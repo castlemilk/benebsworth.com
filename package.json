@@ -1,0 +1,30 @@
+{
+  "name": "blog-mvp",
+  "description": "blog website for displaying portfolio",
+  "version": "0.1",
+  "author": "Ben Ebsworth <ben.ebsworth@gmail.com>",
+  "dependencies": {
+    "babel-plugin-styled-components": "^1.5.1",
+    "gatsby": "^1.9.253",
+    "gatsby-cli": "^1.1.50",
+    "gatsby-link": "^1.6.40",
+    "gatsby-plugin-react-helmet": "^2.0.11",
+    "gatsby-plugin-styled-components": "^2.0.11",
+    "material-ui": "^1.0.0-beta.42",
+    "react-helmet": "^5.2.0",
+    "styled-components": "^3.2.6"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write 'src/**/*.js'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "prettier": "^1.12.0"
+  }
+}

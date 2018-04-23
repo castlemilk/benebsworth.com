@@ -1,7 +1,7 @@
 {
   "name": "blog-mvp",
   "description": "blog website for displaying portfolio",
-  "version": "0.1",
+  "version": "0.1.0",
   "author": "Ben Ebsworth <ben.ebsworth@gmail.com>",
   "dependencies": {
     "babel-plugin-styled-components": "^1.5.1",

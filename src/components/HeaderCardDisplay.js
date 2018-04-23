@@ -17,9 +17,9 @@ const styles = theme => ({
 });
 
 const HeaderCardDisplay = (props) => {
-  const cards = props.items.map(item => (
-    <Grid xs={3} item className={styles.paper} spacing={12} >
-      <Paper style={{ width: '250', height: '250', margin: '20'}} key={item} >
+  const cards =["1", "2", "3", "4", "5", "6"].map(item => (
+    <Grid xs={12} sm={6} md={4} lg={4} item className={styles.paper} spacing={4} >
+      <Paper style={{ height: '250'}} key={item} >
         <div>
           {item}
         </div>
@@ -27,9 +27,11 @@ const HeaderCardDisplay = (props) => {
   </Grid>
 ))
   return (
-    <Grid container spacing={16} >
-        {cards}
-    </Grid>
+    <div style={{ width: '100%', textAlign: 'center' }} >
+      <Grid container spacing={16}>
+          {cards}
+      </Grid>
+    </div>
 
   )
 }

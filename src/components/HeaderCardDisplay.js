@@ -17,9 +17,9 @@ const styles = theme => ({
 });
 
 const HeaderCardDisplay = (props) => {
-  const cards =["1", "2", "3", "4", "5", "6"].map(item => (
-    <Grid xs={12} sm={6} md={4} lg={4} item className={styles.paper} spacing={4} >
-      <Paper style={{ height: '250'}} key={item} >
+  const cards =["About", "Blog", "Projects"].map(item => (
+    <Grid xs={12} sm={6} md={4} lg={4} item className={styles.paper} >
+      <Paper style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '250'}} key={item} >
         <div>
           {item}
         </div>

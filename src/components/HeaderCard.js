@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'gatsby-link'
 
-const HaderCard = (props) => (
+const HeaderCard = (props) => (
   <div>
     <h1>
-      card
+      {props.text}
     </h1>
   </div>
 )

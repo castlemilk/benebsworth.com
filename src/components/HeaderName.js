@@ -13,7 +13,7 @@ class HeaderName extends React.Component {
     render() {
         const style = {
             fontFamily: 'Days One',
-            marginBottom: '50'
+            marginBottom: 50
         }
         return <ReactRevealText style={style} show={this.state.show} >BEN EBSWORTH</ReactRevealText>
     }

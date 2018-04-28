@@ -11,9 +11,13 @@
     "gatsby-plugin-google-fonts": "^0.0.4",
     "gatsby-plugin-react-helmet": "^2.0.11",
     "gatsby-plugin-styled-components": "^2.0.11",
+    "imports-loader": "^0.8.0",
     "material-ui": "^1.0.0-beta.42",
     "react-helmet": "^5.2.0",
+    "react-mt-svg-lines": "^0.8.3",
     "react-reveal-text": "^0.1.1",
+    "react-svgpathplayer": "^2.0.3",
+    "snapsvg": "^0.5.1",
     "styled-components": "^3.2.6"
   },
   "keywords": [

@@ -3,10 +3,28 @@ import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
 
-import { headerCards } from '../config';
 import HeaderCard from './HeaderCard';
 
-
+export const headerCards = [
+    {
+        key: 1,
+        text: 'About',
+        color: 'green',
+        path: '/about',
+    },
+    {
+        key: 2,
+        text: 'Blog',
+        color: 'blue',
+        path: '/blog'
+    },
+    {
+        key: 3,
+        text: 'Projects',
+        color: 'purple',
+        path: '/projects'
+    },
+]
 const styles = theme => ({
   root: {
     flexGrow: 1,

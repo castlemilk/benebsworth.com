@@ -2,7 +2,7 @@ import React from 'react'
 
 const AboutSVG = () => {
   return (
-    <svg width="311px" height="259px" viewBox="0 0 311 259" version="1.1">
+    <svg width="309px" height="250px" viewBox="0 0 311 259" version="1.1">
       <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <g id="portrait" transform="translate(1.000000, 3.000000)" stroke="#000000" strokeWidth="2">
               <path id="Shape" d="M27.4802372 0.496031746 29.9229249 4.46428571 25.9535573 6.94444444"></path>

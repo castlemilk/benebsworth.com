@@ -23,16 +23,20 @@ const RealImage = styled.div`
 `
 const AboutAnimation = (props) => {
   return (
-    <div style={{ position: 'absolute'}}>
-      <RealImage>
-        <img style={{ zIndex: 5, position: 'absolute'}} src={AboutPNG}/>
-      </RealImage>
-      <MtSvgLines animate={ true } duration={ 2000 } style={{ zIndex: 4, position: 'absolute'}}>
-        <AboutSVG />
-      </MtSvgLines>
-
-
-    </div>
+    <div>
+      <div style={{ zIndex: 5, position: 'absolute'}}>
+        <RealImage>
+          <img src={AboutPNG}/>
+        </RealImage>
+      </div>
+      <div>
+        <div style={{ position: 'absolute'}}>
+          <MtSvgLines animate={ true } duration={ 2000 } style={{ zIndex: 4, position: 'absolute'}}>
+            <AboutSVG style={{ zIndex: 3, position: 'absolute'}} />
+          </MtSvgLines>
+        </div>
+      </div>
+  </div>
   )
 }
 export default AboutAnimation

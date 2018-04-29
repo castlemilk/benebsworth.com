@@ -24,15 +24,21 @@ class AboutCard extends React.Component {
        imageOpacity: 0.7,
        opacity: 0,
        fontSize: 25,
+       titleBackgroundWidth: 70,
+       titleBackgroundHeight: 20
      },
      style:{
        scale: spring(this.state.isHover ? 1 : 1.15),
-       marginTop: spring(this.state.isHover ? 0 : 0),
+       marginTop: spring(this.state.isHover ? -0.4 : -0.4),
        marginLeft: spring(this.state.isHover ? 0 : 0),
        imageOpacity: spring(this.state.isHover ? 0.4 : 0.7),
        opacity: spring(this.state.isHover ? 1 : 0),
-       fontSize: spring(this.state.isHover ? 35 : 30)
+       fontSize: spring(this.state.isHover ? 35 : 25),
+       titleBackgroundWidth: spring(this.state.isHover ? 100 : 70),
+       titleBackgroundHeight: spring(this.state.isHover ? 45 : 30)
      },
+     titleBackgroundWidth: spring(this.state.isHover ? 100 : 75),
+     titleBackgroundHeight: spring(this.state.isHover ? 45 : 20)
    };
  }
   render() {
@@ -40,7 +46,7 @@ class AboutCard extends React.Component {
       <Paper
         onMouseOver={() => this.handleHover(true)}
         onMouseOut={() => this.handleHover(false)}
-        style={{ height: 250, width: 309}}>
+        style={{ height: 250, width: 309, display: 'inline-block'}}>
 
         <div className="container" style={{ height: 250}}>
           <Motion {...this.getSpringProps()}>
@@ -55,11 +61,14 @@ class AboutCard extends React.Component {
              return (
               <div className="subcontainer">
                 <div className="animation-1">
-                <AboutAnimation />
+                  <AboutAnimation />
                 </div>
                 <div className="title-subcontainer">
                   <div className="title-content" style={styleTitle}>
-                      <AboutPanel />
+                      <AboutPanel
+                        titleBackgroundWidth={tweenCollection.titleBackgroundWidth}
+                        titleBackgroundHeight={tweenCollection.titleBackgroundHeight}
+                      />
                     </div>
                   </div>
                 </div>

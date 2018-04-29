@@ -4,6 +4,7 @@ import HeaderCardDisplay from './HeaderCardDisplay';
 import HeaderName from './HeaderName';
 import AboutCard from './AboutCard';
 import AboutAnimation from './AboutAnimation';
+import AboutPanel from './AboutPanel';
 const items = ["dog", "cat", "mouse"]
 const MainPage = (props) => (
   <div>
@@ -16,6 +17,7 @@ const MainPage = (props) => (
     <Grid>
       <AboutCard />
     </Grid>
+      <AboutPanel />
   </div>
 )
 

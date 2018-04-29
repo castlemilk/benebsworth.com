@@ -3,8 +3,8 @@ import React from 'react'
 const AboutSVG = () => {
   return (
     <svg width="311px" height="259px" viewBox="0 0 311 259" version="1.1">
-      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-          <g id="portrait" transform="translate(1.000000, 3.000000)" stroke="#000000" stroke-width="2">
+      <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+          <g id="portrait" transform="translate(1.000000, 3.000000)" stroke="#000000" strokeWidth="2">
               <path id="Shape" d="M27.4802372 0.496031746 29.9229249 4.46428571 25.9535573 6.94444444"></path>
               <path id="Shape" d="M28.0909091 1.48809524 32.6709486 7.93650794 32.6709486 11.9047619 37.8616601 14.3849206 42.1363636 14.1369048"></path>
               <path id="Shape" d="M45.1897233 9.1765873 47.6324111 13.1448413 42.7470356 16.8650794 42.4416996 20.8333333 46.1057312 22.8174603 50.3804348 20.0892857"></path>

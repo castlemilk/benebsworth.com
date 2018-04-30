@@ -13,3 +13,5 @@
 [5] http://gedd.ski/post/dynamic-svg-components/
 
 [6] https://hackernoon.com/render-a-hearthstone-card-using-react-and-svg-cb086957e74a
+
+[7] https://gist.github.com/pbeshai/484d6bf04edcdecfc3731e00c062f47e

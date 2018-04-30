@@ -5,6 +5,7 @@ import HeaderName from './HeaderName';
 import AboutCard from './AboutCard';
 import AboutAnimation from './AboutAnimation';
 import AboutPanel from './AboutPanel';
+import BlogCard from './BlogCard';
 const items = ["dog", "cat", "mouse"]
 const items_advanced = [
   {
@@ -17,8 +18,9 @@ const items_advanced = [
   {
     id: 2,
     title: 'Blog',
-    isComponent: false,
-    color: 'blue'
+    isComponent: true,
+    color: false,
+    component: <BlogCard />
   },
   {
     id: 3,

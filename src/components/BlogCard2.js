@@ -5,107 +5,69 @@ import Paper from 'material-ui/Paper';
 
 import * as d3 from "d3";
 
-const LineWrapper = styled.div`
-  .baseline {
-    stroke: black;
-    stroke-dasharray:4 4;
+const BlogWrapper = styled.div`
+  .paper-wrapper:hover {
+    text-shadow: 2px 2px 5px #903fb9;
+    font-size: 40px;
   }
 `
+const BlogTitle = styled.div`
+  z-index: 10;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 309px;
+  height: 250px;
+  font-family: 'Days One';
+  font-size: 30px;
+`
 class BlogCard2 extends React.Component {
-  constructor() {
-      super();
+
+  constructor(props) {
+      super(props);
       this.state = {
         isHover: false,
+      }
+      this.startAnimation = this.startAnimation.bind(this)
+      this.stopAnimation = this.startAnimation.bind(this)
+      this.margin = {top: 0, right: 0, bottom: 0, left: 0};
+      this.width = 309 - this.margin.left - this.margin.right;
+      this.height = 250 - this.margin.top - this.margin.bottom;
+      this.rect = [0,0, this.width - 0, this.height - 0];
+      this.n = 20;
+      this.m = 4;
+      this.padding = 6;
+      this.maxSpeed = 4;
+      this.radius = d3.scaleSqrt().range([0, 8]);
+      this.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.m));
+      this.nodes = [];
+
+      for (let i of d3.range(this.n) ){
+      this.nodes.push({radius: this.radius(1 + Math.floor(Math.random() * 4)),
+        color: this.color(Math.floor(Math.random() * this.m)),
+        x: this.rect[0] + (Math.random() * (this.rect[2] - this.rect[0])),
+        y: this.rect[1] + (Math.random() * (this.rect[3] - this.rect[1])),
+        speedX: (Math.random() - 0.5) * 2 *this.maxSpeed,
+        speedY: (Math.random() - 0.5) * 2 *this.maxSpeed});
       }
 
 
   }
+
   handleHover(active) {
     this.setState({ isHover: active})
   }
   componentDidMount() {
-    this.setContext();
-  }
-  collide(alpha) {
-    var quadtree = d3.geom.quadtree(nodes);
-    return function(d) {
-      var r = d.radius + radius.domain()[1] + padding,
-      nx1 = d.x - r,
-      nx2 = d.x + r,
-      ny1 = d.y - r,
-      ny2 = d.y + r;
-      quadtree.visit(function(quad, x1, y1, x2, y2) {
-      if (quad.point && (quad.point !== d)) {
-        var x = d.x - quad.point.x,
-        y = d.y - quad.point.y,
-        l = Math.sqrt(x * x + y * y),
-        r = d.radius + quad.point.radius + (d.color !== quad.point.color) * padding;
-        if (l < r) {
-        l = (l - r) / l * alpha;
-        d.x -= x *= l;
-        d.y -= y *= l;
-        quad.point.x += x;
-        quad.point.y += y;
-      }
-    }
-    return x1 > nx2
-    || x2 < nx1
-    || y1 > ny2
-    || y2 < ny1;
-    });
-    };
-  };
-
-  setContext() {
-    const margin = {top: 0, right: 0, bottom: 0, left: 0};
-    const width = 309 - margin.left - margin.right;
-    const height = 250 - margin.top - margin.bottom;
-    const rect = [0,0, width - 0, height - 0];
-    const n = 20;
-    const m = 4;
-    const padding = 6;
-    const maxSpeed = 300;
-    const radius = d3.scaleSqrt().range([0, 8]);
-    const color = d3.scaleOrdinal(d3.schemeCategory10).domain(d3.range(m));
-    var nodes = [];
-
-    for (let i of d3.range(n) ){
-    nodes.push({radius: radius(1 + Math.floor(Math.random() * 4)),
-      color: color(Math.floor(Math.random() * m)),
-      x: rect[0] + (Math.random() * (rect[2] - rect[0])),
-      y: rect[1] + (Math.random() * (rect[3] - rect[1])),
-      speedX: (Math.random() - 0.5) * 2 *maxSpeed,
-      speedY: (Math.random() - 0.5) * 2 *maxSpeed});
-    }
-    var force = d3.forceSimulation()
-    .nodes(nodes)
-    .on("tick", tick)
-    var svg = d3.select(".container-blog").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    svg.append("svg:rect")
-      .attr("width", rect[2] - rect[0])
-      .attr("height", rect[3] - rect[1])
-      .attr("x", rect[0])
-      .attr("y", rect[1])
-      .style("fill", "None")
-      .style("stroke", "#222222");
-    console.log(svg.selectAll("circle"))
-    var circle = svg.selectAll("circle")
-      .data(nodes)
-      .enter().append("circle")
-      .attr("r", function(d) { return d.radius; })
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .style("fill", function(d) { console.log(d.color); return d.color; })
-      // .call(force.drag);
-    console.log(circle)
-    var flag = false;
+    this.generateObjects()
+    this.force = d3.forceSimulation()
+    .nodes(this.nodes)
+    .on("tick", tick).stop()
+    var { circle, rect, nodes, padding, radius } = this
     function tick() {
       // console.log(e)
-      force.alpha(0.1);
+      // this.force.alpha(0.1);
       function gravity(alpha) {
         return function(d) {
         if ((d.x - d.radius - 2) < rect[0]) d.speedX = Math.abs(d.speedX);
@@ -153,21 +115,87 @@ class BlogCard2 extends React.Component {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
       }
-
   }
+  collide(alpha) {
+    var quadtree = d3.geom.quadtree(nodes);
+    return function(d) {
+      var r = d.radius + radius.domain()[1] + padding,
+      nx1 = d.x - r,
+      nx2 = d.x + r,
+      ny1 = d.y - r,
+      ny2 = d.y + r;
+      quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.x - quad.point.x,
+        y = d.y - quad.point.y,
+        l = Math.sqrt(x * x + y * y),
+        r = d.radius + quad.point.radius + (d.color !== quad.point.color) * padding;
+        if (l < r) {
+        l = (l - r) / l * alpha;
+        d.x -= x *= l;
+        d.y -= y *= l;
+        quad.point.x += x;
+        quad.point.y += y;
+      }
+    }
+    return x1 > nx2
+    || x2 < nx1
+    || y1 > ny2
+    || y2 < ny1;
+    });
+    };
+  };
+  startAnimation() {
+    console.log(this.circle)
+    this.force.restart()
+  }
+  stopAnimation() {
+    this.force.stop()
+  }
+
+  generateObjects() {
+    this.svg = d3.select(".container-blog").append("svg")
+      .attr("width", this.width + this.margin.left + this.margin.right)
+      .attr("height", this.height + this.margin.top + this.margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+    this.svg.append("svg:rect")
+      .attr("width", this.rect[2] - this.rect[0])
+      .attr("height", this.rect[3] - this.rect[1])
+      .attr("x", this.rect[0])
+      .attr("y", this.rect[1])
+      .style("fill", "None")
+      .style("stroke", "#222222");
+    this.circle = this.svg.selectAll("circle")
+      .data(this.nodes)
+      .enter().append("circle")
+      .attr("r", function(d) { return d.radius; })
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .style("fill", function(d) { return d.color; })
+  }
+
+
   // Move nodes toward cluster focus.
 
   render() {
+    if (this.state.isHover) {
+      this.startAnimation()
+    }
     return (
-      <LineWrapper>
-        <Paper
+      <BlogWrapper>
+        <Paper className="paper-wrapper"
           onMouseOver={() => this.handleHover(true)}
           onMouseOut={() => this.handleHover(false)}
           style={{ height: 250, width: 309, display: 'inline-block'}}>
-          <div className="container-blog" style={{ height: 250}}>
+          <div className="container-blog" style={{ height: 250, position: 'absolute'}}>
+            <BlogTitle>
+                Blog
+
+            </BlogTitle>
           </div>
         </Paper>
-      </LineWrapper>
+      </BlogWrapper>
     )
 }
 }

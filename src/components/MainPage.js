@@ -6,6 +6,7 @@ import AboutCard from './AboutCard';
 import AboutAnimation from './AboutAnimation';
 import AboutPanel from './AboutPanel';
 import BlogCard from './BlogCard';
+import BlogCard2 from './BlogCard2';
 const items = ["dog", "cat", "mouse"]
 const items_advanced = [
   {
@@ -20,7 +21,7 @@ const items_advanced = [
     title: 'Blog',
     isComponent: true,
     color: false,
-    component: <BlogCard />
+    component: <BlogCard2 />
   },
   {
     id: 3,

@@ -15,3 +15,7 @@
 [6] https://hackernoon.com/render-a-hearthstone-card-using-react-and-svg-cb086957e74a
 
 [7] https://gist.github.com/pbeshai/484d6bf04edcdecfc3731e00c062f47e
+
+[8] http://bl.ocks.org/rveciana/6184054
+
+[9] https://github.com/d3/d3-force/blob/master/README.md#simulation_tick

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from "styled-components"
-
+import {Motion, spring} from 'react-motion';
 import Paper from 'material-ui/Paper';
 
 import * as d3 from "d3";
@@ -27,11 +27,9 @@ class BlogCard2 extends React.Component {
 
   constructor(props) {
       super(props);
-      this.state = {
-        isHover: false,
-      }
-      this.startAnimation = this.startAnimation.bind(this)
-      this.stopAnimation = this.startAnimation.bind(this)
+      // this.startAnimation = this.startAnimation.bind(this)
+      // this.stopAnimation = this.startAnimation.bind(this)
+      this.getSpringProps = this.getSpringProps.bind(this)
       this.margin = {top: 0, right: 0, bottom: 0, left: 0};
       this.width = 309 - this.margin.left - this.margin.right;
       this.height = 250 - this.margin.top - this.margin.bottom;
@@ -39,7 +37,7 @@ class BlogCard2 extends React.Component {
       this.n = 20;
       this.m = 4;
       this.padding = 6;
-      this.maxSpeed = 4;
+      this.maxSpeed = 300;
       this.radius = d3.scaleSqrt().range([0, 8]);
       this.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.m));
       this.nodes = [];
@@ -55,19 +53,16 @@ class BlogCard2 extends React.Component {
 
 
   }
-
-  handleHover(active) {
-    this.setState({ isHover: active})
-  }
-  componentDidMount() {
+  generateAnimation() {
     this.generateObjects()
     this.force = d3.forceSimulation()
     .nodes(this.nodes)
-    .on("tick", tick).stop()
+    .on("tick", tick)
+    .alpha(1)
+    .alphaDecay(0.0001)
+    .stop()
     var { circle, rect, nodes, padding, radius } = this
     function tick() {
-      // console.log(e)
-      // this.force.alpha(0.1);
       function gravity(alpha) {
         return function(d) {
         if ((d.x - d.radius - 2) < rect[0]) d.speedX = Math.abs(d.speedX);
@@ -144,14 +139,31 @@ class BlogCard2 extends React.Component {
     || y2 < ny1;
     });
     };
+  }
+  componentDidMount() {
+    this.generateAnimation();
   };
+  getSpringProps() {
+   return {
+     defaultStyle: {
+       opacity: 0,
+     },
+     style:{
+       opacity: spring(this.state.isHover ? 1 : 0),
+     },
+   };
+ }
   startAnimation() {
-    console.log(this.circle)
+    console.log('starting')
     this.force.restart()
+    d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 1)
   }
   stopAnimation() {
-    this.force.stop()
+    console.log('stopping')
+    this.force.stop();
+    d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 0)
   }
+
 
   generateObjects() {
     this.svg = d3.select(".container-blog").append("svg")
@@ -159,13 +171,6 @@ class BlogCard2 extends React.Component {
       .attr("height", this.height + this.margin.top + this.margin.bottom)
       .append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-    this.svg.append("svg:rect")
-      .attr("width", this.rect[2] - this.rect[0])
-      .attr("height", this.rect[3] - this.rect[1])
-      .attr("x", this.rect[0])
-      .attr("y", this.rect[1])
-      .style("fill", "None")
-      .style("stroke", "#222222");
     this.circle = this.svg.selectAll("circle")
       .data(this.nodes)
       .enter().append("circle")
@@ -179,14 +184,11 @@ class BlogCard2 extends React.Component {
   // Move nodes toward cluster focus.
 
   render() {
-    if (this.state.isHover) {
-      this.startAnimation()
-    }
     return (
       <BlogWrapper>
         <Paper className="paper-wrapper"
-          onMouseOver={() => this.handleHover(true)}
-          onMouseOut={() => this.handleHover(false)}
+          onMouseEnter={() => this.startAnimation()}
+          onMouseLeave={() => this.stopAnimation()}
           style={{ height: 250, width: 309, display: 'inline-block'}}>
           <div className="container-blog" style={{ height: 250, position: 'absolute'}}>
             <BlogTitle>

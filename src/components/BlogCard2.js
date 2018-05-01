@@ -37,7 +37,7 @@ class BlogCard2 extends React.Component {
       this.n = 20;
       this.m = 4;
       this.padding = 6;
-      this.maxSpeed = 300;
+      this.maxSpeed = 100;
       this.radius = d3.scaleSqrt().range([0, 8]);
       this.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.m));
       this.nodes = [];

@@ -14,20 +14,23 @@ const items_advanced = [
     title: 'About',
     isComponent: true,
     component: <AboutCard />,
-    color: false
+    color: false,
+    path: '/about'
   },
   {
     id: 2,
     title: 'Blog',
     isComponent: true,
     color: false,
-    component: <BlogCard2 />
+    component: <BlogCard2 />,
+    path: '/blog'
   },
   {
     id: 3,
     title: 'Projects',
     isComponent: false,
-    color: 'purple'
+    color: 'purple',
+    path: '/projects'
   }
 ]
 const MainPage = (props) => (

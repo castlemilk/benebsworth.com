@@ -6,7 +6,7 @@ import AboutCard from './AboutCard';
 import AboutAnimation from './AboutAnimation';
 import AboutPanel from './AboutPanel';
 import BlogCard from './BlogCard';
-import BlogCard2 from './BlogCard2';
+import ProjectsCard from './ProjectsCard';
 const items = ["dog", "cat", "mouse"]
 const items_advanced = [
   {
@@ -21,13 +21,13 @@ const items_advanced = [
     title: 'Blog',
     isComponent: true,
     color: false,
-    component: <BlogCard2 />
+    component: <BlogCard />
   },
   {
     id: 3,
     title: 'Projects',
-    isComponent: false,
-    color: 'purple'
+    isComponent: true,
+    component: <ProjectsCard />
   }
 ]
 const MainPage = (props) => (

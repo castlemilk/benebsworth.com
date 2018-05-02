@@ -1,185 +1,201 @@
 import React from 'react'
 import styled from "styled-components"
-
+import {Motion, spring} from 'react-motion';
 import Paper from 'material-ui/Paper';
 
 import * as d3 from "d3";
 
-const LineWrapper = styled.div`
-  .baseline {
-    stroke: black;
-    stroke-dasharray:4 4;
+const BlogWrapper = styled.div`
+  .paper-wrapper:hover {
+    text-shadow: 2px 2px 5px #903fb9;
+    font-size: 40px;
   }
 `
+const BlogTitle = styled.div`
+  z-index: 10;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  width: 309px;
+  height: 250px;
+  font-family: 'Days One';
+  font-size: 30px;
+`
 class BlogCard extends React.Component {
-  constructor() {
-      super();
-      this.state = {
-        isHover: false,
+
+  constructor(props) {
+      super(props);
+      // this.startAnimation = this.startAnimation.bind(this)
+      // this.stopAnimation = this.startAnimation.bind(this)
+      this.getSpringProps = this.getSpringProps.bind(this)
+      this.margin = {top: 0, right: 0, bottom: 0, left: 0};
+      this.width = 309 - this.margin.left - this.margin.right;
+      this.height = 250 - this.margin.top - this.margin.bottom;
+      this.rect = [0,0, this.width - 0, this.height - 0];
+      this.n = 20;
+      this.m = 4;
+      this.padding = 6;
+      this.maxSpeed = 300;
+      this.radius = d3.scaleSqrt().range([0, 8]);
+      this.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.m));
+      this.nodes = [];
+
+      for (let i of d3.range(this.n) ){
+      this.nodes.push({radius: this.radius(1 + Math.floor(Math.random() * 4)),
+        color: this.color(Math.floor(Math.random() * this.m)),
+        x: this.rect[0] + (Math.random() * (this.rect[2] - this.rect[0])),
+        y: this.rect[1] + (Math.random() * (this.rect[3] - this.rect[1])),
+        speedX: (Math.random() - 0.5) * 2 *this.maxSpeed,
+        speedY: (Math.random() - 0.5) * 2 *this.maxSpeed});
+      }
+
+
+  }
+  generateAnimation() {
+    this.generateObjects()
+    this.force = d3.forceSimulation()
+    .nodes(this.nodes)
+    .on("tick", tick)
+    .alpha(1)
+    .alphaDecay(0.0001)
+    .stop()
+    var { circle, rect, nodes, padding, radius } = this
+    function tick() {
+      function gravity(alpha) {
+        return function(d) {
+        if ((d.x - d.radius - 2) < rect[0]) d.speedX = Math.abs(d.speedX);
+        if ((d.x + d.radius + 2) > rect[2]) d.speedX = -1 * Math.abs(d.speedX);
+        if ((d.y - d.radius - 2) < rect[1]) d.speedY = -1 * Math.abs(d.speedY);
+        if ((d.y + d.radius + 2) > rect[3]) d.speedY = Math.abs(d.speedY);
+
+        d.x = d.x + (d.speedX * alpha);
+        d.y = d.y + (-1 * d.speedY * alpha);
+
+        };
+      }
+      function collide(alpha) {
+        var quadtree = d3.quadtree(nodes);
+        return function(d) {
+          var r = d.radius + radius.domain()[1] + padding,
+          nx1 = d.x - r,
+          nx2 = d.x + r,
+          ny1 = d.y - r,
+          ny2 = d.y + r;
+          quadtree.visit(function(quad, x1, y1, x2, y2) {
+          if (quad.point && (quad.point !== d)) {
+            var x = d.x - quad.point.x,
+            y = d.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + quad.point.radius + (d.color !== quad.point.color) * padding;
+            if (l < r) {
+            l = (l - r) / l * alpha;
+            d.x -= x *= l;
+            d.y -= y *= l;
+            quad.point.x += x;
+            quad.point.y += y;
+          }
+        }
+        return x1 > nx2
+        || x2 < nx1
+        || y1 > ny2
+        || y2 < ny1;
+        });
+        };
+      };
+      circle
+      .each(gravity(0.1))
+      .each(collide(.5))
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
       }
   }
-  handleHover(active) {
-    this.setState({ isHover: active})
+  collide(alpha) {
+    var quadtree = d3.geom.quadtree(nodes);
+    return function(d) {
+      var r = d.radius + radius.domain()[1] + padding,
+      nx1 = d.x - r,
+      nx2 = d.x + r,
+      ny1 = d.y - r,
+      ny2 = d.y + r;
+      quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.x - quad.point.x,
+        y = d.y - quad.point.y,
+        l = Math.sqrt(x * x + y * y),
+        r = d.radius + quad.point.radius + (d.color !== quad.point.color) * padding;
+        if (l < r) {
+        l = (l - r) / l * alpha;
+        d.x -= x *= l;
+        d.y -= y *= l;
+        quad.point.x += x;
+        quad.point.y += y;
+      }
+    }
+    return x1 > nx2
+    || x2 < nx1
+    || y1 > ny2
+    || y2 < ny1;
+    });
+    };
   }
   componentDidMount() {
-    this.setContext();
+    this.generateAnimation();
+  };
+  getSpringProps() {
+   return {
+     defaultStyle: {
+       opacity: 0,
+     },
+     style:{
+       opacity: spring(this.state.isHover ? 1 : 0),
+     },
+   };
+ }
+  startAnimation() {
+    this.force.restart()
+    d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 1)
   }
-  /**
-   * Helper function to rotate a point around an origin by theta radians
-   */
-   rotate(origin, point, thetaRadians) {
-    const [originX, originY] = origin;
-    const [pointX, pointY] = point;
-
-    const rotatedEndX = originX +
-      (pointX - originX) * Math.cos(thetaRadians) -
-      (pointY - originY) * Math.sin(thetaRadians);
-    const rotatedEndY = originY +
-      (pointX - originX) * Math.sin(thetaRadians) +
-      (pointY - originY) * Math.cos(thetaRadians);
-
-    return [rotatedEndX, rotatedEndY];
-  }
-  /**
-   * Creates a series of jagged points between start and end based on
-   * maxPeakHeight for how far away from the midline they get to be and
-   * minPeakDistance for how often they occur. If minPeakDistance is not
-   * provided, it will add roughly 18 points to the line (every 5% of the
-   * line length).
-   */
-  createJaggedPoints(start, end, maxPeakHeight, minPeakDistance) {
-    // we want the one with farthest left X to be 'start'
-    let reversed = false;
-    if (start[0] > end[0]) {
-      const swap = start;
-      start = end;
-      end = swap;
-      reversed = true;
-    }
-
-    const [startX, startY] = start;
-    const [endX, endY] = end;
-
-    // keep the start point unmodified
-    const points = [start];
-
-    // rotate it so end point is horizontal with start point
-    const opposite = endY - startY;
-    const adjacent = endX - startX;
-    const thetaRadians = -Math.atan(opposite / adjacent);
-
-    // compute the overall length of the line
-    const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-    if (!minPeakDistance) {
-      minPeakDistance = length * 0.05;
-    }
-
-    // compute rotated end point
-    const [rotatedEndX, rotatedEndY] = rotate(start, end, thetaRadians);
-
-    // generate the intermediate peak points
-    let lastX = startX;
-    while (lastX < rotatedEndX - minPeakDistance) {
-      // move minPeakDistance from previous X + some random amount, but stop at most at
-      // minPeakDistance from the end
-      const nextX = Math.min(lastX + minPeakDistance + (Math.random() * minPeakDistance),
-        rotatedEndX - minPeakDistance);
-
-      // add some randomness to the expected y position to get peaks
-      // we can use startY as the expected y position since we rotated the line to be flat
-      const nextY = (maxPeakHeight * (Math.random() - 0.5)) + startY;
-
-      points.push([nextX, nextY]);
-      lastX = nextX;
-    }
-
-    // add in the end point
-    points.push([rotatedEndX, rotatedEndY]);
-
-    // undo the rotation and return the points as the result
-    const unrotated = points.map((point, i) => {
-      if (i === 0) {
-        return start;
-      } else if (i === points.length - 1) {
-        return end;
-      }
-
-      return rotate(start, point, -thetaRadians);
-    });
-
-    // restore original directionality if we reversed it
-    return reversed ? unrotated.reverse() : unrotated;
-  }
-  /*
-   * Animate the line based on pathSpeed. Uses sroke-dasharray.
-   */
-  transitionLine(path, pathSpeed) {
-    const pathLength = path.node().getTotalLength();
-    path
-      .attr('stroke-dasharray', '0,100000') // fix safari flash
-      .transition()
-      .duration(pathLength / (pathSpeed / 1000))
-      .ease(d3.easeQuadOut)
-      .attrTween('stroke-dasharray', function tweenDash() {
-        // Dashed line interpolation trick from https://bl.ocks.org/mbostock/5649592
-        const length = this.getTotalLength();
-        return d3.interpolateString(`0,${length}`, `${length},${length}`);
-      })
-      // Remove stroke-dasharray property at the end
-      .on('end', function endDashTransition() {
-        d3.select(this).attr('stroke-dasharray', 'none');
-      });
-  }
-  /**
-   * Draw the original line between the two points
-   */
-  drawBaseline(start, end) {
-    return d3.select('#main-svg').append('path').datum([start, end])
-      .classed('baseline', true)
-      .attr('d', d3.line());
-  }
-
-  /**
-   * Helper function to generate a random point in the plot area
-   */
-  randomPoint() {
-    return [
-      Math.round(Math.random() * 309),
-      Math.round(Math.random() * 250),
-    ];
+  stopAnimation() {
+    this.force.stop();
+    d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 0)
   }
 
 
-  setContext() {
-    // generate random start and end points
-    const start = this.randomPoint();
-    const end = this.randomPoint();
-    this.drawBaseline(start, end)
-    const width = 700;
-    const height = 500;
-    const padding = 50;
-    const plotAreaWidth = width - (2 * padding);
-    const plotAreaHeight = height - (2 * padding);
-    // return d3.select('#main-svg')
-    //   .attr('width', width)
-    //   .attr('height', height)
-    //   .append('g')
-    //     .attr('transform', `translate(${padding} ${padding})`);
-
+  generateObjects() {
+    this.svg = d3.select(".container-blog").append("svg")
+      .attr("width", this.width + this.margin.left + this.margin.right)
+      .attr("height", this.height + this.margin.top + this.margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+    this.circle = this.svg.selectAll("circle")
+      .data(this.nodes)
+      .enter().append("circle")
+      .attr("r", function(d) { return d.radius; })
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .style("fill", function(d) { return d.color; })
+    d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 0)
   }
+
+
+  // Move nodes toward cluster focus.
 
   render() {
     return (
-      <LineWrapper>
-        <Paper
-          onMouseOver={() => this.handleHover(true)}
-          onMouseOut={() => this.handleHover(false)}
+      <BlogWrapper>
+        <Paper className="paper-wrapper"
+          onMouseEnter={() => this.startAnimation()}
+          onMouseLeave={() => this.stopAnimation()}
           style={{ height: 250, width: 309, display: 'inline-block'}}>
-          <div className="container" style={{ height: 250}}>
-            <svg id="main-svg"></svg>
+          <div className="container-blog" style={{ height: 250, position: 'absolute'}}>
+            <BlogTitle>
+                Blog
+            </BlogTitle>
           </div>
         </Paper>
-      </LineWrapper>
+      </BlogWrapper>
     )
 }
 }

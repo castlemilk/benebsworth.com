@@ -1,9 +1,10 @@
 import React from 'react'
 import Link from 'gatsby-link'
+import Blogs from '../../components/Blogs'
 
 const BlogIndexPage = () => (
   <div>
-      lol
+      <Blogs />
   </div>
 )
 

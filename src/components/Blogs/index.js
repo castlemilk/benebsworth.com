@@ -4,29 +4,24 @@ import Grid from 'material-ui/Grid';
 import styled from "styled-components"
 
 import HeaderName from '../HeaderName';
-import AboutBody from './AboutBody';
-import AboutFooter from './AboutFooter';
 
+const BlogsWrapper = styled.div`
 
-export class AboutPage extends React.Component {
+`
+export class Blogs extends React.Component {
     constructor(props) {
         super(props)
     }
 
     render() {
-        return (<div>
+        return (<BlogsWrapper>
             <Grid style={{ textAlign: 'center'}}>
                 <HeaderName />
             </Grid>
-            <Grid>
-                <AboutBody />
-            </Grid>
-            <Grid>
-                <AboutFooter />
-            </Grid>     
-        </div>)
+            items
+        </BlogsWrapper>)
     }
 }
 
 
-export default AboutPage
+export default Blogs

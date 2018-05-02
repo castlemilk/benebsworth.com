@@ -23,10 +23,12 @@ const BlogTitle = styled.div`
   font-family: 'Days One';
   font-size: 30px;
 `
-class BlogCard extends React.Component {
+class BlogCard2 extends React.Component {
 
   constructor(props) {
       super(props);
+      // this.startAnimation = this.startAnimation.bind(this)
+      // this.stopAnimation = this.startAnimation.bind(this)
       this.getSpringProps = this.getSpringProps.bind(this)
       this.margin = {top: 0, right: 0, bottom: 0, left: 0};
       this.width = 309 - this.margin.left - this.margin.right;
@@ -35,7 +37,7 @@ class BlogCard extends React.Component {
       this.n = 20;
       this.m = 4;
       this.padding = 6;
-      this.maxSpeed = 300;
+      this.maxSpeed = 100;
       this.radius = d3.scaleSqrt().range([0, 8]);
       this.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.m));
       this.nodes = [];
@@ -152,10 +154,12 @@ class BlogCard extends React.Component {
    };
  }
   startAnimation() {
+    console.log('starting')
     this.force.restart()
     d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 1)
   }
   stopAnimation() {
+    console.log('stopping')
     this.force.stop();
     d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 0)
   }
@@ -174,7 +178,6 @@ class BlogCard extends React.Component {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .style("fill", function(d) { return d.color; })
-    d3.select(".container-blog").select("svg").selectAll("*").attr("opacity", 0)
   }
 
 
@@ -190,6 +193,7 @@ class BlogCard extends React.Component {
           <div className="container-blog" style={{ height: 250, position: 'absolute'}}>
             <BlogTitle>
                 Blog
+
             </BlogTitle>
           </div>
         </Paper>
@@ -197,4 +201,4 @@ class BlogCard extends React.Component {
     )
 }
 }
-export default BlogCard
+export default BlogCard2

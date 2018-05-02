@@ -2,29 +2,13 @@ import React from 'react'
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
-
+import styled from "styled-components"
+import Link from 'gatsby-link'
 import HeaderCard from './HeaderCard';
+const StyledLink = styled(Link)`
+  color: black;
+`;
 
-export const headerCards = [
-    {
-        key: 1,
-        text: 'About',
-        color: 'green',
-        path: '/about',
-    },
-    {
-        key: 2,
-        text: 'Blog',
-        color: 'blue',
-        path: '/blog'
-    },
-    {
-        key: 3,
-        text: 'Projects',
-        color: 'purple',
-        path: '/projects'
-    },
-]
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -43,9 +27,9 @@ const HeaderCardDisplay = (props) => {
         <HeaderCard key={key} text={text} color={color} />
     </Paper>)
   }
-  const cards =props.items.map(({ title, id, isComponent, component, color }) => (
+  const cards =props.items.map(({ title, id, isComponent, component, color, path }) => (
     <Grid key={id} xs={12} sm={6} md={4} lg={4} item className={styles.paper} >
-      { isComponent ? component : plainCard(id, title, color)}
+      { isComponent ? <StyledLink to={path}>{component}</StyledLink> : plainCard(id, title, color)}
   </Grid>
 ))
   return (

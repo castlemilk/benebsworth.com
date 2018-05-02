@@ -14,7 +14,8 @@ const items_advanced = [
     title: 'About',
     isComponent: true,
     component: <AboutCard />,
-    color: false
+    color: false,
+    path: '/about'
   },
   {
     id: 2,

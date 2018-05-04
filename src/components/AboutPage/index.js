@@ -14,7 +14,7 @@ export class AboutPage extends React.Component {
     }
 
     render() {
-        return (<div>
+        return (<Grid>
             <Grid style={{ textAlign: 'center'}}>
                 <HeaderName />
             </Grid>
@@ -24,7 +24,7 @@ export class AboutPage extends React.Component {
             <Grid>
                 <AboutFooter />
             </Grid>     
-        </div>)
+        </Grid>)
     }
 }
 

@@ -11,9 +11,7 @@ import AboutContact from './AboutContact';
 import AboutSocial from './AboutSocial';
 
 const AboutFooterWrapper = styled.div`
-    text-align: center;
-    display: inline-block;
-    width: 50%;
+    height: 200px;
 `
 export class AboutFooter extends React.Component {
     constructor(props) {
@@ -22,18 +20,10 @@ export class AboutFooter extends React.Component {
     }
     render() {
     return (
-        <div>
     <AboutFooterWrapper>
-        <Grid>
-            <AboutSocial />
-        </Grid>
+        <AboutSocial />
+        <AboutContact />
     </AboutFooterWrapper>
-    <AboutFooterWrapper>
-        <Grid >
-            <AboutContact />
-        </Grid>
-    </AboutFooterWrapper>
-    </div>
     )
     }
 }

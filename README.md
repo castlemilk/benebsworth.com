@@ -19,3 +19,5 @@
 [8] http://bl.ocks.org/rveciana/6184054
 
 [9] https://github.com/d3/d3-force/blob/master/README.md#simulation_tick
+
+[10] https://www.canva.com/learn/unique-inspiring-about-page/

@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { FaFacebookOfficial, FaTwitterSquare, FaInstagram, FaLinkedinSquare } from 'react-icons/lib/fa';
 
 const AboutSocialWrapper = styled.div`
-    display: inline-block;
-    height: 160px;
+    height: 100%;
     width: 50%;
     float: left;
+    background-color: #ccc9c9;
     .social-media-box {
         text-align: center;
 
@@ -24,7 +24,6 @@ const height = 121;
 const fontSize = 50;
 const AboutSocial = (props) => (
     <AboutSocialWrapper>
-        <Paper >
         <div className="social-header">
             <span>
             Social.
@@ -32,12 +31,11 @@ const AboutSocial = (props) => (
            
         </div>
         <div className="social-media-box">
-                <FaInstagram style={{ height, fontSize, color: '#7F3FBF' }} />
-                <FaLinkedinSquare style={{height, fontSize, color: '#7F3FBF' }} />
-                <FaTwitterSquare style={{height, fontSize, color: '#7F3FBF' }} />
-                <FaFacebookOfficial style={{height, fontSize, color: '#7F3FBF' }} />
+                <FaInstagram style={{ height, fontSize, color: '#000000' }} />
+                <FaLinkedinSquare style={{height, fontSize, color: '#000000' }} />
+                <FaTwitterSquare style={{height, fontSize, color: '#000000' }} />
+                <FaFacebookOfficial style={{height, fontSize, color: '#000000' }} />
         </div>
-        </Paper>
     </AboutSocialWrapper>
 )
 

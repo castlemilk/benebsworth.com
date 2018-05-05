@@ -12,6 +12,8 @@ import AboutSocial from './AboutSocial';
 
 const AboutFooterWrapper = styled.div`
     height: 200px;
+    display: inline-block;
+    width: 100%;
 `
 export class AboutFooter extends React.Component {
     constructor(props) {
@@ -21,8 +23,9 @@ export class AboutFooter extends React.Component {
     render() {
     return (
     <AboutFooterWrapper>
-        <AboutSocial />
-        <AboutContact />
+    <AboutSocial />
+    <AboutContact />
+        
     </AboutFooterWrapper>
     )
     }

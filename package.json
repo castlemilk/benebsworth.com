@@ -15,7 +15,7 @@
     "gatsby-plugin-react-helmet": "^2.0.11",
     "gatsby-plugin-styled-components": "^2.0.11",
     "imports-loader": "^0.8.0",
-    "material-ui": "^1.0.0-beta.42",
+    "material-ui": "^1.0.0-beta.44",
     "react-anime": "^2.1.0",
     "react-crossfade-image": "^1.1.1",
     "react-helmet": "^5.2.0",

@@ -69,9 +69,7 @@ const textInputTheme = createMuiTheme({
             root: {
                 backgroundColor: 'white',
             },
-            bottom: {
-                marginTop: 30,
-            },
+           
             raisedPrimary: {
                 backgroundColor: 'white',
                 color: 'black',
@@ -84,6 +82,40 @@ const textInputTheme = createMuiTheme({
         }
 	},
 });
+const buttonThemeValid = createMuiTheme({
+    overrides: {
+        MuiButton: {
+            root: {
+                backgroundColor: 'white',
+            },
+           
+            raisedPrimary: {
+                backgroundColor: 'white',
+                color: 'black',
+                '&:hover': {
+                    backgroundColor: '#309f72'
+                }
+            }
+        }
+    }
+})
+const buttonThemeInvalid = createMuiTheme({
+    overrides: {
+        MuiButton: {
+            root: {
+                backgroundColor: 'gray',
+            },
+           
+            raisedPrimary: {
+                backgroundColor: 'gray',
+                color: 'black',
+                '&:hover': {
+                    backgroundColor: '#309f72'
+                }
+            }
+        }
+    }
+})
 const styles = theme => ({
     textField: {
         marginTop: 10,
@@ -162,8 +194,8 @@ export class AboutFooter extends React.Component {
         super(props);
         this.state = { 
             isSelected: false,
-            subject: 'Message Subject',
-            message: 'Message'
+            subject: '',
+            message: ''
         }
     }
     handleSelect(active) {
@@ -183,6 +215,9 @@ export class AboutFooter extends React.Component {
           
         };
       }
+    contactValid() {
+        return this.state.subject != "" && this.state.message != ""
+    }
     render() {
         const height = 121;
         const fontSize = 50;
@@ -236,7 +271,7 @@ export class AboutFooter extends React.Component {
                         fullWidth={true}
                         />
                 </MuiThemeProvider>
-                <MuiThemeProvider theme={textInputTheme}>
+                <MuiThemeProvider theme={this.contactValid() ? buttonThemeValid : buttonThemeInvalid}>
                     <Button className={classes.button} variant="raised" color="primary" >
                         Send
                         <MdSend style={{ marginLeft: 5, fontSize: 20}} />

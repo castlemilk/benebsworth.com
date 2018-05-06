@@ -11,18 +11,40 @@ import AboutFooter from './AboutFooter';
 export class AboutPage extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            windowWidth: window.innerWidth
+        }
+    }
+    componentWillMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
+      }
+      
+      // make sure to remove the listener
+      // when the component is not mounted anymore
+      componentWillUnmount() {
+        window.removeEventListener('resize', this.handleWindowSizeChange);
+      }
+      
+      handleWindowSizeChange = () => {
+        this.setState({ windowWidth: window.innerWidth });
+      };
+    handleSelect(active) {
+        this.setState({ isSelected: active})
     }
 
     render() {
+        const { windowWidth } = this.state;
+        const isMobile = windowWidth <=1000;
+        const shrinkHeader = windowWidth <= 350;
         return (<Grid>
             <Grid style={{ textAlign: 'center'}}>
-                <HeaderName />
+                <HeaderName size={ shrinkHeader ? 35 : 60} />
             </Grid>
             <Grid>
-                <AboutBody />
+                <AboutBody isMobile={isMobile}/>
             </Grid>
             <Grid>
-                <AboutFooter />
+                <AboutFooter isMobile={isMobile}/>
             </Grid>     
         </Grid>)
     }

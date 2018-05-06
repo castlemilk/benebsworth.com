@@ -18,9 +18,6 @@ import { ThemeProvider } from 'styled-components';
 import { Motion, spring } from 'react-motion';
 import { FaFacebookOfficial, FaTwitterSquare, FaInstagram, FaLinkedinSquare } from 'react-icons/lib/fa';
 import MdSend from 'react-icons/lib/md/send';
-
-import AboutContact from './AboutContact';
-import AboutSocial from './AboutSocial';
 const textInputTheme = createMuiTheme({
     pallete: createPalette({
         primary: white,
@@ -134,14 +131,13 @@ const styles = theme => ({
     },
   });
 const AboutFooterWrapper = styled.div`
-    height: 200px;
     display: inline-block;
     width: 100%;
 `
 const AboutSocialWrapper = styled.div`
     float: left;
     background-color: #ccc9c9;
-    height: 100%;
+    height: ${props => props.height || 200}px;
     width: 100%;
     .social-media-box {
         text-align: center;
@@ -157,7 +153,7 @@ const AboutSocialWrapper = styled.div`
     }
 `
 const AboutContactWrapper = styled.div`
-    height: 100%;
+    height: ${props => props.isMobile ? 275 : 200}px;
     width: 100%;
     float: right;
     background-color: black;
@@ -184,7 +180,7 @@ const AboutContactWrapper = styled.div`
     }
     button {
         margin-top: 50px;
-        float: right;
+        float: ${props => props.isMobile ? 'left' : 'right'}
     }
 
 
@@ -194,18 +190,37 @@ export class AboutFooter extends React.Component {
         super(props);
         this.state = { 
             isSelected: false,
+            isFocused: false,
+            isBlured: true,
             subject: '',
-            message: ''
+            message: '',
         }
-    }
-    handleSelect(active) {
-        this.setState({ isSelected: active})
     }
     handleChange = key => event => {
         this.setState({
           [key]: event.target.value,
         });
     };
+    handleSelect(active) {
+        this.setState({ isSelected: active})
+    }
+    handleFocus(focused) {
+        this.setState({ 
+            isFocused: true,
+            isSelected: true
+        })
+    }
+    handleBlur(blurred) {
+        this.setState({ 
+            isBlured: blurred,
+            isFocused: false,
+        })
+    }
+    handleMouseLeave() {
+        this.setState({
+            isSelected: this.state.isFocused ? true : false
+        })
+    }
     getSpringProps = () => {
         return {
           style: {
@@ -221,8 +236,9 @@ export class AboutFooter extends React.Component {
     render() {
         const height = 121;
         const fontSize = 50;
-        const { isSelected } = this.state;
-        const { classes } = this.props;
+        const { isSelected, isFocused } = this.state;
+        
+        const { classes, isMobile } = this.props;
         const socialView = (
             
             <AboutSocialWrapper>
@@ -255,6 +271,8 @@ export class AboutFooter extends React.Component {
                     placeholder="Message Subject"
                     value={this.state.subject}
                     onChange={this.handleChange('subject')}
+                    onFocus={() => this.handleFocus(true)}
+                    onBlur={() => this.handleBlur(true)}
                     margin="normal"
                     />
                 </MuiThemeProvider><br />
@@ -266,6 +284,8 @@ export class AboutFooter extends React.Component {
                         multiline={true}
                         value={this.state.message}
                         onChange={this.handleChange('message')}
+                        onFocus={() => this.handleFocus(true)}
+                        onBlur={() => this.handleBlur(true)}
                         rows={2}
                         rowsMax={3}
                         fullWidth={true}
@@ -280,35 +300,96 @@ export class AboutFooter extends React.Component {
                 <br />
             </AboutContactWrapper>
         )
-    
-    return (
+
+    const desktopView = (
         <Motion {...this.getSpringProps()}>
             {
-            tweenCollection => {
-                return (
-                <AboutFooterWrapper>
-                    <div className="social-box"
-                        style={{
-                            height: '100%',
-                            width: `${tweenCollection.socialWidth}%`,
-                            float: 'left' }} 
-                        >
-                        {socialView}
-                    </div>
-                    <div className="contact-box"
-                        style={{
-                            height: '100%',
-                            width: `${tweenCollection.contactWidth}%`,
-                            float: 'right'}} 
-                        onClick={() => this.handleSelect(true)}
-                        onMouseLeave={() => this.handleSelect(false)} >
-                        {contactView}
-                    </div>
-                </AboutFooterWrapper>
-                )
-            }
+                tweenCollection => {
+                    return (
+                    <AboutFooterWrapper>
+                        <div className="social-box"
+                            style={{
+                                height: '100%',
+                                width: `${tweenCollection.socialWidth}%`,
+                                float: 'left' }} 
+                            >
+                            {socialView}
+                        </div>
+                        <div className="contact-box"
+                            style={{
+                                height: '100%',
+                                width: `${tweenCollection.contactWidth}%`,
+                                float: 'right'}} 
+                            onClick={() => this.handleSelect(true)}
+                            onMouseEnter={() => this.handleSelect(true)}
+                            onMouseLeave={() => this.handleMouseLeave()} >
+                            {contactView}
+                        </div>
+                    </AboutFooterWrapper>
+                    )
+                }
             }
         </Motion>
+    )
+    const mobileView = (
+        <AboutFooterWrapper>
+                        <div className="social-box"
+                            style={{
+                                height: '100%',
+                                width: '100%' }} 
+                            >
+                            {socialView}
+                        </div>
+                        <div className="contact-box"
+                            style={{
+                                height: '100%',
+                                width: '100%' }} 
+                            >
+                            <AboutContactWrapper isMobile={isMobile} >
+                                <div className="contact-header" >
+                                    <span>
+                                    Contact.
+                                    </span><br />
+                                    
+                                </div>
+                                <MuiThemeProvider theme={textInputTheme}>
+                                        <TextField
+                                        label="Subject"
+                                        className={classes.textField}
+                                        placeholder="Message Subject"
+                                        value={this.state.subject}
+                                        onChange={this.handleChange('subject')}
+                                        margin="normal"
+                                        />
+                                    </MuiThemeProvider><br />
+                                    <MuiThemeProvider theme={textInputTheme}>
+                                        <TextField
+                                            className={classes.textField}
+                                            label="Message"
+                                            placeholder="Enter a message here"
+                                            multiline={true}
+                                            value={this.state.message}
+                                            onChange={this.handleChange('message')}
+                                            rows={2}
+                                            rowsMax={3}
+                                            fullWidth={true}
+                                            />
+                                    </MuiThemeProvider>
+                                    <br />
+                                    <MuiThemeProvider theme={this.contactValid() ? buttonThemeValid : buttonThemeInvalid}>
+                                        <Button className={classes.button} variant="raised" color="primary" >
+                                            Send
+                                            <MdSend style={{ marginLeft: 5, fontSize: 20}} />
+                                        </Button>
+                                    </MuiThemeProvider>
+                                </AboutContactWrapper>
+                                            </div>
+                    </AboutFooterWrapper>
+    )
+    
+    return (<div>
+       {isMobile ? mobileView: desktopView}
+       </div>
     )
     }
 }

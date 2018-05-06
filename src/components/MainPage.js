@@ -22,13 +22,15 @@ const items_advanced = [
     title: 'Blog',
     isComponent: true,
     color: false,
-    component: <BlogCard />
+    component: <BlogCard />,
+    path: '/blog'
   },
   {
     id: 3,
     title: 'Projects',
     isComponent: true,
-    component: <ProjectsCard />
+    component: <ProjectsCard />,
+    path: '/projects'
   }
 ]
 const MainPage = (props) => (

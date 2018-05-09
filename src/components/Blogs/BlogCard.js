@@ -12,8 +12,8 @@ const BlogCard = ({ title, description, image }) => (
  
     <Paper>
         <BlogWrapper>
-        {title}
-        {description}
+        {title}<br/>
+        {description}<br/>
         {image}
         </BlogWrapper>
     </Paper>

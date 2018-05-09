@@ -6,6 +6,7 @@ import Link from 'gatsby-link'
 
 import HeaderName from '../HeaderName';
 import AboutBody from './AboutBody';
+import AboutTimeLine from './AboutTimeLine';
 import AboutFooter from './AboutFooter';
 const StyledLink = styled(Link)`
   color: black;
@@ -48,6 +49,9 @@ export class AboutPage extends React.Component {
             </Grid>
             <Grid>
                 <AboutBody isMobile={isMobile}/>
+            </Grid>
+            <Grid>
+                <AboutTimeLine />
             </Grid>
             <Grid>
                 <AboutFooter isMobile={isMobile}/>

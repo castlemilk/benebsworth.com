@@ -36,7 +36,11 @@ const AboutBlurb = styled.div`
   }
 `
 
-
+const bio1 =`
+Oh so you'd like to know a little about me? Well I'm flattered. Here we go; Born to a Moroccan Diesel Mechanic and Australian Artist. I only just made it into could be described as a more driven mode of operation. I Am deeply passionate about learning and developing my understanding of the world, perhaps deriving personal existential meaning through this endevour. 
+              Strongly rooted in a belief of nuture over nature, and that effort will often trump gifted intelligence. Setting out to prove myself right by working dillgently to make my dreams come to fruition.
+              I bloomed late in a sense, unfortunately I didn't have any early tutillage to guide me into intellectual persuits. So I am catching up, albiet quickly, if I can say so myself.
+`
 const AboutBody = (props) => (
   <AboutBodyWrapper>
       <Paper>
@@ -46,7 +50,7 @@ const AboutBody = (props) => (
               <span>
                 Blurb.
               </span>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer accumsan magna ac interdum semper. Donec lobortis nulla id massa porta bibendum. Morbi feugiat nisi eget viverra condimentum. In et consectetur nulla, vel lobortis enim. Nunc vel luctus felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec molestie est nulla, vitae fringilla nibh aliquet ac. Integer imperdiet est vel arcu fermentum, vel varius nisl lobortis. Nulla tristique, nulla ac varius scelerisque, lorem nibh auctor felis, at scelerisque libero neque eget erat. Pellentesque accumsan aliquet turpis a mollis. Phasellus elementum cursus hendrerit. In sed venenatis erat. Curabitur a nulla dolor. Nam vitae ultrices massa. Integer suscipit commodo laoreet.
+              {bio1}
             </p>
           </div>
         </AboutBlurb>

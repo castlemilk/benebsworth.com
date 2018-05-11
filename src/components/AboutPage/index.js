@@ -7,10 +7,7 @@ import Link from 'gatsby-link'
 import HeaderName from '../HeaderName';
 import AboutBody from './AboutBody';
 import AboutFooter from './AboutFooter';
-const StyledLink = styled(Link)`
-  color: black;
-  text-decoration:none;
-`;
+
 
 export class AboutPage extends React.Component {
     constructor(props) {
@@ -42,9 +39,9 @@ export class AboutPage extends React.Component {
         const shrinkHeader = windowWidth <= 350;
         return (<Grid>
             <Grid style={{ textAlign: 'center'}}>
-                <StyledLink to="/" >
+                
                 <HeaderName size={ shrinkHeader ? 35 : 60} />
-                </StyledLink>
+               
             </Grid>
             <Grid>
                 <AboutBody isMobile={isMobile}/>

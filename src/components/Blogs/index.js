@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import styled from "styled-components"
+
+import { blogs } from './tests/fixtures'
 import BlogList from './BlogList';
 import HeaderName from '../HeaderName';
 
@@ -40,7 +42,7 @@ export class Blogs extends React.Component {
             <Grid style={{ textAlign: 'center'}}>
                 <HeaderName />
             </Grid>
-            <BlogList items={blogPosts} />
+            <BlogList items={blogs} />
         </BlogsWrapper>)
     }
 }

@@ -23,8 +23,10 @@
     "react-motion": "^0.5.2",
     "react-mt-svg-lines": "^0.8.3",
     "react-particles-js": "^2.1.2",
+    "react-popper": "^0.10.4",
     "react-reveal-text": "^0.1.1",
     "react-svgpathplayer": "^2.0.3",
+    "react-vertical-timeline-component": "^2.0.6",
     "snapsvg": "^0.5.1",
     "styled-components": "^3.2.6"
   },

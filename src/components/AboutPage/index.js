@@ -48,7 +48,7 @@ export class AboutPage extends React.Component {
                 <AboutBody isMobile={isMobile}/>
             </Grid>
             <Grid>
-                <AboutTimeLine />
+                {/* <AboutTimeLine /> */}
             </Grid>
             <Grid>
                 <AboutFooter isMobile={isMobile}/>

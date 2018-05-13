@@ -42,7 +42,6 @@ class ProjectsCard extends React.Component {
     var voronoi = d3.voronoi()
       .x(function (d) { return d.x })
       .y(function (d) { return d.y })
-      // .extent([[0, 0], [height, width]])
     var links = voronoi.links(nodes)
     var force = d3.forceSimulation()
       .nodes(nodes.slice())
@@ -51,13 +50,12 @@ class ProjectsCard extends React.Component {
     d3.select('.project-card-container')
       .on('touchmove mousemove', moved)
     var root = nodes.shift()
-    root.fixed = false;
+    root.fixed = true;
     function moved() {
       var p1 = d3.mouse(this)
       root.x = p1[0]
       root.y = p1[1]
-      nodes[0] = p1
-      force.alphaTarget(0.3).restart()
+      force.restart()
     };
     function ticked () {
       force.restart()

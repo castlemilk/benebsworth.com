@@ -1,9 +1,12 @@
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import FaAnchor from 'react-icons/lib/fa/anchor';
-
+import styled from 'styled-components';
 
 import React from 'react'
+
+const Wrapper = styled.div`
+`
 
 class AboutTimeLine extends React.Component {
     constructor(props) {
@@ -100,9 +103,9 @@ class AboutTimeLine extends React.Component {
           </VerticalTimeline>
         )
         return (
-            <div>
+            <Wrapper>
                 {content}
-            </div>
+            </Wrapper>
         )
     }
 }

@@ -14,11 +14,11 @@ class VerticalTimeline extends Component {
     }
 
     return (
-    <VerticalTimeline>
+    <VerticleTimelineWrapper>
         <div className={className.trim()}>
             {children}
         </div>
-    </VerticalTimeline>
+    </VerticleTimelineWrapper>
     );
   }
 }

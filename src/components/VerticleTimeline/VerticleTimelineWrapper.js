@@ -37,3 +37,5 @@ const VerticleTimelineWrapper = styled.div`
   }
 }
 `
+
+export default VerticleTimelineWrapper;

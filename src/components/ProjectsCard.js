@@ -36,7 +36,7 @@ class ProjectsCard extends React.Component {
     var height = 250;
     var width = 309;
     var pi = 2 * Math.PI;
-    var gravity = 0.05;
+    var gravity = 0.1;
     var sample = poissonDiscSampler(width+200, height+200, 20);
     var s;
     var canvas = d3.select('.project-card-container').append('canvas')
@@ -45,6 +45,7 @@ class ProjectsCard extends React.Component {
     var context = canvas.node().getContext("2d")
     var nodes = [{ x: 0, y: 0}]
     while (s = sample() ) nodes.push(s);
+    console.log(nodes)
     var voronoi = d3.voronoi()
       .x(function (d) { return d.x })
       .y(function (d) { return d.y })
@@ -54,9 +55,12 @@ class ProjectsCard extends React.Component {
 
     var force = d3.forceSimulation()
       .nodes(nodes.slice())
-      .force('charge', d3.forceManyBody().strength(function (d, i) { return i ? -30 : -180}))
-      .alphaTarget(0.1)
+      // .force('charge', d3.forceManyBody().strength(function () { return  -200 }))
+      .force('charge', d3.forceManyBody().strength(function (d, i) { return i ? -30 : -350}))
       .on('tick', ticked)
+      .alphaMin(0.2)
+      .alphaTarget(0.2)
+      .alpha(0.2)
     d3.select('.project-card-container')
       .on('touchmove mousemove', moved)
     function moved() {
@@ -74,7 +78,6 @@ class ProjectsCard extends React.Component {
         node.y += (node.cy - node.y) * gravity;
         node.x += (node.cx - node.x) * gravity;
       }
-  
       context.clearRect(0, 0, width, height);
   
       context.beginPath();

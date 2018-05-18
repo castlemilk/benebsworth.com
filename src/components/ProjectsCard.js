@@ -27,8 +27,8 @@ class ProjectsCard extends React.Component {
       super(props);
   }
   startAnimation() {
-    var height = 280;
-    var width = 350;
+    var height = 250;
+    var width = 309;
     var pi = 2 * Math.PI;
     var gravity = 0.05;
     var sample = poissonDiscSampler(width, height, 30);

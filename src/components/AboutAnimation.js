@@ -5,6 +5,10 @@ import CrossfadeImage from '../lib/CrossfadeImage';
 import MtSvgLines from 'react-mt-svg-lines';
 import AboutSVG from './AboutSVG';
 import AboutPNG from '../assets/images/portrait.png'
+/**
+ * TODO: add a spray-paint like animation that reveals the underlying rgb image beneath the black and white svg stenline, as the user mouses over the stencil
+ * it will spray paint reveal the underlying image.
+ */
 const RealImage = styled.div`
   -webkit-animation: 3s ease 0s normal forwards 1 fadein;
   animation: 3s ease 0s normal forwards 1 fadein;

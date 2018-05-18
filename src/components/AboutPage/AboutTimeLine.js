@@ -1,9 +1,13 @@
-import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
+// import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
+import { VerticalTimeline, VerticalTimelineElement }  from '../VerticleTimeline';
+// import 'react-vertical-timeline-component/style.min.css';
 import FaAnchor from 'react-icons/lib/fa/anchor';
-
+import styled from 'styled-components';
 
 import React from 'react'
+
+const Wrapper = styled.div`
+`
 
 class AboutTimeLine extends React.Component {
     constructor(props) {
@@ -12,8 +16,10 @@ class AboutTimeLine extends React.Component {
 
     render() {
         const content = (
-            <VerticalTimeline>
+            <VerticalTimeline animate={true} >
             <VerticalTimelineElement
+              position="right"
+              animate="true"
               className="vertical-timeline-element--work"
               date="2011 - present"
               iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
@@ -26,6 +32,8 @@ class AboutTimeLine extends React.Component {
               </p>
             </VerticalTimelineElement>
             <VerticalTimelineElement
+              position="left"
+              animate="true"
               className="vertical-timeline-element--work"
               date="2010 - 2011"
               iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
@@ -38,6 +46,8 @@ class AboutTimeLine extends React.Component {
               </p>
             </VerticalTimelineElement>
             <VerticalTimelineElement
+              position="right"
+              animate="true"
               className="vertical-timeline-element--work"
               date="2008 - 2010"
               iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
@@ -50,6 +60,8 @@ class AboutTimeLine extends React.Component {
               </p>
             </VerticalTimelineElement>
             <VerticalTimelineElement
+              position="left"
+              animate="true"
               className="vertical-timeline-element--work"
               date="2006 - 2008"
               iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
@@ -62,6 +74,8 @@ class AboutTimeLine extends React.Component {
               </p>
             </VerticalTimelineElement>
             <VerticalTimelineElement
+              position="right"
+              animate="true"
               className="vertical-timeline-element--education"
               date="April 2013"
               iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
@@ -74,6 +88,8 @@ class AboutTimeLine extends React.Component {
               </p>
             </VerticalTimelineElement>
             <VerticalTimelineElement
+              position="left"
+              animate="true"
               className="vertical-timeline-element--education"
               date="November 2012"
               iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
@@ -86,6 +102,36 @@ class AboutTimeLine extends React.Component {
               </p>
             </VerticalTimelineElement>
             <VerticalTimelineElement
+              position="right"
+              animate="true"
+              className="vertical-timeline-element--education"
+              date="2002 - 2006"
+              iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
+              icon={<FaAnchor />}
+            >
+              <h3 className="vertical-timeline-element-title">Bachelor of Science in Interactive Digital Media Visual Imaging</h3>
+              <h4 className="vertical-timeline-element-subtitle">Bachelor Degree</h4>
+              <p>
+                Creative Direction, Visual Design
+              </p>
+            </VerticalTimelineElement>
+            <VerticalTimelineElement
+              position="left"
+              animate="true"
+              className="vertical-timeline-element--education"
+              date="2002 - 2006"
+              iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
+              icon={<FaAnchor />}
+            >
+              <h3 className="vertical-timeline-element-title">Bachelor of Science in Interactive Digital Media Visual Imaging</h3>
+              <h4 className="vertical-timeline-element-subtitle">Bachelor Degree</h4>
+              <p>
+                Creative Direction, Visual Design
+              </p>
+            </VerticalTimelineElement>
+            <VerticalTimelineElement
+              position="right"
+              animate="true"
               className="vertical-timeline-element--education"
               date="2002 - 2006"
               iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
@@ -100,9 +146,9 @@ class AboutTimeLine extends React.Component {
           </VerticalTimeline>
         )
         return (
-            <div>
+            <Wrapper>
                 {content}
-            </div>
+            </Wrapper>
         )
     }
 }

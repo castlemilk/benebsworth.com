@@ -5,6 +5,11 @@ import {Motion, spring} from 'react-motion';
 import MtSvgLines from 'react-mt-svg-lines';
 import AboutPanel from './AboutPanel';
 import AboutAnimation from './AboutAnimation';
+
+/**
+ * TODO: add a spray-paint like animation that reveals the underlying rgb image beneath the black and white svg stenline, as the user mouses over the stencil
+ * it will spray paint reveal the underlying image.
+ */
 class AboutCard extends React.Component {
   constructor() {
       super();

@@ -28,6 +28,7 @@ export function poissonDiscSampler(width, height, radius) {
           // Reject candidates that are outside the allowed extent,
           // or closer than 2 * radius to any existing sample.
           if (0 <= x && x < width && 0 <= y && y < height && far(x, y)) return sample(x, y);
+          // if (x < width && y < height && far(x, y)) return sample(x, y);
         }
   
         queue[i] = queue[--queueSize];

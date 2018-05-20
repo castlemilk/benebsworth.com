@@ -33,7 +33,7 @@ class VerticalTimelineElement extends Component {
     }
 
     return (
-        <VerticalTimelineElementWrapper>
+        <VerticalTimelineElementWrapper isVisible={this.state.isVisible} >
         <div id={id} className={className} style={style}>
             <VisibilitySensor onChange={this.onVisibilitySensorChange}>
             <div>

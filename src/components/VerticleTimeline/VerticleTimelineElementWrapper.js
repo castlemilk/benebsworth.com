@@ -48,24 +48,24 @@ const VerticleTimelineElementWrapper = styled.div`
     }
 
     @media only screen and (min-width: 1170px) {
-    .vertical-timeline-element-icon {
-        width: 60px;
-        height: 60px;
-        left: 50%;
-        margin-left: -30px;
-        /* Force Hardware Acceleration in WebKit */
-        -webkit-transform: translateZ(0);
-        -webkit-backface-visibility: hidden;
-    }
-    .vertical-timeline--animate .vertical-timeline-element-icon.is-hidden {
-        visibility: hidden;
-    }
-    .vertical-timeline--animate .vertical-timeline-element-icon.bounce-in {
-        visibility: visible;
-        -webkit-animation: cd-bounce-1 0.6s;
-        -moz-animation: cd-bounce-1 0.6s;
-        animation: cd-bounce-1 0.6s;
-    }
+        .vertical-timeline-element-icon {
+            width: 60px;
+            height: 60px;
+            left: 50%;
+            margin-left: -30px;
+            /* Force Hardware Acceleration in WebKit */
+            -webkit-transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+        }
+        .vertical-timeline-element-icon.is-hidden {
+            visibility: hidden;
+        }
+        .vertical-timeline-element-icon.bounce-in {
+            visibility: visible;
+            -webkit-animation: cd-bounce-1 0.6s;
+            -moz-animation: cd-bounce-1 0.6s;
+            animation: cd-bounce-1 0.6s;
+        }
     }
 
     @-webkit-keyframes cd-bounce-1 {
@@ -233,10 +233,10 @@ const VerticleTimelineElementWrapper = styled.div`
         right: 124%;
         text-align: right;
     }
-    .vertical-timeline--animate .vertical-timeline-element-content.is-hidden {
+    .vertical-timeline-element-content.is-hidden {
         visibility: hidden;
     }
-    .vertical-timeline--animate .vertical-timeline-element-content.bounce-in {
+    .vertical-timeline-element-content.bounce-in {
         visibility: visible;
         -webkit-animation: cd-bounce-2 0.6s;
         -moz-animation: cd-bounce-2 0.6s;
@@ -246,8 +246,8 @@ const VerticleTimelineElementWrapper = styled.div`
 
     @media only screen and (min-width: 1170px) {
     /* inverse bounce effect on even content blocks */
-    .vertical-timeline--animate .vertical-timeline-element:nth-child(even):not(.vertical-timeline-element--left) .vertical-timeline-element-content.bounce-in,
-    .vertical-timeline--animate .vertical-timeline-element.vertical-timeline-element--right .vertical-timeline-element-content.bounce-in {
+    .vertical-timeline-element:nth-child(even):not(.vertical-timeline-element--left) .vertical-timeline-element-content.bounce-in,
+    .vertical-timeline-element.vertical-timeline-element--right .vertical-timeline-element-content.bounce-in {
         -webkit-animation: cd-bounce-2-inverse 0.6s;
         -moz-animation: cd-bounce-2-inverse 0.6s;
         animation: cd-bounce-2-inverse 0.6s;

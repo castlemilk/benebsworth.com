@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from "styled-components"
-import {Motion, spring} from 'react-motion';
+import { Motion, spring } from 'react-motion';
 import Paper from 'material-ui/Paper';
 
 import * as d3 from "d3";
@@ -35,7 +35,7 @@ class BlogCard extends React.Component {
       this.n = 20;
       this.m = 4;
       this.padding = 6;
-      this.maxSpeed = 300;
+      this.maxSpeed = 100;
       this.radius = d3.scaleSqrt().range([0, 8]);
       this.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.m));
       this.nodes = [];

@@ -1,6 +1,4 @@
-// import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import { VerticalTimeline, VerticalTimelineElement }  from '../VerticleTimeline';
-// import 'react-vertical-timeline-component/style.min.css';
 import FaAnchor from 'react-icons/lib/fa/anchor';
 import styled from 'styled-components';
 
@@ -21,7 +19,7 @@ class AboutTimeLine extends React.Component {
               position="right"
               animate="true"
               className="vertical-timeline-element--work"
-              date="2011 - present"
+              date="April, 2018 - present"
               iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
               icon={<FaAnchor style={{ fontSize: 10}} />}
             >

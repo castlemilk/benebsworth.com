@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom';
 import Paper from 'material-ui/Paper';
 import styled from 'styled-components';

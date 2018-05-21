@@ -5,9 +5,8 @@ import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
 
 const AboutBodyWrapper = styled.div`
-    text-align: center;
-    width: 100%;
-
+  text-align: center;
+  width: 100%;
 `
 const AboutBlurb = styled.div`
   @media (max-width: 991px) {

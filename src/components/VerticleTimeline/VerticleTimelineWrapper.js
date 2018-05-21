@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 const VerticleTimelineWrapper = styled.div`
+background-color: #e8e8e8;
 .vertical-timeline {
   width: 95%;
   max-width: 1170px;

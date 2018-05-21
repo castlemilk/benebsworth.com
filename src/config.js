@@ -18,19 +18,41 @@ export const headerCards = [
         path: '/projects'
     },
 ]
+const COLOR_SCHEME = {
+    gray: '',
+    green: '',
+    blue: '',
+    red: '',
+    yellow: '',
+    orange: '',
+    brown: '',
+    purple: '',
+    
+}
 export const skills = [
     [
         {
-            text: 'Kafka',
+            text: 'Istio',
             color: '#7f329c'
           },
           {
-            text: 'Openstack',
+            text: 'Kubernetes',
             color: '#f01742'
           },
           {
             text: 'Elasticsearch',
             color: '#25b2e1'
           },
+          {
+            text: 'AWS',
+            color: '#ff9800'
+          },
+          {
+            text: 'fluentbit',
+            color: '#f44336'
+          },
+    ],
+    [
+
     ]
 ]

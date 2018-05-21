@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const SkillsWrapper = styled.div`
 display: flex;
+flex-wrap: wrap;
 
 `
 const Skill = styled.div`
@@ -17,7 +18,7 @@ const Skill = styled.div`
 const Skills = (props) => (
     <SkillsWrapper>
     {props.skills.map((skill) =>
-        <Skill color={skill.color}>
+        <Skill color={skill.color} key={skill.text}>
         {skill.text}
         </Skill>
     )}

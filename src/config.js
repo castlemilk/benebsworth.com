@@ -18,3 +18,19 @@ export const headerCards = [
         path: '/projects'
     },
 ]
+export const skills = [
+    [
+        {
+            text: 'Kafka',
+            color: '#7f329c'
+          },
+          {
+            text: 'Openstack',
+            color: '#f01742'
+          },
+          {
+            text: 'Elasticsearch',
+            color: '#25b2e1'
+          },
+    ]
+]

@@ -1,6 +1,9 @@
 import { VerticalTimeline, VerticalTimelineElement }  from '../VerticleTimeline';
+import { skills } from '../../config';
+import Skills from '../Skills';
 import FaAnchor from 'react-icons/lib/fa/anchor';
 import styled from 'styled-components';
+
 
 import React from 'react'
 
@@ -28,6 +31,7 @@ class AboutTimeLine extends React.Component {
               <p>
                 Creative Direction, User Experience, Visual Design, Project Management, Team Leading
               </p>
+              <Skills skills={skills[0]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="left"

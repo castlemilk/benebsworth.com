@@ -49,7 +49,9 @@ class AboutTimeLine extends React.Component {
               <h3 className="vertical-timeline-element-title">DevOps Engineer</h3>
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>
               <p>
-                Building highly automated and robust platforms ontop of Kubernetes, Istio. Creating next-gen monitoring/observability capabilities
+                Building highly automated and robust platforms ontop of Kubernetes. Utilising service-mesh technologies such 
+                as Istio to enable sophisticated service-mesh micoservice architectures.
+                Additionally, enabling/creating next-generation monitoring/observability capabilities, CI/CD pipelines, and security pratices. 
               </p>
               <Skills skills={skills[0]}/>
             </VerticalTimelineElement>

@@ -38,38 +38,50 @@ export const skills = [
         {
             text: 'Istio',
             color: COLOR_SCHEME.blue
-          },
-          {
+        },
+        {
             text: 'Kubernetes',
             color: COLOR_SCHEME.darkblue
-          },
-          {
+        },
+        {
             text: 'Elasticsearch',
             color: COLOR_SCHEME.teal
-          },
-          {
+        },
+        {
             text: 'AWS',
             color: COLOR_SCHEME.orange
-          },
-          {
+        },
+        {
             text: 'Fluentbit',
             color: COLOR_SCHEME.green
-          },
-          {
+        },
+        {
             text: 'Jenkins',
             color: COLOR_SCHEME.red
-          },
-          {
+        },
+        {
             text: 'Docker',
             color: COLOR_SCHEME.blue
-          },
-          {
+        },
+        {
             text: 'Prometheus',
             color: COLOR_SCHEME.darkorange
-          },
-          {
+        },
+        {
             text: 'Python',
             color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Dex',
+            color: COLOR_SCHEME.purple
+        },
+        {
+            text: 'Oauth2',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'Okta',
+            color: COLOR_SCHEME.blue
         },
     ],
     [
@@ -98,6 +110,10 @@ export const skills = [
             color: COLOR_SCHEME.gray
         },
         {
+            text: 'Kafka Streams',
+            color: COLOR_SCHEME.purple
+        },
+        {
             text: 'Prometheus',
             color: COLOR_SCHEME.darkorange
         },
@@ -106,9 +122,17 @@ export const skills = [
             color: COLOR_SCHEME.green
         },
         {
+            text: 'Spark',
+            color: COLOR_SCHEME.orange
+        },
+        {
             text: 'Java',
             color: COLOR_SCHEME.blue
-        },  
+        },
+        {
+            text: 'S3',
+            color: COLOR_SCHEME.red
+        },
     ],
     [
         {

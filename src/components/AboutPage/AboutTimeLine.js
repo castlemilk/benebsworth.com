@@ -65,9 +65,9 @@ class AboutTimeLine extends React.Component {
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>
               <p>
                 Leading the build and development of small private cloud environment (4000 vCPU, 4 PB storage). 
-                As well building the application layer ontop which carried out large-scale message ingestion (capable of over 300k EPS)
+                As well building the application layer ontop which carried out large-scale message ingestion and transformation (capable of over 300k EPS)
               </p>
-              <Skills skills={skills[0]}/>
+              <Skills skills={skills[1]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="right"
@@ -84,7 +84,7 @@ class AboutTimeLine extends React.Component {
                 Experience with the typical networking vendors Cisco, Juniper, Palo Alto, Checkpoints and the respective CLI/GUI/Automation tooling.
                 Additionally, responsible for building out a range of small automation tools using Python and the Python SSH library Paramiko.
               </p>
-              <Skills skills={skills[0]}/>
+              <Skills skills={skills[2]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="left"
@@ -95,54 +95,29 @@ class AboutTimeLine extends React.Component {
               icon={monashLogoView}
             >
               <h2 className="vertical-timeline-element-header">Monash University</h2>
-              <h3 className="vertical-timeline-element-title">Bachelor of Electrical and Computer System Engineering</h3>
+              <h3 className="vertical-timeline-element-title">Bachelor of Electrical and Computer System Engineering (Honours)</h3>
               <p>
                 Thorough cirriculum which provided students with a deep experimental and hands-on experience with the design, build and analysis of 
                 complex real-time systems, imbedded electronics and analogue electronics. Additionally a foundational knowledge in computer science
               </p>
-              <Skills skills={skills[0]}/>
+              <Skills skills={skills[3]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="right"
               animate="true"
               className="vertical-timeline-element--education"
-              date="2002 - 2006"
-              iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
-              icon={<FaAnchor />}
+              date="2009 - 2013"
+              iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
+              icon={monashLogoView}
             >
-              <h3 className="vertical-timeline-element-title">Bachelor of Science in Interactive Digital Media Visual Imaging</h3>
-              <h4 className="vertical-timeline-element-subtitle">Bachelor Degree</h4>
+              <h2 className="vertical-timeline-element-header">Monash University</h2>
+              <h3 className="vertical-timeline-element-title">Bachelor of Science in Applied Mathematics and Experimental Physics</h3>
               <p>
-                Creative Direction, Visual Design
+              In depth expose to low-level scientific theories in physics such as quantum mechanics, partical physics, condensed matter and cosmology/astronomy
+              My applied mathematics major was confused in statistical and computational analysis with a strong coverage of partial and ordinary differential equations
+              Throughout the course a heavy emphasis was made on experimentation/laboratory work with extensive report writing and literature recviews.
               </p>
-            </VerticalTimelineElement>
-            <VerticalTimelineElement
-              position="left"
-              animate="true"
-              className="vertical-timeline-element--education"
-              date="2002 - 2006"
-              iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
-              icon={<FaAnchor />}
-            >
-              <h3 className="vertical-timeline-element-title">Bachelor of Science in Interactive Digital Media Visual Imaging</h3>
-              <h4 className="vertical-timeline-element-subtitle">Bachelor Degree</h4>
-              <p>
-                Creative Direction, Visual Design
-              </p>
-            </VerticalTimelineElement>
-            <VerticalTimelineElement
-              position="right"
-              animate="true"
-              className="vertical-timeline-element--education"
-              date="2002 - 2006"
-              iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
-              icon={<FaAnchor />}
-            >
-              <h3 className="vertical-timeline-element-title">Bachelor of Science in Interactive Digital Media Visual Imaging</h3>
-              <h4 className="vertical-timeline-element-subtitle">Bachelor Degree</h4>
-              <p>
-                Creative Direction, Visual Design
-              </p>
+              <Skills skills={skills[4]}/>
             </VerticalTimelineElement>
           </VerticalTimeline>
         )

@@ -19,40 +19,177 @@ export const headerCards = [
     },
 ]
 const COLOR_SCHEME = {
-    gray: '',
-    green: '',
-    blue: '',
-    red: '',
-    yellow: '',
-    orange: '',
-    brown: '',
-    purple: '',
+    gray: '#cecece',
+    green: '#a8e6cf',
+    teal: '#8bdaff',
+    blue: '#a8bde6',
+    darkblue: '#858ece',
+    red: '#ff8b94',
+    redpink: '#ff8b90',
+    yellow: '#ffeda4',
+    orange: '#ffd3b6',
+    darkorange: '#fb812c',
+    brown: '#bf7b26',
+    purple: '#cfa8e6',
     
 }
 export const skills = [
     [
         {
             text: 'Istio',
-            color: '#7f329c'
+            color: COLOR_SCHEME.blue
           },
           {
             text: 'Kubernetes',
-            color: '#f01742'
+            color: COLOR_SCHEME.darkblue
           },
           {
             text: 'Elasticsearch',
-            color: '#25b2e1'
+            color: COLOR_SCHEME.teal
           },
           {
             text: 'AWS',
-            color: '#ff9800'
+            color: COLOR_SCHEME.orange
           },
           {
-            text: 'fluentbit',
-            color: '#f44336'
+            text: 'Fluentbit',
+            color: COLOR_SCHEME.green
           },
+          {
+            text: 'Jenkins',
+            color: COLOR_SCHEME.red
+          },
+          {
+            text: 'Docker',
+            color: COLOR_SCHEME.blue
+          },
+          {
+            text: 'Prometheus',
+            color: COLOR_SCHEME.darkorange
+          },
+          {
+            text: 'Python',
+            color: COLOR_SCHEME.green
+        },
     ],
     [
-
+        {
+            text: 'Openstack',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'Kafka',
+            color: COLOR_SCHEME.purple
+        },
+        {
+            text: 'Jenkins',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'Elasticsearch',
+            color: COLOR_SCHEME.teal
+        },
+        {
+            text: 'Ceph',
+            color: COLOR_SCHEME.redpink
+        },
+        {
+            text: 'Ansible',
+            color: COLOR_SCHEME.gray
+        },
+        {
+            text: 'Prometheus',
+            color: COLOR_SCHEME.darkorange
+        },
+        {
+            text: 'Python',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Java',
+            color: COLOR_SCHEME.blue
+        },  
+    ],
+    [
+        {
+            text: 'Python',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Ansible',
+            color: COLOR_SCHEME.gray
+        },
+        {
+            text: 'Paramiko',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Cisco',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Juniper',
+            color: COLOR_SCHEME.purple
+        },
+        {
+            text: 'TCP/IP',
+            color: COLOR_SCHEME.gray
+        }, 
+    ],
+    [
+        {
+            text: 'Analogue Electronics & Circuit Design',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'C++',
+            color: COLOR_SCHEME.darkblue
+        },
+        {
+            text: 'RTOS and Imbedded Systems',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'FPGA design',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Engineering Optimisation & design',
+            color: COLOR_SCHEME.gray
+        },
+        {
+            text: 'MATLAB',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'Telecommunications',
+            color: COLOR_SCHEME.yellow
+        }, 
+    ],
+    [
+        {
+            text: 'Partial DE',
+            color: COLOR_SCHEME.gray
+        },
+        {
+            text: 'Ordinary DE',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'Statistics',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Linear algebra',
+            color: COLOR_SCHEME.yellow
+        },
+        {
+            text: 'Condensed Matter',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Particle Physics',
+            color: COLOR_SCHEME.gray
+        },  
     ]
 ]

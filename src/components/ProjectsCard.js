@@ -11,9 +11,7 @@ import AboutAnimation from './AboutAnimation';
 
 const ProjectCardWrapper = styled.div`
   canvas {
-    ${'' /* transform: translateY(-15px) translateX(-15px); */}
   }
-  ${'' /* overflow: hidden; */}
 `
 const CardTitle = styled.div`
   z-index: 10;
@@ -45,17 +43,14 @@ class ProjectsCard extends React.Component {
     var context = canvas.node().getContext("2d")
     var nodes = [{ x: 0, y: 0}]
     while (s = sample() ) nodes.push(s);
-    console.log(nodes)
     var voronoi = d3.voronoi()
       .x(function (d) { return d.x })
       .y(function (d) { return d.y })
-      // .size(width, height)
-      // .extent([[-1, -1], [width +100, height +100 ]])
     var links = voronoi.links(nodes)
 
+    // TODO: apply -30 charge force on force initialize and keep it active
     var force = d3.forceSimulation()
       .nodes(nodes.slice())
-      // .force('charge', d3.forceManyBody().strength(function () { return  -200 }))
       .force('charge', d3.forceManyBody().strength(function (d, i) { return i ? -30 : -350}))
       .on('tick', ticked)
       .alphaMin(0.2)
@@ -96,7 +91,7 @@ class ProjectsCard extends React.Component {
         context.moveTo(node.x, node.y);
         context.arc(node.x, node.y, 2, 0, pi);
       }
-      context.lineWidth = 3;
+      context.lineWidth = 2;
       context.strokeStyle = "#fff";
       context.stroke();
       context.fillStyle = "#000";

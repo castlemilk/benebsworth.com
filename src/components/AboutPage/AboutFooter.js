@@ -150,6 +150,9 @@ const AboutSocialWrapper = styled.div`
         .icon-github {
             text-decoration: none;
         }
+        .icon-github:hover {
+            color: #f7e2b0;
+        }
         .icon-github a {
             color:inherit;
             text-decoration: none;

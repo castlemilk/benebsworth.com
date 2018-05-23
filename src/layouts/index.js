@@ -12,6 +12,9 @@ h2,h3,h4 {
 p {
   font-family: 'Open Sans';
 }
+.vertical-timeline-element-date {
+  font-family: 'Days One';
+}
 `
 
 const Layout = ({ children, data }) => (

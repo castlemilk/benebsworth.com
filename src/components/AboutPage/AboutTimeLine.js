@@ -59,7 +59,7 @@ class AboutTimeLine extends React.Component {
               position="left"
               animate="true"
               className="vertical-timeline-element--work"
-              date="August, 2016 - 2018"
+              date="August, 2016 - April, 2018"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
               icon={telstraLogoView}
             >
@@ -75,7 +75,7 @@ class AboutTimeLine extends React.Component {
               position="right"
               animate="true"
               className="vertical-timeline-element--work"
-              date="2008 - 2010"
+              date="Febuary, 2015 - July, 2016"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
               icon={telstraLogoView}
             >
@@ -92,7 +92,7 @@ class AboutTimeLine extends React.Component {
               position="left"
               animate="true"
               className="vertical-timeline-element--education"
-              date="November 2014"
+              date="November, 2014"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
               icon={monashLogoView}
             >

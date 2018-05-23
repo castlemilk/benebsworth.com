@@ -23,7 +23,7 @@ class AboutTimeLine extends React.Component {
     render() {
       const digioLogoView = (
         <div style={{ display: 'flex', textAlign: 'center', height: '100%' }} >
-          <img style={{ margin: 'auto'}}src={DigioLogo} />
+          <img style={{ margin: 'auto'}} src={DigioLogo} />
         </div>
        )
        const telstraLogoView = (
@@ -111,7 +111,8 @@ class AboutTimeLine extends React.Component {
               icon={monashLogoView}
             >
               <h2 className="vertical-timeline-element-header">Monash University</h2>
-              <h3 className="vertical-timeline-element-title">Bachelor of Science in Applied Mathematics and Experimental Physics</h3>
+              <h3 className="vertical-timeline-element-title">Bachelor of Science </h3>
+              <h3 className="vertical-timeline-element-subtitle">Majoring in Applied Mathematics and Experimental Physics</h3>
               <p>
               In depth expose to low-level scientific theories in physics such as quantum mechanics, partical physics, condensed matter and cosmology/astronomy
               My applied mathematics major was confused in statistical and computational analysis with a strong coverage of partial and ordinary differential equations

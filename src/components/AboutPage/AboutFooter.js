@@ -16,7 +16,7 @@ import white from 'material-ui/colors';
 import { Input } from 'material-ui';
 import { ThemeProvider } from 'styled-components';
 import { Motion, spring } from 'react-motion';
-import { FaFacebookOfficial, FaTwitterSquare, FaInstagram, FaLinkedinSquare } from 'react-icons/lib/fa';
+import { FaFacebookOfficial, FaGithubSquare, FaTwitterSquare, FaLinkedinSquare } from 'react-icons/lib/fa';
 import MdSend from 'react-icons/lib/md/send';
 const textInputTheme = createMuiTheme({
     pallete: createPalette({
@@ -141,12 +141,22 @@ const AboutSocialWrapper = styled.div`
     width: 100%;
     .social-media-box {
         text-align: center;
-        float: left;
         background-color: #ccc9c9;
         width: 100%;
-
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        .icon-facebook:hover {
+            color: #4267b2;
+        }
+        .icon-twitter:hover {
+            color: #1ea1f2;
+        }
+        .icon-linkedin:hover {
+            color: #0077b5;
+        }
     }
-    .social-header span{
+    .social-header span {
         font-size: 30px;
         font-family: 'Days One';
         margin-left: 10px;
@@ -249,10 +259,18 @@ export class AboutFooter extends React.Component {
                 
                 </div>
                 <div className="social-media-box">
-                        <FaInstagram style={{ height, fontSize, color: '#000000' }} />
-                        <FaLinkedinSquare style={{height, fontSize, color: '#000000' }} />
-                        <FaTwitterSquare style={{height, fontSize, color: '#000000' }} />
-                        <FaFacebookOfficial style={{height, fontSize, color: '#000000' }} />
+                    <div className="icon-github" >
+                        <FaGithubSquare  style={{ height, fontSize }} />
+                    </div>
+                    <div className="icon-linkedin" >
+                        <FaLinkedinSquare  style={{height, fontSize }} />
+                    </div>
+                    <div className="icon-twitter" >
+                        <FaTwitterSquare  style={{height, fontSize }} />
+                    </div>
+                    <div className="icon-facebook" >
+                        <FaFacebookOfficial  style={{height, fontSize }} />
+                    </div>
                 </div>
             </AboutSocialWrapper>
         )

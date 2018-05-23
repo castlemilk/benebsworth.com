@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
+import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/createPalette'
@@ -279,19 +280,19 @@ export class AboutFooter extends React.Component {
                 </div>
                 <div className="social-media-box">
                     <div className="icon-github" >
-                        <a href="https://github.com/castlemilk" >
+                        <OutboundLink href="https://github.com/castlemilk" >
                             <FaGithubSquare  style={{ height, fontSize }} />
-                        </a>
+                        </OutboundLink>
                     </div>
                     <div className="icon-linkedin" >
-                        <a href="https://www.linkedin.com/in/ben-ebsworth/" >
+                        <OutboundLink href="https://www.linkedin.com/in/ben-ebsworth/" >
                             <FaLinkedinSquare  style={{height, fontSize }} />
-                        </a>
+                        </OutboundLink>
                     </div>
                     <div className="icon-twitter" >
-                        <a href="https://twitter.com/sycli?lang=en" >
+                        <OutboundLink href="https://twitter.com/sycli?lang=en" >
                             <FaTwitterSquare  style={{height, fontSize }} />
-                        </a>
+                        </OutboundLink>
                     </div>
                     <div className="icon-facebook" >
                         <FaFacebookOfficial  style={{height, fontSize }} />

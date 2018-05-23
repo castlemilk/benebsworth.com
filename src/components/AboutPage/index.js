@@ -14,24 +14,31 @@ export class AboutPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            windowWidth: window.innerWidth
+            windowWidth: 0
         }
+        this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
     }
-    componentWillMount() {
-        window.addEventListener('resize', this.handleWindowSizeChange);
-      }
+    // componentWillMount() {
+    //     window.addEventListener('resize', this.handleWindowSizeChange);
+    // }
       
       // make sure to remove the listener
       // when the component is not mounted anymore
-      componentWillUnmount() {
-        window.removeEventListener('resize', this.handleWindowSizeChange);
-      }
+    componentWillUnmount() {
+        typeof window !== 'undefined' && window.removeEventListener('resize', this.handleWindowSizeChange);
+    }
       
-      handleWindowSizeChange = () => {
+    handleWindowSizeChange() {
         this.setState({ windowWidth: window.innerWidth });
-      };
+    };
     handleSelect(active) {
         this.setState({ isSelected: active})
+    }
+    componentDidMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
+        this.setState({
+            windowWidth: window.innerWidth
+        })
     }
 
     render() {
@@ -39,13 +46,11 @@ export class AboutPage extends React.Component {
         //TODO:  * Add Certification view
 
         const { windowWidth } = this.state;
-        const isMobile = windowWidth <=1000;
+        const isMobile = windowWidth <= 1000;
         const shrinkHeader = windowWidth <= 400;
         return (<Grid>
             <Grid style={{ textAlign: 'center'}}>
-                
                 <HeaderName size={ shrinkHeader ? 35 : 60} />
-               
             </Grid>
             <Grid>
                 <AboutBody isMobile={isMobile}/>

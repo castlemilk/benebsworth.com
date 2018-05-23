@@ -35,9 +35,12 @@ export class AboutPage extends React.Component {
     }
 
     render() {
+        //TODO:  * Add Skills summary view
+        //TODO:  * Add Certification view
+
         const { windowWidth } = this.state;
         const isMobile = windowWidth <=1000;
-        const shrinkHeader = windowWidth <= 350;
+        const shrinkHeader = windowWidth <= 400;
         return (<Grid>
             <Grid style={{ textAlign: 'center'}}>
                 

@@ -146,14 +146,30 @@ const AboutSocialWrapper = styled.div`
         display: flex;
         justify-content: center;
         align-content: center;
+        text-decoration: none;
+        .icon-github {
+            text-decoration: none;
+        }
+        .icon-github a {
+            color:inherit;
+            text-decoration: none;
+        }
         .icon-facebook:hover {
             color: #4267b2;
         }
         .icon-twitter:hover {
             color: #1ea1f2;
         }
+        .icon-twitter a {
+            color:inherit;
+            text-decoration: none;
+        }
         .icon-linkedin:hover {
             color: #0077b5;
+        }
+        .icon-linkedin a {
+            color:inherit;
+            text-decoration: none;
         }
     }
     .social-header span {
@@ -260,13 +276,19 @@ export class AboutFooter extends React.Component {
                 </div>
                 <div className="social-media-box">
                     <div className="icon-github" >
-                        <FaGithubSquare  style={{ height, fontSize }} />
+                        <a href="https://github.com/castlemilk" >
+                            <FaGithubSquare  style={{ height, fontSize }} />
+                        </a>
                     </div>
                     <div className="icon-linkedin" >
-                        <FaLinkedinSquare  style={{height, fontSize }} />
+                        <a href="https://www.linkedin.com/in/ben-ebsworth/" >
+                            <FaLinkedinSquare  style={{height, fontSize }} />
+                        </a>
                     </div>
                     <div className="icon-twitter" >
-                        <FaTwitterSquare  style={{height, fontSize }} />
+                        <a href="https://twitter.com/sycli?lang=en" >
+                            <FaTwitterSquare  style={{height, fontSize }} />
+                        </a>
                     </div>
                     <div className="icon-facebook" >
                         <FaFacebookOfficial  style={{height, fontSize }} />

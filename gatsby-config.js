@@ -10,6 +10,7 @@ module.exports = {
       options: {
         fonts: [
         'Days One',
+        'Open Sans'
         ]
       }
   }

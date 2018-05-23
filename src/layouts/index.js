@@ -3,7 +3,16 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 
 import Header from '../components/header'
-import './index.css'
+import { injectGlobal } from 'styled-components'
+
+injectGlobal`
+h2,h3,h4 {
+  font-family: 'Days One';
+}
+p {
+  font-family: 'Open Sans';
+}
+`
 
 const Layout = ({ children, data }) => (
   <div>

@@ -14,7 +14,7 @@ export class AboutPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            windowWidth: 0
+            windowWidth: 1700
         }
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
     }

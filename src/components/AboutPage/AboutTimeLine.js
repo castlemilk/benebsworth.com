@@ -1,7 +1,8 @@
 import { VerticalTimeline, VerticalTimelineElement }  from '../VerticleTimeline';
 import { skills } from '../../config';
 import Skills from '../Skills';
-import DigioLogo from '../../assets/images/digio-logo.png';
+import DigioLogoLarge from '../../assets/images/digio-logo.png';
+import DigioLogoSmall from '../../assets/images/digio-logo-small.png';
 import TelstraLogo from '../../assets/images/telstra-logo.png'
 import MonashLogo from '../../assets/images/monash-logo.png';
 import FaAnchor from 'react-icons/lib/fa/anchor';
@@ -23,7 +24,7 @@ class AboutTimeLine extends React.Component {
     render() {
       const digioLogoView = (
         <div style={{ display: 'flex', textAlign: 'center', height: '100%' }} >
-          <img style={{ margin: 'auto'}} src={DigioLogo} />
+          <img style={{ margin: 'auto'}} src={DigioLogoLarge} width={ window.innerWidth <= 400 ? "70%" : "100%" }/>
         </div>
        )
        const telstraLogoView = (
@@ -44,7 +45,7 @@ class AboutTimeLine extends React.Component {
               className="vertical-timeline-element--work"
               date="April, 2018 - present"
               iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
-              icon={digioLogoView}
+              icon={digioLogoView }
             >
               <h3 className="vertical-timeline-element-title">DevOps Engineer</h3>
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>

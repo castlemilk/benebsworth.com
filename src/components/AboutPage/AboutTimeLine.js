@@ -22,11 +22,21 @@ class AboutTimeLine extends React.Component {
     }
 
     render() {
-      const digioLogoView = (
-        <div style={{ display: 'flex', textAlign: 'center', height: '100%' }} >
-          <img style={{ margin: 'auto'}} src={DigioLogoLarge} width={ window.innerWidth <= 400 ? "70%" : "100%" }/>
-        </div>
-       )
+      let digioLogoView;
+      if (typeof window !== 'undefined') {
+        digioLogoView = (
+          <div style={{ display: 'flex', textAlign: 'center', height: '100%' }} >
+            <img style={{ margin: 'auto'}} src={DigioLogoLarge} width={ window.innerWidth <= 400 ? "70%" : "100%" }/>
+          </div>
+         )
+      } else {
+        digioLogoView = (
+          <div style={{ display: 'flex', textAlign: 'center', height: '100%' }} >
+            <img style={{ margin: 'auto'}} src={DigioLogoLarge} width={"100%"}/>
+          </div>
+         )
+      }
+      
        const telstraLogoView = (
         <div style={{ display: 'flex', textAlign: 'center', height: '100%' }} >
           <img style={{ margin: 'auto'}} src={TelstraLogo} />
@@ -45,7 +55,7 @@ class AboutTimeLine extends React.Component {
               className="vertical-timeline-element--work"
               date="April, 2018 - present"
               iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
-              icon={digioLogoView }
+              icon={digioLogoView}
             >
               <h3 className="vertical-timeline-element-title">DevOps Engineer</h3>
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>

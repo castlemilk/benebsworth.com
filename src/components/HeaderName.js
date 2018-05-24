@@ -8,19 +8,26 @@ const StyledLink = styled(Link)`
   font-family: 'Days One';
   margin-bottom: 30
 `;
+
 class HeaderName extends React.Component {
     constructor(props) {
         super(props);
         this.state = { show: false };
     }
     componentDidMount() {
-        setTimeout(() => {
-          this.setState({ show: true });
+        this._ismounted = true;
+        this.transitionTimeout = setTimeout(() => {
+            if (this._ismounted) {
+                this.setState({ show: true });
+            }
         }, 1000);
-      }
+    }
+    componentWillUnmount() {
+        clearTimeout(this.transitionTimeout);
+    }
     render() {
         return <StyledLink to="/" size={this.props.size}><ReactRevealText style={{ fontSize: this.props.size || 60 }} show={this.state.show} >BEN EBSWORTH</ReactRevealText></StyledLink>
     }
 }
 
-export default HeaderName
+export default HeaderName;

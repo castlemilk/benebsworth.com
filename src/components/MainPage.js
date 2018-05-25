@@ -7,7 +7,7 @@ import AboutAnimation from './AboutAnimation';
 import AboutPanel from './AboutPanel';
 import BlogCard from './BlogCard';
 import ProjectsCard from './ProjectsCard';
-const items = ["dog", "cat", "mouse"]
+const items = [{ title: "dog"}, { title: "cat"}, {title: "mouse"}]
 const items_advanced = [
   {
     id: 1,
@@ -33,15 +33,24 @@ const items_advanced = [
     path: '/projects'
   }
 ]
-const MainPage = (props) => (
-  <div>
-    <Grid style={{ textAlign: 'center'}}>
-      <HeaderName />
-    </Grid>
-    <Grid>
-      <HeaderCardDisplay items={items_advanced} />
-    </Grid>
-  </div>
-)
+class MainPage extends React.Component {
+  constructor() {
+    super()
+    this.state = { loading: true }
+  }
+  
+  componentWillMount() {
+    this.setState({ loading: false})
+  }
+  render() {
+    return this.state.loading ? <div>loading</div> : (<div>
+          <Grid style={{ textAlign: 'center'}}>
+            <HeaderName />
+          </Grid>
+          <Grid >
+            <HeaderCardDisplay items={items} />
+          </Grid>
+        </div>)}
+}
 
 export default MainPage

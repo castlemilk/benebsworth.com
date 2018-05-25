@@ -21,24 +21,32 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
   },
 });
-const HeaderCardDisplay = (props) => {
-  const plainCard = (key, text, color) => {
-    return (<Paper key={key} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 250}} >
-        <HeaderCard key={key} text={text} color={color} />
-    </Paper>)
+class HeaderCardDisplay extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { loading: true }
   }
-  const cards =props.items.map(({ title, id, isComponent, component, color, path }) => (
-    <Grid key={id} xs={12} sm={6} md={4} lg={4} item className={styles.paper} >
-      { isComponent ? <StyledLink to={path}>{component}</StyledLink> : plainCard(id, title, color)}
-  </Grid>
-))
-  return (
-    <div style={{  textAlign: 'center' }} >
-      <Grid container spacing={16}>
-          {cards}
-      </Grid>
-    </div>
-  )
+  componentWillMount() {
+    this.setState({ loading: false})
+  }
+  render() {
+    const plainCard = (key, text, color) => {
+      return (<Paper key={key} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 250}} >
+          <HeaderCard key={key} text={text} color={color} />
+      </Paper>)
+    }
+    const cards =this.state.loading ? [] : this.props.items.map(({ title, id, isComponent, component, color, path }) => (
+      <Grid key={id || title} xs={12} sm={12} md={4} lg={4} item >
+        { isComponent ? <StyledLink to={path}>{component}</StyledLink> : plainCard(id, title, color)}
+    </Grid>
+    ))
+    return this.state.loading ? <div>loading</div> : (
+      <div style={{  textAlign: 'center' }} >
+        <Grid container spacing={16}>
+            {cards}
+        </Grid>
+      </div>
+    )}
 }
 
 export default HeaderCardDisplay

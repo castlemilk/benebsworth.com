@@ -48,7 +48,7 @@ class MainPage extends React.Component {
             <HeaderName />
           </Grid>
           <Grid >
-            <HeaderCardDisplay items={items} />
+            <HeaderCardDisplay items={items_advanced} />
           </Grid>
         </div>)}
 }

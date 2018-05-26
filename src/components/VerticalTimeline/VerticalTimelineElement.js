@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import VisibilitySensor from 'react-visibility-sensor';
 
-import VerticalTimelineElementWrapper from './VerticleTimelineElementWrapper';
+import VerticalTimelineElementWrapper from './VerticalTimelineElementWrapper';
 
 
-class VerticalTimelineElement extends Component {
+class VerticalTimelineElement extends React.Component {
   constructor(props) {
     super(props);
     this.onVisibilitySensorChange = this.onVisibilitySensorChange.bind(this);

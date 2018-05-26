@@ -1,5 +1,6 @@
 import styled from 'styled-components'; 
-const VerticleTimelineElementWrapper = styled.div`
+
+const VerticalTimelineElementWrapper = styled.div`
     .vertical-timeline-element {
         position: relative;
         margin: 2em 0;
@@ -369,4 +370,4 @@ const VerticleTimelineElementWrapper = styled.div`
     }
 `
 
-export default VerticleTimelineElementWrapper;
+export default VerticalTimelineElementWrapper;

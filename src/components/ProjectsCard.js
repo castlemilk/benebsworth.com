@@ -29,76 +29,86 @@ const CardTitle = styled.div`
 class ProjectsCard extends React.Component {
   constructor(props) {
       super(props);
+      this.state = {
+        height: 250,
+        width: 309,
+        pi: 2 * Math.PI,
+        gravity: 0.1,
+        sample: [],
+        s: null,
+        nodes: [],
+        context: null,
+        voronoi: null,
+        force: null,
+        links: null,
+      }
   }
   startAnimation() {
-    var height = 250;
-    var width = 309;
-    var pi = 2 * Math.PI;
-    var gravity = 0.1;
-    var sample = poissonDiscSampler(width+200, height+200, 20);
-    var s;
-    var canvas = d3.select('.project-card-container').append('canvas')
-      .attr('width', width)
-      .attr('height', height)
-    var context = canvas.node().getContext("2d")
-    var nodes = [{ x: 0, y: 0}]
-    while (s = sample() ) nodes.push(s);
-    var voronoi = d3.voronoi()
+    this.state.sample = poissonDiscSampler(this.state.width+200, this.state.height+200, 20);
+    this.state.canvas = d3.select('.project-card-container').append('canvas')
+      .attr('width', this.state.width)
+      .attr('height', this.state.height)
+    this.state.context = this.state.canvas.node().getContext("2d")
+    this.state.nodes = [{ x: 0, y: 0}]
+    while (this.state.s = this.state.sample() ) this.state.nodes.push(this.state.s);
+    this.state.voronoi = d3.voronoi()
       .x(function (d) { return d.x })
       .y(function (d) { return d.y })
-    var links = voronoi.links(nodes)
+    this.state.links = this.state.voronoi.links(this.state.nodes)
+    
 
     // TODO: apply -30 charge force on force initialize and keep it active
-    var force = d3.forceSimulation()
-      .nodes(nodes.slice())
+    this.state.force = d3.forceSimulation()
+      .nodes(this.state.nodes.slice())
       .force('charge', d3.forceManyBody().strength(function (d, i) { return i ? -30 : -350}))
-      .on('tick', ticked)
+      .on('tick', () => this.ticked())
       .alphaMin(0.2)
       .alphaTarget(0.2)
       .alpha(0.2)
+    var nodes = this.state.nodes;
+    var force = this.state.force;
     d3.select('.project-card-container')
-      .on('touchmove mousemove', moved)
-    function moved() {
-      var p1 = d3.mouse(this)
-      nodes[0].x = p1[0]
-      nodes[0].y = p1[1]
-      force.restart()
-    };
-    function ticked () {
-      
-      force.restart()
-      
-      for (var i = 0, n = nodes.length; i < n; ++i) {
-        var node = nodes[i];
-        node.y += (node.cy - node.y) * gravity;
-        node.x += (node.cx - node.x) * gravity;
-      }
-      context.clearRect(0, 0, width, height);
-  
-      context.beginPath();
-      for (var i = 0, n = links.length; i < n; ++i) {
-        var link = links[i];
-        context.moveTo(link.source.x, link.source.y);
-        context.lineTo(link.target.x, link.target.y);
-      }
-      context.lineWidth = 1;
-      context.strokeStyle = "#bbb";
-      context.stroke();
-  
-      context.beginPath();
-      for (var i = 0, n = nodes.length; i < n; ++i) {
-        var node = nodes[i];
-        context.moveTo(node.x, node.y);
-        context.arc(node.x, node.y, 2, 0, pi);
-      }
-      context.lineWidth = 2;
-      context.strokeStyle = "#fff";
-      context.stroke();
-      context.fillStyle = "#000";
-      context.fill();
-    };
-    
+      .on('touchmove mousemove', function () {
+        var p1 = d3.mouse(this)
+        nodes[0].x = p1[0]
+        nodes[0].y = p1[1]
+        force.restart()
+      })
   }
+
+ 
+  ticked () {
+    this.state.force.restart()
+    
+    for (var i = 0, n = this.state.nodes.length; i < n; ++i) {
+      var node = this.state.nodes[i];
+      node.y += (node.cy - node.y) * this.state.gravity;
+      node.x += (node.cx - node.x) * this.state.gravity;
+    }
+    this.state.context.clearRect(0, 0, this.state.width, this.state.height);
+
+    this.state.context.beginPath();
+    for (var i = 0, n = this.state.links.length; i < n; ++i) {
+      var link = this.state.links[i];
+      this.state.context.moveTo(link.source.x, link.source.y);
+      this.state.context.lineTo(link.target.x, link.target.y);
+    }
+    this.state.context.lineWidth = 1;
+    this.state.context.strokeStyle = "#bbb";
+    this.state.context.stroke();
+
+    this.state.context.beginPath();
+    for (var i = 0, n = this.state.nodes.length; i < n; ++i) {
+      var node = this.state.nodes[i];
+      this.state.context.moveTo(node.x, node.y);
+      this.state.context.arc(node.x, node.y, 2, 0, this.state.pi);
+    }
+    this.state.context.lineWidth = 2;
+    this.state.context.strokeStyle = "#fff";
+    this.state.context.stroke();
+    this.state.context.fillStyle = "#000";
+    this.state.context.fill();
+  };
   
   
   

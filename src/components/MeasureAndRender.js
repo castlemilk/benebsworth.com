@@ -5,16 +5,19 @@ import React from "react";
 import debounce from "debounce";
 
 class MeasureAndRender extends React.Component {
-  state = {
-    measurement: null,
-    hasMeasured: false
-  };
-
-  onWindowResize = debounce(() => {
-    this.setState({
-      measurement: this.el.getBoundingClientRect()
-    });
-  }, this.props.debounce || 100);
+  constructor(props) {
+    super(props);
+    this.state = {
+      measurement: null,
+      hasMeasured: false
+    };
+    this.onWindowResize = debounce(() => {
+      this.setState({
+        measurement: this.el.getBoundingClientRect()
+      });
+    }, this.props.debounce || 100);
+  }
+  
 
   componentDidMount() {
     this.setState({

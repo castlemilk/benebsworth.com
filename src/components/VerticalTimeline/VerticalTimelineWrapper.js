@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-const VerticleTimelineWrapper = styled.div`
+
+const VerticalTimelineWrapper = styled.div`
 background-color: #e8e8e8;
 .vertical-timeline {
   width: 95%;
@@ -39,4 +40,4 @@ background-color: #e8e8e8;
 }
 `
 
-export default VerticleTimelineWrapper;
+export default VerticalTimelineWrapper;

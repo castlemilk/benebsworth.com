@@ -1,4 +1,4 @@
-import { VerticalTimeline, VerticalTimelineElement }  from '../VerticleTimeline';
+import { VerticalTimeline, VerticalTimelineElement }  from '../VerticalTimeline';
 import { skills } from '../../config';
 import Skills from '../Skills';
 import DigioLogoLarge from '../../assets/images/digio-logo.png';

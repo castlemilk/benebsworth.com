@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import VerticleTimelineWrapper from './VerticleTimelineWrapper';
+import VerticalTimelineWrapper from './VerticalTimelineWrapper';
 
-class VerticalTimeline extends Component {
+class VerticalTimeline extends React.Component {
   render() {
     const { animate, children } = this.props;
     let { className } = this.props;
@@ -14,11 +14,11 @@ class VerticalTimeline extends Component {
     }
 
     return (
-    <VerticleTimelineWrapper>
+    <VerticalTimelineWrapper>
         <div className={className.trim()}>
             {children}
         </div>
-    </VerticleTimelineWrapper>
+    </VerticalTimelineWrapper>
     );
   }
 }

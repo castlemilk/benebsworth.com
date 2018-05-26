@@ -21,17 +21,28 @@
 //      });
 //    });
 // };
-exports.modifyWebpackConfig = ({ config, stage }) => {
-  if (stage === "build-html") {
-    config.loader("snapsvg", {
-      test: require.resolve('snapsvg'),
-      loader: 'imports-loader?this=>window,fix=>module.exports=0'
-    });
-    config.loader("svgpathplayer", {
-      test: /svgpathplayer/,
-      loader: 'imports-loader?this=>window,fix=>module.exports=0'
-    });
-  }
-
-  return config;
+exports.onCreateWebpackConfig = ({ stage,
+  rules,
+  loaders,
+  plugins,
+  actions, }) => {
+  actions.setWebpackConfig({
+    module: {
+      rules: [
+        {
+          test: require.resolve('snapsvg'),
+          loader: 'imports-loader?this=>window,fix=>module.exports=0'
+        },
+        {
+          test: /svgpathplayer/,
+          loader: 'imports-loader?this=>window,fix=>module.exports=0'
+        }
+      ]
+    },
+    plugins: [
+      plugins.define({
+        __DEVELOPMENT__: stage === `develop` || stage === `develop-html`,
+      }),
+    ],
+  })
 };

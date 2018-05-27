@@ -12,8 +12,13 @@ import styled from 'styled-components';
 import React from 'react'
 
 const Wrapper = styled.div`
+  .title {
+    font-family: 'Days One';
+    font-size: 40px;
+    background: #e8e8e8;
+    padding-left: 10px;
+  }
 
- 
 `
 
 class AboutTimeLine extends React.Component {
@@ -137,7 +142,11 @@ class AboutTimeLine extends React.Component {
         )
         return (
             <Wrapper>
+            <div className='title'>
+              Career
+            </div>
                 {content}
+            
             </Wrapper>
         )
     }

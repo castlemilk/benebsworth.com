@@ -6,6 +6,8 @@ background-color: #e8e8e8;
   width: 95%;
   max-width: 1170px;
   margin: 2em auto;
+  margin-top: 0;
+  margin-bottom: 0;
   position: relative;
   padding: 2em 0;
 }
@@ -29,8 +31,8 @@ background-color: #e8e8e8;
 
 @media only screen and (min-width: 1170px) {
   .vertical-timeline {
-    margin-top: 3em;
-    margin-bottom: 3em;
+    margin-top: 0;
+    margin-bottom: 1em;
     width: 90%;
   }
   .vertical-timeline:before {

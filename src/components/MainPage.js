@@ -50,24 +50,26 @@ class MainPage extends React.Component {
       padding: '0px 1.0875rem 1.45rem',
       paddingTop: 0,
   }} >
-      {/* <Container>
+      <Container>
             <Grid style={{ textAlign: 'center'}}>
               <HeaderName />
             </Grid>
             <Grid >
               <HeaderCardDisplay items={items_advanced} />
             </Grid>
-      </Container> */}
-      <Container>
+      </Container>
+      {/* <Container>
             <Row>
               <div style={{ textAlign: 'center', width: '100%'}}>
               <HeaderName />
               </div>
             </Row>
             <Row >
+            <div style={{ textAlign: 'center', width: '100%'}}>
               <HeaderCardDisplay items={items_advanced} />
+            </div>
             </Row>
-      </Container>
+      </Container> */}
         </div>)}
 }
 

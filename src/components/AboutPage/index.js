@@ -18,31 +18,22 @@ export class AboutPage extends React.Component {
         }
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
     }
-    componentWillMount() {
-        window.addEventListener('resize', this.handleWindowSizeChange);
-    }
       
       // make sure to remove the listener
       // when the component is not mounted anymore
     componentWillUnmount() {
         typeof window !== 'undefined' && window.removeEventListener('resize', this.handleWindowSizeChange);
     }
-      
+    componentDidMount() {
+        typeof window !== 'undefined' && setTimeout(window.addEventListener('resize', this.handleWindowSizeChange));
+    }
     handleWindowSizeChange() {
         typeof window !== 'undefined' && setTimeout(this.setState({ windowWidth: window.innerWidth }));
     };
     handleSelect(active) {
         this.setState({ isSelected: active})
     }
-    componentWillMount() {
-        typeof window !== 'undefined' && setTimeout(this.setState({
-            windowWidth: window.innerWidth
-        }))
-    }
-    componentDidMount() {
-        setTimeout(window.addEventListener('resize', this.handleWindowSizeChange));
-        
-    }
+
 
     render() {
         //TODO:  * Add Skills summary view

@@ -14,6 +14,9 @@ module.exports = {
         ]
       }
   },
+  // {
+  //   resolve: 'gatsby-plugin-material-ui'
+  // }
   {
     resolve: `gatsby-plugin-google-analytics`,
     options: {
@@ -21,11 +24,9 @@ module.exports = {
       // Puts tracking script in the head instead of the body
       head: false,
       // Setting this parameter is optional
-      anonymize: true,
+      anonymize: false,
       // Setting this parameter is also optional
-      respectDNT: true,
-      // Avoids sending pageview hits from custom paths
-      exclude: ["/preview/**", "/do-not-track/me/too/"],
+      respectDNT: false
     },
   },
   ],

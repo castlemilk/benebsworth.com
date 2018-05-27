@@ -1,5 +1,6 @@
 import React from 'react'
 import Grid from 'material-ui/Grid';
+import { Container, Row, Col } from 'styled-bootstrap-grid';
 import HeaderCardDisplay from './HeaderCardDisplay';
 import HeaderName from './HeaderName';
 import AboutCard from './AboutCard';
@@ -43,13 +44,30 @@ class MainPage extends React.Component {
     this.setState({ loading: false})
   }
   render() {
-    return this.state.loading ? <div>loading</div> : (<div>
-          <Grid style={{ textAlign: 'center'}}>
-            <HeaderName />
-          </Grid>
-          <Grid >
-            <HeaderCardDisplay items={items_advanced} />
-          </Grid>
+    return this.state.loading ? <div>loading</div> : (<div style={{
+      margin: '0 auto',
+      maxWidth: 960,
+      padding: '0px 1.0875rem 1.45rem',
+      paddingTop: 0,
+  }} >
+      {/* <Container>
+            <Grid style={{ textAlign: 'center'}}>
+              <HeaderName />
+            </Grid>
+            <Grid >
+              <HeaderCardDisplay items={items_advanced} />
+            </Grid>
+      </Container> */}
+      <Container>
+            <Row>
+              <div style={{ textAlign: 'center', width: '100%'}}>
+              <HeaderName />
+              </div>
+            </Row>
+            <Row >
+              <HeaderCardDisplay items={items_advanced} />
+            </Row>
+      </Container>
         </div>)}
 }
 

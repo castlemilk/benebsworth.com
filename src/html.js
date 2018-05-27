@@ -18,17 +18,6 @@ p {
 class Html extends Component {
     
     render() {
-        const body = (<div
-            style={{
-                margin: '0 auto',
-                maxWidth: 960,
-                padding: '0px 1.0875rem 1.45rem',
-                paddingTop: 0,
-            }}
-            >
-            {this.props.body}
-            </div>
-        )
         return (
             <html op="news" lang="en">
               <head>
@@ -44,7 +33,7 @@ class Html extends Component {
                 
                     <div
                     id="___gatsby"
-                    dangerouslySetInnerHTML={{ __html: body }}
+                    dangerouslySetInnerHTML={{ __html: this.props.body }}
                     />
                     {this.props.postBodyComponents}
 
@@ -54,6 +43,6 @@ class Html extends Component {
         }
       }
       
-Html.propTypes = PropTypes
+// Html.propTypes = PropTypes
 
 export default Html;

@@ -18,9 +18,9 @@ export class AboutPage extends React.Component {
         }
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
     }
-    // componentWillMount() {
-    //     window.addEventListener('resize', this.handleWindowSizeChange);
-    // }
+    componentWillMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
+    }
       
       // make sure to remove the listener
       // when the component is not mounted anymore
@@ -29,16 +29,19 @@ export class AboutPage extends React.Component {
     }
       
     handleWindowSizeChange() {
-        this.setState({ windowWidth: window.innerWidth });
+        typeof window !== 'undefined' && setTimeout(this.setState({ windowWidth: window.innerWidth }));
     };
     handleSelect(active) {
         this.setState({ isSelected: active})
     }
-    componentDidMount() {
-        window.addEventListener('resize', this.handleWindowSizeChange);
-        this.setState({
+    componentWillMount() {
+        typeof window !== 'undefined' && setTimeout(this.setState({
             windowWidth: window.innerWidth
-        })
+        }))
+    }
+    componentDidMount() {
+        setTimeout(window.addEventListener('resize', this.handleWindowSizeChange));
+        
     }
 
     render() {

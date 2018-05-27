@@ -2,7 +2,6 @@
 
 
 import React from 'react'
-import Link from 'gatsby-link'
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
@@ -226,7 +225,7 @@ export class AboutFooter extends React.Component {
             message: '',
         }
     }
-    handleChange = key => event => {
+    handleChange(key,event) {
         this.setState({
           [key]: event.target.value,
         });
@@ -234,7 +233,7 @@ export class AboutFooter extends React.Component {
     handleSelect(active) {
         this.setState({ isSelected: active})
     }
-    handleFocus(focused) {
+    handleFocus() {
         this.setState({ 
             isFocused: true,
             isSelected: true
@@ -251,7 +250,7 @@ export class AboutFooter extends React.Component {
             isSelected: this.state.isFocused ? true : false
         })
     }
-    getSpringProps = () => {
+    getSpringProps() {
         return {
           style: {
             socialWidth: spring(this.state.isSelected ? 30 : 50),
@@ -266,7 +265,6 @@ export class AboutFooter extends React.Component {
     render() {
         const height = 121;
         const fontSize = 50;
-        const { isSelected, isFocused } = this.state;
         
         const { classes, isMobile } = this.props;
         const socialView = (
@@ -301,7 +299,7 @@ export class AboutFooter extends React.Component {
             </AboutSocialWrapper>
         )
         const contactView = (
-            <AboutContactWrapper >
+            <AboutContactWrapper isMobile={this.props.isMobile} >
             <div className="contact-header" >
                 <span>
                 Contact.
@@ -314,7 +312,7 @@ export class AboutFooter extends React.Component {
                     className={classes.textField}
                     placeholder="Message Subject"
                     value={this.state.subject}
-                    onChange={this.handleChange('subject')}
+                    onChange={(event) => this.handleChange('subject', event)}
                     onFocus={() => this.handleFocus(true)}
                     onBlur={() => this.handleBlur(true)}
                     margin="normal"
@@ -327,7 +325,7 @@ export class AboutFooter extends React.Component {
                         placeholder="Enter a message here"
                         multiline={true}
                         value={this.state.message}
-                        onChange={this.handleChange('message')}
+                        onChange={(event) => this.handleChange('message', event)}
                         onFocus={() => this.handleFocus(true)}
                         onBlur={() => this.handleBlur(true)}
                         rows={2}
@@ -344,9 +342,9 @@ export class AboutFooter extends React.Component {
                 <br />
             </AboutContactWrapper>
         )
-
+    const styles = this.getSpringProps()
     const desktopView = (
-        <Motion {...this.getSpringProps()}>
+        <Motion {...styles}>
             {
                 tweenCollection => {
                     return (
@@ -377,57 +375,57 @@ export class AboutFooter extends React.Component {
     )
     const mobileView = (
         <AboutFooterWrapper>
-                        <div className="social-box"
-                            style={{
-                                height: '100%',
-                                width: '100%' }} 
-                            >
-                            {socialView}
+            <div className="social-box"
+                style={{
+                    height: '100%',
+                    width: '100%' }} 
+                >
+                {socialView}
+            </div>
+            <div className="contact-box"
+                style={{
+                    height: '100%',
+                    width: '100%' }} 
+                >
+                <AboutContactWrapper isMobile={isMobile} >
+                    <div className="contact-header" >
+                        <span>
+                        Contact.
+                        </span><br />
+                        
+                    </div>
+                    <MuiThemeProvider theme={textInputTheme}>
+                            <TextField
+                            label="Subject"
+                            className={classes.textField}
+                            placeholder="Message Subject"
+                            value={this.state.subject}
+                            onChange={(event) => this.handleChange('subject', event)}
+                            margin="normal"
+                            />
+                        </MuiThemeProvider><br />
+                        <MuiThemeProvider theme={textInputTheme}>
+                            <TextField
+                                className={classes.textField}
+                                label="Message"
+                                placeholder="Enter a message here"
+                                multiline={true}
+                                value={this.state.message}
+                                onChange={(event) => this.handleChange('message', event)}
+                                rows={2}
+                                rowsMax={3}
+                                fullWidth={true}
+                                />
+                        </MuiThemeProvider>
+                        <br />
+                        <MuiThemeProvider theme={this.contactValid() ? buttonThemeValid : buttonThemeInvalid}>
+                            <Button className={classes.button} variant="raised" color="primary" >
+                                Send
+                                <MdSend style={{ marginLeft: 5, fontSize: 20}} />
+                            </Button>
+                        </MuiThemeProvider>
+                    </AboutContactWrapper>
                         </div>
-                        <div className="contact-box"
-                            style={{
-                                height: '100%',
-                                width: '100%' }} 
-                            >
-                            <AboutContactWrapper isMobile={isMobile} >
-                                <div className="contact-header" >
-                                    <span>
-                                    Contact.
-                                    </span><br />
-                                    
-                                </div>
-                                <MuiThemeProvider theme={textInputTheme}>
-                                        <TextField
-                                        label="Subject"
-                                        className={classes.textField}
-                                        placeholder="Message Subject"
-                                        value={this.state.subject}
-                                        onChange={this.handleChange('subject')}
-                                        margin="normal"
-                                        />
-                                    </MuiThemeProvider><br />
-                                    <MuiThemeProvider theme={textInputTheme}>
-                                        <TextField
-                                            className={classes.textField}
-                                            label="Message"
-                                            placeholder="Enter a message here"
-                                            multiline={true}
-                                            value={this.state.message}
-                                            onChange={this.handleChange('message')}
-                                            rows={2}
-                                            rowsMax={3}
-                                            fullWidth={true}
-                                            />
-                                    </MuiThemeProvider>
-                                    <br />
-                                    <MuiThemeProvider theme={this.contactValid() ? buttonThemeValid : buttonThemeInvalid}>
-                                        <Button className={classes.button} variant="raised" color="primary" >
-                                            Send
-                                            <MdSend style={{ marginLeft: 5, fontSize: 20}} />
-                                        </Button>
-                                    </MuiThemeProvider>
-                                </AboutContactWrapper>
-                                            </div>
                     </AboutFooterWrapper>
     )
     

@@ -18,29 +18,43 @@ const RealImage = styled.div`
     66% { opacity:0; }
     100% { opacity:1; }
   }
-
   @-webkit-keyframes fadein {
       0% { opacity:0; }
       66% { opacity:0; }
       100% { opacity:1; }
   }
 `
-const AboutAnimation = (props) => {
-  return (
-    <div>
-      <div style={{ zIndex: 5, position: 'absolute'}}>
-        <RealImage>
-          <img src={AboutPNG}/>
-        </RealImage>
-      </div>
+class AboutAnimation extends React.Component {
+  constructor() {
+    super()
+    this.state = { loading: true, hidden: 'none' }
+  }
+  
+  componentWillMount() {
+    this.setState({ loading: false})
+    setTimeout(() => this.show(), 100)
+  }
+  show() {
+    this.setState({ hidden: "block"})
+  }
+  render() {
+    const loadingView = (<div>loading</div>)
+    return this.state.loading ? (loadingView) : (
       <div>
-        <div style={{ position: 'absolute'}}>
-          <MtSvgLines animate={ true } duration={ 2000 } style={{ zIndex: 4, position: 'absolute'}}>
-            <AboutSVG style={{ zIndex: 3, position: 'absolute'}} />
-          </MtSvgLines>
+        <div style={{ zIndex: 5, position: 'absolute'}}>
+          <RealImage>
+            <img src={AboutPNG} height={250} />
+          </RealImage>
         </div>
-      </div>
-  </div>
-  )
+        <div style={{ display: this.state.hidden }}>
+          <div style={{ position: 'absolute'}}>
+            <MtSvgLines animate={ true } duration={ 2000 } style={{ zIndex: 4, position: 'absolute'}}>
+                <AboutSVG  style={{ zIndex: 3, position: 'absolute'}} />
+            </MtSvgLines>
+          </div>
+        </div>
+    </div>
+    )
+  }
 }
 export default AboutAnimation

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Paper from 'material-ui/Paper';
 import styled from 'styled-components';
 import MtSvgLines from 'react-mt-svg-lines';
 import * as d3 from 'd3';
@@ -9,10 +8,6 @@ import { poissonDiscSampler, sample } from '../lib/utils';
 import AboutPanel from './AboutPanel';
 import AboutAnimation from './AboutAnimation';
 
-const ProjectCardWrapper = styled.div`
-  canvas {
-  }
-`
 const CardTitle = styled.div`
   z-index: 10;
   position: absolute;
@@ -34,6 +29,7 @@ class ProjectsCard extends React.Component {
         width: 309,
         pi: 2 * Math.PI,
         gravity: 0.1,
+        radius: 30,
         sample: [],
         s: null,
         nodes: [],
@@ -44,7 +40,7 @@ class ProjectsCard extends React.Component {
       }
   }
   startAnimation() {
-    this.state.sample = poissonDiscSampler(this.state.width+200, this.state.height+200, 20);
+    this.state.sample = poissonDiscSampler(this.state.width, this.state.height, this.state.radius);
     this.state.canvas = d3.select('.project-card-container').append('canvas')
       .attr('width', this.state.width)
       .attr('height', this.state.height)
@@ -68,7 +64,7 @@ class ProjectsCard extends React.Component {
     var nodes = this.state.nodes;
     var force = this.state.force;
     d3.select('.project-card-container')
-      .on('touchmove mousemove', function () {
+      .on('mousemove', function () {
         var p1 = d3.mouse(this)
         nodes[0].x = p1[0]
         nodes[0].y = p1[1]
@@ -113,21 +109,19 @@ class ProjectsCard extends React.Component {
   
   
   componentDidMount() {
-    this.startAnimation()
+    setTimeout(this.startAnimation())
   };
   render() {
     
     return (
-      <ProjectCardWrapper>
-      <Paper
+      <div
         style={{ height: 250, width: 309, display: 'inline-block'}}>
           <div className='project-card-container' >   
           <CardTitle>
             Projects
           </CardTitle>
         </div>
-      </Paper>
-      </ProjectCardWrapper>
+      </div>
     )
 }
 }

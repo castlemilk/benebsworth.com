@@ -33,8 +33,8 @@ class BlogCard extends React.Component {
         width: 0,
         height: 0,
         rect: 0,
-        n: 20,
-        m: 4,
+        n: 10,
+        m: 3,
         padding: 6,
         maxSpeed: 100,
         radius: 0,
@@ -49,16 +49,19 @@ class BlogCard extends React.Component {
       this.state.rect = [0,0, this.state.width - 0, this.state.height - 0];
       this.state.radius = d3.scaleSqrt().range([0, 8]);
       this.state.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.state.m));
+      
 
-      for (let i of d3.range(this.state.n) ){
-        this.state.nodes.push({radius: this.state.radius(1 + Math.floor(Math.random() * 4)),
-        color: this.state.color(Math.floor(Math.random() * this.state.m)),
-        x: this.state.rect[0] + (Math.random() * (this.state.rect[2] - this.state.rect[0])),
-        y: this.state.rect[1] + (Math.random() * (this.state.rect[3] - this.state.rect[1])),
-        speedX: (Math.random() - 0.5) * 2 *this.state.maxSpeed,
-        speedY: (Math.random() - 0.5) * 2 *this.state.maxSpeed});
-      }
-
+  }
+  initialise() {
+    for (let i of d3.range(this.state.n) ){
+      this.state.nodes.push({radius: this.state.radius(1 + Math.floor(Math.random() * 4)),
+      color: this.state.color(Math.floor(Math.random() * this.state.m)),
+      x: this.state.rect[0] + (Math.random() * (this.state.rect[2] - this.state.rect[0])),
+      y: this.state.rect[1] + (Math.random() * (this.state.rect[3] - this.state.rect[1])),
+      speedX: (Math.random() - 0.5) * 2 *this.state.maxSpeed,
+      speedY: (Math.random() - 0.5) * 2 *this.state.maxSpeed});
+    }
+    this.generateAnimation()
   }
   generateAnimation() {
     this.generateObjects()
@@ -120,7 +123,7 @@ class BlogCard extends React.Component {
     .attr("cy", function(d) { return d.y; });
     }
   componentDidMount() {
-    this.generateAnimation();
+    setTimeout((() => this.initialise()));
   };
   startAnimation() {
     this.state.force.restart()
@@ -154,16 +157,16 @@ class BlogCard extends React.Component {
   render() {
     return (
       <BlogWrapper>
-        <Paper className="paper-wrapper"
+        <div className="paper-wrapper"
           onMouseEnter={() => this.startAnimation()}
           onMouseLeave={() => this.stopAnimation()}
-          style={{ height: 250, width: 309, display: 'inline-block'}}>
+          style={{ height: 250, width: 309, display: 'inline-block', boxShadow: '10 10 8 #888888'}}>
           <div className="container-blog" style={{ height: 250, position: 'absolute'}}>
             <BlogTitle>
                 Blog
             </BlogTitle>
           </div>
-        </Paper>
+        </div>
       </BlogWrapper>
     )
 }

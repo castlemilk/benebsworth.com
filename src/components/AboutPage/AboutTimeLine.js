@@ -110,8 +110,8 @@ class AboutTimeLine extends React.Component {
               <h2 className="vertical-timeline-element-header">Monash University</h2>
               <h3 className="vertical-timeline-element-title">Bachelor of Electrical and Computer System Engineering (Honours)</h3>
               <p>
-                Thorough cirriculum which provided students with a deep experimental and hands-on experience with the design, build and analysis of 
-                complex real-time systems, imbedded electronics and analogue electronics. Additionally a foundational knowledge in computer science
+                Thorough curriculum which provided students with a deep experimental and hands-on experience with the design, build and analysis of 
+                complex real-time systems, imbedded electronics and analogue electronics. Additionally a foundational knowledge in computer science.
               </p>
               <Skills skills={skills[3]}/>
             </VerticalTimelineElement>
@@ -127,8 +127,8 @@ class AboutTimeLine extends React.Component {
               <h3 className="vertical-timeline-element-title">Bachelor of Science </h3>
               <h3 className="vertical-timeline-element-subtitle">Majoring in Applied Mathematics and Experimental Physics</h3>
               <p>
-              In depth expose to low-level scientific theories in physics such as quantum mechanics, partical physics, condensed matter and cosmology/astronomy
-              My applied mathematics major was confused in statistical and computational analysis with a strong coverage of partial and ordinary differential equations
+              In depth exposure to low-level scientific theories in physics such as quantum mechanics, particle physics, condensed matter and cosmology/astronomy
+              My applied mathematics major was focused in statistical and computational analysis with a strong coverage of partial and ordinary differential equations
               Throughout the course a heavy emphasis was made on experimentation/laboratory work with extensive report writing and literature recviews.
               </p>
               <Skills skills={skills[4]}/>

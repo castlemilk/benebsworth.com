@@ -1,26 +1,17 @@
 import React from 'react'
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import { withStyles } from 'material-ui/styles';
+import { Row, Col } from 'styled-bootstrap-grid';
 import styled from "styled-components"
 import Link from 'gatsby-link'
-import HeaderCard from './HeaderCard';
+
 const StyledLink = styled(Link)`
   color: black;
 `;
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    height: 0,
-    width: 0,
-  },
-  control: {
-    padding: theme.spacing.unit * 2,
-  },
-});
+const Paper = styled.div`
+  -webkit-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  -moz-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  height: 250px;
+`
 class HeaderCardDisplay extends React.Component {
   constructor(props) {
     super(props)
@@ -32,19 +23,24 @@ class HeaderCardDisplay extends React.Component {
   render() {
     const plainCard = (key, text, color) => {
       return (<Paper key={key} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 250}} >
-          <HeaderCard key={key} text={text} color={color} />
+          {text}
       </Paper>)
     }
-    const cards =this.state.loading ? [] : this.props.items.map(({ title, id, isComponent, component, color, path }) => (
-      <Grid key={id || title} xs={12} sm={12} md={4} lg={4} item >
-        { isComponent ? <StyledLink to={path}>{component}</StyledLink> : plainCard(id, title, color)}
-    </Grid>
+    // const cards =this.state.loading ? [] : this.props.items.map(({ title, id, isComponent, component, color, path }) => (
+    //   <Grid key={id || title} xs={12} sm={12} md={4} lg={4} item >
+    //     { isComponent ? <StyledLink to={path}>{component}</StyledLink> : plainCard(id, title, color)}
+    // </Grid>
+    // ))
+    const cards = this.state.loading ? [] : this.props.items.map(({ title, id, isComponent, component, color, path }) => (
+      <Col key={id || title} col={2} auto={true}>
+        { isComponent ? <StyledLink to={path}><Paper >{component}</Paper></StyledLink> : plainCard(id, title, color)}
+    </Col>
     ))
     return this.state.loading ? <div>loading</div> : (
       <div style={{  textAlign: 'center' }} >
-        <Grid container spacing={16}>
+        <Row >
             {cards}
-        </Grid>
+        </Row>
       </div>
     )}
 }

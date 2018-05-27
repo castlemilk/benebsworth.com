@@ -29,7 +29,7 @@ class ProjectsCard extends React.Component {
         width: 309,
         pi: 2 * Math.PI,
         gravity: 0.1,
-        radius: 30,
+        radius: 25,
         sample: [],
         s: null,
         nodes: [],

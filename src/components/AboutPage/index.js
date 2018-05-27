@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import { Container } from 'styled-bootstrap-grid';
 import styled from "styled-components"
 import Link from 'gatsby-link'
 
@@ -42,20 +43,27 @@ export class AboutPage extends React.Component {
         const { windowWidth } = this.state;
         const isMobile = windowWidth <= 1000;
         const shrinkHeader = windowWidth <= 400;
-        return (<Grid>
-            <Grid style={{ textAlign: 'center'}}>
-                <HeaderName size={ shrinkHeader ? 35 : 60} />
-            </Grid>
-            <Grid>
-                <AboutBody isMobile={isMobile}/>
-            </Grid>
-            <Grid>
-                <AboutTimeLine />
-            </Grid>
-            <Grid>
-                <AboutFooter isMobile={isMobile}/>
-            </Grid>     
-        </Grid>)
+        return (<div style={{
+            margin: '0 auto',
+            maxWidth: 960,
+            padding: '0px 1.0875rem 1.45rem',
+            paddingTop: 0,
+        }}>
+            <Container>
+                <Grid style={{ textAlign: 'center', width: '100%'}}>
+                    <HeaderName size={ shrinkHeader ? 35 : 60} />
+                </Grid>
+                <Grid>
+                    <AboutBody isMobile={isMobile}/>
+                </Grid>
+                <Grid>
+                    <AboutTimeLine />
+                </Grid>
+                <Grid>
+                    <AboutFooter isMobile={isMobile}/>
+                </Grid>     
+            </Container>
+        </div>)
     }
 }
 

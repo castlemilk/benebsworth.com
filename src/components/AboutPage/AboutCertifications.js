@@ -44,7 +44,7 @@ const AboutCertifications = (props) => {
         <CertificationHeader>
             Certifications
             </CertificationHeader>
-        <Grid container>
+        <Grid container style= {{ justifyContent: 'center' }} >
         {/* <div style={{ textAlign: 'center' }}> */}
         {
         certs.map ( props => (

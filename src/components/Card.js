@@ -11,8 +11,10 @@ const CardWrapper = styled.div`
 const CardImage = styled.div`
     position: absolute;
     z-index: 3;
+    margin: auto;
     margin-top: 40px;
-    margin-left: 5%;
+    margin-left: 62.5px;
+
     
 `;
 const CardDescription = styled.div`
@@ -49,7 +51,7 @@ const ScoreBar = styled.div`
     border-radius: 10px;
     height: 20px;
     width: ${props => props.score}%;
-    background-color: #f89b1d;
+    background-color: #febd61;
     color: black;
     text-align: center;
     display: flex;
@@ -90,7 +92,6 @@ const ScoreWrapper = styled.div`
 `
 
 const Card = (props) => (
-        <Grid key={props.title} xs={12} sm={6} md={4} lg={4} xl={4} item >
         <Paper>
             <CardImage>
                 <img src={props.image} />
@@ -103,10 +104,9 @@ const Card = (props) => (
                 <Description>
                     {props.title}
                 </Description>
-                { props.score ? <ScoreWrapper><ScoreBackground><ScoreBar score={props.score}  ></ScoreBar><ScoreValue>{props.score}%</ScoreValue></ScoreBackground></ScoreWrapper>: <div /> }
+                {/* { props.score ? <ScoreWrapper><ScoreBackground><ScoreBar score={props.score}  ></ScoreBar><ScoreValue>{props.score}%</ScoreValue></ScoreBackground></ScoreWrapper>: <div /> } */}
             </Body>
         </Paper>
-        </Grid>
 )
 
 

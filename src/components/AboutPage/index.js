@@ -49,7 +49,6 @@ export class AboutPage extends React.Component {
             padding: '0px 1.0875rem 1.45rem',
             paddingTop: 0,
         }}>
-            <Container>
                 <Grid style={{ textAlign: 'center', width: '100%'}}>
                     <HeaderName size={ shrinkHeader ? 35 : 60} />
                 </Grid>
@@ -61,8 +60,7 @@ export class AboutPage extends React.Component {
                 </Grid>
                 <Grid>
                     <AboutFooter isMobile={isMobile}/>
-                </Grid>     
-            </Container>
+                </Grid>
         </div>)
     }
 }

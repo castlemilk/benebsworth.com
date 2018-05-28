@@ -131,6 +131,7 @@ const styles = theme => ({
     },
   });
 const AboutFooterWrapper = styled.div`
+    margin-top: 20px;
     display: inline-block;
     width: 100%;
 `

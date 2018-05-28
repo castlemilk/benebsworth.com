@@ -29,15 +29,15 @@ const projects = [
             },
             {
                 text: 'Redux',
-                color: COLOR_SCHEME.orange
+                color: COLOR_SCHEME.purple
             },
             {
                 text: 'Redux-Sagas',
-                color: COLOR_SCHEME.orange
+                color: COLOR_SCHEME.purple
             },
             {
                 text: 'Firebase',
-                color: COLOR_SCHEME.orange
+                color: COLOR_SCHEME.redpink
             }
         ],
     },
@@ -59,15 +59,15 @@ const projects = [
             },
             {
                 text: 'Redux',
-                color: COLOR_SCHEME.orange
+                color: COLOR_SCHEME.purple
             },
             {
                 text: 'Redux-Sagas',
-                color: COLOR_SCHEME.orange
+                color: COLOR_SCHEME.purple
             },
             {
                 text: 'Firebase',
-                color: COLOR_SCHEME.orange
+                color: COLOR_SCHEME.redpink
             }
         ],
     }

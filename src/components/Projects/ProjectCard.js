@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'gatsby-link'
 import styled from "styled-components"
 import Paper from 'material-ui/Paper';
+import Skills from '../Skills';
 
 const ProjectWrapper = styled.div`
 display: inline-block;
@@ -49,6 +50,9 @@ const ProjectCard = (props) => (
             <div className='project-card-description' >
                 <p>{props.description}</p>
             </div>
+            </div>
+            <div className='project-technologies' >
+                <Skills skills={props.technologies} />
             </div>
             </ProjectWrapper>
         </Paper>

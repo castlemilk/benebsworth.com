@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import styled from 'styled-components';
-
+import Grid from 'material-ui/Grid';
 import Card from '../Card';
 import AWSDeveloperAssociate from '../../assets/images/aws-developer-associate.png';
 import AWSSolArchitectAssociate from '../../assets/images/aws-sol-architect-associate.png';
@@ -9,6 +9,7 @@ import AWSSysOpsAssociate from '../../assets/images/aws-sysops-associate.png';
 import AWSHeaderBackground from '../../assets/images/aws-header-background.png';
 const Wrapper = styled.div`
     display: flex;
+    flex-wrap: flex;
     width: 100%;
     margin-bottom: 20px;
 `;
@@ -43,12 +44,14 @@ const AboutCertifications = (props) => {
         <CertificationHeader>
             Certifications
             </CertificationHeader>
-        <Wrapper>
+        <Grid container>
+        {/* <div style={{ textAlign: 'center' }}> */}
         {
         certs.map ( props => (
             <Card key={props.title} {...props} />
         ))}
-        </Wrapper>
+        {/* </div> */}
+        </Grid>
         </div>)
 }
 

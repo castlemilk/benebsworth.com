@@ -1,8 +1,12 @@
 import React from 'react'
 import Link from 'gatsby-link'
+import Grid from 'material-ui/Grid';
 import styled from 'styled-components';
 
 const CardWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
 `;
 const CardImage = styled.div`
     position: absolute;
@@ -78,12 +82,15 @@ const ScoreValue = styled.div`
     text-align: center;
 `
 const ScoreWrapper = styled.div`
-    width: 100%;
+    width: 90%;
+    margin-left: 5%;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 5px;
 `
 
-
 const Card = (props) => (
-    <CardWrapper>
+        <Grid key={props.title} xs={12} sm={6} md={4} lg={4} xl={4} item >
         <Paper>
             <CardImage>
                 <img src={props.image} />
@@ -99,7 +106,7 @@ const Card = (props) => (
                 { props.score ? <ScoreWrapper><ScoreBackground><ScoreBar score={props.score}  ></ScoreBar><ScoreValue>{props.score}%</ScoreValue></ScoreBackground></ScoreWrapper>: <div /> }
             </Body>
         </Paper>
-    </CardWrapper>
+        </Grid>
 )
 
 

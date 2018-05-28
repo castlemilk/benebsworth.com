@@ -9,6 +9,7 @@ import HeaderName from '../HeaderName';
 import AboutBody from './AboutBody';
 import AboutTimeLine from './AboutTimeLine';
 import AboutFooter from './AboutFooter';
+import AboutCertifications from './AboutCertifications';
 
 
 export class AboutPage extends React.Component {
@@ -59,8 +60,11 @@ export class AboutPage extends React.Component {
                     <AboutTimeLine />
                 </Grid>
                 <Grid>
-                    <AboutFooter isMobile={isMobile}/>
+                    <AboutCertifications />
                 </Grid>
+                <Grid>
+                    <AboutFooter isMobile={isMobile}/>
+                </Grid> 
         </div>)
     }
 }

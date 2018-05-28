@@ -2,7 +2,6 @@ import React from 'react'
 import Grid from 'material-ui/Grid';
 import styled from 'styled-components'
 import Helmet from 'react-helmet'
-// import { Container, Row, Col } from 'styled-bootstrap-grid';
 import HeaderCardDisplay from './HeaderCardDisplay';
 import icon16 from '../assets/images/favicon.png';
 import HeaderName from './HeaderName';

@@ -8,9 +8,6 @@ import AWSSolArchitectAssociate from '../../assets/images/aws-sol-architect-asso
 import AWSSysOpsAssociate from '../../assets/images/aws-sysops-associate.png';
 import AWSHeaderBackground from '../../assets/images/aws-header-background.png';
 const Wrapper = styled.div`
-    display: flex;
-    flex-wrap: flex;
-    width: 100%;
     margin-bottom: 20px;
 `;
 const CertificationHeader = styled.div`
@@ -40,7 +37,7 @@ const AboutCertifications = (props) => {
         },
 
     ]
-    return (<div>
+    return (<Wrapper>
         <CertificationHeader>
             Certifications
             </CertificationHeader>
@@ -52,7 +49,7 @@ const AboutCertifications = (props) => {
         ))}
         {/* </div> */}
         </Grid>
-        </div>)
+        </Wrapper>)
 }
 
 export default AboutCertifications;

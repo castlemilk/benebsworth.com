@@ -35,19 +35,19 @@ margin-bottom: 10px;
 
 `
 
-const ProjectCard = ({ title, description, image }) => (
+const ProjectCard = (props) => (
     <Wrapper>
         <Paper>
             <ProjectWrapper>
             <div className='project-card-image' >
-                <img src={image} />
+                <img src={props.image} />
             </div>
             <div className='project-text-wrapper' >
             <div className='project-card-title' >
-                {title}
+                {props.title}
             </div>
             <div className='project-card-description' >
-                <p>{description}</p>
+                <p>{props.description}</p>
             </div>
             </div>
             </ProjectWrapper>

@@ -18,7 +18,7 @@ export const headerCards = [
         path: '/projects'
     },
 ]
-const COLOR_SCHEME = {
+export const COLOR_SCHEME = {
     gray: '#cecece',
     green: '#a8e6cf',
     teal: '#8bdaff',
@@ -31,6 +31,7 @@ const COLOR_SCHEME = {
     darkorange: '#fb812c',
     brown: '#bf7b26',
     purple: '#cfa8e6',
+    react: '#5fdbfb',
     
 }
 export const skills = [

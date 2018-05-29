@@ -37,11 +37,6 @@ class HeaderCardDisplay extends React.Component {
         { isComponent ? <StyledLink to={path}><Paper>{component}</Paper></StyledLink> : plainCard(id, title, color)}
     </Grid>
     ))
-    // const cards = this.state.loading ? [] : this.props.items.map(({ title, id, isComponent, component, color, path }) => (
-    //   <Col key={id || title} col={2} xs={2} sm={2} smOffset={4} xsOffset={4} md={2} lg={2} xl={2} justifyContent='center' alignSelf='center' auto={true}>
-    //     { isComponent ? <StyledLink to={path}><Paper >{component}</Paper></StyledLink> : plainCard(id, title, color)}
-    // </Col>
-    // ))
     return this.state.loading ? <div>loading</div> : (
       <div style={{  textAlign: 'center' }} >
         <Row >

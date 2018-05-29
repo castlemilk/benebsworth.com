@@ -7,7 +7,7 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   font-family: 'Days One';
   margin-bottom: 30;
-  font-size: ${props => props.size}px
+  font-size: ${props => props.size}px;
 `;
 
 class HeaderName extends React.Component {

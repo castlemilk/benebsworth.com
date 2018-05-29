@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
+import Helmet from 'react-helmet';
 import { Container } from 'styled-bootstrap-grid';
 import styled from "styled-components"
 import Link from 'gatsby-link'
-
+import icon16 from '../../assets/images/favicon.png';
 import HeaderName from '../HeaderName';
 import AboutBody from './AboutBody';
 import AboutTimeLine from './AboutTimeLine';
@@ -50,6 +51,15 @@ export class AboutPage extends React.Component {
             padding: '0px 1.0875rem 1.45rem',
             paddingTop: 0,
         }}>
+            <Helmet
+                title='Ben Ebsworth [About]'
+                meta={[
+                  { name: 'description', content: 'Blog' },
+                  { name: 'keywords', content: 'Blog, technology, software engineering' },
+                ]}
+               >
+                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
+              </Helmet>
                 <Grid style={{ textAlign: 'center', width: '100%'}}>
                     <HeaderName size={ shrinkHeader ? 35 : 60} />
                 </Grid>

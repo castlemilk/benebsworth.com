@@ -1,8 +1,9 @@
 import React from 'react'
 import Grid from 'material-ui/Grid';
 import styled from 'styled-components'
-// import { Container, Row, Col } from 'styled-bootstrap-grid';
+import Helmet from 'react-helmet'
 import HeaderCardDisplay from './HeaderCardDisplay';
+import icon16 from '../assets/images/favicon.png';
 import HeaderName from './HeaderName';
 import AboutCard from './AboutCard';
 import AboutAnimation from './AboutAnimation';
@@ -52,6 +53,15 @@ class MainPage extends React.Component {
   }
   render() {
     return this.state.loading ? <div>loading</div> : (<Container>
+            <Helmet
+                title='Ben Ebsworth'
+                meta={[
+                  { name: 'description', content: 'Blog' },
+                  { name: 'keywords', content: 'Blog, technology, software engineering' },
+                ]}
+               >
+                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
+              </Helmet>
             <Grid style={{ textAlign: 'center'}}>
               <HeaderName />
             </Grid>

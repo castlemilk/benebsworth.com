@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import styled from "styled-components"
+import Helmet from 'react-helmet'
+import icon16 from '../../assets/images/favicon.png';
 
 import { blogs } from './tests/fixtures'
 import BlogList from './BlogList';
@@ -39,6 +41,15 @@ export class Blogs extends React.Component {
 
     render() {
         return (<BlogsWrapper>
+            <Helmet
+                title='Ben Ebsworth [Blog]'
+                meta={[
+                  { name: 'description', content: 'Blog' },
+                  { name: 'keywords', content: 'Blog, technology, software engineering' },
+                ]}
+               >
+                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
+              </Helmet>
             <Grid style={{ textAlign: 'center'}}>
                 <HeaderName />
             </Grid>

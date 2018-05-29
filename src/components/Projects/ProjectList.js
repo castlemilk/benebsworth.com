@@ -7,7 +7,7 @@ class ProjectList extends React.Component {
         super(props)
     }
     render() {
-        const items = this.props.items.map( projectProps => <ProjectCard key={projectProps.key} {...projectProps} />)
+        const items = this.props.items.map( projectProps => <ProjectCard key={projectProps.key || projectProps.title} {...projectProps} />)
         return (<div>
             {items}
         </div>

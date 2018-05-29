@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
-import Helmet from 'react-helmet'
+import Helmet from 'react-helmet';
 import { Container } from 'styled-bootstrap-grid';
 import styled from "styled-components"
 import Link from 'gatsby-link'

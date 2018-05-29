@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
-import styled from "styled-components"
+import styled from "styled-components";
+import Helmet from 'react-helmet';
+import icon16 from '../../assets/images/favicon.png';
+import Dog from './tests/images/dog.png';
 
 import { COLOR_SCHEME } from '../../config';
 import ProjectList from './ProjectList';
@@ -14,6 +17,7 @@ const projects = [
     {
         title: 'Nutry',
         description: 'Food Nutrients search & analytics platform',
+        image: Dog,
         technologies: [
             {
                 text: 'Elasticsearch',
@@ -79,12 +83,28 @@ export class Projects extends React.Component {
     }
 
     render() {
-        return (<ProjectsWrapper>
+        return (<div style={{
+            margin: '0 auto',
+            maxWidth: 960,
+            padding: '0px 1.0875rem 1.45rem',
+            paddingTop: 0,
+        }}>
+            <Helmet
+                title='Ben Ebsworth [Projects]'
+                meta={[
+                  { name: 'description', content: 'Projects' },
+                  { name: 'keywords', content: 'Blog, technology, software engineering' },
+                ]}
+               >
+               <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
+              </Helmet>
+            <ProjectsWrapper>
             <Grid style={{ textAlign: 'center'}}>
                 <HeaderName />
             </Grid>
             <ProjectList items={projects} />
-        </ProjectsWrapper>)
+        </ProjectsWrapper>
+        </div>)
     }
 }
 

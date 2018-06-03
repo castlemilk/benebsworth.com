@@ -11,7 +11,7 @@ const BannerWrapper = styled.div`
     .img-wrapper {
       display: none;
     }
-    height: 550px;
+    height: 500px;
     .banner-bg {
     width: 130%;
     overflow: hidden;
@@ -29,7 +29,7 @@ const BannerWrapper = styled.div`
     .banner-bg {
     width: 130%;
     overflow: hidden;
-    height: 600px;
+    height: 650px;
     background: #7f3fbf;
     position: absolute;
     bottom: -700px;

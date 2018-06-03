@@ -1,4 +1,6 @@
 import React from 'react';
+import { OutboundLink } from 'gatsby-plugin-google-analytics'
+import { FaGithub } from 'react-icons/lib/fa';
 // import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
 import NutryLogo from './images/icon-120x120.png';
@@ -10,14 +12,17 @@ export default class Header extends React.Component { // eslint-disable-line rea
   render() {
     return (
       <HeaderWrapper >
-        <Row>
-          <Col xxl={4} xl={5} lg={5} md={6} sm={24} xs={24} >
-            <a className="logo-link" >
-              <img className="logo" alt="logo" src={NutryLogo} />
-              {/* <img className="title" alt="Nutry" src={NutryTitle} /> */}
-            </a>
-          </Col>
-        </Row>
+        <div className="logo" >
+        <a className="logo-link" >
+          <img className="logo" alt="logo" src={NutryLogo} />
+          {/* <img className="title" alt="Nutry" src={NutryTitle} /> */}
+        </a>
+        </div>
+        <div className="github-link">
+          <OutboundLink href="https://github.com/castlemilk/nutry" >
+            <FaGithub style={{ fontSize: 70 , height: 120}} />
+          </OutboundLink>
+        </div>
       </HeaderWrapper>
     );
   }

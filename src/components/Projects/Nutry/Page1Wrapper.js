@@ -4,13 +4,18 @@ const Page1Wrapper = styled.div`
   background: #7f3fbf;
   @media only screen and (max-width: 1300px) {
     .page1-row {
-    margin-top: 0;
-  }
-
+      margin-top: 0;
+    }
+    .header {
+      z-index: 10;
+      color: white;
+      position: relative;
+      margin-bottom: 300px;
+    }
   }
   @media only screen and (min-width: 1300px) {
     .page1-row {
-      margin-top: 470px;
+      margin-top: 200px;
     }
   }
   min-height: 1020px;

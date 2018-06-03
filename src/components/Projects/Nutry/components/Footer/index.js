@@ -8,7 +8,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 import { Row, Col } from 'styled-bootstrap-grid';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 // import { Row, Col } from 'antd';
 import { FaFacebookOfficial, FaTwitterSquare, FaInstagram, FaLinkedinSquare } from 'react-icons/lib/fa';
 

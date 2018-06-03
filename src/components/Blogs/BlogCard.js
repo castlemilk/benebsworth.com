@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import styled from "styled-components"
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 const BlogWrapper = styled.div`
 display: inline-block;

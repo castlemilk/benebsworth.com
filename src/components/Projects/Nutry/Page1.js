@@ -4,7 +4,7 @@ import { TweenOneGroup } from 'rc-tween-one';
 // import { Row, Col } from 'antd';
 
 import { Row, Col } from 'styled-bootstrap-grid';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import Link from 'gatsby-link';
 import QueueAnim from 'rc-queue-anim';
 import ScrollOverPack from 'rc-scroll-anim/lib/ScrollOverPack';

@@ -20,7 +20,7 @@ export default class Header extends React.Component { // eslint-disable-line rea
         </div>
         <div className="github-link">
           <OutboundLink href="https://github.com/castlemilk/nutry" >
-            <FaGithub style={{ fontSize: 70 , height: 105}} />
+            <FaGithub style={{ fontSize: 70 , height: 105, color: 'black'}} />
           </OutboundLink>
         </div>
       </HeaderWrapper>

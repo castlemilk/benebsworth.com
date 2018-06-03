@@ -55,7 +55,9 @@ class Page2 extends React.Component { // eslint-disable-line react/prefer-statel
                 type="bottom"
                 leaveReverse
               >
-                <h3 key="h1">{descriptions.title}</h3>
+                <div className="page2-title" >
+                  <h3 key="h1">{descriptions.title}</h3>
+                </div>
                 <div className="descriptions-box" >
                   <span>{descriptions.text}</span>
                 </div>

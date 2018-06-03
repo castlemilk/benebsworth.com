@@ -9,6 +9,11 @@ const Page2Wrapper = styled.div`
     min-height: 900px;
     overflow: initial;
     padding-top: 1px;
+    display: flex;
+    justify-content: center;
+  }
+  .page2-title {
+    color: #7e3fbf;
   }
   .home-page-wrapper .page h2 {
     color: #7e3fbf;
@@ -25,6 +30,7 @@ const Page2Wrapper = styled.div`
     z-index: 1;
     padding-left: 20px;
     padding-right: 20px;
+    width: 100%;
   }
 
   .page2-content {

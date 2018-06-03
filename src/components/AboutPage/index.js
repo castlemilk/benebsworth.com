@@ -11,7 +11,22 @@ import AboutBody from './AboutBody';
 import AboutTimeLine from './AboutTimeLine';
 import AboutFooter from './AboutFooter';
 import AboutCertifications from './AboutCertifications';
+import { injectGlobal } from 'styled-components'
 
+injectGlobal`
+h2,h3,h4 {
+  font-family: 'Days One';
+}
+p {
+  font-family: 'Open Sans';
+}
+span {
+    font-family: 'Open Sans';
+}
+.vertical-timeline-element-date {
+  font-family: 'Days One';
+}
+`
 
 export class AboutPage extends React.Component {
     constructor(props) {

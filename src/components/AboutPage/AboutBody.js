@@ -24,7 +24,7 @@ const AboutBlurb = styled.div`
   }
   .blurb-description p span {
     float: left;
-    margin: 26px 0 20px 0;
+    margin: 26px 15px 20px 0;
     font-size: 40px;
     font-family: 'Days One';
     text-align: left;

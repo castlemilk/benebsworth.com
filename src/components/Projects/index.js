@@ -4,7 +4,9 @@ import Grid from 'material-ui/Grid';
 import styled from "styled-components";
 import Helmet from 'react-helmet';
 import icon16 from '../../assets/images/favicon.png';
-import Dog from './tests/images/dog.png';
+import Nutry from '../../assets/images/nutry.png';
+import B from '../../assets/images/b-image.png';
+
 
 import { COLOR_SCHEME } from '../../config';
 import ProjectList from './ProjectList';
@@ -17,7 +19,8 @@ const projects = [
     {
         title: 'Nutry',
         description: 'Food Nutrients search & analytics platform',
-        image: Dog,
+        image: Nutry,
+        path: '/projects/nutry',
         technologies: [
             {
                 text: 'Elasticsearch',
@@ -42,37 +45,42 @@ const projects = [
             {
                 text: 'Firebase',
                 color: COLOR_SCHEME.redpink
+            },
+            {
+                text: 'Jest',
+                color: COLOR_SCHEME.blue
+            },
+            {
+                text: 'Jenkins',
+                color: COLOR_SCHEME.gray
             }
         ],
     },
     {
-        title: 'Nutry',
-        description: 'Food Nutrients search & analytics platform',
+        title: 'This Blog',
+        description: 'Little personal website to experiment and learn web technologies',
+        image: B,
         technologies: [
             {
-                text: 'Elasticsearch',
-                color: COLOR_SCHEME.teal
+                text: 'Gatsby',
+                color: COLOR_SCHEME.purple
             },
             {
                 text: 'React',
                 color: COLOR_SCHEME.react
             },
             {
+                text: 'Google Analytics',
+                color: COLOR_SCHEME.blue
+            },
+            {
+                text: 'SSR',
+                color: COLOR_SCHEME.gray
+            },
+            {
                 text: 'AWS',
                 color: COLOR_SCHEME.orange
             },
-            {
-                text: 'Redux',
-                color: COLOR_SCHEME.purple
-            },
-            {
-                text: 'Redux-Sagas',
-                color: COLOR_SCHEME.purple
-            },
-            {
-                text: 'Firebase',
-                color: COLOR_SCHEME.redpink
-            }
         ],
     }
 ]
@@ -83,12 +91,7 @@ export class Projects extends React.Component {
     }
 
     render() {
-        return (<div style={{
-            margin: '0 auto',
-            maxWidth: 960,
-            padding: '0px 1.0875rem 1.45rem',
-            paddingTop: 0,
-        }}>
+        return (<div>
             <Helmet
                 title='Ben Ebsworth [Projects]'
                 meta={[
@@ -96,7 +99,7 @@ export class Projects extends React.Component {
                   { name: 'keywords', content: 'Blog, technology, software engineering' },
                 ]}
                >
-               <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
+                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
               </Helmet>
             <ProjectsWrapper>
             <Grid style={{ textAlign: 'center'}}>

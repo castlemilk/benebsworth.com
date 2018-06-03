@@ -4,6 +4,10 @@ import styled from "styled-components"
 import Paper from 'material-ui/Paper';
 import Skills from '../Skills';
 
+const StyledLink = styled(Link)`
+  color: black;
+`;
+
 const ProjectWrapper = styled.div`
 display: inline-block;
 width: 100%;
@@ -43,6 +47,7 @@ margin-left: 10px;
 
 const ProjectCard = (props) => (
     <Wrapper>
+        <StyledLink to={props.path || '/'}>
         <Paper>
             <ProjectWrapper>
             <div className='project-card-image' >
@@ -64,6 +69,7 @@ const ProjectCard = (props) => (
             
             </ProjectWrapper>
         </Paper>
+        </StyledLink>
     </Wrapper>
 )
 

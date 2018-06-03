@@ -4,7 +4,14 @@ module.exports = {
   },
   plugins: [
     'gatsby-plugin-react-helmet',
+    'gatsby-plugin-antd',
     'gatsby-plugin-styled-components',
+    {
+      resolve: 'gatsby-plugin-antd',
+      options: {
+        style: true
+      }
+    },
     {
       resolve: 'gatsby-plugin-google-fonts',
       options: {

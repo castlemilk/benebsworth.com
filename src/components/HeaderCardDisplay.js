@@ -33,7 +33,7 @@ class HeaderCardDisplay extends React.Component {
       </Paper>)
     }
     const cards =this.state.loading ? [] : this.props.items.map(({ title, id, isComponent, component, color, path }) => (
-      <Grid key={id || title} xs={4} sm={4} md={4} lg={4} xl={4} item >
+      <Grid key={id || title} xs={12} sm={12} md={4} lg={4} xl={4} item >
         { isComponent ? <StyledLink to={path}><Paper>{component}</Paper></StyledLink> : plainCard(id, title, color)}
     </Grid>
     ))

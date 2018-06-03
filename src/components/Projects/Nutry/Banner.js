@@ -34,7 +34,7 @@ export default class Banner extends React.PureComponent { // eslint-disable-line
               </TweenOne>
             </svg>
 
-            <ScrollParallax location="banner" className="banner-bg" animation={{ playScale: [1, 1.5], rotate: 1 }} />
+            <ScrollParallax location="banner" className="banner-bg" animation={{ playScale: [1, 1.5], rotate: 0 }} />
           </div>
           <QueueAnim className={'banner-page'} type="alpha" delay={150}>
             <QueueAnim

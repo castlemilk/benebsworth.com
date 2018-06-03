@@ -10,7 +10,7 @@ const Page1Wrapper = styled.div`
   }
   @media only screen and (min-width: 1300px) {
     .page1-row {
-      margin-top: 400px;
+      margin-top: 470px;
     }
   }
   min-height: 1020px;

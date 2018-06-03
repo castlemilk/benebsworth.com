@@ -15,10 +15,10 @@ const BannerWrapper = styled.div`
     .banner-bg {
     width: 130%;
     overflow: hidden;
-    height: 200px;
+    height: 300px;
     background: #7f3fbf;
     position: absolute;
-    bottom: 0;
+    bottom: -250px;
     left: 0;
     transform: translate(0, 0) rotate(-3.8243deg);
     z-index: 1;
@@ -76,7 +76,6 @@ const BannerWrapper = styled.div`
   
 
   .banner-page {
-    padding-top: 75px;
     padding-left: 50px;
     padding-bottom: 250px
   }

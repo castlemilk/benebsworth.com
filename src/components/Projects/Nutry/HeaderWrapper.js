@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const HeaderWrapper = styled.div`
   background: white;
+  height: 100px;
   padding-top: 20px;
   text-decoration: none;
   .logo-link {
@@ -20,12 +21,15 @@ const HeaderWrapper = styled.div`
     float: right;
     margin-right: 20px;
     text-decoration: none;
+    z-index: 11;
+    color:inherit;
   }
   .github-link a {
     text-decoration: none;
+    z-index: 11;
   }
   .github-link a:hover{
-    color: purple;
+    color: #7e3fbf;
   }
 `;
 

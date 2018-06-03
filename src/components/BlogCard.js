@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from "styled-components"
 import { spring } from 'react-motion';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 import * as d3 from "d3";
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 import {Motion, spring} from 'react-motion';
 import MtSvgLines from 'react-mt-svg-lines';

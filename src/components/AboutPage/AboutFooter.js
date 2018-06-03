@@ -2,18 +2,18 @@
 
 
 import React from 'react'
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
-import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
-import Icon from 'material-ui/Icon';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 import { OutboundLink } from 'gatsby-plugin-google-analytics'
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import createPalette from 'material-ui/styles/createPalette'
-import white from 'material-ui/colors';
-import { Input } from 'material-ui';
+import { withStyles, createStyleSheet } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import createPalette from '@material-ui/core/styles/createPalette'
+import white from '@material-ui/core/colors';
+import { Input } from '@material-ui/core';
 import { ThemeProvider } from 'styled-components';
 import { Motion, spring } from 'react-motion';
 import { FaFacebookOfficial, FaGithubSquare, FaTwitterSquare, FaLinkedinSquare } from 'react-icons/lib/fa';

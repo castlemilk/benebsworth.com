@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "author": "Ben Ebsworth <ben.ebsworth@gmail.com>",
   "dependencies": {
+    "@material-ui/core": "^1.1.0",
     "antd": "^3.5.4",
     "babel-loader": "^8.0.0-beta.3",
     "babel-plugin-import": "^1.7.0",
@@ -59,9 +60,11 @@
     "develop": "gatsby develop",
     "format": "prettier --write 'src/**/*.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gatsby build --prefix-paths && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket benebsworth.com --deleteRemoved --gzip"
+    "deploy": "gatsby build --prefix-paths && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket benebsworth.com --deleteRemoved --gzip && npm run clear",
+    "clear": "aws-cloudfront-invalidate E30L2WGIX5OPQG"
   },
   "devDependencies": {
+    "aws-cloudfront-invalidate": "^0.1.3",
     "eslint-plugin-styled-components-config": "0.0.2",
     "prettier": "^1.12.0"
   },

@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'gatsby-link'
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 
 const CardWrapper = styled.div`

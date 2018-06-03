@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'gatsby-link'
-import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
 
 const AboutBodyWrapper = styled.div`

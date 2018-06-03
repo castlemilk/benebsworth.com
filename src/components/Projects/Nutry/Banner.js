@@ -21,7 +21,7 @@ export default class Banner extends React.PureComponent { // eslint-disable-line
       <BannerWrapper >
         <div className="home-page-wrapper banner-wrapper" id="banner">
           <div className="banner-bg-wrapper">
-            <svg width="400px" height="576px" viewBox="0 0 400 576" fill="transparent">
+            {/* <svg width="400px" height="576px" viewBox="0 0 400 576" fill="transparent">
               <TweenOne component="g" animation={[{ opacity: 0, type: 'from' }, { ...loop, y: 15 }]}>
                 <ellipse id="Oval-9-Copy-4" cx="100" cy="100" rx="10" ry="10" stroke="#2F54EB" strokeWidth="1.6" />
               </TweenOne>
@@ -32,7 +32,7 @@ export default class Banner extends React.PureComponent { // eslint-disable-line
                   </g>
                 </g>
               </TweenOne>
-            </svg>
+            </svg> */}
 
             <ScrollParallax location="banner" className="banner-bg" animation={{ playScale: [1, 1.5], rotate: 0 }} />
           </div>

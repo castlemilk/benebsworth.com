@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import styled from "styled-components"
 import Helmet from 'react-helmet'
 import icon16 from '../../assets/images/favicon.png';

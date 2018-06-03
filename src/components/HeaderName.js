@@ -8,6 +8,9 @@ const StyledLink = styled(Link)`
   font-family: 'Days One';
   margin-bottom: 30;
   font-size: ${props => props.size}px;
+  .header-content span {
+      font-family: 'Days One';
+  }
 `;
 
 class HeaderName extends React.Component {
@@ -38,7 +41,7 @@ class HeaderName extends React.Component {
     }
     render() {
         const { windowWidth } = this.state;
-        return <StyledLink to="/" size={windowWidth <=480 ? 35 : 60}><ReactRevealText show={this.state.show} >BEN EBSWORTH</ReactRevealText></StyledLink>
+        return <StyledLink to="/" size={windowWidth <=480 ? 35 : 60}><div className='header-content'><ReactRevealText show={this.state.show} >BEN EBSWORTH</ReactRevealText></div></StyledLink>
     }
 }
 

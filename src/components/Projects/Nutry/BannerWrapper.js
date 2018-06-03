@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const BannerWrapper = styled.div`
   background: white;
   width: 100%;
-  height: 700px;
+  
   .buttons-wrapper {
     display: flex;
   }
@@ -11,6 +11,32 @@ const BannerWrapper = styled.div`
     .img-wrapper {
       display: none;
     }
+    height: 550px;
+    .banner-bg {
+    width: 130%;
+    overflow: hidden;
+    height: 200px;
+    background: #7f3fbf;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: translate(0, 0) rotate(-3.8243deg);
+    z-index: 1;
+    }
+  }
+  @media only screen and (min-width: 1301px) {
+    height: 800px;
+    .banner-bg {
+    width: 130%;
+    overflow: hidden;
+    height: 600px;
+    background: #7f3fbf;
+    position: absolute;
+    bottom: -700px;
+    left: 0;
+    transform: translate(0, 0) rotate(-3.8243deg);
+    z-index: 1;
+  }
   }
   .img-wrapper {
     width: 46%;
@@ -47,16 +73,7 @@ const BannerWrapper = styled.div`
     fill: none;
   }
 
-  .banner-bg {
-    width: 130%;
-    height: 450px;
-    background: #7f3fbf;
-    position: absolute;
-    bottom: -300px;
-    left: 0;
-    transform: translate(0, 0) rotate(-3.8243deg);
-    z-index: 1;
-  }
+  
 
   .banner-page {
     padding-top: 75px;
@@ -75,7 +92,6 @@ const BannerWrapper = styled.div`
 
   .buttons {
     color: white;
-    width: 200px;
     background: #7f3fbf;
     border-radius: 100px;
     margin-right: 20px;
@@ -83,6 +99,8 @@ const BannerWrapper = styled.div`
     align-items: center;
     margin-top: 24px;
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
     z-index: 11;
   }
 

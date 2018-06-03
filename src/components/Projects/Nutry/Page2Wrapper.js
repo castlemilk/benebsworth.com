@@ -6,7 +6,7 @@ const Page2Wrapper = styled.div`
   width: 100%;
   .page2 {
     background: #eff3f6;
-    min-height: 900px;
+    min-height: 1200px;
     overflow: initial;
     padding-top: 1px;
     display: flex;
@@ -15,9 +15,16 @@ const Page2Wrapper = styled.div`
   .page2-title {
     color: #7e3fbf;
   }
+  
   .home-page-wrapper .page h2 {
+    font-size: 60px;
+    line-height: 46px;
     color: #7e3fbf;
-  }
+    text-align: center;
+    font-weight: 400;
+    margin: 140px auto 100px;
+    z-index: 10;
+  }  
   .descriptions-box {
     margin: 20px;
   }

@@ -228,6 +228,7 @@ class Page1 extends React.PureComponent { // eslint-disable-line react/prefer-st
           <div className='header' >
             <h2><FormattedMessage {...messages.features} /></h2>
           </div>
+            <div className="page1-row">
             <ScrollOverPack playScale="0.3">
               <QueueAnim
                 component={Row}
@@ -239,6 +240,7 @@ class Page1 extends React.PureComponent { // eslint-disable-line react/prefer-st
                 {children}
               </QueueAnim>
             </ScrollOverPack>
+            </div>
           </div>
         </div>
       </Page1Wrapper>

@@ -7,9 +7,16 @@ const Page3Wrapper = styled.div`
   background: #eff3f6;
   display: flex;
   justify-content: center;
+  
   .home-page-wrapper .page h2 {
+    font-size: 60px;
+    line-height: 46px;
     color: #7e3fbf;
-  }
+    text-align: center;
+    font-weight: 400;
+    margin: 140px auto 100px;
+    z-index: 10;
+  }  
   .page3 {
     max-width: 1600px;
     background: #eff3f6;

@@ -49,7 +49,7 @@ class Page2 extends React.Component { // eslint-disable-line react/prefer-statel
             <ScrollOverPack component={Row} className="page2-content" playScale="0.4">
               <QueueAnim
                 component={Grid}
-                componentProps={{ xs: 12, sm: 12, md: 6, lg: 6, xl:6 }}
+                componentProps={{ xs: 12, sm: 12, md: 6, lg: 6, xl:6, item: true }}
                 className="page2-descriptions"
                 key="left"
                 type="bottom"
@@ -64,7 +64,7 @@ class Page2 extends React.Component { // eslint-disable-line react/prefer-statel
               </QueueAnim>
               <QueueAnim
                 component={Grid}
-                componentProps={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6 }}
+                componentProps={{ xs: 12, sm: 12, md: 6, lg: 6, xl: 6, item: true }}
                 className="page2-architecture"
                 key="right"
                 type="bottom"

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="63px" height="57px" viewBox="0 0 63 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>architectureEnterpriseMobile</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Architecture" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="mobile" transform="translate(1.000000, -68.000000)">
+            <g id="architectureEnterpriseMobile" transform="translate(0.000000, 69.000000)">
+                <polygon id="Path-10" stroke="#979797" points="0 28.8953369 19.7608503 14.9781022 61.4391144 41.3617312 41.5229633 55.4744526"></polygon>
+                <polygon id="Path-10" stroke="#979797" fill="#FFFFFF" points="0 13.9172348 19.7608503 0 61.4391144 26.383629 41.5229633 40.4963504"></polygon>
+                <polygon id="Path-11" stroke="#979797" fill="#FDFDFD" points="0 13.8686131 0 29.0164587 41.7358211 55.4744526 61.4391144 41.3351496 61.4391144 26.0108311 41.7358211 40.3616074"></polygon>
+                <polygon id="Path-12" stroke="#979797" fill="#4A4A4A" points="23.800738 19.0869602 29.2675412 14.9781022 39.8523985 21.6087677 33.5264966 26.0729927 31.8265683 24.9885919 36.330153 21.6087677 29.2675412 17.3411161 25.8136195 20.0335234"></polygon>
+                <path d="M26.0147601,33.8394161 L22.1402214,39.9416058" id="Path-13" stroke="#D0021B" stroke-width="4"></path>
+                <path d="M21.0332103,34.3941606 L27.6752768,38.8321168" id="Path-14" stroke="#D0021B" stroke-width="4"></path>
+            </g>
+        </g>
+    </g>
+</svg>

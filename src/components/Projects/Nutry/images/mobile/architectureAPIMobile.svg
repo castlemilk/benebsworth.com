@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="102px" height="76px" viewBox="0 0 102 76" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>architectureAPIMobile</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0.255293084 36.2447754 48.8554919 66.8713216 93.7523114 33.7748047 45.8082702 3.81236979"></polygon>
+        <filter x="-8.0%" y="-8.7%" width="116.0%" height="123.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-3" points="0.255293084 36.2447754 48.8554919 66.8713216 93.7523114 33.7748047 45.8082702 3.81236979"></polygon>
+        <filter x="-8.0%" y="-8.7%" width="116.0%" height="123.8%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Architecture" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="mobile" transform="translate(-116.000000, -158.000000)">
+            <g id="architectureAPIMobile" transform="translate(120.000000, 161.000000)">
+                <g id="Path-9">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use stroke="#979797" stroke-width="1" fill="#D8D8D8" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="Group-2">
+                    <g id="Path-9">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                        <use stroke="#979797" stroke-width="1" fill="#D8D8D8" fill-rule="evenodd" xlink:href="#path-3"></use>
+                    </g>
+                    <g id="API" transform="translate(20.023669, 0.000000)" stroke="#979797" stroke-width="4">
+                        <polygon id="Path-6" fill="#FFFFFF" points="0.668640108 24.9652012 0 9.20039083 11.0488782 1.11666667 22.7738887 8.53014547 23.3609467 24.12033 12.3220582 32.3833333"></polygon>
+                        <polyline id="Path-7" points="18.2222507 27.9166667 17.7988166 20.1815868 23.3609467 16.1916667"></polyline>
+                        <polygon id="Path-6" fill="#FFFFFF" transform="translate(39.491124, 15.633333) scale(-1, -1) translate(-39.491124, -15.633333) " points="28.479291 23.8485346 27.8106509 8.08372416 38.8595291 0 50.5845396 7.4134788 51.1715976 23.0036633 40.1327091 31.2666667"></polygon>
+                        <polyline id="Path-5" points="28.3668639 16.1916667 33.9289941 19.6948193 33.9289941 26.8"></polyline>
+                        <polygon id="Path-6" fill="#FFFFFF" transform="translate(26.698225, 43.550000) scale(-1, -1) translate(-26.698225, -43.550000) " points="15.6863916 51.7652012 15.0177515 36.0003908 26.0666297 27.9166667 37.7916402 35.3301455 38.3786982 50.92033 27.3398097 59.1833333"></polygon>
+                        <polyline id="Path-8" points="20.5798817 32.2242145 26.3238801 35.7333333 31.704142 31.825"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

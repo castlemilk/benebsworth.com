@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="96px" height="62px" viewBox="0 0 96 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>architectureGUIMobile</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-60.2%" y="-59.3%" width="240.9%" height="237.4%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowOffsetOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Architecture" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="mobile" transform="translate(-43.000000, -116.000000)">
+            <g id="architectureGUIMobile" transform="translate(91.113741, 146.593764) rotate(1.000000) translate(-91.113741, -146.593764) translate(43.512265, 116.826227)">
+                <polygon id="Path-37" stroke="#979797" fill="#FFFFFF" opacity="0.528645833" points="0 25.8972777 37.9786062 -5.68434189e-14 95.202952 33.0634886 56.1425252 59.5350753"></polygon>
+                <polygon id="Path-38" stroke="#979797" fill="#5B7B99" points="38.0610557 0 95.202952 33.3813495 91.9953755 35.3840542 34.8708487 2.44936346"></polygon>
+                <ellipse id="Oval" stroke="#FF4E50" fill="#FF4E50" cx="37.9151292" cy="1.96578079" rx="1" ry="1"></ellipse>
+                <ellipse id="Oval" stroke="#FFBB00" fill="#FFBB00" cx="40.6826568" cy="3.65073575" rx="1" ry="1"></ellipse>
+                <ellipse id="Oval" stroke="#00D11B" fill="#00D11B" cx="44.00369" cy="5.33569071" rx="1" ry="1"></ellipse>
+                <path d="M34.776986,2.24660661 C41.7110074,6.33039045 45.0462557,8.28387103 44.7827308,8.10704836 C44.5192058,7.93022568 45.5456201,7.46166291 47.8619736,6.70136004 L57.1981395,12.0050009 C57.3380481,14.0470661 57.1573518,14.9602842 56.6560506,14.7446552 C56.1547493,14.5290263 67.8967054,21.3716365 91.8819188,35.2724861 L86.7836852,38.7539641 L29.8892989,5.46475625 L34.776986,2.24660661 Z" id="Path-39" stroke="#D7D7D6" fill="#D7D7D6"></path>
+                <polygon id="Path-40" stroke="#000000" points="48.0684998 7.30147149 46.4944649 8.35063714 48.4474836 9.54807811 49.8154982 8.4247748"></polygon>
+                <polyline id="Path-41" stroke="#000000" points="47.8152437 7.86312315 48.119388 8.14429075 47.601476 8.14429075 47.860432 8.98642645 48.119388 8.98642645 48.7084871 8.69272707"></polyline>
+                <polyline id="Path-42" stroke="#000000" points="48.2573506 8.4247748 47.0479705 8.61056288 48.2573506 8.98642645 48.7084871 8.61056288"></polyline>
+                <path d="M56.4575646,12.6371622 L55.3505535,12.6371622" id="Path-43" stroke="#979797"></path>
+                <path d="M55.6273063,12.3563364 L55.6273063,13.4796397" id="Path-44" stroke="#979797"></path>
+                <g id="BACK" transform="translate(33.763838, 4.493213)" stroke="#585858">
+                    <path d="M0.108647083,0.291864147 L1.62700357,1.344961" id="Path-45"></path>
+                    <polyline id="Path-46" points="1.55691449 0.109423345 0.119097382 0.109423345 0.119097382 1.51958585"></polyline>
+                </g>
+                <g id="FORWARD" filter="url(#filter-1)" transform="translate(37.361624, 6.458994) scale(-1, -1) translate(-37.361624, -6.458994) translate(36.531365, 5.616517)" stroke="#ABA9A9">
+                    <path d="M0.108647083,0.291864147 L1.62700357,1.344961" id="Path-45"></path>
+                    <polyline id="Path-46" points="1.55691449 0.109423345 0.119097382 0.109423345 0.119097382 1.51958585"></polyline>
+                </g>
+                <path d="M41.5129151,8.72347729 C41.1805259,8.89877673 40.9037731,8.98642645 40.6826568,8.98642645 C40.4615406,8.98642645 40.2396397,8.89877673 40.0169542,8.72347729 C39.9072504,8.54343735 39.8523985,8.34826416 39.8523985,8.13795773 C39.8523985,7.92765129 39.9072504,7.76118616 40.0169542,7.63856234 C40.2396397,7.41383511 40.4615406,7.30147149 40.6826568,7.30147149 C40.9037731,7.30147149 41.1442253,7.41383511 41.4040134,7.63856234" id="Path-47" stroke="#595959"></path>
+                <polygon id="Path-48" stroke="#595959" fill="#6B6B6B" points="40.4059041 8.4247748 41.5129151 7.30147149 41.5129151 8.4247748"></polygon>
+                <polygon id="Path-49" stroke="#979797" fill="#FFFFFF" points="44.0200119 8.98642645 41.5129151 10.7983813 82.5538716 34.2607509 85.2398524 32.272629"></polygon>
+                <path d="M86.900369,33.6990992 L89.6678967,35.3840542" id="Path-50" stroke="#979797" stroke-width="4"></path>
+                <path d="M85.7933579,34.2607509 L88.5608856,35.9457058" id="Path-50" stroke="#979797" stroke-width="4"></path>
+                <path d="M84.6863469,35.3840542 L87.4538745,37.0690091" id="Path-50" stroke="#979797" stroke-width="4"></path>
+                <polygon id="Path-61" stroke="#979797" points="34.4739149 23.0277178 32.6568266 24.0981728 48.156183 33.6990992 49.8154982 32.7074744"></polygon>
+                <g id="searchLogo" transform="translate(49.815498, 33.137448)">
+                    <ellipse id="Oval-5" stroke="#979797" fill="#FFFFFF" cx="5.25830258" cy="5.33569071" rx="5.25830258" ry="5.33569071"></ellipse>
+                    <g transform="translate(2.767528, 2.808258)" stroke="#B775F2" stroke-linecap="round">
+                        <ellipse id="Oval" cx="2.03637678" cy="2.11044864" rx="1.26221701" ry="1.25946128"></ellipse>
+                        <path d="M4.98154982,3.65132114 L4.01357404,2.65274415 C4.01667182,2.63774326 4.01902619,2.62645155 4.02063714,2.61886901 C4.361003,1.01680964 3.17627206,0 2.04619163,0 C0.916111197,0 0,0.923930572 0,2.06365669 C0,3.20338281 0.9171162,4.45502186 2.56858709,4.06191243 C2.65452701,4.04145564 3.17692248,4.55965701 4.13577348,5.61651653" id="Oval-2"></path>
+                        <path d="M3.53420764,3.98262081 L4.98154982,5.44631906" id="Path-2"></path>
+                        <path d="M3.66884412,3.30183093 L4.81325421,4.45917373" id="Path-3"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

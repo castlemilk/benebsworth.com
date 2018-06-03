@@ -2,14 +2,25 @@ import styled from 'styled-components';
 
 const Page1Wrapper = styled.div`
   background: #7f3fbf;
+  @media only screen and (max-width: 1300px) {
+    .page1-row {
+    margin-top: 0;
+  }
 
+  }
+  @media only screen and (min-width: 1300px) {
+    .page1-row {
+      margin-top: 400px;
+    }
+  }
+  min-height: 1020px;
   .home-page-wrapper .page h2 {
     font-size: 60px;
     line-height: 46px;
     color: white;
     text-align: center;
     font-weight: 400;
-    margin: 140px auto 100px;
+    margin-top: 30px;
   }
   .home-page-wrapper .page .header {
     z-index: 10;
@@ -22,7 +33,7 @@ const Page1Wrapper = styled.div`
     max-width: 2200px;
     margin: auto;
     position: relative;
-    padding: 0 24px;
+    z-index: 10;
   }
 
   .page1-block {

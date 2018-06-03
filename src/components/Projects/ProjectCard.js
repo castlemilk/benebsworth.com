@@ -47,7 +47,7 @@ margin-left: 10px;
 
 const ProjectCard = (props) => (
     <Wrapper>
-        <StyledLink to={props.path}>
+        <StyledLink to={props.path || '/'}>
         <Paper>
             <ProjectWrapper>
             <div className='project-card-image' >

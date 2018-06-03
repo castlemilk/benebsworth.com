@@ -7,6 +7,7 @@ import icon16 from '../../assets/images/favicon.png';
 import Nutry from '../../assets/images/nutry.png';
 import B from '../../assets/images/b-image.png';
 
+
 import { COLOR_SCHEME } from '../../config';
 import ProjectList from './ProjectList';
 import HeaderName from '../HeaderName';
@@ -90,12 +91,7 @@ export class Projects extends React.Component {
     }
 
     render() {
-        return (<div style={{
-            margin: '0 auto',
-            maxWidth: 960,
-            padding: '0px 1.0875rem 1.45rem',
-            paddingTop: 0,
-        }}>
+        return (<div>
             <Helmet
                 title='Ben Ebsworth [Projects]'
                 meta={[
@@ -103,7 +99,7 @@ export class Projects extends React.Component {
                   { name: 'keywords', content: 'Blog, technology, software engineering' },
                 ]}
                >
-               <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
+                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
               </Helmet>
             <ProjectsWrapper>
             <Grid style={{ textAlign: 'center'}}>

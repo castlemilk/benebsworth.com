@@ -126,8 +126,8 @@ class NutryArchitecture extends React.Component {
       typeof window !== 'undefined' && setTimeout(this.setState({
         windowWidth: window.innerWidth,
     }))
-    typeof window !== 'undefined' && console.log(window.innerWidth)
-    typeof window !== 'undefined' && console.log(window.innerWidth <=610)
+    // typeof window !== 'undefined' && console.log(window.innerWidth)
+    // typeof window !== 'undefined' && console.log(window.innerWidth <=610)
   }
   render() {
     const isMobile = this.state.windowWidth <= 610;

@@ -1,8 +1,9 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import styled from "styled-components"
+import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import Paper from '@material-ui/core/Paper';
-import Skills from '../Skills';
+import Skills from './../Skills';
 
 const StyledLink = styled(Link)`
   color: black;
@@ -38,16 +39,21 @@ width: 100%;
     }
 `
 const Wrapper = styled.div`
-margin-bottom: 10px;
+    margin-bottom: 10px;
+    color:black;
+    text-decoration: none;
+    a {
+        color:black;
+        text-decoration: none;
+    }
 `
 const SkillsHeader = styled.div`
 font-family: 'Days One';
 margin-left: 10px;
 `
 
-const ProjectCard = (props) => (
-    <Wrapper>
-        <StyledLink to={props.path || '/'}>
+const ProjectCard = (props) => {
+    const cardView = (
         <Paper>
             <ProjectWrapper>
             <div className='project-card-image' >
@@ -69,8 +75,21 @@ const ProjectCard = (props) => (
             
             </ProjectWrapper>
         </Paper>
-        </StyledLink>
-    </Wrapper>
-)
+    )
+    return props.path.url ? (
+        <Wrapper>
+            <OutboundLink href={props.path.url} >
+                {cardView}
+            </OutboundLink>
+        </Wrapper>
+    ) : (
+        <Wrapper>
+            <StyledLink to={props.path || '/'}>
+                {cardView}
+            </StyledLink>
+       </Wrapper>
+    )
+    
+}
 
 export default ProjectCard

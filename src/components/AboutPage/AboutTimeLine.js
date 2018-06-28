@@ -1,6 +1,6 @@
 import { VerticalTimeline, VerticalTimelineElement }  from '../VerticalTimeline';
 import { skills } from '../../config';
-import Skills from '../Skills';
+import Skills from './../Skills';
 import DigioLogoLarge from '../../assets/images/digio-logo.png';
 import DigioLogoSmall from '../../assets/images/digio-logo-small.png';
 import TelstraLogo from '../../assets/images/telstra-logo.png'
@@ -62,12 +62,12 @@ class AboutTimeLine extends React.Component {
               iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
               icon={digioLogoView}
             >
-              <h3 className="vertical-timeline-element-title">DevOps Engineer</h3>
+              <h3 className="vertical-timeline-element-title">DevOps/FullStack Engineer</h3>
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>
               <p>
-                Building highly automated and robust platforms ontop of Kubernetes. Utilising service-mesh technologies such 
+                Building highly automated and robust platforms on-top of Kubernetes. Utilising service-mesh technologies such 
                 as Istio to enable sophisticated service-mesh micoservice architectures.
-                Additionally, enabling/creating next-generation monitoring/observability capabilities, CI/CD pipelines, and security pratices. 
+                Additionally, enabling/creating next-generation monitoring/observability capabilities, CI/CD pipelines, and security practices. 
               </p>
               <Skills skills={skills[0]}/>
             </VerticalTimelineElement>
@@ -83,7 +83,7 @@ class AboutTimeLine extends React.Component {
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>
               <p>
                 Leading the build and development of small private cloud environment (4000 vCPU, 4 PB storage). 
-                As well building the application layer ontop which carried out large-scale message ingestion and transformation (capable of over 300k EPS)
+                As well building the application layer on-top which carried out large-scale message ingestion and transformation (capable of over 300k EPS)
               </p>
               <Skills skills={skills[1]}/>
             </VerticalTimelineElement>
@@ -134,7 +134,7 @@ class AboutTimeLine extends React.Component {
               <p>
               In depth exposure to low-level scientific theories in physics such as quantum mechanics, particle physics, condensed matter and cosmology/astronomy
               My applied mathematics major was focused in statistical and computational analysis with a strong coverage of partial and ordinary differential equations
-              Throughout the course a heavy emphasis was made on experimentation/laboratory work with extensive report writing and literature recviews.
+              Throughout the course a heavy emphasis was made on experimentation/laboratory work with extensive report writing and literature reviews.
               </p>
               <Skills skills={skills[4]}/>
             </VerticalTimelineElement>

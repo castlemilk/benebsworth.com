@@ -10,7 +10,7 @@ import B from '../../assets/images/b-image.png';
 
 import { COLOR_SCHEME } from '../../config';
 import ProjectList from './ProjectList';
-import HeaderName from '../HeaderName';
+import Header from '../Header';
 
 const ProjectsWrapper = styled.div`
 `
@@ -60,6 +60,10 @@ const projects = [
         title: 'This Blog',
         description: 'Little personal website to experiment and learn web technologies',
         image: B,
+        path: {
+            url: 'https://github.com/castlemilk/b',
+            outbound: true,
+        },
         technologies: [
             {
                 text: 'Gatsby',
@@ -103,7 +107,7 @@ export class Projects extends React.Component {
               </Helmet>
             <ProjectsWrapper>
             <Grid style={{ textAlign: 'center'}}>
-                <HeaderName />
+                <Header />
             </Grid>
             <ProjectList items={projects} />
         </ProjectsWrapper>

@@ -2,14 +2,13 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components'
 import Helmet from 'react-helmet'
-import HeaderCardDisplay from './HeaderCardDisplay';
-import icon16 from '../assets/images/favicon.png';
-import HeaderName from './HeaderName';
-import AboutCard from './AboutCard';
-import AboutAnimation from './AboutAnimation';
-import AboutPanel from './AboutPanel';
-import BlogCard from './BlogCard';
-import ProjectsCard from './ProjectsCard';
+import icon16 from '../../assets/images/favicon.png';
+import Header from './../Header';
+import HeaderCardDisplay from './HomeCardDisplay';
+import AboutCard from './../AboutCard';
+import BlogCard from './../BlogCard';
+import ProjectsCard from './../ProjectsCard';
+
 const Container = styled.div`
   margin: 0 auto;
   max-width: 960px;
@@ -63,7 +62,7 @@ class MainPage extends React.Component {
                 <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
               </Helmet>
             <Grid style={{ textAlign: 'center'}}>
-              <HeaderName />
+              <Header />
             </Grid>
             <Grid >
               <HeaderCardDisplay items={items_advanced} />

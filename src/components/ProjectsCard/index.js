@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import MtSvgLines from 'react-mt-svg-lines';
 import * as d3 from 'd3';
 
-import { poissonDiscSampler, sample } from '../lib/utils';
-import AboutPanel from './AboutPanel';
-import AboutAnimation from './AboutAnimation';
+import { poissonDiscSampler, sample } from '../../lib/utils';
 
 const CardTitle = styled.div`
   z-index: 10;

@@ -18,7 +18,7 @@ const Paper = styled.div`
   text-align: center;
   margin-top: 10px;
 `
-class HeaderCardDisplay extends React.Component {
+class HomeCardDisplay extends React.Component {
   constructor(props) {
     super(props)
     this.state = { loading: true }
@@ -46,4 +46,4 @@ class HeaderCardDisplay extends React.Component {
     )}
 }
 
-export default HeaderCardDisplay
+export default HomeCardDisplay

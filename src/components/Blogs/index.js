@@ -7,7 +7,7 @@ import icon16 from '../../assets/images/favicon.png';
 
 import { blogs } from './tests/fixtures'
 import BlogList from './BlogList';
-import HeaderName from '../HeaderName';
+import Header from '../Header';
 
 const BlogsWrapper = styled.div`
 `
@@ -51,7 +51,7 @@ export class Blogs extends React.Component {
                 <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
               </Helmet>
             <Grid style={{ textAlign: 'center'}}>
-                <HeaderName />
+                <Header />
             </Grid>
             <BlogList items={blogs} />
         </BlogsWrapper>)

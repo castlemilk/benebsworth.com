@@ -51,9 +51,9 @@ class AboutCard extends React.Component {
       <div
         onMouseOver={() => this.handleHover(true)}
         onMouseOut={() => this.handleHover(false)}
-        style={{ height: 250, width: 309, display: 'inline-block'}}>
+        style={{ height: 250, width: 311, display: 'inline-block'}}>
 
-        <div className="container" style={{ height: 250}}>
+        <div className="container" style={{ height: 250, width: 311}}>
           <Motion {...this.getSpringProps()}>
             {tweenCollection => {
              let styleTitle = {

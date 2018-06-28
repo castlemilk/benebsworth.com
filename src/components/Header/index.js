@@ -13,7 +13,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-class HeaderName extends React.Component {
+class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = { show: false, loading: true, windowWidth: 1700 }
@@ -45,4 +45,4 @@ class HeaderName extends React.Component {
     }
 }
 
-export default HeaderName;
+export default Header;

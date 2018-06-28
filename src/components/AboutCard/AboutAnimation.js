@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from "styled-components"
 // import Anime from 'react-anime';
-import CrossfadeImage from '../lib/CrossfadeImage';
+import CrossfadeImage from '../../lib/CrossfadeImage';
 import MtSvgLines from 'react-mt-svg-lines';
 import AboutSVG from './AboutSVG';
-import AboutPNG from '../assets/images/portrait.png'
+import AboutPNG from '../../assets/images/portrait.png'
 /**
  * TODO: add a spray-paint like animation that reveals the underlying rgb image beneath the black and white svg stenline, as the user mouses over the stencil
  * it will spray paint reveal the underlying image.

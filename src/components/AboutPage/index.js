@@ -6,7 +6,7 @@ import { Container } from 'styled-bootstrap-grid';
 import styled from "styled-components"
 import Link from 'gatsby-link'
 import icon16 from '../../assets/images/favicon.png';
-import HeaderName from '../HeaderName';
+import Header from '../Header';
 import AboutBody from './AboutBody';
 import AboutTimeLine from './AboutTimeLine';
 import AboutFooter from './AboutFooter';
@@ -76,7 +76,7 @@ export class AboutPage extends React.Component {
                 <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
               </Helmet>
                 <Grid style={{ textAlign: 'center', width: '100%'}}>
-                    <HeaderName size={ shrinkHeader ? 35 : 60} />
+                    <Header size={ shrinkHeader ? 35 : 60} />
                 </Grid>
                 <Grid>
                     <AboutBody isMobile={isMobile}/>

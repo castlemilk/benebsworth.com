@@ -24,5 +24,5 @@ class HomePage extends React.Component {
   }
 }
 
-export default withRoot(withStyles(styles)(HomePage));
-// export default HomePage;
+// export default withRoot(withStyles(styles)(HomePage));
+export default HomePage;

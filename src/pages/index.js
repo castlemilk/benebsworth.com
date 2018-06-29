@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from 'gatsby-link'
+// import Link from 'gatsby-link'
 import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import Home from '../components/Home';
@@ -16,12 +16,13 @@ class HomePage extends React.Component {
     super(props)
   }
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
-      <div className={classes.root}>
+      <div >
         <Home />
       </div>)
   }
 }
 
-export default withRoot(withStyles(styles)(HomePage));
+// export default withRoot(withStyles(styles)(HomePage));
+export default HomePage;

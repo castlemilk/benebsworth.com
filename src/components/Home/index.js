@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import styled from 'styled-components'
+// import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import icon16 from '../../assets/images/favicon.png';
 import Header from './../Header';
@@ -9,12 +9,12 @@ import AboutCard from './../AboutCard';
 import BlogCard from './../BlogCard';
 import ProjectsCard from './../ProjectsCard';
 
-const Container = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  padding: 0px 1.0875rem 1.45rem;
-  padding-top: 0;
-`
+// const Container = styled.div`
+//   margin: 0 auto;
+//   max-width: 960px;
+//   padding: 0px 1.0875rem 1.45rem;
+//   padding-top: 0;
+// `
 const items = [{ title: "dog"}, { title: "cat"}, {title: "mouse"}]
 const items_advanced = [
   {
@@ -51,7 +51,11 @@ class MainPage extends React.Component {
     this.setState({ loading: false})
   }
   render() {
-    return this.state.loading ? <div>loading</div> : (<Container>
+    return this.state.loading ? <div>loading</div> : (<div style={{
+      margin: "0 auto",
+      maxWidth: 960,
+      // padding: "0px 30px 30px",
+      paddingTop: 0}}>
             <Helmet
                 title='Ben Ebsworth'
                 meta={[
@@ -67,7 +71,7 @@ class MainPage extends React.Component {
             <Grid >
               <HeaderCardDisplay items={items_advanced} />
             </Grid>
-      </Container>)}
+      </div>)}
 }
 
 export default MainPage

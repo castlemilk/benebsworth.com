@@ -21,33 +21,33 @@
 //      });
 //    });
 // };
-exports.onCreateWebpackConfig = ({ stage,
-  rules,
-  loaders,
-  plugins,
-  actions, }) => {
-  actions.setWebpackConfig({
-    module: {
-      rules: [
-        {
-          test: require.resolve('snapsvg'),
-          loader: 'imports-loader?this=>window,fix=>module.exports=0'
-        },
-        {
-          test: /svgpathplayer/,
-          loader: 'imports-loader?this=>window,fix=>module.exports=0'
-        }
-      ]
-    },
-    plugins: [
-      plugins.define({
-        __DEVELOPMENT__: stage === `develop` || stage === `develop-html`,
-      }),
-    ],
-  })
-};
+// exports.onCreateWebpackConfig = ({ stage,
+//   rules,
+//   loaders,
+//   plugins,
+//   actions, }) => {
+//   actions.setWebpackConfig({
+//     module: {
+//       rules: [
+//         {
+//           test: require.resolve('snapsvg'),
+//           loader: 'imports-loader?this=>window,fix=>module.exports=0'
+//         },
+//         {
+//           test: /svgpathplayer/,
+//           loader: 'imports-loader?this=>window,fix=>module.exports=0'
+//         }
+//       ]
+//     },
+//     plugins: [
+//       plugins.define({
+//         __DEVELOPMENT__: stage === `develop` || stage === `develop-html`,
+//       }),
+//     ],
+//   })
+// };
 
-// Add Babel plugin
+// //Add Babel plugin
 // try {
 //   require.resolve(`babel-plugin-styled-components`)
 // } catch (e) {
@@ -66,22 +66,3 @@ exports.onCreateWebpackConfig = ({ stage,
 //     },
 //   })
 // }
-
-
-try {
-  require.resolve(`babel-plugin-styled-components`)
-} catch (e) {
-  throw new Error(
-    `'babel-plugin-styled-components' is not installed which is needed by plugin 'gatsby-plugin-styled-components'`
-  )
-}
-
-exports.onCreateBabelConfig = ({ stage, actions }, pluginOptions) => {
-  actions.setBabelPlugin({
-    name: `babel-plugin-styled-components`,
-    stage,
-    options: {
-      ssr: stage === `build-html`,
-    },
-  })
-}

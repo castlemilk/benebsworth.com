@@ -1,3 +1,13 @@
+export const SEOconfig  = {
+    title: 'Ben Ebsworth · Personal Blog and Projects',
+    description: '',
+    url: 'https://benebsworth.com',
+    image: 'https://benebsworth.com/static/logo-512x512.png',
+    twitter: '@sycli',
+    fbAppID: ''
+
+
+}
 export const headerCards = [
     {
         key: 1,
@@ -32,6 +42,8 @@ export const COLOR_SCHEME = {
     brown: '#bf7b26',
     purple: '#cfa8e6',
     react: '#5fdbfb',
+    midblue: '#6398AA',
+    okta: '#0f7ec2'
     
 }
 export const skills = [
@@ -82,7 +94,23 @@ export const skills = [
         },
         {
             text: 'Okta',
+            color: COLOR_SCHEME.okta
+        },
+        {
+            text: 'Java',
             color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Python',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Groovy',
+            color: COLOR_SCHEME.midblue
+        },
+        {
+            text: 'SpringBoot',
+            color: COLOR_SCHEME.green
         },
     ],
     [

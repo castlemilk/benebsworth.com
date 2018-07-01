@@ -43,7 +43,7 @@ class AboutAnimation extends React.Component {
       <div>
         <div style={{ zIndex: 5, position: 'absolute'}}>
           <RealImage>
-            <img src={AboutPNG} height={250} />
+            <img src={AboutPNG} height={274} />
           </RealImage>
         </div>
         <div style={{ display: this.state.hidden }}>

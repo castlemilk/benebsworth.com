@@ -1,13 +1,22 @@
 import React from 'react'
-import Link from 'gatsby-link'
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
 
 const AboutBodyWrapper = styled.div`
   text-align: center;
   width: 100%;
 `
+
+const Paper = styled.div`
+  -webkit-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  -moz-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 20px;
+`
+
 const AboutBlurb = styled.div`
   @media (max-width: 991px) {
     .blurb-description p span {

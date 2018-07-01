@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import styled from 'styled-components'
+// import styled from 'styled-components'
 import Helmet from 'react-helmet'
 import icon16 from '../../assets/images/favicon.png';
 import Header from './../Header';
@@ -8,13 +8,14 @@ import HeaderCardDisplay from './HomeCardDisplay';
 import AboutCard from './../AboutCard';
 import BlogCard from './../BlogCard';
 import ProjectsCard from './../ProjectsCard';
+import withRoot from '../../withRoot';
 
-const Container = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  padding: 0px 1.0875rem 1.45rem;
-  padding-top: 0;
-`
+// const Container = styled.div`
+//   margin: 0 auto;
+//   max-width: 960px;
+//   padding: 0px 1.0875rem 1.45rem;
+//   padding-top: 0;
+// `
 const items = [{ title: "dog"}, { title: "cat"}, {title: "mouse"}]
 const items_advanced = [
   {
@@ -51,23 +52,16 @@ class MainPage extends React.Component {
     this.setState({ loading: false})
   }
   render() {
-    return this.state.loading ? <div>loading</div> : (<Container>
-            <Helmet
-                title='Ben Ebsworth'
-                meta={[
-                  { name: 'description', content: 'Blog' },
-                  { name: 'keywords', content: 'Blog, technology, software engineering' },
-                ]}
-               >
-                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
-              </Helmet>
+    return this.state.loading ? <div>loading</div> : (<div style={{
+      margin: "0 auto",
+      maxWidth: 1024 }}>
             <Grid style={{ textAlign: 'center'}}>
               <Header />
             </Grid>
             <Grid >
               <HeaderCardDisplay items={items_advanced} />
             </Grid>
-      </Container>)}
+      </div>)}
 }
 
-export default MainPage
+export default withRoot(MainPage)

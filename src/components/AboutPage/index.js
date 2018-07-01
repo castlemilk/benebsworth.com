@@ -62,19 +62,10 @@ export class AboutPage extends React.Component {
         const shrinkHeader = windowWidth <= 400;
         return (<div style={{
             margin: '0 auto',
-            maxWidth: 960,
+            maxWidth: 1024,
             padding: '0px 1.0875rem 1.45rem',
             paddingTop: 0,
         }}>
-            <Helmet
-                title='Ben Ebsworth [About]'
-                meta={[
-                  { name: 'description', content: 'Blog' },
-                  { name: 'keywords', content: 'Blog, technology, software engineering' },
-                ]}
-               >
-                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
-              </Helmet>
                 <Grid style={{ textAlign: 'center', width: '100%'}}>
                     <Header size={ shrinkHeader ? 35 : 60} />
                 </Grid>

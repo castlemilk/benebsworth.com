@@ -5,7 +5,7 @@ import Panel from './Panel';
 export default (props) => {
   const dimenions = {
     width: 309,
-    height: 250
+    height: 274
   }
   const gridStyles = {
     position: "absolute",

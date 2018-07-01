@@ -14,7 +14,7 @@ const CardTitle = styled.div`
   text-align: center;
   justify-content: center;
   width: 309px;
-  height: 250px;
+  height: 274px;
   font-family: 'Days One';
   font-size: 30px;
 `
@@ -23,7 +23,7 @@ class ProjectsCard extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-        height: 250,
+        height: 274,
         width: 309,
         pi: 2 * Math.PI,
         gravity: 0.1,

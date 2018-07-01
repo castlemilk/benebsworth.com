@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 
 const BlogWrapper = styled.div`
 display: inline-block;
-width: 100%;
+width: 1024px;
     .blog-card-image {
         margin: 5px;
         float: left;
@@ -31,10 +31,10 @@ width: 100%;
     }
 `
 const Wrapper = styled.div`
-${'' /* justify-content: center;
+justify-content: center;
 align-items: center;
 flex-wrap: wrap;
-display: flex; */}
+display: flex;
 margin-bottom: 10px;
 
 `

@@ -95,16 +95,9 @@ export class Projects extends React.Component {
     }
 
     render() {
-        return (<div>
-            <Helmet
-                title='Ben Ebsworth [Projects]'
-                meta={[
-                  { name: 'description', content: 'Projects' },
-                  { name: 'keywords', content: 'Blog, technology, software engineering' },
-                ]}
-               >
-                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
-              </Helmet>
+        return (<div style={{
+            margin: "0 auto",
+            maxWidth: 1024 }}>
             <ProjectsWrapper>
             <Grid style={{ textAlign: 'center'}}>
                 <Header />

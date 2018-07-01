@@ -61,7 +61,7 @@ const projects = [
         description: 'Little personal website to experiment and learn web technologies',
         image: B,
         path: {
-            url: 'https://github.com/castlemilk/b',
+            url: 'https://github.com/castlemilk/benebsworth.com',
             outbound: true,
         },
         technologies: [

@@ -19,7 +19,7 @@ const BlogTitle = styled.div`
   text-align: center;
   justify-content: center;
   width: 309px;
-  height: 250px;
+  height: 274px;
   font-family: 'Days One';
   font-size: 30px;
 `
@@ -34,7 +34,7 @@ class BlogCard extends React.Component {
         height: 0,
         rect: 0,
         n: 10,
-        m: 3,
+        m: 5,
         padding: 6,
         maxSpeed: 100,
         radius: 0,
@@ -45,7 +45,7 @@ class BlogCard extends React.Component {
         circle: null,
       }
       this.state.width = 309 - this.state.margin.left - this.state.margin.right;
-      this.state.height = 250 - this.state.margin.top - this.state.margin.bottom;
+      this.state.height = 274 - this.state.margin.top - this.state.margin.bottom;
       this.state.rect = [0,0, this.state.width - 0, this.state.height - 0];
       this.state.radius = d3.scaleSqrt().range([0, 8]);
       this.state.color = d3.scaleOrdinal(d3.schemeSet3).domain(d3.range(this.state.m));

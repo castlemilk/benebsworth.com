@@ -6,7 +6,6 @@ const StyledLink = styled(Link)`
   color: black;
   text-decoration: none;
   font-family: 'Days One';
-  margin-bottom: 30;
   font-size: ${props => props.size}px;
   .header-content span {
       font-family: 'Days One';

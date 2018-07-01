@@ -1,8 +1,8 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import { Row, Col } from 'styled-bootstrap-grid';
 import styled from 'styled-components'
 import Link from 'gatsby-link'
+import withRoot from '../../withRoot';
 
 const StyledLink = styled(Link)`
   color: black;
@@ -11,12 +11,11 @@ const Paper = styled.div`
   -webkit-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
   -moz-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
   box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
-  height: 250px;
+  height: 274px;
   width: 309px;
   display: inline-flex;
   justify-content: center;
   text-align: center;
-  margin-top: 10px;
 `
 class HomeCardDisplay extends React.Component {
   constructor(props) {
@@ -28,7 +27,7 @@ class HomeCardDisplay extends React.Component {
   }
   render() {
     const plainCard = (key, text, color) => {
-      return (<Paper key={key} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 250}} >
+      return (<Paper key={key} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 274}} >
           {text}
       </Paper>)
     }
@@ -39,12 +38,11 @@ class HomeCardDisplay extends React.Component {
             <div style={{ '-webkit-box-shadow': '6px 7px 11px -5px rgba(138,133,138,1)',
                           '-moz-box-shadow': '6px 7px 11px -5px rgba(138,133,138,1)',
                           'box-shadow': '6px 7px 11px -5px rgba(138,133,138,1)',
-                          height: 250,
+                          height: 274,
                           width: 309,
                           display: 'inline-flex',
                           justifyContent: 'center',
-                          textAlign: 'center',
-                          marginTop: 10}}
+                          textAlign: 'center' }}
             >
               {component}
             </div>
@@ -52,12 +50,13 @@ class HomeCardDisplay extends React.Component {
     </Grid>
     ))
     return this.state.loading ? <div>loading</div> : (
-      <div style={{  textAlign: 'center' }} >
-        <div style={{ display: 'flex', flexWrap: 'wrap', marginRight: 0, marginLeft: 0 }} >
+      <div style={{  textAlign: 'center', marginTop: 30 }} >
+        {/* <div style={{ display: 'flex', flexWrap: 'wrap', marginRight: 0, marginLeft: 0 }} > */}
+        <Grid container direction='row'>
             {cards}
-        </div>
+        </Grid>
       </div>
     )}
 }
 
-export default HomeCardDisplay
+export default withRoot(HomeCardDisplay)

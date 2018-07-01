@@ -8,6 +8,7 @@ import HeaderCardDisplay from './HomeCardDisplay';
 import AboutCard from './../AboutCard';
 import BlogCard from './../BlogCard';
 import ProjectsCard from './../ProjectsCard';
+import withRoot from '../../withRoot';
 
 // const Container = styled.div`
 //   margin: 0 auto;
@@ -53,18 +54,7 @@ class MainPage extends React.Component {
   render() {
     return this.state.loading ? <div>loading</div> : (<div style={{
       margin: "0 auto",
-      maxWidth: 960,
-      // padding: "0px 30px 30px",
-      paddingTop: 0}}>
-            <Helmet
-                title='Ben Ebsworth'
-                meta={[
-                  { name: 'description', content: 'Blog' },
-                  { name: 'keywords', content: 'Blog, technology, software engineering' },
-                ]}
-               >
-                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
-              </Helmet>
+      maxWidth: 1024 }}>
             <Grid style={{ textAlign: 'center'}}>
               <Header />
             </Grid>
@@ -74,4 +64,4 @@ class MainPage extends React.Component {
       </div>)}
 }
 
-export default MainPage
+export default withRoot(MainPage)

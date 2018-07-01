@@ -41,16 +41,7 @@ export class Blogs extends React.Component {
 
     render() {
         return (<BlogsWrapper>
-            <Helmet
-                title='Ben Ebsworth [Blog]'
-                meta={[
-                  { name: 'description', content: 'Blog' },
-                  { name: 'keywords', content: 'Blog, technology, software engineering' },
-                ]}
-               >
-                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
-              </Helmet>
-            <Grid style={{ textAlign: 'center'}}>
+            <Grid style={{ textAlign: 'center', width: '100%'}}>
                 <Header />
             </Grid>
             <BlogList items={blogs} />

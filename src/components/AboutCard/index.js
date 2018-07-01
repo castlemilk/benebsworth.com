@@ -34,7 +34,7 @@ class AboutCard extends React.Component {
      },
      style:{
        scale: spring(this.state.isHover ? 1 : 1.15),
-       marginTop: spring(this.state.isHover ? -0 : -0),
+       marginTop: spring(this.state.isHover ? 0 : 0),
        marginLeft: spring(this.state.isHover ? 0 : 0),
        imageOpacity: spring(this.state.isHover ? 0.4 : 0.7),
        opacity: spring(this.state.isHover ? 1 : 0),
@@ -51,7 +51,7 @@ class AboutCard extends React.Component {
       <div
         onMouseOver={() => this.handleHover(true)}
         onMouseOut={() => this.handleHover(false)}
-        style={{ height: 250, width: 311, display: 'inline-block'}}>
+        style={{ height: 250, width: 309, display: 'inline-block'}}>
 
         <div className="container" style={{ height: 250, width: 311}}>
           <Motion {...this.getSpringProps()}>

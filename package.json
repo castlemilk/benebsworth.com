@@ -61,7 +61,7 @@
     "develop": "gatsby develop",
     "format": "prettier --write 'src/**/*.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gatsby build --prefix-paths && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket benebsworth.com --deleteRemoved --gzip && npm run clear",
+    "deploy": "gatsby build && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket benebsworth.com --deleteRemoved --gzip && s3-deploy './static/**' --cwd './static/' --region ap-southeast-2 --bucket benebsworth.com --gzip && npm run clear",
     "clear": "aws-cloudfront-invalidate E30L2WGIX5OPQG"
   },
   "devDependencies": {

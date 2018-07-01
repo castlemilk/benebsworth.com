@@ -1,4 +1,4 @@
-export const SEOconfig = {
+export const SEOconfig  = {
     title: 'Ben Ebsworth · Personal Blog and Projects',
     description: '',
     url: 'https://benebsworth.com',

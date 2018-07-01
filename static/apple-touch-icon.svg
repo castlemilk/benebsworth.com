@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="29px" viewBox="0 0 17 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>apple-touch-icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="blog" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Verdana-Bold, Verdana" font-size="21" font-weight="bold">
+        <g id="apple-touch-icon" transform="translate(-8.000000, -1.000000)" fill="#000000">
+            <text id="B">
+                <tspan x="8.00195312" y="21">B</tspan>
+            </text>
+            <text id="E" transform="translate(16.500000, 22.774194) rotate(90.000000) translate(-16.500000, -22.774194) ">
+                <tspan x="10" y="33.4516129">E</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

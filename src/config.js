@@ -101,10 +101,6 @@ export const skills = [
             color: COLOR_SCHEME.blue
         },
         {
-            text: 'Python',
-            color: COLOR_SCHEME.green
-        },
-        {
             text: 'Groovy',
             color: COLOR_SCHEME.midblue
         },

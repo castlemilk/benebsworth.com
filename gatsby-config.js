@@ -7,7 +7,7 @@ module.exports = {
     // 'gatsby-plugin-antd',
     // 'gatsby-plugin-styled-components',
     {
-      resolve: 'gatsby-plugin-antd',
+      resolve: 'gatsby-plugin-antd-v2',
       options: {
         style: true
       }

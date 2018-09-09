@@ -12,7 +12,7 @@ class AboutSVG extends React.Component {
 
   render () {
     const loadingView = (<div>loading</div>)
-    return this.state.loading ? loadingView : (
+    return (
       <svg width="309px" height="274px" viewBox="0 0 309 274" version="1.1">
         <g id="Architecture" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="portrait" transform="translate(3.000000, 1.000000)" stroke="#000000" stroke-width="2">

@@ -3,7 +3,7 @@ module.exports = {
     title: 'Ben Ebsworth',
   },
   plugins: [
-    'gatsby-plugin-react-helmet',
+    // 'gatsby-plugin-react-helmet',
     // 'gatsby-plugin-antd',
     // 'gatsby-plugin-styled-components',
     {

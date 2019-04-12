@@ -57,6 +57,7 @@ class AboutTimeLine extends React.Component {
             <VerticalTimelineElement
               position="right"
               animate="true"
+              key={'item-one'}
               className="vertical-timeline-element--work"
               date="April, 2018 - present"
               iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
@@ -74,6 +75,7 @@ class AboutTimeLine extends React.Component {
             <VerticalTimelineElement
               position="left"
               animate="true"
+              key={'item-two'}
               className="vertical-timeline-element--work"
               date="August, 2016 - April, 2018"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
@@ -90,6 +92,7 @@ class AboutTimeLine extends React.Component {
             <VerticalTimelineElement
               position="right"
               animate="true"
+              key={'item-three'}
               className="vertical-timeline-element--work"
               date="Febuary, 2015 - July, 2016"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
@@ -107,6 +110,7 @@ class AboutTimeLine extends React.Component {
             <VerticalTimelineElement
               position="left"
               animate="true"
+              key={'item-four'}
               className="vertical-timeline-element--education"
               date="November, 2014"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
@@ -123,6 +127,7 @@ class AboutTimeLine extends React.Component {
             <VerticalTimelineElement
               position="right"
               animate="true"
+              key={'item-six'}
               className="vertical-timeline-element--education"
               date="2009 - 2013"
               iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}

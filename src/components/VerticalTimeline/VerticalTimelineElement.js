@@ -13,6 +13,7 @@ class VerticalTimelineElement extends React.Component {
   }
 
   onVisibilitySensorChange(isVisible) {
+    console.log('VerticalTimelineElement:isVisible:', isVisible)
     if (isVisible) {
       this.setState({ visible: true });
     }
@@ -34,17 +35,19 @@ class VerticalTimelineElement extends React.Component {
 
     return (
         <VerticalTimelineElementWrapper isVisible={this.state.isVisible} >
-        <div id={id} className={className} style={style}>
-            <VisibilitySensor onChange={this.onVisibilitySensorChange}>
-            <div>
-                <span style={iconStyle} className={`vertical-timeline-element-icon ${this.state.visible ? 'bounce-in' : 'is-hidden'}`}>{icon}</span>
-                <div className={`vertical-timeline-element-content ${this.state.visible ? 'bounce-in' : 'is-hidden'}`}>
-                {children}
-                <span className="vertical-timeline-element-date">{date}</span>
-                </div>
-            </div>
-            </VisibilitySensor>
-        </div>
+        <VisibilitySensor onChange={this.onVisibilitySensorChange}>
+          <div id={id} className={className} style={style}>
+              
+              <div>
+                  <span style={iconStyle} className={`vertical-timeline-element-icon ${this.state.visible ? 'bounce-in' : 'is-hidden'}`}>{icon}</span>
+                  <div className={`vertical-timeline-element-content ${this.state.visible ? 'bounce-in' : 'is-hidden'}`}>
+                  {children}
+                  <span className="vertical-timeline-element-date">{date}</span>
+                  </div>
+              </div>
+              
+          </div>
+        </VisibilitySensor>
         </VerticalTimelineElementWrapper>
     );
   }

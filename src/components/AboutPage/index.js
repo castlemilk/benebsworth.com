@@ -11,9 +11,9 @@ import AboutBody from './AboutBody';
 import AboutTimeLine from './AboutTimeLine';
 import AboutFooter from './AboutFooter';
 import AboutCertifications from './AboutCertifications';
-import { injectGlobal } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 
-injectGlobal`
+const GlobalStyles = createGlobalStyle`
 h2,h3,h4 {
   font-family: 'Days One';
 }
@@ -66,6 +66,7 @@ export class AboutPage extends React.Component {
             padding: '0px 1.0875rem 1.45rem',
             paddingTop: 0,
         }}>
+                <GlobalStyles />
                 <Grid style={{ textAlign: 'center', width: '100%'}}>
                     <Header size={ shrinkHeader ? 35 : 60} />
                 </Grid>

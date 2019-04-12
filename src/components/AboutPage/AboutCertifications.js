@@ -9,6 +9,13 @@ import AWSSolArchitectProfessional from '../../assets/images/aws-sol-architect-p
 import AWSSolArchitectAssociate from '../../assets/images/aws-sol-architect-associate.png';
 import AWSSysOpsAssociate from '../../assets/images/aws-sysops-associate.png';
 import AWSHeaderBackground from '../../assets/images/aws-header-background.png';
+import GCPHeaderBackground from '../../assets/images/gcp-header-background.png';
+import GCPCloudArchitectProfessional from '../../assets/images/gcp-cloud-architect-professional.png';
+import GCPCloudDeveloperProfessional from '../../assets/images/gcp-cloud-developer-professional.png';
+import GCPDataEngineerProfessional from '../../assets/images/gcp-data-engineer-professional.png';
+import KubernetesHeaderBackground from '../../assets/images/kubernetes-header-background.png';
+import CKA from '../../assets/images/cka.png';
+import CKAD from '../../assets/images/ckad.png';
 const Wrapper = styled.div`
     margin-bottom: 20px;
     color:black;
@@ -48,6 +55,41 @@ const AboutCertifications = (props) => {
             url: 'https://www.certmetrics.com/amazon/public/badge.aspx?i=4&t=c&d=2018-07-23&ci=AWS00461528',
             score: 81,
             headerBackground: AWSHeaderBackground
+        },
+        {
+            title: 'Cloud Architect - Professional',
+            image: GCPCloudArchitectProfessional,
+            url: 'https://www.credential.net/n61f0yqq?key=90fc73583c37636afe695c1630616338274ef6de2af726f6f115b09fa8486aee',
+            score: 100,
+            headerBackground: GCPHeaderBackground
+        },
+        {
+            title: 'Data Engineer - Professional',
+            image: GCPDataEngineerProfessional,
+            url: 'https://www.credential.net/b0ggnqiq?key=c6bc1ec57d52e36b9bf1121bd038a0660f549001c0ce2afc0d9da751ddf6c530',
+            score: 100,
+            headerBackground: GCPHeaderBackground
+        },
+        {
+            title: 'Cloud Developer - Professional',
+            image: GCPCloudDeveloperProfessional,
+            url: 'https://www.credential.net/9pdnh3wk?key=6fa8092c877c293db755182f5ca1d0e465d0aa15e3c842d727390bb37843a5dc',
+            score: 100,
+            headerBackground: GCPHeaderBackground
+        },
+        {
+            title: 'Certified Kubernetes Administrator',
+            image: CKA,
+            url: 'https://www.credential.net/9pdnh3wk?key=6fa8092c877c293db755182f5ca1d0e465d0aa15e3c842d727390bb37843a5dc',
+            score: 100,
+            headerBackground: KubernetesHeaderBackground
+        },
+        {
+            title: 'Certified Kubernetes Application Developer',
+            image: CKAD,
+            url: 'https://www.credential.net/9pdnh3wk?key=6fa8092c877c293db755182f5ca1d0e465d0aa15e3c842d727390bb37843a5dc',
+            score: 100,
+            headerBackground: KubernetesHeaderBackground
         }
 
     ]
@@ -56,14 +98,12 @@ const AboutCertifications = (props) => {
             Certifications
             </CertificationHeader>
         <Grid container style= {{ justifyContent: 'center' }} >
-        {/* <div style={{ textAlign: 'center' }}> */}
         {
         certs.map ( props => (
-            <OutboundLink style={{ color: 'black', textDecoration:'none' }} href={props.url} >
+            <OutboundLink key={`item-${props.title}`} style={{ color: 'black', textDecoration:'none' }} href={props.url} >
                 <Card key={props.title} {...props} />
             </OutboundLink>
         ))}
-        {/* </div> */}
         </Grid>
         </Wrapper>)
 }

@@ -1,9 +1,8 @@
 import React, { Component } from "react"
 import * as PropTypes from "prop-types"
-import { injectGlobal } from 'styled-components'
-import Helmet from 'react-helmet'
+import { createGlobalStyle } from 'styled-components'
 
-injectGlobal`
+const GlobalStyles = createGlobalStyle`
 h2,h3,h4 {
   font-family: 'Days One';
 }
@@ -20,6 +19,7 @@ class Html extends Component {
     render() {
         return (
             <html op="news" lang="en">
+             <GlobalStyles />
               <head>
                 {this.props.headComponents}
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />

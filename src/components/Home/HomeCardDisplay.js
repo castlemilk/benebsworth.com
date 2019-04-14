@@ -7,6 +7,9 @@ import Transition from 'react-transition-group/Transition';
 
 const StyledLink = styled(Link)`
   color: black;
+  box-shadow: none;
+  border: none;
+  text-decoration: none !important;
 
 `;
 

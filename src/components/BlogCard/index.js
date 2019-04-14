@@ -9,7 +9,9 @@ const BlogWrapper = styled.div`
   .paper-wrapper:hover {
     text-shadow: 2px 2px 5px #903fb9;
     font-size: 40px;
+    text-decoration: none !important;
   }
+  border: none;
 `
 const BlogTitle = styled.div`
   z-index: 10;
@@ -160,8 +162,8 @@ class BlogCard extends React.Component {
         <div className="paper-wrapper"
           onMouseEnter={() => this.startAnimation()}
           onMouseLeave={() => this.stopAnimation()}
-          style={{ height: 250, width: 309, display: 'inline-block', boxShadow: '10 10 8 #888888'}}>
-          <div className="container-blog" style={{ height: 250, position: 'absolute'}}>
+          style={{ height: '92%', width: 309, display: 'inline-block', border: 0, boxShadow: '10 10 8 #888888'}}>
+          <div className="container-blog" style={{ height: '100%', position: 'absolute'}}>
             <BlogTitle>
                 Blog
             </BlogTitle>

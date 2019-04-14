@@ -113,7 +113,7 @@ class ProjectsCard extends React.Component {
     
     return (
       <div
-        style={{ height: 250, width: 309, display: 'inline-block'}}>
+        style={{ height: '92%', width: 309, display: 'inline-block'}}>
           <div className='project-card-container' >   
           <CardTitle>
             Projects

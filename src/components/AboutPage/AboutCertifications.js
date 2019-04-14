@@ -20,7 +20,13 @@ const Wrapper = styled.div`
     margin-bottom: 20px;
     color:black;
     text-decoration: none;
+    box-shadow: none;
+    border: none;
 `;
+const StyledLink = styled(OutboundLink)`
+    text-decoration: none;
+    box-shadow: none;
+`
 const CertificationHeader = styled.div`
     font-family: 'Days One';
     font-size:  35px;
@@ -100,9 +106,9 @@ const AboutCertifications = (props) => {
         <Grid container style= {{ justifyContent: 'center' }} >
         {
         certs.map ( props => (
-            <OutboundLink key={`item-${props.title}`} style={{ color: 'black', textDecoration:'none' }} href={props.url} >
+            <StyledLink key={`item-${props.title}`} style={{ color: 'black', textDecoration:'none' }} href={props.url} >
                 <Card key={props.title} {...props} />
-            </OutboundLink>
+            </StyledLink>
         ))}
         </Grid>
         </Wrapper>)

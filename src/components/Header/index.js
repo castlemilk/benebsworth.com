@@ -6,6 +6,7 @@ const StyledLink = styled(Link)`
   color: black;
   text-decoration: none;
   font-family: 'Prompt';
+  font-weight: bold;
   font-size: ${props => props.size}px;
   .header-content span {
     font-family: 'Prompt';

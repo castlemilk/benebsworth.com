@@ -17,6 +17,7 @@ const CardTitle = styled.div`
   height: 274px;
   font-family: 'Prompt';
   font-size: 30px;
+  font-weight: bold;
 `
 
 class ProjectsCard extends React.Component {

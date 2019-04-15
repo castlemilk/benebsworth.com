@@ -32,6 +32,7 @@ const Header = styled.div`
   width: 100%;
   background-color: #ffb44f;
   z-index: 2;
+  
 `
 const Body = styled.div`
   height: 60%;
@@ -39,6 +40,8 @@ const Body = styled.div`
   background-color: white;
   z-index: 1;
   position: relative;
+  font-weight: bold;
+  font-size: 17px;
 `
 const Description = styled.div`
   padding-top: 70px;

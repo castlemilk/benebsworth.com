@@ -211,7 +211,7 @@ const VerticalTimelineElementWrapper = styled.div`
     .vertical-timeline-element-content .vertical-timeline-element-date {
         position: absolute;
         width: 100%;
-        left: 124%;
+        left: 140%;
         top: 6px;
         font-size: 16px;
         font-size: 1rem;
@@ -233,7 +233,7 @@ const VerticalTimelineElementWrapper = styled.div`
     .vertical-timeline-element:nth-child(even):not(.vertical-timeline-element--left) .vertical-timeline-element-content .vertical-timeline-element-date,
     .vertical-timeline-element.vertical-timeline-element--right .vertical-timeline-element-content .vertical-timeline-element-date {
         left: auto;
-        right: 124%;
+        right: 140%;
         text-align: right;
     }
     .vertical-timeline-element-content.is-hidden {

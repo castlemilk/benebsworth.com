@@ -13,7 +13,6 @@ class VerticalTimelineElement extends React.Component {
   }
 
   onVisibilitySensorChange(isVisible) {
-    console.log('VerticalTimelineElement:isVisible:', isVisible)
     if (isVisible) {
       this.setState({ visible: true });
     }

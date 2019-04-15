@@ -30,6 +30,7 @@ const StyledLink = styled(OutboundLink)`
 const CertificationHeader = styled.div`
     font-family: Avenir Next, sans-serif;
     font-size:  35px;
+    font-weight: bold;
 `
 
 const AboutCertifications = (props) => {
@@ -86,14 +87,14 @@ const AboutCertifications = (props) => {
         {
             title: 'Certified Kubernetes Administrator',
             image: CKA,
-            url: 'https://www.credential.net/9pdnh3wk?key=6fa8092c877c293db755182f5ca1d0e465d0aa15e3c842d727390bb37843a5dc',
+            url: 'https://benebsworth.com/pdf/CKA_Certificate.pdf',
             score: 100,
             headerBackground: KubernetesHeaderBackground
         },
         {
             title: 'Certified Kubernetes Application Developer',
             image: CKAD,
-            url: 'https://www.credential.net/9pdnh3wk?key=6fa8092c877c293db755182f5ca1d0e465d0aa15e3c842d727390bb37843a5dc',
+            url: 'https://benebsworth.com/pdf/CKAD_Certificate.pdf',
             score: 100,
             headerBackground: KubernetesHeaderBackground
         }

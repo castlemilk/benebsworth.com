@@ -23,6 +23,7 @@ const BlogTitle = styled.div`
   width: 309px;
   height: 274px;
   font-family: 'Prompt';
+  font-weight: bold;
   font-size: 30px;
 `
 class BlogCard extends React.Component {

@@ -51,6 +51,7 @@ export default props => {
               width: dimenions.width,
               height: dimenions.height,
               fontFamily: 'Prompt',
+              fontWeight: `bold`,
               zIndex: 20
             }}
           >

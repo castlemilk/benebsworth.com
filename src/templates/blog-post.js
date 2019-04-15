@@ -18,7 +18,7 @@ class BlogPostTemplate extends React.Component {
           title={post.frontmatter.title}
           description={post.frontmatter.description || post.excerpt}
         />
-        <h1>{post.frontmatter.title}</h1>
+        <h1 style={{ color: 'var(--textTitle)' }}>{post.frontmatter.title}</h1>
         <p
           style={{
             ...scale(-1 / 5),
@@ -48,7 +48,12 @@ class BlogPostTemplate extends React.Component {
         >
           <li>
             {previous && (
-              <Link to={previous.fields.slug} rel="prev">
+              <Link  style={{
+                  boxShadow: 'none',
+                  textDecoration: 'none',
+                  color: 'var(--green)',
+                  }}
+              to={previous.fields.slug} rel="prev">
                 ← {previous.frontmatter.title}
               </Link>
             )}

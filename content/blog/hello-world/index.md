@@ -1,8 +1,8 @@
 ---
 title: Hello World
-date: "2015-05-01T22:12:03.284Z"
+date: "2019-04-16T22:12:03.284Z"
 author: Ben Ebsworth
-description: 'no descr'
+description: 'example layout of blogs to come'
 ---
 
 This is my first post on my new fake blog! How exciting!

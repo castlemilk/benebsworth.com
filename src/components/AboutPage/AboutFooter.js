@@ -178,7 +178,7 @@ const AboutSocialWrapper = styled.div`
     }
     .social-header span {
         font-size: 30px;
-        font-family: 'Days One';
+        font-family: Avenir Next, sans-serif;
         margin-left: 10px;
     }
 `
@@ -194,14 +194,14 @@ const AboutContactWrapper = styled.div`
     }
     .contact-header span {
         font-size: 30px;
-        font-family: 'Days One';
+        font-family: Avenir Next, sans-serif;
         background-color: black;
         color: white;
         margin-left: 10px;
     }
     .contact-header p {
         font-size: 20px;
-        font-family: 'Days One';
+        font-family: Avenir Next, sans-serif;
         background-color: black;
         color: white;
         margin-left: 25px;

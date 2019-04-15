@@ -7,7 +7,7 @@ module.exports = {
     social: {
       twitter: `sycli`,
       linkedin: `ben-ebsworth`
-    },
+    }
   },
   plugins: [
     // 'gatsby-plugin-react-helmet',
@@ -22,25 +22,22 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-google-fonts',
       options: {
-        fonts: [
-        'Days One',
-        'Open Sans'
-        ]
+        fonts: ['Prompt', 'Open Sans']
       }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/content/blog`,
-        name: `blog`,
-      },
+        name: `blog`
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/content/assets`,
-        name: `assets`,
-      },
+        name: `assets`
+      }
     },
     {
       resolve: `gatsby-transformer-remark`,
@@ -49,20 +46,20 @@ module.exports = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 590,
-            },
+              maxWidth: 590
+            }
           },
           {
             resolve: `gatsby-remark-responsive-iframe`,
             options: {
-              wrapperStyle: `margin-bottom: 1.0725rem`,
-            },
+              wrapperStyle: `margin-bottom: 1.0725rem`
+            }
           },
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
-          `gatsby-remark-smartypants`,
-        ],
-      },
+          `gatsby-remark-smartypants`
+        ]
+      }
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-offline`,
@@ -70,23 +67,23 @@ module.exports = {
     {
       resolve: `gatsby-plugin-typography`,
       options: {
-        pathToConfigModule: `src/utils/typography`,
-      },
+        pathToConfigModule: `src/utils/typography`
+      }
     },
-  // {
-  //   resolve: 'gatsby-plugin-material-ui'
-  // },
-  {
-    resolve: `gatsby-plugin-google-analytics`,
-    options: {
-      trackingId: "UA-119767237-1",
-      // Puts tracking script in the head instead of the body
-      head: false,
-      // Setting this parameter is optional
-      anonymize: false,
-      // Setting this parameter is also optional
-      respectDNT: false
-    },
-  },
-  ],
+    // {
+    //   resolve: 'gatsby-plugin-material-ui'
+    // },
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: 'UA-119767237-1',
+        // Puts tracking script in the head instead of the body
+        head: false,
+        // Setting this parameter is optional
+        anonymize: false,
+        // Setting this parameter is also optional
+        respectDNT: false
+      }
+    }
+  ]
 }

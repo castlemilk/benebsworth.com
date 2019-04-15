@@ -28,7 +28,7 @@ const StyledLink = styled(OutboundLink)`
     box-shadow: none;
 `
 const CertificationHeader = styled.div`
-    font-family: 'Days One';
+    font-family: Avenir Next, sans-serif;
     font-size:  35px;
 `
 

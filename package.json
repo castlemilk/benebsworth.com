@@ -69,6 +69,9 @@
     "snapsvg": "^0.5.1",
     "styled-bootstrap-grid": "^1.2.2",
     "styled-components": "4.0.3",
+    "typeface-merriweather": "^0.0.72",
+    "typeface-montserrat": "^0.0.54",
+    "typeface-prompt": "^0.0.72",
     "typography": "^0.16.19",
     "typography-theme-wordpress-2016": "^0.16.19",
     "webpack": "^4.29.6"

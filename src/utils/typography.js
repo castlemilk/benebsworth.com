@@ -6,6 +6,30 @@ Wordpress2016.overrideThemeStyles = () => {
     "a.gatsby-resp-image-link": {
       boxShadow: `none`,
     },
+    "a": {
+      boxShadow: `none`
+    },
+    "div": {
+      fontFamily: `Avenir Next, sans-serif`
+    },
+    "span": {
+      fontFamily: `Avenir Next, sans-serif`
+    },
+    "h1": {
+      fontFamily: `Avenir Next, sans-serif`
+    },
+    "h2": {
+      fontFamily: `Avenir Next, sans-serif`
+    },
+    "h3.vertical-timeline-element-title": {
+      fontFamily: `Avenir Next, sans-serif`,
+      fontWeight: `bold`
+    },
+    "h4.vertical-timeline-element-subtitle": {
+      fontFamily: `Avenir Next, sans-serif`,
+      fontWeight: `bold`,
+      marginTop: `10px`
+    },
   }
 }
 

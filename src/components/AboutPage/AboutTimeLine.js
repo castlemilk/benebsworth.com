@@ -13,11 +13,13 @@ import React from 'react'
 
 const Wrapper = styled.div`
   .title {
-    font-family: 'Days One';
+    font-family: Avenir Next, sans-serif;
     font-size: 40px;
     background: #e8e8e8;
     padding-left: 10px;
+    font-weight: bold;
   }
+  font-family: Avenir Next, sans-serif; 
 
 `
 

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const AboutBodyWrapper = styled.div`
   text-align: center;
   width: 100%;
+  font-family: Avenir Next, sans-serif;
 `
 
 const Paper = styled.div`
@@ -18,6 +19,7 @@ const Paper = styled.div`
 `
 
 const AboutBlurb = styled.div`
+  font-family: Avenir Next, sans-serif;
   @media (max-width: 991px) {
     .blurb-description p span {
         font-size: 30px;
@@ -27,18 +29,23 @@ const AboutBlurb = styled.div`
   }
   @media (max-width: 1199px) {
     .blurb-description p span {
-        font-size: 30px;
-        text-align: left;
+      font-size: 30px;
+      text-align: left;
+      font-family: Avenir Next, sans-serif;
+      font-weight: bold;
+        
     }
   }
   .blurb-description p span {
     float: left;
     margin: 26px 15px 20px 0;
     font-size: 40px;
-    font-family: 'Days One';
+    font-family: Avenir Next, sans-serif;
+    font-weight: bold;
     text-align: left;
   }
   .blurb-description p {
+    font-family: Avenir Next, sans-serif;
     text-align: left;
     margin-left: 10px;
   }

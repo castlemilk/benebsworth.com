@@ -1,6 +1,7 @@
 import styled from 'styled-components'; 
 
 const VerticalTimelineElementWrapper = styled.div`
+    font-family: Avenir Next, sans-serif;
     .vertical-timeline-element {
         position: relative;
         margin: 2em 0;
@@ -162,6 +163,7 @@ const VerticalTimelineElementWrapper = styled.div`
 
     .vertical-timeline-element-subtitle {
     margin: 0;
+    margin-top: 5px;
     }
 
     .vertical-timeline-element-content .vertical-timeline-element-date {

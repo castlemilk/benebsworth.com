@@ -20,11 +20,15 @@ const Paper = styled.div`
 
 const AboutBlurb = styled.div`
   font-family: Avenir Next, sans-serif;
+  color: black;
   @media (max-width: 991px) {
     .blurb-description p span {
         font-size: 30px;
         margin: 16px 20px 10px 0;
         text-align: left;
+        margin-left: 10px;
+        margin-top: 10px;
+        margin-right: 10px;
     }
   }
   @media (max-width: 1199px) {
@@ -33,6 +37,10 @@ const AboutBlurb = styled.div`
       text-align: left;
       font-family: Avenir Next, sans-serif;
       font-weight: bold;
+      color: black;
+      margin-left: 10px;
+      margin-top: 10px;
+      margin-right: 10px;
         
     }
   }
@@ -43,12 +51,17 @@ const AboutBlurb = styled.div`
     font-family: Avenir Next, sans-serif;
     font-weight: bold;
     text-align: left;
+    color: black;
   }
   .blurb-description p {
     font-family: Avenir Next, sans-serif;
     text-align: left;
     margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: black;
   }
+  color: black;
 `
 
 const bio1 =`
@@ -64,7 +77,7 @@ Oh so you'd like to know a little about me? Well I'm flattered. Here we go; Born
 const AboutBody = (props) => (
   <AboutBodyWrapper>
       <Paper>
-        <AboutBlurb >
+        <AboutBlurb>
           <div className="blurb-description" >
             <p>
               <span>

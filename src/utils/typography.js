@@ -33,9 +33,6 @@ Wordpress2016.overrideThemeStyles = () => {
       fontWeight: `bold`,
       marginTop: `10px`
     },
-    a: {
-      color: 'var(--textLink)',
-    },
     hr: {
       background: 'var(--hr)',
     },

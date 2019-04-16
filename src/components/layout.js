@@ -34,7 +34,7 @@ class Layout extends React.Component {
             style={{
               boxShadow: 'none',
               textDecoration: 'none',
-              color: 'var(--textTitle)',
+              color: 'var(--green)',
             }}
             to={'/'}
           >
@@ -51,6 +51,7 @@ class Layout extends React.Component {
             marginBottom: 0,
             height: 42, // because
             lineHeight: '2.625rem',
+            color: 'var(--green)',
           }}
         >
           <Link

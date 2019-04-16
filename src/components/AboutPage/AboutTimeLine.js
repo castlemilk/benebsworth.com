@@ -18,6 +18,7 @@ const Wrapper = styled.div`
     background: #e8e8e8;
     padding-left: 10px;
     font-weight: bold;
+    color: black;
   }
   font-family: Avenir Next, sans-serif; 
 

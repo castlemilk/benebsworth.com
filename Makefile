@@ -8,6 +8,8 @@ dev:
 ## deploy to hosting environment
 deploy:
 	yarn run deploy
+serve:
+	gatsby build; gatsby serve
 
 
 ## Show help

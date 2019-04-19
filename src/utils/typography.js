@@ -56,6 +56,13 @@ Wordpress2016.overrideThemeStyles = () => {
     'li code': {
       fontSize: '1rem',
     },
+    "ul": {
+      marginLeft: `28px`
+
+    },
+    "ol": {
+
+    },
     blockquote: {
       color: 'inherit',
       borderLeftColor: 'inherit',

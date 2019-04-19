@@ -9,8 +9,9 @@ flex-wrap: wrap;
 `
 const Skill = styled.div`
     border-radius: 10px;
-    color: black;
-    font-family: 'Open Sans';
+    color: white;
+    font-family: 'Prompt';
+    font-weight: 500;
     margin: 5px;
     padding-left: 10px;
     padding-right: 10px;

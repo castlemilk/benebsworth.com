@@ -29,26 +29,33 @@ export const headerCards = [
     },
 ]
 export const COLOR_SCHEME = {
-    gray: '#cecece',
-    green: '#a8e6cf',
-    teal: '#8bdaff',
-    blue: '#a8bde6',
-    darkblue: '#858ece',
-    red: '#ff8b94',
-    redpink: '#ff8b90',
-    yellow: '#ffeda4',
-    orange: '#ffd3b6',
-    darkorange: '#fb812c',
+    gray: '#8D9F9B',
+    green: '#62BB35',
+    teal: '#208EA3',
+    blue: '#5c91ff',
+    darkblue: '#316ce6',
+    kubernetes: '#316ce6',
+    istio: '#5c91ff',
+    red: '#E8384F',
+    redpink: '#FCA7E4',
+    yellow: '#EECC16',
+    orange: '#FD817D',
+    darkorange: '#FDAE33',
     brown: '#bf7b26',
-    purple: '#cfa8e6',
-    react: '#5fdbfb',
-    midblue: '#6398AA',
-    okta: '#0f7ec2'
+    purple: '#AA71FF',
+    react: '#208EA3',
+    midblue: '#316ce6',
+    okta: '#0f7ec2',
+    golang: '#6AD7E5',
     
 }
 export const labelColors = {
     general: COLOR_SCHEME.blue,
-    personal: COLOR_SCHEME.green
+    personal: COLOR_SCHEME.green,
+    technology: COLOR_SCHEME.red,
+    react: COLOR_SCHEME.react,
+    kubernetes: COLOR_SCHEME.kubernetes,
+    golang: COLOR_SCHEME.golang
 }
 export const skills = [
     [
@@ -313,6 +320,10 @@ export const skills = [
         {
             text: 'Condensed Matter',
             color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Quantum Mechanics',
+            color: COLOR_SCHEME.purple
         },
         {
             text: 'Particle Physics',

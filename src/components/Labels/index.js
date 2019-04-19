@@ -10,9 +10,11 @@ flex-wrap: wrap;
 `
 const Label = styled.div`
     border-radius: 10px;
-    color: black;
-    font-family: 'Open Sans';
+    color: white;
+    font-weight: 500;
+    font-family: 'Prompt';
     margin: 5px;
+    margin-bottom: 1.75em;
     padding-left: 10px;
     padding-right: 10px;
     background-color: ${props => props.color};

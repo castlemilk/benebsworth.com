@@ -238,3 +238,6 @@ pre[data-line] {
   float: left;
   min-width: 100%;
 }
+ul {
+  margin-left: 28px;
+}

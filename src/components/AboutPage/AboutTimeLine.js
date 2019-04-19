@@ -56,24 +56,43 @@ class AboutTimeLine extends React.Component {
         </div>
        )
         const content = (
-            <VerticalTimeline animate={true} >
+            <VerticalTimeline animate={true}>
+            <VerticalTimelineElement
+              position="left"
+              animate="false"
+              key={'item-5'}
+              className="vertical-timeline-element--work"
+              date="September, 2018 - present"
+              iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
+              icon={digioLogoView}
+            >
+              <h3 className="vertical-timeline-element-title">Senior DevOps/FullStack Engineer</h3>
+              <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>
+              <p>
+                Leading the development and deployment of a set of production grade platform components on GCP. Facilitating adoption and 
+                consumption of the platform through a series of developer tooling and frameworks to streamline usage.
+                Delivered first production-grade GKE/GCP based platform for one of Australia's biggest Banks.
+              </p>
+              <Skills skills={skills[0]}/>
+            </VerticalTimelineElement>
             <VerticalTimelineElement
               position="right"
               animate="true"
               key={'item-one'}
               className="vertical-timeline-element--work"
-              date="April, 2018 - present"
+              date="April, 2018 - September, 2018"
               iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
               icon={digioLogoView}
             >
               <h3 className="vertical-timeline-element-title">DevOps/FullStack Engineer</h3>
               <h4 className="vertical-timeline-element-subtitle">Melbourne, Australia</h4>
               <p>
-                Building highly automated and robust platforms on-top of Kubernetes. Utilising service-mesh technologies such 
+                Building highly automated and robust production grade platforms on-top of Kubernetes. Utilising service-mesh technologies such 
                 as Istio to enable sophisticated service-mesh micoservice architectures.
-                Additionally, enabling/creating next-generation monitoring/observability capabilities, CI/CD pipelines, and security practices. 
+                Additionally, enabling/creating next-generation monitoring/observability capabilities, CI/CD pipelines, and security practices.
+                Lead the delivery of Australia's first Istio deployment into production
               </p>
-              <Skills skills={skills[0]}/>
+              <Skills skills={skills[1]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="left"
@@ -90,7 +109,7 @@ class AboutTimeLine extends React.Component {
                 Leading the build and development of small private cloud environment (4000 vCPU, 4 PB storage). 
                 As well building the application layer on-top which carried out large-scale message ingestion and transformation (capable of over 300k EPS)
               </p>
-              <Skills skills={skills[1]}/>
+              <Skills skills={skills[2]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="right"
@@ -108,7 +127,7 @@ class AboutTimeLine extends React.Component {
                 Experience with the typical networking vendors Cisco, Juniper, Palo Alto, Checkpoints and the respective CLI/GUI/Automation tooling.
                 Additionally, responsible for building out a range of small automation tools using Python and the Python SSH library Paramiko.
               </p>
-              <Skills skills={skills[2]}/>
+              <Skills skills={skills[3]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="left"
@@ -125,7 +144,7 @@ class AboutTimeLine extends React.Component {
                 Thorough curriculum which provided students with a deep experimental and hands-on experience with the design, build and analysis of 
                 complex real-time systems, imbedded electronics and analogue electronics. Additionally a foundational knowledge in computer science.
               </p>
-              <Skills skills={skills[3]}/>
+              <Skills skills={skills[4]}/>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               position="right"
@@ -144,7 +163,7 @@ class AboutTimeLine extends React.Component {
               My applied mathematics major was focused in statistical and computational analysis with a strong coverage of partial and ordinary differential equations
               Throughout the course a heavy emphasis was made on experimentation/laboratory work with extensive report writing and literature reviews.
               </p>
-              <Skills skills={skills[4]}/>
+              <Skills skills={skills[5]}/>
             </VerticalTimelineElement>
           </VerticalTimeline>
         )

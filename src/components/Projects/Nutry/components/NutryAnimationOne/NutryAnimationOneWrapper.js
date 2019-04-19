@@ -4,6 +4,10 @@ const NutryAnimationOneWrapper = styled.div`
   position: absolute;
   z-index: 1;
   width: 400px;
+  transition: ${props => `${props.duration}ms ease-in-out`};
+  transition-property: opacity, transform;
+  transform: ${props => `translateY(${props.Ypos}px)`};
+  opacity: ${props => props.opacity};
 
   .cogs-wrapper {
     position: absolute;

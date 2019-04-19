@@ -46,7 +46,85 @@ export const COLOR_SCHEME = {
     okta: '#0f7ec2'
     
 }
+export const labelColors = {
+    general: COLOR_SCHEME.blue,
+    personal: COLOR_SCHEME.green
+}
 export const skills = [
+    [
+        {
+            text: 'Istio',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Kubernetes',
+            color: COLOR_SCHEME.darkblue
+        },
+        {
+            text: 'GKE',
+            color: COLOR_SCHEME.teal
+        },
+        {
+            text: 'GCP',
+            color: COLOR_SCHEME.orange
+        },
+        {
+            text: 'Fluentbit',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Jenkins',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'Docker',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Prometheus',
+            color: COLOR_SCHEME.darkorange
+        },
+        {
+            text: 'Python',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Spinnaker',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Oauth2',
+            color: COLOR_SCHEME.red
+        },
+        {
+            text: 'JWT',
+            color: COLOR_SCHEME.okta
+        },
+        {
+            text: 'Java',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Groovy',
+            color: COLOR_SCHEME.midblue
+        },
+        {
+            text: 'Golang',
+            color: COLOR_SCHEME.teal
+        },
+        {
+            text: 'SpringBoot',
+            color: COLOR_SCHEME.green
+        },
+        {
+            text: 'Postgres',
+            color: COLOR_SCHEME.blue
+        },
+        {
+            text: 'Distributed Tracing',
+            color: COLOR_SCHEME.red
+        },
+    ],
     [
         {
             text: 'Istio',

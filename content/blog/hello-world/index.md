@@ -2,22 +2,12 @@
 title: Hello World
 date: "2019-04-16T22:12:03.284Z"
 author: Ben Ebsworth
-description: 'example layout of blogs to come'
+description: 'First blog post introducing motivations and goals'
+labels: general,personal
 ---
 
 This is my first post on my new fake blog! How exciting!
 
-I'm sure I'll write a lot more interesting things in the future.
+I've used the [Gatsby base blog template here](https://github.com/gatsbyjs/gatsby-starter-blog). With styling, tuning and components taken from the incredibly impressive blog done by [Dan Abramov](https://mobile.twitter.com/dan_abramov) called [overreacted.io](overreacted.io).
 
-Oh, and here's a great quote from this Wikipedia on
-[salted duck eggs](http://en.wikipedia.org/wiki/Salted_duck_egg).
-
-> A salted duck egg is a Chinese preserved food product made by soaking duck
-> eggs in brine, or packing each egg in damp, salted charcoal. In Asian
-> supermarkets, these eggs are sometimes sold covered in a thick layer of salted
-> charcoal paste. The eggs may also be sold with the salted paste removed,
-> wrapped in plastic, and vacuum packed. From the salt curing process, the
-> salted duck eggs have a briny aroma, a gelatin-like egg white and a
-> firm-textured, round yolk that is bright orange-red in color.
-
-![Chinese Salty Egg](./salty_egg.jpg)
+The goals of this medium is to explore ideas in an open format to hopefully act as a mechanism for clean note taking but also encouraging more structured exploration of technologies. I would like to play with different technology and write posts here capturing the learnings for my own future reference. I'd like to continually update/clean blog posts overtime, further refining ideas, almost like a personal wiki.

@@ -14,6 +14,7 @@ const CardImage = styled.div`
   margin: auto;
   margin-top: 40px;
   margin-left: 62.5px;
+  border-radius: 10px 10px 0 0;
 `
 const CardDescription = styled.div``
 const Paper = styled.div`
@@ -26,12 +27,13 @@ const Paper = styled.div`
   text-align: center;
   margin-top: 5px;
   margin: 10px;
+  border-radius: 10px;
 `
 const Header = styled.div`
   height: 40%;
   width: 100%;
-  background-color: #ffb44f;
   z-index: 2;
+  border-radius: 10px 10px 0 0;
   
 `
 const Body = styled.div`
@@ -42,6 +44,7 @@ const Body = styled.div`
   position: relative;
   font-weight: bold;
   font-size: 17px;
+  border-radius: 0 0 10px 10px;
 `
 const Description = styled.div`
   padding-top: 70px;
@@ -93,10 +96,10 @@ const ScoreWrapper = styled.div`
 const Card = props => (
   <Paper>
     <CardImage>
-      <img src={props.image} />
+      <img  src={props.image} />
     </CardImage>
     <Header>
-      <img src={props.headerBackground} />
+      <img style={{ borderRadius: '10px 10px 0 0' }} src={props.headerBackground} />
     </Header>
 
     <Body>

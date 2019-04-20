@@ -4,6 +4,7 @@ date: "2019-04-20T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'Overview of an example Next.js starter project to bootstrap front-end development'
 labels: technology,react
+release: false 
 ---
 This post attempts to capture the end-to-end steps to bootstrapping a [next.js](https://nextjs.org/) project for the rapid prototyping of ideas.
 
@@ -20,8 +21,8 @@ With these tools included we aim to provided a somewhat opinionated development 
 
 ## getting started
 
-The starter repository can be found on github [here](https://github.com/castlemilk/react-starter). This repo will have all the necessary instructions to get a project started.
+The starter repository can be found on github [here](https://github.com/castlemilk/next-starter). This repo will have all the necessary instructions to get a project started.
 
 ## NextJS
 
-NextJS provides a 
+NextJS provides a ...

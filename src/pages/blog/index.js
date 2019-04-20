@@ -58,7 +58,9 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMarkdownRemark(
+      filter: { frontmatter: { release: { eq: true }}}
+      sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {
           excerpt
@@ -70,6 +72,7 @@ export const pageQuery = graphql`
             title
             description
             labels
+            release
           }
         }
       }

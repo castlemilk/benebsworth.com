@@ -4,7 +4,7 @@ date: "2019-04-20T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'Overview of an example Next.js starter project to bootstrap front-end development'
 labels: technology,react
-release: false 
+release: false
 ---
 This post attempts to capture the end-to-end steps to bootstrapping a [next.js](https://nextjs.org/) project for the rapid prototyping of ideas.
 

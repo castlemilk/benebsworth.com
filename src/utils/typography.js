@@ -19,19 +19,23 @@ Wordpress2016.overrideThemeStyles = () => {
       fontFamily: `Avenir Next, sans-serif`
     },
     "h1": {
-      fontFamily: `Avenir Next, sans-serif`
+      fontFamily: `Avenir Next, sans-serif`,
+      color: `var(--textTitle)`
     },
     "h2": {
-      fontFamily: `Avenir Next, sans-serif`
+      fontFamily: `Avenir Next, sans-serif`,
+      color: `var(--textTitle)`
     },
     "h3.vertical-timeline-element-title": {
       fontFamily: `Avenir Next, sans-serif`,
-      fontWeight: `bold`
+      fontWeight: `bold`,
+      color: `var(--textTitle)`
     },
     "h4.vertical-timeline-element-subtitle": {
       fontFamily: `Avenir Next, sans-serif`,
       fontWeight: `bold`,
-      marginTop: `10px`
+      marginTop: `10px`,
+      color: `var(--textTitle)`
     },
     hr: {
       background: 'var(--hr)',

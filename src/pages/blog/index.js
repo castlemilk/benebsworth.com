@@ -26,7 +26,7 @@ class BlogIndex extends React.Component {
             <div key={node.fields.slug}>
               <h3
                 style={{
-                  marginBottom: rhythm(1 / 4),
+                  marginBottom: rhythm(1 / 8),
                   color: 'var(--green)',
                 }}
               >
@@ -34,13 +34,15 @@ class BlogIndex extends React.Component {
                   {title}
                 </Link>
               </h3>
+              <Labels labels={node.frontmatter.labels.split(',')} />
               <small>{node.frontmatter.date}</small>
               <p
+                style={{ marginBottom: rhythm(1)}}
                 dangerouslySetInnerHTML={{
                   __html: node.frontmatter.description || node.excerpt,
                 }}
               />
-              <Labels labels={node.frontmatter.labels.split(',')} />
+              
             </div>
           )
         })}

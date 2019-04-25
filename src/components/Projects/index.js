@@ -18,7 +18,7 @@ const ProjectsWrapper = styled.div`
 const projects = [
     {
         title: 'Nutry',
-        description: 'Food Nutrients search & analytics platform',
+        description: 'Aggregated nutritional information and common food search & analytics platform',
         image: Nutry,
         path: '/projects/nutry',
         technologies: [
@@ -87,13 +87,12 @@ const projects = [
             },
         ],
     }
-]
+];
 
 export class Projects extends React.Component {
     constructor(props) {
         super(props)
     }
-
     render() {
         return (<div style={{
             margin: "0 auto",

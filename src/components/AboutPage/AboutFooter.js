@@ -209,7 +209,8 @@ const AboutContactWrapper = styled.div`
         margin-bottom: 10px;
     }
     button {
-        margin-top: 50px;
+        margin-top: ${props => props.isMobile ? 40: 45}px;
+        margin-right: 10px;
         float: ${props => props.isMobile ? 'left' : 'right'}
     }
 

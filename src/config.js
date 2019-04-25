@@ -47,6 +47,14 @@ export const COLOR_SCHEME = {
     midblue: '#316ce6',
     okta: '#0f7ec2',
     golang: '#6AD7E5',
+    algorithms: '#8a7128',
+    gcp: '#4285F4',
+    aws: '#FF9900',
+    azure: '#035BDA',
+    ibm: '#bf7b26',
+    python: '#A4C61A',
+    istio: '#4285F4',
+    sm: '#FCA7E4'
     
 }
 export const labelColors = {
@@ -55,7 +63,17 @@ export const labelColors = {
     technology: COLOR_SCHEME.red,
     react: COLOR_SCHEME.react,
     kubernetes: COLOR_SCHEME.kubernetes,
-    golang: COLOR_SCHEME.golang
+    golang: COLOR_SCHEME.golang,
+    go: COLOR_SCHEME.golang,
+    algorithms: COLOR_SCHEME.algorithms,
+    AWS: COLOR_SCHEME.aws,
+    GCP: COLOR_SCHEME.gcp,
+    Azure: COLOR_SCHEME.azure,
+    'developer experience': COLOR_SCHEME.purple,
+    python: COLOR_SCHEME.python,
+    'service mesh': COLOR_SCHEME.sm,
+    istio: COLOR_SCHEME.istio,
+    IBM: COLOR_SCHEME.ibm,
 }
 export const skills = [
     [

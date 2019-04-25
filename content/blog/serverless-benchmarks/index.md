@@ -1,9 +1,9 @@
 ---
-title: Two Number Sum
+title: Serverless Benchmarks
 date: "2019-04-25T22:12:03.284Z"
 author: Ben Ebsworth
-description: 'self-explanation of approach to solving th Two Number Sum problem, with some basic benchmark analysis in Go'
-labels: algorithms,personal,go,python
+description: 'An attempt to benchmark the performance of different cloud platform serverless/faas offerings'
+labels: go,GCP,AWS,Azure,IBM
 release: false
 ---
 Algorithm design and analysis

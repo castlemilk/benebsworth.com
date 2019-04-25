@@ -18,7 +18,7 @@ class BlogPostTemplate extends React.Component {
           title={post.frontmatter.title}
           description={post.frontmatter.description || post.excerpt}
         />
-        <h1 style={{ color: 'var(--textTitle)' }}>{post.frontmatter.title}</h1>
+        <h1 style={{ color: 'var(--textTitle)', marginBottom: rhythm(0.2)}}>{post.frontmatter.title}</h1>
         <Labels labels={post.frontmatter.labels.split(',')} />
         <p
           style={{

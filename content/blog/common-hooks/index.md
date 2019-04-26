@@ -17,9 +17,22 @@ This article will serve as a library of ramblings about personally developed, as
 
 The fundamental tenants of React Hooks seems to be to enable a cleaner and more functional mechanism for accessing the underlying core react tools, including: state, [context](https://reactjs.org/docs/context.html),lifecycle, and refs. With this new API, we can go about implementing a simpler, lighter, and likely more modular approach to problems we'd normally seek Redux/Redux-sagas to solve. I would like to see how hooks compare when building out a larger app, in comparison to experiences with Redux. To validate the excitement felt about the future of React.
 
+The primary hooks available are the following:
+
+* **useState** - provides getter/setter pair for managing a localised state
+* **useEffect** - accepts a function that will possibly __effectuate__ aspects of a component. Example could be to do some kind of mutation, logging, delayed action or timer and other side effects within this hook. By default effects run on every complete render, but more granular firing can be controled via the second argumement.
+* **useContext** - Takes a context object and returns the current value of the given context. If the given context changes, the component will re-render.
+* **useReducer** - Alternative to the **useState** hook, accepts a reducer of type `(state, action) => newState`, very similar to model to how `Redux` operates. Returns the current state, paired with a `dispatch` method.
+
+There are a number of more advanced hooks which we'll cover in more detail over time.
+
 ## Examples
 
-### counter
+Here we define common hook usages across the number of fundamental categories.
+
+### useState
+
+#### counter
 
 ```jsx
 function Example() {
@@ -37,3 +50,5 @@ function Example() {
   );
 }
 ```
+
+### useEffectx

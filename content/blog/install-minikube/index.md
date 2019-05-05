@@ -1,19 +1,19 @@
 ---
 title: Install Minikube 
-date: "2019-05-08T22:12:03.284Z"
+date: "2019-05-05T22:12:03.284Z"
 author: Ben Ebsworth
-description: 'Instructions for the installation, upgrade and other customisations of a Minikube install on MacOS'
-labels: technology,kubernetes,developer experience,minikube
+description: 'Instructions for the installation, upgrade and other customization of a Minikube install on MacOS. As well as a basic example of deploying a service and exposing it for local access'
+labels: technology,kubernetes,developer experience
 release: true
 ---
 ![Minikube](/minikube.png)
-Minikube is a "blessed" or kubernetes community endoursed mechanism to run a [Kubernetes](https://kubernetes.io) cluster locally. Minikube provides a streamlined way of managing the bootstrap process of the Kubernetes cluster as well as the interaction of the chosen virtualisation tooling, on MacOS this could be either [Virtualbox](https://www.virtualbox.org/wiki/Downloads), [HyperKit](https://github.com/moby/hyperkit), [VMware](https://my.vmware.com/en/web/vmware/info/slug/desktop_end_user_computing/vmware_fusion/11_0).
+Minikube is a "blessed" or kubernetes community endorsed mechanism to run a [Kubernetes](https://kubernetes.io) cluster locally. Minikube provides a streamlined way of managing the bootstrap process of the Kubernetes cluster as well as the interaction of the chosen virtualization tooling, on MacOS this could be either [Virtualbox](https://www.virtualbox.org/wiki/Downloads), [HyperKit](https://github.com/moby/hyperkit), [VMware](https://my.vmware.com/en/web/vmware/info/slug/desktop_end_user_computing/vmware_fusion/11_0).
 
 In this post we'll try and capture all of the common steps required to standup a local environment to enable test and development of applications locally. Some of the challenges we'll address are as follows:
 
 * is a clear-cut way to bring up an environment end-to-end
 * exposing services locally to view/interact with deployed application
-* managing _kubectl_ context to switch between local development environment and potentially a remote cluster and available CLI tools to suppor this.
+* managing _kubectl_ context to switch between local development environment and potentially a remote cluster and available CLI tools to support this.
 
 ## Pre-requisites
 
@@ -75,7 +75,7 @@ CURRENT   NAME                           CLUSTER                        AUTHINFO
 *         minikube                       minikube                       minikube 
 ```
 
-Note that this output will show you what context is currently active. An alternative, and probably more effective way to manaage context is via the [kubectx](https://github.com/ahmetb/kubectx) cli tool. This can be installed by simply running `brew install kubectx`. With this availab,e we can run:
+Note that this output will show you what context is currently active. An alternative, and probably more effective way to manage context is via the [kubectx](https://github.com/ahmetb/kubectx) cli tool. This can be installed by simply running `brew install kubectx`. With this available we can run:
 
 ```bash
 foo@bar:~$ kubectx
@@ -89,7 +89,7 @@ We can then set our kubectl context by running the `kubectx` command, selecting 
 kubectx minikube
 ```
 
-This will set our kubectl contex to target the minikube cluster we've just deployed locally.
+This will set our kubectl context to target the minikube cluster we've just deployed locally.
 
 To check that you're `kubectl` context is set correctly run the following:
 
@@ -152,7 +152,7 @@ httpbin-5446f4d9b4-j7957   1/1     Running             0          2m39s
 
 ### get deployment status
 
-This status of the deployment can also be viewed, this output will repesent the state that the kubernetes scheduler sees when attempting to converge on the desired replica factor.
+This status of the deployment can also be viewed, this output will represent the state that the kubernetes scheduler sees when attempting to converge on the desired replica factor.
 
 ```bash
 foo@bar:~$ kubectl get deployment  -n default httpbin
@@ -162,7 +162,7 @@ httpbin   1/1     1            1           4m54s
 
 ### get etcd events
 
-From my experience, one of the best mechanisms to debug and understand the state of a given workload is the view the etcd events associated with the workflow. This will provide insights into issues that the sheduler is having or unexpected errors occuring due to mis-configured resources. The output can be retrieved as follows:
+From my experience, one of the best mechanisms to debug and understand the state of a given workload is the view the etcd events associated with the workflow. This will provide insights into issues that the scheduler is having or unexpected errors occurring due to mis-configured resources. The output can be retrieved as follows:
 
 ```bash
 foo@bar:~$ kubectl get events --namespace default -w
@@ -273,7 +273,7 @@ curl $httpbin_ip:8000/anything
 
 ## Future work
 
-One of the issues with exposing services this way is it is harder to effectively manage the IP address that would be allocated. One nice thing about the `docker-for-mac` approach is it exposes a the first defined `Service` of `type: Loadbalancer` via [VPNKit](https://github.com/moby/vpnkit) on `localahost`. This means you could create a `ingress-controller` or istio `Gateway` as a singular entrypoint to your local cluster, and then dynamically steer traffic based of domain, URLs, headers etc. This simplifies how you then think about getting access to deployed services.
+One of the issues with exposing services this way is it is harder to effectively manage the IP address that would be allocated. One nice thing about the `docker-for-mac` approach is it exposes the first defined `Service` of `type: Loadbalancer` via [VPNKit](https://github.com/moby/vpnkit) on `localahost`. This means you could create a `ingress-controller` or istio `Gateway` as a singular entrypoint to your local cluster, and then dynamically steer traffic based of domain, URLs, headers etc. into your target services. This simplifies how you then think about getting access to deployed services.
 
 One solution to this could be to establish the minikube tunnel, deploy your chosen `ingress controller`or `istio gateway`, discover the allocated `ClusterIP` (which is also the `ExternalIP`) and then edit your `/etc/hosts` file to map hostnames to the allocated IP. This would look like so:
 
@@ -289,4 +289,6 @@ Then you'd be able to curl your expose service as:
 curl httpbin.local:8080/anything
 ```
 
-This could then be scripted to support dynamically updated your `/etc/hosts` according to the allocated `ClusterIP` on the fly.
+This could then be scripted to support dynamically updated your `/etc/hosts` according to the allocated `ClusterIP` on the fly. 
+
+Watch this space on further content for enabling ingress to your cluster via a typical _ingress-controller_ like [nginx-ingress](https://github.com/kubernetes/ingress-nginx). Or via more sophisticated means, such as a _Service Mesh_ construct, where a gateway can be defined to enable access to services within the "Mesh". Such examples include [Istio](https://istio.io/), [Linkerd](https://linkerd.io/)  and [Consul Connect](https://learn.hashicorp.com/consul/getting-started/connect).

@@ -1,28 +1,38 @@
 /**
-*
-* Footer
-*
-*/
+ *
+ * Footer
+ *
+ */
 
-import React from 'react';
-import { Row, Col } from 'styled-bootstrap-grid';
-import Grid from '@material-ui/core/Grid';
-import { FaFacebookOfficial, FaTwitterSquare, FaInstagram, FaLinkedinSquare } from 'react-icons/lib/fa';
+import React from 'react'
+import { Row, Col } from 'styled-bootstrap-grid'
+import Grid from '@material-ui/core/Grid'
+import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official'
+import FaInstagram from 'react-icons/lib/fa/instagram'
+import FaTwitterSquare from 'react-icons/lib/fa/twitter-square'
+import FaLinkedinSquare from 'react-icons/lib/fa/linkedin-square'
 
+import { FormattedMessage } from 'react-intl'
+import messages from './messages'
+import FooterWrapper from './FooterWrapper'
 
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
-import FooterWrapper from './FooterWrapper';
-
-function Footer() {
+function Footer () {
   // const { Footer } = Layout;
   return (
     <FooterWrapper>
-      <footer className="footer">
-        <div className="footer-wrap" >
-          <Row className="links" >
-          <Grid key={'products-col'} xs={12} sm={12} md={4} lg={4} xl={4} item >
-              <div className="footer-center">
+      <footer className='footer'>
+        <div className='footer-wrap'>
+          <Row className='links'>
+            <Grid
+              key={'products-col'}
+              xs={12}
+              sm={12}
+              md={4}
+              lg={4}
+              xl={4}
+              item
+            >
+              <div className='footer-center'>
                 <h2>Products</h2>
                 <div>
                   <FormattedMessage {...messages.search} />
@@ -38,8 +48,16 @@ function Footer() {
                 </div>
               </div>
             </Grid>
-            <Grid key={'developers-col'} xs={12} sm={12} md={4} lg={4} xl={4} item >
-              <div className="footer-center">
+            <Grid
+              key={'developers-col'}
+              xs={12}
+              sm={12}
+              md={4}
+              lg={4}
+              xl={4}
+              item
+            >
+              <div className='footer-center'>
                 <h2>Developers</h2>
                 <div>
                   <FormattedMessage {...messages.discussion} />
@@ -55,11 +73,11 @@ function Footer() {
                 </div>
               </div>
             </Grid>
-            <Grid key={'company-col'} xs={12} sm={12} md={4} lg={4} xl={4} item >
-              <div className="footer-center">
+            <Grid key={'company-col'} xs={12} sm={12} md={4} lg={4} xl={4} item>
+              <div className='footer-center'>
                 <h2>Company</h2>
                 <div>
-                    <FormattedMessage {...messages.about} />
+                  <FormattedMessage {...messages.about} />
                 </div>
                 <div>
                   <FormattedMessage {...messages.blog} />
@@ -76,30 +94,37 @@ function Footer() {
               </div>
             </Grid>
           </Row>
-          <Row className="media-row" type="flex" justify="center">
-            <Col className="side-col" xl={12} lg={12} md={12} sm={12} xs={12}>
-              <div className="line-left"></div>
+          <Row className='media-row' type='flex' justify='center'>
+            <Col className='side-col' xl={12} lg={12} md={12} sm={12} xs={12}>
+              <div className='line-left' />
             </Col>
-            <Col className="media-center-column" xl={12} lg={12} md={12} sm={12} xs={12}>
-              <div className="social-media-box">
+            <Col
+              className='media-center-column'
+              xl={12}
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+            >
+              <div className='social-media-box'>
                 <FaInstagram style={{ fontSize: 55, color: '#7F3FBF' }} />
                 <FaLinkedinSquare style={{ fontSize: 55, color: '#7F3FBF' }} />
                 <FaTwitterSquare style={{ fontSize: 55, color: '#7F3FBF' }} />
-                <FaFacebookOfficial style={{ fontSize: 55, color: '#7F3FBF' }} />
+                <FaFacebookOfficial
+                  style={{ fontSize: 55, color: '#7F3FBF' }}
+                />
               </div>
             </Col>
-            <Col className="side-col" xl={12} lg={12} md={12} sm={12} xs={12}>
-              <div className="line-right"></div>
+            <Col className='side-col' xl={12} lg={12} md={12} sm={12} xs={12}>
+              <div className='line-right' />
             </Col>
           </Row>
         </div>
       </footer>
     </FooterWrapper>
-  );
+  )
 }
 
-Footer.propTypes = {
+Footer.propTypes = {}
 
-};
-
-export default Footer;
+export default Footer

@@ -1,10 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import styled from 'styled-components'
-import MtSvgLines from 'react-mt-svg-lines'
-import * as d3 from 'd3'
+import { select, mouse} from 'd3-selection'
+import { voronoi } from 'd3-voronoi'
+import { forceSimulation, forceManyBody } from 'd3-force'
 
-import { poissonDiscSampler, sample } from '../../lib/utils'
+import { poissonDiscSampler } from '../../lib/utils'
 
 const CardTitle = styled.div`
   z-index: 10;
@@ -33,7 +33,7 @@ class ProjectsCard extends React.Component {
       s: null,
       nodes: [],
       context: null,
-      voronoi: null,
+      voronois: null,
       force: null,
       links: null
     }
@@ -44,31 +44,30 @@ class ProjectsCard extends React.Component {
       this.state.height,
       this.state.radius
     )
-    this.state.canvas = d3
-      .select('.project-card-container')
+    this.state.canvas = select('.project-card-container')
       .append('canvas')
       .attr('width', this.state.width)
       .attr('height', this.state.height)
     this.state.context = this.state.canvas.node().getContext('2d')
     this.state.nodes = [{ x: 0, y: 0 }]
-    while ((this.state.s = this.state.sample())) { this.state.nodes.push(this.state.s) }
-    this.state.voronoi = d3
-      .voronoi()
+    while ((this.state.s = this.state.sample())) {
+      this.state.nodes.push(this.state.s)
+    }
+    this.state.voronois = voronoi()
       .x(function (d) {
         return d.x
       })
       .y(function (d) {
         return d.y
       })
-    this.state.links = this.state.voronoi.links(this.state.nodes)
+    this.state.links = this.state.voronois.links(this.state.nodes)
 
     // TODO: apply -30 charge force on force initialize and keep it active
-    this.state.force = d3
-      .forceSimulation()
+    this.state.force = forceSimulation()
       .nodes(this.state.nodes.slice())
       .force(
         'charge',
-        d3.forceManyBody().strength(function (d, i) {
+        forceManyBody().strength(function (d, i) {
           return i ? -30 : -350
         })
       )
@@ -78,8 +77,8 @@ class ProjectsCard extends React.Component {
       .alpha(0.2)
     var nodes = this.state.nodes
     var force = this.state.force
-    d3.select('.project-card-container').on('mousemove', function () {
-      var p1 = d3.mouse(this)
+    select('.project-card-container').on('mousemove', function () {
+      var p1 = mouse(this)
       nodes[0].x = p1[0]
       nodes[0].y = p1[1]
       force.restart()

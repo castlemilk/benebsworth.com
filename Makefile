@@ -10,6 +10,9 @@ deploy:
 	yarn run deploy
 serve:
 	gatsby build; gatsby serve
+analyze:
+	# bundle-analyzer public
+	webpack-bundle-analyzer public
 
 
 ## Show help

@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { spring } from 'react-motion'
-import Paper from '@material-ui/core/Paper'
-
-import * as d3 from 'd3'
+import { range } from 'd3-array'
+import { forceSimulation } from 'd3-force'
+import { quadtree } from 'd3-quadtree'
+import { select } from 'd3-selection'
+import { schemeSet3 } from 'd3-scale-chromatic'
+import { scaleOrdinal, scaleSqrt } from 'd3-scale'
 
 const BlogWrapper = styled.div`
   .paper-wrapper:hover {
@@ -49,13 +51,11 @@ class BlogCard extends React.Component {
     this.state.width = 309 - this.state.margin.left - this.state.margin.right
     this.state.height = 274 - this.state.margin.top - this.state.margin.bottom
     this.state.rect = [0, 0, this.state.width - 0, this.state.height - 0]
-    this.state.radius = d3.scaleSqrt().range([0, 8])
-    this.state.color = d3
-      .scaleOrdinal(d3.schemeSet3)
-      .domain(d3.range(this.state.m))
+    this.state.radius = scaleSqrt().range([0, 8])
+    this.state.color = scaleOrdinal(schemeSet3).domain(range(this.state.m))
   }
   initialise () {
-    for (let i of d3.range(this.state.n)) {
+    for (let i of range(this.state.n)) {
       this.state.nodes.push({
         radius: this.state.radius(1 + Math.floor(Math.random() * 4)),
         color: this.state.color(Math.floor(Math.random() * this.state.m)),
@@ -73,8 +73,7 @@ class BlogCard extends React.Component {
   }
   generateAnimation () {
     this.generateObjects()
-    this.state.force = d3
-      .forceSimulation()
+    this.state.force = forceSimulation()
       .nodes(this.state.nodes)
       .on('tick', () => this.tick())
       .alpha(1)
@@ -95,7 +94,7 @@ class BlogCard extends React.Component {
       }
     }
     function collide (alpha) {
-      var quadtree = d3.quadtree(nodes)
+      var quadtrees = quadtree(nodes)
       return function (d) {
         var r = d.radius + radius.domain()[1] + padding
 
@@ -106,7 +105,7 @@ class BlogCard extends React.Component {
         var ny1 = d.y - r
 
         var ny2 = d.y + r
-        quadtree.visit(function (quad, x1, y1, x2, y2) {
+        quadtrees.visit(function (quad, x1, y1, x2, y2) {
           if (quad.point && quad.point !== d) {
             var x = d.x - quad.point.x
 
@@ -115,9 +114,9 @@ class BlogCard extends React.Component {
             var l = Math.sqrt(x * x + y * y)
 
             var r =
-                d.radius +
-                quad.point.radius +
-                (d.color !== quad.point.color) * padding
+              d.radius +
+              quad.point.radius +
+              (d.color !== quad.point.color) * padding
             if (l < r) {
               l = ((l - r) / l) * alpha
               d.x -= x *= l
@@ -145,22 +144,21 @@ class BlogCard extends React.Component {
   }
   startAnimation () {
     this.state.force.restart()
-    d3.select('.container-blog')
+    select('.container-blog')
       .select('svg')
       .selectAll('*')
       .attr('opacity', 1)
   }
   stopAnimation () {
     this.state.force.stop()
-    d3.select('.container-blog')
+    select('.container-blog')
       .select('svg')
       .selectAll('*')
       .attr('opacity', 0)
   }
 
   generateObjects () {
-    this.state.svg = d3
-      .select('.container-blog')
+    this.state.svg = select('.container-blog')
       .append('svg')
       .attr(
         'width',
@@ -196,7 +194,7 @@ class BlogCard extends React.Component {
       .style('fill', function (d) {
         return d.color
       })
-    d3.select('.container-blog')
+    select('.container-blog')
       .select('svg')
       .selectAll('*')
       .attr('opacity', 0)

@@ -7,46 +7,51 @@
 //  // You can delete this file if you're not using it
 //  /* eslint-disable react/no-danger */
 
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { JssProvider } from 'react-jss';
-import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
-import getPageContext from './src/getPageContext';
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { JssProvider } from 'react-jss'
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
+import getPageContext from './src/getPageContext'
 
-
-export const replaceRenderer = ({ bodyComponent, replaceBodyHTMLString, setHeadComponents }) => {
+export const replaceRenderer = ({
+  bodyComponent,
+  replaceBodyHTMLString,
+  setHeadComponents
+}) => {
   // Get the context of the page to collected side effects.
-  const pageContext = getPageContext();
+  const pageContext = getPageContext()
   const sheet = new ServerStyleSheet()
   const bodyHTML = renderToString(
     <JssProvider
-    registry={pageContext.sheetsRegistry}
-    generateClassName={pageContext.generateClassName}
+      registry={pageContext.sheetsRegistry}
+      generateClassName={pageContext.generateClassName}
     >
       <StyleSheetManager sheet={sheet.instance}>
-      {React.cloneElement(bodyComponent, {
-          pageContext,
-      })}
+        {React.cloneElement(bodyComponent, {
+          pageContext
+        })}
       </StyleSheetManager>
     </JssProvider>
-  );
-//   const bodyHTML = renderToString(
-//       <StyleSheetManager sheet={sheet.instance}>
-//         {bodyComponent}
-//       </StyleSheetManager>
-//   );
+  )
+  //   const bodyHTML = renderToString(
+  //       <StyleSheetManager sheet={sheet.instance}>
+  //         {bodyComponent}
+  //       </StyleSheetManager>
+  //   );
 
-  replaceBodyHTMLString(bodyHTML);
+  replaceBodyHTMLString(bodyHTML)
   setHeadComponents([
     <style
-      type="text/css"
-      id="server-side-jss"
-      key="server-side-jss"
-      dangerouslySetInnerHTML={{ __html: pageContext.sheetsRegistry.toString() }}
+      type='text/css'
+      id='server-side-jss'
+      key='server-side-jss'
+      dangerouslySetInnerHTML={{
+        __html: pageContext.sheetsRegistry.toString()
+      }}
     />,
     sheet.getStyleElement()
-  ]);
-};
+  ])
+}
 
 // import React from "react"
 // import { ServerStyleSheet, StyleSheetManager } from "styled-components"

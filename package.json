@@ -12,10 +12,11 @@
     "babel-plugin-remove-graphql-queries": "^2.6.3",
     "babel-plugin-styled-components": "^1.10.0",
     "babel-runtime": "^6.26.0",
+    "bundle-analyzer": "^0.0.6",
     "d3": "^5.9.2",
     "d3-shape": "^1.3.5",
     "debounce": "^1.2.0",
-    "gatsby": "^2.2.0",
+    "gatsby": "^2.4.2",
     "gatsby-cli": "^2.5.4",
     "gatsby-image": "^2.0.38",
     "gatsby-link": "^2.0.16",
@@ -30,6 +31,7 @@
     "gatsby-plugin-sharp": "^2.0.34",
     "gatsby-plugin-styled-components": "^2.0.0",
     "gatsby-plugin-typography": "^2.2.13",
+    "gatsby-plugin-webpack-bundle-analyzer": "^1.0.4",
     "gatsby-remark-copy-linked-files": "^2.0.11",
     "gatsby-remark-images": "^3.0.10",
     "gatsby-remark-prismjs": "^3.2.8",
@@ -90,7 +92,8 @@
   },
   "devDependencies": {
     "eslint-plugin-styled-components-config": "0.0.2",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "webpack-bundle-analyzer": "^3.3.2"
   },
   "resolutions": {
     "graphql": "^0.13.0"

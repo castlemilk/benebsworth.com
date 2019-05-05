@@ -19,11 +19,25 @@ module.exports = {
         style: true
       }
     },
+    // {
+    //   resolve: 'gatsby-plugin-google-fonts',
+    //   options: {
+    //     fonts: ['Prompt', 'Open Sans']
+    //   }
+    // },
     {
-      resolve: 'gatsby-plugin-google-fonts',
+      resolve: `gatsby-plugin-prefetch-google-fonts`,
       options: {
-        fonts: ['Prompt', 'Open Sans']
-      }
+        fonts: [
+          {
+            family: `Prompt`,
+          },
+          {
+            family: `Open Sans`,
+            variants: [`400`, `700`]
+          },
+        ],
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,

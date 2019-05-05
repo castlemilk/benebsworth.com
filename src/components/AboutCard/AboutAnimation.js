@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from "styled-components"
 import MtSvgLines from 'react-mt-svg-lines';
+import Img from "gatsby-image"
 import AboutSVG from './AboutSVG';
-import AboutPNG from '../../assets/images/portrait.png'
+import AboutPNG from '../../assets/images/portrait.jpg'
 /**
  * TODO: add a spray-paint like animation that reveals the underlying rgb image beneath the black and white svg stenline, as the user mouses over the stencil
  * it will spray paint reveal the underlying image.
@@ -40,7 +41,7 @@ class AboutAnimation extends React.Component {
     return this.state.loading ? (loadingView) : (
       <div>
         <div style={{ zIndex: 5, position: 'absolute'}}>
-          <RealImage>
+          <RealImage fixed={AboutPNG}>
             <img src={AboutPNG} height={274} />
           </RealImage>
         </div>

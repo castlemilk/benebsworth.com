@@ -1,22 +1,22 @@
 /**
-*
-* CodeEditor
-*
-*/
+ *
+ * CodeEditor
+ *
+ */
 
-import React from 'react';
-import Embed from 'react-runkit';
-import { Helmet } from "react-helmet";
-
+import React from 'react'
+import Embed from 'react-runkit'
+import { Helmet } from 'react-helmet'
 
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
 // import { FormattedMessage } from 'react-intl';
-import messages from './messages';
+import messages from './messages'
 // import CodeEditorWrapper from './CodeEditorWrapper';
 // TODO: Override runkit css to provide more UI friendly styling
-class CodeEditor extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class CodeEditor extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
   // componentDidMount () {
   //   const script = document.createElement("script");
 
@@ -24,18 +24,16 @@ class CodeEditor extends React.Component { // eslint-disable-line react/prefer-s
   //   script.async = false;
 
   //   document.body.appendChild(script);
-  // } 
-  render() {
+  // }
+  render () {
     return (
       <div>
-        <Embed className="embed" source={messages.codeBlockJS.text} />
+        <Embed className='embed' source={messages.codeBlockJS.text} />
       </div>
-    );
+    )
   }
 }
 
-CodeEditor.propTypes = {
+CodeEditor.propTypes = {}
 
-};
-
-export default CodeEditor;
+export default CodeEditor

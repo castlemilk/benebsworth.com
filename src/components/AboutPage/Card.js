@@ -34,7 +34,6 @@ const Header = styled.div`
   width: 100%;
   z-index: 2;
   border-radius: 10px 10px 0 0;
-  
 `
 const Body = styled.div`
   height: 60%;
@@ -96,10 +95,13 @@ const ScoreWrapper = styled.div`
 const Card = props => (
   <Paper>
     <CardImage>
-      <img  src={props.image} />
+      <img src={props.image} />
     </CardImage>
     <Header>
-      <img style={{ borderRadius: '10px 10px 0 0' }} src={props.headerBackground} />
+      <img
+        style={{ borderRadius: '10px 10px 0 0' }}
+        src={props.headerBackground}
+      />
     </Header>
 
     <Body>

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const AboutBodyWrapper = styled.div`
   text-align: center;
@@ -8,9 +8,9 @@ const AboutBodyWrapper = styled.div`
 `
 
 const Paper = styled.div`
-  -webkit-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
-  -moz-box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
-  box-shadow: 6px 7px 11px -5px rgba(138,133,138,1);
+  -webkit-box-shadow: 6px 7px 11px -5px rgba(138, 133, 138, 1);
+  -moz-box-shadow: 6px 7px 11px -5px rgba(138, 133, 138, 1);
+  box-shadow: 6px 7px 11px -5px rgba(138, 133, 138, 1);
   width: 100%;
   display: inline-flex;
   justify-content: center;
@@ -23,12 +23,12 @@ const AboutBlurb = styled.div`
   color: black;
   @media (max-width: 991px) {
     .blurb-description p span {
-        font-size: 30px;
-        margin: 16px 20px 10px 0;
-        text-align: left;
-        margin-left: 10px;
-        margin-top: 10px;
-        margin-right: 10px;
+      font-size: 30px;
+      margin: 16px 20px 10px 0;
+      text-align: left;
+      margin-left: 10px;
+      margin-top: 10px;
+      margin-right: 10px;
     }
   }
   @media (max-width: 1199px) {
@@ -41,7 +41,6 @@ const AboutBlurb = styled.div`
       margin-left: 10px;
       margin-top: 10px;
       margin-right: 10px;
-        
     }
   }
   .blurb-description p span {
@@ -64,7 +63,7 @@ const AboutBlurb = styled.div`
   color: black;
 `
 
-const bio1 =`
+const bio1 = `
 Oh so you'd like to know a little about me? Well I'm flattered. Here we go; Born to a Moroccan Diesel Mechanic and Australian Artist.
              We lived in Port Hedland, Western Australia for 8 years before moving to a very small town called Denmark in Western Australia.
              These small towns, with the typical small town mentalities proved challenging, but somewhat enriching. Finally we settled in Melbourne where I've been since
@@ -74,20 +73,18 @@ Oh so you'd like to know a little about me? Well I'm flattered. Here we go; Born
              I bloomed late in a sense, unfortunately I didn't have any early tutillage to guide me into intellectual pursuits. So I am catching up, albeit quickly, if I can say so myself.
 
 `
-const AboutBody = (props) => (
+const AboutBody = props => (
   <AboutBodyWrapper>
-      <Paper>
-        <AboutBlurb>
-          <div className="blurb-description" >
-            <p>
-              <span>
-                Blurb.
-              </span>
-              {bio1}
-            </p>
-          </div>
-        </AboutBlurb>
-      </Paper>
+    <Paper>
+      <AboutBlurb>
+        <div className='blurb-description'>
+          <p>
+            <span>Blurb.</span>
+            {bio1}
+          </p>
+        </div>
+      </AboutBlurb>
+    </Paper>
   </AboutBodyWrapper>
 )
 

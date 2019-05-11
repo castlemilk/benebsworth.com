@@ -80,34 +80,34 @@ export const replaceRenderer = ({
 export const onRenderBody = ({ setHeadComponents }) => {
   setHeadComponents([
     <link
-      rel="dns-prefetch"
-      key="dns-prefetch-google-analytics"
-      href="https://www.google-analytics.com"
+      rel='dns-prefetch'
+      key='dns-prefetch-google-analytics'
+      href='https://www.google-analytics.com'
     />,
     <link
-      rel="preconnect"
-      key="google-analytics-preconnect"
-      href="https://www.google-analytics.com"
+      rel='preconnect'
+      key='google-analytics-preconnect'
+      href='https://www.google-analytics.com'
     />,
     <link
-      rel="dns-prefetch"
-      key="dns-prefetch-google-analytics-1"
-      href="https://marketingplatform.google.com"
+      rel='dns-prefetch'
+      key='dns-prefetch-google-analytics-1'
+      href='https://marketingplatform.google.com'
     />,
     <link
-    rel="preconnect"
-    key="google-analytics-preconnect-1"
-    href="https://marketingplatform.google.com"
-  />,
-  <link
-      rel="dns-prefetch"
-      key="dns-prefetch-google-analytics-2"
-      href="https://www.google.com"
+      rel='preconnect'
+      key='google-analytics-preconnect-1'
+      href='https://marketingplatform.google.com'
     />,
     <link
-    rel="preconnect"
-    key="google-analytics-preconnect-2"
-    href="https://www.google.com"
-  />,
-  ]);
-};
+      rel='dns-prefetch'
+      key='dns-prefetch-google-analytics-2'
+      href='https://www.google.com'
+    />,
+    <link
+      rel='preconnect'
+      key='google-analytics-preconnect-2'
+      href='https://www.google.com'
+    />
+  ])
+}

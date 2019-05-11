@@ -3,14 +3,14 @@
  *
  * This contains all the text for the CodeEditor component.
  */
-import { defineMessages } from 'react-intl';
+import { defineMessages } from 'react-intl'
 
-const scope = 'app.components.CodeEditor';
+const scope = 'app.components.CodeEditor'
 
 export default defineMessages({
   header: {
     id: `${scope}.header`,
-    defaultMessage: 'This is the CodeEditor component !',
+    defaultMessage: 'This is the CodeEditor component !'
   },
   codeBlockJS: {
     id: `${scope}.header`,
@@ -22,6 +22,6 @@ const charge = await nutry.search({
   name: 'chocolate',
 });
 
-// Click “▶ run” to try this code live and fetch a list of discovered foods.`,
-  },
-});
+// Click “▶ run” to try this code live and fetch a list of discovered foods.`
+  }
+})

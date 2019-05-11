@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const Page1Wrapper = styled.div`
   background: #7f3fbf;
@@ -88,16 +88,24 @@ const Page1Wrapper = styled.div`
     overflow: hidden;
     position: relative;
     color: #314659;
-    font-family: 'SF UI Display', "Helvetica Neue For Number", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'SF UI Display', 'Helvetica Neue For Number', -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB',
+      'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   .page1 {
     min-height: 784px;
     background: #7f3fbf;
-    background: -webkit-gradient(linear, left top, left bottom, from(#7f3fbf), to(#7f3fbf));
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(#7f3fbf),
+      to(#7f3fbf)
+    );
     background: linear-gradient(to bottom, #7f3fbf 0, #7f3fbf 100%);
   }
-`;
+`
 
-export default Page1Wrapper;
+export default Page1Wrapper

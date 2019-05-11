@@ -74,7 +74,7 @@ const ProjectTechnologyHeader = styled.div`
   text-align: left;
   margin-left: 10px;
   font-weight: bold;
-  font-size: 1.2em
+  font-size: 1.2em;
 `
 const ProjectTechnologyContent = styled.div`
   grid-area: technology-content;

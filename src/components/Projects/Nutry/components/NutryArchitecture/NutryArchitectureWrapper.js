@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const NutryArchitectureWrapper = styled.div`
   @media only screen and (min-width: 380px) and (max-width: 576px) {
@@ -12,7 +12,6 @@ export const NutryArchitectureWrapper = styled.div`
     width: 554px;
     text-align: center;
     justify-content: center;
-
   }
 
   .architectureDataSources {
@@ -28,7 +27,8 @@ export const NutryArchitectureWrapper = styled.div`
     top: 5px;
     right: 0;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architecturePathOne {
@@ -44,7 +44,8 @@ export const NutryArchitectureWrapper = styled.div`
     right: 90px;
     z-index: 2;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureCoreSystem {
@@ -60,7 +61,8 @@ export const NutryArchitectureWrapper = styled.div`
     right: 170px;
     z-index: 2;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architecturePathTwo {
@@ -76,7 +78,8 @@ export const NutryArchitectureWrapper = styled.div`
     right: 290px;
     z-index: 1;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureAI {
@@ -92,7 +95,8 @@ export const NutryArchitectureWrapper = styled.div`
     right: 335px;
     z-index: 2;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architecturePathThree {
@@ -108,7 +112,8 @@ export const NutryArchitectureWrapper = styled.div`
     right: 180px;
     z-index: 1;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureEnterprise {
@@ -123,7 +128,8 @@ export const NutryArchitectureWrapper = styled.div`
     top: 165px;
     right: 450px;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureGUI {
@@ -138,7 +144,8 @@ export const NutryArchitectureWrapper = styled.div`
     top: 245px;
     right: 310px;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureAPI {
@@ -153,8 +160,9 @@ export const NutryArchitectureWrapper = styled.div`
     top: 315px;
     right: 170px;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
-`;
+`
 
-export default NutryArchitectureWrapper;
+export default NutryArchitectureWrapper

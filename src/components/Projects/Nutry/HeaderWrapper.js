@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const HeaderWrapper = styled.div`
   background: white;
@@ -22,15 +22,15 @@ const HeaderWrapper = styled.div`
     margin-right: 20px;
     text-decoration: none;
     z-index: 11;
-    color:inherit;
+    color: inherit;
   }
   .github-link a {
     text-decoration: none;
     z-index: 11;
   }
-  .github-link a:hover{
+  .github-link a:hover {
     color: #7e3fbf;
   }
-`;
+`
 
-export default HeaderWrapper;
+export default HeaderWrapper

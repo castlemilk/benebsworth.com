@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const Page3Wrapper = styled.div`
   overflow: hidden;
@@ -7,7 +7,7 @@ const Page3Wrapper = styled.div`
   background: #eff3f6;
   display: flex;
   justify-content: center;
-  
+
   .home-page-wrapper .page h2 {
     font-size: 60px;
     line-height: 46px;
@@ -16,7 +16,7 @@ const Page3Wrapper = styled.div`
     font-weight: 400;
     margin: 140px auto 100px;
     z-index: 10;
-  }  
+  }
   .page3 {
     max-width: 1600px;
     background: #eff3f6;
@@ -33,6 +33,6 @@ const Page3Wrapper = styled.div`
     color: #af74ea;
     margin-bottom: 40px;
   }
-`;
+`
 
-export default Page3Wrapper;
+export default Page3Wrapper

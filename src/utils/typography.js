@@ -1,80 +1,76 @@
+import './global.css'
 
-import './global.css';
-
-import Typography from "typography"
-import Wordpress2016 from "typography-theme-wordpress-2016"
+import Typography from 'typography'
+import Wordpress2016 from 'typography-theme-wordpress-2016'
 
 Wordpress2016.overrideThemeStyles = () => {
   return {
-    "a.gatsby-resp-image-link": {
-      boxShadow: `none`,
-    },
-    "a": {
+    'a.gatsby-resp-image-link': {
       boxShadow: `none`
     },
-    "div": {
+    a: {
+      boxShadow: `none`
+    },
+    div: {
       fontFamily: `Avenir Next, sans-serif`
     },
-    "span": {
+    span: {
       fontFamily: `Avenir Next, sans-serif`
     },
-    "h1": {
+    h1: {
       fontFamily: `Avenir Next, sans-serif`,
       color: `var(--textTitle)`
     },
-    "h2": {
+    h2: {
       fontFamily: `Avenir Next, sans-serif`,
       color: `var(--textTitle)`
     },
-    "h3.vertical-timeline-element-title": {
+    'h3.vertical-timeline-element-title': {
       fontFamily: `Avenir Next, sans-serif`,
       fontWeight: `bold`,
       color: `var(--textTitle)`
     },
-    "h4.vertical-timeline-element-subtitle": {
+    'h4.vertical-timeline-element-subtitle': {
       fontFamily: `Avenir Next, sans-serif`,
       fontWeight: `bold`,
       marginTop: `10px`,
       color: `var(--textTitle)`
     },
     hr: {
-      background: 'var(--hr)',
+      background: 'var(--hr)'
     },
     'a.gatsby-resp-image-link': {
-      boxShadow: 'none',
+      boxShadow: 'none'
     },
     // These two are for gatsby-remark-autolink-headers:
     'a.anchor': {
-      boxShadow: 'none',
+      boxShadow: 'none'
     },
     'a.anchor svg[aria-hidden="true"]': {
-      stroke: 'var(--textLink)',
+      stroke: 'var(--textLink)'
     },
     'p code': {
-      fontSize: '1rem',
+      fontSize: '1rem'
     },
     // TODO: why tho
     'h1 code, h2 code, h3 code, h4 code, h5 code, h6 code': {
-      fontSize: 'inherit',
+      fontSize: 'inherit'
     },
     'li code': {
-      fontSize: '1rem',
+      fontSize: '1rem'
     },
-    "ul": {
+    ul: {
       marginLeft: `28px`
-
     },
-    "ol": {
-
-    },
+    ol: {},
     blockquote: {
       color: 'inherit',
       borderLeftColor: 'inherit',
-      opacity: '0.8',
+      opacity: '0.8'
     },
     'blockquote.translation': {
-      fontSize: '1em',
-    },
+      fontSize: '1em'
+    }
   }
 }
 

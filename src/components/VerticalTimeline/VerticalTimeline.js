@@ -1,25 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import VerticalTimelineWrapper from './VerticalTimelineWrapper';
+import React from 'react'
+import PropTypes from 'prop-types'
+import VerticalTimelineWrapper from './VerticalTimelineWrapper'
 
 class VerticalTimeline extends React.Component {
-  render() {
-    const { animate, children } = this.props;
-    let { className } = this.props;
+  render () {
+    const { animate, children } = this.props
+    let { className } = this.props
 
-    className += ' vertical-timeline';
+    className += ' vertical-timeline'
 
     if (animate) {
-      className += ' vertical-timeline--animate';
+      className += ' vertical-timeline--animate'
     }
 
     return (
-    <VerticalTimelineWrapper>
-        <div className={className.trim()}>
-            {children}
-        </div>
-    </VerticalTimelineWrapper>
-    );
+      <VerticalTimelineWrapper>
+        <div className={className.trim()}>{children}</div>
+      </VerticalTimelineWrapper>
+    )
   }
 }
 
@@ -30,11 +28,11 @@ VerticalTimeline.propTypes = {
   ]).isRequired,
   className: PropTypes.string,
   animate: PropTypes.bool
-};
+}
 
 VerticalTimeline.defaultProps = {
   animate: true,
   className: ''
-};
+}
 
-export default VerticalTimeline;
+export default VerticalTimeline

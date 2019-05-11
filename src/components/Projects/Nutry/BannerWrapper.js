@@ -1,9 +1,9 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const BannerWrapper = styled.div`
   background: white;
   width: 100%;
-  
+
   .buttons-wrapper {
     display: flex;
   }
@@ -13,30 +13,30 @@ const BannerWrapper = styled.div`
     }
     height: 500px;
     .banner-bg {
-    width: 130%;
-    overflow: hidden;
-    height: 300px;
-    background: #7f3fbf;
-    position: absolute;
-    bottom: -250px;
-    left: 0;
-    transform: translate(0, 0) rotate(-3.8243deg);
-    z-index: 1;
+      width: 130%;
+      overflow: hidden;
+      height: 300px;
+      background: #7f3fbf;
+      position: absolute;
+      bottom: -250px;
+      left: 0;
+      transform: translate(0, 0) rotate(-3.8243deg);
+      z-index: 1;
     }
   }
   @media only screen and (min-width: 1301px) {
     height: 800px;
     .banner-bg {
-    width: 130%;
-    overflow: hidden;
-    height: 650px;
-    background: #7f3fbf;
-    position: absolute;
-    bottom: -700px;
-    left: 0;
-    transform: translate(0, 0) rotate(-3.8243deg);
-    z-index: 1;
-  }
+      width: 130%;
+      overflow: hidden;
+      height: 650px;
+      background: #7f3fbf;
+      position: absolute;
+      bottom: -700px;
+      left: 0;
+      transform: translate(0, 0) rotate(-3.8243deg);
+      z-index: 1;
+    }
   }
   .img-wrapper {
     width: 46%;
@@ -57,7 +57,9 @@ const BannerWrapper = styled.div`
     padding: 0;
     position: relative;
     color: #314659;
-    font-family: 'SF UI Display', "Helvetica Neue For Number", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'SF UI Display', 'Helvetica Neue For Number', -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB',
+      'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -73,11 +75,9 @@ const BannerWrapper = styled.div`
     fill: none;
   }
 
-  
-
   .banner-page {
     padding-left: 50px;
-    padding-bottom: 250px
+    padding-bottom: 250px;
   }
 
   .banner-page h1 {
@@ -108,6 +108,6 @@ const BannerWrapper = styled.div`
     color: black;
     box-shadow: 0 4px 10px 0 rgba(127, 63, 191, 0.7);
   }
-`;
+`
 
-export default BannerWrapper;
+export default BannerWrapper

@@ -30,14 +30,14 @@ module.exports = {
       options: {
         fonts: [
           {
-            family: `Prompt`,
+            family: `Prompt`
           },
           {
             family: `Open Sans`,
             variants: [`400`, `700`]
-          },
-        ],
-      },
+          }
+        ]
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
@@ -63,7 +63,6 @@ module.exports = {
               maxWidth: 590,
               backgroundColor: `transparent`,
               linkImagesToOriginal: true
-
             }
           },
           {
@@ -84,8 +83,8 @@ module.exports = {
       resolve: 'gatsby-plugin-webpack-bundle-analyzer',
       options: {
         analyzerPort: 3000,
-        production: true,
-      },
+        production: true
+      }
     },
     `gatsby-plugin-react-helmet`,
     {

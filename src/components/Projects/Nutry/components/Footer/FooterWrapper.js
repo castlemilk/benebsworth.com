@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const FooterWrapper = styled.div`
   .social-media-box {
@@ -275,6 +275,6 @@ const FooterWrapper = styled.div`
       width: 100%;
     }
   }
-`;
+`
 
-export default FooterWrapper;
+export default FooterWrapper

@@ -4,26 +4,27 @@
  *
  */
 
-import React from 'react';
+import React from 'react'
 // import PropTypes from 'prop-types';
 // import { enquireScreen } from 'enquire-js';
-import { Helmet } from 'react-helmet';
-import icon16 from './images/favicon.png';
-import Footer from './components/Footer';
+import { Helmet } from 'react-helmet'
+import icon16 from './images/favicon.png'
+import Footer from './components/Footer'
 
-import Header from './Header';
-import Banner from './Banner';
-import Page1 from './Page1';
-import Page2 from './Page2';
-import Page3 from './Page3';
-import LandingPageWrapper from './LandingPageWrapper';
-export class Nutry extends React.Component { // eslint-disable-line react/prefer-stateless-function
+import Header from './Header'
+import Banner from './Banner'
+import Page1 from './Page1'
+import Page2 from './Page2'
+import Page3 from './Page3'
+import LandingPageWrapper from './LandingPageWrapper'
+export class Nutry extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
 
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      isMobile: true,
-    };
+      isMobile: true
+    }
   }
   // componentDidMount() {
   //   enquireScreen((b) => {
@@ -33,21 +34,24 @@ export class Nutry extends React.Component { // eslint-disable-line react/prefer
   //     });
   //   });
   // }
-  render() {
-    const { isMobile } = this.state;
-    const childProps = { isMobile };
+  render () {
+    const { isMobile } = this.state
+    const childProps = { isMobile }
     return (
       <LandingPageWrapper>
         <Helmet
-                title='Nutry [Overview]'
-                meta={[
-                  { name: 'description', content: 'Projects' },
-                  { name: 'keywords', content: 'Blog, technology, software engineering' },
-                ]}
-               >
-                <script src="https://embed.runkit.com"></script>
-                <link rel="icon" type="image/png" href={`${icon16}`} sizes="16x16" />
-              </Helmet>
+          title='Nutry [Overview]'
+          meta={[
+            { name: 'description', content: 'Projects' },
+            {
+              name: 'keywords',
+              content: 'Blog, technology, software engineering'
+            }
+          ]}
+        >
+          <script src='https://embed.runkit.com' />
+          <link rel='icon' type='image/png' href={`${icon16}`} sizes='16x16' />
+        </Helmet>
         <Header {...childProps} />
         <Banner {...childProps} />
         <Page1 {...childProps} />
@@ -55,7 +59,7 @@ export class Nutry extends React.Component { // eslint-disable-line react/prefer
         <Page3 {...childProps} />
         <Footer />
       </LandingPageWrapper>
-    );
+    )
   }
 }
 
@@ -63,4 +67,4 @@ export class Nutry extends React.Component { // eslint-disable-line react/prefer
 //   dispatch: PropTypes.func.isRequired,
 // };
 
-export default Nutry;
+export default Nutry

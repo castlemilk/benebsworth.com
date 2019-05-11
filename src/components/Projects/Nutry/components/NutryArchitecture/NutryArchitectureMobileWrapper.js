@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const NutryArchitectureMobileWrapper = styled.div`
   @media only screen and (min-width: 380px) and (max-width: 576px) {
@@ -12,7 +12,6 @@ const NutryArchitectureMobileWrapper = styled.div`
     width: 359px;
     text-align: center;
     justify-content: center;
-
   }
 
   .architectureDataSources {
@@ -28,7 +27,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     top: 5px;
     right: 0;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architecturePathOne {
@@ -44,7 +44,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     right: 55px;
     z-index: 2;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureCoreSystem {
@@ -60,7 +61,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     right: 97px;
     z-index: 2;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architecturePathTwo {
@@ -76,7 +78,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     right: 158px;
     z-index: 1;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureAI {
@@ -92,7 +95,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     right: 185px;
     z-index: 2;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architecturePathThree {
@@ -108,7 +112,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     right: 99px;
     z-index: 1;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureEnterprise {
@@ -123,7 +128,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     top: 87px;
     right: 250px;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureGUI {
@@ -138,7 +144,8 @@ const NutryArchitectureMobileWrapper = styled.div`
     top: 135px;
     right: 172px;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
 
   .architectureAPI {
@@ -153,9 +160,9 @@ const NutryArchitectureMobileWrapper = styled.div`
     top: 175px;
     right: 92px;
     background-position: 0 0;
-    filter: drop-shadow(0 3px 2px rgb(85, 72, 132)) drop-shadow(0 2px 2px rgb(85, 72, 132));
+    filter: drop-shadow(0 3px 2px rgb(85, 72, 132))
+      drop-shadow(0 2px 2px rgb(85, 72, 132));
   }
-`;
+`
 
-export default NutryArchitectureMobileWrapper;
-
+export default NutryArchitectureMobileWrapper

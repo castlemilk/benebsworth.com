@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { select, mouse} from 'd3-selection'
+import { select, mouse } from 'd3-selection'
 import { voronoi } from 'd3-voronoi'
 import { forceSimulation, forceManyBody } from 'd3-force'
 

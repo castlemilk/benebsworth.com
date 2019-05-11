@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 export default class CrossfadeImage extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       topSrc: props.src,
       bottomOpacity: 0,
       bottomSrc: props.src
-    };
+    }
   }
-  componentWillReceiveProps(newProps) {
-    const oldSrc = this.state.topSrc;
-    const newSrc = newProps.src;
+  componentWillReceiveProps (newProps) {
+    const oldSrc = this.state.topSrc
+    const newSrc = newProps.src
     if (newSrc !== oldSrc) {
       // Reset the component everytime we receive new prop, to
       // cancel out any animation that's still going on
@@ -23,45 +23,48 @@ export default class CrossfadeImage extends Component {
           () => {
             // One of the few times setTimeout does wonders, this is for
             // getting fade out transition without css keyframe
-            if (!this.timeout) clearTimeout(this.timeout);
+            if (!this.timeout) clearTimeout(this.timeout)
             this.timeout = setTimeout(
               () => this.setState({ bottomOpacity: 0 }),
               20
-            );
+            )
           }
         )
-      );
+      )
     }
   }
-  render() {
-    const { duration, timingFunction, delay, style, alt } = this.props;
-    const { topSrc, bottomOpacity, bottomSrc } = this.state;
+  render () {
+    const { duration, timingFunction, delay, style, alt } = this.props
+    const { topSrc, bottomOpacity, bottomSrc } = this.state
     return (
-      <div style={{ ...defaultStyle, ...{ position: "absolute" } }}>
-        {topSrc &&
+      <div style={{ ...defaultStyle, ...{ position: 'absolute' } }}>
+        {topSrc && (
           <img
-            style={{ ...defaultStyle, ...style, ...{ position: "absolute" } }}
+            style={{ ...defaultStyle, ...style, ...{ position: 'absolute' } }}
             src={topSrc}
             alt={alt}
-          />}
-        {bottomSrc &&
+          />
+        )}
+        {bottomSrc && (
           <img
             style={{
               ...defaultStyle,
               ...style,
               ...{
                 opacity: bottomOpacity,
-                transition: `opacity ${duration / 1000}s ${timingFunction} ${delay / 1000}s`
+                transition: `opacity ${duration /
+                  1000}s ${timingFunction} ${delay / 1000}s`
               }
             }}
             src={bottomSrc}
-          />}
+          />
+        )}
       </div>
-    );
+    )
   }
 }
 
-const defaultStyle = { maxWidth: "100%", maxHeight: "100%" };
+const defaultStyle = { maxWidth: '100%', maxHeight: '100%' }
 
 CrossfadeImage.propTypes = {
   src: PropTypes.string.isRequired,
@@ -70,10 +73,10 @@ CrossfadeImage.propTypes = {
   timingFunction: PropTypes.string,
   delay: PropTypes.number,
   style: PropTypes.object
-};
+}
 
 CrossfadeImage.defaultProps = {
   duration: 500,
-  timingFunction: "ease",
+  timingFunction: 'ease',
   delay: 0
-};
+}

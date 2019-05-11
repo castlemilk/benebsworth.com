@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const NutryAnimationOneWrapper = styled.div`
   position: absolute;
@@ -33,6 +33,6 @@ const NutryAnimationOneWrapper = styled.div`
     bottom: 50px;
     left: 20px;
   }
-`;
+`
 
-export default NutryAnimationOneWrapper;
+export default NutryAnimationOneWrapper

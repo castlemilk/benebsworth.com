@@ -1,162 +1,176 @@
 /**
-*
-* NutryArchitecture
-*
-*/
+ *
+ * NutryArchitecture
+ *
+ */
 
-import React from 'react';
+import React from 'react'
 
-import architectureAI from '../../images/architectureAI.svg';
-import architectureAPI from '../../images/architectureAPI.svg';
-import architectureCoreSystem from '../../images/architectureCoreSystem.svg';
-import architectureDataSources from '../../images/architectureDataSources.svg';
-import architectureGUI from '../../images/architectureGUI.svg';
-import architecturePathOne from '../../images/architecturePathOne.svg';
-import architecturePathTwo from '../../images/architecturePathTwo.svg';
-import architecturePathThree from '../../images/architecturePathThree.svg';
-import architectureEnterprise from '../../images/architectureEnterprise.svg';
+import architectureAI from '../../images/architectureAI.svg'
+import architectureAPI from '../../images/architectureAPI.svg'
+import architectureCoreSystem from '../../images/architectureCoreSystem.svg'
+import architectureDataSources from '../../images/architectureDataSources.svg'
+import architectureGUI from '../../images/architectureGUI.svg'
+import architecturePathOne from '../../images/architecturePathOne.svg'
+import architecturePathTwo from '../../images/architecturePathTwo.svg'
+import architecturePathThree from '../../images/architecturePathThree.svg'
+import architectureEnterprise from '../../images/architectureEnterprise.svg'
 
-import architectureAIMobile from '../../images/mobile/architectureAIMobile.svg';
-import architectureAPIMobile from '../../images/mobile/architectureAPIMobile.svg';
-import architectureCoreSystemMobile from '../../images/mobile/architectureCoreSystemMobile.svg';
-import architectureDataSourcesMobile from '../../images/mobile/architectureDataSourcesMobile.svg';
-import architectureGUIMobile from '../../images/mobile/architectureGUIMobile.svg';
-import architecturePathOneMobile from '../../images/mobile/architecturePathOneMobile.svg';
-import architecturePathTwoMobile from '../../images/mobile/architecturePathTwoMobile.svg';
-import architecturePathThreeMobile from '../../images/mobile/architecturePathThreeMobile.svg';
-import architectureEnterpriseMobile from '../../images/mobile/architectureEnterpriseMobile.svg';
+import architectureAIMobile from '../../images/mobile/architectureAIMobile.svg'
+import architectureAPIMobile from '../../images/mobile/architectureAPIMobile.svg'
+import architectureCoreSystemMobile from '../../images/mobile/architectureCoreSystemMobile.svg'
+import architectureDataSourcesMobile from '../../images/mobile/architectureDataSourcesMobile.svg'
+import architectureGUIMobile from '../../images/mobile/architectureGUIMobile.svg'
+import architecturePathOneMobile from '../../images/mobile/architecturePathOneMobile.svg'
+import architecturePathTwoMobile from '../../images/mobile/architecturePathTwoMobile.svg'
+import architecturePathThreeMobile from '../../images/mobile/architecturePathThreeMobile.svg'
+import architectureEnterpriseMobile from '../../images/mobile/architectureEnterpriseMobile.svg'
 
-import NutryArchitectureWrapper from './NutryArchitectureWrapper';
-import NutryArchitectureMobileWrapper from './NutryArchitectureMobileWrapper';
+import NutryArchitectureWrapper from './NutryArchitectureWrapper'
+import NutryArchitectureMobileWrapper from './NutryArchitectureMobileWrapper'
 const dataWeb = [
   {
     className: 'architectureDataSources',
-    img: architectureDataSources,
+    img: architectureDataSources
   },
   {
     className: 'architecturePathOne',
-    img: architecturePathOne,
+    img: architecturePathOne
   },
   {
     className: 'architectureCoreSystem',
-    img: architectureCoreSystem,
+    img: architectureCoreSystem
   },
   {
     className: 'architecturePathTwo',
-    img: architecturePathTwo,
+    img: architecturePathTwo
   },
   {
     className: 'architectureAI',
-    img: architectureAI,
+    img: architectureAI
   },
   {
     className: 'architecturePathThree',
-    img: architecturePathThree,
+    img: architecturePathThree
   },
   {
     className: 'architectureEnterprise',
-    img: architectureEnterprise,
+    img: architectureEnterprise
   },
   {
     className: 'architectureGUI',
-    img: architectureGUI,
+    img: architectureGUI
   },
   {
     className: 'architectureAPI',
-    img: architectureAPI,
-  },
-];
+    img: architectureAPI
+  }
+]
 const dataMobile = [
   {
     className: 'architectureDataSources',
-    img: architectureDataSourcesMobile,
+    img: architectureDataSourcesMobile
   },
   {
     className: 'architecturePathOne',
-    img: architecturePathOneMobile,
+    img: architecturePathOneMobile
   },
   {
     className: 'architectureCoreSystem',
-    img: architectureCoreSystemMobile,
+    img: architectureCoreSystemMobile
   },
   {
     className: 'architecturePathTwo',
-    img: architecturePathTwoMobile,
+    img: architecturePathTwoMobile
   },
   {
     className: 'architectureAI',
-    img: architectureAIMobile,
+    img: architectureAIMobile
   },
   {
     className: 'architecturePathThree',
-    img: architecturePathThreeMobile,
+    img: architecturePathThreeMobile
   },
   {
     className: 'architectureEnterprise',
-    img: architectureEnterpriseMobile,
+    img: architectureEnterpriseMobile
   },
   {
     className: 'architectureGUI',
-    img: architectureGUIMobile,
+    img: architectureGUIMobile
   },
   {
     className: 'architectureAPI',
-    img: architectureAPIMobile,
-  },
-];
-
+    img: architectureAPIMobile
+  }
+]
 
 class NutryArchitecture extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = { windowWidth: 1700 }
     this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
   }
-  componentWillUnmount() {
-      typeof window !== 'undefined' && window.removeEventListener('resize', this.handleWindowSizeChange);
-      clearTimeout(this.transitionTimeout);
+  componentWillUnmount () {
+    typeof window !== 'undefined' &&
+      window.removeEventListener('resize', this.handleWindowSizeChange)
+    clearTimeout(this.transitionTimeout)
   }
-  handleWindowSizeChange() {
-      typeof window !== 'undefined' && setTimeout(this.setState({ windowWidth: window.innerWidth }));
-      // typeof window !== 'undefined' && console.log(window.innerWidth)
-  }    
-  componentDidMount() {
-      this._ismounted = true;
-      setTimeout(window.addEventListener('resize', this.handleWindowSizeChange));
-      typeof window !== 'undefined' && setTimeout(this.setState({
-        windowWidth: window.innerWidth,
-    }))
+  handleWindowSizeChange () {
+    typeof window !== 'undefined' &&
+      setTimeout(this.setState({ windowWidth: window.innerWidth }))
+    // typeof window !== 'undefined' && console.log(window.innerWidth)
+  }
+  componentDidMount () {
+    this._ismounted = true
+    setTimeout(window.addEventListener('resize', this.handleWindowSizeChange))
+    typeof window !== 'undefined' &&
+      setTimeout(
+        this.setState({
+          windowWidth: window.innerWidth
+        })
+      )
     // typeof window !== 'undefined' && console.log(window.innerWidth)
     // typeof window !== 'undefined' && console.log(window.innerWidth <=610)
   }
-  render() {
-    const isMobile = this.state.windowWidth <= 610;
-    const imagesMobile = dataMobile.map((item) => (
-      <img key={item.className} alt="" onFocus={() => this.props.onHover(item.className)} onMouseOver={() => this.props.onHover(item.className)} className={item.className} src={item.img} />
-      ));
-    const images = dataWeb.map((item) => (
-      <img key={item.className} alt="" onFocus={() => this.props.onHover(item.className)} onMouseOver={() => this.props.onHover(item.className)} className={item.className} src={item.img} />
-      ));
+  render () {
+    const isMobile = this.state.windowWidth <= 610
+    const imagesMobile = dataMobile.map(item => (
+      <img
+        key={item.className}
+        alt=''
+        onFocus={() => this.props.onHover(item.className)}
+        onMouseOver={() => this.props.onHover(item.className)}
+        className={item.className}
+        src={item.img}
+      />
+    ))
+    const images = dataWeb.map(item => (
+      <img
+        key={item.className}
+        alt=''
+        onFocus={() => this.props.onHover(item.className)}
+        onMouseOver={() => this.props.onHover(item.className)}
+        className={item.className}
+        src={item.img}
+      />
+    ))
     const webView = (
-    <div>
-      <NutryArchitectureWrapper>
-        <div className="architecture-box" >
-          {images}
-        </div>
-      </NutryArchitectureWrapper>
-    </div>
+      <div>
+        <NutryArchitectureWrapper>
+          <div className='architecture-box'>{images}</div>
+        </NutryArchitectureWrapper>
+      </div>
     )
     const mobileView = (
       <div>
         <NutryArchitectureMobileWrapper>
-          <div className="architecture-box" >
-            {imagesMobile}
-          </div>
+          <div className='architecture-box'>{imagesMobile}</div>
         </NutryArchitectureMobileWrapper>
       </div>
-      )
-    return isMobile ? mobileView : webView;
+    )
+    return isMobile ? mobileView : webView
   }
 }
 
-export default NutryArchitecture;
+export default NutryArchitecture

@@ -4,7 +4,7 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 
- // You can delete this file if you're not using it
+// You can delete this file if you're not using it
 //  const generateBabelConfig = require("gatsby/dist/utils/babel-config");
 //  exports.modifyWebpackConfig = ({ config, stage }) => {
 //    const program = {
@@ -47,7 +47,7 @@
 //   })
 // };
 
-//Add Babel plugin
+// Add Babel plugin
 try {
   require.resolve(`babel-plugin-styled-components`)
 } catch (e) {
@@ -62,8 +62,8 @@ exports.onCreateBabelConfig = ({ stage, actions }, pluginOptions) => {
     stage,
     options: {
       ...pluginOptions,
-      ssr: stage === `build-html`,
-    },
+      ssr: stage === `build-html`
+    }
   })
 }
 
@@ -78,7 +78,7 @@ exports.createPages = ({ graphql, actions }) => {
     `
       {
         allMarkdownRemark(
-          filter: { frontmatter: { release: { eq: true }}}
+          filter: { frontmatter: { release: { eq: true } } }
           sort: { fields: [frontmatter___date], order: DESC }
           limit: 1000
         ) {
@@ -113,8 +113,8 @@ exports.createPages = ({ graphql, actions }) => {
         context: {
           slug: post.node.fields.slug,
           previous,
-          next,
-        },
+          next
+        }
       })
     })
 
@@ -130,8 +130,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     createNodeField({
       name: `slug`,
       node,
-      value,
+      value
     })
   }
 }
-

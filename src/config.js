@@ -54,7 +54,9 @@ export const COLOR_SCHEME = {
     ibm: '#bf7b26',
     python: '#A4C61A',
     istio: '#4285F4',
-    sm: '#FCA7E4'
+    sm: '#FCA7E4',
+    kaniko: '#f8a001',
+    containers: '#0998e6',
     
 }
 export const labelColors = {
@@ -74,6 +76,9 @@ export const labelColors = {
     'service mesh': COLOR_SCHEME.sm,
     istio: COLOR_SCHEME.istio,
     IBM: COLOR_SCHEME.ibm,
+    kaniko: COLOR_SCHEME.kaniko,
+    containers: COLOR_SCHEME.containers,
+    'CI/CD': COLOR_SCHEME.purple
 }
 export const skills = [
     [

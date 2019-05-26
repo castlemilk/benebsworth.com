@@ -4,6 +4,7 @@ date: "2019-04-16T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'First blog post introducing motivations and goals'
 labels: general,personal
+keywords: 
 release: true
 ---
 

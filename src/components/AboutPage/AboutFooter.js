@@ -6,6 +6,7 @@ import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import { withStyles } from '@material-ui/core/styles'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import createPalette from '@material-ui/core/styles/createPalette'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import white from '@material-ui/core/colors'
 import { Motion, spring } from 'react-motion'
 import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official'
@@ -13,6 +14,8 @@ import FaGithubSquare from 'react-icons/lib/fa/github-square'
 import FaTwitterSquare from 'react-icons/lib/fa/twitter-square'
 import FaLinkedinSquare from 'react-icons/lib/fa/linkedin-square'
 import MdSend from 'react-icons/lib/md/send'
+import FaExclamationCircle from 'react-icons/lib/fa/exclamation-circle'
+import firebase from './firebase'
 const textInputTheme = createMuiTheme({
   pallete: createPalette({
     primary: white,
@@ -111,7 +114,7 @@ const styles = theme => ({
     marginTop: 10,
     marginLeft: 20,
     marginRight: theme.spacing.unit,
-    width: '70%'
+    width: '65%'
   },
   iconSmall: {
     fontSize: 20
@@ -120,6 +123,9 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit
   },
   button: {
+    margin: theme.spacing.unit
+  },
+  progress: {
     margin: theme.spacing.unit
   }
 })
@@ -207,6 +213,28 @@ const AboutContactWrapper = styled.div`
     float: ${props => (props.isMobile ? 'left' : 'right')};
   }
 `
+const getSendIcon = state => {
+  switch (state) {
+    case LOADING:
+      return (
+        <CircularProgress
+          size={20}
+          className={{ root: { height: 20, width: 20 } }}
+        />
+      )
+    case SUCCESS:
+      return null
+    case ERROR:
+      return <FaExclamationCircle style={{ fontSize: 20 }} />
+    case READY:
+      return <MdSend style={{ fontSize: 20 }} />
+  }
+}
+// STATES
+const LOADING = 'LOADING'
+const ERROR = 'ERROR'
+const SUCCESS = 'SUCCESS'
+const READY = 'READY'
 export class AboutFooter extends React.Component {
   constructor (props) {
     super(props)
@@ -214,9 +242,17 @@ export class AboutFooter extends React.Component {
       isSelected: false,
       isFocused: false,
       isBlured: true,
+      loading: false,
+      status: READY,
       subject: '',
       message: ''
     }
+  }
+  componentWillMount () {
+    this.db = firebase.firestore()
+  }
+  componentWillUnmount () {
+    clearInterval(this.progessCheckInterval)
   }
   handleChange (key, event) {
     this.setState({
@@ -243,6 +279,33 @@ export class AboutFooter extends React.Component {
       isSelected: !!this.state.isFocused
     })
   }
+  progressCheck () {
+    this.setState({ progress: this.state.progress + 10 })
+  }
+  handleSubmit () {
+    console.log('submitting')
+    this.setState({ loading: true, status: LOADING })
+    this.progessCheckInterval = setInterval(() => this.progressCheck(), 300)
+    this.db
+      .collection('messages')
+      .add({
+        subject: this.state.subject,
+        message: this.state.message
+      })
+      .then(docRef => {
+        console.log('Document written with ID: ', docRef.id)
+        setTimeout(
+          () => this.setState({ loading: false, status: SUCCESS }),
+          300
+        )
+        clearInterval(this.progessCheckInterval)
+      })
+      .catch(error => {
+        console.error('Error adding document: ', error)
+        this.setState({ loading: false, status: ERROR })
+        clearInterval(this.progessCheckInterval)
+      })
+  }
   getSpringProps () {
     return {
       style: {
@@ -254,6 +317,7 @@ export class AboutFooter extends React.Component {
   contactValid () {
     return this.state.subject != '' && this.state.message != ''
   }
+
   render () {
     const height = 121
     const fontSize = 50
@@ -292,43 +356,72 @@ export class AboutFooter extends React.Component {
           <span>Contact.</span>
           <br />
         </div>
-        <MuiThemeProvider theme={textInputTheme}>
-          <TextField
-            label='Subject'
-            className={classes.textField}
-            placeholder='Message Subject'
-            value={this.state.subject}
-            onChange={event => this.handleChange('subject', event)}
-            onFocus={() => this.handleFocus(true)}
-            onBlur={() => this.handleBlur(true)}
-            margin='normal'
-          />
-        </MuiThemeProvider>
-        <br />
-        <MuiThemeProvider theme={textInputTheme}>
-          <TextField
-            className={classes.textField}
-            label='Message'
-            placeholder='Enter a message here'
-            multiline
-            value={this.state.message}
-            onChange={event => this.handleChange('message', event)}
-            onFocus={() => this.handleFocus(true)}
-            onBlur={() => this.handleBlur(true)}
-            rows={2}
-            rowsMax={3}
-            fullWidth
-          />
-        </MuiThemeProvider>
-        <MuiThemeProvider
-          theme={this.contactValid() ? buttonThemeValid : buttonThemeInvalid}
-        >
-          <Button className={classes.button} variant='raised' color='primary'>
-            Send
-            <MdSend style={{ marginLeft: 5, fontSize: 20 }} />
-          </Button>
-        </MuiThemeProvider>
-        <br />
+        {this.state.status === SUCCESS ? (
+          <div
+            style={{
+              display: 'flex',
+              color: 'white',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '84%',
+              height: '70%',
+              fontSize: 20,
+              textAlign: 'center',
+              margin: 30
+            }}
+          >
+            🎉 Thanks for getting in touch, I look forward to reading your message. 😀
+          </div>
+        ) : (
+          <div>
+            <MuiThemeProvider theme={textInputTheme}>
+              <TextField
+                label='Subject'
+                className={classes.textField}
+                placeholder='Message Subject'
+                value={this.state.subject}
+                onChange={event => this.handleChange('subject', event)}
+                onFocus={() => this.handleFocus(true)}
+                onBlur={() => this.handleBlur(true)}
+                margin='normal'
+              />
+            </MuiThemeProvider>
+            <br />
+            <MuiThemeProvider theme={textInputTheme}>
+              <TextField
+                className={classes.textField}
+                label='Message'
+                placeholder='Enter a message here'
+                multiline
+                value={this.state.message}
+                onChange={event => this.handleChange('message', event)}
+                onFocus={() => this.handleFocus(true)}
+                onBlur={() => this.handleBlur(true)}
+                rows={2}
+                rowsMax={3}
+                fullWidth
+              />
+            </MuiThemeProvider>
+            <MuiThemeProvider
+              theme={
+                this.contactValid() ? buttonThemeValid : buttonThemeInvalid
+              }
+            >
+              <Button
+                className={classes.button}
+                variant='raised'
+                color='primary'
+                onClick={() => this.handleSubmit()}
+              >
+                <p style={{ marginBottom: 0, marginLeft: 5, marginRight: 10 }}>
+                  Send
+                </p>
+                {getSendIcon(this.state.status)}
+              </Button>
+            </MuiThemeProvider>
+            <br />
+          </div>
+        )}
       </AboutContactWrapper>
     )
     const styles = this.getSpringProps()
@@ -388,45 +481,66 @@ export class AboutFooter extends React.Component {
               <span>Contact.</span>
               <br />
             </div>
-            <MuiThemeProvider theme={textInputTheme}>
-              <TextField
-                label='Subject'
-                className={classes.textField}
-                placeholder='Message Subject'
-                value={this.state.subject}
-                onChange={event => this.handleChange('subject', event)}
-                margin='normal'
-              />
-            </MuiThemeProvider>
-            <br />
-            <MuiThemeProvider theme={textInputTheme}>
-              <TextField
-                className={classes.textField}
-                label='Message'
-                placeholder='Enter a message here'
-                multiline
-                value={this.state.message}
-                onChange={event => this.handleChange('message', event)}
-                rows={2}
-                rowsMax={3}
-                fullWidth
-              />
-            </MuiThemeProvider>
-            <br />
-            <MuiThemeProvider
-              theme={
-                this.contactValid() ? buttonThemeValid : buttonThemeInvalid
-              }
+            {this.state.status === SUCCESS ? (
+              <div
+              style={{
+                display: 'flex',
+                color: 'white',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '84%',
+                height: '70%',
+                fontSize: 20,
+                textAlign: 'center',
+                margin: 30
+              }}
             >
-              <Button
-                className={classes.button}
-                variant='raised'
-                color='primary'
-              >
-                Send
-                <MdSend style={{ marginLeft: 5, fontSize: 20 }} />
-              </Button>
-            </MuiThemeProvider>
+              🎉 Thanks for getting in touch, I look forward to reading your message. 😀
+            </div>
+            ) : (
+              <div>
+                <MuiThemeProvider theme={textInputTheme}>
+                  <TextField
+                    label='Subject'
+                    className={classes.textField}
+                    placeholder='Message Subject'
+                    value={this.state.subject}
+                    onChange={event => this.handleChange('subject', event)}
+                    margin='normal'
+                  />
+                </MuiThemeProvider>
+                <br />
+                <MuiThemeProvider theme={textInputTheme}>
+                  <TextField
+                    className={classes.textField}
+                    label='Message'
+                    placeholder='Enter a message here'
+                    multiline
+                    value={this.state.message}
+                    onChange={event => this.handleChange('message', event)}
+                    rows={2}
+                    rowsMax={3}
+                    fullWidth
+                  />
+                </MuiThemeProvider>
+                <br />
+                <MuiThemeProvider
+                  theme={
+                    this.contactValid() ? buttonThemeValid : buttonThemeInvalid
+                  }
+                >
+                  <Button
+                    className={classes.button}
+                    variant='raised'
+                    color='primary'
+                    onClick={() => this.handleSubmit()}
+                  >
+                    Send
+                    {getSendIcon(this.state.status)}
+                  </Button>
+                </MuiThemeProvider>
+              </div>
+            )}
           </AboutContactWrapper>
         </div>
       </AboutFooterWrapper>

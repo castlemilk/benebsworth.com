@@ -4,6 +4,7 @@ date: "2019-05-05T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'Instructions for the installation, upgrade and other customization of a Minikube install on MacOS. As well as a basic example of deploying a service and exposing it for local access'
 labels: technology,kubernetes,developer experience
+keywords: kubernetes,local development,minikube,docker,docker registry,macOS,testing,homebrew,virtualbox,docker-for-desktop,docker-for-mac
 release: true
 ---
 ![Minikube](/minikube.png)

@@ -4,6 +4,7 @@ date: "2019-04-20T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'Collection of common hook usage examples as well as custom implementations'
 labels: technology,react
+keywords:
 release: true
 ---
 From the first watching of Reactconf 2018 keynote, where [Hooks]([link here](https://reactjs.org/docs/hooks-intro.html)) were first introduced I was taken aback by the simplicity of the approach but the far reaching applicability to solving common problems within design and build of react applications. It was very reminicent of quote from Albert Einstein:
@@ -51,4 +52,46 @@ function Example() {
 }
 ```
 
-### useEffectx
+### useEffect
+
+##### useResizerObserver
+
+Provides a mechanism to fetch window size using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+
+>useResizerObserver.tsx
+
+```jsx
+import { useEffect, useState, useRef } from 'react';
+import ResizeObserver from 'resize-observer-polyfill';
+
+export default function() {
+  const isClient = typeof window === 'object';
+  const ref = useRef();
+  const [width, changeWidth] = useState(1);
+  const [height, changeHeight] = useState(1);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || !isClient) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(entries => {
+      if (!Array.isArray(entries)) {
+        return;
+      }
+      if (!entries.length) {
+        return;
+      }
+      const entry = entries[0];
+      changeWidth(entry.contentRect.width);
+      changeHeight(entry.contentRect.height);
+    });
+    resizeObserver.observe(element);
+    return () => resizeObserver.disconnect();
+  }, [width, isClient]);
+
+  return [ref, width, height];
+}
+
+```

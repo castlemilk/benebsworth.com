@@ -5,7 +5,7 @@ author: Ben Ebsworth
 description: 'Utilising Kustomize in CI/CD workflows to simplify deployment and testing, and enable the representation of different environmental configuration in a streamlined way, demonstrating a number of use-case examples of how to use and extend kustomize'
 labels: technology,kubernetes,developer experience
 keywords: kustomize,kubernetes,CI/CD,CI,CD,GCP,skaffold,tekton,declarative,platform,templating,yaml,google cloud platform,knative,kubectl
-release: false
+release: true
 ---
 ![kustomize](kustomize.jpg)
 
@@ -13,5 +13,34 @@ Kustomize is a fairly new templating tool that has come out of the efforts by th
 
 In terms of complexity I would argue that Kustomize is an intermediate step between using raw Kubernetes resources and going deep into templating via [Helm](https://helm.sh/) or other tools. Where I believe Helm still has a strong use-case when it comes to building more complex abstractions, as well as providing a strong story around sharing and versioning, through its packaging and repository system.
 
-## file structure
+## File Structure
 
+Below is a basic file structure of a multi-tier application's resources
+```bash
+resources
+├── backend
+│   ├── deployment.yaml
+│   ├── kustomization.yaml
+│   └── service.yaml
+├── frontend
+│   ├── deployment.yaml
+│   ├── kustomization.yaml
+│   └── service.yaml
+├── mongodb
+│   ├── deployment.yaml
+│   ├── kustomization.yaml
+│   └── service.yaml
+└── overlays
+    ├── local
+    │   └── kustomization.yaml
+    ├── non-production
+    │   ├── backend_replica_count.yaml
+    │   ├── frontend_replica_count.yaml
+    │   ├── kustomization.yaml
+    │   └── mongodb_cpu_limit.yaml
+    └── production
+        ├── backend_replica_count.yaml
+        ├── frontend_replica_count.yaml
+        ├── kustomization.yaml
+        └── mongodb_cpu_limit.yaml
+```

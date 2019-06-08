@@ -161,11 +161,13 @@ const VerticalTimelineElementWrapper = styled.div`
 
   .vertical-timeline-element-title {
     margin: 0;
+    color: black !important;
   }
 
   .vertical-timeline-element-subtitle {
     margin: 0;
     margin-top: 5px;
+    color: black !important;
   }
 
   .vertical-timeline-element-content .vertical-timeline-element-date {

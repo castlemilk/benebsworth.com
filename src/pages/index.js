@@ -33,11 +33,11 @@ class HomePage extends React.Component {
           <title>Ben Ebsworth</title>
           <meta
             name='description'
-            content='Ben Ebsworth · About, Blog, Projects my online profile'
+            content='Ben Ebsworth · About | Blog | Projects · A place of self-discovery and personal ramblings'
           />
           <meta
             name='keywords'
-            content='Blog, technology, software engineering, about, personal, ben ebsworth, telstra, digio, projects, open source'
+            content='Blog,technology,software engineering,devops,sre,site reliability engineering,programming,about,personal,ben ebsworth,telstra,digio,digIO,projects,open source,istio,kubernetes,react,frontend,ben,ebsworth,service mesh,ramblings,twitter,linkedin,react,GCP,AWS,python,golang,java,platform,cicd'
           />
           <meta name='apple-mobile-web-app-title' content='benebsworth.com' />
           <meta name='application-name' content='benebsworth.com' />

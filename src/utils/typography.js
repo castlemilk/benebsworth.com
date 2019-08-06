@@ -11,9 +11,6 @@ Wordpress2016.overrideThemeStyles = () => {
     a: {
       boxShadow: `none`
     },
-    div: {
-      fontFamily: `Avenir Next, sans-serif`
-    },
     span: {
       fontFamily: `Avenir Next, sans-serif`
     },

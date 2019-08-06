@@ -47,7 +47,7 @@ const ProjectContent = styled.div`
     'subtitle'
     'technology-header'
     'technologies-content';
-  grid-template-rows: 40px 55px 20px;
+  grid-template-rows: 40px 55px 30px;
 `
 const ProjectHeader = styled.div`
   grid-area: header;
@@ -63,7 +63,7 @@ const ProjectSubtitle = styled.div`
   }
   font-family: 'Prompt';
   width: 100%;
-  margin-left: 30px;
+  margin-left: 10px;
   text-align: left;
   align-content: top;
   font-style: italic;
@@ -75,6 +75,7 @@ const ProjectTechnologyHeader = styled.div`
   margin-left: 10px;
   font-weight: bold;
   font-size: 1.2em;
+  margin-bottom: 5px;
 `
 const ProjectTechnologyContent = styled.div`
   grid-area: technology-content;

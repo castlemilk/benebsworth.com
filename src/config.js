@@ -57,6 +57,11 @@ export const COLOR_SCHEME = {
     sm: '#FCA7E4',
     kaniko: '#f8a001',
     containers: '#0998e6',
+    knative: '#1567b0',
+    grafana: '#f07a24',
+    prometheus: '#df4e2b',
+    jaeger: '#60d1e4',
+    kiali: '#003043',
     
 }
 export const labelColors = {
@@ -71,6 +76,7 @@ export const labelColors = {
     AWS: COLOR_SCHEME.aws,
     GCP: COLOR_SCHEME.gcp,
     Azure: COLOR_SCHEME.azure,
+    knative: COLOR_SCHEME.knative,
     'developer experience': COLOR_SCHEME.purple,
     python: COLOR_SCHEME.python,
     'service mesh': COLOR_SCHEME.sm,
@@ -78,7 +84,11 @@ export const labelColors = {
     IBM: COLOR_SCHEME.ibm,
     kaniko: COLOR_SCHEME.kaniko,
     containers: COLOR_SCHEME.containers,
-    'CI/CD': COLOR_SCHEME.purple
+    'CI/CD': COLOR_SCHEME.purple,
+    jaeger: COLOR_SCHEME.jaeger,
+    prometheus: COLOR_SCHEME.prometheus,
+    grafana: COLOR_SCHEME.grafana,
+    kiali: COLOR_SCHEME.kiali,
 }
 export const skills = [
     [

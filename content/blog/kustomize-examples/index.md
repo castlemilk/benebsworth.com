@@ -16,7 +16,8 @@ In terms of complexity I would argue that Kustomize is an intermediate step betw
 ## File Structure
 
 Below is a basic file structure of a multi-tier application's resources
-```bash
+
+```text
 resources
 ├── backend
 │   ├── deployment.yaml
@@ -44,3 +45,17 @@ resources
         ├── kustomization.yaml
         └── mongodb_cpu_limit.yaml
 ```
+
+This layout shows how you can have a number of "bases", coupled with overlays which allow an importing like flow. This facilitates enabling grouping based on the environment the given application is being deployed to. Below we'll delve further into some of the core tenants in Kustomize, and how we can piece them together to produce a workflow for deploying to Kubernetes.
+
+## Bases
+
+## Overlays
+
+## Patching
+
+## ConfigMapGenerator & SecretGenerator
+
+## Plugins
+
+## CLI commands for profit

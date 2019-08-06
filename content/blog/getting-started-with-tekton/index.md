@@ -4,7 +4,7 @@ date: "2019-05-12T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'Developing basic CI and CD pipelines in Tekton and deploying this both to local and cloud based environments'
 labels: technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience
-keywords: technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience,tekton,knative,cicd foundation,CI,CD,continuous delivery,istio,docker,cicd foundation,google cloud,pipelines
+keywords: technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience,tekton,knative,cicd foundation,CI,CD,continuous delivery,istio,docker,cicd foundation,google cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline resource
 release: true
 ---
 ![Tekton](./tekton.png)

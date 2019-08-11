@@ -40,7 +40,7 @@ class BlogIndex extends React.Component {
               <Labels labels={node.frontmatter.labels.split(',')} />
               <small>{node.frontmatter.date}</small>
               <p
-                style={{ marginBottom: rhythm(1) }}
+                style={{ marginBottom: rhythm(1)}}
                 dangerouslySetInnerHTML={{
                   __html: node.frontmatter.description || node.excerpt
                 }}

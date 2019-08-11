@@ -1,3 +1,15 @@
+import KubernetesLogo from './assets/images/kubernetes.png';
+import GCPLogo from './assets/images/GCP.png';
+import ReactLogo from './assets/images/react.png';
+import DeveloperExperienceLogo from './assets/images/developer-experience.png';
+import KnativeLogo from './assets/images/knative.png';
+import SkaffoldLogo from './assets/images/skaffold.png';
+import KustomizeLogo from './assets/images/kustomize.png';
+import ContainersLogo from './assets/images/containers.png';
+import TektonLogo from './assets/images/tekton.png';
+import TechnologyLogo from './assets/images/technology.png';
+
+
 export const SEOconfig  = {
     title: 'Ben Ebsworth · Personal Blog and Projects',
     description: '',
@@ -34,7 +46,7 @@ export const COLOR_SCHEME = {
     teal: '#208EA3',
     blue: '#5c91ff',
     darkblue: '#316ce6',
-    kubernetes: '#316ce6',
+    kubernetes: '#9fbeff',
     istio: '#5c91ff',
     red: '#E8384F',
     redpink: '#FCA7E4',
@@ -43,12 +55,12 @@ export const COLOR_SCHEME = {
     darkorange: '#FDAE33',
     brown: '#bf7b26',
     purple: '#AA71FF',
-    react: '#208EA3',
+    react: '#5b929c',
     midblue: '#316ce6',
     okta: '#0f7ec2',
     golang: '#6AD7E5',
     algorithms: '#8a7128',
-    gcp: '#4285F4',
+    gcp: '#6da4ff',
     aws: '#FF9900',
     azure: '#035BDA',
     ibm: '#bf7b26',
@@ -56,12 +68,14 @@ export const COLOR_SCHEME = {
     istio: '#4285F4',
     sm: '#FCA7E4',
     kaniko: '#f8a001',
-    containers: '#0998e6',
-    knative: '#1567b0',
+    containers: '#80d2ff',
+    knative: '#86afd3',
     grafana: '#f07a24',
     prometheus: '#df4e2b',
     jaeger: '#60d1e4',
     kiali: '#003043',
+    skaffold: '#266185',
+    kustomize: '#9fbeff'
     
 }
 export const labelColors = {
@@ -89,6 +103,20 @@ export const labelColors = {
     prometheus: COLOR_SCHEME.prometheus,
     grafana: COLOR_SCHEME.grafana,
     kiali: COLOR_SCHEME.kiali,
+    skaffold: COLOR_SCHEME.skaffold,
+    kustomize: COLOR_SCHEME.kustomize
+}
+
+export const labelImages = {
+    react: ReactLogo,
+    GCP: GCPLogo,
+    kubernetes: KubernetesLogo,
+    technology: TechnologyLogo,
+    containers: ContainersLogo,
+    'developer experience': DeveloperExperienceLogo,
+    knative: KnativeLogo,
+    skaffold: SkaffoldLogo,
+    kustomize: KustomizeLogo,
 }
 export const skills = [
     [

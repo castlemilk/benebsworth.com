@@ -5,7 +5,12 @@ import Layout from '../components/layout'
 import SEO from '../components/seo'
 import Labels from '../components/Labels'
 import { rhythm, scale } from '../utils/typography'
-
+import rehypeReact from 'rehype-react'
+import GitHubLink from '../components/GitHubLink'
+const renderAst = new rehypeReact({
+  createElement: React.createElement,
+  components: { "github-link": GitHubLink }
+}).Compiler
 class BlogPostTemplate extends React.Component {
   render () {
     const post = this.props.data.markdownRemark
@@ -38,8 +43,8 @@ class BlogPostTemplate extends React.Component {
         >
           {post.frontmatter.date}
         </p>
-        <div style={{
-        }} dangerouslySetInnerHTML={{ __html: post.html }} />
+        {/* <div dangerouslySetInnerHTML={{ __html: post.html }} /> */}
+        <div>{renderAst(post.htmlAst)}</div>
         <hr
           style={{
             marginBottom: rhythm(1)
@@ -96,7 +101,7 @@ export const pageQuery = graphql`
     markdownRemark(fields: { slug: { eq: $slug } }) {
       id
       excerpt(pruneLength: 160)
-      html
+      htmlAst
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")

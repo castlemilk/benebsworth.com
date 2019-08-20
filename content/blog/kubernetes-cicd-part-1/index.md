@@ -137,14 +137,7 @@ In order to manage all of these resources, we're using *Kustomize*, lets take a 
 │       ├── ...
 │       └── ...
 ├── frontend
-│   ├── base
-│   │   ├── deployment.yaml
-│   │   ├── kustomization.yaml
-│   │   └── service.yaml
-│   ├── istio
-│   │   ├── gateway.yaml
-│   │   ├── kustomization.yaml
-│   │   └── virtualservice.yaml
+│   ├── ...
 │   └── overlays
 │       ├── local
 │       │   └── kustomization.yaml
@@ -159,18 +152,7 @@ In order to manage all of these resources, we're using *Kustomize*, lets take a 
 │   └── ...
 └── postgres
     ├── base
-    │   ├── configmap.yaml
-    │   ├── deployment.yaml
-    │   ├── init-scripts
-    │   │   ├── ...
-    │   │   └── 4-ratings-data.sql
-    │   ├── kustomization.yaml
-    │   ├── pv.yaml
-    │   ├── pvc.yaml
-    │   └── service.yaml
-    ├── istio
-    │   ├── destinationrule.yaml
-    │   └── kustomization.yaml
+    │   ├── ...
     └── overlays
         ├── local
         │   ├── kustomization.yaml
@@ -192,7 +174,115 @@ So now at this point you may be thinking "wow that escalated quickly", the inten
 * There is a `base` folder, this represents the bare minimum or base resources we will need for the given deployment of that tier, and within this folder you see that there's the expected common Kubernetes resources used to deploy a given application.
 * We have an `istio` folder, which is another base, but we will only be importing/using this base when we deploy to the remote environment running in the cloud. We'll go through this in more detail later in the post.
 
-At this point we have a full representation of our depoyment resources and we can now deploy to our local environment. Let's see how we can do that now.
+At this point we have a full representation of our deployment resources and we can now deploy to our local environment. Let's see how we can do that now.
 
-### deploy demo application
+### Local Deployment
 
+Run the following commands to get fetch the repository we'll be working out of for the subsequent sections.
+
+```bash
+git clone https://github.com/castlemilk/kubernetes-cicd.git
+cd kubernetes-cdcd
+```
+
+In order to run the following sections we're going to need to istall a few depdencies, these are:
+
+* **kubectl** - cli tool to interact with kubernetes run - `brew install kubernetes-cli`
+* **kustomize** - kubernetes resource config management system - `brew install kustomize`
+* **skaffold** - local developer experience  - `brew install skaffold`
+* **minikube** - local kubernetes cluster provider - `brew install minikube`
+
+With all of these dependencies install we can now begin the creation of our local development environment.
+
+#### 1. create kubernetes cluster
+
+Start your minikube cluster by running the following command:
+
+```bash
+minikube start
+```
+
+> check the status with `kubectl get nodes`, you should see that your kubectl context has been set and you have a node ready
+
+#### 2. deploy demo application
+
+Once your cluster is operational we can deploy our demo application. By using *Skaffold* as our local development "management" tool, we have all of the required steps to build, test and deploy our demo app in the one entrypoint. To kick off your deployment run the following (from the `kubernetes-cicd` repo):
+
+```bash
+make local.dev
+```
+
+This `Makefile` entrypoint bundles a few commands together which give us a few nice things
+
+* mapping of the allocated `ClusterIP` to a nicer DNS name, in this case we have:
+  * **products.demo.local** - the frontend webapp
+  * **api.demo.local** - backend API which serves our product information
+  
+  This is done by setting the entries in `/etc/hosts`, which will **required you to enter your local machines password**.
+
+* runs `skaffold dev --profile local`, where the *local* profile maps to the local overlay in our *Kustomize* config. This will start a real-time event watching which will trigger re-deployments on config/source code changes, as well as attach to the log output from our applications.
+
+At this point Skaffold has deployed our *Kustomize* overlay to our local running minikube cluster. Skaffold will start a watcher/tail on the logs of our application once we've successfully allowed ingress to our demo application. **leave this window open and open a new one to run the next steps**
+
+#### 3. allow ingress to application
+
+Once of the challenges will Kubernetes is enabling simple modes of ingress to your running application from your local machine. This mostly arises because we need some way of mapping typical ports like `80` and `443` to `NodePort`'s that then map to `ClusterIP`'s which represent a higher level address of our deployed application. Minikube solves this by providing "tunneling" capability. This enables native routing from your local machine to the `ClusterIP`'s in your local Kubernetes cluster.
+
+To enable tunneling run the following command in a new terminal:
+
+```bash
+minikube tunnel
+```
+
+After some time (10-30s) you should see your other window where your ran `make local.dev` show some activity, eventually opening a browser to `products.demo.local` in your browser. The end-to-end experience should be as follows:
+
+![local-development-example](./local-dev-example.gif)
+
+#### 4. troubleshooting
+
+To get a feel whats happening behind the scenes of the `skaffold ...` command, we can look at a few thing to get a better feel what this is doing for us:
+
+* view running pods by running `kubectl get pods -n dev`
+* view the contents of the *Kustomize* files in `app/deploy/overlays/local`
+* view the contents of the **Skaffold** config file - found in `app/skaffold.yaml`, get a feel for how the **build**, **test** and **deploy** steps work, as well as how we are creating a profile which corresponds to a **Kustomize** overlay
+
+If all else fails try and re-run the steps described above, where in summary they would be:
+
+> 1. remove the deployed cluster and any created routes- `minikube delete && minikube tunnel -c`
+> 1. recreate local cluster - `minikube start`
+> 2. run `Makefile` entrypoint - `make local.dev`
+> 3. enable ingress to the local cluster with `minikube tunnel`
+
+#### 5. hot-reloading
+
+With **Skaffold** in `dev` mode, it will reactively re-deploy the application on source code or config changes. To see this in action we can checkout the `feature/products` branch. This branch contains the baselined `v1` of the products app. We'll then checkout the `v2` branch `feature/ratings` which contains a "new" feature - product ratings will be rendered, and can be updated by users - which skaffold will automatically "hot-reload" for us.
+
+In order to see this in action, enure you've run steps 1-3 above, and you have the terminals still open from previously, this time open a 3rd window and run the following:
+
+```bash
+kubernetes-cicd git:(master) ✗ git checkout feature/products
+kubernetes-cicd git:(feature/products) ✗
+```
+
+You'll see Skaffold trigger a re-deploy as the code will be different on each branch. Switch to the other branch `feature/ratings` to see what happens in the browser at [http://products.demo.local](http://products.demo.local). Run the following:
+
+```bash
+kubernetes-cicd git:(master) ✗ git checkout feature/products
+kubernetes-cicd git:(feature/products) ✗
+```
+
+Hopefully you see the following:
+
+![hot-reloading](./local-dev-hot-reload.gif)
+
+#### 6. Remote staging deployment
+
+### Recap and Future Work
+
+We've run through a range of tools available in the current Kubernetes landscape. Having selected a few and connecting them to bring about an example local developer experience, which hopefully demonstrates the capabilities available. Specifically, the goal was to show how we can fairly easily represent our local development environment in such a way that it is mostly identical to the way in which we manage and deploy our app to a remote "staging" environment.
+
+We can consider the future developments in the space which will continue to make the experience even better and more cognitively accessible.
+
+Through the `kubernetes-cicd` repository, the plan is continue adding a number of working examples which cover usages the above mentioned tools available in the ecosystem. Where a nice comparison can be drawn between options, enabling easier selection of tools for the given environment.
+
+The next part of the series will deal with the pipelining aspects of a given application, and how we can go about enabling the CI and CD workflows. Watch this space!

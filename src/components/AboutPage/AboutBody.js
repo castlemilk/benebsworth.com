@@ -70,8 +70,6 @@ Oh so you'd like to know a little about me? Well I'm flattered. Here we go; Born
              the start of my high school years.
              I only just made it into what could be described as a more driven mode of operation. I'm deeply passionate about learning and developing my understanding of the world, perhaps deriving personal existential meaning through this endeavour.
              Strongly rooted in a belief of nurture over nature, and that effort will often trump gifted intelligence. Setting out to prove myself right by working diligently to make my dreams come to fruition.
-             I bloomed late in a sense, unfortunately I didn't have any early tutillage to guide me into intellectual pursuits. So I am catching up, albeit quickly, if I can say so myself.
-
 `
 const AboutBody = props => (
   <AboutBodyWrapper>

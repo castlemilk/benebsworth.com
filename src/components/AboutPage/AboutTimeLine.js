@@ -78,7 +78,7 @@ class AboutTimeLine extends React.Component {
             Leading the development and deployment of a set of production grade
             platform components on GCP. Facilitating adoption and consumption of
             the platform through a series of developer tooling and frameworks to
-            streamline usage. Delivered first production-grade GKE/GCP based
+            streamline onboarding. Delivered first production-grade GKE/GCP based
             platform for one of Australia's biggest Banks.
           </p>
           <Skills skills={skills[0]} />

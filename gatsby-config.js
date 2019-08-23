@@ -80,6 +80,7 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-offline`,
+    `gatsby-plugin-manifest`,
     {
       resolve: 'gatsby-plugin-webpack-bundle-analyzer',
       options: {

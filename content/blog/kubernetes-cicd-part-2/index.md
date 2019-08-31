@@ -12,15 +12,4 @@ release: false
 
 # Overview
 
-In this article we will explore in detail the ins and outs of an end-to-end continuous delivery platform, comprised of fairly sophisticated set of tools, which we will unpack and explain how they work together. We have an ambitious goal, and if you endure to the end, you should have a good view of what goes into productionising kubernetes environments.
-
-The key sections we will go through are the following:
-
-* Pipelining (Tekton)
-* Container Building
-* Security
-* Eventing/Triggering builds
-* Robust deployments via Canary
-* Observability
-* Developer Experience
-
+Through this article we will explore the end-to-end standup and running of a Tekton based pipeline, as well as how we can enable things to GitHub webhooks for trigger, and the tooling available for visualisation the state of our pipeline.

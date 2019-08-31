@@ -213,7 +213,7 @@ With all of these dependencies install we can now begin the creation of our loca
 Start your minikube cluster by running the following command:
 
 ```bash
-minikube start
+make components.kubernetes.minikube.create
 ```
 
 > check the status with `kubectl get nodes`, you should see that your kubectl context has been set and you have a node ready
@@ -223,7 +223,7 @@ minikube start
 Once your cluster is operational we can deploy our demo application. By using *Skaffold* as our local development "management" tool, we have all of the required steps to build, test and deploy our demo app in the one entrypoint. To kick off your deployment run the following (from the `kubernetes-cicd` repo):
 
 ```bash
-make local.dev
+make app.local-development
 ```
 
 This `Makefile` entrypoint bundles a few commands together which give us a few nice things
@@ -268,7 +268,7 @@ If all else fails try and re-run the steps described above, where in summary the
 
 > 1. remove the deployed cluster and any created routes- `minikube delete && minikube tunnel -c
 > 2. recreate local cluster - `minikube start`
-> 3. run `Makefile` entrypoint - `make local.dev`
+> 3. run `Makefile` entrypoint - `make app.local-development`
 > 4. enable ingress to the local cluster with `minikube tunnel`
 
 #### 5. hot-reloading
@@ -326,7 +326,7 @@ Staging environment and associated ingress access and tooling required to carry 
 We can kick-off this remote deployment by running the following (once you've stood up a remote environment, instructions for doing this via the `kubernetes-cicd` repo is [here](https://github.com/castlemilk/kubernetes-cicd/blob/master/docs/install.md):
 
 ```bash
-make staging.dev
+make app.staging-development
 ```
 
 This will start a live *Skaffold* session, which deploys our application to the remote cluster and tails the logs. The application would then be available at your configured domain which has been made externally available. In the default mode this would make the demo application available at `products.np.cicd.benebsworth.com`.

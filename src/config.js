@@ -8,6 +8,7 @@ import KustomizeLogo from './assets/images/kustomize.png';
 import ContainersLogo from './assets/images/containers.png';
 import TektonLogo from './assets/images/tekton.png';
 import TechnologyLogo from './assets/images/technology.png';
+import IstioLogo from './assets/images/istio.png';
 
 
 export const SEOconfig  = {
@@ -65,7 +66,7 @@ export const COLOR_SCHEME = {
     azure: '#035BDA',
     ibm: '#bf7b26',
     python: '#A4C61A',
-    istio: '#4285F4',
+    istio: '#91bbff',
     sm: '#FCA7E4',
     kaniko: '#f8a001',
     containers: '#80d2ff',
@@ -75,7 +76,8 @@ export const COLOR_SCHEME = {
     jaeger: '#60d1e4',
     kiali: '#003043',
     skaffold: '#266185',
-    kustomize: '#9fbeff'
+    kustomize: '#9fbeff',
+    tekton: '#f6beff'
     
 }
 export const labelColors = {
@@ -104,7 +106,8 @@ export const labelColors = {
     grafana: COLOR_SCHEME.grafana,
     kiali: COLOR_SCHEME.kiali,
     skaffold: COLOR_SCHEME.skaffold,
-    kustomize: COLOR_SCHEME.kustomize
+    kustomize: COLOR_SCHEME.kustomize,
+    tekton: COLOR_SCHEME.tekton
 }
 
 export const labelImages = {
@@ -117,6 +120,8 @@ export const labelImages = {
     knative: KnativeLogo,
     skaffold: SkaffoldLogo,
     kustomize: KustomizeLogo,
+    tekton: TektonLogo,
+    istio: IstioLogo,
 }
 export const skills = [
     [

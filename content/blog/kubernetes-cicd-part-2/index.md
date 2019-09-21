@@ -18,7 +18,7 @@ The pipelining we'll explore today acts to implement two hemispheres of applicat
 
 ## Pipelining ecosystem
 
-The pipelining/workflow/CI/CD tooling ecosystem is incredibly rich with many projects out their providing similar feature sets, but perhaps tailoring their solution to specific types of environments. As part of the quick research done for this article, I discovered that there are [over 33 projects within the CI/CD category provided by the CNCF](https://landscape.cncf.io/category=continuous-integration-delivery&format=card-mode&grouping=category), with even more being available outside of whats captured by the CNCF. In this article we'll focus more specifically tools which are very kubernetes-centric in nature, that is, run specifically within a Kubernetes cluster and can target deploying applications with a strong understanding of Kubernetes resources and lifecycle patterns.
+The pipelining/workflow/CI/CD tooling ecosystem is incredibly rich with many projects out their providing similar feature sets, but perhaps tailoring their solution to specific types of environments. As part of the quick research done for this article, I discovered that there are [over 33 projects within the CI/CD category provided by the CNCF](https://landscape.cncf.io/category=continuous-integration-delivery&format=card-mode&grouping=category), with even more being available outside of whats captured by the CNCF. In this article we'll focus more specifically tools which are very kubernetes-centric in nature, that is, run specifically within a Kubernetes cluster and can target deploying applications with a strong understanding of Kubernetes resources and life cycle patterns.
 
 ![cicd-pipeline-ecosystem](pipeline-ecosystem.png)
 
@@ -37,7 +37,7 @@ So if we do a brief summary of each option i've consider "kubernetes-native", we
   * Docker Registry - an in cluster docker registry where our pipelines push application images
   * Chart Museum - a Repository for publishing Helm charts (used when not integrating some given cloud provider option like ECR/GCR)
   * Monocular -  a UI used for discovering and running Helm charts
-  * Skaffold - build and push image actions in a pipeline. Managing the integrtion with cloud provider container registries (GCR, ECR, ACB)
+  * Skaffold - build and push image actions in a pipeline. Managing the integration with cloud provider container registries (GCR, ECR, ACB)
   * Tekton - providing the reconciliation engine for running underlying CI and CD pipelines and/or tasks
 
   From my initial inspection it looks fairly complex, but does provide a full solution. The use of Jenkins within Jenkins X is fairly abstract and not something that needs to be directly interacted with, this can be favorable as there can be overheads using Jenkins directly. The final result is a nice interface for defining a pipeline with given steps, a reference for this "front-end" interface can be found [here](https://jenkins-x.io/docs/reference/pipeline-syntax-reference/). The opinionated structure of Jenkins X may not be flexible enough for some teams, but may provide a safe and quick start for teams starting their Kubernetes journey, looking to have a "best practice" end-to-end implementation provided for their CI/CD workflow.

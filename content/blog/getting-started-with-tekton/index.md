@@ -9,6 +9,12 @@ release: true
 ---
 ![Tekton](./tekton.png)
 
+## Updates (21/09/2019)
+
+* Tekton 0.6.0 has been release, introducing conditional steps!
+* I've release the [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd) repository which contains a rich end-to-end pipeline example using Tekton, as well as capturing the standup of a the underlying kubernetes environment including knative, istio, et al.
+* Checkout the newly release blog post I've written [Kubernetes-centric Continuous Delivery - Part 2 (Tekton Pipelines)](https://benebsworth.com/blog/kubernetes-cicd-part-2) which walks through the Tekton tooling ecosystem and its deployment to a Kubernetes cluster. As well as some more information on the usage of the [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd) repository.
+
 In this post we'll discuss what [Tekton](https://github.com/tektoncd) is and how we can stand up a local test/development environment to see it in action. We'll then utilise the Custom Resource Definitions (CRDs) to build composable and highly reusable CI and CD pipelines on top of Kubernetes.
 
 ## Install

@@ -11,6 +11,7 @@ import AboutBody from './AboutBody'
 import AboutTimeLine from './AboutTimeLine'
 import AboutFooter from './AboutFooter'
 import AboutCertifications from './AboutCertifications'
+import AboutSpeaking from './AboutSpeaking'
 import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyles = createGlobalStyle`
@@ -80,6 +81,9 @@ export class AboutPage extends React.Component {
         </Grid>
         <Grid>
           <AboutTimeLine />
+        </Grid>
+        <Grid>
+          <AboutSpeaking />
         </Grid>
         <Grid>
           <AboutCertifications />

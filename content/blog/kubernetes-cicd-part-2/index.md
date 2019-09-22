@@ -4,7 +4,7 @@ date: "2019-09-21T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'An overview of the current kubernetes-native ci/cd ecosystem, With a demonstration of an end-to-end Tekton based workflow for build, test and deployment of a fullstack application'
 labels: technology,CI/CD,GCP,kubernetes,kaniko,developer experience,istio,knative,tekton,skaffold
-keywords: technology,CI/CD,GCP,kubernetes,kaniko,developer experience,tekton,knative,cicd foundation,CI,CD,continuous delivery,istio,docker,google cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline resource,production,dockerless,security,googlecloudplatform,googlecloud,knative,serverless,react,postgres,skaffold,
+keywords: technology,CI/CD,GCP,kubernetes,kaniko,developer experience,tekton,knative,cicd foundation,CI,CD,continuous delivery,istio,docker,google cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline resource,production,dockerless,security,googlecloudplatform,googlecloud,knative,serverless,react,postgres,skaffold
 release: true
 ---
 

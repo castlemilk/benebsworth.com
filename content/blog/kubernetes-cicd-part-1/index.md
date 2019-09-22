@@ -3,7 +3,7 @@ title: Kubernetes-centric Continuous Delivery - Part 1 (Developer Experience)
 date: "2019-08-22T22:12:03.284Z"
 author: Ben Ebsworth
 description: 'How we can get closer to unifying the local developer experience with production-grade kubernetes run-time environments'
-labels: technology,GCP,kubernetes,containers,developer experience,knative,skaffold,kustomize,
+labels: technology,GCP,kubernetes,containers,developer experience,knative,skaffold,kustomize
 keywords: technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience,tekton,knative,cicd foundation,CI,CD,continuous delivery,istio,docker,google cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline resource,production,dockerless,security,googlecloudplatform,googlecloud
 release: true
 ---

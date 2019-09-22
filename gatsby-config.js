@@ -80,7 +80,18 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-offline`,
-    `gatsby-plugin-manifest`,
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `Ben Ebsworth's Blog`,
+        short_name: `Ben Ebsworth - Home`,
+        description: `Ben Ebsworth's Person space. Contains About|Blog|Projects. General playground for experimenting with web technologies`,
+        lang: `en`,
+        start_url: `/`,
+        display: `standalone`,
+        icon: `src/assets/images/icon.png`
+      },
+    },
     {
       resolve: 'gatsby-plugin-webpack-bundle-analyzer',
       options: {

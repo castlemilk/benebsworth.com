@@ -6,6 +6,7 @@ import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import ContainerCamp from '../../assets/images/container-camp.png'
 import KubernetesMeetup from '../../assets/images/kubernetes-meetup.png'
 import GoogleCloudSummit from '../../assets/images/google-cloud-summit.png'
+import KubernetesForum from '../../assets/images/kubernetes-forum.png'
 const Wrapper = styled.div`
   margin-bottom: 20px;
   color: black;
@@ -29,8 +30,8 @@ const Card = styled.div`
   width: 100%;
   height: 100%;
   grid-template-areas:
-    'image title'
-    'image date'
+    'title title'
+    'date date'
     'image description';
   grid-template-columns: 128px 1fr;
   grid-template-rows: 30px 20px 1fr;
@@ -48,6 +49,7 @@ const CardImageWrapper = styled.div`
   grid-area: image;
   justify-content: center;
   align-self: center;
+  margin-left: 10px;
 `;
 const CardImage =styled.img`
   grid-area: image;
@@ -60,14 +62,18 @@ const CardTitle = styled.div`
   float: left;
   font-weight: bold;
   font-size: 25px;
+  margin-left: 10px;
 `;
 const CardDate = styled.div`
   grid-area: date;
   font-style: italic;
+  margin-left: 10px;
 `;
 const CardDescription = styled.div`
   grid-area: description;
   padding: 10px;
+  align-self: center;
+
 
 `;
 
@@ -104,6 +110,14 @@ const AboutSpeaking = props => {
       image: KubernetesMeetup,
       url:
         'https://www.meetup.com/Melbourne-Kubernetes-Meetup/events/263929562/',
+    },
+    {
+      title: 'CNCF | Kubernetes Forum',
+      date: 'Sydney, Australia - December 2019',
+      description: `Advanced session - "Open Policy Agent Templating and Testing". Exploring in depth the pathways to productionising OPA policy and gaining confidence through robust end-to-end integration testing`,
+      image: KubernetesForum,
+      url:
+        'https://youtu.be/tGDAuij5RvE',
     },
   ]
   return (

@@ -93,7 +93,7 @@ const AboutSpeaking = props => {
       description: `Demonstrating Istio in action with a fullstack application and carrying out an example continuous delivery workflow via canary releases`,
       image: GoogleCloudSummit,
       url:
-        'https://melbkubernetes.org/istion-in-the-real-world/',
+        'https://www.youtube.com/watch?v=PXgMofDT5To',
     },
     {
       title: 'Container Camp',

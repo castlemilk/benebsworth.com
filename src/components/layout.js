@@ -1,11 +1,16 @@
 import React from 'react'
 import { Link } from 'gatsby'
+import { MDXProvider } from "@mdx-js/react"
 import Toggle from './Toggle'
 import Helmet from 'react-helmet'
+
+import Counter from './Counter';
 
 import { rhythm, scale } from '../utils/typography'
 import sun from '../assets/sun.png'
 import moon from '../assets/moon.png'
+
+// const shortcodes = {  }
 
 class Layout extends React.Component {
   state = {
@@ -140,6 +145,7 @@ class Layout extends React.Component {
               <div style={{ height: '24px' }} />
             )}
           </header>
+          {/* <MDXProvider>{children}</MDXProvider> */}
           {children}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, graphql } from 'gatsby'
-import { MDXRenderer } from "gatsby-plugin-mdx"
+import MDXRenderer from 'gatsby-plugin-mdx/mdx-renderer';
 import Bio from '../components/bio'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
@@ -38,9 +38,7 @@ class BlogPostTemplate extends React.Component {
         >
           {post.frontmatter.date}
         </p>
-        {/* <div dangerouslySetInnerHTML={{ __html: post.html }} /> */}
         <MDXRenderer>{post.body}</MDXRenderer>
-        {/* <div>{renderAst(post.html)}</div> */}
         <hr
           style={{
             marginBottom: rhythm(1)

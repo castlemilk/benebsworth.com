@@ -1,6 +1,6 @@
 import React from 'react'
 import { OutboundLink } from 'gatsby-plugin-google-analytics'
-import FaGithub from 'react-icons/lib/fa/github'
+import { FaGithub } from 'react-icons/fa'
 import NutryLogo from './images/icon-120x120.png'
 
 import HeaderWrapper from './HeaderWrapper'

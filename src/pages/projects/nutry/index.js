@@ -1,17 +1,22 @@
 import React from 'react'
 import Link from 'gatsby-link'
-import { addLocaleData } from 'react-intl'
-import localeData from 'react-intl/locale-data/en'
+import {createIntl, createIntlCache, RawIntlProvider} from 'react-intl'
+import localeData from 'react-intl/lib/'
 import Nutry from '../../../components/Projects/Nutry'
 import { IntlProvider } from 'react-intl'
-
-addLocaleData(localeData)
+// This is optional but highly recommended
+// since it prevents memory leak
+const cache = createIntlCache()
+const intl = createIntl({
+  locale: 'en',
+  messages: {}
+}, cache)
 
 const NutryIndexPage = () => (
   <div>
-    <IntlProvider locale={'en'}>
+    <RawIntlProvider value={intl}>
       <Nutry />
-    </IntlProvider>
+    </RawIntlProvider>
   </div>
 )
 

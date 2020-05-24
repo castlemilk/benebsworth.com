@@ -7,11 +7,7 @@
 import React from 'react'
 import { Row, Col } from 'styled-bootstrap-grid'
 import Grid from '@material-ui/core/Grid'
-import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official'
-import FaInstagram from 'react-icons/lib/fa/instagram'
-import FaTwitterSquare from 'react-icons/lib/fa/twitter-square'
-import FaLinkedinSquare from 'react-icons/lib/fa/linkedin-square'
-
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa'
 import { FormattedMessage } from 'react-intl'
 import messages from './messages'
 import FooterWrapper from './FooterWrapper'
@@ -108,9 +104,9 @@ function Footer () {
             >
               <div className='social-media-box'>
                 <FaInstagram style={{ fontSize: 55, color: '#7F3FBF' }} />
-                <FaLinkedinSquare style={{ fontSize: 55, color: '#7F3FBF' }} />
-                <FaTwitterSquare style={{ fontSize: 55, color: '#7F3FBF' }} />
-                <FaFacebookOfficial
+                <FaLinkedin style={{ fontSize: 55, color: '#7F3FBF' }} />
+                <FaTwitter style={{ fontSize: 55, color: '#7F3FBF' }} />
+                <FaFacebook
                   style={{ fontSize: 55, color: '#7F3FBF' }}
                 />
               </div>

@@ -1,41 +1,41 @@
 /**
  * Measure's the element's bounding box and then renders children
  */
-import React from 'react'
-import debounce from 'debounce'
+import React from "react"
+import debounce from "debounce"
 
 class MeasureAndRender extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       measurement: null,
-      hasMeasured: false
+      hasMeasured: false,
     }
     this.onWindowResize = debounce(() => {
       this.setState({
-        measurement: this.el.getBoundingClientRect()
+        measurement: this.el.getBoundingClientRect(),
       })
     }, this.props.debounce || 100)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setState({
       measurement: this.el.getBoundingClientRect(),
-      hasMeasured: true
+      hasMeasured: true,
     })
 
-    window.addEventListener('resize', this.onWindowResize)
+    window.addEventListener("resize", this.onWindowResize)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // stop listening to window resize
-    window.removeEventListener('resize', this.onWindowResize)
+    window.removeEventListener("resize", this.onWindowResize)
   }
 
-  render () {
+  render() {
     let style = {}
     if (this.props.stretch) {
-      style.position = 'absolute'
+      style.position = "absolute"
       style.top = 0
       style.right = 0
       style.bottom = 0

@@ -1,22 +1,26 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-// import styled from 'styled-components'
-import Helmet from 'react-helmet'
 import icon16 from '../../assets/images/favicon.png'
 import Header from './../Header'
-import HeaderCardDisplay from './HomeCardDisplay'
+import HomeCardDisplay from './HomeCardDisplay'
 import AboutCard from './../AboutCard'
 import BlogCard from './../BlogCard'
 import ProjectsCard from './../ProjectsCard'
 import withRoot from '../../withRoot'
 
-// const Container = styled.div`
-//   margin: 0 auto;
-//   max-width: 960px;
-//   padding: 0px 1.0875rem 1.45rem;
-//   padding-top: 0;
-// `
-const items = [{ title: 'dog' }, { title: 'cat' }, { title: 'mouse' }]
+import { createGlobalStyle } from "styled-components"
+
+const GlobalStyles = createGlobalStyle`
+
+body {
+  --bg: #fff;
+  background: #fff !important; 
+}
+body .dark {
+  background: #fff !important;
+}
+`
+
 const items_advanced = [
   {
     id: 1,
@@ -61,11 +65,12 @@ class MainPage extends React.Component {
           maxWidth: 1024
         }}
       >
+        <GlobalStyles />
         <Grid style={{ textAlign: 'center' }}>
           <Header />
         </Grid>
         <Grid>
-          <HeaderCardDisplay items={items_advanced} />
+          <HomeCardDisplay items={items_advanced} />
         </Grid>
       </div>
     )

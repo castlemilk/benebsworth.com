@@ -1,13 +1,6 @@
-import React from 'react'
-import Link from 'gatsby-link'
-import Grid from '@material-ui/core/Grid'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
-const CardWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-`
 const CardImage = styled.div`
   position: absolute;
   z-index: 3;
@@ -16,7 +9,6 @@ const CardImage = styled.div`
   margin-left: 62.5px;
   border-radius: 10px 10px 0 0;
 `
-const CardDescription = styled.div``
 const Paper = styled.div`
   -webkit-box-shadow: 6px 7px 11px -5px rgba(138, 133, 138, 1);
   -moz-box-shadow: 6px 7px 11px -5px rgba(138, 133, 138, 1);
@@ -47,49 +39,7 @@ const Body = styled.div`
 `
 const Description = styled.div`
   padding-top: 70px;
-  font-family: 'Prompt';
-`
-const ScoreBar = styled.div`
-  border-radius: 10px;
-  height: 20px;
-  width: ${props => props.score}%;
-  background-color: #febd61;
-  color: black;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  bottom: 0;
-  position: absolute;
-`
-const ScoreBackground = styled.div`
-  background: #939398;
-  border-color: black;
-  border-width: 2px;
-  color: black;
-  border-radius: 10px;
-  width: 100%;
-  height: 20px;
-  bottom: 0;
-  position: absolute;
-  margin-bottom: 10px;
-  text-align: center;
-`
-const ScoreValue = styled.div`
-  z-index: 4;
-  color: gray;
-  font-family: 'Prompt';
-  width: 100%;
-  height: 20px;
-  bottom: 0;
-  position: absolute;
-  text-align: center;
-`
-const ScoreWrapper = styled.div`
-  width: 90%;
-  margin-left: 5%;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 5px;
+  font-family: "Prompt";
 `
 
 const Card = props => (
@@ -99,14 +49,13 @@ const Card = props => (
     </CardImage>
     <Header>
       <img
-        style={{ borderRadius: '10px 10px 0 0' }}
+        style={{ borderRadius: "10px 10px 0 0" }}
         src={props.headerBackground}
       />
     </Header>
 
     <Body>
       <Description>{props.title}</Description>
-      {/* { props.score ? <ScoreWrapper><ScoreBackground><ScoreBar score={props.score}  ></ScoreBar><ScoreValue>{props.score}%</ScoreValue></ScoreBackground></ScoreWrapper>: <div /> } */}
     </Body>
   </Paper>
 )

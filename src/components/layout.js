@@ -114,6 +114,7 @@ class Layout extends React.Component {
                       width='16'
                       height='16'
                       role='presentation'
+                      alt="moon"
                       style={{ pointerEvents: 'none' }}
                     />
                   ),
@@ -123,6 +124,7 @@ class Layout extends React.Component {
                       width='16'
                       height='16'
                       role='presentation'
+                      alt="sun"
                       style={{ pointerEvents: 'none' }}
                     />
                   )

@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
 const AboutBodyWrapper = styled.div`
   text-align: center;
@@ -64,18 +64,15 @@ const AboutBlurb = styled.div`
 `
 
 const bio1 = `
-Oh so you'd like to know a little about me? Well I'm flattered. Here we go; Born to a Moroccan Diesel Mechanic and Australian Artist.
-             We lived in Port Hedland, Western Australia for 8 years before moving to a very small town called Denmark in Western Australia.
-             These small towns, with the typical small town mentalities proved challenging, but somewhat enriching. Finally we settled in Melbourne where I've been since
-             the start of my high school years.
-             I only just made it into what could be described as a more driven mode of operation. I'm deeply passionate about learning and developing my understanding of the world, perhaps deriving personal existential meaning through this endeavour.
-             Strongly rooted in a belief of nurture over nature, and that effort will often trump gifted intelligence. Setting out to prove myself right by working diligently to make my dreams come to fruition.
+Highly self-driven Engineer who is continually exploring new learnings. This place acts as place for playing around with new ideas. 
+Actively building my capability to be able to robustly execute on entrepreneurial endeavors. I obtain great satisfaction from brining to 
+fruition new creations, this pursuit gives existential meaning. I'm glad you've stopped by 😊
 `
 const AboutBody = props => (
   <AboutBodyWrapper>
     <Paper>
       <AboutBlurb>
-        <div className='blurb-description'>
+        <div className="blurb-description">
           <p>
             <span>Blurb.</span>
             {bio1}

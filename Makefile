@@ -9,7 +9,7 @@ dev:
 deploy:
 	yarn run deploy
 serve:
-	gatsby build; gatsby serve
+	yarn run build; yarn run serve	
 analyze:
 	# bundle-analyzer public
 	webpack-bundle-analyzer public

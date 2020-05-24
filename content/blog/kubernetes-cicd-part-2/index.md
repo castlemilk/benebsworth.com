@@ -168,7 +168,7 @@ Now when we raise a PR, it will trigger the running of the targeted `PipelineRun
 
 &nbsp;
 
-<more information available soon! repo is available [here](https://github.com/tektoncd/triggers)>
+more information available soon! repo is available [here](https://github.com/tektoncd/triggers)
 
 &nbsp;
 

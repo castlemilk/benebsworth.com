@@ -7,12 +7,12 @@ import { select } from 'd3-selection'
 import { schemeSet3 } from 'd3-scale-chromatic'
 import { scaleOrdinal, scaleSqrt } from 'd3-scale'
 // import Kubernetes from './assets/kubernetes.'
-const technologies = [
-  {
-    name: 'Kubernetes',
-    image: ''
-  }
-]
+// const technologies = [
+//   {
+//     name: 'Kubernetes',
+//     image: ''
+//   }
+// ]
 const BlogWrapper = styled.div`
   .paper-wrapper:hover {
     text-shadow: 2px 2px 5px #903fb9;
@@ -61,7 +61,7 @@ class BlogCard extends React.Component {
     this.state.color = scaleOrdinal(schemeSet3).domain(range(this.state.m))
   }
   initialise () {
-    for (let i of range(this.state.n)) {
+    for (let _ of range(this.state.n)) {
       this.state.nodes.push({
         radius: this.state.radius(1 + Math.floor(Math.random() * 4)),
         color: this.state.color(Math.floor(Math.random() * this.state.m)),

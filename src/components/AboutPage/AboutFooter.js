@@ -1,133 +1,135 @@
-import React from 'react'
-import styled from 'styled-components'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import { OutboundLink } from 'gatsby-plugin-google-analytics'
-import { withStyles } from '@material-ui/core/styles'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import createPalette from '@material-ui/core/styles/createPalette'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import white from '@material-ui/core/colors'
-import { Motion, spring } from 'react-motion'
-import FaFacebookOfficial from 'react-icons/lib/fa/facebook-official'
-import FaGithubSquare from 'react-icons/lib/fa/github-square'
-import FaTwitterSquare from 'react-icons/lib/fa/twitter-square'
-import FaLinkedinSquare from 'react-icons/lib/fa/linkedin-square'
-import MdSend from 'react-icons/lib/md/send'
-import FaExclamationCircle from 'react-icons/lib/fa/exclamation-circle'
-import firebase from './firebase'
+import React from "react"
+import styled from "styled-components"
+import TextField from "@material-ui/core/TextField"
+import Button from "@material-ui/core/Button"
+import { OutboundLink } from "gatsby-plugin-google-analytics"
+import { withStyles } from "@material-ui/core/styles"
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
+import createPalette from "@material-ui/core/styles/createPalette"
+import CircularProgress from "@material-ui/core/CircularProgress"
+import white from "@material-ui/core/colors"
+import { Motion, spring } from "react-motion"
+import {
+  FaExclamationCircle,
+  FaFacebookSquare,
+  FaGithubSquare,
+  FaTwitterSquare,
+  FaLinkedin,
+} from "react-icons/fa"
+import { MdSend } from "react-icons/md"
+import firebase from "./firebase"
 const textInputTheme = createMuiTheme({
   pallete: createPalette({
     primary: white,
-    type: 'light',
+    type: "light",
     text: {
-      primary: white
-    }
+      primary: white,
+    },
   }),
   overrides: {
     MuiInput: {
       root: {
-        color: 'white'
+        color: "white",
       },
       input: {
-        color: 'white',
-        '&:focus': {
-          color: 'white'
-        }
+        color: "white",
+        "&:focus": {
+          color: "white",
+        },
       },
-      focused: {
-        color: 'white'
+      "&$focused": {
+        color: "white",
       },
       underline: {
-        '&:after': {
-          backgroundColor: 'white'
-        }
-      }
+        "&:after": {
+          backgroundColor: "white",
+        },
+      },
     },
     MuiInputLabel: {
       root: {
-        color: 'white'
-      }
+        color: "white",
+      },
     },
     MuiFormLabel: {
       root: {
-        color: 'white',
-        '&$focused': {
-          color: 'white'
-        }
+        color: "white",
+        "&$focused": {
+          color: "white",
+        },
       },
-      focused: {
-        color: 'white'
-      }
+      "&$focused": {
+        color: "white",
+      },
     },
     MuiButton: {
       root: {
-        backgroundColor: 'white'
+        backgroundColor: "white",
       },
 
       raisedPrimary: {
-        backgroundColor: 'white',
-        color: 'black',
-        '&:hover': {
-          backgroundColor: '#309f72'
-        }
-      }
-    }
-  }
+        backgroundColor: "white",
+        color: "black",
+        "&:hover": {
+          backgroundColor: "#309f72",
+        },
+      },
+    },
+  },
 })
 const buttonThemeValid = createMuiTheme({
   overrides: {
     MuiButton: {
       root: {
-        backgroundColor: 'white'
+        backgroundColor: "white",
       },
 
       raisedPrimary: {
-        backgroundColor: 'white',
-        color: 'black',
-        '&:hover': {
-          backgroundColor: '#309f72'
-        }
-      }
-    }
-  }
+        backgroundColor: "white",
+        color: "black",
+        "&:hover": {
+          backgroundColor: "#309f72",
+        },
+      },
+    },
+  },
 })
 const buttonThemeInvalid = createMuiTheme({
   overrides: {
     MuiButton: {
       root: {
-        backgroundColor: 'gray'
+        backgroundColor: "gray",
       },
 
       raisedPrimary: {
-        backgroundColor: 'gray',
-        color: 'black',
-        '&:hover': {
-          backgroundColor: '#309f72'
-        }
-      }
-    }
-  }
+        backgroundColor: "gray",
+        color: "black",
+        "&:hover": {
+          backgroundColor: "#309f72",
+        },
+      },
+    },
+  },
 })
 const styles = theme => ({
   textField: {
     marginTop: 10,
     marginLeft: 20,
     marginRight: theme.spacing.unit,
-    width: '65%'
+    width: "65%",
   },
   iconSmall: {
-    fontSize: 20
+    fontSize: 20,
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing.unit,
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   progress: {
-    margin: theme.spacing.unit
-  }
+    margin: theme.spacing.unit,
+  },
 })
 const AboutFooterWrapper = styled.div`
   margin-top: 20px;
@@ -147,6 +149,7 @@ const AboutSocialWrapper = styled.div`
     justify-content: center;
     align-content: center;
     text-decoration: none;
+
     .icon-github {
       text-decoration: none;
     }
@@ -173,6 +176,9 @@ const AboutSocialWrapper = styled.div`
     .icon-linkedin a {
       color: inherit;
       text-decoration: none;
+    }
+    * {
+      margin: 5px;
     }
   }
   .social-header span {
@@ -210,7 +216,7 @@ const AboutContactWrapper = styled.div`
   button {
     margin-top: ${props => (props.isMobile ? 40 : 45)}px;
     margin-right: 10px;
-    float: ${props => (props.isMobile ? 'left' : 'right')};
+    float: ${props => (props.isMobile ? "left" : "right")};
   }
 `
 const getSendIcon = state => {
@@ -228,15 +234,17 @@ const getSendIcon = state => {
       return <FaExclamationCircle style={{ fontSize: 20 }} />
     case READY:
       return <MdSend style={{ fontSize: 20 }} />
+    default:
+      return null
   }
 }
 // STATES
-const LOADING = 'LOADING'
-const ERROR = 'ERROR'
-const SUCCESS = 'SUCCESS'
-const READY = 'READY'
+const LOADING = "LOADING"
+const ERROR = "ERROR"
+const SUCCESS = "SUCCESS"
+const READY = "READY"
 export class AboutFooter extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isSelected: false,
@@ -244,56 +252,56 @@ export class AboutFooter extends React.Component {
       isBlured: true,
       loading: false,
       status: READY,
-      subject: '',
-      message: ''
+      subject: "",
+      message: "",
     }
   }
-  componentWillMount () {
+  componentWillMount() {
     this.db = firebase.firestore()
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearInterval(this.progessCheckInterval)
   }
-  handleChange (key, event) {
+  handleChange(key, event) {
     this.setState({
-      [key]: event.target.value
+      [key]: event.target.value,
     })
   }
-  handleSelect (active) {
+  handleSelect(active) {
     this.setState({ isSelected: active })
   }
-  handleFocus () {
+  handleFocus() {
     this.setState({
       isFocused: true,
-      isSelected: true
+      isSelected: true,
     })
   }
-  handleBlur (blurred) {
+  handleBlur(blurred) {
     this.setState({
       isBlured: blurred,
-      isFocused: false
+      isFocused: false,
     })
   }
-  handleMouseLeave () {
+  handleMouseLeave() {
     this.setState({
-      isSelected: !!this.state.isFocused
+      isSelected: !!this.state.isFocused,
     })
   }
-  progressCheck () {
+  progressCheck() {
     this.setState({ progress: this.state.progress + 10 })
   }
-  handleSubmit () {
-    console.log('submitting')
+  handleSubmit() {
+    console.log("submitting")
     this.setState({ loading: true, status: LOADING })
     this.progessCheckInterval = setInterval(() => this.progressCheck(), 300)
     this.db
-      .collection('messages')
+      .collection("messages")
       .add({
         subject: this.state.subject,
-        message: this.state.message
+        message: this.state.message,
       })
       .then(docRef => {
-        console.log('Document written with ID: ', docRef.id)
+        console.log("Document written with ID: ", docRef.id)
         setTimeout(
           () => this.setState({ loading: false, status: SUCCESS }),
           300
@@ -301,100 +309,101 @@ export class AboutFooter extends React.Component {
         clearInterval(this.progessCheckInterval)
       })
       .catch(error => {
-        console.error('Error adding document: ', error)
+        console.error("Error adding document: ", error)
         this.setState({ loading: false, status: ERROR })
         clearInterval(this.progessCheckInterval)
       })
   }
-  getSpringProps () {
+  getSpringProps() {
     return {
       style: {
         socialWidth: spring(this.state.isSelected ? 30 : 50),
-        contactWidth: spring(this.state.isSelected ? 70 : 50)
-      }
+        contactWidth: spring(this.state.isSelected ? 70 : 50),
+      },
     }
   }
-  contactValid () {
-    return this.state.subject != '' && this.state.message != ''
+  contactValid() {
+    return this.state.subject !== "" && this.state.message !== ""
   }
 
-  render () {
+  render() {
     const height = 121
     const fontSize = 50
 
     const { classes, isMobile } = this.props
     const socialView = (
       <AboutSocialWrapper>
-        <div className='social-header'>
+        <div className="social-header">
           <span>Social.</span>
         </div>
-        <div className='social-media-box'>
-          <div className='icon-github'>
-            <OutboundLink href='https://github.com/castlemilk'>
+        <div className="social-media-box">
+          <div className="icon-github">
+            <OutboundLink href="https://github.com/castlemilk">
               <FaGithubSquare style={{ height, fontSize }} />
             </OutboundLink>
           </div>
-          <div className='icon-linkedin'>
-            <OutboundLink href='https://www.linkedin.com/in/ben-ebsworth/'>
-              <FaLinkedinSquare style={{ height, fontSize }} />
+          <div className="icon-linkedin">
+            <OutboundLink href="https://www.linkedin.com/in/ben-ebsworth/">
+              <FaLinkedin style={{ height, fontSize }} />
             </OutboundLink>
           </div>
-          <div className='icon-twitter'>
-            <OutboundLink href='https://twitter.com/sycli?lang=en'>
+          <div className="icon-twitter">
+            <OutboundLink href="https://twitter.com/sycli?lang=en">
               <FaTwitterSquare style={{ height, fontSize }} />
             </OutboundLink>
           </div>
-          <div className='icon-facebook'>
-            <FaFacebookOfficial style={{ height, fontSize }} />
+          <div className="icon-facebook">
+            <FaFacebookSquare style={{ height, fontSize }} />
           </div>
         </div>
       </AboutSocialWrapper>
     )
     const contactView = (
       <AboutContactWrapper isMobile={this.props.isMobile}>
-        <div className='contact-header'>
+        <div className="contact-header">
           <span>Contact.</span>
           <br />
         </div>
         {this.state.status === SUCCESS ? (
           <div
             style={{
-              display: 'flex',
-              color: 'white',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '84%',
-              height: '70%',
+              display: "flex",
+              color: "white",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "84%",
+              height: "70%",
               fontSize: 20,
-              textAlign: 'center',
-              margin: 30
+              textAlign: "center",
+              margin: 30,
             }}
           >
-            🎉 Thanks for getting in touch, I look forward to reading your message. 😀
+            <span role="img">🎉</span> Thanks for getting in touch, I look
+            forward to reading your message. <span role="img">😀</span>
           </div>
         ) : (
           <div>
             <MuiThemeProvider theme={textInputTheme}>
               <TextField
-                label='Subject'
+                label="Subject"
                 className={classes.textField}
-                placeholder='Message Subject'
+                placeholder="Message Subject"
                 value={this.state.subject}
-                onChange={event => this.handleChange('subject', event)}
+                onChange={event => this.handleChange("subject", event)}
                 onFocus={() => this.handleFocus(true)}
                 onBlur={() => this.handleBlur(true)}
-                margin='normal'
+                margin="normal"
               />
             </MuiThemeProvider>
             <br />
             <MuiThemeProvider theme={textInputTheme}>
               <TextField
                 className={classes.textField}
-                label='Message'
-                placeholder='Enter a message here'
+                label="Message"
+                placeholder="Enter a message here"
                 multiline
                 value={this.state.message}
-                onChange={event => this.handleChange('message', event)}
+                onChange={event => this.handleChange("message", event)}
                 onFocus={() => this.handleFocus(true)}
                 onBlur={() => this.handleBlur(true)}
                 rows={2}
@@ -409,8 +418,8 @@ export class AboutFooter extends React.Component {
             >
               <Button
                 className={classes.button}
-                variant='raised'
-                color='primary'
+                variant="raised"
+                color="primary"
                 onClick={() => this.handleSubmit()}
               >
                 <p style={{ marginBottom: 0, marginLeft: 5, marginRight: 10 }}>
@@ -431,21 +440,21 @@ export class AboutFooter extends React.Component {
           return (
             <AboutFooterWrapper>
               <div
-                className='social-box'
+                className="social-box"
                 style={{
-                  height: '100%',
+                  height: "100%",
                   width: `${tweenCollection.socialWidth}%`,
-                  float: 'left'
+                  float: "left",
                 }}
               >
                 {socialView}
               </div>
               <div
-                className='contact-box'
+                className="contact-box"
                 style={{
-                  height: '100%',
+                  height: "100%",
                   width: `${tweenCollection.contactWidth}%`,
-                  float: 'right'
+                  float: "right",
                 }}
                 onClick={() => this.handleSelect(true)}
                 onMouseEnter={() => this.handleSelect(true)}
@@ -461,63 +470,64 @@ export class AboutFooter extends React.Component {
     const mobileView = (
       <AboutFooterWrapper>
         <div
-          className='social-box'
+          className="social-box"
           style={{
-            height: '100%',
-            width: '100%'
+            height: "100%",
+            width: "100%",
           }}
         >
           {socialView}
         </div>
         <div
-          className='contact-box'
+          className="contact-box"
           style={{
-            height: '100%',
-            width: '100%'
+            height: "100%",
+            width: "100%",
           }}
         >
           <AboutContactWrapper isMobile={isMobile}>
-            <div className='contact-header'>
+            <div className="contact-header">
               <span>Contact.</span>
               <br />
             </div>
             {this.state.status === SUCCESS ? (
               <div
-              style={{
-                display: 'flex',
-                color: 'white',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '84%',
-                height: '70%',
-                fontSize: 20,
-                textAlign: 'center',
-                margin: 30
-              }}
-            >
-              🎉 Thanks for getting in touch, I look forward to reading your message. 😀
-            </div>
+                style={{
+                  display: "flex",
+                  color: "white",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "84%",
+                  height: "70%",
+                  fontSize: 20,
+                  textAlign: "center",
+                  margin: 30,
+                }}
+              >
+                🎉 Thanks for getting in touch, I look forward to reading your
+                message. 😀
+              </div>
             ) : (
               <div>
                 <MuiThemeProvider theme={textInputTheme}>
                   <TextField
-                    label='Subject'
+                    label="Subject"
                     className={classes.textField}
-                    placeholder='Message Subject'
+                    placeholder="Message Subject"
                     value={this.state.subject}
-                    onChange={event => this.handleChange('subject', event)}
-                    margin='normal'
+                    onChange={event => this.handleChange("subject", event)}
+                    margin="normal"
                   />
                 </MuiThemeProvider>
                 <br />
                 <MuiThemeProvider theme={textInputTheme}>
                   <TextField
                     className={classes.textField}
-                    label='Message'
-                    placeholder='Enter a message here'
+                    label="Message"
+                    placeholder="Enter a message here"
                     multiline
                     value={this.state.message}
-                    onChange={event => this.handleChange('message', event)}
+                    onChange={event => this.handleChange("message", event)}
                     rows={2}
                     rowsMax={3}
                     fullWidth
@@ -531,8 +541,8 @@ export class AboutFooter extends React.Component {
                 >
                   <Button
                     className={classes.button}
-                    variant='raised'
-                    color='primary'
+                    variant="raised"
+                    color="primary"
                     onClick={() => this.handleSubmit()}
                   >
                     Send

@@ -1,14 +1,12 @@
-import { VerticalTimeline, VerticalTimelineElement } from '../VerticalTimeline'
-import { skills } from '../../config'
-import Skills from './../Skills'
-import DigioLogoLarge from '../../assets/images/digio-logo.png'
-import DigioLogoSmall from '../../assets/images/digio-logo-small.png'
-import TelstraLogo from '../../assets/images/telstra-logo.png'
-import MonashLogo from '../../assets/images/monash-logo.png'
-import FaAnchor from 'react-icons/lib/fa/anchor'
-import styled from 'styled-components'
+import { VerticalTimeline, VerticalTimelineElement } from "../VerticalTimeline"
+import { skills } from "../../config"
+import Skills from "./../Skills"
+import DigioLogoLarge from "../../assets/images/digio-logo.png"
+import TelstraLogo from "../../assets/images/telstra-logo.png"
+import MonashLogo from "../../assets/images/monash-logo.png"
+import styled from "styled-components"
 
-import React from 'react'
+import React from "react"
 
 const Wrapper = styled.div`
   .title {
@@ -23,79 +21,82 @@ const Wrapper = styled.div`
 `
 
 class AboutTimeLine extends React.Component {
-  constructor (props) {
-    super(props)
-  }
-
-  render () {
+  render() {
     let digioLogoView
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       digioLogoView = (
-        <div style={{ display: 'flex', textAlign: 'center', height: '100%' }}>
+        <div style={{ display: "flex", textAlign: "center", height: "100%" }}>
           <img
-            style={{ margin: 'auto' }}
+            alt="digio"
+            style={{ margin: "auto" }}
             src={DigioLogoLarge}
-            width={window.innerWidth <= 400 ? '70%' : '100%'}
+            width={window.innerWidth <= 400 ? "70%" : "100%"}
           />
         </div>
       )
     } else {
       digioLogoView = (
-        <div style={{ display: 'flex', textAlign: 'center', height: '100%' }}>
-          <img style={{ margin: 'auto' }} src={DigioLogoLarge} width={'100%'} />
+        <div style={{ display: "flex", textAlign: "center", height: "100%" }}>
+          <img
+            alt="digio"
+            style={{ margin: "auto" }}
+            src={DigioLogoLarge}
+            width={"100%"}
+          />
         </div>
       )
     }
 
     const telstraLogoView = (
-      <div style={{ display: 'flex', textAlign: 'center', height: '100%' }}>
-        <img style={{ margin: 'auto' }} src={TelstraLogo} />
+      <div style={{ display: "flex", textAlign: "center", height: "100%" }}>
+        <img alt="telstra" style={{ margin: "auto" }} src={TelstraLogo} />
       </div>
     )
     const monashLogoView = (
-      <div style={{ display: 'flex', textAlign: 'center', height: '100%' }}>
-        <img style={{ margin: 'auto' }} src={MonashLogo} />
+      <div style={{ display: "flex", textAlign: "center", height: "100%" }}>
+        <img alt="monash" style={{ margin: "auto" }} src={MonashLogo} />
       </div>
     )
     const content = (
       <VerticalTimeline animate>
         <VerticalTimelineElement
-          position='left'
-          animate='false'
-          key={'item-5'}
-          className='vertical-timeline-element--work'
-          date='September, 2018 - present'
-          iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
+          position="left"
+          animate="false"
+          visible="true"
+          key={"item-5"}
+          className="vertical-timeline-element--work"
+          date="September, 2018 - present"
+          iconStyle={{ background: "rgb(93, 41, 113)", color: "#fff" }}
           icon={digioLogoView}
         >
-          <h3 className='vertical-timeline-element-title'>
+          <h3 className="vertical-timeline-element-title">
             Senior DevOps/FullStack Engineer
           </h3>
-          <h4 className='vertical-timeline-element-subtitle'>
+          <h4 className="vertical-timeline-element-subtitle">
             Melbourne, Australia
           </h4>
           <p>
             Leading the development and deployment of a set of production grade
             platform components on GCP. Facilitating adoption and consumption of
             the platform through a series of developer tooling and frameworks to
-            streamline onboarding. Delivered first production-grade GKE/GCP based
-            platform for one of Australia's biggest Banks.
+            streamline onboarding. Delivered first production-grade GKE/GCP
+            based platform for one of Australia's biggest Banks.
           </p>
           <Skills skills={skills[0]} />
         </VerticalTimelineElement>
         <VerticalTimelineElement
-          position='right'
-          animate='true'
-          key={'item-one'}
-          className='vertical-timeline-element--work'
-          date='April, 2018 - September, 2018'
-          iconStyle={{ background: 'rgb(93, 41, 113)', color: '#fff' }}
+          position="right"
+          animate="true"
+          key={"item-one"}
+          className="vertical-timeline-element--work"
+          date="April, 2018 - September, 2018"
+          iconStyle={{ background: "rgb(93, 41, 113)", color: "#fff" }}
           icon={digioLogoView}
         >
-          <h3 className='vertical-timeline-element-title'>
+          <h3 className="vertical-timeline-element-title">
             DevOps/FullStack Engineer
           </h3>
-          <h4 className='vertical-timeline-element-subtitle'>
+          <h4 className="vertical-timeline-element-subtitle">
             Melbourne, Australia
           </h4>
           <p>
@@ -110,18 +111,18 @@ class AboutTimeLine extends React.Component {
           <Skills skills={skills[1]} />
         </VerticalTimelineElement>
         <VerticalTimelineElement
-          position='left'
-          animate='true'
-          key={'item-two'}
-          className='vertical-timeline-element--work'
-          date='August, 2016 - April, 2018'
-          iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
+          position="left"
+          animate="true"
+          key={"item-two"}
+          className="vertical-timeline-element--work"
+          date="August, 2016 - April, 2018"
+          iconStyle={{ background: "rgb(255, 255, 255)", color: "#fff" }}
           icon={telstraLogoView}
         >
-          <h3 className='vertical-timeline-element-title'>
+          <h3 className="vertical-timeline-element-title">
             DevOps/Full-Stack Engineer
           </h3>
-          <h4 className='vertical-timeline-element-subtitle'>
+          <h4 className="vertical-timeline-element-subtitle">
             Melbourne, Australia
           </h4>
           <p>
@@ -133,16 +134,16 @@ class AboutTimeLine extends React.Component {
           <Skills skills={skills[2]} />
         </VerticalTimelineElement>
         <VerticalTimelineElement
-          position='right'
-          animate='true'
-          key={'item-three'}
-          className='vertical-timeline-element--work'
-          date='Febuary, 2015 - July, 2016'
-          iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
+          position="right"
+          animate="true"
+          key={"item-three"}
+          className="vertical-timeline-element--work"
+          date="Febuary, 2015 - July, 2016"
+          iconStyle={{ background: "rgb(255, 255, 255)", color: "#fff" }}
           icon={telstraLogoView}
         >
-          <h3 className='vertical-timeline-element-title'>Graduate Engineer</h3>
-          <h4 className='vertical-timeline-element-subtitle'>
+          <h3 className="vertical-timeline-element-title">Graduate Engineer</h3>
+          <h4 className="vertical-timeline-element-subtitle">
             Melbourne, Australia
           </h4>
           <p>
@@ -155,18 +156,18 @@ class AboutTimeLine extends React.Component {
           <Skills skills={skills[3]} />
         </VerticalTimelineElement>
         <VerticalTimelineElement
-          position='left'
-          animate='true'
-          key={'item-four'}
-          className='vertical-timeline-element--education'
-          date='November, 2014'
-          iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
+          position="left"
+          animate="true"
+          key={"item-four"}
+          className="vertical-timeline-element--education"
+          date="November, 2014"
+          iconStyle={{ background: "rgb(255, 255, 255)", color: "#fff" }}
           icon={monashLogoView}
         >
-          <h2 className='vertical-timeline-element-header'>
+          <h2 className="vertical-timeline-element-header">
             Monash University
           </h2>
-          <h3 className='vertical-timeline-element-title'>
+          <h3 className="vertical-timeline-element-title">
             Bachelor of Electrical and Computer System Engineering (Honours)
           </h3>
           <p>
@@ -179,21 +180,21 @@ class AboutTimeLine extends React.Component {
           <Skills skills={skills[4]} />
         </VerticalTimelineElement>
         <VerticalTimelineElement
-          position='right'
-          animate='true'
-          key={'item-six'}
-          className='vertical-timeline-element--education'
-          date='2009 - 2013'
-          iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff' }}
+          position="right"
+          animate="true"
+          key={"item-six"}
+          className="vertical-timeline-element--education"
+          date="2009 - 2013"
+          iconStyle={{ background: "rgb(255, 255, 255)", color: "#fff" }}
           icon={monashLogoView}
         >
-          <h2 className='vertical-timeline-element-header'>
+          <h2 className="vertical-timeline-element-header">
             Monash University
           </h2>
-          <h3 className='vertical-timeline-element-title'>
-            Bachelor of Science{' '}
+          <h3 className="vertical-timeline-element-title">
+            Bachelor of Science{" "}
           </h3>
-          <h3 className='vertical-timeline-element-subtitle'>
+          <h3 className="vertical-timeline-element-subtitle">
             Majoring in Applied Mathematics and Experimental Physics
           </h3>
           <p>
@@ -211,7 +212,7 @@ class AboutTimeLine extends React.Component {
     )
     return (
       <Wrapper>
-        <div className='title'>Career</div>
+        <div className="title">Career</div>
         {content}
       </Wrapper>
     )

@@ -1,18 +1,18 @@
-import React from 'react'
-import MeasureAndRender from './MeasureAndRender'
-import Panel from './Panel'
+import React from "react"
+import MeasureAndRender from "./MeasureAndRender"
+import Panel from "./Panel"
 
 export default props => {
   const dimenions = {
     width: 309,
-    height: 274
+    height: 274,
   }
   const gridStyles = {
-    position: 'absolute',
-    display: 'grid',
+    position: "absolute",
+    display: "grid",
     gridTemplateColumns: dimenions.width,
     gridTemplateRows: dimenions.height,
-    zIndex: 15
+    zIndex: 15,
   }
   const stroke = -3
   const offset = 0
@@ -21,9 +21,9 @@ export default props => {
   // const titleBackgroundWidth = 70
   const titleBackgroundDifference = 30
   return (
-    <div className='about-container' style={{ display: 'block-inline' }}>
+    <div className="about-container" style={{ display: "block-inline" }}>
       <div style={gridStyles}>
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: "relative" }}>
           <MeasureAndRender stretch debounce={1}>
             {bounds => {
               const path = `
@@ -46,13 +46,13 @@ export default props => {
           </MeasureAndRender>
           <div
             style={{
-              position: 'absolute',
-              textAlign: 'center',
+              position: "absolute",
+              textAlign: "center",
               width: dimenions.width,
               height: dimenions.height,
-              fontFamily: 'Prompt',
+              fontFamily: "Prompt",
               fontWeight: `bold`,
-              zIndex: 20
+              zIndex: 20,
             }}
           >
             About

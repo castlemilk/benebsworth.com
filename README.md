@@ -1,25 +1,59 @@
-# Blog site
+<!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
+<p align="center">
+  <a href="https://www.gatsbyjs.org">
+    <img alt="Gatsby" src="https://www.gatsbyjs.org/monogram.svg" width="60" />
+  </a>
+</p>
+<h1 align="center">
+  Gatsby's personal blog starter
+</h1>
 
-# Reference ideas
+<img alt="screesnhot" src="./screenshot.png">
 
-[1] https://github.com/chr15m/motion
+This starter is a fork of Gatsby Starter Blog, the most popular starter by far – with second place being Gatsby Starter Netlify CMS. So I decided to combine the 2!
 
-[2] http://gedd.ski/post/dynamic-svg-components/
+## 🚀 Quick start
 
-[3] http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_canny/py_canny.html
+1.  **Create a Gatsby site.**
 
-[4] https://github.com/LingDong-/linedraw
+    Use the Gatsby CLI to create a new site, specifying the blog starter.
 
-[5] http://gedd.ski/post/dynamic-svg-components/
+    ```sh
+    # create a new Gatsby site using the blog starter
+    gatsby new my-blog-starter https://github.com/thomaswang/gatsby-personal-starter-blog
+    ```
 
-[6] https://hackernoon.com/render-a-hearthstone-card-using-react-and-svg-cb086957e74a
+1.  **Start developing.**
 
-[7] https://gist.github.com/pbeshai/484d6bf04edcdecfc3731e00c062f47e
+    Navigate into your new site’s directory and start it up.
 
-[8] http://bl.ocks.org/rveciana/6184054
+    ```sh
+    cd my-blog-starter/
+    gatsby develop
+    ```
 
-[9] https://github.com/d3/d3-force/blob/master/README.md#simulation_tick
+1.  **Open the source code and start editing!**
 
-[10] https://www.canva.com/learn/unique-inspiring-about-page/
+    Your site is now running at `http://localhost:8000`!
 
-[11] https://bl.ocks.org/mbostock/517fdb49f959cb1461e2
+    _Note: You'll also see a second link: _`http://localhost:8000/___graphql`_. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby tutorial](https://www.gatsbyjs.org/tutorial/part-five/#introducing-graphiql)._
+
+    Open the `my-blog-starter` directory in your code editor of choice and edit `src/pages/index.js`. Save your changes and the browser will update in real time!
+
+## 🎓 Learning Gatsby
+
+Looking for more guidance? Full documentation for Gatsby lives [on the website](https://www.gatsbyjs.org/). Here are some places to start:
+
+- **For most developers, we recommend starting with our [in-depth tutorial for creating a site with Gatsby](https://www.gatsbyjs.org/tutorial/).** It starts with zero assumptions about your level of ability and walks through every step of the process.
+
+- **To dive straight into code samples, head [to our documentation](https://www.gatsbyjs.org/docs/).** In particular, check out the _Guides_, _API Reference_, and _Advanced Tutorials_ sections in the sidebar.
+
+## 📔 Learning Netlify CMS with Gatsby
+
+Start from [this point](https://www.gatsbyjs.org/docs/sourcing-from-netlify-cms/#authenticating-with-github) in the Gatsby documentation to finish the set up for your personal Netlify CMS with authentication.
+
+## 💫 Deploy
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/thomaswangio/gatsby-personal-starter-blog)
+
+<!-- AUTO-GENERATED-CONTENT:END -->

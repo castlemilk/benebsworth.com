@@ -8,7 +8,7 @@ class VerticalTimelineElement extends React.Component {
   constructor (props) {
     super(props)
     this.onVisibilitySensorChange = this.onVisibilitySensorChange.bind(this)
-    this.state = { visible: false }
+    this.state = { visible: this.props.visible }
   }
 
   onVisibilitySensorChange (isVisible) {
@@ -71,7 +71,8 @@ VerticalTimelineElement.propTypes = {
   iconStyle: PropTypes.shape({}),
   style: PropTypes.shape({}),
   date: PropTypes.string,
-  position: PropTypes.string
+  position: PropTypes.string,
+  visible: PropTypes.bool,
 }
 
 VerticalTimelineElement.defaultProps = {

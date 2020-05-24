@@ -48,7 +48,6 @@ export const COLOR_SCHEME = {
     blue: '#5c91ff',
     darkblue: '#316ce6',
     kubernetes: '#9fbeff',
-    istio: '#5c91ff',
     red: '#E8384F',
     redpink: '#FCA7E4',
     yellow: '#EECC16',

@@ -1,6 +1,7 @@
 // export default BlogIndexPage
 import React from 'react'
 import { Link, graphql } from 'gatsby'
+
 import Bio from '../../components/bio'
 import Layout from '../../components/layout'
 import SEO from '../../components/seo'
@@ -11,7 +12,7 @@ class BlogIndex extends React.Component {
   render () {
     const { data } = this.props
     const siteTitle = data.site.siteMetadata.title
-    const posts = data.allMarkdownRemark.edges
+    const posts = data.allMdx.edges
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
@@ -62,7 +63,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(
+    allMdx(
       filter: { frontmatter: { release: { eq: true } } }
       sort: { fields: [frontmatter___date], order: DESC }
     ) {

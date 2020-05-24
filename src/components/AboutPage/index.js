@@ -1,18 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid'
-import Helmet from 'react-helmet'
-import { Container } from 'styled-bootstrap-grid'
-import styled from 'styled-components'
-import Link from 'gatsby-link'
-import icon16 from '../../assets/images/favicon.png'
-import Header from '../Header'
-import AboutBody from './AboutBody'
-import AboutTimeLine from './AboutTimeLine'
-import AboutFooter from './AboutFooter'
-import AboutCertifications from './AboutCertifications'
-import AboutSpeaking from './AboutSpeaking'
-import { createGlobalStyle } from 'styled-components'
+import React from "react"
+import Grid from "@material-ui/core/Grid"
+import Header from "../Header"
+import AboutBody from "./AboutBody"
+import AboutTimeLine from "./AboutTimeLine"
+import AboutFooter from "./AboutFooter"
+import AboutCertifications from "./AboutCertifications"
+import AboutSpeaking from "./AboutSpeaking"
+import { createGlobalStyle } from "styled-components"
 
 const GlobalStyles = createGlobalStyle`
 h2,h3,h4 {
@@ -27,36 +21,43 @@ span {
 .vertical-timeline-element-date {
   font-family: 'Prompt';
 }
+body {
+  --bg: #fff;
+  background: #fff !important; 
+}
+body .dark {
+  background: #fff !important;
+}
 `
 
 export class AboutPage extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      windowWidth: 1700
+      windowWidth: 1700,
     }
     this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
   }
 
   // make sure to remove the listener
   // when the component is not mounted anymore
-  componentWillUnmount () {
-    typeof window !== 'undefined' &&
-      window.removeEventListener('resize', this.handleWindowSizeChange)
+  componentWillUnmount() {
+    typeof window !== "undefined" &&
+      window.removeEventListener("resize", this.handleWindowSizeChange)
   }
-  componentDidMount () {
-    typeof window !== 'undefined' &&
-      setTimeout(window.addEventListener('resize', this.handleWindowSizeChange))
+  componentDidMount() {
+    typeof window !== "undefined" &&
+      setTimeout(window.addEventListener("resize", this.handleWindowSizeChange))
   }
-  handleWindowSizeChange () {
-    typeof window !== 'undefined' &&
+  handleWindowSizeChange() {
+    typeof window !== "undefined" &&
       setTimeout(this.setState({ windowWidth: window.innerWidth }))
   }
-  handleSelect (active) {
+  handleSelect(active) {
     this.setState({ isSelected: active })
   }
 
-  render () {
+  render() {
     // TODO:  * Add Skills summary view
     // TODO:  * Add Certification view
 
@@ -66,14 +67,14 @@ export class AboutPage extends React.Component {
     return (
       <div
         style={{
-          margin: '0 auto',
+          margin: "0 auto",
           maxWidth: 1024,
-          padding: '0px 1.0875rem 1.45rem',
-          paddingTop: 0
+          padding: "0px 1.0875rem 1.45rem",
+          paddingTop: 0,
         }}
       >
         <GlobalStyles />
-        <Grid style={{ textAlign: 'center', width: '100%' }}>
+        <Grid style={{ textAlign: "center", width: "100%" }}>
           <Header size={shrinkHeader ? 35 : 60} />
         </Grid>
         <Grid>

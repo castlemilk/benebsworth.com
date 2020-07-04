@@ -3,17 +3,20 @@
 init:
 	yarn	
 ## start local development environment
-dev:
+dev: clean
 	yarn run develop
 ## deploy to hosting environment
-deploy:
-	yarn run deploy
+deploy.prod:
+	yarn run deploy.prod
+deploy.next:
+	yarn run deploy.next
 serve:
 	yarn run build; yarn run serve	
 analyze:
 	# bundle-analyzer public
 	webpack-bundle-analyzer public
-
+clean:
+	gatsby clean
 
 ## Show help
 help:

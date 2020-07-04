@@ -54,6 +54,8 @@
     "react-switch": "^5.0.0",
     "react-typography": "^0.16.19",
     "react-visibility-sensor": "^5.1.1",
+    "remarkable": "^2.0.1",
+    "s3-deploy": "^1.4.0",
     "styled-bootstrap-grid": "^3.1.0",
     "styled-components": "^5.1.0",
     "typeface-merriweather": "0.0.72",
@@ -83,7 +85,8 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
-    "deploy": "gatsby clean && gatsby build && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket benebsworth.com --deleteRemoved --gzip && s3-deploy './static/**' --cwd './static/' --region ap-southeast-2 --bucket benebsworth.com --gzip && npm run clear",
+    "deploy.prod": "gatsby clean && gatsby build && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket benebsworth.com --deleteRemoved --gzip && s3-deploy './static/**' --cwd './static/' --region ap-southeast-2 --bucket benebsworth.com --gzip && npm run clear",
+    "deploy.next": "gatsby clean && gatsby build && s3-deploy './public/**' --cwd './public/' --profile ben --region ap-southeast-2 --bucket next.benebsworth.com --deleteRemoved --gzip && s3-deploy './static/**' --cwd './static/' --region ap-southeast-2 --bucket next.benebsworth.com --gzip",
     "clear": "aws --profile ben cloudfront create-invalidation --distribution-id E30L2WGIX5OPQG --paths '/*'"
   }
 }

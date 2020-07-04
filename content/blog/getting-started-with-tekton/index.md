@@ -491,6 +491,6 @@ Watch this space for future work relating to Tekton:
 
 ## Extras
 
-You'll find another sample application and the corresponding pipelines within the repostory we've been working out of. This deploys a multi-tier application using Tekton, the link is below
+You'll find another sample application and the corresponding pipelines within the repository we've been working out of. This deploys a multi-tier application using Tekton, the link is below
 
 ```https://github.com/castlemilk/next-dev-xp```

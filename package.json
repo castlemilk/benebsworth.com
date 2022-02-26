@@ -36,7 +36,7 @@
     "gatsby-remark-vscode": "^1.0.4",
     "gatsby-source-filesystem": "^2.0.29",
     "gatsby-transformer-sharp": "^2.1.18",
-    "prismjs": "^1.20.0",
+    "prismjs": "^1.27.0",
     "rc-queue-anim": "^1.8.4",
     "rc-scroll-anim": "^2.7.4",
     "rc-tween-one": "^2.6.8",

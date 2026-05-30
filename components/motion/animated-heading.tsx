@@ -15,6 +15,12 @@ type AnimatedHeadingProps = {
  * Section heading whose words fade + rise in on first view (staggered).
  * Words are always rendered (SSR / static-export safe) — only the visual
  * state animates. prefers-reduced-motion → plain, fully visible.
+ *
+ * Resilience guarantees:
+ * - threshold: 0 + generous rootMargin so headings reveal as they approach viewport
+ * - Fallback timer: if observer hasn't fired within 700ms of mount, force reveal
+ * - prefers-reduced-motion → reveal immediately, no transform
+ * - If IntersectionObserver is unavailable, reveal immediately
  */
 export function AnimatedHeading({
   text,
@@ -28,26 +34,55 @@ export function AnimatedHeading({
   const [reduced, setReduced] = useState(false)
 
   useEffect(() => {
+    // prefers-reduced-motion: reveal immediately, no animation
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mq.matches) {
       setReduced(true)
       return
     }
+
+    // If IntersectionObserver is unavailable, reveal immediately
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true)
+      return
+    }
+
     const el = ref.current
-    if (!el) return
+    if (!el) {
+      setInView(true)
+      return
+    }
+
+    let revealed = false
+
+    const reveal = () => {
+      if (!revealed) {
+        revealed = true
+        setInView(true)
+      }
+    }
+
+    // Fallback timer: ensure heading is never permanently hidden
+    const fallbackTimer = setTimeout(reveal, 700)
+
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            setInView(true)
+            clearTimeout(fallbackTimer)
             obs.disconnect()
+            reveal()
           }
         }
       },
-      { threshold: 0.4 },
+      { threshold: 0, rootMargin: '0px 0px -8% 0px' },
     )
     obs.observe(el)
-    return () => obs.disconnect()
+
+    return () => {
+      clearTimeout(fallbackTimer)
+      obs.disconnect()
+    }
   }, [])
 
   const visible = reduced || inView

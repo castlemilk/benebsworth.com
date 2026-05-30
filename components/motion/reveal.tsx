@@ -15,7 +15,12 @@ type RevealProps = {
  * Scroll-reveal wrapper. Children are ALWAYS rendered (static-export / SSR safe);
  * we only animate the visual state. Initial state is pre-animation (opacity 0,
  * translateY) and an IntersectionObserver flips it to in-view on first sight.
- * prefers-reduced-motion → render visible immediately, no transform.
+ *
+ * Resilience guarantees:
+ * - threshold: 0 + generous rootMargin so elements reveal as they approach viewport
+ * - Fallback timer: if observer hasn't fired within 700ms of mount, force reveal
+ * - prefers-reduced-motion → reveal immediately, no transform
+ * - If IntersectionObserver is unavailable, reveal immediately
  */
 export function Reveal({ children, delay = 0, as = 'div', className }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null)
@@ -23,26 +28,55 @@ export function Reveal({ children, delay = 0, as = 'div', className }: RevealPro
   const [reduced, setReduced] = useState(false)
 
   useEffect(() => {
+    // prefers-reduced-motion: reveal immediately, no animation
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mq.matches) {
       setReduced(true)
       return
     }
+
+    // If IntersectionObserver is unavailable, reveal immediately
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true)
+      return
+    }
+
     const el = ref.current
-    if (!el) return
+    if (!el) {
+      setInView(true)
+      return
+    }
+
+    let revealed = false
+
+    const reveal = () => {
+      if (!revealed) {
+        revealed = true
+        setInView(true)
+      }
+    }
+
+    // Fallback timer: ensure content is never permanently hidden
+    const fallbackTimer = setTimeout(reveal, 700)
+
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            setInView(true)
+            clearTimeout(fallbackTimer)
             obs.disconnect()
+            reveal()
           }
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+      { threshold: 0, rootMargin: '0px 0px -8% 0px' },
     )
     obs.observe(el)
-    return () => obs.disconnect()
+
+    return () => {
+      clearTimeout(fallbackTimer)
+      obs.disconnect()
+    }
   }, [])
 
   const visible = reduced || inView

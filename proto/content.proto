@@ -1,0 +1,51 @@
+syntax = "proto3";
+package content;
+
+message Technology { string text = 1; string color = 2; }
+message Link { string url = 1; bool outbound = 2; }
+
+message Project {
+  string slug = 1;
+  string title = 2;
+  string description = 3;
+  string image = 4;
+  Link link = 5;
+  repeated Technology technologies = 6;
+  int32 order = 7;
+}
+
+message BlogPost {
+  string slug = 1;
+  string title = 2;
+  string date = 3;
+  string description = 4;
+  repeated string tags = 5;
+  string hero_image = 6;
+  bool draft = 7;
+}
+
+message TimelineEntry { string when = 1; string title = 2; string detail = 3; }
+message SpeakingEvent { string title = 1; string description = 2; string url = 3; string date = 4; }
+message Certification { string title = 1; string issuer = 2; string url = 3; }
+
+message About {
+  string bio = 1;
+  repeated TimelineEntry timeline = 2;
+  repeated SpeakingEvent speaking = 3;
+  repeated Certification certifications = 4;
+  repeated string skills = 5;
+}
+
+enum ArtifactKind {
+  ARTIFACT_KIND_UNSPECIFIED = 0;
+  IMAGE = 1; TEXT = 2; ANIM = 3; AVATAR = 4; GLYPH = 5;
+}
+message Artifact {
+  string id = 1;
+  string label = 2;
+  string link = 3;
+  ArtifactKind kind = 4;
+  string image = 5;
+  repeated string lines = 6;
+  string glyph = 7;
+}

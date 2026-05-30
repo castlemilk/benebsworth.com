@@ -1,0 +1,11 @@
+version: v2
+plugins:
+  - local: ./node_modules/.bin/protoc-gen-ts_proto
+    out: lib/gen
+    opt:
+      - esModuleInterop=true
+      - outputServices=false
+      - outputJsonMethods=false
+      - outputEncodeMethods=false
+      - stringEnums=true
+      - snakeToCamel=true

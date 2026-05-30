@@ -75,3 +75,7 @@ yarn-error.log
 
 # brainstorming visual companion
 .superpowers/
+
+# Playwright
+test-results/
+playwright-report/

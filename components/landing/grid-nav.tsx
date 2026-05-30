@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { pack, type Placement } from './packer'
 import { shuffle, mulberry32 } from './rng'
@@ -16,7 +16,20 @@ const COLOR: Record<string, string> = { blog: '#00e0b8', project: '#7c5cff', abo
 
 type Latest = { title: string; href: string } | null
 
+function useReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReduced(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+  return reduced
+}
+
 export function GridNav({ latest }: { latest: Latest }) {
+  const reducedMotion = useReducedMotion()
   const [dims, setDims] = useState<{ cols: number; rows: number }>({ cols: 5, rows: 4 })
   const [seed, setSeed] = useState(1)
   const [cell, setCell] = useState(84)
@@ -36,7 +49,7 @@ export function GridNav({ latest }: { latest: Latest }) {
     let t: number
     const onResize = () => { clearTimeout(t); t = window.setTimeout(fit, 180) }
     window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
+    return () => { window.removeEventListener('resize', onResize); clearTimeout(t) }
   }, [])
 
   const { cols, rows } = dims
@@ -45,8 +58,11 @@ export function GridNav({ latest }: { latest: Latest }) {
   const cx = (c: number) => PAD + c * cell + cell / 2
   const cy = (r: number) => PAD + r * cell + cell / 2
 
-  let placement: Placement | null = null
-  for (let s = seed; !placement && s < seed + 80; s++) placement = pack(cols, rows, WORDS, s)
+  const placement = useMemo<Placement | null>(() => {
+    let p: Placement | null = null
+    for (let s = seed; !p && s < seed + 80; s++) p = pack(cols, rows, WORDS, s)
+    return p
+  }, [cols, rows, seed])
   if (!placement) return null
 
   const occ = new Set(Object.values(placement).flat().map(([c, r]) => `${c},${r}`))
@@ -86,10 +102,10 @@ export function GridNav({ latest }: { latest: Latest }) {
         {gaps.map(([c, r], i) => {
           const a = picks[i]; if (!a) return null
           const external = a.link.startsWith('http')
-          const inner = <ArtifactTile artifact={a} cx={cx(c)} cy={cy(r)} cell={cell} />
+          const inner = <ArtifactTile artifact={a} cx={cx(c)} cy={cy(r)} cell={cell} reducedMotion={reducedMotion} />
           return external
-            ? <a key={i} href={a.link} target="_blank" rel="noreferrer">{inner}</a>
-            : <Link key={i} href={a.link}>{inner}</Link>
+            ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label}>{inner}</a>
+            : <Link key={i} href={a.link} aria-label={a.label}>{inner}</Link>
         })}
       </svg>
       <button onClick={() => setSeed(Math.floor(Math.random() * 1e9))}

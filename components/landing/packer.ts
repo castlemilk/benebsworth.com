@@ -1,5 +1,4 @@
-import { shuffle } from './rng'
-import { mulberry32 } from './rng'
+import { mulberry32, shuffle } from './rng'
 
 export type Cell = [number, number]
 export type Word = { key: string; text: string }

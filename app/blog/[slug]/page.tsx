@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { getPublishedPosts, getPost } from '@/lib/content'
+import { getPublishedPosts, getPost, isPublished } from '@/lib/content'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
@@ -12,13 +12,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const p = getPost(slug)
-  return { title: p?.title ?? 'Post', description: p?.description }
+  if (!p || !isPublished(p)) return { title: 'Not found' }
+  return { title: p.title, description: p.description }
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const p = getPost(slug)
-  if (!p) notFound()
+  if (!p || !isPublished(p)) notFound()
   return (
     <>
       <SiteNav />

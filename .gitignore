@@ -79,3 +79,7 @@ yarn-error.log
 # Playwright
 test-results/
 playwright-report/
+
+# UI review artifacts
+.playwright-mcp/
+/*.png

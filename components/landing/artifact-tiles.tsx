@@ -2,7 +2,13 @@
 import type { Artifact } from '@/lib/gen/content'
 import { ArtifactKind } from '@/lib/gen/content'
 
-type Props = { artifact: Artifact; cx: number; cy: number; cell: number; reducedMotion?: boolean }
+type Props = {
+  artifact: Artifact
+  cx: number
+  cy: number
+  cell: number
+  reducedMotion?: boolean
+}
 
 export function ArtifactTile({ artifact: a, cx, cy, cell, reducedMotion = false }: Props) {
   const s = cell * 0.84
@@ -71,8 +77,6 @@ export function ArtifactTile({ artifact: a, cx, cy, cell, reducedMotion = false 
           <circle cx={cx} cy={cy} r={s * 0.05} fill="#fff" opacity={0.8} />
         </>
       )}
-      <text x={cx} y={y + s + cell * 0.18} textAnchor="middle" fill="#cfcfd6" fontSize={9}
-        className="opacity-0 transition group-hover:opacity-100">{a.label}</text>
     </g>
   )
 }

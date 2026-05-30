@@ -178,7 +178,51 @@ html { color-scheme: dark; }
 }
 
 @keyframes fadeglyph { from { opacity: 0; transform: scale(.12); } to { opacity: 1; transform: scale(1); } }
+
+/* --- snake-draw landing animation --- */
+/* Connector body draws by retracting its dash offset from full length (1) to 0.
+   pathLength is normalised to 1 so no JS measurement is needed; final state is
+   the fully-drawn line, so reduced-motion (animation inert) shows it complete. */
+@keyframes snakedraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+/* The comet head is a short bright dash that rides the same retracting offset,
+   so it stays glued to the draw front by construction. It fades out as it lands. */
+@keyframes snakehead {
+  0%   { stroke-dashoffset: 1; opacity: 0; }
+  8%   { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+/* Each letter snaps in with a crisp scale overshoot as the head passes its cell. */
+@keyframes glyphsettle {
+  0%   { opacity: 0; transform: scale(.45); }
+  60%  { opacity: 1; transform: scale(1.14); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 .word text { transform-box: fill-box; transform-origin: center; }
-.word:hover text { filter: drop-shadow(0 0 12px currentColor); }
+/* Persistent connector: subtle structural line linking the letters. */
+.snake-body {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* pathLength is 1; dasharray:1 + dashoffset:0 = fully drawn (the rest state).
+     The snakedraw keyframe retracts offset 1→0 to reveal it on load. */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  opacity: 0.32;
+  transition: opacity .25s ease, filter .25s ease;
+}
+/* Rest state must be invisible: the head only exists while travelling. Without
+   opacity:0 the backwards fill reverts to a static 6% dash parked on the first
+   letter, and it would also flash on the SSR/reduced-motion first paint. */
+.snake-head { fill: none; stroke-linecap: round; opacity: 0; }
+/* Brighten the connector + glow the glyphs on hover OR keyboard focus. */
+.word:hover text,
+a:focus-visible .word text { filter: drop-shadow(0 0 12px currentColor); }
+.word:hover .snake-body,
+a:focus-visible .word .snake-body {
+  opacity: 0.85;
+  filter: drop-shadow(0 0 6px currentColor);
+}
 
 @keyframes skillmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

@@ -9,8 +9,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 PROFILE="${AWS_PROFILE:-default}"
 
-if [ "$ENV" = "prod" ]; then BUCKET="benebsworth.com"; else BUCKET="next.benebsworth.com"; fi
 DIST_ID="$(cd "infra/envs/$ENV" && terraform output -raw distribution_id)"
+BUCKET="$(cd "infra/envs/$ENV" && terraform output -raw bucket)"
 
 npm run build
 

@@ -15,7 +15,7 @@ module "site" {
   source      = "../../modules/site"
   domain      = "next.benebsworth.com"
   aliases     = ["next.benebsworth.com"]
-  bucket_name = "next.benebsworth.com"
+  bucket_name = "benebsworth-site-staging-299413881343"
   providers = {
     aws           = aws
     aws.us_east_1 = aws.us_east_1

@@ -59,7 +59,7 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-[26rem] [perspective:1000px]">
+    <div className="relative mx-auto w-full max-w-[32rem] [perspective:1000px]">
       {/* ambient bloom behind the frame */}
       <div
         aria-hidden

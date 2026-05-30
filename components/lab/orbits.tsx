@@ -22,7 +22,8 @@ export function Orbits({ size = 320 }: { size?: number }) {
   const r = size * 0.32
   const dot = size * 0.05
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
+    <svg viewBox={`0 0 ${size} ${size}`} role="img"
+      className="h-auto w-full max-w-full" style={{ maxWidth: size }}
       aria-label="Generative orbiting dots animation">
       {[0, 1, 2].map((i) => {
         if (reduced) {

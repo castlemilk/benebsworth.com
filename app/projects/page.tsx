@@ -43,9 +43,9 @@ export default function ProjectsPage() {
     <>
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-5xl px-6 pb-24">
+      <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
         {/* ── Hero ───────────────────────────────────────────────── */}
-        <section className="pt-10 pb-16 md:pt-16">
+        <section className="pt-14 pb-20 md:pt-20">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-project">
               Selected work
@@ -57,7 +57,7 @@ export default function ProjectsPage() {
             className="type-h1 mt-4"
           />
           <Reveal delay={160}>
-            <p className="mt-6 max-w-xl font-sans text-[1.05rem] leading-7 text-fg/70">
+            <p className="mt-7 max-w-2xl font-sans text-[1.2rem] leading-8 text-fg/70">
               Side projects and experiments — places to try new ideas end-to-end, from
               data layer to interface.
             </p>
@@ -78,10 +78,10 @@ export default function ProjectsPage() {
                       src={lead.image}
                       alt={`${lead.title} emblem`}
                       accent={PROJECT}
-                      className="min-h-[16rem] border-b border-white/10 md:border-b-0 md:border-r"
-                      emblemSize={128}
+                      className="min-h-[20rem] border-b border-white/10 md:border-b-0 md:border-r"
+                      emblemSize={168}
                     />
-                    <div className="flex flex-col justify-center p-7 sm:p-9">
+                    <div className="flex flex-col justify-center p-9 sm:p-12">
                       <div className="flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
                         <span className="text-project">Featured</span>
                         <span className="text-muted">·</span>
@@ -90,7 +90,7 @@ export default function ProjectsPage() {
                       <h2 className="type-h2 mt-3">
                         {lead.title}
                       </h2>
-                      <p className="mt-3 max-w-md font-sans text-[0.95rem] leading-7 text-fg/70">
+                      <p className="mt-4 max-w-lg font-sans text-[1.0625rem] leading-7 text-fg/70">
                         {lead.description}
                       </p>
                       <div className="mt-6">
@@ -118,20 +118,20 @@ export default function ProjectsPage() {
                 <Reveal key={p.slug} delay={(i + 1) * 60}>
                   <Link href={`/projects/${p.slug}/`} className="block rounded-2xl">
                     <SpotlightCard accent={PROJECT} className="overflow-hidden">
-                      <div className="grid grid-cols-1 gap-0 sm:grid-cols-[clamp(13rem,32%,18rem)_1fr]">
+                      <div className="grid grid-cols-1 gap-0 sm:grid-cols-[clamp(15rem,34%,21rem)_1fr]">
                         <ProjectEmblem
                           src={p.image}
                           alt={`${p.title} emblem`}
                           accent={PROJECT}
-                          className="min-h-[12rem] border-b border-white/10 sm:border-b-0 sm:border-r"
-                          emblemSize={112}
+                          className="min-h-[15rem] border-b border-white/10 sm:border-b-0 sm:border-r"
+                          emblemSize={140}
                         />
-                        <div className="flex flex-col justify-center p-6 sm:p-7">
-                          <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-muted">
+                        <div className="flex flex-col justify-center p-8 sm:p-9">
+                          <div className="font-mono text-[0.74rem] uppercase tracking-[0.22em] text-muted">
                             Project 0{i + 2}
                           </div>
-                          <h2 className="type-h3 mt-2 text-[1.5rem]">{p.title}</h2>
-                          <p className="mt-2 max-w-md font-sans text-sm leading-6 text-fg/65">
+                          <h2 className="type-h3 mt-2.5 text-[1.75rem]">{p.title}</h2>
+                          <p className="mt-3 max-w-lg font-sans text-base leading-7 text-fg/65">
                             {p.description}
                           </p>
                           <div className="mt-5">

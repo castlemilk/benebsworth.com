@@ -47,9 +47,9 @@ export default function AboutPage() {
     <>
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-5xl px-6 pb-24">
+      <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
         {/* ── Hero — portrait is the focal point, copy framing it ──── */}
-        <section className="grid grid-cols-1 items-center gap-12 pt-12 pb-20 md:grid-cols-[1fr_minmax(20rem,26rem)] md:gap-14 md:pt-20">
+        <section className="grid grid-cols-1 items-center gap-12 pt-14 pb-28 md:grid-cols-[1fr_minmax(24rem,32rem)] md:gap-20 md:pt-24">
           <div className="order-2 text-center md:order-1 md:text-left">
             <Reveal>
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-about">
@@ -64,12 +64,12 @@ export default function AboutPage() {
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mx-auto mt-5 max-w-xl font-mono text-sm text-fg/60 md:mx-0">
+              <p className="mx-auto mt-6 max-w-xl font-mono text-base text-fg/60 md:mx-0">
                 Platform / SRE engineer · Kubernetes, GCP &amp; AWS · Melbourne, Australia
               </p>
             </Reveal>
             <Reveal delay={220}>
-              <p className="mx-auto mt-6 max-w-xl type-body text-fg/85 md:mx-0">
+              <p className="mx-auto mt-7 max-w-2xl type-body text-fg/85 md:mx-0">
                 {about.bio}
               </p>
             </Reveal>
@@ -88,7 +88,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── Resume / Career ────────────────────────────────────── */}
-        <section id="resume" className="pb-20">
+        <section id="resume" className="pb-28">
           <SectionLabel index="01">Career &amp; education</SectionLabel>
           <AnimatedHeading
             text="The track record"
@@ -114,15 +114,15 @@ export default function AboutPage() {
                 </span>
 
                 <Reveal delay={i * 40}>
-                  <SpotlightCard accent={t.color} className="p-5 sm:p-6">
-                    <div className="flex items-start gap-4">
-                      <span className="grid size-12 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] p-2">
+                  <SpotlightCard accent={t.color} className="p-6 sm:p-8">
+                    <div className="flex items-start gap-5">
+                      <span className="grid size-14 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] p-2.5">
                         <img
                           src={t.logo}
                           alt={`${t.company} logo`}
-                          width={32}
-                          height={32}
-                          className="max-h-8 max-w-8 object-contain"
+                          width={40}
+                          height={40}
+                          className="max-h-10 max-w-10 object-contain"
                         />
                       </span>
                       <div className="min-w-0 flex-1">
@@ -135,8 +135,8 @@ export default function AboutPage() {
                           </span>
                           <span className="font-mono text-[0.7rem] text-muted">{t.when}</span>
                         </div>
-                        <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug tracking-[-0.01em]">{t.title}</h3>
-                        <p className="mt-2 font-sans text-sm leading-6 text-fg/65">{t.detail}</p>
+                        <h3 className="mt-2 font-display text-xl font-semibold leading-snug tracking-[-0.01em] sm:text-2xl">{t.title}</h3>
+                        <p className="mt-2.5 font-sans text-base leading-7 text-fg/65">{t.detail}</p>
                         {t.tech.length > 0 && (
                           <ul className="mt-4 flex flex-wrap gap-1.5">
                             {t.tech.map((tech) => (
@@ -164,7 +164,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── Certifications ─────────────────────────────────────── */}
-        <section id="certifications" className="pb-20">
+        <section id="certifications" className="pb-28">
           <SectionLabel index="02">Verified credentials</SectionLabel>
           <AnimatedHeading
             text="The trophy shelf"
@@ -203,17 +203,17 @@ export default function AboutPage() {
                       >
                         <SpotlightCard
                           accent={group.meta.accent}
-                          className="flex h-full items-center gap-4 p-4"
+                          className="flex h-full items-center gap-5 p-5"
                         >
                           <img
                             src={c.badge}
                             alt={`${c.title} badge`}
-                            width={72}
-                            height={72}
-                            className="size-16 shrink-0 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+                            width={88}
+                            height={88}
+                            className="size-20 shrink-0 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
                           />
                           <div className="min-w-0">
-                            <p className="font-display text-sm font-semibold leading-snug tracking-[-0.01em]">{c.title}</p>
+                            <p className="font-display text-base font-semibold leading-snug tracking-[-0.01em]">{c.title}</p>
                             <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-wider text-muted">
                               {group.meta.tag} ↗
                             </p>
@@ -229,7 +229,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── Speaking ───────────────────────────────────────────── */}
-        <section id="speaking" className="pb-20">
+        <section id="speaking" className="pb-28">
           <SectionLabel index="03">On the record</SectionLabel>
           <AnimatedHeading
             text="Talks & speaking"
@@ -337,10 +337,10 @@ export default function AboutPage() {
 function Fact({ value, label, accent }: { value: string; label: string; accent: string }) {
   return (
     <div>
-      <dt className="text-3xl font-bold leading-none" style={{ color: accent }}>
+      <dt className="text-4xl font-bold leading-none sm:text-5xl" style={{ color: accent }}>
         {value}
       </dt>
-      <dd className="mt-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-muted">{label}</dd>
+      <dd className="mt-2 text-[0.78rem] uppercase tracking-[0.18em] text-muted">{label}</dd>
     </div>
   )
 }

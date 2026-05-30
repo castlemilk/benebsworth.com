@@ -39,9 +39,9 @@ export default function BlogPage() {
     <>
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-5xl px-6 pb-24">
+      <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
         {/* ── Hero ───────────────────────────────────────────────── */}
-        <section className="pt-10 pb-16 md:pt-16">
+        <section className="pt-14 pb-20 md:pt-20">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-blog">
               Writing · Platform &amp; cloud-native
@@ -53,7 +53,7 @@ export default function BlogPage() {
             className="type-h1 mt-4"
           />
           <Reveal delay={160}>
-            <p className="mt-6 max-w-xl font-sans text-[1.05rem] leading-7 text-fg/70">
+            <p className="mt-7 max-w-2xl font-sans text-[1.2rem] leading-8 text-fg/70">
               Long-form technical writing on Kubernetes, service mesh, CI/CD and the
               developer experience — worked examples, diagrams, and the occasional algorithm.
             </p>
@@ -75,7 +75,7 @@ export default function BlogPage() {
                   <SpotlightCard accent={topic.accent} className="overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-[0.85fr_1fr]">
                       {/* topic panel */}
-                      <div className="relative grid min-h-[15rem] place-items-center overflow-hidden border-b border-white/10 bg-white/[0.02] md:border-b-0 md:border-r">
+                      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-white/10 bg-white/[0.02] md:border-b-0 md:border-r">
                         <span
                           aria-hidden
                           className="absolute inset-0"
@@ -99,10 +99,10 @@ export default function BlogPage() {
                             src={topic.icon}
                             alt=""
                             aria-hidden
-                            width={88}
-                            height={88}
+                            width={112}
+                            height={112}
                             className="object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                            style={{ width: 88, height: 88 }}
+                            style={{ width: 112, height: 112 }}
                           />
                           <span
                             className="font-mono text-[0.62rem] uppercase tracking-[0.28em]"
@@ -114,7 +114,7 @@ export default function BlogPage() {
                       </div>
 
                       {/* editorial column */}
-                      <div className="flex flex-col justify-center p-7 sm:p-9">
+                      <div className="flex flex-col justify-center p-9 sm:p-12">
                         <div className="flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
                           <span className="text-blog">Latest</span>
                           <span className="text-muted">·</span>
@@ -123,7 +123,7 @@ export default function BlogPage() {
                         <h2 className="type-h2 mt-3">
                           {lead.title}
                         </h2>
-                        <p className="mt-3 max-w-md font-sans text-[0.95rem] leading-7 text-fg/70">
+                        <p className="mt-4 max-w-lg font-sans text-[1.0625rem] leading-7 text-fg/70">
                           {lead.description}
                         </p>
                         {lead.tags.length > 0 && (
@@ -157,7 +157,7 @@ export default function BlogPage() {
                 return (
                   <Reveal key={p.slug} delay={Math.min(i, 6) * 50}>
                     <Link href={`/blog/${p.slug}/`} className="block rounded-xl">
-                      <SpotlightCard accent={topic.accent} className="p-5 sm:p-6">
+                      <SpotlightCard accent={topic.accent} className="p-6 sm:p-8">
                         {/* accent rail */}
                         <span
                           aria-hidden
@@ -172,10 +172,10 @@ export default function BlogPage() {
                                 {fmtDate(p.date)}
                               </time>
                             </div>
-                            <h2 className="font-display text-lg font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover/spot:text-blog sm:text-xl">
+                            <h2 className="font-display text-xl font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover/spot:text-blog sm:text-2xl">
                               {p.title}
                             </h2>
-                            <p className="mt-1.5 max-w-2xl font-sans text-sm leading-6 text-fg/65">
+                            <p className="mt-2 max-w-2xl font-sans text-base leading-7 text-fg/65">
                               {p.description}
                             </p>
                           </div>

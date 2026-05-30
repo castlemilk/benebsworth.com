@@ -21,13 +21,13 @@
      One coherent hierarchy. clamp(min, fluid, max) in rem; paired weights,
      line-heights and tracking are applied via the .type-* utilities below.
      display → h1 → h2 → h3 → body → small/label                          */
-  --text-display: clamp(2.75rem, 1.6rem + 5.6vw, 5rem);
-  --text-h1: clamp(2.25rem, 1.5rem + 3.4vw, 3.75rem);
-  --text-h2: clamp(1.6rem, 1.2rem + 1.7vw, 2.5rem);
-  --text-h3: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
-  --text-body: clamp(1rem, 0.97rem + 0.16vw, 1.0625rem);
-  --text-small: 0.8125rem;
-  --text-label: 0.6875rem;
+  --text-display: clamp(3.25rem, 1.9rem + 6.4vw, 6rem);
+  --text-h1: clamp(2.6rem, 1.7rem + 3.9vw, 4.5rem);
+  --text-h2: clamp(1.85rem, 1.35rem + 2vw, 3rem);
+  --text-h3: clamp(1.3rem, 1.1rem + 0.75vw, 1.65rem);
+  --text-body: clamp(1.0625rem, 1rem + 0.22vw, 1.1875rem);
+  --text-small: 0.875rem;
+  --text-label: 0.72rem;
 
   /* shadcn token mappings */
   --color-background: var(--background);

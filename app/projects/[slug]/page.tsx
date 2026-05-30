@@ -30,7 +30,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     <>
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-4xl px-6 pb-24">
+      <main className="mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8">
         <Reveal>
           <Link
             href="/projects/"
@@ -44,10 +44,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <header className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[1.1fr_1fr] md:items-stretch">
           <Reveal className="order-2 flex flex-col justify-center md:order-1">
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-project">Project</p>
-            <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            <h1 className="type-h1 mt-4">
               {p.title}
             </h1>
-            <p className="mt-4 max-w-xl font-sans text-[1.05rem] leading-7 text-fg/75">
+            <p className="mt-5 max-w-xl font-sans text-[1.2rem] leading-8 text-fg/75">
               {p.description}
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
@@ -74,8 +74,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               src={p.image}
               alt={`${p.title} emblem`}
               accent={PROJECT}
-              className="h-full min-h-[15rem] rounded-2xl border border-white/10"
-              emblemSize={128}
+              className="h-full min-h-[19rem] rounded-2xl border border-white/10"
+              emblemSize={160}
             />
           </Reveal>
         </header>
@@ -87,7 +87,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <span className="h-px flex-1 bg-white/10" />
         </div>
         <Reveal>
-          <article className="mt-6">
+          <article className="mt-8 max-w-[44rem]">
             <MdxContent source={p.body} />
           </article>
         </Reveal>

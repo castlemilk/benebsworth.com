@@ -34,8 +34,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <SiteNav />
-      <main className="mx-auto w-full max-w-3xl px-6 pb-24 pt-10 md:pt-14">
-        {/* ── Post header: topic marker carries the visual, accent rule keys it ── */}
+      <main className="mx-auto w-full max-w-5xl px-6 pb-32 pt-14 sm:px-8 md:pt-20">
+        {/* ── Post header spans the full (wide) page frame — editorial title +
+            accent rule fill the screen. Only the long-form prose below is capped
+            to a comfortable reading measure (~44rem ≈ 74ch). ── */}
         <header className="relative">
           {/* soft topic-tinted wash behind the title */}
           <span
@@ -51,11 +53,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               {fmtDate(p.date)}
             </time>
           </div>
-          <h1 className="type-h1 mt-4 text-[clamp(1.9rem,1.4rem+2.2vw,3rem)]">
+          <h1 className="type-h1 mt-5">
             {p.title}
           </h1>
           {p.description && (
-            <p className="mt-3 max-w-2xl font-sans text-base leading-7 text-fg/65">
+            <p className="mt-4 max-w-2xl font-sans text-lg leading-8 text-fg/65">
               {p.description}
             </p>
           )}
@@ -74,7 +76,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             }}
           />
         </header>
-        <article className="mt-8"><MdxContent source={p.body} slug={p.slug} /></article>
+        <article className="mt-10 max-w-[44rem]"><MdxContent source={p.body} slug={p.slug} /></article>
       </main>
       <SiteFooter />
     </>

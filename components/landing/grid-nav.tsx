@@ -52,9 +52,9 @@ export function GridNav({ latest }: { latest: Latest }) {
       const w = window.innerWidth, h = window.innerHeight
       const cols = w < 560 || h > w ? 4 : 5
       const rows = cols === 4 ? 5 : 4
-      const availW = Math.min(w * 0.92, 660), availH = Math.min(h * 0.58, 560)
+      const availW = Math.min(w * 0.96, 1200), availH = Math.min(h * 0.74, 820)
       const PAD_FRAC = 0.5
-      const c = Math.max(48, Math.floor(Math.min(availW / (cols + PAD_FRAC * 2), availH / (rows + PAD_FRAC * 2))))
+      const c = Math.max(62, Math.floor(Math.min(availW / (cols + PAD_FRAC * 2), availH / (rows + PAD_FRAC * 2))))
       setDims({ cols, rows }); setCell(c)
     }
     fit()
@@ -96,7 +96,7 @@ export function GridNav({ latest }: { latest: Latest }) {
   )
 
   return (
-    <main className="font-mono flex min-h-screen flex-col items-center justify-center gap-6 p-6">
+    <main className="font-mono flex min-h-screen flex-col items-center justify-center gap-4 p-4">
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (

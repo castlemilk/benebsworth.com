@@ -1,3 +1,6 @@
+import { GridNav } from '@/components/landing/grid-nav'
+
+// TODO(phase3): wire getLatestPost from @/lib/content and pass real latest post.
 export default function Home() {
-  return <main className="flex min-h-screen items-center justify-center">landing</main>
+  return <GridNav latest={null} />
 }

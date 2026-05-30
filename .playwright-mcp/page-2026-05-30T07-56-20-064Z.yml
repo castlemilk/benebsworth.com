@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "ben ebsworth" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - navigation [ref=e4]:
+      - link "projects" [ref=e5] [cursor=pointer]:
+        - /url: /projects/
+      - link "blog" [ref=e6] [cursor=pointer]:
+        - /url: /blog/
+      - link "about" [ref=e7] [cursor=pointer]:
+        - /url: /about/
+  - main [ref=e8]:
+    - heading "Projects" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - link "Nutry Aggregated nutritional information and common food search & analytics platform Elasticsearch React AWS Redux Firebase Jest" [ref=e11] [cursor=pointer]:
+        - /url: /projects/nutry/
+        - generic [ref=e12]:
+          - heading "Nutry" [level=2] [ref=e13]
+          - paragraph [ref=e14]: Aggregated nutritional information and common food search & analytics platform
+          - generic [ref=e15]:
+            - generic [ref=e16]: Elasticsearch
+            - generic [ref=e17]: React
+            - generic [ref=e18]: AWS
+            - generic [ref=e19]: Redux
+            - generic [ref=e20]: Firebase
+            - generic [ref=e21]: Jest
+      - link "This Site Lightweight personal site with an animated grid landing, built with Next.js Next.js React Terraform AWS" [ref=e22] [cursor=pointer]:
+        - /url: /projects/this-site/
+        - generic [ref=e23]:
+          - heading "This Site" [level=2] [ref=e24]
+          - paragraph [ref=e25]: Lightweight personal site with an animated grid landing, built with Next.js
+          - generic [ref=e26]:
+            - generic [ref=e27]: Next.js
+            - generic [ref=e28]: React
+            - generic [ref=e29]: Terraform
+            - generic [ref=e30]: AWS
+  - contentinfo [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e33]: © Ben Ebsworth
+      - link "view the old site →" [ref=e34] [cursor=pointer]:
+        - /url: /archive/
+  - alert [ref=e35]

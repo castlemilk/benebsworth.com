@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation "Primary" [ref=e3]:
+      - link "blog" [ref=e24] [cursor=pointer]:
+        - /url: /blog/
+        - generic [ref=e25]:
+          - generic [ref=e26]: B
+          - generic [ref=e27]: L
+          - generic [ref=e28]: O
+          - generic [ref=e29]: G
+      - link "project" [ref=e30] [cursor=pointer]:
+        - /url: /projects/
+        - generic [ref=e31]:
+          - generic [ref=e32]: P
+          - generic [ref=e33]: R
+          - generic [ref=e34]: O
+          - generic [ref=e35]: J
+          - generic [ref=e36]: E
+          - generic [ref=e37]: C
+          - generic [ref=e38]: T
+      - link "about" [ref=e39] [cursor=pointer]:
+        - /url: /about/
+        - generic [ref=e40]:
+          - generic [ref=e41]: A
+          - generic [ref=e42]: B
+          - generic [ref=e43]: O
+          - generic [ref=e44]: U
+          - generic [ref=e45]: T
+      - link "about me →" [ref=e46] [cursor=pointer]:
+        - /url: /about/
+        - generic [ref=e47]:
+          - generic [ref=e50]: be
+          - generic [ref=e51]: about me →
+      - link "the old site →" [ref=e52] [cursor=pointer]:
+        - /url: /archive/
+        - generic [ref=e53]:
+          - generic [ref=e55]: ⌘
+          - generic [ref=e56]: the old site →
+      - link "Nutry →" [ref=e57] [cursor=pointer]:
+        - /url: /projects/nutry/
+        - generic [ref=e61]: Nutry →
+      - link "latest post →" [ref=e62] [cursor=pointer]:
+        - /url: /blog/istio-patterns/
+        - generic [ref=e63]:
+          - generic [ref=e65]:
+            - generic [ref=e66]: ↳ NEW
+            - generic [ref=e67]: Istio
+            - generic [ref=e68]: "\"Service"
+          - generic [ref=e69]: latest post →
+    - button "↻ shuffle" [ref=e70]
+  - alert [ref=e71]

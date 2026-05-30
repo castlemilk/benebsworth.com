@@ -1,0 +1,74 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "ben ebsworth" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - navigation [ref=e4]:
+      - link "projects" [ref=e5] [cursor=pointer]:
+        - /url: /projects/
+      - link "blog" [ref=e6] [cursor=pointer]:
+        - /url: /blog/
+      - link "about" [ref=e7] [cursor=pointer]:
+        - /url: /about/
+  - main [ref=e8]:
+    - heading "Blog" [level=1] [ref=e9]
+    - list [ref=e10]:
+      - listitem [ref=e11]:
+        - link "2020-07-03 Istio \"Service Mesh\" Topologies Overview of some common Istio Service Mesh topologies and configuration examples and diagrams" [ref=e12] [cursor=pointer]:
+          - /url: /blog/istio-patterns/
+          - time [ref=e13]: 2020-07-03
+          - heading "Istio \"Service Mesh\" Topologies" [level=2] [ref=e14]
+          - paragraph [ref=e15]: Overview of some common Istio Service Mesh topologies and configuration examples and diagrams
+      - listitem [ref=e16]:
+        - link "2019-09-23 GKE Auto Scale Down for Fun and Profit How to sleep at night when actively developing on Google Kubernetes Engine (GKE) using Google Cloud Scheduler" [ref=e17] [cursor=pointer]:
+          - /url: /blog/gke-development-auto-scale-down/
+          - time [ref=e18]: 2019-09-23
+          - heading "GKE Auto Scale Down for Fun and Profit" [level=2] [ref=e19]
+          - paragraph [ref=e20]: How to sleep at night when actively developing on Google Kubernetes Engine (GKE) using Google Cloud Scheduler
+      - listitem [ref=e21]:
+        - link "2019-09-21 Kubernetes-centric Continuous Delivery - Part 2 (Tekton Pipelines) An overview of the current kubernetes-native ci/cd ecosystem, With a demonstration of an end-to-end Tekton based workflow for build, test and deployment of a fullstack application" [ref=e22] [cursor=pointer]:
+          - /url: /blog/kubernetes-cicd-part-2/
+          - time [ref=e23]: 2019-09-21
+          - heading "Kubernetes-centric Continuous Delivery - Part 2 (Tekton Pipelines)" [level=2] [ref=e24]
+          - paragraph [ref=e25]: An overview of the current kubernetes-native ci/cd ecosystem, With a demonstration of an end-to-end Tekton based workflow for build, test and deployment of a fullstack application
+      - listitem [ref=e26]:
+        - link "2019-08-22 Kubernetes-centric Continuous Delivery - Part 1 (Developer Experience) How we can get closer to unifying the local developer experience with production-grade kubernetes run-time environments" [ref=e27] [cursor=pointer]:
+          - /url: /blog/kubernetes-cicd-part-1/
+          - time [ref=e28]: 2019-08-22
+          - heading "Kubernetes-centric Continuous Delivery - Part 1 (Developer Experience)" [level=2] [ref=e29]
+          - paragraph [ref=e30]: How we can get closer to unifying the local developer experience with production-grade kubernetes run-time environments
+      - listitem [ref=e31]:
+        - link "2019-05-27 Two Number Sum self-explanation of approach to solving the Two Number Sum problem" [ref=e32] [cursor=pointer]:
+          - /url: /blog/two-number-sum/
+          - time [ref=e33]: 2019-05-27
+          - heading "Two Number Sum" [level=2] [ref=e34]
+          - paragraph [ref=e35]: self-explanation of approach to solving the Two Number Sum problem
+      - listitem [ref=e36]:
+        - link "2019-05-12 Getting started with Tekton Developing basic CI and CD pipelines in Tekton and deploying this both to local and cloud based environments" [ref=e37] [cursor=pointer]:
+          - /url: /blog/getting-started-with-tekton/
+          - time [ref=e38]: 2019-05-12
+          - heading "Getting started with Tekton" [level=2] [ref=e39]
+          - paragraph [ref=e40]: Developing basic CI and CD pipelines in Tekton and deploying this both to local and cloud based environments
+      - listitem [ref=e41]:
+        - link "2019-05-05 Install Minikube Instructions for the installation, upgrade and other customization of a Minikube install on MacOS. As well as a basic example of deploying a service and exposing it for local access" [ref=e42] [cursor=pointer]:
+          - /url: /blog/install-minikube/
+          - time [ref=e43]: 2019-05-05
+          - heading "Install Minikube" [level=2] [ref=e44]
+          - paragraph [ref=e45]: Instructions for the installation, upgrade and other customization of a Minikube install on MacOS. As well as a basic example of deploying a service and exposing it for local access
+      - listitem [ref=e46]:
+        - link "2019-04-20 Common Hooks Collection of common hook usage examples as well as custom implementations" [ref=e47] [cursor=pointer]:
+          - /url: /blog/common-hooks/
+          - time [ref=e48]: 2019-04-20
+          - heading "Common Hooks" [level=2] [ref=e49]
+          - paragraph [ref=e50]: Collection of common hook usage examples as well as custom implementations
+      - listitem [ref=e51]:
+        - link "2019-04-16 Hello World First blog post introducing motivations and goals" [ref=e52] [cursor=pointer]:
+          - /url: /blog/hello-world/
+          - time [ref=e53]: 2019-04-16
+          - heading "Hello World" [level=2] [ref=e54]
+          - paragraph [ref=e55]: First blog post introducing motivations and goals
+  - contentinfo [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: © Ben Ebsworth
+      - link "view the old site →" [ref=e59] [cursor=pointer]:
+        - /url: /archive/
+  - alert [ref=e60]

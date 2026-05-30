@@ -75,7 +75,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               alt={`${p.title} emblem`}
               accent={PROJECT}
               className="h-full min-h-[15rem] rounded-2xl border border-white/10"
-              emblemSize={168}
+              emblemSize={128}
             />
           </Reveal>
         </header>
@@ -87,7 +87,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <span className="h-px flex-1 bg-white/10" />
         </div>
         <Reveal>
-          <article className="prose prose-invert mt-6 max-w-none">
+          <article className="mt-6">
             <MdxContent source={p.body} />
           </article>
         </Reveal>

@@ -79,7 +79,7 @@ export default function ProjectsPage() {
                       alt={`${lead.title} emblem`}
                       accent={PROJECT}
                       className="min-h-[16rem] border-b border-white/10 md:border-b-0 md:border-r"
-                      emblemSize={176}
+                      emblemSize={128}
                     />
                     <div className="flex flex-col justify-center p-7 sm:p-9">
                       <div className="flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
@@ -109,37 +109,41 @@ export default function ProjectsPage() {
             </Reveal>
           )}
 
-          {/* Secondary cards — narrower, emblem on a compact side panel */}
+          {/* Secondary entries — full-width horizontal cards (emblem-left,
+              shorter than the lead) so a single entry never floats in an empty
+              grid cell, while extra entries simply stack with rhythm. */}
           {rest.length > 0 && (
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="mt-6 space-y-6">
               {rest.map((p, i) => (
                 <Reveal key={p.slug} delay={(i + 1) * 60}>
-                  <Link href={`/projects/${p.slug}/`} className="block h-full rounded-2xl">
-                    <SpotlightCard accent={PROJECT} className="flex h-full flex-col overflow-hidden">
-                      <ProjectEmblem
-                        src={p.image}
-                        alt={`${p.title} emblem`}
-                        accent={PROJECT}
-                        className="aspect-[16/9] border-b border-white/10"
-                        emblemSize={104}
-                      />
-                      <div className="flex flex-1 flex-col p-6">
-                        <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-muted">
-                          Project 0{i + 2}
-                        </div>
-                        <h2 className="mt-2 text-2xl font-bold tracking-tight">{p.title}</h2>
-                        <p className="mt-2 font-sans text-sm leading-6 text-fg/65">
-                          {p.description}
-                        </p>
-                        <div className="mt-5">
-                          <TechBadges project={p} />
-                        </div>
-                        <span className="mt-auto inline-flex items-center gap-2 pt-6 font-mono text-sm text-project">
-                          View project
-                          <span className="transition-transform duration-300 group-hover/spot:translate-x-1">
-                            →
+                  <Link href={`/projects/${p.slug}/`} className="block rounded-2xl">
+                    <SpotlightCard accent={PROJECT} className="overflow-hidden">
+                      <div className="grid grid-cols-1 gap-0 sm:grid-cols-[clamp(13rem,32%,18rem)_1fr]">
+                        <ProjectEmblem
+                          src={p.image}
+                          alt={`${p.title} emblem`}
+                          accent={PROJECT}
+                          className="min-h-[12rem] border-b border-white/10 sm:border-b-0 sm:border-r"
+                          emblemSize={112}
+                        />
+                        <div className="flex flex-col justify-center p-6 sm:p-7">
+                          <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-muted">
+                            Project 0{i + 2}
+                          </div>
+                          <h2 className="mt-2 text-2xl font-bold tracking-tight">{p.title}</h2>
+                          <p className="mt-2 max-w-md font-sans text-sm leading-6 text-fg/65">
+                            {p.description}
+                          </p>
+                          <div className="mt-5">
+                            <TechBadges project={p} />
+                          </div>
+                          <span className="mt-6 inline-flex items-center gap-2 font-mono text-sm text-project">
+                            View project
+                            <span className="transition-transform duration-300 group-hover/spot:translate-x-1">
+                              →
+                            </span>
                           </span>
-                        </span>
+                        </div>
                       </div>
                     </SpotlightCard>
                   </Link>

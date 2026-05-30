@@ -34,7 +34,9 @@ export function getAllPosts(): LoadedPost[] {
       title: String(data.title),
       date: String(data.date),
       description: String(data.description ?? ''),
-      tags: (data.tags ?? []) as string[],
+      tags: (data.tags ?? (typeof data.labels === 'string'
+        ? data.labels.split(',').map((t) => t.trim()).filter(Boolean)
+        : data.labels) ?? []) as string[],
       heroImage: String(data.heroImage ?? data.hero_image ?? ''),
       draft: Boolean(data.draft ?? false),
       release: data.release !== false,

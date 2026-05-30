@@ -11,6 +11,10 @@ describe('content loader', () => {
       expect(p.date).toBeTruthy()
     }
   })
+  it('maps labels frontmatter into tags', () => {
+    const posts = getAllPosts()
+    expect(posts.some((p) => p.tags.length > 0)).toBe(true)
+  })
   it('sorts posts newest-first', () => {
     const posts = getAllPosts()
     for (let i = 1; i < posts.length; i++) {

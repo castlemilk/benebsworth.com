@@ -32,6 +32,7 @@ message TimelineEntry {
   string company = 5;
   string color = 6;
   string kind = 7; // "work" or "education"
+  repeated string tech = 8; // technologies used in this role
 }
 message SpeakingEvent {
   string title = 1;

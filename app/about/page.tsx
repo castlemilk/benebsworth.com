@@ -6,6 +6,7 @@ import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { SkillMarquee } from '@/components/motion/skill-marquee'
+import { PortraitHero } from '@/components/about/portrait-hero'
 import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
 
@@ -47,33 +48,33 @@ export default function AboutPage() {
       <SiteNav />
 
       <main className="mx-auto w-full max-w-5xl px-6 pb-24">
-        {/* ── Hero ───────────────────────────────────────────────── */}
-        <section className="grid grid-cols-1 gap-10 pt-10 pb-20 md:grid-cols-[1fr_auto] md:items-end md:gap-16 md:pt-16">
-          <div className="order-2 md:order-1">
+        {/* ── Hero — portrait is the focal point, copy framing it ──── */}
+        <section className="grid grid-cols-1 items-center gap-12 pt-12 pb-20 md:grid-cols-[1fr_minmax(20rem,26rem)] md:gap-14 md:pt-20">
+          <div className="order-2 text-center md:order-1 md:text-left">
             <Reveal>
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-about">
                 Dossier · Platform / SRE
               </p>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mt-4 text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
+              <h1 className="type-display mt-4">
                 Ben
                 <br />
                 Ebsworth
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mt-4 max-w-xl font-mono text-sm text-fg/60">
+              <p className="mx-auto mt-5 max-w-xl font-mono text-sm text-fg/60 md:mx-0">
                 Platform / SRE engineer · Kubernetes, GCP &amp; AWS · Melbourne, Australia
               </p>
             </Reveal>
             <Reveal delay={220}>
-              <p className="mt-6 max-w-xl font-sans text-[1.05rem] leading-7 text-fg/85">
+              <p className="mx-auto mt-6 max-w-xl type-body text-fg/85 md:mx-0">
                 {about.bio}
               </p>
             </Reveal>
             <Reveal delay={300}>
-              <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4 font-mono">
+              <dl className="mt-8 flex flex-wrap justify-center gap-x-10 gap-y-4 font-mono md:justify-start">
                 <Fact value="10+" label="years building" accent={ACCENT.about} />
                 <Fact value={`${certCount}`} label="certifications" accent={ACCENT.blog} />
                 <Fact value={`${talkCount}`} label="talks given" accent={ACCENT.project} />
@@ -82,26 +83,7 @@ export default function AboutPage() {
           </div>
 
           <Reveal delay={120} className="order-1 md:order-2">
-            <div className="relative w-44 sm:w-52 md:w-60">
-              <div
-                aria-hidden
-                className="absolute -inset-3 -z-10 rounded-2xl opacity-60 blur-2xl"
-                style={{
-                  background:
-                    'radial-gradient(60% 60% at 50% 30%, color-mix(in srgb, #ff7a59 35%, transparent), transparent 70%)',
-                }}
-              />
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
-                {/* plain <img>: static-export safe, guarantees /about/ ref in HTML */}
-                <img
-                  src="/about/portrait.svg"
-                  alt="Portrait of Ben Ebsworth"
-                  width={480}
-                  height={480}
-                  className="block aspect-square w-full object-cover"
-                />
-              </div>
-            </div>
+            <PortraitHero accent={ACCENT.about} />
           </Reveal>
         </section>
 
@@ -111,7 +93,7 @@ export default function AboutPage() {
           <AnimatedHeading
             text="The track record"
             as="h2"
-            className="mb-10 text-3xl font-bold tracking-tight sm:text-4xl"
+            className="type-h2 mb-10"
           />
 
           <ol className="relative ml-2 sm:ml-3">
@@ -153,8 +135,25 @@ export default function AboutPage() {
                           </span>
                           <span className="font-mono text-[0.7rem] text-muted">{t.when}</span>
                         </div>
-                        <h3 className="mt-1.5 text-lg font-semibold leading-snug">{t.title}</h3>
+                        <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug tracking-[-0.01em]">{t.title}</h3>
                         <p className="mt-2 font-sans text-sm leading-6 text-fg/65">{t.detail}</p>
+                        {t.tech.length > 0 && (
+                          <ul className="mt-4 flex flex-wrap gap-1.5">
+                            {t.tech.map((tech) => (
+                              <li
+                                key={tech}
+                                className="rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] tracking-tight text-fg/75"
+                                style={{
+                                  borderColor: `color-mix(in srgb, ${t.color} 35%, transparent)`,
+                                  backgroundColor: `color-mix(in srgb, ${t.color} 12%, transparent)`,
+                                  color: `color-mix(in srgb, ${t.color} 78%, white)`,
+                                }}
+                              >
+                                {tech}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </div>
                   </SpotlightCard>
@@ -170,7 +169,7 @@ export default function AboutPage() {
           <AnimatedHeading
             text="The trophy shelf"
             as="h2"
-            className="mb-2 text-3xl font-bold tracking-tight sm:text-4xl"
+            className="type-h2 mb-2"
           />
           <p className="mb-10 max-w-lg font-sans text-sm text-fg/55">
             {certCount}{' '}active certifications across the three clouds &amp; the cloud-native ecosystem.
@@ -214,7 +213,7 @@ export default function AboutPage() {
                             className="size-16 shrink-0 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
                           />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold leading-snug">{c.title}</p>
+                            <p className="font-display text-sm font-semibold leading-snug tracking-[-0.01em]">{c.title}</p>
                             <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-wider text-muted">
                               {group.meta.tag} ↗
                             </p>
@@ -235,7 +234,7 @@ export default function AboutPage() {
           <AnimatedHeading
             text="Talks & speaking"
             as="h2"
-            className="mb-10 text-3xl font-bold tracking-tight sm:text-4xl"
+            className="type-h2 mb-10"
           />
 
           {(() => {
@@ -265,7 +264,7 @@ export default function AboutPage() {
                             </span>
                             <div className="min-w-0">
                               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                <h3 className="text-base font-semibold leading-snug">{e.title}</h3>
+                                <h3 className="font-display text-base font-semibold leading-snug tracking-[-0.01em]">{e.title}</h3>
                                 <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-project">
                                   ▶ Recording
                                 </span>
@@ -304,7 +303,7 @@ export default function AboutPage() {
                               />
                             </span>
                             <div className="min-w-0">
-                              <h3 className="text-base font-semibold leading-snug">{e.title}</h3>
+                              <h3 className="font-display text-base font-semibold leading-snug tracking-[-0.01em]">{e.title}</h3>
                               <p className="mt-1 font-mono text-[0.7rem] text-muted">{e.date}</p>
                               <p className="mt-2 font-sans text-sm leading-6 text-fg/60">
                                 {e.description}

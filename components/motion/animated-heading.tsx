@@ -89,9 +89,9 @@ export function AnimatedHeading({
   const words = text.split(' ')
 
   return (
-    <Tag ref={ref} className={cn('flex flex-wrap', className)}>
+    <Tag ref={ref} className={cn('font-display flex flex-wrap', className)}>
       {words.map((w, i) => (
-        <span key={i} className="inline-flex overflow-hidden pb-1 pr-[0.28em] last:pr-0">
+        <span key={i} className="inline-flex overflow-hidden pb-[0.12em] pr-[0.28em] leading-[1.05] last:pr-0">
           <span
             style={{
               display: 'inline-block',

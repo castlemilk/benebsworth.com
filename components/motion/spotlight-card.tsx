@@ -55,6 +55,10 @@ export function SpotlightCard({
     transition: 'transform 220ms cubic-bezier(0.16,1,0.3,1), border-color 220ms ease, box-shadow 220ms ease',
     borderColor: hover ? 'color-mix(in srgb, var(--accent) 55%, transparent)' : undefined,
     boxShadow: hover ? '0 18px 50px -28px color-mix(in srgb, var(--accent) 60%, transparent)' : undefined,
+    // Lift the hovered (tilted, glowing) card above its siblings so the next
+    // card never paints over its raised edge or hover-revealed labels.
+    position: 'relative',
+    zIndex: hover ? 20 : undefined,
   }
 
   return (

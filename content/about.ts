@@ -12,6 +12,7 @@ export const about: About = {
       company: 'Digio',
       color: '#00e0b8',
       kind: 'work',
+      tech: ['Istio', 'Kubernetes', 'GKE', 'GCP', 'Fluentbit', 'Jenkins', 'Docker', 'Prometheus', 'Python', 'Spinnaker', 'OAuth2', 'JWT', 'Java', 'Groovy', 'Go', 'SpringBoot', 'Postgres', 'Distributed Tracing'],
     },
     {
       when: 'April 2018 — September 2018',
@@ -22,6 +23,7 @@ export const about: About = {
       company: 'Digio',
       color: '#00e0b8',
       kind: 'work',
+      tech: ['Istio', 'Kubernetes', 'Elasticsearch', 'AWS', 'Fluentbit', 'Jenkins', 'Docker', 'Prometheus', 'Python', 'Dex', 'OAuth2', 'Okta', 'Java', 'Groovy', 'SpringBoot'],
     },
     {
       when: 'August 2016 — April 2018',
@@ -32,6 +34,7 @@ export const about: About = {
       company: 'Telstra',
       color: '#7c5cff',
       kind: 'work',
+      tech: ['OpenStack', 'Kafka', 'Jenkins', 'Elasticsearch', 'Ceph', 'Ansible', 'Kafka Streams', 'Prometheus', 'Python', 'Spark', 'Java', 'S3'],
     },
     {
       when: 'February 2015 — July 2016',
@@ -42,6 +45,7 @@ export const about: About = {
       company: 'Telstra',
       color: '#7c5cff',
       kind: 'work',
+      tech: ['Python', 'Ansible', 'Paramiko', 'Cisco', 'Juniper', 'TCP/IP'],
     },
     {
       when: 'November 2014',
@@ -52,6 +56,7 @@ export const about: About = {
       company: 'Monash University',
       color: '#ff7a59',
       kind: 'education',
+      tech: ['Analogue Electronics', 'C++', 'RTOS & Embedded', 'FPGA Design', 'Optimisation', 'MATLAB', 'Telecommunications'],
     },
     {
       when: '2009 — 2013',
@@ -62,6 +67,7 @@ export const about: About = {
       company: 'Monash University',
       color: '#ff7a59',
       kind: 'education',
+      tech: ['Partial DEs', 'Ordinary DEs', 'Statistics', 'Linear Algebra', 'Condensed Matter', 'Quantum Mechanics', 'Particle Physics'],
     },
   ],
   speaking: [

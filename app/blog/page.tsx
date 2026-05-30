@@ -50,7 +50,7 @@ export default function BlogPage() {
           <AnimatedHeading
             text="Notes from the cluster"
             as="h1"
-            className="mt-4 text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl"
+            className="type-h1 mt-4"
           />
           <Reveal delay={160}>
             <p className="mt-6 max-w-xl font-sans text-[1.05rem] leading-7 text-fg/70">
@@ -120,7 +120,7 @@ export default function BlogPage() {
                           <span className="text-muted">·</span>
                           <span className="text-muted">{fmtDate(lead.date)}</span>
                         </div>
-                        <h2 className="mt-3 text-2xl font-bold leading-tight tracking-tight sm:text-3xl">
+                        <h2 className="type-h2 mt-3">
                           {lead.title}
                         </h2>
                         <p className="mt-3 max-w-md font-sans text-[0.95rem] leading-7 text-fg/70">
@@ -172,7 +172,7 @@ export default function BlogPage() {
                                 {fmtDate(p.date)}
                               </time>
                             </div>
-                            <h2 className="text-lg font-semibold leading-snug transition-colors group-hover/spot:text-blog sm:text-xl">
+                            <h2 className="font-display text-lg font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover/spot:text-blog sm:text-xl">
                               {p.title}
                             </h2>
                             <p className="mt-1.5 max-w-2xl font-sans text-sm leading-6 text-fg/65">

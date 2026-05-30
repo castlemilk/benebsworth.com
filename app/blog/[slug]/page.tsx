@@ -51,7 +51,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               {fmtDate(p.date)}
             </time>
           </div>
-          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+          <h1 className="type-h1 mt-4 text-[clamp(1.9rem,1.4rem+2.2vw,3rem)]">
             {p.title}
           </h1>
           {p.description && (

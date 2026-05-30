@@ -1,9 +1,18 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Inter } from 'next/font/google'
+import { JetBrains_Mono, Space_Grotesk, Hanken_Grotesk } from 'next/font/google'
 import './globals.css'
 
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
-const sans = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const display = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
+})
+const sans = Hanken_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://benebsworth.com'),
@@ -14,8 +23,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${mono.variable} ${sans.variable}`}>
-      <body className="font-mono antialiased">{children}</body>
+    <html
+      lang="en"
+      className={`dark ${mono.variable} ${display.variable} ${sans.variable}`}
+    >
+      <body className="font-sans antialiased">{children}</body>
     </html>
   )
 }

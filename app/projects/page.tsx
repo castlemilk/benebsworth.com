@@ -54,7 +54,7 @@ export default function ProjectsPage() {
           <AnimatedHeading
             text="Things I've built"
             as="h1"
-            className="mt-4 text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl"
+            className="type-h1 mt-4"
           />
           <Reveal delay={160}>
             <p className="mt-6 max-w-xl font-sans text-[1.05rem] leading-7 text-fg/70">
@@ -87,7 +87,7 @@ export default function ProjectsPage() {
                         <span className="text-muted">·</span>
                         <span className="text-muted">Project 01</span>
                       </div>
-                      <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                      <h2 className="type-h2 mt-3">
                         {lead.title}
                       </h2>
                       <p className="mt-3 max-w-md font-sans text-[0.95rem] leading-7 text-fg/70">
@@ -130,7 +130,7 @@ export default function ProjectsPage() {
                           <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-muted">
                             Project 0{i + 2}
                           </div>
-                          <h2 className="mt-2 text-2xl font-bold tracking-tight">{p.title}</h2>
+                          <h2 className="type-h3 mt-2 text-[1.5rem]">{p.title}</h2>
                           <p className="mt-2 max-w-md font-sans text-sm leading-6 text-fg/65">
                             {p.description}
                           </p>

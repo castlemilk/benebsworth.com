@@ -15,6 +15,19 @@
 
   --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-sans: var(--font-sans), ui-sans-serif, system-ui;
+  --font-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui;
+
+  /* ── Fluid type scale ───────────────────────────────────────────────
+     One coherent hierarchy. clamp(min, fluid, max) in rem; paired weights,
+     line-heights and tracking are applied via the .type-* utilities below.
+     display → h1 → h2 → h3 → body → small/label                          */
+  --text-display: clamp(2.75rem, 1.6rem + 5.6vw, 5rem);
+  --text-h1: clamp(2.25rem, 1.5rem + 3.4vw, 3.75rem);
+  --text-h2: clamp(1.6rem, 1.2rem + 1.7vw, 2.5rem);
+  --text-h3: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+  --text-body: clamp(1rem, 0.97rem + 0.16vw, 1.0625rem);
+  --text-small: 0.8125rem;
+  --text-label: 0.6875rem;
 
   /* shadcn token mappings */
   --color-background: var(--background);
@@ -91,6 +104,70 @@
     background: radial-gradient(120% 120% at 50% 0%, #131318 0%, var(--color-bg) 60%);
     color: var(--color-fg);
     min-height: 100vh;
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Headings default to the display grotesque. Page headings carry no font
+     class and would otherwise inherit body sans — this catches them. Explicit
+     font-sans / font-mono utilities still win where set (labels, code). */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+}
+
+/* ── Type-scale utilities ────────────────────────────────────────────────
+   Intentional size + weight + line-height + tracking per tier, so every page
+   composes from the same hierarchy instead of ad-hoc per-page values.        */
+@layer components {
+  .type-display {
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    font-weight: 700;
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+  }
+  .type-h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+  .type-h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+  .type-h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+  .type-body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    font-weight: 400;
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+  /* Mono is reserved for metadata labels + code. */
+  .type-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    line-height: 1;
   }
 }
 

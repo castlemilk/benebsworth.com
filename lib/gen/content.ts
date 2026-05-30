@@ -57,6 +57,8 @@ export interface TimelineEntry {
   color: string;
   /** "work" or "education" */
   kind: string;
+  /** technologies used in this role */
+  tech: string[];
 }
 
 export interface SpeakingEvent {

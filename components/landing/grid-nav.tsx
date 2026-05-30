@@ -77,7 +77,7 @@ export function GridNav({ latest }: { latest: Latest }) {
   )
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6">
+    <main className="font-mono flex min-h-screen flex-col items-center justify-center gap-6 p-6">
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (

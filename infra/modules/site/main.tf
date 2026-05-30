@@ -72,6 +72,20 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
+  # S3 returns 403 (not 404) for missing keys under OAC, so map both to 404.html.
+  custom_error_response {
+    error_code            = 403
+    response_code         = 404
+    response_page_path    = "/404.html"
+    error_caching_min_ttl = 10
+  }
+  custom_error_response {
+    error_code            = 404
+    response_code         = 404
+    response_page_path    = "/404.html"
+    error_caching_min_ttl = 10
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"

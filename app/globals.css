@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --bg: #0a0a0c; --fg: #ececf0; }
+html { color-scheme: dark; }
+body {
+  background: radial-gradient(120% 120% at 50% 0%, #131318 0%, var(--bg) 60%);
+  color: var(--fg);
+  min-height: 100vh;
+}
+*:focus-visible { outline: 2px solid #7c5cff; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

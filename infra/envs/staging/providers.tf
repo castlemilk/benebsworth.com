@@ -1,11 +1,11 @@
 provider "aws" {
   region  = "ap-southeast-2"
-  profile = "ben"
+  profile = "default"
 }
 provider "aws" {
   alias   = "us_east_1"
   region  = "us-east-1"
-  profile = "ben"
+  profile = "default"
 }
 provider "dnsimple" {
   account = var.dnsimple_account

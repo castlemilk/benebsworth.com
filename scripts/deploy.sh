@@ -7,6 +7,7 @@ if [ "$ENV" != "prod" ] && [ "$ENV" != "staging" ]; then
 fi
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+PROFILE="${AWS_PROFILE:-default}"
 
 if [ "$ENV" = "prod" ]; then BUCKET="benebsworth.com"; else BUCKET="next.benebsworth.com"; fi
 DIST_ID="$(cd "infra/envs/$ENV" && terraform output -raw distribution_id)"
@@ -40,14 +41,14 @@ fi
 # Pass 2's `--exclude '_next/static/*'` also stops its own --delete from wiping
 # the immutable assets pass 1 just uploaded. The ARCHIVE_EXCLUDE expansion uses
 # the bash 3.2-safe form so an empty array doesn't trip `set -u`.
-aws --profile ben s3 sync out/ "s3://$BUCKET" --delete \
+aws --profile "$PROFILE" s3 sync out/ "s3://$BUCKET" --delete \
   "${ARCHIVE_EXCLUDE[@]+"${ARCHIVE_EXCLUDE[@]}"}" \
   --exclude '*' --include '_next/static/*' \
   --cache-control 'public,max-age=31536000,immutable'
-aws --profile ben s3 sync out/ "s3://$BUCKET" --delete \
+aws --profile "$PROFILE" s3 sync out/ "s3://$BUCKET" --delete \
   "${ARCHIVE_EXCLUDE[@]+"${ARCHIVE_EXCLUDE[@]}"}" \
   --exclude '_next/static/*' \
   --cache-control 'public,max-age=60'
 
-aws --profile ben cloudfront create-invalidation --distribution-id "$DIST_ID" --paths '/*'
+aws --profile "$PROFILE" cloudfront create-invalidation --distribution-id "$DIST_ID" --paths '/*'
 echo "deployed $ENV -> $BUCKET"

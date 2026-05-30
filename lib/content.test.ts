@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getAllPosts, getLatestPost, getAllProjects } from './content'
+import { getAllPosts, getPublishedPosts, getLatestPost, getAllProjects } from './content'
 
 describe('content loader', () => {
   it('loads blog posts with required frontmatter', () => {
@@ -17,8 +17,19 @@ describe('content loader', () => {
       expect(new Date(posts[i - 1].date) >= new Date(posts[i].date)).toBe(true)
     }
   })
-  it('latest post is the newest non-draft', () => {
-    expect(getLatestPost()?.slug).toBe(getAllPosts().filter(p => !p.draft)[0].slug)
+  it('excludes posts with release: false from the published list', () => {
+    const published = getPublishedPosts()
+    expect(published.length).toBeGreaterThan(0)
+    expect(published.length).toBeLessThan(getAllPosts().length)
+    for (const p of published) {
+      expect(p.release).toBe(true)
+      expect(p.draft).toBe(false)
+    }
+    // A known release:false stub must not appear.
+    expect(published.find((p) => p.slug === 'using-helm')).toBeUndefined()
+  })
+  it('latest post is the newest published post', () => {
+    expect(getLatestPost()?.slug).toBe(getPublishedPosts()[0].slug)
   })
   it('loads projects ordered by order field', () => {
     const projs = getAllProjects()

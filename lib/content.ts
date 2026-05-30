@@ -10,7 +10,16 @@ function require_(cond: unknown, msg: string): asserts cond {
   if (!cond) throw new Error(`content validation: ${msg}`)
 }
 
-export type LoadedPost = BlogPost & { body: string }
+export type LoadedPost = BlogPost & { body: string; release: boolean }
+
+/**
+ * A post is published iff it is not an explicit draft and its `release`
+ * frontmatter flag is not `false`. Legacy posts use `release: false` to keep
+ * placeholder/unfinished bodies out of the public site.
+ */
+export function isPublished(p: LoadedPost): boolean {
+  return p.release !== false && !p.draft
+}
 
 export function getAllPosts(): LoadedPost[] {
   const slugs = fs.readdirSync(BLOG_DIR).filter((d) =>
@@ -28,10 +37,16 @@ export function getAllPosts(): LoadedPost[] {
       tags: (data.tags ?? []) as string[],
       heroImage: String(data.heroImage ?? data.hero_image ?? ''),
       draft: Boolean(data.draft ?? false),
+      release: data.release !== false,
       body: content,
     }
   })
   return posts.sort((a, b) => +new Date(b.date) - +new Date(a.date))
+}
+
+/** All published posts, newest-first. */
+export function getPublishedPosts(): LoadedPost[] {
+  return getAllPosts().filter(isPublished)
 }
 
 export function getPost(slug: string): LoadedPost | undefined {
@@ -39,7 +54,7 @@ export function getPost(slug: string): LoadedPost | undefined {
 }
 
 export function getLatestPost(): LoadedPost | null {
-  return getAllPosts().find((p) => !p.draft) ?? null
+  return getPublishedPosts()[0] ?? null
 }
 
 export type LoadedProject = Project & { body: string }

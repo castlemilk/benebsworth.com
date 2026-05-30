@@ -5,7 +5,7 @@ author: Ben Ebsworth
 description: 'Utilising Kustomize in CI/CD workflows to simplify deployment and testing, and enable the representation of different environmental configuration in a streamlined way, demonstrating a number of use-case examples of how to use and extend kustomize'
 labels: technology,kubernetes,developer experience
 keywords: kustomize,kubernetes,CI/CD,CI,CD,GCP,skaffold,tekton,declarative,platform,templating,yaml,google cloud platform,knative,kubectl
-release: true
+release: false
 ---
 ![kustomize](kustomize.jpg)
 

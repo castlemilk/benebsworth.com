@@ -9,6 +9,7 @@ import { SkillMarquee } from '@/components/motion/skill-marquee'
 import { PortraitHero } from '@/components/about/portrait-hero'
 import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
+import { techColor } from '@/lib/tech-colors'
 
 export const metadata: Metadata = { title: 'About' }
 
@@ -139,19 +140,22 @@ export default function AboutPage() {
                         <p className="mt-2.5 font-sans text-base leading-7 text-fg/65">{t.detail}</p>
                         {t.tech.length > 0 && (
                           <ul className="mt-4 flex flex-wrap gap-1.5">
-                            {t.tech.map((tech) => (
-                              <li
-                                key={tech}
-                                className="rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] tracking-tight text-fg/75"
-                                style={{
-                                  borderColor: `color-mix(in srgb, ${t.color} 35%, transparent)`,
-                                  backgroundColor: `color-mix(in srgb, ${t.color} 12%, transparent)`,
-                                  color: `color-mix(in srgb, ${t.color} 78%, white)`,
-                                }}
-                              >
-                                {tech}
-                              </li>
-                            ))}
+                            {t.tech.map((tech) => {
+                              const c = techColor(tech)
+                              return (
+                                <li
+                                  key={tech}
+                                  className="rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] tracking-tight"
+                                  style={{
+                                    borderColor: `color-mix(in srgb, ${c} 45%, transparent)`,
+                                    backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
+                                    color: c,
+                                  }}
+                                >
+                                  {tech}
+                                </li>
+                              )
+                            })}
                           </ul>
                         )}
                       </div>

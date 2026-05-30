@@ -107,8 +107,8 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
           alt="Line-art portrait of Ben Ebsworth"
           width={480}
           height={480}
-          className="absolute inset-0 m-auto block h-[78%] w-[78%] object-contain [filter:invert(1)_drop-shadow(0_0_18px_color-mix(in_srgb,var(--accent)_45%,transparent))] [translate:0_4%]"
-          style={{ transform: 'translateZ(40px)' }}
+          className="absolute inset-0 block h-full w-full object-cover [filter:invert(1)_drop-shadow(0_0_18px_color-mix(in_srgb,var(--accent)_45%,transparent))]"
+          style={{ transform: 'translateZ(40px) scale(1.04)' }}
         />
 
         {/* glare sweep tracking the pointer, above the art */}

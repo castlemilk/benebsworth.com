@@ -1,6 +1,11 @@
 import type { MDXComponents } from 'mdx/types'
+import { IngressFlowBasic, EgressFlowBasic, EgressFlowAdvanced } from './istio-flows'
 
 export const mdxComponents: MDXComponents = {
+  // Interactive Istio flow diagrams (used by the istio-patterns post).
+  IngressFlowBasic,
+  EgressFlowBasic,
+  EgressFlowAdvanced,
   h2: (p) => <h2 className="mt-10 text-2xl font-bold text-fg" {...p} />,
   h3: (p) => <h3 className="mt-8 text-xl font-semibold text-fg" {...p} />,
   p: (p) => <p className="mt-4 leading-7 text-fg/90" {...p} />,

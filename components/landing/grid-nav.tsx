@@ -105,7 +105,7 @@ export function GridNav({ latest }: { latest: Latest }) {
           const inner = <ArtifactTile artifact={a} cx={cx(c)} cy={cy(r)} cell={cell} reducedMotion={reducedMotion} />
           return external
             ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label}>{inner}</a>
-            : <Link key={i} href={a.link} aria-label={a.label}>{inner}</Link>
+            : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label}>{inner}</Link>
         })}
       </svg>
       <button onClick={() => setSeed(Math.floor(Math.random() * 1e9))}

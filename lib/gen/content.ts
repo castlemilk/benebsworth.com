@@ -52,6 +52,11 @@ export interface TimelineEntry {
   when: string;
   title: string;
   detail: string;
+  logo: string;
+  company: string;
+  color: string;
+  /** "work" or "education" */
+  kind: string;
 }
 
 export interface SpeakingEvent {
@@ -59,12 +64,14 @@ export interface SpeakingEvent {
   description: string;
   url: string;
   date: string;
+  image: string;
 }
 
 export interface Certification {
   title: string;
   issuer: string;
   url: string;
+  badge: string;
 }
 
 export interface About {

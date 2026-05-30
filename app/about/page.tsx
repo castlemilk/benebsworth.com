@@ -6,6 +6,8 @@ import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { SkillMarquee } from '@/components/motion/skill-marquee'
+import { YouTube } from '@/components/media/youtube'
+import { youtubeId } from '@/lib/youtube'
 
 export const metadata: Metadata = { title: 'About' }
 
@@ -236,35 +238,87 @@ export default function AboutPage() {
             className="mb-10 text-3xl font-bold tracking-tight sm:text-4xl"
           />
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {about.speaking.map((e, i) => (
-              <Reveal key={i} delay={i * 40}>
-                <a
-                  href={e.url || '#'}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block h-full rounded-xl"
-                >
-                  <SpotlightCard accent={ACCENT.project} className="flex h-full gap-4 p-5">
-                    <span className="grid size-14 shrink-0 place-items-center self-start rounded-lg border border-white/10 bg-white/[0.04] p-2.5">
-                      <img
-                        src={e.image}
-                        alt={`${e.title} logo`}
-                        width={40}
-                        height={40}
-                        className="max-h-9 max-w-9 object-contain"
-                      />
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="text-base font-semibold leading-snug">{e.title}</h3>
-                      <p className="mt-1 font-mono text-[0.7rem] text-muted">{e.date}</p>
-                      <p className="mt-2 font-sans text-sm leading-6 text-fg/60">{e.description}</p>
-                    </div>
-                  </SpotlightCard>
-                </a>
-              </Reveal>
-            ))}
-          </div>
+          {(() => {
+            const withVideo = about.speaking
+              .map((e) => ({ e, vid: youtubeId(e.url) }))
+              .filter((x): x is { e: typeof x.e; vid: string } => x.vid !== null)
+            const noVideo = about.speaking.filter((e) => youtubeId(e.url) === null)
+
+            return (
+              <>
+                {/* Talks with recordings — the embed is the hero of each card */}
+                {withVideo.length > 0 && (
+                  <div className="mb-5 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    {withVideo.map(({ e, vid }, i) => (
+                      <Reveal key={`v-${i}`} delay={i * 60}>
+                        <SpotlightCard accent={ACCENT.project} className="flex h-full flex-col p-4">
+                          <YouTube id={vid} title={e.title} accent={ACCENT.project} />
+                          <div className="flex items-start gap-3 px-1 pt-4">
+                            <span className="grid size-11 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] p-2">
+                              <img
+                                src={e.image}
+                                alt={`${e.title} logo`}
+                                width={32}
+                                height={32}
+                                className="max-h-7 max-w-7 object-contain"
+                              />
+                            </span>
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                <h3 className="text-base font-semibold leading-snug">{e.title}</h3>
+                                <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-project">
+                                  ▶ Recording
+                                </span>
+                              </div>
+                              <p className="mt-1 font-mono text-[0.7rem] text-muted">{e.date}</p>
+                              <p className="mt-2 font-sans text-sm leading-6 text-fg/60">
+                                {e.description}
+                              </p>
+                            </div>
+                          </div>
+                        </SpotlightCard>
+                      </Reveal>
+                    ))}
+                  </div>
+                )}
+
+                {/* Remaining talks — logo + external link card */}
+                {noVideo.length > 0 && (
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    {noVideo.map((e, i) => (
+                      <Reveal key={`n-${i}`} delay={i * 40}>
+                        <a
+                          href={e.url || '#'}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block h-full rounded-xl"
+                        >
+                          <SpotlightCard accent={ACCENT.project} className="flex h-full gap-4 p-5">
+                            <span className="grid size-14 shrink-0 place-items-center self-start rounded-lg border border-white/10 bg-white/[0.04] p-2.5">
+                              <img
+                                src={e.image}
+                                alt={`${e.title} logo`}
+                                width={40}
+                                height={40}
+                                className="max-h-9 max-w-9 object-contain"
+                              />
+                            </span>
+                            <div className="min-w-0">
+                              <h3 className="text-base font-semibold leading-snug">{e.title}</h3>
+                              <p className="mt-1 font-mono text-[0.7rem] text-muted">{e.date}</p>
+                              <p className="mt-2 font-sans text-sm leading-6 text-fg/60">
+                                {e.description}
+                              </p>
+                            </div>
+                          </SpotlightCard>
+                        </a>
+                      </Reveal>
+                    ))}
+                  </div>
+                )}
+              </>
+            )
+          })()}
         </section>
 
         {/* ── Skills ─────────────────────────────────────────────── */}

@@ -30,7 +30,7 @@ describe('content loader', () => {
       expect(p.draft).toBe(false)
     }
     // A known release:false stub must not appear.
-    expect(published.find((p) => p.slug === 'using-helm')).toBeUndefined()
+    expect(published.find((p) => p.slug === 'serverless-benchmarks')).toBeUndefined()
   })
   it('latest post is the newest published post', () => {
     expect(getLatestPost()?.slug).toBe(getPublishedPosts()[0].slug)

@@ -1,0 +1,28 @@
+import { describe, it, expect } from 'vitest'
+import { getAllPosts, getLatestPost, getAllProjects } from './content'
+
+describe('content loader', () => {
+  it('loads blog posts with required frontmatter', () => {
+    const posts = getAllPosts()
+    expect(posts.length).toBeGreaterThan(0)
+    for (const p of posts) {
+      expect(p.slug).toBeTruthy()
+      expect(p.title).toBeTruthy()
+      expect(p.date).toBeTruthy()
+    }
+  })
+  it('sorts posts newest-first', () => {
+    const posts = getAllPosts()
+    for (let i = 1; i < posts.length; i++) {
+      expect(new Date(posts[i - 1].date) >= new Date(posts[i].date)).toBe(true)
+    }
+  })
+  it('latest post is the newest non-draft', () => {
+    expect(getLatestPost()?.slug).toBe(getAllPosts().filter(p => !p.draft)[0].slug)
+  })
+  it('loads projects ordered by order field', () => {
+    const projs = getAllProjects()
+    expect(projs.length).toBeGreaterThan(0)
+    for (let i = 1; i < projs.length; i++) expect(projs[i - 1].order <= projs[i].order).toBe(true)
+  })
+})

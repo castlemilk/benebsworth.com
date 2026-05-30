@@ -1,6 +1,7 @@
 import { GridNav } from '@/components/landing/grid-nav'
+import { getLatestPost } from '@/lib/content'
 
-// TODO(phase3): wire getLatestPost from @/lib/content and pass real latest post.
 export default function Home() {
-  return <GridNav latest={null} />
+  const latest = getLatestPost()
+  return <GridNav latest={latest ? { title: latest.title, href: `/blog/${latest.slug}/` } : null} />
 }

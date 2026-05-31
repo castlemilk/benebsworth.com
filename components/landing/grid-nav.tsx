@@ -6,6 +6,7 @@ import { shuffle, mulberry32 } from './rng'
 import { ARTIFACTS } from './artifacts'
 import { ArtifactTile } from './artifact-tiles'
 import { HomeEmbed, homeEmbedSlug } from '@/components/lab/home-embed'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 
 const WORDS = [
   { key: 'blog', text: 'BLOG' },
@@ -104,7 +105,8 @@ export function GridNav({ latest }: { latest: Latest }) {
   )
 
   return (
-    <main className="font-mono flex min-h-screen flex-col items-center gap-4 p-4 sm:p-6">
+    <main className="font-mono relative flex min-h-screen flex-col items-center gap-4 p-4 sm:p-6">
+      <ThemeToggle className="absolute right-4 top-4" />
       <header className="w-full pt-2 text-center sm:pt-4">
         <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg sm:text-4xl">BEN EBSWORTH</h1>
         <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem]">INFRA | SOFTWARE | HARDWARE</p>

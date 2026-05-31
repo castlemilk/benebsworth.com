@@ -162,13 +162,18 @@ export function FlowDiagram({
                   alt={layer.alt}
                   loading="lazy"
                   aria-hidden={!active}
-                  className="absolute transition-opacity duration-500 ease-out motion-reduce:transition-none"
+                  className="absolute motion-reduce:!transition-none"
                   style={{
                     top: `${layer.top}%`,
                     left: '50%',
                     width: `${layer.width}%`,
                     transform: 'translateX(-50%)',
                     opacity: active ? 1 : 0,
+                    // Wipe the layer in left→right (the diagram's flow direction)
+                    // so it reads as "drawn" rather than popping on.
+                    clipPath: active ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)',
+                    transition:
+                      'opacity 320ms ease-out, clip-path 760ms cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                 />
               )
@@ -222,8 +227,9 @@ export function FlowDiagram({
           </div>
 
           {/* Every step's panel is rendered into the DOM (content preserved /
-              static-prerendered); inactive ones are hidden via CSS. */}
-          <div className="mt-4 min-h-0 flex-1">
+              static-prerendered); inactive ones are hidden via CSS. Fixed height
+              + internal scroll so stepping never resizes the figure (no jank). */}
+          <div className="mt-4 h-72 overflow-y-auto pr-1">
             {steps.map((s, si) => {
               const stepBlocks = parseBlocks(s.description)
               return (

@@ -15,7 +15,7 @@ export const about: About = {
       tech: ['Go', 'TypeScript', 'Kubernetes', 'EKS', 'GKE', 'Istio', 'Prometheus', 'CI/CD', 'Spinnaker'],
     },
     {
-      when: 'October 2020 — April 2024',
+      when: 'October 2020 — December 2023',
       title: 'Senior Site Reliability Engineer · Atlassian',
       detail:
         "Site reliability engineering across Atlassian's platform — incident response and root-cause analysis, defining SLIs/SLOs, and building the observability for large-scale, high-throughput services.",

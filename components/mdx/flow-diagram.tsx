@@ -89,7 +89,7 @@ function renderInline(text: string) {
       return (
         <code
           key={i}
-          className="rounded bg-white/10 px-1 py-0.5 font-mono text-[0.8em] text-blog"
+          className="rounded bg-fg/10 px-1 py-0.5 font-mono text-[0.8em] text-blog"
         >
           {tok.slice(1, -1)}
         </code>
@@ -136,15 +136,15 @@ export function FlowDiagram({
 
   return (
     <figure
-      className="not-prose my-8 overflow-hidden rounded-lg border border-white/10 bg-[#0d0d12]"
+      className="not-prose my-8 overflow-hidden rounded-lg border border-[var(--color-border)] bg-surface"
       aria-roledescription="interactive diagram"
       aria-label={label}
     >
       <div className="grid gap-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         {/* Diagram stage */}
-        <div className="flex items-center justify-center border-b border-white/10 bg-[#08080b] p-5 md:border-b-0 md:border-r">
+        <div className="flex items-center justify-center border-b border-[var(--color-border)] p-5 md:border-b-0 md:border-r">
           <div
-            className="relative w-full max-w-[360px]"
+            className="relative w-full max-w-[360px] rounded-xl border border-black/10 bg-[var(--color-diagram-paper)]"
             style={{ aspectRatio: `${width} / ${height}` }}
           >
             <img
@@ -188,7 +188,7 @@ export function FlowDiagram({
                 onClick={() => setCurrent((c) => Math.max(0, c - 1))}
                 disabled={current === 0}
                 aria-label="Previous step"
-                className="rounded border border-white/15 px-2.5 py-1 font-mono text-xs text-fg/80 transition-colors hover:border-blog hover:text-blog disabled:cursor-not-allowed disabled:opacity-30"
+                className="rounded border border-[var(--color-border)] px-2.5 py-1 font-mono text-xs text-fg/80 transition-colors hover:border-blog hover:text-blog disabled:cursor-not-allowed disabled:opacity-30"
               >
                 &larr; Prev
               </button>
@@ -197,7 +197,7 @@ export function FlowDiagram({
                 onClick={() => setCurrent((c) => Math.min(last, c + 1))}
                 disabled={current === last}
                 aria-label="Next step"
-                className="rounded border border-white/15 px-2.5 py-1 font-mono text-xs text-fg/80 transition-colors hover:border-blog hover:text-blog disabled:cursor-not-allowed disabled:opacity-30"
+                className="rounded border border-[var(--color-border)] px-2.5 py-1 font-mono text-xs text-fg/80 transition-colors hover:border-blog hover:text-blog disabled:cursor-not-allowed disabled:opacity-30"
               >
                 Next &rarr;
               </button>
@@ -215,7 +215,7 @@ export function FlowDiagram({
                 aria-label={`Step ${i + 1}: ${s.header}`}
                 onClick={() => setCurrent(i)}
                 className={`h-1.5 w-6 rounded-full transition-colors ${
-                  i === current ? 'bg-blog' : i < current ? 'bg-blog/40' : 'bg-white/15'
+                  i === current ? 'bg-blog' : i < current ? 'bg-blog/40' : 'bg-fg/15'
                 }`}
               />
             ))}
@@ -234,7 +234,7 @@ export function FlowDiagram({
                       block.kind === 'code' ? (
                         <pre
                           key={i}
-                          className="mt-3 overflow-x-auto rounded-md border border-white/10 bg-black/60 p-3 font-mono text-[0.78rem] leading-5 text-fg/90 first:mt-0"
+                          className="mt-3 overflow-x-auto rounded-md border border-[var(--color-border)] bg-surface-2 p-3 font-mono text-[0.78rem] leading-5 text-fg first:mt-0"
                         >
                           <code>{block.text}</code>
                         </pre>

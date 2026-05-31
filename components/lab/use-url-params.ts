@@ -12,6 +12,9 @@ export function useUrlParams(defaults: Params, specs: ControlSpec[]) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Cancel any pending URL write on unmount so a stale debounce can't fire on the next route.
+  useEffect(() => () => clearTimeout(timer.current), [])
+
   const sync = useCallback((p: Params) => {
     clearTimeout(timer.current)
     timer.current = window.setTimeout(() => {
@@ -24,7 +27,11 @@ export function useUrlParams(defaults: Params, specs: ControlSpec[]) {
     setParams((prev) => { const nextP = { ...prev, [key]: value }; sync(nextP); return nextP })
   }, [sync])
 
-  const reset = useCallback(() => { setParams(defaults); window.history.replaceState(null, '', window.location.pathname) }, [defaults])
+  const reset = useCallback(() => {
+    clearTimeout(timer.current)
+    setParams(defaults)
+    window.history.replaceState(null, '', window.location.pathname)
+  }, [defaults])
 
   const permalink = useCallback(() => `${window.location.origin}${window.location.pathname}?${encodeParams(params)}`, [params])
 

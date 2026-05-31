@@ -69,3 +69,11 @@ message Artifact {
   repeated string lines = 6;
   string glyph = 7;
 }
+
+message LabEffect {
+  string slug = 1;
+  string title = 2;
+  string blurb = 3;
+  repeated string tags = 4;
+  bool home_embed_safe = 5;
+}

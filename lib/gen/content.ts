@@ -93,3 +93,11 @@ export interface Artifact {
   lines: string[];
   glyph: string;
 }
+
+export interface LabEffect {
+  slug: string;
+  title: string;
+  blurb: string;
+  tags: string[];
+  homeEmbedSafe: boolean;
+}

@@ -6,12 +6,17 @@
 
 /* Custom site theme tokens (dark / mono / neon) */
 @theme inline {
-  --color-bg: #0a0a0c;
-  --color-fg: #ececf0;
-  --color-muted: #5a5a64;
-  --color-blog: #00e0b8;
-  --color-project: #7c5cff;
-  --color-about: #ff7a59;
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-dot: var(--dot);
+  --color-stage: var(--stage);
+  --color-diagram-paper: var(--diagram-paper);
+  --color-blog: var(--blog);
+  --color-project: var(--project);
+  --color-about: var(--about);
 
   --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-sans: var(--font-sans), ui-sans-serif, system-ui;
@@ -73,6 +78,20 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
+
+  /* site brand tokens — light */
+  --bg: #f6f6f9;
+  --fg: #16161a;
+  --muted: #5d5d68;
+  --surface: #ffffff;
+  --surface-2: #eeeef2;
+  --dot: #c9c9d2;
+  --stage: #0c0c10;          /* dark "screen" base for canvases/plate, both themes */
+  --diagram-paper: #f4f5f8;  /* light schematic panel, both themes */
+  --blog: #0a7d6a;
+  --project: #5b3fd6;
+  --about: #d2532c;
+  color-scheme: light;
 }
 
 .dark {
@@ -94,6 +113,20 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+
+  /* site brand tokens — dark */
+  --bg: #0a0a0c;
+  --fg: #ececf0;
+  --muted: #8a8a94;
+  --surface: #14141b;
+  --surface-2: #1a1a23;
+  --dot: #26262d;
+  --stage: #0c0c10;
+  --diagram-paper: #f4f5f8;
+  --blog: #00e0b8;
+  --project: #7c5cff;
+  --about: #ff7a59;
+  color-scheme: dark;
 }
 
 @layer base {
@@ -101,7 +134,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    background: radial-gradient(120% 120% at 50% 0%, #131318 0%, var(--color-bg) 60%);
+    background:
+      radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--fg) 4%, var(--bg)) 0%, var(--bg) 60%);
     color: var(--color-fg);
     min-height: 100vh;
     font-family: var(--font-sans);
@@ -171,7 +205,9 @@
   }
 }
 
-html { color-scheme: dark; }
+.dark body {
+  background: radial-gradient(120% 120% at 50% 0%, #131318 0%, var(--bg) 60%);
+}
 *:focus-visible { outline: 2px solid #7c5cff; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }

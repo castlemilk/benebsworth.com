@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono, Space_Grotesk, Hanken_Grotesk } from 'next/font/google'
 import './globals.css'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
 const display = Space_Grotesk({
@@ -25,9 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`dark ${mono.variable} ${display.variable} ${sans.variable}`}
+      suppressHydrationWarning
+      className={`${mono.variable} ${display.variable} ${sans.variable}`}
     >
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   )
 }

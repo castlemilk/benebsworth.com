@@ -32,7 +32,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     let raf = 0
     let last = -Infinity
     let visible = true
-    let onscreen = true
+    let onscreen = false // IntersectionObserver drives the first start → off-screen canvases run zero frames
 
     function size() {
       const r = wrap!.getBoundingClientRect()
@@ -67,8 +67,8 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     const onVis = () => { visible = !document.hidden; visible ? start() : stop() }
     document.addEventListener('visibilitychange', onVis)
 
-    if (reduce) renderer.step(0, paramsRef.current)
-    else start()
+    // Motion: the IntersectionObserver callback fires the first start() once on-screen.
+    // Reduced motion: size() already painted the single static frame; no loop.
 
     return () => {
       stop(); ro.disconnect(); io.disconnect()

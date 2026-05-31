@@ -7,6 +7,6 @@ export function LabCard({ slug }: { slug: string }) {
   return (
     <EffectCanvas effect={e.module} params={e.defaults} quality="mini"
       ariaLabel={`${e.title} preview`}
-      className="aspect-[16/9] w-full overflow-hidden rounded-xl border border-white/5 bg-[#0a0a0c]" />
+      className="aspect-[16/9] w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-stage)]" />
   )
 }

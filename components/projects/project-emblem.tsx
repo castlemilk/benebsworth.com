@@ -29,7 +29,7 @@ export function ProjectEmblem({
   return (
     <div
       className={cn(
-        'relative grid place-items-center overflow-hidden bg-white/[0.02]',
+        'relative grid place-items-center overflow-hidden bg-surface',
         className,
       )}
     >

@@ -29,7 +29,7 @@ function SectionLabel({ index, children }: { index: string; children: React.Reac
     <div className="mb-6 flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
       <span className="text-about">{index}</span>
       <span>{children}</span>
-      <span className="h-px flex-1 bg-white/10" />
+      <span className="h-px flex-1 bg-[var(--color-border)]" />
     </div>
   )
 }
@@ -101,14 +101,14 @@ export default function AboutPage() {
             {/* vertical spine */}
             <span
               aria-hidden
-              className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-white/5 via-white/15 to-white/5"
+              className="absolute left-[11px] top-2 bottom-2 w-px bg-[var(--color-border)]"
             />
             {about.timeline.map((t, i) => (
               <li key={i} className="relative pl-10 pb-8 last:pb-0 sm:pl-12">
                 {/* spine node, colored per entry */}
                 <span
                   aria-hidden
-                  className="absolute left-[3px] top-5 grid size-4 place-items-center rounded-full border border-white/20 bg-bg sm:left-[4px]"
+                  className="absolute left-[3px] top-5 grid size-4 place-items-center rounded-full border border-[var(--color-border)] bg-bg sm:left-[4px]"
                   style={{ boxShadow: `0 0 0 3px color-mix(in srgb, ${t.color} 18%, transparent)` }}
                 >
                   <span className="size-1.5 rounded-full" style={{ backgroundColor: t.color }} />
@@ -117,7 +117,7 @@ export default function AboutPage() {
                 <Reveal delay={i * 40}>
                   <SpotlightCard accent={t.color} className="p-6 sm:p-8">
                     <div className="flex items-start gap-5">
-                      <span className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] p-3">
+                      <span className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-surface p-3">
                         <img
                           src={t.logo}
                           alt={`${t.company} logo`}
@@ -257,7 +257,7 @@ export default function AboutPage() {
                         <SpotlightCard accent={ACCENT.project} className="flex h-full flex-col p-4">
                           <YouTube id={vid} title={e.title} accent={ACCENT.project} />
                           <div className="flex items-start gap-3 px-1 pt-4">
-                            <span className="grid size-11 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] p-2">
+                            <span className="grid size-11 shrink-0 place-items-center rounded-lg border border-[var(--color-border)] bg-surface p-2">
                               <img
                                 src={e.image}
                                 alt={`${e.title} logo`}
@@ -297,7 +297,7 @@ export default function AboutPage() {
                           className="block h-full rounded-xl"
                         >
                           <SpotlightCard accent={ACCENT.project} className="flex h-full gap-4 p-5">
-                            <span className="grid size-14 shrink-0 place-items-center self-start rounded-lg border border-white/10 bg-white/[0.04] p-2.5">
+                            <span className="grid size-14 shrink-0 place-items-center self-start rounded-lg border border-[var(--color-border)] bg-surface p-2.5">
                               <img
                                 src={e.image}
                                 alt={`${e.title} logo`}

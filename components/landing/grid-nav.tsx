@@ -14,7 +14,7 @@ const WORDS = [
   { key: 'about', text: 'ABOUT' },
 ]
 const HREF: Record<string, string> = { blog: '/blog/', project: '/projects/', about: '/about/' }
-const COLOR: Record<string, string> = { blog: '#00e0b8', project: '#7c5cff', about: '#ff7a59' }
+const COLOR: Record<string, string> = { blog: 'var(--color-blog)', project: 'var(--color-project)', about: 'var(--color-about)' }
 
 /* Snake-draw timing. The body of each word draws over BODY_DUR at constant
  * (linear) speed; words cascade with a START_STAGGER that is < BODY_DUR so they
@@ -115,7 +115,7 @@ export function GridNav({ latest }: { latest: Latest }) {
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (
-            <circle key={`${c}-${r}`} cx={cx(c)} cy={cy(r)} r={Math.max(1.6, cell * 0.024)} fill="#26262d" opacity={0.5} />
+            <circle key={`${c}-${r}`} cx={cx(c)} cy={cy(r)} r={Math.max(1.6, cell * 0.024)} fill="var(--color-dot)" opacity={0.5} />
           )),
         )}
         {WORDS.map((w) => {
@@ -196,7 +196,7 @@ export function GridNav({ latest }: { latest: Latest }) {
             return (
               <Link key={i} href={`/lab/${homeEmbedSlug(embedIndex)}/`} aria-label="generative lab" prefetch={false} {...active}>
                 <g className="group cursor-pointer">
-                  <rect x={x} y={y} width={s} height={s} rx={rad} className="fill-[#0d0d12] stroke-white/10 [stroke-width:1.5] transition group-hover:stroke-[#5a5a66]" />
+                  <rect x={x} y={y} width={s} height={s} rx={rad} className="fill-[var(--color-surface)] stroke-[var(--color-border)] [stroke-width:1.5] transition group-hover:stroke-[var(--color-muted)]" />
                   <foreignObject x={x} y={y} width={s} height={s}>
                     <div style={{ width: '100%', height: '100%', borderRadius: `${rad}px`, overflow: 'hidden' }}>
                       <HomeEmbed index={embedIndex} px={s} />
@@ -218,7 +218,7 @@ export function GridNav({ latest }: { latest: Latest }) {
           const s = cell * 0.84
           return (
             <text key={`lbl-${i}`} x={cx(c)} y={cy(r) + s / 2 + cell * 0.2}
-              textAnchor="middle" fill="#e6e6ee" fontSize={Math.max(9, Math.round(cell * 0.13))}
+              textAnchor="middle" fill="var(--color-fg)" fontSize={Math.max(9, Math.round(cell * 0.13))}
               style={{ pointerEvents: 'none' }}>{a.label}</text>
           )
         })}

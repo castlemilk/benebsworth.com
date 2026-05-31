@@ -74,7 +74,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               src={p.image}
               alt={`${p.title} emblem`}
               accent={PROJECT}
-              className="h-full min-h-[19rem] rounded-2xl border border-white/10"
+              className="h-full min-h-[19rem] rounded-2xl border border-[var(--color-border)]"
               emblemSize={160}
             />
           </Reveal>
@@ -84,7 +84,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="mt-12 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
           <span className="text-project">02</span>
           <span>Writeup</span>
-          <span className="h-px flex-1 bg-white/10" />
+          <span className="h-px flex-1 bg-[var(--color-border)]" />
         </div>
         <Reveal>
           <article className="mt-8 max-w-[44rem]">

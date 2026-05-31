@@ -11,12 +11,12 @@ type Props = {
 
 export function Controls({ specs, params, onChange, onReset, onCopy }: Props) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 font-mono">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-surface p-5 font-mono">
       <div className="mb-4 flex items-center justify-between">
         <span className="type-label text-muted">knobs</span>
         <div className="flex gap-2">
-          <button onClick={onCopy} className="rounded-md border border-white/10 px-2 py-1 text-xs text-fg/70 hover:text-fg">⧉ copy</button>
-          <button onClick={onReset} className="rounded-md border border-white/10 px-2 py-1 text-xs text-fg/70 hover:text-fg">↺ reset</button>
+          <button onClick={onCopy} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">⧉ copy</button>
+          <button onClick={onReset} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">↺ reset</button>
         </div>
       </div>
       <div className="space-y-3">
@@ -37,7 +37,7 @@ export function Controls({ specs, params, onChange, onReset, onCopy }: Props) {
               <input type="color" value={String(params[s.key])} onChange={(e) => onChange(s.key, e.target.value)} className="h-6 w-10 rounded bg-transparent" />
             )}
             {s.type === 'select' && (
-              <select value={String(params[s.key])} onChange={(e) => onChange(s.key, e.target.value)} className="rounded bg-white/5 px-2 py-1 text-fg">
+              <select value={String(params[s.key])} onChange={(e) => onChange(s.key, e.target.value)} className="rounded bg-surface-2 px-2 py-1 text-fg">
                 {s.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             )}

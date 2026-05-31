@@ -273,7 +273,7 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
         onPointerEnter={onEnter}
         onPointerLeave={onLeave}
         style={frameStyle}
-        className="group relative isolate aspect-square overflow-hidden rounded-[1.75rem] border border-white/12 bg-[radial-gradient(120%_120%_at_30%_0%,#16161d,#0c0c10)] will-change-transform"
+        className="group relative isolate aspect-square overflow-hidden rounded-[1.75rem] border border-white/12 bg-[radial-gradient(120%_120%_at_30%_0%,color-mix(in_srgb,var(--color-fg)_6%,var(--color-stage)),var(--color-stage))] will-change-transform"
       >
         {/* line-art portrait — the default visible layer. Recolored from black
             strokes to a bright accent so it reads against the dark frame. */}

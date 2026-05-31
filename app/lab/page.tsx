@@ -19,11 +19,11 @@ export default function LabPage() {
         </p>
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {LAB_EFFECTS.map((e) => (
-            <Link key={e.slug} href={`/lab/${e.slug}/`} className="group min-w-0 rounded-2xl border border-white/10 bg-white/[0.02] p-4 transition hover:border-white/25">
+            <Link key={e.slug} href={`/lab/${e.slug}/`} className="group min-w-0 rounded-2xl border border-[var(--color-border)] bg-surface p-4 transition hover:border-[var(--color-muted)]">
               <LabCard slug={e.slug} />
               <h2 className="mt-4 type-h3">{e.title}</h2>
               <p className="mt-1 type-body text-fg/65">{e.blurb}</p>
-              <ul className="mt-3 flex gap-2">{e.tags.map((t) => <li key={t} className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted">{t}</li>)}</ul>
+              <ul className="mt-3 flex gap-2">{e.tags.map((t) => <li key={t} className="rounded-full border border-[var(--color-border)] px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted">{t}</li>)}</ul>
             </Link>
           ))}
         </div>

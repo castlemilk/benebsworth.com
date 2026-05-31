@@ -71,7 +71,7 @@ export function SpotlightCard({
       onPointerLeave={onLeave}
       style={style}
       className={cn(
-        'group/spot relative isolate overflow-hidden rounded-xl border border-white/10 bg-white/[0.025]',
+        'group/spot relative isolate overflow-hidden rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-fg)_3%,transparent)]',
         className,
       )}
     >

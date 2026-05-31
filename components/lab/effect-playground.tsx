@@ -11,7 +11,7 @@ export function EffectPlayground({ slug }: { slug: string }) {
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <EffectCanvas effect={entry.module} params={params} quality="full"
         ariaLabel={`${entry.title} animation`}
-        className="aspect-[16/10] w-full min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0c]" />
+        className="aspect-[16/10] w-full min-w-0 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]" />
       <Controls specs={entry.controls} params={params} onChange={setParam} onReset={reset}
         onCopy={() => navigator.clipboard?.writeText(permalink()).catch(() => {})} />
     </div>

@@ -18,7 +18,7 @@ function SectionLabel({ index, children }: { index: string; children: React.Reac
     <div className="mb-6 flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
       <span className="text-blog">{index}</span>
       <span>{children}</span>
-      <span className="h-px flex-1 bg-white/10" />
+      <span className="h-px flex-1 bg-[var(--color-border)]" />
     </div>
   )
 }
@@ -75,7 +75,7 @@ export default function BlogPage() {
                   <SpotlightCard accent={topic.accent} className="overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-[0.85fr_1fr]">
                       {/* topic panel */}
-                      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-white/10 bg-white/[0.02] md:border-b-0 md:border-r">
+                      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-[var(--color-border)] bg-surface md:border-b-0 md:border-r">
                         <span
                           aria-hidden
                           className="absolute inset-0"

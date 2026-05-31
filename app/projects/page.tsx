@@ -18,7 +18,7 @@ function SectionLabel({ index, children }: { index: string; children: React.Reac
     <div className="mb-6 flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
       <span className="text-project">{index}</span>
       <span>{children}</span>
-      <span className="h-px flex-1 bg-white/10" />
+      <span className="h-px flex-1 bg-[var(--color-border)]" />
     </div>
   )
 }
@@ -78,7 +78,7 @@ export default function ProjectsPage() {
                       src={lead.image}
                       alt={`${lead.title} emblem`}
                       accent={PROJECT}
-                      className="min-h-[20rem] border-b border-white/10 md:border-b-0 md:border-r"
+                      className="min-h-[20rem] border-b border-[var(--color-border)] md:border-b-0 md:border-r"
                       emblemSize={168}
                     />
                     <div className="flex flex-col justify-center p-9 sm:p-12">
@@ -123,7 +123,7 @@ export default function ProjectsPage() {
                           src={p.image}
                           alt={`${p.title} emblem`}
                           accent={PROJECT}
-                          className="min-h-[15rem] border-b border-white/10 sm:border-b-0 sm:border-r"
+                          className="min-h-[15rem] border-b border-[var(--color-border)] sm:border-b-0 sm:border-r"
                           emblemSize={140}
                         />
                         <div className="flex flex-col justify-center p-8 sm:p-9">

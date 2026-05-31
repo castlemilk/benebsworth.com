@@ -46,7 +46,7 @@ export function YouTube({ id, title, accent = '#7c5cff' }: YouTubeProps) {
       type="button"
       onClick={() => setPlaying(true)}
       aria-label={`Play: ${title}`}
-      className="group/yt relative block aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-black"
+      className="group/yt relative block aspect-video w-full overflow-hidden rounded-lg border border-[var(--color-border)] bg-black"
     >
       <img
         src={thumb}

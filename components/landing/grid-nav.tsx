@@ -5,6 +5,7 @@ import { pack, type Placement } from './packer'
 import { shuffle, mulberry32 } from './rng'
 import { ARTIFACTS } from './artifacts'
 import { ArtifactTile } from './artifact-tiles'
+import { HomeEmbed, homeEmbedSlug } from '@/components/lab/home-embed'
 
 const WORDS = [
   { key: 'blog', text: 'BLOG' },
@@ -45,8 +46,15 @@ export function GridNav({ latest }: { latest: Latest }) {
   const [seed, setSeed] = useState(1)
   const [cell, setCell] = useState(84)
   const [hovered, setHovered] = useState<number | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  // Effect chosen from the same seed so SSR/first-paint never read it (gated by
+  // `mounted`). When the mount effect flips seed + mounted, this re-derives and
+  // the doodle tile swaps in a live mini-embed.
+  const embedIndex = useMemo(() => Math.floor(mulberry32(seed + 7)() * 1e6), [seed])
 
   useEffect(() => {
+    setMounted(true)
     setSeed(Math.floor(Math.random() * 1e9))
     function fit() {
       const w = window.innerWidth, h = window.innerHeight
@@ -168,7 +176,6 @@ export function GridNav({ latest }: { latest: Latest }) {
         {gaps.map(([c, r], i) => {
           const a = picks[i]; if (!a) return null
           const external = a.link.startsWith('http')
-          const inner = <ArtifactTile artifact={a} cx={cx(c)} cy={cy(r)} cell={cell} reducedMotion={reducedMotion} />
           // Hover/focus on the anchor (focus lands on the link, not the inner
           // <g>, so handlers live here) reveals this tile's label in the top layer.
           const active = {
@@ -177,6 +184,27 @@ export function GridNav({ latest }: { latest: Latest }) {
             onFocus: () => setHovered(i),
             onBlur: () => setHovered((prev) => (prev === i ? null : prev)),
           }
+          // Lab artifact: after mount, render a live mini-embed via foreignObject
+          // and link to the chosen effect's detail page. Before mount (SSR + first
+          // paint) it falls through to the static ArtifactTile (ANIM glyph) below,
+          // so there is no hydration mismatch and a graceful no-canvas fallback.
+          if (a.id === 'doodle' && mounted) {
+            const s = cell * 0.84
+            const x = cx(c) - s / 2, y = cy(r) - s / 2, rad = s * 0.16
+            return (
+              <Link key={i} href={`/lab/${homeEmbedSlug(embedIndex)}/`} aria-label="generative lab" prefetch={false} {...active}>
+                <g className="group cursor-pointer">
+                  <rect x={x} y={y} width={s} height={s} rx={rad} className="fill-[#0d0d12] stroke-white/10 [stroke-width:1.5] transition group-hover:stroke-[#5a5a66]" />
+                  <foreignObject x={x} y={y} width={s} height={s}>
+                    <div style={{ width: '100%', height: '100%', borderRadius: `${rad}px`, overflow: 'hidden' }}>
+                      <HomeEmbed index={embedIndex} px={s} />
+                    </div>
+                  </foreignObject>
+                </g>
+              </Link>
+            )
+          }
+          const inner = <ArtifactTile artifact={a} cx={cx(c)} cy={cy(r)} cell={cell} reducedMotion={reducedMotion} />
           return external
             ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label} {...active}>{inner}</a>
             : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label} {...active}>{inner}</Link>

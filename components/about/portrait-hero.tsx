@@ -273,17 +273,18 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
         onPointerEnter={onEnter}
         onPointerLeave={onLeave}
         style={frameStyle}
-        className="group relative isolate aspect-square overflow-hidden rounded-[1.75rem] border border-white/12 bg-[radial-gradient(120%_120%_at_30%_0%,color-mix(in_srgb,var(--color-fg)_6%,var(--color-stage)),var(--color-stage))] will-change-transform"
+        className="group relative isolate aspect-square overflow-hidden rounded-[1.75rem] border border-fg/12 bg-[radial-gradient(120%_120%_at_30%_0%,color-mix(in_srgb,var(--color-fg)_6%,var(--color-stage)),var(--color-stage))] will-change-transform"
       >
-        {/* line-art portrait — the default visible layer. Recolored from black
-            strokes to a bright accent so it reads against the dark frame. */}
+        {/* line-art portrait — the default visible layer. The source SVG is
+            black strokes: on the light plate (light mode) they show directly;
+            on the dark plate (dark mode) invert(1) turns them white so they read. */}
         <img
           src="/about/portrait.svg"
           alt="Portrait of Ben Ebsworth"
           width={IMG_W}
           height={IMG_H}
           draggable={false}
-          className="absolute inset-0 block h-full w-full object-cover [filter:invert(1)_drop-shadow(0_0_18px_color-mix(in_srgb,var(--accent)_45%,transparent))]"
+          className="absolute inset-0 block h-full w-full object-cover [filter:drop-shadow(0_0_18px_color-mix(in_srgb,var(--accent)_45%,transparent))] dark:[filter:invert(1)_drop-shadow(0_0_18px_color-mix(in_srgb,var(--accent)_45%,transparent))]"
           style={
             reducedMotion
               ? { transition: 'opacity 320ms ease', opacity: active ? 0 : 1 }
@@ -326,20 +327,20 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
           className="pointer-events-none absolute inset-0 opacity-[0.35]"
           style={{
             backgroundImage:
-              'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
+              'linear-gradient(to right, color-mix(in srgb, var(--color-fg) 12%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--color-fg) 12%, transparent) 1px, transparent 1px)',
             backgroundSize: '30px 30px',
             maskImage: 'radial-gradient(80% 80% at 50% 45%, black, transparent 80%)',
           }}
         />
 
         {/* corner registration ticks — dossier detail */}
-        <span aria-hidden className="absolute left-3 top-3 size-3 border-l border-t border-white/25" />
-        <span aria-hidden className="absolute right-3 top-3 size-3 border-r border-t border-white/25" />
-        <span aria-hidden className="absolute bottom-3 left-3 size-3 border-b border-l border-white/25" />
-        <span aria-hidden className="absolute bottom-3 right-3 size-3 border-b border-r border-white/25" />
+        <span aria-hidden className="absolute left-3 top-3 size-3 border-l border-t border-fg/25" />
+        <span aria-hidden className="absolute right-3 top-3 size-3 border-r border-t border-fg/25" />
+        <span aria-hidden className="absolute bottom-3 left-3 size-3 border-b border-l border-fg/25" />
+        <span aria-hidden className="absolute bottom-3 right-3 size-3 border-b border-r border-fg/25" />
 
         {/* metadata strip */}
-        <span className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-white/45">
+        <span className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-fg/45">
           <span style={{ color: accent }}>subject · be</span>
           <span>plate 01</span>
         </span>

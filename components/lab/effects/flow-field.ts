@@ -10,7 +10,7 @@ export const flowField: EffectModule = {
     { key: 'color', label: 'Color', type: 'color' },
   ],
   defaults: { particles: 500, scale: 0.006, speed: 1, trail: 0.06, color: '#00e0b8' },
-  createRenderer(ctx, dims) {
+  createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     const noise = makeNoise2D(1337)
     let pts: { x: number; y: number }[] = []
     const seed = () => { pts = Array.from({ length: 1200 }, () => ({ x: Math.random() * dims.w, y: Math.random() * dims.h })) }
@@ -20,7 +20,8 @@ export const flowField: EffectModule = {
       step(t, p) {
         const { w, h } = dims
         const dt = Math.min(50, t - prevT) / 16.67 || 1; prevT = t
-        ctx.fillStyle = `rgba(10,10,12,${p.trail})`; ctx.fillRect(0, 0, w, h)
+        ctx.save(); ctx.globalAlpha = p.trail as number; ctx.fillStyle = theme.bg
+        ctx.fillRect(0, 0, w, h); ctx.restore()
         ctx.strokeStyle = p.color as string; ctx.lineWidth = 1
         const n = p.particles as number, sc = p.scale as number, sp = (p.speed as number) * dt
         ctx.beginPath()

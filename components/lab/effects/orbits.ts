@@ -13,15 +13,15 @@ export const defaults: Params = { count: 3, speed: 1, radius: 0.7, trail: 0.12, 
 export const orbits: EffectModule = {
   controls,
   defaults,
-  createRenderer(ctx, dims) {
+  createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     return {
       step(t, p) {
         const { w, h } = dims
         const cx = w / 2, cy = h / 2
         const R = Math.min(w, h) / 2 * (p.radius as number)
-        // trail: translucent clear
-        ctx.fillStyle = `rgba(10,10,12,${p.trail})`
-        ctx.fillRect(0, 0, w, h)
+        // trail: translucent clear to the themed stage colour
+        ctx.save(); ctx.globalAlpha = p.trail as number; ctx.fillStyle = theme.bg
+        ctx.fillRect(0, 0, w, h); ctx.restore()
         const n = p.count as number
         const time = (t / 1000) * (p.speed as number)
         for (let i = 0; i < n; i++) {
@@ -38,7 +38,7 @@ export const orbits: EffectModule = {
         }
         // core
         ctx.beginPath(); ctx.arc(cx, cy, Math.max(2, Math.min(w, h) * 0.01), 0, Math.PI * 2)
-        ctx.fillStyle = '#ececf0'; ctx.fill()
+        ctx.fillStyle = theme.fg; ctx.fill()
       },
     }
   },

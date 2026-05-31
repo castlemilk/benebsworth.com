@@ -8,7 +8,7 @@ export const starfield: EffectModule = {
     { key: 'color', label: 'Color', type: 'color' },
   ],
   defaults: { count: 300, speed: 1, streak: 0.4, color: '#ececf0' },
-  createRenderer(ctx, dims) {
+  createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     type S = { x: number; y: number; z: number }
     const N = 800
     let stars: S[] = []
@@ -17,8 +17,12 @@ export const starfield: EffectModule = {
     return {
       step(t, p) {
         const { w, h } = dims, cx = w / 2, cy = h / 2
-        ctx.fillStyle = `rgba(10,10,12,${1 - (p.streak as number) * 0.9})`; ctx.fillRect(0, 0, w, h)
-        ctx.fillStyle = p.color as string; ctx.strokeStyle = p.color as string
+        ctx.save(); ctx.globalAlpha = 1 - (p.streak as number) * 0.9; ctx.fillStyle = theme.bg
+        ctx.fillRect(0, 0, w, h); ctx.restore()
+        // Stars use the neutral knob when the user has set a custom (non-default)
+        // colour; otherwise track the themed fg so they read on light + dark stages.
+        const star = (p.color as string) === '#ececf0' ? theme.fg : (p.color as string)
+        ctx.fillStyle = star; ctx.strokeStyle = star
         const n = p.count as number, sp = (p.speed as number) * 6
         for (let i = 0; i < n; i++) {
           const s = stars[i]

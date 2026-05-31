@@ -12,7 +12,8 @@ export const rippleGrid: EffectModule = {
     { key: 'color', label: 'Color', type: 'color' },
   ],
   defaults: { gap: 24, amp: 4, freq: 0.02, speed: 1, sources: 2, color: '#00e0b8' },
-  createRenderer(ctx, dims) {
+  createRenderer(ctx, dims, _theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
+    void _theme // clears to transparent; accent dots read on both the light and dark stage
     // Preallocate source positions; mutated in place each frame (allocation-free step).
     const srcs = Array.from({ length: MAX_SOURCES }, () => ({ x: 0, y: 0 }))
     return {

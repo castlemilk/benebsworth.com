@@ -86,7 +86,7 @@
   --surface: #ffffff;
   --surface-2: #eeeef2;
   --dot: #c9c9d2;
-  --stage: #0c0c10;          /* dark "screen" base for canvases/plate, both themes */
+  --stage: #eef0f4;          /* light "screen" base for canvases/plate in light mode */
   --diagram-paper: #f4f5f8;  /* light schematic panel, both themes */
   --blog: #0a7d6a;
   --project: #5b3fd6;

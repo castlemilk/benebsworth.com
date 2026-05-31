@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import type { EffectModule, Params, Dims } from '@/lib/lab/types'
+import type { EffectModule, Params, Dims, EffectTheme } from '@/lib/lab/types'
 
 type Props = {
   effect: EffectModule
@@ -8,6 +8,15 @@ type Props = {
   quality?: 'full' | 'mini'
   className?: string
   ariaLabel?: string
+}
+
+/** Read the live themed stage palette from CSS vars; dark fallback for SSR. */
+function resolveTheme(): EffectTheme {
+  if (typeof window === 'undefined') return { bg: '#0c0c10', fg: '#ececf0' }
+  const s = getComputedStyle(document.documentElement)
+  const bg = s.getPropertyValue('--stage').trim() || '#0c0c10'
+  const fg = s.getPropertyValue('--fg').trim() || '#ececf0'
+  return { bg, fg }
 }
 
 export function EffectCanvas({ effect, params, quality = 'full', className, ariaLabel }: Props) {
@@ -28,7 +37,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     const minFrameMs = quality === 'mini' ? 1000 / 30 : 0
 
     let dims: Dims = { w: 0, h: 0, dpr }
-    let renderer = effect.createRenderer(ctx, dims)
+    let renderer = effect.createRenderer(ctx, dims, resolveTheme())
     let raf = 0
     let last = -Infinity
     let visible = true
@@ -43,7 +52,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
       dims = { w, h, dpr }
       renderer.destroy?.()
-      renderer = effect.createRenderer(ctx!, dims)
+      renderer = effect.createRenderer(ctx!, dims, resolveTheme())
       if (reduce) renderer.step(0, paramsRef.current) // static frame after resize
     }
 
@@ -67,11 +76,19 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     const onVis = () => { visible = !document.hidden; visible ? start() : stop() }
     document.addEventListener('visibilitychange', onVis)
 
+    // Recreate the renderer with the new palette when the theme class flips.
+    const themeObserver = new MutationObserver(() => {
+      renderer.destroy?.()
+      renderer = effect.createRenderer(ctx!, dims, resolveTheme())
+      if (reduce) renderer.step(0, paramsRef.current) // static repaint under reduced motion
+    })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
     // Motion: the IntersectionObserver callback fires the first start() once on-screen.
     // Reduced motion: size() already painted the single static frame; no loop.
 
     return () => {
-      stop(); ro.disconnect(); io.disconnect()
+      stop(); ro.disconnect(); io.disconnect(); themeObserver.disconnect()
       document.removeEventListener('visibilitychange', onVis)
       renderer.destroy?.()
     }

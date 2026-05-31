@@ -11,7 +11,8 @@ export const cyclicAutomaton: EffectModule = {
     { key: 'color', label: 'Hue base', type: 'color' },
   ],
   defaults: { cell: 10, states: 8, threshold: 2, tickMs: 90, color: '#7c5cff' },
-  createRenderer(ctx, dims) {
+  createRenderer(ctx, dims, _theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
+    void _theme // clears to transparent; hsl cells read on both the light and dark stage
     let cols = 0, rows = 0, grid = new Int8Array(0), next = new Int8Array(0), cell = 0, states = 0
     let lastTick = 0
     function rebuild(nextCell: number, nextStates: number) {

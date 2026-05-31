@@ -8,9 +8,10 @@ export type ControlSpec =
   | { key: string; label: string; type: 'select'; options: { label: string; value: string }[] }
 
 export type Dims = { w: number; h: number; dpr: number }
+export type EffectTheme = { bg: string; fg: string }
 export type Renderer = { step: (timeMs: number, params: Params) => void; destroy?: () => void }
 export type EffectModule = {
   controls: ControlSpec[]
   defaults: Params
-  createRenderer: (ctx: CanvasRenderingContext2D, dims: Dims) => Renderer
+  createRenderer: (ctx: CanvasRenderingContext2D, dims: Dims, theme?: EffectTheme) => Renderer
 }

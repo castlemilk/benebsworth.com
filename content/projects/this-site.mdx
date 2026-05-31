@@ -12,4 +12,33 @@ technologies:
   - { text: AWS, color: "#ff9900" }
 ---
 
-The site you're on now — see the writeup and source on GitHub.
+## Overview
+
+The site you're on now — a rebuild of my personal site as a fast, fully static
+playground. The old Gatsby version is preserved at [`/archive`](/archive/) for fun;
+everything else is new.
+
+## Highlights
+
+- **Generative landing** — the nav (`blog · project · about`) is laid out by a
+  seeded solver that packs each word as a monotone staircase into a responsive
+  grid, then a DFS "snake" draws the words in with a connecting trail. It's a
+  different layout every refresh.
+- **The Lab** — a small system of efficient canvas animations (orbits, flow field,
+  starfield, cyclic automaton, ripple grid), each with live, URL-shareable knobs and
+  a writeup. A tiny one rides along on the home page.
+- **Paint-reveal portrait** — the About hero shows a line drawing by default and
+  paints the real photo in as you move the cursor.
+- **Light & dark** — full theming via a shadcn token system + `next-themes`.
+
+## How it's built
+
+**Next.js** (App Router, React 19) exported as **fully static** HTML/CSS/JS — no
+server, no runtime cost. Content (blog posts, projects, the about timeline) is
+**MDX** validated against **Protobuf**-defined data models, with code highlighting via
+Shiki. The animations are hand-rolled Canvas 2D on a shared harness that pauses
+off-screen and respects reduced motion — no animation library.
+
+It deploys to **AWS** (private S3 origin + CloudFront with OAC) provisioned entirely
+with **Terraform**, fronted by DNSimple. The whole thing — source, infra, and the
+generative bits — is on [GitHub](https://github.com/castlemilk/benebsworth.com).

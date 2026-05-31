@@ -13,4 +13,32 @@ technologies:
   - { text: Jest, color: "#3b82f6" }
 ---
 
-Nutry aggregates nutritional information into a single searchable analytics platform.
+## Overview
+
+Nutry pulls scattered nutritional data into one place and makes it instantly
+searchable. Instead of hunting across labels and databases, you search a food,
+see its aggregated nutritional breakdown, and compare it against others — a fast,
+focused tool for understanding what's actually in the things we eat.
+
+## What it does
+
+- **Instant food search** — fuzzy, typo-tolerant search across a large aggregated
+  food dataset, powered by Elasticsearch so results come back as you type.
+- **Aggregated nutritional breakdowns** — macro and micronutrient profiles
+  normalised across sources into a single, consistent view per food.
+- **Compare & analyse** — line up foods side by side to spot differences at a
+  glance, with analytics over the underlying dataset.
+- **Accounts & saved data** — sign-in and per-user state via Firebase.
+
+## How it's built
+
+A single-page **React** app with **Redux** + **Redux-Sagas** managing data flow and
+the asynchronous search/analytics pipelines. The search layer is backed by
+**Elasticsearch**, which does the heavy lifting for fuzzy matching and ranking over
+the aggregated corpus. **Firebase** handles authentication and lightweight
+persistence, the app is hosted on **AWS**, and the pipeline is wired up with
+**Jenkins** for CI and **Jest** for the test suite.
+
+The interesting engineering was less the UI and more the data side: ingesting and
+reconciling nutritional information from different sources into one normalised
+schema that Elasticsearch could index and serve quickly.

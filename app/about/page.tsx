@@ -117,13 +117,13 @@ export default function AboutPage() {
                 <Reveal delay={i * 40}>
                   <SpotlightCard accent={t.color} className="p-6 sm:p-8">
                     <div className="flex items-start gap-5">
-                      <span className="grid size-14 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/[0.04] p-2.5">
+                      <span className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] p-3">
                         <img
                           src={t.logo}
                           alt={`${t.company} logo`}
                           width={40}
                           height={40}
-                          className="max-h-10 max-w-10 object-contain"
+                          className="block h-full w-full object-contain"
                         />
                       </span>
                       <div className="min-w-0 flex-1">

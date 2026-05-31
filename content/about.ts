@@ -113,7 +113,7 @@ export const about: About = {
       title: 'Container Camp',
       description:
         'Overview of the current Kubernetes-centric ecosystem of CI/CD tools, with an end-to-end practical example of implementing a feature-rich workflow in Tekton.',
-      url: 'https://2019.container.camp/au/speakers/ben-ebsworth/',
+      url: 'https://www.youtube.com/watch?v=1ZcrSeA6nDQ',
       date: 'Sydney, Australia — July 2019',
       image: '/about/speaking/container-camp.png',
     },

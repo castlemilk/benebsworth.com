@@ -1,8 +1,14 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // Mirror the tsconfig `@/*` path alias so tests can import via `@/...`
+  // (e.g. the lab registry pulls in effect modules through `@/components/...`).
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('.', import.meta.url)) },
+  },
   // Default to 'node': all planned unit tests are pure-logic / fs-based and need
   // no DOM. (jsdom fails to start workers under vitest 4 due to the
   // @asamuzakjp/css-color ESM/CJS conflict.) DOM-needing tests can opt in

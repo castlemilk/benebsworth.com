@@ -1,0 +1,17 @@
+## How it works
+
+A regular grid of dots samples a wave field. A few sources drift around the canvas, and at
+each dot we sum `sin(distance · freq − time)` from every source — classic wave
+interference, where overlapping crests reinforce and crests-meeting-troughs cancel. The
+averaged sum drives both the dot's radius and its opacity, so the grid breathes in bright
+ridges and dark valleys that sweep outward from the moving sources. With more **Sources**
+the interference pattern gets richer and less predictable.
+
+## Knobs
+
+- **Dot spacing** — grid gap; smaller = denser grid.
+- **Amplitude** — how much the wave changes each dot's size.
+- **Frequency** — wavelength of the ripples (higher = tighter rings).
+- **Speed** — how fast the waves and sources move.
+- **Sources** — number of interfering wave origins.
+- **Color** — dot colour.

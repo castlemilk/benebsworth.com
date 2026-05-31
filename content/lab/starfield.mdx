@@ -1,0 +1,17 @@
+## How it works
+
+Every star has a 3D position; its depth `z` decreases each frame, so it flies toward the
+viewer. We project to the screen by perspective division: the on-screen position is the
+world position scaled by `width / z`, measured from the centre — distant stars sit near the
+middle and slow, near stars race outward. When a star passes the camera (`z` hits zero) it
+respawns far away. The **Streak** knob blends two looks: at zero we draw a crisp dot at the
+projected point; turned up, we draw a line from the star's *previous* projection to its
+current one, producing warp-speed trails, and reduce the per-frame fade so the streaks
+linger.
+
+## Knobs
+
+- **Stars** — how many points fill the field.
+- **Warp** — how fast `z` decreases (flight speed).
+- **Streak** — dot-to-line blend plus trail length.
+- **Color** — star colour.

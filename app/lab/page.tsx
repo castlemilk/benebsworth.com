@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
-import { Orbits } from '@/components/lab/orbits'
+import { LAB_EFFECTS } from '@/lib/lab/registry'
+import { LabCard } from '@/components/lab/lab-card'
 
 export const metadata: Metadata = { title: 'Lab' }
 
@@ -9,12 +11,22 @@ export default function LabPage() {
   return (
     <>
       <SiteNav />
-      <main className="mx-auto flex w-full max-w-5xl flex-col items-center gap-10 px-6 py-24 sm:px-8">
-        <h1 className="type-h1">Lab</h1>
-        <p className="max-w-prose text-center type-body text-fg/70">
-          A corner for generative experiments.
+      <main className="mx-auto w-full max-w-6xl px-6 py-20 sm:px-8">
+        <p className="type-label text-muted">00 · the lab</p>
+        <h1 className="mt-3 type-h1">Generative experiments</h1>
+        <p className="mt-4 max-w-prose type-body text-fg/70">
+          Small canvas animations, each with live knobs and a note on how it works. Tune them, share a link, steal the idea.
         </p>
-        <Orbits size={420} />
+        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+          {LAB_EFFECTS.map((e) => (
+            <Link key={e.slug} href={`/lab/${e.slug}/`} className="group min-w-0 rounded-2xl border border-white/10 bg-white/[0.02] p-4 transition hover:border-white/25">
+              <LabCard slug={e.slug} />
+              <h2 className="mt-4 type-h3">{e.title}</h2>
+              <p className="mt-1 type-body text-fg/65">{e.blurb}</p>
+              <ul className="mt-3 flex gap-2">{e.tags.map((t) => <li key={t} className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted">{t}</li>)}</ul>
+            </Link>
+          ))}
+        </div>
       </main>
       <SiteFooter />
     </>

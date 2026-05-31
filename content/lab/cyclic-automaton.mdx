@@ -1,0 +1,17 @@
+## How it works
+
+This is a cyclic cellular automaton. Each cell holds a state from `0` to `states − 1`. On
+every tick, a cell looks at its four orthogonal neighbours: if at least **Threshold** of
+them already hold the *next* state `(s + 1) % states`, the cell advances to that state;
+otherwise it waits. Because the "next" state chases its predecessor around the cycle, the
+grid self-organises out of random noise into spirals and rotating spiral cores. The colour
+of a cell is its state index mapped around the hue wheel (`hsl(state/states · 360 …)`) — so
+the **Color** knob is kept for consistency, but the live palette is derived from state, not
+from that single colour.
+
+## Knobs
+
+- **Cell size** — pixel size of each cell (smaller = finer grid, more cells).
+- **States** — length of the colour cycle.
+- **Threshold** — neighbours that must lead before a cell advances.
+- **Tick** — milliseconds between automaton updates.

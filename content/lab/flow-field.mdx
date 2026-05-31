@@ -1,0 +1,17 @@
+## How it works
+
+A field of particles drifts across the canvas. Each frame, every particle samples a
+deterministic value-noise field at its current position to get a flow angle
+(`noise(x·scale, y·scale + time) · 2π`), then steps one unit in that direction. Because
+neighbouring points sample nearby noise values, the particles fall into smooth, river-like
+streams. As with the orbits, we never fully clear the canvas — a translucent fill each
+frame leaves a fading trail, so the streams read as flowing lines rather than dots. Lower
+**Trail** = longer streaks.
+
+## Knobs
+
+- **Particles** — how many points are advected.
+- **Noise scale** — zoom of the underlying field; small values = broad, sweeping currents, large values = tight eddies.
+- **Speed** — step length per frame.
+- **Trail** — per-frame fade; lower = longer streaks.
+- **Color** — line colour.

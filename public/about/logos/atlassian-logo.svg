@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Atlassian">
+  <defs>
+    <linearGradient id="atl" x1="50%" y1="0%" x2="40%" y2="100%">
+      <stop offset="0" stop-color="#2684FF"/>
+      <stop offset="1" stop-color="#0052CC"/>
+    </linearGradient>
+  </defs>
+  <!-- back blade -->
+  <path fill="#0052CC" d="M16 3.5 30 28 H2 Z"/>
+  <!-- front blade (overlaps lower-left, leaving the back blade visible to the right) -->
+  <path fill="url(#atl)" d="M10.8 12.5 20.2 28 H1.4 Z"/>
+</svg>

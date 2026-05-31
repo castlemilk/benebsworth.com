@@ -107,7 +107,7 @@ export function GridNav({ latest }: { latest: Latest }) {
     <main className="font-mono flex min-h-screen flex-col items-center gap-4 p-4 sm:p-6">
       <header className="w-full pt-2 text-center sm:pt-4">
         <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg sm:text-4xl">BEN EBSWORTH</h1>
-        <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem]">platform · sre engineer</p>
+        <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem]">INFRA | SOFTWARE | HARDWARE</p>
       </header>
       <div className="flex w-full flex-1 items-center justify-center">
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">

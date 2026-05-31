@@ -67,6 +67,13 @@ const MAP: Record<string, string> = {
   opa: '#b39ddb',
   canary: '#f48fb1',
   observability: '#ffab91',
+  'spring boot': '#a5d6a7',
+  springboot: '#a5d6a7',
+  spinnaker: '#f6a5c0',
+  ec2: '#ffcc80',
+  sqs: '#ffab91',
+  'sli/slo': '#b39ddb',
+  eks: '#8ab4f8',
 }
 
 export function techColor(tech: string): string {

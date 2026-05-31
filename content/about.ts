@@ -4,7 +4,29 @@ export const about: About = {
   bio: "Highly self-driven engineer who is continually exploring new learnings. This place acts as a space for playing around with new ideas, and actively building my capability to robustly execute on entrepreneurial endeavors. I obtain great satisfaction from bringing new creations to fruition. I'm glad you've stopped by.",
   timeline: [
     {
-      when: 'September 2018 — present',
+      when: 'December 2023 — present',
+      title: 'Senior Software Engineer · Atlassian',
+      detail:
+        'Working in the Micros platform team — responsible for the running and support of Atlassian products and services on top of AWS. Building and operating the internal platform, developer tooling, and orchestration that thousands of Atlassian services deploy and run on.',
+      logo: '/about/logos/atlassian-logo.svg',
+      company: 'Atlassian',
+      color: '#2684ff',
+      kind: 'work',
+      tech: ['Go', 'TypeScript', 'Kubernetes', 'EKS', 'GKE', 'Istio', 'Prometheus', 'CI/CD', 'Spinnaker'],
+    },
+    {
+      when: 'October 2020 — April 2024',
+      title: 'Senior Site Reliability Engineer · Atlassian',
+      detail:
+        "Site reliability engineering across Atlassian's platform — incident response and root-cause analysis, defining SLIs/SLOs, and building the observability for large-scale, high-throughput services.",
+      logo: '/about/logos/atlassian-logo.svg',
+      company: 'Atlassian',
+      color: '#2684ff',
+      kind: 'work',
+      tech: ['Java', 'Spring Boot', 'Go', 'SRE', 'SLI/SLO', 'Observability', 'CI/CD', 'EC2', 'SQS'],
+    },
+    {
+      when: 'September 2018 — October 2020',
       title: 'Senior DevOps/FullStack Engineer · Digio',
       detail:
         "Leading the development and deployment of a set of production grade platform components on GCP. Facilitating adoption and consumption of the platform through a series of developer tooling and frameworks to streamline onboarding. Delivered the first production-grade GKE/GCP based platform for one of Australia's biggest banks.",
@@ -123,5 +145,14 @@ export const about: About = {
     { title: 'Certified Kubernetes Administrator (CKA)', issuer: 'CNCF', url: 'https://benebsworth.com/pdf/CKA_Certificate.pdf', badge: '/about/certs/cka.png' },
     { title: 'Certified Kubernetes Application Developer (CKAD)', issuer: 'CNCF', url: 'https://benebsworth.com/pdf/CKAD_Certificate.pdf', badge: '/about/certs/ckad.png' },
   ],
-  skills: ['Kubernetes', 'Istio', 'GCP', 'AWS', 'Go', 'Python', 'React', 'Terraform', 'CI/CD', 'SRE'],
+  skills: [
+    'Go', 'TypeScript', 'JavaScript', 'Python', 'Java', 'Spring Boot',
+    'React', 'Next.js', 'Node.js',
+    'Microservices', 'Distributed Systems', 'Event-Driven Architecture', 'System Design',
+    'gRPC', 'REST APIs', 'GraphQL', 'TDD',
+    'Kubernetes', 'EKS', 'GKE', 'Istio', 'Docker', 'Spinnaker',
+    'AWS', 'GCP', 'Terraform',
+    'CI/CD', 'SRE', 'SLI/SLO', 'Observability', 'Prometheus', 'Grafana',
+    'PostgreSQL', 'DynamoDB', 'Kafka',
+  ],
 }

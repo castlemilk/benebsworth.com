@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 import type { Topic } from '@/lib/topics'
 
@@ -18,15 +19,15 @@ export function TopicMarker({ topic, size = 16, className }: TopicMarkerProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 rounded-full border py-1 pl-1.5 pr-3',
+        'accent-ink inline-flex items-center gap-2 rounded-full border py-1 pl-1.5 pr-3',
         'font-mono text-[0.62rem] uppercase tracking-[0.18em]',
         className,
       )}
       style={{
+        '--ink': topic.accent,
         borderColor: `color-mix(in srgb, ${topic.accent} 30%, transparent)`,
         backgroundColor: `color-mix(in srgb, ${topic.accent} 9%, transparent)`,
-        color: topic.accent,
-      }}
+      } as CSSProperties}
     >
       <span
         className="grid place-items-center rounded-full"

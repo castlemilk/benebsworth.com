@@ -88,9 +88,9 @@
   --dot: #c9c9d2;
   --stage: #eef0f4;          /* light "screen" base for canvases/plate in light mode */
   --diagram-paper: #f4f5f8;  /* light schematic panel, both themes */
-  --blog: #0a7d6a;
+  --blog: #08664f;    /* deepened from #0a7d6a → AA (4.5:1) for small accent text even over faint accent tints */
   --project: #5b3fd6;
-  --about: #d2532c;
+  --about: #bf451c;   /* deepened from #d2532c → AA (4.5:1) for small accent text on light */
   color-scheme: light;
 }
 
@@ -208,6 +208,18 @@
 .dark body {
   background: radial-gradient(120% 120% at 50% 0%, #131318 0%, var(--bg) 60%);
 }
+
+/* ── Theme-safe accent ink ────────────────────────────────────────────────
+   Per-element accent colors that are carried as a raw hex in `--ink` (set
+   inline). In dark the raw neon reads fine, so it is used verbatim. In light,
+   the raw neon (e.g. teal #00e0b8, atlassian #2684ff) is too pale on white, so
+   it is deepened toward --fg to meet WCAG AA (~4.5:1 small text) while keeping
+   the hue identity. Dark is left byte-identical (no .dark override).            */
+.accent-ink { color: var(--ink); }
+:root:not(.dark) .accent-ink {
+  color: color-mix(in srgb, var(--ink) 38%, var(--fg));
+}
+
 *:focus-visible { outline: 2px solid #7c5cff; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }

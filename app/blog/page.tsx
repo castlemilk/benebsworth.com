@@ -105,8 +105,8 @@ export default function BlogPage() {
                             style={{ width: 112, height: 112 }}
                           />
                           <span
-                            className="font-mono text-[0.62rem] uppercase tracking-[0.28em]"
-                            style={{ color: topic.accent }}
+                            className="accent-ink font-mono text-[0.62rem] uppercase tracking-[0.28em]"
+                            style={{ '--ink': topic.accent } as React.CSSProperties}
                           >
                             {topic.label}
                           </span>

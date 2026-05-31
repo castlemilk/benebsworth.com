@@ -13,7 +13,14 @@ import { techColor } from '@/lib/tech-colors'
 
 export const metadata: Metadata = { title: 'About' }
 
-const ACCENT = { blog: '#00e0b8', project: '#7c5cff', about: '#ff7a59' }
+// Theme-aware brand accents: in dark these tokens equal the original neon
+// hexes (#00e0b8/#7c5cff/#ff7a59); in light they resolve to the deepened
+// AA-safe values, so accent text reads on white without touching dark.
+const ACCENT = {
+  blog: 'var(--color-blog)',
+  project: 'var(--color-project)',
+  about: 'var(--color-about)',
+}
 
 // Issuer → accent (coding system consistent with the timeline company colors):
 // AWS = orange (about), GCP = teal (blog), CNCF = purple (project).
@@ -129,8 +136,8 @@ export default function AboutPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                           <span
-                            className="font-mono text-[0.65rem] uppercase tracking-[0.2em]"
-                            style={{ color: t.color }}
+                            className="accent-ink font-mono text-[0.65rem] uppercase tracking-[0.2em]"
+                            style={{ '--ink': t.color } as React.CSSProperties}
                           >
                             {t.kind === 'education' ? 'Education' : 'Work'} · {t.company}
                           </span>
@@ -145,12 +152,12 @@ export default function AboutPage() {
                               return (
                                 <li
                                   key={tech}
-                                  className="rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] tracking-tight"
+                                  className="accent-ink rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] tracking-tight"
                                   style={{
+                                    '--ink': c,
                                     borderColor: `color-mix(in srgb, ${c} 45%, transparent)`,
                                     backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                                    color: c,
-                                  }}
+                                  } as React.CSSProperties}
                                 >
                                   {tech}
                                 </li>

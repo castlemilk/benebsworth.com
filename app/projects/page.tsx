@@ -23,11 +23,27 @@ function SectionLabel({ index, children }: { index: string; children: React.Reac
   )
 }
 
+// Pick black or white text per badge color for AA contrast on the solid fill.
+// Some brand colors (e.g. Terraform #844fba) are too dark for black text; those
+// get white. Theme-independent — the badges look identical in both themes.
+function readableInk(hex: string): string {
+  const h = hex.replace('#', '')
+  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h
+  const rgb = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255)
+  const lin = rgb.map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)))
+  const lum = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+  // contrast of black vs the fill = (lum+0.05)/0.05; white vs fill = 1.05/(lum+0.05)
+  return (lum + 0.05) / 0.05 >= 1.05 / (lum + 0.05) ? '#000000' : '#ffffff'
+}
+
 function TechBadges({ project }: { project: LoadedProject }) {
   return (
     <div className="flex flex-wrap gap-2">
       {project.technologies.map((t) => (
-        <Badge key={t.text} style={{ backgroundColor: t.color }} className="text-black">
+        <Badge
+          key={t.text}
+          style={{ backgroundColor: t.color, color: readableInk(t.color) }}
+        >
           {t.text}
         </Badge>
       ))}

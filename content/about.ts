@@ -8,7 +8,7 @@ export const about: About = {
       title: 'Senior Software Engineer · Atlassian',
       detail:
         'Working in the Micros platform team — responsible for the running and support of Atlassian products and services on top of AWS. Building and operating the internal platform, developer tooling, and orchestration that thousands of Atlassian services deploy and run on.',
-      logo: '/about/logos/atlassian-logo.svg',
+      logo: '/about/logos/atlassian-logo.png',
       company: 'Atlassian',
       color: '#2684ff',
       kind: 'work',
@@ -19,7 +19,7 @@ export const about: About = {
       title: 'Senior Site Reliability Engineer · Atlassian',
       detail:
         "Site reliability engineering across Atlassian's platform — incident response and root-cause analysis, defining SLIs/SLOs, and building the observability for large-scale, high-throughput services.",
-      logo: '/about/logos/atlassian-logo.svg',
+      logo: '/about/logos/atlassian-logo.png',
       company: 'Atlassian',
       color: '#2684ff',
       kind: 'work',

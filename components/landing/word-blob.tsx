@@ -104,83 +104,89 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: false, dpr })
-    const gl = renderer.gl
-    gl.clearColor(0, 0, 0, 0)
-    renderer.setSize(width, height)
+    // WebGL may be unavailable/blocked. This is a pure enhancement, so on any
+    // init failure we bail silently — the SVG words still work without the glow.
+    try {
+      const renderer = new Renderer({ alpha: true, premultipliedAlpha: false, dpr })
+      const gl = renderer.gl
+      gl.clearColor(0, 0, 0, 0)
+      renderer.setSize(width, height)
 
-    const program = new Program(gl, {
-      vertex, fragment, transparent: true,
-      uniforms: {
-        uTime: { value: 0 },
-        uResolution: { value: [gl.canvas.width, gl.canvas.height] },
-        uAlpha: { value: 0 },
-        uColor: { value: [1, 1, 1] },
-        uRadius: { value: 60 },
-        uCount: { value: 0 },
-        uPoints: { value: new Float32Array(16) },
-      },
-    })
-    const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
-    const canvas = gl.canvas as HTMLCanvasElement
-    canvas.style.display = 'block'
-    canvas.style.width = `${width}px`
-    canvas.style.height = `${height}px`
-    wrap.appendChild(canvas)
+      const program = new Program(gl, {
+        vertex, fragment, transparent: true,
+        uniforms: {
+          uTime: { value: 0 },
+          uResolution: { value: [gl.canvas.width, gl.canvas.height] },
+          uAlpha: { value: 0 },
+          uColor: { value: [1, 1, 1] },
+          uRadius: { value: 60 },
+          uCount: { value: 0 },
+          uPoints: { value: new Float32Array(16) },
+        },
+      })
+      const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
+      const canvas = gl.canvas as HTMLCanvasElement
+      canvas.style.display = 'block'
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+      wrap.appendChild(canvas) // last GL step → on throw above, nothing is in the DOM
 
-    let raf = 0
-    let cur = 0 // current (eased) alpha
-    let target = 0
+      let raf = 0
+      let cur = 0 // current (eased) alpha
+      let target = 0
 
-    function paint(timeMs: number) {
-      program.uniforms.uTime.value = reduce ? 0 : timeMs * 0.001
-      program.uniforms.uAlpha.value = cur
-      renderer.render({ scene: mesh })
-    }
-    function loop(timeMs: number) {
-      cur += 0.09 * (target - cur)
-      if (Math.abs(target - cur) < 0.004) cur = target
-      paint(timeMs)
-      // Active blob keeps flowing; once fully faded out, park the loop.
-      if (target === 0 && cur === 0) { raf = 0; return }
-      raf = requestAnimationFrame(loop)
-    }
-    function ensure() { if (!raf) raf = requestAnimationFrame(loop) }
+      const paint = (timeMs: number) => {
+        program.uniforms.uTime.value = reduce ? 0 : timeMs * 0.001
+        program.uniforms.uAlpha.value = cur
+        renderer.render({ scene: mesh })
+      }
+      const loop = (timeMs: number) => {
+        cur += 0.09 * (target - cur)
+        if (Math.abs(target - cur) < 0.004) cur = target
+        paint(timeMs)
+        // Active blob keeps flowing; once fully faded out, park the loop.
+        if (target === 0 && cur === 0) { raf = 0; return }
+        raf = requestAnimationFrame(loop)
+      }
+      const ensure = () => { if (!raf) raf = requestAnimationFrame(loop) }
 
-    apiRef.current = {
-      setActive(points, color, radiusCss) {
-        const buf = program.uniforms.uPoints.value as Float32Array
-        const n = Math.min(points.length, 8)
-        for (let i = 0; i < n; i++) {
-          buf[i * 2] = points[i][0] * dpr
-          buf[i * 2 + 1] = gl.canvas.height - points[i][1] * dpr // GL origin is bottom-left
-        }
-        program.uniforms.uCount.value = n
-        program.uniforms.uColor.value = color
-        program.uniforms.uRadius.value = radiusCss * dpr
-        target = 1
-        if (reduce) { cur = 1; paint(0); return }
-        ensure()
-      },
-      clear() {
-        target = 0
-        if (reduce) { cur = 0; paint(0); return }
-        ensure()
-      },
-    }
+      apiRef.current = {
+        setActive(points, color, radiusCss) {
+          const buf = program.uniforms.uPoints.value as Float32Array
+          const n = Math.min(points.length, 8)
+          for (let i = 0; i < n; i++) {
+            buf[i * 2] = points[i][0] * dpr
+            buf[i * 2 + 1] = gl.canvas.height - points[i][1] * dpr // GL origin is bottom-left
+          }
+          program.uniforms.uCount.value = n
+          program.uniforms.uColor.value = color
+          program.uniforms.uRadius.value = radiusCss * dpr
+          target = 1
+          if (reduce) { cur = 1; paint(0); return }
+          ensure()
+        },
+        clear() {
+          target = 0
+          if (reduce) { cur = 0; paint(0); return }
+          ensure()
+        },
+      }
 
-    const onVis = () => {
-      if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
-      else if (target !== 0 || cur > 0) ensure()
-    }
-    document.addEventListener('visibilitychange', onVis)
+      const onVis = () => {
+        if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
+        else if (target !== 0 || cur > 0) ensure()
+      }
+      document.addEventListener('visibilitychange', onVis)
 
-    return () => {
-      if (raf) cancelAnimationFrame(raf)
-      document.removeEventListener('visibilitychange', onVis)
-      apiRef.current = null
-      if (canvas.parentNode) canvas.parentNode.removeChild(canvas)
-      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      return () => {
+        if (raf) cancelAnimationFrame(raf)
+        document.removeEventListener('visibilitychange', onVis)
+        apiRef.current = null
+        if (canvas.parentNode) canvas.parentNode.removeChild(canvas)
+        gl.getExtension('WEBGL_lose_context')?.loseContext()
+      }
+    } catch {
+      return
     }
   }, [width, height])
 

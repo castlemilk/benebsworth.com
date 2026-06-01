@@ -16,6 +16,8 @@ const WORDS = [
 ]
 const HREF: Record<string, string> = { blog: '/blog/', project: '/projects/', about: '/about/' }
 const COLOR: Record<string, string> = { blog: 'var(--color-blog)', project: 'var(--color-project)', about: 'var(--color-about)' }
+// Particle shape per section (shader: 0 square · 1 circle · 2 triangle).
+const SHAPE: Record<string, number> = { blog: 0, project: 1, about: 2 }
 
 /** Parse a computed `rgb(...)`/`rgba(...)` fill into 0..1 rgb for the GL uniform. */
 function parseRGB(css: string): [number, number, number] {
@@ -140,7 +142,8 @@ export function GridNav({ latest }: { latest: Latest }) {
     pts.forEach(([x, y], i) => (i === 0 ? c.moveTo(x, y) : c.lineTo(x, y)))
     c.stroke()
     texts.forEach((t, i) => c.fillText(t.textContent || '', pts[i][0], pts[i][1]))
-    blobRef.current?.setActive(mask, parseRGB(cs.fill))
+    const shape = SHAPE[el.getAttribute('aria-label') || ''] ?? 1
+    blobRef.current?.setActive(mask, parseRGB(cs.fill), shape)
   }
 
   const rng = mulberry32(seed)

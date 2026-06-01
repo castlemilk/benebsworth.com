@@ -7,7 +7,7 @@ export type WordBlobHandle = {
   /** Light up a word's blob. `mask` is a canvas with the word's glyphs drawn
    *  (soft white on transparent, same pixel space as the blob canvas); `color`
    *  is rgb 0..1. The shader tints + flows inside the glyph mask. */
-  setActive: (mask: HTMLCanvasElement, color: [number, number, number]) => void
+  setActive: (mask: HTMLCanvasElement, color: [number, number, number], shape: number) => void
   /** Fade the blob back out. */
   clear: () => void
 }
@@ -25,7 +25,7 @@ void main() { vUv = uv; gl_Position = vec4(position, 0.0, 1.0); }
 // liquid inside the letters. Tinted by the section accent, faded by uAlpha.
 const fragment = /* glsl */ `
 precision highp float;
-uniform float uTime, uAlpha;
+uniform float uTime, uAlpha, uShape; // uShape: 0 square · 1 circle · 2 triangle
 uniform vec2 uResolution;
 uniform vec3 uColor;
 uniform sampler2D uMask;
@@ -66,24 +66,56 @@ float fbm(vec2 p, float t) {
   return v;
 }
 
-void main() {
-  // The mask is a connected region covering the whole word segment.
-  float region = texture2D(uMask, vUv).a;
-  if (region < 0.003) discard;
-
-  // Lava field: domain-warped fbm that rises and morphs over time, so bright
-  // blobs of glow drift through the segment like a lava lamp.
+// Moving lava field in [0,1] at a normalised uv (domain-warped, rising).
+float lavaField(vec2 uv) {
   float t = uTime * 0.28;
-  vec2 p = vUv * vec2(uResolution.x / uResolution.y, 1.0) * 2.4; // aspect-correct
-  vec2 warp = vec2(fbm(p + vec2(0.0, t), t * 0.6),
-                   fbm(p + vec2(4.7, 1.3 - t), t * 0.6));
-  float lava = fbm(p + 2.6 * warp + vec2(0.0, -t * 2.2), t * 0.4); // -y → blobs rise
-  lava = smoothstep(-0.22, 0.32, lava);
+  vec2 p = uv * vec2(uResolution.x / uResolution.y, 1.0) * 2.4;
+  vec2 warp = vec2(fbm(p + vec2(0.0, t), t * 0.6), fbm(p + vec2(4.7, 1.3 - t), t * 0.6));
+  float lava = fbm(p + 2.6 * warp + vec2(0.0, -t * 2.2), t * 0.4);
+  return smoothstep(-0.22, 0.32, lava);
+}
 
-  float bright = mix(0.45, 1.35, lava);
-  float a = clamp(region * bright, 0.0, 1.0) * uAlpha;
-  vec3 col = uColor * (0.85 + 0.5 * lava);
-  // Premultiplied output so the region gates the colour regardless of blend mode.
+// Signed distance to an up-pointing equilateral triangle (iq), <0 inside.
+float sdTriangle(vec2 p, float r) {
+  const float k = 1.7320508; // sqrt(3)
+  p.x = abs(p.x) - r;
+  p.y = p.y + r / k;
+  if (p.x + k * p.y > 0.0) p = vec2(p.x - k * p.y, -k * p.x - p.y) / 2.0;
+  p.x -= clamp(p.x, -2.0 * r, 0.0);
+  return -length(p) * sign(p.y);
+}
+
+// Soft coverage of the per-section shape, radius r, local coord gv in [-0.5,0.5].
+float shapeMask(vec2 gv, float r) {
+  float aa = 0.06;
+  if (uShape < 0.5) {            // square
+    return smoothstep(r, r - aa, max(abs(gv.x), abs(gv.y)));
+  } else if (uShape < 1.5) {     // circle
+    return smoothstep(r, r - aa, length(gv));
+  }
+  return smoothstep(aa, -aa, sdTriangle(gv, r * 0.9)); // triangle
+}
+
+void main() {
+  // Rasterise into a particle grid: one shape per cell, sized by the moving lava
+  // field × the word-region mask, both sampled at the cell centre — so a field of
+  // circles/squares/triangles grows and shrinks as the lava drifts through.
+  float cellPx = uResolution.y / 44.0;
+  vec2 id = floor(gl_FragCoord.xy / cellPx);
+  vec2 center = (id + 0.5) * cellPx;        // cell centre, px
+  vec2 gv = (gl_FragCoord.xy - center) / cellPx; // local [-0.5, 0.5]
+  vec2 cuv = center / uResolution.xy;       // normalised cell centre
+
+  float region = texture2D(uMask, cuv).a;
+  float lava = lavaField(cuv);
+  float inten = clamp(region * (0.35 + 0.85 * lava), 0.0, 1.0);
+  if (inten < 0.02) discard;
+
+  float r = inten * 0.6;                     // shape half-size (≤ touches cell edge)
+  float s = shapeMask(gv, r);
+  float a = s * uAlpha;
+  vec3 col = uColor * (0.85 + 0.45 * lava);
+  // Premultiplied output so the shape coverage gates the colour.
   gl_FragColor = vec4(col * a, a);
 }
 `
@@ -94,7 +126,7 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
   const wrapRef = useRef<HTMLDivElement>(null)
   const apiRef = useRef<WordBlobHandle | null>(null)
   useImperativeHandle(ref, () => ({
-    setActive: (m, c) => apiRef.current?.setActive(m, c),
+    setActive: (m, c, s) => apiRef.current?.setActive(m, c, s),
     clear: () => apiRef.current?.clear(),
   }), [])
 
@@ -120,6 +152,7 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
           uResolution: { value: [gl.canvas.width, gl.canvas.height] },
           uAlpha: { value: 0 },
           uColor: { value: [1, 1, 1] },
+          uShape: { value: 1 },
           uMask: { value: mask },
         },
       })
@@ -157,10 +190,11 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       const ensure = () => { if (!raf) raf = requestAnimationFrame(loop) }
 
       apiRef.current = {
-        setActive(maskCanvas, color) {
+        setActive(maskCanvas, color, shape) {
           mask.image = maskCanvas as unknown as HTMLImageElement
           mask.needsUpdate = true
           program.uniforms.uColor.value = color
+          program.uniforms.uShape.value = shape
           target = 1
           if (reduce) { cur = 1; paint(0); return }
           ensure()

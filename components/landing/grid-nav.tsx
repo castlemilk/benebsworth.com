@@ -271,13 +271,17 @@ export function GridNav({ latest }: { latest: Latest }) {
             ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label} {...active}>{inner}</a>
             : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label} {...active}>{inner}</Link>
         })}
-        {/* Label layer painted after all tiles so the hovered tile's label (drawn
-            ABOVE the tile) is never covered by a neighbouring tile's rect. */}
+        {/* Label layer painted after all tiles so it sits on top of any neighbour.
+            Placed toward the grid's vertical centre — a top-edge tile labels BELOW,
+            a bottom-edge tile labels ABOVE — so the text always opens into the grid
+            (and its inter-row gap) instead of clipping past the top/bottom margin. */}
         {gaps.map(([c, r], i) => {
           const a = picks[i]; if (!a || hovered !== i) return null
           const s = cell * 0.84
+          const above = cy(r) > H / 2
+          const y = above ? cy(r) - s / 2 - cell * 0.14 : cy(r) + s / 2 + cell * 0.3
           return (
-            <text key={`lbl-${i}`} x={cx(c)} y={cy(r) - s / 2 - cell * 0.12}
+            <text key={`lbl-${i}`} x={cx(c)} y={y}
               textAnchor="middle" fill="var(--color-fg)" fontSize={Math.max(9, Math.round(cell * 0.13))}
               style={{ pointerEvents: 'none' }}>{a.label}</text>
           )

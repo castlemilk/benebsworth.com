@@ -61,7 +61,7 @@ export default function AboutPage() {
           <div className="order-2 text-center md:order-1 md:text-left">
             <Reveal>
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-about">
-                Dossier · Platform / SRE
+                Dossier · Software · Platform · Hardware
               </p>
             </Reveal>
             <Reveal delay={80}>
@@ -73,7 +73,7 @@ export default function AboutPage() {
             </Reveal>
             <Reveal delay={160}>
               <p className="mx-auto mt-6 max-w-xl font-mono text-base text-fg/60 md:mx-0">
-                Platform / SRE engineer · Kubernetes, GCP &amp; AWS · Melbourne, Australia
+                Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia
               </p>
             </Reveal>
             <Reveal delay={220}>

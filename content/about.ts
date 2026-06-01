@@ -1,7 +1,7 @@
 import type { About } from '@/lib/gen/content'
 
 export const about: About = {
-  bio: "Highly self-driven engineer who is continually exploring new learnings. This place acts as a space for playing around with new ideas, and actively building my capability to robustly execute on entrepreneurial endeavors. I obtain great satisfaction from bringing new creations to fruition. I'm glad you've stopped by.",
+  bio: "Self-driven engineer who builds across the whole stack of computing — from electrical and embedded hardware, up through distributed software platforms, to the product and developer experience on top. An electrical & computer systems background grounds how I design and build; years operating large-scale platforms shape how I make it reliable; and I work AI-native, treating LLMs and agents as a core part of the toolchain rather than a bolt-on. This place is where I explore new ideas and sharpen my ability to take creations from concept to production. I'm glad you've stopped by.",
   timeline: [
     {
       when: 'December 2023 — present',
@@ -146,10 +146,12 @@ export const about: About = {
     { title: 'Certified Kubernetes Application Developer (CKAD)', issuer: 'CNCF', url: 'https://benebsworth.com/pdf/CKAD_Certificate.pdf', badge: '/about/certs/ckad.png' },
   ],
   skills: [
-    'Go', 'TypeScript', 'JavaScript', 'Python', 'Java', 'Spring Boot',
+    'Go', 'TypeScript', 'JavaScript', 'Python', 'Java', 'Spring Boot', 'C / C++',
     'React', 'Next.js', 'Node.js',
     'Microservices', 'Distributed Systems', 'Event-Driven Architecture', 'System Design',
     'gRPC', 'REST APIs', 'GraphQL', 'TDD',
+    'AI-Native', 'LLMs', 'AI Agents', 'RAG', 'MCP', 'Anthropic & OpenAI APIs', 'Prompt Engineering', 'Embeddings / Vector Search',
+    'Embedded Systems', 'RTOS', 'FPGA', 'Analogue & Digital Electronics', 'Signal Processing',
     'Kubernetes', 'EKS', 'GKE', 'Istio', 'Docker', 'Spinnaker',
     'AWS', 'GCP', 'Terraform',
     'CI/CD', 'SRE', 'SLI/SLO', 'Observability', 'Prometheus', 'Grafana',

@@ -125,14 +125,23 @@ type Props = { width: number; height: number; className?: string }
 export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ width, height, className }, ref) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const apiRef = useRef<WordBlobHandle | null>(null)
+  // Latest size, read by the (run-once) init effect; resizing reuses the context.
+  const sizeRef = useRef({ width, height })
+  sizeRef.current = { width, height }
+  const resizeRef = useRef<((w: number, h: number) => void) | null>(null)
   useImperativeHandle(ref, () => ({
     setActive: (m, c, s) => apiRef.current?.setActive(m, c, s),
     clear: () => apiRef.current?.clear(),
   }), [])
 
+  // Init once. The GL context, shader and texture are created a single time;
+  // resizing only calls renderer.setSize (see the resize effect below) instead of
+  // rebuilding everything — rebuilding on every resize janks and churns through the
+  // browser's WebGL-context budget until the canvas gets force-lost.
   useEffect(() => {
     const wrap = wrapRef.current
-    if (!wrap || width < 2 || height < 2) return
+    const { width: w0, height: h0 } = sizeRef.current
+    if (!wrap || w0 < 2 || h0 < 2) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     // WebGL may be unavailable/blocked. Pure enhancement → bail silently on any
@@ -142,7 +151,7 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, dpr })
       const gl = renderer.gl
       gl.clearColor(0, 0, 0, 0)
-      renderer.setSize(width, height)
+      renderer.setSize(w0, h0)
 
       const mask = new Texture(gl, { generateMipmaps: false, flipY: true })
       const program = new Program(gl, {
@@ -160,8 +169,8 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       const meshObj = new Mesh(gl, { geometry: new Triangle(gl), program })
       const canvas = gl.canvas as HTMLCanvasElement
       canvas.style.display = 'block'
-      canvas.style.width = `${width}px`
-      canvas.style.height = `${height}px`
+      canvas.style.width = `${w0}px`
+      canvas.style.height = `${h0}px`
       wrap.appendChild(canvas) // last GL step → on throw above, nothing is in the DOM
 
       let raf = 0
@@ -212,12 +221,24 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       }
       document.addEventListener('visibilitychange', onVis)
 
+      // Resize reuses the context: just resize the framebuffer + update the
+      // resolution uniform, and re-render a frame if the blob is currently showing.
+      resizeRef.current = (w, h) => {
+        if (w < 2 || h < 2) return
+        renderer.setSize(w, h)
+        program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height]
+        canvas.style.width = `${w}px`
+        canvas.style.height = `${h}px`
+        if (target !== 0 || cur > 0) ensure()
+      }
+
       return () => {
         if (raf) cancelAnimationFrame(raf)
         document.removeEventListener('visibilitychange', onVis)
         canvas.removeEventListener('webglcontextlost', onLost)
         canvas.removeEventListener('webglcontextrestored', onRestored)
         apiRef.current = null
+        resizeRef.current = null
         if (canvas.parentNode) canvas.parentNode.removeChild(canvas)
         gl.getExtension('WEBGL_lose_context')?.loseContext()
       }
@@ -225,7 +246,11 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       console.warn('[word-blob] WebGL init failed; words render without the glow', e)
       return
     }
-  }, [width, height])
+    // Init once — resizing is handled by the effect below, not by re-running this.
+  }, [])
+
+  // Apply size changes to the existing context (no teardown/rebuild).
+  useEffect(() => { resizeRef.current?.(width, height) }, [width, height])
 
   return <div ref={wrapRef} className={className} aria-hidden style={{ pointerEvents: 'none' }} />
 })

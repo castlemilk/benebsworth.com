@@ -75,12 +75,14 @@ export function GridNav({ latest }: { latest: Latest }) {
 
   const { cols, rows } = dims
   const PAD = cell * 0.5
-  // Extra bottom padding so a hovered artifact-tile label (drawn below its tile)
-  // is never clipped by the SVG bounds. Top/left padding stays PAD.
+  // Extra TOP padding so a hovered artifact-tile label (drawn ABOVE its tile) is
+  // never clipped by the SVG bounds, and so labels open into empty header space
+  // rather than colliding with the shuffle button / content below the grid. cy is
+  // shifted down by LABEL_PAD to claim that top room; left/right padding stays PAD.
   const LABEL_PAD = cell * 0.34
   const W = cols * cell + PAD * 2, H = rows * cell + PAD * 2 + LABEL_PAD
   const cx = (c: number) => PAD + c * cell + cell / 2
-  const cy = (r: number) => PAD + r * cell + cell / 2
+  const cy = (r: number) => PAD + LABEL_PAD + r * cell + cell / 2
 
   // Connector path through the centres of a word's cells (monotone right/down).
   const connectorD = (path: [number, number][]) =>
@@ -113,6 +115,17 @@ export function GridNav({ latest }: { latest: Latest }) {
       </header>
       <div className="flex w-full flex-1 items-center justify-center">
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">
+        {/* Gooey/metaball filter: blurs the per-letter blobs + connector, then the
+            alpha-contrast matrix re-sharpens the edge so overlapping shapes fuse
+            into ONE connected organic blob hugging the whole word (lava-lamp goo).
+            stdDeviation scales with the cell so the bridge between adjacent letters
+            holds at any viewport size. */}
+        <defs>
+          <filter id="word-goo" x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation={Math.max(4, cell * 0.2)} result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 15 -6" />
+          </filter>
+        </defs>
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (
             <circle key={`${c}-${r}`} cx={cx(c)} cy={cy(r)} r={Math.max(1.6, cell * 0.024)} fill="var(--color-dot)" opacity={0.5} />
@@ -133,6 +146,66 @@ export function GridNav({ latest }: { latest: Latest }) {
             // Re-key by seed so a re-roll remounts the group and replays the draw.
             <Link key={`${w.key}-${seed}`} href={HREF[w.key]} aria-label={w.key}>
               <g className="word">
+                {/* Lava-goo glow layer. Painted first → sits behind the connector
+                    and glyphs. The gooey filter fuses the fat connector stroke +
+                    per-letter blobs into one connected blob spanning the word.
+                    Invisible at rest; CSS reveals + breathes it on hover/focus, so
+                    the calm landing state is unchanged. pointer-events:none keeps
+                    the link's hit area on the letters/connector, not the bloom. */}
+                {(() => {
+                  // Seeded RNG (per word) → deterministic across SSR + re-renders, so
+                  // no hydration mismatch and the layout stays stable while hovering.
+                  // Every blob/particle gets its own jitter, drift target, scale,
+                  // duration, delay and direction → the fused shape morphs randomly
+                  // and asymmetrically instead of pulsing in unison.
+                  const g = mulberry32(seed + order * 7919 + 13)
+                  const blobs = path.map(([c, r]) => ({
+                    x: cx(c) + (g() - 0.5) * cell * 0.3,
+                    y: cy(r) + (g() - 0.5) * cell * 0.3,
+                    r: cell * (0.28 + g() * 0.22),
+                    dx: (g() - 0.5) * cell * 0.55, dy: (g() - 0.5) * cell * 0.55,
+                    sx: 0.74 + g() * 0.6, sy: 0.74 + g() * 0.6,
+                    dur: 2.4 + g() * 3.4, delay: -g() * 5, rev: g() > 0.5,
+                  }))
+                  const particles = Array.from({ length: 9 }).map(() => {
+                    const [c, r] = path[Math.floor(g() * path.length)]
+                    return {
+                      x: cx(c) + (g() - 0.5) * cell * 0.8,
+                      y: cy(r) + (g() - 0.5) * cell * 0.5,
+                      r: cell * (0.035 + g() * 0.07),
+                      rise: -cell * (0.7 + g() * 1.1),
+                      drift: (g() - 0.5) * cell * 0.5,
+                      dur: 2.2 + g() * 2.8, delay: -g() * 4, op: 0.5 + g() * 0.45,
+                    }
+                  })
+                  const wrapStyle = { pointerEvents: 'none', color: accent, '--goo-glow': `${cell * 0.3}px` } as React.CSSProperties
+                  return (
+                    <g className="word-goo" style={wrapStyle}>
+                      {/* Connected metaball blob (faint, soft). */}
+                      <g className="word-goo-blob" filter="url(#word-goo)" fill={accent}>
+                        <path d={d} fill="none" stroke={accent} strokeWidth={cell * 0.4} strokeLinecap="round" strokeLinejoin="round" />
+                        {blobs.map((b, i) => (
+                          <circle key={i} cx={b.x} cy={b.y} r={b.r} className="goo-blob"
+                            style={{
+                              '--dx': `${b.dx}px`, '--dy': `${b.dy}px`, '--sx': b.sx, '--sy': b.sy,
+                              animationDuration: `${b.dur}s`, animationDelay: `${b.delay}s`,
+                              animationDirection: b.rev ? 'reverse' : 'normal',
+                            } as React.CSSProperties} />
+                        ))}
+                      </g>
+                      {/* Rising particles (embers / bubbles drifting off the word). */}
+                      <g className="word-particles" fill={accent}>
+                        {particles.map((p, i) => (
+                          <circle key={i} cx={p.x} cy={p.y} r={p.r} className="goo-particle"
+                            style={{
+                              '--rise': `${p.rise}px`, '--px-drift': `${p.drift}px`, '--p-op': p.op,
+                              animationDuration: `${p.dur}s`, animationDelay: `${p.delay}s`,
+                            } as React.CSSProperties} />
+                        ))}
+                      </g>
+                    </g>
+                  )
+                })()}
                 {/* Persistent connector "snake body": draws in, then stays as the
                     structural line linking the letters; brightens on hover/focus. */}
                 <path
@@ -211,13 +284,13 @@ export function GridNav({ latest }: { latest: Latest }) {
             ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label} {...active}>{inner}</a>
             : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label} {...active}>{inner}</Link>
         })}
-        {/* Label layer painted after all tiles so the hovered tile's label is
-            never covered by a neighbouring tile's rect (tiles paint row-major). */}
+        {/* Label layer painted after all tiles so the hovered tile's label (drawn
+            ABOVE the tile) is never covered by a neighbouring tile's rect. */}
         {gaps.map(([c, r], i) => {
           const a = picks[i]; if (!a || hovered !== i) return null
           const s = cell * 0.84
           return (
-            <text key={`lbl-${i}`} x={cx(c)} y={cy(r) + s / 2 + cell * 0.2}
+            <text key={`lbl-${i}`} x={cx(c)} y={cy(r) - s / 2 - cell * 0.12}
               textAnchor="middle" fill="var(--color-fg)" fontSize={Math.max(9, Math.round(cell * 0.13))}
               style={{ pointerEvents: 'none' }}>{a.label}</text>
           )

@@ -273,4 +273,49 @@ a:focus-visible .word .snake-body {
   filter: drop-shadow(0 0 6px currentColor);
 }
 
+/* --- lava-goo glow + particles (hover/focus only) --- */
+/* Behind the glyphs, invisible at rest so the calm landing look is untouched. On
+   hover/focus it fades to a faint, soft-glowing blob plus rising particles. Each
+   blob/particle carries its own seeded duration, delay, direction and CSS-var drift
+   targets (set inline) so the fused shape morphs asymmetrically and never repeats in
+   unison. The wrapper's drop-shadow supplies the outer gaussian glow. */
+.word-goo { opacity: 0; transition: opacity .4s ease; }
+.word-goo-blob { opacity: 0.32; }
+.goo-blob, .goo-particle { transform-box: fill-box; transform-origin: center; }
+.goo-particle { opacity: 0; }
+.word:hover .word-goo,
+a:focus-visible .word .word-goo {
+  opacity: 1;
+  filter: drop-shadow(0 0 var(--goo-glow, 14px) currentColor);
+}
+.word:hover .goo-blob,
+a:focus-visible .word .goo-blob {
+  animation-name: goo-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.word:hover .goo-particle,
+a:focus-visible .word .goo-particle {
+  animation-name: goo-particle;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+/* Multi-stop, multi-direction morph. Combined with each blob's randomised vars,
+   duration, delay and direction, the union of blobs never resolves to a symmetric
+   pulse — it churns like lava. */
+@keyframes goo-drift {
+  0%   { transform: translate(0, 0) scale(1, 1); }
+  25%  { transform: translate(var(--dx, 0), var(--dy, 0)) scale(var(--sx, 1), var(--sy, 1)); }
+  55%  { transform: translate(calc(var(--dx, 0) * -0.7), calc(var(--dy, 0) * 0.9)) scale(calc(2 - var(--sx, 1)), var(--sy, 1)); }
+  80%  { transform: translate(calc(var(--dx, 0) * 0.5), calc(var(--dy, 0) * -0.6)) scale(var(--sx, 1), calc(2 - var(--sy, 1))); }
+  100% { transform: translate(0, 0) scale(1, 1); }
+}
+/* Particles rise + drift sideways and fade, like embers/bubbles off the word. */
+@keyframes goo-particle {
+  0%   { opacity: 0; transform: translate(0, 0) scale(.5); }
+  15%  { opacity: var(--p-op, .6); }
+  85%  { opacity: var(--p-op, .6); }
+  100% { opacity: 0; transform: translate(var(--px-drift, 0), var(--rise, -20px)) scale(1.2); }
+}
+
 @keyframes skillmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

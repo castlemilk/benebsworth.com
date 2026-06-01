@@ -127,13 +127,19 @@ export function GridNav({ latest }: { latest: Latest }) {
     c.textAlign = 'center'
     c.textBaseline = 'middle'
     c.fillStyle = '#fff'
-    // Blur softens + slightly dilates the glyphs into a glow that hugs the text.
-    c.filter = `blur(${Math.max(2, cell * 0.13)}px)`
-    for (const t of texts) {
-      const x = parseFloat(t.getAttribute('x') || '0')
-      const y = parseFloat(t.getAttribute('y') || '0')
-      c.fillText(t.textContent || '', x, y)
-    }
+    c.strokeStyle = '#fff'
+    c.lineCap = 'round'
+    c.lineJoin = 'round'
+    c.lineWidth = cell * 0.92
+    // Blur dilates everything into ONE wide connected region covering the segment.
+    c.filter = `blur(${Math.max(4, cell * 0.26)}px)`
+    const pts = texts.map((t) => [parseFloat(t.getAttribute('x') || '0'), parseFloat(t.getAttribute('y') || '0')] as const)
+    // Thick polyline through the letter cells (consecutive = the word's path) joins
+    // the glyphs into a continuous shape; the glyph fills bulge it at each letter.
+    c.beginPath()
+    pts.forEach(([x, y], i) => (i === 0 ? c.moveTo(x, y) : c.lineTo(x, y)))
+    c.stroke()
+    texts.forEach((t, i) => c.fillText(t.textContent || '', pts[i][0], pts[i][1]))
     blobRef.current?.setActive(mask, parseRGB(cs.fill))
   }
 

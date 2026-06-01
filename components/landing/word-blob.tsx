@@ -67,18 +67,23 @@ float fbm(vec2 p, float t) {
 }
 
 void main() {
-  // Slightly warp the mask lookup with the flow field so the glow wavers like
-  // liquid held in the letterforms.
-  float w0 = fbm(vUv * 3.0, uTime * 0.3);
-  float w1 = fbm(vUv * 3.0 + 7.3, uTime * 0.3);
-  vec2 uv = vUv + 0.006 * vec2(w0, w1);
-  float m = texture2D(uMask, uv).a; // soft glyph mask → blob follows the text
+  // The mask is a connected region covering the whole word segment.
+  float region = texture2D(uMask, vUv).a;
+  if (region < 0.003) discard;
 
-  float n = fbm(gl_FragCoord.xy / uResolution.y * 2.2, uTime * 0.3);
-  float flow = clamp(0.7 + 0.5 * n, 0.35, 1.3);
-  float a = clamp(m * flow, 0.0, 1.0) * uAlpha;
-  vec3 col = uColor * (0.8 + 0.4 * flow);
-  // Premultiplied output so the mask gates the colour regardless of blend mode.
+  // Lava field: domain-warped fbm that rises and morphs over time, so bright
+  // blobs of glow drift through the segment like a lava lamp.
+  float t = uTime * 0.28;
+  vec2 p = vUv * vec2(uResolution.x / uResolution.y, 1.0) * 2.4; // aspect-correct
+  vec2 warp = vec2(fbm(p + vec2(0.0, t), t * 0.6),
+                   fbm(p + vec2(4.7, 1.3 - t), t * 0.6));
+  float lava = fbm(p + 2.6 * warp + vec2(0.0, -t * 2.2), t * 0.4); // -y → blobs rise
+  lava = smoothstep(-0.22, 0.32, lava);
+
+  float bright = mix(0.45, 1.35, lava);
+  float a = clamp(region * bright, 0.0, 1.0) * uAlpha;
+  vec3 col = uColor * (0.85 + 0.5 * lava);
+  // Premultiplied output so the region gates the colour regardless of blend mode.
   gl_FragColor = vec4(col * a, a);
 }
 `

@@ -15,6 +15,8 @@ const WORDS = [
 ]
 const HREF: Record<string, string> = { blog: '/blog/', project: '/projects/', about: '/about/' }
 const COLOR: Record<string, string> = { blog: 'var(--color-blog)', project: 'var(--color-project)', about: 'var(--color-about)' }
+// Each section's hover cloud is built from one particle shape, for identity.
+const SHAPE: Record<string, 'square' | 'circle' | 'triangle'> = { blog: 'square', project: 'circle', about: 'triangle' }
 
 /* Snake-draw timing. The body of each word draws over BODY_DUR at constant
  * (linear) speed; words cascade with a START_STAGGER that is < BODY_DUR so they
@@ -115,17 +117,6 @@ export function GridNav({ latest }: { latest: Latest }) {
       </header>
       <div className="flex w-full flex-1 items-center justify-center">
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">
-        {/* Gooey/metaball filter: blurs the per-letter blobs + connector, then the
-            alpha-contrast matrix re-sharpens the edge so overlapping shapes fuse
-            into ONE connected organic blob hugging the whole word (lava-lamp goo).
-            stdDeviation scales with the cell so the bridge between adjacent letters
-            holds at any viewport size. */}
-        <defs>
-          <filter id="word-goo" x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur in="SourceGraphic" stdDeviation={Math.max(4, cell * 0.2)} result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 15 -6" />
-          </filter>
-        </defs>
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (
             <circle key={`${c}-${r}`} cx={cx(c)} cy={cy(r)} r={Math.max(1.6, cell * 0.024)} fill="var(--color-dot)" opacity={0.5} />
@@ -134,6 +125,7 @@ export function GridNav({ latest }: { latest: Latest }) {
         {WORDS.map((w) => {
           const path = placement![w.key]
           const accent = COLOR[w.key]
+          const shape = SHAPE[w.key]
           const order = CASCADE.indexOf(w.key)
           const wordStart = order * START_STAGGER
           const len = path.length
@@ -154,55 +146,45 @@ export function GridNav({ latest }: { latest: Latest }) {
                     the link's hit area on the letters/connector, not the bloom. */}
                 {(() => {
                   // Seeded RNG (per word) → deterministic across SSR + re-renders, so
-                  // no hydration mismatch and the layout stays stable while hovering.
-                  // Every blob/particle gets its own jitter, drift target, scale,
-                  // duration, delay and direction → the fused shape morphs randomly
-                  // and asymmetrically instead of pulsing in unison.
+                  // no hydration mismatch and the cloud stays stable while hovering.
+                  // The whole "blob" is now a faint cloud of small shapes scattered
+                  // over the word's letters; each particle drifts/rotates/twinkles on
+                  // its own seeded loop, so the cloud shimmers subtly with no uniform
+                  // pulse. Shape is per section (□ blog · ○ project · △ about).
                   const g = mulberry32(seed + order * 7919 + 13)
-                  const blobs = path.map(([c, r]) => ({
-                    x: cx(c) + (g() - 0.5) * cell * 0.3,
-                    y: cy(r) + (g() - 0.5) * cell * 0.3,
-                    r: cell * (0.28 + g() * 0.22),
-                    dx: (g() - 0.5) * cell * 0.55, dy: (g() - 0.5) * cell * 0.55,
-                    sx: 0.74 + g() * 0.6, sy: 0.74 + g() * 0.6,
-                    dur: 2.4 + g() * 3.4, delay: -g() * 5, rev: g() > 0.5,
-                  }))
-                  const particles = Array.from({ length: 9 }).map(() => {
-                    const [c, r] = path[Math.floor(g() * path.length)]
-                    return {
-                      x: cx(c) + (g() - 0.5) * cell * 0.8,
-                      y: cy(r) + (g() - 0.5) * cell * 0.5,
-                      r: cell * (0.035 + g() * 0.07),
-                      rise: -cell * (0.7 + g() * 1.1),
-                      drift: (g() - 0.5) * cell * 0.5,
-                      dur: 2.2 + g() * 2.8, delay: -g() * 4, op: 0.5 + g() * 0.45,
-                    }
-                  })
-                  const wrapStyle = { pointerEvents: 'none', color: accent, '--goo-glow': `${cell * 0.3}px` } as React.CSSProperties
+                  const PER_CELL = 11
+                  const dots = path.flatMap(([c, r]) =>
+                    Array.from({ length: PER_CELL }).map(() => {
+                      const ang = g() * Math.PI * 2
+                      const rad = Math.sqrt(g()) * cell * 0.52 // disc scatter around the cell centre
+                      return {
+                        x: cx(c) + Math.cos(ang) * rad,
+                        y: cy(r) + Math.sin(ang) * rad,
+                        s: cell * (0.03 + g() * 0.05),
+                        op: 0.08 + g() * 0.16,
+                        dx: (g() - 0.5) * cell * 0.1, dy: (g() - 0.5) * cell * 0.1,
+                        rot: (g() - 0.5) * 50,
+                        dur: 4 + g() * 4, delay: -g() * 6,
+                      }
+                    }),
+                  )
+                  const wrapStyle = { pointerEvents: 'none', color: accent, '--goo-glow': `${cell * 0.08}px` } as React.CSSProperties
                   return (
-                    <g className="word-goo" style={wrapStyle}>
-                      {/* Connected metaball blob (faint, soft). */}
-                      <g className="word-goo-blob" filter="url(#word-goo)" fill={accent}>
-                        <path d={d} fill="none" stroke={accent} strokeWidth={cell * 0.4} strokeLinecap="round" strokeLinejoin="round" />
-                        {blobs.map((b, i) => (
-                          <circle key={i} cx={b.x} cy={b.y} r={b.r} className="goo-blob"
-                            style={{
-                              '--dx': `${b.dx}px`, '--dy': `${b.dy}px`, '--sx': b.sx, '--sy': b.sy,
-                              animationDuration: `${b.dur}s`, animationDelay: `${b.delay}s`,
-                              animationDirection: b.rev ? 'reverse' : 'normal',
-                            } as React.CSSProperties} />
-                        ))}
-                      </g>
-                      {/* Rising particles (embers / bubbles drifting off the word). */}
-                      <g className="word-particles" fill={accent}>
-                        {particles.map((p, i) => (
-                          <circle key={i} cx={p.x} cy={p.y} r={p.r} className="goo-particle"
-                            style={{
-                              '--rise': `${p.rise}px`, '--px-drift': `${p.drift}px`, '--p-op': p.op,
-                              animationDuration: `${p.dur}s`, animationDelay: `${p.delay}s`,
-                            } as React.CSSProperties} />
-                        ))}
-                      </g>
+                    <g className="word-goo" fill={accent} style={wrapStyle}>
+                      {dots.map((p, i) => {
+                        const style = {
+                          '--dx': `${p.dx}px`, '--dy': `${p.dy}px`, '--rot': `${p.rot}deg`, '--p-op': p.op,
+                          animationDuration: `${p.dur}s`, animationDelay: `${p.delay}s`,
+                        } as React.CSSProperties
+                        if (shape === 'circle')
+                          return <circle key={i} cx={p.x} cy={p.y} r={p.s} className="goo-dot" style={style} />
+                        if (shape === 'square')
+                          return <rect key={i} x={p.x - p.s} y={p.y - p.s} width={p.s * 2} height={p.s * 2} className="goo-dot" style={style} />
+                        // equilateral triangle centred on (p.x, p.y)
+                        const h = p.s * 1.3
+                        const pts = `${p.x},${p.y - h} ${p.x - h * 0.87},${p.y + h * 0.5} ${p.x + h * 0.87},${p.y + h * 0.5}`
+                        return <polygon key={i} points={pts} className="goo-dot" style={style} />
+                      })}
                     </g>
                   )
                 })()}

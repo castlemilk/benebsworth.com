@@ -264,9 +264,18 @@
    opacity:0 the backwards fill reverts to a static 6% dash parked on the first
    letter, and it would also flash on the SSR/reduced-motion first paint. */
 .snake-head { fill: none; stroke-linecap: round; opacity: 0; }
-/* Brighten the connector + glow the glyphs on hover OR keyboard focus. */
+/* Glyphs paint their stroke behind the fill so a hover halo never eats the letter. */
+.word text { paint-order: stroke; }
+/* On hover/focus the particle field fills the word's region in the same accent, so
+   the glyphs need to punch through it: a bg-coloured "knockout" stroke clears a dark
+   gap around each letter, and a tight glow lifts it off the field. */
 .word:hover text,
-a:focus-visible .word text { filter: drop-shadow(0 0 12px currentColor); }
+a:focus-visible .word text {
+  stroke: var(--bg);
+  stroke-width: 0.22em;
+  paint-order: stroke;
+  filter: drop-shadow(0 0 7px currentColor);
+}
 .word:hover .snake-body,
 a:focus-visible .word .snake-body {
   opacity: 0.85;

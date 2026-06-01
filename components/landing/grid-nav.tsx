@@ -107,15 +107,34 @@ export function GridNav({ latest }: { latest: Latest }) {
   const gaps: [number, number][] = []
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (!occ.has(`${c},${r}`)) gaps.push([c, r])
 
-  // Drives the shared WebGL blob behind the words. On hover/focus we hand it the
-  // word's letter-cell centres (canvas px) + the section accent resolved from the
-  // live computed fill (so it tracks the theme).
+  // Drives the shared WebGL blob behind the words. On hover/focus we render the
+  // word's actual glyphs into a soft mask canvas (so the blob follows the text
+  // shape) and pass it + the section accent (resolved from the live computed fill,
+  // so it tracks the theme) to the shader.
   const blobRef = useRef<WordBlobHandle>(null)
-  const activateBlob = (el: Element, path: [number, number][]) => {
-    const pts = path.map(([c, r]) => [cx(c), cy(r)] as [number, number])
-    const txt = el.querySelector('text')
-    const color = txt ? parseRGB(getComputedStyle(txt).fill) : ([1, 1, 1] as [number, number, number])
-    blobRef.current?.setActive(pts, color, cell * 0.62)
+  const activateBlob = (el: Element) => {
+    const texts = Array.from(el.querySelectorAll('text'))
+    if (!texts.length) return
+    const cs = getComputedStyle(texts[0])
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const mask = document.createElement('canvas')
+    mask.width = Math.round(W * dpr)
+    mask.height = Math.round(H * dpr)
+    const c = mask.getContext('2d')
+    if (!c) return
+    c.scale(dpr, dpr)
+    c.font = `${cs.fontWeight} ${parseFloat(cs.fontSize)}px ${cs.fontFamily}`
+    c.textAlign = 'center'
+    c.textBaseline = 'middle'
+    c.fillStyle = '#fff'
+    // Blur softens + slightly dilates the glyphs into a glow that hugs the text.
+    c.filter = `blur(${Math.max(2, cell * 0.13)}px)`
+    for (const t of texts) {
+      const x = parseFloat(t.getAttribute('x') || '0')
+      const y = parseFloat(t.getAttribute('y') || '0')
+      c.fillText(t.textContent || '', x, y)
+    }
+    blobRef.current?.setActive(mask, parseRGB(cs.fill))
   }
 
   const rng = mulberry32(seed)
@@ -157,9 +176,9 @@ export function GridNav({ latest }: { latest: Latest }) {
           return (
             // Re-key by seed so a re-roll remounts the group and replays the draw.
             <Link key={`${w.key}-${seed}`} href={HREF[w.key]} aria-label={w.key}
-              onMouseEnter={(e) => activateBlob(e.currentTarget, path)}
+              onMouseEnter={(e) => activateBlob(e.currentTarget)}
               onMouseLeave={() => blobRef.current?.clear()}
-              onFocus={(e) => activateBlob(e.currentTarget, path)}
+              onFocus={(e) => activateBlob(e.currentTarget)}
               onBlur={() => blobRef.current?.clear()}>
               <g className="word">
                 {/* Persistent connector "snake body": draws in, then stays as the

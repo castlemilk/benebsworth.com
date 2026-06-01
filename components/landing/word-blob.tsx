@@ -1,13 +1,13 @@
 'use client'
-import { Renderer, Program, Mesh, Triangle } from 'ogl'
+import { Renderer, Program, Mesh, Triangle, Texture } from 'ogl'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
 /** Imperative handle: the SVG word links drive this from their hover/focus. */
 export type WordBlobHandle = {
-  /** Light up a word's blob. `pointsCss` are letter-cell centres in CSS px
-   *  (canvas-local), `color` is linear-ish rgb 0..1, `radiusCss` the metaball
-   *  sigma in CSS px. */
-  setActive: (pointsCss: [number, number][], color: [number, number, number], radiusCss: number) => void
+  /** Light up a word's blob. `mask` is a canvas with the word's glyphs drawn
+   *  (soft white on transparent, same pixel space as the blob canvas); `color`
+   *  is rgb 0..1. The shader tints + flows inside the glyph mask. */
+  setActive: (mask: HTMLCanvasElement, color: [number, number, number]) => void
   /** Fade the blob back out. */
   clear: () => void
 }
@@ -19,15 +19,17 @@ varying vec2 vUv;
 void main() { vUv = uv; gl_Position = vec4(position, 0.0, 1.0); }
 `
 
-// Metaball mask over the word's letter cells × a Perlin/fbm flow field (ported
-// from the SoftAurora reference), tinted by the section accent and faded by uAlpha.
+// Mask = the word's glyphs (sampled from a texture, so the blob follows the actual
+// text shape). A Perlin/fbm flow field (ported from the SoftAurora reference)
+// shimmers the brightness and slightly warps the lookup so the glow drifts like
+// liquid inside the letters. Tinted by the section accent, faded by uAlpha.
 const fragment = /* glsl */ `
 precision highp float;
 uniform float uTime, uAlpha;
 uniform vec2 uResolution;
 uniform vec3 uColor;
-uniform vec2 uCenter; // word bbox centre, GL px
-uniform vec2 uHalf;   // word bbox half-size (+pad), GL px
+uniform sampler2D uMask;
+varying vec2 vUv;
 #define TAU 6.28318
 
 vec3 gradientHash(vec3 p) {
@@ -65,18 +67,15 @@ float fbm(vec2 p, float t) {
 }
 
 void main() {
-  vec2 frag = gl_FragCoord.xy;
-  // Soft elliptical mask over the word's bounding box, with a noise-wobbled edge so
-  // the blob breathes organically. No uniform arrays → robust upload, and the mask
-  // is exactly 0 outside the box (no stray corner contribution).
-  vec2 q = (frag - uCenter) / uHalf;
-  float dist = length(q);
-  float edge = 1.12 + 0.22 * fbm(q * 1.6, uTime * 0.25);
-  float m = smoothstep(edge, edge - 0.85, dist); // 1 inside → 0 past the edge
+  // Slightly warp the mask lookup with the flow field so the glow wavers like
+  // liquid held in the letterforms.
+  float w0 = fbm(vUv * 3.0, uTime * 0.3);
+  float w1 = fbm(vUv * 3.0 + 7.3, uTime * 0.3);
+  vec2 uv = vUv + 0.006 * vec2(w0, w1);
+  float m = texture2D(uMask, uv).a; // soft glyph mask → blob follows the text
 
-  vec2 np = frag / uResolution.y;
-  float n = fbm(np * 2.2, uTime * 0.3);
-  float flow = clamp(0.55 + 0.6 * n, 0.0, 1.25);
+  float n = fbm(gl_FragCoord.xy / uResolution.y * 2.2, uTime * 0.3);
+  float flow = clamp(0.7 + 0.5 * n, 0.35, 1.3);
   float a = clamp(m * flow, 0.0, 1.0) * uAlpha;
   vec3 col = uColor * (0.8 + 0.4 * flow);
   // Premultiplied output so the mask gates the colour regardless of blend mode.
@@ -88,11 +87,9 @@ type Props = { width: number; height: number; className?: string }
 
 export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ width, height, className }, ref) {
   const wrapRef = useRef<HTMLDivElement>(null)
-  // The live API is wired up inside the effect (once GL exists); the handle just
-  // forwards to it, so calls before mount are safely dropped.
   const apiRef = useRef<WordBlobHandle | null>(null)
   useImperativeHandle(ref, () => ({
-    setActive: (p, c, r) => apiRef.current?.setActive(p, c, r),
+    setActive: (m, c) => apiRef.current?.setActive(m, c),
     clear: () => apiRef.current?.clear(),
   }), [])
 
@@ -100,16 +97,17 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
     const wrap = wrapRef.current
     if (!wrap || width < 2 || height < 2) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
-    // WebGL may be unavailable/blocked. This is a pure enhancement, so on any
-    // init failure we bail silently — the SVG words still work without the glow.
+    // WebGL may be unavailable/blocked. Pure enhancement → bail silently on any
+    // init failure; the SVG words still work without the glow.
     try {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, dpr })
       const gl = renderer.gl
       gl.clearColor(0, 0, 0, 0)
       renderer.setSize(width, height)
 
+      const mask = new Texture(gl, { generateMipmaps: false, flipY: true })
       const program = new Program(gl, {
         vertex, fragment, transparent: true,
         uniforms: {
@@ -117,14 +115,11 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
           uResolution: { value: [gl.canvas.width, gl.canvas.height] },
           uAlpha: { value: 0 },
           uColor: { value: [1, 1, 1] },
-          uCenter: { value: [0, 0] },
-          uHalf: { value: [1, 1] },
+          uMask: { value: mask },
         },
       })
-      // Explicit premultiplied blend so the gate above is honoured regardless of
-      // OGL's transparent default.
-      program.setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
-      const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
+      program.setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA) // premultiplied
+      const meshObj = new Mesh(gl, { geometry: new Triangle(gl), program })
       const canvas = gl.canvas as HTMLCanvasElement
       canvas.style.display = 'block'
       canvas.style.width = `${width}px`
@@ -135,9 +130,8 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       let cur = 0 // current (eased) alpha
       let target = 0
 
-      // A lost context (GPU reset, tab backgrounded, driver hiccup) would otherwise
-      // throw on the next render and silently kill the blob. preventDefault lets the
-      // browser restore it; we just park the loop until then.
+      // A lost context (GPU reset, tab backgrounded) would otherwise throw on the
+      // next render and silently kill the blob. preventDefault lets it restore.
       const onLost = (ev: Event) => { ev.preventDefault(); if (raf) { cancelAnimationFrame(raf); raf = 0 } }
       const onRestored = () => { if (target !== 0 || cur > 0) { if (!raf) raf = requestAnimationFrame(loop) } }
       canvas.addEventListener('webglcontextlost', onLost)
@@ -146,31 +140,21 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       const paint = (timeMs: number) => {
         program.uniforms.uTime.value = reduce ? 0 : timeMs * 0.001
         program.uniforms.uAlpha.value = cur
-        renderer.render({ scene: mesh })
+        renderer.render({ scene: meshObj })
       }
       const loop = (timeMs: number) => {
         cur += 0.09 * (target - cur)
         if (Math.abs(target - cur) < 0.004) cur = target
         paint(timeMs)
-        // Active blob keeps flowing; once fully faded out, park the loop.
-        if (target === 0 && cur === 0) { raf = 0; return }
+        if (target === 0 && cur === 0) { raf = 0; return } // park when fully out
         raf = requestAnimationFrame(loop)
       }
       const ensure = () => { if (!raf) raf = requestAnimationFrame(loop) }
 
       apiRef.current = {
-        setActive(points, color, radiusCss) {
-          // Reduce the word's letter-cell centres to a padded bounding box.
-          let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
-          for (const [x, y] of points) {
-            if (x < minX) minX = x; if (x > maxX) maxX = x
-            if (y < minY) minY = y; if (y > maxY) maxY = y
-          }
-          const pad = radiusCss
-          const cxv = (minX + maxX) / 2, cyv = (minY + maxY) / 2
-          const hx = (maxX - minX) / 2 + pad, hy = (maxY - minY) / 2 + pad
-          program.uniforms.uCenter.value = [cxv * dpr, gl.canvas.height - cyv * dpr] // GL origin bottom-left
-          program.uniforms.uHalf.value = [hx * dpr, hy * dpr]
+        setActive(maskCanvas, color) {
+          mask.image = maskCanvas as unknown as HTMLImageElement
+          mask.needsUpdate = true
           program.uniforms.uColor.value = color
           target = 1
           if (reduce) { cur = 1; paint(0); return }
@@ -199,7 +183,6 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
         gl.getExtension('WEBGL_lose_context')?.loseContext()
       }
     } catch (e) {
-      // Pure enhancement: log once for diagnosis, then leave the words untouched.
       console.warn('[word-blob] WebGL init failed; words render without the glow', e)
       return
     }

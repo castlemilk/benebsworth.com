@@ -77,10 +77,13 @@ export function GridNav({ latest }: { latest: Latest }) {
       setDims({ cols, rows }); setCell(c)
     }
     fit()
-    let t: number
-    const onResize = () => { clearTimeout(t); t = window.setTimeout(fit, 180) }
+    // rAF-throttled (not debounced) so the grid tracks the window live while it's
+    // being dragged, at most once per frame. Cheap now that resize reuses the GL
+    // context (placement is memoised; only cell/cols/rows recompute).
+    let raf = 0
+    const onResize = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; fit() }) }
     window.addEventListener('resize', onResize)
-    return () => { window.removeEventListener('resize', onResize); clearTimeout(t) }
+    return () => { window.removeEventListener('resize', onResize); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   const { cols, rows } = dims

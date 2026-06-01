@@ -1,10 +1,11 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { pack, type Placement } from './packer'
 import { shuffle, mulberry32 } from './rng'
 import { ARTIFACTS } from './artifacts'
 import { ArtifactTile } from './artifact-tiles'
+import { WordBlob, type WordBlobHandle } from './word-blob'
 import { HomeEmbed, homeEmbedSlug } from '@/components/lab/home-embed'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 
@@ -15,8 +16,13 @@ const WORDS = [
 ]
 const HREF: Record<string, string> = { blog: '/blog/', project: '/projects/', about: '/about/' }
 const COLOR: Record<string, string> = { blog: 'var(--color-blog)', project: 'var(--color-project)', about: 'var(--color-about)' }
-// Each section's hover cloud is built from one particle shape, for identity.
-const SHAPE: Record<string, 'square' | 'circle' | 'triangle'> = { blog: 'square', project: 'circle', about: 'triangle' }
+
+/** Parse a computed `rgb(...)`/`rgba(...)` fill into 0..1 rgb for the GL uniform. */
+function parseRGB(css: string): [number, number, number] {
+  const m = css.match(/(\d+\.?\d*)/g)
+  if (!m || m.length < 3) return [1, 1, 1]
+  return [Number(m[0]) / 255, Number(m[1]) / 255, Number(m[2]) / 255]
+}
 
 /* Snake-draw timing. The body of each word draws over BODY_DUR at constant
  * (linear) speed; words cascade with a START_STAGGER that is < BODY_DUR so they
@@ -101,6 +107,17 @@ export function GridNav({ latest }: { latest: Latest }) {
   const gaps: [number, number][] = []
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) if (!occ.has(`${c},${r}`)) gaps.push([c, r])
 
+  // Drives the shared WebGL blob behind the words. On hover/focus we hand it the
+  // word's letter-cell centres (canvas px) + the section accent resolved from the
+  // live computed fill (so it tracks the theme).
+  const blobRef = useRef<WordBlobHandle>(null)
+  const activateBlob = (el: Element, path: [number, number][]) => {
+    const pts = path.map(([c, r]) => [cx(c), cy(r)] as [number, number])
+    const txt = el.querySelector('text')
+    const color = txt ? parseRGB(getComputedStyle(txt).fill) : ([1, 1, 1] as [number, number, number])
+    blobRef.current?.setActive(pts, color, cell * 0.62)
+  }
+
   const rng = mulberry32(seed)
   const picks = shuffle(ARTIFACTS, rng).slice(0, gaps.length).map((a) =>
     a.id === 'latest' && latest
@@ -116,7 +133,11 @@ export function GridNav({ latest }: { latest: Latest }) {
         <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem]">INFRA | SOFTWARE | HARDWARE</p>
       </header>
       <div className="flex w-full flex-1 items-center justify-center">
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary">
+      <div className="relative" style={{ width: W, height: H }}>
+      {/* Shared GPU blob, behind the SVG. Mounted only after mount (client-only GL,
+          no SSR/hydration concern); fades in per word on hover/focus. */}
+      {mounted && <WordBlob ref={blobRef} width={W} height={H} className="absolute inset-0" />}
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary" className="relative">
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (
             <circle key={`${c}-${r}`} cx={cx(c)} cy={cy(r)} r={Math.max(1.6, cell * 0.024)} fill="var(--color-dot)" opacity={0.5} />
@@ -125,7 +146,6 @@ export function GridNav({ latest }: { latest: Latest }) {
         {WORDS.map((w) => {
           const path = placement![w.key]
           const accent = COLOR[w.key]
-          const shape = SHAPE[w.key]
           const order = CASCADE.indexOf(w.key)
           const wordStart = order * START_STAGGER
           const len = path.length
@@ -136,58 +156,12 @@ export function GridNav({ latest }: { latest: Latest }) {
           const d = connectorD(path)
           return (
             // Re-key by seed so a re-roll remounts the group and replays the draw.
-            <Link key={`${w.key}-${seed}`} href={HREF[w.key]} aria-label={w.key}>
+            <Link key={`${w.key}-${seed}`} href={HREF[w.key]} aria-label={w.key}
+              onMouseEnter={(e) => activateBlob(e.currentTarget, path)}
+              onMouseLeave={() => blobRef.current?.clear()}
+              onFocus={(e) => activateBlob(e.currentTarget, path)}
+              onBlur={() => blobRef.current?.clear()}>
               <g className="word">
-                {/* Lava-goo glow layer. Painted first → sits behind the connector
-                    and glyphs. The gooey filter fuses the fat connector stroke +
-                    per-letter blobs into one connected blob spanning the word.
-                    Invisible at rest; CSS reveals + breathes it on hover/focus, so
-                    the calm landing state is unchanged. pointer-events:none keeps
-                    the link's hit area on the letters/connector, not the bloom. */}
-                {(() => {
-                  // Seeded RNG (per word) → deterministic across SSR + re-renders, so
-                  // no hydration mismatch and the cloud stays stable while hovering.
-                  // The whole "blob" is now a faint cloud of small shapes scattered
-                  // over the word's letters; each particle drifts/rotates/twinkles on
-                  // its own seeded loop, so the cloud shimmers subtly with no uniform
-                  // pulse. Shape is per section (□ blog · ○ project · △ about).
-                  const g = mulberry32(seed + order * 7919 + 13)
-                  const PER_CELL = 11
-                  const dots = path.flatMap(([c, r]) =>
-                    Array.from({ length: PER_CELL }).map(() => {
-                      const ang = g() * Math.PI * 2
-                      const rad = Math.sqrt(g()) * cell * 0.52 // disc scatter around the cell centre
-                      return {
-                        x: cx(c) + Math.cos(ang) * rad,
-                        y: cy(r) + Math.sin(ang) * rad,
-                        s: cell * (0.03 + g() * 0.05),
-                        op: 0.08 + g() * 0.16,
-                        dx: (g() - 0.5) * cell * 0.1, dy: (g() - 0.5) * cell * 0.1,
-                        rot: (g() - 0.5) * 50,
-                        dur: 4 + g() * 4, delay: -g() * 6,
-                      }
-                    }),
-                  )
-                  const wrapStyle = { pointerEvents: 'none', color: accent, '--goo-glow': `${cell * 0.08}px` } as React.CSSProperties
-                  return (
-                    <g className="word-goo" fill={accent} style={wrapStyle}>
-                      {dots.map((p, i) => {
-                        const style = {
-                          '--dx': `${p.dx}px`, '--dy': `${p.dy}px`, '--rot': `${p.rot}deg`, '--p-op': p.op,
-                          animationDuration: `${p.dur}s`, animationDelay: `${p.delay}s`,
-                        } as React.CSSProperties
-                        if (shape === 'circle')
-                          return <circle key={i} cx={p.x} cy={p.y} r={p.s} className="goo-dot" style={style} />
-                        if (shape === 'square')
-                          return <rect key={i} x={p.x - p.s} y={p.y - p.s} width={p.s * 2} height={p.s * 2} className="goo-dot" style={style} />
-                        // equilateral triangle centred on (p.x, p.y)
-                        const h = p.s * 1.3
-                        const pts = `${p.x},${p.y - h} ${p.x - h * 0.87},${p.y + h * 0.5} ${p.x + h * 0.87},${p.y + h * 0.5}`
-                        return <polygon key={i} points={pts} className="goo-dot" style={style} />
-                      })}
-                    </g>
-                  )
-                })()}
                 {/* Persistent connector "snake body": draws in, then stays as the
                     structural line linking the letters; brightens on hover/focus. */}
                 <path
@@ -278,6 +252,7 @@ export function GridNav({ latest }: { latest: Latest }) {
           )
         })}
       </svg>
+      </div>
       </div>
       <button onClick={() => setSeed(Math.floor(Math.random() * 1e9))}
         className="text-xs uppercase tracking-wider text-muted hover:text-fg">↻ shuffle</button>

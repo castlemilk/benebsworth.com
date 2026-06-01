@@ -273,30 +273,7 @@ a:focus-visible .word .snake-body {
   filter: drop-shadow(0 0 6px currentColor);
 }
 
-/* --- particle-cloud word glow (hover/focus only) --- */
-/* The whole "blob" is a faint cloud of small shapes (□ blog · ○ project · △ about)
-   scattered over each word's letters, painted behind the glyphs and invisible at
-   rest so the calm landing look is untouched. On hover/focus the cloud fades in and
-   every particle drifts, rotates and twinkles on its own seeded loop — small
-   amplitudes on purpose, so it shimmers subtly rather than pulsing in unison. */
-.word-goo { opacity: 0; transition: opacity .45s ease; }
-.goo-dot { transform-box: fill-box; transform-origin: center; opacity: var(--p-op, .2); }
-.word:hover .word-goo,
-a:focus-visible .word .word-goo {
-  opacity: 1;
-  filter: drop-shadow(0 0 var(--goo-glow, 4px) currentColor);
-}
-.word:hover .goo-dot,
-a:focus-visible .word .goo-dot {
-  animation-name: particle-float;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-/* Tiny drift + slow rotation + faint twinkle; per-particle vars/duration/delay keep
-   the cloud's motion incoherent and gentle. */
-@keyframes particle-float {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: var(--p-op, .2); }
-  50%      { transform: translate(var(--dx, 0), var(--dy, 0)) rotate(var(--rot, 0deg)); opacity: calc(var(--p-op, .2) * 0.5); }
-}
+/* Word hover/focus glow is now a shared WebGL blob behind the SVG; see
+   components/landing/word-blob.tsx. The letter + connector glow below stays. */
 
 @keyframes skillmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

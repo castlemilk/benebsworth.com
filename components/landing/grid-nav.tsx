@@ -272,17 +272,30 @@ export function GridNav({ latest }: { latest: Latest }) {
             : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label} {...active}>{inner}</Link>
         })}
         {/* Label layer painted after all tiles so it sits on top of any neighbour.
-            Placed toward the grid's vertical centre — a top-edge tile labels BELOW,
-            a bottom-edge tile labels ABOVE — so the text always opens into the grid
-            (and its inter-row gap) instead of clipping past the top/bottom margin. */}
+            Side is chosen to open into the most space and NOT clash with the big
+            filled tile in the next row: rank each side by what it abuts — the grid
+            edge / outer margin (most room) > a word letter (thin, room around it) >
+            another tile (worst). Clipping past the top/bottom margin is excluded. */}
         {gaps.map(([c, r], i) => {
           const a = picks[i]; if (!a || hovered !== i) return null
           const s = cell * 0.84
-          const above = cy(r) > H / 2
-          const y = above ? cy(r) - s / 2 - cell * 0.14 : cy(r) + s / 2 + cell * 0.3
+          const fs = Math.max(9, Math.round(cell * 0.13))
+          const aboveY = cy(r) - s / 2 - cell * 0.14
+          const belowY = cy(r) + s / 2 + cell * 0.3
+          const aboveClips = aboveY - fs < 1
+          const belowClips = belowY > H - 1
+          // edge (2, open margin) > letter (1, space around glyph) > tile (0, clashes)
+          const rank = (rr: number) => (rr < 0 || rr >= rows ? 2 : occ.has(`${c},${rr}`) ? 1 : 0)
+          let useAbove: boolean
+          if (!aboveClips && belowClips) useAbove = true
+          else if (aboveClips && !belowClips) useAbove = false
+          else {
+            const ra = rank(r - 1), rb = rank(r + 1)
+            useAbove = ra !== rb ? ra > rb : cy(r) > H / 2
+          }
           return (
-            <text key={`lbl-${i}`} x={cx(c)} y={y}
-              textAnchor="middle" fill="var(--color-fg)" fontSize={Math.max(9, Math.round(cell * 0.13))}
+            <text key={`lbl-${i}`} x={cx(c)} y={useAbove ? aboveY : belowY}
+              textAnchor="middle" fill="var(--color-fg)" fontSize={fs}
               style={{ pointerEvents: 'none' }}>{a.label}</text>
           )
         })}

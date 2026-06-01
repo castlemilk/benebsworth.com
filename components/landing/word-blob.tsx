@@ -23,10 +23,11 @@ void main() { vUv = uv; gl_Position = vec4(position, 0.0, 1.0); }
 // from the SoftAurora reference), tinted by the section accent and faded by uAlpha.
 const fragment = /* glsl */ `
 precision highp float;
-uniform float uTime, uAlpha, uRadius, uCount;
+uniform float uTime, uAlpha;
 uniform vec2 uResolution;
 uniform vec3 uColor;
-uniform vec2 uPoints[8];
+uniform vec2 uCenter; // word bbox centre, GL px
+uniform vec2 uHalf;   // word bbox half-size (+pad), GL px
 #define TAU 6.28318
 
 vec3 gradientHash(vec3 p) {
@@ -65,24 +66,21 @@ float fbm(vec2 p, float t) {
 
 void main() {
   vec2 frag = gl_FragCoord.xy;
-  // Metaball mask: sum of gaussians at the (slowly wobbling) letter cells so the
-  // visible field is one connected blob shaped to the word, with edges that flow.
-  float m = 0.0;
-  for (int i = 0; i < 8; i++) {
-    if (float(i) >= uCount) break;
-    vec2 pt = uPoints[i] + uRadius * 0.22 * vec2(sin(uTime * 0.7 + float(i) * 1.7),
-                                                 cos(uTime * 0.6 + float(i) * 1.1));
-    vec2 d = frag - pt;
-    m += exp(-dot(d, d) / (uRadius * uRadius));
-  }
-  m = clamp(m, 0.0, 1.0);
+  // Soft elliptical mask over the word's bounding box, with a noise-wobbled edge so
+  // the blob breathes organically. No uniform arrays → robust upload, and the mask
+  // is exactly 0 outside the box (no stray corner contribution).
+  vec2 q = (frag - uCenter) / uHalf;
+  float dist = length(q);
+  float edge = 1.12 + 0.22 * fbm(q * 1.6, uTime * 0.25);
+  float m = smoothstep(edge, edge - 0.85, dist); // 1 inside → 0 past the edge
 
   vec2 np = frag / uResolution.y;
   float n = fbm(np * 2.2, uTime * 0.3);
-  float flow = clamp(0.5 + 0.7 * n, 0.0, 1.3);
-  float intensity = m * flow;
-  vec3 col = uColor * (0.7 + 0.5 * flow);
-  gl_FragColor = vec4(col, intensity * uAlpha);
+  float flow = clamp(0.55 + 0.6 * n, 0.0, 1.25);
+  float a = clamp(m * flow, 0.0, 1.0) * uAlpha;
+  vec3 col = uColor * (0.8 + 0.4 * flow);
+  // Premultiplied output so the mask gates the colour regardless of blend mode.
+  gl_FragColor = vec4(col * a, a);
 }
 `
 
@@ -107,7 +105,7 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
     // WebGL may be unavailable/blocked. This is a pure enhancement, so on any
     // init failure we bail silently — the SVG words still work without the glow.
     try {
-      const renderer = new Renderer({ alpha: true, premultipliedAlpha: false, dpr })
+      const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, dpr })
       const gl = renderer.gl
       gl.clearColor(0, 0, 0, 0)
       renderer.setSize(width, height)
@@ -119,11 +117,13 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
           uResolution: { value: [gl.canvas.width, gl.canvas.height] },
           uAlpha: { value: 0 },
           uColor: { value: [1, 1, 1] },
-          uRadius: { value: 60 },
-          uCount: { value: 0 },
-          uPoints: { value: new Float32Array(16) },
+          uCenter: { value: [0, 0] },
+          uHalf: { value: [1, 1] },
         },
       })
+      // Explicit premultiplied blend so the gate above is honoured regardless of
+      // OGL's transparent default.
+      program.setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
       const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
       const canvas = gl.canvas as HTMLCanvasElement
       canvas.style.display = 'block'
@@ -160,15 +160,18 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
 
       apiRef.current = {
         setActive(points, color, radiusCss) {
-          const buf = program.uniforms.uPoints.value as Float32Array
-          const n = Math.min(points.length, 8)
-          for (let i = 0; i < n; i++) {
-            buf[i * 2] = points[i][0] * dpr
-            buf[i * 2 + 1] = gl.canvas.height - points[i][1] * dpr // GL origin is bottom-left
+          // Reduce the word's letter-cell centres to a padded bounding box.
+          let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+          for (const [x, y] of points) {
+            if (x < minX) minX = x; if (x > maxX) maxX = x
+            if (y < minY) minY = y; if (y > maxY) maxY = y
           }
-          program.uniforms.uCount.value = n
+          const pad = radiusCss
+          const cxv = (minX + maxX) / 2, cyv = (minY + maxY) / 2
+          const hx = (maxX - minX) / 2 + pad, hy = (maxY - minY) / 2 + pad
+          program.uniforms.uCenter.value = [cxv * dpr, gl.canvas.height - cyv * dpr] // GL origin bottom-left
+          program.uniforms.uHalf.value = [hx * dpr, hy * dpr]
           program.uniforms.uColor.value = color
-          program.uniforms.uRadius.value = radiusCss * dpr
           target = 1
           if (reduce) { cur = 1; paint(0); return }
           ensure()

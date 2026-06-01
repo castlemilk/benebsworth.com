@@ -135,6 +135,14 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       let cur = 0 // current (eased) alpha
       let target = 0
 
+      // A lost context (GPU reset, tab backgrounded, driver hiccup) would otherwise
+      // throw on the next render and silently kill the blob. preventDefault lets the
+      // browser restore it; we just park the loop until then.
+      const onLost = (ev: Event) => { ev.preventDefault(); if (raf) { cancelAnimationFrame(raf); raf = 0 } }
+      const onRestored = () => { if (target !== 0 || cur > 0) { if (!raf) raf = requestAnimationFrame(loop) } }
+      canvas.addEventListener('webglcontextlost', onLost)
+      canvas.addEventListener('webglcontextrestored', onRestored)
+
       const paint = (timeMs: number) => {
         program.uniforms.uTime.value = reduce ? 0 : timeMs * 0.001
         program.uniforms.uAlpha.value = cur
@@ -181,11 +189,15 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
       return () => {
         if (raf) cancelAnimationFrame(raf)
         document.removeEventListener('visibilitychange', onVis)
+        canvas.removeEventListener('webglcontextlost', onLost)
+        canvas.removeEventListener('webglcontextrestored', onRestored)
         apiRef.current = null
         if (canvas.parentNode) canvas.parentNode.removeChild(canvas)
         gl.getExtension('WEBGL_lose_context')?.loseContext()
       }
-    } catch {
+    } catch (e) {
+      // Pure enhancement: log once for diagnosis, then leave the words untouched.
+      console.warn('[word-blob] WebGL init failed; words render without the glow', e)
       return
     }
   }, [width, height])

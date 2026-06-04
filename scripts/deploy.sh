@@ -50,16 +50,5 @@ aws --profile "$PROFILE" s3 sync out/ "s3://$BUCKET" --delete \
   --exclude '_next/static/*' \
   --cache-control 'public,max-age=60'
 
-# Next emits OpenGraph images as EXTENSIONLESS files named `opengraph-image`
-# (the file-route name), so `aws s3 sync` guesses the wrong Content-Type and
-# social scrapers (Slack/X/LinkedIn/FB) reject them. Re-stamp each as image/png
-# via a server-side copy (no re-upload of bytes).
-while IFS= read -r f; do
-  key="${f#out/}"
-  aws --profile "$PROFILE" s3 cp "s3://$BUCKET/$key" "s3://$BUCKET/$key" \
-    --content-type image/png --metadata-directive REPLACE \
-    --cache-control 'public,max-age=3600' >/dev/null
-done < <(find out -type f -name 'opengraph-image')
-
 aws --profile "$PROFILE" cloudfront create-invalidation --distribution-id "$DIST_ID" --paths '/*'
 echo "deployed $ENV -> $BUCKET"

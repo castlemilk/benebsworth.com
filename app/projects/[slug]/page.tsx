@@ -18,7 +18,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const p = getProject(slug)
-  return { title: p?.title ?? 'Project', description: p?.description }
+  const url = `/projects/${slug}/`
+  return {
+    title: p?.title ?? 'Project',
+    description: p?.description,
+    alternates: { canonical: url },
+    openGraph: { type: 'article', title: p?.title, description: p?.description, url },
+    twitter: { card: 'summary_large_image', title: p?.title, description: p?.description },
+  }
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {

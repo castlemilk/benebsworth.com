@@ -9,7 +9,17 @@ import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { ProjectEmblem } from '@/components/projects/project-emblem'
 
-export const metadata: Metadata = { title: 'Projects' }
+export const metadata: Metadata = {
+  title: 'Projects',
+  description: 'Selected projects by Ben Ebsworth — platforms, tools and product work across software, cloud and hardware.',
+  alternates: { canonical: '/projects/' },
+  openGraph: {
+    type: 'website',
+    title: 'Projects · Ben Ebsworth',
+    description: 'Selected projects across software, cloud and hardware.',
+    url: '/projects/',
+  },
+}
 
 const PROJECT = '#7c5cff'
 

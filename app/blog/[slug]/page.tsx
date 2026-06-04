@@ -6,6 +6,7 @@ import { MdxContent } from '@/components/mdx/mdx-content'
 import { TopicMarker } from '@/components/blog/topic-marker'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
+import { JsonLd, SITE_URL } from '@/components/seo/json-ld'
 
 function fmtDate(iso: string): string {
   const d = new Date(iso)
@@ -23,7 +24,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const p = getPost(slug)
   if (!p || !isPublished(p)) return { title: 'Not found' }
-  return { title: p.title, description: p.description }
+  const url = `/blog/${slug}/`
+  return {
+    title: p.title,
+    description: p.description,
+    keywords: p.tags,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      title: p.title,
+      description: p.description,
+      url,
+      publishedTime: new Date(p.date).toISOString(),
+      authors: ['Ben Ebsworth'],
+      tags: p.tags,
+    },
+    twitter: { card: 'summary_large_image', title: p.title, description: p.description },
+  }
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -31,8 +48,33 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const p = getPost(slug)
   if (!p || !isPublished(p)) notFound()
   const topic = topicFor(p)
+  const url = `${SITE_URL}/blog/${slug}/`
+  const published = new Date(p.date).toISOString()
+  const blogPostingLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: p.title,
+    description: p.description,
+    datePublished: published,
+    dateModified: published,
+    author: { '@type': 'Person', name: 'Ben Ebsworth', url: `${SITE_URL}/about/` },
+    publisher: { '@type': 'Person', name: 'Ben Ebsworth' },
+    image: `${url}opengraph-image`,
+    mainEntityOfPage: url,
+    url,
+    ...(p.tags.length ? { keywords: p.tags.join(', ') } : {}),
+  }
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Blog', item: `${SITE_URL}/blog/` },
+      { '@type': 'ListItem', position: 2, name: p.title, item: url },
+    ],
+  }
   return (
     <>
+      <JsonLd data={[blogPostingLd, breadcrumbLd]} />
       <SiteNav />
       <main className="mx-auto w-full max-w-5xl px-6 pb-32 pt-14 sm:px-8 md:pt-20">
         {/* ── Post header spans the full (wide) page frame — editorial title +

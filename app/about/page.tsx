@@ -11,7 +11,18 @@ import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
 import { techColor } from '@/lib/tech-colors'
 
-export const metadata: Metadata = { title: 'About' }
+export const metadata: Metadata = {
+  title: 'About',
+  description:
+    'Ben Ebsworth — software, platform & hardware engineer in Melbourne. Building across the stack from electrical/embedded hardware to distributed platforms, AI-native. Timeline, talks, certifications and skills.',
+  alternates: { canonical: '/about/' },
+  openGraph: {
+    type: 'profile',
+    title: 'About · Ben Ebsworth',
+    description: 'Software, platform & hardware engineer · AI-native · Melbourne, Australia.',
+    url: '/about/',
+  },
+}
 
 // Theme-aware brand accents: in dark these tokens equal the original neon
 // hexes (#00e0b8/#7c5cff/#ff7a59); in light they resolve to the deepened

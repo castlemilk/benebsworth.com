@@ -17,9 +17,14 @@ const sans = Hanken_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://benebsworth.com'),
-  title: { default: 'Ben Ebsworth', template: '%s · Ben Ebsworth' },
-  description: 'A playground for development and writing material.',
-  openGraph: { type: 'website', siteName: 'Ben Ebsworth' },
+  title: { default: 'Ben Ebsworth — Software, Platform & Hardware Engineer', template: '%s · Ben Ebsworth' },
+  description:
+    'Ben Ebsworth — software, platform & hardware engineer in Melbourne. Building across the stack from electrical/embedded hardware to distributed platforms, AI-native. Writing on Kubernetes, service mesh, CI/CD and cloud.',
+  keywords: ['Ben Ebsworth', 'software engineer', 'platform engineering', 'Kubernetes', 'Istio', 'SRE', 'cloud', 'GCP', 'AWS', 'embedded', 'AI-native', 'Melbourne'],
+  authors: [{ name: 'Ben Ebsworth', url: 'https://benebsworth.com' }],
+  creator: 'Ben Ebsworth',
+  openGraph: { type: 'website', siteName: 'Ben Ebsworth', url: 'https://benebsworth.com', locale: 'en_AU' },
+  twitter: { card: 'summary_large_image', creator: '@benebsworth' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

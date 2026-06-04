@@ -9,7 +9,18 @@ import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { TopicMarker } from '@/components/blog/topic-marker'
 
-export const metadata: Metadata = { title: 'Blog' }
+export const metadata: Metadata = {
+  title: 'Blog',
+  description:
+    'Engineering writing by Ben Ebsworth — Kubernetes, Istio service mesh, CI/CD, platform engineering, cloud (GCP/AWS) and hands-on field notes.',
+  alternates: { canonical: '/blog/' },
+  openGraph: {
+    type: 'website',
+    title: 'Blog · Ben Ebsworth',
+    description: 'Kubernetes, service mesh, CI/CD, platform engineering and cloud — practical writing & field notes.',
+    url: '/blog/',
+  },
+}
 
 const BLOG = '#00e0b8'
 

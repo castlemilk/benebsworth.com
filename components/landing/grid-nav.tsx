@@ -71,9 +71,17 @@ export function GridNav({ latest }: { latest: Latest }) {
       const w = window.innerWidth, h = window.innerHeight
       const cols = w < 560 || h > w ? 4 : 5
       const rows = cols === 4 ? 5 : 4
-      const availW = Math.min(w * 0.96, 1200), availH = Math.min(h * 0.64, 740)
+      // The grid claims most of the viewport and keeps scaling up on large screens
+      // rather than capping at a fixed pixel box. The width/height budgets grow with
+      // the viewport (so a 1440p/4K monitor gets a much bigger grid) but stay clamped
+      // so ultra-wide/4K never blows out, and CELL_MAX is the final ceiling. Small
+      // screens are untouched: the fractional fit + the 62px floor still bind there.
+      const availW = Math.min(w * 0.94, 1760)
+      const availH = Math.min(h * 0.72, 1040)
       const PAD_FRAC = 0.5
-      const c = Math.max(62, Math.floor(Math.min(availW / (cols + PAD_FRAC * 2), availH / (rows + PAD_FRAC * 2))))
+      const CELL_MIN = 62, CELL_MAX = 220
+      const raw = Math.min(availW / (cols + PAD_FRAC * 2), availH / (rows + PAD_FRAC * 2))
+      const c = Math.max(CELL_MIN, Math.min(CELL_MAX, Math.floor(raw)))
       setDims({ cols, rows }); setCell(c)
     }
     fit()
@@ -160,8 +168,8 @@ export function GridNav({ latest }: { latest: Latest }) {
     <main className="font-mono relative flex min-h-screen flex-col items-center gap-4 p-4 sm:p-6">
       <ThemeToggle className="absolute right-4 top-4" />
       <header className="w-full pt-2 text-center sm:pt-4">
-        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg sm:text-4xl">BEN EBSWORTH</h1>
-        <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem]">INFRA | SOFTWARE | HARDWARE</p>
+        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>
+        <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem] lg:text-[0.8rem] lg:tracking-[0.38em]">INFRA | SOFTWARE | HARDWARE</p>
       </header>
       <div className="flex w-full flex-1 items-center justify-center">
       <div className="relative" style={{ width: W, height: H }}>

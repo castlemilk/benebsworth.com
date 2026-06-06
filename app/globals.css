@@ -286,3 +286,16 @@ a:focus-visible .word .snake-body {
    components/landing/word-blob.tsx. The letter + connector glow below stays. */
 
 @keyframes skillmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Theme toggle thumb glide. next-themes' `disableTransitionOnChange` injects a
+   global `*{transition:none!important}` during the theme swap to stop colours
+   flashing — which also kills the toggle thumb's slide. These class selectors
+   have higher specificity than `*`, so their `!important` transition wins and
+   the thumb keeps gliding while the rest of the page still switches instantly.
+   Applied only once the toggle is "ready" (one frame after mount) so the thumb
+   snaps to the real theme position on load instead of animating in. */
+.theme-thumb { transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important; }
+.theme-thumb-icon { transition: opacity 0.35s ease, transform 0.4s ease !important; }
+@media (prefers-reduced-motion: reduce) {
+  .theme-thumb, .theme-thumb-icon { transition: none !important; }
+}

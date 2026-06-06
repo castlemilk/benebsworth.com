@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getAllProjects, getProject } from '@/lib/content'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
+import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Badge } from '@/components/ui/badge'
 import { Reveal } from '@/components/motion/reveal'
 import { ProjectEmblem } from '@/components/projects/project-emblem'
@@ -39,12 +39,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       <main className="mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8">
         <Reveal>
-          <Link
-            href="/projects/"
-            className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-muted transition-colors hover:text-project"
-          >
-            <span aria-hidden>←</span> Projects
-          </Link>
+          <Breadcrumb
+            className="mt-8"
+            items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: p.title }]}
+          />
         </Reveal>
 
         {/* ── Hero ───────────────────────────────────────────────── */}

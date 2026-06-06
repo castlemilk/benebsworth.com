@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { getAllProjects, type LoadedProject } from '@/lib/content'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
+import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Badge } from '@/components/ui/badge'
 import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
@@ -70,8 +71,10 @@ export default function ProjectsPage() {
       <SiteNav />
 
       <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
+        <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'Projects' }]} />
+
         {/* ── Hero ───────────────────────────────────────────────── */}
-        <section className="pt-14 pb-20 md:pt-20">
+        <section className="pt-8 pb-20 md:pt-10">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-project">
               Selected work

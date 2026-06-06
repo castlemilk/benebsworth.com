@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
+import { Breadcrumb } from '@/components/site/breadcrumb'
 import { LAB_EFFECTS } from '@/lib/lab/registry'
 import { LabCard } from '@/components/lab/lab-card'
 
@@ -11,7 +12,8 @@ export default function LabPage() {
   return (
     <>
       <SiteNav />
-      <main className="mx-auto w-full max-w-6xl px-6 py-20 sm:px-8">
+      <main className="mx-auto w-full max-w-6xl px-6 pb-20 pt-10 sm:px-8">
+        <Breadcrumb className="mb-10" items={[{ label: 'Home', href: '/' }, { label: 'Lab' }]} />
         <p className="type-label text-muted">00 · the lab</p>
         <h1 className="mt-3 type-h1">Generative experiments</h1>
         <p className="mt-4 max-w-prose type-body text-fg/70">

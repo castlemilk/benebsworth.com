@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { about } from '@/content/about'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
+import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
@@ -67,8 +68,10 @@ export default function AboutPage() {
       <SiteNav />
 
       <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
+        <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
+
         {/* ── Hero — portrait is the focal point, copy framing it ──── */}
-        <section className="grid grid-cols-1 items-center gap-12 pt-14 pb-28 md:grid-cols-[1fr_minmax(24rem,32rem)] md:gap-20 md:pt-24">
+        <section className="grid grid-cols-1 items-center gap-12 pt-8 pb-28 md:grid-cols-[1fr_minmax(24rem,32rem)] md:gap-20 md:pt-14">
           <div className="order-2 text-center md:order-1 md:text-left">
             <Reveal>
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-about">

@@ -6,6 +6,7 @@ import { MdxContent } from '@/components/mdx/mdx-content'
 import { TopicMarker } from '@/components/blog/topic-marker'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
+import { Breadcrumb } from '@/components/site/breadcrumb'
 import { JsonLd, SITE_URL } from '@/components/seo/json-ld'
 
 function fmtDate(iso: string): string {
@@ -76,7 +77,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <>
       <JsonLd data={[blogPostingLd, breadcrumbLd]} />
       <SiteNav />
-      <main className="mx-auto w-full max-w-5xl px-6 pb-32 pt-14 sm:px-8 md:pt-20">
+      <main className="mx-auto w-full max-w-5xl px-6 pb-32 pt-8 sm:px-8 md:pt-12">
+        <Breadcrumb
+          className="mb-8"
+          items={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: p.title }]}
+        />
         {/* ── Post header spans the full (wide) page frame — editorial title +
             accent rule fill the screen. Only the long-form prose below is capped
             to a comfortable reading measure (~44rem ≈ 74ch). ── */}

@@ -8,6 +8,7 @@ import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Badge } from '@/components/ui/badge'
 import { Reveal } from '@/components/motion/reveal'
 import { ProjectEmblem } from '@/components/projects/project-emblem'
+import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
 
 const PROJECT = '#7c5cff'
 
@@ -33,8 +34,27 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const p = getProject(slug)
   if (!p) notFound()
 
+  const url = `${SITE_URL}/projects/${slug}/`
+  const ld = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: p.title,
+      description: p.description,
+      url,
+      author: { '@type': 'Person', name: 'Ben Ebsworth', url: `${SITE_URL}/about/` },
+      ...(p.technologies?.length ? { keywords: p.technologies.map((t) => t.text).join(', ') } : {}),
+    },
+    breadcrumbLd([
+      { name: 'Home', url: `${SITE_URL}/` },
+      { name: 'Projects', url: `${SITE_URL}/projects/` },
+      { name: p.title, url },
+    ]),
+  ]
+
   return (
     <>
+      <JsonLd data={ld} />
       <SiteNav />
 
       <main className="mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8">

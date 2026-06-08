@@ -9,10 +9,11 @@ import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { ProjectEmblem } from '@/components/projects/project-emblem'
+import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'Selected projects by Ben Ebsworth — platforms, tools and product work across software, cloud and hardware.',
+  description: 'Selected projects by Ben Ebsworth — platforms, tools and product work spanning software, cloud infrastructure and embedded hardware, built end-to-end from data layer to interface.',
   alternates: { canonical: '/projects/' },
   openGraph: {
     type: 'website',
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
     description: 'Selected projects across software, cloud and hardware.',
     url: '/projects/',
   },
+  twitter: { card: 'summary_large_image', title: 'Projects · Ben Ebsworth' },
 }
 
 const PROJECT = '#7c5cff'
@@ -66,8 +68,22 @@ export default function ProjectsPage() {
   const projects = getAllProjects()
   const [lead, ...rest] = projects
 
+  const ld = [
+    breadcrumbLd([
+      { name: 'Home', url: `${SITE_URL}/` },
+      { name: 'Projects', url: `${SITE_URL}/projects/` },
+    ]),
+    collectionPageLd({
+      name: 'Projects · Ben Ebsworth',
+      description: 'Selected projects across software, cloud and hardware.',
+      url: `${SITE_URL}/projects/`,
+      items: projects.map((p) => ({ name: p.title, url: `${SITE_URL}/projects/${p.slug}/` })),
+    }),
+  ]
+
   return (
     <>
+      <JsonLd data={ld} />
       <SiteNav />
 
       <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">

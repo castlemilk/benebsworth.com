@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono, Space_Grotesk, Hanken_Grotesk } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme/theme-provider'
@@ -25,6 +25,14 @@ export const metadata: Metadata = {
   creator: 'Ben Ebsworth',
   openGraph: { type: 'website', siteName: 'Ben Ebsworth', url: 'https://benebsworth.com', locale: 'en_AU' },
   twitter: { card: 'summary_large_image', creator: '@benebsworth' },
+  alternates: { types: { 'application/rss+xml': '/feed.xml' } },
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f6f6f9' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0c' },
+  ],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -9,6 +9,7 @@ import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { TopicMarker } from '@/components/blog/topic-marker'
+import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -21,9 +22,8 @@ export const metadata: Metadata = {
     description: 'Kubernetes, service mesh, CI/CD, platform engineering and cloud — practical writing & field notes.',
     url: '/blog/',
   },
+  twitter: { card: 'summary_large_image', title: 'Blog · Ben Ebsworth' },
 }
-
-const BLOG = '#00e0b8'
 
 function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
   return (
@@ -47,8 +47,22 @@ export default function BlogPage() {
   const posts = getPublishedPosts()
   const [lead, ...rest] = posts
 
+  const ld = [
+    breadcrumbLd([
+      { name: 'Home', url: `${SITE_URL}/` },
+      { name: 'Blog', url: `${SITE_URL}/blog/` },
+    ]),
+    collectionPageLd({
+      name: 'Blog · Ben Ebsworth',
+      description: 'Long-form technical writing on Kubernetes, service mesh, CI/CD and developer experience.',
+      url: `${SITE_URL}/blog/`,
+      items: posts.map((p) => ({ name: p.title, url: `${SITE_URL}/blog/${p.slug}/` })),
+    }),
+  ]
+
   return (
     <>
+      <JsonLd data={ld} />
       <SiteNav />
 
       <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">

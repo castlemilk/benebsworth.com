@@ -11,6 +11,7 @@ import { PortraitHero } from '@/components/about/portrait-hero'
 import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
 import { techColor } from '@/lib/tech-colors'
+import { JsonLd, SITE_URL, profilePageLd, breadcrumbLd } from '@/components/seo/json-ld'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
     description: 'Software, platform & hardware engineer · AI-native · Melbourne, Australia.',
     url: '/about/',
   },
+  twitter: { card: 'summary_large_image', title: 'About · Ben Ebsworth' },
 }
 
 // Theme-aware brand accents: in dark these tokens equal the original neon
@@ -65,6 +67,15 @@ export default function AboutPage() {
 
   return (
     <>
+      <JsonLd
+        data={[
+          profilePageLd,
+          breadcrumbLd([
+            { name: 'Home', url: `${SITE_URL}/` },
+            { name: 'About', url: `${SITE_URL}/about/` },
+          ]),
+        ]}
+      />
       <SiteNav />
 
       <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">

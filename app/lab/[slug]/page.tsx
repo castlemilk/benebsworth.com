@@ -8,7 +8,7 @@ import { Breadcrumb } from '@/components/site/breadcrumb'
 import { LAB_EFFECTS, getEffect } from '@/lib/lab/registry'
 import { EffectPlayground } from '@/components/lab/effect-playground'
 import { MdxContent } from '@/components/mdx/mdx-content'
-import { JsonLd, SITE_URL } from '@/components/seo/json-ld'
+import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
 
 export function generateStaticParams() {
   return LAB_EFFECTS.map((e) => ({ slug: e.slug }))
@@ -16,7 +16,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const e = getEffect(slug)
-  return { title: e ? `${e.title} · Lab` : 'Lab', description: e?.blurb }
+  const url = `/lab/${slug}/`
+  return {
+    title: e ? `${e.title} · Lab` : 'Lab',
+    description: e?.blurb,
+    alternates: { canonical: url },
+    openGraph: { type: 'article', title: e ? `${e.title} · Lab` : 'Lab', description: e?.blurb, url },
+    twitter: { card: 'summary_large_image', title: e?.title, description: e?.blurb },
+  }
 }
 
 function explainer(slug: string): string {
@@ -29,17 +36,14 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
   const e = getEffect(slug)
   if (!e) notFound()
   const body = explainer(slug)
-  const breadcrumbLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Lab', item: `${SITE_URL}/lab/` },
-      { '@type': 'ListItem', position: 2, name: e.title, item: `${SITE_URL}/lab/${slug}/` },
-    ],
-  }
+  const breadcrumb = breadcrumbLd([
+    { name: 'Home', url: `${SITE_URL}/` },
+    { name: 'Lab', url: `${SITE_URL}/lab/` },
+    { name: e.title, url: `${SITE_URL}/lab/${slug}/` },
+  ])
   return (
     <>
-      <JsonLd data={breadcrumbLd} />
+      <JsonLd data={breadcrumb} />
       <SiteNav />
       <main className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8">
         {/* Breadcrumb back to Home / the lab hub — the home doodle tile links

@@ -28,3 +28,66 @@ export const websiteLd = {
   name: 'Ben Ebsworth',
   url: SITE_URL,
 } as const
+
+/** BreadcrumbList from an ordered trail of { name, url } crumbs (absolute URLs). */
+export function breadcrumbLd(crumbs: { name: string; url: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: c.url,
+    })),
+  }
+}
+
+/** CollectionPage for index/listing pages, optionally carrying its item list. */
+export function collectionPageLd({
+  name,
+  description,
+  url,
+  items,
+}: {
+  name: string
+  description?: string
+  url: string
+  items?: { name: string; url: string }[]
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    url,
+    ...(description ? { description } : {}),
+    ...(items?.length
+      ? {
+          mainEntity: {
+            '@type': 'ItemList',
+            itemListElement: items.map((it, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              name: it.name,
+              url: it.url,
+            })),
+          },
+        }
+      : {}),
+  }
+}
+
+/** ProfilePage wrapping the Person — used on the about page. */
+export const profilePageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: personLd.name,
+    url: personLd.url,
+    jobTitle: personLd.jobTitle,
+    sameAs: personLd.sameAs,
+    knowsAbout: personLd.knowsAbout,
+    image: `${SITE_URL}/about/opengraph-image.png`,
+  },
+} as const

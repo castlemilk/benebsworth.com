@@ -5,12 +5,39 @@ import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { LAB_EFFECTS } from '@/lib/lab/registry'
 import { LabCard } from '@/components/lab/lab-card'
+import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
 
-export const metadata: Metadata = { title: 'Lab' }
+export const metadata: Metadata = {
+  title: 'Lab',
+  description:
+    'Generative experiments — small interactive canvas animations with live parameter controls. Orbits, flow fields, starfields, cyclic automata and ripple grids.',
+  alternates: { canonical: '/lab/' },
+  openGraph: {
+    type: 'website',
+    title: 'Lab · Ben Ebsworth',
+    description: 'Generative canvas experiments with live, tweakable controls.',
+    url: '/lab/',
+  },
+  twitter: { card: 'summary_large_image', title: 'Lab · Ben Ebsworth' },
+}
 
 export default function LabPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          breadcrumbLd([
+            { name: 'Home', url: `${SITE_URL}/` },
+            { name: 'Lab', url: `${SITE_URL}/lab/` },
+          ]),
+          collectionPageLd({
+            name: 'Lab · Ben Ebsworth',
+            description: 'Generative canvas experiments with live, tweakable controls.',
+            url: `${SITE_URL}/lab/`,
+            items: LAB_EFFECTS.map((e) => ({ name: e.title, url: `${SITE_URL}/lab/${e.slug}/` })),
+          }),
+        ]}
+      />
       <SiteNav />
       <main className="mx-auto w-full max-w-6xl px-6 pb-20 pt-10 sm:px-8">
         <Breadcrumb className="mb-10" items={[{ label: 'Home', href: '/' }, { label: 'Lab' }]} />

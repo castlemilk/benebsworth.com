@@ -7,7 +7,7 @@ import { TopicMarker } from '@/components/blog/topic-marker'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { JsonLd, SITE_URL } from '@/components/seo/json-ld'
+import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
 
 function fmtDate(iso: string): string {
   const d = new Date(iso)
@@ -65,17 +65,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     url,
     ...(p.tags.length ? { keywords: p.tags.join(', ') } : {}),
   }
-  const breadcrumbLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Blog', item: `${SITE_URL}/blog/` },
-      { '@type': 'ListItem', position: 2, name: p.title, item: url },
-    ],
-  }
+  const breadcrumb = breadcrumbLd([
+    { name: 'Home', url: `${SITE_URL}/` },
+    { name: 'Blog', url: `${SITE_URL}/blog/` },
+    { name: p.title, url },
+  ])
   return (
     <>
-      <JsonLd data={[blogPostingLd, breadcrumbLd]} />
+      <JsonLd data={[blogPostingLd, breadcrumb]} />
       <SiteNav />
       <main className="mx-auto w-full max-w-5xl px-6 pb-32 pt-8 sm:px-8 md:pt-12">
         <Breadcrumb

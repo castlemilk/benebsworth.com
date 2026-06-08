@@ -12,6 +12,24 @@ export const mdxComponents: MDXComponents = {
   a: (p) => <a className="text-project underline underline-offset-4 decoration-project/40 transition-colors hover:decoration-project" {...p} />,
   ul: (p) => <ul className="font-sans mt-4 list-disc space-y-1.5 pl-6 leading-[1.7] text-fg/85" {...p} />,
   code: (p) => <code className="font-mono rounded bg-white/5 px-1.5 py-0.5 text-[0.85em]" {...p} />,
+  // Looping demo video — replaces heavy autoplaying GIFs (≈90% smaller as H.264).
+  // width/height set the aspect ratio so space is reserved (no CLS); src is an
+  // absolute /blog/<slug>/<file>.mp4 path (component props skip image rewriting).
+  Video: (p: { src?: string; width?: number; height?: number; alt?: string }) => (
+    <video
+      src={p.src}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={p.alt}
+      width={p.width}
+      height={p.height}
+      className="not-prose my-7 w-full rounded-xl border border-[var(--color-border)]"
+      style={p.width && p.height ? { aspectRatio: `${p.width} / ${p.height}` } : undefined}
+    />
+  ),
   // Repo link card. Replaces the legacy Gatsby <github-link> embed (kebab-case
   // custom tags aren't mapped by the MDX pipeline, so the post now uses
   // <GithubLink url="..."/>). Renders a styled "view on GitHub" card.

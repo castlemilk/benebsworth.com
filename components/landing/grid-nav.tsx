@@ -1,11 +1,16 @@
 'use client'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { pack, type Placement } from './packer'
 import { shuffle, mulberry32 } from './rng'
 import { ARTIFACTS } from './artifacts'
 import { ArtifactTile } from './artifact-tiles'
-import { WordBlob, type WordBlobHandle } from './word-blob'
+import type { WordBlobHandle } from './word-blob'
+// Code-split the WebGL blob (pulls in `ogl`, ~40KB) into its own async chunk so
+// it stays off the home page's initial JS. React.lazy (not next/dynamic) because
+// it forwards the imperative ref WordBlob exposes; it only loads after mount,
+// where the blob is gated, so there's no SSR/hydration concern.
+const WordBlob = lazy(() => import('./word-blob').then((m) => ({ default: m.WordBlob })))
 import { HomeEmbed, homeEmbedSlug } from '@/components/lab/home-embed'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 
@@ -109,6 +114,8 @@ export function GridNav({ latest }: { latest: Latest }) {
   const connectorD = (path: [number, number][]) =>
     path.map(([c, r], i) => `${i === 0 ? 'M' : 'L'}${cx(c)} ${cy(r)}`).join(' ')
 
+  const blobRef = useRef<WordBlobHandle>(null)
+
   const placement = useMemo<Placement | null>(() => {
     let p: Placement | null = null
     for (let s = seed; !p && s < seed + 80; s++) p = pack(cols, rows, WORDS, s)
@@ -124,7 +131,6 @@ export function GridNav({ latest }: { latest: Latest }) {
   // word's actual glyphs into a soft mask canvas (so the blob follows the text
   // shape) and pass it + the section accent (resolved from the live computed fill,
   // so it tracks the theme) to the shader.
-  const blobRef = useRef<WordBlobHandle>(null)
   const activateBlob = (el: Element) => {
     const texts = Array.from(el.querySelectorAll('text'))
     if (!texts.length) return
@@ -175,7 +181,11 @@ export function GridNav({ latest }: { latest: Latest }) {
       <div className="relative" style={{ width: W, height: H }}>
       {/* Shared GPU blob, behind the SVG. Mounted only after mount (client-only GL,
           no SSR/hydration concern); fades in per word on hover/focus. */}
-      {mounted && <WordBlob ref={blobRef} width={W} height={H} className="absolute inset-0" />}
+      {mounted && (
+        <Suspense fallback={null}>
+          <WordBlob ref={blobRef} width={W} height={H} className="absolute inset-0" />
+        </Suspense>
+      )}
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary" className="relative">
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (

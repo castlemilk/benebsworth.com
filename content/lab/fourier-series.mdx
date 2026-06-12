@@ -1,0 +1,58 @@
+<LabSide effect="fourier-series" height={340} params={{ terms: 3, shape: "square", speed: 1 }} caption="A square wave approximated with just 3 Fourier terms. The epicycles trace the partial sum in real time.">
+
+## The Core Idea
+
+Joseph Fourier's radical claim — later proved rigorously — was that **any** periodic function, no matter how jagged or discontinuous, can be decomposed into a sum of sines and cosines. A square wave is not "square" at all; it's an infinite chorus of harmonics, each oscillating at an integer multiple of the fundamental frequency, their amplitudes carefully chosen so the sharp corners emerge from constructive interference.
+
+</LabSide>
+
+## The Mathematics
+
+The Fourier series of a periodic function `f(t)` with period `T` is:
+
+```
+f(t) = a₀/2 + Σ [aₙ cos(2πnt/T) + bₙ sin(2πnt/T)]
+```
+
+where the coefficients are:
+
+```
+aₙ = (2/T) ∫₀ᵀ f(t) cos(2πnt/T) dt
+bₙ = (2/T) ∫₀ᵀ f(t) sin(2πnt/T) dt
+```
+
+For a square wave (odd symmetry, so all `aₙ = 0`):
+
+```
+f(t) = (4/π) [sin(ωt) + sin(3ωt)/3 + sin(5ωt)/5 + ...]
+```
+
+Only odd harmonics appear, each with amplitude `1/n`. This `1/n` decay is slow — that's why you need many terms to build a convincing square edge.
+
+<LabCanvas effect="fourier-series" height={280} params={{ terms: 15, shape: "square", speed: 0.8 }} caption="15 terms — the square wave emerges. The overshoot at each corner is the Gibbs phenomenon: ~9% of the jump, no matter how many terms you add." />
+
+## The Gibbs phenomenon
+
+Notice the persistent overshoot at the corners? That's the **Gibbs phenomenon** — a mathematical inevitability. No matter how many terms you add, the partial sum overshoots by approximately 9% of the jump height at each discontinuity. The overshoot doesn't disappear; it just gets narrower. This is not a failure of Fourier analysis — it's a deep result about the tension between pointwise and uniform convergence.
+
+<LabSide effect="fourier-series" height={280} params={{ terms: 5, shape: "sawtooth", speed: 1 }} reverse={true} caption="Sawtooth wave with 5 terms. All harmonics contribute, making it harder to approximate than the square wave.">
+
+### Different shapes, different spectra
+
+Switch the shape control to see how the harmonic recipe changes:
+
+- **Square wave**: only odd harmonics, `1/n` amplitude — the classic.
+- **Sawtooth**: all harmonics, `1/n` amplitude — richer in high frequencies.
+- **Triangle**: only odd harmonics, `1/n²` amplitude — the `1/n²` decay makes it smoother, needing fewer terms.
+
+</LabSide>
+
+## Why epicycles?
+
+The visualisation uses rotating circles (**epicycles**) because each Fourier term `Aₙ sin(nωt + φₙ)` is exactly a vector of length `Aₙ` rotating at angular velocity `nω`. Stack them tip-to-tail and the final point traces the partial sum. Ptolemy used the same geometry for planetary orbits — Fourier just gave it rigorous mathematical footing.
+
+## Further reading
+
+- [Fourier series (Wikipedia)](https://en.wikipedia.org/wiki/Fourier_series)
+- 3Blue1Brown, *But what is a Fourier series?* — the definitive visual explanation.
+- Stein & Shakarchi, *Fourier Analysis: An Introduction*, Princeton Lectures in Analysis.

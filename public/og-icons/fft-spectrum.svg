@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" fill="none">
+  <rect width="172" height="172" rx="24" fill="#0d1a22"/>
+  <rect x="1" y="1" width="170" height="170" rx="23" fill="none" stroke="#00b4d8" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- Frequency spectrum bars (log scale) -->
+  <!-- Background bars (faded) -->
+  <rect x="22" y="118" width="11" height="20" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="38" y="104" width="11" height="34" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="54" y="90" width="11" height="48" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="70" y="72" width="11" height="66" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="86" y="58" width="11" height="80" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="102" y="50" width="11" height="88" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="118" y="58" width="11" height="80" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <rect x="134" y="72" width="11" height="66" rx="2" fill="#00b4d8" opacity="0.12"/>
+  <!-- Foreground bars -->
+  <rect x="22" y="112" width="11" height="26" rx="2" fill="#00b4d8" opacity="0.3"/>
+  <rect x="38" y="96" width="11" height="42" rx="2" fill="#00b4d8" opacity="0.4"/>
+  <rect x="54" y="76" width="11" height="62" rx="2" fill="#00b4d8" opacity="0.55"/>
+  <rect x="70" y="52" width="11" height="86" rx="2" fill="#00b4d8" opacity="0.7"/>
+  <rect x="86" y="30" width="11" height="108" rx="2" fill="#00b4d8"/>
+  <rect x="102" y="38" width="11" height="100" rx="2" fill="#00b4d8" opacity="0.85"/>
+  <rect x="118" y="52" width="11" height="86" rx="2" fill="#00b4d8" opacity="0.65"/>
+  <rect x="134" y="68" width="11" height="70" rx="2" fill="#00b4d8" opacity="0.45"/>
+  <!-- Peak marker -->
+  <line x1="86" y1="24" x2="86" y2="30" stroke="#00b4d8" stroke-width="2"/>
+  <circle cx="86" cy="24" r="3" fill="#00b4d8"/>
+  <!-- FFT label -->
+  <text x="14" y="22" font-family="monospace" font-size="13" fill="#00b4d8" opacity="0.9">FFT</text>
+  <!-- Baseline -->
+  <line x1="18" y1="138" x2="154" y2="138" stroke="#00b4d8" stroke-width="1" opacity="0.5"/>
+</svg>

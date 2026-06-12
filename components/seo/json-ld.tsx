@@ -18,15 +18,60 @@ export const personLd = {
   name: 'Ben Ebsworth',
   url: SITE_URL,
   jobTitle: 'Software, Platform & Hardware Engineer',
-  sameAs: ['https://github.com/castlemilk'],
-  knowsAbout: ['Software Engineering', 'Platform Engineering', 'Kubernetes', 'Distributed Systems', 'Electrical Engineering', 'Embedded Systems', 'AI'],
+  // SameAs: canonical social profiles. Google uses these to build the
+  // author entity graph and to attribute content to the right person.
+  // Listed in priority order: professional profile first.
+  sameAs: [
+    'https://github.com/castlemilk',
+    'https://www.linkedin.com/in/benebsworth/',
+  ],
+  // KnowsAbout: topic clusters the person writes about. Helps Google's
+  // topical authority computation. Keep in sync with the post labels.
+  knowsAbout: [
+    'Software Engineering',
+    'Platform Engineering',
+    'Kubernetes',
+    'Distributed Systems',
+    'Service Mesh',
+    'Electrical Engineering',
+    'Embedded Systems',
+    'Signal Processing',
+    'Control Systems',
+    'RF Engineering',
+    'Quantum Computing',
+    'AI',
+    'Machine Learning',
+  ],
 } as const
 
+/**
+ * WebSite schema with a SearchAction. The SearchAction isn't useful for
+ * internal-site search (the site has none), but Google uses the
+ * declaration to build sitelinks search and to understand the
+ * site-search relationship. The search URL is a placeholder that
+ * points to the homepage with a `?q=` param — Google will index this
+ * as the canonical search template even if it doesn't do anything
+ * special on our side.
+ */
 export const websiteLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Ben Ebsworth',
   url: SITE_URL,
+  description: 'Software, platform & hardware engineer in Melbourne. Writing on Kubernetes, distributed systems, electrical engineering, and AI.',
+  inLanguage: 'en-AU',
+  author: { '@type': 'Person', name: 'Ben Ebsworth', url: SITE_URL },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+    },
+    // Google's documentation requires the query-input to be in this
+    // exact format (a property-of-EntryPoint with a quoted string).
+    // Satori-friendly serialised shape.
+    'query-input': 'required name=search_term_string',
+  },
 } as const
 
 /** BreadcrumbList from an ordered trail of { name, url } crumbs (absolute URLs). */

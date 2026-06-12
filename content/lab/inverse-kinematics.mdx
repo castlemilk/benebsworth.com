@@ -1,0 +1,58 @@
+<LabSide effect="inverse-kinematics" height={340} params={{ L1: 1, L2: 1 }} caption="A 2R planar arm tracking a moving target. Two links, two joints, one smooth path.">
+
+## The Core Idea
+
+You want a robot arm to reach a specific point in space. **Forward kinematics** asks: given joint angles, where is the end effector? **Inverse kinematics (IK)** asks the reverse: given a target position, what joint angles get us there? For a planar two-link arm (2R), the problem has an elegant closed-form solution. For real robots with 6+ joints, it requires iterative numerical methods — but the 2R case reveals all the geometry.
+
+</LabSide>
+
+## The Mathematics
+
+Given a base at the origin, link lengths L₁ and L₂, and target (tx, ty):
+
+### Reachability check
+
+```
+d = √(tx² + ty²)
+reachable iff |L₁ − L₂| < d < L₁ + L₂
+```
+
+### Solve for joint angles
+
+Using the **cosine rule**:
+
+```
+cos(θ₂) = (d² − L₁² − L₂²) / (2·L₁·L₂)
+θ₂ = ±acos(cos θ₂)     ← elbow-up or elbow-down
+θ₁ = atan2(ty, tx) − atan2(L₂·sin θ₂, L₁ + L₂·cos θ₂)
+```
+
+The ± in θ₂ gives two solutions — "elbow up" and "elbow down." Both reach the same target; choosing between them depends on obstacle avoidance and joint limits.
+
+<LabSide effect="inverse-kinematics" height={280} params={{ L1: 1.2, L2: 0.8 }} reverse={true} caption="Asymmetric links (L₁=1.2, L₂=0.8). The workspace boundary is an annulus — the arm can't reach too close or too far.">
+
+Try adjusting L₁ and L₂ to see how the reachable workspace changes. When L₁ = L₂, the arm can reach the base. When they're unequal, a "dead zone" appears near the origin.
+
+</LabSide>
+
+## Singularities
+
+When the arm is fully extended (d = L₁ + L₂) or fully folded (d = |L₁ − L₂|), the Jacobian loses rank — the arm can't move in certain directions. These **singularities** are where IK breaks down numerically.
+
+<LabSide effect="inverse-kinematics" height={280} params={{ L1: 1, L2: 0.5 }} caption="Asymmetric links — the dead zone near the base is clearly visible in the arm's movement.">
+
+## From 2R to 6R
+
+Real industrial robots have six joints. The IK problem becomes:
+
+- **Analytical**: For specific geometries (spherical wrist), closed-form solutions exist — fast but robot-specific.
+- **Numerical**: Jacobian-based methods (`Δθ = J⁺·Δx`) — general but slower.
+- **Iterative**: CCD, FABRIK — heuristic methods popular in animation and games.
+
+</LabSide>
+
+## Further reading
+
+- [Inverse kinematics (Wikipedia)](https://en.wikipedia.org/wiki/Inverse_kinematics)
+- Siciliano et al., *Robotics: Modelling, Planning and Control*
+- Lynch & Park, *Modern Robotics* — free online textbook.

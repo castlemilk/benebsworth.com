@@ -5,7 +5,9 @@ import { topicFor } from '@/lib/topics'
 export const dynamic = 'force-static'
 export const size = OG_SIZE
 export const contentType = OG_CONTENT_TYPE
-export const alt = 'Blog post · Ben Ebsworth'
+// The `alt` export drives the `og:image:alt` meta tag. Use the post's
+// title + topic for a useful screen-reader description.
+export const alt = 'Blog post on benebsworth.com'
 
 export function generateStaticParams() {
   return getPublishedPosts().map((p) => ({ slug: p.slug }))

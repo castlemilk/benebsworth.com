@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" fill="none">
+  <!-- Decaying oscillation waveform -->
+  <rect width="172" height="172" rx="24" fill="#0d1a22"/>
+  <rect x="1" y="1" width="170" height="170" rx="23" fill="none" stroke="#00b4d8" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- Waveform: decaying sine -->
+  <path d="M18,86 Q40,86 54,86 T90,86 T126,86 T154,86" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
+  <path d="M18,86 Q27,56 36,86 Q45,116 54,86 Q63,56 72,86 Q81,116 90,86 Q99,56 108,86 Q117,116 126,86 Q135,56 144,86" stroke="#00b4d8" stroke-width="3" stroke-linecap="round"/>
+  <!-- Amplitude decay markers -->
+  <line x1="18" y1="56" x2="18" y2="116" stroke="#00b4d8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <line x1="54" y1="66" x2="54" y2="106" stroke="#00b4d8" stroke-width="1" stroke-dasharray="4 3" opacity="0.4"/>
+  <line x1="90" y1="74" x2="90" y2="98" stroke="#00b4d8" stroke-width="1" stroke-dasharray="4 3" opacity="0.3"/>
+  <line x1="126" y1="80" x2="126" y2="92" stroke="#00b4d8" stroke-width="1" stroke-dasharray="4 3" opacity="0.2"/>
+  <!-- Annotation: RLC label -->
+  <text x="14" y="22" font-family="monospace" font-size="13" fill="#00b4d8" opacity="0.9">RLC</text>
+  <!-- Axis -->
+  <line x1="18" y1="86" x2="154" y2="86" stroke="#00b4d8" stroke-width="1.5" opacity="0.6"/>
+  <path d="M154,86 L148,83 M154,86 L148,89" stroke="#00b4d8" stroke-width="1.5" opacity="0.6"/>
+</svg>

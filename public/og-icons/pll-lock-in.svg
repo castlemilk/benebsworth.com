@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" fill="none">
+  <rect width="172" height="172" rx="24" fill="#0d1a22"/>
+  <rect x="1" y="1" width="170" height="170" rx="23" fill="none" stroke="#00b4d8" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- VCO output wave (locked, tight) -->
+  <path d="M18,86 Q28,56 38,86 Q48,116 58,86 Q68,56 78,86 Q88,116 98,86 Q108,56 118,86 Q128,116 138,86 Q148,56 154,86" stroke="#00b4d8" stroke-width="2" opacity="0.4"/>
+  <path d="M18,86 Q28,72 38,86 Q48,100 58,86 Q68,72 78,86 Q88,100 98,86 Q108,72 118,86 Q128,100 138,86 Q148,72 154,86" stroke="#00b4d8" stroke-width="2.5"/>
+  <!-- Phase error bars -->
+  <line x1="78" y1="86" x2="78" y2="72" stroke="#00b4d8" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.7"/>
+  <line x1="118" y1="86" x2="118" y2="72" stroke="#00b4d8" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.7"/>
+  <!-- Lock indicator -->
+  <rect x="118" y="14" width="38" height="22" rx="5" fill="#00b4d8" opacity="0.2"/>
+  <text x="122" y="29" font-family="monospace" font-size="11" fill="#00b4d8" font-weight="700">LOCK</text>
+  <!-- PLL label -->
+  <text x="14" y="22" font-family="monospace" font-size="13" fill="#00b4d8" opacity="0.9">PLL</text>
+  <!-- Frequency axis -->
+  <line x1="18" y1="120" x2="154" y2="120" stroke="#00b4d8" stroke-width="1" opacity="0.4"/>
+  <path d="M154,120 L150,117 M154,120 L150,123" stroke="#00b4d8" stroke-width="1" opacity="0.4"/>
+  <!-- Loop filter arrow -->
+  <path d="M86,86 L86,136" stroke="#00b4d8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+  <path d="M84,130 L86,136 L88,130" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/>
+</svg>

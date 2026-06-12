@@ -1,0 +1,67 @@
+<LabSide effect="phase-portrait" height={340} params={{ system: "lotka-volterra", speed: 1, trails: 0.06 }} caption="Lotka-Volterra predator-prey cycles. Each closed orbit is a different initial population pair.">
+
+## The Core Idea
+
+A **phase portrait** is a map of everywhere a dynamical system can go. Instead of plotting a variable against time — position versus *t*, population versus *t* — we plot variables against *each other*: predator vs prey, voltage vs current, x-velocity vs y-velocity.
+
+Every point on the plane is a possible state; the arrows and trajectories show where the system flows from there. The shape of the phase portrait tells you everything about long-term behaviour — stability, oscillation, chaos — without solving a single equation.
+
+</LabSide>
+
+## The Mathematics
+
+For a two-dimensional autonomous system:
+
+```
+dx/dt = f(x, y)
+dy/dt = g(x, y)
+```
+
+we draw the **vector field** `(f, g)` at a grid of points and trace **integral curves** — the paths a particle would follow if it "went with the flow." Fixed points occur where `f = g = 0`; the Jacobian matrix at those points tells us whether they're stable spirals, saddles, nodes, or centres.
+
+<LabSide effect="phase-portrait" height={280} params={{ system: "lotka-volterra", speed: 0.5, trails: 0.03 }} reverse={true} caption="Slower speed reveals fine structure. Near the fixed point, orbits are nearly circular.">
+
+### Lotka-Volterra: Nature's oscillator
+
+The classic predator-prey model:
+
+```
+dx/dt = αx − βxy      (prey: grows, eaten)
+dy/dt = δxy − γy      (predator: fed, dies)
+```
+
+The phase portrait reveals closed orbits around a centre — populations cycle endlessly: prey booms, predators follow, prey crashes, predators starve, repeat. No external forcing needed; the oscillation is intrinsic to the coupling.
+
+</LabSide>
+
+<LabSide effect="phase-portrait" height={280} params={{ system: "van-der-pol", speed: 1, trails: 0.04 }} caption="Van der Pol limit cycle. All trajectories converge to the same orbit regardless of initial conditions.">
+
+### Van der Pol: Limit cycles
+
+Switch to the Van der Pol system and you'll see something radically different: trajectories spiral *inward* from any starting point and lock onto a single closed curve — a **limit cycle**. This is the mathematical heartbeat of oscillators, from vacuum-tube circuits to pacemaker neurons.
+
+```
+x' = y
+y' = μ(1 − x²)y − x
+```
+
+The parameter μ controls nonlinearity. Large μ produces relaxation oscillations (sharp jumps followed by slow drifts); small μ gives nearly sinusoidal motion.
+
+</LabSide>
+
+## Reading the map
+
+A few patterns to recognise:
+
+- **Centre**: nested closed orbits (Lotka-Volterra). The system cycles forever at an amplitude set by initial conditions.
+- **Stable spiral**: trajectories spiral inward to a fixed point. The system returns to equilibrium after perturbation.
+- **Saddle**: trajectories approach along one axis and diverge along another. The system is extremely sensitive to the direction of perturbation.
+- **Limit cycle**: an isolated closed orbit that attracts or repels nearby trajectories.
+
+Head back up to the playground and switch between systems. Watch how the same initial-condition grid produces qualitatively different portraits. That's the power of the phase plane — the geometry *is* the dynamics.
+
+## Further reading
+
+- Strogatz, *Nonlinear Dynamics and Chaos* — the gold standard textbook, especially Chapters 6–7.
+- [Phase portrait (Wikipedia)](https://en.wikipedia.org/wiki/Phase_portrait)
+- Lotka, A. J. (1925), *Elements of Physical Biology*

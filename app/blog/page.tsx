@@ -21,8 +21,10 @@ export const metadata: Metadata = {
     title: 'Blog · Ben Ebsworth',
     description: 'Kubernetes, service mesh, CI/CD, platform engineering and cloud — practical writing & field notes.',
     url: '/blog/',
+    siteName: 'Ben Ebsworth',
+    locale: 'en_AU',
   },
-  twitter: { card: 'summary_large_image', title: 'Blog · Ben Ebsworth' },
+  twitter: { card: 'summary_large_image', title: 'Blog · Ben Ebsworth', creator: '@benebsworth', site: '@benebsworth' },
 }
 
 function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {

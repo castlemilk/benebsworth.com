@@ -1,0 +1,52 @@
+<LabSide effect="constellation-plot" height={340} params={{ order: "4", snr: 20 }} caption="QPSK constellation at 20 dB SNR. Four tight clusters, each representing a 2-bit symbol.">
+
+## The Core Idea
+
+Before a radio signal reaches your phone, someone had to map data bits onto a physical waveform. **Digital modulation** does this by choosing points on a 2D plane — the **constellation diagram** — where each point represents a unique group of bits. QPSK uses 4 points (2 bits/symbol), 16-QAM uses 16 (4 bits/symbol), 64-QAM uses 64 (6 bits/symbol). More points = faster data rate, but points are closer together = more vulnerable to noise.
+
+</LabSide>
+
+## The Mathematics
+
+A modulated symbol is:
+
+```
+s(t) = I·cos(2πfct) − Q·sin(2πfct)
+```
+
+where (I, Q) is the constellation point. Through an AWGN channel:
+
+```
+(I', Q') = (I + nI, Q + nQ)     where nI, nQ ~ N(0, σ²)
+```
+
+and `σ² = 1/(2·SNR_linear)`.
+
+<LabSide effect="constellation-plot" height={280} params={{ order: "16", snr: 20 }} reverse={true} caption="16-QAM at 20 dB SNR. Sixteen clusters, 4 bits each. Points are packed tighter than QPSK.">
+
+Switch between modulation orders and watch the clusters multiply. Each step up in order doubles the bits per symbol — but also halves the noise margin between adjacent points.
+
+</LabSide>
+
+## Bit error rate
+
+The probability of decoding incorrectly depends on the minimum distance between points and noise level:
+
+- **QPSK** at 20 dB SNR: BER ≈ 10⁻⁵ (one error per 100,000 bits).
+- **64-QAM** at 20 dB SNR: BER ≈ 10⁻³ — two orders of magnitude worse.
+
+This is the fundamental trade-off: **spectral efficiency vs robustness**. Wi-Fi and LTE switch between modulation orders in real time — high-order QAM when signal is strong, falling back to QPSK when conditions degrade.
+
+<LabSide effect="constellation-plot" height={280} params={{ order: "64", snr: 10 }} caption="64-QAM at 10 dB SNR. The noise clouds overlap — many symbols will be decoded incorrectly.">
+
+## Error Vector Magnitude (EVM)
+
+EVM measures the average distance between received and ideal constellation points. A good transmitter has EVM < −30 dB (received points within 3% of ideal). EVM degrades with phase noise, amplifier distortion, and channel fading.
+
+</LabSide>
+
+## Further reading
+
+- [QAM (Wikipedia)](https://en.wikipedia.org/wiki/QAM)
+- [Constellation diagram](https://en.wikipedia.org/wiki/Constellation_diagram)
+- Proakis, *Digital Communications*

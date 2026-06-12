@@ -1,0 +1,56 @@
+<LabSide effect="random-walk" height={340} params={{ walks: 150, drift: 0, volatility: 1 }} caption="150 unbiased random walks. The cloud of paths spreads like √t — the hallmark of diffusive processes.">
+
+## The Core Idea
+
+A **random walk** is the simplest model of a process that accumulates uncertainty over time. At each step, you move by a random amount — up or down, left or right. After N steps, your position is the sum of N independent random variables. The central limit theorem guarantees that this sum, properly scaled, converges to a Gaussian distribution. But individual paths? Wildly unpredictable.
+
+</LabSide>
+
+## The Mathematics
+
+A simple random walk is defined by:
+
+```
+Sₙ = X₁ + X₂ + ... + Xₙ
+```
+
+where each `Xᵢ` is drawn independently from some distribution (e.g., `Xᵢ ∈ {-1, +1}` with equal probability, or `Xᵢ ~ N(0, σ²)` for a Gaussian walk).
+
+Key properties:
+
+- **Expected position**: `E[Sₙ] = n·μ` where μ is the drift (mean step size). With zero drift, the expected position is always the origin — even as individual walks wander far.
+- **Variance**: `Var(Sₙ) = n·σ²` — uncertainty grows linearly with time.
+- **Standard deviation**: `σₙ = σ√n` — the typical distance from the origin grows as the **square root** of time.
+
+This √t scaling is the signature of diffusion: heat spreading through a rod, ink dispersing in water, stock prices fluctuating. It's why your GPS accuracy degrades as √(time) if you lose satellite lock.
+
+<LabSide effect="random-walk" height={280} params={{ walks: 100, drift: 0.3, volatility: 1 }} reverse={true} caption="Adding positive drift (μ = 0.3). The cloud still spreads, but the centre of mass drifts upward.">
+
+Try adjusting the drift slider — the expected path becomes a straight line with slope μ, while the cloud still spreads around it. This is exactly how financial models treat stock prices: drift is expected return, volatility is risk.
+
+</LabSide>
+
+## The arc sine law
+
+Here's a paradox: in a symmetric random walk, the most likely scenario is that one side (positive or negative) dominates for almost the entire duration. The time spent above zero follows the **arc sine distribution** — it's U-shaped, meaning extreme splits (90/10, 95/5) are more probable than balanced ones (50/50). This is not intuitive, and it has profound implications for gambling, trading, and any sequential decision process.
+
+<LabSide effect="random-walk" height={280} params={{ walks: 200, drift: 0, volatility: 1.5 }} caption="Higher volatility — the spreading envelope widens, showing how σ scales the √t diffusion rate.">
+
+## From walks to Brownian motion
+
+Take the step size to zero while speeding up time proportionally, and the random walk converges to **Brownian motion** (the Wiener process `W(t)`) — a continuous, nowhere-differentiable path with independent Gaussian increments. Brownian motion is the building block of stochastic calculus (Itō's lemma, the Black-Scholes equation, the Fokker-Planck equation).
+
+</LabSide>
+
+## Applications
+
+- **Finance**: Stock prices are often modelled as geometric random walks (log-normal increments). The drift is the expected return; volatility is the risk.
+- **Physics**: Brownian motion of particles, diffusion equations, polymer chain conformations.
+- **Biology**: Bacterial chemotaxis (biased random walks toward nutrients).
+- **Computer science**: Randomised algorithms, network packet routing, Markov chain Monte Carlo.
+
+## Further reading
+
+- [Random walk (Wikipedia)](https://en.wikipedia.org/wiki/Random_walk)
+- Feller, *An Introduction to Probability Theory and Its Applications*, Vol. 1 — Chapter III on random walks is a masterpiece.
+- Mandelbrot, *The Variation of Certain Speculative Prices* (1963) — the classic challenge to Gaussian assumptions in finance.

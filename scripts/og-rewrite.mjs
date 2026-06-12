@@ -12,7 +12,7 @@ const OUT = 'out'
 function walk(dir, fn) {
   for (const entry of readdirSync(dir)) {
     const p = join(dir, entry)
-    statSync(p).isDirectory() ? walk(p, fn) : fn(p)
+    if (statSync(p).isDirectory()) walk(p, fn); else fn(p)
   }
 }
 

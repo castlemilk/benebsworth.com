@@ -1,0 +1,158 @@
+<LabCanvas effect="rlc-resonance" height={400} params={{ R: 1, L: 0.5, C: 0.001, amplitude: 2 }} caption="The full picture: a series RLC circuit with animated current flow (blue dots), energy tanks showing the inductor-capacitor energy exchange, and the resulting Vc waveform. Drag R to watch the damping ratio change in real time." />
+
+## The Core Idea
+
+Connect a resistor, inductor, and capacitor in series. Apply a step voltage. The circuit *rings* — but why?
+
+Watch the energy tanks in the visualisation above. Energy sloshes back and forth between the inductor's magnetic field and the capacitor's electric field, like water swinging between two halves of a U-tube. The resistor drains a little energy on each pass. When resistance is low, the sloshing goes on for many cycles (underdamped). When resistance is high, the energy drains before a single full swing completes (overdamped).
+
+This is the deepest intuition for RLC circuits: **it's an energy exchange with friction**.
+
+### The circuit as a schematic
+
+Look at the animated schematic above. The blue particles flowing around the loop represent conventional current — their speed and brightness scale with the instantaneous current magnitude. When you see them reverse direction, that's the inductor pushing current backward through the circuit as its magnetic field collapses. The R, L, and C symbols are drawn in their standard schematic forms:
+
+- **R** (zigzag): dissipates energy as heat. The yellow tank shows cumulative energy lost.
+- **L** (coils): stores energy in a magnetic field. The orange tank shows ½LI².
+- **C** (parallel plates): stores energy in an electric field. The green tank shows ½CV².
+
+## The Mathematics
+
+The series RLC circuit obeys Kirchhoff's Voltage Law around the loop:
+
+```
+Vin = VR + VL + VC
+Vin = R·i + L·di/dt + q/C
+```
+
+Since `i = dq/dt`, we can write this as a second-order ODE in the capacitor voltage VC:
+
+```
+LC·d²VC/dt² + RC·dVC/dt + VC = Vin(t)
+```
+
+This is identical in form to the **damped harmonic oscillator** from mechanics:
+
+```
+m·ẍ + b·ẋ + k·x = F(t)
+```
+
+where mass ↔ inductance, damping ↔ resistance, spring constant ↔ 1/capacitance, and force ↔ voltage. This analogy runs deep — every mechanical oscillator has an electrical dual, and vice versa. Horowitz and Hill (*The Art of Electronics*, §1.7) use this explicitly: the capacitor is a spring, the inductor is a mass, and the resistor is a dashpot.
+
+### The characteristic equation
+
+Assuming a solution of the form `VC = A·e^(st)`:
+
+```
+s² + (R/L)s + 1/(LC) = 0
+```
+
+with roots:
+
+```
+s = −R/(2L) ± √((R/2L)² − 1/(LC))
+```
+
+<LabSide effect="rlc-resonance" height={380} params={{ R: 0.5, L: 0.5, C: 0.001, amplitude: 2 }} caption="Low R = 0.5Ω (ζ ≈ 0.35, high Q). Energy bounces between L and C many times before the resistor drains it all. The waveform rings prominently.">
+
+### Three regimes
+
+The discriminant `(R/2L)² − 1/(LC)` determines everything:
+
+- **Underdamped** (ζ < 1): Complex roots → decaying sinusoid. The circuit oscillates at `ωd = √(1/LC − (R/2L)²)` with an envelope that decays as `e^(−Rt/2L)`. This is the ringing you see on oscilloscopes when a digital signal transitions.
+
+- **Critically damped** (ζ = 1): Repeated real roots. The fastest possible return to equilibrium without overshoot. This is what you design for in surge protectors, relay coils, and suspension systems.
+
+- **Overdamped** (ζ > 1): Two distinct real roots. The system returns to equilibrium as a sum of two decaying exponentials — sluggishly, without oscillation, but also without overshoot.
+
+</LabSide>
+
+<LabSide effect="rlc-resonance" height={380} params={{ R: 5, L: 0.5, C: 0.001, amplitude: 2 }} reverse={true} caption="High R = 5Ω (ζ ≈ 3.5, overdamped). The energy drains almost instantly — no oscillation, just a sluggish exponential approach.">
+
+Try dragging the R slider between 0.5Ω and 5Ω and watch the energy tanks. At low R, the orange and green bars trade places rhythmically for many cycles. At high R, the yellow bar (resistor loss) fills almost immediately and the L/C tanks barely exchange anything.
+
+</LabSide>
+
+## Key parameters
+
+### Natural frequency ω₀
+
+```
+ω₀ = 1/√(LC)
+```
+
+This is the frequency the circuit *wants* to oscillate at — the frequency with zero resistance. It depends only on L and C: the inductor and capacitor set the "pitch" of the circuit, just like the length of a pendulum sets its natural swing rate.
+
+### Damping ratio ζ
+
+```
+ζ = R / (2√(L/C))
+```
+
+A dimensionless number that tells you which regime you're in. The ratio is beautiful: `√(L/C)` has units of ohms — it's the **characteristic impedance** of the LC pair. When R equals 2× this impedance, you're at critical damping.
+
+### Quality factor Q
+
+```
+Q = 1/R · √(L/C) = 1/(2ζ)
+```
+
+Q tells you how many radians of oscillation it takes for the amplitude to decay to 1/e of its peak. A circuit with Q = 10 rings for about 10/π ≈ 3 full cycles before dying out. In radio engineering, Q determines selectivity — how narrowly a tuned circuit responds to a specific frequency.
+
+<LabCanvas effect="rlc-resonance" height={380} params={{ R: 2, L: 0.5, C: 0.001, amplitude: 2 }} caption="R = 2Ω, near critical damping (ζ ≈ 1.4). Fast settling, minimal overshoot — the design target for most transient applications." />
+
+## Why it matters everywhere
+
+Every wire is an inductor. Every pair of conductors is a capacitor. Every conductor has resistance. This means **every real circuit is an RLC circuit** whether you designed it to be or not.
+
+### Digital signal integrity
+
+When a CMOS driver switches from 0 to 3.3V in 1ns, it's applying a step voltage to an RLC circuit formed by:
+- **L**: the PCB trace inductance (~1 nH/mm)
+- **C**: the load capacitance (IC input pin + trace capacitance, typically 5–15 pF)
+- **R**: the driver output impedance (~10–30 Ω)
+
+The natural frequency of just 10mm of trace into a 10pF load:
+
+```
+ω₀ = 1/√(10nH × 10pF) = 1√(100×10⁻²¹) ≈ 3.16 Grad/s → f₀ ≈ 500 MHz
+```
+
+This is why you see ringing at hundreds of MHz on "simple" digital signals. The fix? A series termination resistor chosen to match `√(L/C)` — exactly critical damping.
+
+### Power supply decoupling
+
+Your voltage regulator has a low output impedance, but the traces to your IC have inductance. The IC's power pins have capacitance. When the IC draws a transient current spike, the supply voltage rings. Decoupling capacitors are placed physically close to the IC to minimise loop inductance — bringing ω₀ up and the ring duration down.
+
+### Mechanical analogues
+
+The RLC equation `Lq̈ + Rq̇ + q/C = Vin` is *exactly* the equation for:
+- A **mass-spring-damper** system (car suspension, building earthquake isolation)
+- An acoustic **Helmholtz resonator** (the "boom" when you blow across a bottle)
+- A **laser cavity** (photon energy bouncing between mirrors, with losses)
+
+Hayt, Kemmerly & Durbin (*Engineering Circuit Analysis*, §8.4) devote an entire section to the mechanical analogy, and Paul Horowitz once quipped that "every physics problem is secretly every other physics problem in a wig."
+
+## The envelope game
+
+Here's a quick design challenge. You're building a 5V logic driver with 20mm of trace (20nH) into a 5pF load. You want the fastest settling with no more than 10% overshoot. What series resistance do you need?
+
+```
+ω₀ = 1/√(20nH × 5pF) = 1/√(100×10⁻²¹) = 3.16 Grad/s
+Z₀ = √(L/C) = √(20nH/5pF) = √(4000) ≈ 63.2 Ω
+```
+
+For 10% overshoot, ζ ≈ 0.6 (from the overshoot formula: `Mp = e^(−πζ/√(1−ζ²))`):
+
+```
+R = 2ζZ₀ = 2 × 0.6 × 63.2 ≈ 75.8 Ω
+```
+
+Use a 75Ω series terminator. This is why 75Ω and 50Ω are standard transmission-line impedances — they're not arbitrary numbers, they're the critical-damping values for typical PCB geometries.
+
+## Further reading
+
+- Horowitz & Hill, *The Art of Electronics*, 3rd ed. — §1.7 (LC circuits) and §1.7.3 (damping). The most intuitive treatment in any textbook.
+- Hayt, Kemmerly & Durbin, *Engineering Circuit Analysis* — Chapters 8–9 for the full mathematical treatment of transients.
+- Bogatin, *Signal Integrity: Simplified* — Chapter 8 on the RLC model of every real interconnect.
+- [RLC circuit (Wikipedia)](https://en.wikipedia.org/wiki/RLC_circuit) — excellent mathematical summary.

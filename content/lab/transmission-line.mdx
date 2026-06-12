@@ -1,0 +1,27 @@
+<LabSide effect="transmission-line" height={300} params={{ loadType: "matched", speed: 1 }} caption="A voltage pulse travels down a 50Ω line and meets the load — matched, shorted, or open.">
+
+## What TDR Sees
+
+Time Domain Reflectometry is how EE's "look down" a transmission line without cutting it open. You send a fast voltage step into the line and watch what comes back. The amplitude and sign of the reflection tells you exactly what's at the far end — **no reflection = matched**, **inverted = short**, **in-phase = open**, and everything in between if the load impedance is neither 0 nor ∞.
+
+## The Reflection Coefficient
+
+At the load, the voltage and current must obey both the line's characteristic impedance Z₀ and the load's impedance Z_L. The boundary condition forces a reflected wave with amplitude:
+
+```
+Γ = (Z_L − Z₀) / (Z_L + Z₀)
+```
+
+- **Z_L = Z₀** → Γ = 0: The pulse is absorbed. No reflection.
+- **Z_L = 0 (short)** → Γ = −1: The pulse inverts and reflects.
+- **Z_L = ∞ (open)** → Γ = +1: The pulse reflects in phase, doubling the voltage.
+- **Z_L = 2Z₀** → Γ = +1/3: Part of the pulse reflects in phase.
+- **Z_L = Z₀/2** → Γ = −1/3: Part of the pulse inverts on reflection.
+
+</LabSide>
+
+## The Telegrapher's Equations
+
+A transmission line is not a lumped wire — it's a **distributed** RLC network. At every point along the line, there's series inductance and shunt capacitance per unit length. A voltage wave propagates at a characteristic velocity `v = 1/√(LC)` with a characteristic impedance `Z₀ = √(L/C)`. The reflection and transmission at boundaries follow directly from conservation of energy and charge at the junction.
+
+TDR is used practically for cable fault location, PCB trace characterisation, and soil moisture measurement — wherever you need to know what's at the far end of a wire without going there.

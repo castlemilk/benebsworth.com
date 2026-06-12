@@ -299,3 +299,59 @@ a:focus-visible .word .snake-body {
 @media (prefers-reduced-motion: reduce) {
   .theme-thumb, .theme-thumb-icon { transition: none !important; }
 }
+
+/* ── KaTeX (math) ─────────────────────────────────────────────────── */
+/* Imported via JS in mdx-content.tsx so we don't pull it into global
+   CSS where it would be unused on pages without math. The minimal rules
+   below restore the expected KaTeX rendering and align it with the
+   site's typography. */
+
+/* Block math: full-width centred equation with breathing room. */
+.katex-display {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+.katex-display > .katex {
+  font-size: 1.05em;
+  color: var(--color-fg);
+}
+
+/* Inline math: same colour as surrounding prose, slightly tighter. */
+.katex {
+  color: var(--color-fg);
+  font-size: 1em;
+}
+
+/* Dark mode: KaTeX default colours are tuned for white backgrounds. Force
+   the foreground colour so the math reads as body text. */
+.dark .katex,
+.dark .katex-display > .katex {
+  color: var(--color-fg);
+}
+/* Math accent in dark mode (fractions, sqrt, accent characters). */
+.dark .katex .mord,
+.dark .katex .mop,
+.dark .katex .mbin,
+.dark .katex .mrel,
+.dark .katex .mopen,
+.dark .katex .mclose,
+.dark .katex .mpunct {
+  color: inherit;
+}
+
+/* Selected equation gets a soft highlight. */
+.katex-selection {
+  background: rgb(125 211 252 / 0.25);
+}
+
+/* Inside prose, the math should sit naturally without breaking line height. */
+.prose .katex {
+  vertical-align: -0.15em;
+  line-height: 1;
+}
+.prose .katex-display {
+  margin-top: 1.75rem;
+  margin-bottom: 1.75rem;
+}

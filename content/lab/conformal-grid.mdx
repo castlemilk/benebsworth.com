@@ -1,0 +1,58 @@
+<LabSide effect="conformal-grid" height={340} params={{ map: "power", power: 2, density: 12 }} caption="The map z → z² squares the complex plane. A rectangular grid becomes two families of parabolas — but every intersection remains perpendicular.">
+
+## The Core Idea
+
+A **conformal map** is a function that preserves angles. Take a grid of perpendicular lines, apply the map, and — no matter how wildly the grid bends — every intersection is still a right angle. This seemingly abstract property makes conformal maps indispensable in aerodynamics (Joukowski airfoils), electrostatics (solving Laplace's equation by mapping to simpler geometries), and complex analysis (the Riemann mapping theorem).
+
+</LabSide>
+
+## The Mathematics
+
+A function `w = f(z)` of a complex variable `z = x + iy` is conformal at every point where `f'(z) ≠ 0`. The derivative `f'(z)` simultaneously encodes:
+
+- **Scaling**: `|f'(z)|` — how much the map stretches lengths.
+- **Rotation**: `arg(f'(z))` — how much the map rotates.
+
+Because multiplication by a complex number is a rotation + scale (never a shear), infinitesimal circles map to infinitesimal circles — angles are preserved.
+
+<LabSide effect="conformal-grid" height={280} params={{ map: "power", power: 3, density: 10 }} reverse={true} caption="z → z³ triples all angles. The origin is a branch point; three copies of the plane wrap around it.">
+
+### The power map: z → zⁿ
+
+```
+w = zⁿ  →  rⁿ eⁱⁿᶿ
+```
+
+The power map takes the ray at angle θ to the ray at angle `nθ`, and stretches the radius from `r` to `rⁿ`. A full circle in z-space covers n circles in w-space.
+
+</LabSide>
+
+<LabSide effect="conformal-grid" height={280} params={{ map: "exp", density: 10 }} caption="The exponential map. Horizontal lines become rays; vertical lines become circles. Strips of height 2π tile the entire plane.">
+
+### The exponential map: z → eᶻ
+
+```
+w = eˣ⁺ⁱʸ = eˣ(cos y + i sin y)
+```
+
+The exponential map turns horizontal lines (constant y) into rays from the origin and vertical lines (constant x) into concentric circles. A rectangular grid in z-space maps to the polar grid in w-space — still orthogonal everywhere.
+
+</LabSide>
+
+### The Möbius transformation
+
+```
+w = (az + b) / (cz + d)
+```
+
+Möbius transformations map circles to circles (including lines as circles through infinity). They are the "rigid motions" of the Riemann sphere — the most general conformal automorphisms of the extended complex plane. Every Möbius map is a composition of translations, rotations, dilations, and inversions.
+
+## Where angles break down
+
+Conformality fails at **critical points** where `f'(z) = 0`. For `z²`, the origin doubles all angles — two crossing curves that meet at 90° in z-space meet at 180° in w-space. This is the same mechanism as branch points in multivalued functions.
+
+## Further reading
+
+- Needham, *Visual Complex Analysis* — the most beautiful mathematics textbook ever written. Chapter 3 is all about conformal maps.
+- [Conformal map (Wikipedia)](https://en.wikipedia.org/wiki/Conformal_map)
+- Ahlfors, *Complex Analysis*

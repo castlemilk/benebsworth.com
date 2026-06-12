@@ -1,0 +1,50 @@
+<LabSide effect="pid-tuner" height={340} params={{ Kp: 1.5, Ki: 0.3, Kd: 0.8, setpoint: 2 }} caption="A well-tuned PID response — fast rise, modest overshoot, quick settling.">
+
+## The Core Idea
+
+A **PID controller** is the workhorse of control engineering — the algorithm that keeps your car's cruise control steady, your drone hovering, your 3D printer's hotend at exactly 200°C. It reads the error (setpoint minus measurement), then applies three corrections: proportional (push back now), integral (fix accumulated drift), and derivative (anticipate future error). Tuning these three gains is the art and science of control loops.
+
+</LabSide>
+
+## The Mathematics
+
+The PID control law is:
+
+```
+u(t) = Kp·e(t) + Ki·∫e(τ)dτ + Kd·de/dt
+```
+
+where `e(t) = setpoint − y(t)` is the error signal.
+
+Each term plays a distinct role:
+
+- **Proportional (Kp)**: Push in proportion to current error. Large Kp → aggressive response, but potential instability and steady-state error.
+- **Integral (Ki)**: Accumulate error over time. Fixes steady-state offset but adds phase lag → oscillation risk.
+- **Derivative (Kd)**: Push against rate of change. Damps oscillation and improves stability, but amplifies measurement noise.
+
+<LabSide effect="pid-tuner" height={280} params={{ Kp: 4, Ki: 0, Kd: 0, setpoint: 2 }} reverse={true} caption="Pure proportional control (Kp=4). Fast initial response but sustained oscillation and steady-state error.">
+
+Try setting Ki and Kd to zero and cranking Kp up high. The response becomes increasingly oscillatory and never quite reaches the setpoint — that's the classic limitation of pure proportional control.
+
+</LabSide>
+
+### Tuning trade-offs
+
+The PID gains interact in non-obvious ways:
+
+- **Increase Kp**: Faster rise time, but more overshoot and oscillation.
+- **Increase Ki**: Eliminates steady-state error, but increases overshoot and settling time.
+- **Increase Kd**: Reduces overshoot and improves damping, but amplifies noise.
+
+<LabSide effect="pid-tuner" height={280} params={{ Kp: 1.5, Ki: 0.3, Kd: 0, setpoint: 2 }} caption="PI control (no derivative). The integral eliminates steady-state error but oscillations persist without the damping effect of Kd.">
+
+## The Ziegler-Nichols method
+
+The classic tuning recipe: (1) Set Ki = Kd = 0, increase Kp until the system oscillates (the ultimate gain Ku). (2) Measure the oscillation period Tu. (3) Set Kp = 0.6·Ku, Ki = 2·Kp/Tu, Kd = Kp·Tu/8. This gives a reasonable starting point; fine-tune by hand.
+
+</LabSide>
+
+## Further reading
+
+- [PID controller (Wikipedia)](https://en.wikipedia.org/wiki/PID_controller)
+- Åström & Hägglund, *PID Controllers: Theory, Design, and Tuning*

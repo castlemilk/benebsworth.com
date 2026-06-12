@@ -1,0 +1,61 @@
+<LabSide effect="bloch-sphere" height={340} params={{ fieldTheta: 0.4, fieldPhi: 0, coupling: 1.5 }} caption="A qubit state (the bright dot) precessing around an external field direction on the Bloch sphere.">
+
+## The Core Idea
+
+A **qubit** is not a "bit that can be 0 and 1 at the same time" — it's more nuanced than that. The state of a single qubit is a point on the **Bloch sphere**, a unit sphere where the north pole is |0⟩, the south pole is |1⟩, and every other point represents a quantum superposition `cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩`. The two angles θ and φ specify the state completely.
+
+</LabSide>
+
+## The Mathematics
+
+Any single-qubit state can be written:
+
+```
+|ψ⟩ = cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩
+```
+
+where `0 ≤ θ ≤ π` and `0 ≤ φ < 2π`. The Bloch vector is:
+
+```
+r = (sin θ cos φ,  sin θ sin φ,  cos θ)
+```
+
+Pure states lie on the surface (|r| = 1); mixed states (classical probabilistic mixtures) live inside the sphere. Measurement in the computational basis collapses the state to the north pole (with probability cos²(θ/2)) or the south pole (probability sin²(θ/2)).
+
+<LabSide effect="bloch-sphere" height={280} params={{ fieldTheta: 0.8, fieldPhi: 1.2, coupling: 2 }} reverse={true} caption="Stronger coupling — the precession is faster. The tilted field axis determines the cone the state traces.">
+
+### Larmor precession
+
+When a qubit couples to an external field (like a magnetic field on a spin-½ particle), the state vector **precesses** around the field axis:
+
+```
+d|ψ⟩/dt = −iγ(H/ℏ)|ψ⟩
+```
+
+where γ is the gyromagnetic ratio and H is the Hamiltonian. On the Bloch sphere, this looks like the state vector tracing a cone around the field direction — exactly like a gyroscope precessing in a gravitational field.
+
+</LabSide>
+
+## Gates as rotations
+
+Quantum gates are **rotations** on the Bloch sphere:
+
+- **X gate** (NOT): 180° rotation around the x-axis. Flips |0⟩ to |1⟩.
+- **Hadamard (H)**: rotates the north pole to the equator — creates equal superposition.
+- **T gate**: 45° rotation around the z-axis — creates the phase needed for quantum speedups.
+
+Any single-qubit gate is a rotation `R_n(α)` by angle α around axis n. This geometric picture — quantum computation as choreographed rotations — is the foundation of quantum circuit design.
+
+<LabSide effect="bloch-sphere" height={280} params={{ fieldTheta: 1.57, fieldPhi: 0, coupling: 1 }} caption="Field along the equator — the state precesses around the x-axis, cycling between superposition states.">
+
+## Why a sphere and not a circle?
+
+A classical bit is 0 or 1 — a point on a line. A probabilistic bit is a probability p ∈ [0, 1] — a point on a line segment. A qubit needs two angles because of the **phase** φ. Two states that differ only in phase (e.g., `(|0⟩ + |1⟩)/√2` vs `(|0⟩ − |1⟩)/√2`) produce identical measurement probabilities but behave differently under further operations. The phase is invisible to measurement but critical to interference — and interference is what makes quantum algorithms work.
+
+</LabSide>
+
+## Further reading
+
+- Nielsen & Chuang, *Quantum Computation and Quantum Information* — the standard textbook, Chapter 1.
+- [Bloch sphere (Wikipedia)](https://en.wikipedia.org/wiki/Bloch_sphere)
+- 3Blue1Brown & MinutePhysics, *Quantum Computing* — excellent visual series.

@@ -4,8 +4,6 @@
 //   protoc               unknown
 // source: content.proto
 
-/* eslint-disable */
-
 export const protobufPackage = "content";
 
 export enum ArtifactKind {
@@ -94,10 +92,13 @@ export interface Artifact {
   glyph: string;
 }
 
+export type LabCategory = 'art' | 'maths' | 'physics' | 'engineering'
+
 export interface LabEffect {
   slug: string;
   title: string;
   blurb: string;
   tags: string[];
+  category: LabCategory;
   homeEmbedSafe: boolean;
 }

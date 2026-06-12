@@ -2,8 +2,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import rehypeSlug from 'rehype-slug'
+import rehypeKatex from 'rehype-katex'
 import rehypePrettyCode from 'rehype-pretty-code'
+// Side-effect import: pulls in KaTeX's CSS rules on the MDX pages only.
+// The custom overrides in app/globals.css follow this so they cascade.
+import 'katex/dist/katex.min.css'
 import { visit } from 'unist-util-visit'
 import type { Root } from 'mdast'
 import type { Root as HastRoot } from 'hast'
@@ -104,8 +109,17 @@ export function MdxContent({
         components={mdxComponents}
         options={{
           mdxOptions: {
-            remarkPlugins: [remarkGfm, [remarkImageBasePath, basePath]],
-            rehypePlugins: [rehypeSlug, [rehypePrettyCode, { theme: 'github-dark' }], rehypeImageAttrs],
+            // remark-math parses `$...$` and `$$...$$` into math nodes;
+            // rehype-katex renders them as KaTeX HTML.
+            remarkPlugins: [remarkGfm, remarkMath, [remarkImageBasePath, basePath]],
+            rehypePlugins: [
+              rehypeSlug,
+              [rehypePrettyCode, { theme: 'github-dark' }],
+              rehypeImageAttrs,
+              // strict:false allows physical units like \rm, deprecated TeX
+              // commands. The post may include legacy syntax.
+              [rehypeKatex, { strict: false, throwOnError: false }],
+            ],
           },
         }}
       />

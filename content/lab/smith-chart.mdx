@@ -1,0 +1,60 @@
+<LabSide effect="smith-chart" height={340} params={{ freq: 0.8, type: "s11" }} caption="A reflection coefficient (Γ) trace on the Smith chart. The bright dot is the current operating point.">
+
+## The Core Idea
+
+The **Smith chart** is the RF engineer's most iconic tool — a graphical calculator that maps the entire infinite impedance plane onto a finite circle. Every point inside the unit circle represents a physically realisable impedance; the distance from centre tells you the reflection coefficient magnitude; the angle tells you the phase. It turns complex impedance matching calculations into geometry.
+
+</LabSide>
+
+## The Mathematics
+
+The reflection coefficient relates impedance Z to the reference impedance Z₀:
+
+```
+Γ = (Z − Z₀) / (Z + Z₀)
+```
+
+Normalise: `z = Z/Z₀ = r + jx`. Then:
+
+```
+Γ = (z − 1) / (z + 1) = (r − 1 + jx) / (r + 1 + jx)
+```
+
+|Γ| ≤ 1 for all passive impedances, so every physically realisable impedance maps inside the unit circle. The Smith chart plots this directly: constant-resistance circles and constant-reactance arcs form the coordinate grid.
+
+<LabSide effect="smith-chart" height={280} params={{ freq: 0.5, type: "s11" }} reverse={true} caption="Lower frequency — the point moves toward the capacitive region (lower half).">
+
+### The constant-r circles
+
+```
+Circle centre: (r/(r+1), 0)     Circle radius: 1/(r+1)
+```
+
+The r = 0 circle is the unit circle (pure reactance). The r = 1 circle passes through the origin (matched). As r → ∞, the circle shrinks to the point (1, 0) — an open circuit.
+
+</LabSide>
+
+## Impedance matching
+
+The goal: move Γ to the centre (Γ = 0, perfect match). Two fundamental moves:
+
+- **Series element**: Move along a constant-resistance circle.
+- **Shunt element**: Move along a constant-conductance circle.
+
+<LabSide effect="smith-chart" height={280} params={{ freq: 1.2, type: "s11" }} caption="Higher frequency — the point moves into the inductive region (upper half). A series RLC traces a clockwise circle as frequency sweeps upward.">
+
+## Reading the chart
+
+- **Centre** (Γ = 0): Perfect match. Z = Z₀. No reflected power.
+- **Right edge** (Γ = 1): Open circuit. All power reflected, in phase.
+- **Left edge** (Γ = −1): Short circuit. All reflected, 180° out of phase.
+- **Upper half**: Inductive (positive reactance).
+- **Lower half**: Capacitive (negative reactance).
+
+</LabSide>
+
+## Further reading
+
+- [Smith chart (Wikipedia)](https://en.wikipedia.org/wiki/Smith_chart)
+- Gonzalez, *Microwave Transistor Amplifiers* — Chapter 2 is the definitive tutorial.
+- Pozar, *Microwave Engineering*

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" fill="none">
+  <rect width="172" height="172" rx="24" fill="#0d1a22"/>
+  <rect x="1" y="1" width="170" height="170" rx="23" fill="none" stroke="#00b4d8" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- Bode magnitude plot -->
+  <!-- -20dB/decade slope line -->
+  <line x1="28" y1="50" x2="154" y2="114" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+  <!-- Corner frequency marker -->
+  <circle cx="56" cy="56" r="5" fill="#00b4d8"/>
+  <!-- Flat region (low freq) -->
+  <line x1="28" y1="44" x2="56" y2="44" stroke="#00b4d8" stroke-width="2" opacity="0.5"/>
+  <!-- Roll-off region label -->
+  <text x="100" y="128" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.7">−20dB/dec</text>
+  <!-- Frequency axis -->
+  <line x1="28" y1="148" x2="154" y2="148" stroke="#00b4d8" stroke-width="1" opacity="0.4"/>
+  <path d="M154,148 L150,145 M154,148 L150,151" stroke="#00b4d8" stroke-width="1" opacity="0.4"/>
+  <!-- Magnitude axis -->
+  <line x1="28" y1="18" x2="28" y2="148" stroke="#00b4d8" stroke-width="1" opacity="0.4"/>
+  <path d="M28,18 L25,22 M28,18 L31,22" stroke="#00b4d8" stroke-width="1" opacity="0.4"/>
+  <!-- Axis labels -->
+  <text x="20" y="14" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.5">|H|</text>
+  <text x="158" y="152" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.5">ω</text>
+  <!-- Bode label -->
+  <text x="14" y="22" font-family="monospace" font-size="13" fill="#00b4d8" opacity="0.9">Bode</text>
+  <!-- Corner freq annotation -->
+  <line x1="56" y1="56" x2="56" y2="148" stroke="#00b4d8" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+  <text x="58" y="145" font-family="monospace" font-size="9" fill="#00b4d8" opacity="0.6">ωc</text>
+</svg>

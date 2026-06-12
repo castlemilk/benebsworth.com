@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <circle cx="30" cy="30" r="30" fill="#0d1a22"/>
+  <circle cx="30" cy="30" r="28" stroke="#00b4d8" stroke-opacity="0.4" stroke-width="2"/>
+  <text x="30" y="38" text-anchor="middle" font-family="monospace" font-size="22" font-weight="700" fill="#00b4d8">BE</text>
+</svg>

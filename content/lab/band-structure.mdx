@@ -1,0 +1,58 @@
+<LabSide effect="band-structure" height={340} params={{ potential: 0.8, bands: 3, speed: 1 }} caption="Three energy bands as a function of crystal momentum k. The gaps between them are band gaps — forbidden energies.">
+
+## The Core Idea
+
+Electrons in a crystal don't have a continuous range of allowed energies — they have **bands**: intervals of energy where states exist, separated by **gaps** where no states are allowed. This band structure determines whether a material is a conductor, semiconductor, or insulator. It's the single most important concept in solid-state physics.
+
+</LabSide>
+
+## The Mathematics
+
+In a periodic potential `V(x) = V(x + a)`, the electron wavefunctions satisfy Bloch's theorem:
+
+```
+ψₙₖ(x) = e^(ikx) · uₙₖ(x)
+```
+
+where `uₙₖ(x)` has the same periodicity as the lattice. The energy `Eₙ(k)` forms continuous functions of k within each band n — but different bands are separated by gaps.
+
+For a 1D crystal with potential `V(x) = V₀ cos(2πx/a)`, we solve the Schrödinger equation using a plane-wave expansion. The Hamiltonian in the plane-wave basis is:
+
+```
+H_{mn} = (ℏ²(k + mG)²/2m)δ_{mn} + (V₀/2)(δ_{m,n±1})
+```
+
+where `G = 2π/a` is the reciprocal lattice vector. Diagonalise this matrix for each k, and you get the band structure.
+
+<LabSide effect="band-structure" height={280} params={{ potential: 0.2, bands: 3, speed: 1 }} reverse={true} caption="Weak potential — bands are nearly free-electron parabolas that barely split at the zone boundaries.">
+
+### Tuning the potential
+
+The crystal potential `V₀` controls the band gap width. Drag the potential slider to see:
+
+- **V₀ → 0**: Free electrons. Bands overlap, no gaps — the "empty lattice" limit.
+- **V₀ → large**: Deep potential wells, tightly bound electrons. Wide gaps, narrow bands — the tight-binding limit.
+
+</LabSide>
+
+## Band gaps and material properties
+
+The **Fermi level** — the highest occupied energy at zero temperature — determines everything:
+
+- **Conductor**: Fermi level cuts through a band. Electrons at the Fermi surface can accelerate → current flows.
+- **Insulator**: Fermi level sits in a large band gap (> 4 eV). Electrons can't reach the next band → no conduction.
+- **Semiconductor**: Fermi level sits in a small band gap (0.1–2 eV). Thermal excitation can promote electrons → modest conduction that increases with temperature.
+
+<LabSide effect="band-structure" height={280} params={{ potential: 1.5, bands: 3, speed: 1 }} caption="Strong potential — wide band gaps and narrow bands. Electrons are nearly localised to individual lattice sites.">
+
+## The Brillouin zone
+
+Band structure is plotted within the **first Brillouin zone** — the range k ∈ [−π/a, π/a]. Beyond this, the bands repeat (translational symmetry of the reciprocal lattice). The zone boundaries (k = ±π/a) are where the most interesting physics happens: Bragg reflection opens the gaps.
+
+</LabSide>
+
+## Further reading
+
+- Kittel, *Introduction to Solid State Physics* — the standard undergraduate text.
+- [Electronic band structure (Wikipedia)](https://en.wikipedia.org/wiki/Electronic_band_structure)
+- Ashcroft & Mermin, *Solid State Physics* — more rigorous treatment.

@@ -1,0 +1,58 @@
+<LabSide effect="bode-plotter" height={340} params={{ type: "lp", order: 2, normalizedFreq: 2 }} caption="Second-order low-pass filter. Flat at low frequencies, −40 dB/decade rolloff after cutoff. Phase goes 0° → −180°.">
+
+## The Core Idea
+
+A **Bode plot** is the frequency-domain fingerprint of a system. It shows how much a sinusoidal input is amplified or attenuated at each frequency (**magnitude**), and how much the output is shifted in phase (**phase**). Together, they tell you everything about how a filter, amplifier, or control loop behaves across the spectrum.
+
+</LabSide>
+
+## The Mathematics
+
+For a transfer function `H(s)`, the Bode plot evaluates `H(jω)` for `ω ∈ (0, ∞)`:
+
+- **Magnitude**: `20·log₁₀|H(jω)|` in decibels (dB).
+- **Phase**: `arg(H(jω))` in degrees.
+
+### Second-order low-pass
+
+```
+H(s) = ωc² / (s² + 2ζωc·s + ωc²)
+```
+
+The damping ratio ζ controls behaviour near ωc:
+
+- **ζ = 1**: Critically damped, smooth −40 dB/decade rolloff.
+- **ζ < 1/√2**: Underdamped — a resonant peak appears before rolloff.
+- **ζ → 0**: Pure resonance — a sharp spike at ωc.
+
+<LabSide effect="bode-plotter" height={280} params={{ type: "hp", order: 2, normalizedFreq: 2 }} reverse={true} caption="Second-order high-pass. Signal rejection below ωc, +40 dB/decade rise, flat above. Phase: +180° → 0°.">
+
+Switch between filter types to see how the same second-order structure produces opposite behaviours depending on topology:
+
+</LabSide>
+
+## Filter types
+
+- **Low-pass (LP)**: Pass low frequencies, reject high. Anti-aliasing, smoothing.
+- **High-pass (HP)**: Pass high, reject low. AC coupling, edge detection.
+- **Band-pass (BP)**: Pass a frequency band, reject everything else. Radio tuning.
+- **Notch**: Reject a narrow band. Power-line interference removal (50/60 Hz).
+
+<LabSide effect="bode-plotter" height={280} params={{ type: "bp", order: 2, normalizedFreq: 2 }} caption="Band-pass filter. Only frequencies near ωc pass through — the hallmark of a resonant system.">
+
+## Stability from Bode plots
+
+For feedback with open-loop `G(s)`:
+
+- **Gain margin**: How much gain increase before instability (measured at phase = −180°).
+- **Phase margin**: How much phase lag before instability (measured at gain = 0 dB).
+
+Rule of thumb: phase margin > 45° for comfortable stability.
+
+</LabSide>
+
+## Further reading
+
+- [Bode plot (Wikipedia)](https://en.wikipedia.org/wiki/Bode_plot)
+- Oppenheim & Willsky, *Signals and Systems*
+- Ogata, *Modern Control Engineering*

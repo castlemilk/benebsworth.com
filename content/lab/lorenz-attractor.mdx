@@ -1,0 +1,29 @@
+<LabSide effect="lorenz-attractor" height={380} params={{ points: 2, rho: 28, speed: 1 }} caption="The Lorenz attractor — two trajectories starting 10⁻⁴ apart diverge into the iconic butterfly shape.">
+
+## The Discovery
+
+In 1963, Edward Lorenz was running a simplified model of atmospheric convection on a computer. He wanted to re-run part of a simulation and, rather than starting from scratch, he typed in the numbers from a printout — but only to three decimal places instead of six. The second run diverged wildly from the first over time. That tiny rounding error exposed something profound: **deterministic chaos** — a system governed by precise equations whose long-term behaviour is fundamentally unpredictable.
+
+## The System
+
+The three equations are deceptively simple:
+
+```
+dx/dt = σ (y − x)
+dy/dt = x (ρ − z) − y
+dz/dt = x y − β z
+```
+
+- **σ** (Prandtl number) relates diffusion rates. Classic value: 10.
+- **ρ** (Rayleigh number) controls the strength of convection. At ρ = 28, the system enters the chaotic regime — the attractor becomes a strange attractor.
+- **β** is a geometric factor. Classic value: 8/3.
+
+For ρ < 1, the system has a single stable fixed point at the origin — the fluid is motionless. At ρ = 1, convection begins. By ρ ≈ 24, the system is fully chaotic.
+
+</LabSide>
+
+## Why It Matters
+
+The Lorenz system is the **canonical example** of deterministic chaos. The "butterfly effect" — the idea that a butterfly flapping its wings in Brazil could set off a tornado in Texas — comes directly from this system. Two trajectories starting arbitrarily close together diverge exponentially fast, meaning any measurement error, no matter how small, eventually makes the forecast useless.
+
+Rotate the view by watching for a moment — the attractor's 3D structure becomes clear. Two lobes connected by a narrow bridge, with trajectories orbiting one lobe a few times before crossing to the other. The pattern never repeats.

@@ -1,0 +1,56 @@
+<LabSide effect="quantum-tunneling" height={340} params={{ barrierHeight: 2, barrierWidth: 0.08, energy: 2 }} caption="A Gaussian wave packet approaching a rectangular barrier. Part reflects; part tunnels through — the transmitted packet is smaller but intact.">
+
+## The Core Idea
+
+In classical mechanics, a particle hitting a wall it can't climb just bounces back. In quantum mechanics, the particle's wavefunction **leaks through** the barrier. If the wall is thin enough, there's a measurable probability of finding the particle on the other side — even though it never had enough energy to go over. This is **quantum tunnelling**, and it powers everything from nuclear fusion in the Sun to flash memory in your phone.
+
+</LabSide>
+
+## The Mathematics
+
+For a particle of energy E approaching a rectangular barrier of height V₀ > E:
+
+```
+Region I  (x < 0):     ψ = e^(ikx) + R·e^(−ikx)        (incident + reflected)
+Region II (0 < x < a): ψ = A·e^(−κx) + B·e^(κx)        (evanescent decay)
+Region III (x > a):    ψ = T·e^(ikx)                      (transmitted)
+```
+
+where `k = √(2mE)/ℏ` and `κ = √(2m(V₀−E))/ℏ`. Inside the barrier, the wavefunction decays exponentially — it doesn't oscillate. But it doesn't reach zero either. The transmission coefficient is:
+
+```
+T ≈ e^(−2κa) = exp(−2a·√(2m(V₀−E))/ℏ)
+```
+
+The thicker the barrier (larger a) or the higher the barrier (larger V₀ − E), the exponentially smaller the tunnelling probability. But it's never exactly zero.
+
+<LabSide effect="quantum-tunneling" height={280} params={{ barrierHeight: 2, barrierWidth: 0.15, energy: 1.5 }} reverse={true} caption="Wider barrier — the exponential decay has more room to suppress the wavefunction. Very little makes it through.">
+
+Try widening the barrier and watch the transmitted packet shrink exponentially. The barrier width slider gives you direct control over the `e^(−2κa)` factor — every small increase makes a dramatic difference.
+
+</LabSide>
+
+## Evanescent waves
+
+The key physics is the **evanescent wave** inside the barrier. Classically, kinetic energy would be negative there — an impossibility. Quantum mechanically, the wavefunction simply switches from oscillatory (`e^(ikx)`) to exponentially decaying (`e^(−κx)`). The probability density |ψ|² is nonzero everywhere inside the barrier — the particle has a presence there, it just fades rapidly.
+
+### The energy balance
+
+The transmitted particle has the **same energy** as the incident one. Tunnelling doesn't slow the particle down or steal energy. The barrier only attenuates the probability amplitude — the wave that emerges on the other side oscillates at the same frequency and wavenumber, just with a smaller amplitude.
+
+<LabSide effect="quantum-tunneling" height={280} params={{ barrierHeight: 2, barrierWidth: 0.05, energy: 1.8 }} caption="Thin barrier, energy close to V₀ — significant tunnelling. A large fraction of the wave packet passes through.">
+
+## Real-world tunnelling
+
+- **Sun**: Protons in the solar core tunnel through their Coulomb barrier to fuse — the Sun burns because of tunnelling.
+- **Tunnelling diodes**: Exploit negative differential resistance from resonant tunnelling through quantum wells.
+- **Flash memory**: Electrons tunnel through an insulating oxide layer to charge/discharge a floating gate.
+- **STM (scanning tunnelling microscope)**: Maps surfaces by measuring tunnelling current between a tip and the sample — sensitive to sub-angstrom height differences.
+
+</LabSide>
+
+## Further reading
+
+- Griffiths, *Introduction to Quantum Mechanics* — Chapter 2 derives the rectangular barrier in detail.
+- [Quantum tunnelling (Wikipedia)](https://en.wikipedia.org/wiki/Quantum_tunnelling)
+- Gamow, *Zur Quantentheorie des Atomkernes* (1928) — the original tunnelling paper explaining alpha decay.

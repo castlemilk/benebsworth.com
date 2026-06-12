@@ -1,0 +1,29 @@
+<LabSide effect="coupled-oscillators" height={360} params={{ initMode: "left", coupling: 0.3, speed: 1 }} caption="Energy sloshes between the two masses — a beat phenomenon from normal-mode interference.">
+
+## Two Springs, One Connection
+
+Two identical mass-spring systems are joined by a third, weaker coupling spring. Pull one mass to the side and let go, and something elegant happens: the energy doesn't stay in that mass — it **sloshes** back and forth between the two, transferring completely from one to the other and back again.
+
+This is **not** an exponential decay. It's a beat — two frequencies close together producing a slow modulation of amplitude. The energy alternates at a frequency equal to **half the difference** between the two normal-mode frequencies.
+
+## Normal Modes
+
+The system has two natural "shapes" of oscillation where both masses move at the same frequency indefinitely:
+
+- **Mode 1 (ω₁ = √(k/m))**: both masses move **in phase** — the coupling spring is never stretched, so k_c doesn't matter.
+- **Mode 2 (ω₂ = √((k + 2k_c)/m))**: both masses move **out of phase** — the coupling spring stretches maximally, adding its stiffness.
+
+Select "Normal mode 1" or "Normal mode 2" from the dropdown to see these pure modes. Now select "Left displaced" — watch how the amplitude **beats** between m₁ and m₂. That pattern is the sum of the two normal modes interfering.
+
+</LabSide>
+
+## The Beat Frequency
+
+When you start with only m₁ displaced, you're exciting **both** normal modes equally. The displacement of each mass over time is:
+
+```
+x₁(t) = A cos(ω_beat t) cos(ω_avg t)
+x₂(t) = A sin(ω_beat t) sin(ω_avg t)
+```
+
+where `ω_beat = (ω₂ − ω₁) / 2` and `ω_avg = (ω₂ + ω₁) / 2`. The beat period gets shorter as the coupling spring gets stronger — increase k_c and watch the energy slosh faster.

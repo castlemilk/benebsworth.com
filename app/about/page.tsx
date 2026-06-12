@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { about } from '@/content/about'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
@@ -7,6 +8,7 @@ import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { SkillMarquee } from '@/components/motion/skill-marquee'
+import { RelatedLabs } from '@/components/blog/related-labs'
 import { PortraitHero } from '@/components/about/portrait-hero'
 import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
@@ -23,8 +25,10 @@ export const metadata: Metadata = {
     title: 'About · Ben Ebsworth',
     description: 'Software, platform & hardware engineer · AI-native · Melbourne, Australia.',
     url: '/about/',
+    siteName: 'Ben Ebsworth',
+    locale: 'en_AU',
   },
-  twitter: { card: 'summary_large_image', title: 'About · Ben Ebsworth' },
+  twitter: { card: 'summary_large_image', title: 'About · Ben Ebsworth', creator: '@benebsworth', site: '@benebsworth' },
 }
 
 // Theme-aware brand accents: in dark these tokens equal the original neon
@@ -361,6 +365,25 @@ export default function AboutPage() {
           <SectionLabel index="04">Toolkit</SectionLabel>
           <Reveal>
             <SkillMarquee skills={about.skills} />
+          </Reveal>
+        </section>
+
+        {/* ── Lab ─────────────────────────────────────────────── */}
+        <section id="lab">
+          <SectionLabel index="05">The lab</SectionLabel>
+          <Reveal>
+            <div className="mt-6 max-w-2xl">
+              <p className="font-sans text-[1.0625rem] leading-8 text-fg/80">
+                I keep an <Link href="/lab/" className="underline decoration-fg/30 underline-offset-4 hover:decoration-fg/70">interactive lab</Link> of small visual essays — each effect is a working simulation, parameterised, playable, and shareable. They are the working sketches behind many of my posts: oscillators, attractors, filters, modulation, signal integrity. Drop in, drag the controls, watch what happens.
+              </p>
+            </div>
+            <div className="mt-8">
+              <RelatedLabs
+                tags={['electrical', 'engineering', 'physics', 'algorithms', 'signal']}
+                labels={['physics', 'engineering', 'algorithms', 'simulation']}
+                limit={4}
+              />
+            </div>
           </Reveal>
         </section>
       </main>

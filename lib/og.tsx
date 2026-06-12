@@ -30,13 +30,24 @@ const BRAND_DOTS = ['#00e0b8', '#7c5cff', '#ff7a59'] // blog · project · about
 export function renderOgCard({
   eyebrow,
   title,
+  description,
   footer,
   accent = '#7c5cff',
+  glyph,
+  iconDataUri,
+  tags,
 }: {
   eyebrow: string
   title: string
+  description?: string
   footer: string
   accent?: string
+  /** Optional category glyph (∫ ψ Ω ◆) shown in the top-right of the card. */
+  glyph?: string
+  /** Optional icon PNG (topic mark) as a data URI. */
+  iconDataUri?: string
+  /** Optional tag list shown as a small monospace row at the bottom. */
+  tags?: string[]
 }) {
   return new ImageResponse(
     (
@@ -78,16 +89,28 @@ export function renderOgCard({
             padding: '84px 92px',
           }}
         >
-          {/* eyebrow row: brand dots + category */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ display: 'flex' }}>
-              {BRAND_DOTS.map((c) => (
-                <div key={c} style={{ width: 18, height: 18, borderRadius: 9999, background: c, marginRight: 13 }} />
-              ))}
+          {/* eyebrow row: brand dots + category + glyph */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex' }}>
+                {BRAND_DOTS.map((c) => (
+                  <div key={c} style={{ width: 18, height: 18, borderRadius: 9999, background: c, marginRight: 13 }} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', color: '#9a9aa8', fontSize: 27, letterSpacing: 6, marginLeft: 14, textTransform: 'uppercase' }}>
+                {eyebrow}
+              </div>
             </div>
-            <div style={{ display: 'flex', color: '#9a9aa8', fontSize: 27, letterSpacing: 6, marginLeft: 14, textTransform: 'uppercase' }}>
-              {eyebrow}
-            </div>
+            {glyph ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60, borderRadius: 14, background: `linear-gradient(135deg, ${accent}26, ${accent}08)`, border: `1px solid ${accent}40` }}>
+                <div style={{ display: 'flex', fontSize: 40, color: accent, lineHeight: 1 }}>{glyph}</div>
+              </div>
+            ) : iconDataUri ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60, borderRadius: 14, background: `linear-gradient(135deg, ${accent}26, ${accent}08)`, border: `1px solid ${accent}40` }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={iconDataUri} width={42} height={42} style={{ objectFit: 'contain' }} alt="" />
+              </div>
+            ) : null}
           </div>
 
           {/* title + accent rule */}
@@ -96,6 +119,34 @@ export function renderOgCard({
               {title}
             </div>
             <div style={{ display: 'flex', width: 128, height: 7, marginTop: 34, borderRadius: 9999, background: accent }} />
+            {description ? (
+              <div style={{ display: 'flex', marginTop: 26, fontSize: 30, color: '#c1c1cd', lineHeight: 1.4, maxWidth: 1000 }}>
+                {truncate(description, 140)}
+              </div>
+            ) : null}
+            {tags && tags.length > 0 ? (
+              <div style={{ display: 'flex', marginTop: 24, flexWrap: 'wrap', gap: 10 }}>
+                {tags.map((t) => (
+                  <div
+                    key={t}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '6px 14px',
+                      borderRadius: 9999,
+                      border: `1px solid ${accent}50`,
+                      background: `${accent}10`,
+                      color: '#cfcfd9',
+                      fontSize: 22,
+                      letterSpacing: 1,
+                      textTransform: 'lowercase',
+                    }}
+                  >
+                    #{t}
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           {/* footer: name + meta */}
@@ -172,7 +223,7 @@ export function renderBlogOgCard({
             <div style={{ display: 'flex', alignItems: 'center' }}>
               {authorUri ? (
                 <div style={{ display: 'flex', width: 60, height: 60, borderRadius: 9999, overflow: 'hidden', border: `2px solid ${accent}`, marginRight: 18 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  { }
                   <img src={authorUri} width={60} height={60} style={{ objectFit: 'cover' }} alt="" />
                 </div>
               ) : null}
@@ -195,7 +246,7 @@ export function renderBlogOgCard({
               background: `radial-gradient(60% 60% at 50% 40%, ${accent}26, transparent 72%)`,
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            { }
             {iconUri ? <img src={iconUri} width={172} height={172} style={{ objectFit: 'contain' }} alt="" /> : null}
           </div>
         </div>

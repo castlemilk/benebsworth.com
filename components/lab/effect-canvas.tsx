@@ -69,11 +69,11 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     size()
 
     const io = new IntersectionObserver(
-      ([e]) => { onscreen = e.isIntersecting; onscreen ? start() : stop() },
+      ([e]) => { onscreen = e.isIntersecting; if (onscreen) start(); else stop() },
       { threshold: 0 },
     )
     io.observe(wrap)
-    const onVis = () => { visible = !document.hidden; visible ? start() : stop() }
+    const onVis = () => { visible = !document.hidden; if (visible) start(); else stop() }
     document.addEventListener('visibilitychange', onVis)
 
     // Recreate the renderer with the new palette when the theme class flips.

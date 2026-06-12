@@ -1,0 +1,66 @@
+<LabSide effect="wave-superposition" height={340} params={{ freq1: 2, freq2: 2.3, amp: 0.6, showComponents: true }} caption="Two sine waves at slightly different frequencies (2.0 and 2.3 Hz) producing visible beats. The composite swells and fades as the components drift in and out of phase.">
+
+## The Core Idea
+
+When two waves share the same medium, they don't collide — they **add**. The resulting displacement at every point is simply the sum of what each wave would produce alone. This principle of **superposition** is one of the most powerful ideas in physics: it underlies interference patterns, beat frequencies, standing waves, and the entire framework of linear systems.
+
+</LabSide>
+
+## The Mathematics
+
+For two sinusoidal waves travelling in the same direction:
+
+```
+y₁ = A sin(k₁x − ω₁t)
+y₂ = A sin(k₂x − ω₂t)
+```
+
+Superposition gives:
+
+```
+y = y₁ + y₂ = 2A cos(Δk·x/2 − Δω·t/2) · sin(k̄x − ω̄t)
+```
+
+where `Δω = ω₁ − ω₂` and `k̄, ω̄` are the averages. The result is a fast oscillation at the average frequency, modulated by a slow envelope at the **beat frequency** `Δf = |f₁ − f₂|`. This is why tuning a guitar by ear works: you listen for the beats slow to zero as the strings approach unison.
+
+<LabSide effect="wave-superposition" height={280} params={{ freq1: 4, freq2: 4.5, amp: 0.6, showComponents: true }} caption="Higher frequencies with a 0.5 Hz difference. The beat envelope is clearly visible as periodic amplitude modulation.">
+
+### Beats in action
+
+Adjust the frequency sliders and watch how the beat rate changes. The closer the two frequencies, the slower the beats — when they match exactly, the beats vanish and you hear a pure tone.
+
+</LabSide>
+
+## Standing waves
+
+When two waves of identical frequency travel in **opposite directions**, superposition produces a **standing wave** — nodes (perpetual zero displacement) and antinodes (maximum oscillation) locked in space:
+
+```
+y = 2A sin(kx) cos(ωt)
+```
+
+The spatial pattern `sin(kx)` never moves; only the amplitude oscillates in time. This is the physics of guitar strings, organ pipes, and microwave cavities.
+
+## Constructive and destructive interference
+
+The key insight is all about **phase**:
+
+- **Constructive**: waves in phase → amplitudes add → louder, brighter, bigger.
+- **Destructive**: waves out of phase → amplitudes cancel → quieter, darker, smaller.
+- **Complete cancellation**: equal amplitude, 180° phase difference → total silence at that point.
+
+<LabSide effect="wave-superposition" height={280} params={{ freq1: 3, freq2: 3, amp: 0.6, showComponents: true }} reverse={true} caption="Same frequency — pure constructive interference with double amplitude.">
+
+Try setting both frequencies to the same value above — the two waves are always in phase, producing pure constructive interference with double amplitude.
+
+</LabSide>
+
+## Beyond sine waves
+
+Superposition only holds for **linear** systems. In nonlinear media (shock waves, certain optical crystals, general relativity), waves interact and produce new frequencies — harmonics, sum-and-difference tones, solitons. But for the vast majority of engineering and physics (acoustics, optics, quantum mechanics, signal processing), superposition is the rule.
+
+## Further reading
+
+- [Wave interference (Wikipedia)](https://en.wikipedia.org/wiki/Wave_interference)
+- [Beat (acoustics)](https://en.wikipedia.org/wiki/Beat_(acoustics))
+- Crawford, *Waves* (Berkeley Physics Course, Vol. 3)

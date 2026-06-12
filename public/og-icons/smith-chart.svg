@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 172" fill="none">
+  <rect width="172" height="172" rx="24" fill="#0d1a22"/>
+  <rect x="1" y="1" width="170" height="170" rx="23" fill="none" stroke="#00b4d8" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- Smith chart outer circle -->
+  <circle cx="86" cy="86" r="58" stroke="#00b4d8" stroke-width="1.5" opacity="0.6"/>
+  <!-- Real axis (horizontal) -->
+  <line x1="28" y1="86" x2="144" y2="86" stroke="#00b4d8" stroke-width="1.5" opacity="0.7"/>
+  <!-- Imag axis (vertical) -->
+  <line x1="86" y1="28" x2="86" y2="144" stroke="#00b4d8" stroke-width="1.5" opacity="0.7"/>
+  <!-- Unity circle (r=1 arcs) -->
+  <circle cx="86" cy="86" r="29" stroke="#00b4d8" stroke-width="1" opacity="0.3" stroke-dasharray="4 3"/>
+  <!-- Constant resistance circles (r=0.5, 1, 2) -->
+  <circle cx="57" cy="86" r="29" stroke="#00b4d8" stroke-width="1" opacity="0.3" stroke-dasharray="3 4"/>
+  <circle cx="115" cy="86" r="58" stroke="#00b4d8" stroke-width="1" opacity="0.2" stroke-dasharray="3 5"/>
+  <!-- Constant reactance arcs -->
+  <path d="M86,57 A29,29 0 0,1 115,86" stroke="#00b4d8" stroke-width="1" opacity="0.3" stroke-dasharray="3 4"/>
+  <path d="M86,115 A29,29 0 0,1 57,86" stroke="#00b4d8" stroke-width="1" opacity="0.3" stroke-dasharray="3 4"/>
+  <!-- Reflection coefficient path (trajectory) -->
+  <path d="M86,86 Q110,55 115,86 Q110,115 86,115 Q57,115 50,86 Q57,55 86,57" stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+  <!-- Current point marker -->
+  <circle cx="115" cy="86" r="5" fill="#00b4d8"/>
+  <circle cx="115" cy="86" r="9" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/>
+  <!-- Label -->
+  <text x="14" y="22" font-family="monospace" font-size="13" fill="#00b4d8" opacity="0.9">Γ</text>
+  <!-- Real axis labels -->
+  <text x="144" y="90" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.5">1</text>
+  <text x="28" y="90" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.5">−1</text>
+  <text x="80" y="28" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.5">j1</text>
+  <text x="80" y="148" font-family="monospace" font-size="10" fill="#00b4d8" opacity="0.5">−j1</text>
+</svg>

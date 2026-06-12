@@ -1,0 +1,84 @@
+---
+title: "Article Backlog & Research Plan"
+date: "2026-06-10T00:00:00.000Z"
+description: "Internal planning document — not a published post."
+labels: meta,planning
+release: false
+---
+
+# Article Backlog
+
+This is a working document for the post-pipeline. NOT a published article. To add a topic to the queue, append it under the right category with a status marker.
+
+## Categories of opportunity
+
+Each backlog item lists: **lab effects reused · MDX components used · research sources · est. word count**.
+
+### High-leverage EE topics (uses existing lab)
+
+- [ ] **Why your digital signal rings** — digital signal integrity viewed through the RLC lab. Probe effects: scope-trace, transmission-line, RLC. (Picks up the implicit "every wire is an RLC" theme from the existing RLC post.) **reuses:** `rlc-resonance`, `transmission-line`, `smith-chart` · **components:** `Callout`, `LabSide`, `CodeBlock` · **sources:** Bogatin *Signal Integrity Simplified* ch.8, Johnson/Graham *High-Speed Digital Design* ch.2 · **~2500 words**
+- [ ] **PLL design from first principles** — phase-locked loops, building on the `pll-lockin` lab. The classic 1975 Gardner paper, simplified. Lock-in visualisation as a "phase portrait for control engineers". **reuses:** `pll-lockin`, `bode-plotter`, `pid-tuner` · **components:** `Callout`, `LabSide`, equation blocks · **sources:** Gardner *Phaselock Techniques* (1975), Best *Phase-Locked Loops* ch.2 · **~3000 words**
+- [ ] **AM vs FM vs QAM — the modulation zoo** — companion to the `am-modulation` and `constellation-plot` labs. Why QAM beats AM for spectral efficiency. **reuses:** `am-modulation`, `constellation-plot`, `fft-spectrum` · **sources:** Proakis *Digital Communications* ch.3 · **~2200 words**
+- [ ] **Filters from poles and zeros** — building the `bode-plotter` lab into a 1st–4th order primer. Butterworth, Chebyshev, Bessel approximations. **reuses:** `bode-plotter`, `fft-spectrum` · **sources:** Sedra/Smith *Microelectronic Circuits* §14 · **~2500 words**
+- [ ] **PID tuning without a math PhD** — companion to `pid-tuner`. Zeigler-Nichols, manual tuning rules, the "no overshoot" interpretation. **reuses:** `pid-tuner`, `pll-lockin` · **~1800 words**
+- [ ] **The Smith chart is geometry** — visualise the `smith-chart` lab through cross-ratio geometry. Why it's a Möbius transform. **reuses:** `smith-chart`, `conformal-grid` · **sources:** Pozar *Microwave Engineering* §3 · **~2200 words**
+
+### Algorithmic topics (reuse, plus new diagrams)
+
+- [ ] **A* search, visually** — best-first search with priority queue, animated on a grid. **components needed:** new `GridSearch` component · **sources:** Hart/Nilsson/Raphael 1968 paper, Russell/Norvig ch.3 · **~2200 words**
+- [ ] **Hash tables: how Python dicts really work** — open addressing, probing, load factor, the djb2 hash. Animation of collisions. **components needed:** new `HashTableDemo` component · **sources:** Knuth TAOCP vol.3 §6.4 · **~2500 words**
+- [ ] **Dynamic programming from the ground up** — memoisation vs tabulation, optimal substructure, classic examples (fib, knapsack, edit distance). **reuses:** existing patterns · **~2000 words**
+- [ ] **The BFS / DFS taxonomy** — when to use which, with animation. **components needed:** new `TreeTraversal` component · **~1500 words**
+
+### Physics / visualisation (reuse existing lab)
+
+- [ ] **The Bloch sphere for beginners** — qubit precession visualised. Why every qubit operation is a rotation. **reuses:** `bloch-sphere` · **sources:** Nielsen/Chuang ch.2 · **~2200 words**
+- [ ] **Quantum tunneling: the wave equation you can see** — split-step Fourier method. **reuses:** `quantum-tunneling` · **~2500 words**
+- [ ] **Brillouin zones and the origin of band gaps** — the 1D nearly-free electron model. **reuses:** `band-structure` · **~2000 words**
+- [ ] **Coupled oscillators and the wisdom of normal modes** — beyond the lab, into coupled pendulums and the FPU problem. **reuses:** `coupled-oscillators` · **~2200 words**
+- [ ] **The Lorenz attractor and the limits of prediction** — what chaos really means. **reuses:** `lorenz-attractor`, `double-pendulum` · **sources:** Lorenz 1963 paper, Gleick *Chaos* ch.1 · **~2500 words**
+
+### Math visualisation (reuse existing lab)
+
+- [ ] **The FFT in pictures** — Cooley-Tukey radix-2, the butterfly diagram. **reuses:** `fft-spectrum` · **sources:** Cooley/Tukey 1965 paper · **~2500 words**
+- [ ] **The conformal grid: what Möbius transformations look like** — Joukowski airfoil, Schwarz-Christoffel mapping. **reuses:** `conformal-grid` · **~2200 words**
+
+### Engineering case studies
+
+- [ ] **Designing a 75Ω trace for clean digital edges** — PCB signal integrity from first principles. Builds on `rlc-resonance` and `transmission-line`. · **~2200 words**
+- [ ] **Build a software-defined radio in 100 lines** — IQ sampling, FFT, demod. · **sources:** Lyons *Understanding Digital Signal Processing* ch.13 · **~2500 words**
+
+### Practical software engineering
+
+- [ ] **The hidden cost of `useEffect` in React** — render thrashing, dependency arrays, the 5 rules. **components:** inline code examples · **sources:** React docs, Dan Abramov's *Complete Guide to useEffect* · **~2500 words**
+- [ ] **Performance budgets for the post-Lighthouse era** — INP, LCP, CLS. What to actually measure. **components:** inline metric examples · **sources:** web.dev, MDN · **~2200 words**
+- [ ] **Why I rewrote my site in Next.js 15 / RSC** — the architectural trade-offs. A retrospective. **~2000 words**
+- [ ] **Type-driven development: when the compiler does the work** — discriminated unions, branded types, parsing with the type system. **~2200 words**
+
+### Soft-skill / personal
+
+- [ ] **What I learned shipping 30 posts in a year** — a retrospective on the blog itself. Publish mid-2027.
+- [ ] **Reading a textbook properly: a 5-pass system** — study method. Based on the EE textbooks I keep citing.
+
+## Selection heuristic — which to write next?
+
+When choosing the next article from this backlog, score on three axes (1–5 each, pick the highest sum):
+
+1. **Reusable lab effects available** (1 = none, 5 = multiple existing effects) — 5 gives a fully interactive post for free
+2. **Strong visual / interactive payoff** (1 = pure prose, 5 = the topic demands a diagram) — interactive posts get 5–10× the engagement
+3. **Personal conviction** (1 = "could write", 5 = "have to write this") — authenticity reads. Topics you'd defend in a conversation
+
+Total ≥ 12 → write it. Total < 8 → wait.
+
+## Component gaps
+
+The blog's MDX component library is missing:
+- `Equation` — display math via KaTeX/MathJax. Several backlogs (PLL, modulation, FFT, normal modes) need it.
+- `CodeSandbox` or `CodePen` embed — for live-edit examples
+- `ComparisonTable` — side-by-side feature comparison (current `prose` tables work but aren't styled)
+- `Timeline` — for "X → Y → Z" history sections
+- `BoxCallout` variants — there's `<Callout type=...>` but no compact "key insight" pill, no warning with a specific icon, no quote-block style
+- `Section` — anchor for sub-sections within a long post (with a small visual divider)
+- `ProgressiveImage` — currently uses `<img>`, no blur-up placeholder
+
+Backlog items that need **at least one new component** are marked in the categories above.

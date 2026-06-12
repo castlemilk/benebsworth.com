@@ -1,0 +1,51 @@
+<LabSide effect="pll-lock-in" height={340} params={{ Kp: 2, order: "2" }} caption="A second-order PLL locking onto a reference signal. The VCO output aligns with the reference within a few cycles.">
+
+## The Core Idea
+
+A **phase-locked loop (PLL)** is the circuit that locks a local oscillator to an incoming signal's frequency and phase. Every radio, every CPU clock multiplier, every WiFi chip has one. It works by comparing phases, filtering the error, and using it to steer the oscillator — a feedback loop that, when it locks, makes the local oscillator a perfect copy of the reference.
+
+</LabSide>
+
+## The Mathematics
+
+A PLL has three blocks:
+
+1. **Phase detector (PD)**: Produces error `e = Kd·sin(θref − θvco)`.
+2. **Loop filter**: Low-pass filters the error. `F(s) = 1 + Ki/s` gives type-II.
+3. **VCO**: Produces `ωout = ω₀ + Kv·v_control`.
+
+The closed-loop dynamics for a type-II PLL:
+
+```
+θ̈vco + K·θ̇vco + K·Ki·θvco = K·θ̇ref + K·Ki·θref
+```
+
+Natural frequency `ωn = √(K·Ki)`, damping ratio `ζ = 1/(2√(K·Ki/K))`. The loop bandwidth K controls lock speed; Ki determines steady-state phase error.
+
+<LabSide effect="pll-lock-in" height={280} params={{ Kp: 1, order: "2" }} reverse={true} caption="Lower bandwidth (K=1) — slower lock but better noise rejection.">
+
+Try reducing the loop bandwidth K. The PLL takes longer to lock but rejects more noise — the classic engineering trade-off between speed and filtering.
+
+</LabSide>
+
+## Type-I vs Type-II
+
+- **Type-I PLL** (proportional-only): Simple but has a static phase error. Faster lock, poorer tracking.
+- **Type-II PLL** (PI filter): The integrator drives steady-state phase error to zero — the standard choice for clock recovery, frequency synthesis, and demodulation.
+
+<LabSide effect="pll-lock-in" height={280} params={{ Kp: 4, order: "1" }} caption="First-order PLL with high bandwidth — locks fast but shows residual phase error. No integrator to drive error to zero.">
+
+## Applications
+
+- **Frequency synthesis**: PLL multiplies a crystal reference to generate GHz-range LO signals.
+- **Clock recovery**: Serial links (USB, PCIe, Ethernet) extract a clock from the data stream.
+- **FM demodulation**: A PLL locked to an FM carrier outputs voltage proportional to instantaneous frequency.
+- **Grid synchronisation**: Inverters tied to the power grid use PLLs to synchronise with the 50/60 Hz mains.
+
+</LabSide>
+
+## Further reading
+
+- [Phase-locked loop (Wikipedia)](https://en.wikipedia.org/wiki/Phase-locked_loop)
+- Best, *Phase-Locked Loops: Design, Simulation, and Applications*
+- Gardner, *Phaselock Techniques*

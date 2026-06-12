@@ -1,7 +1,7 @@
 function handler(event) {
-  var req = event.request
-  var uri = req.uri
-  if (uri.endsWith('/')) { req.uri = uri + 'index.html' }
-  else if (!uri.includes('.')) { req.uri = uri + '/index.html' }
-  return req
+  var request = event.request
+  var uri = request.uri
+  if (uri.endsWith('/')) { request.uri = uri + 'index.html' }
+  else if (!uri.includes('.')) { request.uri = uri + '/index.html' }
+  return request
 }

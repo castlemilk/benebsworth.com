@@ -9,8 +9,18 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 PROFILE="${AWS_PROFILE:-default}"
 
-DIST_ID="$(cd "infra/envs/$ENV" && terraform output -raw distribution_id)"
-BUCKET="$(cd "infra/envs/$ENV" && terraform output -raw bucket)"
+# Allow env-var overrides so deploys work even when Terraform state is empty
+# locally (common after repo clones). CI/CD or a populated terraform state will
+# still provide the correct values.
+DIST_ID="${DIST_ID:-$(cd "infra/envs/$ENV" && terraform output -raw distribution_id 2>/dev/null || echo "")}"
+BUCKET="${BUCKET:-$(cd "infra/envs/$ENV" && terraform output -raw bucket 2>/dev/null || echo "")}"
+
+if [ -z "$DIST_ID" ] || [ -z "$BUCKET" ]; then
+  echo "error: DIST_ID and BUCKET must be set — either via env vars or terraform output" >&2
+  echo "  DIST_ID=${DIST_ID:-<empty>}" >&2
+  echo "  BUCKET=${BUCKET:-<empty>}" >&2
+  exit 1
+fi
 
 npm run build
 

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 export function StatGroup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="not-prose my-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
+    <div className="not-prose my-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
       {children}
     </div>
   )

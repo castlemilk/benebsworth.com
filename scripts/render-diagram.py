@@ -1031,17 +1031,67 @@ def _poly_len(pts):
 # main
 # ----------------------------------------------------------------------------
 
+def render_llm(lo):
+    lines = []
+    lines.append(f"# DIAGRAM: {lo.title}")
+    if lo.subtitle:
+        lines.append(f"> {lo.subtitle}")
+    lines.append("")
+    lines.append("## Nodes")
+    for n in lo.nodes:
+        sub = f" - {n.sublabel}" if n.sublabel else ""
+        lines.append(f"- **[{n.id}]** {n.label}{sub} (Type: {n.type or 'default'})")
+    lines.append("")
+    lines.append("## Flow")
+    for e in lo.edges:
+        label = f" --[{e.label}]--> " if e.label else " ----> "
+        lines.append(f"[{e.src}]{label}[{e.dst}]")
+    if lo.journeys:
+        lines.append("")
+        lines.append("## Highlighted Journeys")
+        for i, j in enumerate(lo.journeys):
+            hops = j.get("hops", [])
+            if not hops: continue
+            path = " -> ".join([h[0] for h in hops] + [hops[-1][1]])
+            lines.append(f"- Journey {i+1}: {path}")
+    lines.append("")
+    lines.append("## Mermaid Representation")
+    lines.append("```mermaid")
+    lines.append("flowchart LR")
+    for n in lo.nodes:
+        lbl = n.label.replace('"', "'")
+        if n.sublabel:
+            sub = n.sublabel.replace('"', "'")
+            lbl = f"{lbl}<br/>{sub}"
+        lines.append(f'    {n.id}["{lbl}"]')
+    for e in lo.edges:
+        if e.label:
+            lbl = e.label.replace('"', "'")
+            lines.append(f'    {e.src} -- "{lbl}" --> {e.dst}')
+        else:
+            lines.append(f'    {e.src} --> {e.dst}')
+    lines.append("```")
+    return "\n".join(lines)
+
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    emit_svg = None
-    # --render is the delivery alias; --emit-svg the original debug name. Same path:
-    # both write the complete, ready-to-ship HTML (geometry + style + copy).
-    for flag in ("--render", "--emit-svg"):
-        if flag in sys.argv:
-            i = sys.argv.index(flag)
-            emit_svg = sys.argv[i + 1]
-            args = [a for a in args if a != emit_svg]
+    args = sys.argv[1:]
+    emit_svg = ""
+    emit_llm = ""
+    for flag in ["--render", "-r", "--out", "-o"]:
+        if flag in args:
+            i = args.index(flag)
+            emit_svg = args[i + 1]
+            args.pop(i + 1)
+            args.pop(i)
             break
+    for flag in ["--llm"]:
+        if flag in args:
+            i = args.index(flag)
+            emit_llm = args[i + 1]
+            args.pop(i + 1)
+            args.pop(i)
+            break
+            
     if not args:
         print(__doc__)
         sys.exit(1)
@@ -1049,11 +1099,18 @@ def main():
     lo = Layout(graph)
     lo.run()
     geom = geometry(lo)
+    
     if emit_svg:
         html = render(lo, geom)
         open(emit_svg, "w", encoding="utf-8").write(html)
-        print(f"wrote {emit_svg}")
-    else:
+        print(f"wrote HTML diagram to {emit_svg}")
+        
+    if emit_llm:
+        txt = render_llm(lo)
+        open(emit_llm, "w", encoding="utf-8").write(txt)
+        print(f"wrote LLM-friendly text to {emit_llm}")
+        
+    if not emit_svg and not emit_llm:
         print(json.dumps(geom, ensure_ascii=False, indent=2))
 
 

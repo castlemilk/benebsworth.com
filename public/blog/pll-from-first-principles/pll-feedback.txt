@@ -1,0 +1,35 @@
+# DIAGRAM: Phase-Locked Loop
+> Negative feedback continuously minimizes phase error Δθ
+
+## Nodes
+- **[in]** r(t) - Reference phase (Type: frontend)
+- **[pd]** Phase Detector ⊕ - Computes Δθ = r(t) - y(t) (Type: backend)
+- **[lf]** Loop Filter - PI Controller (Type: backend)
+- **[vco]** VCO (NCO) - Plant (Integrator) (Type: backend)
+- **[out]** y(t) - Output phase (Type: frontend)
+
+## Flow
+[in] ----> [pd]
+[pd] --[Error u_d(t)]--> [lf]
+[lf] --[Voltage u_c(t)]--> [vco]
+[vco] ----> [out]
+[vco] --[Feedback y(t)]--> [pd]
+
+## Highlighted Journeys
+- Journey 1: in -> pd -> lf -> vco -> out
+- Journey 2: vco -> pd
+
+## Mermaid Representation
+```mermaid
+flowchart LR
+    in["r(t)<br/>Reference phase"]
+    pd["Phase Detector ⊕<br/>Computes Δθ = r(t) - y(t)"]
+    lf["Loop Filter<br/>PI Controller"]
+    vco["VCO (NCO)<br/>Plant (Integrator)"]
+    out["y(t)<br/>Output phase"]
+    in --> pd
+    pd -- "Error u_d(t)" --> lf
+    lf -- "Voltage u_c(t)" --> vco
+    vco --> out
+    vco -- "Feedback y(t)" --> pd
+```

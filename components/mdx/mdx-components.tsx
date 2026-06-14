@@ -14,6 +14,7 @@ import { ZooMiniMap } from './zoo-mini-map'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
 import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
+import { PllDiagram } from './pll-diagram'
 
 export const mdxComponents: MDXComponents = {
   // Editorial layout components (inspired by shorted newsroom)
@@ -21,6 +22,7 @@ export const mdxComponents: MDXComponents = {
   Stat,
   PullQuote,
   Figure,
+  PllDiagram,
   // Interactive Istio flow diagrams (used by the istio-patterns post).
   IngressFlowBasic,
   EgressFlowBasic,

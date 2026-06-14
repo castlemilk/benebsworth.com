@@ -99,20 +99,15 @@ function stripMdx(body, slugDir) {
     return m;
   })
 
-  // Translate native Diagram components. Assumes the JSON file name matches the imported var name or is nearby.
-  // We'll scan the file for import varName from './basename.json'
-  out = out.replace(/<Diagram\s+data=\{([^}]+)\}\s*\/>/g, (m, varName) => {
-    const importMatch = new RegExp(`import\\s+${varName}\\s+from\\s+['"]\\.\\/([^'"]+)\\.json['"]`).exec(body);
-    if (importMatch) {
-      const basename = importMatch[1];
-      const jsonPath = join(SRC, slugDir, `${basename}.json`);
-      if (existsSync(jsonPath)) {
-        try {
-          const text = execSync(`python3 scripts/render-diagram.py "${jsonPath}" --llm /dev/stdout`, { encoding: 'utf8' });
-          return `\n\n${text}\n\n`;
-        } catch (e) {
-          console.error(`Failed to render LLM text for ${jsonPath}: ${e.message}`);
-        }
+  // Translate PllDiagram component
+  out = out.replace(/<PllDiagram\s*\/>/g, (m) => {
+    const jsonPath = join(SRC, 'pll-from-first-principles', 'pll-feedback.json');
+    if (existsSync(jsonPath)) {
+      try {
+        const text = execSync(`python3 scripts/render-diagram.py "${jsonPath}" --llm /dev/stdout`, { encoding: 'utf8' });
+        return `\n\n${text}\n\n`;
+      } catch (e) {
+        console.error(`Failed to render LLM text for ${jsonPath}: ${e.message}`);
       }
     }
     return m;

@@ -15,6 +15,9 @@ const ARCH_ASYNC = "#fb923c";
 const ARCH_AUTH = "#fb7185";
 const ARCH_DOT = "#7C5CFF";
 
+const MARGIN = 34.0;
+const BOTTOM_PAD = 44.0;
+
 const TYPE_STYLE: Record<string, [string, string, string]> = {
     "signal": ["rgba(124,92,255,0.15)", "#7C5CFF", "signal"],
     "backend":  ["rgba(0,224,184,0.15)", "#00E0B8", "block"],

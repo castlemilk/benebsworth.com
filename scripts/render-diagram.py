@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""layout.py — deterministic geometry for dashmotion diagrams (pure stdlib).
+"""scripts/render-diagram.py — deterministic geometry for diagram generation (pure stdlib).
 
 The model produces a *semantic* graph JSON (nodes/types/edges/groups/journeys +
 tier hints); this script does the mechanical placement arithmetic that the mode
@@ -1011,7 +1011,7 @@ def render(lo, geom):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{esc(lo.title)} — dashmotion</title>
+<title>{esc(lo.title)}</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>{css}</style>
 </head>
@@ -1024,7 +1024,7 @@ def render(lo, geom):
     {''.join(svg)}
   </div>
   {cards}
-  <p class="footer">{esc(lo.footer) if lo.footer else f"dashmotion · {mode} mode · deterministic layout"}</p>
+  {f'<p class="footer">{esc(lo.footer)}</p>' if lo.footer else ''}
 </div>
 {SCRIPT}
 

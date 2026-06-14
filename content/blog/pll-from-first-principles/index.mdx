@@ -7,6 +7,9 @@ release: true
 heroImage: /blog/pll-from-first-principles/hero.png
 ---
 
+import { Diagram } from '@/components/diagram/diagram'
+import pllData from './pll-feedback.json'
+
 A **phase-locked loop** is one of those circuits that shows up everywhere and is rarely understood deeply. The 1970s TV tuner. The 1990s modem. The 2010s radio base station. The 2020s clock-data-recovery circuit on a serialiser. In every case, the same three blocks: a phase detector, a loop filter, a voltage-controlled oscillator. The output is a clean synthesised frequency that tracks a noisy input.
 
 <LabSide effect="pll-lock-in" height={400} params={{ referenceType: 'chirp', filterType: 'pi' }} caption="A PLL tracking a chirped reference. The VCO frequency (yellow) tries to follow the reference (red) as it sweeps. The phase error (bottom) stays bounded once the loop is in lock. The PI loop filter trades tracking error against loop bandwidth.">
@@ -27,7 +30,7 @@ A PLL is a feedback control system whose **process variable is the phase differe
 
 The three blocks of a PLL map onto the canonical feedback loop:
 
-<iframe src="/blog/pll-from-first-principles/pll-feedback.html" width="100%" height="220" className="w-full rounded-xl border border-white/5 my-8 shadow-xl"></iframe>
+<Diagram data={pllData} />
 
 The phase detector is a **subtractor** that compares the reference phase to the VCO phase. The loop filter is a **controller** with proportional and integral terms. The VCO is the **plant** — its frequency is proportional to the control voltage, so its phase is the integral of the control voltage.
 

@@ -92,11 +92,11 @@ BOUND_PAD = 20.0
 ARCH_CONN = "var(--color-muted)"
 ARCH_ASYNC = "#fb923c"
 ARCH_AUTH = "#fb7185"
-ARCH_DOT = "#22d3ee"
+ARCH_DOT = "#7C5CFF"
 
 TYPE_STYLE = {  # type -> (fill, stroke, legend label)
-    "frontend": ("rgba(8,51,68,0.45)", "#22d3ee", "frontend"),
-    "backend":  ("rgba(0,224,184,0.15)", "#00E0B8", "service"),
+    "signal": ("rgba(124,92,255,0.15)", "#7C5CFF", "signal"),
+    "backend":  ("rgba(0,224,184,0.15)", "#00E0B8", "block"),
     "database": ("rgba(76,29,149,0.45)", "#a78bfa", "data"),
     "cloud":    ("rgba(120,53,15,0.35)", "#fbbf24", "cloud infra"),
     "security": ("rgba(255,255,255,0.05)", "#fb7185", "security"),
@@ -676,6 +676,8 @@ CSS_COMMON = """
       --color-muted: #64748b;
       --color-border: #e2e8f0;
       --color-border-hover: #cbd5e1;
+      --color-grid-line: #f1f5f9;
+      --color-card-bg: #f8fafc;
     }
     :root.dark {
       --color-bg: #0a0a0a;
@@ -683,6 +685,8 @@ CSS_COMMON = """
       --color-muted: #94a3b8;
       --color-border: #1e293b;
       --color-border-hover: #334155;
+      --color-grid-line: #0f1b33;
+      --color-card-bg: #060d20;
     }
     body { font-family: 'Inter', monospace; background: var(--color-bg);
 
@@ -693,8 +697,8 @@ CSS_COMMON = """
   h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
   .subtitle { color: var(--color-muted); font-size: 0.8rem; margin-bottom: 1.5rem; }
   .diagram-card { border: 1px solid var(--color-border); border-radius: 12px; position: relative;
-    background: repeating-linear-gradient(0deg, #0f1b33 0 0.5px, transparent 0.5px 40px),
-      repeating-linear-gradient(90deg, #0f1b33 0 0.5px, transparent 0.5px 40px), #030a1c;
+    background: repeating-linear-gradient(0deg, var(--color-grid-line) 0 0.5px, transparent 0.5px 40px),
+      repeating-linear-gradient(90deg, var(--color-grid-line) 0 0.5px, transparent 0.5px 40px), var(--color-bg);
     padding: 1.25rem 1rem; }
   .pause-btn { position: absolute; top: 12px; right: 12px; z-index: 2; background: transparent;
     border: 1px solid var(--color-border); color: var(--color-muted); border-radius: 6px; padding: 4px 10px;
@@ -721,13 +725,13 @@ CSS_COMMON = """
 CSS_CARDS = """
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem; margin-top: 1.25rem; }
-  .card { border: 1px solid var(--color-border); border-radius: 10px; background: #060d20; padding: 1rem 1.1rem; }
+  .card { border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-card-bg); padding: 1rem 1.1rem; }
   .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.6rem; }
   .card-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .card-dot.cyan { background: #22d3ee; } .card-dot.violet { background: #a78bfa; }
-  .card-dot.rose { background: #fb7185; }
+  .card-dot.cyan { background: var(--color-cyan, #7C5CFF); } .card-dot.violet { background: var(--color-violet, #a78bfa); }
+  .card-dot.rose { background: var(--color-rose, #fb7185); }
   .card h3 { font-size: 0.8rem; font-weight: 600; }
-  .card ul { list-style: none; } .card li { font-size: 0.72rem; color: #94a3b8; line-height: 1.7; }
+  .card ul { list-style: none; } .card li { font-size: 0.72rem; color: var(--color-muted); line-height: 1.7; }
 """
 
 SCRIPT = """
@@ -912,7 +916,7 @@ def render(lo, geom):
             dash = f' stroke-dasharray="{n.sem_dash}"' if n.sem_dash else ""
             node_svg.append(
                 f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
-                f'height="{fmt(n.h)}" rx="8" fill="#0b1226"/>')
+                f'height="{fmt(n.h)}" rx="8" fill="var(--color-bg)"/>')
             node_svg.append(
                 f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
                 f'height="{fmt(n.h)}" rx="8" fill="{fill}" stroke="{st}" '

@@ -688,18 +688,16 @@ CSS_COMMON = """
       --color-grid-line: #0f1b33;
       --color-card-bg: #060d20;
     }
-    body { font-family: 'Inter', monospace; background: var(--color-bg);
+    body { font-family: 'Inter', monospace; background: transparent;
 
-         min-height: 100vh; padding: 2rem; color: var(--color-fg); }
+         min-height: 100vh; padding: 0; color: var(--color-fg); overflow: hidden; }
   .container { max-width: %dpx; margin: 0 auto; }
   .header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.4rem; }
   .pulse-dot { width: 10px; height: 10px; border-radius: 50%%; background: %s; }
   h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
   .subtitle { color: var(--color-muted); font-size: 0.8rem; margin-bottom: 1.5rem; }
-  .diagram-card { border: 1px solid var(--color-border); border-radius: 12px; position: relative;
-    background: repeating-linear-gradient(0deg, var(--color-grid-line) 0 0.5px, transparent 0.5px 40px),
-      repeating-linear-gradient(90deg, var(--color-grid-line) 0 0.5px, transparent 0.5px 40px), var(--color-bg);
-    padding: 1.25rem 1rem; }
+  .diagram-card { border: none; border-radius: 0; position: relative;
+    background: transparent; padding: 0; }
   .pause-btn { position: absolute; top: 12px; right: 12px; z-index: 2; background: transparent;
     border: 1px solid var(--color-border); color: var(--color-muted); border-radius: 6px; padding: 4px 10px;
     font: inherit; font-size: 11px; cursor: pointer; }
@@ -1017,8 +1015,6 @@ def render(lo, geom):
 </head>
 <body>
 <div class="container">
-  <div class="header"><div class="pulse-dot"></div><h1>{esc(lo.title)}</h1></div>
-  <p class="subtitle">{esc(lo.subtitle) if lo.subtitle else f"Animated {mode} diagram"}</p>
   <div class="diagram-card">
     <button class="pause-btn" id="pauseBtn" aria-pressed="false">⏸ pause</button>
     {''.join(svg)}

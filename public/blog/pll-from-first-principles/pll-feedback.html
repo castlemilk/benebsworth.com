@@ -7,21 +7,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', monospace; background: #0a0a0a;
-         min-height: 100vh; padding: 2rem; color: #e2e8f0; }
+
+    :root {
+      --color-bg: #ffffff;
+      --color-fg: #1e293b;
+      --color-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-border-hover: #cbd5e1;
+    }
+    :root.dark {
+      --color-bg: #0a0a0a;
+      --color-fg: #e2e8f0;
+      --color-muted: #94a3b8;
+      --color-border: #1e293b;
+      --color-border-hover: #334155;
+    }
+    body { font-family: 'Inter', monospace; background: var(--color-bg);
+
+         min-height: 100vh; padding: 2rem; color: var(--color-fg); }
   .container { max-width: 1100px; margin: 0 auto; }
   .header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.4rem; }
   .pulse-dot { width: 10px; height: 10px; border-radius: 50%; background: #22d3ee; }
   h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
-  .subtitle { color: #64748b; font-size: 0.8rem; margin-bottom: 1.5rem; }
-  .diagram-card { border: 1px solid #1e293b; border-radius: 12px; position: relative;
+  .subtitle { color: var(--color-muted); font-size: 0.8rem; margin-bottom: 1.5rem; }
+  .diagram-card { border: 1px solid var(--color-border); border-radius: 12px; position: relative;
     background: repeating-linear-gradient(0deg, #0f1b33 0 0.5px, transparent 0.5px 40px),
       repeating-linear-gradient(90deg, #0f1b33 0 0.5px, transparent 0.5px 40px), #030a1c;
     padding: 1.25rem 1rem; }
   .pause-btn { position: absolute; top: 12px; right: 12px; z-index: 2; background: transparent;
-    border: 1px solid #1e293b; color: #64748b; border-radius: 6px; padding: 4px 10px;
+    border: 1px solid var(--color-border); color: var(--color-muted); border-radius: 6px; padding: 4px 10px;
     font: inherit; font-size: 11px; cursor: pointer; }
-  .pause-btn:hover { color: #e2e8f0; border-color: #334155; }
+  .pause-btn:hover { color: var(--color-fg); border-color: var(--color-border-hover); }
   .footer { color: #475569; font-size: 0.7rem; margin-top: 1rem; }
   .flow { stroke-dasharray: 5 5; }
   .flow-async { stroke-dasharray: 2 4; }
@@ -41,7 +57,7 @@
 
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem; margin-top: 1.25rem; }
-  .card { border: 1px solid #1e293b; border-radius: 10px; background: #060d20; padding: 1rem 1.1rem; }
+  .card { border: 1px solid var(--color-border); border-radius: 10px; background: #060d20; padding: 1rem 1.1rem; }
   .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.6rem; }
   .card-dot { width: 8px; height: 8px; border-radius: 50%; }
   .card-dot.cyan { background: #22d3ee; } .card-dot.violet { background: #a78bfa; }
@@ -56,7 +72,7 @@
   <p class="subtitle">Canonical feedback control loop representation</p>
   <div class="diagram-card">
     <button class="pause-btn" id="pauseBtn" aria-pressed="false">⏸ pause</button>
-    <svg id="flowsvg" width="100%" viewBox="0 0 900 170" role="img"><title>Phase-Locked Loop animated diagram</title><desc>Top-down architecture diagram; dashed connectors animate in the direction of flow and dots ride the main paths.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs><g fill="none"><path class="flow" d="M99 90 V114 H280 V94" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M280 90 V114 H461 V94" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M461 90 V114 H631 V94" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M631 90 V114 H801 V94" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M631 90 V114 H280 V94" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/></g><text x="376.5" y="111" fill="#64748b" font-size="10">u_d(t)</text><text x="552" y="111" fill="#64748b" font-size="10">u_c(t)</text><text x="465.5" y="111" fill="#64748b" font-size="10">Feedback y(t)</text><g><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_0" dur="1.5s" begin="0s;j0_3.end+0.6s" fill="freeze" path="M99 90 V114 H280 V94"/></circle><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_1" dur="1.5s" begin="j0_0.end+0.3s" fill="freeze" path="M280 90 V114 H461 V94"/></circle><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_2" dur="1.4s" begin="j0_1.end+0.3s" fill="freeze" path="M461 90 V114 H631 V94"/></circle><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_3" dur="1.4s" begin="j0_2.end+0.3s" fill="freeze" path="M631 90 V114 H801 V94"/></circle><circle r="3.5" class="dot" fill="#7C5CFF"><animateMotion id="j1_0" dur="2.6s" begin="0s;j1_0.end+0.6s" fill="freeze" path="M631 90 V114 H280 V94"/></circle></g><g font-family="Inter, monospace" text-anchor="middle"><rect x="34" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="34" y="34" width="130" height="56" rx="8" fill="rgba(8,51,68,0.45)" stroke="#22d3ee" stroke-width="1.5"/><text x="99" y="66" fill="#e2e8f0" font-size="13" font-weight="500">r(t)</text><rect x="204" y="34" width="152" height="56" rx="8" fill="#0b1226"/><rect x="204" y="34" width="152" height="56" rx="8" fill="rgba(0,224,184,0.15)" stroke="#00E0B8" stroke-width="1.5"/><text x="280" y="66" fill="#e2e8f0" font-size="13" font-weight="500">Phase Detector ⊕</text><rect x="396" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="396" y="34" width="130" height="56" rx="8" fill="rgba(0,224,184,0.15)" stroke="#00E0B8" stroke-width="1.5"/><text x="461" y="66" fill="#e2e8f0" font-size="13" font-weight="500">Loop Filter</text><rect x="566" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="566" y="34" width="130" height="56" rx="8" fill="rgba(0,224,184,0.15)" stroke="#00E0B8" stroke-width="1.5"/><text x="631" y="66" fill="#e2e8f0" font-size="13" font-weight="500">VCO (NCO)</text><rect x="736" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="736" y="34" width="130" height="56" rx="8" fill="rgba(8,51,68,0.45)" stroke="#22d3ee" stroke-width="1.5"/><text x="801" y="66" fill="#e2e8f0" font-size="13" font-weight="500">y(t)</text></g><g font-family="Inter, monospace" font-size="11"><rect x="34" y="120" width="12" height="12" rx="3" fill="rgba(8,51,68,0.45)" stroke="#22d3ee"/><text x="52" y="130" fill="#94a3b8" font-size="11">frontend</text><rect x="145" y="120" width="12" height="12" rx="3" fill="rgba(0,224,184,0.15)" stroke="#00E0B8"/><text x="163" y="130" fill="#94a3b8" font-size="11">service</text><circle cx="254" cy="126" r="3.5" fill="#22d3ee"/><text x="264" y="130" fill="#94a3b8" font-size="11">request in flight</text></g></svg>
+    <svg id="flowsvg" width="100%" viewBox="0 0 900 170" role="img"><title>Phase-Locked Loop animated diagram</title><desc>Top-down architecture diagram; dashed connectors animate in the direction of flow and dots ride the main paths.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs><g fill="none"><path class="flow" d="M99 90 V114 H280 V94" stroke="var(--color-muted)" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M280 90 V114 H461 V94" stroke="var(--color-muted)" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M461 90 V114 H631 V94" stroke="var(--color-muted)" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M631 90 V114 H801 V94" stroke="var(--color-muted)" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M631 90 V114 H280 V94" stroke="var(--color-muted)" stroke-width="1" opacity="1" marker-end="url(#arrow)"/></g><text x="376.5" y="111" fill="var(--color-muted)" font-size="10">u_d(t)</text><text x="552" y="111" fill="var(--color-muted)" font-size="10">u_c(t)</text><text x="465.5" y="111" fill="var(--color-muted)" font-size="10">Feedback y(t)</text><g><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_0" dur="1.5s" begin="0s;j0_3.end+0.6s" fill="freeze" path="M99 90 V114 H280 V94"/></circle><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_1" dur="1.5s" begin="j0_0.end+0.3s" fill="freeze" path="M280 90 V114 H461 V94"/></circle><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_2" dur="1.4s" begin="j0_1.end+0.3s" fill="freeze" path="M461 90 V114 H631 V94"/></circle><circle r="3.5" class="dot" fill="#00E0B8"><animateMotion id="j0_3" dur="1.4s" begin="j0_2.end+0.3s" fill="freeze" path="M631 90 V114 H801 V94"/></circle><circle r="3.5" class="dot" fill="#7C5CFF"><animateMotion id="j1_0" dur="2.6s" begin="0s;j1_0.end+0.6s" fill="freeze" path="M631 90 V114 H280 V94"/></circle></g><g font-family="Inter, monospace" text-anchor="middle"><rect x="34" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="34" y="34" width="130" height="56" rx="8" fill="rgba(8,51,68,0.45)" stroke="#22d3ee" stroke-width="1.5"/><text x="99" y="66" fill="var(--color-fg)" font-size="13" font-weight="500">r(t)</text><rect x="204" y="34" width="152" height="56" rx="8" fill="#0b1226"/><rect x="204" y="34" width="152" height="56" rx="8" fill="rgba(0,224,184,0.15)" stroke="#00E0B8" stroke-width="1.5"/><text x="280" y="66" fill="var(--color-fg)" font-size="13" font-weight="500">Phase Detector ⊕</text><rect x="396" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="396" y="34" width="130" height="56" rx="8" fill="rgba(0,224,184,0.15)" stroke="#00E0B8" stroke-width="1.5"/><text x="461" y="66" fill="var(--color-fg)" font-size="13" font-weight="500">Loop Filter</text><rect x="566" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="566" y="34" width="130" height="56" rx="8" fill="rgba(0,224,184,0.15)" stroke="#00E0B8" stroke-width="1.5"/><text x="631" y="66" fill="var(--color-fg)" font-size="13" font-weight="500">VCO (NCO)</text><rect x="736" y="34" width="130" height="56" rx="8" fill="#0b1226"/><rect x="736" y="34" width="130" height="56" rx="8" fill="rgba(8,51,68,0.45)" stroke="#22d3ee" stroke-width="1.5"/><text x="801" y="66" fill="var(--color-fg)" font-size="13" font-weight="500">y(t)</text></g><g font-family="Inter, monospace" font-size="11"><rect x="34" y="120" width="12" height="12" rx="3" fill="rgba(8,51,68,0.45)" stroke="#22d3ee"/><text x="52" y="130" fill="#94a3b8" font-size="11">frontend</text><rect x="145" y="120" width="12" height="12" rx="3" fill="rgba(0,224,184,0.15)" stroke="#00E0B8"/><text x="163" y="130" fill="#94a3b8" font-size="11">service</text><circle cx="254" cy="126" r="3.5" fill="#22d3ee"/><text x="264" y="130" fill="#94a3b8" font-size="11">request in flight</text></g></svg>
   </div>
   <div class="cards"><div class="card"><div class="card-header"><div class="card-dot cyan"></div><h3>Input Reference</h3></div><ul><li>• External reference r(t)</li><li>• Sets the target frequency</li><li>• Phase detector measures error</li></ul></div><div class="card"><div class="card-header"><div class="card-dot violet"></div><h3>Control Logic</h3></div><ul><li>• Loop Filter (PI controller)</li><li>• Amplifies and integrates error</li><li>• Generates control voltage u_c(t)</li></ul></div><div class="card"><div class="card-header"><div class="card-dot rose"></div><h3>Output Generation</h3></div><ul><li>• VCO acts as an integrator</li><li>• Produces clean signal y(t)</li><li>• Fed back to close the loop</li></ul></div></div>
   <p class="footer">dashmotion · architecture mode · deterministic layout</p>
@@ -77,6 +93,31 @@
     btn.setAttribute('aria-pressed', String(paused));
   });
 })();
+</script>
+
+
+<script>
+  // Sync theme with parent window
+  function syncTheme() {
+    try {
+      if (window.parent !== window) {
+        const isDark = window.parent.document.documentElement.classList.contains('dark') || 
+                       window.parent.document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    } catch(e) {}
+  }
+  syncTheme();
+  // Set up an observer on parent if possible
+  try {
+    if (window.parent !== window) {
+      new MutationObserver(syncTheme).observe(window.parent.document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+    }
+  } catch(e) {}
 </script>
 
 </body>

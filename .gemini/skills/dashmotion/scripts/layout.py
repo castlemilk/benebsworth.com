@@ -89,7 +89,7 @@ ARCH_VGAP = 56.0
 ARCH_HGAP = 40.0
 ARCH_MAXW = 200.0
 BOUND_PAD = 20.0
-ARCH_CONN = "#64748b"
+ARCH_CONN = "var(--color-muted)"
 ARCH_ASYNC = "#fb923c"
 ARCH_AUTH = "#fb7185"
 ARCH_DOT = "#22d3ee"
@@ -669,21 +669,37 @@ def geometry(lo):
 
 CSS_COMMON = """
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', monospace; background: #0a0a0a;
-         min-height: 100vh; padding: 2rem; color: #e2e8f0; }
+
+    :root {
+      --color-bg: #ffffff;
+      --color-fg: #1e293b;
+      --color-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-border-hover: #cbd5e1;
+    }
+    :root.dark {
+      --color-bg: #0a0a0a;
+      --color-fg: #e2e8f0;
+      --color-muted: #94a3b8;
+      --color-border: #1e293b;
+      --color-border-hover: #334155;
+    }
+    body { font-family: 'Inter', monospace; background: var(--color-bg);
+
+         min-height: 100vh; padding: 2rem; color: var(--color-fg); }
   .container { max-width: %dpx; margin: 0 auto; }
   .header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.4rem; }
   .pulse-dot { width: 10px; height: 10px; border-radius: 50%%; background: %s; }
   h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
-  .subtitle { color: #64748b; font-size: 0.8rem; margin-bottom: 1.5rem; }
-  .diagram-card { border: 1px solid #1e293b; border-radius: 12px; position: relative;
+  .subtitle { color: var(--color-muted); font-size: 0.8rem; margin-bottom: 1.5rem; }
+  .diagram-card { border: 1px solid var(--color-border); border-radius: 12px; position: relative;
     background: repeating-linear-gradient(0deg, #0f1b33 0 0.5px, transparent 0.5px 40px),
       repeating-linear-gradient(90deg, #0f1b33 0 0.5px, transparent 0.5px 40px), #030a1c;
     padding: 1.25rem 1rem; }
   .pause-btn { position: absolute; top: 12px; right: 12px; z-index: 2; background: transparent;
-    border: 1px solid #1e293b; color: #64748b; border-radius: 6px; padding: 4px 10px;
+    border: 1px solid var(--color-border); color: var(--color-muted); border-radius: 6px; padding: 4px 10px;
     font: inherit; font-size: 11px; cursor: pointer; }
-  .pause-btn:hover { color: #e2e8f0; border-color: #334155; }
+  .pause-btn:hover { color: var(--color-fg); border-color: var(--color-border-hover); }
   .footer { color: #475569; font-size: 0.7rem; margin-top: 1rem; }
   .flow { stroke-dasharray: 5 5; }
   .flow-async { stroke-dasharray: 2 4; }
@@ -705,7 +721,7 @@ CSS_COMMON = """
 CSS_CARDS = """
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem; margin-top: 1.25rem; }
-  .card { border: 1px solid #1e293b; border-radius: 10px; background: #060d20; padding: 1rem 1.1rem; }
+  .card { border: 1px solid var(--color-border); border-radius: 10px; background: #060d20; padding: 1rem 1.1rem; }
   .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.6rem; }
   .card-dot { width: 8px; height: 8px; border-radius: 50%; }
   .card-dot.cyan { background: #22d3ee; } .card-dot.violet { background: #a78bfa; }
@@ -745,24 +761,24 @@ def _node_text_svg(n):
     if n.sublabel:  # arch component: label + sublabel
         ly = n.y + (n.h - 18) / 2 + 4
         if len(n.lines) == 1:
-            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ly)}" fill="#e2e8f0" '
+            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ly)}" fill="var(--color-fg)" '
                          f'font-size="13" font-weight="500">{esc(n.lines[0])}</text>')
         else:
-            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ly-7)}" fill="#e2e8f0" '
+            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ly-7)}" fill="var(--color-fg)" '
                          f'font-size="13" font-weight="500">'
                          f'<tspan x="{fmt(cx)}">{esc(n.lines[0])}</tspan>'
                          f'<tspan x="{fmt(cx)}" dy="15">{esc(n.lines[1])}</tspan></text>')
-        parts.append(f'<text x="{fmt(cx)}" y="{fmt(n.y2-10)}" fill="#64748b" '
+        parts.append(f'<text x="{fmt(cx)}" y="{fmt(n.y2-10)}" fill="var(--color-muted)" '
                      f'font-size="10">{esc(n.sublabel)}</text>')
     else:
         weight = "600" if n.shape == "pill" else "500"
         if len(n.lines) == 1:
             ty = n.cy + 4
-            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ty)}" fill="#e2e8f0" '
+            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ty)}" fill="var(--color-fg)" '
                          f'font-size="13" font-weight="{weight}">{esc(n.lines[0])}</text>')
         else:
             ty = n.cy - 3
-            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ty)}" fill="#e2e8f0" '
+            parts.append(f'<text x="{fmt(cx)}" y="{fmt(ty)}" fill="var(--color-fg)" '
                          f'font-size="13" font-weight="{weight}">'
                          f'<tspan x="{fmt(cx)}">{esc(n.lines[0])}</tspan>'
                          f'<tspan x="{fmt(cx)}" dy="15">{esc(n.lines[1])}</tspan></text>')
@@ -823,7 +839,7 @@ def render(lo, geom):
                     f'stroke-width="{width}" opacity="{opacity}"{marker}/>')
         if e.label and e.label_pos:
             lx, ly = e.label_pos
-            label_svg.append(f'<text x="{fmt(lx)}" y="{fmt(ly)}" fill="#64748b" '
+            label_svg.append(f'<text x="{fmt(lx)}" y="{fmt(ly)}" fill="var(--color-muted)" '
                              f'font-size="10">{esc(e.label)}</text>')
     conn.append('</g>')
 
@@ -833,11 +849,11 @@ def render(lo, geom):
         for note in n.loop_notes:
             lx = n.x2 + 8
             ly = n.cy + 4 + off
-            label_svg.append(f'<text x="{fmt(lx)}" y="{fmt(ly)}" fill="#64748b" '
+            label_svg.append(f'<text x="{fmt(lx)}" y="{fmt(ly)}" fill="var(--color-muted)" '
                              f'font-size="11">↻</text>')
             if note:
                 label_svg.append(f'<text x="{fmt(lx+14)}" y="{fmt(ly)}" '
-                                 f'fill="#64748b" font-size="10">{esc(note)}</text>')
+                                 f'fill="var(--color-muted)" font-size="10">{esc(note)}</text>')
             off += 15
 
     # journeys / dots
@@ -1019,6 +1035,31 @@ def render(lo, geom):
   <p class="footer">{esc(lo.footer) if lo.footer else f"dashmotion · {mode} mode · deterministic layout"}</p>
 </div>
 {SCRIPT}
+
+<script>
+  // Sync theme with parent window
+  function syncTheme() {{
+    try {{
+      if (window.parent !== window) {{
+        const isDark = window.parent.document.documentElement.classList.contains('dark') || 
+                       window.parent.document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {{
+          document.documentElement.classList.add('dark');
+        }} else {{
+          document.documentElement.classList.remove('dark');
+        }}
+      }}
+    }} catch(e) {{}}
+  }}
+  syncTheme();
+  // Set up an observer on parent if possible
+  try {{
+    if (window.parent !== window) {{
+      new MutationObserver(syncTheme).observe(window.parent.document.documentElement, {{ attributes: true, attributeFilter: ['class', 'data-theme'] }});
+    }}
+  }} catch(e) {{}}
+</script>
+
 </body>
 </html>"""
     return html

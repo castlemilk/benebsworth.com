@@ -496,10 +496,22 @@ export class Layout {
         let vx = v.cx, vtop = v.y - EDGE_SHORT;
         const upward = v.layer < u.layer;
         const same = v.layer === u.layer;
+        
+        let exitBottom = false;
+        if (upward && this.mode === "circuit") {
+            const hasDownwardIn = this.edges.some(ee => ee.dst === u.id && this.by_id[ee.src] && this.by_id[ee.src].layer < u.layer);
+            exitBottom = hasDownwardIn;
+        }
+
         if (upward) {
-            ux = u.cx; uy = u.y;
+            if (exitBottom) {
+                ux = u.cx; uy = u.y2;
+            } else {
+                ux = u.cx; uy = u.y;
+            }
             vx = v.cx; vtop = v.y2 + EDGE_SHORT;
         }
+
         if (!upward && !same && v.layer - u.layer === 1) {
             if (Math.abs(ux - vx) < 0.6) {
                 e.pts = [[ux, uy], [vx, vtop]];
@@ -549,7 +561,7 @@ export class Layout {
                 this._src_lane_l[e.src] = lane;
             }
         }
-        const rail_a = uy + (!upward ? RAIL_IN : -RAIL_IN);
+        const rail_a = uy + ((!upward || exitBottom) ? RAIL_IN : -RAIL_IN);
         const rail_b = vtop + (!upward ? -RAIL_IN : RAIL_IN);
         e.pts = [
             [ux, uy], [ux, rail_a], [lane, rail_a],

@@ -103,10 +103,10 @@ heroImage: /blog/<slug>/hero.png
 
 ## Generating Hero Images
 
-When creating a new post or updating an existing one without a `heroImage`, you should generate a high-quality hero image using OpenAI's DALL-E 3 model. The image should be abstract, visually striking, and technically themed to match the site's aesthetic (often dark backgrounds with neon/vibrant accents).
+When creating a new post or updating an existing one without a `heroImage`, you should generate a high-quality hero image using OpenAI's `gpt-image-2` model. The image should be abstract, visually striking, and technically themed to match the site's aesthetic (often dark backgrounds with neon/vibrant accents).
 
 **Step 1: Generate and download the image**
-Use the `OPENAI_API_KEY` located in `~/projects/brandbrain/.env` to call the DALL-E 3 API.
+Use the `OPENAI_API_KEY` located in `~/projects/brandbrain/.env` to call the API. Note that `gpt-image-2` returns a base64 encoded string.
 
 ```bash
 # 1. Source the API key
@@ -117,20 +117,25 @@ curl -s https://api.openai.com/v1/images/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
-    "model": "dall-e-3",
-    "prompt": "A highly technical, abstract geometric illustration representing [TOPIC], sleek modern vector art style, dark background, utilizing vibrant accent colors",
+    "model": "gpt-image-2",
+    "prompt": "A highly technical, abstract geometric illustration representing [TOPIC], sleek modern vector art style, dark background, utilizing vibrant accent colors. No text or words.",
     "n": 1,
-    "size": "1024x1024",
-    "response_format": "url"
+    "size": "1024x1024"
   }' > response.json
 
-# 3. Extract the URL
-IMAGE_URL=$(node -pe 'JSON.parse(require("fs").readFileSync("response.json")).data[0].url')
-
-# 4. Download it to BOTH the content and public directories (crucial!)
+# 3. Extract the base64 string and save it to BOTH the content and public directories (crucial!)
 mkdir -p public/blog/<slug> content/blog/<slug>
-curl -s "$IMAGE_URL" -o content/blog/<slug>/hero.png
-curl -s "$IMAGE_URL" -o public/blog/<slug>/hero.png
+node -e '
+  const fs = require("fs");
+  const data = JSON.parse(fs.readFileSync("response.json", "utf8"));
+  if (data.data && data.data[0] && data.data[0].b64_json) {
+    const buf = Buffer.from(data.data[0].b64_json, "base64");
+    fs.writeFileSync("content/blog/<slug>/hero.png", buf);
+    fs.writeFileSync("public/blog/<slug>/hero.png", buf);
+  } else {
+    console.error("Failed to parse image from response", data);
+  }
+'
 ```
 
 **Step 2: Update the frontmatter**

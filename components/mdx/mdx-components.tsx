@@ -13,8 +13,14 @@ import { ColorLegend } from './color-legend'
 import { ZooMiniMap } from './zoo-mini-map'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
+import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
 
 export const mdxComponents: MDXComponents = {
+  // Editorial layout components (inspired by shorted newsroom)
+  StatGroup,
+  Stat,
+  PullQuote,
+  Figure,
   // Interactive Istio flow diagrams (used by the istio-patterns post).
   IngressFlowBasic,
   EgressFlowBasic,

@@ -159,6 +159,32 @@ Add the `heroImage` field pointing to the downloaded file:
 - **Restyled elements**: `h2 h3 p a ul code` are themed in `mdx-components.tsx`. Everything else falls back to Tailwind `prose`.
 - **Math** — see [Math and equations](#math-and-equations) below.
 
+### Editorial MDX Palette (for enhanced readability)
+
+To improve the scannability, narrative flow, and engagement of the articles, use the following layout components:
+
+| Component | Props | Use |
+|---|---|---|
+| `<StatGroup>` | (none) | Wrapper for 2-4 `<Stat>` components to break up long sections of prose. |
+| `<Stat />` | `label`, `value`, `context?` | A bold callout for important metrics or numbers. `value` is large text, `label` is the header, `context` is a short subtext. |
+| `<PullQuote>` | children | Wrap a striking sentence from the text to create a large, italicized blockquote with a branded accent border. Use 1 or 2 per article. |
+| `<Figure />` | `src`, `caption?`, `credit?`, `placement?` | For rendering layout images with proper captioning. `placement` can be `full`, `left`, `right`, or `inset` to allow text wrapping and varied rhythm. |
+
+Example:
+```mdx
+<StatGroup>
+  <Stat label="Training Time" value="48 Hours" context="on 8x A100 GPUs" />
+  <Stat label="Parameter Count" value="1.2B" context="sparse mixture" />
+</StatGroup>
+
+As we discovered during the final epoch:
+<PullQuote>
+  The real bottleneck wasn't the compute, but the memory bandwidth required to shuffle the latent embeddings.
+</PullQuote>
+
+<Figure src="/blog/post-slug/layout-1.png" caption="The memory allocation profile during the forward pass." placement="right" />
+```
+
 ## Math and equations
 
 The MDX pipeline has `remark-math` + `rehype-katex` enabled, so LaTeX-style math renders server-side. No configuration needed by the author — write `$...$` for inline and `$$...$$` for display, and it just works. KaTeX is the rendering engine (not MathJax), so it's fast enough to be in the static export without a runtime cost.

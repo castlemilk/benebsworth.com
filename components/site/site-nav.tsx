@@ -1,9 +1,17 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 import { cn } from '@/lib/utils'
+
+const navLinks = [
+  { href: '/projects/', prefix: '/projects', label: 'projects', accent: 'text-project' },
+  { href: '/blog/', prefix: '/blog', label: 'blog', accent: 'text-blog' },
+  { href: '/lab/', prefix: '/lab', label: 'lab', accent: 'text-blog' },
+  { href: '/about/', prefix: '/about', label: 'about', accent: 'text-about' },
+]
 
 /**
  * Site-wide top navigation. Pinned to the top of the viewport via
@@ -26,6 +34,8 @@ import { cn } from '@/lib/utils'
  */
 export function SiteNav() {
   const scrolling = useScrollActivity(200)
+  const pathname = usePathname()
+
   return (
     <header
       className={cn(
@@ -43,15 +53,23 @@ export function SiteNav() {
         </Link>
         <div className="flex items-center gap-4">
           <nav className="flex gap-6 font-mono text-[0.78rem] uppercase tracking-[0.18em] text-muted">
-            <Link href="/projects/" className="hover:text-project transition-colors">
-              projects
-            </Link>
-            <Link href="/blog/" className="hover:text-blog transition-colors">
-              blog
-            </Link>
-            <Link href="/about/" className="hover:text-about transition-colors">
-              about
-            </Link>
+            {navLinks.map(({ href, label, accent, prefix }) => {
+              const isActive = pathname.startsWith(prefix)
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    'relative transition-colors',
+                    isActive
+                      ? [accent, 'after:absolute after:inset-x-0 after:-bottom-4 after:h-[2px] after:rounded-full after:bg-current']
+                      : `hover:${accent}`,
+                  )}
+                >
+                  {label}
+                </Link>
+              )
+            })}
           </nav>
           <ThemeToggle />
         </div>

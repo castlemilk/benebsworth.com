@@ -106,41 +106,51 @@ export default function BlogPage() {
                     <div className="grid grid-cols-1 md:grid-cols-[0.85fr_1fr]">
                       {/* topic panel */}
                       <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-[var(--color-border)] bg-surface md:border-b-0 md:border-r">
-                        <span
-                          aria-hidden
-                          className="absolute inset-0"
-                          style={{
-                            background: `radial-gradient(75% 70% at 50% 36%, color-mix(in srgb, ${topic.accent} 22%, transparent), transparent 72%)`,
-                          }}
-                        />
-                        <span
-                          aria-hidden
-                          className="absolute inset-0 opacity-[0.4]"
-                          style={{
-                            backgroundImage:
-                              'linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px)',
-                            backgroundSize: '28px 28px',
-                            maskImage:
-                              'radial-gradient(70% 70% at 50% 50%, black, transparent 75%)',
-                          }}
-                        />
-                        <div className="relative flex flex-col items-center gap-4">
+                        {lead.heroImage ? (
                           <img
-                            src={topic.icon}
+                            src={lead.heroImage}
                             alt=""
-                            aria-hidden
-                            width={112}
-                            height={112}
-                            className="object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                            style={{ width: 112, height: 112 }}
+                            className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-500 group-hover/spot:scale-105 group-hover/spot:opacity-100"
                           />
-                          <span
-                            className="accent-ink font-mono text-[0.62rem] uppercase tracking-[0.28em]"
-                            style={{ '--ink': topic.accent } as React.CSSProperties}
-                          >
-                            {topic.label}
-                          </span>
-                        </div>
+                        ) : (
+                          <>
+                            <span
+                              aria-hidden
+                              className="absolute inset-0"
+                              style={{
+                                background: `radial-gradient(75% 70% at 50% 36%, color-mix(in srgb, ${topic.accent} 22%, transparent), transparent 72%)`,
+                              }}
+                            />
+                            <span
+                              aria-hidden
+                              className="absolute inset-0 opacity-[0.4]"
+                              style={{
+                                backgroundImage:
+                                  'linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px)',
+                                backgroundSize: '28px 28px',
+                                maskImage:
+                                  'radial-gradient(70% 70% at 50% 50%, black, transparent 75%)',
+                              }}
+                            />
+                            <div className="relative flex flex-col items-center gap-4">
+                              <img
+                                src={topic.icon}
+                                alt=""
+                                aria-hidden
+                                width={112}
+                                height={112}
+                                className="object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+                                style={{ width: 112, height: 112 }}
+                              />
+                              <span
+                                className="accent-ink font-mono text-[0.62rem] uppercase tracking-[0.28em]"
+                                style={{ '--ink': topic.accent } as React.CSSProperties}
+                              >
+                                {topic.label}
+                              </span>
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       {/* editorial column */}
@@ -187,15 +197,15 @@ export default function BlogPage() {
                 return (
                   <Reveal key={p.slug} delay={Math.min(i, 6) * 50}>
                     <Link href={`/blog/${p.slug}/`} className="block rounded-xl">
-                      <SpotlightCard accent={topic.accent} className="p-6 sm:p-8">
+                      <SpotlightCard accent={topic.accent} className="overflow-hidden p-6 sm:p-8">
                         {/* accent rail */}
                         <span
                           aria-hidden
-                          className="absolute inset-y-0 left-0 w-[3px]"
+                          className="absolute inset-y-0 left-0 z-10 w-[3px]"
                           style={{ backgroundColor: topic.accent, opacity: 0.65 }}
                         />
-                        <div className="flex flex-col gap-3 pl-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                          <div className="min-w-0">
+                        <div className="relative z-10 flex flex-col gap-3 pl-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+                          <div className="min-w-0 flex-1">
                             <div className="mb-2 flex flex-wrap items-center gap-3">
                               <TopicMarker topic={topic} />
                               <time className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
@@ -209,13 +219,25 @@ export default function BlogPage() {
                               {p.description}
                             </p>
                           </div>
-                          <span
-                            aria-hidden
-                            className="hidden shrink-0 self-center font-mono text-base text-muted transition-all duration-300 group-hover/spot:translate-x-1 sm:block"
-                            style={{ color: `color-mix(in srgb, ${topic.accent} 80%, transparent)` }}
-                          >
-                            →
-                          </span>
+                          {p.heroImage ? (
+                            <div className="mt-4 shrink-0 sm:ml-6 sm:mt-0">
+                              <div className="relative h-24 w-32 overflow-hidden rounded-lg border border-[var(--color-border)] bg-black/20 sm:h-28 sm:w-40">
+                                <img
+                                  src={p.heroImage}
+                                  alt=""
+                                  className="absolute inset-0 h-full w-full object-cover opacity-85 transition-transform duration-500 group-hover/spot:scale-110 group-hover/spot:opacity-100"
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <span
+                              aria-hidden
+                              className="hidden shrink-0 self-center font-mono text-base text-muted transition-all duration-300 group-hover/spot:translate-x-1 sm:block"
+                              style={{ color: `color-mix(in srgb, ${topic.accent} 80%, transparent)` }}
+                            >
+                              →
+                            </span>
+                          )}
                         </div>
                       </SpotlightCard>
                     </Link>

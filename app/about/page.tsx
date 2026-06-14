@@ -9,7 +9,7 @@ import { AnimatedHeading } from '@/components/motion/animated-heading'
 import { SpotlightCard } from '@/components/motion/spotlight-card'
 import { SkillMarquee } from '@/components/motion/skill-marquee'
 import { RelatedLabs } from '@/components/blog/related-labs'
-import { PortraitHero } from '@/components/about/portrait-hero'
+import { HalftoneHero } from '@/components/about/halftone-hero'
 import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
 import { techColor } from '@/lib/tech-colors'
@@ -120,7 +120,7 @@ export default function AboutPage() {
           </div>
 
           <Reveal delay={120} className="order-1 md:order-2">
-            <PortraitHero accent={ACCENT.about} />
+            <HalftoneHero accent={ACCENT.about} />
           </Reveal>
         </section>
 

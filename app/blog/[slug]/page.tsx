@@ -9,6 +9,8 @@ import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
+import { RelatedPosts } from '@/components/blog/related-posts'
+import { MobileToc } from '@/components/blog/mobile-toc'
 import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
 
 function fmtDate(iso: string): string {
@@ -81,6 +83,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     .replace(/[#*_`>~|]/g, ' ')     // markdown punctuation
     .split(/\s+/)
     .filter(Boolean).length
+  const readingTime = Math.max(1, Math.round(wordCount / 230))
   // High-level article section for Google's News / Discover box. We use
   // the topic label (e.g. "Algorithms", "Service Mesh") which is also
   // the visual badge at the top of the post.
@@ -139,11 +142,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           room because sticky elements stay in normal flow. */}
       <main className="mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] xl:grid-cols-[minmax(0,1fr)_16rem]">
-          <div>
-        <Breadcrumb
-          className="mb-8 lg:hidden"
-          items={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: p.title }]}
-        />
+          <article className="min-w-0">
         {/* ── Post header spans the full (wide) page frame — editorial title +
             accent rule fill the screen. Only the long-form prose below is capped
             to a comfortable reading measure (~44rem ≈ 74ch). ── */}
@@ -158,9 +157,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           />
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <TopicMarker topic={topic} />
-            <time className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
-              {fmtDate(p.date)}
-            </time>
+            <div className="flex flex-wrap items-center gap-2">
+              <time className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
+                {fmtDate(p.date)}
+              </time>
+              <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
+                · {readingTime} min read · Ben Ebsworth
+              </span>
+            </div>
           </div>
           <h1 className="type-h1 mt-5">
             {p.title}
@@ -185,14 +189,18 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             }}
           />
         </header>
-        <article className="mt-10 max-w-[44rem]"><MdxContent source={p.body} slug={p.slug} /></article>
+        <div className="mt-10 max-w-[44rem]">
+          <MobileToc />
+          <MdxContent source={p.body} slug={p.slug} />
+        </div>
           {/* "Try it in the lab" footer. Uses the post's tags to find
               matching lab effects, with a daily-rotating random fallback
               when no overlap exists. */}
           <div className="max-w-[44rem]">
             <RelatedLabs tags={p.tags} labels={p.tags} limit={3} />
+            <RelatedPosts currentSlug={slug} tags={p.tags} />
           </div>
-          </div>
+          </article>
           {/* Sticky right-rail TOC. Only visible on lg+ — mobile users
               get the in-content inline mini-map already. */}
           <aside className="hidden lg:block">

@@ -174,13 +174,14 @@ export function Diagram({ data }: { data: any }) {
 
         const cx = n.x + n.w / 2;
         const cy = n.y + n.h / 2;
+        const textCx = n.shape === "triangle" ? n.x + n.w * 0.4 : cx;
         let nodeText = null;
         if (n.shape === "point") {
             // Text outside the point
             nodeText = (
                 <>
-                    <text x={cx} y={n.y - 12} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
-                    {n.sublabel && <text x={cx} y={n.y + n.h + 16} fill="var(--color-muted)" fontSize="11">{n.sublabel}</text>}
+                    <text x={textCx} y={n.y - 12} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
+                    {n.sublabel && <text x={textCx} y={n.y + n.h + 16} fill="var(--color-muted)" fontSize="11">{n.sublabel}</text>}
                 </>
             );
         } else if (n.sublabel) {
@@ -188,30 +189,30 @@ export function Diagram({ data }: { data: any }) {
             if (n.labelLines.length === 1) {
                 nodeText = (
                     <>
-                        <text x={cx} y={ly} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
-                        <text x={cx} y={n.y + n.h - 10} fill="var(--color-muted)" fontSize="10">{n.sublabel}</text>
+                        <text x={textCx} y={ly} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
+                        <text x={textCx} y={n.y + n.h - 10} fill="var(--color-muted)" fontSize="10">{n.sublabel}</text>
                     </>
                 );
             } else {
                 nodeText = (
                     <>
-                        <text x={cx} y={ly - 7} fill="var(--color-fg)" fontSize="13" fontWeight="500">
-                            <tspan x={cx}>{n.labelLines[0]}</tspan>
-                            <tspan x={cx} dy="15">{n.labelLines[1]}</tspan>
+                        <text x={textCx} y={ly - 7} fill="var(--color-fg)" fontSize="13" fontWeight="500">
+                            <tspan x={textCx}>{n.labelLines[0]}</tspan>
+                            <tspan x={textCx} dy="15">{n.labelLines[1]}</tspan>
                         </text>
-                        <text x={cx} y={n.y + n.h - 10} fill="var(--color-muted)" fontSize="10">{n.sublabel}</text>
+                        <text x={textCx} y={n.y + n.h - 10} fill="var(--color-muted)" fontSize="10">{n.sublabel}</text>
                     </>
                 );
             }
         } else {
             const weight = n.shape === "pill" ? "600" : "500";
             if (n.labelLines.length === 1) {
-                nodeText = <text x={cx} y={cy + 4} fill="var(--color-fg)" fontSize="13" fontWeight={weight}>{n.labelLines[0]}</text>;
+                nodeText = <text x={textCx} y={cy + 4} fill="var(--color-fg)" fontSize="13" fontWeight={weight}>{n.labelLines[0]}</text>;
             } else {
                 nodeText = (
-                    <text x={cx} y={cy - 3} fill="var(--color-fg)" fontSize="13" fontWeight={weight}>
-                        <tspan x={cx}>{n.labelLines[0]}</tspan>
-                        <tspan x={cx} dy="15">{n.labelLines[1]}</tspan>
+                    <text x={textCx} y={cy - 3} fill="var(--color-fg)" fontSize="13" fontWeight={weight}>
+                        <tspan x={textCx}>{n.labelLines[0]}</tspan>
+                        <tspan x={textCx} dy="15">{n.labelLines[1]}</tspan>
                     </text>
                 );
             }

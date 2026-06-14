@@ -1,13 +1,5 @@
-/**
- * Bio component that queries for data
- * with Gatsby's StaticQuery component
- *
- * See: https://www.gatsbyjs.org/docs/static-query/
- */
-
 import React from 'react'
 import { StaticQuery, graphql } from 'gatsby'
-import Image from 'gatsby-image'
 
 import { rhythm } from '../utils/typography'
 
@@ -16,34 +8,38 @@ function Bio () {
     <StaticQuery
       query={bioQuery}
       render={data => {
-        const { author, social } = data.site.siteMetadata
+        const { author, social, twitter } = data.site.siteMetadata
         return (
           <div
             style={{
               display: `flex`,
-              marginBottom: rhythm(2.5)
+              marginBottom: rhythm(2.5),
+              alignItems: `center`,
             }}
           >
-            <Image
-              fixed={data.avatar.childImageSharp.fixed}
-              alt={author}
+            <div
               style={{
+                width: 50,
+                height: 50,
+                borderRadius: `50%`,
+                backgroundColor: `#222`,
                 marginRight: rhythm(1 / 2),
-                marginBottom: 0,
-                minWidth: 50,
-                borderRadius: `100%`
+                flexShrink: 0,
+                display: `flex`,
+                alignItems: `center`,
+                justifyContent: `center`,
+                fontSize: 20,
               }}
-              imgStyle={{
-                borderRadius: `50%`
-              }}
-            />
+            >
+              {author ? author[0] : `B`}
+            </div>
             <p>
               Written by <strong>{author}</strong>, thoughts are their own and
               any material is representative of an attempt to self-educate and
               explore ideas and technology
               {` `}
-              <a href={`https://twitter.com/${social.twitter}`}>
-                You should follow him on Twitter
+              <a href={`https://twitter.com/${social?.twitter || 'benebsworth'}`}>
+                You should follow {author?.split(' ')[0]} on Twitter
               </a>
             </p>
           </div>
@@ -55,13 +51,6 @@ function Bio () {
 
 const bioQuery = graphql`
   query BioQuery {
-    avatar: file(absolutePath: { regex: "/profile-pic.png/" }) {
-      childImageSharp {
-        fixed(width: 50, height: 50) {
-          ...GatsbyImageSharpFixed
-        }
-      }
-    }
     site {
       siteMetadata {
         author

@@ -14,7 +14,7 @@
     "debounce": "^1.2.0",
     "firebase": "^7.14.2",
     "firebase-admin": "^8.12.1",
-    "gatsby": "^2.3.25",
+    "gatsby": "^2.32.13",
     "gatsby-image": "^2.0.39",
     "gatsby-plugin-antd-v2": "^1.0.3",
     "gatsby-plugin-feed-mdx": "^1.0.0",

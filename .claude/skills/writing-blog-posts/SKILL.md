@@ -118,7 +118,7 @@ curl -s https://api.openai.com/v1/images/generations \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
     "model": "gpt-image-2",
-    "prompt": "A highly technical, abstract geometric illustration representing [TOPIC], sleek modern vector art style, dark background, utilizing vibrant accent colors. No text or words.",
+    "prompt": "Abstract editorial art: highly technical geometric vector illustration representing [TOPIC]. Clean isometric lines or layered gradients, translucent materials, subtle depth-of-field, brand teal (#00E0B8) and purple (#7C5CFF) accents against near-black (#0a0a0a). Generous negative space, matte finish.\n\nSTRICT: no text, words, numbers, letters, charts, UI elements, glossy 3D chrome, or stock-photo clichés.",
     "n": 1,
     "size": "1024x1024"
   }' > response.json

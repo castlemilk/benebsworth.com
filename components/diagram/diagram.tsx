@@ -324,7 +324,7 @@ export function Diagram({ data }: { data: any }) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center w-full relative h-full">
+        <div className="flex flex-col items-center justify-center w-full relative my-8 rounded-xl border border-white/5 shadow-xl bg-[#060d20]/50 overflow-hidden">
             <style dangerouslySetInnerHTML={{__html: `
                 :root {
                   --color-bg: #0a0a0a;
@@ -349,15 +349,15 @@ export function Diagram({ data }: { data: any }) {
                 .paused .flow, .paused .flow-async, .paused .flow-auth { animation-play-state: paused; }
             `}} />
             
-            <div className={`relative flex items-center justify-center w-full p-6 ${paused ? 'paused' : ''}`}>
+            <div className={`relative flex items-center justify-center w-full pt-12 pb-8 px-6 ${paused ? 'paused' : ''}`}>
                 <button 
                     onClick={() => setPaused(!paused)}
-                    className="absolute top-4 right-4 z-20 bg-[#060d20] border border-[#1e293b] text-[#94a3b8] rounded-md px-3 py-1.5 text-[11px] font-medium hover:text-[#e2e8f0] hover:border-[#334155] cursor-pointer transition-all"
+                    className="absolute top-4 right-4 z-20 bg-[#060d20]/80 backdrop-blur-sm border border-[#1e293b] text-[#94a3b8] rounded-md px-3 py-1.5 text-[11px] font-medium hover:text-[#e2e8f0] hover:border-[#334155] cursor-pointer transition-all"
                     aria-pressed={paused}
                 >
                     {paused ? '▶ play' : '⏸ pause'}
                 </button>
-                <svg ref={svgRef} id="flowsvg" width="100%" viewBox={`0 0 ${adjustedW} ${adjustedH}`} role="img">
+                <svg ref={svgRef} id="flowsvg" className="max-w-full h-auto" width={adjustedW} height={adjustedH} viewBox={`0 0 ${adjustedW} ${adjustedH}`} role="img">
                     <title>{geom.title} animated diagram</title>
                     <defs>
                         <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">

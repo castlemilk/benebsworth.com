@@ -671,15 +671,6 @@ CSS_COMMON = """
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --color-bg: #ffffff;
-      --color-fg: #1e293b;
-      --color-muted: #64748b;
-      --color-border: #e2e8f0;
-      --color-border-hover: #cbd5e1;
-      --color-grid-line: #f1f5f9;
-      --color-card-bg: #f8fafc;
-    }
-    :root.dark {
       --color-bg: #0a0a0a;
       --color-fg: #e2e8f0;
       --color-muted: #94a3b8;
@@ -688,8 +679,7 @@ CSS_COMMON = """
       --color-grid-line: #0f1b33;
       --color-card-bg: #060d20;
     }
-    body { font-family: 'Inter', monospace; background: transparent;
-
+    body { font-family: 'Inter', monospace; background: var(--color-bg);
          min-height: 100vh; padding: 0; color: var(--color-fg); overflow: hidden; }
   .container { max-width: %dpx; margin: 0 auto; }
   .header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.4rem; }
@@ -912,7 +902,9 @@ def render(lo, geom):
                 used_types.append((fill, stroke, leg))
             st = n.sem_stroke or stroke
             dash = f' stroke-dasharray="{n.sem_dash}"' if n.sem_dash else ""
-
+            node_svg.append(
+                f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
+                f'height="{fmt(n.h)}" rx="8" fill="var(--color-bg)"/>')
             node_svg.append(
                 f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
                 f'height="{fmt(n.h)}" rx="8" fill="{fill}" stroke="{st}" '
@@ -1021,31 +1013,6 @@ def render(lo, geom):
   {f'<p class="footer">{esc(lo.footer)}</p>' if lo.footer else ''}
 </div>
 {SCRIPT}
-
-<script>
-  // Sync theme with parent window
-  function syncTheme() {{
-    try {{
-      if (window.parent !== window) {{
-        const isDark = window.parent.document.documentElement.classList.contains('dark') || 
-                       window.parent.document.documentElement.getAttribute('data-theme') === 'dark';
-        if (isDark) {{
-          document.documentElement.classList.add('dark');
-        }} else {{
-          document.documentElement.classList.remove('dark');
-        }}
-      }}
-    }} catch(e) {{}}
-  }}
-  syncTheme();
-  // Set up an observer on parent if possible
-  try {{
-    if (window.parent !== window) {{
-      new MutationObserver(syncTheme).observe(window.parent.document.documentElement, {{ attributes: true, attributeFilter: ['class', 'data-theme'] }});
-    }}
-  }} catch(e) {{}}
-</script>
-
 </body>
 </html>"""
     return html

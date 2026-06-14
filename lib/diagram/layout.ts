@@ -522,6 +522,24 @@ export class Layout {
             this._set_label_pos(e, u, v);
             return;
         }
+        
+        if (upward && !same) {
+            const r_a = uy + (exitBottom ? RAIL_IN : -RAIL_IN);
+            const r_b = vtop + RAIL_IN;
+            // Can we go straight up ux?
+            if (this._column_clear(ux, r_a, r_b, new Set([u.id, v.id]))) {
+                e.pts = [[ux, uy], [ux, r_b], [vx, r_b], [vx, vtop]];
+                this._set_label_pos(e, u, v);
+                return;
+            }
+            // Can we go straight up vx?
+            if (this._column_clear(vx, r_a, r_b, new Set([u.id, v.id]))) {
+                e.pts = [[ux, uy], [ux, r_a], [vx, r_a], [vx, vtop]];
+                this._set_label_pos(e, u, v);
+                return;
+            }
+        }
+
         if (!upward && !same) {
             const rail_b = v.y - RAIL_IN;
             if (this._column_clear(ux, u.y2, rail_b, new Set([u.id, v.id]))) {

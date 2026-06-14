@@ -467,8 +467,20 @@ class Layout:
         # exit from source bottom; if target is above (upward) start from top
         upward = v.layer < u.layer
         same = v.layer == u.layer
+        
+        exit_bottom = False
+        if upward and getattr(self, 'mode', 'architecture') == "circuit":
+            has_downward_in = any(
+                ee.dst == u.id and self.by_id.get(ee.src) and self.by_id[ee.src].layer < u.layer 
+                for ee in self.edges
+            )
+            exit_bottom = has_downward_in
+
         if upward:
-            ux, uy = u.cx, u.y
+            if exit_bottom:
+                ux, uy = u.cx, u.y2
+            else:
+                ux, uy = u.cx, u.y
             vx, vtop = v.cx, v.y2 + EDGE_SHORT
         if (not upward) and (not same) and v.layer - u.layer == 1:
             if abs(ux - vx) < 0.6:
@@ -478,6 +490,19 @@ class Layout:
                 e.pts = [(ux, uy), (ux, midy), (vx, midy), (vx, vtop)]
             self._set_label_pos(e, u, v)
             return
+
+        if upward and (not same):
+            r_a = uy + (RAIL_IN if exit_bottom else -RAIL_IN)
+            r_b = vtop + RAIL_IN
+            if self._column_clear(ux, r_a, r_b, {u.id, v.id}):
+                e.pts = [(ux, uy), (ux, r_b), (vx, r_b), (vx, vtop)]
+                self._set_label_pos(e, u, v)
+                return
+            if self._column_clear(vx, r_a, r_b, {u.id, v.id}):
+                e.pts = [(ux, uy), (ux, r_a), (vx, r_a), (vx, vtop)]
+                self._set_label_pos(e, u, v)
+                return
+
         # multi-layer downward: prefer a straight column drop (source's own
         # column, then jog above the target) when that column is clear of boxes
         # — avoids the boxy far-lane detour. Fall back to a lane only if blocked.
@@ -517,7 +542,7 @@ class Layout:
                 self.lanes_l += 1
                 lane = self.lane_base_l - (self.lanes_l - 1) * LANE_STEP
                 self._src_lane_l[e.src] = lane
-        rail_a = uy + (RAIL_IN if not upward else -RAIL_IN)
+        rail_a = uy + (RAIL_IN if (not upward or exit_bottom) else -RAIL_IN)
         rail_b = vtop + (-RAIL_IN if not upward else RAIL_IN)
         e.pts = [(ux, uy), (ux, rail_a), (lane, rail_a),
                  (lane, rail_b), (vx, rail_b), (vx, vtop)]

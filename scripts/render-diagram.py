@@ -172,6 +172,7 @@ class Node:
         self.sublabel = d.get("sublabel")
         self.shape = d.get("shape")          # flow: pill|step|decision
         self.type = d.get("type")            # arch: frontend|...
+        self.signal = d.get("signal")        # hover graph signal type (e.g. square, sine, dc, pulse)
         self.tier = d.get("tier")
         self.group = d.get("group")
         self.sem_stroke = d.get("semStroke")  # semantic classDef retention
@@ -710,6 +711,14 @@ CSS_COMMON = """
   @keyframes pulse { 0%%, 100%% { opacity: 1; } 50%% { opacity: 0.4; } }
   body.paused .flow, body.paused .flow-async, body.paused .flow-auth,
   body.paused .pulse-dot { animation-play-state: paused; }
+  #oscilloscope {
+    position: fixed; pointer-events: none; opacity: 0; transition: opacity 0.1s;
+    background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 8px;
+    padding: 8px; z-index: 100; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.5);
+    color: #00E0B8; font-family: monospace;
+  }
+  .tooltip-title { font-size: 10px; color: var(--color-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+  #oscope-canvas { display: block; width: 160px; height: 60px; }
 """
 
 CSS_CARDS = """
@@ -737,7 +746,70 @@ SCRIPT = """
     paused = !paused; document.body.classList.toggle('paused', paused);
     paused ? svg.pauseAnimations() : svg.unpauseAnimations();
     btn.textContent = paused ? '▶ play' : '⏸ pause';
-    btn.setAttribute('aria-pressed', String(paused));
+    btn.setAttribute('aria-pressed', paused);
+  });
+
+  var oscope = document.getElementById('oscilloscope');
+  var ocanvas = document.getElementById('oscope-canvas');
+  var ctx = ocanvas ? ocanvas.getContext('2d') : null;
+  var signalType = null;
+  var animFrame = null;
+  var time = 0;
+
+  function drawSignal() {
+    if (!ctx || !signalType) return;
+    time -= 1;
+    ctx.clearRect(0, 0, 160, 60);
+    
+    // Draw grid
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for(let i=0; i<=160; i+=20) { ctx.moveTo(i,0); ctx.lineTo(i,60); }
+    for(let j=0; j<=60; j+=20) { ctx.moveTo(0,j); ctx.lineTo(160,j); }
+    ctx.stroke();
+
+    ctx.strokeStyle = '#00E0B8';
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let x = 0; x < 160; x++) {
+      let t = (x - time) * 0.1;
+      let y = 30;
+      if (signalType === 'square') {
+        y = 30 + (Math.sin(t) > 0 ? -15 : 15);
+      } else if (signalType === 'sine') {
+        y = 30 - Math.sin(t) * 15;
+      } else if (signalType === 'sawtooth') {
+        y = 30 - (((t / Math.PI) % 2) - 1) * 15;
+      } else if (signalType === 'pulse') {
+        y = 30 + (Math.sin(t) > 0.8 ? -15 : 15);
+      } else if (signalType === 'dc') {
+        y = 30 + Math.sin(t*0.5)*1 + (Math.random()-0.5)*3;
+      }
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    if (!paused) animFrame = requestAnimationFrame(drawSignal);
+  }
+
+  document.querySelectorAll('.signal-node').forEach(function(node) {
+    node.addEventListener('mouseenter', function(e) {
+      signalType = node.getAttribute('data-signal');
+      oscope.style.opacity = 1;
+      document.querySelector('.tooltip-title').innerText = "Signal: " + signalType;
+      if (!animFrame && !paused) drawSignal();
+    });
+    node.addEventListener('mousemove', function(e) {
+      oscope.style.left = (e.clientX + 15) + 'px';
+      oscope.style.top = (e.clientY + 15) + 'px';
+    });
+    node.addEventListener('mouseleave', function() {
+      oscope.style.opacity = 0;
+      signalType = null;
+      if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+    });
   });
 })();
 </script>
@@ -904,6 +976,8 @@ def render(lo, geom):
                 used_types.append((fill, stroke, leg))
             st = n.sem_stroke or stroke
             dash = f' stroke-dasharray="{n.sem_dash}"' if n.sem_dash else ""
+            if n.signal:
+                node_svg.append(f'<g class="signal-node" data-signal="{esc(n.signal)}" style="cursor: crosshair;">')
             node_svg.append(
                 f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
                 f'height="{fmt(n.h)}" rx="8" fill="var(--color-bg)"/>')
@@ -912,6 +986,8 @@ def render(lo, geom):
                 f'height="{fmt(n.h)}" rx="8" fill="{fill}" stroke="{st}" '
                 f'stroke-width="1.5"{dash}/>')
             node_svg.append(_node_text_svg(n))
+            if n.signal:
+                node_svg.append('</g>')
 
     # legend (arch): below everything
     legend_svg = []
@@ -1013,6 +1089,10 @@ def render(lo, geom):
   </div>
   {cards}
   {f'<p class="footer">{esc(lo.footer)}</p>' if lo.footer else ''}
+</div>
+<div id="oscilloscope" class="tooltip">
+  <div class="tooltip-title">Signal</div>
+  <canvas id="oscope-canvas" width="160" height="60"></canvas>
 </div>
 {SCRIPT}
 </body>

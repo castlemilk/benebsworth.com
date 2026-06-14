@@ -3,11 +3,11 @@
   "title": "Phase-Locked Loop",
   "subtitle": "Negative feedback continuously minimizes phase error Δθ",
   "nodes": [
-    { "id": "in", "label": "r(t)", "sublabel": "Reference phase", "type": "frontend", "tier": 0 },
-    { "id": "pd", "label": "Phase Detector ⊕", "sublabel": "Computes Δθ = r(t) - y(t)", "type": "backend", "tier": 0 },
-    { "id": "lf", "label": "Loop Filter", "sublabel": "PI Controller", "type": "backend", "tier": 0 },
-    { "id": "vco", "label": "VCO (NCO)", "sublabel": "Plant (Integrator)", "type": "backend", "tier": 0 },
-    { "id": "out", "label": "y(t)", "sublabel": "Output phase", "type": "frontend", "tier": 0 }
+    { "id": "in", "label": "r(t)", "sublabel": "Reference phase", "type": "frontend", "tier": 0, "signal": "square" },
+    { "id": "pd", "label": "Phase Detector ⊕", "sublabel": "Computes Δθ = r(t) - y(t)", "type": "backend", "tier": 0, "signal": "pulse" },
+    { "id": "lf", "label": "Loop Filter", "sublabel": "PI Controller", "type": "backend", "tier": 0, "signal": "dc" },
+    { "id": "vco", "label": "VCO (NCO)", "sublabel": "Plant (Integrator)", "type": "backend", "tier": 0, "signal": "sawtooth" },
+    { "id": "out", "label": "y(t)", "sublabel": "Output phase", "type": "frontend", "tier": 0, "signal": "sawtooth" }
   ],
   "edges": [
     { "from": "in", "to": "pd", "label": "" },

@@ -1005,18 +1005,6 @@ def render(lo, geom):
                     f'<h3>{esc(c.get("title", ""))}</h3></div>'
                     f'<ul>{items}</ul></div>')
             cards = f'<div class="cards">{"".join(blocks)}</div>'
-        else:
-            cards = (
-                '<div class="cards">'
-                '<div class="card"><div class="card-header"><div class="card-dot cyan">'
-                '</div><h3>Request path</h3></div><ul><li>• animated dot rides the '
-                'main journey</li><li>• tier by tier</li></ul></div>'
-                '<div class="card"><div class="card-header"><div class="card-dot violet">'
-                '</div><h3>Data layer</h3></div><ul><li>• stores and caches</li>'
-                '<li>• violet components</li></ul></div>'
-                '<div class="card"><div class="card-header"><div class="card-dot rose">'
-                '</div><h3>Boundaries</h3></div><ul><li>• regions and subnets</li>'
-                '<li>• dashed containment</li></ul></div></div>')
 
     html = f"""<!DOCTYPE html>
 <html lang="en">

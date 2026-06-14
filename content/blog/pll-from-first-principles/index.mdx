@@ -145,6 +145,12 @@ Three concepts in PLL design, often confused:
 - **Capture range** — the range of frequencies the PLL can acquire lock on, starting from *unlocked*. Smaller than the lock range; limited by the loop filter's bandwidth.
 - **Pull-in range** — the range from which the PLL will eventually acquire lock, after a slow transient. Larger than the capture range; set by the loop filter's natural frequency.
 
+<StatGroup>
+  <Stat label="Lock Range" value="Maximum" context="Holds lock once acquired" />
+  <Stat label="Pull-in" value="Intermediate" context="Slow transient acquisition" />
+  <Stat label="Capture" value="Minimum" context="Immediate phase acquisition" />
+</StatGroup>
+
 The relationships between these three define what the PLL can do in practice. A PLL with a first-order loop filter has all three ranges equal — a degenerate case. A second-order PLL (with PI filter) has capture range < lock range, because the filter's pole at the origin creates a low-pass behaviour during acquisition. A third-order loop (with a narrow filter at high frequency) can have a very wide lock range but a very narrow capture range.
 
 <Callout type="warning" title="The classic stability trap">
@@ -169,7 +175,11 @@ The same three experiments on a real PLL would take a soldering iron and an afte
 
 <LabSide effect="pid-tuner" height={360} caption="A PID controller with the same plant (an integrator). The transfer functions are the same — P-only has steady-state error, PI tracks, PID with too much D oscillates. The PLL lab is a PID lab in disguise." />
 
-The PID lab above is the controls-engineering twin of the PLL lab. **Same plant, same controller topology, same dynamics.** A PLL is a phase-domain PID controller, a PID is a current-domain PID controller. The mathematics, the design heuristics, the failure modes — they map 1:1.
+The PID lab above is the controls-engineering twin of the PLL lab. **Same plant, same controller topology, same dynamics.**
+
+<PullQuote>
+  A PLL is a phase-domain PID controller, a PID is a current-domain PID controller. The mathematics, the design heuristics, the failure modes — they map 1:1.
+</PullQuote>
 
 This is not a coincidence. The control system is a *pattern*, and the PLL is one of its many instantiations. Once you have the pattern, you can recognise it everywhere.
 

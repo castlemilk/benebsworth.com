@@ -9,7 +9,7 @@ heroImage: /blog/pll-from-first-principles/hero.png
 
 A **phase-locked loop** is one of those circuits that shows up everywhere and is rarely understood deeply. The 1970s TV tuner. The 1990s modem. The 2010s radio base station. The 2020s clock-data-recovery circuit on a serialiser. In every case, the same three blocks: a phase detector, a loop filter, a voltage-controlled oscillator. The output is a clean synthesised frequency that tracks a noisy input.
 
-<LabSide effect="pll-lockin" height={400} params={{ referenceType: 'chirp', filterType: 'pi' }} caption="A PLL tracking a chirped reference. The VCO frequency (yellow) tries to follow the reference (red) as it sweeps. The phase error (bottom) stays bounded once the loop is in lock. The PI loop filter trades tracking error against loop bandwidth.">
+<LabSide effect="pll-lock-in" height={400} params={{ referenceType: 'chirp', filterType: 'pi' }} caption="A PLL tracking a chirped reference. The VCO frequency (yellow) tries to follow the reference (red) as it sweeps. The phase error (bottom) stays bounded once the loop is in lock. The PI loop filter trades tracking error against loop bandwidth.">
 
 The lab above is the canonical picture of a PLL in action. The reference is **chirped** — its frequency rises linearly with time, modelling a Doppler-shifted signal or a frequency-hopping transmitter. The PLL is locked at low chirp rates, slips a cycle as the chirp rate exceeds the loop bandwidth, and goes out of lock entirely beyond a critical chirp slope. The PI filter gives a wider lock range than a pure P filter, at the cost of slower convergence.
 

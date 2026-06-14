@@ -285,6 +285,17 @@ export class Layout {
                     n.w = Math.max(lw + 32, 110);
                     n.h = n.lines.length === 1 ? STEP_H : STEP_H + 14;
                 }
+            } else if (this.mode === "circuit") {
+                if (n.shape === "circle") {
+                    n.w = 48; n.h = 48;
+                } else if (n.shape === "triangle") {
+                    n.w = 60; n.h = 60;
+                } else if (n.shape === "point") {
+                    n.w = 12; n.h = 12;
+                } else {
+                    n.w = Math.max(lw + 32, 64);
+                    n.h = n.lines.length === 1 ? 48 : 64;
+                }
             } else {
                 let base = Math.max(lw + 36, 130);
                 if (n.sublabel) {

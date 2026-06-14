@@ -146,6 +146,19 @@ export function Diagram({ data }: { data: any }) {
             } else {
                 nodeBody = <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={8} fill={FLOW_NODE_FILL} stroke={FLOW_NODE_STROKE} />;
             }
+        } else if (mode === "circuit") {
+            const st = "#00E0B8";
+            const fill = "rgba(0,224,184,0.05)";
+            if (n.shape === "circle") {
+                nodeBody = <circle cx={n.x + n.w / 2} cy={n.y + n.h / 2} r={n.w / 2} fill={fill} stroke={st} strokeWidth={1.5} />;
+            } else if (n.shape === "triangle") {
+                const pts = `${n.x},${n.y} ${n.x + n.w},${n.y + n.h / 2} ${n.x},${n.y + n.h}`;
+                nodeBody = <polygon points={pts} fill={fill} stroke={st} strokeWidth={1.5} strokeLinejoin="round" />;
+            } else if (n.shape === "point") {
+                nodeBody = <circle cx={n.x + n.w / 2} cy={n.y + n.h / 2} r={3} fill={st} />;
+            } else {
+                nodeBody = <rect x={n.x} y={n.y} width={n.w} height={n.h} fill={fill} stroke={st} strokeWidth={1.5} />;
+            }
         } else {
             const fill = fillStrokeLeg[0];
             const stroke = fillStrokeLeg[1];
@@ -162,7 +175,15 @@ export function Diagram({ data }: { data: any }) {
         const cx = n.x + n.w / 2;
         const cy = n.y + n.h / 2;
         let nodeText = null;
-        if (n.sublabel) {
+        if (n.shape === "point") {
+            // Text outside the point
+            nodeText = (
+                <>
+                    <text x={cx} y={n.y - 12} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
+                    {n.sublabel && <text x={cx} y={n.y + n.h + 16} fill="var(--color-muted)" fontSize="11">{n.sublabel}</text>}
+                </>
+            );
+        } else if (n.sublabel) {
             const ly = n.y + (n.h - 18) / 2 + 4;
             if (n.labelLines.length === 1) {
                 nodeText = (
@@ -239,6 +260,11 @@ export function Diagram({ data }: { data: any }) {
 
         if (mode === "flow") {
             cls = e.kind === "async" ? "flow-async" : (e.kind === "auth" ? "flow-auth" : (e.kind === "static" ? "" : "flow"));
+        } else if (mode === "circuit") {
+            stroke = "rgba(0,224,184,0.3)";
+            cls = "";
+            width = "1.5";
+            opacity = "1";
         } else {
             stroke = e.kind === "async" ? ARCH_ASYNC : (e.kind === "auth" ? ARCH_AUTH : ARCH_CONN);
             cls = e.kind === "async" ? "flow-async" : (e.kind === "auth" ? "flow-auth" : (e.kind === "static" ? "" : "flow"));
@@ -257,13 +283,14 @@ export function Diagram({ data }: { data: any }) {
         const g = geom.groups[gid];
         if (!g.box) return null;
         const [x, y, w, h] = g.box;
-        let stroke = "#fbbf24", dash = "8 4", fs = 11, rx = 12;
+        let stroke = mode === "circuit" ? "rgba(0,224,184,0.6)" : "#fbbf24";
+        let dash = "8 4", fs = 11, rx = 12;
         if (g.kind === "subnet") {
             stroke = "#fb7185"; dash = "4 4"; fs = 10; rx = 8;
         }
         return (
             <React.Fragment key={`group-${gid}`}>
-                <rect x={x} y={y} width={w} height={h} rx={rx} fill="none" stroke={stroke} strokeWidth="1" strokeDasharray={dash} opacity="0.6" />
+                <rect x={x} y={y} width={w} height={h} rx={rx} fill="none" stroke={stroke} strokeWidth="1.2" strokeDasharray={dash} opacity="0.8" />
                 <text x={x + 14} y={y + 18} fill={stroke} fontSize={fs} opacity="0.9">{g.label}</text>
             </React.Fragment>
         );

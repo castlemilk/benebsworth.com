@@ -1,23 +1,30 @@
 {
-  "mode": "architecture",
+  "mode": "circuit",
   "title": "Phase-Locked Loop",
   "subtitle": "Negative feedback continuously minimizes phase error Δθ",
   "nodes": [
-    { "id": "in", "label": "r(t)", "sublabel": "Reference phase", "type": "frontend", "tier": 0, "signal": "square" },
-    { "id": "pd", "label": "Phase Detector ⊕", "sublabel": "Computes Δθ = r(t) - y(t)", "type": "backend", "tier": 0, "signal": "pulse" },
-    { "id": "lf", "label": "Loop Filter", "sublabel": "PI Controller", "type": "backend", "tier": 0, "signal": "dc" },
-    { "id": "vco", "label": "VCO (NCO)", "sublabel": "Plant (Integrator)", "type": "backend", "tier": 0, "signal": "sawtooth" },
-    { "id": "out", "label": "y(t)", "sublabel": "Output phase", "type": "frontend", "tier": 0, "signal": "sawtooth" }
+    { "id": "in", "label": "F_REF", "sublabel": "(θ_REF)", "type": "frontend", "shape": "point", "tier": 0, "signal": "square" },
+    { "id": "pd", "label": "PD", "group": "err", "type": "backend", "shape": "circle", "tier": 1, "signal": "pulse" },
+    { "id": "cp", "label": "Kd", "sublabel": "CP", "group": "err", "type": "backend", "shape": "triangle", "tier": 2 },
+    { "id": "lf", "label": "Z(s)", "sublabel": "Loop Filter", "type": "backend", "shape": "box", "tier": 3, "signal": "dc" },
+    { "id": "vco", "label": "Kv / s", "sublabel": "VCO", "type": "backend", "shape": "box", "tier": 4, "signal": "sawtooth" },
+    { "id": "out", "label": "F_O", "sublabel": "(θ_O)", "type": "frontend", "shape": "point", "tier": 5, "signal": "sawtooth" },
+    { "id": "div", "label": "1 / N", "sublabel": "Feedback Divider", "type": "backend", "shape": "box", "tier": 3 }
+  ],
+  "groups": [
+    { "id": "err", "label": "Error Detector", "box": true }
   ],
   "edges": [
-    { "from": "in", "to": "pd", "label": "" },
-    { "from": "pd", "to": "lf", "label": "Error u_d(t)" },
-    { "from": "lf", "to": "vco", "label": "Voltage u_c(t)" },
+    { "from": "in", "to": "pd", "label": "+" },
+    { "from": "pd", "to": "cp", "label": "e(s)" },
+    { "from": "cp", "to": "lf", "label": "" },
+    { "from": "lf", "to": "vco", "label": "" },
     { "from": "vco", "to": "out", "label": "" },
-    { "from": "vco", "to": "pd", "label": "Feedback y(t)", "kind": "sync" }
+    { "from": "vco", "to": "div", "label": "" },
+    { "from": "div", "to": "pd", "label": "-", "kind": "main" }
   ],
   "journeys": [
-    { "color": "#00E0B8", "hops": [["in","pd"], ["pd","lf"], ["lf","vco"], ["vco","out"]] },
-    { "color": "#7C5CFF", "hops": [["vco","pd"]] }
+    { "color": "#00E0B8", "hops": [["in","pd"], ["pd","cp"], ["cp","lf"], ["lf","vco"], ["vco","out"]] },
+    { "color": "#7C5CFF", "hops": [["vco","div"], ["div","pd"]] }
   ]
 }

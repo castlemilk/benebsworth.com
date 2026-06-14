@@ -577,10 +577,29 @@ class Layout:
 
     def run(self):
         self.size_nodes()
+
+        is_horizontal = self.mode == "circuit"
+        if is_horizontal:
+            for n in self.nodes:
+                n.w, n.h = n.h, n.w
+
         self.assign_layers()
         self.place()
         self.build_groups()
         self.route()
+
+        if is_horizontal:
+            for n in self.nodes:
+                n.x, n.y = n.y, n.x
+                n.w, n.h = n.h, n.w
+            for g in self.groups:
+                if g.box:
+                    g.box = (g.box[1], g.box[0], g.box[3], g.box[2])
+            for e in self.edges:
+                e.pts = [(py, px) for (px, py) in e.pts]
+                if e.label_pos:
+                    e.label_pos = (e.label_pos[1], e.label_pos[0])
+
         self.normalize()
 
 

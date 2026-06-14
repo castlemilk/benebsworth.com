@@ -625,10 +625,37 @@ export class Layout {
 
     run() {
         this.size_nodes();
+
+        const isHorizontal = this.mode === "circuit";
+        if (isHorizontal) {
+            for (const n of this.nodes) {
+                const t = n.w; n.w = n.h; n.h = t;
+            }
+        }
+
         this.assign_layers();
         this.place();
         this.build_groups();
         this.route();
+
+        if (isHorizontal) {
+            for (const n of this.nodes) {
+                const tx = n.x; n.x = n.y; n.y = tx;
+                const tw = n.w; n.w = n.h; n.h = tw;
+            }
+            for (const g of this.groups) {
+                if (g.box) {
+                    g.box = [g.box[1], g.box[0], g.box[3], g.box[2]];
+                }
+            }
+            for (const e of this.edges) {
+                e.pts = e.pts.map(([px, py]) => [py, px]);
+                if (e.label_pos) {
+                    e.label_pos = [e.label_pos[1], e.label_pos[0]];
+                }
+            }
+        }
+
         this.normalize();
     }
 }

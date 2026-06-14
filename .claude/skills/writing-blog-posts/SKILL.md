@@ -97,8 +97,45 @@ date: "2026-06-08T00:00:00.000Z"
 description: "One-sentence summary for listings, meta tags and the OG image."
 labels: technology,kubernetes
 release: true
+heroImage: /blog/<slug>/hero.png
 ---
 ```
+
+## Generating Hero Images
+
+When creating a new post or updating an existing one without a `heroImage`, you should generate a high-quality hero image using OpenAI's DALL-E 3 model. The image should be abstract, visually striking, and technically themed to match the site's aesthetic (often dark backgrounds with neon/vibrant accents).
+
+**Step 1: Generate and download the image**
+Use the `OPENAI_API_KEY` located in `~/projects/brandbrain/.env` to call the DALL-E 3 API.
+
+```bash
+# 1. Source the API key
+export OPENAI_API_KEY=$(grep OPENAI_API_KEY ~/projects/brandbrain/.env | cut -d '=' -f2)
+
+# 2. Call the OpenAI API (adjust the prompt to match the post topic)
+curl -s https://api.openai.com/v1/images/generations \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "dall-e-3",
+    "prompt": "A highly technical, abstract geometric illustration representing [TOPIC], sleek modern vector art style, dark background, utilizing vibrant accent colors",
+    "n": 1,
+    "size": "1024x1024",
+    "response_format": "url"
+  }' > response.json
+
+# 3. Extract the URL
+IMAGE_URL=$(node -pe 'JSON.parse(require("fs").readFileSync("response.json")).data[0].url')
+
+# 4. Download it to BOTH the content and public directories (crucial!)
+mkdir -p public/blog/<slug> content/blog/<slug>
+curl -s "$IMAGE_URL" -o content/blog/<slug>/hero.png
+curl -s "$IMAGE_URL" -o public/blog/<slug>/hero.png
+```
+
+**Step 2: Update the frontmatter**
+Add the `heroImage` field pointing to the downloaded file:
+`heroImage: /blog/<slug>/hero.png`
 
 ## Markdown / MDX features
 

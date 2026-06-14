@@ -1108,7 +1108,8 @@ def main():
     if emit_llm:
         txt = render_llm(lo)
         open(emit_llm, "w", encoding="utf-8").write(txt)
-        print(f"wrote LLM-friendly text to {emit_llm}")
+        if emit_llm != "/dev/stdout":
+            print(f"wrote LLM-friendly text to {emit_llm}")
         
     if not emit_svg and not emit_llm:
         print(json.dumps(geom, ensure_ascii=False, indent=2))

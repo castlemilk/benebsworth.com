@@ -16,6 +16,7 @@
 
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, existsSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { execSync } from 'node:child_process'
 import matter from 'gray-matter'
 
 const ROOT = process.cwd()
@@ -77,11 +78,26 @@ const COMPONENT_DESCRIPTIONS = {
  *   - `{...}` JSX expression blocks
  *   - Bare frontmatter escapes that look like JSX
  */
-function stripMdx(body) {
+function stripMdx(body, slugDir) {
   let out = body
 
   // Drop MDX import / export statements.
   out = out.replace(/^(import|export)\s.+$/gm, '')
+
+  // Translate animated diagram iframes into LLM text representations if a JSON definition exists
+  out = out.replace(/<iframe\b[^>]*\bsrc=["']\/blog\/([^/]+)\/([^/.]+)\.html["'][^>]*><\/iframe>/gi, (m, iframeSlug, basename) => {
+    if (iframeSlug !== slugDir) return m;
+    const jsonPath = join(SRC, slugDir, `${basename}.json`);
+    if (existsSync(jsonPath)) {
+      try {
+        const text = execSync(`python3 scripts/render-diagram.py "${jsonPath}" --llm /dev/stdout`, { encoding: 'utf8' });
+        return `\n\n${text}\n\n`;
+      } catch (e) {
+        console.error(`Failed to render LLM text for ${jsonPath}: ${e.message}`);
+      }
+    }
+    return m;
+  })
 
   // Replace self-closing component tags. Match `<Name ... />` where Name
   // starts with an uppercase letter (the convention for a React component,
@@ -161,7 +177,7 @@ function processPost(slugDir) {
   // Skip if title/date missing (would've thrown at build time anyway).
   if (!data.title || !data.date) return null
 
-  const body = absolutiseImages(stripMdx(content), slugDir)
+  const body = absolutiseImages(stripMdx(content, slugDir), slugDir)
 
   // Build the markdown frontmatter + body. We keep the original YAML
   // frontmatter so any tooling that consumes it (including the post

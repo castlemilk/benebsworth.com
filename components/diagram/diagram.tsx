@@ -131,7 +131,7 @@ export function Diagram({ data }: { data: any }) {
     const renderedNodes = Object.keys(geom.nodes).map(nid => {
         const n = geom.nodes[nid];
         const isFlow = mode === "flow";
-        const isArch = mode !== "flow";
+        const isArch = mode === "architecture";
         const fillStrokeLeg = TYPE_STYLE[n.type || "external"] || TYPE_STYLE["external"];
         if (isArch && !used_types.some(u => u.leg === fillStrokeLeg[2])) {
             used_types.push({ fill: fillStrokeLeg[0], stroke: fillStrokeLeg[1], leg: fillStrokeLeg[2] });
@@ -335,7 +335,7 @@ export function Diagram({ data }: { data: any }) {
     const legendNodes: React.ReactNode[] = [];
     let adjustedH = H;
     let adjustedW = W;
-    if (mode !== "flow") {
+    if (mode === "architecture") {
         let ly = H - BOTTOM_PAD + 6;
         let lx = MARGIN;
         used_types.forEach((u, i) => {

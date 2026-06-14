@@ -276,7 +276,17 @@ export function Diagram({ data }: { data: any }) {
             labelNodes.push(<text key={`edge-label-${i}`} x={e.labelPos[0]} y={e.labelPos[1]} fill="var(--color-muted)" fontSize="10">{e.label}</text>);
         }
 
-        return <path key={`edge-${i}`} className={cls} d={e.d} stroke={stroke} strokeWidth={width} opacity={opacity} markerEnd={marker} />;
+        if (mode === "circuit") {
+            const electronCls = e.kind === "async" ? "electron-async" : "electron-flow";
+            return (
+                <g key={`edge-group-${i}`}>
+                    <path d={e.d} stroke="rgba(0,224,184,0.3)" strokeWidth={width} fill="none" opacity="1" markerEnd={marker} />
+                    <path className={electronCls} d={e.d} stroke="#00E0B8" strokeWidth={width} fill="none" opacity="0.9" />
+                </g>
+            );
+        }
+
+        return <path key={`edge-${i}`} className={cls} d={e.d} stroke={stroke} strokeWidth={width} fill="none" opacity={opacity} markerEnd={marker} />;
     });
 
     const renderedGroups = Object.keys(geom.groups).map(gid => {
@@ -298,9 +308,10 @@ export function Diagram({ data }: { data: any }) {
 
     const dotDefault = mode === "flow" ? FLOW_DOT : ARCH_DOT;
     const dotSvg: React.ReactNode[] = [];
-    geom.journeys.forEach((j: any, ji: number) => {
-        const color = j.color || dotDefault;
-        let prevId: string | null = null;
+    if (mode !== "circuit") {
+        geom.journeys.forEach((j: any, ji: number) => {
+            const color = j.color || dotDefault;
+            let prevId: string | null = null;
         const lastId = `j${ji}_${j.hops.length - 1}`;
         j.hops.forEach((hop: any, hi: number) => {
             const mid = `j${ji}_${hi}`;
@@ -317,7 +328,8 @@ export function Diagram({ data }: { data: any }) {
             );
             prevId = mid;
         });
-    });
+        });
+    }
 
     const legendNodes: React.ReactNode[] = [];
     let adjustedH = H;
@@ -365,15 +377,19 @@ export function Diagram({ data }: { data: any }) {
                 .flow { stroke-dasharray: 5 5; }
                 .flow-async { stroke-dasharray: 2 4; }
                 .flow-auth { stroke-dasharray: 4 4; }
+                .electron-flow { stroke-dasharray: 2 8; }
+                .electron-async { stroke-dasharray: 2 12; }
                 @media (prefers-reduced-motion: no-preference) {
                     .flow { animation: dashmove 0.75s linear infinite; }
                     .flow-async { animation: dashasync 0.9s linear infinite; }
                     .flow-auth { animation: dashauth 1.2s linear infinite; }
+                    .electron-flow { animation: dashmove 0.5s linear infinite; }
+                    .electron-async { animation: dashmove 1.0s linear infinite; }
                 }
                 @keyframes dashmove { to { stroke-dashoffset: -10; } }
                 @keyframes dashasync { to { stroke-dashoffset: -12; } }
                 @keyframes dashauth { to { stroke-dashoffset: -8; } }
-                .paused .flow, .paused .flow-async, .paused .flow-auth { animation-play-state: paused; }
+                .paused .flow, .paused .flow-async, .paused .flow-auth, .paused .electron-flow, .paused .electron-async { animation-play-state: paused; }
             `}} />
             
             <div className={`relative flex items-center justify-center w-full pt-12 pb-8 px-6 ${paused ? 'paused' : ''}`}>

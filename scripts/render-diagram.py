@@ -89,7 +89,7 @@ ARCH_VGAP = 56.0
 ARCH_HGAP = 40.0
 ARCH_MAXW = 200.0
 BOUND_PAD = 20.0
-ARCH_CONN = "var(--color-muted)"
+ARCH_CONN = "#00E0B8"
 ARCH_ASYNC = "#fb923c"
 ARCH_AUTH = "#fb7185"
 ARCH_DOT = "#7C5CFF"
@@ -912,9 +912,7 @@ def render(lo, geom):
                 used_types.append((fill, stroke, leg))
             st = n.sem_stroke or stroke
             dash = f' stroke-dasharray="{n.sem_dash}"' if n.sem_dash else ""
-            node_svg.append(
-                f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
-                f'height="{fmt(n.h)}" rx="8" fill="var(--color-bg)"/>')
+
             node_svg.append(
                 f'<rect x="{fmt(n.x)}" y="{fmt(n.y)}" width="{fmt(n.w)}" '
                 f'height="{fmt(n.h)}" rx="8" fill="{fill}" stroke="{st}" '

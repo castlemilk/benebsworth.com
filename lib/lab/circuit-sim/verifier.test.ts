@@ -87,11 +87,13 @@ describe('all samples pass verification', () => {
       expect(report.passed).toBe(true)
       expect(report.dcNodeVoltages).not.toBeNull()
       
-      // Verify current flows (skip for cap-only circuits where DC current is 0)
+      // Verify current flows (skip for reactive- or AC-driven circuits where the
+      // DC operating-point current is legitimately zero — sine sources bias to 0V).
       const hasReactive = c.components.some(comp => comp.type === 'C' || comp.type === 'L')
+      const acDriven = c.components.some(comp => (comp.type === 'V' || comp.type === 'I') && comp.waveform && comp.waveform.kind !== 'dc')
       const hasCurrent = Object.values(report.componentCurrents).some(i => Math.abs(i) > 1e-12)
       const hasResistors = c.components.some(comp => comp.type === 'R')
-      if (hasResistors && !hasReactive) {
+      if (hasResistors && !hasReactive && !acDriven) {
         expect(hasCurrent).toBe(true)
       }
 

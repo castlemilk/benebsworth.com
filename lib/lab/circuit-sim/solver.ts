@@ -1,5 +1,9 @@
 import type { Circuit, CircuitComponent } from './types'
-import { assembleMNA, makeDCEnv } from './mna'
+import { assembleMNA, makeDCEnv, type AssembledMNA } from './mna'
+import type { SolveEnv } from './devices'
+
+const MAX_NR_ITERS = 100
+const NR_TOL = 1e-7
 
 export interface MNAMatrix {
   /** Size of the matrix (n + m) */
@@ -111,20 +115,63 @@ export function buildDCMatrix(circuit: Circuit): MNAMatrix | null {
   return { size: mna.size, n: mna.n, m: mna.m, A: mna.A, z: mna.z, vsIndex: mna.vsIndex }
 }
 
+/** LU-solve an assembled MNA system. Returns the solution vector or null if singular. */
+function luSolveMNA(mna: AssembledMNA): Float64Array | null {
+  const { size, A, z } = mna
+  const pivot = new Int32Array(size)
+  if (!luDecompose(size, A, pivot)) return null
+  const x = new Float64Array(size)
+  luSolve(size, A, pivot, z, x)
+  return x
+}
+
+/**
+ * Solve a circuit for the given mode. Linear circuits solve in one pass;
+ * circuits with nonlinear devices (diodes) iterate Newton-Raphson, re-linearizing
+ * each device around the latest guess until the node voltages converge.
+ */
+export function solveCircuit(circuit: Circuit, env: SolveEnv): { x: Float64Array; mna: AssembledMNA } | null {
+  const nonlinear = circuit.components.some(c => c.type === 'D')
+  if (!nonlinear) {
+    const mna = assembleMNA(circuit, env)
+    if (!mna || mna.size === 0) return null
+    const x = luSolveMNA(mna)
+    return x ? { x, mna } : null
+  }
+
+  const nrState = new Map<string, number>()
+  const nrFlags = { limited: false }
+  let prev: Float64Array | undefined = env.prev
+  let last: { x: Float64Array; mna: AssembledMNA } | null = null
+  for (let iter = 0; iter < MAX_NR_ITERS; iter++) {
+    nrFlags.limited = false
+    const mna = assembleMNA(circuit, { ...env, prev, nrState, nrFlags })
+    if (!mna || mna.size === 0) return null
+    const x = luSolveMNA(mna)
+    if (!x) return null
+    let converged = false
+    if (prev && prev.length === x.length && !nrFlags.limited) {
+      // Only accept convergence once no junction is still being voltage-limited.
+      let maxDelta = 0
+      for (let i = 0; i < mna.n; i++) maxDelta = Math.max(maxDelta, Math.abs(x[i] - prev[i]))
+      converged = maxDelta < NR_TOL
+    }
+    last = { x, mna }
+    if (converged) return last
+    prev = x
+  }
+  return last // best effort if not converged
+}
+
 /**
  * Solve DC operating point.
  * Returns node voltages (indexed by node id) or null if singular.
  */
 export function solveDC(circuit: Circuit): Float64Array | null {
-  const mna = assembleMNA(circuit, makeDCEnv())
-  if (!mna || mna.size === 0) return null
-
-  const { size, A, z, n, nodeOrder } = mna
-  const pivot = new Int32Array(size)
-  if (!luDecompose(size, A, pivot)) return null
-
-  const x = new Float64Array(size)
-  luSolve(size, A, pivot, z, x)
+  const res = solveCircuit(circuit, makeDCEnv())
+  if (!res) return null
+  const { x, mna } = res
+  const { n, nodeOrder } = mna
 
   // Extract node voltages indexed by node id (row i ↔ nodeOrder[i]).
   const maxNode = nodeOrder.length ? nodeOrder[nodeOrder.length - 1] : 0

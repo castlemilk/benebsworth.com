@@ -1,4 +1,4 @@
-export type ComponentType = 'R' | 'L' | 'C' | 'V' | 'I' | 'GND'
+export type ComponentType = 'R' | 'L' | 'C' | 'V' | 'I' | 'D' | 'SW' | 'GND'
 
 export type WaveformKind = 'dc' | 'sine' | 'pulse' | 'square'
 
@@ -33,6 +33,8 @@ export interface CircuitComponent {
   waveform?: Waveform
   /** AC analysis stimulus magnitude (V/I sources). Default 1 for the input. */
   acMag?: number
+  /** Switch state (SW). true = closed (conducting). */
+  closed?: boolean
 }
 
 export interface CircuitWire {
@@ -137,6 +139,8 @@ export const DEFAULT_COMPONENT_VALUES: Record<ComponentType, number> = {
   C: 1e-6,
   V: 5,
   I: 0.001,
+  D: 0,
+  SW: 0,
   GND: 0,
 }
 
@@ -146,6 +150,8 @@ export const COMPONENT_LABELS: Record<ComponentType, string> = {
   C: 'Capacitor',
   V: 'Voltage Source',
   I: 'Current Source',
+  D: 'Diode',
+  SW: 'Switch',
   GND: 'Ground',
 }
 
@@ -170,6 +176,10 @@ export function formatValue(type: ComponentType, value: number): string {
       if (Math.abs(value) >= 1) return `${value.toFixed(2)}A`
       if (Math.abs(value) >= 1e-3) return `${(value * 1e3).toFixed(1)}mA`
       return `${(value * 1e6).toFixed(0)}µA`
+    case 'D':
+      return 'diode'
+    case 'SW':
+      return 'switch'
     case 'GND':
       return 'GND'
   }

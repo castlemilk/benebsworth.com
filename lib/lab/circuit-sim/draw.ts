@@ -75,6 +75,8 @@ function getOffset(type: string): number {
     case 'C': return 20  // gap half 6 + lead 8 + pad
     case 'V': return 20  // radius 16 + lead 8 → pad to 20
     case 'I': return 20  // radius 16 + lead 8 → pad to 20
+    case 'D': return 20  // triangle + bar + leads
+    case 'SW': return 20 // contacts + leads
     case 'GND': return 0
     default: return 40
   }
@@ -369,6 +371,91 @@ function drawCurrentSource(
   ctx.restore()
 }
 
+function drawDiode(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, rot: 0 | 90 | 180 | 270,
+  colors: DrawColors, selected: boolean,
+) {
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate((rot * Math.PI) / 180)
+  const off = getOffset('D'), tw = 8, th = 8
+
+  if (selected) {
+    ctx.strokeStyle = colors.selection
+    ctx.lineWidth = 2
+    ctx.setLineDash([4, 4])
+    ctx.strokeRect(-tw - 6, -th - 6, tw * 2 + 12, th * 2 + 12)
+    ctx.setLineDash([])
+  }
+
+  // Leads (anode left, cathode right)
+  ctx.strokeStyle = colors.wire
+  ctx.lineWidth = 2.5
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(-off, 0); ctx.lineTo(-tw, 0)
+  ctx.moveTo(tw, 0); ctx.lineTo(off, 0)
+  ctx.stroke()
+
+  // Triangle (points toward cathode) + cathode bar
+  ctx.strokeStyle = colors.component
+  ctx.fillStyle = 'rgba(8,10,16,0.85)'
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(-tw, -th); ctx.lineTo(tw, 0); ctx.lineTo(-tw, th); ctx.closePath()
+  ctx.fill(); ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(tw, -th); ctx.lineTo(tw, th)
+  ctx.stroke()
+
+  ctx.restore()
+}
+
+function drawSwitch(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, rot: 0 | 90 | 180 | 270,
+  closed: boolean, colors: DrawColors, selected: boolean,
+) {
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate((rot * Math.PI) / 180)
+  const off = getOffset('SW'), cx = 10
+
+  if (selected) {
+    ctx.strokeStyle = colors.selection
+    ctx.lineWidth = 2
+    ctx.setLineDash([4, 4])
+    ctx.strokeRect(-off - 2, -14, off * 2 + 4, 28)
+    ctx.setLineDash([])
+  }
+
+  // Leads to the two contacts
+  ctx.strokeStyle = colors.wire
+  ctx.lineWidth = 2.5
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(-off, 0); ctx.lineTo(-cx, 0)
+  ctx.moveTo(cx, 0); ctx.lineTo(off, 0)
+  ctx.stroke()
+
+  // Contact dots
+  ctx.fillStyle = colors.component
+  ctx.beginPath(); ctx.arc(-cx, 0, 2, 0, Math.PI * 2); ctx.fill()
+  ctx.beginPath(); ctx.arc(cx, 0, 2, 0, Math.PI * 2); ctx.fill()
+
+  // Lever — closed = horizontal, open = lifted
+  ctx.strokeStyle = closed ? colors.current : colors.component
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(-cx, 0)
+  if (closed) ctx.lineTo(cx, 0)
+  else ctx.lineTo(cx - 2, -10)
+  ctx.stroke()
+
+  ctx.restore()
+}
+
 function drawGround(
   ctx: CanvasRenderingContext2D,
   x: number, y: number,
@@ -423,6 +510,8 @@ export function drawComponent(
     case 'C': drawCapacitor(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
     case 'V': drawVoltageSource(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
     case 'I': drawCurrentSource(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
+    case 'D': drawDiode(ctx, comp.x, comp.y, comp.rotation, colors, selected); break
+    case 'SW': drawSwitch(ctx, comp.x, comp.y, comp.rotation, comp.closed ?? false, colors, selected); break
     case 'GND': drawGround(ctx, comp.x, comp.y, colors, selected); break
   }
 }

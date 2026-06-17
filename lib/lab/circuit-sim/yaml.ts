@@ -28,6 +28,7 @@ export function serializeCircuit(circuit: Circuit): string {
       lines.push(`    wduty: ${c.waveform.duty}`)
     }
     if (c.acMag !== undefined) lines.push(`    acmag: ${c.acMag}`)
+    if (c.type === 'SW') lines.push(`    closed: ${c.closed ? 'true' : 'false'}`)
   }
 
   lines.push('wires:')
@@ -157,6 +158,7 @@ function parseValue(key: string, raw: string): unknown {
     case 'wduty':
     case 'acmag': return parseFloat(raw)
     case 'wkind': return raw
+    case 'closed': return raw === 'true'
     default: return raw
   }
 }

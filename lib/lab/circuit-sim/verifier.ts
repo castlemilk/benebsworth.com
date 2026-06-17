@@ -89,15 +89,18 @@ export function verifyCircuit(circuit: Circuit): VerificationReport {
       }
     }
     const hasReactive = circuit.components.some(c => c.type === 'C' || c.type === 'L')
+    // AC-waveform sources bias to 0V at the DC operating point, so the DC current
+    // can legitimately be zero (the action shows up in transient / AC sweep).
+    const hasACSource = circuit.components.some(c => (c.type === 'V' || c.type === 'I') && c.waveform && c.waveform.kind !== 'dc')
     const powered = Object.entries(componentCurrents).filter(([, i]) => Math.abs(i) > 1e-12)
     const resistorsWithCurrent = powered.length
     const totalResistors = circuit.components.filter(c => c.type === 'R').length
 
     checks.push({
       name: 'Resistors have measurable current',
-      passed: totalResistors === 0 || resistorsWithCurrent > 0 || hasReactive,
-      detail: hasReactive
-        ? `${resistorsWithCurrent}/${totalResistors} resistors have DC current (caps may block DC)`
+      passed: totalResistors === 0 || resistorsWithCurrent > 0 || hasReactive || hasACSource,
+      detail: hasReactive || hasACSource
+        ? `${resistorsWithCurrent}/${totalResistors} resistors have DC current (caps/AC sources may give 0 DC)`
         : resistorsWithCurrent > 0
           ? `${resistorsWithCurrent}/${totalResistors} resistors have current flowing`
           : 'No resistors or all resistors have zero current',
@@ -153,9 +156,10 @@ export function verifyCircuit(circuit: Circuit): VerificationReport {
 
     const uniqueVoltages = new Set(probePoints.map(p => p.voltage.toFixed(3)))
     const hasCaps = circuit.components.some(c => c.type === 'C')
+    const acDriven = circuit.components.some(c => (c.type === 'V' || c.type === 'I') && c.waveform && c.waveform.kind !== 'dc')
     checks.push({
       name: 'Probe points show distinct voltage levels',
-      passed: uniqueVoltages.size >= 2 || hasCaps || probePoints.length <= 1,
+      passed: uniqueVoltages.size >= 2 || hasCaps || acDriven || probePoints.length <= 1,
       detail: hasCaps
         ? `${uniqueVoltages.size} distinct DC levels (capacitors block DC — use transient for AC view)`
         : uniqueVoltages.size >= 2

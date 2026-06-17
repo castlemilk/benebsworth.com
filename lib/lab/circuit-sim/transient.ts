@@ -1,6 +1,6 @@
 import type { Circuit, SimulationState } from './types'
-import { luDecompose, luSolve } from './solver'
-import { assembleMNA, makeTransientEnv } from './mna'
+import { solveCircuit } from './solver'
+import { makeTransientEnv } from './mna'
 
 /**
  * Build and solve one transient timestep using trapezoidal integration.
@@ -12,17 +12,11 @@ export function transientStep(
   state: SimulationState,
   dt: number,
 ): Float64Array | null {
-  const mna = assembleMNA(circuit, makeTransientEnv(dt, state, state.time))
-  if (!mna || mna.size === 0) return null
+  const res = solveCircuit(circuit, makeTransientEnv(dt, state, state.time))
+  if (!res) return null
 
-  const { size, A, z, n, m, nodeOrder, vsIndex } = mna
-
-  // Solve
-  const pivot = new Int32Array(size)
-  if (!luDecompose(size, A, pivot)) return null
-
-  const x = new Float64Array(size)
-  luSolve(size, A, pivot, z, x)
+  const { x, mna } = res
+  const { n, m, nodeOrder, vsIndex } = mna
 
   // Extract node voltages (row i ↔ nodeOrder[i])
   const maxNode = nodeOrder.length ? nodeOrder[nodeOrder.length - 1] : 0

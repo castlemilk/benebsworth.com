@@ -309,6 +309,16 @@ export function useCircuitEditor() {
     })
   }, [mutate])
 
+  const toggleSwitch = useCallback((id: string) => {
+    mutate(s => {
+      const idx = s.circuit.components.findIndex(c => c.id === id)
+      if (idx === -1 || s.circuit.components[idx].type !== 'SW') return {}
+      const components = [...s.circuit.components]
+      components[idx] = { ...components[idx], closed: !components[idx].closed }
+      return { circuit: { ...s.circuit, components } }
+    })
+  }, [mutate])
+
   const rotateComponent = useCallback((id: string) => {
     mutate(s => {
       const idx = s.circuit.components.findIndex(c => c.id === id)
@@ -545,6 +555,7 @@ export function useCircuitEditor() {
     cancelWiring,
     updateComponentValue,
     updateComponentWaveform,
+    toggleSwitch,
     rotateComponent,
     setPan,
     setZoom,

@@ -115,6 +115,7 @@ export function CircuitSimPage() {
             onValue={editor.updateComponentValue}
             onWaveform={editor.updateComponentWaveform}
             onProbe={editor.addProbe}
+            onToggleSwitch={editor.toggleSwitch}
           />
         </div>
 

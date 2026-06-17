@@ -606,6 +606,105 @@ components:
 wires: []`,
   },
   {
+    name: 'Half-Wave Rectifier',
+    description: '10V 60Hz sine → diode → 1k load — diode clips the negative half',
+    yaml: `# Half-Wave Rectifier
+version: 1
+nextNodeId: 3
+nextCompId: 5
+components:
+  - id: c1
+    type: V
+    value: 10
+    nodeA: 1
+    nodeB: 0
+    x: 120
+    y: 200
+    rotation: 90
+    wkind: sine
+    wamp: 10
+    woff: 0
+    wfreq: 60
+    wphase: 0
+    wduty: 0.5
+  - id: c2
+    type: D
+    value: 0
+    nodeA: 1
+    nodeB: 2
+    x: 300
+    y: 180
+    rotation: 0
+  - id: c3
+    type: R
+    value: 1000
+    nodeA: 2
+    nodeB: 0
+    x: 460
+    y: 360
+    rotation: 90
+  - id: c4
+    type: GND
+    value: 0
+    nodeA: 0
+    nodeB: 0
+    x: 120
+    y: 360
+    rotation: 0
+wires: []`,
+  },
+  {
+    name: 'Switched RC',
+    description: 'Toggle the switch (inspector) to charge/hold the capacitor',
+    yaml: `# Switched RC
+version: 1
+nextNodeId: 4
+nextCompId: 6
+components:
+  - id: c1
+    type: V
+    value: 5
+    nodeA: 1
+    nodeB: 0
+    x: 120
+    y: 200
+    rotation: 90
+  - id: c2
+    type: SW
+    value: 0
+    nodeA: 1
+    nodeB: 2
+    x: 300
+    y: 180
+    rotation: 0
+    closed: true
+  - id: c3
+    type: R
+    value: 10000
+    nodeA: 2
+    nodeB: 3
+    x: 440
+    y: 180
+    rotation: 0
+  - id: c4
+    type: C
+    value: 0.00001
+    nodeA: 3
+    nodeB: 0
+    x: 540
+    y: 360
+    rotation: 90
+  - id: c5
+    type: GND
+    value: 0
+    nodeA: 0
+    nodeB: 0
+    x: 120
+    y: 360
+    rotation: 0
+wires: []`,
+  },
+  {
     name: 'Current Source → Resistor',
     description: '10mA forced through 1kΩ — Ohm fixes node 1 at 10V',
     yaml: `# Current Source → Resistor

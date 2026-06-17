@@ -9,6 +9,7 @@ interface Props {
   onValue: (id: string, value: number) => void
   onWaveform: (id: string, partial: Partial<Waveform>) => void
   onProbe?: (kind: ProbeKind, ref: number | string) => void
+  onToggleSwitch?: (id: string) => void
 }
 
 const VALUE_LABEL: Record<string, string> = {
@@ -23,7 +24,7 @@ const WAVE_KINDS: { kind: WaveformKind; label: string }[] = [
   { kind: 'square', label: 'Square' },
 ]
 
-export function Inspector({ comp, onValue, onWaveform, onProbe }: Props) {
+export function Inspector({ comp, onValue, onWaveform, onProbe, onToggleSwitch }: Props) {
   if (!comp) {
     return (
       <div className="rounded-xl border border-[#1b2a38] bg-[#0a1118] p-4">
@@ -50,7 +51,27 @@ export function Inspector({ comp, onValue, onWaveform, onProbe }: Props) {
         <p className="text-[11px] font-mono text-[#7aa0b2]/60">Reference node (0 V).</p>
       )}
 
-      {!isSource && comp.type !== 'GND' && (
+      {comp.type === 'D' && (
+        <p className="text-[11px] font-mono text-[#7aa0b2]/60">Ideal diode — triangle points anode → cathode (current flows that way when forward-biased).</p>
+      )}
+
+      {comp.type === 'SW' && (
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-mono uppercase tracking-wider text-[#5c8294]/60">State</span>
+          <button
+            onClick={() => onToggleSwitch?.(comp.id)}
+            className={`px-3 py-1 rounded text-[11px] font-mono border transition-colors ${
+              comp.closed
+                ? 'bg-[#67d98a]/15 text-[#67d98a] border-[#67d98a]/40'
+                : 'bg-[#101822] text-[#7aa0b2]/70 border-[#1b2a38] hover:bg-[#142233]'
+            }`}
+          >
+            {comp.closed ? '⊷ Closed' : '⊶ Open'}
+          </button>
+        </div>
+      )}
+
+      {(comp.type === 'R' || comp.type === 'L' || comp.type === 'C') && (
         <NumberField
           label={VALUE_LABEL[comp.type]}
           suffix={VALUE_UNIT[comp.type]}

@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { CircuitComponent, Waveform, WaveformKind } from '@/lib/lab/circuit-sim/types'
+import type { CircuitComponent, ProbeKind, Waveform, WaveformKind } from '@/lib/lab/circuit-sim/types'
 import { COMPONENT_LABELS } from '@/lib/lab/circuit-sim/types'
 
 interface Props {
   comp: CircuitComponent | null
   onValue: (id: string, value: number) => void
   onWaveform: (id: string, partial: Partial<Waveform>) => void
+  onProbe?: (kind: ProbeKind, ref: number | string) => void
 }
 
 const VALUE_LABEL: Record<string, string> = {
@@ -22,7 +23,7 @@ const WAVE_KINDS: { kind: WaveformKind; label: string }[] = [
   { kind: 'square', label: 'Square' },
 ]
 
-export function Inspector({ comp, onValue, onWaveform }: Props) {
+export function Inspector({ comp, onValue, onWaveform, onProbe }: Props) {
   if (!comp) {
     return (
       <div className="rounded-xl border border-[#1b2a38] bg-[#0a1118] p-4">
@@ -110,7 +111,30 @@ export function Inspector({ comp, onValue, onWaveform }: Props) {
           )}
         </div>
       )}
+
+      {onProbe && comp.type !== 'GND' && (
+        <div className="flex flex-col gap-1 border-t border-[#13202c] pt-2">
+          <span className="text-[9px] font-mono uppercase tracking-wider text-[#5c8294]/60">Probe</span>
+          <div className="grid grid-cols-4 gap-1">
+            <ProbeButton label="V@A" onClick={() => onProbe('nodeV', comp.nodeA)} />
+            <ProbeButton label="V@B" onClick={() => onProbe('nodeV', comp.nodeB)} />
+            <ProbeButton label="I" onClick={() => onProbe('compI', comp.id)} />
+            <ProbeButton label="ΔV" onClick={() => onProbe('compV', comp.id)} />
+          </div>
+        </div>
+      )}
     </div>
+  )
+}
+
+function ProbeButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-1.5 py-1 rounded text-[10px] font-mono bg-[#101822] text-[#7aa0b2]/80 border border-transparent hover:bg-[#142233] hover:text-[#22c8ee] transition-colors"
+    >
+      {label}
+    </button>
   )
 }
 

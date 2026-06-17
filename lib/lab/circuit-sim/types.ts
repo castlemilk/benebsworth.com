@@ -74,26 +74,54 @@ export interface SimulationState {
   running: boolean
 }
 
-export interface ScopeTrace {
-  nodeId: number
+/** What a probe measures. */
+export type ProbeKind =
+  | 'nodeV' // voltage at a node (ref = nodeId)
+  | 'compI' // current through a component (ref = compId)
+  | 'compV' // voltage across a component (ref = compId)
+
+export interface Probe {
+  /** Stable id, e.g. "nodeV:2" or "compI:c3". */
+  id: string
+  kind: ProbeKind
+  /** nodeId for nodeV, compId for compI/compV. */
+  ref: number | string
+  /** Display label, e.g. "N2", "I(R1)", "V(C1)". */
+  label: string
   color: string
   visible: boolean
-  /** Ring buffer of voltage samples */
+  /** Unit suffix for readouts: 'V' or 'A'. */
+  unit: 'V' | 'A'
+  /** Ring buffer of samples. */
   samples: Float64Array
-  /** Write index in ring buffer */
+  /** Write index in ring buffer. */
   writeIdx: number
-  /** Number of valid samples */
+  /** Number of valid samples. */
   count: number
 }
 
-export interface ScopeConfig {
-  timePerDiv: number // seconds per horizontal division
-  voltsPerDiv: number // volts per vertical division
+/** Oscilloscope display settings. */
+export interface ScopeSettings {
+  /** Auto-fit vertical scale vs. fixed volts/div. */
+  autoFit: boolean
+  voltsPerDiv: number
+  triggerEnabled: boolean
   triggerLevel: number
   triggerEdge: 'rising' | 'falling'
-  triggerEnabled: boolean
-  sampleRate: number // Hz
-  traces: ScopeTrace[]
+  /** Probe id used as the trigger source, or null for the first channel. */
+  triggerSource: string | null
+  /** Freeze the display (stop scrolling) without stopping the sim. */
+  frozen: boolean
+}
+
+export const DEFAULT_SCOPE_SETTINGS: ScopeSettings = {
+  autoFit: true,
+  voltsPerDiv: 2,
+  triggerEnabled: false,
+  triggerLevel: 0,
+  triggerEdge: 'rising',
+  triggerSource: null,
+  frozen: false,
 }
 
 export const GRID_SIZE = 20

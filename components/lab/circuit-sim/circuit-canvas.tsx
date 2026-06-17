@@ -1,8 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { CircuitComponent, CircuitWire, ComponentType, ScopeTrace, SimulationState } from '@/lib/lab/circuit-sim/types'
-import { SNAP_RADIUS, GRID_SIZE } from '@/lib/lab/circuit-sim/types'
+import type { Circuit, CircuitComponent, ComponentType, Probe, ProbeKind, SimulationState } from '@/lib/lab/circuit-sim/types'
+import { SNAP_RADIUS } from '@/lib/lab/circuit-sim/types'
+import { componentCurrent, componentVoltage } from '@/lib/lab/circuit-sim/results'
 import {
   drawGrid,
   drawComponent,
@@ -17,11 +18,11 @@ import { computeManhattanPath } from '@/lib/lab/circuit-sim/wiring'
 import { drawFlowParticles } from './scope-panel'
 
 interface Props {
-  circuit: { components: CircuitComponent[]; wires: CircuitWire[] }
+  circuit: Circuit
   placingType: ComponentType | null
   wiringFrom: string | null
   selectedId: string | null
-  scopeTraces: ScopeTrace[]
+  probes: Probe[]
   sim: SimulationState | null
   panX: number
   panY: number
@@ -35,8 +36,8 @@ interface Props {
   onCancelWiring: () => void
   onCancelPlacing: () => void
   onPanZoom: (panX: number, panY: number, zoom: number) => void
-  onAddProbe: (nodeId: number) => void
-  onRemoveProbe: (nodeId: number) => void
+  onAddProbe: (kind: ProbeKind, ref: number | string) => void
+  onRemoveProbe: (id: string) => void
   onRotate: (id: string) => void
 }
 
@@ -45,7 +46,7 @@ export function CircuitCanvas({
   placingType,
   wiringFrom,
   selectedId,
-  scopeTraces,
+  probes,
   sim,
   panX, panY, zoom,
   onPlaceComponent, onSelectComponent, onMoveComponent,
@@ -347,31 +348,33 @@ export function CircuitCanvas({
       const tvb = live ? sim!.nodeVoltages[comp.nodeB] : undefined
       drawTerminal(ctx, sax, say, colors, hA, tva !== undefined && isFinite(tva) ? voltageColor(tva, vmax, colors) : undefined)
       drawTerminal(ctx, sbx, sby, colors, hB, tvb !== undefined && isFinite(tvb) ? voltageColor(tvb, vmax, colors) : undefined)
+    }
 
-      // Probe labels with real-time voltage
-      const probed = scopeTraces.find(t => t.nodeId === comp.nodeA || t.nodeId === comp.nodeB)
-      if (probed) {
-        const nx = comp.nodeA === probed.nodeId ? sax : sbx
-        const ny = comp.nodeA === probed.nodeId ? say : sby
-        ctx.fillStyle = probed.color
-        ctx.font = 'bold 10px monospace'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'bottom'
-        const label = `CH${scopeTraces.indexOf(probed) + 1}`
-        ctx.fillText(label, nx, ny - 12)
-
-        // Real-time voltage readout
-        if (sim && probed.nodeId < sim.nodeVoltages.length) {
-          const v = sim.nodeVoltages[probed.nodeId]
-          if (isFinite(v)) {
-            ctx.font = '9px monospace'
-            ctx.fillStyle = probed.color
-            ctx.globalAlpha = 0.8
-            ctx.fillText(`${v.toFixed(2)}V`, nx, ny - 24)
-            ctx.globalAlpha = 1
+    // ── Probe markers (voltage on nodes, current/diff on components) ──
+    for (const p of probes) {
+      let mx: number | undefined, my: number | undefined, reading: string | undefined
+      if (p.kind === 'nodeV') {
+        for (const comp of circuit.components) {
+          const [ax, ay, bx, by] = getTerminalPositions(comp)
+          if (comp.nodeA === p.ref) { mx = gridSnap(ax); my = gridSnap(ay); break }
+          if (comp.nodeB === p.ref) { mx = gridSnap(bx); my = gridSnap(by); break }
+        }
+        if (live && sim && (p.ref as number) < sim.nodeVoltages.length) {
+          const v = sim.nodeVoltages[p.ref as number]
+          if (isFinite(v)) reading = `${v.toFixed(2)}V`
+        }
+      } else {
+        const comp = circuit.components.find(c => c.id === p.ref)
+        if (comp) {
+          mx = comp.x; my = comp.y
+          if (live && sim) {
+            const v = p.kind === 'compI' ? componentCurrent(circuit, comp, sim) : componentVoltage(sim, comp)
+            if (isFinite(v)) reading = p.kind === 'compI' ? formatAmps(v) : `${v.toFixed(2)}V`
           }
         }
       }
+      if (mx === undefined || my === undefined) continue
+      drawProbeMarker(ctx, mx, my, p.color, p.label, reading)
     }
 
     // ── Wiring preview ───────────────────────────────────────────
@@ -398,7 +401,14 @@ export function CircuitCanvas({
     }
 
     ctx.restore()
-  }, [circuit, selectedId, hoveredTerminal, wiringFrom, panX, panY, zoom, scopeTraces, sim])
+  }, [circuit, selectedId, hoveredTerminal, wiringFrom, panX, panY, zoom, probes, sim])
+
+  // Toggle a probe: add if not present, remove if already probing this target.
+  const toggleProbe = useCallback((kind: ProbeKind, ref: number | string) => {
+    const id = `${kind}:${ref}`
+    if (probes.some(p => p.id === id)) onRemoveProbe(id)
+    else onAddProbe(kind, ref)
+  }, [probes, onAddProbe, onRemoveProbe])
 
   // ── Pointer handlers (mouse + touch + pen) ──────────────────────────
 
@@ -448,7 +458,7 @@ export function CircuitCanvas({
     const comp = hitTestComponent(pos.x, pos.y)
     if (comp) {
       if (e.shiftKey) {
-        if (e.metaKey || e.ctrlKey) onAddProbe(comp.nodeA)
+        if (e.metaKey || e.ctrlKey) toggleProbe('nodeV', comp.nodeA)
         else {
           const [ax, ay, bx, by] = getTerminalPositions(comp)
           const dA = Math.hypot(pos.x - ax, pos.y - ay)
@@ -471,9 +481,16 @@ export function CircuitCanvas({
       return
     }
 
+    // Click on an empty wire segment → toggle a voltage probe on that node.
+    const wireNode = hitTestWire(pos.x, pos.y)
+    if (wireNode !== null) {
+      toggleProbe('nodeV', wireNode)
+      return
+    }
+
     onSelectComponent(null)
     panRef.current = { startX: e.clientX, startY: e.clientY, startPanX: panX, startPanY: panY }
-  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, circuit.components, panX, panY, zoom, onCompleteWire, onCancelWiring, onAddProbe, onSelectComponent, onStartWire, onRotate])
+  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, hitTestWire, toggleProbe, circuit.components, panX, panY, zoom, onCompleteWire, onCancelWiring, onSelectComponent, onStartWire, onRotate])
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (pointersRef.current.has(e.pointerId)) {
@@ -549,9 +566,9 @@ export function CircuitCanvas({
     if (e.key === 'r' && selectedId) onRotate(selectedId)
     if (e.key === 'p' && selectedId) {
       const comp = circuit.components.find(c => c.id === selectedId)
-      if (comp) onAddProbe(comp.nodeA)
+      if (comp) toggleProbe('nodeV', comp.nodeA)
     }
-  }, [placingType, wiringFrom, selectedId, onDeleteComponent, onSelectComponent, onCancelPlacing, onCancelWiring, onRotate, onAddProbe, circuit.components])
+  }, [placingType, wiringFrom, selectedId, onDeleteComponent, onSelectComponent, onCancelPlacing, onCancelWiring, onRotate, toggleProbe, circuit.components])
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -590,6 +607,43 @@ export function CircuitCanvas({
       )}
     </div>
   )
+}
+
+/** Draw a probe marker (ring + label + optional live reading) at a world point. */
+function drawProbeMarker(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, color: string, label: string, reading?: string,
+) {
+  ctx.save()
+  // ring
+  ctx.strokeStyle = color
+  ctx.lineWidth = 2
+  ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.stroke()
+  ctx.fillStyle = color
+  ctx.globalAlpha = 0.25
+  ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill()
+  ctx.globalAlpha = 1
+  // label
+  ctx.fillStyle = color
+  ctx.font = 'bold 10px monospace'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'bottom'
+  ctx.fillText(label, x, y - 9)
+  if (reading) {
+    ctx.font = '9px monospace'
+    ctx.globalAlpha = 0.85
+    ctx.fillText(reading, x, y - 20)
+    ctx.globalAlpha = 1
+  }
+  ctx.restore()
+}
+
+function formatAmps(a: number): string {
+  const abs = Math.abs(a)
+  if (abs >= 1) return `${a.toFixed(2)}A`
+  if (abs >= 1e-3) return `${(a * 1e3).toFixed(1)}mA`
+  if (abs >= 1e-6) return `${(a * 1e6).toFixed(0)}µA`
+  return `${(a * 1e9).toFixed(0)}nA`
 }
 
 /** Shortest distance from point (px,py) to the line segment (ax,ay)-(bx,by). */

@@ -7,16 +7,40 @@ import type {
   CircuitWire,
   ComponentType,
   SimulationState,
-  ScopeTrace,
+  Probe,
+  ProbeKind,
+  ScopeSettings,
 } from './types'
-import { DEFAULT_COMPONENT_VALUES, DEFAULT_WAVEFORM } from './types'
+import { DEFAULT_COMPONENT_VALUES, DEFAULT_WAVEFORM, DEFAULT_SCOPE_SETTINGS } from './types'
 import type { Waveform } from './types'
 import { transientStep } from './transient'
 import { validateCircuit, type CircuitDiagnostic } from './validator'
 import { solveDC } from './solver'
-
+import { nodeVoltage, componentCurrent, componentVoltage } from './results'
 import { serializeCircuit, deserializeCircuit } from './yaml'
 import { generateWires } from './wiring'
+
+/** Build a probe with a stable id, display label, and unit. */
+function makeProbe(kind: ProbeKind, ref: number | string, circuit: Circuit, colorIdx: number): Probe {
+  let label: string
+  let unit: 'V' | 'A' = 'V'
+  if (kind === 'nodeV') {
+    label = `N${ref}`
+  } else {
+    const comp = circuit.components.find(c => c.id === ref)
+    const name = comp ? `${comp.type}${String(comp.id).replace(/^c/, '')}` : String(ref)
+    if (kind === 'compI') { label = `I(${name})`; unit = 'A' } else { label = `V(${name})` }
+  }
+  return {
+    id: `${kind}:${ref}`,
+    kind, ref, label, unit,
+    color: TRACE_COLORS[colorIdx % TRACE_COLORS.length],
+    visible: true,
+    samples: new Float64Array(MAX_SCOPE_SAMPLES),
+    writeIdx: 0,
+    count: 0,
+  }
+}
 
 const MAX_SCOPE_SAMPLES = 2000
 
@@ -38,8 +62,10 @@ interface CircuitEditorState {
   dt: number
   /** Total simulation time limit */
   simDuration: number
-  /** Scope configuration */
-  scopeTraces: ScopeTrace[]
+  /** Active probes (scope channels) */
+  probes: Probe[]
+  /** Oscilloscope display settings */
+  scopeSettings: ScopeSettings
   /** Validation errors */
   errors: CircuitDiagnostic[]
   /** View offset (pan) */
@@ -77,7 +103,8 @@ export function useCircuitEditor() {
     sim: null,
     dt: 1e-5,
     simDuration: 0.1,
-    scopeTraces: [],
+    probes: [],
+    scopeSettings: DEFAULT_SCOPE_SETTINGS,
     errors: [],
     panX: 0,
     panY: 0,
@@ -283,30 +310,25 @@ export function useCircuitEditor() {
   const resetSimulation = useCallback(() => {
     mutate(() => ({
       sim: newSimState(),
-      scopeTraces: [],
+      probes: [],
       errors: [],
     }))
   }, [mutate])
 
-  const addScopeProbe = useCallback((nodeId: number) => {
+  const addProbe = useCallback((kind: ProbeKind, ref: number | string) => {
     mutate(s => {
-      // Don't add duplicate probes
-      if (s.scopeTraces.some(t => t.nodeId === nodeId)) return {}
-      const colorIdx = s.scopeTraces.length % TRACE_COLORS.length
-      const trace: ScopeTrace = {
-        nodeId,
-        color: TRACE_COLORS[colorIdx],
-        visible: true,
-        samples: new Float64Array(MAX_SCOPE_SAMPLES),
-        writeIdx: 0,
-        count: 0,
-      }
-      return { scopeTraces: [...s.scopeTraces, trace] }
+      const id = `${kind}:${ref}`
+      if (s.probes.some(p => p.id === id)) return {}
+      return { probes: [...s.probes, makeProbe(kind, ref, s.circuit, s.probes.length)] }
     })
   }, [mutate])
 
-  const removeScopeProbe = useCallback((nodeId: number) => {
-    mutate(s => ({ scopeTraces: s.scopeTraces.filter(t => t.nodeId !== nodeId) }))
+  const removeProbe = useCallback((id: string) => {
+    mutate(s => ({ probes: s.probes.filter(p => p.id !== id) }))
+  }, [mutate])
+
+  const setScopeSettings = useCallback((partial: Partial<ScopeSettings>) => {
+    mutate(s => ({ scopeSettings: { ...s.scopeSettings, ...partial } }))
   }, [mutate])
 
   const runSimulation = useCallback(() => {
@@ -351,7 +373,11 @@ export function useCircuitEditor() {
       let t = s.sim.time
       const dt = s.dt
       const simState = { ...s.sim, capState: new Map(s.sim.capState), indState: new Map(s.sim.indState) }
-      let scopeTraces = [...s.scopeTraces]
+      let probes = [...s.probes]
+      // Clone each probe's ring buffer once per frame, then write in place.
+      if (probes.length > 0) {
+        probes = probes.map(p => ({ ...p, samples: p.samples.slice() }))
+      }
 
       let stepCount = 0
       while (t < targetTime && stepCount < 200) {
@@ -361,16 +387,18 @@ export function useCircuitEditor() {
         simState.nodeVoltages = voltages
         simState.time = t + dt
 
-        // Record scope samples
-        if (scopeTraces.length > 0) {
-          scopeTraces = scopeTraces.map(trace => {
-            const v = trace.nodeId < voltages.length ? voltages[trace.nodeId] : 0
-            const samples = trace.samples.slice()
-            samples[trace.writeIdx] = v
-            const newIdx = (trace.writeIdx + 1) % MAX_SCOPE_SAMPLES
-            const newCount = Math.min(trace.count + 1, MAX_SCOPE_SAMPLES)
-            return { ...trace, samples, writeIdx: newIdx, count: newCount }
-          })
+        // Record one sample per probe (value depends on probe kind).
+        for (const p of probes) {
+          let val = 0
+          if (p.kind === 'nodeV') {
+            val = nodeVoltage(simState, p.ref as number)
+          } else {
+            const comp = s.circuit.components.find(c => c.id === p.ref)
+            if (comp) val = p.kind === 'compI' ? componentCurrent(s.circuit, comp, simState) : componentVoltage(simState, comp)
+          }
+          p.samples[p.writeIdx] = val
+          p.writeIdx = (p.writeIdx + 1) % MAX_SCOPE_SAMPLES
+          p.count = Math.min(p.count + 1, MAX_SCOPE_SAMPLES)
         }
 
         t += dt
@@ -391,7 +419,7 @@ export function useCircuitEditor() {
       setState(prev => ({
         ...prev,
         sim: simState as SimulationState,
-        scopeTraces,
+        probes,
       }))
 
       if (simState.running) {
@@ -443,18 +471,9 @@ export function useCircuitEditor() {
         if (count > bestCount) { bestCount = count; bestNode = n }
       }
 
-      const trace: ScopeTrace = {
-        nodeId: bestNode,
-        color: TRACE_COLORS[0],
-        visible: true,
-        samples: new Float64Array(MAX_SCOPE_SAMPLES),
-        writeIdx: 0,
-        count: 0,
-      }
-
       mutate(() => ({
         circuit,
-        scopeTraces: bestNode > 0 ? [trace] : [],
+        probes: bestNode > 0 ? [makeProbe('nodeV', bestNode, circuit, 0)] : [],
       }))
       return true
     } catch {
@@ -471,7 +490,8 @@ export function useCircuitEditor() {
     sim: state.sim,
     dt: state.dt,
     simDuration: state.simDuration,
-    scopeTraces: state.scopeTraces,
+    probes: state.probes,
+    scopeSettings: state.scopeSettings,
     errors: state.errors,
     panX: state.panX,
     panY: state.panY,
@@ -491,8 +511,9 @@ export function useCircuitEditor() {
     setPan,
     setZoom,
     resetSimulation,
-    addScopeProbe,
-    removeScopeProbe,
+    addProbe,
+    removeProbe,
+    setScopeSettings,
     runSimulation,
     stopSimulation,
     setDt,

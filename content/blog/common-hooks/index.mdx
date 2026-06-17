@@ -44,7 +44,7 @@ function Example() {
   return (
     <div>
       <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
+      <button onClick={() => setCount(c => c + 1)}>
         Click me
       </button>
     </div>
@@ -52,11 +52,13 @@ function Example() {
 }
 ```
 
+Note the functional updater form `setCount(c => c + 1)` rather than `setCount(count + 1)` — passing a function avoids stale closures by always operating on the latest state value instead of the `count` captured at render time.
+
 ### useEffect
 
 ##### useResizerObserver
 
-Provides a mechanism to fetch window size using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+Provides a mechanism to fetch element size using the [ResizeObserver API](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). Note that this is the correct API for observing dimensions — the Intersection Observer API tracks element visibility, not size.
 
 >useResizerObserver.tsx
 

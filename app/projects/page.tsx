@@ -86,7 +86,7 @@ export default function ProjectsPage() {
       <JsonLd data={ld} />
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
         <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'Projects' }]} />
 
         {/* ── Hero ───────────────────────────────────────────────── */}

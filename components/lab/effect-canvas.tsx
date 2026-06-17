@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
+import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 import type { EffectModule, Params, Dims, EffectTheme } from '@/lib/lab/types'
 
 type Props = {
@@ -25,6 +26,12 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
   // live params: step() reads the latest without recreating the renderer
   const paramsRef = useRef(params)
   paramsRef.current = params
+  // scroll-aware: skip render frames while user is actively scrolling so the
+  // browser can dedicate the frame budget to scroll + repaint. Synced via ref
+  // so the rAF loop reads the latest value without re-renders.
+  const scrolling = useScrollActivity(200)
+  const scrollingRef = useRef(false)
+  scrollingRef.current = scrolling
 
   useEffect(() => {
     const wrap = wrapRef.current, canvas = canvasRef.current
@@ -58,6 +65,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
 
     function loop(t: number) {
       raf = requestAnimationFrame(loop)
+      if (scrollingRef.current) return
       if (minFrameMs && t - last < minFrameMs) return
       last = t
       renderer.step(t, paramsRef.current)

@@ -7,7 +7,7 @@ import { ArtifactKind } from '@/lib/gen/content'
  * newest blog slug/title (see grid-nav).
  */
 export const ARTIFACTS: Artifact[] = [
-  { id: 'nutry', label: 'Nutry →', link: '/projects/nutry/', kind: ArtifactKind.IMAGE, image: '/artifacts/nutry.png', lines: [], glyph: '' },
+  { id: 'nutry', label: 'Nutry →', link: '/projects/nutry/', kind: ArtifactKind.IMAGE, image: '/artifacts/nutry.webp', lines: [], glyph: '' },
   { id: 'latest', label: 'latest post →', link: '/blog/', kind: ArtifactKind.TEXT, image: '', lines: ['↳ NEW', 'latest', 'post'], glyph: '' },
   { id: 'doodle', label: 'generative →', link: '/lab/', kind: ArtifactKind.ANIM, image: '', lines: [], glyph: '' },
   { id: 'me', label: 'about me →', link: '/about/', kind: ArtifactKind.AVATAR, image: '', lines: [], glyph: '' },

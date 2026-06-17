@@ -4,7 +4,7 @@ test('toggle switches theme and persists', async ({ page }) => {
   await page.goto('/about/')
   const html = page.locator('html')
   const before = (await html.getAttribute('class')) ?? ''
-  await page.getByRole('button', { name: 'Toggle theme' }).click()
+  await page.getByRole('switch', { name: 'Toggle dark mode' }).click()
   const after = (await html.getAttribute('class')) ?? ''
   expect(after).not.toBe(before) // dark class added/removed
   const hadDark = after.includes('dark')

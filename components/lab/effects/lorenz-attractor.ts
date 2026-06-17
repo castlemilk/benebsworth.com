@@ -34,8 +34,6 @@ export const defaults: Params = {
 
 const SIGMA = 10
 const BETA = 8 / 3
-const DEFAULT_RHO = 28
-
 // Simple 3D → 2D orthographic projection with rotation.
 function project(
   x: number, y: number, z: number,
@@ -88,10 +86,6 @@ export const lorenzAttractor: EffectModule = {
         })
       }
     }
-
-    // Shared: pre-allocated for the trail drawing
-    const drawBufX = new Float64Array(TRAIL_LEN)
-    const drawBufY = new Float64Array(TRAIL_LEN)
 
     return {
       step(t, p) {

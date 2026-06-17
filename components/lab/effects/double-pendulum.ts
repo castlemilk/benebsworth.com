@@ -23,25 +23,8 @@ const MAX_P = 3
 const SUBSTEPS = 4
 const DT = 0.016 / SUBSTEPS // ~16ms frame split into substeps
 
-// Preallocate state arrays (theta1, theta2, omega1, omega2 per pendulum)
-const th1 = new Float64Array(MAX_P)
-const th2 = new Float64Array(MAX_P)
-const om1 = new Float64Array(MAX_P)
-const om2 = new Float64Array(MAX_P)
 const mass1 = 1.0
 const mass2 = 1.0
-
-function initPendulum(i: number) {
-  // Slightly different initial conditions to show chaos divergence
-  const offset = i * 0.001
-  th1[i] = Math.PI / 2 + offset
-  th2[i] = Math.PI / 2 + offset
-  om1[i] = 0
-  om2[i] = 0
-}
-
-// Initialize all on module load
-for (let i = 0; i < MAX_P; i++) initPendulum(i)
 
 // Double pendulum equations of motion (angular accelerations)
 // Uses standard Lagrangian-derived formulas
@@ -77,12 +60,8 @@ function computeAlpha2(
   return num / (L * den)
 }
 
-// Preallocate tip positions for ring buffer trail
+// Ring buffer trail length (tip positions stored per pendulum)
 const TRAIL_LEN = 256
-const trailX = new Float64Array(MAX_P * TRAIL_LEN) // flat: pendulum * TRAIL_LEN + idx
-const trailY = new Float64Array(MAX_P * TRAIL_LEN)
-const trailHead = new Int32Array(MAX_P) // ring buffer head index
-let trailFrame = 0
 
 // Helper to shift hue from a hex color
 function shiftHue(hex: string, pendulumIndex: number): string {
@@ -125,11 +104,28 @@ export const doublePendulum: EffectModule = {
   controls,
   defaults,
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
-    // Reset trails on creation
-    trailHead.fill(0)
-    trailX.fill(0)
-    trailY.fill(0)
-    trailFrame = 0
+    // Per-instance simulation state (theta1, theta2, omega1, omega2 per pendulum)
+    const th1 = new Float64Array(MAX_P)
+    const th2 = new Float64Array(MAX_P)
+    const om1 = new Float64Array(MAX_P)
+    const om2 = new Float64Array(MAX_P)
+
+    // Per-instance ring buffer trail (flat: pendulum * TRAIL_LEN + idx)
+    const trailX = new Float64Array(MAX_P * TRAIL_LEN)
+    const trailY = new Float64Array(MAX_P * TRAIL_LEN)
+    const trailHead = new Int32Array(MAX_P) // ring buffer head index
+    let trailFrame = 0
+
+    function initPendulum(i: number) {
+      // Slightly different initial conditions to show chaos divergence
+      const offset = i * 0.001
+      th1[i] = Math.PI / 2 + offset
+      th2[i] = Math.PI / 2 + offset
+      om1[i] = 0
+      om2[i] = 0
+    }
+
+    // Initialize all pendulums
     for (let i = 0; i < MAX_P; i++) initPendulum(i)
 
     return {

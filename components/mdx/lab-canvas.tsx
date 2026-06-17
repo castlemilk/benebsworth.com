@@ -1,9 +1,10 @@
 'use client'
 import { useState, useCallback } from 'react'
 import { getEffect } from '@/lib/lab/registry'
+import { useEffectModule } from '@/lib/lab/use-effect-module'
+import type { EffectModule, Params, ParamValue } from '@/lib/lab/types'
 import { EffectCanvas } from '@/components/lab/effect-canvas'
 import { Controls } from '@/components/lab/controls'
-import type { Params, ParamValue } from '@/lib/lab/types'
 
 /**
  * Inline interactive canvas for MDX knowledge articles.
@@ -23,13 +24,56 @@ export function LabCanvas({
   controls?: boolean
 }) {
   const entry = getEffect(slug)
-  const initial: Params = entry ? { ...entry.defaults, ...overrides } : {}
+  const effectModule = useEffectModule(slug)
+
+  if (!entry) return <p className="text-red-400">Unknown effect: {slug}</p>
+
+  if (!effectModule) {
+    return (
+      <figure className="not-prose my-8">
+        <div
+          className="w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]"
+          style={{ height }}
+        >
+          <div className="h-full w-full animate-pulse" />
+        </div>
+      </figure>
+    )
+  }
+
+  return (
+    <LabCanvasInner
+      key={slug}
+      title={entry.title}
+      module={effectModule}
+      height={height}
+      overrides={overrides}
+      caption={caption}
+      controls={controls}
+    />
+  )
+}
+
+function LabCanvasInner({
+  title,
+  module,
+  height,
+  overrides,
+  caption,
+  controls,
+}: {
+  title: string
+  module: EffectModule
+  height: number
+  overrides?: Record<string, number | boolean | string>
+  caption?: string
+  controls?: boolean
+}) {
+  const initial: Params = { ...module.defaults, ...overrides }
   const [params, setParams] = useState<Params>(initial)
   const setParam = useCallback((key: string, value: ParamValue) => {
     setParams((prev) => ({ ...prev, [key]: value }))
   }, [])
-
-  if (!entry) return <p className="text-red-400">Unknown effect: {slug}</p>
 
   return (
     <figure className="not-prose my-8">
@@ -38,17 +82,17 @@ export function LabCanvas({
         style={{ height }}
       >
         <EffectCanvas
-          effect={entry.module}
+          effect={module}
           params={params}
           quality="mini"
-          ariaLabel={`${entry.title} diagram`}
+          ariaLabel={`${title} diagram`}
           className="h-full w-full"
         />
       </div>
-      {controls && entry.controls.length > 0 && (
+      {controls && module.controls.length > 0 && (
         <div className="mt-3">
           <Controls
-            specs={entry.controls}
+            specs={module.controls}
             params={params}
             onChange={setParam}
             onReset={() => setParams(initial)}
@@ -87,13 +131,70 @@ export function LabSide({
   children: React.ReactNode
 }) {
   const entry = getEffect(slug)
-  const initial: Params = entry ? { ...entry.defaults, ...overrides } : {}
+  const effectModule = useEffectModule(slug)
+
+  if (!entry) return <p className="text-red-400">Unknown effect: {slug}</p>
+
+  if (!effectModule) {
+    return (
+      <section className="not-prose my-10">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className={reverse ? 'lg:order-2' : ''}>
+            <div
+              className="w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]"
+              style={{ height }}
+            >
+              <div className="h-full w-full animate-pulse" />
+            </div>
+          </div>
+          <div className={`prose dark:prose-invert max-w-none flex flex-col justify-center ${reverse ? 'lg:order-1' : ''}`}>
+            {children}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <LabSideInner
+      key={slug}
+      title={entry.title}
+      module={effectModule}
+      height={height}
+      overrides={overrides}
+      caption={caption}
+      controls={controls}
+      reverse={reverse}
+    >
+      {children}
+    </LabSideInner>
+  )
+}
+
+function LabSideInner({
+  title,
+  module,
+  height,
+  overrides,
+  caption,
+  controls,
+  reverse,
+  children,
+}: {
+  title: string
+  module: EffectModule
+  height: number
+  overrides?: Record<string, number | boolean | string>
+  caption?: string
+  controls?: boolean
+  reverse?: boolean
+  children: React.ReactNode
+}) {
+  const initial: Params = { ...module.defaults, ...overrides }
   const [params, setParams] = useState<Params>(initial)
   const setParam = useCallback((key: string, value: ParamValue) => {
     setParams((prev) => ({ ...prev, [key]: value }))
   }, [])
-
-  if (!entry) return <p className="text-red-400">Unknown effect: {slug}</p>
 
   return (
     <section className="not-prose my-10">
@@ -104,17 +205,17 @@ export function LabSide({
             style={{ height }}
           >
             <EffectCanvas
-              effect={entry.module}
+              effect={module}
               params={params}
               quality="mini"
-              ariaLabel={`${entry.title} diagram`}
+              ariaLabel={`${title} diagram`}
               className="h-full w-full"
             />
           </div>
-          {controls && entry.controls.length > 0 && (
+          {controls && module.controls.length > 0 && (
             <div className="mt-3">
               <Controls
-                specs={entry.controls}
+                specs={module.controls}
                 params={params}
                 onChange={setParam}
                 onReset={() => setParams(initial)}

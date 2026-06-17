@@ -2,33 +2,12 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Layout, geometry } from "../../lib/diagram/layout";
+import { FLOW_DOT, ARCH_DOT } from "./diagram-constants";
+import { FlowNodes, CircuitNodes, ArchitectureNodes, renderLoopNotes } from "./diagram-nodes";
+import type { NodeHandlers } from "./diagram-nodes";
+import { renderEdges, renderJourneyDots, renderLegend } from "./diagram-edges";
 
-const FLOW_NODE_FILL = "rgba(16,185,129,0.04)";
-const FLOW_NODE_STROKE = "#10b981";
-const FLOW_PILL_FILL = "rgba(52,211,153,0.06)";
-const FLOW_PILL_STROKE = "#00E0B8";
-const FLOW_CONN = "#10b981";
-const FLOW_DOT = "#00E0B8";
-
-const ARCH_CONN = "#00E0B8";
-const ARCH_ASYNC = "#fb923c";
-const ARCH_AUTH = "#fb7185";
-const ARCH_DOT = "#7C5CFF";
-
-const MARGIN = 34.0;
-const BOTTOM_PAD = 44.0;
-
-const TYPE_STYLE: Record<string, [string, string, string]> = {
-    "signal": ["rgba(124,92,255,0.15)", "#7C5CFF", "signal"],
-    "backend":  ["rgba(0,224,184,0.15)", "#00E0B8", "block"],
-    "database": ["rgba(76,29,149,0.45)", "#a78bfa", "data"],
-    "cloud":    ["rgba(120,53,15,0.35)", "#fbbf24", "cloud infra"],
-    "security": ["rgba(255,255,255,0.05)", "#fb7185", "security"],
-    "bus":      ["rgba(154,52,18,0.35)", "#fb923c", "message bus"],
-    "external": ["rgba(30,41,59,0.5)", "#94a3b8", "external"],
-};
-
-export function Diagram({ data }: { data: any }) {
+export function Diagram({ data }: { data: Record<string, unknown> }) {
     const geom = useMemo(() => {
         const lo = new Layout(data);
         lo.run();
@@ -36,8 +15,6 @@ export function Diagram({ data }: { data: any }) {
     }, [data]);
 
     const mode = geom.mode;
-    const W = geom.width;
-    const H = geom.height;
 
     const [paused, setPaused] = useState(false);
     const svgRef = useRef<SVGSVGElement>(null);
@@ -79,7 +56,7 @@ export function Diagram({ data }: { data: any }) {
             ctx.lineJoin = 'round';
             ctx.beginPath();
             for (let x = 0; x < 160; x++) {
-                let t = (x - timeRef.current) * 0.1;
+                const t = (x - timeRef.current) * 0.1;
                 let y = 30;
                 if (oscope.signal === 'square') {
                     y = 30 + (Math.sin(t) > 0 ? -15 : 15);
@@ -126,169 +103,21 @@ export function Diagram({ data }: { data: any }) {
         setOscope(prev => ({ ...prev, visible: false, signal: null }));
     };
 
-    const used_types: { fill: string, stroke: string, leg: string }[] = [];
+    const handlers: NodeHandlers = {
+        onMouseEnter: handleNodeMouseEnter,
+        onMouseMove: handleNodeMouseMove,
+        onMouseLeave: handleNodeMouseLeave,
+    };
 
-    const renderedNodes = Object.keys(geom.nodes).map(nid => {
-        const n = geom.nodes[nid];
-        const isFlow = mode === "flow";
-        const isArch = mode === "architecture";
-        const fillStrokeLeg = TYPE_STYLE[n.type || "external"] || TYPE_STYLE["external"];
-        if (isArch && !used_types.some(u => u.leg === fillStrokeLeg[2])) {
-            used_types.push({ fill: fillStrokeLeg[0], stroke: fillStrokeLeg[1], leg: fillStrokeLeg[2] });
-        }
-        
-        let nodeBody = null;
-        if (isFlow) {
-            if (n.shape === "pill") {
-                nodeBody = <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={20} fill={FLOW_PILL_FILL} stroke={FLOW_PILL_STROKE} strokeWidth={1.5} />;
-            } else if (n.shape === "decision") {
-                nodeBody = <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={8} fill={FLOW_NODE_FILL} stroke={FLOW_NODE_STROKE} strokeDasharray="4 3" />;
-            } else {
-                nodeBody = <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={8} fill={FLOW_NODE_FILL} stroke={FLOW_NODE_STROKE} />;
-            }
-        } else if (mode === "circuit") {
-            const st = "#00E0B8";
-            const fill = "rgba(0,224,184,0.05)";
-            if (n.shape === "circle") {
-                nodeBody = <circle cx={n.x + n.w / 2} cy={n.y + n.h / 2} r={n.w / 2} fill={fill} stroke={st} strokeWidth={1.5} />;
-            } else if (n.shape === "triangle") {
-                const pts = `${n.x},${n.y} ${n.x + n.w},${n.y + n.h / 2} ${n.x},${n.y + n.h}`;
-                nodeBody = <polygon points={pts} fill={fill} stroke={st} strokeWidth={1.5} strokeLinejoin="round" />;
-            } else if (n.shape === "point") {
-                nodeBody = <circle cx={n.x + n.w / 2} cy={n.y + n.h / 2} r={3} fill={st} />;
-            } else {
-                nodeBody = <rect x={n.x} y={n.y} width={n.w} height={n.h} fill={fill} stroke={st} strokeWidth={1.5} />;
-            }
-        } else {
-            const fill = fillStrokeLeg[0];
-            const stroke = fillStrokeLeg[1];
-            const st = n.semStroke || stroke;
-            const dashProps = n.semDash ? { strokeDasharray: n.semDash } : {};
-            nodeBody = (
-                <>
-                    <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={8} fill="var(--color-bg)" />
-                    <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={8} fill={fill} stroke={st} strokeWidth={1.5} {...dashProps} />
-                </>
-            );
-        }
+    const renderedNodes = mode === "flow"
+        ? FlowNodes({ geom, handlers })
+        : mode === "circuit"
+        ? CircuitNodes({ geom, handlers })
+        : ArchitectureNodes({ geom, handlers });
 
-        const cx = n.x + n.w / 2;
-        const cy = n.y + n.h / 2;
-        const textCx = n.shape === "triangle" ? n.x + n.w * 0.4 : cx;
-        let nodeText = null;
-        if (n.shape === "point") {
-            // Text outside the point
-            nodeText = (
-                <>
-                    <text x={textCx} y={n.y - 12} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
-                    {n.sublabel && <text x={textCx} y={n.y + n.h + 16} fill="var(--color-muted)" fontSize="11">{n.sublabel}</text>}
-                </>
-            );
-        } else if (n.sublabel) {
-            const ly = n.y + (n.h - 18) / 2 + 4;
-            if (n.labelLines.length === 1) {
-                nodeText = (
-                    <>
-                        <text x={textCx} y={ly} fill="var(--color-fg)" fontSize="13" fontWeight="500">{n.labelLines[0]}</text>
-                        <text x={textCx} y={n.y + n.h - 10} fill="var(--color-muted)" fontSize="10">{n.sublabel}</text>
-                    </>
-                );
-            } else {
-                nodeText = (
-                    <>
-                        <text x={textCx} y={ly - 7} fill="var(--color-fg)" fontSize="13" fontWeight="500">
-                            <tspan x={textCx}>{n.labelLines[0]}</tspan>
-                            <tspan x={textCx} dy="15">{n.labelLines[1]}</tspan>
-                        </text>
-                        <text x={textCx} y={n.y + n.h - 10} fill="var(--color-muted)" fontSize="10">{n.sublabel}</text>
-                    </>
-                );
-            }
-        } else {
-            const weight = n.shape === "pill" ? "600" : "500";
-            if (n.labelLines.length === 1) {
-                nodeText = <text x={textCx} y={cy + 4} fill="var(--color-fg)" fontSize="13" fontWeight={weight}>{n.labelLines[0]}</text>;
-            } else {
-                nodeText = (
-                    <text x={textCx} y={cy - 3} fill="var(--color-fg)" fontSize="13" fontWeight={weight}>
-                        <tspan x={textCx}>{n.labelLines[0]}</tspan>
-                        <tspan x={textCx} dy="15">{n.labelLines[1]}</tspan>
-                    </text>
-                );
-            }
-        }
-
-        const gProps = n.signal ? {
-            className: "signal-node",
-            "data-signal": n.signal,
-            style: { cursor: "crosshair" },
-            onMouseEnter: () => handleNodeMouseEnter(n.signal!),
-            onMouseMove: handleNodeMouseMove,
-            onMouseLeave: handleNodeMouseLeave,
-        } : {};
-
-        return (
-            <g key={`node-${nid}`} {...gProps}>
-                {nodeBody}
-                {nodeText}
-            </g>
-        );
-    });
-
-    const labelNodes: React.ReactNode[] = [];
-    Object.keys(geom.nodes).forEach(nid => {
-        const n = geom.nodes[nid];
-        let off = 0;
-        const cy = n.y + n.h / 2;
-        const x2 = n.x + n.w;
-        n.loopNotes.forEach((note: string, i: number) => {
-            const lx = x2 + 8;
-            const ly = cy + 4 + off;
-            labelNodes.push(<text key={`loop-${nid}-${i}-icon`} x={lx} y={ly} fill="var(--color-muted)" fontSize="11">↻</text>);
-            if (note) {
-                labelNodes.push(<text key={`loop-${nid}-${i}-text`} x={lx + 14} y={ly} fill="var(--color-muted)" fontSize="10">{note}</text>);
-            }
-            off += 15;
-        });
-    });
-
-    const renderedEdges = geom.edges.map((e: any, i: number) => {
-        if (e.loop) return null;
-        let stroke = FLOW_CONN;
-        let width = e.kind === "main" ? "1.5" : "1";
-        let opacity = "0.85";
-        let cls = "";
-
-        if (mode === "flow") {
-            cls = e.kind === "async" ? "flow-async" : (e.kind === "auth" ? "flow-auth" : (e.kind === "static" ? "" : "flow"));
-        } else if (mode === "circuit") {
-            stroke = "rgba(0,224,184,0.3)";
-            cls = "";
-            width = "1.5";
-            opacity = "1";
-        } else {
-            stroke = e.kind === "async" ? ARCH_ASYNC : (e.kind === "auth" ? ARCH_AUTH : ARCH_CONN);
-            cls = e.kind === "async" ? "flow-async" : (e.kind === "auth" ? "flow-auth" : (e.kind === "static" ? "" : "flow"));
-            opacity = "1";
-        }
-        const marker = e.kind !== "static" ? "url(#arrow)" : undefined;
-
-        if (e.label && e.labelPos) {
-            labelNodes.push(<text key={`edge-label-${i}`} x={e.labelPos[0]} y={e.labelPos[1]} fill="var(--color-muted)" fontSize="10">{e.label}</text>);
-        }
-
-        if (mode === "circuit") {
-            const electronCls = e.kind === "async" ? "electron-async" : "electron-flow";
-            return (
-                <g key={`edge-group-${i}`}>
-                    <path d={e.d} stroke="rgba(0,224,184,0.3)" strokeWidth={width} fill="none" opacity="1" markerEnd={marker} />
-                    <path className={electronCls} d={e.d} stroke="#00E0B8" strokeWidth={width} fill="none" opacity="0.9" />
-                </g>
-            );
-        }
-
-        return <path key={`edge-${i}`} className={cls} d={e.d} stroke={stroke} strokeWidth={width} fill="none" opacity={opacity} markerEnd={marker} />;
-    });
+    const loopNotes = renderLoopNotes(geom);
+    const { edges: renderedEdges, labels: edgeLabels } = renderEdges(geom, mode);
+    const labelNodes: React.ReactNode[] = [...loopNotes, ...edgeLabels];
 
     const renderedGroups = Object.keys(geom.groups).map(gid => {
         const g = geom.groups[gid];
@@ -308,60 +137,9 @@ export function Diagram({ data }: { data: any }) {
     });
 
     const dotDefault = mode === "flow" ? FLOW_DOT : ARCH_DOT;
-    const dotSvg: React.ReactNode[] = [];
-    if (mode !== "circuit") {
-        geom.journeys.forEach((j: any, ji: number) => {
-            const color = j.color || dotDefault;
-            let prevId: string | null = null;
-        const lastId = `j${ji}_${j.hops.length - 1}`;
-        j.hops.forEach((hop: any, hi: number) => {
-            const mid = `j${ji}_${hi}`;
-            let begin = "";
-            if (hi === 0) {
-                begin = `0s;${lastId}.end+0.6s`;
-            } else {
-                begin = `${prevId}.end+0.3s`;
-            }
-            dotSvg.push(
-                <circle key={`dot-${mid}`} r="3.5" className="dot" fill={color}>
-                    <animateMotion id={mid} dur={`${hop.dur}s`} begin={begin} fill="freeze" path={hop.d} />
-                </circle>
-            );
-            prevId = mid;
-        });
-        });
-    }
+    const dotSvg = renderJourneyDots(geom, mode, dotDefault);
 
-    const legendNodes: React.ReactNode[] = [];
-    let adjustedH = H;
-    let adjustedW = W;
-    if (mode === "architecture") {
-        let ly = H - BOTTOM_PAD + 6;
-        let lx = MARGIN;
-        used_types.forEach((u, i) => {
-            legendNodes.push(<rect key={`leg-rect-${i}`} x={lx} y={ly} width="12" height="12" rx="3" fill={u.fill} stroke={u.stroke} />);
-            legendNodes.push(<text key={`leg-text-${i}`} x={lx + 18} y={ly + 10} fill="#94a3b8" fontSize="11">{u.leg}</text>);
-            lx += 22 + (u.leg.length * 7) + 28;
-        });
-        legendNodes.push(<circle key="leg-flight-circ" cx={lx + 6} cy={ly + 6} r="3.5" fill={ARCH_DOT} />);
-        legendNodes.push(<text key="leg-flight-text" x={lx + 16} y={ly + 10} fill="#94a3b8" fontSize="11">request in flight</text>);
-        lx += 16 + ("request in flight".length * 7) + 28;
-
-        if (geom.legendExtra && geom.legendExtra.length > 0) {
-            const ly2 = ly + 22;
-            lx = MARGIN;
-            geom.legendExtra.forEach((ex: any, i: number) => {
-                const dashProps = ex.dash ? { strokeDasharray: ex.dash } : {};
-                legendNodes.push(<rect key={`leg-ex-rect-${i}`} x={lx} y={ly2} width="12" height="12" rx="3" fill="none" stroke={ex.stroke || "#94a3b8"} {...dashProps} />);
-                legendNodes.push(<text key={`leg-ex-text-${i}`} x={lx + 18} y={ly2 + 10} fill="#94a3b8" fontSize="11">{ex.label}</text>);
-                lx += 22 + (ex.label.length * 7) + 28;
-            });
-            adjustedH += 24;
-            adjustedW = Math.max(adjustedW, lx + 10);
-        }
-        adjustedW = Math.max(adjustedW, lx + 10);
-        adjustedH += 12;
-    }
+    const { legendNodes, adjustedW, adjustedH } = renderLegend(geom, mode);
 
     return (
         <div className="flex flex-col items-center justify-center w-full relative my-8 rounded-xl border border-white/5 shadow-xl bg-[#060d20]/50 overflow-hidden">
@@ -429,7 +207,7 @@ export function Diagram({ data }: { data: any }) {
 
             {mode !== "flow" && geom.summary && geom.summary.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-5 w-full max-w-5xl px-4">
-                    {geom.summary.map((c: any, i: number) => {
+                    {geom.summary.map((c, i: number) => {
                         let accentBg = "bg-[#7C5CFF]";
                         if (c.accent === "violet") accentBg = "bg-[#a78bfa]";
                         if (c.accent === "rose") accentBg = "bg-[#fb7185]";

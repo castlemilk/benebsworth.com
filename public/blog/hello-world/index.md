@@ -11,6 +11,6 @@ canonical_url: 'https://benebsworth.com/blog/hello-world/'
 ---
 This is my first post on my new fake blog! How exciting!
 
-I've used the [Gatsby base blog template here](https://github.com/gatsbyjs/gatsby-starter-blog). With styling, tuning and components taken from the incredibly impressive blog done by [Dan Abramov](https://mobile.twitter.com/dan_abramov) called [overreacted.io](overreacted.io).
+This site was originally built on the [Gatsby base blog template here](https://github.com/gatsbyjs/gatsby-starter-blog), with styling, tuning and components taken from the incredibly impressive blog done by [Dan Abramov](https://mobile.twitter.com/dan_abramov) called [overreacted.io](https://overreacted.io). The site has since been rebuilt in Next.js (App Router).
 
 The goals of this medium is to explore ideas in an open format to hopefully act as a mechanism for clean note taking but also encouraging more structured exploration of technologies. I would like to play with different technology and write posts here capturing the learnings for my own future reference. I'd like to continually update/clean blog posts overtime, further refining ideas, almost like a personal wiki.

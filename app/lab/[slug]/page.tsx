@@ -18,7 +18,7 @@ const CATEGORY_ACCENT: Record<string, string> = {
 }
 
 export function generateStaticParams() {
-  return LAB_EFFECTS.map((e) => ({ slug: e.slug }))
+  return LAB_EFFECTS.filter(e => e.slug !== 'circuit-sim').map((e) => ({ slug: e.slug }))
 }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -101,7 +101,7 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
     <>
       <JsonLd data={[breadcrumb, appLd]} />
       <SiteNav />
-      <main className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8">
         <Breadcrumb
           items={[
             { label: 'Home', href: '/' },

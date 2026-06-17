@@ -83,3 +83,9 @@ playwright-report/
 # UI review artifacts
 .playwright-mcp/
 /*.png
+
+# serena MCP workspace
+.serena/
+
+# old Gatsby site kept locally for reference (1.1GB)
+legacy/

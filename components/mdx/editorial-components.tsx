@@ -3,9 +3,9 @@ import { cn } from '@/lib/utils'
 
 export function StatGroup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="not-prose my-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+    <dl className="not-prose my-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
       {children}
-    </div>
+    </dl>
   )
 }
 
@@ -14,17 +14,20 @@ export function Stat({ label, value, context }: { label: React.ReactNode; value:
     <div className="flex flex-col border-l-[3px] border-[var(--color-blog)]/60 pl-4 transition-colors hover:border-[var(--color-blog)]">
       <dt className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">{label}</dt>
       <dd className="mt-2 font-display text-3xl font-semibold tracking-tight text-fg">{value}</dd>
-      {context && <span className="mt-1.5 font-sans text-[0.85rem] leading-snug text-fg/60">{context}</span>}
+      {context && <dd className="mt-1.5 font-sans text-[0.85rem] leading-snug text-fg/60">{context}</dd>}
     </div>
   )
 }
 
 export function PullQuote({ children }: { children: React.ReactNode }) {
+  // The quote styling lives on the blockquote and is force-applied to any
+  // paragraph MDX wraps the children in. This lets authors write the quote on
+  // its own lines (which MDX turns into a <p>) WITHOUT producing a <p> nested
+  // inside a component <p> — the invalid nesting that triggers a hydration
+  // mismatch. `blockquote > p` is valid; `p > p` is not.
   return (
-    <blockquote className="not-prose my-14 border-l-[3px] border-[var(--color-blog)] pl-6 sm:pl-8">
-      <p className="font-display text-[1.45rem] font-medium italic leading-[1.35] tracking-[-0.015em] text-fg/90">
-        {children}
-      </p>
+    <blockquote className="not-prose my-14 border-l-[3px] border-[var(--color-blog)] pl-6 font-display text-[1.45rem] font-medium italic leading-[1.35] tracking-[-0.015em] text-fg/90 sm:pl-8 [&_p]:!m-0 [&_p]:!font-display [&_p]:!text-[1.45rem] [&_p]:!font-medium [&_p]:!italic [&_p]:!leading-[1.35] [&_p]:!tracking-[-0.015em] [&_p]:!text-fg/90">
+      {children}
     </blockquote>
   )
 }
@@ -50,7 +53,7 @@ export function Figure({
   return (
     <figure className={cn("not-prose relative clear-both", wrapperClasses)}>
       <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-fg)_3%,transparent)] shadow-sm">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+        { }
         <img src={src} alt={typeof caption === 'string' ? caption : ''} className="h-auto w-full object-cover" />
       </div>
       {(caption || credit) && (

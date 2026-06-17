@@ -27,11 +27,7 @@ export const metadata: Metadata = {
   },
 }
 
-function fmtDate(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso.slice(0, 10)
-  return d.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()
-}
+import { fmtDate } from '@/lib/format'
 
 export default function Home() {
   const posts = getPublishedPosts().slice(0, 3)

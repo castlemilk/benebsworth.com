@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { LAB_EFFECTS, type LabEntry } from '@/lib/lab/registry'
+import { useEffectModule } from '@/lib/lab/use-effect-module'
 import { EffectCanvas } from '@/components/lab/effect-canvas'
 
 /**
@@ -37,9 +38,11 @@ export function LabMatrix({ count = 6 }: { count?: number }) {
   // Lightweight periodic "tick" that rotates a single card every ~12s
   // so the matrix feels alive without re-rendering everything. We
   // swap one entry for a fresh one from the unused pool.
+  // Skips when the tab is backgrounded via document.hidden check.
   useEffect(() => {
     if (picks.length === 0) return
     const id = setInterval(() => {
+      if (document.hidden) return
       setPicks((prev) => {
         const used = new Set(prev.map((p) => p.slug))
         const pool = LAB_EFFECTS.filter((e) => !used.has(e.slug))
@@ -72,48 +75,67 @@ export function LabMatrix({ count = 6 }: { count?: number }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       {picks.map((e) => (
-        <Link
+        <LabMatrixTile
           key={e.slug}
-          href={`/lab/${e.slug}/`}
-          onMouseEnter={() => setHovered(e.slug)}
-          onMouseLeave={() => setHovered((h) => (h === e.slug ? null : h))}
-          className="group/mx group/matrix relative block overflow-hidden rounded-lg border border-fg/10 bg-fg/2 transition-all hover:border-fg/25 hover:bg-fg/5"
-        >
-          {/* The effect canvas. quality="mini" gives a low-res preview
-              that runs cheaply in a 6-tile grid. The EffectCanvas
-              already implements rAF pause on off-viewport and prefers-
-              reduced-motion, so we don't have to. */}
-          <div className="aspect-[4/3] w-full">
-            <EffectCanvas
-              effect={e.module}
-              params={e.defaults}
-              quality="mini"
-              ariaLabel={`${e.title} preview`}
-              className="h-full w-full"
-            />
-          </div>
-          {/* Title overlay. Slides up slightly on hover to feel alive. */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--color-bg,#0a0a0c)]/85 via-[var(--color-bg,#0a0a0c)]/40 to-transparent px-3 pb-2.5 pt-6">
-            <div className="flex items-baseline justify-between gap-2">
-              <h3 className="font-display text-sm font-semibold text-white/95">
-                {e.title}
-              </h3>
-              <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/55">
-                {e.category}
-              </span>
-            </div>
-          </div>
-          {/* Hover affordance — small "→" that fades in on hover. */}
-          <div
-            className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/70 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/85 transition-opacity ${
-              hovered === e.slug ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            Open →
-          </div>
-        </Link>
+          entry={e}
+          hovered={hovered}
+          setHovered={setHovered}
+        />
       ))}
     </div>
+  )
+}
+
+function LabMatrixTile({
+  entry,
+  hovered,
+  setHovered,
+}: {
+  entry: LabEntry
+  hovered: string | null
+  setHovered: React.Dispatch<React.SetStateAction<string | null>>
+}) {
+  const effectModule = useEffectModule(entry.slug)
+  return (
+    <Link
+      href={`/lab/${entry.slug}/`}
+      onMouseEnter={() => setHovered(entry.slug)}
+      onMouseLeave={() => setHovered((h) => (h === entry.slug ? null : h))}
+      className="group/mx group/matrix relative block overflow-hidden rounded-lg border border-fg/10 bg-fg/2 transition-all hover:border-fg/25 hover:bg-fg/5"
+    >
+      <div className="aspect-[4/3] w-full">
+        {effectModule ? (
+          <EffectCanvas
+            effect={effectModule}
+            params={effectModule.defaults}
+            quality="mini"
+            ariaLabel={`${entry.title} preview`}
+            className="h-full w-full"
+          />
+        ) : (
+          <div className="h-full w-full animate-pulse" />
+        )}
+      </div>
+      {/* Title overlay. Slides up slightly on hover to feel alive. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--color-bg,#0a0a0c)]/85 via-[var(--color-bg,#0a0a0c)]/40 to-transparent px-3 pb-2.5 pt-6">
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="font-display text-sm font-semibold text-white/95">
+            {entry.title}
+          </h3>
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/55">
+            {entry.category}
+          </span>
+        </div>
+      </div>
+      {/* Hover affordance — small "→" that fades in on hover. */}
+      <div
+        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/70 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/85 transition-opacity ${
+          hovered === entry.slug ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        Open →
+      </div>
+    </Link>
   )
 }
 

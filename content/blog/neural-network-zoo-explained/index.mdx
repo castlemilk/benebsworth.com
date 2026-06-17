@@ -6,10 +6,10 @@ description: "A guided tour through the Asimov Institute's Neural Network Zoo �
 labels: algorithms,machine-learning,deep-learning
 keywords: neural networks,deep learning,architecture,cnn,rnn,gan,transformer,lstm
 release: true
-heroImage: /blog/neural-network-zoo-explained/hero.png
+heroImage: /blog/neural-network-zoo-explained/hero.webp
 ---
 
-There's a famous cheat sheet called [The Neural Network Zoo](https://www.asimovinstitute.org/neural-network-zoo/) drawn by Fjodor van Veen at the Asimov Institute. It's a single poster that maps out, as node graphs, almost every well-known neural network architecture — feed-forward, recurrent, convolutional, adversarial, attention — and the relationships between them. As of the most recent update, the poster carries around 27 distinct architectures, grouped visually into related families.
+There's a famous cheat sheet called [The Neural Network Zoo](https://www.asimovinstitute.org/neural-network-zoo/) drawn by Fjodor van Veen at the Asimov Institute. It's a single poster that maps out, as node graphs, almost every well-known neural network architecture — feed-forward, recurrent, convolutional, adversarial, attention — and the relationships between them. As of its most recent update (2025), the poster carries around two dozen primary architecture cells — and once you count the closely related variants noted alongside them, well over thirty — grouped visually into related families.
 
 It's a great reference. But it's a *map*, not a tour. The poster shows you the topology of each network (how the nodes connect), and a one-line caption for each. The harder question — the one the poster deliberately side-steps — is **what each architecture is actually for, and why it exists in the form it does**.
 
@@ -35,7 +35,7 @@ A few things to notice once you have the colour vocabulary:
 
 With that in mind, here's the poster:
 
-![The Neural Network Zoo poster by the Asimov Institute](./zoo-poster.png)
+![The Neural Network Zoo poster by the Asimov Institute](./zoo-poster.webp)
 
 And here's the same zoo, but reduced to the six architectures I built interactive diagrams for. Click any of them to jump straight to its diagram.
 
@@ -81,7 +81,7 @@ Here's an RNN unrolled across three time steps. The curved edge running from `h(
 
 <RnnFlow id="arch-rnn" />
 
-**LSTM** (Long Short-Term Memory) and **GRU** (Gated Recurrent Unit) both attack this problem by adding learned gates that explicitly control what information flows through the cell and what gets thrown away. An LSTM has three gates — input, output, forget — plus an explicit memory cell. A GRU merges these into an update gate and a reset gate, has no separate memory cell, and exposes its full state at every step. GRUs are slightly cheaper to run and slightly less expressive; in practice the performance difference is usually noise.
+**LSTM** (Long Short-Term Memory) and **GRU** (Gated Recurrent Unit) both attack this problem by adding learned gates that explicitly control what information flows through the cell and what gets thrown away. An LSTM has three gates — input, forget, output — plus an explicit memory cell. A GRU merges these into an update gate and a reset gate, has no separate memory cell, and exposes its full state at every step. GRUs are slightly cheaper to run and slightly less expressive; in practice the performance difference is usually noise.
 
 The natural extension is **bidirectional** variants (BiRNN, BiLSTM, BiGRU). These run the sequence through the network once forward and once backward, concatenating the two hidden states. They're great for tasks where you can see the whole sequence at inference time (filling in a missing word, classifying a sentence) and terrible for tasks where you can't (autocompletion, real-time speech). The architecture is the same as the unidirectional version; the difference is the inputs you feed it. (The Asimov post doesn't draw them on the poster because, visually, they look identical to their unidirectional counterparts — only the data flow is different.)
 
@@ -133,7 +133,7 @@ The interactive version shows the encoder collapsing the input into a `(μ, σ)`
 
 - **Denoising autoencoders** (DAE): feed in noisy input, ask the network to reconstruct the *clean* input. Forces the network to learn the broader, more stable features of the data instead of memorising noise. The intuition: a network that can recover the clean signal from the noisy one has to have learned the underlying structure, not the noise. (This is a precursor to modern self-supervised learning tricks like SimCLR and MAE.)
 
-- **Sparse autoencoders** (SAE): the opposite of a regular autoencoder. Instead of compressing to a small bottleneck, you *expand* to a large sparse layer. The sparsity is enforced by adding a constraint that only a few neurons should fire for any given input. The result is a network that learns to detect many small features independently — useful for things like dictionary learning. (Sparse autoencoders are a hot topic again in 2024+ as a tool for interpreting the internal activations of large language models.)
+- **Sparse autoencoders** (SAE): the opposite of a regular autoencoder. Instead of compressing to a small bottleneck, you *expand* to a large sparse layer. The sparsity is enforced by adding a constraint that only a few neurons should fire for any given input. The result is a network that learns to detect many small features independently — useful for things like dictionary learning. (As of 2026, sparse autoencoders are a hot topic again as a tool for interpreting the internal activations of large language models.)
 
 The cleanest way to think about autoencoders:
 
@@ -166,7 +166,7 @@ A **deep convolutional inverse graphics network** (DCIGN) is a VAE where the enc
 
 The two are trained in alternation. The discriminator's loss is straightforward: classify real as real, generated as fake. The generator's loss is *derived from* the discriminator: succeed at fooling the discriminator. The result, when it works, is a generator that produces samples indistinguishable from real data.
 
-The Zoo's description is good: GANs work partly because, in a high-dimensional space, real data lives on a thin manifold, and a generator that learns to land on that manifold will produce realistic samples. The discriminator provides the learning signal by being a learned measure of "manifolds" — it gets good at telling the difference between the generator's output and real data, which gives the generator gradient information about *how* to be more realistic.
+The Zoo's description is good: GANs work partly because, in a high-dimensional space, real data lives on a thin manifold, and a generator that learns to land on that manifold will produce realistic samples. The discriminator provides the learning signal by being a learned measure of *realness* — how likely a sample is to belong to the real-data manifold. It gets good at telling the difference between the generator's output and real data, which gives the generator gradient information about *how* to be more realistic.
 
 <Callout type="warning" title="Why GANs are hard to train">
 The two networks have to be kept in balance: if the discriminator gets too good, the generator's gradient vanishes and it stops learning; if the generator gets too good, the discriminator can't tell the difference and the whole signal disappears. Mode collapse — the generator finding a single output that consistently fools the discriminator and producing only that — is a common failure mode. There are dozens of variant architectures (DCGAN, WGAN, StyleGAN, CycleGAN, etc.) that all try to make this training process more stable.
@@ -211,7 +211,7 @@ The last cluster in the Zoo is the **energy-based** family. These networks are a
 1. They inspired the energy-based networks that came after.
 2. They're used as a sampling mechanism inside Boltzmann machines and Deep Belief Networks.
 
-**Hopfield networks** (HN) are the historical precursor. Every neuron is connected to every other neuron — a fully entangled plate of spaghetti where every node acts as input, hidden, and output depending on the phase. Training sets the weights so that specific patterns are stable states of the network; once trained, the network relaxes to whichever learned pattern is closest to whatever you set the initial state to. The training is one-shot, not iterative, and the network is associative-memory: present half a pattern, get the full pattern back. Hopfield networks fell out of fashion for decades, then came back briefly in the context of modern Hopfield networks and attention — the math is closely related.
+**Hopfield networks** (HN) are the historical precursor. Every neuron is connected to every other neuron — a fully entangled plate of spaghetti where every node acts as input, hidden, and output depending on the phase. Training sets the weights so that specific patterns are stable states of the network; once trained, the network relaxes to whichever learned pattern is closest to whatever you set the initial state to. The training is one-shot, not iterative, and the network is associative-memory: present half a pattern, get the full pattern back. Hopfield networks fell out of fashion for decades, then came back into view around 2020 in the context of modern Hopfield networks and attention — the math is closely related ([Ramsauer et al., 2020](https://arxiv.org/abs/2008.02217)).
 
 **Boltzmann machines** (BM) are bidirectional, fully connected networks of binary neurons trained using a global "energy" function. Some neurons are clamped to input values; others are free. The network settles into a low-energy configuration; that configuration is the output. The training procedure (contrastive divergence) uses a Markov chain to sample from the network's distribution, and the gradient is the difference between the data-driven statistics and the model's own statistics. Boltzmann machines are theoretically beautiful and almost never used in practice — they're slow to train, and the binary activations are a pain to deal with.
 
@@ -227,7 +227,7 @@ A few patterns that fall out of walking through the Zoo:
 
 - **The most useful question to ask about an architecture is what it can't do.** RNNs can't handle long dependencies. CNNs can't handle arbitrary translations without pooling or data augmentation. FFNNs can't handle spatial or sequential structure at all. GANs can't easily count or enforce global constraints on their outputs. Transformers can't efficiently process sequences longer than their training context window. Each architecture's existence is a workaround for a different failure mode of the one before it.
 
-- **The fields that the Zoo tracks have changed a lot since 2016.** Capsule networks and Deep Belief Networks are largely historical. Transformers, which barely made the cut when the post was updated in 2019, are now the dominant architecture for any sequence task. Diffusion models — which the Zoo doesn't have a separate entry for, because they were invented later — have largely displaced GANs for image generation. State-space models (Mamba, S4) have come back as a way to handle very long sequences where Transformers' O(n²) attention cost is prohibitive.
+- **The fields that the Zoo tracks have changed a lot since 2016.** Capsule networks and Deep Belief Networks are largely historical. Transformers, which barely made the cut when the post was updated in 2019, are (as of 2026) the dominant architecture for any sequence task. Diffusion models — which the Zoo doesn't have a separate entry for, because they were invented later — have largely displaced GANs for image generation. State-space models (Mamba, S4) have come back as a way to handle very long sequences where Transformers' O(n²) attention cost is prohibitive.
 
 - **The "abbreviation soup" problem hasn't gone away.** The Zoo post complained that "DCIGN, BiLSTM, DCGAN, anyone?" was overwhelming. If anything it's gotten worse: we now also have MoE, SSM, Mamba, RAG, RLHF, DPO, GRPO, ICL, and dozens of others. The same advice still applies — pick a few architectures to learn deeply, and treat the rest as combinations of things you already know.
 
@@ -243,6 +243,7 @@ The Neural Network Zoo is still the best single-image overview of the field. It'
 - [Long Short-Term Memory](https://www.bioinf.jku.at/publications/older/2604.pdf) — Hochreiter & Schmidhuber, 1997. The original LSTM paper.
 - [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114) — Kingma & Welling, 2013. The VAE paper.
 - [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829) — Sabour, Frosst & Hinton, 2017. The CapsNet paper.
+- [Hopfield Networks is All You Need](https://arxiv.org/abs/2008.02217) — Ramsauer et al., 2020. Shows that modern (continuous) Hopfield networks are closely related to the attention mechanism of Transformers.
 - [Neural Turing Machines](https://arxiv.org/abs/1410.5401) — Graves, Wayne & Danihelka, 2014.
 - [Hybrid Computing Using a Neural Network With Dynamic External Memory](https://www.nature.com/articles/nature20101) — Graves et al., 2016. The DNC paper.
 - [Gradient-Based Learning Applied to Document Recognition](http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf) — LeCun et al., 1998. The foundational CNN paper.

@@ -6,11 +6,18 @@ import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 import { cn } from '@/lib/utils'
 
+const NAV_COLORS: Record<string, string> = {
+  '/projects/': '#8b5cf6',
+  '/blog/': '#f59e0b',
+  '/lab/': '#f59e0b',
+  '/about/': '#10b981',
+}
+
 const navLinks = [
-  { href: '/projects/', prefix: '/projects', label: 'projects', accent: 'text-project' },
-  { href: '/blog/', prefix: '/blog', label: 'blog', accent: 'text-blog' },
-  { href: '/lab/', prefix: '/lab', label: 'lab', accent: 'text-blog' },
-  { href: '/about/', prefix: '/about', label: 'about', accent: 'text-about' },
+  { href: '/projects/', prefix: '/projects', label: 'projects' },
+  { href: '/blog/', prefix: '/blog', label: 'blog' },
+  { href: '/lab/', prefix: '/lab', label: 'lab' },
+  { href: '/about/', prefix: '/about', label: 'about' },
 ]
 
 /**
@@ -53,8 +60,9 @@ export function SiteNav() {
         </Link>
         <div className="flex items-center gap-4">
           <nav className="flex gap-6 font-mono text-[0.78rem] uppercase tracking-[0.18em] text-muted">
-            {navLinks.map(({ href, label, accent, prefix }) => {
+            {navLinks.map(({ href, label, prefix }) => {
               const isActive = pathname.startsWith(prefix)
+              const accent = NAV_COLORS[href]
               return (
                 <Link
                   key={href}
@@ -62,9 +70,10 @@ export function SiteNav() {
                   className={cn(
                     'relative transition-colors',
                     isActive
-                      ? [accent, 'after:absolute after:inset-x-0 after:-bottom-4 after:h-[2px] after:rounded-full after:bg-current']
-                      : `hover:${accent}`,
+                      ? 'accent-ink after:absolute after:inset-x-0 after:-bottom-4 after:h-[2px] after:rounded-full after:bg-current'
+                      : 'hover:text-fg/70',
                   )}
+                  style={isActive ? ({ '--ink': accent } as React.CSSProperties) : undefined}
                 >
                   {label}
                 </Link>

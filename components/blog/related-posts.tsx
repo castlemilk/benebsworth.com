@@ -1,13 +1,8 @@
 import Link from 'next/link'
 import { getPublishedPosts } from '@/lib/content'
 import { topicFor } from '@/lib/topics'
+import { fmtDate } from '@/lib/format'
 import { TopicMarker } from '@/components/blog/topic-marker'
-
-function fmtDate(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso.slice(0, 10)
-  return d.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()
-}
 
 export function RelatedPosts({ currentSlug, tags, limit = 3 }: {
   currentSlug: string

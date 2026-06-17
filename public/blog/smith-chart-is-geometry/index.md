@@ -7,12 +7,13 @@ description: >-
   of circles, lines, and rotations.
 labels: 'technology,algorithms,physics,electrical engineering'
 release: true
+heroImage: /blog/smith-chart-is-geometry/hero.webp
 markdown_url: /blog/smith-chart-is-geometry/
 canonical_url: 'https://benebsworth.com/blog/smith-chart-is-geometry/'
 ---
 Every RF textbook opens with the same intimidating diagram — a unit circle with two families of curves: orange circles tangent to the left edge, blue arcs that sweep from the bottom to the top. The Smith chart. Most engineers learn to read it the way pilots read an artificial horizon: a pattern-recognition skill, built on a thousand hours of practice, divorced from any geometric intuition.
 
-> [LabSide component] Component `LabSide` — see the rendered post.
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
 
 0.7 (high SWR).">
 
@@ -22,7 +23,7 @@ This post builds the Smith chart from first principles — first geometrically, 
 
 ## The problem the chart solves
 
-In RF engineering, you often need to compute the **reflection coefficient** of a load — the ratio of a wave's reflected amplitude to its incident amplitude, for a signal bouncing off the end of a transmission line. The reflection coefficient is a complex number, typically denoted Γ:
+In RF engineering, you often need to compute the **reflection coefficient** of a load — the ratio of a wave's reflected amplitude to its incident amplitude, for a signal bouncing off the end of a transmission line. The reflection coefficient is a complex number, typically denoted $\Gamma$:
 
 > [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
 
@@ -36,23 +37,17 @@ $$
 
 where $Z_L$ is the load impedance (a complex number with resistive and reactive parts) and $Z_0$ is the characteristic impedance of the line (typically $50\Omega$ real).
 
-Here's the awkward bit. If you plot every possible load impedance as a point in the complex plane, with R on the real axis and X (reactance) on the imaginary axis, you get the *impedance plane*. The reflection coefficient Γ is a rational function of the load. Every possible Z_L occupies a unique point, but the same Z_L mapped through Γ lands in a different, more useful place.
+Here's the awkward bit. If you plot every possible load impedance as a point in the complex plane, with R on the real axis and X (reactance) on the imaginary axis, you get the *impedance plane*. The reflection coefficient $\Gamma$ is a rational function of the load. Every possible $Z_L$ occupies a unique point, but the same $Z_L$ mapped through $\Gamma$ lands in a different, more useful place.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-Impedance plane: bounded on the left by zero (a short circuit), unbounded to the right. A perfect open circuit is a point at infinity. The locus of "matched" loads is a single point, Z₀.
+Impedance plane: bounded on the left by zero (a short circuit), unbounded to the right. A perfect open circuit is a point at infinity. The locus of "matched" loads is a single point, $Z_0$.
 
-Reflection coefficient plane (Γ-plane): bounded, all values inside the unit disk. The locus of matched loads is the *origin*. Open and short are on the *unit circle*. A lossless line is a rotation around the origin.
+Reflection coefficient plane ($\Gamma$-plane): bounded, all values inside the unit disk. The locus of matched loads is the *origin*. Open and short are on the *unit circle*. A lossless line is a rotation around the origin.
 
-The Smith chart is the Γ-plane, with the impedance overlay drawn back on top.
+The Smith chart is the $\Gamma$-plane, with the impedance overlay drawn back on top.
 
-The mapping Z_L → Γ is a **Möbius transform** — the class of fractional linear transformations that map the extended complex plane to itself. Specifically:
-
-$$
-\Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}
-$$
-
-This maps the **right half of the impedance plane** (passive loads with R ≥ 0) to the **interior of the unit disk** in the Γ-plane. The boundary of the right half-plane (the imaginary axis, R = 0) maps to the unit circle. Infinity maps to Γ = 1 (open circuit at the right side of the disk).
+The mapping $Z_L \to \Gamma$ is a **Möbius transform** — the class of fractional linear transformations that map the extended complex plane to itself. The Möbius transform of equation (1) maps the **right half of the impedance plane** (passive loads with R ≥ 0) to the **interior of the unit disk** in the $\Gamma$-plane. The boundary of the right half-plane (the imaginary axis, R = 0) maps to the unit circle. Infinity maps to $\Gamma = 1$ (open circuit at the right side of the disk).
 
 The most important consequence: every passive load is inside the disk. Every unmatched load is somewhere in the disk, distance from the origin equal to the reflection magnitude. The visual answer to "how matched is this load?" is the distance from the origin, and the visual answer to "where is the mismatch?" is the angle.
 
@@ -80,9 +75,9 @@ Positive reactances (inductive) produce circles in the upper half; negative reac
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-The fundamental theorem: any Möbius transform maps any circle or line to some circle or line. Since the impedance plane's constant-R and constant-X loci are lines (vertical and horizontal), the Γ-plane's loci are circles. This is not an accident of the specific transform — it is a structural property of all Möbius transforms.
+The fundamental theorem: any Möbius transform maps any circle or line to some circle or line. Since the impedance plane's constant-R and constant-X loci are lines (vertical and horizontal), the $\Gamma$-plane's loci are circles. This is not an accident of the specific transform — it is a structural property of all Möbius transforms.
 
-The same identity is why `Joukowski airfoil` mappings in aerodynamics, `Schwarz-Christoffel` transformations in conformal mapping, and the `z → (z−1)/(z+1)` used in the **Möbius ladder filter** all produce circular structures.
+The same identity is why *Joukowski airfoil* mappings in aerodynamics, *Schwarz-Christoffel* transformations in conformal mapping, and the `z → (z−1)/(z+1)` used in the *Möbius ladder filter* all produce circular structures.
 
 ## The rotation: moving down a transmission line
 
@@ -100,18 +95,18 @@ $$
 
 This is also a Möbius transform. Its action on the $\Gamma$-plane is the simplest possible: a **rotation about the origin** by $2\beta \ell$. The angle is twice the electrical length.
 
-This is the property that makes the Smith chart so useful. As you walk down a transmission line, the reflection coefficient traces a **circle of constant |Γ|** (since rotation preserves magnitude). One full rotation of |Γ| as you walk one wavelength down the line. The orange circles of the chart become the loci of "this load impedance, but at different line lengths."
+This is the property that makes the Smith chart so useful. As you walk down a transmission line, the reflection coefficient traces a **circle of constant $|\Gamma|$** (since rotation preserves magnitude). Because the rotation angle is $2\beta\ell$, one full $360°$ rotation happens over just a *half*-wavelength ($\lambda/2$) of line — walking a full wavelength sends you twice around. The orange circles of the chart become the loci of "this load impedance, but at different line lengths."
 
-> [LabSide component] Component `LabSide` — see the rendered post.
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
 
-The visual above is what the Möbius transform actually *does*: a Cartesian grid in the right half-plane (positive R, any X) becomes a family of circles inside the unit disk. The grid's vertical lines become the orange constant-R circles of the Smith chart. The grid's horizontal lines become the blue constant-X arcs. The transform is a **stereographic projection** of sorts — it folds the unbounded half-plane into a bounded disk in a way that preserves circles.
+The visual above is what the Möbius transform actually *does*: a Cartesian grid in the right half-plane (positive R, any X) becomes a family of circles inside the unit disk. The grid's vertical lines become the orange constant-R circles of the Smith chart. The grid's horizontal lines become the blue constant-X arcs. The transform is a **fractional-linear (Möbius) map** — it folds the unbounded half-plane into a bounded disk in a way that preserves circles.
 
 ## Reading the chart, geometrically
 
-The typical RF design task: you have a load Z_L, you want to match it to Z₀, you have a stub of a fixed length to add. The procedure on a Smith chart is:
+The typical RF design task: you have a load $Z_L$, you want to match it to $Z_0$, you have a stub of a fixed length to add. The procedure on a Smith chart is:
 
 1. **Plot the normalised load.** Compute `z = Z_L / Z₀` (a dimensionless complex number). Find the point on the chart where the constant-R circle and the constant-X circle meet.
-2. **Walk along a constant-|Γ| circle** toward the source. A quarter wavelength lands you at a real impedance (purely resistive), with the same magnitude of mismatch.
+2. **Walk along a constant-$|\Gamma|$ circle** toward the source. A quarter wavelength lands you at a real impedance (purely resistive), with the same magnitude of mismatch.
 3. **Add a stub in parallel** — this is a movement along a constant-conductance circle (the chart is symmetric in impedance and admittance; the bottom half is the **admittance Smith chart**).
 4. **Iterate**: each element of the matching network is a rotation on the chart. The full network is a sequence of rotations landing at the origin.
 
@@ -119,7 +114,7 @@ On a properly drawn Smith chart, all of this reduces to: read the angle, draw an
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-A standalone calculation: rotate Γ by angle θ (line length ℓ), then find the impedance via `Z = Z₀ (1+Γ)/(1−Γ)`, then convert to admittance via `Y = 1/Z`, then add a stub admittance, then convert back. The same procedure, six transformations, three or four complex divisions, every step susceptible to a sign error or a missing factor of two.
+A standalone calculation: rotate $\Gamma$ by angle $\theta$ (line length $\ell$), then find the impedance via `Z = Z₀ (1+Γ)/(1−Γ)`, then convert to admittance via `Y = 1/Z`, then add a stub admittance, then convert back. The same procedure, six transformations, three or four complex divisions, every step susceptible to a sign error or a missing factor of two.
 
 The chart collapses all of this to: **one rotation, one point**. The chart is a tool, but it is also a *proof* that the underlying operations are geometric.
 
@@ -131,11 +126,11 @@ The Smith chart is a teaching case for a broader truth: the easiest computations
 - **The S-parameter flow graph**, where a feedback loop becomes a Mason's-rule summation drawn in circles
 - **Thevenin/Norton equivalent circuits**, where any linear two-terminal network becomes a point on the (R, I) plane
 
-The lab at the top of this post is a playground for the chart's geometry — drag the controls, watch the Γ vector sweep, observe how the line length is just a rotation. The lab above the "Walking down the line" section uses the **conformal grid** to show the underlying Möbius transform in action, mapping a Cartesian grid onto the chart's circles. The two labs are the same math, drawn two ways: the chart as a *tool*, the grid as the *transform*.
+The lab at the top of this post is a playground for the chart's geometry — drag the controls, watch the $\Gamma$ vector sweep, observe how the line length is just a rotation. The lab in "The rotation: moving down a transmission line" section uses the **conformal grid** to show the underlying Möbius transform in action, mapping a Cartesian grid onto the chart's circles. The two labs are the same math, drawn two ways: the chart as a *tool*, the grid as the *transform*.
 
 ## Reading further
 
 - **Pozar, *Microwave Engineering*, 4th ed.** — chapter 3, the cleanest derivation of the Smith chart from the Möbius transform
-- **Gonzalez, *Microwave Transistor Amplifiers*, 2nd ed.** — chapter 2, the impedance/admittance symmetry treated as a stereographic projection
+- **Gonzalez, *Microwave Transistor Amplifiers*, 2nd ed.** — chapter 2, the impedance/admittance symmetry treated as a Möbius map
 - **Apostol, *Modular Functions and Dirichlet Series in Number Theory*** — chapter 2, the deeper geometry: the upper half-plane and the modular group. The Smith chart is the same construction in disguise.
 - **Needham, *Visual Complex Analysis*** — chapter 3, the visual approach to Möbius transforms that grounds the chart's geometry in pictures

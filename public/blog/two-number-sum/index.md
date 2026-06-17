@@ -52,16 +52,16 @@ This could be sufficient if we are dealing with a reasonable small value of n, a
 def twoNumberSum(array, targetSum):
 	if (len(array) <= 0):
 		return []
-	previousNum = []
+	previousNum = set()
 	for i in range(len(array)):
 		y = targetSum-array[i]
 		if y in previousNum:
 			return sorted([array[i],y])
-		previousNum.append(array[i])
+		previousNum.add(array[i])
 	return []
 ```
 
-So now we're populating the `previousNum` table, which gives us the "memory" or ability to evaluate whether any of the previously encountered numbers will be suitable to reach `targetSum`. Effectively reducing the second iteration we were doing in the first approach.
+So now we're populating the `previousNum` set, a hash-based structure which gives us the "memory" or ability to evaluate whether any of the previously encountered numbers will be suitable to reach `targetSum`. Because it's a set, the `y in previousNum` membership check is `O(1)` rather than the `O(n)` scan a list would force. Effectively reducing the second iteration we were doing in the first approach.
 
 > Time: O(n) - we still have to iterate over the list once, and insertion and lookups are O(1) for a hash table
 > 
@@ -103,7 +103,7 @@ With a known sorted list we can take advantage of the ordering to determine whet
 
 This gives us the following [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity)
 
-> Time: O(nlog(n)) - utilising the sorted structure, we can search faster than O(n^2)
+> Time: O(n) - utilising the sorted structure, the two-pointer scan visits each element at most once. (If the input weren't already sorted, sorting it first would dominate at O(nlog(n)).)
 > Space: O(1) - we don't store any information during search
 
 So the clear benefit here is we don't need to consume memory and we still achieve a reasonable order of time complexity. Similar to the second solution, it comes down to what your resource costs are and goals.

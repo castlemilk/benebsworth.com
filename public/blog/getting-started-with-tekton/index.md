@@ -16,7 +16,7 @@ release: true
 markdown_url: /blog/getting-started-with-tekton/
 canonical_url: 'https://benebsworth.com/blog/getting-started-with-tekton/'
 ---
-![Tekton](/blog/getting-started-with-tekton/tekton.png)
+![Tekton](/blog/getting-started-with-tekton/tekton.webp)
 
 ## Updates (21/09/2019)
 
@@ -78,7 +78,7 @@ What we've done here is mapped the host `host.docker.local` to our IP address `1
 
 Next we need to allow `insecure-registries` within our `docker-for-desktop` daemon. This can be done by navigating to your docker preferences and then selecting the daemon tab, and setting it as follows:
 
-![Docker Daemon Settings](/blog/getting-started-with-tekton/docker-daemon-settings.png)
+![Docker Daemon Settings](/blog/getting-started-with-tekton/docker-daemon-settings.webp)
 
 With these settings in place we now can refer to `host.docker.local:5000` as our "insecure registry" and assume that this will be accessible within our Kubernetes cluster running locally.
 
@@ -183,7 +183,7 @@ spec:
 > This defines the image artifact we intent to produce, note the reference to our local registry `host.docker.local`. If we were running inside a Minikube environment, we would need to ensure this is specified as our insecure registry.
 
 ```yaml
-piVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
   name: build-docker-image-from-git-source

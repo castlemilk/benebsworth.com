@@ -179,7 +179,7 @@ export function Callout({ children, type = 'info', title, className }: CalloutPr
           children (which can be plain text or rich MDX content). */}
       <div className="mt-2 ml-4">
         {title && (
-          <h4 className={cn('text-base font-semibold m-0 mb-2', style.titleColor)}>{title}</h4>
+          <p className={cn('text-base font-semibold m-0 mb-2', style.titleColor)}>{title}</p>
         )}
         <div className="leading-relaxed text-base">{children}</div>
       </div>

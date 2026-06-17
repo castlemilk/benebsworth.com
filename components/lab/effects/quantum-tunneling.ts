@@ -51,10 +51,6 @@ export const quantumTunneling: EffectModule = {
       const psiR = new Float64Array(NX) // real part
       const psiI = new Float64Array(NX) // imaginary part
 
-      // Momentum space arrays
-      const _psiKR = new Float64Array(NX)
-      const _psiKI = new Float64Array(NX)
-
       // Potential
       const V = new Float64Array(NX)
       const barrierCenter = L * 0.55
@@ -139,9 +135,6 @@ export const quantumTunneling: EffectModule = {
         }
       }
 
-      // Store potential profile
-      const _potentialNorm = V0 > 0 ? V0 : 1
-
       // Simulate and store frames
       for (let frame = 0; frame < NFRAMES; frame++) {
         // Store |ψ|²
@@ -187,8 +180,6 @@ export const quantumTunneling: EffectModule = {
       compute._barrierW = barrierW
       compute._V0 = V0
       compute._potential = V
-      compute._L = L
-      compute._dx = dx
     }
 
     // Attach metadata
@@ -196,8 +187,6 @@ export const quantumTunneling: EffectModule = {
     compute._barrierW = 0.08
     compute._V0 = 2
     compute._potential = new Float64Array(NX)
-    compute._L = 4 * Math.PI
-    compute._dx = compute._L / NX
 
     return {
       step(t, p) {
@@ -220,8 +209,6 @@ export const quantumTunneling: EffectModule = {
         // Loop through frames
         const frameIdx = Math.floor(time * 30) % NFRAMES
         const prob = frames[frameIdx]
-        const _L = compute._L
-        const _dx = compute._dx
         const V = compute._potential
         const VMax = Math.max(V0, 1)
 

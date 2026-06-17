@@ -1,15 +1,19 @@
-import type { EffectModule } from '@/lib/lab/types'
+import type { ControlSpec, EffectModule, Params } from '@/lib/lab/types'
 import { makeNoise2D } from '@/lib/lab/noise'
 
+export const controls: ControlSpec[] = [
+  { key: 'particles', label: 'Particles', type: 'range', min: 100, max: 1200, step: 50 },
+  { key: 'scale', label: 'Noise scale', type: 'range', min: 0.001, max: 0.02, step: 0.001 },
+  { key: 'speed', label: 'Speed', type: 'range', min: 0.2, max: 3, step: 0.1 },
+  { key: 'trail', label: 'Trail', type: 'range', min: 0.01, max: 0.2, step: 0.01 },
+  { key: 'color', label: 'Color', type: 'color' },
+]
+
+export const defaults: Params = { particles: 500, scale: 0.006, speed: 1, trail: 0.06, color: '#00e0b8' }
+
 export const flowField: EffectModule = {
-  controls: [
-    { key: 'particles', label: 'Particles', type: 'range', min: 100, max: 1200, step: 50 },
-    { key: 'scale', label: 'Noise scale', type: 'range', min: 0.001, max: 0.02, step: 0.001 },
-    { key: 'speed', label: 'Speed', type: 'range', min: 0.2, max: 3, step: 0.1 },
-    { key: 'trail', label: 'Trail', type: 'range', min: 0.01, max: 0.2, step: 0.01 },
-    { key: 'color', label: 'Color', type: 'color' },
-  ],
-  defaults: { particles: 500, scale: 0.006, speed: 1, trail: 0.06, color: '#00e0b8' },
+  controls,
+  defaults,
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     const noise = makeNoise2D(1337)
     let pts: { x: number; y: number }[] = []

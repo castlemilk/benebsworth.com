@@ -25,10 +25,28 @@ export const createRenderer = (
   const cy = h / 2
   const R = Math.min(w, h) * 0.4
 
-  const HISTORY = 600
-  const pathX = new Float32Array(HISTORY)
-  const pathY = new Float32Array(HISTORY)
-  let head = 0
+  // Bilinear (Möbius) Smith transform: a normalized impedance z = re + j·im
+  // maps to the reflection coefficient Γ = (z − 1)/(z + 1), |Γ| ≤ 1.
+  const gamma = (re: number, im: number): [number, number] => {
+    const denRe = re + 1, denIm = im
+    const numRe = re - 1, numIm = im
+    const denMag2 = denRe * denRe + denIm * denIm
+    return [
+      (numRe * denRe + numIm * denIm) / denMag2,
+      (numIm * denRe - numRe * denIm) / denMag2,
+    ]
+  }
+
+  // Series-RLC normalized impedance z = r + j·x at a given f/fc, then the
+  // plotted reflection point for each chart mode. The admittance chart is
+  // the impedance chart rotated 180°: plot Γ for y = 1/z via (1 − y)/(1 + y),
+  // which is just −Γ(z).
+  const point = (fi: number, type: string): [number, number] => {
+    const r = 0.5
+    const x = 2 * Math.PI * fi * 0.5 - 1 / (2 * Math.PI * fi * 0.2)
+    const [gRe, gIm] = gamma(r, x)
+    return type === 'y' ? [-gRe, -gIm] : [gRe, gIm]
+  }
 
   let lastTime = 0
   let currentFreq = defaults.freq as number
@@ -43,52 +61,15 @@ export const createRenderer = (
 
       const f = currentFreq
 
-      // Series RLC: Z = R + j(XL - XC)
-      // For Smith chart: Γ = (Z - Z0)/(Z + Z0) with Z0 = 1
-      // Impedance Z normalized: z = r + jx
-      // Γ = (z - 1)/(z + 1)
-      // On Smith chart, real part circles and imaginary part arcs
+      // Series RLC: Z = R + j(XL - XC), normalized to Z0 = 1 so z = r + jx.
+      // The reflection coefficient is the bilinear transform Γ = (z - 1)/(z + 1)
+      // (see `gamma`/`point` above). The locus below is the static frequency
+      // sweep of that transform; the swept-point marker animates with `f`.
 
       const type = (params.type ?? defaults.type) as string
 
-      // Sweep through the frequency range for the trail
-      const _steps = 200
+      // Frequency range for the swept locus
       const fMin = 0.01, fMax = 3
-
-      for (let s = 0; s < 3; s++) {
-        const fi = fMin + ((head + s) % HISTORY) / HISTORY * (fMax - fMin)
-        const _fi2 = fi * fi
-
-        let re: number, im: number
-
-        if (type === 's11') {
-          // Reflection coefficient for series RLC
-          // Z = R + j(ωL - 1/ωC)  normalized to R0=1
-          const r = 0.5
-          const x = 2 * Math.PI * fi * 0.5 - 1 / (2 * Math.PI * fi * 0.2)
-          const denRe = r + 1, denIm = x
-          const numRe = r - 1, numIm = x
-          const denMag2 = denRe * denRe + denIm * denIm
-          re = (numRe * denRe + numIm * denIm) / denMag2
-          im = (numIm * denRe - numRe * denIm) / denMag2
-        } else if (type === 'z') {
-          // Impedance: z = r + jx for series RLC
-          const r = 0.5
-          const x = 2 * Math.PI * fi * 0.5 - 1 / (2 * Math.PI * fi * 0.2)
-          re = r / (1 + r)
-          im = x / (2 + x)
-        } else {
-          // Admittance: y = g + jb
-          const g = 1 / 0.5
-          const b = -1 / (2 * Math.PI * fi * 0.5 - 1 / (2 * Math.PI * fi * 0.2))
-          re = g / (1 + g)
-          im = b / (2 + b)
-        }
-
-        pathX[(head + s) % HISTORY] = re
-        pathY[(head + s) % HISTORY] = im
-      }
-      head = (head + 3) % HISTORY
 
       ctx.fillStyle = bg
       ctx.fillRect(0, 0, w, h)
@@ -110,6 +91,15 @@ export const createRenderer = (
       ctx.arc(cx, cy, R, 0, Math.PI * 2)
       ctx.stroke()
 
+      // Constant-R circles and constant-X arcs are full circles whose centres
+      // sit on (or beyond) the |Γ|=1 boundary, so most of each constant-X arc
+      // lies outside the chart. Clip to the unit disk so only the in-disk
+      // portion is drawn (and never bleeds over the title).
+      ctx.save()
+      ctx.beginPath()
+      ctx.arc(cx, cy, R, 0, Math.PI * 2)
+      ctx.clip()
+
       // Constant R circles (real part of Z)
       ctx.strokeStyle = '#1a2a3a'
       ctx.lineWidth = 1
@@ -117,7 +107,7 @@ export const createRenderer = (
         const rCenter = R * rVal / (1 + rVal)
         const rRadius = R / (1 + rVal)
         ctx.beginPath()
-        ctx.arc(cx + R * rCenter / R, cy, rRadius, 0, Math.PI * 2)
+        ctx.arc(cx + rCenter, cy, rRadius, 0, Math.PI * 2)
         ctx.stroke()
       }
 
@@ -129,6 +119,7 @@ export const createRenderer = (
         ctx.arc(cx, cy + xCenter, xRadius, 0, Math.PI * 2)
         ctx.stroke()
       }
+      ctx.restore()
 
       // Unit conductance circle (for admittance)
       ctx.setLineDash([3, 4])
@@ -160,61 +151,23 @@ export const createRenderer = (
       ctx.fillText('j', 0, 0)
       ctx.restore()
 
-      // Current point marker
-      let curRe: number, curIm: number
-      if (type === 's11') {
-        const r = 0.5
-        const x = 2 * Math.PI * f * 0.5 - 1 / (2 * Math.PI * f * 0.2)
-        const denMag2 = (r + 1) * (r + 1) + x * x
-        curRe = ((r - 1) * (r + 1) + x * x) / denMag2
-        curIm = (x * (r + 1) - (r - 1) * x) / denMag2
-      } else if (type === 'z') {
-        const r = 0.5, x = 2 * Math.PI * f * 0.5 - 1 / (2 * Math.PI * f * 0.2)
-        curRe = r / (1 + r); curIm = x / (2 + x)
-      } else {
-        const g = 1 / 0.5, b = -1 / (2 * Math.PI * f * 0.5 - 1 / (2 * Math.PI * f * 0.2))
-        curRe = g / (1 + g); curIm = b / (2 + b)
-      }
+      // Current swept point: the bilinear transform of z at the current f/fc.
+      const [curRe, curIm] = point(f, type)
 
-      // Frequency arc
-      ctx.strokeStyle = '#2a4a5a'
-      ctx.lineWidth = 1
-      ctx.setLineDash([2, 3])
+      // Static swept locus: the frequency sweep of Γ across fMin..fMax, drawn
+      // once per frame from the closed-form transform (no ring buffer — the
+      // animation lives in the swept-point marker below).
+      const SAMPLES = 200
+      ctx.strokeStyle = accent
+      ctx.lineWidth = 1.5
       ctx.beginPath()
-      for (let i = 0; i <= 100; i++) {
-        const fi = fMin + (i / 100) * (fMax - fMin)
-        const _fi2 = fi * fi
-        let re: number, im: number
-        if (type === 's11') {
-          const r = 0.5
-          const x = 2 * Math.PI * fi * 0.5 - 1 / (2 * Math.PI * fi * 0.2)
-          const denMag2 = (r + 1) * (r + 1) + x * x
-          re = ((r - 1) * (r + 1) + x * x) / denMag2
-          im = (x * (r + 1) - (r - 1) * x) / denMag2
-        } else {
-          re = 0.5; im = 0
-        }
+      for (let i = 0; i <= SAMPLES; i++) {
+        const fi = fMin + (i / SAMPLES) * (fMax - fMin)
+        const [re, im] = point(fi, type)
         const px = cx + re * R
         const py = cy - im * R
         if (i === 0) ctx.moveTo(px, py)
         else ctx.lineTo(px, py)
-      }
-      ctx.stroke()
-      ctx.setLineDash([])
-
-      // Path trail
-      ctx.strokeStyle = accent
-      ctx.lineWidth = 1.5
-      ctx.beginPath()
-      for (let i = 0; i < HISTORY; i++) {
-        const idx = (head + i) % HISTORY
-        const px = cx + pathX[idx] * R
-        const py = cy - pathY[idx] * R
-        if (i === 0) {
-          ctx.moveTo(px, py)
-        } else {
-          ctx.lineTo(px, py)
-        }
       }
       ctx.stroke()
 

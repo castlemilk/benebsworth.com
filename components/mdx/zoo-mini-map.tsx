@@ -48,13 +48,6 @@ type NodeXY = { x: number; y: number; r?: number; fill?: string; label?: string 
 type EdgeXY = { from: NodeXY; to: NodeXY }
 
 function buildFfnn(): { nodes: NodeXY[]; edges: EdgeXY[]; label: string } {
-  const dots = (xs: number[], colour: string) =>
-    xs.map((x) => ({ x, y: SH / 2, r: 3.5, fill: colour })) as NodeXY[]
-  const layers = [
-    [20, 50, 80, 100],
-    [40, 60, 80],
-    [50, 70, 90],
-  ]
   // Use 3 columns of 3 dots, all hidden colour. The "feed-forward" feel
   // is the dense edge mesh.
   const cols = [
@@ -64,7 +57,7 @@ function buildFfnn(): { nodes: NodeXY[]; edges: EdgeXY[]; label: string } {
   ]
   const nodes: NodeXY[] = []
   cols.forEach((c, ci) =>
-    c.ys.forEach((y, i) =>
+    c.ys.forEach((y, _) =>
       nodes.push({ x: c.x, y, r: 3, fill: ci === 0 ? COLOURS.input : ci === 2 ? COLOURS.output : COLOURS.hidden }),
     ),
   )
@@ -233,7 +226,7 @@ function buildTransformer(): { nodes: NodeXY[]; edges: EdgeXY[]; label: string }
   return { nodes, edges, label: 'Transformer' }
 }
 
-const BUILDERS: Record<Arch, () => any> = {
+const BUILDERS: Record<Arch, () => { nodes: NodeXY[]; edges: EdgeXY[]; label: string; recurvePath?: boolean; recurve?: { fromX: number; toX: number; y: number } }> = {
   ffnn: buildFfnn,
   rnn: buildRnn,
   lstm: buildLstm,

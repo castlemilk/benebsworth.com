@@ -1,0 +1,180 @@
+---
+title: 'Phase Portraits: See a Differential Equation Before You Solve It'
+date: '2026-06-17T00:00:00.000Z'
+description: >-
+  Most differential equations have no closed-form solution — we treat that as a
+  dead end. But the qualitative behaviour is fully visible in the vector field
+  before you solve anything. Poincare's trick: stop chasing solutions, draw the
+  flow.
+labels: 'mathematics,dynamical systems,differential equations'
+release: true
+author: Ben Ebsworth
+heroImage: /blog/phase-portraits-of-differential-equations/hero.webp
+markdown_url: /blog/phase-portraits-of-differential-equations/
+canonical_url: 'https://benebsworth.com/blog/phase-portraits-of-differential-equations/'
+---
+You can tell whether a system settles to rest, oscillates forever, or blows up to infinity *without solving its differential equation* — often more reliably than you could from the solution itself, if one even existed. The honest fact, the one rarely said out loud in a first calculus course, is that **most differential equations have no closed-form solution.** Write down a nonlinear ordinary differential equation (ODE) at random and the odds of a tidy formula in terms of $\sin$, $\exp$, and polynomials are essentially zero. We are trained to read that as a dead end — no formula, no answer.
+
+It is not a dead end. It is the wrong question. The fate of a system — does it come to rest, lock into a rhythm, or run away — is written into the equation's *vector field* before any solving happens. Henri Poincare saw this in the 1880s, drowning in the three-body problem, which famously has no closed-form solution. So he stopped chasing solutions and started drawing the **flow**: pin an arrow to every point in space telling a particle which way to move next, and the long-run behaviour becomes a question about the *shape* of that arrow field. Fixed points, limit cycles, basins of attraction — analysis turns into geometry.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+Watch the trajectories thread through the faint grid of arrows. The arrows *are* the equation: at each point they point in the direction the state moves next. The curves are just particles released into that field and carried along. Switch the **System** control from Lotka-Volterra to Van der Pol to Duffing and watch the qualitative character change completely — orbiting loops, a single attracting ring, a tangle around two wells. None of these systems has a clean closed-form solution. You are reading their behaviour straight off the geometry anyway.
+
+## The field, not the formula
+
+Start with the object itself. A planar autonomous system is a pair of first-order ODEs that fix the rate of change of two state variables purely in terms of where you currently are:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\dot{x} = f(x, y), \qquad \dot{y} = g(x, y)
+```
+
+$$
+\dot{x} = f(x, y), \qquad \dot{y} = g(x, y)
+$$
+
+The dot is $\mathrm{d}/\mathrm{d}t$. Read equation (1) not as "two equations to solve" but as an instruction: at the point $(x, y)$, the velocity of the state is the vector $(f, g)$. Do this at every point and you have painted a **vector field** across the plane — a fixed arrow everywhere, the flow. A solution is then nothing more than a curve that is everywhere tangent to its arrows: a particle dropped into the field and swept along. That curve is a *trajectory*, and the whole gallery of trajectories is the **phase portrait**.
+
+The shift in viewpoint is the entire game. The formula $x(t)$ — were you lucky enough to have one — tells you where one particle is at one time from one start. The phase portrait tells you the fate of *every* start at once, as a picture. And critically, you can draw the field directly from $f$ and $g$. No integration required. The arrows come for free; the curves are optional.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Pick any point in the plane. Equation (1) assigns it exactly one velocity vector — $f$ and $g$ are single-valued functions. So a particle there has exactly one direction to go. If two trajectories crossed, the crossing point would need two different futures, which the equation forbids. This "no crossing" rule (the uniqueness theorem for ODEs) is not a technicality. It is the structural constraint that makes everything below work — it is *why* a bounded 2D flow has so few options, and why escaping that constraint takes a third dimension.
+
+## Fixed points and what linearisation tells you
+
+The skeleton of any phase portrait is its **fixed points** — the places where $f(x, y) = 0$ *and* $g(x, y) = 0$ simultaneously. The velocity there is zero, so a particle placed exactly on one never moves: it is an equilibrium. Find these first. They are the rest states, the candidate "settling" points, and the organising centres around which all the trajectories arrange themselves.
+
+But knowing *where* the equilibria sit tells you nothing yet about *what they do*. Push a marble slightly off a fixed point — does it roll back (stable), roll away (unstable), or spiral? The answer lives in how the field behaves in an infinitesimal neighbourhood, and that is exactly what the derivative captures. Linearise: replace $f$ and $g$ near the fixed point with their best linear approximation, whose coefficients form the **Jacobian matrix**.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+J = \begin{pmatrix} \dfrac{\partial f}{\partial x} & \dfrac{\partial f}{\partial y} \\[1ex] \dfrac{\partial g}{\partial x} & \dfrac{\partial g}{\partial y} \end{pmatrix}
+```
+
+$$
+J = \begin{pmatrix} \dfrac{\partial f}{\partial x} & \dfrac{\partial f}{\partial y} \\[1ex] \dfrac{\partial g}{\partial x} & \dfrac{\partial g}{\partial y} \end{pmatrix}
+$$
+
+Evaluate $J$ at the fixed point and find its two eigenvalues $\lambda_1, \lambda_2$. Near the equilibrium the flow looks like $e^{\lambda t}$ along each eigenvector, so the eigenvalues' signs and imaginary parts read off the local picture directly — and the **Hartman-Grobman theorem** guarantees this linear sketch matches the true nonlinear flow near the point, as long as no eigenvalue sits exactly on the imaginary axis.
+
+The full classification is short enough to memorise:
+
+| Eigenvalues $\lambda_1, \lambda_2$ | Fixed point | Behaviour |
+|---|---|---|
+| Both real, same sign, $< 0$ | Stable node | Trajectories flow straight in |
+| Both real, same sign, $> 0$ | Unstable node | Trajectories flow straight out |
+| Real, opposite signs | Saddle | In along one axis, out along the other |
+| Complex, negative real part | Stable spiral | Spirals inward to rest |
+| Complex, positive real part | Unstable spiral | Spirals outward |
+| Pure imaginary (real part 0) | Centre | Closed orbits, neither in nor out |
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+You rarely need the eigenvalues themselves. For a $2 \times 2$ Jacobian, the eigenvalues are fixed by two numbers: the trace $\tau = \lambda_1 + \lambda_2$ and the determinant $\Delta = \lambda_1 \lambda_2$. The determinant's sign separates saddles ($\Delta < 0$) from everything else; the trace's sign separates stable ($\tau < 0$) from unstable; and the discriminant $\tau^2 - 4\Delta$ separates nodes (real eigenvalues) from spirals (complex). One plot of $\tau$ against $\Delta$ — the *trace-determinant plane* — classifies every possible planar fixed point at a glance. Geometry collapsing algebra again.
+
+This is the payoff of Poincare's shift. You found the equilibria by solving $f = g = 0$ (often easy — it is algebra, not calculus), you took derivatives to build $J$ (mechanical), and you read off two numbers. No solution to the ODE was ever required, yet you now know whether each rest state attracts, repels, or saddles the flow around it. The phase portrait's skeleton is fully drawn.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+The formula tells you where one particle goes; the vector field tells you the fate of every particle at once — and you can read it without solving anything.
+
+## Limit cycles: oscillation without a driver
+
+Fixed points are the *static* skeleton. The genuinely surprising structure in nonlinear systems is dynamic: the **limit cycle**, an isolated closed loop that nearby trajectories spiral *onto*. A system on a limit cycle oscillates forever with a fixed amplitude and period — and remarkably, it does so with no external clock, no periodic forcing, nothing pushing it. The oscillation is generated entirely from within. This is what a heartbeat is, what a firing neuron is, what a laser's output is.
+
+The cleanest example is the **Van der Pol oscillator**, born in the 1920s from Balthasar van der Pol's work on vacuum-tube circuits:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\ddot{x} - \mu(1 - x^2)\,\dot{x} + x = 0
+```
+
+$$
+\ddot{x} - \mu(1 - x^2)\,\dot{x} + x = 0
+$$
+
+Look at the damping term $-\mu(1 - x^2)\dot{x}$. When the amplitude is small ($|x| < 1$), the factor $1 - x^2$ is positive, so the term is *negative* damping — it pumps energy *in*, growing the oscillation. When the amplitude is large ($|x| > 1$), $1 - x^2$ goes negative, the damping turns positive, and energy bleeds *out*, shrinking the oscillation. The two effects fight to a draw at one particular amplitude. That self-balancing amplitude is the limit cycle. Start anywhere — a tiny nudge or a huge swing — and the system converges to the same ring.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+Set **System** to Van der Pol and watch the convergence. Trajectories starting near the centre spiral *outward*; trajectories starting far out spiral *inward*; both land on the same closed loop. That loop is the attractor. Now switch back to Lotka-Volterra and note the contrast: those orbits are *nested* closed curves — a continuum of them — because Lotka-Volterra has a *centre*, not a limit cycle. Nudge the predator-prey start and it simply sits on a *different* nested loop and stays there; nudge Van der Pol and it winds back onto *the* loop. Drag the **Speed** control up to make the winding-on happen faster. The difference between a centre and a limit cycle is the difference between an idealised frictionless world and a real self-sustaining oscillator.
+
+That distinction matters in practice. A centre is *structurally fragile* — the slightest perturbation to the equations turns it into a slow spiral, inward or outward. A limit cycle is *structurally robust* — perturb the equations and the loop wobbles but survives, still attracting. Real oscillators that keep ticking despite noise and component drift — pacemaker cells, electronic clocks, the predator-prey cycles that actually persist in ecosystems — are limit cycles, not centres. Robustness is why nature can build reliable rhythms out of messy parts.
+
+## Basins of attraction
+
+When a system has more than one stable destination — two stable fixed points, or a fixed point and a limit cycle — a new question appears: *which* one does a given start end up at? The set of all initial conditions that flow to a particular attractor is its **basin of attraction**. The plane gets carved into territories, one per attractor, and the borders between them are the **separatrices** — often the stable trajectories running into a saddle point, the knife-edges from which the flow tips one way or the other.
+
+The Duffing oscillator makes this vivid. Its potential has two wells, like a ball rolling in a double valley. In the damped, *unforced* version, the field has two stable resting points — one at the bottom of each well, at $x = \pm 1$ — separated by an unstable saddle at the central ridge. Release the ball with no drive and where you start decides which well it rolls into.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+Switch **System** to Duffing. The arrows trace the same double-well landscape — two attracting wells flanking a central saddle — but this widget runs the *driven* Duffing, with a small periodic forcing term added, so the trajectories never quite come to rest: they swing through the wells, some pinned near one side, others hopping the ridge between them. The dividing structure is still there in the field. The **separatrix** through the saddle does the same job as a watershed ridge, where rain falling a metre to the left runs to one ocean and a metre to the right runs to another. Lower the **Trails** value to keep the history visible longer and the two-well skeleton stands out more clearly.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+In tame 2D systems the separatrix is a smooth curve and the basins are clean territories. But raise the dimension or add forcing and basin boundaries can become *fractal* — infinitely intricate, so that arbitrarily close to any starting point lie initial conditions destined for *every* attractor. When that happens, predicting the destination from a finitely-precise initial measurement becomes impossible in exactly the sense of the [Lorenz post](/blog/lorenz-and-the-limits-of-prediction/): not because the system is random, but because the geometry of "which basin" is finer than any measurement. The phase portrait shows you this danger directly — you see the boundary thrashing — where a formula would hide it.
+
+## Why 2D is special, and 3D isn't
+
+There is a deep reason the *autonomous* planar systems above are all so well-behaved — Lotka-Volterra and Van der Pol each settle to a fixed point, a centre, or a limit cycle, and nothing more exotic. (The Duffing widget escapes the list precisely because its periodic drive makes it secretly three-dimensional, as we will see.) It is a theorem, and it is one of the most beautiful results in the subject.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\text{2D bounded} + \text{no fixed point} \;\Longrightarrow\; \text{limit cycle}
+```
+
+$$
+\text{2D bounded} + \text{no fixed point} \;\Longrightarrow\; \text{limit cycle}
+$$
+
+The **Poincare-Bendixson theorem** says: if a trajectory of a smooth planar system stays inside a bounded region forever and that region contains no fixed point, the trajectory must approach a closed orbit. That is the *entire* menu of long-run behaviour available in two dimensions. Settle to a point, or wind onto a cycle. Nothing else is allowed.
+
+The proof rests entirely on the no-crossing rule from the first callout. In the plane, a trajectory is a curve, and a non-self-intersecting curve that cannot escape a bounded box has only so much room — the Jordan curve theorem boxes it in, literally, until it has nowhere to go but a loop. The plane is simply too cramped for anything wilder. There is no room to be perpetually surprising.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Add one dimension and the cage springs open. In 3D, a trajectory can pass *over or under* itself without crossing — no violation of uniqueness, because the third coordinate differs at the apparent intersection. That extra room is exactly what lets a bounded, non-repeating, never-crossing trajectory exist: the **strange attractor**. Poincare-Bendixson is false in three dimensions, and chaos lives in the gap. This is not a vague analogy — it is *why* the Lorenz system needs three variables and not two, and why no *autonomous* continuous 2D flow can be chaotic. (The escape hatch is a third axis by any name: the forced Duffing above smuggled one in as the clock $\theta$ that drives its periodic term — a time-dependent 2D system is a 3D one in disguise.)
+
+That third dimension is where the phase-portrait viewpoint pays its largest dividend, because a 3D phase portrait is something you can still *draw* even when you cannot solve the equations at all.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+This is the same construction as every 2D portrait above, lifted into three dimensions. Each trajectory is a particle swept along the Lorenz vector field, never crossing itself, never escaping the butterfly — yet never settling and never repeating. With **Trajectories** set to 2, watch two starts a hair apart trace the same path, then split irreconcilably. In two dimensions Poincare-Bendixson would forbid this; the trajectories would have to settle or loop. The third dimension is the loophole, and the strange attractor is what fits through it. The full story of why this destroys predictability is the [Lorenz post](/blog/lorenz-and-the-limits-of-prediction/) — but the *picture* is just a phase portrait with one more axis.
+
+## The same geometry in other rooms
+
+Phase portraits are not a calculus-class abstraction. The reason the technique endures is that the same handful of shapes — node, saddle, spiral, centre, limit cycle, basin — keep reappearing in fields that share no vocabulary.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+**Predator-prey ecology.** The Lotka-Volterra system in the opening lab *is* the canonical population model: $x$ prey, $y$ predators, the closed orbits the boom-and-bust cycles ecologists read off the classic lynx-hare records. The phase portrait answers "will the populations cycle, coexist, or crash?" without ever solving for population-as-a-function-of-time — which has no elementary closed form anyway.
+
+**The heartbeat as a limit cycle.** A healthy heart's pacemaker cells are a biological Van der Pol oscillator: a self-sustaining limit cycle with no external driver, robust to perturbation. Cardiac arrhythmias are, in the phase-portrait language, the limit cycle losing stability or a competing attractor capturing the dynamics. Defibrillation is, geometrically, a kick large enough to knock the state out of a pathological basin and back into the healthy cycle's basin.
+
+**Control-system stability.** An engineer asking "is this feedback loop stable?" is asking whether the closed-loop system's fixed point is a stable node or spiral — whether the Jacobian's eigenvalues have negative real parts. The entire apparatus of [control theory](/blog/pll-from-first-principles/) — poles in the left half-plane, gain margins, the Routh-Hurwitz criterion — is the trace-determinant classification of equation (2), dressed in engineering clothes. Same eigenvalues, same geometry, different room.
+
+The thread tying these together is Poincare's original insight, now a century and a half old: when the formula is unavailable — and for nonlinear systems it almost always is — the geometry is still right there in the vector field, waiting to be read. You do not need the solution. You need the flow.
+
+## Reading further
+
+- [Strogatz, *Nonlinear Dynamics and Chaos*, chapters 5-8](https://www.stevenstrogatz.com/books/nonlinear-dynamics-and-chaos) — the standard modern text; chapters 5-8 build linear classification, phase portraits, limit cycles, and Poincare-Bendixson in exactly the order of this post, with the clearest geometric intuition in print.
+- [Poincare, *Sur les courbes definies par une equation differentielle* (1881-1886)](https://gallica.bnf.fr/ark:/12148/bpt6k107765r) — the original memoirs where Poincare invents the qualitative theory of differential equations: fixed points, the index, and the idea of studying flows instead of solutions.
+- [Hirsch, Smale & Devaney, *Differential Equations, Dynamical Systems, and an Introduction to Chaos*](https://www.elsevier.com/books/differential-equations-dynamical-systems-and-an-introduction-to-chaos/hirsch/978-0-12-382010-5) — the rigorous bridge from linear algebra (eigenvalues of $J$) to nonlinear flows and chaos; the canonical graduate-level treatment of the classification you read off equation (2).
+- [Lotka, *Elements of Physical Biology* (1925)](https://archive.org/details/elementsofphysic017171mbp) — the teaching case: the original predator-prey model that turns the abstract phase portrait into a concrete, measurable ecological cycle.

@@ -1,6 +1,5 @@
 'use client'
-import { Renderer, Program, Mesh, Triangle, Texture } from 'ogl'
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { useEffect, useImperativeHandle, useRef } from 'react'
 
 /** Imperative handle: the SVG word links drive this from their hover/focus. */
 export type WordBlobHandle = {
@@ -120,9 +119,9 @@ void main() {
 }
 `
 
-type Props = { width: number; height: number; className?: string }
+type Props = { width: number; height: number; className?: string; ref?: React.Ref<WordBlobHandle> }
 
-export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ width, height, className }, ref) {
+export function WordBlob({ width, height, className, ref }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const apiRef = useRef<WordBlobHandle | null>(null)
   // Latest size, read by the (run-once) init effect; resizing reuses the context.
@@ -144,107 +143,126 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
     if (!wrap || w0 < 2 || h0 < 2) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    // WebGL may be unavailable/blocked. Pure enhancement → bail silently on any
-    // init failure; the SVG words still work without the glow.
-    try {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, dpr })
-      const gl = renderer.gl
-      gl.clearColor(0, 0, 0, 0)
-      renderer.setSize(w0, h0)
+    let destroyed = false
+    let cleanup: (() => void) | null = null
 
-      const mask = new Texture(gl, { generateMipmaps: false, flipY: true })
-      const program = new Program(gl, {
-        vertex, fragment, transparent: true,
-        uniforms: {
-          uTime: { value: 0 },
-          uResolution: { value: [gl.canvas.width, gl.canvas.height] },
-          uAlpha: { value: 0 },
-          uColor: { value: [1, 1, 1] },
-          uShape: { value: 1 },
-          uMask: { value: mask },
-        },
-      })
-      program.setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA) // premultiplied
-      const meshObj = new Mesh(gl, { geometry: new Triangle(gl), program })
-      const canvas = gl.canvas as HTMLCanvasElement
-      canvas.style.display = 'block'
-      canvas.style.width = `${w0}px`
-      canvas.style.height = `${h0}px`
-      wrap.appendChild(canvas) // last GL step → on throw above, nothing is in the DOM
+    // Dynamic import: ogl (~146KB) is only fetched when the blob actually
+    // initialises, keeping it out of the initial page bundle entirely.
+    // Pre-check WebGL support so ogl's Renderer (which logs console.error
+    // on failure) never runs in headless/WebGL-blocked environments.
+    const testCanvas = document.createElement('canvas')
+    const testGl = testCanvas.getContext('webgl2') || testCanvas.getContext('webgl')
+    if (!testGl) return
 
-      let raf = 0
-      let cur = 0 // current (eased) alpha
-      let target = 0
+    import('ogl').then(({ Renderer, Program, Mesh, Triangle, Texture }) => {
+      if (destroyed) return
 
-      // A lost context (GPU reset, tab backgrounded) would otherwise throw on the
-      // next render and silently kill the blob. preventDefault lets it restore.
-      const onLost = (ev: Event) => { ev.preventDefault(); if (raf) { cancelAnimationFrame(raf); raf = 0 } }
-      const onRestored = () => { if (target !== 0 || cur > 0) { if (!raf) raf = requestAnimationFrame(loop) } }
-      canvas.addEventListener('webglcontextlost', onLost)
-      canvas.addEventListener('webglcontextrestored', onRestored)
+      // WebGL may be unavailable/blocked. Pure enhancement → bail silently on any
+      // init failure; the SVG words still work without the glow.
+      try {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2)
+        const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, dpr })
+        const gl = renderer.gl
+        gl.clearColor(0, 0, 0, 0)
+        renderer.setSize(w0, h0)
 
-      const paint = (timeMs: number) => {
-        program.uniforms.uTime.value = reduce ? 0 : timeMs * 0.001
-        program.uniforms.uAlpha.value = cur
-        renderer.render({ scene: meshObj })
+        const mask = new Texture(gl, { generateMipmaps: false, flipY: true })
+        const program = new Program(gl, {
+          vertex, fragment, transparent: true,
+          uniforms: {
+            uTime: { value: 0 },
+            uResolution: { value: [gl.canvas.width, gl.canvas.height] },
+            uAlpha: { value: 0 },
+            uColor: { value: [1, 1, 1] },
+            uShape: { value: 1 },
+            uMask: { value: mask },
+          },
+        })
+        program.setBlendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA) // premultiplied
+        const meshObj = new Mesh(gl, { geometry: new Triangle(gl), program })
+        const canvas = gl.canvas as HTMLCanvasElement
+        canvas.style.display = 'block'
+        canvas.style.width = `${w0}px`
+        canvas.style.height = `${h0}px`
+        wrap.appendChild(canvas) // last GL step → on throw above, nothing is in the DOM
+
+        let raf = 0
+        let cur = 0 // current (eased) alpha
+        let target = 0
+
+        // A lost context (GPU reset, tab backgrounded) would otherwise throw on the
+        // next render and silently kill the blob. preventDefault lets it restore.
+        const onLost = (ev: Event) => { ev.preventDefault(); if (raf) { cancelAnimationFrame(raf); raf = 0 } }
+        const onRestored = () => { if (target !== 0 || cur > 0) { if (!raf) raf = requestAnimationFrame(loop) } }
+        canvas.addEventListener('webglcontextlost', onLost)
+        canvas.addEventListener('webglcontextrestored', onRestored)
+
+        const paint = (timeMs: number) => {
+          program.uniforms.uTime.value = reduce ? 0 : timeMs * 0.001
+          program.uniforms.uAlpha.value = cur
+          renderer.render({ scene: meshObj })
+        }
+        const loop = (timeMs: number) => {
+          cur += 0.09 * (target - cur)
+          if (Math.abs(target - cur) < 0.004) cur = target
+          paint(timeMs)
+          if (target === 0 && cur === 0) { raf = 0; return } // park when fully out
+          raf = requestAnimationFrame(loop)
+        }
+        const ensure = () => { if (!raf) raf = requestAnimationFrame(loop) }
+
+        apiRef.current = {
+          setActive(maskCanvas, color, shape) {
+            mask.image = maskCanvas as unknown as HTMLImageElement
+            mask.needsUpdate = true
+            program.uniforms.uColor.value = color
+            program.uniforms.uShape.value = shape
+            target = 1
+            if (reduce) { cur = 1; paint(0); return }
+            ensure()
+          },
+          clear() {
+            target = 0
+            if (reduce) { cur = 0; paint(0); return }
+            ensure()
+          },
+        }
+
+        const onVis = () => {
+          if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
+          else if (target !== 0 || cur > 0) ensure()
+        }
+        document.addEventListener('visibilitychange', onVis)
+
+        // Resize reuses the context: just resize the framebuffer + update the
+        // resolution uniform, and re-render a frame if the blob is currently showing.
+        resizeRef.current = (w, h) => {
+          if (w < 2 || h < 2) return
+          renderer.setSize(w, h)
+          program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height]
+          canvas.style.width = `${w}px`
+          canvas.style.height = `${h}px`
+          if (target !== 0 || cur > 0) ensure()
+        }
+
+        cleanup = () => {
+          if (raf) cancelAnimationFrame(raf)
+          document.removeEventListener('visibilitychange', onVis)
+          canvas.removeEventListener('webglcontextlost', onLost)
+          canvas.removeEventListener('webglcontextrestored', onRestored)
+          apiRef.current = null
+          resizeRef.current = null
+          if (canvas.parentNode) canvas.parentNode.removeChild(canvas)
+          gl.getExtension('WEBGL_lose_context')?.loseContext()
+        }
+      } catch {
+        // WebGL unavailable/blocked — pure enhancement, words still work without the glow.
       }
-      const loop = (timeMs: number) => {
-        cur += 0.09 * (target - cur)
-        if (Math.abs(target - cur) < 0.004) cur = target
-        paint(timeMs)
-        if (target === 0 && cur === 0) { raf = 0; return } // park when fully out
-        raf = requestAnimationFrame(loop)
-      }
-      const ensure = () => { if (!raf) raf = requestAnimationFrame(loop) }
+    }).catch(() => {})
 
-      apiRef.current = {
-        setActive(maskCanvas, color, shape) {
-          mask.image = maskCanvas as unknown as HTMLImageElement
-          mask.needsUpdate = true
-          program.uniforms.uColor.value = color
-          program.uniforms.uShape.value = shape
-          target = 1
-          if (reduce) { cur = 1; paint(0); return }
-          ensure()
-        },
-        clear() {
-          target = 0
-          if (reduce) { cur = 0; paint(0); return }
-          ensure()
-        },
-      }
-
-      const onVis = () => {
-        if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
-        else if (target !== 0 || cur > 0) ensure()
-      }
-      document.addEventListener('visibilitychange', onVis)
-
-      // Resize reuses the context: just resize the framebuffer + update the
-      // resolution uniform, and re-render a frame if the blob is currently showing.
-      resizeRef.current = (w, h) => {
-        if (w < 2 || h < 2) return
-        renderer.setSize(w, h)
-        program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height]
-        canvas.style.width = `${w}px`
-        canvas.style.height = `${h}px`
-        if (target !== 0 || cur > 0) ensure()
-      }
-
-      return () => {
-        if (raf) cancelAnimationFrame(raf)
-        document.removeEventListener('visibilitychange', onVis)
-        canvas.removeEventListener('webglcontextlost', onLost)
-        canvas.removeEventListener('webglcontextrestored', onRestored)
-        apiRef.current = null
-        resizeRef.current = null
-        if (canvas.parentNode) canvas.parentNode.removeChild(canvas)
-        gl.getExtension('WEBGL_lose_context')?.loseContext()
-      }
-    } catch (e) {
-      console.warn('[word-blob] WebGL init failed; words render without the glow', e)
-      return
+    return () => {
+      destroyed = true
+      cleanup?.()
     }
     // Init once — resizing is handled by the effect below, not by re-running this.
   }, [])
@@ -253,4 +271,4 @@ export const WordBlob = forwardRef<WordBlobHandle, Props>(function WordBlob({ wi
   useEffect(() => { resizeRef.current?.(width, height) }, [width, height])
 
   return <div ref={wrapRef} className={className} aria-hidden style={{ pointerEvents: 'none' }} />
-})
+}

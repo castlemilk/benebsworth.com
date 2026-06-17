@@ -1,56 +1,56 @@
 import type { MDXComponents } from 'mdx/types'
-import { IngressFlowBasic, EgressFlowBasic, EgressFlowAdvanced } from './istio-flows'
+import { Callout } from '@/components/ui/callout'
+import { Equation } from './equation'
+import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
 import {
+  IngressFlowBasic,
+  EgressFlowBasic,
+  EgressFlowAdvanced,
   FfnnFlow,
   RnnFlow,
   LstmFlow,
   VaeFlow,
   GanFlow,
   TransformerFlow,
-} from './neural-graphs'
-import { LabCanvas, LabSide } from './lab-canvas'
-import { ColorLegend } from './color-legend'
-import { ZooMiniMap } from './zoo-mini-map'
-import { Callout } from '@/components/ui/callout'
-import { Equation } from './equation'
-import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
-import { PllDiagram } from './pll-diagram'
+  LabCanvas,
+  LabSide,
+  ColorLegend,
+  ZooMiniMap,
+  PllDiagram,
+  AttentionHeatmap,
+  SoftmaxLab,
+  TokenSampler,
+  MoEBlock,
+  HashTableDemo,
+  StorageEngineSim,
+} from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
-  // Editorial layout components (inspired by shorted newsroom)
   StatGroup,
   Stat,
   PullQuote,
   Figure,
   PllDiagram,
-  // Interactive Istio flow diagrams (used by the istio-patterns post).
+  AttentionHeatmap,
+  SoftmaxLab,
+  TokenSampler,
+  MoEBlock,
+  HashTableDemo,
+  StorageEngineSim,
   IngressFlowBasic,
   EgressFlowBasic,
   EgressFlowAdvanced,
-  // Interactive neural-network architecture graphs (used by the
-  // neural-network-zoo-explained post). Each renders an SVG with animated
-  // data-flow particles driven by a tiny per-architecture forward pass.
   FfnnFlow,
   RnnFlow,
   LstmFlow,
   VaeFlow,
   GanFlow,
   TransformerFlow,
-  // Inline lab canvas — renders any registered effect inside an MDX article.
   LabCanvas,
-  // Side-by-side: text + interactive canvas.
   LabSide,
-  // Colour-legend block for the neural network zoo post.
   ColorLegend,
-  // Clickable mini-map of the neural network zoo, used at the top of the
-  // neural-network-zoo-explained post as a navigation index.
   ZooMiniMap,
-  // Styled info-block with type-coded accent (info / warning / thinking /
-  // feeling / doing / success / error). Used to highlight insights,
-  // contrasts, and gotchas without breaking the prose flow.
   Callout,
-  // Labeled display-math block with a number, optional caption, and stable
-  // id for cross-references. See components/mdx/equation.tsx.
   Equation,
   h2: (p) => <h2 className="font-display mt-12 scroll-mt-32 text-[clamp(1.85rem,1.35rem+2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-fg" {...p} />,
   h3: (p) => <h3 className="font-display mt-8 scroll-mt-32 text-[clamp(1.3rem,1.1rem+0.75vw,1.65rem)] font-semibold leading-[1.25] tracking-[-0.015em] text-fg" {...p} />,
@@ -58,9 +58,6 @@ export const mdxComponents: MDXComponents = {
   a: (p) => <a className="text-project underline underline-offset-4 decoration-project/40 transition-colors hover:decoration-project" {...p} />,
   ul: (p) => <ul className="font-sans mt-4 list-disc space-y-1.5 pl-6 leading-[1.7] text-fg/85" {...p} />,
   code: (p) => <code className="font-mono rounded bg-white/5 px-1.5 py-0.5 text-[0.85em]" {...p} />,
-  // Looping demo video — replaces heavy autoplaying GIFs (≈90% smaller as H.264).
-  // width/height set the aspect ratio so space is reserved (no CLS); src is an
-  // absolute /blog/<slug>/<file>.mp4 path (component props skip image rewriting).
   Video: (p: { src?: string; width?: number; height?: number; alt?: string }) => (
     <video
       src={p.src}
@@ -76,9 +73,6 @@ export const mdxComponents: MDXComponents = {
       style={p.width && p.height ? { aspectRatio: `${p.width} / ${p.height}` } : undefined}
     />
   ),
-  // Repo link card. Replaces the legacy Gatsby <github-link> embed (kebab-case
-  // custom tags aren't mapped by the MDX pipeline, so the post now uses
-  // <GithubLink url="..."/>). Renders a styled "view on GitHub" card.
   GithubLink: (p: { url?: string }) => {
     const href = p.url ?? ''
     const repo = href.replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '')

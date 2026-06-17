@@ -26,6 +26,12 @@ const ACCENT = {
   teal: '#00e0b8',
   purple: '#7c5cff',
   orange: '#ff7a59',
+  // Science-desk accents (the deep-dive essays): distinct, mid-luminance hues
+  // that read on both light and dark backgrounds.
+  blue: '#4c9be8', // mathematics
+  violet: '#b16cea', // physics
+  green: '#34d399', // software / computer science
+  amber: '#f5a623', // electrical engineering / signals
 } as const
 
 const TOPIC = {
@@ -39,18 +45,22 @@ const TOPIC = {
   algorithms: { icon: '/topics/technology.png', label: 'Algorithms', accent: ACCENT.orange },
   general: { icon: '/topics/technology.png', label: 'Field Notes', accent: ACCENT.orange },
   technology: { icon: '/topics/technology.png', label: 'Engineering', accent: ACCENT.teal },
+  // Science desks
+  maths: { icon: '/topics/technology.png', label: 'Mathematics', accent: ACCENT.blue },
+  physics: { icon: '/topics/technology.png', label: 'Physics', accent: ACCENT.violet },
+  software: { icon: '/topics/technology.png', label: 'Software', accent: ACCENT.green },
+  ee: { icon: '/topics/technology.png', label: 'Electrical Eng', accent: ACCENT.amber },
 } satisfies Record<string, Topic>
+
+export { TOPIC }
 
 /** Explicit, hand-curated per-slug overrides — the source of truth. */
 const BY_SLUG: Record<string, Topic> = {
   'istio-patterns': TOPIC.istio,
-  'debugging-istio': TOPIC.istio,
-  'managing-istio': TOPIC.istio,
   'kubernetes-cicd-part-1': TOPIC.kubernetes,
   'kubernetes-cicd-part-2': TOPIC.kubernetes,
   'kubernetes-cicd-part-3': TOPIC.kubernetes,
   'getting-started-with-tekton': TOPIC.tekton,
-  'tekton-pipelines': TOPIC.tekton,
   'kustomize-examples': TOPIC.kustomize,
   'using-helm': TOPIC.kubernetes,
   'using-kapitan': TOPIC.kubernetes,
@@ -61,6 +71,21 @@ const BY_SLUG: Record<string, Topic> = {
   'binary-search-tree': TOPIC.algorithms,
   'two-number-sum': TOPIC.algorithms,
   'hello-world': TOPIC.general,
+  // Science deep-dives
+  'lorenz-and-the-limits-of-prediction': TOPIC.maths,
+  'phase-portraits-of-differential-equations': TOPIC.maths,
+  'every-wave-is-a-circle': TOPIC.maths,
+  'every-qubit-gate-is-a-rotation': TOPIC.physics,
+  'band-gaps-are-bragg-reflection': TOPIC.physics,
+  'normal-modes-to-chaos': TOPIC.physics,
+  'a-star-search-visually': TOPIC.software,
+  'how-python-dicts-really-work': TOPIC.software,
+  'b-trees-vs-lsm-trees': TOPIC.software,
+  'every-wire-is-an-rlc-circuit': TOPIC.ee,
+  'am-fm-qam-the-modulation-zoo': TOPIC.ee,
+  'software-defined-radio-in-100-lines': TOPIC.ee,
+  'smith-chart-is-geometry': TOPIC.ee,
+  'pll-from-first-principles': TOPIC.ee,
 }
 
 /**

@@ -1,17 +1,21 @@
-import type { EffectModule } from '@/lib/lab/types'
+import type { ControlSpec, EffectModule, Params } from '@/lib/lab/types'
 
 const MAX_SOURCES = 4
 
+export const controls: ControlSpec[] = [
+  { key: 'gap', label: 'Dot spacing', type: 'range', min: 12, max: 48, step: 2 },
+  { key: 'amp', label: 'Amplitude', type: 'range', min: 1, max: 8, step: 0.5 },
+  { key: 'freq', label: 'Frequency', type: 'range', min: 0.005, max: 0.06, step: 0.005 },
+  { key: 'speed', label: 'Speed', type: 'range', min: 0.2, max: 3, step: 0.1 },
+  { key: 'sources', label: 'Sources', type: 'range', min: 1, max: 4, step: 1 },
+  { key: 'color', label: 'Color', type: 'color' },
+]
+
+export const defaults: Params = { gap: 24, amp: 4, freq: 0.02, speed: 1, sources: 2, color: '#00e0b8' }
+
 export const rippleGrid: EffectModule = {
-  controls: [
-    { key: 'gap', label: 'Dot spacing', type: 'range', min: 12, max: 48, step: 2 },
-    { key: 'amp', label: 'Amplitude', type: 'range', min: 1, max: 8, step: 0.5 },
-    { key: 'freq', label: 'Frequency', type: 'range', min: 0.005, max: 0.06, step: 0.005 },
-    { key: 'speed', label: 'Speed', type: 'range', min: 0.2, max: 3, step: 0.1 },
-    { key: 'sources', label: 'Sources', type: 'range', min: 1, max: 4, step: 1 },
-    { key: 'color', label: 'Color', type: 'color' },
-  ],
-  defaults: { gap: 24, amp: 4, freq: 0.02, speed: 1, sources: 2, color: '#00e0b8' },
+  controls,
+  defaults,
   createRenderer(ctx, dims, _theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     void _theme // clears to transparent; accent dots read on both the light and dark stage
     // Preallocate source positions; mutated in place each frame (allocation-free step).

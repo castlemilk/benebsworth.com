@@ -27,7 +27,7 @@ The power map takes the ray at angle θ to the ray at angle `nθ`, and stretches
 
 </LabSide>
 
-<LabSide effect="conformal-grid" height={280} params={{ map: "exp", density: 10 }} caption="The exponential map. Horizontal lines become rays; vertical lines become circles. Strips of height 2π tile the entire plane.">
+<LabSide effect="conformal-grid" height={280} params={{ map: "exponential", density: 10 }} caption="The exponential map. Horizontal lines become rays; vertical lines become circles. Strips of height 2π tile the entire plane.">
 
 ### The exponential map: z → eᶻ
 
@@ -39,17 +39,29 @@ The exponential map turns horizontal lines (constant y) into rays from the origi
 
 </LabSide>
 
-### The Möbius transformation
+### The Joukowski map: z → z + 1/z
 
 ```
-w = (az + b) / (cz + d)
+w = z + 1/z
 ```
 
-Möbius transformations map circles to circles (including lines as circles through infinity). They are the "rigid motions" of the Riemann sphere — the most general conformal automorphisms of the extended complex plane. Every Möbius map is a composition of translations, rotations, dilations, and inversions.
+Pick **Joukowski** in the playground and a circle offset from the origin maps to a smooth airfoil — the classic teardrop wing profile that made early aerodynamics tractable. Lines and circles in z-space bend into the wing's contour while every crossing stays perpendicular.
+
+### Inversion: z → 1/z
+
+```
+w = 1/z
+```
+
+Pick **Inversion** and the grid turns inside-out: points near the origin fly outward, the far field collapses inward, and straight lines that miss the origin become circles through it. It's the simplest map that swaps "near" and "far."
+
+Inversion is the simplest **Möbius transformation** `(az + b)/(cz + d)` — the family that maps circles to circles (straight lines counting as circles through infinity). Joukowski is built from it: `z + 1/z` is an inversion bolted onto the identity.
 
 ## Where angles break down
 
 Conformality fails at **critical points** where `f'(z) = 0`. For `z²`, the origin doubles all angles — two crossing curves that meet at 90° in z-space meet at 180° in w-space. This is the same mechanism as branch points in multivalued functions.
+
+Head back up to the playground and switch the **Map** dropdown between Power, Inversion, Joukowski, and Exponential. Watch how wildly the same rectangular grid bends from one map to the next — yet every intersection stays a perfect right angle. That invariance *is* conformality.
 
 ## Further reading
 

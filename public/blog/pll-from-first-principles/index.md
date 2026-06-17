@@ -7,12 +7,13 @@ description: >-
   durable than the textbook derivations.
 labels: 'technology,algorithms,physics,electrical engineering,signal processing'
 release: true
+heroImage: /blog/pll-from-first-principles/hero.webp
 markdown_url: /blog/pll-from-first-principles/
 canonical_url: 'https://benebsworth.com/blog/pll-from-first-principles/'
 ---
 A **phase-locked loop** is one of those circuits that shows up everywhere and is rarely understood deeply. The 1970s TV tuner. The 1990s modem. The 2010s radio base station. The 2020s clock-data-recovery circuit on a serialiser. In every case, the same three blocks: a phase detector, a loop filter, a voltage-controlled oscillator. The output is a clean synthesised frequency that tracks a noisy input.
 
-> [LabSide component] Component `LabSide` — see the rendered post.
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
 
 The lab above is the canonical picture of a PLL in action. The reference is **chirped** — its frequency rises linearly with time, modelling a Doppler-shifted signal or a frequency-hopping transmitter. The PLL is locked at low chirp rates, slips a cycle as the chirp rate exceeds the loop bandwidth, and goes out of lock entirely beyond a critical chirp slope. The PI filter gives a wider lock range than a pure P filter, at the cost of slower convergence.
 
@@ -26,17 +27,48 @@ A PLL is a feedback control system whose **process variable is the phase differe
 
 The three blocks of a PLL map onto the canonical feedback loop:
 
-```
-   ┌─────────┐         ┌──────────┐         ┌──────────┐
-   │         │         │          │         │          │
-   │  Phase  │  u_d(t) │   Loop   │  u_c(t) │   VCO    │  y(t)
- ──┤ detector├─────────▶│  filter  ├────────▶│  (NCO)   ├──────▶
-   │    ⊕    │         │          │         │          │
-   │         │         │          │         │          │
-   └────▲────┘         └──────────┘         └────┬─────┘
-        │                                         │
-        │           r(t)                          │
-        └─────────────────────────────────────────┘
+# DIAGRAM: Phase-Locked Loop
+> Negative feedback continuously minimizes phase error Δθ
+
+## Nodes
+- **[in]** F_REF - (θ_REF) (Type: frontend)
+- **[pd]** PD (Type: backend)
+- **[cp]** Kd - CP (Type: backend)
+- **[lf]** Z(s) - Loop Filter (Type: backend)
+- **[vco]** Kv / s - VCO (Type: backend)
+- **[out]** F_O - (θ_O) (Type: frontend)
+- **[div]** 1 / N - Feedback Divider (Type: backend)
+
+## Flow
+[in] --[+]--> [pd]
+[pd] --[e(s)]--> [cp]
+[cp] ----> [lf]
+[lf] ----> [vco]
+[vco] ----> [out]
+[vco] ----> [div]
+[div] --[-]--> [pd]
+
+## Highlighted Journeys
+- Journey 1: in -> pd -> cp -> lf -> vco -> out
+- Journey 2: vco -> div -> pd
+
+## Mermaid Representation
+```mermaid
+flowchart LR
+    in["F_REF<br/>(θ_REF)"]
+    pd["PD"]
+    cp["Kd<br/>CP"]
+    lf["Z(s)<br/>Loop Filter"]
+    vco["Kv / s<br/>VCO"]
+    out["F_O<br/>(θ_O)"]
+    div["1 / N<br/>Feedback Divider"]
+    in -- "+" --> pd
+    pd -- "e(s)" --> cp
+    cp --> lf
+    lf --> vco
+    vco --> out
+    vco --> div
+    div -- "-" --> pd
 ```
 
 The phase detector is a **subtractor** that compares the reference phase to the VCO phase. The loop filter is a **controller** with proportional and integral terms. The VCO is the **plant** — its frequency is proportional to the control voltage, so its phase is the integral of the control voltage.
@@ -100,39 +132,39 @@ $$
 \phi_\text{vco} = \int \omega_\text{vco}\, dt = \omega_0 t + K_\text{vco} \int u_c\, dt
 $$
 
-In Laplace notation, the VCO is a pure integrator with gain K_vco/s. This is the plant. The phase detector measures `φ_ref − φ_vco`, the loop filter amplifies and integrates the result, and the VCO integrates again to produce its phase.
+In Laplace notation, the VCO is a pure integrator with gain $K_\text{vco}/s$. This is the plant. The phase detector measures $\phi_\text{ref} - \phi_\text{vco}$, the loop filter amplifies and integrates the result, and the VCO integrates again to produce its phase.
 
 A first-order PLL (no loop filter, just a gain $K$) is a **second-order system** with one integrator in the controller-free path (the VCO) and another from the phase detector's transfer. The closed-loop transfer function is:
 
 > [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
 
 ```latex
-H(s) = \frac{K \cdot K_\text{vco}}{s^2 + K \cdot K_\text{vco}}
+H(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}, \qquad \omega_n^2 = K \cdot K_\text{vco}
 ```
 
 $$
-H(s) = \frac{K \cdot K_\text{vco}}{s^2 + K \cdot K_\text{vco}}
+H(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}, \qquad \omega_n^2 = K \cdot K_\text{vco}
 $$
 
-That is a **critically damped second-order system** with natural frequency $\omega_n = \sqrt{K \cdot K_\text{vco}}$ and damping ratio $\zeta = 0.5$. Underdamped, just barely. A textbook result that surprises nobody who has tuned a control loop.
+That is a **second-order system** with natural frequency $\omega_n = \sqrt{K \cdot K_\text{vco}}$. With realistic loop-filter damping the ratio lands around $\zeta = 0.5$. Underdamped, just barely. A textbook result that surprises nobody who has tuned a control loop.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-The VCO's transfer function `K_vco / s` is a pure integrator. Its Bode plot is a constant gain at low frequency rolling off at −20 dB/decade, with a phase of −90° at all frequencies. Multiply by a proportional loop filter K and you have the open-loop transfer function `K · K_vco / s` — the same shape as a Type-1 control system.
+The VCO's transfer function $K_\text{vco}/s$ is a pure integrator. Its Bode plot is a constant gain at low frequency rolling off at −20 dB/decade, with a phase of −90° at all frequencies. Multiply by a proportional loop filter $K$ and you have the open-loop transfer function $K \cdot K_\text{vco}/s$ — the same shape as a Type-1 control system.
 
-Adding an integrator in the loop filter (the I in PI) gives `K · (1 + 1/(τ s)) · K_vco / s` — a Type-2 system. Zero steady-state phase error, but at the cost of phase margin.
+Adding an integrator in the loop filter (the I in PI) gives $K \cdot (1 + 1/(\tau s)) \cdot K_\text{vco}/s$ — a Type-2 system. Zero steady-state phase error, but at the cost of phase margin.
 
 ## The loop filter: a P, PI, or PID, by another name
 
 The lab exposes the loop filter as a dropdown. The three options map directly onto the three controllers you already know:
 
 - **P (proportional)**: $F(s) = K_p$. The simplest possible loop. Phase error in steady state is $\Delta\omega / (K_p \cdot K_\text{vco})$ — non-zero if the reference frequency is offset.
-- **PI (proportional + integral)**: $F(s) = K_p + K_i / s$. The integral term drives the steady-state phase error to zero. This is the **workhorse** — used in 90% of PLLs.
+- **PI (proportional + integral)**: $F(s) = K_p + K_i / s$. The integral term drives the steady-state phase error to zero. This is the **workhorse** — used in the overwhelming majority of PLLs.
 - **PID (with derivative)**: $F(s) = K_p + K_i / s + K_d s$. The derivative term extends the loop bandwidth but amplifies phase-detector noise. Rare in practice for PLLs because the phase detector's noise is already a problem.
 
 The textbook design problem — "given a reference frequency accuracy, a noise floor, and a settling time requirement, choose K_p, K_i, K_d" — is identical to the textbook PID design problem. The same Bode-stability methods, the same trade-off between bandwidth and noise, the same instability when you push the gain too high.
 
-> [LabSide component] Component `LabSide` — see the rendered post.
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
 
 The Bode plot above is the textbook way to design the loop. The **0 dB crossing** of the open-loop gain sets the loop bandwidth. Wider bandwidth means faster tracking of frequency changes (and reference noise). Narrower means better rejection of VCO phase noise and reference spurs.
 
@@ -145,6 +177,18 @@ Three concepts in PLL design, often confused:
 - **Lock range** — the range of frequencies the PLL can hold lock on, given that it is *already* locked. Set by the loop's linear range.
 - **Capture range** — the range of frequencies the PLL can acquire lock on, starting from *unlocked*. Smaller than the lock range; limited by the loop filter's bandwidth.
 - **Pull-in range** — the range from which the PLL will eventually acquire lock, after a slow transient. Larger than the capture range; set by the loop filter's natural frequency.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
 
 The relationships between these three define what the PLL can do in practice. A PLL with a first-order loop filter has all three ranges equal — a degenerate case. A second-order PLL (with PI filter) has capture range < lock range, because the filter's pole at the origin creates a low-pass behaviour during acquisition. A third-order loop (with a narrow filter at high frequency) can have a very wide lock range but a very narrow capture range.
 
@@ -166,9 +210,13 @@ The PLL lab at the top of this post is a sandbox for the dynamics described abov
 
 The same three experiments on a real PLL would take a soldering iron and an afternoon. The lab collapses them into a few clicks.
 
-> [LabSide component] Interactive component `LabSide` — see the rendered post.
+> [LabCanvas component] Inline interactive lab canvas. Embeds any effect registered in `lib/lab/registry.ts` (referenced by its `effect` slug) as a live Canvas2D/WebGL visualisation, with the effect's own controls rendered below unless `controls={false}`. Optional `params` override the effect's defaults and `caption` adds a figcaption. The rendered post has the live, interactive version; this is a static placeholder for the markdown-only sibling — read the matching lab explainer under `/lab/<slug>/` for the full description of what the effect shows.
 
-The PID lab above is the controls-engineering twin of the PLL lab. **Same plant, same controller topology, same dynamics.** A PLL is a phase-domain PID controller, a PID is a current-domain PID controller. The mathematics, the design heuristics, the failure modes — they map 1:1.
+The PID lab above is the controls-engineering twin of the PLL lab. **Same plant, same controller topology, same dynamics.**
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+A PLL is a phase-domain PID controller; a motor drive is a speed-domain PID controller. The mathematics, the design heuristics, the failure modes — they map 1:1.
 
 This is not a coincidence. The control system is a *pattern*, and the PLL is one of its many instantiations. Once you have the pattern, you can recognise it everywhere.
 
@@ -176,7 +224,7 @@ This is not a coincidence. The control system is a *pattern*, and the PLL is one
 
 The PLL is the **canonical example** of a feedback control system operating on a non-electrical variable. A PID controller regulates a motor speed. A PLL regulates a phase. The pattern is the same; the application is different.
 
-The lab at the top is a working sketchpad for that pattern. Drag the controls, watch the dynamics, observe the regimes (locked, slipping, unlocked) emerge from the same equations. The lab above the "Bode plot" section is the controls lab — the same Bode plot, the same design rules, a different physical system. The same loop, twice.
+The lab at the top is a working sketchpad for that pattern. Drag the controls, watch the dynamics, observe the regimes (locked, slipping, unlocked) emerge from the same equations. The PID lab in "The lab: what to look for" is the controls lab — the same Bode plot (from "The loop filter: a P, PI, or PID, by another name"), the same design rules, a different physical system. The same loop, twice.
 
 The two labs are the most direct demonstration of the *transfer function as a unifying concept* in modern engineering: once you can read a Bode plot, you can design a PLL, a PID, a state-space observer, a Kalman filter. The transfer function is the language. The labs are the conversation.
 

@@ -1,0 +1,182 @@
+---
+title: Every Qubit Gate Is a Rotation
+date: '2026-06-17T00:00:00.000Z'
+description: >-
+  Quantum computing is taught as alien linear algebra. On the Bloch sphere it
+  collapses to one homely fact: a qubit is an arrow on a ball, and every
+  operation you can do to it is a rotation of that arrow.
+labels: 'physics,quantum,quantum computing'
+release: true
+author: Ben Ebsworth
+heroImage: /blog/every-qubit-gate-is-a-rotation/hero.webp
+markdown_url: /blog/every-qubit-gate-is-a-rotation/
+canonical_url: 'https://benebsworth.com/blog/every-qubit-gate-is-a-rotation/'
+---
+Quantum computing arrives wrapped in intimidating vocabulary: complex amplitudes, unitary matrices, Hilbert spaces, superposition, entanglement. The textbook hands you a $2 \times 2$ matrix of complex numbers, tells you it is a "gate", and asks you to multiply. It feels like a different kind of mathematics — one that doesn't connect to anything you already know.
+
+It isn't. For a single qubit, the whole machine collapses to one homely fact: **a qubit state is an arrow pointing out from the center of a ball, and every operation you can perform on it is a rotation of that arrow.** A gate is an axis and an angle. Decoherence is the arrow slowly sinking off the surface toward the center. "Measurement collapse" is the arrow snapping to a pole. None of this needs new intuition — your hands already know how to turn a ball.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+Watch the purple arrow before you read another bra or ket. It doesn't jump around or do anything spooky. It precesses — it traces a tidy circle around the yellow axis, exactly the way a tilted spinning top traces a circle around vertical. The yellow vector is the field; it sets the rotation axis. The state just turns around it.
+
+Move the **Field θ** slider and the axis tilts; the circle the arrow traces tilts with it. Crank **Coupling** and the arrow goes around faster. Everything you will read below is already on the screen — a ball, an axis, and an arrow rotating.
+
+## The arrow on the ball
+
+A single qubit's state is a unit vector $|\psi\rangle = \alpha|0\rangle + \beta|1\rangle$ with complex amplitudes satisfying $|\alpha|^2 + |\beta|^2 = 1$. That is four real numbers ($\alpha$ and $\beta$ each have a real and imaginary part) tied down by one constraint, leaving three. Strip one more — and we are about to see why you can — and you have two. Two real numbers parametrize a sphere, so the qubit's state is a point on a sphere, and we draw the arrow from the center to that point.
+
+The standard parametrization writes the two leftover numbers as a polar angle $\theta$ and an azimuthal angle $\varphi$:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+|\psi\rangle = \cos\frac{\theta}{2}\,|0\rangle + e^{i\varphi}\sin\frac{\theta}{2}\,|1\rangle
+```
+
+$$
+|\psi\rangle = \cos\frac{\theta}{2}\,|0\rangle + e^{i\varphi}\sin\frac{\theta}{2}\,|1\rangle
+$$
+
+The half-angle $\theta/2$ is the tell that something geometric is going on, and we will pay it off at the very end. For now read it directly: $\theta = 0$ gives $|\psi\rangle = |0\rangle$ (the north pole), $\theta = \pi$ gives $|1\rangle$ (the south pole), and $\theta = \pi/2$ puts you on the equator in an equal superposition whose phase $\varphi$ sets which point on the equator. The arrow's tip in ordinary 3D space — the **Bloch vector** — has Cartesian coordinates you can read straight off:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\vec{r} = (\sin\theta\cos\varphi,\ \sin\theta\sin\varphi,\ \cos\theta)
+```
+
+$$
+\vec{r} = (\sin\theta\cos\varphi,\ \sin\theta\sin\varphi,\ \cos\theta)
+$$
+
+That is the green-and-red labelled ball in the lab. North pole $|0\rangle$, south pole $|1\rangle$, the equator full of equal superpositions, and the arrow's latitude telling you how much $|0\rangle$ versus $|1\rangle$ is in the mix.
+
+## Why two real numbers capture a complex 2-vector
+
+Four real degrees of freedom, minus one for normalization, leaves three — but the sphere only has two. Where did the third go?
+
+It went to **global phase**. Multiply the whole state by $e^{i\gamma}$ and nothing measurable changes — every probability and every experimental outcome is identical for $|\psi\rangle$ and $e^{i\gamma}|\psi\rangle$. The overall phase is unobservable, so you are free to spend it rotating $\alpha$ to be real and non-negative. That is exactly what equation (1) does: $\cos(\theta/2)$ is real, and the only surviving phase $e^{i\varphi}$ sits on the $|1\rangle$ amplitude, where it is a *relative* phase you actually can measure.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The third degree of freedom isn't missing — it's invisible. A qubit state is not a point in $\mathbb{C}^2$; it's a point in $\mathbb{C}^2$ with the global phase quotiented out (the mathematician's name is "complex projective line", $\mathbb{CP}^1$). Quotient out the unobservable phase and the four real numbers collapse to two, and two real numbers is precisely a sphere.
+
+This is why "a qubit holds infinite information" is a myth worth killing early: the continuum of points on the surface looks like a lot, but you can only ever extract one bit by measuring, and the no-cloning theorem stops you copying the state to measure it twice.
+
+So the sphere is not an approximation or a cartoon. It is the *exact* space of distinct single-qubit states, with the redundant phase already divided out. Every honest question about one qubit is a question about an arrow on this ball.
+
+## States are points, gates are rotations
+
+Here is the payoff. A quantum gate is a unitary operator $U$ — a complex matrix with $U^\dagger U = I$ that preserves the length of the state vector. "Preserves length" is the same constraint a rotation obeys: it keeps the arrow on the surface of the ball. Every single-qubit unitary, stripped of its irrelevant global phase, is *literally* a rotation of the Bloch vector — no exceptions.
+
+The cleanest way to write it uses the **Pauli matrices** $\sigma_x, \sigma_y, \sigma_z$, three $2 \times 2$ matrices that generate rotation about the $x$, $y$, $z$ axes. Bundle them into a vector $\vec{\sigma} = (\sigma_x, \sigma_y, \sigma_z)$. Then any single-qubit gate is:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+U = e^{-i\frac{\theta}{2}\,(\hat{n}\cdot\vec{\sigma})} = \cos\frac{\theta}{2}\,I - i\sin\frac{\theta}{2}\,(\hat{n}\cdot\vec{\sigma})
+```
+
+$$
+U = e^{-i\frac{\theta}{2}\,(\hat{n}\cdot\vec{\sigma})} = \cos\frac{\theta}{2}\,I - i\sin\frac{\theta}{2}\,(\hat{n}\cdot\vec{\sigma})
+$$
+
+Read it as a sentence: $U$ rotates the Bloch vector by angle $\theta$ about the unit axis $\hat{n}$. The axis $\hat{n}$ is a direction in ordinary 3D space; the angle $\theta$ is how far you turn. A gate is an axis and an angle. That is the entire content of single-qubit quantum computing.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+A gate is an axis and an angle. The full machinery of qubit manipulation is rigid-body rotation, which your hands already understand.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+The lab runs the rotation *continuously* — a held Hamiltonian — but a gate is just a snapshot of that motion stopped at the right angle. Set **Field θ** to roughly $\pi/2$ so the yellow axis lies in the equatorial plane along $x$. Now the arrow precesses *around* the $x$-axis: it dips below the equator, swings underneath, and comes back. Freeze it after a half-turn and you have applied a Pauli-X gate; freeze it after a quarter-turn and you have the square-root-of-NOT gate. The gate isn't a different operation from the precession you have been watching — it *is* the precession, sampled at a chosen angle.
+
+## The named gates are named rotations
+
+Once you see gates as (axis, angle) pairs, the famous gates lose their mystery. They are just particularly tidy rotations.
+
+- **Pauli-X** ($X$, the quantum NOT) is a $180°$ rotation about the $x$-axis. It sends $|0\rangle$ (north pole) to $|1\rangle$ (south pole) and back — a flip through the equator.
+- **Pauli-Z** ($Z$) is a $180°$ rotation about the $z$-axis. It leaves the poles fixed and shoves the equator halfway around, which is why $Z$ does nothing to $|0\rangle$ or $|1\rangle$ but flips the relative phase of a superposition. Every **phase gate** ($S$, $T$, and the general $R_z(\theta)$) is a smaller rotation about this same $z$-axis.
+- **Hadamard** ($H$) is a $180°$ rotation about the diagonal axis $\hat{n} = (x + z)/\sqrt{2}$ — the line bisecting the $x$ and $z$ directions. That single tilt is why $H$ turns a pole into an equator point: rotating $|0\rangle$ by $180°$ about the $x{+}z$ diagonal lands it on the $+x$ point of the equator, the equal superposition $(|0\rangle + |1\rangle)/\sqrt{2}$.
+
+Plugging $X$ into equation (3) makes the matrix concrete. With $\hat{n} = \hat{x}$ and $\theta = \pi$:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+R_x(\pi) = \cos\frac{\pi}{2}\,I - i\sin\frac{\pi}{2}\,\sigma_x = -i\,\sigma_x = -i\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+```
+
+$$
+R_x(\pi) = \cos\frac{\pi}{2}\,I - i\sin\frac{\pi}{2}\,\sigma_x = -i\,\sigma_x = -i\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+$$
+
+The leftover $-i$ is a global phase — invisible, the room you can't see — so $R_x(\pi)$ and the textbook $X = \left(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\right)$ are the same physical gate. The matrix you were told to memorize and the geometric rotation are one object viewed from two sides.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Any single-qubit gate, however exotic its matrix, decomposes into three rotations about two fixed axes — the **Z-Y-Z decomposition**: $U = e^{i\gamma} R_z(\beta_2) R_y(\beta_1) R_z(\beta_0)$. The same fact in robotics is Euler angles; the same fact for an aircraft is yaw-pitch-roll. A quantum compiler turning your algorithm into hardware pulses is solving the identical problem an animation rig solves to orient a camera: find three turns that compose to the orientation you want.
+
+## Measurement: snapping to a pole
+
+So far the arrow glides smoothly. Measurement is where it jumps. When you measure a qubit in the computational basis, you are asking "north pole or south pole?" — and the arrow must answer with one or the other. It snaps to a pole. The latitude it had right before the measurement sets the *odds*: an arrow near the north pole almost always reports $|0\rangle$; an arrow on the equator is a coin flip.
+
+The exact rule falls straight out of equation (1). The amplitude on $|0\rangle$ is $\cos(\theta/2)$, and the probability is its square:
+
+$$
+P(|0\rangle) = \cos^2\frac{\theta}{2} = \frac{1 + \cos\theta}{2} = \frac{1 + r_z}{2}
+$$
+
+where $r_z = \cos\theta$ is the height of the arrow above the equatorial plane. The probability of measuring $|0\rangle$ is a linear function of how high the arrow points: at the north pole ($r_z = 1$) it's certain, on the equator ($r_z = 0$) it's $1/2$, at the south pole it's $0$. The lab prints exactly this — the `P(|0⟩)` readout in the corner is $\cos^2(\theta/2)$ evaluated on the live arrow.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Beginners constantly write $\cos^2\theta$ and get wrong probabilities. The factor of $1/2$ is the whole game: a state at the equator ($\theta = \pi/2$, an honest 50/50 superposition) has $\cos^2(\theta/2) = \cos^2(\pi/4) = 1/2$, not $\cos^2(\pi/2) = 0$. The Bloch sphere lives in 3D space, but the state vector lives in a space where a $360°$ trip around the sphere is only a $180°$ trip for the state. Every angle in the *state* is half the angle in the *picture* — which is the next, and deepest, idea.
+
+## Decoherence: the arrow sinks off the surface
+
+The Bloch sphere has an inside, and real qubits use it. A perfect, isolated qubit keeps its arrow on the surface — a **pure state**. A qubit coupled to a noisy environment loses information into that environment, and its arrow shrinks *inward*: the tip leaves the surface and drifts toward the center. A Bloch vector of length $|\vec{r}| < 1$ is a **mixed state**, a classical-probability blur over pure states; length zero (the dead center) is maximal ignorance, a 50/50 coin you've lost all phase information about.
+
+Two timescales govern the sinking. **$T_1$ (relaxation)** is the arrow falling toward the north pole as the qubit dumps energy and relaxes to $|0\rangle$ — the $z$-component decaying. **$T_2$ (dephasing)** is the arrow's shadow on the equatorial plane shrinking as the relative phase $\varphi$ randomizes — the $x$ and $y$ components decaying, usually faster. Build a quantum computer and these two numbers are the enemy: every gate is a race against the arrow leaving the surface.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+In the lab the arrow stays pinned to the surface because the simulation is a closed, lossless precession. Picture decoherence as that same trail spiraling slowly inward instead of tracing a clean circle — the rotation continuing while the radius bleeds away.
+
+## The same rotation, in three other places
+
+The reason all of this feels familiar is that it is genuinely the same mathematics as a spinning top, and not by analogy. A classical magnetic moment in a field — a compass needle, a gyroscope, a proton in a magnetic resonance imaging (MRI) scanner — precesses around the field axis at the **Larmor frequency**. The qubit's Hamiltonian in a field is:
+
+$$
+H = -\frac{\hbar\omega}{2}\,(\hat{n}\cdot\vec{\sigma}), \qquad \omega = \gamma B
+$$
+
+and that $\hat{n}\cdot\vec{\sigma}$ is the exact generator from equation (3). Evolving under $H$ for a time $t$ applies $U = e^{-iHt/\hbar}$ — a rotation by angle $\omega t$ about $\hat{n}$. The precession in the lab *is* Larmor precession; the **coupling** slider *is* $\omega$. Nuclear magnetic resonance (NMR) spectroscopists were rotating Bloch vectors with radio pulses for decades before anyone called it a gate. An MRI machine drives an ensemble of nuclear spins — spin-$\tfrac{1}{2}$ systems, the same object as a qubit — with $R_x$ and $R_y$ pulses in the rotating frame.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Here is the half-angle's secret. Rotations of the qubit state live in the group $SU(2)$; rotations of the visible Bloch arrow live in $SO(3)$. The map between them is **two-to-one** — $SU(2)$ is the *double cover* of $SO(3)$. Turn the Bloch arrow a full $360°$ and it returns to where it started, but the state vector has only gone halfway: it picks up a factor of $-1$. You must rotate the *picture* by $720°$ to bring the *state* home.
+
+This isn't quantum mysticism. Hold a belt by both ends, twist one end a full $360°$, and you cannot flatten the twist out without rotating again to $720°$ — at which point it slides free. A coffee mug carried through two full turns of your wrist comes back untwisted; one full turn leaves your arm wrapped. The qubit's $-1$ at $360°$ and your tangled elbow are the *same topological fact*: $SU(2)$ wraps $SO(3)$ twice. The half-angle in $\cos(\theta/2)$ is the bookkeeping that tracks it.
+
+That double cover is why every angle in the state is half the angle in the picture — equation (1)'s $\theta/2$, equation (3)'s $\theta/2$, and the $\cos^2(\theta/2)$ of measurement are all the same fact wearing different clothes. Learn it once on the ball and it pays out across the whole subject.
+
+The arrow, the axis, the angle. A gate is a turn, decoherence is a slow sinking, measurement is a snap to a pole, and a $720°$ trip is the trip that brings you home. The linear algebra is still there when you need to multiply matrices on hardware — but the meaning lives on the ball, and the ball is something you can hold.
+
+## Reading further
+
+- [Nielsen & Chuang, *Quantum Computation and Quantum Information*](https://doi.org/10.1017/CBO9780511976667) — chapters 1–2 build the Bloch sphere and single-qubit gates from scratch; the canonical anchor for everything above and the exercise on the Z-Y-Z decomposition is the best way to internalize "gates are rotations".
+- [Feynman, *The Feynman Lectures on Physics*, Vol. III](https://www.feynmanlectures.caltech.edu/III_toc.html) — the two-state-system chapters derive precession from the Hamiltonian first, physics before formalism, which is exactly the order this post argues for.
+- [Slichter, *Principles of Magnetic Resonance*](https://doi.org/10.1007/978-3-662-09441-9) — the NMR text that treats Bloch-vector rotation as the everyday tool it is; read it to see that quantum gates are decades-old radio engineering.
+- [The orientation entanglement / belt trick, on the *SU(2)→SO(3)* double cover](https://en.wikipedia.org/wiki/Plate_trick) — a clear visual teaching case for why $360°$ gives a minus sign and $720°$ returns you home.

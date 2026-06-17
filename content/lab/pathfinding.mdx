@@ -1,0 +1,86 @@
+<LabSide effect="pathfinding" height={360} params={{ algorithm: "astar", heuristic: "manhattan", weight: 1, density: 0.28, speed: 12 }} caption="A* with a Manhattan heuristic streaks toward the goal. The teal→purple gradient shows cost-so-far (g); the orange line is the reconstructed shortest path.">
+
+## The Core Idea
+
+Given a grid of free cells and walls, how do you find the **shortest path** from start to goal? The family of algorithms that answer this — Dijkstra, A*, greedy best-first — all share one engine: a **priority queue** of cells to explore, ordered by a score. The only thing that changes between them is *how that score is computed*. That single choice produces dramatically different search shapes: Dijkstra floods outward like a wavefront, while A* with a good heuristic carves a narrow corridor straight at the target.
+
+</LabSide>
+
+## The Algorithm
+
+Every variant here is **best-first search** on a weighted graph. Each cell `n` carries three numbers:
+
+```
+g(n) = cost of the cheapest path from start to n found so far
+h(n) = heuristic estimate of the remaining cost from n to the goal
+f(n) = the priority used to order the queue
+```
+
+The loop is always the same:
+
+```
+push start onto a min-priority-queue keyed by f
+while queue not empty:
+    n ← pop the cell with the smallest f      (now "closed")
+    if n is the goal: reconstruct and stop
+    for each free neighbour m of n:
+        tentative = g(n) + cost(n, m)
+        if tentative < g(m):
+            parent(m) ← n
+            g(m) ← tentative
+            f(m)  ← (depends on the algorithm)
+            push m
+```
+
+When the goal is popped, you walk the **parent pointers** backward from goal to start to recover the path. The implementation uses a binary min-heap with *lazy deletion* — when a cheaper route to a cell is found, a fresh entry is pushed and the stale one is simply skipped when it surfaces.
+
+### The three score functions
+
+The visceral difference between the algorithms is entirely in `f`:
+
+- **Dijkstra:** `f = g`. The heuristic is ignored. The search expands cells in strict order of distance-from-start, so it explores a roughly circular wavefront. It is **guaranteed optimal** but does a lot of redundant work — it has no idea where the goal is.
+- **A\*:** `f = g + w·h`. It balances "how far I've come" against "how far I think I have to go." With `w = 1` and an *admissible* heuristic (one that never overestimates), A* is **provably optimal** and expands the fewest cells of any optimal algorithm.
+- **Greedy best-first:** `f = h`. Pure ambition — it always steps toward whichever frontier cell *looks* closest to the goal, ignoring accumulated cost. It is fast and direct, but **not optimal**: it happily walks into dead-ends and takes detours that a cost-aware search would avoid.
+
+### Heuristics
+
+The heuristic must match the connectivity of the grid to stay admissible:
+
+```
+Manhattan  |Δx| + |Δy|              (4-connected: N, S, E, W)
+Chebyshev  max(|Δx|, |Δy|)          (8-connected, uniform diagonal cost)
+Euclidean  √(Δx² + Δy²)             (8-connected, straight-line distance)
+```
+
+For a 4-connected grid the Manhattan distance is the *exact* shortest distance with no walls, which makes it the tightest admissible heuristic — A* with Manhattan is essentially perfect on open grids. On an 8-connected grid (where diagonal moves cost √2), Chebyshev and Euclidean are the natural admissible choices.
+
+<LabSide effect="pathfinding" height={320} params={{ algorithm: "dijkstra", heuristic: "manhattan", weight: 1, density: 0.28, speed: 12 }} reverse={true} caption="Dijkstra with the heuristic switched off. The closed set blooms outward symmetrically — every cell within radius r of the start is settled before any cell at r+1. It always finds the optimal path, but expands far more nodes.">
+
+## What Each Control Does
+
+- **Algorithm** — switches the score function: A* (`g + w·h`), Dijkstra (`g` only), or Greedy best-first (`h` only). Watch how the closed set's *shape* changes: a flood versus a streak.
+- **Heuristic** — Manhattan, Euclidean, or Chebyshev. This also sets the grid connectivity: Manhattan uses 4-connectivity (orthogonal moves), the other two use 8-connectivity (diagonals allowed at √2 cost).
+- **Heuristic weight (w)** — inflates `h` in the A* score. At `w = 1` A* is optimal. As `w` grows past 1 the search becomes *weighted A\**: increasingly greedy, expanding far fewer nodes but with a bounded loss of optimality — the returned path is at most `w` times longer than the true shortest path.
+- **Wall density** — the fraction of cells turned into obstacles when a new maze is generated. Higher density makes mazes more tortuous (and occasionally forces a regeneration if no path exists).
+- **Speed** — how many nodes are expanded per animation frame, so you can slow the flood to a crawl or watch it finish in a blink.
+
+</LabSide>
+
+## What to Look For
+
+- **Dijkstra vs A\*:** Set both to Manhattan and flip between them. Dijkstra settles a near-circular disc of cells; A* settles a slim cone aimed at the goal. Compare the `expanded:` counter in the caption — A* typically explores a small fraction of what Dijkstra does, yet returns the *same* optimal path length.
+- **The cost gradient:** The teal→purple colouring is `g`, the cost-so-far. In Dijkstra it forms clean concentric rings (iso-cost contours). In greedy search the gradient is jagged because the algorithm doesn't expand in cost order.
+- **Weighted A\*:** Push **weight** to 3 or 4. The frontier narrows dramatically and the node count plummets — but on a cluttered maze you'll sometimes catch the path taking a visibly suboptimal kink. That's the speed-for-optimality trade laid bare.
+- **Greedy's mistakes:** Greedy best-first often produces a longer path than A* on the same maze. It charges at the goal and only backtracks when it hits a wall, leaving telltale dead-end stubs in the closed set.
+
+## Why It Matters
+
+Best-first search is one of the most reused algorithms in computing. A* powers route planning in game AI and GPS navigation, motion planning for robot arms and drones, word-ladder and puzzle solvers, and even network routing. The single insight — *order your exploration by a cost-plus-estimate score* — generalises far beyond grids to any graph where you can define `g` and a sensible `h`. The art is almost entirely in choosing the heuristic: too weak and you waste effort like Dijkstra; inadmissible and you lose the optimality guarantee; just right and you get the optimal answer for the least possible work.
+
+## Further reading
+
+- Hart, Nilsson & Raphael (1968), *A Formal Basis for the Heuristic Determination of Minimum Cost Paths* — the original A* paper.
+- Amit Patel, [*Introduction to A\**](https://www.redblobgames.com/pathfinding/a-star/introduction.html) (Red Blob Games) — the definitive interactive, visual explanation.
+- Russell & Norvig, *Artificial Intelligence: A Modern Approach* — Chapter 3 on informed search, admissibility, and consistency.
+- Pohl (1970), *Heuristic Search Viewed as Path Finding in a Graph* — the origin of weighted A* and the optimality-vs-effort trade-off.
+- [A* search algorithm (Wikipedia)](https://en.wikipedia.org/wiki/A*_search_algorithm) — a solid mathematical summary with pseudocode.

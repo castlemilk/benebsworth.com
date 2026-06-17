@@ -27,7 +27,7 @@ export function Controls({ specs, params, onChange, onReset, onCopy }: Props) {
               <span className="flex items-center gap-2">
                 <input type="range" min={s.min} max={s.max} step={s.step} value={Number(params[s.key])}
                   onChange={(e) => onChange(s.key, Number(e.target.value))} className="accent-project" />
-                <span className="w-10 text-right tabular-nums text-fg/50">{Number(params[s.key])}</span>
+                <span className="w-10 text-right tabular-nums text-muted">{Number(params[s.key])}</span>
               </span>
             )}
             {s.type === 'toggle' && (

@@ -94,29 +94,12 @@ export const fourierSeries: EffectModule = {
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     const { w, h } = dims
 
-    // Ring buffer for the trace
-    const TRACE_LEN = 1024
-    const traceX = new Float64Array(TRACE_LEN)
-    const traceY = new Float64Array(TRACE_LEN)
-    let traceHead = 0
-    let traceCount = 0
-    let prevTerms = 0
-    let prevShape = ''
-
     return {
       step(t, p) {
         const nTerms = p.terms as number
         const shape = p.shape as string
         const speed = p.speed as number
         const color = p.color as string
-
-        // Reset trace on param change
-        if (nTerms !== prevTerms || shape !== prevShape) {
-          traceHead = 0
-          traceCount = 0
-          prevTerms = nTerms
-          prevShape = shape
-        }
 
         // Clear
         ctx.fillStyle = theme.bg
@@ -191,12 +174,6 @@ export const fourierSeries: EffectModule = {
         }
         const traceScreenY = epicycleCY - traceSum * scale
 
-        // Store in ring buffer
-        traceX[traceHead] = traceScreenX
-        traceY[traceHead] = traceScreenY
-        traceHead = (traceHead + 1) % TRACE_LEN
-        traceCount = Math.min(traceCount + 1, TRACE_LEN)
-
         // Draw connecting line from tip to waveform area
         ctx.save()
         ctx.strokeStyle = color
@@ -229,7 +206,7 @@ export const fourierSeries: EffectModule = {
         ctx.restore()
 
         // Draw Fourier approximation trace
-        // Instead of using the ring buffer, compute the full waveform each frame for accuracy
+        // Compute the full waveform each frame for accuracy
         ctx.save()
         ctx.strokeStyle = color
         ctx.globalAlpha = 0.85

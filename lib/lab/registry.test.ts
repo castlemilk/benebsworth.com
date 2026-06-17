@@ -1,19 +1,22 @@
 import { describe, it, expect } from 'vitest'
-import { LAB_EFFECTS, HOME_EMBED_EFFECTS, getEffect } from './registry'
+import { LAB_EFFECTS, HOME_EMBED_EFFECTS, getEffect, EFFECT_LOADERS } from './registry'
 
 describe('lab registry', () => {
   it('has unique slugs', () => {
     const s = LAB_EFFECTS.map((e) => e.slug)
     expect(new Set(s).size).toBe(s.length)
   })
-  it('every default key has a matching in-range control', () => {
+  it('every default key has a matching in-range control', async () => {
     for (const e of LAB_EFFECTS) {
-      const byKey = Object.fromEntries(e.controls.map((c) => [c.key, c]))
-      for (const [k, v] of Object.entries(e.defaults)) {
+      const loader = EFFECT_LOADERS[e.slug]
+      if (!loader) continue // standalone pages like circuit-sim
+      const mod = await loader()
+      const byKey = Object.fromEntries(mod.controls.map((c: any) => [c.key, c]))
+      for (const [k, v] of Object.entries(mod.defaults)) {
         const spec = byKey[k]
         expect(spec, `${e.slug}.${k} has a control`).toBeTruthy()
         if (spec.type === 'range') { expect(v).toBeGreaterThanOrEqual(spec.min); expect(v).toBeLessThanOrEqual(spec.max) }
-        if (spec.type === 'select') expect(spec.options.some((o) => o.value === v)).toBe(true)
+        if (spec.type === 'select') expect(spec.options.some((o: any) => o.value === v)).toBe(true)
       }
     }
   })

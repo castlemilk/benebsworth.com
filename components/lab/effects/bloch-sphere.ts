@@ -21,7 +21,6 @@ function rotate(x: number, y: number, z: number, ax: number, ay: number): [numbe
   const z1 = -x * Math.sin(ay) + z * Math.cos(ay)
   // Rotate around X axis
   const y1 = y * Math.cos(ax) - z1 * Math.sin(ax)
-  const _z2 = y * Math.sin(ax) + z1 * Math.cos(ax)
   // Orthographic projection
   return [x1, y1]
 }
@@ -176,7 +175,6 @@ export const blochSphere: EffectModule = {
           for (let i = 0; i < trailCount; i++) {
             const idx = (trailIdx - trailCount + i + TRAIL_LEN) % TRAIL_LEN
             const [px, py] = proj(trailX[idx], trailY[idx], trailZ[idx])
-            const _alpha = i / trailCount
             if (i === 0) {
               ctx.moveTo(px, py)
             } else {

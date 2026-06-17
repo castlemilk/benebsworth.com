@@ -19,7 +19,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
  * line-art and photo on hover. Touch / no-hover → just the line-art.
  *
  * Both <img>s (svg + jpg) are always rendered, so /about/portrait.svg and
- * /about/portrait.jpg references survive the static export.
+ * /about/portrait.webp references survive the static export.
  */
 
 const IMG_W = 309
@@ -297,7 +297,7 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
             canvas paints it in. Under reduced motion it crossfades on hover. */}
         <img
           ref={photoRef}
-          src="/about/portrait.jpg"
+          src="/about/portrait.webp"
           alt=""
           aria-hidden
           width={IMG_W}
@@ -341,7 +341,7 @@ export function PortraitHero({ accent = '#ff7a59' }: { accent?: string }) {
 
         {/* metadata strip */}
         <span className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-fg/45">
-          <span style={{ color: accent }}>subject · be</span>
+          <span className="accent-ink" style={{ '--ink': accent } as React.CSSProperties}>subject · be</span>
           <span>plate 01</span>
         </span>
       </div>

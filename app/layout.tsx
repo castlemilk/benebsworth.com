@@ -43,6 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${mono.variable} ${display.variable} ${sans.variable}`}
     >
       <body className="font-sans antialiased">
+        <a
+          href="#main-content"
+          className="skip-link"
+        >
+          Skip to content
+        </a>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

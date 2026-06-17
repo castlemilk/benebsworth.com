@@ -7,19 +7,13 @@ import { TopicMarker } from '@/components/blog/topic-marker'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
+import { tagColor } from '@/lib/tag-colors'
 import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { RelatedPosts } from '@/components/blog/related-posts'
 import { MobileToc } from '@/components/blog/mobile-toc'
 import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
-
-function fmtDate(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso.slice(0, 10)
-  return d
-    .toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' })
-    .toUpperCase()
-}
+import { fmtDate } from '@/lib/format'
 
 export function generateStaticParams() {
   return getPublishedPosts().map((p) => ({ slug: p.slug }))
@@ -130,6 +124,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <JsonLd data={[blogPostingLd, breadcrumb]} />
+      {p.heroImage && (
+        <link rel="preload" as="image" href={p.heroImage} fetchPriority="high" />
+      )}
       <SiteNav />
       {/* Sticky breadcrumb sits just below the sticky SiteNav. */}
       <Breadcrumb
@@ -140,7 +137,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           measure) on the left, and the sticky TOC on the right. The
           post's own `pt-8` on <main> still creates the right breathing
           room because sticky elements stay in normal flow. */}
-      <main className="mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] xl:grid-cols-[minmax(0,1fr)_16rem]">
           <article className="min-w-0">
         {/* ── Post header spans the full (wide) page frame — editorial title +
@@ -175,10 +172,23 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </p>
           )}
           {p.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted">
-              {p.tags.slice(0, 6).map((t) => (
-                <span key={t}>#{t}</span>
-              ))}
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {p.tags.slice(0, 6).map((t) => {
+                const c = tagColor(t)
+                return (
+                  <span
+                    key={t}
+                    className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
+                    style={{
+                      '--ink': c,
+                      borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
+                      backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
+                    } as React.CSSProperties}
+                  >
+                    {t}
+                  </span>
+                )
+              })}
             </div>
           )}
           {/* accent rule keyed to the topic */}

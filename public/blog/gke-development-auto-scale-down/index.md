@@ -30,7 +30,7 @@ gcloud services enable container.googleapis.com
 and then we enable Google Cloud Scheduler
 
 ```text
-cloud services enable cloudscheduler.googleapis.com
+gcloud services enable cloudscheduler.googleapis.com
 ```
 
 ## Create GKE cluster
@@ -43,7 +43,7 @@ gcloud beta container clusters create example \
     --machine-type="n1-standard-1" \
     --num-nodes="3" \
     --preemptible \
-    --no-user-output-enabled \
+    --no-user-output-enabled
 ```
 
 ## Create IAM
@@ -70,7 +70,7 @@ gcloud iam roles create gke.scheduler \
 In order for us to provide the required authorization to our *Cloud Scheduler* task we need to attach a *Service Account*, this is created by running the following,
 
 ```text
-cloud beta iam service-accounts create gke-scheduler \
+gcloud beta iam service-accounts create gke-scheduler \
     --description "managing scheduling of worker nodes on gke" \
     --display-name "gke-scheduler"
 ```
@@ -90,7 +90,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 Finally the job can be created using our created *Service Account*. *Cloud Scheduler* uses the standard [CronJob](https://crontab.guru) syntax, I've used a 6 hour interval to be safe - ensuring the cluster gets scaled down regularly. The beauty of Kubernetes its so easy to stand everything back up its fairly trivial to just scale the cluster back up when required.
 
 ```text
-cloud beta scheduler jobs create http gke-cluster-auto-scale-down \
+gcloud beta scheduler jobs create http gke-cluster-auto-scale-down \
   --schedule "0 */6 * * *" \
   --uri=https://container.googleapis.com/v1beta1/projects/${PROJECT_ID}/zones/australia-southeast1-a/clusters/${CLUSTER_NAME}/nodePools/default-pool/setSize \
   --message-body '{"nodeCount":0}' \

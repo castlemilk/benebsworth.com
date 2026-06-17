@@ -92,7 +92,7 @@ export interface Artifact {
   glyph: string;
 }
 
-export type LabCategory = 'art' | 'maths' | 'physics' | 'engineering'
+export type LabCategory = 'art' | 'maths' | 'physics' | 'engineering' | 'ai'
 
 export interface LabEffect {
   slug: string;

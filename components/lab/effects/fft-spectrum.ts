@@ -70,6 +70,16 @@ export const createRenderer = (
 
       // Radix-2 Cooley-Tukey FFT
       const N = FFT_SIZE
+      // Bit-reversal permutation (interleaved re/im layout) before butterflies
+      for (let i = 1, j = 0; i < N; i++) {
+        let bit = N >> 1
+        while (j & bit) { j ^= bit; bit >>= 1 }
+        j ^= bit
+        if (i < j) {
+          let tmp = samples[i * 2]; samples[i * 2] = samples[j * 2]; samples[j * 2] = tmp
+          tmp = samples[i * 2 + 1]; samples[i * 2 + 1] = samples[j * 2 + 1]; samples[j * 2 + 1] = tmp
+        }
+      }
       let step = 1
       for (let stage = 0; stage < 11; stage++) {
         const half = step
@@ -149,7 +159,11 @@ export const createRenderer = (
       for (let b = 0; b < BARS; b++) {
         const x = margin.left + (b / BARS) * plotW
         const barW = plotW / BARS - 1
-        const barH = (Math.abs(magnitudes[b]) / maxMag) * plotH
+        // Convert normalised magnitude to dB and map onto the -60..0 dB axis
+        const ratio = Math.abs(magnitudes[b]) / maxMag
+        const db = ratio > 0 ? 20 * Math.log10(ratio) : -60
+        const norm = Math.max(0, (db + 60) / 60)
+        const barH = norm * plotH
         const hue = 180 + (b / BARS) * 60
         ctx.fillStyle = `hsla(${hue}, 80%, 55%, 0.85)`
         ctx.fillRect(x, margin.top + plotH - barH, barW, barH)

@@ -4,7 +4,7 @@ date: "2026-06-10T00:00:00.000Z"
 description: "A phase-locked loop is a control system with a phase detector instead of a summing junction. The intuition you can build with the lab above is more durable than the textbook derivations."
 labels: technology,algorithms,physics,electrical engineering,signal processing
 release: true
-heroImage: /blog/pll-from-first-principles/hero.png
+heroImage: /blog/pll-from-first-principles/hero.webp
 ---
 
 A **phase-locked loop** is one of those circuits that shows up everywhere and is rarely understood deeply. The 1970s TV tuner. The 1990s modem. The 2010s radio base station. The 2020s clock-data-recovery circuit on a serialiser. In every case, the same three blocks: a phase detector, a loop filter, a voltage-controlled oscillator. The output is a clean synthesised frequency that tracks a noisy input.
@@ -86,25 +86,25 @@ $$
 
 </Equation>
 
-In Laplace notation, the VCO is a pure integrator with gain K_vco/s. This is the plant. The phase detector measures `φ_ref − φ_vco`, the loop filter amplifies and integrates the result, and the VCO integrates again to produce its phase.
+In Laplace notation, the VCO is a pure integrator with gain $K_\text{vco}/s$. This is the plant. The phase detector measures $\phi_\text{ref} - \phi_\text{vco}$, the loop filter amplifies and integrates the result, and the VCO integrates again to produce its phase.
 
 A first-order PLL (no loop filter, just a gain $K$) is a **second-order system** with one integrator in the controller-free path (the VCO) and another from the phase detector's transfer. The closed-loop transfer function is:
 
-<Equation id="eqn:pll-closedloop" number="4" caption="The closed-loop transfer function of a first-order PLL." latex="H(s) = \frac{K \cdot K_\text{vco}}{s^2 + K \cdot K_\text{vco}}">
+<Equation id="eqn:pll-closedloop" number="4" caption="The closed-loop transfer function of a first-order PLL." latex="H(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}, \qquad \omega_n^2 = K \cdot K_\text{vco}">
 
 $$
-H(s) = \frac{K \cdot K_\text{vco}}{s^2 + K \cdot K_\text{vco}}
+H(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}, \qquad \omega_n^2 = K \cdot K_\text{vco}
 $$
 
 </Equation>
 
-That is a **critically damped second-order system** with natural frequency $\omega_n = \sqrt{K \cdot K_\text{vco}}$ and damping ratio $\zeta = 0.5$. Underdamped, just barely. A textbook result that surprises nobody who has tuned a control loop.
+That is a **second-order system** with natural frequency $\omega_n = \sqrt{K \cdot K_\text{vco}}$. With realistic loop-filter damping the ratio lands around $\zeta = 0.5$. Underdamped, just barely. A textbook result that surprises nobody who has tuned a control loop.
 
 <Callout type="thinking" title="The Bode plot of an integrator">
 
-The VCO's transfer function `K_vco / s` is a pure integrator. Its Bode plot is a constant gain at low frequency rolling off at −20 dB/decade, with a phase of −90° at all frequencies. Multiply by a proportional loop filter K and you have the open-loop transfer function `K · K_vco / s` — the same shape as a Type-1 control system.
+The VCO's transfer function $K_\text{vco}/s$ is a pure integrator. Its Bode plot is a constant gain at low frequency rolling off at −20 dB/decade, with a phase of −90° at all frequencies. Multiply by a proportional loop filter $K$ and you have the open-loop transfer function $K \cdot K_\text{vco}/s$ — the same shape as a Type-1 control system.
 
-Adding an integrator in the loop filter (the I in PI) gives `K · (1 + 1/(τ s)) · K_vco / s` — a Type-2 system. Zero steady-state phase error, but at the cost of phase margin.
+Adding an integrator in the loop filter (the I in PI) gives $K \cdot (1 + 1/(\tau s)) \cdot K_\text{vco}/s$ — a Type-2 system. Zero steady-state phase error, but at the cost of phase margin.
 
 </Callout>
 
@@ -113,7 +113,7 @@ Adding an integrator in the loop filter (the I in PI) gives `K · (1 + 1/(τ s))
 The lab exposes the loop filter as a dropdown. The three options map directly onto the three controllers you already know:
 
 - **P (proportional)**: $F(s) = K_p$. The simplest possible loop. Phase error in steady state is $\Delta\omega / (K_p \cdot K_\text{vco})$ — non-zero if the reference frequency is offset.
-- **PI (proportional + integral)**: $F(s) = K_p + K_i / s$. The integral term drives the steady-state phase error to zero. This is the **workhorse** — used in 90% of PLLs.
+- **PI (proportional + integral)**: $F(s) = K_p + K_i / s$. The integral term drives the steady-state phase error to zero. This is the **workhorse** — used in the overwhelming majority of PLLs.
 - **PID (with derivative)**: $F(s) = K_p + K_i / s + K_d s$. The derivative term extends the loop bandwidth but amplifies phase-detector noise. Rare in practice for PLLs because the phase detector's noise is already a problem.
 
 The textbook design problem — "given a reference frequency accuracy, a noise floor, and a settling time requirement, choose K_p, K_i, K_d" — is identical to the textbook PID design problem. The same Bode-stability methods, the same trade-off between bandwidth and noise, the same instability when you push the gain too high.
@@ -167,7 +167,7 @@ The same three experiments on a real PLL would take a soldering iron and an afte
 The PID lab above is the controls-engineering twin of the PLL lab. **Same plant, same controller topology, same dynamics.**
 
 <PullQuote>
-  A PLL is a phase-domain PID controller, a PID is a current-domain PID controller. The mathematics, the design heuristics, the failure modes — they map 1:1.
+  A PLL is a phase-domain PID controller; a motor drive is a speed-domain PID controller. The mathematics, the design heuristics, the failure modes — they map 1:1.
 </PullQuote>
 
 This is not a coincidence. The control system is a *pattern*, and the PLL is one of its many instantiations. Once you have the pattern, you can recognise it everywhere.
@@ -176,7 +176,7 @@ This is not a coincidence. The control system is a *pattern*, and the PLL is one
 
 The PLL is the **canonical example** of a feedback control system operating on a non-electrical variable. A PID controller regulates a motor speed. A PLL regulates a phase. The pattern is the same; the application is different.
 
-The lab at the top is a working sketchpad for that pattern. Drag the controls, watch the dynamics, observe the regimes (locked, slipping, unlocked) emerge from the same equations. The lab above the "Bode plot" section is the controls lab — the same Bode plot, the same design rules, a different physical system. The same loop, twice.
+The lab at the top is a working sketchpad for that pattern. Drag the controls, watch the dynamics, observe the regimes (locked, slipping, unlocked) emerge from the same equations. The PID lab in "The lab: what to look for" is the controls lab — the same Bode plot (from "The loop filter: a P, PI, or PID, by another name"), the same design rules, a different physical system. The same loop, twice.
 
 The two labs are the most direct demonstration of the *transfer function as a unifying concept* in modern engineering: once you can read a Bode plot, you can design a PLL, a PID, a state-space observer, a Kalman filter. The transfer function is the language. The labs are the conversation.
 

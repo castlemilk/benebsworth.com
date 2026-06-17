@@ -1,0 +1,92 @@
+<LabSide effect="gradient-descent" height={400} params={{ preset: "ravine", lr: 0.02, momentum: 0.9, show: "all", speed: 1 }} caption="Four optimisers released from the same point on the Rosenbrock ravine. SGD (orange) zig-zags across the valley walls; Momentum (yellow) overshoots; RMSProp (teal) and Adam (purple) damp the oscillation and slide down the floor.">
+
+## The Core Idea
+
+Training a neural network is just rolling a ball downhill. The "hill" is the **loss landscape** — a surface whose height at every point is how wrong the model is for that setting of its parameters. Learning means finding the lowest point. The tool for getting there is **gradient descent**: at your current position, compute which way is steepest downhill (the negative gradient), take a small step, and repeat.
+
+That sounds trivial, and on a smooth bowl it is. Real landscapes are not smooth bowls. They have long curved **ravines** where the floor slopes gently but the walls are steep, **saddles** where the surface goes down in one direction and up in another, and **bumpy** regions riddled with shallow local minima. The whole reason modern optimisers exist — Momentum, RMSProp, Adam — is to navigate this terrain without zig-zagging, stalling, or overshooting.
+
+</LabSide>
+
+## The Mathematics
+
+We want to minimise a loss $f(\boldsymbol{\theta})$ over parameters $\boldsymbol{\theta}$. The gradient $\mathbf{g} = \nabla f(\boldsymbol{\theta})$ points in the direction of steepest *increase*, so we step against it:
+
+```
+θ ← θ − lr · g
+```
+
+The scalar `lr` is the **learning rate** — the step size. This is plain **stochastic gradient descent (SGD)**, the orange ball in the visualisation. It is simple and it works, but it has a famous failure mode: on a narrow ravine, the gradient is dominated by the *steep* cross-valley direction, not the *gentle* along-valley direction you actually want to follow. So SGD bounces back and forth between the walls, inching forward only slowly.
+
+### The four optimisers
+
+Each ball above uses the same gradient `g = ∇f`, but a different update rule.
+
+**SGD** — no memory, just the raw gradient:
+
+```
+θ ← θ − lr · g
+```
+
+**Momentum** — accumulate a velocity so consistent directions build speed and oscillations partly cancel ($\beta \approx 0.9$):
+
+```
+v ← β·v + g
+θ ← θ − lr · v
+```
+
+**RMSProp** — keep a running average of squared gradients per coordinate and divide by its root, so steep directions get *small* steps and flat directions get *large* ones ($\rho \approx 0.9$):
+
+```
+s ← ρ·s + (1−ρ)·g⊙g
+θ ← θ − lr · g / (√s + ε)
+```
+
+**Adam** — combine both ideas: momentum on the gradient ($m$) and RMSProp's per-coordinate scaling ($v$), with a bias correction for the cold start ($\beta_1 = 0.9,\ \beta_2 = 0.999,\ \varepsilon = 10^{-8}$):
+
+```
+m  ← β₁·m + (1−β₁)·g
+v  ← β₂·v + (1−β₂)·g⊙g
+m̂ = m / (1−β₁ᵗ)
+v̂ = v / (1−β₂ᵗ)
+θ  ← θ − lr · m̂ / (√v̂ + ε)
+```
+
+The symbol $\odot$ is element-wise multiplication: $\mathbf{g}\odot\mathbf{g}$ is the vector of squared gradient components, so each coordinate gets its own adaptive scaling. Adam is the default optimiser for most deep learning today precisely because this per-coordinate scaling makes it robust to badly conditioned landscapes — like the ravine you are watching.
+
+### The landscapes
+
+Each preset has an analytic loss and an analytic gradient, so there is no numerical approximation in the slope — the balls roll on the true surface.
+
+- **Ravine (Rosenbrock)**: $f = (a-x)^2 + b(y - x^2)^2$ with $a=1,\ b=20$. A long, banana-shaped valley with a near-flat floor and steep sides — the classic "Adam beats SGD" demo. Gradient: $\partial f/\partial x = -2(a-x) - 4bx(y-x^2)$, $\partial f/\partial y = 2b(y-x^2)$.
+- **Saddle**: $f = x^2 - y^2$ (with a tiny linear asymmetry so it isn't perfectly degenerate). Down in $y$, up in $x$ — the surface plateaus near the origin, and the question is whether an optimiser escapes or stalls.
+- **Bumpy**: a shallow bowl minus a few Gaussians, $f = 0.1(x^2+y^2) - \sum_i A_i\,e^{-((x-c_{x_i})^2 + (y-c_{y_i})^2)/s}$. Several local minima — different optimisers can settle in different basins.
+- **Bowl**: $f = x^2 + 2y^2$, a clean convex sanity check where everything converges quickly.
+
+## What each control does
+
+- **Landscape** — picks the surface (Ravine / Saddle / Bumpy / Bowl). Changing it recomputes the heatmap and restarts every ball from the shared start point.
+- **Learning rate** — the step size `lr`. Too small and the balls crawl; too large and SGD/Momentum diverge up the walls. Watch the ravine: there is a narrow band of `lr` where SGD is stable at all, while Adam tolerates a much wider range.
+- **Momentum β** — the velocity decay for the Momentum optimiser. At $\beta = 0$ it reduces to SGD; near $\beta = 0.99$ it carries huge inertia and overshoots dramatically before curling back.
+- **Show** — compare all four at once, or isolate a single optimiser to study its path cleanly.
+- **Speed** — how many optimiser steps run per frame. Purely cosmetic; it does not change the trajectories, only how fast they unfold.
+
+## What to look for
+
+- **The ravine is the headline.** With *Compare all* selected, watch SGD (orange) ricochet between the valley walls while Adam (purple) and RMSProp (teal) settle onto the floor and glide along it. This single picture explains why adaptive optimisers dominate modern training.
+- **Momentum overshoots.** The yellow ball builds so much speed down the steep walls that it sails past the valley floor, swings up the far side, and oscillates inward. Crank **Momentum β** up to see it exaggerated.
+- **The heatmap encodes loss.** The teal→purple ramp goes dark in the low (good) regions and bright in the high (bad) regions; the faint white contour lines are iso-loss curves. The minimum is where the colour is darkest.
+- **Saddles trap naive descent.** Switch to **Saddle** and watch how the balls slow to a crawl near the origin where the gradient nearly vanishes, before the small asymmetry finally tips them down the unstable direction. Escaping saddle points — not avoiding local minima — is now believed to be the central difficulty of high-dimensional optimisation.
+- **Local minima divide the field.** On **Bumpy**, the optimisers can fall into *different* basins depending on their dynamics, ending at different losses. The legend's min-loss readout shows who found the deeper valley.
+
+## Why it matters
+
+Every neural network you have ever used — every language model, every image classifier — was trained by some variant of this loop, run billions of times over millions of parameters. The 2D surface here is a cartoon; a real network's loss lives in a space of millions of dimensions, where you cannot see the terrain at all. But the geometry that makes optimisers behave the way they do — ill-conditioned ravines, saddle points, flat regions — is exactly the same, just hidden. Understanding why Adam beats SGD on this banana-shaped valley is understanding why it beats SGD on a transformer.
+
+## Further reading
+
+- Ruder, S. (2016), *An overview of gradient descent optimization algorithms* — [arXiv:1609.04747](https://arxiv.org/abs/1609.04747). The standard survey of SGD, Momentum, RMSProp, Adam and friends.
+- Kingma & Ba (2015), *Adam: A Method for Stochastic Optimization* — [arXiv:1412.6980](https://arxiv.org/abs/1412.6980). The original Adam paper.
+- Goodfellow, Bengio & Courville, *Deep Learning* — Chapter 8 (Optimization for Training Deep Models), and §8.2 on the prevalence of saddle points in high dimensions.
+- Dauphin et al. (2014), *Identifying and attacking the saddle point problem in high-dimensional non-convex optimization* — [arXiv:1406.2572](https://arxiv.org/abs/1406.2572).
+- [Rosenbrock function (Wikipedia)](https://en.wikipedia.org/wiki/Rosenbrock_function) — the test landscape behind the Ravine preset.

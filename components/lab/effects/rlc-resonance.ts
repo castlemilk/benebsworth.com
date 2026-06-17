@@ -36,7 +36,7 @@ function drawCapacitor(ctx: CanvasRenderingContext2D, cx: number, cy: number, ga
   ctx.beginPath(); ctx.moveTo(cx + hg, cy - plateH / 2); ctx.lineTo(cx + hg, cy + plateH / 2); ctx.stroke()
 }
 
-function drawVoltageSource(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fg: string) {
+function drawVoltageSource(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, _fg: string) {
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke()
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
   ctx.fillText('+', cx, cy - r * 0.35)
@@ -114,7 +114,6 @@ export const rlcResonance: EffectModule = {
         //     ringing / damping behaviour. ─────────────────────────
         const omega0 = 1 / Math.sqrt(L * C)
         const zeta = R / (2 * Math.sqrt(L / C))
-        const dampedOmega = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta))
         // Decay envelope: amplitude decays as exp(-zeta * omega0 * t)
         // Consider settled when the envelope is < 0.01 * A
         const decayEnv = A * Math.exp(-zeta * omega0 * state.t)
@@ -390,19 +389,6 @@ export const rlcResonance: EffectModule = {
             else ctx.lineTo(x, y)
           }
           ctx.stroke()
-        }
-
-        // ── Current trace (transparent, on same axis) ──
-        if (nSamples > 1) {
-          const iMax = A / (R + 0.001)
-          const hScale = pw / (nSamples - 1)
-          ctx.strokeStyle = indColor + '66'; ctx.lineWidth = 1; ctx.beginPath()
-          for (let i = 0; i < nSamples; i++) {
-            // Approximate: reconstruct current from voltage in buffer
-            // For simplicity, just overlay a damped sinusoid hint
-          }
-          // Skip current trace for now — too complex to reconstruct from Vc buffer alone.
-          // The energy tanks already show the inductor-capacitor exchange.
         }
 
         // Legend

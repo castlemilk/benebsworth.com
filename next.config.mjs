@@ -7,6 +7,9 @@ const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
   images: { unoptimized: true },
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
 }
 
 const withMDX = createMDX({})

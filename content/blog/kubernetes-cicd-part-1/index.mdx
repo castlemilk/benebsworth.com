@@ -37,11 +37,9 @@ These tools give us a local cluster that we can then deploy our application, and
 
 With our application running with its required dependencies, we can then run tests suites for validating conformance/integration and performance, where because we are running in a Kubernetes cluster, we are more accurately representing the reality of the applications runtime environment.
 
-![local-clusters](local-clusters.png)
+![local-clusters](local-clusters.webp)
 
-<center>
-A Comparison of the different local cluster tools available
-</center>
+*A Comparison of the different local cluster tools available*
 
 &nbsp;
 
@@ -59,11 +57,9 @@ Let's go through the available templating/configuration management options we ha
 
 * **jsonnet** - A lower-level data templating language, providing effectively an extension on the JSON specification. [jsonnet](https://jsonnet.org/) is a very rich templating language, and can act as a base language to build higher level abstractions on-top of. However as a bespoke templating language, it does have the implications of learning another language, deriving from JSON - when most other resources will be YAML based - which adds extra complexity into your configuration management. There'd have to be a justification for utilising jsonnet as your primary templating mechanism, when you factor in the current Kubernetes ecosystem of tooling, jsonnet does feel to fork as a non-contiguous framework for configuration management.
 
-![configuration-management](configuration-management.png)
+![configuration-management](configuration-management.webp)
 
-<center>
-A Comparison of the different configuration management tooling in the Kubernetes ecosystem
-</center>
+*A Comparison of the different configuration management tooling in the Kubernetes ecosystem*
 
 &nbsp;
 
@@ -81,11 +77,9 @@ The tools we're going to go through here are specially aiming at making the deve
 
 * **Draft** - Perhaps one of the first generation tools in making the local developer experience more manageable on Kubernetes, it was the continual evolution of Helm, where it tried to look at how applications could be package, and also then deployed in the cleanest way possible. The development of *Draft* seems to slow to a halt, where the last change was over *5 months* ago.
 
-![developer-experience](developer-experience.png)
+![developer-experience](developer-experience.webp)
 
-<center>
-A Comparison of the different developer experience tools
-</center>
+*A Comparison of the different developer experience tools*
 
 &nbsp;
 
@@ -101,11 +95,9 @@ We have an end-to-end example which captures the local developer workflow using 
 
 *Clone this repository to run through the up-coming steps as we go*.Contained within this repository is a fullstack application which has the following topology
 
-![example-fullstack-application](example-fullstack-application.png)
+![example-fullstack-application](example-fullstack-application.webp)
 
-<center>
-Fullstack architecture for example application
-</center>
+*Fullstack architecture for example application*
 
 &nbsp;
 
@@ -119,11 +111,9 @@ In order to produce an example developer workflow, we've chosen the following se
 
 Now if we look at translating the above top level topology, into a more specific set of Kubernetes resources, and the tools we'll use locally we have the following
 
-![local-fullstack-deployment](./local-fullstack-deployment.png)
+![local-fullstack-deployment](./local-fullstack-deployment.webp)
 
-<center>
-Local development deployment representation and associated tools
-</center>
+*Local development deployment representation and associated tools*
 
 &nbsp;
 
@@ -169,9 +159,7 @@ In order to manage all of these resources, we're using *Kustomize*, let's take a
         └── ...
 ```
 
-<center>
-Kustomize configuration representing our fullstack application to run in our local development environment
-</center>
+*Kustomize configuration representing our fullstack application to run in our local development environment*
 
 &nbsp;
 
@@ -193,7 +181,7 @@ Run the following commands to fetch the repository we'll be working out of for t
 
 ```bash
 git clone https://github.com/castlemilk/kubernetes-cicd.git
-cd kubernetes-cdcd
+cd kubernetes-cicd
 ```
 
 In order to run the following sections we're going to need to install a few dependencies, these are:
@@ -285,8 +273,8 @@ kubernetes-cicd git:(feature/products) ✗
 You'll see Skaffold trigger a re-deploy as the code is different on each branch. Switch to the other branch `feature/ratings` to see what happens in the browser at [http://products.demo.local](http://products.demo.local). Run the following:
 
 ```bash
-kubernetes-cicd git:(master) ✗ git checkout feature/products
-kubernetes-cicd git:(feature/products) ✗
+kubernetes-cicd git:(feature/products) ✗ git checkout feature/ratings
+kubernetes-cicd git:(feature/ratings) ✗
 ```
 
 Hopefully you see the following:
@@ -297,11 +285,9 @@ Hopefully you see the following:
 
 The end-to-end install steps for standing up the depicted remote architecture can be found in the `kubernetes-cicd` repo in the docs section [here](https://github.com/castlemilk/kubernetes-cicd/blob/master/docs/install.md)
 
-![remote-architecture](./remote-architecture.png)
+![remote-architecture](./remote-architecture.webp)
 
-<center>
-Remote cluster architecture. We'll unpack the details in this diagram is much more detail in this blog series. Including the ins and outs of productionizing Istio and Knative on GKE.
-</center>
+*Remote cluster architecture. We'll unpack the details in this diagram is much more detail in this blog series. Including the ins and outs of productionizing Istio and Knative on GKE.*
 
 &nbsp;
 
@@ -315,11 +301,9 @@ With a working local deployment of our application we need to gain confidence in
 
 A contrast to our local development environment is shown below. Note that we now have external DNS names and some Istio constructs introduced. All of this configuration is contained within the *Kustomize* overlay found in `app/deploy/overlays/staging`. You'll see that there's additional `bases` for the staging and production environments which contain the required Istio configuration to enable ingress to our application from outside the cluster
 
-![local-development-stg](./local-development-stg.png)
+![local-development-stg](./local-development-stg.webp)
 
-<center>
-Staging environment and associated ingress access and tooling required to carry out end-to-end deployment
-</center>
+*Staging environment and associated ingress access and tooling required to carry out end-to-end deployment*
 
 &nbsp;
 

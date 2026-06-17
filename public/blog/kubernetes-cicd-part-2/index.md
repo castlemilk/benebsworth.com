@@ -19,7 +19,7 @@ release: true
 markdown_url: /blog/kubernetes-cicd-part-2/
 canonical_url: 'https://benebsworth.com/blog/kubernetes-cicd-part-2/'
 ---
-![Tekton](/blog/kubernetes-cicd-part-2/tekton.png)
+![Tekton](/blog/kubernetes-cicd-part-2/tekton.webp)
 
 # Overview
 
@@ -31,7 +31,7 @@ The pipelining we'll explore today acts to implement two hemispheres of applicat
 
 The pipelining/workflow/CI/CD tooling ecosystem is incredibly rich with many projects out their providing similar feature sets, but perhaps tailoring their solution to specific types of environments. As part of the quick research done for this article, I discovered that there are [over 33 projects within the CI/CD category provided by the CNCF](https://landscape.cncf.io/category=continuous-integration-delivery&format=card-mode&grouping=category), with even more being available outside of whats captured by the CNCF. In this article we'll focus more specifically tools which are very kubernetes-centric in nature, that is, run specifically within a Kubernetes cluster and can target deploying applications with a strong understanding of Kubernetes resources and life cycle patterns.
 
-![cicd-pipeline-ecosystem](/blog/kubernetes-cicd-part-2/pipeline-ecosystem.png)
+![cicd-pipeline-ecosystem](/blog/kubernetes-cicd-part-2/pipeline-ecosystem.webp)
 
 <center>
 <i>Kubernetes centric pipeline ecosystem and feature comparison</i>
@@ -62,7 +62,7 @@ With these summaries in mind, we've got a practical implementation of one of the
 
 ## Tekton
 
-We've talked in detail about what **Tekton** is, and more specifically how we can go about using its core primitives in [Getting started with Tekton](https://benebsworth.com/getting-started-with-tekton/). For this article we'll go through how we can standup a **Tekton** environment on GKE using our [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd) repository. The instructs are detailed [here](https://github.com/castlemilk/kubernetes-cicd/docs/install-tekton.md), but let break down the sections to help explain each of the key components making up our **Tekton** pipelining stack.
+We've talked in detail about what **Tekton** is, and more specifically how we can go about using its core primitives in [Getting started with Tekton](https://benebsworth.com/getting-started-with-tekton/). For this article we'll go through how we can standup a **Tekton** environment on GKE using our [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd) repository. The instructs are detailed [here](https://github.com/castlemilk/kubernetes-cicd/blob/master/docs/install-tekton.md), but let break down the sections to help explain each of the key components making up our **Tekton** pipelining stack.
 
 ### Tekton Control Plane
 
@@ -120,7 +120,7 @@ This entrypoint will discover the IP address allocated to the **Global LoadBalan
 
 Once everything has been successfully deployed you'll be able to navigate to your **Tekton Dashboard** UI, in my default configuration - used for demonstrations etc - this would be at `tekton-dashboard.tekton-pipelines.cicd.benebsworth.com`. You'll see the following:
 
-![tekton-dashboard](/blog/kubernetes-cicd-part-2/tekton-dashboard-completed.png)
+![tekton-dashboard](/blog/kubernetes-cicd-part-2/tekton-dashboard-completed.webp)
 
 <center>
 <i>Tekton Dashboard, with a fully featured pipeline showing the status of each stage and the associated logs</i>
@@ -165,7 +165,7 @@ This extension will now give us to ability to create a webhook on a target repos
 
 If all goes well you should see a webhook created in your repository like so:
 
-![github-webhook](/blog/kubernetes-cicd-part-2/github-webhook.png)
+![github-webhook](/blog/kubernetes-cicd-part-2/github-webhook.webp)
 
 <center>
 <i>GitHub webhook created on the targeted repository</i>
@@ -187,7 +187,7 @@ more information available soon! repo is available [here](https://github.com/tek
 
 In a previous post - [getting started with tekton](https://benebsworth.com/getting-started-with-tekton/) - we discussed core primitives defined by `Tekton`. These are used to construct an end-to-end pipeline which manages the linting, testing, building and deployment of our application, all completely self-contained within our Kubernetes cluster.
 
-![pipeline-architecture](/blog/kubernetes-cicd-part-2/pipeline-architecture.png)
+![pipeline-architecture](/blog/kubernetes-cicd-part-2/pipeline-architecture.webp)
 
 <center>
 <i>End-to-end tekton pipeline architecture</i>
@@ -214,7 +214,7 @@ This above described pipeline can be found [here](https://github.com/castlemilk/
 
 Within each stage of our `Pipeline` we're able to provide feedback relating to how each stage has proceeded. This results in the final status check view within our PR:
 
-![github-status-view](/blog/kubernetes-cicd-part-2/github-status-view.png)
+![github-status-view](/blog/kubernetes-cicd-part-2/github-status-view.webp)
 
 <center>
 <i>GitHub Status API View, providing feedback to users on the status of a PR that triggered a <code>PipelineRun</code>!</i>

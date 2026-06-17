@@ -1,0 +1,83 @@
+<LabCanvas effect="reaction-diffusion" height={400} params={{ preset: "mitosis", speed: 12 }} caption="The Gray-Scott model in mitosis mode. Two chemicals — a feed U and an autocatalyst V — react and diffuse on a grid. From a single seed blob, V-rich spots grow, stretch, and split in two, like cells dividing. Switch the preset to watch the same two equations grow spots, mazes, coral, or travelling waves." />
+
+## The Core Idea
+
+In 1952 Alan Turing asked a startling question: how does a featureless ball of identical cells — an early embryo — decide where to put stripes, spots, fingers, and limbs? His answer, in *The Chemical Basis of Morphogenesis*, was that **diffusion can create pattern**, not just smear it out. Couple two chemicals that react with each other, let them diffuse at *different* speeds, and a perfectly uniform soup becomes unstable: tiny random fluctuations get amplified into a regular, self-organising pattern. Turing called these chemicals **morphogens**.
+
+The animation above is a *reaction–diffusion* system — the Gray-Scott model — running that idea live. There is no blueprint, no master plan, no pixel that "knows" it should be a spot. Every cell runs the same two equations looking only at its neighbours, and yet spots, stripes, and labyrinths emerge from nothing but a seed and a clock. This is **emergence**: global order with no global controller.
+
+## The Mathematics
+
+Two chemical concentration fields, `U` and `V`, live on a grid. `U` is the "feed" substrate; `V` is an autocatalyst that consumes `U` to make more of itself via the reaction `U + 2V → 3V`. Their evolution is governed by two coupled partial differential equations:
+
+```
+∂U/∂t = Du ∇²U − U·V² + F·(1 − U)
+∂V/∂t = Dv ∇²V + U·V² − (F + k)·V
+```
+
+Read each term as a physical process:
+
+- **`Du ∇²U` / `Dv ∇²V`** — *diffusion*. The Laplacian `∇²` measures how much a cell differs from the average of its neighbours; chemicals flow from high to low concentration. The crucial asymmetry is `Du > Dv`: the substrate spreads faster than the activator.
+- **`−U·V²` / `+U·V²`** — *reaction*. Wherever `U` and `V` meet, the cubic autocatalytic term burns one `U` and three `V` are produced. `V` is self-amplifying: more `V` makes even more `V`.
+- **`+F·(1 − U)`** — *feed*. Fresh `U` is pumped in at rate `F`, replenishing the substrate toward `U = 1`.
+- **`−(F + k)·V`** — *kill*. `V` is removed at rate `F + k`. If `V` can't outrun its own removal, the pattern dies; if it outruns it, the pattern grows.
+
+The whole drama is a race between an **activator** (`V`, slow-diffusing, self-reinforcing) and an **inhibitor** (substrate depletion, fast-diffusing). Local activation plus long-range inhibition is the universal recipe for Turing patterns — it shows up in animal coats, sand ripples, and vegetation stripes in semi-arid deserts.
+
+### Discretisation
+
+To run this on a grid we replace the Laplacian with a 3×3 convolution kernel and step time forward with simple forward (explicit Euler) integration, `dt = 1`:
+
+```
+        0.05  0.20  0.05
+∇²  ≈   0.20 −1.00  0.20
+        0.05  0.20  0.05
+```
+
+The kernel sums to zero (so a flat field has zero Laplacian) and weights orthogonal neighbours more than diagonals. With `Du = 0.16`, `Dv = 0.08`, this scheme is numerically stable. The grid uses **periodic (wrap-around) boundaries** — the left edge's neighbour is the right edge — so patterns tile seamlessly with no wall artefacts. Two `Float32Array` buffers per field are *ping-ponged*: read from one, write to the other, swap. Each animation frame runs several sub-steps so the evolution is visible in real time, and neighbour indices are precomputed once so the inner loop is pure arithmetic.
+
+### Why uniform isn't stable
+
+The trivial state `U = 1, V = 0` is a fixed point — feed everything, no reaction. But Turing's insight is that it can be an *unstable* fixed point. Linearise around it and you find a band of spatial wavelengths whose perturbations grow exponentially. The fastest-growing wavelength sets the characteristic spot size or stripe spacing you see. That's why the patterns have a consistent scale: it's an intrinsic length set by the diffusion ratio and the reaction rates, not by anything external.
+
+## The control space
+
+<LabSide effect="reaction-diffusion" height={380} params={{ preset: "spots", speed: 12 }} caption="Spots: F=0.035, k=0.065. Isolated V-rich blobs that grow to a fixed size and stop — the classic Turing dot pattern, like a cheetah's coat.">
+
+Everything hinges on just two numbers, the **feed rate `F`** and **kill rate `k`**. Together they pick a coordinate in the famous Pearson parameter map of the Gray-Scott model, and tiny moves across that map flip the system between wildly different regimes — spots, stripes, mazes, self-replicating blobs, and chaotic waves all live within a strip a few thousandths of a unit wide.
+
+- **Pattern** selects a preset `(F, k)` pair that drops you into a known region of the map. Changing it reinitialises the fields so you watch the new pattern grow from a fresh seed.
+- **Feed rate `F`** (custom mode) pumps in substrate. Higher `F` keeps the field saturated and tends toward connected, maze-like growth; lower `F` starves it toward isolated spots.
+- **Kill rate `k`** (custom mode) removes activator. There is a knife-edge: just below a critical `k` the pattern thrives and fills space; just above it the activator can't sustain itself and everything decays back to the blank `U = 1` state.
+- **Speed** sets how many simulation sub-steps run per frame — purely how fast you watch evolution unfold, not the physics.
+- **Reseed** re-nucleates fresh blobs without changing `F` and `k`, handy for watching the *same* rule grow a different random arrangement.
+
+</LabSide>
+
+<LabSide effect="reaction-diffusion" height={380} params={{ preset: "maze", speed: 12 }} reverse={true} caption="Maze: F=0.029, k=0.057. The activator forms connected, branching corridors that grow until they fill the plane — a labyrinth with a characteristic wall spacing.">
+
+To explore the boundary yourself, choose the **Custom** preset and nudge `k` by single thousandths. Around `F ≈ 0.037`, `k ≈ 0.065` you'll find **mitosis** — V-blobs that grow, elongate, pinch in the middle, and split into two, then repeat, looking uncannily like dividing cells. This is *self-replication* falling straight out of chemistry: no copying machinery, just an unstable balance between growth and removal. Drop `k` a touch and the spots merge into stripes; drop it further and the stripes connect into a maze. Raise `F` and the whole field becomes a turbulent sea of travelling waves.
+
+</LabSide>
+
+## What to look for
+
+- **Nucleation.** Everything starts from a few seed blobs of `V`. Watch how the pattern *grows outward* from the seeds rather than appearing all at once — information propagates at a finite speed, like a crystal front.
+- **A consistent scale.** Spots are all roughly the same size; maze corridors keep a constant width. That length is intrinsic to the equations.
+- **Fronts and competition.** In maze and coral modes, growing fingers compete for substrate. Where two fronts meet they stop, freezing in a junction — the same way river deltas and crack networks tessellate space.
+- **Mitosis.** In mitosis mode, find a single spot and follow it: it bulges, narrows, and divides. Set Speed high to see many generations of "cells" sweep across the grid.
+- **The colour ramp** maps activator concentration `V` from the near-black background, up through teal and purple, to bright orange where `V` is highest. Bright filaments are the active reaction fronts; dark regions are pure substrate awaiting invasion.
+
+## Why it matters
+
+Turing's mechanism is now believed to underlie a remarkable range of real biological patterning. Experiments have directly implicated reaction–diffusion in the **stripes of zebrafish**, the **ridges on the roof of a mouse's mouth**, the spacing of **hair follicles** and **feather buds**, and the **digit-forming** Turing system in vertebrate limbs (Sheth et al., *Science* 2012). Beyond biology, the same maths describes the **Belousov–Zhabotinsky** chemical oscillator, **vegetation banding** in drylands, and the ripples in **wind-blown sand**.
+
+It is also a touchstone for thinking about emergence and computation. The Gray-Scott model is Turing-complete-adjacent in spirit: simple local rules, no central controller, yet open-ended pattern and even self-replicating structures. The lesson Turing drew in 1952 still lands: **complexity does not require a complex cause.** A featureless start, two chemicals, and a difference in how fast they spread is enough to paint a leopard.
+
+## Further reading
+
+- A. M. Turing, "The Chemical Basis of Morphogenesis," *Philosophical Transactions of the Royal Society B*, 237 (1952), 37–72 — the founding paper.
+- P. Gray & S. K. Scott, "Autocatalytic reactions in the isothermal, continuous stirred tank reactor," *Chemical Engineering Science*, 38 (1983) & 39 (1984) — the model these equations are named for.
+- J. E. Pearson, "Complex Patterns in a Simple System," *Science*, 261 (1993), 189–192 — the parameter-space map that names spots, stripes, mazes, and mitosis.
+- R. Sheth et al., "Hox Genes Regulate Digit Patterning by Controlling the Wavelength of a Turing-Type Mechanism," *Science*, 338 (2012) — modern experimental confirmation in vertebrate limbs.
+- Karl Sims, [Reaction-Diffusion Tutorial](https://www.karlsims.com/rd.html) — the clearest interactive explanation of the Gray-Scott equations online.

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { CATEGORIES, effectsByCategory, LAB_EFFECTS } from '@/lib/lab/registry'
-import { LabCard } from '@/components/lab/lab-card'
+import type { CategoryNavItem } from '@/components/lab/category-nav'
+import { LabContent } from '@/components/lab/lab-content'
+import { Reveal } from '@/components/motion/reveal'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
 
 const CATEGORY_ACCENT: Record<string, string> = {
@@ -31,6 +32,14 @@ export const metadata: Metadata = {
 }
 
 export default function LabPage() {
+  const navItems: CategoryNavItem[] = CATEGORIES.map((cat) => ({
+    key: cat.key,
+    label: cat.label,
+    glyph: cat.glyph,
+    accent: CATEGORY_ACCENT[cat.key] ?? '#7c5cff',
+    count: effectsByCategory(cat.key).length,
+  }))
+
   return (
     <>
       <JsonLd
@@ -48,66 +57,26 @@ export default function LabPage() {
         ]}
       />
       <SiteNav />
-      <main className="mx-auto w-full max-w-6xl px-6 pb-20 pt-10 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
         <Breadcrumb className="mb-10" items={[{ label: 'Home', href: '/' }, { label: 'Lab' }]} />
-        <p className="type-label text-muted">00 · the lab</p>
-        <h1 className="mt-3 type-h1">Generative experiments</h1>
-        <p className="mt-4 max-w-prose type-body text-fg/70">
-          Small canvas animations spanning generative art, mathematics, and physics — each with
-          live knobs and a note on how it works. Tune them, share a link, steal the idea.
-        </p>
 
-        {CATEGORIES.map((cat) => {
-          const effects = effectsByCategory(cat.key)
-          if (effects.length === 0) return null
-          const accent = CATEGORY_ACCENT[cat.key] ?? '#7c5cff'
+        {/* ── Hero ───────────────────────────────────────────────── */}
+        <section className="pb-20">
+          <Reveal>
+            <p className="type-label text-muted">00 · the lab</p>
+          </Reveal>
+          <Reveal delay={80}>
+            <h1 className="mt-3 type-h1">Generative experiments</h1>
+          </Reveal>
+          <Reveal delay={160}>
+            <p className="mt-4 max-w-prose type-body text-fg/70">
+              Small canvas animations spanning generative art, mathematics, and physics — each with
+              live knobs and a note on how it works. Tune them, share a link, steal the idea.
+            </p>
+          </Reveal>
+        </section>
 
-          return (
-            <section
-              key={cat.key}
-              className="mt-16 border-l-2 pl-6 sm:pl-8"
-              style={{ borderColor: accent }}
-            >
-              <div className="mb-8">
-                <h2 className="type-h2">
-                  <span
-                    className="accent-ink mr-2 inline-block text-[0.85em]"
-                    style={{ '--ink': accent } as React.CSSProperties}
-                  >
-                    {cat.glyph}
-                  </span>
-                  <span className="opacity-40">·</span>
-                  <span className="ml-2">{cat.label}</span>
-                </h2>
-                <p className="mt-2 max-w-prose type-body text-fg/60">{cat.blurb}</p>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                {effects.map((e) => (
-                  <Link
-                    key={e.slug}
-                    href={`/lab/${e.slug}/`}
-                    className="group min-w-0 rounded-2xl border border-[var(--color-border)] bg-surface p-4 transition hover:border-[var(--color-muted)]"
-                  >
-                    <LabCard slug={e.slug} />
-                    <h3 className="mt-4 type-h3">{e.title}</h3>
-                    <p className="mt-1 type-body text-fg/65">{e.blurb}</p>
-                    <ul className="mt-3 flex gap-2">
-                      {e.tags.map((t) => (
-                        <li
-                          key={t}
-                          className="rounded-full border border-[var(--color-border)] px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted"
-                        >
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )
-        })}
+        <LabContent navItems={navItems} />
       </main>
       <SiteFooter />
     </>

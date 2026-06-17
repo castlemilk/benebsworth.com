@@ -115,7 +115,6 @@ export const spirographRose: EffectModule = {
 
     function rebuildLayers(p: Params): void {
       const count = p.layers as number
-      const petals = p.petals as number
       const innerRatio = p.innerRatio as number
       const baseColor = (p.color as string) || '#e84393'
 
@@ -126,7 +125,6 @@ export const spirographRose: EffectModule = {
       for (let i = 0; i < count; i++) {
         // Each layer gets a slightly different inner ratio and petal count
         const layerRatio = innerRatio + (i - count / 2) * 0.06
-        const _layerPetals = petals + (i % 2 === 0 ? 1 : -1) * (i * 0.5)
         const R = baseScale * (1 - i * 0.08)
         const r = R * Math.max(0.1, Math.min(0.9, layerRatio))
         const dBase = r * 0.8

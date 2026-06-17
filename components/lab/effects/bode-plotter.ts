@@ -33,7 +33,6 @@ export const createRenderer = (
   const magP = new Float32Array(MAGN)
 
   let lastParamHash = ''
-  let lastTime = 0
 
   function computeResponse(params: Params) {
     const type = (params.type ?? defaults.type) as string
@@ -96,9 +95,6 @@ export const createRenderer = (
 
   return {
     step(_timeMs: number, params: Params) {
-      const _dt = Math.min((_timeMs - lastTime) / 1000, 0.05)
-      lastTime = _timeMs
-
       const hash = `${params.type ?? defaults.type}-${params.order ?? defaults.order}-${params.normalizedFreq ?? defaults.normalizedFreq}`
       if (hash !== lastParamHash) {
         computeResponse(params)

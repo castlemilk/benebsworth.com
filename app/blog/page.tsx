@@ -1,14 +1,11 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
-import { getPublishedPosts } from '@/lib/content'
-import { topicFor } from '@/lib/topics'
+import { getPublishedPosts, type BlogPostSummary } from '@/lib/content'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Reveal } from '@/components/motion/reveal'
 import { AnimatedHeading } from '@/components/motion/animated-heading'
-import { SpotlightCard } from '@/components/motion/spotlight-card'
-import { TopicMarker } from '@/components/blog/topic-marker'
+import { BlogContent } from '@/components/blog/blog-content'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
 
 export const metadata: Metadata = {
@@ -27,27 +24,17 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: 'Blog · Ben Ebsworth', creator: '@benebsworth', site: '@benebsworth' },
 }
 
-function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
-  return (
-    <div className="mb-6 flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
-      <span className="text-blog">{index}</span>
-      <span>{children}</span>
-      <span className="h-px flex-1 bg-[var(--color-border)]" />
-    </div>
-  )
-}
-
-function fmtDate(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso.slice(0, 10)
-  return d
-    .toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' })
-    .toUpperCase()
-}
-
 export default function BlogPage() {
   const posts = getPublishedPosts()
-  const [lead, ...rest] = posts
+
+  const postSummaries: BlogPostSummary[] = posts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    date: p.date,
+    description: p.description,
+    tags: p.tags,
+    heroImage: p.heroImage,
+  }))
 
   const ld = [
     breadcrumbLd([
@@ -65,12 +52,14 @@ export default function BlogPage() {
   return (
     <>
       <JsonLd data={ld} />
+      {postSummaries[0]?.heroImage && (
+        <link rel="preload" as="image" href={postSummaries[0].heroImage} fetchPriority="high" />
+      )}
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
         <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
 
-        {/* ── Hero ───────────────────────────────────────────────── */}
         <section className="pt-8 pb-20 md:pt-10">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-blog">
@@ -90,163 +79,7 @@ export default function BlogPage() {
           </Reveal>
         </section>
 
-        {/* ── Posts ──────────────────────────────────────────────── */}
-        <section>
-          <SectionLabel index="01">{posts.length} posts</SectionLabel>
-
-          {/* Featured / newest — wide card: a tinted topic panel keyed to the
-              post's accent alongside large editorial type. Distinct from the
-              compact list rows below to give the page rhythm. */}
-          {lead && (() => {
-            const topic = topicFor(lead)
-            return (
-              <Reveal>
-                <Link href={`/blog/${lead.slug}/`} className="block rounded-2xl">
-                  <SpotlightCard accent={topic.accent} className="overflow-hidden">
-                    <div className="grid grid-cols-1 md:grid-cols-[0.85fr_1fr]">
-                      {/* topic panel */}
-                      <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-[var(--color-border)] bg-surface md:border-b-0 md:border-r">
-                        {lead.heroImage ? (
-                          <img
-                            src={lead.heroImage}
-                            alt=""
-                            className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-500 group-hover/spot:scale-105 group-hover/spot:opacity-100"
-                          />
-                        ) : (
-                          <>
-                            <span
-                              aria-hidden
-                              className="absolute inset-0"
-                              style={{
-                                background: `radial-gradient(75% 70% at 50% 36%, color-mix(in srgb, ${topic.accent} 22%, transparent), transparent 72%)`,
-                              }}
-                            />
-                            <span
-                              aria-hidden
-                              className="absolute inset-0 opacity-[0.4]"
-                              style={{
-                                backgroundImage:
-                                  'linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px)',
-                                backgroundSize: '28px 28px',
-                                maskImage:
-                                  'radial-gradient(70% 70% at 50% 50%, black, transparent 75%)',
-                              }}
-                            />
-                            <div className="relative flex flex-col items-center gap-4">
-                              <img
-                                src={topic.icon}
-                                alt=""
-                                aria-hidden
-                                width={112}
-                                height={112}
-                                className="object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                                style={{ width: 112, height: 112 }}
-                              />
-                              <span
-                                className="accent-ink font-mono text-[0.62rem] uppercase tracking-[0.28em]"
-                                style={{ '--ink': topic.accent } as React.CSSProperties}
-                              >
-                                {topic.label}
-                              </span>
-                            </div>
-                          </>
-                        )}
-                      </div>
-
-                      {/* editorial column */}
-                      <div className="flex flex-col justify-center p-9 sm:p-12">
-                        <div className="flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
-                          <span className="text-blog">Latest</span>
-                          <span className="text-muted">·</span>
-                          <span className="text-muted">{fmtDate(lead.date)}</span>
-                        </div>
-                        <h2 className="type-h2 mt-3">
-                          {lead.title}
-                        </h2>
-                        <p className="mt-4 max-w-lg font-sans text-[1.0625rem] leading-7 text-fg/70">
-                          {lead.description}
-                        </p>
-                        {lead.tags.length > 0 && (
-                          <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted">
-                            {lead.tags.slice(0, 5).map((t) => (
-                              <span key={t}>#{t}</span>
-                            ))}
-                          </div>
-                        )}
-                        <span className="mt-7 inline-flex items-center gap-2 font-mono text-sm text-blog">
-                          Read post
-                          <span className="transition-transform duration-300 group-hover/spot:translate-x-1">
-                            →
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </SpotlightCard>
-                </Link>
-              </Reveal>
-            )
-          })()}
-
-          {/* Remaining posts — compact editorial rows. An accent rail keys each
-              row to its topic; the marker chip carries the glyph + label inline,
-              so the list stays scannable without a repetitive icon grid. */}
-          {rest.length > 0 && (
-            <div className="mt-6 space-y-4">
-              {rest.map((p, i) => {
-                const topic = topicFor(p)
-                return (
-                  <Reveal key={p.slug} delay={Math.min(i, 6) * 50}>
-                    <Link href={`/blog/${p.slug}/`} className="block rounded-xl">
-                      <SpotlightCard accent={topic.accent} className="overflow-hidden p-6 sm:p-8">
-                        {/* accent rail */}
-                        <span
-                          aria-hidden
-                          className="absolute inset-y-0 left-0 z-10 w-[3px]"
-                          style={{ backgroundColor: topic.accent, opacity: 0.65 }}
-                        />
-                        <div className="relative z-10 flex flex-col gap-3 pl-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                          <div className="min-w-0 flex-1">
-                            <div className="mb-2 flex flex-wrap items-center gap-3">
-                              <TopicMarker topic={topic} />
-                              <time className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
-                                {fmtDate(p.date)}
-                              </time>
-                            </div>
-                            <h2 className="font-display text-xl font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover/spot:text-blog sm:text-2xl">
-                              {p.title}
-                            </h2>
-                            <p className="mt-2 max-w-2xl font-sans text-base leading-7 text-fg/65">
-                              {p.description}
-                            </p>
-                          </div>
-                          {p.heroImage ? (
-                            <div className="mt-4 shrink-0 sm:ml-6 sm:mt-0">
-                              <div className="relative h-24 w-32 overflow-hidden rounded-lg border border-[var(--color-border)] bg-black/20 sm:h-28 sm:w-40">
-                                <img
-                                  src={p.heroImage}
-                                  alt=""
-                                  className="absolute inset-0 h-full w-full object-cover opacity-85 transition-transform duration-500 group-hover/spot:scale-110 group-hover/spot:opacity-100"
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <span
-                              aria-hidden
-                              className="hidden shrink-0 self-center font-mono text-base text-muted transition-all duration-300 group-hover/spot:translate-x-1 sm:block"
-                              style={{ color: `color-mix(in srgb, ${topic.accent} 80%, transparent)` }}
-                            >
-                              →
-                            </span>
-                          )}
-                        </div>
-                      </SpotlightCard>
-                    </Link>
-                  </Reveal>
-                )
-              })}
-            </div>
-          )}
-        </section>
+        <BlogContent posts={postSummaries} />
       </main>
 
       <SiteFooter />

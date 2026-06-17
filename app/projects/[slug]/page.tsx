@@ -57,7 +57,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={ld} />
       <SiteNav />
 
-      <main className="mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8">
         <Reveal>
           <Breadcrumb
             className="mt-8"

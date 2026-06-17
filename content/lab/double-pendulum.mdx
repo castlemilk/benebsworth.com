@@ -20,9 +20,9 @@ The double pendulum has two degrees of freedom: angles θ₁ and θ₂. The equa
 
 The key nonlinearity is the `sin(θ₁ − θ₂)` coupling and the `cos(2θ₁ − 2θ₂)` in the denominator. These terms prevent analytical solution and create the sensitive dependence on initial conditions.
 
-<LabSide effect="double-pendulum" height={280} params={{ pendulums: 5, length: 0.5, gravity: 1.5, speed: 0.8, trail: 0.04 }} reverse={true} caption="Five pendulums, tighter trail. The initial cluster of paths rapidly spreads — trajectory divergence in action.">
+<LabSide effect="double-pendulum" height={280} params={{ pendulums: 3, length: 0.5, gravity: 1.5, speed: 0.8, trail: 0.04 }} reverse={true} caption="Three pendulums, tighter trail. The initial cluster of paths rapidly spreads — trajectory divergence in action.">
 
-Try increasing the number of pendulums and watch how the initially identical paths rapidly diverge. The trail persistence slider shows the history — longer trails reveal how the paths fan out over time.
+Try increasing the number of pendulums (1–3) and watch how the initially identical paths rapidly diverge. The trail persistence slider shows the history — longer trails reveal how the paths fan out over time.
 
 </LabSide>
 

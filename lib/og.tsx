@@ -107,7 +107,7 @@ export function renderOgCard({
               </div>
             ) : iconDataUri ? (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 60, height: 60, borderRadius: 14, background: `linear-gradient(135deg, ${accent}26, ${accent}08)`, border: `1px solid ${accent}40` }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                { }
                 <img src={iconDataUri} width={42} height={42} style={{ objectFit: 'contain' }} alt="" />
               </div>
             ) : null}

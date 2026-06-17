@@ -1,16 +1,20 @@
-import type { EffectModule } from '@/lib/lab/types'
+import type { ControlSpec, EffectModule, Params } from '@/lib/lab/types'
 
 const NEIGHBORS: ReadonlyArray<readonly [number, number]> = [[1, 0], [-1, 0], [0, 1], [0, -1]]
 
+export const controls: ControlSpec[] = [
+  { key: 'cell', label: 'Cell size', type: 'range', min: 4, max: 24, step: 1 },
+  { key: 'states', label: 'States', type: 'range', min: 3, max: 16, step: 1 },
+  { key: 'threshold', label: 'Threshold', type: 'range', min: 1, max: 4, step: 1 },
+  { key: 'tickMs', label: 'Tick (ms)', type: 'range', min: 30, max: 300, step: 10 },
+  { key: 'color', label: 'Hue base', type: 'color' },
+]
+
+export const defaults: Params = { cell: 10, states: 8, threshold: 2, tickMs: 90, color: '#7c5cff' }
+
 export const cyclicAutomaton: EffectModule = {
-  controls: [
-    { key: 'cell', label: 'Cell size', type: 'range', min: 4, max: 24, step: 1 },
-    { key: 'states', label: 'States', type: 'range', min: 3, max: 16, step: 1 },
-    { key: 'threshold', label: 'Threshold', type: 'range', min: 1, max: 4, step: 1 },
-    { key: 'tickMs', label: 'Tick (ms)', type: 'range', min: 30, max: 300, step: 10 },
-    { key: 'color', label: 'Hue base', type: 'color' },
-  ],
-  defaults: { cell: 10, states: 8, threshold: 2, tickMs: 90, color: '#7c5cff' },
+  controls,
+  defaults,
   createRenderer(ctx, dims, _theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     void _theme // clears to transparent; hsl cells read on both the light and dark stage
     let cols = 0, rows = 0, grid = new Int8Array(0), next = new Int8Array(0), cell = 0, states = 0

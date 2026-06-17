@@ -185,9 +185,60 @@ As we discovered during the final epoch:
 <Figure src="/blog/post-slug/layout-1.png" caption="The memory allocation profile during the forward pass." placement="right" />
 ```
 
-## Math and equations
+## MDX Component Palette
 
-The MDX pipeline has `remark-math` + `rehype-katex` enabled, so LaTeX-style math renders server-side. No configuration needed by the author — write `$...$` for inline and `$$...$$` for display, and it just works. KaTeX is the rendering engine (not MathJax), so it's fast enough to be in the static export without a runtime cost.
+This is the menu — reuse a Reusable component before building a new one; one-off rows show what's possible, not what to drop into an unrelated post. One row per key actually registered in `components/mdx/mdx-components.tsx`.
+
+| Component | Props (types; required ✅) | When to use | Reusable / one-off |
+|---|---|---|---|
+| `StatGroup` | children (none) | Wrap 2–4 `<Stat>` to break up long prose with a metric row | Reusable (editorial) |
+| `Stat` | `label` str ✅, `value` str ✅, `context?` str | A bold callout for an important metric/number | Reusable (editorial) |
+| `PullQuote` | children ✅ | A striking sentence as a large branded blockquote; 1–2 per post | Reusable (editorial) |
+| `Figure` | `src` str ✅, `caption?` str, `credit?` str, `placement?` `full\|left\|right\|inset` | Captioned layout image with text-wrap placement | Reusable (editorial) |
+| `Callout` | `type?` `info\|warning\|success\|error\|thinking\|feeling\|doing`, children ✅ | A "stop, look at this" insight, gotcha, or contrast; 3–5 per post | Reusable (editorial) |
+| `Equation` | `id?` str, `number?` str, `caption?` str, `latex?` str, children (`$$…$$`) ✅ | A numbered, cross-referenceable display equation; 3–5 per post | Reusable (editorial) |
+| `GithubLink` | `url` str ✅ | Inline styled repo link card | Reusable (editorial) |
+| `Video` | `src?` str, `width?` num, `height?` num, `alt?` str | Auto-playing muted looping demo video | Reusable (editorial) |
+| `LabCanvas` | `effect` str ✅, `height?` num, `params?` obj, `caption?` str, `controls?` bool | Embed ANY registered lab effect inline as an interactive canvas + live controls | Reusable (lab) |
+| `LabSide` | `effect` str ✅, children ✅, `height?` num, `params?` obj, `controls?` bool, `caption?` str, `reverse?` bool | Two-column text-beside-lab layout (stacks on mobile); weave prose and lab | Reusable (lab) |
+| `FlowDiagram` | `background` str ✅, `width` num ✅, `height` num ✅, `steps` FlowStep[] ✅, `label` str ✅ | The reusable walkthrough primitive: stepped image+SVG-overlay reveal with per-step prose/code. Register a thin wrapper that supplies data | Reusable (primitive) |
+| `IngressFlowBasic` / `EgressFlowBasic` / `EgressFlowAdvanced` | (none — wrappers) | Istio ingress/egress walkthroughs; data-only wrappers over `FlowDiagram` | one-off (istio post) |
+| `FfnnFlow` / `RnnFlow` / `LstmFlow` / `VaeFlow` / `GanFlow` / `TransformerFlow` | (none) | Animated neural-net architecture diagrams (one per zoo cell type) | one-off (zoo post) |
+| `ZooMiniMap` | (none) | Clickable 3×2 mini-map navigating to each zoo diagram | one-off (zoo post) |
+| `ColorLegend` | (none) | 15-swatch Asimov-poster colour legend for the zoo diagrams | one-off (zoo post) |
+| `AttentionHeatmap` | (none) | Interactive self-attention matrix heatmap with scale slider | one-off (LLM-internals) |
+| `SoftmaxLab` | (none) | Animated softmax-pipeline walkthrough (raw → ÷√dₖ → exp → ÷Σ) | one-off (LLM-internals) |
+| `TokenSampler` | (none) | Next-token sampler with temperature / top-k / top-p sliders | one-off (LLM-internals) |
+| `MoEBlock` | (none) | Mixture-of-Experts routing diagram with parameter accounting | one-off (LLM-internals) |
+| `PllDiagram` | (none) | Renders the PLL feedback circuit from its JSON via `<Diagram>` | one-off (PLL post) |
+
+`LabCanvas` and `LabSide` are how most posts become interactive "for free": `effect` is any slug in `lib/lab/registry.ts`, so you embed an existing lab effect (with its real controls) without writing canvas code. Reach for these before authoring a bespoke component.
+
+### THE COMPONENT SYNC RULE (keep three places in sync)
+
+A registered MDX component lives in **three** places, and all three must agree:
+
+1. **Implementation** — `components/mdx/<name>.tsx` (the actual React component).
+2. **Registration KEY** — `components/mdx/mdx-components.tsx`. The MDX tag IS the object key: `{ Foo: Bar }` means you write `<Foo/>`, not `<Bar/>`.
+3. **Description** — `scripts/gen-md-siblings.mjs` `COMPONENT_DESCRIPTIONS`. This is what LLM crawlers see in the `.md` sibling where the live component can't render.
+
+**The invariant:** a registered component with **no** `COMPONENT_DESCRIPTIONS` entry ships a blank placeholder to crawlers (the script falls back to `` `Interactive component `Name` — see the rendered post.` `` — useless); a description with **no** registration is dead — it describes a tag no post can use.
+
+**Drift check** — compare the registration keys against the description keys:
+
+```bash
+# Registered keys (object keys + inline component definitions in mdx-components.tsx)
+grep -oE '^\s+[A-Z][A-Za-z0-9]+,' components/mdx/mdx-components.tsx | tr -d ' ,'
+# Description keys
+grep -oE '^\s+[A-Z][A-Za-z0-9]+:' scripts/gen-md-siblings.mjs | tr -d ' :'
+# Diff the two sorted lists; anything registered-but-undescribed is drift.
+```
+
+**Worked example (current known drift):** `LabCanvas`, `LabSide`, and `PllDiagram` are registered in `mdx-components.tsx` but were missing from `COMPONENT_DESCRIPTIONS` — so any post embedding a lab shipped a blank placeholder to crawlers. When you add a component, add its description in the same change.
+
+## Deep dive: math and equations
+
+The deep-dive reference for the `Equation` palette row and raw `$…$` / `$$…$$` math. The MDX pipeline has `remark-math` + `rehype-katex` enabled, so LaTeX-style math renders server-side. No configuration needed by the author — write `$...$` for inline and `$$...$$` for display, and it just works. KaTeX is the rendering engine (not MathJax), so it's fast enough to be in the static export without a runtime cost.
 
 ### Inline math — `$...$`
 
@@ -564,6 +615,61 @@ Five qualities separate a post readers remember from a post readers skim:
 | Math breaks in dark mode | The `.katex` CSS colour override was lost — re-add the rules in `globals.css` |
 | Literal `$5` renders as broken math | Escape the dollar: `\$5` |
 | Copy buttons missing on `<Equation>` | `latex` prop not set — add it. Authors must provide the LaTeX source explicitly because it's not recoverable from `children` after the MDX pipeline converts to KaTeX HTML |
+
+## Publish gate (NEVER ship without)
+
+If **any** of these fail, the post is **not done** — no exceptions, no "I'll fix it after deploy". Each gate is hard and verifiable; each points at the deeper section that explains it.
+
+1. **`npm run build` passes.** A failed build is a broken post. Build errors are almost always MDX syntax (unclosed tag, unregistered component, bad escaping). See [Build, preview, deploy](#build-preview-deploy).
+2. **Every image exists in BOTH `content/blog/<slug>/` and `public/blog/<slug>/`.** Only `public/` is served; nothing copies automatically. Confirm zero 404s in the network tab. See [Quickstart](#quickstart--add-a-post).
+3. **Every custom tag is PascalCase AND registered** in `components/mdx/mdx-components.tsx`. kebab-case tags and unregistered tags render as nothing. See [Bespoke interactive components](#bespoke-interactive-components).
+4. **Math is RENDERED, not raw.** Count `.katex` elements in the served HTML and confirm it matches the number of `$…$` + `$$…$$` blocks. Every `<Equation>` has a **unique** `eqn:`-prefixed `id` AND a `latex` prop (the copy buttons and `.md` sibling depend on it). See [Deep dive: math and equations](#deep-dive-math-and-equations).
+5. **`.md` sibling regenerated** (`npm run md:siblings`) AND every component used in the post has a `COMPONENT_DESCRIPTIONS` entry — no blank crawler placeholders. See [THE COMPONENT SYNC RULE](#the-component-sync-rule-keep-three-places-in-sync).
+6. **Renders in BOTH light and dark theme.** Callouts, sticky nav, breadcrumb, diagram colours all legible in each. See [Cross-theme verification](#6-cross-theme-verification).
+7. **Diagram accuracy verified by Playwright DOM check, not eyeball.** A diagram that renders is not a diagram that is correct — assert node counts / colours / cursor-on-trace against the data. See [Diagram accuracy](#diagram-accuracy--verifying-interactive-components).
+8. **Frontmatter has `title` + `date` + intended release/draft state.** `title`/`date` are required (build throws without them); set `release`/`draft` to the state you actually intend (defaults publish). See [Frontmatter](#frontmatter).
+
+## Commissioning a post
+
+### Is this topic worth writing?
+
+Score it on three axes, 1–5 each. **Total ≥ 12 → write it. < 8 → wait** (the idea isn't ready, or you don't care enough yet).
+
+| Axis | 1 = skip | 3 = maybe | 5 = must-write |
+|---|---|---|---|
+| Reusable lab effects | no existing effect fits | one effect fits | two-plus existing effects compose into the post |
+| Visual / interactive payoff | pure prose, nothing to show | a static figure would help | the topic *demands* an interactive diagram |
+| Personal conviction | "could write it" | "would enjoy writing it" | "have to write this" |
+
+The single best predictor of engagement: **a topic that ties together 2+ existing labs the author already cares about.** That combination scores high on all three axes at once and the post almost writes itself.
+
+### Desk house angles
+
+Each desk has a canonical anchor source (what the field considers correct), the reusable labs it draws from, and a house angle (the framing that makes the post land).
+
+| Desk | Canonical anchor source | Reusable labs | House angle |
+|---|---|---|---|
+| Maths / Algorithms | Knuth (TAOCP); Cooley–Tukey 1965 | `fourier-series`, `random-walk`, `phase-portrait`, `lorenz` | "the same structure shows up in two unrelated places" |
+| Physics | Lorenz 1963; Nielsen & Chuang | `lorenz-attractor`, `bloch-sphere`, `quantum-tunneling`, `band-structure` | "lead with the phenomenon, derive after" |
+| Software / Infra | k8s / Tekton / Argo docs | `flow-diagram` walkthroughs | "desired-state vs reality — show the failure mode" |
+| EE / Signals | Pozar (RF); Franklin & Powell (control) | `smith-chart`, `rlc-resonance`, `pll-lock-in`, `transmission-line`, `bode-plotter` | "every wire is an RLC; every loop is a control system" |
+
+## Voice & house style
+
+**Positive rules:**
+
+- **Lead with a counter-intuitive claim.** "Every wire is an RLC circuit." "A PLL is a PID controller in disguise." A claim the reader wants to test as they read.
+- **Second person + present tense for the reader's actions.** "You sweep the frequency and the marker walks the unit circle" — not "the user would observe…".
+- **Sentence-case headings.** "How to read a Smith chart", not "How To Read A Smith Chart".
+- **Figures as digits, with units.** `50 Ω`, `1.2B`, `48 hours` — not "fifty ohm", "one point two billion".
+- **Define each acronym on first use.** "phase-locked loop (PLL)", then `PLL` thereafter.
+- **Pace with components.** 3–5 `<Callout>`s and 3–5 numbered `<Equation>`s per ~2000-word post. Fewer reads as a wall of text; more reads as Twitter.
+
+**Banned phrases / AI tells** — do not use:
+
+- "it's worth noting", "in today's fast-paced world", "delve", "leverage" (as a verb), "in conclusion"
+- Stacked transitions: "moreover", "furthermore", "additionally" piling up between paragraphs
+- Clickbait superlatives ("the ultimate guide", "game-changing", "revolutionary")
 
 ## Build, preview, deploy
 

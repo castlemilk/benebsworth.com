@@ -1,13 +1,17 @@
-import type { EffectModule } from '@/lib/lab/types'
+import type { ControlSpec, EffectModule, Params } from '@/lib/lab/types'
+
+export const controls: ControlSpec[] = [
+  { key: 'count', label: 'Stars', type: 'range', min: 80, max: 800, step: 20 },
+  { key: 'speed', label: 'Warp', type: 'range', min: 0.2, max: 4, step: 0.1 },
+  { key: 'streak', label: 'Streak', type: 'range', min: 0, max: 1, step: 0.05 },
+  { key: 'color', label: 'Color', type: 'color' },
+]
+
+export const defaults: Params = { count: 300, speed: 1, streak: 0.4, color: '#ececf0' }
 
 export const starfield: EffectModule = {
-  controls: [
-    { key: 'count', label: 'Stars', type: 'range', min: 80, max: 800, step: 20 },
-    { key: 'speed', label: 'Warp', type: 'range', min: 0.2, max: 4, step: 0.1 },
-    { key: 'streak', label: 'Streak', type: 'range', min: 0, max: 1, step: 0.05 },
-    { key: 'color', label: 'Color', type: 'color' },
-  ],
-  defaults: { count: 300, speed: 1, streak: 0.4, color: '#ececf0' },
+  controls,
+  defaults,
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     type S = { x: number; y: number; z: number }
     const N = 800

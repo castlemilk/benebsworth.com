@@ -25,15 +25,18 @@ export const createRenderer = (
   const ph = h - margin.top - margin.bottom
 
   const MAX = 500
-  const refPhase = new Float32Array(MAX)
+  const refTrace = new Float32Array(MAX)
   const vcoFreq = new Float32Array(MAX)
   const pdOut = new Float32Array(MAX)
   let head = 0
 
   // PLL state
-  let phase = 0
-  let freq = 1.0  // VCO frequency (normalized)
+  let phase = 0       // VCO phase
+  let refPhase = 0    // reference phase (integrated reference frequency)
+  let freq = 1.0      // VCO frequency (normalized)
   let lastTime = 0
+  let chirpStart = 0  // epoch (ms) for the current chirp sweep — re-armed on retrigger
+  let paramKey = ''
 
   return {
     step(timeMs: number, params: Params) {
@@ -43,16 +46,42 @@ export const createRenderer = (
       const K = (params.Kp ?? defaults.Kp) as number
       const order = parseInt((params.order ?? defaults.order) as string)
 
+      // ── Reset on parameter change ──────────────────────────────
+      // phase / freq / chirp origin all restart so the acquisition
+      // transient replays whenever K or the filter order changes.
+      const key = `${K.toFixed(1)}_${order}`
+      if (key !== paramKey) {
+        paramKey = key
+        phase = 0
+        refPhase = 0
+        freq = 1.0
+        chirpStart = timeMs
+        head = 0
+        refTrace.fill(0)
+        vcoFreq.fill(0)
+        pdOut.fill(0)
+      }
+
+      // ── Auto-retrigger: the chirp settles into a flat 1.2 hold,
+      //     so after a short pause we reset the time origin and the
+      //     loop state to replay the acquisition transient. ────────
+      const elapsed = (timeMs - chirpStart) / 1000
+      if (elapsed > 14) {
+        chirpStart = timeMs
+        phase = 0
+        refPhase = 0
+        freq = 1.0
+      }
+
       // Reference: chirp from 0.8 to 1.2 over 10s then hold
-      const t = timeMs / 1000
+      const t = (timeMs - chirpStart) / 1000
       const refFreq = t < 10 ? 0.8 + t * 0.04 : 1.2
-      const refPhaseInc = 2 * Math.PI * refFreq * dt
 
       for (let rep = 0; rep < 4; rep++) {
-        // Phase detector (edge-triggered XOR or simple cosine)
-        const _pd = Math.sin(phase) * Math.cos(phase) // simplified PFD
-        // Actually use a proper phase detector: sin(phi) for sinusoidal PLL
-        const phaseErr = Math.sin(phase)
+        // Phase detector: compare reference and VCO phases. sin(Δφ)
+        // is the classic sinusoidal PD — it drives the loop to align
+        // the VCO with the reference rather than toward zero.
+        const phaseErr = Math.sin(refPhase - phase)
 
         // Loop filter (P or PI)
         if (order === 1) {
@@ -65,13 +94,15 @@ export const createRenderer = (
 
         freq = Math.max(0.1, Math.min(3, freq))
 
-        // VCO integration
+        // Integrate both phases
+        refPhase += 2 * Math.PI * refFreq * dt
         phase += 2 * Math.PI * freq * dt
-        // Keep phase bounded
+        // Keep phases bounded (relative error is preserved mod 2π)
+        if (refPhase > Math.PI * 2) refPhase -= Math.PI * 2
         if (phase > Math.PI * 2) phase -= Math.PI * 2
 
         const idx = (head + rep) % MAX
-        refPhase[idx] = (refPhaseInc * rep / 4) % (Math.PI * 2)
+        refTrace[idx] = refFreq
         vcoFreq[idx] = freq
         pdOut[idx] = phaseErr
       }
@@ -96,20 +127,25 @@ export const createRenderer = (
       ctx.textAlign = 'right'
       ctx.fillText(locked ? 'LOCKED' : 'UNLOCKED', w - margin.right, 48)
 
-      // Sub-plot 1: Frequency tracking
+      // Sub-plot 1: Frequency tracking — reference (dashed) vs VCO
       const plot1H = ph * 0.35
       ctx.fillStyle = '#5a6a7a'
       ctx.font = '10px monospace'
       ctx.textAlign = 'left'
-      ctx.fillText('VCO Frequency (normalized)', margin.left, margin.top - 6)
+      ctx.fillText('Reference vs VCO Frequency (normalized)', margin.left, margin.top - 6)
 
-      ctx.strokeStyle = '#1a2a3a'
+      // Reference trace (the chirped target the VCO is locking to)
+      ctx.strokeStyle = '#5a7a8a'
       ctx.lineWidth = 1
       ctx.setLineDash([3, 3])
-      const refY = margin.top + plot1H * (1 - (refFreq - 0) / 3)
       ctx.beginPath()
-      ctx.moveTo(margin.left, refY)
-      ctx.lineTo(margin.left + pw, refY)
+      for (let i = 0; i < MAX; i++) {
+        const idx = (head + i) % MAX
+        const xi = margin.left + (i / (MAX - 1)) * pw
+        const yi = margin.top + plot1H * (1 - (refTrace[idx] - 0) / 3)
+        if (i === 0) ctx.moveTo(xi, yi)
+        else ctx.lineTo(xi, yi)
+      }
       ctx.stroke()
       ctx.setLineDash([])
 

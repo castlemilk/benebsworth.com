@@ -8,7 +8,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
  *
  * Two stacked images at the same pixel dimensions (602×533):
  *
- *   1. /about/portrait-2.jpg          — the full photo (95 KB)
+ *   1. /about/portrait-2.webp          — the full photo (95 KB)
  *   2. /about/portrait-2-halftone.png — the halftone dot pattern (5.5 KB)
  *
  * Default state: the halftone is the visible layer; the photo sits
@@ -121,7 +121,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
         {/* the real photo, sitting at full opacity underneath. The halftone
             above has a circular loupe mask that lets this show through. */}
         <img
-          src="/about/portrait-main.jpg"
+          src="/about/portrait-main.webp"
           alt="Portrait of Ben Ebsworth"
           width={IMG_W}
           height={IMG_H}
@@ -171,7 +171,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
 
         {/* metadata strip */}
         <span className="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-fg/45">
-          <span style={{ color: accent }}>subject · be</span>
+          <span className="accent-ink" style={{ '--ink': accent } as React.CSSProperties}>subject · be</span>
           <span>plate 02 · halftone</span>
         </span>
       </div>

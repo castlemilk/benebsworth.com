@@ -67,15 +67,24 @@ export const randomWalk: EffectModule = {
 
     // Pre-allocated walk data: walks[i * MAX_STEPS + step] = position
     const walkData = new Float64Array(MAX_WALKS * MAX_STEPS)
-    const rng = makePRNG(42)
+    const SEED = 42
+    let rng = makePRNG(SEED)
     let currentStep = 0
     let lastWalks = 0
     let lastDrift = 0
     let lastVol = 0
+    // Auto-restart bookkeeping: once the ensemble reaches MAX_STEPS we pause,
+    // then re-seed the same family so the CLT convergence keeps replaying.
+    let completed = false
+    let restartAt = 0
 
     function resetWalks() {
       walkData.fill(0)
       currentStep = 0
+      completed = false
+      // Re-seed from the same fixed seed so the walk family is reproducible
+      // across restarts and parameter changes.
+      rng = makePRNG(SEED)
     }
 
     // Generate one step for all walks
@@ -96,15 +105,24 @@ export const randomWalk: EffectModule = {
         const vol = p.volatility as number
         const color = p.color as string
 
-        // Reset if params changed
+        // Reset if params changed. resetWalks() re-seeds the RNG so the walk
+        // family is reproducible for a given parameter set.
         if (nWalks !== lastWalks || drift !== lastDrift || vol !== lastVol) {
-          // Re-seed rng for determinism
-          // We can't re-seed, so just reset the data. rng will continue but that's fine
-          // since the visual result is still deterministic per session
           resetWalks()
           lastWalks = nWalks
           lastDrift = drift
           lastVol = vol
+        }
+
+        // Auto-restart: once the ensemble fills MAX_STEPS the canvas would
+        // otherwise freeze. Pause ~2s on the converged distribution, then
+        // re-seed and replay so the CLT convergence keeps animating.
+        if (currentStep >= MAX_STEPS && !completed) {
+          completed = true
+          restartAt = t + 2000
+        }
+        if (completed && t > restartAt) {
+          resetWalks()
         }
 
         // Generate a few steps per frame for visible progression

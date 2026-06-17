@@ -6,7 +6,7 @@ them already hold the *next* state `(s + 1) % states`, the cell advances to that
 otherwise it waits. Because the "next" state chases its predecessor around the cycle, the
 grid self-organises out of random noise into spirals and rotating spiral cores. The colour
 of a cell is its state index mapped around the hue wheel (`hsl(state/states · 360 …)`) — so
-the **Color** knob is kept for consistency, but the live palette is derived from state, not
+the **Hue base** knob is kept for consistency, but the live palette is derived from state, not
 from that single colour.
 
 ## Knobs
@@ -15,3 +15,4 @@ from that single colour.
 - **States** — length of the colour cycle.
 - **Threshold** — neighbours that must lead before a cell advances.
 - **Tick** — milliseconds between automaton updates.
+- **Hue base** — kept for consistency; cell colours are derived from state, so it has no live effect.

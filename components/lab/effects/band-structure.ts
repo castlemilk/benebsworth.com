@@ -15,6 +15,67 @@ function hexRgb(hex: string): [number, number, number] {
 }
 
 /**
+ * Eigenvalues of a real symmetric tridiagonal matrix via the QL algorithm
+ * with implicit shifts (the classic tql1 routine). `d` holds the diagonal,
+ * `e` the sub-diagonal with e[0] unused. Operates in place on `d`, which on
+ * return holds the (unsorted) eigenvalues. `e` is used as scratch.
+ */
+function tridiagEigenvalues(d: number[], e: number[]): number[] {
+  const n = d.length
+  if (n === 1) return d
+  // Shift sub-diagonal so e[i] is the element between d[i-1] and d[i].
+  for (let i = 1; i < n; i++) e[i - 1] = e[i]
+  e[n - 1] = 0
+
+  for (let l = 0; l < n; l++) {
+    let iter = 0
+    let m = l
+    do {
+      // Find a small sub-diagonal element to split the matrix.
+      for (m = l; m < n - 1; m++) {
+        const dd = Math.abs(d[m]) + Math.abs(d[m + 1])
+        if (Math.abs(e[m]) <= Number.EPSILON * dd) break
+      }
+      if (m !== l) {
+        if (iter++ === 50) break // give up gracefully; bands stay finite
+        let g = (d[l + 1] - d[l]) / (2 * e[l])
+        let r = Math.hypot(g, 1)
+        g = d[m] - d[l] + e[l] / (g + (g >= 0 ? Math.abs(r) : -Math.abs(r)))
+        let s = 1
+        let c = 1
+        let p = 0
+        let i = m - 1
+        let underflow = false
+        for (; i >= l; i--) {
+          const f = s * e[i]
+          const b = c * e[i]
+          r = Math.hypot(f, g)
+          e[i + 1] = r
+          if (r === 0) {
+            d[i + 1] -= p
+            e[m] = 0
+            underflow = true
+            break
+          }
+          s = f / r
+          c = g / r
+          g = d[i + 1] - p
+          r = (d[i] - g) * s + 2 * c * b
+          p = s * r
+          d[i + 1] = g + p
+          g = c * r - b
+        }
+        if (underflow && i >= l) continue
+        d[l] -= p
+        e[l] = g
+        e[m] = 0
+      }
+    } while (m !== l)
+  }
+  return d
+}
+
+/**
  * 1D nearly-free electron model band structure.
  *
  * In reduced zone scheme, the nth band has dispersion:
@@ -25,8 +86,12 @@ function hexRgb(hex: string): [number, number, number] {
  *   E_± ≈ E₀ ± |V_G|
  * where E₀ is the free-electron energy at the boundary.
  *
- * We use a simple perturbative approach: compute the 2×2 secular equation
- * at each k for pairs of nearly-degenerate free-electron levels.
+ * We diagonalize the plane-wave Hamiltonian at each k:
+ *   H_{mn} = (k + mG)² δ_{mn} + (V₀/2)(δ_{m,n+1} + δ_{m,n-1})
+ * which is real, symmetric and tridiagonal. Its eigenvalues give the bands,
+ * so a gap of 2|V_G| = V₀ opens *only* where free-electron levels become
+ * degenerate — i.e. at the Brillouin-zone boundaries — instead of being
+ * painted onto every adjacent pair by hand.
  */
 export const bandStructure: EffectModule = {
   controls,
@@ -46,64 +111,34 @@ export const bandStructure: EffectModule = {
     const sortedBands: number[][] = []
     for (let n = 0; n < N_WAVES; n++) sortedBands.push(new Array(N_K).fill(0))
 
-    // Electron positions (one per displayed band)
-    const _electronPhase = new Float64Array(N_MAX_BANDS)
-
     function computeBands(V0: number) {
       // k goes from -π/a to π/a (first Brillouin zone)
       // We set a=1, ℏ=1, m=0.5 for clean units → ℏ²/2m = 1
       // G = 2π
       const G = 2 * Math.PI
 
+      // Coupling between adjacent plane waves. With off-diagonal V0/2 the
+      // zone-boundary splitting is 2|V_G| = V0, which is the physical gap.
+      const coupling = V0 / 2
+      const halfN = Math.floor(N_WAVES / 2)
+
       for (let ki = 0; ki < N_K; ki++) {
         const k = ((ki / (N_K - 1)) - 0.5) * G // -π to π
 
-        // Build and diagonalize a small matrix
-        // Plane waves: k + n*G for n = -N_WAVES/2 ... +N_WAVES/2
-        const halfN = Math.floor(N_WAVES / 2)
-        const eigenvals: number[] = []
-
-        // Simple approach: for each pair of adjacent free-electron levels,
-        // apply the 2×2 secular equation
-        // Full approach: tridiagonal matrix eigenvalue problem
-        // Diagonal: (k + n*G)²
-        // Off-diagonal: V0/2
-
-        // For a tridiagonal symmetric matrix, use a simple QR-like approach
-        // Actually, for 9x9 it's fast enough to just use the analytic formula
-        // for the nearly-free electron model
-
-        // Compute free-electron energies
-        const freeE: number[] = []
-        for (let n = -halfN; n <= halfN; n++) {
-          freeE.push((k + n * G) ** 2)
+        // Build the tridiagonal plane-wave Hamiltonian for this k.
+        // Plane waves: k + n*G for n = -halfN ... +halfN
+        // Diagonal:    (k + n*G)²
+        // Off-diagonal: V0/2 (couples adjacent plane waves)
+        const diag: number[] = []
+        const sub: number[] = []
+        for (let i = 0; i < N_WAVES; i++) {
+          const n = i - halfN
+          diag.push((k + n * G) ** 2)
+          sub.push(i === 0 ? 0 : coupling)
         }
 
-        // Apply perturbation at zone boundaries (coupling adjacent levels)
-        // E_n ≈ freeE_n ± |V0/2| when |freeE_n - freeE_{n+1}| is small
-        // More rigorously: solve the tridiagonal system
-
-        // For simplicity, use the 2-band model extended to multiple bands
-        // Sort free electron energies
-        const sorted = [...freeE].sort((a, b) => a - b)
-
-        // Apply gap opening between adjacent sorted levels
-        // Gap magnitude proportional to V0, inversely proportional to level spacing
-        for (let i = 0; i < sorted.length; i++) {
-          eigenvals.push(sorted[i])
-        }
-
-        // Apply perturbative corrections: at degeneracies, split by V0
-        for (let i = 0; i < eigenvals.length - 1; i++) {
-          const gap = eigenvals[i + 1] - eigenvals[i]
-          if (gap < V0 * 2) {
-            const mid = (eigenvals[i] + eigenvals[i + 1]) / 2
-            const halfGap = Math.max(gap * 0.3, V0 * 0.5) / 2
-            eigenvals[i] = mid - halfGap
-            eigenvals[i + 1] = mid + halfGap
-          }
-        }
-
+        // Diagonalize; eigenvalues come back unsorted, so sort ascending.
+        const eigenvals = tridiagEigenvalues(diag, sub)
         eigenvals.sort((a, b) => a - b)
         for (let n = 0; n < N_WAVES; n++) {
           sortedBands[n][ki] = eigenvals[n] ?? 0
@@ -112,7 +147,6 @@ export const bandStructure: EffectModule = {
     }
 
     let lastV0 = -1
-    const _N = 300 // draw resolution
 
     return {
       step(t, p) {
@@ -142,7 +176,14 @@ export const bandStructure: EffectModule = {
         const eRange = Math.max(maxE - minE, 1)
 
         const kToX = (ki: number) => pad.left + (ki / (N_K - 1)) * pw
-        const eToY = (e: number) => pad.top + (1 - (e - minE) / eRange) * ph
+        const eToY = (e: number) => {
+          // Clamp to the plot box so the V0=0 / single-band edge case (and the
+          // free-electron reference, which can exceed the band range) never
+          // produces NaN or off-canvas coordinates.
+          const frac = Number.isFinite(e) ? (e - minE) / eRange : 0
+          const y = pad.top + (1 - frac) * ph
+          return Math.max(pad.top, Math.min(pad.top + ph, y))
+        }
 
         // Free electron parabola (reference)
         ctx.beginPath()
@@ -197,7 +238,6 @@ export const bandStructure: EffectModule = {
         if (numBands >= 2) {
           // Find the gap at zone boundary (ki = 0 or N_K-1)
           const gapKi = 0
-          const _gapMid = (sortedBands[0][gapKi] + sortedBands[1][gapKi]) / 2
           const gapSize = Math.abs(sortedBands[1][gapKi] - sortedBands[0][gapKi])
           if (gapSize > 0.5) {
             const y1 = eToY(sortedBands[0][gapKi])

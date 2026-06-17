@@ -2,8 +2,8 @@
 
 Each orbiter is placed on a shared circle at angle `time * speed + i/n * 2π`, so they
 stay evenly spaced and sweep together. Every frame we paint a translucent
-`rgba(10,10,12,trail)` rectangle over the whole canvas instead of clearing it — the
-leftover ghost of previous frames becomes the trail. A lower **Trail** value = longer tails.
+rectangle in the stage's background colour over the whole canvas instead of clearing it —
+the leftover ghost of previous frames becomes the trail. A lower **Trail** value = longer tails.
 
 ## Knobs
 

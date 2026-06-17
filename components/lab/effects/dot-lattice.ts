@@ -1,15 +1,19 @@
-import type { EffectModule } from '@/lib/lab/types'
+import type { ControlSpec, EffectModule, Params } from '@/lib/lab/types'
 import { makeNoise2D } from '@/lib/lab/noise'
 
+export const controls: ControlSpec[] = [
+  { key: 'spacing', label: 'Spacing', type: 'range', min: 15, max: 40, step: 1 },
+  { key: 'amplitude', label: 'Amplitude', type: 'range', min: 0.1, max: 1, step: 0.05 },
+  { key: 'speed', label: 'Speed', type: 'range', min: 0.1, max: 2, step: 0.1 },
+  { key: 'waveScale', label: 'Wave scale', type: 'range', min: 0.5, max: 3, step: 0.1 },
+  { key: 'color', label: 'Color', type: 'color' },
+]
+
+export const defaults: Params = { spacing: 24, amplitude: 0.5, speed: 0.5, waveScale: 1.2, color: '#7c5cff' }
+
 export const dotLattice: EffectModule = {
-  controls: [
-    { key: 'spacing', label: 'Spacing', type: 'range', min: 15, max: 40, step: 1 },
-    { key: 'amplitude', label: 'Amplitude', type: 'range', min: 0.1, max: 1, step: 0.05 },
-    { key: 'speed', label: 'Speed', type: 'range', min: 0.1, max: 2, step: 0.1 },
-    { key: 'waveScale', label: 'Wave scale', type: 'range', min: 0.5, max: 3, step: 0.1 },
-    { key: 'color', label: 'Color', type: 'color' },
-  ],
-  defaults: { spacing: 24, amplitude: 0.5, speed: 0.5, waveScale: 1.2, color: '#7c5cff' },
+  controls,
+  defaults,
 
   createRenderer(ctx, dims, _theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     void _theme

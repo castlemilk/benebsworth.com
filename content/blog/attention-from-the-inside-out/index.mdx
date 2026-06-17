@@ -1,0 +1,185 @@
+---
+title: "Attention, From the Inside Out"
+date: "2026-06-14T00:00:00.000Z"
+author: Ben Ebsworth
+description: "Attention is just a weighted average whose weights the data computes by asking itself questions. A worked tour through scaled dot-product attention, temperature and sampling, and what a representative 46B-active / 1T-total Mixture-of-Experts spec actually means — with live matrices you can poke."
+labels: technology,algorithms,machine-learning,deep-learning
+release: true
+heroImage: /blog/attention-from-the-inside-out/hero.webp
+---
+
+Every explanation of the transformer eventually arrives at the same sentence: *attention lets each token look at every other token*. That sentence is true, and it is almost entirely useless. It tells you attention *permits* looking, but not what looking *is*, how hard a token looks, or why the mechanism produces the behaviour everyone is so excited about.
+
+So here is a better one-liner:
+
+<Callout type="thinking" title="The whole mechanism, in one breath">
+
+Attention is a **weighted average**. Each output token is a convex combination of the input tokens. The only thing the network learns is the **weights** — and it computes them by having the data ask *itself* a question: *for the thing I am, which of these other things is most relevant to me?*
+
+</Callout>
+
+That's it. No recurrence, no convolution, no memory cell — just a weighted average where the weights are a function of the data. The rest of this post is the arithmetic that turns that sentence into the matrix below.
+
+<AttentionHeatmap />
+
+The matrix computes, for the toy sentence *"the cat sat because it napped"*, how strongly each token (a **query**) weighs every other token (a **key**) into its output. Hover any token on the left and watch its attention weights draw in as arcs — their thickness is the weight. The default lands on **"it"**, and the headline result: *it* resolves to *cat*. A pronoun found its antecedent, with nothing more than a row of dot products and a softmax.
+
+## The soft lookup
+
+The right mental model is a **dictionary**. A normal dictionary is a hard lookup: you give a key, you get *exactly one* value. `{"cat": "feline animal"}` — the key matches or it doesn't, and there is no middle ground.
+
+Attention is a *soft* dictionary. You provide a query, and instead of returning one value, it returns a **blend of all the values**, weighted by how well each key matches the query. Close matches contribute a lot; poor matches contribute almost nothing. The blend is continuous, differentiable, and — crucially — **learnable**, because the weights are a smooth function of the inputs.
+
+Three roles, then, projected out of every token's embedding:
+
+- a **query** $Q$ — *"what am I looking for?"*
+- a **key** $K$ — *"what do I have to offer?"*
+- a **value** $V$ — *"if you pick me, here is what I contribute."*
+
+A token's query is dotted against every key. Big dot product means *relevant*; that key's value gets a large weight in the output. Small dot product means *irrelevant*; its value is all but ignored. The query and the key never need to be equal — they just need to be *aligned* in the space the projection learns.
+
+## The three projections
+
+$Q$, $K$, and $V$ are not given. Each is a **learned linear projection** of the same token embedding $x$:
+
+<Equation id="eqn:qkv-projections" number="2" caption="The query, key, and value are three learned linear projections of the same token embedding x." latex="Q = x W_Q, \qquad K = x W_K, \qquad V = x W_V">
+
+$$
+Q = x W_Q, \qquad K = x W_K, \qquad V = x W_V
+$$
+
+</Equation>
+
+Three weight matrices, $W_Q, W_K, W_V \in \mathbb{R}^{d \times d_k}$, map the shared embedding into three different roles. This is the entire reason attention is expressive: the *same* token can ask a sharp question (via $W_Q$), present a specific offer (via $W_K$), and carry distinct content (via $W_V$). A token is not one vector — it is three, wearing different hats.
+
+<Callout type="info" title="Why three projections, not one">
+
+You *could* set $Q = K = V = x$ and attention would still run. But you'd have thrown away the model's ability to separate "what I want" from "what I am." The pronoun *it* wants to find a noun; a noun wants to be found. Those are different jobs, and they need different projections to do them well. The three matrices give the network the latitude to learn that distinction.
+
+</Callout>
+
+## The equation
+
+Everything above collapses into a single line — the whole of scaled dot-product attention:
+
+<Equation id="eqn:scaled-dot-product" number="1" caption="Scaled dot-product attention. QKᵀ measures query–key compatibility; the softmax turns it into weights; V supplies the content that gets averaged." latex="\text{Attention}(Q,K,V) = \operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V">
+
+$$
+\text{Attention}(Q,K,V) = \operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+$$
+
+</Equation>
+
+Read it inside-out, in three steps:
+
+1. **$QK^\top$** — the compatibility matrix. Row $i$ holds the dot products of query $i$ against every key. It is the raw, unscaled answer to *"token $i$, how relevant is each other token?"*
+2. **$\operatorname{softmax}(\,\cdot\,/\sqrt{d_k}\,)$** — turn each row of raw scores into a probability distribution. This is where the weights come from. Each row sums to $1$.
+3. **$\times V$** — use those weights to take a convex combination of the values. The result is the output token: a weighted average of the input tokens' values, weighted by relevance.
+
+The softmax is the heart of it, so it deserves its own dissection.
+
+## The matrix, and why we scale
+
+The softmax does two jobs at once: it makes every weight **positive** (via $\exp$), and it makes the row **sum to one** (via the normalising denominator). Watch one row of the matrix walk through both steps:
+
+<SoftmaxLab />
+
+The first stage is the raw scores — signed, unbounded, and not yet a weighting. After exponentiation they're all positive, but not yet comparable (one could be $e^{6}$, another $e^{0.1}$). Dividing by the sum — the partition function — is what turns them into a distribution. The row now reads like a probability table over keys.
+
+The scaling by $\sqrt{d_k}$ is not decoration. It is the difference between a model that trains and one that doesn't.
+
+<Callout type="warning" title="Drop the √dₖ and your gradients vanish">
+
+Without the scale factor, the dot products $QK^\top$ grow with the dimension $d_k$ (a sum of $d_k$ random-ish terms). As they grow, the softmax **saturates**: the largest score dominates, $\exp$ pushes everything else toward zero, and the distribution collapses to a near one-hot. A saturated softmax has gradients near zero in exactly the region you're trying to train, so learning stalls. Dividing by $\sqrt{d_k}$ keeps the scores' variance roughly independent of dimension, which keeps the softmax in its useful, well-gradiented middle range.
+
+Drag the $\sqrt{d_k}$ slider in the matrix down to $1$ to see the collapse — *"it"* snaps to a near-100% pick of *cat* and the rest go dark. Drag it up and the distribution flattens toward uniform, washing the signal out. The default sits at the sweet spot.
+
+</Callout>
+
+This is the single most common point of confusion in attention, so it is worth the emphasis: **the scale factor exists to manage the softmax's input range, not the math's correctness.** The unscaled equation is still a valid weighted average; it just happens to produce weights that train terribly.
+
+## Many heads, many questions
+
+A single attention head asks one question. *"Given my query, which keys match?"* But a token is usually doing several things at once: *it* wants to resolve its antecedent, agree on number with its verb, and inherit tense from the clause it lives in. One set of weights cannot do all of that simultaneously.
+
+The fix is to run **several attention heads in parallel**, each with its own learned projections $W_Q^{(h)}, W_K^{(h)}, W_V^{(h)}$, concatenate their outputs, and mix them back with a final projection:
+
+<Equation id="eqn:multihead" number="3" caption="Multi-head attention: each head runs scaled dot-product attention with its own projections; the outputs are concatenated and mixed by W_O." latex="\text{MultiHead}(Q,K,V) = \operatorname{Concat}(\text{head}_1, \dots, \text{head}_h)\, W_O">
+
+$$
+\text{MultiHead}(Q,K,V) = \operatorname{Concat}(\text{head}_1, \dots, \text{head}_h)\, W_O
+$$
+
+</Equation>
+
+Each head learns to attend to a different kind of relationship. Probe a trained model and you find heads that specialise: some track subject–verb agreement, some look for the previous occurrence of the same token, some attend to closing brackets and quotation marks. None of this is hand-designed — it emerges from training, because the data rewards heads that carve out useful questions.
+
+<Callout type="thinking" title="Heads are an ensemble, not a committee">
+
+A common mental trap is to think of multi-head attention as "voting." It isn't. The heads don't agree or compromise; they run independently and their outputs are **concatenated**. Each head adds a different *view* of the same tokens to the representation, and the downstream layers learn to use whichever views are useful. Eight heads is not eight opinions averaged down — it is eight features stacked side by side.
+
+</Callout>
+
+## The mask
+
+There is one more detail, and it is the difference between a model that *understands* text and one that merely *sees* it lying around in a bag. In a decoder (GPT and friends), token $i$ is **not allowed to look at** token $i+1$. If it could, it would be reading the answer while predicting it — a spectacularly easy game to win and a useless thing to have learned.
+
+The fix is **causal masking**: before the softmax, set every entry above the diagonal of $QK^\top$ to $-\infty$. After the softmax those positions become exactly zero weight. Token $i$ can attend to tokens $0 \dots i$, but never to its own future.
+
+The mask is why an autoregressive model's attention matrix is **lower-triangular** — a staircase of allowed connections, with the future masked into silence. It is also why these models are expensive to use for generation: every new token adds a row, and the matrix grows quadratically with sequence length. FlashAttention and its descendants are, at their core, an accounting trick for never materialising that triangle.
+
+## Turning weights into tokens
+
+Everything so far has produced, for each position, a rich vector representing the token *in context*. The very last thing a generative model does is turn that vector into an actual next token — and it does so with the softmax you already met, applied to a vector of **logits** (one score per word in the vocabulary).
+
+This is where a knob called **temperature** shows up, and it is worth pausing on, because it is *exactly the same idea* as the $\sqrt{d_k}$ scaling inside attention. The next-token distribution is
+
+<Equation id="eqn:temperature-softmax" number="4" caption="The temperature-scaled softmax over the vocabulary logits. Dividing by T before the exponential is the same trick as the √dₖ scaling inside attention." latex="p_i = \frac{\exp(\text{logit}_i / T)}{\sum_j \exp(\text{logit}_j / T)}">
+
+$$
+p_i = \frac{\exp(\text{logit}_i / T)}{\sum_j \exp(\text{logit}_j / T)}
+$$
+
+</Equation>
+
+Temperature $T$ divides the logits before the softmax. Push it toward zero and the distribution collapses to a near one-hot pick — the model becomes greedy, always choosing its single favourite, which is coherent but repetitive. Push it high and the distribution flattens toward uniform — the model rambles, picking unlikely words. The same knob, the same mechanism, the same trade-off between "too sharp to learn/train" and "too flat to be useful."
+
+<TokenSampler />
+
+Drag the temperature down and watch the distribution sharpen onto *stage*; drag it up and the long shots (*drums*, *piano*) swell. Hit **sample** a few times — at low temperature you'll draw *stage* every time; at high temperature the draws scatter across the vocabulary. The two other knobs, **top-k** and **top-p**, truncate the distribution *before* the draw: top-k keeps only the $k$ most likely tokens, top-p (nucleus) keeps the smallest set whose cumulative probability reaches $p$. Both zero out the tail so the model can never sample a one-in-a-million word even at high temperature.
+
+<Callout type="info" title="Why top-p is usually better than top-k">
+
+Top-k keeps a fixed number of candidates regardless of confidence. That's awkward: on *"The capital of France is"* the model is nearly certain and *one* candidate suffices, while on *"The most interesting thing about*" it is genuinely uncertain and *twenty* might be reasonable. Top-p adapts — it keeps as many candidates as the model's actual confidence warrants, few when the model is sure, more when it isn't. In practice, temperature + top-p is the combination most production decoders settle on.
+
+</Callout>
+
+## Where the parameters live: 46B active out of 1T
+
+A model described as **"46B active, 1T total"** — a representative MoE shape, not a specific named model — is a **Mixture-of-Experts** (MoE) model, and the two numbers measure different things. The total counts every weight the model owns; the active counts only the weights a single token actually multiplies on its way through. The gap is the whole point of the architecture.
+
+To see where the gap comes from, look at one transformer **block**. It has two halves: the **attention** you've spent this post inside, and a **feed-forward network** (FFN) — a two-layer MLP that does the bulk of the model's "knowledge" storage. In a dense model, every token runs through the same single FFN. In an MoE, that single FFN is replaced by $N$ parallel **experts** (each its own FFN), plus a tiny **router** that looks at the token and picks which $k$ experts should handle it.
+
+<MoEBlock />
+
+Each token lights only 2 of 64 experts here. The dormant 62 still occupy memory — the full ≈1T of weights must live in VRAM whether they fire or not — but they do no multiply-accumulates. That is how you buy ≈1T of representational capacity for ≈46B of per-token compute: the sparsity is the bargain. Real models push it harder than this illustration; DeepSeek-V3 routes 8 of 256 routed experts plus 1 always-on shared expert per token (≈37B active of 671B) — a single-digit fraction of the weights doing the work on any given token.
+
+<Callout type="warning" title="Active compute is cheap; total memory is not">
+
+The MoE trade has a sharp edge. You save *compute* (FLOPs per token scale with the active count) but you do **not** save *memory* — every expert's weights must be resident to be available when the router calls on them. A 1T-parameter MoE needs the VRAM to hold 1T of weights even though it only does 46B of work per token. This is why MoE models are served on multi-GPU setups with weight sharding: the bottleneck is fitting the dormant experts in memory, not the math of the active ones. It is also why training them is finicky — left to itself, the router collapses onto a handful of favourite experts and the rest never learn, so every MoE training recipe includes a load-balancing loss that penalises uneven expert usage.
+
+</Callout>
+
+And there is the full picture. The attention block — softmax over $QK^\top/\sqrt{d_k}$ — is where tokens look at each other. The FFN (or, in an MoE, the few experts the router selects) is where each token, in light of what it just saw, decides what to become. Stack that block a few dozen times, apply a temperature-scaled softmax over the vocabulary at the end, sample, and you have a language model. Everything else — the engineering, the scale, the training tricks — is in service of those two operations.
+
+## Reading further
+
+- **Vaswani et al., *Attention Is All You Need* (2017)** — the paper that started it. Short, dense, and still the canonical reference for the equation above. [arXiv:1706.03762](https://arxiv.org/abs/1706.03762)
+- **Bahdanau, Cho & Bengio (2014)** — the *additive* attention that preceded the transformer, born from machine translation. Useful for understanding what problem "attention" was invented to solve before it became a generic block. [arXiv:1409.0473](https://arxiv.org/abs/1409.0473)
+- **Rush, *The Annotated Transformer*** — the original paper, re-implemented line-by-line in PyTorch. The fastest path from "I've read the equation" to "I can run it." [nlp.seas.harvard.edu](https://nlp.seas.harvard.edu/annotated-transformer/)
+- **Jay Alammar, *The Illustrated Transformer*** — the canonical visual companion, with the diagrams most people have in their head when they say "attention." [jalammar.github.io](https://jalammar.github.io/illustrated-transformer/)
+- **Shazeer et al., *Outrageously Large Neural Networks: The Sparsely-Gated MoE Layer* (2017)** — where the router/top-k gating idea entered the deep-learning era. The load-balancing loss mentioned in the warning above comes from here. [arXiv:1701.06538](https://arxiv.org/abs/1701.06538)
+- **DeepSeek-V3 Technical Report (2024)** — a modern, production-scale MoE (671B total, ≈37B active) with the kind of fine-grained expert routing the diagram above simplifies. A good reference for the memory-vs-compute trade in practice. [arXiv:2412.19437](https://arxiv.org/abs/2412.19437)
+- **Holtzman et al., *The Curious Case of Neural Text Degeneration* (2019)** — the case for nucleus (top-p) sampling over top-k and greedy decoding. Where the "why top-p" intuition in the info callout comes from. [arXiv:1904.09751](https://arxiv.org/abs/1904.09751)
+
+The matrix above runs the real arithmetic — hand-tuned scores, exact softmax, the actual $\sqrt{d_k}$ scaling — so when you dragged that slider and watched *"it"* sharpen onto *cat*, you were watching equation (1) do exactly what it does in a production model. The only difference is scale: a real head does this over thousands of tokens, with weights learned across trillions of them. The mechanism is the one you just held in your hand.

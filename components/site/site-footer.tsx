@@ -11,6 +11,7 @@ export function SiteFooter() {
             <li><Link href="/projects/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Projects</Link></li>
             <li><Link href="/blog/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Blog</Link></li>
             <li><Link href="/lab/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Lab</Link></li>
+            <li><Link href="/lab/circuit-sim/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Circuit Sim</Link></li>
             <li><Link href="/about/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">About</Link></li>
           </ul>
         </div>
@@ -23,10 +24,12 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <h3 className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-fg/70 mb-3">Site</h3>
+          <h3 className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-fg/70 mb-3">Lab</h3>
           <ul className="flex flex-col gap-2">
-            <li><span className="text-muted text-[0.8rem] leading-relaxed">Built with Next.js</span></li>
-            <li><a href="https://github.com/castlemilk/benebsworth.com" target="_blank" rel="noreferrer" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">View source</a></li>
+            <li><Link href="/lab/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">All experiments</Link></li>
+            <li><Link href="/lab/circuit-sim/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">
+              <span className="inline-block mr-1.5 text-[var(--color-accent)]">⚡</span>Circuit Simulator
+            </Link></li>
           </ul>
         </div>
       </div>

@@ -20,7 +20,7 @@
  * Plus a generic "neuron" entry for cells whose role is defined by
  * their edges rather than by colour.
  */
-import type { CSSProperties, ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { NODE_COLOURS } from './neural-graph'
 
 /** A single legend entry. `render` is the SVG that draws the swatch. */
@@ -76,76 +76,76 @@ const ENTRIES: LegendEntry[] = [
     group: 'yellow',
     label: 'Input cell',
     description: 'Holds one element of the input vector',
-    render: (k) => <SolidCircle key={k} colour={NODE_COLOURS.input} />,
+    render: (_) => <SolidCircle key={_} colour={NODE_COLOURS.input} />,
   },
   {
     group: 'yellow',
     label: 'Backfed input cell',
     description: 'Receives a connection back from a downstream cell',
-    render: (k) => <HollowCircle key={k} colour={NODE_COLOURS.input} />,
+    render: (_) => <HollowCircle key={_} colour={NODE_COLOURS.input} />,
   },
   {
     group: 'yellow',
     label: 'Noisy input cell',
     description: 'Input with added noise (e.g. VAE sampling step)',
-    render: (k) => <SolidTriangle key={k} colour={NODE_COLOURS.input} />,
+    render: (_) => <SolidTriangle key={_} colour={NODE_COLOURS.input} />,
   },
   // Green family — hidden
   {
     group: 'green',
     label: 'Hidden cell',
     description: 'A standard learned intermediate neuron',
-    render: (k) => <SolidCircle key={k} colour={NODE_COLOURS.hidden} />,
+    render: (_) => <SolidCircle key={_} colour={NODE_COLOURS.hidden} />,
   },
   {
     group: 'green',
     label: 'Probabilistic hidden cell',
     description: 'Holds a sampled value (RBM, DBN, VAE μ/σ)',
-    render: (k) => <HollowCircle key={k} colour={NODE_COLOURS.hidden} />,
+    render: (_) => <HollowCircle key={_} colour={NODE_COLOURS.hidden} />,
   },
   {
     group: 'green',
     label: 'Spiking hidden cell',
     description: 'Integrate-and-fire dynamics (LSM)',
-    render: (k) => <SolidTriangle key={k} colour={NODE_COLOURS.hidden} />,
+    render: (_) => <SolidTriangle key={_} colour={NODE_COLOURS.hidden} />,
   },
   {
     group: 'green',
     label: 'Capsule cell',
     description: 'Vector-valued activation (CapsNet)',
-    render: (k) => <SolidSquare key={k} colour={NODE_COLOURS.hidden} />,
+    render: (_) => <SolidSquare key={_} colour={NODE_COLOURS.hidden} />,
   },
   // Orange family — output
   {
     group: 'orange',
     label: 'Output cell',
     description: 'A standard output neuron',
-    render: (k) => <SolidCircle key={k} colour={NODE_COLOURS.output} />,
+    render: (_) => <SolidCircle key={_} colour={NODE_COLOURS.output} />,
   },
   {
     group: 'orange',
     label: 'Match input/output cell',
     description: 'Self-organising: best-matching unit (Kohonen)',
-    render: (k) => <HollowCircle key={k} colour={NODE_COLOURS.output} />,
+    render: (_) => <HollowCircle key={_} colour={NODE_COLOURS.output} />,
   },
   // Blue family — memory / recurrent
   {
     group: 'blue',
     label: 'Recurrent cell',
     description: 'Feeds back to itself (RNN hidden state)',
-    render: (k) => <RecurrentArc key={k} colour={NODE_COLOURS.recurrent} />,
+    render: (_) => <RecurrentArc key={_} colour={NODE_COLOURS.recurrent} />,
   },
   {
     group: 'blue',
     label: 'Memory cell',
     description: 'Persistent state carried across time steps',
-    render: (k) => <RecurrentArc key={k} colour={NODE_COLOURS.memory} fill="hollow" />,
+    render: (_) => <RecurrentArc key={_} colour={NODE_COLOURS.memory} fill="hollow" />,
   },
   {
     group: 'blue',
     label: 'Gated memory cell',
     description: 'Memory with a learned gate (LSTM input/forget/output)',
-    render: (k) => (
+    render: (_) => (
       <g>
         <SolidTriangle colour={NODE_COLOURS.gating} />
         <path d="M 5 5 A 4.5 4.5 0 0 1 13 5" fill="none" stroke={NODE_COLOURS.gating} strokeWidth={1.4} strokeLinecap="round" />
@@ -157,20 +157,20 @@ const ENTRIES: LegendEntry[] = [
     group: 'pink',
     label: 'Kernel cell',
     description: 'A shared-weight receptive field (CNN)',
-    render: (k) => <SolidCircle key={k} colour={NODE_COLOURS.kernel} />,
+    render: (_) => <SolidCircle key={_} colour={NODE_COLOURS.kernel} />,
   },
   {
     group: 'pink',
     label: 'Convolution or pooling cell',
     description: 'A conv or pool operation, hollow = pool',
-    render: (k) => <HollowCircle key={k} colour={NODE_COLOURS.kernel} />,
+    render: (_) => <HollowCircle key={_} colour={NODE_COLOURS.kernel} />,
   },
   // Generic
   {
     group: 'other',
     label: 'Neuron (unspecified)',
     description: 'Generic neuron — role defined by its edges',
-    render: (k) => <SolidCircle key={k} colour={NODE_COLOURS.default} />,
+    render: (_) => <SolidCircle key={_} colour={NODE_COLOURS.default} />,
   },
 ]
 

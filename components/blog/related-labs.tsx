@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { tagColor } from '@/lib/tag-colors'
 import { LAB_EFFECTS, type LabEntry } from '@/lib/lab/registry'
 
 /**
@@ -50,8 +51,12 @@ export function RelatedLabs({
     'signal processing': ['engineering'],
     'dsp': ['engineering'],
     'algorithms': ['maths'],
-    'machine-learning': ['art', 'maths'],
-    'ml': ['art', 'maths'],
+    'machine-learning': ['ai'],
+    'ml': ['ai'],
+    'deep-learning': ['ai'],
+    'ai': ['ai'],
+    'neural': ['ai'],
+    'transformer': ['ai'],
     'art': ['art'],
   }
   const wantedCategories = new Set<string>()
@@ -77,19 +82,30 @@ export function RelatedLabs({
     chosen = scored.slice(0, limit).map((s) => s.entry)
   } else {
     // Pad with random effects that *aren't* already in the scored list
-    // so we always show the requested number of cards.
+    // so we always show the requested number of cards. When the post
+    // resolved to specific categories (e.g. an AI post → 'ai'), restrict
+    // the fillers to those categories too — so an attention post shows
+    // its sibling AI labs rather than unrelated random effects.
     const chosenSet = new Set(scored.map((s) => s.entry.slug))
-    const fillers = LAB_EFFECTS.filter((e) => !chosenSet.has(e.slug))
+    const fillerPool = wantedCategories.size > 0
+      ? LAB_EFFECTS.filter((e) => !chosenSet.has(e.slug) && wantedCategories.has(e.category))
+      : LAB_EFFECTS.filter((e) => !chosenSet.has(e.slug))
     // Stable random: shuffle by hash of slug + day (changes daily, but
     // stable within a day so the layout doesn't flicker on every page
     // load).
     const day = Math.floor(Date.now() / 86_400_000)
-    const fillersSorted = [...fillers].sort((a, b) => {
+    const fillersSorted = [...fillerPool].sort((a, b) => {
       const ah = hash(a.slug + day)
       const bh = hash(b.slug + day)
       return ah - bh
     })
     chosen = [...scored.map((s) => s.entry), ...fillersSorted].slice(0, limit)
+    // Safety net: if category restriction produced nothing (e.g. a
+    // category with no labs yet), fall back to the top random effects so
+    // the section never renders empty.
+    if (chosen.length === 0) {
+      chosen = [...LAB_EFFECTS].slice(0, limit)
+    }
   }
 
   if (variant === 'inline') {
@@ -138,15 +154,23 @@ export function RelatedLabs({
                 </span>
               </div>
               <p className="font-sans text-sm leading-5 text-fg/65">{e.blurb}</p>
-              <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
-                {e.tags.slice(0, 3).map((t) => (
-                  <span
-                    key={t}
-                    className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-fg/45"
-                  >
-                    #{t}
-                  </span>
-                ))}
+              <div className="mt-auto flex flex-wrap gap-1 pt-2">
+                {e.tags.slice(0, 3).map((t) => {
+                  const c = tagColor(t)
+                  return (
+                    <span
+                      key={t}
+                      className="accent-ink rounded-full border px-1.5 py-0.5 font-mono text-[0.5rem] uppercase leading-none tracking-wider"
+                      style={{
+                        '--ink': c,
+                        borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
+                        backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
+                      } as React.CSSProperties}
+                    >
+                      {t}
+                    </span>
+                  )
+                })}
               </div>
             </Link>
           </li>

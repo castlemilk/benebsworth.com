@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
@@ -61,15 +62,16 @@ export default tseslint.config(
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
-      '@next/next/no-img-element': 'warn',
+      // Static export — images come from MDX frontmatter with unknown
+      // dimensions; next/image isn't practical here.
+      '@next/next/no-img-element': 'off',
     },
   },
 
   // Global rules
   {
     languageOptions: {
-      browser: true,
-      node: true,
+      globals: { ...globals.browser, ...globals.node },
     },
     rules: {
       'no-unused-vars': 'off',
@@ -80,36 +82,14 @@ export default tseslint.config(
     },
   },
 
-  // Test files - Jest environment with browser globals
+  // Test files - Vitest + browser globals
   {
     files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx'],
     ignores: ['legacy/**'],
     languageOptions: {
       globals: {
-        // Browser globals
-        window: 'readonly',
-        document: 'readonly',
-        navigator: 'readonly',
-        fetch: 'readonly',
-        WebAssembly: 'readonly',
-        requestAnimationFrame: 'readonly',
-        cancelAnimationFrame: 'readonly',
-        // Jest globals
-        describe: 'readonly',
-        it: 'readonly',
-        test: 'readonly',
-        expect: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        beforeAll: 'readonly',
-        afterAll: 'readonly',
-        jest: 'readonly',
-        // Node globals for test setup
-        setTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearTimeout: 'readonly',
-        clearInterval: 'readonly',
-        // Vitest
+        ...globals.browser,
+        ...globals.node,
         vi: 'readonly',
       },
     },

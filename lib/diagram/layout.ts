@@ -81,17 +81,17 @@ export class Node {
     h: number;
     lines: string[];
 
-    constructor(d: any) {
-        this.id = d.id;
-        this.label = d.label || d.id;
-        this.sublabel = d.sublabel;
-        this.shape = d.shape;
-        this.type = d.type;
-        this.signal = d.signal;
+    constructor(d: Record<string, unknown>) {
+        this.id = d.id as string;
+        this.label = (d.label as string) || (d.id as string);
+        this.sublabel = d.sublabel as string | undefined;
+        this.shape = d.shape as string | undefined;
+        this.type = d.type as string | undefined;
+        this.signal = d.signal as string | undefined;
         this.tier = d.tier != null ? Number(d.tier) : undefined;
-        this.group = d.group;
-        this.sem_stroke = d.semStroke;
-        this.sem_dash = d.semDash;
+        this.group = d.group as string | undefined;
+        this.sem_stroke = d.semStroke as string | undefined;
+        this.sem_dash = d.semDash as string | undefined;
         this.loop_notes = [];
         this.layer = 0;
         this.x = 0.0;
@@ -116,11 +116,11 @@ export class Edge {
     is_loop: boolean;
     label_pos: [number, number] | null;
 
-    constructor(d: any) {
-        this.src = d.from;
-        this.dst = d.to;
-        this.kind = d.kind || "sync";
-        this.label = d.label;
+    constructor(d: Record<string, unknown>) {
+        this.src = d.from as string;
+        this.dst = d.to as string;
+        this.kind = (d.kind as string) || "sync";
+        this.label = d.label as string | undefined;
         this.pts = [];
         this.is_loop = false;
         this.label_pos = null;
@@ -134,11 +134,11 @@ export class Group {
     parent?: string;
     box: [number, number, number, number] | null;
 
-    constructor(d: any) {
-        this.id = d.id;
-        this.label = d.label || d.id;
-        this.kind = d.kind || "region";
-        this.parent = d.parent;
+    constructor(d: Record<string, unknown>) {
+        this.id = d.id as string;
+        this.label = (d.label as string) || (d.id as string);
+        this.kind = (d.kind as string) || "region";
+        this.parent = d.parent as string | undefined;
         this.box = null;
     }
 }
@@ -223,13 +223,13 @@ export class Layout {
     edges: Edge[];
     groups: Group[];
     group_by_id: Record<string, Group>;
-    journeys: any[];
-    legend_extra: any[];
+    journeys: unknown[];
+    legend_extra: unknown[];
     subtitle?: string;
-    summary?: any[];
+    summary?: unknown[];
     footer?: string;
     input_index: Record<string, number>;
-    notes: any[];
+    notes: unknown[];
     lanes_r: number;
     lanes_l: number;
     lane_base_r: number;
@@ -240,21 +240,21 @@ export class Layout {
     maxy: number;
     back: Set<number>;
 
-    constructor(graph: any) {
-        this.mode = graph.mode || "flow";
-        this.title = graph.title || "diagram";
-        this.nodes = (graph.nodes || []).map((n: any) => new Node(n));
+    constructor(graph: Record<string, unknown>) {
+        this.mode = (graph.mode as string) || "flow";
+        this.title = (graph.title as string) || "diagram";
+        this.nodes = ((graph.nodes as Record<string, unknown>[]) || []).map((n) => new Node(n));
         this.by_id = {};
         for (const n of this.nodes) this.by_id[n.id] = n;
-        this.edges = (graph.edges || []).map((e: any) => new Edge(e));
-        this.groups = (graph.groups || []).map((g: any) => new Group(g));
+        this.edges = ((graph.edges as Record<string, unknown>[]) || []).map((e) => new Edge(e));
+        this.groups = ((graph.groups as Record<string, unknown>[]) || []).map((g) => new Group(g));
         this.group_by_id = {};
         for (const g of this.groups) this.group_by_id[g.id] = g;
-        this.journeys = graph.journeys || [];
-        this.legend_extra = graph.legendExtra || [];
-        this.subtitle = graph.subtitle;
-        this.summary = graph.summary;
-        this.footer = graph.footer;
+        this.journeys = (graph.journeys as unknown[]) || [];
+        this.legend_extra = (graph.legendExtra as unknown[]) || [];
+        this.subtitle = graph.subtitle as string | undefined;
+        this.summary = graph.summary as unknown[] | undefined;
+        this.footer = graph.footer as string | undefined;
         this.input_index = {};
         this.nodes.forEach((n, i) => this.input_index[n.id] = i);
         this.notes = [];
@@ -477,8 +477,8 @@ export class Layout {
     }
 
     _column_clear(x: number, y0: number, y1: number, exclude: Set<string>): boolean {
-        let lo = y0 <= y1 ? y0 : y1;
-        let hi = y0 <= y1 ? y1 : y0;
+        const lo = y0 <= y1 ? y0 : y1;
+        const hi = y0 <= y1 ? y1 : y0;
         for (const n of this.nodes) {
             if (exclude.has(n.id)) continue;
             if (n.x - 3 < x && x < n.x2 + 3 && !(n.y2 <= lo || n.y >= hi)) {
@@ -588,7 +588,7 @@ export class Layout {
         this._set_label_pos(e, u, v);
     }
 
-    _set_label_pos(e: Edge, u: Node, v: Node) {
+    _set_label_pos(e: Edge, _u: Node, _v: Node) {
         if (!e.label || e.pts.length < 2) return;
         const total = poly_len(e.pts);
         const half = total / 2.0;
@@ -631,8 +631,8 @@ export class Layout {
                 acc(x, y);
             }
         }
-        let minx = xs.length ? Math.min(...xs) : 0;
-        let miny = ys.length ? Math.min(...ys) : 0;
+        const minx = xs.length ? Math.min(...xs) : 0;
+        const miny = ys.length ? Math.min(...ys) : 0;
         const dx = -minx + MARGIN;
         const dy = -miny + MARGIN;
         for (const n of this.nodes) {
@@ -715,8 +715,47 @@ export function to_d(pts: [number, number][]): string {
     return out.join(" ");
 }
 
-export function geometry(lo: Layout): any {
-    const nodes: Record<string, any> = {};
+interface GeomNode {
+    x: number; y: number; w: number; h: number;
+    shape?: string; type?: string; signal?: string;
+    labelLines: string[]; sublabel?: string;
+    loopNotes: string[]; semStroke?: string; semDash?: string;
+}
+
+interface GeomEdge {
+    from: string; to: string; kind: string;
+    d?: string; marker?: boolean; label?: string;
+    labelPos?: number[] | null; loop?: boolean;
+}
+
+interface GeomGroup {
+    label: string; kind: string; parent?: string;
+    box?: number[];
+}
+
+interface GeomJourney {
+    color?: string;
+    hops: Array<{ from: string; to: string; d?: string; dur?: number }>;
+}
+
+export interface GeometryResult {
+    mode: string;
+    title: string;
+    subtitle?: string;
+    summary: Array<{ accent?: string; title?: string; items?: string[] }>;
+    footer?: string;
+    nodes: Record<string, GeomNode>;
+    edges: GeomEdge[];
+    groups: Record<string, GeomGroup>;
+    journeys: GeomJourney[];
+    notes: unknown[];
+    legendExtra: Array<{ dash?: string; stroke?: string; label: string }>;
+    width: number;
+    height: number;
+}
+
+export function geometry(lo: Layout): GeometryResult {
+    const nodes: Record<string, GeomNode> = {};
     for (const n of lo.nodes) {
         nodes[n.id] = {
             x: Number(n.x.toFixed(1)), y: Number(n.y.toFixed(1)),
@@ -728,13 +767,13 @@ export function geometry(lo: Layout): any {
             semDash: n.sem_dash
         };
     }
-    const edges: any[] = [];
+    const edges: GeomEdge[] = [];
     const edge_d: Record<string, string> = {};
     for (const e of lo.edges) {
         if (e.is_loop) {
             edges.push({
                 from: e.src, to: e.dst, kind: e.kind,
-                label: e.label, loop: true
+                label: e.label,                 loop: true
             });
             continue;
         }
@@ -747,7 +786,7 @@ export function geometry(lo: Layout): any {
             labelPos: e.label_pos ? [Number(e.label_pos[0].toFixed(1)), Number(e.label_pos[1].toFixed(1))] : null
         });
     }
-    const groups: Record<string, any> = {};
+    const groups: Record<string, GeomGroup> = {};
     for (const g of lo.groups) {
         if (g.box) {
             groups[g.id] = {
@@ -757,9 +796,9 @@ export function geometry(lo: Layout): any {
             };
         }
     }
-    const journeys: any[] = [];
-    for (const j of lo.journeys) {
-        const hops: any[] = [];
+    const journeys: GeomJourney[] = [];
+    for (const j of lo.journeys as { hops?: [string, string][]; color?: string }[]) {
+        const hops: Array<{ from: string; to: string; d?: string; dur?: number }> = [];
         for (const [a, b] of j.hops || []) {
             const d = edge_d[`${a}|${b}`];
             if (d) {
@@ -780,14 +819,14 @@ export function geometry(lo: Layout): any {
         mode: lo.mode,
         title: lo.title,
         subtitle: lo.subtitle,
-        summary: lo.summary,
+        summary: lo.summary as Array<{ accent?: string; title?: string; items?: string[] }>,
         footer: lo.footer,
         nodes,
         edges,
         groups,
         journeys,
         notes: lo.notes,
-        legendExtra: lo.legend_extra,
+        legendExtra: lo.legend_extra as Array<{ dash?: string; stroke?: string; label: string }>,
         width: Number((lo.maxx + MARGIN).toFixed(1)),
         height: Number((lo.maxy + BOTTOM_PAD).toFixed(1)),
     };

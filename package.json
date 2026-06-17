@@ -26,6 +26,7 @@
     "@mdx-js/react": "^3.1.1",
     "@next/mdx": "^16.2.6",
     "@tailwindcss/typography": "^0.5.19",
+    "animejs": "^4.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
@@ -63,6 +64,7 @@
     "eslint": "^9.39.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^17.6.0",
     "jsdom": "^27.0.1",
     "postcss": "^8.5.15",
     "serve": "^14.2.6",
@@ -71,5 +73,8 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1",
     "vitest": "^4.1.7"
-  }
+  },
+  "browserslist": [
+    "defaults and fully supports es6-module-dynamic-import"
+  ]
 }

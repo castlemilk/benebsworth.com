@@ -25,12 +25,17 @@ export const createRenderer = (
   const baseX = margin.left + pw * 0.3
   const baseY = margin.top + ph * 0.85
 
-  // Target (draggable via sine-based animation)
-  let lastTime = 0
+  // Single uniform pixel scale: solve AND render in the same normalised units.
+  // Link lengths (L1, L2) are in normalised units; multiply by `scale` to get pixels.
+  // Max possible reach is L1+L2 = 4 (controls cap each at 2); fit it to the plot.
+  const maxLinkSum = 4
+  const scale = Math.min(pw * 0.9, ph * 0.9) / maxLinkSum
 
   function solveIK(tx: number, ty: number, L1: number, L2: number): [number, number] {
-    const dx = tx - baseX
-    const dy = ty - baseY
+    // Convert the target's pixel offset into the same normalised units as L1/L2.
+    // dy uses a Y-up convention to match the render (which subtracts sin·scale from baseY).
+    const dx = (tx - baseX) / scale
+    const dy = (baseY - ty) / scale
     const dist = Math.sqrt(dx * dx + dy * dy)
     const maxReach = L1 + L2
     const minReach = Math.abs(L1 - L2)
@@ -49,23 +54,22 @@ export const createRenderer = (
 
   return {
     step(timeMs: number, params: Params) {
-      const dt = Math.min((timeMs - lastTime) / 1000, 0.05)
-      lastTime = timeMs
-
       const t = timeMs / 1000
       const L1 = (params.L1 ?? defaults.L1) as number
       const L2 = (params.L2 ?? defaults.L2) as number
 
-      // Target moves in a figure-8 / Lissajous
-      const tx = baseX + Math.sin(t * 0.7) * pw * 0.35 + Math.sin(t * 1.3) * pw * 0.15
-      const ty = baseY - Math.abs(Math.sin(t * 0.5)) * ph * 0.6
+      // Target moves in a figure-8 / Lissajous, swept within the reachable annulus
+      // (pixel offsets stay a comfortable fraction of the max reach, in the same scale).
+      const reach = (L1 + L2) * scale
+      const tx = baseX + (Math.sin(t * 0.7) * 0.5 + Math.sin(t * 1.3) * 0.2) * reach
+      const ty = baseY - Math.abs(Math.sin(t * 0.5)) * reach * 0.85
 
       const [q1, q2] = solveIK(tx, ty, L1, L2)
 
-      const j1X = baseX + L1 * Math.cos(q1) * (pw * 0.15)
-      const j1Y = baseY - L1 * Math.sin(q1) * (ph * 0.15)
-      const eeX = j1X + L2 * Math.cos(q1 + q2) * (pw * 0.15)
-      const eeY = j1Y - L2 * Math.sin(q1 + q2) * (ph * 0.15)
+      const j1X = baseX + L1 * Math.cos(q1) * scale
+      const j1Y = baseY - L1 * Math.sin(q1) * scale
+      const eeX = j1X + L2 * Math.cos(q1 + q2) * scale
+      const eeY = j1Y - L2 * Math.sin(q1 + q2) * scale
 
       ctx.fillStyle = bg
       ctx.fillRect(0, 0, w, h)
@@ -73,7 +77,7 @@ export const createRenderer = (
       ctx.fillStyle = fg
       ctx.font = 'bold 13px monospace'
       ctx.textAlign = 'center'
-      ctx.fillText('2R Robot Arm — FABRIK IK', w / 2, 28)
+      ctx.fillText('2R Robot Arm — Analytic 2R IK (cosine law)', w / 2, 28)
 
       // Floor / base
       ctx.strokeStyle = '#2a3a4a'
@@ -145,8 +149,12 @@ export const createRenderer = (
         ctx.stroke()
       }
 
-      const rArc = Math.min(L1, L2) * pw * 0.05
+      const rArc = Math.min(L1, L2) * scale * 0.35
+      // θ₁ at the base: measured from straight up to link 1.
       arc(baseX, baseY, rArc, -Math.PI / 2, -Math.PI / 2 + q1)
+      // θ₂ at joint 1: the relative angle between link 1 and link 2.
+      // Canvas Y is flipped, so the link directions are at screen angles -q1 and -(q1+q2).
+      arc(j1X, j1Y, rArc, -q1, -(q1 + q2))
       ctx.setLineDash([])
 
       // Angle labels

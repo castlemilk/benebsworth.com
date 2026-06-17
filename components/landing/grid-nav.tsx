@@ -7,9 +7,9 @@ import { ARTIFACTS } from './artifacts'
 import { ArtifactTile } from './artifact-tiles'
 import type { WordBlobHandle } from './word-blob'
 // Code-split the WebGL blob (pulls in `ogl`, ~40KB) into its own async chunk so
-// it stays off the home page's initial JS. React.lazy (not next/dynamic) because
-// it forwards the imperative ref WordBlob exposes; it only loads after mount,
-// where the blob is gated, so there's no SSR/hydration concern.
+// it stays off the home page's initial JS. React.lazy because it forwards
+// the imperative ref WordBlob exposes; it only loads after mount, so the
+// ~146KB ogl WebGL lib is fetched on demand, not in the initial HTML.
 const WordBlob = lazy(() => import('./word-blob').then((m) => ({ default: m.WordBlob })))
 import { HomeEmbed, homeEmbedSlug } from '@/components/lab/home-embed'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
@@ -67,7 +67,7 @@ export function GridNav({ latest }: { latest: Latest }) {
   // Effect chosen from the same seed so SSR/first-paint never read it (gated by
   // `mounted`). When the mount effect flips seed + mounted, this re-derives and
   // the doodle tile swaps in a live mini-embed.
-  const embedIndex = useMemo(() => Math.floor(mulberry32(seed + 7)() * 1e6), [seed])
+  const embedIndex = Math.floor(mulberry32(seed + 7)() * 1e6)
 
   useEffect(() => {
     setMounted(true)

@@ -234,7 +234,7 @@ export function FlowDiagram({
               const stepBlocks = parseBlocks(s.description)
               return (
                 <div key={`${baseId}-panel-${si}`} hidden={si !== current}>
-                  <h4 className="font-mono text-lg font-semibold text-fg">{s.header}</h4>
+                  <p className="font-mono text-lg font-semibold text-fg">{s.header}</p>
                   <div className="mt-2">
                     {stepBlocks.map((block, i) =>
                       block.kind === 'code' ? (

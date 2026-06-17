@@ -59,11 +59,15 @@ export const amModulation: EffectModule = {
 
         const tSec = (t / 1000) * speed
 
+        // Shared x → time mapping: every plot reads the same time base, so the
+        // message, the modulated carrier and its envelope all stay in phase.
+        const timeAt = (px: number) => tSec + px / 100
+
         // Plot 1: Message signal
         const y0 = 20
         drawWaveform(ctx, marginLeft, y0, plotW, plotH, theme.fg, 0.2, true, (tx) => {
-          return Math.sin(2 * Math.PI * fm * (tSec + tx))
-        })
+          return Math.sin(2 * Math.PI * fm * tx)
+        }, timeAt)
 
         ctx.save()
         ctx.font = '9px monospace'
@@ -80,9 +84,12 @@ export const amModulation: EffectModule = {
         drawWaveform(ctx, marginLeft, y1, plotW, plotH, '#ff7a59', 0.7, true, (tx) => {
           const msg = Math.sin(2 * Math.PI * fm * tx)
           return (1 + m * msg) * Math.cos(2 * Math.PI * fc * tx)
-        })
+        }, timeAt)
 
-        // Draw envelope curves (the outline that the message traces on the carrier)
+        // Draw envelope curves (the outline that the message traces on the carrier).
+        // Uses the same timeAt() mapping as the carrier above, so the dashed
+        // envelope hugs the carrier peaks instead of drifting against them.
+        // The 0.9 factor matches drawWaveform's vertical scaling.
         ctx.save()
         ctx.strokeStyle = theme.fg
         ctx.globalAlpha = 0.12
@@ -92,10 +99,10 @@ export const amModulation: EffectModule = {
         ctx.beginPath()
         let started = false
         for (let px = 0; px <= plotW; px += 2) {
-          const tx = tSec + (px / plotW) * (2 / fc)
+          const tx = timeAt(px)
           const msg = Math.sin(2 * Math.PI * fm * tx)
           const env = (1 + m * msg)
-          const sy = y1 + plotH / 2 - (plotH / 2) * env
+          const sy = y1 + plotH / 2 - (plotH / 2) * env * 0.9
           if (!started) { ctx.moveTo(marginLeft + px, sy); started = true }
           else ctx.lineTo(marginLeft + px, sy)
         }
@@ -104,10 +111,10 @@ export const amModulation: EffectModule = {
         ctx.beginPath()
         started = false
         for (let px = 0; px <= plotW; px += 2) {
-          const tx = tSec + (px / plotW) * (2 / fc)
+          const tx = timeAt(px)
           const msg = Math.sin(2 * Math.PI * fm * tx)
           const env = -(1 + m * msg)
-          const sy = y1 + plotH / 2 - (plotH / 2) * env
+          const sy = y1 + plotH / 2 - (plotH / 2) * env * 0.9
           if (!started) { ctx.moveTo(marginLeft + px, sy); started = true }
           else ctx.lineTo(marginLeft + px, sy)
         }
@@ -134,7 +141,7 @@ export const amModulation: EffectModule = {
         ctx.font = '9px monospace'
         ctx.fillStyle = theme.fg
         ctx.globalAlpha = 0.5
-        ctx.fillText(`Spectrum: carrier at ±f_c, sidebands at f_c ± f_m`, marginLeft, y2 - 4)
+        ctx.fillText(`Spectrum (schematic): carrier at ±f_c, sidebands at f_c ± f_m`, marginLeft, y2 - 4)
         ctx.restore()
 
         // Labels
@@ -155,6 +162,7 @@ function drawWaveform(
   x0: number, y0: number, w: number, h: number,
   color: string, alpha: number, fillZero: boolean,
   fn: (tx: number) => number,
+  timeAt: (px: number) => number = (px) => px / 100,
 ) {
   ctx.save()
   ctx.strokeStyle = color
@@ -164,7 +172,7 @@ function drawWaveform(
   let started = false
   const midY = y0 + h / 2
   for (let px = 0; px <= w; px += 2) {
-    const val = fn(px / 100) // scale time to get a few cycles visible
+    const val = fn(timeAt(px)) // shared px → time mapping keeps plots in phase
     const sy = midY - (h / 2) * val * 0.9
     if (!started) { ctx.moveTo(x0 + px, sy); started = true }
     else ctx.lineTo(x0 + px, sy)

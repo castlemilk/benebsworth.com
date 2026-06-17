@@ -128,16 +128,13 @@ export const transmissionLine: EffectModule = {
 
         // Reflected pulse: starts at x=lineL when phase > lineL, runs back.
         let refX = 0
-        let refAmp = 0
         if (phase > lineL) {
           const refPhase = phase - lineL // 0 .. lineL during the return leg
           refX = lineX1 - refPhase       // moves backwards
-          refAmp = G                     // reflected amplitude
         }
 
         // Draw forward pulse
         ctx.save()
-        const pulseAmp = 1
         const pulseFill = '#00e0b8' // teal — engineering accent
         ctx.fillStyle = pulseFill
         ctx.globalAlpha = 0.85

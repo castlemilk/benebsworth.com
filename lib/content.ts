@@ -12,6 +12,9 @@ function require_(cond: unknown, msg: string): asserts cond {
 
 export type LoadedPost = BlogPost & { body: string; release: boolean }
 
+/** Minimal post shape for list/feed views — excludes the heavy `body` MDX source. */
+export type BlogPostSummary = Pick<LoadedPost, 'slug' | 'title' | 'date' | 'description' | 'tags' | 'heroImage'>
+
 /**
  * A post is published iff it is not an explicit draft and its `release`
  * frontmatter flag is not `false`. Legacy posts use `release: false` to keep

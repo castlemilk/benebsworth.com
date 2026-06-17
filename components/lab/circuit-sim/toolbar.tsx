@@ -1,7 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
-import { SAMPLES } from '@/lib/lab/circuit-sim/samples'
+import { useCallback, useRef } from 'react'
 import type { CircuitDiagnostic } from '@/lib/lab/circuit-sim/validator'
 
 interface Props {
@@ -18,7 +17,8 @@ interface Props {
   onExportYaml: () => string
   onImportYaml: (yaml: string) => boolean
   onCopyYaml: (yaml: string) => void
-  onLoadSample: (yaml: string) => void
+  onOpenGallery: () => void
+  onShare: () => void
 }
 
 const DT_PRESETS = [
@@ -38,10 +38,9 @@ const DURATION_PRESETS = [
 export function Toolbar({
   running, simTime, dt, simDuration, errors,
   onRun, onStop, onReset, onDtChange, onDurationChange,
-  onExportYaml, onImportYaml, onCopyYaml, onLoadSample,
+  onExportYaml, onImportYaml, onCopyYaml, onOpenGallery, onShare,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
-  const [showSamples, setShowSamples] = useState(false)
 
   const handleSave = useCallback(() => {
     const yaml = onExportYaml()
@@ -75,11 +74,6 @@ export function Toolbar({
     const yaml = onExportYaml()
     onCopyYaml(yaml)
   }, [onExportYaml, onCopyYaml])
-
-  const handleSample = useCallback((yaml: string) => {
-    onLoadSample(yaml)
-    setShowSamples(false)
-  }, [onLoadSample])
 
   return (
     <div className="flex flex-col gap-2">
@@ -121,32 +115,14 @@ export function Toolbar({
         )}
       </div>
 
-      {/* Samples */}
+      {/* Library */}
       <div className="px-2">
         <button
-          onClick={() => setShowSamples(!showSamples)}
-          className={`w-full px-3 py-1.5 rounded-lg text-xs font-mono transition-colors border
-            ${showSamples
-              ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)] border-[var(--color-accent)]/30'
-              : 'bg-[var(--color-stage)]/30 text-[var(--color-fg)]/50 border-transparent hover:bg-[var(--color-stage)]'
-            }`}
+          onClick={onOpenGallery}
+          className="w-full px-3 py-1.5 rounded-lg text-xs font-mono transition-colors border bg-[var(--color-stage)]/30 text-[var(--color-fg)]/50 border-transparent hover:bg-[var(--color-stage)]"
         >
-          {showSamples ? '⌃ Hide examples' : '📐 Load example...'}
+          📚 Circuit library…
         </button>
-        {showSamples && (
-          <div className="mt-1 max-h-48 overflow-y-auto border border-[var(--color-border)] rounded-lg bg-[var(--color-stage)]/20">
-            {SAMPLES.map((s) => (
-              <button
-                key={s.name}
-                onClick={() => handleSample(s.yaml)}
-                className="w-full text-left px-3 py-2 text-[10px] font-mono hover:bg-[var(--color-stage)] transition-colors border-b border-[var(--color-border)]/50 last:border-b-0"
-              >
-                <span className="text-[var(--color-fg)]/80 block leading-tight">{s.name}</span>
-                <span className="text-[var(--color-fg)]/30 block leading-tight">{s.description}</span>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Timestep */}
@@ -212,6 +188,12 @@ export function Toolbar({
           className="px-2 py-1 rounded text-[10px] font-mono bg-[var(--color-stage)]/30 text-[var(--color-fg)]/50 border border-transparent hover:bg-[var(--color-stage)] transition-colors"
         >
           Copy to clipboard
+        </button>
+        <button
+          onClick={onShare}
+          className="px-2 py-1 rounded text-[10px] font-mono bg-[var(--color-accent)]/10 text-[var(--color-accent)] border border-[var(--color-accent)]/25 hover:bg-[var(--color-accent)]/20 transition-colors"
+        >
+          🔗 Copy share link
         </button>
         <input ref={fileRef} type="file" accept=".yaml,.yml" className="hidden" onChange={handleFileChange} />
       </div>

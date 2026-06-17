@@ -8,7 +8,7 @@ test.describe('live simulation validation', () => {
     page.on('pageerror', e => errors.push(String(e)))
 
     await page.goto(`${BASE}/lab/circuit-sim/`)
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Voltage Divider').click()
     await page.waitForTimeout(500)
 
@@ -41,7 +41,7 @@ test.describe('live simulation validation', () => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
 
     // Load RC filter
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('RC Low-Pass Filter').click()
     await page.waitForTimeout(500)
 
@@ -63,7 +63,7 @@ test.describe('live simulation validation', () => {
   test('RLC tank: ringing causes voltage oscillations visible in scope', async ({ page }) => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
 
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('RLC Tank with Ringing').click()
     await page.waitForTimeout(500)
 
@@ -82,7 +82,7 @@ test.describe('live simulation validation', () => {
   test('resistive load: high current produces visible flow particles', async ({ page }) => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
 
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Resistive Load').click()
     await page.waitForTimeout(500)
 
@@ -100,7 +100,7 @@ test.describe('live simulation validation', () => {
   test('progress bar updates during simulation', async ({ page }) => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
 
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('RC Low-Pass Filter').click()
     await page.waitForTimeout(500)
 
@@ -155,7 +155,7 @@ test.describe('interaction edge cases', () => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
 
     // Load a sample with multiple components
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Voltage Divider').click()
     await page.waitForTimeout(500)
 
@@ -178,7 +178,7 @@ test.describe('interaction edge cases', () => {
     page.on('pageerror', e => errors.push(String(e)))
 
     await page.goto(`${BASE}/lab/circuit-sim/`)
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('RC Low-Pass Filter').click()
     await page.waitForTimeout(500)
 
@@ -203,7 +203,7 @@ test.describe('interaction edge cases', () => {
     page.on('pageerror', e => errors.push(String(e)))
 
     await page.goto(`${BASE}/lab/circuit-sim/`)
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('RC Low-Pass Filter').click()
     await page.waitForTimeout(500)
 
@@ -212,7 +212,7 @@ test.describe('interaction edge cases', () => {
     await page.waitForTimeout(500)
 
     // Switch to a different sample while running
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Voltage Divider').click()
     await page.waitForTimeout(500)
 
@@ -232,7 +232,7 @@ test.describe('interaction edge cases', () => {
   test('auto-probe creates channel and probes list updates', async ({ page }) => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
 
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Two-Stage RC Filter').click()
     await page.waitForTimeout(500)
 
@@ -247,7 +247,7 @@ test.describe('interaction edge cases', () => {
     await expect(page.getByText('CH1')).not.toBeVisible({ timeout: 2000 })
 
     // Load another sample — auto-probe should reappear
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Voltage Divider').click()
     await page.waitForTimeout(500)
 

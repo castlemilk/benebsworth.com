@@ -4,6 +4,48 @@ export interface SampleCircuit {
   yaml: string
 }
 
+export type SampleCategory = 'Basics' | 'RC' | 'RLC' | 'Filters' | 'Bridges' | 'Active'
+
+export interface CategorizedSample extends SampleCircuit {
+  category: SampleCategory
+  lookFor: string
+}
+
+/** Category + "what to look for" per sample, keyed by name. */
+const SAMPLE_META: Record<string, { category: SampleCategory; lookFor: string }> = {
+  'Voltage Divider': { category: 'Basics', lookFor: 'Probe node 2 → 3.33 V (the divider midpoint).' },
+  'Resistive Load': { category: 'Basics', lookFor: 'High current (50 mA) — watch the flow particles race.' },
+  'Three-Resistor T-Network': { category: 'Basics', lookFor: 'Probe all three junctions for the attenuator levels.' },
+  'Current Source → Resistor': { category: 'Basics', lookFor: 'Ohm fixes node 1 at 10 V (I·R).' },
+  'RC Low-Pass Filter': { category: 'RC', lookFor: 'Capacitor charges with τ = 1 ms.' },
+  'Two-Stage RC Filter': { category: 'Filters', lookFor: 'Probe each stage — the second lags the first.' },
+  'Sine → RC Low-Pass': { category: 'Filters', lookFor: 'Switch to AC: the −3 dB knee + 20 dB/dec rolloff.' },
+  'Square → RC Integrator': { category: 'Filters', lookFor: 'Exponential charge/discharge ramps.' },
+  'LC Pi Filter': { category: 'Filters', lookFor: 'Sharper rolloff than RC — see it in AC mode.' },
+  'RLC Ringing': { category: 'RLC', lookFor: 'Under-damped ring — probe node 3.' },
+  'RLC Tank with Ringing': { category: 'RLC', lookFor: 'Heavy ringing from the low R.' },
+  'LC Oscillator Tank': { category: 'RLC', lookFor: 'Resonant tank exchange between L and C.' },
+  'Wheatstone Bridge': { category: 'Bridges', lookFor: 'Measure the imbalance across the centre.' },
+  'Half-Wave Rectifier': { category: 'Active', lookFor: 'Probe the output: the diode clips the negative half.' },
+  'Switched RC': { category: 'Active', lookFor: 'Select the switch → toggle Open/Closed to charge or hold.' },
+}
+
+const CATEGORY_ORDER: SampleCategory[] = ['Basics', 'RC', 'RLC', 'Filters', 'Bridges', 'Active']
+
+/** Samples grouped by category in display order, with what-to-look-for notes. */
+export function groupedSamples(): { category: SampleCategory; samples: CategorizedSample[] }[] {
+  const byCat = new Map<SampleCategory, CategorizedSample[]>()
+  for (const s of SAMPLES) {
+    const meta = SAMPLE_META[s.name] ?? { category: 'Basics' as SampleCategory, lookFor: s.description }
+    const entry: CategorizedSample = { ...s, ...meta }
+    if (!byCat.has(meta.category)) byCat.set(meta.category, [])
+    byCat.get(meta.category)!.push(entry)
+  }
+  return CATEGORY_ORDER
+    .filter(cat => byCat.has(cat))
+    .map(cat => ({ category: cat, samples: byCat.get(cat)! }))
+}
+
 // All samples use GRID_SIZE=20. Components arranged in rectangular
 // closed-loop patterns: V at left, components along top, vertical drop
 // at right, ground at bottom left. Wires trace clear closed rectangles.

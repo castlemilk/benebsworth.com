@@ -17,11 +17,11 @@ test.describe('stress and edge cases', () => {
     ]
 
     for (const name of samples) {
-      await page.getByRole('button', { name: '📐 Load example...' }).click()
+      await page.getByRole('button', { name: 'Circuit library' }).click()
       const btn = page.getByText(name, { exact: false }).first()
       if (await btn.isVisible({ timeout: 500 })) await btn.click()
       else {
-        await page.getByRole('button', { name: '📐 Load example...' }).click()
+        await page.getByRole('button', { name: 'Circuit library' }).click()
         await page.getByText(name, { exact: false }).first().click()
       }
       await page.waitForTimeout(300)
@@ -45,7 +45,7 @@ test.describe('stress and edge cases', () => {
 
   test('max zoom in and out without breaking', async ({ page }) => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Wheatstone Bridge').click()
     await page.waitForTimeout(500)
 
@@ -74,7 +74,7 @@ test.describe('stress and edge cases', () => {
 
   test('YAML round-trip: download, reload, verify identity', async ({ page }) => {
     await page.goto(`${BASE}/lab/circuit-sim/`)
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('RLC Ringing').click()
     await page.waitForTimeout(500)
 

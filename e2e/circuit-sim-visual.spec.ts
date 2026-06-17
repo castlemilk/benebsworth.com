@@ -4,7 +4,7 @@ const BASE = 'http://localhost:3000'
 
 test('debug: verify wires are rendered on canvas', async ({ page }) => {
   await page.goto(`${BASE}/lab/circuit-sim/`)
-  await page.getByRole('button', { name: '📐 Load example...' }).click()
+  await page.getByRole('button', { name: 'Circuit library' }).click()
   await page.getByText('Voltage Divider').click()
   await page.waitForTimeout(1000)
 
@@ -44,7 +44,7 @@ test('debug: verify wires are rendered on canvas', async ({ page }) => {
 
 test('debug: verify components and wires exist in headless render', async ({ page }) => {
   await page.goto(`${BASE}/lab/circuit-sim/`)
-  await page.getByRole('button', { name: '📐 Load example...' }).click()
+  await page.getByRole('button', { name: 'Circuit library' }).click()
   await page.getByText('RC Low-Pass Filter').click()
   await page.waitForTimeout(1000)
 

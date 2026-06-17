@@ -8,7 +8,7 @@ test('complete flow: load → probe → run → scope → stop → switch → re
 
   await page.goto(`${BASE}/lab/circuit-sim/`)
 
-  await page.getByRole('button', { name: '📐 Load example...' }).click()
+  await page.getByRole('button', { name: 'Circuit library' }).click()
   await page.getByText('RC Low-Pass Filter').click()
   await page.waitForTimeout(500)
 
@@ -24,7 +24,7 @@ test('complete flow: load → probe → run → scope → stop → switch → re
   await page.waitForTimeout(300)
   await expect(page.getByRole('button', { name: '▶ Run' })).toBeVisible({ timeout: 2000 })
 
-  await page.getByRole('button', { name: '📐 Load example...' }).click()
+  await page.getByRole('button', { name: 'Circuit library' }).click()
   await page.getByText('RLC Ringing').click()
   await page.waitForTimeout(500)
   await expect(page.locator('canvas')).toHaveCount(2, { timeout: 5000 })
@@ -57,11 +57,11 @@ test('all 10 samples: validate, auto-probe, run, stop', async ({ page }) => {
   ]
 
   for (const name of samples) {
-    await page.getByRole('button', { name: '📐 Load example...' }).click()
+    await page.getByRole('button', { name: 'Circuit library' }).click()
     const btn = page.getByText(name, { exact: false }).first()
     if (await btn.isVisible({ timeout: 500 })) await btn.click()
     else {
-      await page.getByRole('button', { name: '📐 Load example...' }).click()
+      await page.getByRole('button', { name: 'Circuit library' }).click()
       await page.getByText(name, { exact: false }).first().click()
     }
     await page.waitForTimeout(400)

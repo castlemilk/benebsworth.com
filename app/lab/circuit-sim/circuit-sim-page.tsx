@@ -1,17 +1,29 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useCircuitEditor } from '@/lib/lab/circuit-sim/use-circuit-editor'
 import { CircuitCanvas } from '@/components/lab/circuit-sim/circuit-canvas'
 import { ComponentPalette } from '@/components/lab/circuit-sim/component-palette'
 import { Toolbar } from '@/components/lab/circuit-sim/toolbar'
 import { AnalysisPanel } from '@/components/lab/circuit-sim/analysis-panel'
 import { Inspector } from '@/components/lab/circuit-sim/inspector'
+import { GalleryDialog } from '@/components/lab/circuit-sim/gallery-dialog'
+import { encodeCircuit, decodeShareYaml } from '@/lib/lab/circuit-sim/storage'
 
 export function CircuitSimPage() {
   const editor = useCircuitEditor()
   const [showHelp, setShowHelp] = useState(false)
+  const [showGallery, setShowGallery] = useState(false)
   const selectedComp = editor.circuit.components.find(c => c.id === editor.selectedId) ?? null
+
+  // Hydrate from a ?c= share link on first mount.
+  useEffect(() => {
+    const param = new URLSearchParams(window.location.search).get('c')
+    if (!param) return
+    const yaml = decodeShareYaml(param)
+    if (yaml) editor.importYaml(yaml)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handlePanZoom = useCallback((px: number, py: number, z: number) => {
     editor.setPan(px, py)
@@ -26,6 +38,11 @@ export function CircuitSimPage() {
     editor.resetSimulation()
     editor.importYaml(yaml)
   }, [editor])
+
+  const handleShare = useCallback(() => {
+    const url = `${window.location.origin}/lab/circuit-sim/?c=${encodeCircuit(editor.circuit)}`
+    navigator.clipboard?.writeText(url).catch(() => {})
+  }, [editor.circuit])
 
   const sidebar = (
     <div className="flex flex-col gap-3">
@@ -44,7 +61,8 @@ export function CircuitSimPage() {
           onExportYaml={editor.exportYaml}
           onImportYaml={editor.importYaml}
           onCopyYaml={handleCopyYaml}
-          onLoadSample={handleLoadSample}
+          onOpenGallery={() => setShowGallery(true)}
+          onShare={handleShare}
         />
       </div>
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stage)]/30">
@@ -138,6 +156,13 @@ export function CircuitSimPage() {
           Del to delete · Scroll / pinch to zoom · Middle-drag or one-finger-drag to pan · Esc to cancel
         </div>
       )}
+
+      <GalleryDialog
+        open={showGallery}
+        onClose={() => setShowGallery(false)}
+        onLoad={handleLoadSample}
+        getCurrentYaml={editor.exportYaml}
+      />
     </div>
   )
 }

@@ -74,6 +74,7 @@ function getOffset(type: string): number {
     case 'L': return 40  // 28 body + 8 lead + pad to grid
     case 'C': return 20  // gap half 6 + lead 8 + pad
     case 'V': return 20  // radius 16 + lead 8 → pad to 20
+    case 'I': return 20  // radius 16 + lead 8 → pad to 20
     case 'GND': return 0
     default: return 40
   }
@@ -311,6 +312,63 @@ function drawVoltageSource(
   ctx.restore()
 }
 
+function drawCurrentSource(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number,
+  rot: 0 | 90 | 180 | 270, value: number,
+  colors: DrawColors, selected: boolean,
+) {
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate((rot * Math.PI) / 180)
+
+  const r = 16, off = getOffset('I')
+
+  if (selected) {
+    ctx.strokeStyle = colors.selection
+    ctx.lineWidth = 2
+    ctx.setLineDash([4, 4])
+    ctx.strokeRect(-r - 4, -r - 4, r * 2 + 8, r * 2 + 8)
+    ctx.setLineDash([])
+  }
+
+  // Lead wires
+  ctx.strokeStyle = colors.wire
+  ctx.lineWidth = 2.5
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(-off, 0); ctx.lineTo(-r, 0)
+  ctx.moveTo(r, 0); ctx.lineTo(off, 0)
+  ctx.stroke()
+
+  // Circle body
+  ctx.strokeStyle = colors.component
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.arc(0, 0, r, 0, Math.PI * 2)
+  ctx.stroke()
+
+  // Current arrow (points toward nodeA / left = + terminal)
+  ctx.strokeStyle = colors.current
+  ctx.fillStyle = colors.current
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(8, 0); ctx.lineTo(-8, 0)
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(-8, 0); ctx.lineTo(-3, -4); ctx.lineTo(-3, 4); ctx.closePath()
+  ctx.fill()
+
+  // Label
+  ctx.fillStyle = colors.label
+  ctx.font = '10px monospace'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'top'
+  ctx.fillText(formatValue('I', value), 0, r + 6)
+
+  ctx.restore()
+}
+
 function drawGround(
   ctx: CanvasRenderingContext2D,
   x: number, y: number,
@@ -364,6 +422,7 @@ export function drawComponent(
     case 'L': drawInductor(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
     case 'C': drawCapacitor(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
     case 'V': drawVoltageSource(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
+    case 'I': drawCurrentSource(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
     case 'GND': drawGround(ctx, comp.x, comp.y, colors, selected); break
   }
 }

@@ -32,6 +32,23 @@ describe('assembleMNA', () => {
     expect(assembleMNA(makeCircuit(), makeDCEnv())).toBeNull()
   })
 
+  it('current source drives a resistor (1mA into 1k → 1V)', () => {
+    const c = makeCircuit({
+      components: [
+        { id: 'i1', type: 'I', value: 0.001, nodeA: 1, nodeB: 0, x: 0, y: 0, rotation: 0 },
+        { id: 'r1', type: 'R', value: 1000, nodeA: 1, nodeB: 0, x: 0, y: 0, rotation: 0 },
+      ],
+      nextNodeId: 2, nextCompId: 3,
+    })
+    const mna = assembleMNA(c, makeDCEnv())!
+    const { size, A, z, nodeOrder } = mna
+    const pivot = new Int32Array(size), x = new Float64Array(size)
+    luDecompose(size, A, pivot)
+    luSolve(size, A, pivot, z, x)
+    expect(x[nodeOrder.indexOf(1)]).toBeCloseTo(1, 6)
+    expect(mna.m).toBe(0) // current source adds no branch row
+  })
+
   it('counts inductor as a branch row at DC but not in transient', () => {
     const c = makeCircuit({
       components: [

@@ -83,6 +83,25 @@ describe('transient analysis', () => {
     expect(v![2]).toBeCloseTo(5, 0) // Should be close to 5V after 10τ
   })
 
+  it('tracks a sine voltage source across a resistor', () => {
+    // sine V (5V, 1kHz) --- R(1k) --- GND, node 1 follows the source
+    const c: Circuit = makeCircuit({
+      components: [
+        { id: 'c1', type: 'V', value: 0, nodeA: 1, nodeB: 0, x: 0, y: 0, rotation: 0,
+          waveform: { kind: 'sine', amplitude: 5, offset: 0, freq: 1000, phase: 0, duty: 0.5 } },
+        { id: 'c2', type: 'R', value: 1000, nodeA: 1, nodeB: 0, x: 0, y: 0, rotation: 0 },
+      ],
+      nextNodeId: 2, nextCompId: 3,
+    })
+    const state = makeSimState(2)
+    const dt = 2.5e-4 // quarter period of 1kHz
+    // step 1 advances time to t=dt; the stamp reads state.time before each step
+    state.time = dt // evaluate the source at the quarter-period peak
+    const v = transientStep(c, state, dt)
+    expect(v).not.toBeNull()
+    expect(v![1]).toBeCloseTo(5, 3) // node tracks the source at its peak
+  })
+
   it('handles RL circuit transient', () => {
     // V(5V) --- R(1k) --- N1 --- L(0.1H) --- GND (series RL)
     // τ = L/R = 0.0001s. At t=0.1ms, current ≈ 5/1000*(1-e^-1) ≈ 3.16mA

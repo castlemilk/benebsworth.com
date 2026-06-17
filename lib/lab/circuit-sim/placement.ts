@@ -146,6 +146,7 @@ function getBoundingBox(comp: CircuitComponent): BBox {
     case 'L': bw = 60; bh = 22; break
     case 'C': bw = 28; bh = 28; break
     case 'V': bw = 40; bh = 40; break
+    case 'I': bw = 40; bh = 40; break
     case 'GND': bw = 28; bh = 30; break
   }
 

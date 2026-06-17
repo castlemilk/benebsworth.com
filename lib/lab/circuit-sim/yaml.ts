@@ -1,4 +1,4 @@
-import type { Circuit, CircuitComponent, CircuitWire, ComponentType } from './types'
+import type { Circuit, CircuitComponent, CircuitWire, ComponentType, WaveformKind } from './types'
 
 export function serializeCircuit(circuit: Circuit): string {
   const lines: string[] = [
@@ -19,6 +19,15 @@ export function serializeCircuit(circuit: Circuit): string {
     lines.push(`    x: ${c.x}`)
     lines.push(`    y: ${c.y}`)
     lines.push(`    rotation: ${c.rotation}`)
+    if (c.waveform) {
+      lines.push(`    wkind: ${c.waveform.kind}`)
+      lines.push(`    wamp: ${c.waveform.amplitude}`)
+      lines.push(`    woff: ${c.waveform.offset}`)
+      lines.push(`    wfreq: ${c.waveform.freq}`)
+      lines.push(`    wphase: ${c.waveform.phase}`)
+      lines.push(`    wduty: ${c.waveform.duty}`)
+    }
+    if (c.acMag !== undefined) lines.push(`    acmag: ${c.acMag}`)
   }
 
   lines.push('wires:')
@@ -52,6 +61,19 @@ export function deserializeCircuit(yaml: string): Circuit {
 
   function finalizeComponent() {
     if (currentComponent && currentComponent.id && currentComponent.type) {
+      const cc = currentComponent as Record<string, unknown>
+      if (typeof cc.wkind === 'string') {
+        currentComponent.waveform = {
+          kind: cc.wkind as WaveformKind,
+          amplitude: num(cc.wamp, 0),
+          offset: num(cc.woff, 0),
+          freq: num(cc.wfreq, 0),
+          phase: num(cc.wphase, 0),
+          duty: num(cc.wduty, 0.5),
+        }
+      }
+      if (cc.acmag !== undefined) currentComponent.acMag = num(cc.acmag, 1)
+      for (const k of ['wkind', 'wamp', 'woff', 'wfreq', 'wphase', 'wduty', 'acmag']) delete cc[k]
       components.push(currentComponent as CircuitComponent)
     }
     currentComponent = null
@@ -118,7 +140,7 @@ export function deserializeCircuit(yaml: string): Circuit {
   return { components, wires, nextNodeId, nextCompId }
 }
 
-function parseValue(key: keyof CircuitComponent, raw: string): unknown {
+function parseValue(key: string, raw: string): unknown {
   switch (key) {
     case 'id': return raw
     case 'type': return raw as ComponentType
@@ -128,8 +150,19 @@ function parseValue(key: keyof CircuitComponent, raw: string): unknown {
     case 'x':
     case 'y': return parseInt(raw, 10)
     case 'rotation': return parseInt(raw, 10) as 0 | 90 | 180 | 270
+    case 'wamp':
+    case 'woff':
+    case 'wfreq':
+    case 'wphase':
+    case 'wduty':
+    case 'acmag': return parseFloat(raw)
+    case 'wkind': return raw
     default: return raw
   }
+}
+
+function num(v: unknown, fallback: number): number {
+  return typeof v === 'number' && isFinite(v) ? v : fallback
 }
 
 function parseWireValue(key: string, raw: string): unknown {

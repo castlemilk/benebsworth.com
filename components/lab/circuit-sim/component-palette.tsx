@@ -8,6 +8,7 @@ const COMPONENTS: { type: ComponentType; icon: string }[] = [
   { type: 'L', icon: 'L' },
   { type: 'C', icon: 'C' },
   { type: 'V', icon: 'V' },
+  { type: 'I', icon: '⊙' },
   { type: 'GND', icon: '⏚' },
 ]
 

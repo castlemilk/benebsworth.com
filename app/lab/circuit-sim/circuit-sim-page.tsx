@@ -1,41 +1,17 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useCircuitEditor } from '@/lib/lab/circuit-sim/use-circuit-editor'
 import { CircuitCanvas } from '@/components/lab/circuit-sim/circuit-canvas'
 import { ComponentPalette } from '@/components/lab/circuit-sim/component-palette'
 import { Toolbar } from '@/components/lab/circuit-sim/toolbar'
 import { ScopeCanvas } from '@/components/lab/circuit-sim/scope-canvas'
-import type { CircuitComponent } from '@/lib/lab/circuit-sim/types'
-import { formatValue } from '@/lib/lab/circuit-sim/types'
+import { Inspector } from '@/components/lab/circuit-sim/inspector'
 
 export function CircuitSimPage() {
   const editor = useCircuitEditor()
-  const [editingComp, setEditingComp] = useState<CircuitComponent | null>(null)
-  const [editValue, setEditValue] = useState('')
   const [showHelp, setShowHelp] = useState(false)
-
-  useEffect(() => {
-    const comp = editor.selectedId
-      ? editor.circuit.components.find(c => c.id === editor.selectedId)
-      : null
-    if (comp && comp.id !== editingComp?.id) {
-      setEditingComp(comp)
-      setEditValue(String(comp.value))
-    }
-    if (!comp) setEditingComp(null)
-  }, [editor.selectedId])
-
-  const handleValueSubmit = useCallback(() => {
-    if (editingComp) {
-      const val = parseFloat(editValue)
-      if (!isNaN(val) && val > 0) {
-        editor.updateComponentValue(editingComp.id, val)
-        setEditingComp(null)
-      }
-      // If invalid, keep editor open so user can fix
-    }
-  }, [editingComp, editValue, editor])
+  const selectedComp = editor.circuit.components.find(c => c.id === editor.selectedId) ?? null
 
   const handlePanZoom = useCallback((px: number, py: number, z: number) => {
     editor.setPan(px, py)
@@ -141,25 +117,12 @@ export function CircuitSimPage() {
             </div>
           </div>
 
-          {/* Value editor */}
-          {editingComp && (
-            <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-stage)]/50 flex-wrap">
-              <span className="text-xs font-mono text-[var(--color-fg)]/50">
-                {editingComp.type === 'R' ? 'Ω' : editingComp.type === 'L' ? 'L' : editingComp.type === 'C' ? 'C' : editingComp.type === 'V' ? 'V' : 'GND'}
-              </span>
-              <input
-                autoFocus
-                type="text"
-                value={editValue}
-                onChange={e => setEditValue(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') handleValueSubmit(); if (e.key === 'Escape') setEditingComp(null) }}
-                onBlur={handleValueSubmit}
-                className="w-20 sm:w-24 px-2 py-1 text-xs font-mono bg-[var(--color-stage)] border border-[var(--color-border)] rounded text-[var(--color-fg)] focus:outline-none focus:border-[var(--color-accent)]"
-              />
-              <span className="text-xs font-mono text-[var(--color-fg)]/40">{formatValue(editingComp.type, editingComp.value)}</span>
-              <span className="text-[9px] sm:text-[10px] font-mono text-[var(--color-fg)]/30 ml-auto hidden sm:inline">Enter · Esc to cancel</span>
-            </div>
-          )}
+          {/* Inspector: value + source waveform editor for the selected component */}
+          <Inspector
+            comp={selectedComp}
+            onValue={editor.updateComponentValue}
+            onWaveform={editor.updateComponentWaveform}
+          />
         </div>
 
         {/* Sidebar: right column on lg+, below on mobile */}

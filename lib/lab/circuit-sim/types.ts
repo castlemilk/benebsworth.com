@@ -1,14 +1,38 @@
-export type ComponentType = 'R' | 'L' | 'C' | 'V' | 'GND'
+export type ComponentType = 'R' | 'L' | 'C' | 'V' | 'I' | 'GND'
+
+export type WaveformKind = 'dc' | 'sine' | 'pulse' | 'square'
+
+export interface Waveform {
+  kind: WaveformKind
+  amplitude: number // V (or A for current sources)
+  offset: number    // DC bias
+  freq: number      // Hz
+  phase: number     // radians
+  duty: number      // 0..1, for pulse/square
+}
+
+export const DEFAULT_WAVEFORM: Waveform = {
+  kind: 'dc',
+  amplitude: 5,
+  offset: 0,
+  freq: 1000,
+  phase: 0,
+  duty: 0.5,
+}
 
 export interface CircuitComponent {
   id: string
   type: ComponentType
-  value: number // R in Ω, L in H, C in F, V in volts
+  value: number // R in Ω, L in H, C in F, V in volts, I in amps
   nodeA: number // positive terminal node index
   nodeB: number // negative terminal node index
   x: number
   y: number
   rotation: 0 | 90 | 180 | 270
+  /** Source waveform (V/I). Absent → DC source at `value`. */
+  waveform?: Waveform
+  /** AC analysis stimulus magnitude (V/I sources). Default 1 for the input. */
+  acMag?: number
 }
 
 export interface CircuitWire {
@@ -81,6 +105,7 @@ export const DEFAULT_COMPONENT_VALUES: Record<ComponentType, number> = {
   L: 0.001,
   C: 1e-6,
   V: 5,
+  I: 0.001,
   GND: 0,
 }
 
@@ -89,6 +114,7 @@ export const COMPONENT_LABELS: Record<ComponentType, string> = {
   L: 'Inductor',
   C: 'Capacitor',
   V: 'Voltage Source',
+  I: 'Current Source',
   GND: 'Ground',
 }
 
@@ -109,6 +135,10 @@ export function formatValue(type: ComponentType, value: number): string {
       return `${(value * 1e12).toFixed(0)}pF`
     case 'V':
       return `${value.toFixed(1)}V`
+    case 'I':
+      if (Math.abs(value) >= 1) return `${value.toFixed(2)}A`
+      if (Math.abs(value) >= 1e-3) return `${(value * 1e3).toFixed(1)}mA`
+      return `${(value * 1e6).toFixed(0)}µA`
     case 'GND':
       return 'GND'
   }

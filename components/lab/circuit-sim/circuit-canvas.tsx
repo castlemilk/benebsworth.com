@@ -78,7 +78,7 @@ export function CircuitCanvas({
       const dx = wx - comp.x, dy = wy - comp.y
       // Hit-test dims must match visual symbol sizes from draw.ts
       let bw = 52, bh = 24  // R: 44 body + 8 lead margin
-      if (comp.type === 'V') { bw = 44; bh = 44 }   // V: 32 circle + margin
+      if (comp.type === 'V' || comp.type === 'I') { bw = 44; bh = 44 }   // V/I: 32 circle + margin
       if (comp.type === 'GND') { bw = 28; bh = 28 } // GND: 20 bars + margin
       if (comp.type === 'C') { bw = 32; bh = 32 }   // C: 12 gap + plates + margin
       if (comp.type === 'L') { bw = 64; bh = 28 }   // L: 56 loops + margin

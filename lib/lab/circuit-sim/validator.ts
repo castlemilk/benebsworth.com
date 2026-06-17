@@ -34,14 +34,17 @@ export function validateCircuit(circuit: Circuit): CircuitDiagnostic[] {
 
   // ── Zero or negative values ─────────────────────────────────────
   for (const c of circuit.components) {
-    if (c.type !== 'GND' && c.value <= 0) {
+    // Passive components must be strictly positive. Sources (V/I) may be 0
+    // and may carry a waveform whose `value` field is unused.
+    const passive = c.type === 'R' || c.type === 'L' || c.type === 'C'
+    if (passive && c.value <= 0) {
       diags.push({
         severity: 'error', code: 'INVALID_VALUE',
         message: `${c.type} "${c.id}" has invalid value (${c.value}). Must be > 0.`,
         nodes: [c.nodeA, c.nodeB], components: [c.id],
       })
     }
-    if (c.type === 'V' && c.value === 0) {
+    if (c.type === 'V' && !c.waveform && c.value === 0) {
       diags.push({
         severity: 'warning', code: 'ZERO_VOLTAGE',
         message: `Voltage source "${c.id}" is set to 0V — effectively a wire`,

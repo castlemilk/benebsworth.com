@@ -1,4 +1,5 @@
 import type { CircuitComponent, ComponentType, SimulationState } from './types'
+import { sourceValue } from './sources'
 
 /**
  * Per-device "stamp" abstraction. Each component type contributes entries to a
@@ -83,8 +84,13 @@ const stampInductorDC: StampFn = (c, ctx) => {
   stampVoltageSource(c, ctx, 0)
 }
 
-const stampVoltageDC: StampFn = (c, ctx) => {
-  stampVoltageSource(c, ctx, c.value)
+const stampVoltage: StampFn = (c, ctx, env) => {
+  stampVoltageSource(c, ctx, sourceValue(c, env.mode, env.time))
+}
+
+const stampCurrentSource: StampFn = (c, ctx, env) => {
+  // Inject source current INTO nodeA, OUT of nodeB.
+  stampCurrent(ctx, ctx.row(c.nodeA), ctx.row(c.nodeB), sourceValue(c, env.mode, env.time))
 }
 
 // ── Transient stamps (trapezoidal companion models) ────────────────
@@ -121,7 +127,8 @@ export const DC_STAMPS: Record<ComponentType, StampFn> = {
   R: stampResistor,
   C: noop, // open circuit at DC
   L: stampInductorDC,
-  V: stampVoltageDC,
+  V: stampVoltage,
+  I: stampCurrentSource,
   GND: noop,
 }
 
@@ -129,7 +136,8 @@ export const TRANSIENT_STAMPS: Record<ComponentType, StampFn> = {
   R: stampResistor,
   C: stampCapacitorTransient,
   L: stampInductorTransient,
-  V: stampVoltageDC, // Phase 0: source value = c.value (waveforms arrive in Phase 1)
+  V: stampVoltage,
+  I: stampCurrentSource,
   GND: noop,
 }
 

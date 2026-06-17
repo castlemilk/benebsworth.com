@@ -21,6 +21,24 @@ describe('YAML serialization', () => {
     expect(parsed.wires).toEqual([])
   })
 
+  it('round-trips a sine source waveform + acMag', () => {
+    const c: Circuit = makeCircuit({
+      components: [
+        { id: 'v1', type: 'V', value: 0, nodeA: 1, nodeB: 0, x: 100, y: 80, rotation: 90,
+          waveform: { kind: 'sine', amplitude: 5, offset: 1, freq: 2000, phase: 0.5, duty: 0.5 }, acMag: 1 },
+        { id: 'i1', type: 'I', value: 0.002, nodeA: 1, nodeB: 0, x: 200, y: 80, rotation: 0 },
+      ],
+      nextNodeId: 2, nextCompId: 3,
+    })
+    const parsed = deserializeCircuit(serializeCircuit(c))
+    expect(parsed.components[0].waveform).toEqual({ kind: 'sine', amplitude: 5, offset: 1, freq: 2000, phase: 0.5, duty: 0.5 })
+    expect(parsed.components[0].acMag).toBe(1)
+    expect(parsed.components[1].type).toBe('I')
+    expect(parsed.components[1].value).toBeCloseTo(0.002)
+    // a plain component has no waveform key
+    expect(parsed.components[1].waveform).toBeUndefined()
+  })
+
   it('round-trips a voltage divider circuit', () => {
     const c: Circuit = {
       components: [

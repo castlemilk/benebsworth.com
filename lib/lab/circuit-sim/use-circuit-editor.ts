@@ -9,7 +9,8 @@ import type {
   SimulationState,
   ScopeTrace,
 } from './types'
-import { DEFAULT_COMPONENT_VALUES } from './types'
+import { DEFAULT_COMPONENT_VALUES, DEFAULT_WAVEFORM } from './types'
+import type { Waveform } from './types'
 import { transientStep } from './transient'
 import { validateCircuit, type CircuitDiagnostic } from './validator'
 import { solveDC } from './solver'
@@ -230,6 +231,26 @@ export function useCircuitEditor() {
       if (idx === -1) return {}
       const components = [...s.circuit.components]
       components[idx] = { ...components[idx], value }
+      return { circuit: { ...s.circuit, components } }
+    })
+  }, [mutate])
+
+  const updateComponentWaveform = useCallback((id: string, partial: Partial<Waveform>) => {
+    mutate(s => {
+      const idx = s.circuit.components.findIndex(c => c.id === id)
+      if (idx === -1) return {}
+      const components = [...s.circuit.components]
+      const comp = components[idx]
+      const base: Waveform = comp.waveform ?? { ...DEFAULT_WAVEFORM, amplitude: comp.value || DEFAULT_WAVEFORM.amplitude }
+      const wf: Waveform = { ...base, ...partial }
+      if (wf.kind === 'dc') {
+        // A plain DC source carries no waveform — value is canonical.
+        const next = { ...comp, value: wf.amplitude + wf.offset }
+        delete next.waveform
+        components[idx] = next
+      } else {
+        components[idx] = { ...comp, waveform: wf }
+      }
       return { circuit: { ...s.circuit, components } }
     })
   }, [mutate])
@@ -461,6 +482,7 @@ export function useCircuitEditor() {
     completeWire,
     cancelWiring,
     updateComponentValue,
+    updateComponentWaveform,
     rotateComponent,
     setPan,
     setZoom,

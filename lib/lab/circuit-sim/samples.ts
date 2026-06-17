@@ -509,4 +509,134 @@ components:
     rotation: 0
 wires: []`,
   },
+  {
+    name: 'Sine → RC Low-Pass',
+    description: '5V 200Hz sine into 1k/1µF — watch attenuation + phase lag at node 2',
+    yaml: `# Sine → RC Low-Pass
+version: 1
+nextNodeId: 3
+nextCompId: 5
+components:
+  - id: c1
+    type: V
+    value: 5
+    nodeA: 1
+    nodeB: 0
+    x: 140
+    y: 200
+    rotation: 90
+    wkind: sine
+    wamp: 5
+    woff: 0
+    wfreq: 200
+    wphase: 0
+    wduty: 0.5
+  - id: c2
+    type: R
+    value: 1000
+    nodeA: 1
+    nodeB: 2
+    x: 320
+    y: 120
+    rotation: 0
+  - id: c3
+    type: C
+    value: 0.000001
+    nodeA: 2
+    nodeB: 0
+    x: 320
+    y: 300
+    rotation: 270
+  - id: c4
+    type: GND
+    value: 0
+    nodeA: 0
+    nodeB: 0
+    x: 140
+    y: 340
+    rotation: 0
+wires: []`,
+  },
+  {
+    name: 'Square → RC Integrator',
+    description: '5V 150Hz square into 1k/1µF — exponential charge/discharge ramps',
+    yaml: `# Square → RC Integrator
+version: 1
+nextNodeId: 3
+nextCompId: 5
+components:
+  - id: c1
+    type: V
+    value: 5
+    nodeA: 1
+    nodeB: 0
+    x: 140
+    y: 200
+    rotation: 90
+    wkind: square
+    wamp: 5
+    woff: 0
+    wfreq: 150
+    wphase: 0
+    wduty: 0.5
+  - id: c2
+    type: R
+    value: 1000
+    nodeA: 1
+    nodeB: 2
+    x: 320
+    y: 120
+    rotation: 0
+  - id: c3
+    type: C
+    value: 0.000001
+    nodeA: 2
+    nodeB: 0
+    x: 320
+    y: 300
+    rotation: 270
+  - id: c4
+    type: GND
+    value: 0
+    nodeA: 0
+    nodeB: 0
+    x: 140
+    y: 340
+    rotation: 0
+wires: []`,
+  },
+  {
+    name: 'Current Source → Resistor',
+    description: '10mA forced through 1kΩ — Ohm fixes node 1 at 10V',
+    yaml: `# Current Source → Resistor
+version: 1
+nextNodeId: 2
+nextCompId: 4
+components:
+  - id: c1
+    type: I
+    value: 0.01
+    nodeA: 1
+    nodeB: 0
+    x: 120
+    y: 140
+    rotation: 0
+  - id: c2
+    type: R
+    value: 1000
+    nodeA: 1
+    nodeB: 0
+    x: 300
+    y: 320
+    rotation: 270
+  - id: c3
+    type: GND
+    value: 0
+    nodeA: 0
+    nodeB: 0
+    x: 120
+    y: 340
+    rotation: 0
+wires: []`,
+  },
 ]

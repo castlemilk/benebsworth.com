@@ -38,6 +38,33 @@ describe('AC sweep — RC low-pass', () => {
     expect(hi2 - hi1).toBeCloseTo(-20, 0) // one decade → ~-20dB
   })
 
+  it('switch is stamped in AC: closed passes low-freq, open blocks', () => {
+    const switchedRC = (closed: boolean): Circuit => makeCircuit({
+      components: [
+        { id: 'v', type: 'V', value: 1, nodeA: 1, nodeB: 0, x: 0, y: 0, rotation: 0, acMag: 1 },
+        { id: 'sw', type: 'SW', value: 0, nodeA: 1, nodeB: 2, x: 0, y: 0, rotation: 0, closed },
+        { id: 'r', type: 'R', value: 1000, nodeA: 2, nodeB: 3, x: 0, y: 0, rotation: 0 },
+        { id: 'c', type: 'C', value: 1e-6, nodeA: 3, nodeB: 0, x: 0, y: 0, rotation: 0 },
+      ], nextNodeId: 4, nextCompId: 5,
+    })
+    expect(acPointAtNode(switchedRC(true), 1.59, 3).db).toBeCloseTo(0, 0) // closed → ~0 dB well below cutoff
+    expect(acPointAtNode(switchedRC(false), 1.59, 3).db).toBeLessThan(-40) // open → blocked
+  })
+
+  it('diode is stamped in AC: forward-biased passes, reverse blocks', () => {
+    const diodeAC = (forward: boolean): Circuit => makeCircuit({
+      components: [
+        { id: 'v', type: 'V', value: 1, nodeA: 1, nodeB: 0, x: 0, y: 0, rotation: 0, acMag: 1 },
+        { id: 'd', type: 'D', value: 0, nodeA: forward ? 1 : 2, nodeB: forward ? 2 : 1, x: 0, y: 0, rotation: 0 },
+        { id: 'r', type: 'R', value: 1000, nodeA: 2, nodeB: 0, x: 0, y: 0, rotation: 0 },
+      ], nextNodeId: 3, nextCompId: 4,
+    })
+    const fwd = acPointAtNode(diodeAC(true), 1000, 2).db
+    const rev = acPointAtNode(diodeAC(false), 1000, 2).db
+    expect(fwd).toBeGreaterThan(-10) // small-signal r ≪ R → AC passes
+    expect(rev).toBeLessThan(-40)    // reverse → Geq ≈ Gmin → blocked
+  })
+
   it('produces a full sweep with per-probe channels', () => {
     const probes: Probe[] = [
       { id: 'nodeV:2', kind: 'nodeV', ref: 2, label: 'N2', color: '#fff', visible: true, unit: 'V', samples: new Float64Array(0), writeIdx: 0, count: 0 },

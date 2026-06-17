@@ -1,6 +1,8 @@
 import type { Circuit, CircuitComponent, Probe } from './types'
 import { componentNodes } from './types'
 import { cluSolve } from './complex-solver'
+import { solveDC } from './solver'
+import { diodeSmallSignalG, SW_ON, SW_OFF } from './devices'
 
 /**
  * AC (phasor) small-signal frequency sweep.
@@ -86,6 +88,17 @@ export function acSweep(circuit: Circuit, options: Partial<ACOptions>, probes: P
 
   const row = (node: number) => (node === 0 ? -1 : (rowOf.get(node) ?? -1))
 
+  // Diodes linearize to a small-signal conductance about the DC operating point.
+  const diodeG = new Map<string, number>()
+  if (circuit.components.some(c => c.type === 'D')) {
+    const dc = solveDC(circuit)
+    for (const c of circuit.components) {
+      if (c.type !== 'D') continue
+      const vd = dc ? (dc[c.nodeA] ?? 0) - (dc[c.nodeB] ?? 0) : 0
+      diodeG.set(c.id, diodeSmallSignalG(vd))
+    }
+  }
+
   const channels: BodeChannel[] = probes.map(p => ({ id: p.id, label: p.label, color: p.color, mag: [], phase: [] }))
 
   for (const f of freqs) {
@@ -110,6 +123,8 @@ export function acSweep(circuit: Circuit, options: Partial<ACOptions>, probes: P
         case 'R': if (c.value > 0) stampY(a, bb, 1 / c.value, 0); break
         case 'C': stampY(a, bb, 0, w * c.value); break
         case 'L': if (c.value > 0 && w > 0) stampY(a, bb, 0, -1 / (w * c.value)); break
+        case 'D': stampY(a, bb, diodeG.get(c.id) ?? 0, 0); break
+        case 'SW': stampY(a, bb, c.closed ? SW_ON : SW_OFF, 0); break
         case 'I': {
           const mag = c === stimulus ? inputMag : 0
           if (a >= 0) addB(a, mag, 0)
@@ -166,6 +181,8 @@ export function acSweep(circuit: Circuit, options: Partial<ACOptions>, probes: P
             else if (comp.type === 'L' && comp.value > 0 && w > 0) { const yl = -1 / (w * comp.value); re = -yl * dvi; im = yl * dvr }
             else if (comp.type === 'V') { const vr = vBranch.get(comp.id); if (vr !== undefined) { re = x[vr * 2]; im = x[vr * 2 + 1] } }
             else if (comp.type === 'I') { re = comp === stimulus ? inputMag : 0; im = 0 }
+            else if (comp.type === 'D') { const g = diodeG.get(comp.id) ?? 0; re = g * dvr; im = g * dvi }
+            else if (comp.type === 'SW') { const g = comp.closed ? SW_ON : SW_OFF; re = g * dvr; im = g * dvi }
           }
         }
       }

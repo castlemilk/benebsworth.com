@@ -117,6 +117,12 @@ function pnjlim(vnew: number, vold: number): number {
   return vnew
 }
 
+/** Small-signal diode conductance at junction voltage vd (for AC linearization). */
+export function diodeSmallSignalG(vd: number): number {
+  const evd = Math.exp(Math.min(vd / (D_N * D_VT), 80))
+  return (D_IS / (D_N * D_VT)) * evd + D_GMIN
+}
+
 const stampDiode: StampFn = (c, ctx, env) => {
   const ai = ctx.row(c.nodeA), bi = ctx.row(c.nodeB)
   const va = ai === null ? 0 : (env.prev ? env.prev[ai] : 0)
@@ -140,8 +146,8 @@ const stampDiode: StampFn = (c, ctx, env) => {
 
 // ── Switch (linear, state-dependent conductance) ───────────────────
 
-const SW_ON = 1e3   // closed ≈ 1 mΩ
-const SW_OFF = 1e-9 // open ≈ 1 GΩ
+export const SW_ON = 1e3   // closed ≈ 1 mΩ
+export const SW_OFF = 1e-9 // open ≈ 1 GΩ
 
 const stampSwitch: StampFn = (c, ctx) => {
   stampConductance(ctx, ctx.row(c.nodeA), ctx.row(c.nodeB), c.closed ? SW_ON : SW_OFF)

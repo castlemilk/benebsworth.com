@@ -64,7 +64,7 @@ export function CircuitCanvas({
   const wireEndRef = useRef({ x: 0, y: 0 })
   // Active pointers (touch/pen/mouse) for multi-touch pinch-zoom.
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map())
-  const pinchRef = useRef<{ startDist: number; startZoom: number; startPanX: number; startPanY: number; midX: number; midY: number } | null>(null)
+  const pinchRef = useRef<{ id1: number; id2: number; startDist: number; startZoom: number; startPanX: number; startPanY: number; midX: number; midY: number } | null>(null)
   const flowParticlesRef = useRef<Map<string, number[]>>(new Map())
   const lastFlowTimeRef = useRef(0)
 
@@ -390,18 +390,28 @@ export function CircuitCanvas({
 
   // ── Pointer handlers (mouse + touch + pen) ──────────────────────────
 
+  // (Re)establish a pinch from the first two active pointers, locking their ids
+  // so lifting a third/other finger can't swap the tracked pair mid-gesture.
+  const seedPinch = useCallback(() => {
+    const entries = [...pointersRef.current.entries()]
+    if (entries.length < 2) { pinchRef.current = null; return }
+    const [id1, p1] = entries[0], [id2, p2] = entries[1]
+    const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y) || 1
+    const rect = wrapRef.current?.getBoundingClientRect()
+    pinchRef.current = {
+      id1, id2, startDist: dist, startZoom: zoom, startPanX: panX, startPanY: panY,
+      midX: (p1.x + p2.x) / 2 - (rect?.left ?? 0),
+      midY: (p1.y + p2.y) / 2 - (rect?.top ?? 0),
+    }
+  }, [zoom, panX, panY])
+
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     try { (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId) } catch { /* fake/inactive pointer */ }
     pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
 
     // Two pointers → begin pinch-zoom; cancel any single-pointer interaction.
     if (pointersRef.current.size === 2) {
-      const pts = [...pointersRef.current.values()]
-      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1
-      const rect = wrapRef.current?.getBoundingClientRect()
-      const midX = (pts[0].x + pts[1].x) / 2 - (rect?.left ?? 0)
-      const midY = (pts[0].y + pts[1].y) / 2 - (rect?.top ?? 0)
-      pinchRef.current = { startDist: dist, startZoom: zoom, startPanX: panX, startPanY: panY, midX, midY }
+      seedPinch()
       dragRef.current = null
       panRef.current = null
       return
@@ -471,7 +481,7 @@ export function CircuitCanvas({
 
     onSelectComponent(null)
     panRef.current = { startX: e.clientX, startY: e.clientY, startPanX: panX, startPanY: panY }
-  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, hitTestWire, toggleProbe, circuit.components, panX, panY, zoom, onCompleteWire, onCancelWiring, onSelectComponent, onStartWire, onRotate])
+  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, hitTestWire, toggleProbe, seedPinch, circuit.components, panX, panY, zoom, onCompleteWire, onCancelWiring, onSelectComponent, onStartWire, onRotate])
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (pointersRef.current.has(e.pointerId)) {
@@ -479,11 +489,13 @@ export function CircuitCanvas({
     }
     wireEndRef.current = { x: e.clientX, y: e.clientY }
 
-    // Pinch-zoom about the gesture midpoint.
-    if (pinchRef.current && pointersRef.current.size >= 2) {
-      const pts = [...pointersRef.current.values()]
-      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1
+    // Pinch-zoom about the gesture midpoint, tracking the two locked pointers.
+    if (pinchRef.current) {
       const p = pinchRef.current
+      const p1 = pointersRef.current.get(p.id1)
+      const p2 = pointersRef.current.get(p.id2)
+      if (!p1 || !p2) return // a tracked finger lifted; re-seeded on pointer-up
+      const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y) || 1
       const newZoom = Math.max(0.3, Math.min(3, p.startZoom * (dist / p.startDist)))
       const k = newZoom / p.startZoom
       onPanZoom(p.midX - (p.midX - p.startPanX) * k, p.midY - (p.midY - p.startPanY) * k, newZoom)
@@ -513,13 +525,14 @@ export function CircuitCanvas({
     const wasPinching = !!pinchRef.current
     pointersRef.current.delete(e.pointerId)
     if (pointersRef.current.size < 2) pinchRef.current = null
+    else seedPinch() // re-establish a clean pair from the remaining pointers
     dragRef.current = null
     panRef.current = null
     if (place && !wasPinching && placingType) {
       const pos = canvasToWorld(e.clientX, e.clientY)
       onPlaceComponent(placingType, gridSnap(pos.x), gridSnap(pos.y))
     }
-  }, [canvasToWorld, placingType, onPlaceComponent])
+  }, [canvasToWorld, placingType, onPlaceComponent, seedPinch])
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => endPointer(e, true), [endPointer])
   const handlePointerCancel = useCallback((e: React.PointerEvent) => endPointer(e, false), [endPointer])

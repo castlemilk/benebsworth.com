@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CircuitComponent, ProbeKind, Waveform, WaveformKind } from '@/lib/lab/circuit-sim/types'
 import { COMPONENT_LABELS } from '@/lib/lab/circuit-sim/types'
 
@@ -175,9 +175,12 @@ function NumberField({
   eng?: boolean
 }) {
   const [buf, setBuf] = useState(() => (eng ? formatEng(value) : trimNum(value)))
+  const focused = useRef(false)
 
+  // Re-sync from the canonical value only when the user isn't editing, so live
+  // commits don't reformat (e.g. clobber "0.5" → "500m") mid-keystroke.
   useEffect(() => {
-    setBuf(eng ? formatEng(value) : trimNum(value))
+    if (!focused.current) setBuf(eng ? formatEng(value) : trimNum(value))
   }, [value, eng])
 
   return (
@@ -187,6 +190,8 @@ function NumberField({
         <input
           type="text"
           value={buf}
+          onFocus={() => { focused.current = true }}
+          onBlur={() => { focused.current = false; setBuf(eng ? formatEng(value) : trimNum(value)) }}
           onChange={(e) => {
             setBuf(e.target.value)
             const n = eng ? parseEng(e.target.value) : parseFloat(e.target.value)

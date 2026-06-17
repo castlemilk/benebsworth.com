@@ -11,6 +11,7 @@ const COMPONENTS: { type: ComponentType; icon: string }[] = [
   { type: 'I', icon: '⊙' },
   { type: 'D', icon: '◢' },
   { type: 'SW', icon: '⊶' },
+  { type: 'OP', icon: '▷' },
   { type: 'GND', icon: '⏚' },
 ]
 

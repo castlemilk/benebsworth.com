@@ -28,6 +28,7 @@ const SAMPLE_META: Record<string, { category: SampleCategory; lookFor: string }>
   'Wheatstone Bridge': { category: 'Bridges', lookFor: 'Measure the imbalance across the centre.' },
   'Half-Wave Rectifier': { category: 'Active', lookFor: 'Probe the output: the diode clips the negative half.' },
   'Switched RC': { category: 'Active', lookFor: 'Select the switch → toggle Open/Closed to charge or hold.' },
+  'Non-Inverting Amplifier': { category: 'Active', lookFor: 'Probe the output → 3 V (gain 1 + Rf/Rg).' },
 }
 
 const CATEGORY_ORDER: SampleCategory[] = ['Basics', 'RC', 'RLC', 'Filters', 'Bridges', 'Active']
@@ -742,6 +743,57 @@ components:
     nodeA: 0
     nodeB: 0
     x: 120
+    y: 360
+    rotation: 0
+wires: []`,
+  },
+  {
+    name: 'Non-Inverting Amplifier',
+    description: 'Op-amp with Rf=2k, Rg=1k — gain ×3 (probe the output)',
+    yaml: `# Non-Inverting Amplifier (gain = 1 + Rf/Rg = 3)
+version: 1
+nextNodeId: 4
+nextCompId: 6
+components:
+  - id: c1
+    type: V
+    value: 1
+    nodeA: 3
+    nodeB: 0
+    x: 140
+    y: 200
+    rotation: 90
+  - id: c2
+    type: OP
+    value: 0
+    nodeA: 3
+    nodeB: 1
+    nodeC: 2
+    x: 340
+    y: 200
+    rotation: 0
+  - id: c3
+    type: R
+    value: 1000
+    nodeA: 1
+    nodeB: 0
+    x: 300
+    y: 320
+    rotation: 90
+  - id: c4
+    type: R
+    value: 2000
+    nodeA: 2
+    nodeB: 1
+    x: 340
+    y: 120
+    rotation: 0
+  - id: c5
+    type: GND
+    value: 0
+    nodeA: 0
+    nodeB: 0
+    x: 140
     y: 360
     rotation: 0
 wires: []`,

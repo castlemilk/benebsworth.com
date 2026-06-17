@@ -55,6 +55,10 @@ export function Inspector({ comp, onValue, onWaveform, onProbe, onToggleSwitch }
         <p className="text-[11px] font-mono text-[#7aa0b2]/60">Ideal diode — triangle points anode → cathode (current flows that way when forward-biased).</p>
       )}
 
+      {comp.type === 'OP' && (
+        <p className="text-[11px] font-mono text-[#7aa0b2]/60">Ideal op-amp — inputs are a virtual short (+ top, − bottom); output is the right terminal. Wire feedback for a finite gain.</p>
+      )}
+
       {comp.type === 'SW' && (
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-mono uppercase tracking-wider text-[#5c8294]/60">State</span>

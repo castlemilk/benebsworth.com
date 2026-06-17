@@ -1,4 +1,5 @@
 import type { Circuit, CircuitComponent, Probe } from './types'
+import { componentNodes } from './types'
 import { cluSolve } from './complex-solver'
 
 /**
@@ -52,27 +53,26 @@ export function acSweep(circuit: Circuit, options: Partial<ACOptions>, probes: P
   const o = { ...DEFAULT_OPTIONS, ...options }
   const freqs = logFreqs(o)
 
-  // ── Node ordering (non-ground) ──────────────────────────────────
+  // ── Node ordering (non-ground; includes op-amp 3rd terminal) ─────
   const nodeSet = new Set<number>()
   for (const c of circuit.components) {
-    if (c.nodeA > 0) nodeSet.add(c.nodeA)
-    if (c.nodeB > 0) nodeSet.add(c.nodeB)
+    for (const nd of componentNodes(c)) if (nd > 0) nodeSet.add(nd)
   }
   const nodeOrder = [...nodeSet].sort((a, b) => a - b)
   const rowOf = new Map<number, number>()
   nodeOrder.forEach((nid, i) => rowOf.set(nid, i))
   const n = nodeOrder.length
 
-  // ── Voltage sources get branch rows ─────────────────────────────
-  const vSources = circuit.components.filter(c => c.type === 'V')
+  // ── Voltage sources + op-amps get branch rows ───────────────────
+  const branchComps = circuit.components.filter(c => c.type === 'V' || c.type === 'OP')
   const vBranch = new Map<string, number>()
-  vSources.forEach((c, i) => vBranch.set(c.id, n + i))
-  const size = n + vSources.length
+  branchComps.forEach((c, i) => vBranch.set(c.id, n + i))
+  const size = n + branchComps.length
 
   // ── Stimulus: first source with acMag, else first V source, else first I ──
   const stimulus =
     circuit.components.find(c => (c.type === 'V' || c.type === 'I') && c.acMag !== undefined) ??
-    vSources[0] ??
+    circuit.components.find(c => c.type === 'V') ??
     circuit.components.find(c => c.type === 'I') ??
     null
   const inputMag = stimulus ? (stimulus.acMag ?? 1) : 1
@@ -121,6 +121,15 @@ export function acSweep(circuit: Circuit, options: Partial<ACOptions>, probes: P
           if (a >= 0) { addA(a, vr, 1, 0); addA(vr, a, 1, 0) }
           if (bb >= 0) { addA(bb, vr, -1, 0); addA(vr, bb, -1, 0) }
           addB(vr, c === stimulus ? inputMag : 0, 0)
+          break
+        }
+        case 'OP': {
+          // Ideal nullor: output current into nodeC; constraint V(in+) − V(in−) = 0.
+          const br = vBranch.get(c.id)!
+          const out = row(c.nodeC ?? 0)
+          if (out >= 0) addA(out, br, 1, 0)
+          if (a >= 0) addA(br, a, 1, 0)
+          if (bb >= 0) addA(br, bb, -1, 0)
           break
         }
       }

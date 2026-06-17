@@ -1,6 +1,6 @@
 import type { Circuit, CircuitComponent } from './types'
 import { GRID_SIZE } from './types'
-import { getTerminalPositions, gridSnap } from './draw'
+import { getTerminalPositions, getAllTerminals, terminalForNode, gridSnap } from './draw'
 import { computeManhattanPath } from './wiring'
 
 // ── Visual element types (headless, no canvas) ─────────────────────
@@ -52,20 +52,10 @@ export function renderCircuit(circuit: Circuit): VisualElement[] {
       rotation: comp.rotation,
     })
 
-    // Terminals
-    const [ax, ay, bx, by] = getTerminalPositions(comp)
-    elems.push({
-      type: 'terminal',
-      compId: comp.id,
-      nodeId: comp.nodeA,
-      x: gridSnap(ax), y: gridSnap(ay),
-    })
-    elems.push({
-      type: 'terminal',
-      compId: comp.id,
-      nodeId: comp.nodeB,
-      x: gridSnap(bx), y: gridSnap(by),
-    })
+    // Terminals (1 for GND, 2 for most, 3 for op-amp)
+    for (const t of getAllTerminals(comp)) {
+      elems.push({ type: 'terminal', compId: comp.id, nodeId: t.node, x: t.x, y: t.y })
+    }
   }
 
   // ── Wires ─────────────────────────────────────────────────────
@@ -84,15 +74,11 @@ export function renderCircuit(circuit: Circuit): VisualElement[] {
     }
     if (fromComp === toComp) continue
 
-    // Determine which terminal of each component to use
-    const fn = fromComp.nodeA === wire.nodeA ? 0 : 1
-    const tn = toComp.nodeA === wire.nodeB ? 0 : 1
-    const [fax, fay, fbx, fby] = getTerminalPositions(fromComp)
-    const [tax, tay, tbx, tby] = getTerminalPositions(toComp)
-    const fromTx = gridSnap(fn === 0 ? fax : fbx)
-    const fromTy = gridSnap(fn === 0 ? fay : fby)
-    const toTx = gridSnap(tn === 0 ? tax : tbx)
-    const toTy = gridSnap(tn === 0 ? tay : tby)
+    // Determine which terminal of each component to use (handles op-amp's 3)
+    const fromT = terminalForNode(fromComp, wire.nodeA) ?? getAllTerminals(fromComp)[0]
+    const toT = terminalForNode(toComp, wire.nodeB) ?? getAllTerminals(toComp)[0]
+    const fromTx = fromT.x, fromTy = fromT.y
+    const toTx = toT.x, toTy = toT.y
 
     let waypoints = wire.waypoints
     if (waypoints.length === 0) {
@@ -149,6 +135,7 @@ function getBoundingBox(comp: CircuitComponent): BBox {
     case 'I': bw = 40; bh = 40; break
     case 'D': bw = 28; bh = 20; break
     case 'SW': bw = 44; bh = 20; break
+    case 'OP': bw = 56; bh = 56; break
     case 'GND': bw = 28; bh = 30; break
   }
 

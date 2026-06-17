@@ -1,4 +1,5 @@
 import type { Circuit, CircuitComponent, SimulationState } from './types'
+import { componentNodes } from './types'
 import { solveDC } from './solver'
 import { transientStep } from './transient'
 
@@ -81,8 +82,9 @@ export function validateCircuit(circuit: Circuit): CircuitDiagnostic[] {
   if (hasGround) {
     const nodeConnections = new Map<number, number>()
     for (const c of circuit.components) {
-      nodeConnections.set(c.nodeA, (nodeConnections.get(c.nodeA) ?? 0) + 1)
-      nodeConnections.set(c.nodeB, (nodeConnections.get(c.nodeB) ?? 0) + 1)
+      for (const nd of componentNodes(c)) {
+        nodeConnections.set(nd, (nodeConnections.get(nd) ?? 0) + 1)
+      }
     }
     for (const [nodeId, count] of nodeConnections) {
       if (nodeId === 0) continue
@@ -209,8 +211,7 @@ interface AdjacencyOptions {
 function buildAdjacency(circuit: Circuit, opts: AdjacencyOptions = {}): Map<number, Set<number>> {
   const nodes = new Set<number>()
   for (const c of circuit.components) {
-    nodes.add(c.nodeA)
-    nodes.add(c.nodeB)
+    for (const nd of componentNodes(c)) nodes.add(nd)
   }
   const adj = new Map<number, Set<number>>()
   for (const n of nodes) adj.set(n, new Set())
@@ -218,8 +219,14 @@ function buildAdjacency(circuit: Circuit, opts: AdjacencyOptions = {}): Map<numb
   for (const c of circuit.components) {
     if (c.id === opts.excludeCompId) continue
     if (!opts.includeCaps && c.type === 'C') continue
-    adj.get(c.nodeA)?.add(c.nodeB)
-    adj.get(c.nodeB)?.add(c.nodeA)
+    // Connect all of a component's terminals (op-amp output counts as driven).
+    const ns = componentNodes(c)
+    for (let i = 0; i < ns.length; i++) {
+      for (let j = i + 1; j < ns.length; j++) {
+        adj.get(ns[i])?.add(ns[j])
+        adj.get(ns[j])?.add(ns[i])
+      }
+    }
   }
   return adj
 }

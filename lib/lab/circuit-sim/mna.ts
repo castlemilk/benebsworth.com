@@ -1,4 +1,5 @@
 import type { Circuit, SimulationState } from './types'
+import { componentNodes } from './types'
 import { DC_STAMPS, TRANSIENT_STAMPS, type StampContext, type SolveEnv } from './devices'
 
 /**
@@ -44,11 +45,10 @@ export function makeTransientEnv(dt: number, state?: SimulationState, time = 0):
 }
 
 export function assembleMNA(circuit: Circuit, env: SolveEnv): AssembledMNA | null {
-  // ── Collect non-ground nodes ──────────────────────────────────────
+  // ── Collect non-ground nodes (handles op-amp's 3rd terminal) ──────
   const nodeSet = new Set<number>()
   for (const c of circuit.components) {
-    if (c.nodeA > 0) nodeSet.add(c.nodeA)
-    if (c.nodeB > 0) nodeSet.add(c.nodeB)
+    for (const nd of componentNodes(c)) if (nd > 0) nodeSet.add(nd)
   }
   const n = nodeSet.size
   if (n === 0) return null
@@ -62,7 +62,7 @@ export function assembleMNA(circuit: Circuit, env: SolveEnv): AssembledMNA | nul
   // (in transient they use the trapezoidal companion model — no extra row).
   let m = 0
   for (const c of circuit.components) {
-    if (c.type === 'V') m++
+    if (c.type === 'V' || c.type === 'OP') m++
     else if (c.type === 'L' && env.mode === 'dc') m++
   }
 

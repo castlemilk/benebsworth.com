@@ -29,6 +29,7 @@ export function serializeCircuit(circuit: Circuit): string {
     }
     if (c.acMag !== undefined) lines.push(`    acmag: ${c.acMag}`)
     if (c.type === 'SW') lines.push(`    closed: ${c.closed ? 'true' : 'false'}`)
+    if (c.nodeC !== undefined) lines.push(`    nodeC: ${c.nodeC}`)
   }
 
   lines.push('wires:')
@@ -147,7 +148,8 @@ function parseValue(key: string, raw: string): unknown {
     case 'type': return raw as ComponentType
     case 'value': return parseFloat(raw)
     case 'nodeA':
-    case 'nodeB': return parseInt(raw, 10)
+    case 'nodeB':
+    case 'nodeC': return parseInt(raw, 10)
     case 'x':
     case 'y': return parseInt(raw, 10)
     case 'rotation': return parseInt(raw, 10) as 0 | 90 | 180 | 270

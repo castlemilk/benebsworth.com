@@ -1,4 +1,4 @@
-export type ComponentType = 'R' | 'L' | 'C' | 'V' | 'I' | 'D' | 'SW' | 'GND'
+export type ComponentType = 'R' | 'L' | 'C' | 'V' | 'I' | 'D' | 'SW' | 'OP' | 'GND'
 
 export type WaveformKind = 'dc' | 'sine' | 'pulse' | 'square'
 
@@ -35,6 +35,15 @@ export interface CircuitComponent {
   acMag?: number
   /** Switch state (SW). true = closed (conducting). */
   closed?: boolean
+  /** Third terminal — op-amp output node (OP). nodeA = in+, nodeB = in−. */
+  nodeC?: number
+}
+
+/** All node ids a component connects (2 for most, 3 for op-amp, 1 for ground). */
+export function componentNodes(c: CircuitComponent): number[] {
+  if (c.type === 'GND') return [c.nodeA]
+  if (c.type === 'OP') return [c.nodeA, c.nodeB, c.nodeC ?? 0]
+  return [c.nodeA, c.nodeB]
 }
 
 export interface CircuitWire {
@@ -141,6 +150,7 @@ export const DEFAULT_COMPONENT_VALUES: Record<ComponentType, number> = {
   I: 0.001,
   D: 0,
   SW: 0,
+  OP: 0,
   GND: 0,
 }
 
@@ -152,6 +162,7 @@ export const COMPONENT_LABELS: Record<ComponentType, string> = {
   I: 'Current Source',
   D: 'Diode',
   SW: 'Switch',
+  OP: 'Op-Amp',
   GND: 'Ground',
 }
 
@@ -180,6 +191,8 @@ export function formatValue(type: ComponentType, value: number): string {
       return 'diode'
     case 'SW':
       return 'switch'
+    case 'OP':
+      return 'op-amp'
     case 'GND':
       return 'GND'
   }

@@ -10,7 +10,8 @@ import {
   drawWireSegment,
   drawJunctionDot,
   drawTerminal,
-  getTerminalPositions,
+  getAllTerminals,
+  terminalForNode,
   gridSnap,
 } from '@/lib/lab/circuit-sim/draw'
 import { INSTRUMENT, voltageColor } from './instrument'
@@ -83,6 +84,7 @@ export function CircuitCanvas({
       // Hit-test dims must match visual symbol sizes from draw.ts
       let bw = 52, bh = 24  // R: 44 body + 8 lead margin
       if (comp.type === 'V' || comp.type === 'I') { bw = 44; bh = 44 }   // V/I: 32 circle + margin
+      if (comp.type === 'OP') { bw = 56; bh = 56 }  // op-amp triangle + margin
       if (comp.type === 'GND') { bw = 28; bh = 28 } // GND: 20 bars + margin
       if (comp.type === 'C') { bw = 32; bh = 32 }   // C: 12 gap + plates + margin
       if (comp.type === 'L') { bw = 64; bh = 28 }   // L: 56 loops + margin
@@ -94,11 +96,9 @@ export function CircuitCanvas({
 
   const hitTestTerminal = useCallback((wx: number, wy: number) => {
     for (const comp of circuit.components) {
-      const [ax, ay, bx, by] = getTerminalPositions(comp)
-      const sax = gridSnap(ax), say = gridSnap(ay)
-      const sbx = gridSnap(bx), sby = gridSnap(by)
-      if (Math.hypot(wx - sax, wy - say) < SNAP_RADIUS) return { compId: comp.id, nodeId: comp.nodeA, x: sax, y: say }
-      if (Math.hypot(wx - sbx, wy - sby) < SNAP_RADIUS) return { compId: comp.id, nodeId: comp.nodeB, x: sbx, y: sby }
+      for (const t of getAllTerminals(comp)) {
+        if (Math.hypot(wx - t.x, wy - t.y) < SNAP_RADIUS) return { compId: comp.id, nodeId: t.node, x: t.x, y: t.y }
+      }
     }
     return null
   }, [circuit.components])
@@ -121,14 +121,10 @@ export function CircuitCanvas({
       }
       if (!fromComp || !toComp || fromComp === toComp) continue
 
-      const [fax, fay, fbx, fby] = getTerminalPositions(fromComp)
-      const [tax, tay, tbx, tby] = getTerminalPositions(toComp)
-      const fn = fromComp.nodeA === wire.nodeA ? 0 : 1
-      const tn = toComp.nodeA === wire.nodeB ? 0 : 1
-      let px = gridSnap(fn === 0 ? fax : fbx)
-      let py = gridSnap(fn === 0 ? fay : fby)
-      const ex = gridSnap(tn === 0 ? tax : tbx)
-      const ey = gridSnap(tn === 0 ? tay : tby)
+      const fromT = terminalForNode(fromComp, wire.nodeA) ?? getAllTerminals(fromComp)[0]
+      const toT = terminalForNode(toComp, wire.nodeB) ?? getAllTerminals(toComp)[0]
+      const px = fromT.x, py = fromT.y
+      const ex = toT.x, ey = toT.y
 
       const waypoints = wire.waypoints.length > 0 ? wire.waypoints : [{ x: ex, y: py }]
       
@@ -191,9 +187,7 @@ export function CircuitCanvas({
 
     // Register ALL component terminals
     for (const comp of circuit.components) {
-      const [ax, ay, bx, by] = getTerminalPositions(comp)
-      inc(`${gridSnap(ax)},${gridSnap(ay)}`)
-      inc(`${gridSnap(bx)},${gridSnap(by)}`)
+      for (const t of getAllTerminals(comp)) inc(`${t.x},${t.y}`)
     }
 
     // ── Draw wires with Manhattan routing ────────────────────────
@@ -213,15 +207,10 @@ export function CircuitCanvas({
       }
       if (fromComp === toComp) continue
 
-      const [fax, fay, fbx, fby] = getTerminalPositions(fromComp)
-      const [tax, tay, tbx, tby] = getTerminalPositions(toComp)
-
-      const fromNode = fromComp.nodeA === wire.nodeA ? 0 : 1
-      const fromTx = fromNode === 0 ? gridSnap(fax) : gridSnap(fbx)
-      const fromTy = fromNode === 0 ? gridSnap(fay) : gridSnap(fby)
-      const toNode = toComp.nodeA === wire.nodeB ? 0 : 1
-      const toTx = toNode === 0 ? gridSnap(tax) : gridSnap(tbx)
-      const toTy = toNode === 0 ? gridSnap(tay) : gridSnap(tby)
+      const fromT = terminalForNode(fromComp, wire.nodeA) ?? getAllTerminals(fromComp)[0]
+      const toT = terminalForNode(toComp, wire.nodeB) ?? getAllTerminals(toComp)[0]
+      const fromTx = fromT.x, fromTy = fromT.y
+      const toTx = toT.x, toTy = toT.y
 
       // Use pre-computed waypoints if available, otherwise compute Manhattan
       let waypoints = wire.waypoints
@@ -294,15 +283,10 @@ export function CircuitCanvas({
           : circuit.components.find(c => c.nodeA === wire.nodeB || c.nodeB === wire.nodeB)
         if (!fromComp || !toComp || fromComp === toComp) continue
 
-        const [fax, fay, fbx, fby] = getTerminalPositions(fromComp)
-        const [tax, tay, tbx, tby] = getTerminalPositions(toComp)
-
-        const fn = fromComp.nodeA === wire.nodeA ? 0 : 1
-        const fromTx = fn === 0 ? gridSnap(fax) : gridSnap(fbx)
-        const fromTy = fn === 0 ? gridSnap(fay) : gridSnap(fby)
-        const tn = toComp.nodeA === wire.nodeB ? 0 : 1
-        const toTx = tn === 0 ? gridSnap(tax) : gridSnap(tbx)
-        const toTy = tn === 0 ? gridSnap(tay) : gridSnap(tby)
+        const fromT = terminalForNode(fromComp, wire.nodeA) ?? getAllTerminals(fromComp)[0]
+        const toT = terminalForNode(toComp, wire.nodeB) ?? getAllTerminals(toComp)[0]
+        const fromTx = fromT.x, fromTy = fromT.y
+        const toTx = toT.x, toTy = toT.y
 
         // Estimate current: use fromComp's current
         const current = compCurrents.get(fromComp.id) ?? compCurrents.get(toComp.id) ?? 0
@@ -337,17 +321,12 @@ export function CircuitCanvas({
     for (const comp of circuit.components) {
       drawComponent(ctx, comp, colors, comp.id === selectedId)
 
-      const [ax, ay, bx, by] = getTerminalPositions(comp)
-      const sax = gridSnap(ax), say = gridSnap(ay)
-      const sbx = gridSnap(bx), sby = gridSnap(by)
-
       // Draw terminal dots — heat-tinted by node voltage while running.
-      const hA = hoveredTerminal?.compId === comp.id && hoveredTerminal.nodeId === comp.nodeA
-      const hB = hoveredTerminal?.compId === comp.id && hoveredTerminal.nodeId === comp.nodeB
-      const tva = live ? sim!.nodeVoltages[comp.nodeA] : undefined
-      const tvb = live ? sim!.nodeVoltages[comp.nodeB] : undefined
-      drawTerminal(ctx, sax, say, colors, hA, tva !== undefined && isFinite(tva) ? voltageColor(tva, vmax, colors) : undefined)
-      drawTerminal(ctx, sbx, sby, colors, hB, tvb !== undefined && isFinite(tvb) ? voltageColor(tvb, vmax, colors) : undefined)
+      for (const t of getAllTerminals(comp)) {
+        const hovered = hoveredTerminal?.compId === comp.id && hoveredTerminal.nodeId === t.node
+        const tv = live ? sim!.nodeVoltages[t.node] : undefined
+        drawTerminal(ctx, t.x, t.y, colors, hovered, tv !== undefined && isFinite(tv) ? voltageColor(tv, vmax, colors) : undefined)
+      }
     }
 
     // ── Probe markers (voltage on nodes, current/diff on components) ──
@@ -355,9 +334,8 @@ export function CircuitCanvas({
       let mx: number | undefined, my: number | undefined, reading: string | undefined
       if (p.kind === 'nodeV') {
         for (const comp of circuit.components) {
-          const [ax, ay, bx, by] = getTerminalPositions(comp)
-          if (comp.nodeA === p.ref) { mx = gridSnap(ax); my = gridSnap(ay); break }
-          if (comp.nodeB === p.ref) { mx = gridSnap(bx); my = gridSnap(by); break }
+          const t = terminalForNode(comp, p.ref as number)
+          if (t) { mx = t.x; my = t.y; break }
         }
         if (live && sim && (p.ref as number) < sim.nodeVoltages.length) {
           const v = sim.nodeVoltages[p.ref as number]
@@ -381,9 +359,9 @@ export function CircuitCanvas({
     if (wiringFrom) {
       const fromComp = circuit.components.find(c => c.id === wiringFrom)
       if (fromComp) {
-        const [ax, ay, bx, by] = getTerminalPositions(fromComp)
-        // Use terminal A as default for preview (since we may not know which was clicked in preview mode)
-        const sx = gridSnap(ax), sy = gridSnap(ay)
+        // Anchor the preview at the component's first terminal.
+        const t0 = getAllTerminals(fromComp)[0]
+        const sx = t0.x, sy = t0.y
         const wr = wrapRef.current?.getBoundingClientRect()
         if (wr) {
           const wx = (wireEndRef.current.x - wr.left - panX) / zoom
@@ -450,7 +428,7 @@ export function CircuitCanvas({
       const term = hitTestTerminal(pos.x, pos.y)
       if (term && term.compId !== wiringFrom) {
         const toComp = circuit.components.find(c => c.id === term.compId)
-        onCompleteWire(term.compId, undefined, toComp?.nodeA === term.nodeId ? 'A' : 'B')
+        onCompleteWire(term.compId, undefined, toComp ? nodeHint(toComp, term.nodeId) : 'A')
       } else onCancelWiring()
       return
     }
@@ -460,10 +438,13 @@ export function CircuitCanvas({
       if (e.shiftKey) {
         if (e.metaKey || e.ctrlKey) toggleProbe('nodeV', comp.nodeA)
         else {
-          const [ax, ay, bx, by] = getTerminalPositions(comp)
-          const dA = Math.hypot(pos.x - ax, pos.y - ay)
-          const dB = Math.hypot(pos.x - bx, pos.y - by)
-          onStartWire(comp.id, dA < dB ? 'A' : 'B')
+          // Wire from the nearest terminal (handles the op-amp's 3).
+          let best = getAllTerminals(comp)[0], bestD = Infinity
+          for (const t of getAllTerminals(comp)) {
+            const d = Math.hypot(pos.x - t.x, pos.y - t.y)
+            if (d < bestD) { bestD = d; best = t }
+          }
+          onStartWire(comp.id, nodeHint(comp, best.node))
         }
       } else if (e.altKey) {
         onRotate(comp.id)
@@ -477,7 +458,7 @@ export function CircuitCanvas({
     const term = hitTestTerminal(pos.x, pos.y)
     if (term && e.shiftKey) {
       const comp = circuit.components.find(c => c.id === term.compId)
-      onStartWire(term.compId, comp?.nodeA === term.nodeId ? 'A' : 'B')
+      onStartWire(term.compId, comp ? nodeHint(comp, term.nodeId) : 'A')
       return
     }
 
@@ -636,6 +617,12 @@ function drawProbeMarker(
     ctx.globalAlpha = 1
   }
   ctx.restore()
+}
+
+/** Which terminal hint ('A'|'B'|'C') a node corresponds to on a component. */
+function nodeHint(comp: CircuitComponent, node: number): string {
+  if (comp.nodeC !== undefined && node === comp.nodeC) return 'C'
+  return node === comp.nodeB ? 'B' : 'A'
 }
 
 function formatAmps(a: number): string {

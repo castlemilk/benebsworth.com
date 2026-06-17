@@ -147,6 +147,21 @@ const stampSwitch: StampFn = (c, ctx) => {
   stampConductance(ctx, ctx.row(c.nodeA), ctx.row(c.nodeB), c.closed ? SW_ON : SW_OFF)
 }
 
+// ── Op-amp (ideal nullor: virtual short at inputs, free output current) ──
+
+const stampOpAmp: StampFn = (c, ctx) => {
+  const inP = ctx.row(c.nodeA)        // in+
+  const inN = ctx.row(c.nodeB)        // in−
+  const out = ctx.row(c.nodeC ?? 0)   // output
+  const br = ctx.vsRow()              // output branch current Io
+  // Norator: output current flows into the output node.
+  if (out !== null) { ctx.addG(out, br, 1); ctx.addG(br, out, 0) }
+  // Nullator constraint: V(in+) − V(in−) = 0 (and inputs draw no current).
+  if (inP !== null) ctx.addG(br, inP, 1)
+  if (inN !== null) ctx.addG(br, inN, -1)
+  ctx.branchRows?.set(c.id, br)
+}
+
 // ── Transient stamps (trapezoidal companion models) ────────────────
 
 const stampCapacitorTransient: StampFn = (c, ctx, env) => {
@@ -185,6 +200,7 @@ export const DC_STAMPS: Record<ComponentType, StampFn> = {
   I: stampCurrentSource,
   D: stampDiode,
   SW: stampSwitch,
+  OP: stampOpAmp,
   GND: noop,
 }
 
@@ -196,6 +212,7 @@ export const TRANSIENT_STAMPS: Record<ComponentType, StampFn> = {
   I: stampCurrentSource,
   D: stampDiode,
   SW: stampSwitch,
+  OP: stampOpAmp,
   GND: noop,
 }
 

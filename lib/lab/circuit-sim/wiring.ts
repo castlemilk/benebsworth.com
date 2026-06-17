@@ -1,5 +1,5 @@
 import type { Circuit, CircuitWire, CircuitComponent } from './types'
-import { getTerminalPositions, gridSnap } from './draw'
+import { getTerminalPositions, getAllTerminals, gridSnap } from './draw'
 
 /**
  * Auto-generate Manhattan-routed wires for components sharing node IDs.
@@ -11,10 +11,9 @@ export function generateWires(circuit: Circuit): CircuitWire[] {
   const nodeTerminals = new Map<number, { compId: string; x: number; y: number }[]>()
 
   for (const comp of circuit.components) {
-    const [ax, ay, bx, by] = getTerminalPositions(comp)
-    for (const [nodeId, tx, ty] of [[comp.nodeA, ax, ay] as const, [comp.nodeB, bx, by] as const]) {
-      if (!nodeTerminals.has(nodeId)) nodeTerminals.set(nodeId, [])
-      nodeTerminals.get(nodeId)!.push({ compId: comp.id, x: gridSnap(tx), y: gridSnap(ty) })
+    for (const t of getAllTerminals(comp)) {
+      if (!nodeTerminals.has(t.node)) nodeTerminals.set(t.node, [])
+      nodeTerminals.get(t.node)!.push({ compId: comp.id, x: t.x, y: t.y })
     }
   }
 

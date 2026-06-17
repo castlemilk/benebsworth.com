@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { CircuitComponent } from './types'
-import { GRID_SIZE } from './types'
+import { GRID_SIZE, componentNodes } from './types'
 import { getTerminalPositions, gridSnap } from './draw'
 import { circuit } from './validator'
 import { renderCircuit, validatePlacement } from './placement'
@@ -196,7 +196,9 @@ describe('sample circuits', () => {
       const terms = elems.filter(e => e.type === 'terminal')
       const wires = elems.filter(e => e.type === 'wire')
       expect(comps.length).toBe(circuit.components.length)
-      expect(terms.length).toBe(circuit.components.length * 2) // 2 terminals per component
+      // 1 terminal for GND, 3 for op-amp, 2 for everything else.
+      const expectedTerms = circuit.components.reduce((sum, c) => sum + componentNodes(c).length, 0)
+      expect(terms.length).toBe(expectedTerms)
       expect(wires.length).toBeGreaterThan(0) // at least some wires
     })
   }

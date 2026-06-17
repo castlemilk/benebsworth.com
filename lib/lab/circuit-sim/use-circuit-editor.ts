@@ -178,6 +178,9 @@ export function useCircuitEditor() {
         comp.nodeB = 0
         comp.value = 0
       }
+      if (type === 'OP') {
+        comp.nodeC = circuit.nextNodeId++ // output terminal
+      }
       circuit.components.push(comp)
       return {
         circuit: { ...circuit, nextNodeId: circuit.nextNodeId, nextCompId: circuit.nextCompId },
@@ -205,8 +208,8 @@ export function useCircuitEditor() {
       const comp = s.circuit.components.find(c => c.id === id)
       if (!comp) return {}
       const components = s.circuit.components.filter(c => c.id !== id)
-      // Remove wires connected to deleted nodes
-      const deletedNodes = new Set([comp.nodeA, comp.nodeB])
+      // Remove wires connected to deleted nodes (op-amp has a 3rd terminal)
+      const deletedNodes = new Set([comp.nodeA, comp.nodeB, comp.nodeC ?? -1])
       const wires = s.circuit.wires.filter(w => !deletedNodes.has(w.nodeA) && !deletedNodes.has(w.nodeB))
       return {
         circuit: { ...s.circuit, components, wires },
@@ -226,9 +229,9 @@ export function useCircuitEditor() {
       const toComp = s.circuit.components.find(c => c.id === toCompId)
       if (!fromComp || !toComp || fromComp.id === toComp.id) return { wiringFrom: null }
 
-      // Determine which nodes to connect
-      const fromNode = s.wiringFromNode === 'B' ? fromComp.nodeB : fromComp.nodeA
-      const toNode = toNodeHint === 'B' ? toComp.nodeB : toComp.nodeA
+      // Determine which nodes to connect (C = op-amp output)
+      const fromNode = s.wiringFromNode === 'C' ? (fromComp.nodeC ?? 0) : s.wiringFromNode === 'B' ? fromComp.nodeB : fromComp.nodeA
+      const toNode = toNodeHint === 'C' ? (toComp.nodeC ?? 0) : toNodeHint === 'B' ? toComp.nodeB : toComp.nodeA
 
       // Merge nodes: reuse the lower node id across all components/wires
       const keep = Math.min(fromNode, toNode)

@@ -109,6 +109,44 @@ export function getTerminalPositions(comp: CircuitComponent): [number, number, n
   }
 }
 
+/** Op-amp terminal offsets at rotation 0 (in+, in−, out), grid-aligned. */
+const OPAMP_OFFSETS = [
+  { dx: -40, dy: -20 }, // in+  (nodeA)
+  { dx: -40, dy: 20 },  // in−  (nodeB)
+  { dx: 40, dy: 0 },    // out  (nodeC)
+]
+
+/**
+ * All terminals of a component as {node, x, y} (grid-snapped, world coords).
+ * Generalizes getTerminalPositions to 1-terminal (GND) and 3-terminal (op-amp).
+ */
+export function getAllTerminals(comp: CircuitComponent): { node: number; x: number; y: number }[] {
+  if (comp.type === 'GND') {
+    return [{ node: comp.nodeA, x: gridSnap(comp.x), y: gridSnap(comp.y - 20) }]
+  }
+  if (comp.type === 'OP') {
+    const rot = (comp.rotation * Math.PI) / 180
+    const cos = Math.cos(rot), sin = Math.sin(rot)
+    const nodes = [comp.nodeA, comp.nodeB, comp.nodeC ?? 0]
+    return OPAMP_OFFSETS.map((o, i) => ({
+      node: nodes[i],
+      x: gridSnap(comp.x + o.dx * cos - o.dy * sin),
+      y: gridSnap(comp.y + o.dx * sin + o.dy * cos),
+    }))
+  }
+  const [ax, ay, bx, by] = getTerminalPositions(comp)
+  return [
+    { node: comp.nodeA, x: gridSnap(ax), y: gridSnap(ay) },
+    { node: comp.nodeB, x: gridSnap(bx), y: gridSnap(by) },
+  ]
+}
+
+/** The {x,y} of the terminal on `node`, or null if the component doesn't touch it. */
+export function terminalForNode(comp: CircuitComponent, node: number): { x: number; y: number } | null {
+  const t = getAllTerminals(comp).find(t => t.node === node)
+  return t ? { x: t.x, y: t.y } : null
+}
+
 // ── Component symbol drawing ───────────────────────────────────────
 
 function drawResistor(
@@ -456,6 +494,52 @@ function drawSwitch(
   ctx.restore()
 }
 
+function drawOpAmp(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, rot: 0 | 90 | 180 | 270,
+  colors: DrawColors, selected: boolean,
+) {
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate((rot * Math.PI) / 180)
+
+  if (selected) {
+    ctx.strokeStyle = colors.selection
+    ctx.lineWidth = 2
+    ctx.setLineDash([4, 4])
+    ctx.strokeRect(-30, -28, 64, 56)
+    ctx.setLineDash([])
+  }
+
+  // Lead wires to the three terminals
+  ctx.strokeStyle = colors.wire
+  ctx.lineWidth = 2.5
+  ctx.lineCap = 'round'
+  ctx.beginPath()
+  ctx.moveTo(-40, -20); ctx.lineTo(-24, -20)
+  ctx.moveTo(-40, 20); ctx.lineTo(-24, 20)
+  ctx.moveTo(28, 0); ctx.lineTo(40, 0)
+  ctx.stroke()
+
+  // Triangle body
+  ctx.fillStyle = 'rgba(8,10,16,0.9)'
+  ctx.strokeStyle = colors.component
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(-24, -28); ctx.lineTo(-24, 28); ctx.lineTo(28, 0); ctx.closePath()
+  ctx.fill(); ctx.stroke()
+
+  // Input polarity marks
+  ctx.fillStyle = colors.component
+  ctx.font = '11px monospace'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('+', -15, -20)
+  ctx.fillText('−', -15, 20)
+
+  ctx.restore()
+}
+
 function drawGround(
   ctx: CanvasRenderingContext2D,
   x: number, y: number,
@@ -512,6 +596,7 @@ export function drawComponent(
     case 'I': drawCurrentSource(ctx, comp.x, comp.y, comp.rotation, comp.value, colors, selected); break
     case 'D': drawDiode(ctx, comp.x, comp.y, comp.rotation, colors, selected); break
     case 'SW': drawSwitch(ctx, comp.x, comp.y, comp.rotation, comp.closed ?? false, colors, selected); break
+    case 'OP': drawOpAmp(ctx, comp.x, comp.y, comp.rotation, colors, selected); break
     case 'GND': drawGround(ctx, comp.x, comp.y, colors, selected); break
   }
 }

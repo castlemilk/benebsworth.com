@@ -5,7 +5,7 @@ import { useCircuitEditor } from '@/lib/lab/circuit-sim/use-circuit-editor'
 import { CircuitCanvas } from '@/components/lab/circuit-sim/circuit-canvas'
 import { ComponentPalette } from '@/components/lab/circuit-sim/component-palette'
 import { Toolbar } from '@/components/lab/circuit-sim/toolbar'
-import { ScopeCanvas } from '@/components/lab/circuit-sim/scope-canvas'
+import { AnalysisPanel } from '@/components/lab/circuit-sim/analysis-panel'
 import { Inspector } from '@/components/lab/circuit-sim/inspector'
 
 export function CircuitSimPage() {
@@ -95,13 +95,18 @@ export function CircuitSimPage() {
             />
           </div>
 
-          {/* Oscilloscope */}
-          <ScopeCanvas
+          {/* Analysis: oscilloscope (transient) or Bode plot (AC) */}
+          <AnalysisPanel
+            mode={editor.analysisMode}
+            onMode={editor.setAnalysisMode}
             probes={editor.probes}
-            settings={editor.scopeSettings}
+            scopeSettings={editor.scopeSettings}
             dt={editor.dt}
-            onSettings={editor.setScopeSettings}
+            onScopeSettings={editor.setScopeSettings}
             onRemoveProbe={editor.removeProbe}
+            bode={editor.bode}
+            acOptions={editor.acOptions}
+            onAcOptions={editor.setAcOptions}
           />
 
           {/* Inspector: value + source waveform editor + probes for the selected component */}

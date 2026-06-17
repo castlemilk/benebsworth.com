@@ -10,6 +10,7 @@ import type {
   Probe,
   ProbeKind,
   ScopeSettings,
+  AnalysisMode,
 } from './types'
 import { DEFAULT_COMPONENT_VALUES, DEFAULT_WAVEFORM, DEFAULT_SCOPE_SETTINGS } from './types'
 import type { Waveform } from './types'
@@ -17,6 +18,7 @@ import { transientStep } from './transient'
 import { validateCircuit, type CircuitDiagnostic } from './validator'
 import { solveDC } from './solver'
 import { nodeVoltage, componentCurrent, componentVoltage } from './results'
+import { acSweep, type ACOptions, type BodeResult } from './ac'
 import { serializeCircuit, deserializeCircuit } from './yaml'
 import { generateWires } from './wiring'
 
@@ -66,6 +68,12 @@ interface CircuitEditorState {
   probes: Probe[]
   /** Oscilloscope display settings */
   scopeSettings: ScopeSettings
+  /** Time-domain (transient) vs frequency-domain (AC) analysis */
+  analysisMode: AnalysisMode
+  /** AC sweep options */
+  acOptions: ACOptions
+  /** Latest computed Bode result (AC mode) */
+  bode: BodeResult | null
   /** Validation errors */
   errors: CircuitDiagnostic[]
   /** View offset (pan) */
@@ -105,6 +113,9 @@ export function useCircuitEditor() {
     simDuration: 0.1,
     probes: [],
     scopeSettings: DEFAULT_SCOPE_SETTINGS,
+    analysisMode: 'transient',
+    acOptions: { fStart: 1, fStop: 1e6, points: 140 },
+    bode: null,
     errors: [],
     panX: 0,
     panY: 0,
@@ -123,6 +134,18 @@ export function useCircuitEditor() {
     const errors = validateCircuit(state.circuit)
     setState(prev => ({ ...prev, errors }))
   }, [state.circuit])
+
+  // AC mode: recompute the Bode sweep whenever the circuit, probes, or options change.
+  useEffect(() => {
+    if (state.analysisMode !== 'ac') return
+    const errors = validateCircuit(state.circuit)
+    if (errors.some(e => e.severity === 'error')) {
+      setState(prev => ({ ...prev, bode: null }))
+      return
+    }
+    const bode = acSweep(state.circuit, state.acOptions, state.probes)
+    setState(prev => ({ ...prev, bode }))
+  }, [state.analysisMode, state.circuit, state.probes, state.acOptions])
 
   const mutate = useCallback((fn: (s: CircuitEditorState) => Partial<CircuitEditorState>) => {
     setState(prev => {
@@ -331,6 +354,18 @@ export function useCircuitEditor() {
     mutate(s => ({ scopeSettings: { ...s.scopeSettings, ...partial } }))
   }, [mutate])
 
+  const setAnalysisMode = useCallback((mode: AnalysisMode) => {
+    if (mode === 'ac' && rafRef.current) cancelAnimationFrame(rafRef.current)
+    mutate(s => ({
+      analysisMode: mode,
+      sim: mode === 'ac' && s.sim ? { ...s.sim, running: false } : s.sim,
+    }))
+  }, [mutate])
+
+  const setAcOptions = useCallback((partial: Partial<ACOptions>) => {
+    mutate(s => ({ acOptions: { ...s.acOptions, ...partial } }))
+  }, [mutate])
+
   const runSimulation = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
 
@@ -492,6 +527,9 @@ export function useCircuitEditor() {
     simDuration: state.simDuration,
     probes: state.probes,
     scopeSettings: state.scopeSettings,
+    analysisMode: state.analysisMode,
+    acOptions: state.acOptions,
+    bode: state.bode,
     errors: state.errors,
     panX: state.panX,
     panY: state.panY,
@@ -514,6 +552,8 @@ export function useCircuitEditor() {
     addProbe,
     removeProbe,
     setScopeSettings,
+    setAnalysisMode,
+    setAcOptions,
     runSimulation,
     stopSimulation,
     setDt,

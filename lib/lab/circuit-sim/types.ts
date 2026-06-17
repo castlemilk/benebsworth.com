@@ -74,6 +74,9 @@ export interface SimulationState {
   running: boolean
 }
 
+/** Which analysis the tool is running. */
+export type AnalysisMode = 'transient' | 'ac'
+
 /** What a probe measures. */
 export type ProbeKind =
   | 'nodeV' // voltage at a node (ref = nodeId)

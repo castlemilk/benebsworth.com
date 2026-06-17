@@ -1,148 +1,83 @@
 # Circuit Schematic Drawing Rules
 
-## Golden Rules
+Drawing/terminal reference for `draw.ts` + the Canvas layer. Grid = `GRID_SIZE` (20px); everything snaps to it.
 
-### 1. Manhattan Routing Only
-Wires must be strictly horizontal or vertical. Never diagonal. Every wire segment is axis-aligned.
+## Terminals — `getAllTerminals` is the source of truth
 
-### 2. Junction Dots
-- Solid filled circle (radius 3-4px) at every point where 3+ wire segments meet
-- T-junctions (two wires meeting at right angles) ALWAYS have a dot
-- 4-way crossings: avoid them. If unavoidable, mark with a dot if connected, NO dot if crossing
+A component is NOT always two terminals. Use these helpers (all return grid-snapped WORLD coords):
 
-### 3. T-Junctions Only
-Never draw a 4-way wire junction. Instead, offset to create two T-junctions:
-```
-BAD:           GOOD:
-  |               |
---+--           --+--
-  |               |
-                  +--
-                  |
+```ts
+getAllTerminals(comp): { node, x, y }[]   // 1 for GND, 3 for op-amp, 2 otherwise
+terminalForNode(comp, node): {x,y} | null // the terminal on a given node
+getTerminalPositions(comp): [ax,ay,bx,by] // 2-terminal only — internal; do NOT use for OP/GND consumers
 ```
 
-### 4. Terminal Position Rules
+**Every consumer** (wiring, placement, canvas hit-test/render/junctions, probe markers) iterates `getAllTerminals` / resolves with `terminalForNode`. Using `getTerminalPositions` directly drops the op-amp's 3rd terminal and double-counts GND.
 
-Every component has two terminals at fixed positions relative to its center (x, y), determined by type and rotation:
+### Terminal offsets (all multiples of GRID_SIZE — non-grid offsets cause diagonal wires)
 
-**Rotation 0° (horizontal, left-to-right)**:
-```
-Terminal A (left/input)  ←  [COMPONENT]  →  Terminal B (right/output)
-```
+`getOffset(type)`: `R 40 · L 40 · C 20 · V 20 · I 20 · D 20 · SW 20 · GND 0`.
 
-**Rotation 90° (vertical, top-to-bottom)**:
-```
-                           Terminal A (top/input)
-                                 ↓
-                            [COMPONENT]
-                                 ↓
-                           Terminal B (bottom/output)
-```
+For a 2-terminal component at rotation 0: A = (x − off, y), B = (x + off, y).
 
-**Rotation 180° (horizontal, right-to-left)**:
-```
-Terminal B (right/output) ←  [COMPONENT]  →  Terminal A (left/input)
-```
+Rotation maps the offset around the center:
+- 0°: (±off, 0) — A left, B right
+- 90°: (0, ±off) — A top, B bottom
+- 180°: (∓off, 0) — A/B swap (A right)
+- 270°: (0, ∓off) — A/B swap (A bottom)
 
-**Rotation 270° (vertical, bottom-to-top)**:
-```
-                           Terminal B (bottom/output)
-                                 ↑
-                            [COMPONENT]
-                                 ↑
-                           Terminal A (top/input)
-```
+### Op-amp (3 terminals)
 
-### 5. Terminal Offset Distances
+Offsets at rotation 0 (rotated by `comp.rotation`): **in+ (nodeA) = (−40, −20), in− (nodeB) = (−40, +20), out (nodeC) = (+40, 0)**. All grid-aligned.
 
-Terminals extend beyond the component body by a fixed lead length. For each type:
+### Ground (1 terminal)
 
-| Component | Body Half-Size | Lead Extension | Total Terminal Offset |
-|-----------|---------------|----------------|----------------------|
-| Resistor  | ±22 (44 wide, 16 tall) | +8 | ±30 |
-| Capacitor | ±12 (gap=12, plateH=24) | +8 | ±20 |
-| Inductor  | ±28 (4 loops × 14r) | +8 | ±36 |
-| V Source  | ±16 (circle r=16) | +8 | ±24 |
-| Ground    | N/A (single terminal) | +8 | N/A |
+`getAllTerminals(GND)` returns a **single** point at `(cx, cy − 20)` (the connection at the top of the symbol). (Historical note: the old code returned two duplicate terminals — it does not anymore.)
 
-At rotation 0°, Terminal A is at (x - offset, y), Terminal B is at (x + offset, y).
+## Symbols (`draw.ts`, Canvas 2D, `ctx.translate(x,y)` + `ctx.rotate(rot)`)
 
-When rotated, the offset applies along the rotated axis:
-- 0°: (±offset, 0)
-- 90°: (0, ±offset)
-- 180°: (∓offset, 0) [A and B swap]
-- 270°: (0, ∓offset) [A and B swap]
+| Type | Symbol | Body | Leads |
+|------|--------|------|-------|
+| R | IEC rounded rectangle | 44×16, radius 3 | 8px each end |
+| C | two parallel plates | gap 12, plateH 24 | 8px |
+| L | 4 half-circle loops | r 7, width 56 | 8px |
+| V | circle + `+`/`−` marks | r 16 | 8px |
+| I | circle + current arrow (→ nodeA) | r 16 | 8px |
+| D | triangle → cathode bar | tw 8, th 8 | 8px |
+| SW | two contact dots + lever | contacts ±10 | 8px; lever horizontal+green when `closed`, lifted otherwise |
+| OP | triangle (apex = output) + `+`/`−` inputs | ~52 wide × 56 tall | input leads left (±20 y), output lead right |
+| GND | stem + 3 decreasing bars | — | lead up from terminal |
 
-### 6. Wire Routing Algorithm (Manhattan Connector)
+Bodies are drawn semi-opaque (`rgba(8,10,16,0.85–0.9)`) so wires show through. Value labels (`formatValue`) sit below horizontal components.
 
-Given two terminals at positions (ax, ay) and (bx, by) on the grid:
+## Colors — the INSTRUMENT palette (`instrument.ts`)
 
-1. Both terminal positions are grid-snapped
-2. Route uses at most 2 corners (3 segments):
-   ```
-   Path 1 (horizontal-first):  (ax, ay) → (bx, ay) → (bx, by)
-   Path 2 (vertical-first):    (ax, ay) → (ax, by) → (bx, by)
-   ```
-3. Prefer the path with the shortest total length
-4. If both paths equal, prefer horizontal-first
+The console is a **theme-independent dark instrument** in both site themes (an oscilloscope is always dark). Import `INSTRUMENT` (a `DrawColors` superset) — do NOT use site CSS tokens on the canvas.
 
-For MULTIPLE components sharing a node, use a STAR topology:
-- One terminal is the "hub" (usually the one at the extreme position)
-- All other terminals connect to the hub via Manhattan paths
-- The hub itself is NOT drawn (it's the junction dot)
+- While a simulation runs, wires + terminals are **heat-tinted by node voltage** via `voltageColor(v, vmax)` (cool = low/negative → warm = high) with a phosphor glow; `drawFlowParticles` animates current along wires.
+- Probe markers: colored ring + label + live reading at the probed node/component.
 
-### 7. Component Drawing Rules
+## Wire routing
 
-**Resistor (IEC standard — rectangle)**:
-- Body: rectangle 44×16px, rounded corners (radius 3px)
-- Lead wires extend 8px from each end of body
-- Terminals at lead endpoints
-- Label (value) centered below the body
-- Wire connections snap to terminal positions
+- **Manhattan only** — every segment strictly horizontal or vertical, both endpoints grid-snapped. `computeManhattanPath(ax,ay,bx,by)` returns `[]` if already axis-aligned, else one corner `[{x:bx,y:ay}]` (horizontal-first).
+- **Hub-star per node** (`generateWires`): collect the node's unique terminal positions, pick the median-x as hub, route Manhattan paths from hub to each other terminal. Each wire stores `fromCompId`/`toCompId` so the renderer reconstructs endpoints with `terminalForNode` (without them, endpoints can flip → diagonal segments).
+- **Junction dot** at every grid point where ≥2 terminals/waypoints coincide (radius ~5).
+- A wire ending AT a component's terminal touches its bbox — that's expected, NOT a "wire through body". `validatePlacement` only flags a segment that crosses a body with BOTH endpoints outside.
 
-**Resistor (ANSI standard — zigzag)**:
-- Alternative: zigzag line of 4 peaks, amplitude 8px
-- Leads extend from first and last peak
-- NOT used in this simulator (use IEC)
+## Interaction (`circuit-canvas.tsx`)
 
-**Capacitor (IEC)**:
-- Two parallel vertical plates, 24px tall, gap 12px
-- Leads extend 8px horizontally from each plate
-- Non-polarized: both plates straight
-- Polarized: right plate curved (not used in this simulator)
+- **Pointer Events** (mouse/touch/pen), not mouse events. `touch-action: none`.
+- **Pinch-zoom**: lock the two pointer ids in `pinchRef`; re-seed when the active count drops to 2 (lifting a non-tracked finger must not swap the pair).
+- Place on pointer-**up**; Esc/right-click/2nd-finger cancels. Shift+click a terminal/body starts a wire (nearest terminal, hint `'A'|'B'|'C'`). Click an empty wire → toggle a `nodeV` probe. Alt+click rotates.
 
-**Inductor (IEC)**:
-- 4 half-circle loops, each radius 7px, total width 56px
-- Leads extend 8px from each end
-- Terminals at lead endpoints
+## Sample layout rules (validated by `placement.test.ts`)
 
-**DC Voltage Source (circle)**:
-- Circle radius 14px
-- Plus sign (+) inside upper half
-- Minus sign (−) inside lower half
-- Leads extend 8px from left and right of circle
+1. Component centers + all terminals on grid (×20).
+2. Spaced ≥2 grid units apart (no overlap).
+3. Every component connected; no orphans.
+4. Signal flow left→right, power top→bottom where possible.
+5. Must pass `validatePlacement()` with **zero error-severity** issues (the only error codes are `DIAGONAL_WIRE` and `EMPTY` — warnings like `OVERLAP`/`WIRE_NEAR_COMP` are allowed).
 
-**Ground**:
-- Vertical line down from terminal
-- Three decreasing horizontal lines
-- No right terminal (single-ended)
+## Anti-patterns
 
-### 8. Grid System
-- Grid spacing: 20px
-- All component terminals snap to grid
-- Junction dots placed at grid intersections
-- Wire corners align to grid
-
-### 9. Labeling
-- Component values shown in formatValue() format (e.g., "1kΩ", "1µF", "10mH")
-- Labels positioned below component (if horizontal) or to the right (if vertical)
-- No label for ground
-- Node numbers shown as small text near probe points only
-
-### 10. Anti-Patterns to Avoid
-- Don't draw wires that pass UNDER components (route around)
-- Don't overlap wire labels with component symbols
-- Don't use diagonal wire segments EVER
-- Don't create 4-way junctions
-- Don't place terminals off-grid
-- Don't draw wires between terminals that share the same component (self-loop)
+Diagonal segments · off-grid terminals · 4-way junctions (offset into two Ts) · site CSS tokens on the canvas · enumerating terminals via `nodeA`/`nodeB` instead of `getAllTerminals` · hardcoding a per-type terminal count.

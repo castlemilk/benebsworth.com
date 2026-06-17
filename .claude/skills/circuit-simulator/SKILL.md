@@ -1,247 +1,134 @@
-# Circuit Simulator Skill
+---
+name: circuit-simulator
+description: Use when modeling, validating, drawing, simulating, or extending the /lab/circuit-sim circuit simulator — adding component types, MNA/transient/AC/nonlinear solver work, terminals and symbol drawing, probes, the oscilloscope/Bode views, or YAML/samples/share links.
+---
 
-Reference for building and extending web-based circuit simulators with MNA solvers and canvas rendering.
+# Circuit Simulator
 
-## Project Architecture
+Reference for the `/lab/circuit-sim` simulator: a device-stamp MNA engine (DC, transient, AC, nonlinear Newton-Raphson) with a Canvas instrument front-end. **Drawing/terminal/symbol detail lives in `drawing-rules.md` (read it for any rendering work).**
 
-The circuit simulator has three independent layers:
-
-```
-lib/lab/circuit-sim/     ← Headless engine (no React, no canvas)
-  types.ts               → Component/Circuit/Simulation/Wire data models
-  solver.ts              → DC MNA + LU decomposition
-  transient.ts           → Transient analysis (trapezoidal integration)
-  validator.ts           → Structured diagnostics + CircuitBuilder + assertDC/assertTransient
-  yaml.ts                → YAML round-trip serialization
-  wiring.ts              → Auto-generate Manhattan-routed wires
-  draw.ts                → Terminal positions, grid snapping, symbol drawing (Canvas 2D only)
-  placement.ts           → Headless render + placement validation (no browser needed)
-  samples.ts             → 7 pre-built example circuits
-
-components/lab/circuit-sim/  ← React/Canvas rendering layer
-  circuit-canvas.tsx     → Interactive canvas: drag/drop/wire/pan/zoom
-  component-palette.tsx  → Component picker sidebar
-  scope-panel.tsx        → Oscilloscope graticule + trace rendering
-  toolbar.tsx            → Run/Stop/Reset + timestep + YAML save/load + samples
-
-app/lab/circuit-sim/     ← Next.js route
-  page.tsx               → Server component: metadata, layout
-  circuit-sim-page.tsx   → Client component: wires everything together
-```
-
-**Critical rule**: The engine (`lib/lab/circuit-sim/`) must remain headless. Never import React, JSX, or browser APIs there. Tests run in vitest `node` environment without DOM. Placement validation runs headless too — it calls `getTerminalPositions` and `computeManhattanPath` without a canvas.
-
-## Placement & Drawing Rules (FIELD-TESTED)
-
-These rules were validated against 7 sample circuits via headless testing.
-
-### Terminal Offset Grid Alignment (CRITICAL)
-
-ALL terminal offsets MUST be multiples of `GRID_SIZE` (20px). Terminals at non-grid positions cause:
-- Diagonal wires (Manhattan routing breaks when endpoints aren't aligned)
-- Junction dots at wrong positions
-- Ugly wire routing
-
-```ts
-// CORRECT — all offsets are GRID_SIZE multiples
-function getOffset(type: string): number {
-  switch (type) {
-    case 'R': return 40   // 22 body + 8 lead, padded to grid
-    case 'L': return 40   // 28 body + 8 lead, padded to grid
-    case 'C': return 20   // 6 gap-half + 8 lead, padded
-    case 'V': return 20   // 16 radius + 8 lead, padded to 20
-    case 'GND': return 0  // single-point, centered
-  }
-}
-```
-
-### Rotation Semantics
+## Architecture — three layers
 
 ```
-Rotation 0°:   A left, B right     [A]───[Component]───[B]
-Rotation 90°:  A top, B bottom     [A] down through [Component] to [B]
-Rotation 180°: A right, B left     (A and B swap — A is now on right)
-Rotation 270°: A bottom, B top     (A and B swap — A is now on bottom)
+lib/lab/circuit-sim/          ← HEADLESS engine (no React/DOM/canvas; vitest node env)
+  types.ts        → ComponentType, CircuitComponent, Probe, ScopeSettings, AnalysisMode,
+                    Waveform, componentNodes()  ← single source of a component's node list
+  devices.ts      → per-device STAMP registry (DC_STAMPS / TRANSIENT_STAMPS), StampContext, SolveEnv
+  mna.ts          → assembleMNA(): builds the real MNA system by dispatching stamps
+  solver.ts       → solveCircuit() (linear OR Newton-Raphson), solveDC(), LU (luDecompose/luSolve)
+  transient.ts    → transientStep(): trapezoidal companion step (delegates to solveCircuit)
+  complex-solver.ts → cluSolve(): complex LU (interleaved re/im) for AC
+  ac.ts           → acSweep(): complex MNA per log-spaced freq → Bode (mag dB + phase deg)
+  sources.ts      → evalSource()/sourceValue(): waveform value at time t
+  results.ts      → nodeVoltage/componentVoltage/componentCurrent (probe values)
+  measure.ts      → measureTrace(): Vpp/min/max/mean/RMS/freq over a ring buffer
+  validator.ts    → validateCircuit() diagnostics + CircuitBuilder + assertDC/assertTransient
+  verifier.ts     → verifyCircuit(): structural + KCL/KVL/power sanity (powers sample tests)
+  laws.ts         → checkKCL/KVL/power, fuzzing helpers
+  draw.ts         → getAllTerminals/terminalForNode/getTerminalPositions, gridSnap, symbol drawing
+  wiring.ts       → generateWires() (hub-star Manhattan) + computeManhattanPath
+  placement.ts    → renderCircuit()/validatePlacement() (headless geometry validation)
+  yaml.ts         → serialize/deserialize round-trip
+  storage.ts      → encodeCircuit/decodeShareYaml (base64url share links) + localStorage library
+  samples.ts      → SAMPLES + groupedSamples() (6 categories, with "look for" notes)
+
+components/lab/circuit-sim/   ← React/Canvas layer
+  instrument.ts        → INSTRUMENT palette (theme-independent dark) + voltageColor() heat ramp
+  circuit-canvas.tsx   → Pointer-Events canvas: place/drag/wire/pan/pinch-zoom/click-probe + draw
+  inspector.tsx        → selected-component editor: value, waveform editor, switch toggle, probe buttons
+  scope-canvas.tsx     → oscilloscope (trigger, volts/div, freeze, per-channel measurements)
+  bode-canvas.tsx      → magnitude(dB) + phase(deg) vs log-frequency
+  analysis-panel.tsx   → tabs: Transient (scope) | AC (Bode)
+  scope-panel.tsx      → drawFlowParticles() (animated current on wires)
+  component-palette.tsx, toolbar.tsx, gallery-dialog.tsx
+
+app/lab/circuit-sim/          ← Next route: page.tsx (metadata) + circuit-sim-page.tsx (wires it up, ?c= hydration)
 ```
 
-Terminal positions are computed in WORLD coordinates, not local. The drawing functions use `ctx.translate(x, y)` + `ctx.rotate(rot)` for the symbol body, and lead wires are drawn from body edge to the terminal offset.
+**Iron rule:** the engine (`lib/lab/circuit-sim/`) is headless — never import React/JSX/DOM/canvas there. Placement validation, the solver, and all tests run without a browser.
 
-### Ground Component (GND)
+## Data model (`types.ts`)
 
-GND is a special single-point component. Both terminals return the SAME position (the connection point at the top of the ground symbol):
+`ComponentType = 'R'|'L'|'C'|'V'|'I'|'D'|'SW'|'OP'|'GND'`.
 
-```ts
-if (comp.type === 'GND') {
-  return [cx, cy - 20, cx, cy - 20]  // both terminals at same grid-aligned point
-}
-```
+`CircuitComponent`: `id, type, value, nodeA, nodeB, x, y, rotation` + optionals:
+- `nodeC?` — op-amp **output** node (nodeA = in+, nodeB = in−).
+- `waveform?` — `{ kind: 'dc'|'sine'|'pulse'|'square', amplitude, offset, freq, phase, duty }` (V/I sources).
+- `acMag?` — AC stimulus magnitude.
+- `closed?` — switch state.
 
-The GND symbol draws: lead wire up from terminal, then three decreasing horizontal bars downward.
+**`componentNodes(comp)` returns the node list: 1 (GND), 3 (OP), 2 (everything else). ALWAYS enumerate nodes through it** — `assembleMNA`, `validator` adjacency, `wiring`, `placement` all do. Reaching for `nodeA`/`nodeB` directly is the classic op-amp bug (3rd terminal dropped).
 
-### Wire Routing: Hub-based Star Topology
+`Probe`: `{ id, kind: 'nodeV'|'compI'|'compV', ref: nodeId|compId, label, color, visible, unit: 'V'|'A', samples (ring buffer), writeIdx, count }`.
 
-Auto-generated wires use a star topology for each shared node:
-1. Collect all unique terminal grid positions for the node
-2. Pick the median-x terminal as the hub
-3. From the hub, route Manhattan paths to all other terminals
-4. Each wire stores `fromCompId` and `toCompId` to preserve endpoint ordering
+## Solver — device-stamp MNA
 
-**Critical**: Wire waypoints MUST be computed with the SAME endpoint ordering used during rendering. Without `fromCompId`/`toCompId` hints, the renderer may reverse endpoints, causing waypoints to produce diagonal segments.
+Each device contributes to the MNA matrix via a **stamp** `(comp, ctx: StampContext, env: SolveEnv) => void`. `ctx` exposes `row(node)→matrix row|null(ground)`, `vsRow()` (allocate branch row), `addG(r,c,v)`, `addZ(r,v)`, `branchRows`. `env` carries `mode`, `dt`, `time`, `state` (companion), `prev` (NR guess), `nrState`/`nrFlags` (NR limiting). `assembleMNA()` loops components dispatching `DC_STAMPS` or `TRANSIENT_STAMPS`.
 
-### Wire Endpoint Matching
+**Branch rows:** V always; **L only at DC** (0V source); **OP always** (nullor output current). C/L use the trapezoidal companion in transient (conductance + current source, no branch row).
 
-Wires that terminate AT a component's terminal will touch the component's bounding box. This is EXPECTED — do NOT flag as "wire through body". The headless validator checks:
-1. Is either wire endpoint inside the component body? If yes, skip (the wire connects there)
-2. Does the wire segment cross the body with BOTH endpoints outside? Then flag as warning.
+**Four solve paths:**
+- **DC op-point** — `solveDC` → `solveCircuit(makeDCEnv())`.
+- **Transient** — `transientStep` → `solveCircuit(...)`, then companion `vPrev/iPrev` update post-solve.
+- **Nonlinear (diode)** — `solveCircuit` auto-detects any `'D'` and runs Newton-Raphson (else one LU). Re-stamps each iteration around `env.prev`; converges when max node-voltage delta < `NR_TOL` (1e-7) **AND no junction was voltage-limited this iteration** (`nrFlags.limited`); ≤ `MAX_NR_ITERS` (100).
+- **AC** — `acSweep()` assembles a complex MNA per log-spaced frequency (R→G, C→jωC, L→1/jωL, V/I→stimulus), solves with `cluSolve`, returns Bode magnitude(dB)/phase(deg) per probe.
 
-### Manhattan Path Computation
+### Device behavior
 
-```ts
-function computeManhattanPath(ax, ay, bx, by):
-  if ax === bx or ay === by: return []  // already axis-aligned
-  return [{ x: bx, y: ay }]            // horizontal-first routing
-```
+| Type | Term. | DC | Transient | AC |
+|------|-------|----|-----------|----|
+| R | 2 | conductance 1/R | same | G = 1/R |
+| C | 2 | open (no stamp) | companion `gEq=2C/dt`, `iEq=gEq·vPrev+iPrev` | jωC |
+| L | 2 | 0V source (branch row) | companion `gEq=dt/2L`, `iEq=iPrev+gEq·vPrev` | 1/(jωL) |
+| V | 2 | branch row, value = `sourceValue` (waveform bias or `value`) | value = `evalSource(t)` | unit stimulus / 0 |
+| I | 2 | current injection | `evalSource(t)` | current stimulus / 0 |
+| D | 2 | `Is(e^(Vd/nVt)−1)+Gmin·Vd`, NR-linearized | same | small-signal `Geq` at DC op-point |
+| SW | 2 | conductance `SW_ON=1e3` (closed) / `SW_OFF=1e-9` (open) | same | same |
+| OP | 3 | ideal nullor (linear): `v(in+)−v(in−)=0`, free output current → nodeC | same | same |
+| GND | 1 | reference (node 0) | — | — |
 
-Produces at most one corner. Both endpoints must be grid-snapped before calling.
+Diode constants: `Is=1e-14, n=1, Vt=0.025852, Gmin=1e-12`. AC stimulus = first source with `acMag`, else first V, else first I; all other independent sources AC-grounded.
 
-### Junction Dot Rules
+## Validation (`validateCircuit`)
 
-A junction dot (filled circle, radius 4px) is drawn at every grid point where ≥2 terminals or wire waypoints coincide. This is computed by collecting all terminal positions and wire segment endpoints, counting occurrences per grid position.
+Ten diagnostic codes (`severity: error|warning|info`): `EMPTY`, `NO_GROUND` (err), `INVALID_VALUE` (err), `ZERO_VOLTAGE` (warn), `FLOATING_NODE` (err), `OPEN_LOOP` (err), `PARALLEL_VS` (warn), `SINGULAR` (err), `DEAD_END` (info), `READY` (info). Same function powers the UI sidebar and vitest assertions.
 
-### Sample Circuit Layout Rules
+Logic that bites if you forget it:
+- **`INVALID_VALUE` is passive-only** (R/L/C `value ≤ 0`). Sources (V/I) may legitimately be 0; diode/switch/op-amp/GND have no meaningful `value`.
+- **`ZERO_VOLTAGE`** only fires for a DC V source (`value===0 && !waveform`).
+- Adjacency (`buildAdjacency`) cliques **all** of a component's `componentNodes` (so the op-amp output is "driven", not floating) and includes capacitors for connectivity.
+- `verifier.ts` exempts **reactive- or AC-waveform-driven** circuits from the "resistors have DC current" / "distinct voltages" checks (a pure sine biases to 0V at DC).
 
-Sample circuits must follow these rules (validated by `placement.test.ts`):
-1. All component centers on grid (multiples of 20)
-2. Components spaced ≥2 grid units apart to avoid overlap
-3. Every component connected to at least one other (no orphans)
-4. Signal flow left-to-right, power top-to-bottom where possible
-5. Each sample must pass `validatePlacement()` with zero errors
+Programmatic test API: `assertDC(circuit,{node:V},tol)`, `assertTransient(...)`, `circuit().v(5,1,0).r(1000,1,2).gnd().build()`.
 
-## Solver Gotchas (FIELD-TESTED)
+## Probing, scope & Bode
 
-### Companion Current Sign Convention
+- Probe kinds: **`nodeV`** (click any wire), **`compI`** (current through), **`compV`** (V across). `results.ts` computes values per kind; `measure.ts` derives Vpp/RMS/freq.
+- `scope-canvas`: shared time base, trigger (edge + level + source), auto-fit or volts/div, freeze (snapshots probes so the sim runs on), per-channel legend with live measurements.
+- `bode-canvas` + `analysis-panel`: AC mode auto-recomputes the sweep on circuit/probe/option change.
 
-The most subtle bug in transient analysis is the sign of the companion current source injection:
+## Persistence & samples
 
-```ts
-// CORRECT: current injected INTO node a, extracted FROM node b
-z[ai] += iEq   // +iEq INTO node a
-z[bi] -= iEq   // -iEq OUT of node b
+- `yaml.ts` flattens optional fields: `wkind/wamp/woff/wfreq/wphase/wduty`, `acmag`, `closed`, `nodeC`.
+- `storage.ts`: `encodeCircuit`→`?c=` base64url share links (UTF-8 safe), `decodeShareYaml` hydrates on mount; `localStorage` library via pure `upsertSaved`/`removeSaved` helpers.
+- `samples.ts`: `groupedSamples()` → 6 categories (Basics/RC/RLC/Filters/Bridges/Active); metadata (`category`, `lookFor`) keyed by name in `SAMPLE_META`. Don't hardcode a sample count anywhere (the old skill said "7" and rotted).
 
-// WRONG (was in v1 — caused oscillating voltages):
-z[ai] -= iEq
-z[bi] += iEq
-```
+## Field-tested gotchas
 
-Derivation: Norton equivalent has I_eq flowing INTO node a. In MNA, the RHS vector z gets +I_eq at row a and -I_eq at row b.
+1. **Companion current sign** — inject `+iEq` INTO node a, `−iEq` from b (`stampCurrent`). Reversed → oscillating voltages.
+2. **Diode NR convergence** — seed `pnjlim`'s `vold` at **0** (not the raw vd), and **only declare convergence when no junction is still limited** (`nrFlags.limited`). Otherwise geq stays tiny while pnjlim ramps, node deltas look small, and it "converges" with the diode off (output ≈ 0).
+3. **Diode companion** — `Geq=Is/nVt·e^(Vd/nVt)+Gmin`, `Ieq=Id−Geq·Vd`, stamp as conductance + `stampCurrent(ai,bi,−Ieq)`.
+4. **Op-amp is LINEAR** (nullor) — no Newton needed. It needs a branch row (output current), the input constraint row `v(in+)−v(in−)=0`, current into nodeC, and **`componentNodes` updated everywhere** for the 3rd terminal.
+5. **`completeWire`** must set `fromCompId`/`toCompId`; both endpoints become the merged node `keep`. The renderer resolves the actual terminal via `terminalForNode`, not endpoint indices.
+6. **GND emits ONE terminal** via `getAllTerminals` (the old 2-duplicate form is gone). Tests that assumed "2 terminals/component" must sum `componentNodes(c).length`.
+7. **Stale dev server** — after engine edits, hard-reload; HMR can serve stale stamps. Symptom: a source value stays constant instead of following its waveform.
+8. **Pinch-zoom** — lock the two pointer ids in `pinchRef` and re-seed when dropping to 2 pointers, or lifting a 3rd finger swaps the tracked pair and the zoom jumps.
+9. **Inspector NumberField** — skip the value→buffer resync while the field is focused, else live-commit reformats in-progress text ("0.5"→"500m").
 
-### LU Decomposition Algorithm
+## Testing
 
-Must use proper Doolittle algorithm with partial pivoting, NOT simplified Crout:
-
-```
-For each column j:
-  1. Compute U[i][j] for i = 0..j (upper triangle)
-  2. Compute raw L[i][j] for i = j+1..n-1 (before division)
-  3. Find pivot row with max |raw value| in column j
-  4. Swap if needed (swap both A rows AND pivot array entries)
-  5. Divide L[i][j] by U[j][j] for i > j
-```
-
-Common bug: computing upper triangle values during the pivot scan step — this overwrites U[j][j].
-
-### Inductor at DC
-
-Inductors at DC are short circuits (0V). They need an extra MNA row treating them as a 0V voltage source. In transient analysis, they use the trapezoidal companion model instead (no extra row needed).
-
-## Validation Framework
-
-### Validation Rules (enforced by `validateCircuit`)
-
-1. **EMPTY** — circuit has no components (info)
-2. **NO_GROUND** — no GND component (error)
-3. **INVALID_VALUE** — R/L/C/V value ≤ 0 (error)
-4. **ZERO_VOLTAGE** — V source set to 0V (warning)
-5. **FLOATING_NODE** — node has no DC path to ground via R/V/L (error)
-6. **OPEN_LOOP** — voltage source has no closed current path from + to − through circuit (error)
-7. **PARALLEL_VS** — two voltage sources share both terminals (warning)
-8. **SINGULAR** — DC solve fails, matrix is singular (error)
-9. **DEAD_END** — node connects to only one component, useful as probe point (info)
-10. **READY** — circuit is valid and runnable (info)
-
-### Closed Loop Rule
-
-Every voltage source must form a complete circuit. Current flows from the + terminal, through the circuit, and back to the − terminal. If there's no DC-conducting path (through R, V, L — capacitors are DC-open) from + back to −, the source has no current and the circuit is an open loop.
-
-```ts
-function hasDCPath(circuit, from, to):
-  BFS from 'from' through R/V/L components
-  returns true if 'to' is reachable
-```
-
-### Structured Diagnostics
-
-```ts
-interface CircuitDiagnostic {
-  severity: 'error' | 'warning' | 'info'
-  code: string          // 'FLOATING_NODE', 'NO_GROUND', 'INVALID_VALUE', etc.
-  message: string
-  nodes: number[]
-  components: string[]
-}
-```
-
-Same `validateCircuit()` powers both the UI sidebar and vitest assertions.
-
-### Programmatic Test API
-
-```ts
-// DC assertion
-assertDC(circuit, { 1: 5, 2: 3.33 }, 0.01)  // returns string[] of failures
-
-// Transient assertion at specific step indices  
-assertTransient(circuit, dt, steps, { 100: { 2: 3.16 } }, 0.5)
-
-// Fluent builder
-circuit().v(5, 1, 0).r(1000, 1, 2).r(2000, 2, 0).gnd().build()
-```
-
-### Placement Validation (Headless)
-
-```ts
-renderCircuit(circuit)      // → VisualElement[] (no canvas needed)
-validatePlacement(circuit)  // → PlacementIssue[]
-checkTerminalPositions(type, x, y, rot)  // → terminal coordinates
-```
-
-## Interactive Editor Gotchas (FIELD-TESTED)
-
-### Placing Mode
-
-- Place on mouse **UP** (not down) — prevents accidental placement when clicking to select
-- Right-click or Escape cancels placing mode
-- `onCancelPlacing` prop needed on canvas for Escape handling
-- `setPlacingType(null)` called from page when component selected
-
-### Wiring Mode
-
-- Shift+click starts wiring; stores `wiringFrom` compId AND `wiringFromNode` (A/B)
-- Click second terminal to complete; uses stored node hint for correct endpoint
-- Escape or right-click cancels
-- `completeWire` both merges node IDs (electrical) AND creates a CircuitWire (visual)
-
-### Grid Constraint
-
-The page wrapper must NOT use `aspect-[16/9] w-full` — this creates a reflow loop where scrollbar appearance changes the computed width. Use a clamped height instead:
-```tsx
-<div style={{ height: 'clamp(340px, 55vh, 700px)' }}>
-```
+vitest `node` env; the suite covers solver/transient/devices/mna/ac/complex-solver/results/measure/diode-switch/opamp/validator/placement/wiring/yaml/storage/laws/verifier. `placement.test.ts` validates every sample (zero error-severity issues — no diagonal wires; grid-aligned terminals). Run: `npx vitest run lib/lab/circuit-sim/`.
 
 ## References
 
-- Litovski, V. "Modified Nodal Analysis"
-- Pillage, Rohrer, Visweswariah. "Electronic Circuit and System Simulation Methods"
-- Vladimirescu, A. "The SPICE Book"
-- Nagel, L.W. "SPICE2: A Computer Program to Simulate Semiconductor Circuits"
-- IEC 60617: Graphical Symbols for Diagrams
-- IEEE 315: Graphic Symbols for Electrical and Electronics Diagrams
+Litovski "Modified Nodal Analysis" · Najm "Circuit Simulation" (companion/Newton stamps, pnjlim) · Vladimirescu "The SPICE Book" · Nagel "SPICE2" · IEC 60617 / IEEE 315 (graphical symbols).

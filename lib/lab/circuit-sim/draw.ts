@@ -433,15 +433,22 @@ export function drawWireSegment(
   ctx: CanvasRenderingContext2D,
   x1: number, y1: number, x2: number, y2: number,
   colors: DrawColors,
+  color?: string,
+  glow = false,
 ) {
-  ctx.strokeStyle = colors.wire
+  ctx.strokeStyle = color ?? colors.wire
   ctx.lineWidth = 3.5   // thicker wires for visibility
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
+  if (glow) {
+    ctx.shadowColor = color ?? colors.wire
+    ctx.shadowBlur = 7
+  }
   ctx.beginPath()
   ctx.moveTo(x1, y1)
   ctx.lineTo(x2, y2)
   ctx.stroke()
+  if (glow) ctx.shadowBlur = 0
 }
 
 export function drawJunctionDot(
@@ -457,10 +464,10 @@ export function drawJunctionDot(
 
 export function drawTerminal(
   ctx: CanvasRenderingContext2D, x: number, y: number,
-  colors: DrawColors, hovered: boolean,
+  colors: DrawColors, hovered: boolean, color?: string,
 ) {
   const r = hovered ? 6 : 3.5
-  ctx.fillStyle = hovered ? colors.accent : colors.terminal
+  ctx.fillStyle = hovered ? colors.accent : (color ?? colors.terminal)
   ctx.beginPath()
   ctx.arc(x, y, r, 0, Math.PI * 2)
   ctx.fill()

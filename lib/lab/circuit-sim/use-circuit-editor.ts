@@ -203,13 +203,17 @@ export function useCircuitEditor() {
         })
       }
 
-      // Create a visual wire connecting the two components
+      // Create a visual wire connecting the two components. Both endpoints
+      // are now the merged node `keep`; the renderer resolves which terminal of
+      // each component to draw from via fromCompId/toCompId — so they MUST be set.
       const wireId = `w_man_${wires.length}`
       const newWire: CircuitWire = {
         id: wireId,
-        nodeA: fromComp.id === components.find(c => c.id === fromComp.id)!.id ? keep : keep,
+        nodeA: keep,
         nodeB: keep,
         waypoints: [],
+        fromCompId: fromComp.id,
+        toCompId: toComp.id,
       }
       wires.push(newWire)
 

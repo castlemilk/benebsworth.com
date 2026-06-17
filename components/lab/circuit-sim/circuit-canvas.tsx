@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CircuitComponent, CircuitWire, ComponentType, ScopeTrace, SimulationState } from '@/lib/lab/circuit-sim/types'
 import { SNAP_RADIUS, GRID_SIZE } from '@/lib/lab/circuit-sim/types'
 import {
-  DARK_COLORS,
   drawGrid,
   drawComponent,
   drawWireSegment,
@@ -13,6 +12,7 @@ import {
   getTerminalPositions,
   gridSnap,
 } from '@/lib/lab/circuit-sim/draw'
+import { INSTRUMENT, voltageColor } from './instrument'
 import { computeManhattanPath } from '@/lib/lab/circuit-sim/wiring'
 import { drawFlowParticles } from './scope-panel'
 
@@ -60,6 +60,9 @@ export function CircuitCanvas({
   const dragRef = useRef<{ compId: string; offsetX: number; offsetY: number } | null>(null)
   const panRef = useRef<{ startX: number; startY: number; startPanX: number; startPanY: number } | null>(null)
   const wireEndRef = useRef({ x: 0, y: 0 })
+  // Active pointers (touch/pen/mouse) for multi-touch pinch-zoom.
+  const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map())
+  const pinchRef = useRef<{ startDist: number; startZoom: number; startPanX: number; startPanY: number; midX: number; midY: number } | null>(null)
   const flowParticlesRef = useRef<Map<string, number[]>>(new Map())
   const lastFlowTimeRef = useRef(0)
 
@@ -157,10 +160,20 @@ export function CircuitCanvas({
 
     const ctx = canvas.getContext('2d')!
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    const colors = DARK_COLORS
+    const colors = INSTRUMENT
 
     ctx.fillStyle = colors.bg
     ctx.fillRect(0, 0, w, h)
+
+    // Voltage scale for live node-heat coloring (baseline 5V, grows with the circuit).
+    let vmax = 5
+    if (sim) {
+      for (const v of sim.nodeVoltages) {
+        const a = Math.abs(v)
+        if (isFinite(a) && a > vmax) vmax = a
+      }
+    }
+    const live = sim?.running ?? false
 
     ctx.save()
     ctx.translate(panX, panY)
@@ -220,13 +233,17 @@ export function CircuitCanvas({
         inc(`${gridSnap(wp.x)},${gridSnap(wp.y)}`)
       }
 
+      // Live: tint the wire by its node voltage (heat) with a phosphor glow.
+      const nv = sim && wire.nodeA < sim.nodeVoltages.length ? sim.nodeVoltages[wire.nodeA] : undefined
+      const wireColor = live && nv !== undefined && isFinite(nv) ? voltageColor(nv, vmax, colors) : undefined
+
       // Draw wire segments
       let px = fromTx, py = fromTy
       for (const wp of waypoints) {
-        drawWireSegment(ctx, px, py, wp.x, wp.y, colors)
+        drawWireSegment(ctx, px, py, wp.x, wp.y, colors, wireColor, live)
         px = wp.x; py = wp.y
       }
-      drawWireSegment(ctx, px, py, toTx, toTy, colors)
+      drawWireSegment(ctx, px, py, toTx, toTy, colors, wireColor, live)
     }
 
     // ── Draw junction dots ───────────────────────────────────────
@@ -323,11 +340,13 @@ export function CircuitCanvas({
       const sax = gridSnap(ax), say = gridSnap(ay)
       const sbx = gridSnap(bx), sby = gridSnap(by)
 
-      // Draw terminal dots
+      // Draw terminal dots — heat-tinted by node voltage while running.
       const hA = hoveredTerminal?.compId === comp.id && hoveredTerminal.nodeId === comp.nodeA
       const hB = hoveredTerminal?.compId === comp.id && hoveredTerminal.nodeId === comp.nodeB
-      drawTerminal(ctx, sax, say, colors, hA)
-      drawTerminal(ctx, sbx, sby, colors, hB)
+      const tva = live ? sim!.nodeVoltages[comp.nodeA] : undefined
+      const tvb = live ? sim!.nodeVoltages[comp.nodeB] : undefined
+      drawTerminal(ctx, sax, say, colors, hA, tva !== undefined && isFinite(tva) ? voltageColor(tva, vmax, colors) : undefined)
+      drawTerminal(ctx, sbx, sby, colors, hB, tvb !== undefined && isFinite(tvb) ? voltageColor(tvb, vmax, colors) : undefined)
 
       // Probe labels with real-time voltage
       const probed = scopeTraces.find(t => t.nodeId === comp.nodeA || t.nodeId === comp.nodeB)
@@ -381,20 +400,39 @@ export function CircuitCanvas({
     ctx.restore()
   }, [circuit, selectedId, hoveredTerminal, wiringFrom, panX, panY, zoom, scopeTraces, sim])
 
-  // ── Mouse handlers ──────────────────────────────────────────────────
+  // ── Pointer handlers (mouse + touch + pen) ──────────────────────────
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button === 1) {
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    try { (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId) } catch { /* fake/inactive pointer */ }
+    pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+    // Two pointers → begin pinch-zoom; cancel any single-pointer interaction.
+    if (pointersRef.current.size === 2) {
+      const pts = [...pointersRef.current.values()]
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1
+      const rect = wrapRef.current?.getBoundingClientRect()
+      const midX = (pts[0].x + pts[1].x) / 2 - (rect?.left ?? 0)
+      const midY = (pts[0].y + pts[1].y) / 2 - (rect?.top ?? 0)
+      pinchRef.current = { startDist: dist, startZoom: zoom, startPanX: panX, startPanY: panY, midX, midY }
+      dragRef.current = null
+      panRef.current = null
+      return
+    }
+    if (pointersRef.current.size > 2) return
+
+    // Mouse middle button → pan.
+    if (e.pointerType === 'mouse' && e.button === 1) {
       panRef.current = { startX: e.clientX, startY: e.clientY, startPanX: panX, startPanY: panY }
       return
     }
-    if (e.button !== 0) return
+    // Mouse: only the left button drives editing.
+    if (e.pointerType === 'mouse' && e.button !== 0) return
 
     const pos = canvasToWorld(e.clientX, e.clientY)
     const gx = gridSnap(pos.x), gy = gridSnap(pos.y)
 
     if (placingType) {
-      // Place on mouseup, not mousedown — allows right-click cancel
+      // Place on pointer-up — allows right-click / second-finger cancel.
       return
     }
 
@@ -412,7 +450,6 @@ export function CircuitCanvas({
       if (e.shiftKey) {
         if (e.metaKey || e.ctrlKey) onAddProbe(comp.nodeA)
         else {
-          // Wire from nearest terminal
           const [ax, ay, bx, by] = getTerminalPositions(comp)
           const dA = Math.hypot(pos.x - ax, pos.y - ay)
           const dB = Math.hypot(pos.x - bx, pos.y - by)
@@ -436,20 +473,31 @@ export function CircuitCanvas({
 
     onSelectComponent(null)
     panRef.current = { startX: e.clientX, startY: e.clientY, startPanX: panX, startPanY: panY }
-  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, panX, panY, onPlaceComponent, onCompleteWire, onCancelWiring, onAddProbe, onSelectComponent, onStartWire, onRotate])
+  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, circuit.components, panX, panY, zoom, onCompleteWire, onCancelWiring, onAddProbe, onSelectComponent, onStartWire, onRotate])
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (pointersRef.current.has(e.pointerId)) {
+      pointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    }
     wireEndRef.current = { x: e.clientX, y: e.clientY }
+
+    // Pinch-zoom about the gesture midpoint.
+    if (pinchRef.current && pointersRef.current.size >= 2) {
+      const pts = [...pointersRef.current.values()]
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y) || 1
+      const p = pinchRef.current
+      const newZoom = Math.max(0.3, Math.min(3, p.startZoom * (dist / p.startDist)))
+      const k = newZoom / p.startZoom
+      onPanZoom(p.midX - (p.midX - p.startPanX) * k, p.midY - (p.midY - p.startPanY) * k, newZoom)
+      return
+    }
+
     const pos = canvasToWorld(e.clientX, e.clientY)
     const gx = gridSnap(pos.x), gy = gridSnap(pos.y)
 
     if (panRef.current) {
       const p = panRef.current
-      onPanZoom(
-        p.startPanX + (e.clientX - p.startX),
-        p.startPanY + (e.clientY - p.startY),
-        zoom,
-      )
+      onPanZoom(p.startPanX + (e.clientX - p.startX), p.startPanY + (e.clientY - p.startY), zoom)
       return
     }
 
@@ -462,15 +510,21 @@ export function CircuitCanvas({
     setHoveredTerminal(hitTestTerminal(pos.x, pos.y))
   }, [canvasToWorld, zoom, onPanZoom, onMoveComponent, hitTestTerminal])
 
-  const handleMouseUp = useCallback((e: React.MouseEvent) => {
+  const endPointer = useCallback((e: React.PointerEvent, place: boolean) => {
+    try { (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId) } catch { /* not captured */ }
+    const wasPinching = !!pinchRef.current
+    pointersRef.current.delete(e.pointerId)
+    if (pointersRef.current.size < 2) pinchRef.current = null
     dragRef.current = null
     panRef.current = null
-
-    if (placingType && e.button === 0) {
+    if (place && !wasPinching && placingType) {
       const pos = canvasToWorld(e.clientX, e.clientY)
       onPlaceComponent(placingType, gridSnap(pos.x), gridSnap(pos.y))
     }
   }, [canvasToWorld, placingType, onPlaceComponent])
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => endPointer(e, true), [endPointer])
+  const handlePointerCancel = useCallback((e: React.PointerEvent) => endPointer(e, false), [endPointer])
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault()
@@ -510,17 +564,18 @@ export function CircuitCanvas({
     <div
       ref={wrapRef}
       className="relative w-full h-full overflow-hidden rounded-xl border border-[var(--color-border)]"
-      style={{ background: DARK_COLORS.bg }}
+      style={{ background: INSTRUMENT.bg }}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onContextMenu={handleContextMenu}
     >
       <canvas
         ref={canvasRef}
-        className="block w-full h-full cursor-crosshair"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
+        className="block w-full h-full cursor-crosshair touch-none select-none"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
         onWheel={handleWheel}
       />
       {placingType && (

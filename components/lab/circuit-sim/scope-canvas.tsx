@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import type { ScopeTrace } from '@/lib/lab/circuit-sim/types'
-import { DARK_COLORS } from '@/lib/lab/circuit-sim/draw'
+import { INSTRUMENT } from './instrument'
 import { drawScopeGraticule, drawScopeTraces } from './scope-panel'
 
 interface Props {
@@ -31,7 +31,7 @@ export function ScopeCanvas({ traces, simTime }: Props) {
 
     const ctx = canvas.getContext('2d')!
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    const colors = DARK_COLORS
+    const colors = INSTRUMENT
 
     ctx.fillStyle = colors.scopeBg
     ctx.fillRect(0, 0, w, h)

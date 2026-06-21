@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
+import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 import { CircuitSimPage } from './circuit-sim-page'
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ export default function CircuitSimPageRoute() {
             inLanguage: 'en-AU',
             isAccessibleForFree: true,
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-            author: { '@type': 'Person', name: 'Ben Ebsworth', url: SITE_URL },
+            author: authorLd,
           },
         ]}
       />

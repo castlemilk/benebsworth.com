@@ -1,9 +1,27 @@
+## The core idea
+
+A handful of bodies share a single circle, spaced evenly around it, all sweeping at the same angular speed. There is no gravity and no interaction here — just clean circular motion. The beauty is in what gets left behind: each frame fades rather than clears, so the orbiters smear into glowing arcs that turn a static loop into a living, luminous ring.
+
 ## How it works
 
-Each orbiter is placed on a shared circle at angle `time * speed + i/n * 2π`, so they
-stay evenly spaced and sweep together. Every frame we paint a translucent
-rectangle in the stage's background colour over the whole canvas instead of clearing it —
-the leftover ghost of previous frames becomes the trail. A lower **Trail** value = longer tails.
+The position is pure trigonometry. Body `i` of `n` sits on the circle at angle
+
+$$a_i = t\,v + \frac{i}{n}\,2\pi$$
+
+where $t$ is elapsed time and $v$ is the speed. The $\frac{i}{n}\,2\pi$ offset distributes the bodies at equal angular spacing, and the shared $t\,v$ term advances them all in lockstep — so they stay rigidly evenly spaced as they rotate. Each orbiter is then drawn at
+
+```
+x = cx + R·cos(a)
+y = cy + R·sin(a)
+```
+
+with $R$ a fraction of the canvas half-width. A small central dot marks the shared centre.
+
+The trails are a rendering trick, not physics. Instead of wiping the canvas each frame, we paint a translucent rectangle in the stage's background colour over everything. Old pixels survive, dimmed a little more on every pass, so the recent history of each body lingers as a fading tail. The **Trail** value is that per-frame opacity: a lower value fades more gently, leaving longer light streaks.
+
+## What to watch for
+
+This is the same accumulation-buffer technique behind motion blur, phosphor-decay oscilloscope displays, and long-exposure photography — the image is an integral over time, not a single instant. Push the orbiter count up and the trails overlap into a near-solid annulus; drop **Trail** low and a single body paints a complete glowing hoop before its own tail catches up. Because the motion is perfectly periodic and uniform, the eye reads the trails as a frozen ring even though every dot is moving — a small lesson in how persistence of vision builds shape out of speed.
 
 ## Knobs
 

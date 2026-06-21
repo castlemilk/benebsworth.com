@@ -78,6 +78,9 @@ export default function Home() {
                         <time className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
                           {fmtDate(p.date)}
                         </time>
+                        <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                          · {p.readingTime} min read
+                        </span>
                       </div>
                       <h3 className="font-display text-xl font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover:text-blog sm:text-2xl">
                         {p.title}
@@ -93,7 +96,9 @@ export default function Home() {
                         <div className="relative h-24 w-32 overflow-hidden rounded-lg border border-[var(--color-border)] bg-black/20 sm:h-28 sm:w-40">
                           <img
                             src={p.heroImage}
-                            alt=""
+                            alt={p.title}
+                            loading="lazy"
+                            decoding="async"
                             className="absolute inset-0 h-full w-full object-cover opacity-85 transition-transform duration-500 group-hover:scale-110 group-hover:opacity-100"
                           />
                         </div>

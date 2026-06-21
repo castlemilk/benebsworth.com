@@ -25,7 +25,14 @@ export const metadata: Metadata = {
   creator: 'Ben Ebsworth',
   openGraph: { type: 'website', siteName: 'Ben Ebsworth', url: 'https://benebsworth.com', locale: 'en_AU' },
   twitter: { card: 'summary_large_image', creator: '@benebsworth' },
-  alternates: { types: { 'application/rss+xml': '/feed.xml' } },
+  alternates: {
+    types: {
+      'application/rss+xml': '/feed.xml',
+      // Advertise the llms.txt site manifest for AI crawlers/tools that read
+      // <link rel="alternate"> rather than probing /llms.txt by convention.
+      'text/plain': '/llms.txt',
+    },
+  },
 }
 
 export const viewport: Viewport = {

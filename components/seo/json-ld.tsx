@@ -24,6 +24,7 @@ export const personLd = {
   sameAs: [
     'https://github.com/castlemilk',
     'https://www.linkedin.com/in/benebsworth/',
+    'https://twitter.com/benebsworth',
   ],
   // KnowsAbout: topic clusters the person writes about. Helps Google's
   // topical authority computation. Keep in sync with the post labels.
@@ -72,6 +73,21 @@ export const websiteLd = {
     // Satori-friendly serialised shape.
     'query-input': 'required name=search_term_string',
   },
+} as const
+
+/**
+ * Canonical author reference for anything Ben writes/builds — used as the
+ * `author` on BlogPosting (posts), SoftwareApplication (lab effects), and
+ * CreativeWork (projects). One shared object means every page points at the
+ * same Person entity (same `url` → the /about/ ProfilePage, same `sameAs`),
+ * so Google and AI crawlers consolidate authorship instead of fragmenting it
+ * across slightly-different inline copies.
+ */
+export const authorLd = {
+  '@type': 'Person',
+  name: 'Ben Ebsworth',
+  url: `${SITE_URL}/about/`,
+  sameAs: [...personLd.sameAs],
 } as const
 
 /** BreadcrumbList from an ordered trail of { name, url } crumbs (absolute URLs). */

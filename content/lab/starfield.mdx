@@ -1,13 +1,37 @@
+## The core idea
+
+This is the oldest trick in computer graphics: fly a cloud of points past the camera and let
+perspective do the rest. Stars near the centre of the screen drift slowly; stars at the edges
+streak outward and accelerate as they rush past you. Nothing here is genuinely three-dimensional
+— it is a flat canvas — yet the brain reads depth instantly, because the one cue that matters,
+*parallax*, is exactly right.
+
 ## How it works
 
-Every star has a 3D position; its depth `z` decreases each frame, so it flies toward the
-viewer. We project to the screen by perspective division: the on-screen position is the
-world position scaled by `width / z`, measured from the centre — distant stars sit near the
-middle and slow, near stars race outward. When a star passes the camera (`z` hits zero) it
-respawns far away. The **Streak** knob blends two looks: at zero we draw a crisp dot at the
-projected point; turned up, we draw a line from the star's *previous* projection to its
-current one, producing warp-speed trails, and reduce the per-frame fade so the streaks
-linger.
+Every star carries a 3D position $(x, y, z)$. Each frame its depth `z` decreases, so it flies
+toward the viewer. We turn that into a screen position by **perspective division**: scale the
+world coordinates by `width / z` and measure from the centre of the canvas.
+
+```
+screen_x = cx + x * (w / z)
+screen_y = cy + y * (w / z)
+```
+
+Because `z` sits in the denominator, a star that is twice as far away moves half as fast and
+sits half as far from the centre. As `z` shrinks the scale factor `w / z` blows up, which is
+why near stars race outward and grow — the radius is tied to how close a star has come. When a
+star passes the camera (`z` reaches the near plane) it respawns far away, so the field never
+empties.
+
+## Why it reads as motion
+
+Parallax is the whole illusion. The vanishing point is the screen centre, and the rate at
+which a star pulls away from it encodes its depth — the same cue you get watching fence posts
+blur past a car window while distant hills barely move. The **Streak** knob leans into this:
+instead of a crisp dot, it draws a line from each star's *previous* projection to its current
+one, tracing the actual path travelled in one frame. It also reduces the per-frame fade, so
+those lines linger as glowing warp trails rather than being wiped clean each step. Turn it down
+for a calm drift through space; turn it up for the jump to hyperspace.
 
 ## Knobs
 

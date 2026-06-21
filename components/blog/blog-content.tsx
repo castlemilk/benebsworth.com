@@ -115,9 +115,10 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         {lead.heroImage ? (
                           <img
                             src={lead.heroImage}
-                            alt=""
+                            alt={lead.title}
                             fetchPriority="high"
                             loading="eager"
+                            decoding="async"
                             className="absolute inset-0 h-full w-full object-cover opacity-90 transition duration-500 group-hover/spot:scale-105 group-hover/spot:opacity-100"
                           />
                         ) : (
@@ -166,6 +167,12 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                           <span className="text-blog">Latest</span>
                           <span className="text-muted">·</span>
                           <span className="text-muted">{fmtDate(lead.date)}</span>
+                          {lead.readingTime ? (
+                            <>
+                              <span className="text-muted">·</span>
+                              <span className="text-muted">{lead.readingTime} min read</span>
+                            </>
+                          ) : null}
                         </div>
                         <h2 className="type-h2 mt-3">
                           {lead.title}

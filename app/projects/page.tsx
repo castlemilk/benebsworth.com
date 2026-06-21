@@ -20,6 +20,8 @@ export const metadata: Metadata = {
     title: 'Projects · Ben Ebsworth',
     description: 'Selected projects across software, cloud and hardware.',
     url: '/projects/',
+    siteName: 'Ben Ebsworth',
+    locale: 'en_AU',
   },
   twitter: { card: 'summary_large_image', title: 'Projects · Ben Ebsworth' },
 }

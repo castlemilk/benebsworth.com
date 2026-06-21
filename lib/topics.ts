@@ -75,17 +75,22 @@ const BY_SLUG: Record<string, Topic> = {
   'lorenz-and-the-limits-of-prediction': TOPIC.maths,
   'phase-portraits-of-differential-equations': TOPIC.maths,
   'every-wave-is-a-circle': TOPIC.maths,
+  'how-the-leopard-got-its-spots': TOPIC.maths,
   'every-qubit-gate-is-a-rotation': TOPIC.physics,
   'band-gaps-are-bragg-reflection': TOPIC.physics,
   'normal-modes-to-chaos': TOPIC.physics,
+  'quantum-tunnelling-you-can-see': TOPIC.physics,
   'a-star-search-visually': TOPIC.software,
   'how-python-dicts-really-work': TOPIC.software,
   'b-trees-vs-lsm-trees': TOPIC.software,
+  'shrinking-the-kv-cache': TOPIC.software,
+  'learning-by-rolling-downhill': TOPIC.software,
   'every-wire-is-an-rlc-circuit': TOPIC.ee,
   'am-fm-qam-the-modulation-zoo': TOPIC.ee,
   'software-defined-radio-in-100-lines': TOPIC.ee,
   'smith-chart-is-geometry': TOPIC.ee,
   'pll-from-first-principles': TOPIC.ee,
+  'filters-from-poles-and-zeros': TOPIC.ee,
 }
 
 /**

@@ -11,8 +11,10 @@ import { tagColor } from '@/lib/tag-colors'
 import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { RelatedPosts } from '@/components/blog/related-posts'
+import { KeyTakeaways } from '@/components/blog/key-takeaways'
+import { AuthorBio } from '@/components/blog/author-bio'
 import { MobileToc } from '@/components/blog/mobile-toc'
-import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
+import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 import { fmtDate } from '@/lib/format'
 
 export function generateStaticParams() {
@@ -44,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       siteName: 'Ben Ebsworth',
       locale: 'en_AU',
       publishedTime: new Date(p.date).toISOString(),
-      modifiedTime: new Date(p.date).toISOString(),
+      modifiedTime: new Date(p.dateModified ?? p.date).toISOString(),
       authors: ['Ben Ebsworth'],
       tags: p.tags,
       section: topic.label,
@@ -66,18 +68,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const topic = topicFor(p)
   const url = `${SITE_URL}/blog/${slug}/`
   const published = new Date(p.date).toISOString()
-  // Word count is a small but useful SEO signal — search engines use it
-  // for content-depth heuristics. The body is MDX so we strip JSX-ish
-  // constructs (LaTeX blocks, component tags) before counting.
-  const wordCount = p.body
-    .replace(/```[\s\S]*?```/g, ' ') // code blocks
-    .replace(/<[^>]+>/g, ' ')        // JSX tags
-    .replace(/\$\$[\s\S]*?\$\$/g, ' ') // display math
-    .replace(/\$[^$]+\$/g, ' ')     // inline math
-    .replace(/[#*_`>~|]/g, ' ')     // markdown punctuation
-    .split(/\s+/)
-    .filter(Boolean).length
-  const readingTime = Math.max(1, Math.round(wordCount / 230))
+  // wordCount (an SEO content-depth signal) and readingTime are computed once
+  // at load in lib/content so the post header, cards and JSON-LD all agree.
+  const { wordCount, readingTime } = p
   // High-level article section for Google's News / Discover box. We use
   // the topic label (e.g. "Algorithms", "Service Mesh") which is also
   // the visual badge at the top of the post.
@@ -88,19 +81,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     headline: p.title,
     description: p.description,
     datePublished: published,
-    dateModified: published,
+    dateModified: new Date(p.dateModified ?? p.date).toISOString(),
     inLanguage: 'en-AU',
     articleSection,
     wordCount,
-    author: {
-      '@type': 'Person',
-      name: 'Ben Ebsworth',
-      url: `${SITE_URL}/about/`,
-      // SameAs: github profile, in addition to those in the global
-      // Person schema on the home/about pages. Helps Google build the
-      // author entity graph.
-      sameAs: ['https://github.com/castlemilk'],
-    },
+    // Shared author entity (Person, url=/about/, full sameAs) so authorship
+    // consolidates identically across posts, lab effects and projects.
+    author: authorLd,
     publisher: {
       '@type': 'Person',
       name: 'Ben Ebsworth',
@@ -115,6 +102,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
     ...(p.tags.length ? { keywords: p.tags.join(', ') } : {}),
+    // Key takeaways double as the article abstract — a clean, citable summary
+    // for Google and AI engines (mirrors the visible "Key takeaways" block).
+    ...(p.takeaways?.length ? { abstract: p.takeaways.join(' ') } : {}),
   }
   const breadcrumb = breadcrumbLd([
     { name: 'Home', url: `${SITE_URL}/` },
@@ -124,9 +114,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <JsonLd data={[blogPostingLd, breadcrumb]} />
-      {p.heroImage && (
-        <link rel="preload" as="image" href={p.heroImage} fetchPriority="high" />
-      )}
       <SiteNav />
       {/* Sticky breadcrumb sits just below the sticky SiteNav. */}
       <Breadcrumb
@@ -200,6 +187,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           />
         </header>
         <div className="mt-10 max-w-[44rem]">
+          {p.takeaways?.length ? <KeyTakeaways items={p.takeaways} accent={topic.accent} /> : null}
           <MobileToc />
           <MdxContent source={p.body} slug={p.slug} />
         </div>
@@ -207,6 +195,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               matching lab effects, with a daily-rotating random fallback
               when no overlap exists. */}
           <div className="max-w-[44rem]">
+            <AuthorBio />
             <RelatedLabs tags={p.tags} labels={p.tags} limit={3} />
             <RelatedPosts currentSlug={slug} tags={p.tags} />
           </div>

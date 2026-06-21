@@ -12,9 +12,31 @@ keywords: >-
   saving,budget,cost
   protection,IAM,security,oauth,serviceaccount,roles,clusters,scaling
 release: true
+takeaways:
+  - >-
+    Cloud Scheduler can scale a GKE node pool to zero by POSTing {"nodeCount":0}
+    directly to the container API's setSize endpoint on a cron schedule.
+  - >-
+    The scheduler's service account needs only one IAM permission —
+    container.clusters.update — so a tightly-scoped custom role gives
+    least-privilege automation.
+  - >-
+    Cloud Scheduler authenticates outbound HTTP calls to Google APIs via
+    --oauth-service-account-email, minting OAuth tokens with no stored keys.
+  - >-
+    Pairing a scale-to-zero cron (e.g. every 6 hours) with preemptible nodes
+    makes a dev GKE cluster cheap and forgiving — standing it back up is
+    trivial.
 markdown_url: /blog/gke-development-auto-scale-down/
 canonical_url: 'https://benebsworth.com/blog/gke-development-auto-scale-down/'
 ---
+## Key takeaways
+
+- Cloud Scheduler can scale a GKE node pool to zero by POSTing {"nodeCount":0} directly to the container API's setSize endpoint on a cron schedule.
+- The scheduler's service account needs only one IAM permission — container.clusters.update — so a tightly-scoped custom role gives least-privilege automation.
+- Cloud Scheduler authenticates outbound HTTP calls to Google APIs via --oauth-service-account-email, minting OAuth tokens with no stored keys.
+- Pairing a scale-to-zero cron (e.g. every 6 hours) with preemptible nodes makes a dev GKE cluster cheap and forgiving — standing it back up is trivial.
+
 This is a article on how to NOT wake up with a massive GCP bill by forgetting you've left some expensive resources running (like a multi-node GKE cluster), we'll be using *Google Cloud Scheduler* to scale our GKE cluster to 0 on some interval. This could be a really useful pattern if you're spinning up a GKE cluster and doing some platform development and/or prototyping usage of tools and applications within the *Kubernetes* ecosystem.
 
 ## Enable API's

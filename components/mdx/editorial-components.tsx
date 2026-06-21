@@ -32,16 +32,24 @@ export function PullQuote({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function Figure({ 
-  src, 
-  caption, 
+export function Figure({
+  src,
+  caption,
   credit,
-  placement = 'full' 
-}: { 
-  src: string; 
-  caption?: React.ReactNode; 
+  alt,
+  width,
+  height,
+  placement = 'full'
+}: {
+  src: string;
+  caption?: React.ReactNode;
   credit?: React.ReactNode;
-  placement?: 'full' | 'left' | 'right' | 'inset' 
+  /** Explicit alt text. Falls back to the caption (when it's a plain string),
+      so screen readers and image crawlers get a real description either way. */
+  alt?: string;
+  width?: number;
+  height?: number;
+  placement?: 'full' | 'left' | 'right' | 'inset'
 }) {
   const wrapperClasses = {
     full: 'my-14 w-full',
@@ -53,8 +61,16 @@ export function Figure({
   return (
     <figure className={cn("not-prose relative clear-both", wrapperClasses)}>
       <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-fg)_3%,transparent)] shadow-sm">
-        { }
-        <img src={src} alt={typeof caption === 'string' ? caption : ''} className="h-auto w-full object-cover" />
+        <img
+          src={src}
+          alt={alt ?? (typeof caption === 'string' ? caption : '')}
+          width={width}
+          height={height}
+          loading="lazy"
+          decoding="async"
+          className="h-auto w-full object-cover"
+          style={width && height ? { aspectRatio: `${width} / ${height}` } : undefined}
+        />
       </div>
       {(caption || credit) && (
         <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-2 px-1 font-mono text-[0.75rem] text-muted">

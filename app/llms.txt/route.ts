@@ -59,8 +59,12 @@ export function GET() {
   lines.push('')
   for (const p of recent) {
     const t = topicFor(p)
+    // Emit the HTML post AND an explicit, machine-readable link to its
+    // plain-Markdown sibling (/blog/<slug>/index.md). The prose note above
+    // describes the convention; this makes the .md a first-class, followable
+    // discovery artifact so AI crawlers don't have to infer the URL pattern.
     lines.push(
-      `- [${p.title}](${base}/blog/${p.slug}/) [${t.label}]: ${p.description}`,
+      `- [${p.title}](${base}/blog/${p.slug}/) [${t.label}]: ${p.description} — [Markdown](${base}/blog/${p.slug}/index.md)`,
     )
   }
   lines.push('')

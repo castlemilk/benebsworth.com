@@ -1,33 +1,34 @@
 <LabSide effect="transmission-line" height={300} params={{ loadType: "matched", speed: 1 }} caption="A voltage pulse travels down a 50Ω line and meets the load — matched, shorted, or open.">
 
-## What TDR Sees
+## The core idea
 
-Time Domain Reflectometry is how EE's "look down" a transmission line without cutting it open. You send a fast voltage step into the line and watch what comes back. The amplitude and sign of the reflection tells you exactly what's at the far end — **no reflection = matched**, **inverted = short**, **in-phase = open**, and everything in between if the load impedance is neither 0 nor ∞.
+Time Domain Reflectometry is how engineers "look down" a transmission line without cutting it open. You launch a fast voltage step into one end and watch what comes back. The amplitude and sign of the echo tell you exactly what waits at the far end — **no reflection means matched**, an **inverted echo means a short**, an **in-phase echo means an open**, and anything in between maps to an impedance that is neither 0 nor ∞.
 
-## The Reflection Coefficient
+## The reflection coefficient
 
-At the load, the voltage and current must obey both the line's characteristic impedance Z₀ and the load's impedance Z_L. The boundary condition forces a reflected wave with amplitude:
+At the load, voltage and current must simultaneously satisfy the line's characteristic impedance Z₀ and the load impedance Z_L. The only way to honour both boundary conditions is to launch a reflected wave whose amplitude is set by the reflection coefficient:
 
 ```
 Γ = (Z_L − Z₀) / (Z_L + Z₀)
 ```
 
-- **Z_L = Z₀** → Γ = 0: The pulse is absorbed. No reflection.
-- **Z_L = 0 (short)** → Γ = −1: The pulse inverts and reflects.
-- **Z_L = ∞ (open)** → Γ = +1: The pulse reflects in phase, doubling the voltage.
-- **Z_L = 2Z₀** → Γ = +1/3: Part of the pulse reflects in phase.
-- **Z_L = Z₀/2** → Γ = −1/3: Part of the pulse inverts on reflection.
+- **Z_L = Z₀** → Γ = 0: the pulse is fully absorbed. No echo.
+- **Z_L = 0 (short)** → Γ = −1: the pulse inverts and reflects in full.
+- **Z_L = ∞ (open)** → Γ = +1: the pulse reflects in phase, doubling the voltage at the open.
+- **Z_L = 2Z₀** → Γ = +1/3: a fraction reflects, in phase.
+- **Z_L = Z₀/2** → Γ = −1/3: a fraction reflects, inverted.
 
 </LabSide>
 
-## The Telegrapher's Equations
+## The telegrapher's equations
 
-A transmission line is not a lumped wire — it's a **distributed** RLC network. At every point along the line, there's series inductance and shunt capacitance per unit length. A voltage wave propagates at a characteristic velocity `v = 1/√(LC)` with a characteristic impedance `Z₀ = √(L/C)`. The reflection and transmission at boundaries follow directly from conservation of energy and charge at the junction.
+A transmission line is not a lumped wire — it is a **distributed** LC network. Every infinitesimal slice has series inductance and shunt capacitance per unit length, and the telegrapher's equations describe how voltage and current ripple through that ladder. The upshot is a wave that travels at velocity $v = 1/\sqrt{LC}$ carrying a characteristic impedance $Z_0 = \sqrt{L/C}$. Reflection and transmission at a boundary then fall straight out of conserving charge and energy at the junction — there is no extra physics, just bookkeeping at the discontinuity.
 
-TDR is used practically for cable fault location, PCB trace characterisation, and soil moisture measurement — wherever you need to know what's at the far end of a wire without going there.
+## Where it shows up
 
-## Further reading
+TDR is the everyday tool for cable fault location: the round-trip time of the echo times the propagation velocity gives the distance to a break or crimp, and the sign of Γ tells you whether the fault is an open or a short. The same trick characterises PCB traces for signal integrity, profiles connector mismatches, and even measures soil moisture — anywhere you need to know what sits at the far end of a wire without travelling there yourself.
 
-- Pozar, *Microwave Engineering* — Chapter 2 covers transmission line theory and the telegrapher's equations.
-- Bogatin, *Signal Integrity Simplified* — the practical, intuition-first take on reflections and TDR.
-- [Transmission line (Wikipedia)](https://en.wikipedia.org/wiki/Transmission_line)
+## The knobs
+
+- **Load** — selects the termination: Matched (Γ = 0), Short (Γ = −1), Open (Γ = +1), Z_L = 2 Z₀ (Γ = +1/3), or Z_L = Z₀ / 2 (Γ = −1/3). Watch the returning pulse flip colour and shrink as Γ changes sign and magnitude.
+- **Speed** — scales how fast the pulse propagates, stretching or compressing the round trip so you can follow the reflection in slow motion or watch it ring at pace.

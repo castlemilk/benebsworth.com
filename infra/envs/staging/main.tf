@@ -10,6 +10,14 @@ terraform {
       version = "~> 1.5"
     }
   }
+  # Remote state so it survives fresh clones (no more empty-state landmine).
+  backend "s3" {
+    bucket       = "benebsworth-tfstate-299413881343"
+    key          = "staging/terraform.tfstate"
+    region       = "ap-southeast-2"
+    encrypt      = true
+    use_lockfile = true
+  }
 }
 module "site" {
   source      = "../../modules/site"

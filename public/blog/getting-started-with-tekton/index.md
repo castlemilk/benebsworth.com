@@ -13,9 +13,31 @@ keywords: >-
   cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline
   resource
 release: true
+takeaways:
+  - >-
+    Tekton runs as a Kubernetes controller, so its CRDs (PipelineResource, Task,
+    TaskRun, Pipeline, PipelineRun) are reconciled into Pods like any native
+    resource.
+  - >-
+    Each Task runs its steps as containers inside one Pod; a git
+    PipelineResource is cloned into a folder named after the resource (so
+    'docker-source' checks out to /workspace/docker-source).
+  - >-
+    Tekton infers task ordering as a DAG from declared resource inputs/outputs
+    rather than from an explicit step list.
+  - >-
+    Porting a pipeline from a local registry to GKE/GCR only requires swapping
+    the image PipelineResource URL; the Tasks and Pipeline stay identical.
 markdown_url: /blog/getting-started-with-tekton/
 canonical_url: 'https://benebsworth.com/blog/getting-started-with-tekton/'
 ---
+## Key takeaways
+
+- Tekton runs as a Kubernetes controller, so its CRDs (PipelineResource, Task, TaskRun, Pipeline, PipelineRun) are reconciled into Pods like any native resource.
+- Each Task runs its steps as containers inside one Pod; a git PipelineResource is cloned into a folder named after the resource (so 'docker-source' checks out to /workspace/docker-source).
+- Tekton infers task ordering as a DAG from declared resource inputs/outputs rather than from an explicit step list.
+- Porting a pipeline from a local registry to GKE/GCR only requires swapping the image PipelineResource URL; the Tasks and Pipeline stay identical.
+
 ![Tekton](/blog/getting-started-with-tekton/tekton.webp)
 
 ## Updates (21/09/2019)

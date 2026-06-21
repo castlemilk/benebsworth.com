@@ -23,6 +23,11 @@ import {
   MoEBlock,
   HashTableDemo,
   StorageEngineSim,
+  KvCacheCompressor,
+  KvQuantDial,
+  KvEvictionWindow,
+  KvAblationLedger,
+  KvContextHistogram,
 } from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
@@ -37,6 +42,11 @@ export const mdxComponents: MDXComponents = {
   MoEBlock,
   HashTableDemo,
   StorageEngineSim,
+  KvCacheCompressor,
+  KvQuantDial,
+  KvEvictionWindow,
+  KvAblationLedger,
+  KvContextHistogram,
   IngressFlowBasic,
   EgressFlowBasic,
   EgressFlowAdvanced,

@@ -6,6 +6,11 @@ description: 'Developing basic CI and CD pipelines in Tekton and deploying this 
 labels: technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience
 keywords: technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience,tekton,knative,cicd foundation,CI,CD,continuous delivery,istio,docker,cicd foundation,google cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline resource
 release: true
+takeaways:
+  - "Tekton runs as a Kubernetes controller, so its CRDs (PipelineResource, Task, TaskRun, Pipeline, PipelineRun) are reconciled into Pods like any native resource."
+  - "Each Task runs its steps as containers inside one Pod; a git PipelineResource is cloned into a folder named after the resource (so 'docker-source' checks out to /workspace/docker-source)."
+  - "Tekton infers task ordering as a DAG from declared resource inputs/outputs rather than from an explicit step list."
+  - "Porting a pipeline from a local registry to GKE/GCR only requires swapping the image PipelineResource URL; the Tasks and Pipeline stay identical."
 ---
 ![Tekton](./tekton.webp)
 

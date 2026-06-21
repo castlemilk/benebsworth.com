@@ -40,10 +40,14 @@ export const defaults: Params = {
   reseed: false,
 }
 
-// Iterations run synchronously right after seeding so the very first visible
-// frame already shows an emerging pattern instead of a near-blank field —
-// Gray-Scott needs a few thousand steps before its structure is legible.
-const WARMUP_STEPS = 1300
+// NO synchronous warm-up. The first painted frame shows the bare seed blobs and
+// the entire formation then plays out live on screen — the reader watches the
+// spots grow in and settle, which is the whole point of the lead lab. (Any
+// meaningful warm-up here made the canvas look frozen: the pattern formed before
+// the first paint, so a static steady state like 'spots'/'maze' only "moved"
+// when a knob forced a reset, and even the periodic re-seed was invisible
+// because it re-formed synchronously between paints.)
+const WARMUP_STEPS = 0
 
 // ── Diffusion constants ───────────────────────────────────────────────
 // 3x3 Laplacian kernel (von Neumann + diagonal weights). The centre is
@@ -128,6 +132,30 @@ function seedFields(f: Fields) {
   }
 }
 
+// Additive disturbance: stamp a few fresh V blobs onto the EXISTING field
+// (without clearing it) so a converged pattern keeps locally re-forming. This
+// is perpetual gentle motion with no jarring full-field wipe — the spots near a
+// new blob dissolve and re-knit while the rest of the frame carries on.
+function perturbFields(f: Fields) {
+  const { gw, gh, u, v } = f
+  const blobs = 5
+  const r = Math.max(2, Math.round(Math.min(gw, gh) * 0.03))
+  for (let b = 0; b < blobs; b++) {
+    const cx = Math.round((0.1 + 0.8 * Math.random()) * gw)
+    const cy = Math.round((0.1 + 0.8 * Math.random()) * gh)
+    for (let dy = -r; dy <= r; dy++) {
+      for (let dx = -r; dx <= r; dx++) {
+        const x = cx + dx
+        const y = cy + dy
+        if (x < 0 || x >= gw || y < 0 || y >= gh) continue
+        const i = y * gw + x
+        u[i] = 0.25
+        v[i] = 0.5
+      }
+    }
+  }
+}
+
 // ── Colour ramp ───────────────────────────────────────────────────────
 // Map v (0..~0.4) to a brand-palette ramp:
 //   near-black bg → teal (#00e0b8) → purple (#7c5cff) → bright orange tip.
@@ -165,6 +193,24 @@ function buildRamp(): Uint8Array {
 export const reactionDiffusion: EffectModule = {
   controls,
   defaults,
+  // Keep the Pattern preset and the Feed/Kill sliders coherent. The renderer
+  // only uses the sliders when preset === 'custom', so without this the F/k
+  // knobs look live but do nothing under a named preset. Here: editing F or k
+  // flips to 'custom' (so the slider drives the sim); picking a named preset
+  // loads its F/k into the sliders (so they reflect the active values).
+  reconcileParams(params, change) {
+    if (change && (change.key === 'feed' || change.key === 'kill')) {
+      return { ...params, [change.key]: change.value, preset: 'custom' }
+    }
+    const next = change ? { ...params, [change.key]: change.value } : { ...params }
+    const presetKey = next.preset as string
+    if (presetKey && presetKey !== 'custom') {
+      const p = PRESETS[presetKey] ?? PRESETS.custom
+      next.feed = p.F
+      next.kill = p.k
+    }
+    return next
+  },
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     const { w, h, dpr } = dims
     const fg = theme.fg
@@ -201,6 +247,11 @@ export const reactionDiffusion: EffectModule = {
     // Track how long the field has been visually flat so a fully-decayed
     // pattern auto-reseeds instead of sitting on a blank canvas.
     let flatFrames = 0
+    // Wall-clock time (ms) of the last activity injection (full reset OR a
+    // perturbation). A converged Gray-Scott field would freeze into a still
+    // image, so we periodically stamp fresh blobs onto it to keep it evolving.
+    // Time-based so the cadence holds regardless of frame rate.
+    let lastPerturbMs = 0
 
     // Advance the Gray-Scott PDE `steps` sub-steps in place (ping-pong the
     // two buffer pairs). Shared by the per-frame update and the warm-up.
@@ -241,13 +292,14 @@ export const reactionDiffusion: EffectModule = {
     function reset(F: number, k: number, presetKey: string) {
       seedFields(fields)
       flatFrames = 0
-      // Pre-grow the pattern so it is already legible on the first frame.
+      // Small pre-grow so the first frame is an emerging blur, not bare seeds;
+      // the rest of the formation plays out live on screen.
       advance(F, k, WARMUP_STEPS)
       lastKey = `${F.toFixed(4)}_${k.toFixed(4)}_${presetKey}`
     }
 
     return {
-      step(_timeMs, p) {
+      step(timeMs, p) {
         // 1. Read params ------------------------------------------------
         const presetKey = (p.preset as string) ?? (defaults.preset as string)
         const preset = PRESETS[presetKey] ?? PRESETS.custom
@@ -264,9 +316,10 @@ export const reactionDiffusion: EffectModule = {
         // 2. Reset-on-param guard: any change to F, k or the preset name
         //    reinitialises BOTH fields so the new pattern grows from scratch.
         const key = `${F.toFixed(4)}_${k.toFixed(4)}_${presetKey}`
-        if (key !== lastKey) reset(F, k, presetKey)
+        const doReset = () => { reset(F, k, presetKey); lastPerturbMs = timeMs }
+        if (key !== lastKey) doReset()
         // Manual reseed on the rising edge of the toggle.
-        if (reseedToggle && !lastReseed) reset(F, k, presetKey)
+        if (reseedToggle && !lastReseed) doReset()
         lastReseed = reseedToggle
 
         // 3. Advance the simulation `speed` sub-steps with fixed dt -----
@@ -304,14 +357,22 @@ export const reactionDiffusion: EffectModule = {
         }
         ctx.putImageData(img, 0, 0)
 
-        // Auto-reseed guard: if the whole field has collapsed to the
-        // trivial U=1, V≈0 state for a while, re-nucleate so the canvas is
-        // never permanently blank (some F/k combos extinguish the pattern).
+        // Keep the canvas alive. A Gray-Scott field stops being interesting two
+        // ways: it extinguishes to the trivial U=1, V≈0 state, or it converges
+        // to a static steady state (spots/maze "settle and hold"). In either
+        // case, after a short grace period, re-seed so the formation plays
+        // again. Dynamic regimes (mitosis, waves) never settle, so meanActivity
+        // stays high and they just keep moving without ever tripping this.
         const vmean = vsum / n
         if (vmax < 0.02 || vmean < 0.0008) {
-          if (++flatFrames > 90) reset(F, k, presetKey)
+          // field extinguished → full re-seed
+          if (++flatFrames > 90) doReset()
         } else {
           flatFrames = 0
+          // gentle perpetual life: a converged pattern would freeze, so stamp a
+          // few fresh blobs onto it every ~2.2s (wall-clock). It keeps locally
+          // re-forming with no jarring wipe; dynamic regimes barely notice.
+          if (timeMs - lastPerturbMs > 2200) { perturbFields(fields); lastPerturbMs = timeMs }
         }
 
         // 5. Caption (drawn in CSS-pixel space, on top of the bitmap) ---

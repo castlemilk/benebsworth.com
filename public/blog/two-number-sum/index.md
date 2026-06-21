@@ -2,15 +2,39 @@
 title: Two Number Sum
 date: '2019-05-27T22:12:03.284Z'
 author: Ben Ebsworth
-description: self-explanation of approach to solving the Two Number Sum problem
+description: >-
+  Three solutions to Two Number Sum, from O(n^2) brute force to an O(n) hash set
+  to an O(1)-space two-pointer scan — and the memory-vs-compute trade-off behind
+  each.
 labels: 'algorithms,personal,go,python'
 keywords: >-
   datastructures,cyclomatic complexity,big O,physics,blackholes,quantum
   mechanics,physics
 release: true
+takeaways:
+  - >-
+    A hash set turns the O(n^2) brute-force pair scan into a single O(n) pass by
+    trading O(n) memory for O(1) membership lookups instead of nested iteration.
+  - >-
+    On an already-sorted array, two pointers converging from both ends solve it
+    in O(n) time and O(1) space — no lookup table needed at all.
+  - >-
+    The set and two-pointer solutions are the same time/space trade-off seen
+    from opposite sides: spend memory to save compute, or pre-structure the data
+    to save both.
+  - >-
+    Two-pointer search only wins outright if the input is already sorted;
+    sorting it first costs O(n log n), which dominates the linear scan.
 markdown_url: /blog/two-number-sum/
 canonical_url: 'https://benebsworth.com/blog/two-number-sum/'
 ---
+## Key takeaways
+
+- A hash set turns the O(n^2) brute-force pair scan into a single O(n) pass by trading O(n) memory for O(1) membership lookups instead of nested iteration.
+- On an already-sorted array, two pointers converging from both ends solve it in O(n) time and O(1) space — no lookup table needed at all.
+- The set and two-pointer solutions are the same time/space trade-off seen from opposite sides: spend memory to save compute, or pre-structure the data to save both.
+- Two-pointer search only wins outright if the input is already sorted; sorting it first costs O(n log n), which dominates the linear scan.
+
 In this article we discuss a very common, and fairly simple algorithm problem, the __Two Number Sum__.
 
 The challenge is as follows:

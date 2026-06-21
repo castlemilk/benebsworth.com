@@ -8,7 +8,7 @@ import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Badge } from '@/components/ui/badge'
 import { Reveal } from '@/components/motion/reveal'
 import { ProjectEmblem } from '@/components/projects/project-emblem'
-import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
+import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 
 const PROJECT = '#7c5cff'
 
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: p?.title ?? 'Project',
     description: p?.description,
     alternates: { canonical: url },
-    openGraph: { type: 'article', title: p?.title, description: p?.description, url },
+    openGraph: { type: 'article', title: p?.title, description: p?.description, url, siteName: 'Ben Ebsworth', locale: 'en_AU' },
     twitter: { card: 'summary_large_image', title: p?.title, description: p?.description },
   }
 }
@@ -42,7 +42,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       name: p.title,
       description: p.description,
       url,
-      author: { '@type': 'Person', name: 'Ben Ebsworth', url: `${SITE_URL}/about/` },
+      author: authorLd,
       ...(p.technologies?.length ? { keywords: p.technologies.map((t) => t.text).join(', ') } : {}),
     },
     breadcrumbLd([

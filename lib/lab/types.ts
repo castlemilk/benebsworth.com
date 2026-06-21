@@ -14,4 +14,11 @@ export type EffectModule = {
   controls: ControlSpec[]
   defaults: Params
   createRenderer: (ctx: CanvasRenderingContext2D, dims: Dims, theme?: EffectTheme) => Renderer
+  /** Optional: keep coupled controls coherent. Called once on init (no
+   *  `change`) to normalise the starting params, and on every control change
+   *  with the edited `{ key, value }`; returns the next params. Omit for
+   *  effects with independent controls — callers then do a plain
+   *  `{ ...prev, [key]: value }`. (e.g. reaction-diffusion: picking a preset
+   *  loads its feed/kill; editing feed/kill switches the preset to 'custom'.) */
+  reconcileParams?: (params: Params, change?: { key: string; value: ParamValue }) => Params
 }

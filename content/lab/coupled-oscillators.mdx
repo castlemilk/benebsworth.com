@@ -1,29 +1,33 @@
 <LabSide effect="coupled-oscillators" height={360} params={{ initMode: "left", coupling: 0.3, speed: 1 }} caption="Energy sloshes between the two masses — a beat phenomenon from normal-mode interference.">
 
-## Two Springs, One Connection
+## The core idea
 
-Two identical mass-spring systems are joined by a third, weaker coupling spring. Pull one mass to the side and let go, and something elegant happens: the energy doesn't stay in that mass — it **sloshes** back and forth between the two, transferring completely from one to the other and back again.
+Two identical mass-spring systems are joined by a third, weaker coupling spring. Pull one mass aside and release it, and something elegant happens: the energy refuses to stay put. It **sloshes** back and forth between the two masses, draining completely out of the one you displaced, filling the other, then returning. Nothing is lost — this is not decay. It is a **beat**, the slow interference pattern of two oscillators whose frequencies are almost, but not quite, the same.
 
-This is **not** an exponential decay. It's a beat — two frequencies close together producing a slow modulation of amplitude. The energy alternates at a frequency equal to **half the difference** between the two normal-mode frequencies.
+## How it works
 
-## Normal Modes
+The system has two natural "shapes" of motion — **normal modes** — in which both masses oscillate at a single shared frequency forever:
 
-The system has two natural "shapes" of oscillation where both masses move at the same frequency indefinitely:
+- **In phase (ω₁ = √(k/m))**: the masses move together, so the coupling spring is never stretched and k_c has no effect.
+- **Out of phase (ω₂ = √((k + 2k_c)/m))**: the masses move oppositely, stretching the coupling spring maximally and adding its stiffness.
 
-- **Mode 1 (ω₁ = √(k/m))**: both masses move **in phase** — the coupling spring is never stretched, so k_c doesn't matter.
-- **Mode 2 (ω₂ = √((k + 2k_c)/m))**: both masses move **out of phase** — the coupling spring stretches maximally, adding its stiffness.
+Displacing only the left mass excites **both** modes equally, and the motion is their superposition:
 
-Select "Normal mode 1" or "Normal mode 2" from the dropdown to see these pure modes. Now select "Left displaced" — watch how the amplitude **beats** between m₁ and m₂. That pattern is the sum of the two normal modes interfering.
+```
+x₁(t) = A cos(ω_beat·t) cos(ω_avg·t)
+x₂(t) = A sin(ω_beat·t) sin(ω_avg·t)
+```
+
+with `ω_avg = (ω₂ + ω₁) / 2` the fast carrier and `ω_beat = (ω₂ − ω₁) / 2` the slow envelope. The amplitude of each mass is gated by a cosine and a sine that are a quarter-cycle out of step — so as one mass winds down, the other winds up. Stiffen the coupling and ω₂ pulls away from ω₁, widening the gap, shortening the beat period, and sloshing the energy faster.
 
 </LabSide>
 
-## The Beat Frequency
+## Where it shows up
 
-When you start with only m₁ displaced, you're exciting **both** normal modes equally. The displacement of each mass over time is:
+This two-frequencies-from-one-coupling story is everywhere. It is why two slightly detuned guitar strings produce an audible wobble, why pushing a child on a swing in time with a neighbouring swing can pump energy across, and — in the quantum version — why a particle tunnels between two nearby wells, splitting a single level into a symmetric and antisymmetric pair. The same algebra governs molecular vibrations, coupled LC circuits, and avoided crossings in band structure. The lesson is general: couple two identical resonators and their degenerate frequency splits in two, and any localised excitation must beat between them.
 
-```
-x₁(t) = A cos(ω_beat t) cos(ω_avg t)
-x₂(t) = A sin(ω_beat t) sin(ω_avg t)
-```
+## The knobs
 
-where `ω_beat = (ω₂ − ω₁) / 2` and `ω_avg = (ω₂ + ω₁) / 2`. The beat period gets shorter as the coupling spring gets stronger — increase k_c and watch the energy slosh faster.
+- **Initial condition** — choose **Left displaced** (excites both modes, full beating), **Both displaced**, or the pure **Normal mode 1** (in phase) and **Normal mode 2** (out of phase), which oscillate steadily with no energy transfer.
+- **Coupling k_c** — strength of the connecting spring. More coupling widens the mode split and shortens the beat period.
+- **Speed** — time-scale of the simulation; rescales how fast the whole dance plays out.

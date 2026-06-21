@@ -53,6 +53,9 @@ export function RelatedPosts({ currentSlug, tags, limit = 3 }: {
                       <time className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
                         {fmtDate(p.date)}
                       </time>
+                      <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                        · {p.readingTime} min read
+                      </span>
                     </div>
                     <h3 className="font-display text-xl font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover:text-blog sm:text-2xl">
                       {p.title}

@@ -86,6 +86,8 @@ Parsed in `lib/content.ts`. Only **`title`** and **`date`** are required (missin
 | `release` | – | Defaults `true`. Set `release: false` to keep a draft out of the published list/build |
 | `draft` | – | Defaults `false`. `draft: true` also hides it |
 | `heroImage` | – | Optional hero URL (`heroImage` or `hero_image`) |
+| `takeaways` | – | Optional YAML list of 3–4 crisp, standalone insights. Renders a "Key takeaways" block at the top of the post (accent-keyed), feeds the JSON-LD `abstract`, and leads the `.md` sibling — high value for skimmers and AI citation. Write declarative claims, not "this post covers…" |
+| `dateModified` | – | Optional ISO date. When a post is materially revised, set it for a freshness signal (JSON-LD `dateModified` + OG `modifiedTime`); falls back to `date` |
 | `author`, `keywords` | – | Stored but not currently read by the loader |
 
 **Publish gate** (`isPublished`): a post is live iff `release !== false && !draft`. Unpublished posts are excluded from the listing **and** from `generateStaticParams`, so they aren't built at all.
@@ -98,49 +100,41 @@ description: "One-sentence summary for listings, meta tags and the OG image."
 labels: technology,kubernetes
 release: true
 heroImage: /blog/<slug>/hero.png
+takeaways:
+  - "A standalone, quotable insight the reader leaves with — concrete, not a topic label."
+  - "Three or four of these; they render as a Key takeaways block and become the JSON-LD abstract."
 ---
 ```
 
 ## Generating Hero Images
 
-When creating a new post or updating an existing one without a `heroImage`, you should generate a high-quality hero image using OpenAI's `gpt-image-2` model. The image should be abstract, visually striking, and technically themed to match the site's aesthetic (often dark backgrounds with neon/vibrant accents).
+Every published post should have a `heroImage` (it drives the blog-listing card and the OG image — there is no banner on the post page itself). Generate one with OpenAI's `gpt-image-2`.
 
-**Step 1: Generate and download the image**
-Use the `OPENAI_API_KEY` located in `~/projects/brandbrain/.env` to call the API. Note that `gpt-image-2` returns a base64 encoded string.
+**The bar: distinct and clever, NOT a generic template.** The weakest heroes are all the same "abstract geometric shapes in brand colours" — cohesive but interchangeable, and forgettable in a listing grid. A good hero is a *clever visual metaphor for that post's specific thesis*, and visually distinct from every other post's hero. Keep only the dark editorial mood + brand palette as the shared thread (teal `#00E0B8`, purple `#7C5CFF`, orange `#FF7A59` on near-black `#0a0a0a`, no text); let the **subject and composition be unique per post**.
+
+Write the prompt as a concrete *scene* that captures the thesis, then end with the STRICT no-text clause (gpt-image loves to add garbled labels). Examples (thesis → image idea):
+
+- *"every wire is an RLC circuit"* → a clean digital square-wave edge betraying itself, overshooting into damped ringing; the wire beneath revealed as a coil + capacitor plates.
+- *"every qubit gate is a rotation"* → a single glass sphere with one bright arrow, caught mid-rotation in a faint gimbal ring.
+- *"B-trees vs LSM-trees"* → a serene balanced sorted tree facing a cascading waterfall of compacting sorted runs.
+- *"the modulation zoo"* → three dark vitrine panels holding a wobbling line, a circle, and a lattice grid of points.
+
+**Step 1 — generate (to a staging path).** The key lives in `~/projects/brandbrain/.env` (`OPENAI_API_KEY`). The sandbox blocks this cross-project `.env` read as "cross-purpose credential use" — surface it and get the user's OK, then run the gen (it also needs network egress, so it runs unsandboxed). `gpt-image-2` returns base64; use landscape `1536x1024`. Generate to a temp path first so a bad render never clobbers a good existing hero:
 
 ```bash
-# 1. Source the API key
-export OPENAI_API_KEY=$(grep OPENAI_API_KEY ~/projects/brandbrain/.env | cut -d '=' -f2)
-
-# 2. Call the OpenAI API (adjust the prompt to match the post topic)
-curl -s https://api.openai.com/v1/images/generations \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{
-    "model": "gpt-image-2",
-    "prompt": "Abstract editorial art: highly technical geometric vector illustration representing [TOPIC]. Clean isometric lines or layered gradients, translucent materials, subtle depth-of-field, brand teal (#00E0B8) and purple (#7C5CFF) accents against near-black (#0a0a0a). Generous negative space, matte finish.\n\nSTRICT: no text, words, numbers, letters, charts, UI elements, glossy 3D chrome, or stock-photo clichés.",
-    "n": 1,
-    "size": "1024x1024"
-  }' > response.json
-
-# 3. Extract the base64 string and save it to BOTH the content and public directories (crucial!)
-mkdir -p public/blog/<slug> content/blog/<slug>
-node -e '
-  const fs = require("fs");
-  const data = JSON.parse(fs.readFileSync("response.json", "utf8"));
-  if (data.data && data.data[0] && data.data[0].b64_json) {
-    const buf = Buffer.from(data.data[0].b64_json, "base64");
-    fs.writeFileSync("content/blog/<slug>/hero.png", buf);
-    fs.writeFileSync("public/blog/<slug>/hero.png", buf);
-  } else {
-    console.error("Failed to parse image from response", data);
-  }
-'
+# node fetch: POST gpt-image-2 {prompt: "<scene>\n\n<STRICT no-text>", n:1, size:"1536x1024"}
+# write data.data[0].b64_json (base64) → /tmp/heroes/<slug>.png
 ```
 
-**Step 2: Update the frontmatter**
-Add the `heroImage` field pointing to the downloaded file:
-`heroImage: /blog/<slug>/hero.png`
+**Step 2 — optimise to webp (ALWAYS).** A raw gpt-image PNG is ~1.5–2 MB — far too heavy to ship as a hero. Convert to webp (quality 80 → ~50–140 KB, a 10–30× reduction) and write to BOTH `content/blog/<slug>/` and `public/blog/<slug>/` (only `public/` is served, but keep the source co-located):
+
+```bash
+node -e 'const sharp=require("sharp"),fs=require("fs");
+sharp("/tmp/heroes/<slug>.png").resize(1536,1024,{fit:"cover"}).webp({quality:80}).toBuffer()
+  .then(b=>{ for(const d of ["content","public"]) fs.writeFileSync(d+"/blog/<slug>/hero.webp", b) })'
+```
+
+**Step 3 — frontmatter.** `heroImage: /blog/<slug>/hero.webp`. Spot-check the result by eye — a hero that "rendered" can still be off-thesis, samey, or contain stray text (regenerate that one).
 
 ## Markdown / MDX features
 
@@ -211,6 +205,8 @@ This is the menu — reuse a Reusable component before building a new one; one-o
 | `TokenSampler` | (none) | Next-token sampler with temperature / top-k / top-p sliders | one-off (LLM-internals) |
 | `MoEBlock` | (none) | Mixture-of-Experts routing diagram with parameter accounting | one-off (LLM-internals) |
 | `PllDiagram` | (none) | Renders the PLL feedback circuit from its JSON via `<Diagram>` | one-off (PLL post) |
+| `HashTableDemo` | (none) | Interactive open-addressing hash table — insert/delete keys, animated probe sequences, tombstones, 2/3 load-factor resize, probe-strategy toggle (linear/quadratic/perturbed) | reusable for CS / data-structures posts |
+| `StorageEngineSim` | (none) | Dual-pane B-tree vs LSM-tree visualiser — node splits vs memtable flush + compaction, with a live read/write/space amplification readout | reusable for CS / databases posts |
 
 `LabCanvas` and `LabSide` are how most posts become interactive "for free": `effect` is any slug in `lib/lab/registry.ts`, so you embed an existing lab effect (with its real controls) without writing canvas code. Reach for these before authoring a bespoke component.
 
@@ -391,6 +387,8 @@ Each post resolves to one topic (label + icon + accent color) via `lib/topics.ts
 
 Topics include `kubernetes`/`tekton`/`kustomize`/`minikube`/`react` (teal `#00e0b8`), `istio` (purple `#7c5cff`), `gcp`/`algorithms`/`general` (orange `#ff7a59`). To control a post's accent, give it the right `labels`, or add a `BY_SLUG` override in `lib/topics.ts`.
 
+**Science-desk accents** (for the deep-dive essays) are distinct from the devops palette: `maths` (blue `#4c9be8`), `physics` (violet `#b16cea`), `software` (green `#34d399`), `ee` (amber `#f5a623`). These do NOT auto-resolve from labels — wire each science post by adding its **slug** to the right desk in `BY_SLUG` (e.g. `'every-qubit-gate-is-a-rotation': TOPIC.physics`). `BY_SLUG` is the hand-curated source of truth; the science accents reuse `/topics/technology.png` and differ only by colour + label.
+
 ## Bespoke interactive components
 
 This is how to add richer-than-markdown content. The pipeline does **not** support `import` inside `.mdx` (legacy imports were stripped on migration). Instead:
@@ -516,7 +514,7 @@ The pipeline from "I have a topic idea" to "I have a published post" is four pha
 
 ### Phase 1: Discover — what's worth writing?
 
-**Step 1.1 — Audit the existing lab.** Run `grep "slug:" lib/lab/registry.ts` to enumerate the 30+ interactive effects. Each effect is a *promised interactive section* in a future blog post. A topic is high-leverage if it can reuse 2+ existing effects with no new art.
+**Step 1.1 — Audit the existing lab.** Run `grep "slug:" lib/lab/registry.ts` to enumerate the 35+ interactive effects (including `gradient-descent`, `pathfinding`, and `reaction-diffusion`). Each effect is a *promised interactive section* in a future blog post. A topic is high-leverage if it can reuse 2+ existing effects with no new art.
 
 **Step 1.2 — Survey existing posts.** `ls content/blog/`, then `grep -hE "^labels: " content/blog/*/index.mdx` to count tags. Underrepresented tags are opportunities:
 ```
@@ -615,6 +613,7 @@ Five qualities separate a post readers remember from a post readers skim:
 | Math breaks in dark mode | The `.katex` CSS colour override was lost — re-add the rules in `globals.css` |
 | Literal `$5` renders as broken math | Escape the dollar: `\$5` |
 | Copy buttons missing on `<Equation>` | `latex` prop not set — add it. Authors must provide the LaTeX source explicitly because it's not recoverable from `children` after the MDX pipeline converts to KaTeX HTML |
+| Hydration error: `<p> cannot be a descendant of <p>` | A block component renders a `<p>` AND MDX wraps its block-level children in a `<p>` too → nested `<p>`. Bit `PullQuote` when its quote spans its own lines. Fix in the COMPONENT: render children in a `<blockquote>`/`<div>` (not `<p>`) and force the quote styling onto any nested `<p>` via `[&_p]:…`. (Lazy `ssr:false` components — `LabSide`, the widgets — render `null` on the server and so can't hydration-mismatch; the risk is only server-rendered block components.) |
 
 ## Publish gate (NEVER ship without)
 
@@ -647,29 +646,64 @@ The single best predictor of engagement: **a topic that ties together 2+ existin
 
 Each desk has a canonical anchor source (what the field considers correct), the reusable labs it draws from, and a house angle (the framing that makes the post land).
 
-| Desk | Canonical anchor source | Reusable labs | House angle |
-|---|---|---|---|
-| Maths / Algorithms | Knuth (TAOCP); Cooley–Tukey 1965 | `fourier-series`, `random-walk`, `phase-portrait`, `lorenz` | "the same structure shows up in two unrelated places" |
-| Physics | Lorenz 1963; Nielsen & Chuang | `lorenz-attractor`, `bloch-sphere`, `quantum-tunneling`, `band-structure` | "lead with the phenomenon, derive after" |
-| Software / Infra | k8s / Tekton / Argo docs | `flow-diagram` walkthroughs | "desired-state vs reality — show the failure mode" |
-| EE / Signals | Pozar (RF); Franklin & Powell (control) | `smith-chart`, `rlc-resonance`, `pll-lock-in`, `transmission-line`, `bode-plotter` | "every wire is an RLC; every loop is a control system" |
+| Desk | Accent | Canonical anchor source | Reusable labs / widgets | House angle |
+|---|---|---|---|---|
+| Maths | blue | Knuth (TAOCP); Cooley–Tukey 1965; Strogatz | `fourier-series`, `random-walk`, `phase-portrait`, `lorenz-attractor`, `reaction-diffusion`, `conformal-grid` | "the same structure shows up in two unrelated places" |
+| Physics | violet | Lorenz 1963; Nielsen & Chuang; Kittel | `lorenz-attractor`, `bloch-sphere`, `quantum-tunneling`, `band-structure`, `wave-superposition`, `coupled-oscillators` | "lead with the phenomenon, derive after" |
+| Software / CS | green | Knuth; CLRS; the original algorithm paper (Hart-Nilsson-Raphael, O'Neil) | `pathfinding`, `gradient-descent`, `self-attention`, `HashTableDemo`, `StorageEngineSim`; `flow-diagram` for infra | "the same code is two algorithms; show the failure mode and the cost" |
+| EE / Signals | amber | Pozar (RF); Franklin & Powell (control); Proakis (comms) | `smith-chart`, `rlc-resonance`, `pll-lock-in`, `transmission-line`, `bode-plotter`, `am-modulation`, `constellation-plot`, `fft-spectrum` | "every wire is an RLC; every loop is a control system" |
 
 ## Voice & house style
 
 **Positive rules:**
 
 - **Lead with a counter-intuitive claim.** "Every wire is an RLC circuit." "A PLL is a PID controller in disguise." A claim the reader wants to test as they read.
-- **Second person + present tense for the reader's actions.** "You sweep the frequency and the marker walks the unit circle" — not "the user would observe…".
+- **Second person + present tense for the reader's actions.** "You sweep the frequency and the marker walks the unit circle", not "the user would observe…".
 - **Sentence-case headings.** "How to read a Smith chart", not "How To Read A Smith Chart".
-- **Figures as digits, with units.** `50 Ω`, `1.2B`, `48 hours` — not "fifty ohm", "one point two billion".
+- **Figures as digits, with units.** `50 Ω`, `1.2B`, `48 hours`, not "fifty ohm" or "one point two billion".
 - **Define each acronym on first use.** "phase-locked loop (PLL)", then `PLL` thereafter.
 - **Pace with components.** 3–5 `<Callout>`s and 3–5 numbered `<Equation>`s per ~2000-word post. Fewer reads as a wall of text; more reads as Twitter.
 
+### Punctuation & rhythm — the em-dash tell
+
+A dense scatter of em-dashes (`—`) is the single loudest "this was written by an LLM" signal, and it is the one readers now consciously look for. Keep an **em-dash budget: at most ~1 per 600–800 words** (a small handful in a 2,000-word post), and reach for one only when no other punctuation reads as cleanly. Everything else gets rewritten:
+
+- **Appositive / aside** (`X — the important bit — is Y`) → commas (`X, the important bit, is Y`) or parentheses (`X (the important bit) is Y`).
+- **A reveal or payoff** (`the result — a 20-point drop`) → a colon (`the result: a 20-point drop`).
+- **Two independent clauses welded together** (`it compiled — then it crashed`) → a full stop and two sentences (`It compiled. Then it crashed.`). Short sentences are the most human move available.
+- **A trailing tack-on** (`…and it worked — mostly`) → a comma, or a new sentence.
+
+Don't trade the em-dash habit for a semicolon habit or an en-dash habit; those read as the same tic. Vary the punctuation. The goal is prose with a natural rhythm of long and short sentences, not one default connector applied 60 times.
+
+**Never touch dashes inside code fences, inline `code`, component props/attributes (`<Equation latex="…">`, `<Callout title="…">`), `$…$`/`$$…$$` math, frontmatter, or URLs.** CLI flags (`--set`, `--max-new-tokens`) and ranges are not prose punctuation; leave them.
+
+**Read like a person, not a model.** Vary sentence length; let a three-word sentence land after a long one. Contractions are fine. Cut hedging ("arguably", "it's important to note", "can be seen as"). Address the reader directly. An occasional fragment or aside is more human than a paragraph of perfectly balanced clauses.
+
 **Banned phrases / AI tells** — do not use:
 
-- "it's worth noting", "in today's fast-paced world", "delve", "leverage" (as a verb), "in conclusion"
+- "it's worth noting", "in today's fast-paced world", "delve", "leverage" (as a verb), "in conclusion", "let's dive in", "the key takeaway"
+- The `not just X, but Y` / `it isn't X — it's Y` reveal construction, used more than once or twice
+- Rule-of-three padding: every list and sentence arriving in balanced triples ("fast, cheap, and reliable")
 - Stacked transitions: "moreover", "furthermore", "additionally" piling up between paragraphs
 - Clickbait superlatives ("the ultimate guide", "game-changing", "revolutionary")
+- Em-dash overuse (see the budget above) — the most common tell of all
+
+### The author's voice (the pre-AI profile)
+
+The early posts (the 2019 Kubernetes/Tekton/algorithms ones, written before any AI help) carry Ben's authentic voice. Recent science essays drifted into a polished, confident, second-person magazine register that reads "AI". When writing or revising, pull back toward the pre-AI voice. It is a **curious engineer's notebook**, not an authority's lecture. The blog's own stated mission (from the first post): *"explore ideas in an open format… capturing the learnings for my own future reference… almost like a personal wiki."* Write like that.
+
+What that voice actually does, with real lines from the early posts:
+
+- **Collaborative "we / let's", and "I" for opinions.** *"In this post we'll discuss what Tekton is…"*, *"Let's go through the available options"*, *"I'll leave it as an exercise for the reader"*, *"Some extra personal reasons for this selection…"*. The reader and author work through it together. Don't make everything second-person "you".
+- **Curious and hedged, not omniscient.** *"perhaps"*, *"probably"*, *"hopefully you see"*, *"this could be sufficient if…"*, *"there'd have to be a justification for…"*. Comfortable saying "I think" and "feels like". Confidence is fine for the lead claim; the body can wonder.
+- **Genuine tangents, then wave the reader on.** A Two Number Sum post detours into the black-hole information paradox: *"Do you have infinite time, or infinite mass?… Fundamentally information cannot be destroyed… Some food for thought."* This cross-disciplinary curiosity is the real seed of the science desk. Leave one honest aside per post and label it lightly ("Some food for thought", "an interesting conundrum"), rather than staying relentlessly on-thesis.
+- **Light humour and real enthusiasm.** *"customize (get it)"*, *"wow that escalated quickly"*, *"my new fake blog! How exciting!"*, *"the beautiful Tilt UI"*, *"introducing conditional steps!"*. A parenthetical joke or an earned exclamation is human. Use sparingly, never forced.
+- **Hands-on and practical.** Real commands, numbered steps, *"leave this window open and open a new one"*, a troubleshooting section, *"If all else fails try…"*. Trade-offs posed as questions to the reader: *"what are you limited by… which one is more expensive?"*.
+- **Forward-looking sign-offs.** *"The next part of the series will…"*, *"Watch this space!"* — not a tidy literary full-stop.
+- **British/Australian spelling.** utilise, optimise, minimise, initialise, visualise, behaviour, colour. Keep it consistent.
+- **Loose, conversational connectors.** Opening a sentence with "So", "Ok so now", "Now" is on-brand. (Don't over-correct into stiff formality while de-dashing.)
+
+**Blend, don't revert.** Keep the genuine improvements of the recent essays: the intuition-first lead, the interactive components, the 3–5 callouts/equations, the clean structure. Just put the person back in: a little "we", a hedge or two, one real aside, an earned bit of humour, British spelling, and a sign-off that points forward. The target is "Ben explaining something he's excited about", not "a confident narrator performing an essay".
 
 ## Build, preview, deploy
 

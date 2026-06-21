@@ -1,34 +1,43 @@
 <LabSide effect="am-modulation" height={420} params={{ modIndex: 0.5, carrierHz: 4, messageHz: 1, speed: 1 }} caption="Amplitude modulation — the message rides the carrier's envelope, with sidebands in the spectrum.">
 
-## Riding the Envelope
+## The core idea
 
-In AM, the carrier's amplitude follows the message signal:
+Amplitude modulation is the oldest trick in radio: take a slow message — speech, music, a single tone — and let it ride on the *amplitude* of a fast carrier wave. The carrier does the travelling; the message just shapes how loud it is moment to moment. What makes AM beautiful is that this scaling in time becomes a clean, rigid structure in frequency: one carrier line flanked by a symmetric pair of sidebands. The information you can read off the wobbling envelope is the same information sitting in those two spikes.
+
+</LabSide>
+
+## How it works
+
+The transmitted signal is the carrier with its amplitude offset by the message:
 
 ```
 s(t) = A_c [1 + m · m(t)] cos(2π f_c t)
 ```
 
-- **A_c** is the unmodulated carrier amplitude
-- **m** (modulation index, 0–1) controls how deeply the carrier is modulated
-- **m(t)** is the message signal (normalized to [−1, 1])
-- **f_c** is the carrier frequency
+- **A_c** — the unmodulated carrier amplitude
+- **m** — the modulation index (0–1), how deeply the carrier is modulated
+- **m(t)** — the message, normalised to [−1, 1]
+- **f_c** — the carrier frequency
 
-When m = 0, there's no modulation — just the carrier. At m = 0.5, the carrier envelope follows the message with 50% depth. At m = 1, the envelope touches zero at the message peaks — maximum depth without distortion. **Overmodulation** (m > 1) clips the carrier, producing distortion and additional sidebands.
+The factor `[1 + m · m(t)]` is the **envelope** — the dashed outline the carrier peaks trace in the middle panel. At $m = 0$ there's no modulation, just the bare carrier. At $m = 0.5$ the envelope swings with 50% depth; at $m = 1$ it kisses zero at the message troughs, the deepest you can go cleanly. Push past 1 and you **overmodulate**: the envelope tries to go negative, the carrier inverts, and a simple envelope detector recovers a distorted, clipped mess.
 
-## The Spectrum
+## Why the spectrum has exactly three lines
 
-Despite being a time-varying amplitude, AM has a clean frequency-domain view: the carrier at f_c, and two sidebands at f_c ± f_m. The sideband amplitudes are m/2 relative to the carrier. Double-sideband suppressed-carrier (DSB-SC) and single-sideband (SSB) are variants that remove either the carrier or one sideband — more power-efficient but harder to demodulate.
+Multiplying two signals in time is convolution in frequency, so the product of a tone $\cos(2\pi f_m t)$ with the carrier shifts the message spectrum up to sit *around* $f_c$. For a single message tone the result is three spikes: the carrier at $f_c$, and sidebands at $f_c \pm f_m$, each with amplitude $m/2$ relative to the carrier. This is the frequency-shift property in action — the carrier "lifts" a baseband signal to a radio frequency you can actually radiate from an antenna.
 
-</LabSide>
+It's also why AM is power-hungry: the carrier line carries no information yet hogs most of the power. That insight drives the variants — **DSB-SC** suppresses the carrier, **SSB** drops one redundant sideband too — trading transmit efficiency for trickier demodulation.
 
-## The Frequency Shift Property
+## The knobs
 
-The multiplication of message and carrier in the time domain is a **convolution** in the frequency domain. The message's spectrum, centered at DC, gets shifted up to ±f_c — the carrier "lifts" the message to a radio frequency for transmission.
+- **Mod index (m)** — modulation depth; below 1 is clean, above 1 overmodulates and clips.
+- **Carrier freq** — $f_c$, the rate of the fast oscillation being shaped.
+- **Message freq** — $f_m$; raising it pushes the sidebands further from the carrier.
+- **Speed** — playback rate of the animation; purely cosmetic.
 
-Experiment with the modulator: increase m to see the envelope deepen, change the message frequency to see the sidebands spread, and push m past 1 to see overmodulation clip the carrier. The dashed envelope curves show you exactly where the message traces the carrier amplitude.
+Push *m* past 1 and watch the overmodulation warning fire as the carrier clips; raise the message frequency and watch the sidebands spread apart in the spectrum below.
 
 ## Further reading
 
-- Haykin, *Communication Systems* — Chapter 3 walks through AM, DSB-SC, and SSB from first principles.
-- Proakis, *Digital Communications* — for the modulation/demodulation theory behind the spectra.
+- Haykin, *Communication Systems* — Chapter 3 builds AM, DSB-SC, and SSB from first principles.
+- Proakis, *Digital Communications* — the modulation/demodulation theory behind the spectra.
 - [Amplitude modulation (Wikipedia)](https://en.wikipedia.org/wiki/Amplitude_modulation)

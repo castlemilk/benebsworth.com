@@ -69,11 +69,13 @@ function LabCanvasInner({
   caption?: string
   controls?: boolean
 }) {
-  const initial: Params = { ...module.defaults, ...overrides }
+  const reconcile = module.reconcileParams
+  const base: Params = { ...module.defaults, ...overrides }
+  const initial: Params = reconcile ? reconcile(base) : base
   const [params, setParams] = useState<Params>(initial)
   const setParam = useCallback((key: string, value: ParamValue) => {
-    setParams((prev) => ({ ...prev, [key]: value }))
-  }, [])
+    setParams((prev) => (reconcile ? reconcile(prev, { key, value }) : { ...prev, [key]: value }))
+  }, [reconcile])
 
   return (
     <figure className="not-prose my-8">
@@ -190,11 +192,13 @@ function LabSideInner({
   reverse?: boolean
   children: React.ReactNode
 }) {
-  const initial: Params = { ...module.defaults, ...overrides }
+  const reconcile = module.reconcileParams
+  const base: Params = { ...module.defaults, ...overrides }
+  const initial: Params = reconcile ? reconcile(base) : base
   const [params, setParams] = useState<Params>(initial)
   const setParam = useCallback((key: string, value: ParamValue) => {
-    setParams((prev) => ({ ...prev, [key]: value }))
-  }, [])
+    setParams((prev) => (reconcile ? reconcile(prev, { key, value }) : { ...prev, [key]: value }))
+  }, [reconcile])
 
   return (
     <section className="not-prose my-10">

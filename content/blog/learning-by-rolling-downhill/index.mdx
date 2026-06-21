@@ -1,0 +1,153 @@
+---
+title: "Learning by Rolling Downhill"
+date: "2026-06-19T00:00:00.000Z"
+description: "Every neural network you've ever used was trained by the oldest trick in calculus: to minimise a function, walk downhill. The whole story of modern optimisers is a list of the specific ways plain downhill walking fails, and the patch for each."
+labels: software,machine learning,optimization
+release: true
+author: Ben Ebsworth
+heroImage: /blog/learning-by-rolling-downhill/hero.webp
+takeaways:
+  - "Gradient descent's stability hinges on one number: a step converges only when the learning rate stays below 2/curvature, and one global rate must serve the steepest direction, so gentler directions crawl."
+  - "In high dimensions almost every vanishing-gradient point is a saddle, not a bad minimum, because needing every direction to curve up is astronomically unlikely with millions of parameters."
+  - "Adam is just momentum plus RMSProp; its bias correction doesn't prevent tiny first steps but fixes the v-bias mismatch that would otherwise make early steps ~3x too big."
+  - "Mini-batch noise is a feature, not a tax: it jostles the optimiser off saddles and is believed to bias training toward flatter, better-generalising minima."
+---
+
+The entire training run of a billion-parameter model, the thing that costs a data centre weeks and a small fortune in electricity, is built on a trick Augustin-Louis Cauchy wrote down in 1847. To make a function smaller, find the direction in which it falls most steeply, take a step that way, and repeat. That's it. Hadamard arrived at the same idea independently around 1907; Haskell Curry first studied when it actually converges in 1944. None of them had a neural network in mind. They just wanted to minimise things, and downhill is where the minimum is.
+
+What's genuinely surprising is not that this works. It's how *badly* it works in its raw form, and how much of modern machine learning is a stack of patches for the specific ways naive downhill walking falls over. So let's start with the trick, then break it on purpose, because the failure modes are where the understanding lives.
+
+<LabSide effect="gradient-descent" height={420} params={{ preset: "bowl", show: "SGD", lr: 0.08 }} caption="Gradient descent on a simple convex bowl. The dot reads the local slope and steps against it, again and again, curving down to the bottom. With a sane learning rate, this is the whole idea — and on a bowl, it just works.">
+
+This is the friendly case: a smooth convex bowl, one minimum, no traps. The dot sits somewhere on the slope, measures the gradient (the direction of steepest *ascent*), and steps the opposite way. Do that repeatedly and it spirals into the bottom.
+
+Now nudge the **Learning rate** up. A bigger step gets there faster, until it doesn't: past a threshold the dot overshoots the bottom, lands higher on the far wall, overshoots again, and walks itself out of the bowl entirely. That knife-edge is the first thing to understand, and it never really goes away.
+
+</LabSide>
+
+## The rule, and the one number that breaks it
+
+Gradient descent is a single line. Let $\theta$ be the parameters, $f$ the loss, $\eta$ the learning rate.
+
+<Equation id="eqn:gd" number="1" caption="Plain gradient descent: step against the gradient, scaled by the learning rate η. Everything else in this post is a modification of this one line." latex="\theta_{t+1} = \theta_t - \eta\,\nabla f(\theta_t)">
+
+$$
+\theta_{t+1} = \theta_t - \eta\,\nabla f(\theta_t)
+$$
+
+</Equation>
+
+The learning rate $\eta$ is deceptively dangerous. Take a one-dimensional quadratic with curvature $k$ (the second derivative). One step multiplies your distance from the minimum by $(1 - \eta k)$. So you converge only when $|1 - \eta k| < 1$, that is for $0 < \eta < 2/k$. Below $1/k$ you glide in monotonically; between $1/k$ and $2/k$ you converge but *oscillate*, ping-ponging across the minimum with shrinking amplitude; at $2/k$ exactly you orbit forever; above it you diverge. The same lever that sets your speed sets your stability, and the boundary is the curvature you usually don't know.
+
+<Callout type="warning" title="One learning rate, many curvatures">
+
+Here is the catch that makes tuning hard. Real loss surfaces curve differently in different directions, and you get *one* learning rate for all of them. Take the bowl in the lab, $f = x^2 + 2y^2$. Its gradient is $\nabla f = (2x, 4y)$, so the curvature is $2$ along $x$ and $4$ along $y$. The $y$ direction diverges once $\eta > 0.5$, while $x$ would happily take $\eta$ up to $1$. Your safe learning rate is dictated by the *steepest* direction, which means the gentle directions crawl. That gap between the tightest and loosest curvature is the condition number, and it is the villain of the next two sections.
+
+</Callout>
+
+## Failure mode one: the ravine
+
+Switch the lab to the **Ravine** preset, a scaled Rosenbrock function with a long, curved, narrow valley. (The textbook Rosenbrock uses a steepness constant of 100; the lab dials it back to 20 so the traces stay on screen, but the pathology is the same.) This is the case that humbles plain gradient descent.
+
+<LabCanvas effect="gradient-descent" height={460} params={{ preset: "ravine", show: "all", lr: 0.004 }} caption="Four optimisers race down a curved ravine. Orange (plain SGD) bounces between the steep walls and barely crawls along the floor; yellow adds momentum; teal is RMSProp; purple (Adam) slides almost straight down the channel toward the minimum at (1, 1)." />
+
+Watch the orange trace, plain gradient descent. The valley walls are steep and its floor is nearly flat, so the gradient points mostly *across* the valley, not *along* it. Each step throws the dot at the opposite wall; it zig-zags wall to wall and inches forward almost not at all. All the energy goes sideways, where you don't want to move, and almost none goes down the channel, where you do.
+
+The fix, the yellow trace, is **momentum**. Instead of stepping on the current gradient, accumulate a running, discounted sum of past gradients, a heavy ball that keeps its heading.
+
+<Equation id="eqn:momentum" number="2" caption="Momentum (heavy-ball form): v accumulates a discounted sum of gradients, and you step on v. Side-to-side bounces cancel; the consistent downhill direction adds up." latex="v_{t+1} = \beta\, v_t + \nabla f(\theta_t), \qquad \theta_{t+1} = \theta_t - \eta\, v_{t+1}">
+
+$$
+v_{t+1} = \beta\, v_t + \nabla f(\theta_t), \qquad \theta_{t+1} = \theta_t - \eta\, v_{t+1}
+$$
+
+</Equation>
+
+The across-valley components flip sign every step, so they cancel in the running sum. The along-valley component points the same way every step, so it builds. A heavy ball ignores the rattling walls and rolls down the floor. The decay factor $\beta$ (typically $0.9$) sets how much past the ball remembers.
+
+## Failure mode two: the saddle
+
+The folk story of optimisation says the danger is getting stuck in a bad local minimum. In high dimensions that story is mostly wrong, and the **Saddle** preset shows why.
+
+<LabCanvas effect="gradient-descent" height={460} params={{ preset: "saddle", show: "all", lr: 0.01 }} caption="A saddle: down in one direction, up in another. The gradient at the centre is tiny, so plain descent crawls across the flat ridge and can stall there, mistaking a pass for a summit." />
+
+A saddle is a point that's a minimum along some directions and a maximum along others. The gradient there is nearly zero, so equation (1) takes vanishing steps and the optimiser can sit on the ridge as if it had arrived, when really it just needs to find the one direction that goes down.
+
+<Callout type="info" title="In high dimensions, saddles are the enemy, not minima">
+
+Why care so much about saddles? Because of a counting argument. A true local minimum needs *every* curvature direction to point up; a saddle needs only one to point down. With a handful of parameters that's a mild distinction. With millions of parameters, having all of them curve upward at once is astronomically unlikely, so almost every point where the gradient vanishes is a saddle, not a minimum. Dauphin and colleagues made this precise in 2014: in high-dimensional non-convex problems, critical points are exponentially more likely to be saddles. The thing we feared, a bad minimum, is rare. The thing we ignored, an endless plateau around a saddle, is everywhere.
+
+</Callout>
+
+## Adapting the step per direction
+
+Momentum fixes direction; the next idea fixes *scale*. Instead of one global learning rate, give every parameter its own, shrinking the step for directions whose gradients have been large and growing it for directions that have been quiet. **RMSProp** keeps a running average of each squared gradient and divides by its root.
+
+<Equation id="eqn:rmsprop" number="3" caption="RMSProp: track the mean square of each coordinate's recent gradients and divide the step by its root, so steep directions take small steps and flat ones take large steps." latex="s_{t+1} = \rho\, s_t + (1-\rho)\,\nabla f(\theta_t)^{\odot 2}, \qquad \theta_{t+1} = \theta_t - \frac{\eta\,\nabla f(\theta_t)}{\sqrt{s_{t+1}} + \varepsilon}">
+
+$$
+s_{t+1} = \rho\, s_t + (1-\rho)\,\nabla f(\theta_t)^{\odot 2}, \qquad \theta_{t+1} = \theta_t - \frac{\eta\,\nabla f(\theta_t)}{\sqrt{s_{t+1}} + \varepsilon}
+$$
+
+</Equation>
+
+The $\odot 2$ is an elementwise square; the division is elementwise too. A direction that keeps producing big gradients (the steep valley wall) gets a big $s$ and a damped step. A direction with small gradients (the valley floor) gets a small $s$ and a relatively larger step. It directly attacks the condition-number problem from the first callout.
+
+**Adam** is the one everybody reaches for, and it is just momentum and RMSProp bolted together, with one extra correction.
+
+<Equation id="eqn:adam" number="4" caption="Adam's bias correction and update. m and v are momentum and squared-gradient averages (both started at zero); the (1−βᵗ) factors undo the bias from that zero start before the step." latex="\hat{m}_t = \frac{m_t}{1-\beta_1^{\,t}}, \qquad \hat{v}_t = \frac{v_t}{1-\beta_2^{\,t}}, \qquad \theta_{t+1} = \theta_t - \frac{\eta\,\hat{m}_t}{\sqrt{\hat{v}_t} + \varepsilon}">
+
+$$
+\hat{m}_t = \frac{m_t}{1-\beta_1^{\,t}}, \qquad \hat{v}_t = \frac{v_t}{1-\beta_2^{\,t}}, \qquad \theta_{t+1} = \theta_t - \frac{\eta\,\hat{m}_t}{\sqrt{\hat{v}_t} + \varepsilon}
+$$
+
+</Equation>
+
+<Callout type="thinking" title="What the bias correction is actually fixing">
+
+The moment estimates $m$ and $v$ both start at zero, so early on they read too low. The popular intuition is that this makes the first steps tiny and Adam "stalls on the launch pad". That's backwards, and it's worth getting right. The update is the *ratio* $\hat{m}/\sqrt{\hat{v}}$, and since both $m$ and $v$ are biased toward zero, the biases largely cancel. Run the numbers at the first step with $\beta_1 = 0.9$, $\beta_2 = 0.999$: the $m$ correction multiplies by $1/(1-0.9) = 10$, the $v$ correction by $1/(1-0.999) = 1000$, and the square root turns that $1000$ into $\approx 31.6$. Drop the correction entirely and the first step is about $0.1/0.0316 \approx 3.16$ times *too big*, not too small. The real job of the $(1 - \beta^t)$ factors is to fix the mismatch (the slower-decaying $v$ bias) and bring the early steps back to roughly the intended size $\eta$.
+
+</Callout>
+
+On the ravine above, that's why the purple Adam trace slides almost straight down the channel while orange thrashes: per-direction scaling plus momentum is exactly the combination a narrow valley punishes you for lacking.
+
+## Why the noise is a feature
+
+There's a piece of sleight of hand in the name. We say "gradient descent" but in practice train with *stochastic* gradient descent, estimating the gradient from a small random batch rather than the whole dataset. The estimate is noisy, and for years that noise was treated as a regrettable cost of not affording the full gradient. It turns out to be doing real work.
+
+A full-batch optimiser computes the exact gradient, and at a saddle the exact gradient is genuinely tiny, so it can sit on the ridge indefinitely, fooled into thinking a mountain pass is a summit. The noisy estimate from a mini-batch is almost never exactly zero, so it jostles the optimiser off the ridge and back onto a downhill direction. The randomness we apologise for is what rescues us from the plateaus of the previous section. For this to converge you want the step sizes to satisfy the Robbins-Monro conditions, $\sum_t \eta_t = \infty$ (you can still travel any distance) and $\sum_t \eta_t^2 < \infty$ (the noise eventually gets damped), which is the formal reason learning-rate schedules decay over training.
+
+<Callout type="success" title="The bug that turned out to be a feature">
+
+Stochastic noise does two good things at once. It knocks the optimiser off saddles and flat ridges, and it is widely believed to bias training toward *flatter* minima, which tend to generalise better to unseen data than sharp ones. The flat-minima story is the mainstream view rather than a settled theorem (there are honest counterexamples in the literature), so hold it loosely. But the broad shape is real: a cheaper, noisier gradient often trains a *better* model than the expensive exact one. That is not the trade-off anyone expected.
+
+</Callout>
+
+So is Adam simply the answer? Not quite, and this is the kind of cost-aware caveat worth keeping. Wilson and colleagues showed in 2017 that adaptive methods like Adam can converge to solutions that generalise slightly worse than well-tuned plain SGD with momentum, which is why a fair amount of computer-vision work still finishes training on plain SGD. It's a tendency, not a law: most large language models train end to end on Adam and its weight-decay variant AdamW perfectly happily. The honest summary is that the per-direction rescaling that makes Adam so robust to tune is the same thing that occasionally costs it a little at the very end.
+
+## Why not just use the curvature?
+
+A reasonable objection: if the trouble is curvature, why not measure it? Newton's method does exactly that, multiplying the gradient by the inverse Hessian (the matrix of second derivatives).
+
+<Equation id="eqn:newton" number="5" caption="Newton's method: precondition the gradient by the inverse Hessian. It nails a convex quadratic in a single step — but the Hessian is the problem at scale." latex="\theta_{t+1} = \theta_t - \big[\nabla^2 f(\theta_t)\big]^{-1}\,\nabla f(\theta_t)">
+
+$$
+\theta_{t+1} = \theta_t - \big[\nabla^2 f(\theta_t)\big]^{-1}\,\nabla f(\theta_t)
+$$
+
+</Equation>
+
+On a convex quadratic this converges in *one* step; it sees the bowl's exact shape and jumps to the bottom. The reason deep learning doesn't use it is brutal arithmetic. For $n$ parameters the Hessian has $n^2$ entries to store and costs on the order of $n^3$ to solve. At $n$ in the billions, $n^2$ is already impossible. So we settle for first-order methods that only ever touch the gradient, and we spend our cleverness, momentum, per-direction scaling, bias correction, approximating what Newton would have told us for free if only we could afford it.
+
+There's a nice unification hiding here, and it's the kind of cross-field rhyme this site keeps running into. Minimising $f$ means finding where $\nabla f = 0$, which is a *root-finding* problem on the gradient. Newton's method for optimisation is just Newton's method for root-finding applied to $\nabla f$, and stochastic gradient descent is a stochastic root-finder, the original setting of that 1951 Robbins-Monro paper. Seen from the right angle, SGD and Newton's method are the same algorithm wearing different budgets. Some food for thought next time someone calls one "first-order" and the other "second-order" as if they were unrelated.
+
+The loss surface, by the way, is a dynamical system: run the update and the parameters trace a flow, and the fixed points, minima and saddles, are exactly the equilibria we classify in the [phase portraits](/blog/phase-portraits-of-differential-equations/) post. Everything that learns on this site, the [attention](/blog/attention-from-the-inside-out/) layers, the [zoo of architectures](/blog/neural-network-zoo-explained/), the [KV-cache tricks](/blog/shrinking-the-kv-cache/), got that way by rolling downhill on a surface like the ones in the lab above. Set the preset to Bumpy, drop the learning rate, and watch the optimisers pick their way past the little traps. It's the same 1847 idea, still doing the work.
+
+## Reading further
+
+- [Cauchy, *Méthode générale pour la résolution des systèmes d'équations simultanées* (1847)](https://gallica.bnf.fr/ark:/12148/bpt6k2982c/f540). Comptes Rendus 25, 536-538. Two and a bit pages; the origin of steepest descent.
+- [Robbins & Monro, *A Stochastic Approximation Method* (1951)](https://doi.org/10.1214/aoms/1177729586). Annals of Mathematical Statistics 22, 400-407. The ancestor of SGD, and the source of the step-size conditions above.
+- [Sutskever et al., *On the importance of initialization and momentum in deep learning* (2013)](https://proceedings.mlr.press/v28/sutskever13.html). ICML. The paper that showed momentum, done right, matters for deep nets.
+- [Kingma & Ba, *Adam: A Method for Stochastic Optimization* (2015)](https://arxiv.org/abs/1412.6980). ICLR. The optimiser you actually use, equation (4) and all.
+- [Dauphin et al., *Identifying and attacking the saddle point problem* (2014)](https://arxiv.org/abs/1406.2572). NeurIPS. The argument that saddles, not local minima, dominate high-dimensional loss surfaces.
+- [Wilson et al., *The Marginal Value of Adaptive Gradient Methods* (2017)](https://arxiv.org/abs/1705.08292). NeurIPS. The case that well-tuned SGD can still beat Adam at generalisation.

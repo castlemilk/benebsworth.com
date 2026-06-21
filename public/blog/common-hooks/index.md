@@ -2,13 +2,39 @@
 title: Common Hooks
 date: '2019-04-20T22:12:03.284Z'
 author: Ben Ebsworth
-description: Collection of common hook usage examples as well as custom implementations
+description: >-
+  Working React Hooks examples — a stale-closure-proof counter and a custom
+  useResizeObserver — plus when useReducer replaces Redux and why ResizeObserver
+  beats IntersectionObserver.
 labels: 'technology,react'
 keywords: null
 release: true
+takeaways:
+  - >-
+    Hooks expose React's core primitives — state, context, lifecycle, and refs —
+    through a functional API, often replacing Redux/redux-saga with lighter,
+    more modular code.
+  - >-
+    useReducer is the Redux-shaped hook: it takes a (state, action) => newState
+    reducer and returns the current state paired with a dispatch method.
+  - >-
+    Prefer the functional updater setCount(c => c + 1) over setCount(count + 1)
+    — it reads the latest state and avoids stale closures from the render-time
+    value.
+  - >-
+    ResizeObserver is the correct API for tracking element dimensions;
+    IntersectionObserver tracks visibility, not size — and a useEffect cleanup
+    must disconnect it.
 markdown_url: /blog/common-hooks/
 canonical_url: 'https://benebsworth.com/blog/common-hooks/'
 ---
+## Key takeaways
+
+- Hooks expose React's core primitives — state, context, lifecycle, and refs — through a functional API, often replacing Redux/redux-saga with lighter, more modular code.
+- useReducer is the Redux-shaped hook: it takes a (state, action) => newState reducer and returns the current state paired with a dispatch method.
+- Prefer the functional updater setCount(c => c + 1) over setCount(count + 1) — it reads the latest state and avoids stale closures from the render-time value.
+- ResizeObserver is the correct API for tracking element dimensions; IntersectionObserver tracks visibility, not size — and a useEffect cleanup must disconnect it.
+
 From the first watching of Reactconf 2018 keynote, where [Hooks]([link here](https://reactjs.org/docs/hooks-intro.html)) were first introduced I was taken aback by the simplicity of the approach but the far reaching applicability to solving common problems within design and build of react applications. It was very reminicent of quote from Albert Einstein:
 
 > Everything should be made as simple as possible, but not simpler
@@ -54,13 +80,13 @@ function Example() {
 }
 ```
 
-Note the functional updater form `setCount(c => c + 1)` rather than `setCount(count + 1)` — passing a function avoids stale closures by always operating on the latest state value instead of the `count` captured at render time.
+Note the functional updater form `setCount(c => c + 1)` rather than `setCount(count + 1)`. Passing a function avoids stale closures by always operating on the latest state value instead of the `count` captured at render time.
 
 ### useEffect
 
 ##### useResizerObserver
 
-Provides a mechanism to fetch element size using the [ResizeObserver API](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). Note that this is the correct API for observing dimensions — the Intersection Observer API tracks element visibility, not size.
+Provides a mechanism to fetch element size using the [ResizeObserver API](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). Note that this is the correct API for observing dimensions. The Intersection Observer API tracks element visibility, not size.
 
 >useResizerObserver.tsx
 

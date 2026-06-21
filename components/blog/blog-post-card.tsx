@@ -26,6 +26,11 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
                 <time className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
                   {fmtDate(post.date)}
                 </time>
+                {post.readingTime ? (
+                  <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                    · {post.readingTime} min read
+                  </span>
+                ) : null}
               </div>
               <h2 className="font-display text-xl font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover/spot:text-blog sm:text-2xl">
                 {post.title}
@@ -59,7 +64,9 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
                 <div className="relative h-24 w-32 overflow-hidden rounded-lg border border-[var(--color-border)] bg-black/20 sm:h-28 sm:w-40">
                   <img
                     src={post.heroImage}
-                    alt=""
+                    alt={post.title}
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 h-full w-full object-cover opacity-85 transition-transform duration-500 group-hover/spot:scale-110 group-hover/spot:opacity-100"
                   />
                 </div>

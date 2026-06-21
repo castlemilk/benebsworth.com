@@ -2,7 +2,9 @@
 title: Hello World
 date: '2019-04-16T22:12:03.284Z'
 author: Ben Ebsworth
-description: First blog post introducing motivations and goals
+description: >-
+  The first post on Ben Ebsworth's blog: a living, personal-wiki space for
+  exploring technologies, capturing learnings, and refining ideas over time.
 labels: 'general,personal'
 keywords: null
 release: true

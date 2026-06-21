@@ -6,6 +6,11 @@ description: 'Exploring Kapitan as a generic configuration management tool: its 
 labels: technology,kubernetes,developer experience
 keywords: kapitan,reclass,inventory,jinja2,kadet,jsonnet,helm,kubernetes,configuration management,templating,yaml,terraform,GitOps,DevOps
 release: true
+takeaways:
+  - "Kapitan's reclass inventory splits config into composable classes and per-target overrides, resolving an inheritance chain into one fully-merged parameter set where later classes win."
+  - "One resolved parameter set can fan out through jinja2, kadet (manifests as Python), jsonnet and rendered Helm charts in a single compile pass."
+  - "kapitan compile emits plain, fully-rendered files into a per-target compiled/ directory with no templating left, ready to apply or hand to GitOps."
+  - "Kapitan fits where you need many kinds of output (manifests, Terraform, scripts, docs) kept in sync from one source; Helm wins for shareable charts, Kustomize for light patching."
 ---
 
 [Kapitan](https://kapitan.dev/) is a generic configuration management tool that tackles a problem most templating tools only solve for a single target: how do you keep one authoritative description of your system and generate every artefact your environments actually need from it? Rather than being tied to Kubernetes, Kapitan treats Kubernetes manifests, Terraform files, scripts, documentation and arbitrary config as equally valid outputs of the same compile step.
@@ -14,7 +19,7 @@ release: true
 
 The heart of Kapitan is its **inventory**, which is built on top of [reclass](https://github.com/kapicorp/reclass). The inventory is a hierarchy of YAML files split into two ideas: **classes** and **targets**.
 
-Classes are reusable, composable units of configuration. A class can declare parameters, and crucially it can include other classes. This lets you build up shared configuration in layers — a `common` class for things every service needs, a `kubernetes/dev` class for cluster-specific values, a `component/postgres` class for a particular dependency — and then mix them together. Parameters resolve through the inheritance chain, with later classes overriding earlier ones, so you get a clear, predictable order of precedence.
+Classes are reusable, composable units of configuration. A class can declare parameters, and crucially it can include other classes. This lets you build up shared configuration in layers (a `common` class for things every service needs, a `kubernetes/dev` class for cluster-specific values, a `component/postgres` class for a particular dependency) and then mix them together. Parameters resolve through the inheritance chain, with later classes overriding earlier ones, so you get a clear, predictable order of precedence.
 
 Targets are the concrete things you want to compile: usually one per environment-and-service combination, like `dev-frontend` or `prod-billing`. A target is mostly a list of the classes it includes, plus any final overrides specific to that target. Reclass merges the whole chain into a single, fully-resolved parameter set for each target.
 
@@ -24,16 +29,16 @@ Because parameters can reference one another, the inventory becomes a genuine so
 
 A target's parameters are useless until they are turned into files. Kapitan does this through **input types** declared in the target's `compile` block. The same resolved inventory can be fed to several different rendering engines, and you pick whichever suits the artefact:
 
-- **jinja2** — classic text templating, ideal for scripts, documentation, config files and small YAML snippets where you mostly want variable substitution and simple control flow.
-- **kadet** — write your manifests as Python. Instead of fighting whitespace in a template, you build objects programmatically, which is far nicer for anything with real logic, loops or reuse. Kadet is Kapitan's answer to "templating YAML is painful".
-- **jsonnet** — a data templating language with functions, composition and strong support for generating large JSON/YAML structures, popular in the Kubernetes world.
-- **helm** — render existing Helm charts with values driven from the inventory, so you can fold third-party charts into the same workflow without abandoning them.
+- **jinja2**: classic text templating, ideal for scripts, documentation, config files and small YAML snippets where you mostly want variable substitution and simple control flow.
+- **kadet**: write your manifests as Python. Instead of fighting whitespace in a template, you build objects programmatically, which is far nicer for anything with real logic, loops or reuse. Kadet is Kapitan's answer to "templating YAML is painful".
+- **jsonnet**: a data templating language with functions, composition and strong support for generating large JSON/YAML structures, popular in the Kubernetes world.
+- **helm**: render existing Helm charts with values driven from the inventory, so you can fold third-party charts into the same workflow without abandoning them.
 
 There are also helpers for plain `copy`, pulling in `external` files and `remove` for tidying output. The point is that one parameter set can drive a Jinja-rendered runbook, a Kadet-generated set of Kubernetes manifests and a Helm chart render in the same pass.
 
 ## Compiled output
 
-Running `kapitan compile` walks every target, resolves its inventory, runs each declared input type and writes the results into a `compiled/` directory, namespaced per target. What lands there is plain, fully-rendered files — Kubernetes YAML, Terraform, scripts, whatever you asked for — with no templating left in them. That output is what you apply, commit or hand to a GitOps pipeline.
+Running `kapitan compile` walks every target, resolves its inventory, runs each declared input type and writes the results into a `compiled/` directory, namespaced per target. What lands there is plain, fully-rendered files (Kubernetes YAML, Terraform, scripts, whatever you asked for) with no templating left in them. That output is what you apply, commit or hand to a GitOps pipeline.
 
 Kapitan also has first-class support for **secrets** through its references feature, letting you keep encrypted values in the inventory (backed by GPG, cloud KMS, Vault and others) and have them resolved at compile time. So the secret management lives in the same single source of truth rather than in a separate, parallel system.
 
@@ -43,6 +48,6 @@ The mental model is worth stating plainly. Most tools render one kind of thing f
 
 ## When Kapitan fits versus Helm or Kustomize
 
-[Helm](https://helm.sh/) is a packaging and distribution tool. If your goal is to publish a versioned, shareable chart for others to install — with a values file as the public interface — Helm's repository and release story is hard to beat. [Kustomize](https://kustomize.io/) sits at the other end: it is deliberately template-free, layering patches over a base set of Kubernetes manifests, and it is an excellent intermediate step before reaching for heavier templating.
+[Helm](https://helm.sh/) is a packaging and distribution tool. If your goal is to publish a versioned, shareable chart for others to install (with a values file as the public interface), Helm's repository and release story is hard to beat. [Kustomize](https://kustomize.io/) sits at the other end: it is deliberately template-free, layering patches over a base set of Kubernetes manifests, and it is an excellent intermediate step before reaching for heavier templating.
 
-Both, however, are Kubernetes-shaped and largely single-output. Kapitan earns its place when your problem is broader: many environments, many services, and many *kinds* of output that all need to stay in sync from one set of parameters. If you are coordinating Kubernetes manifests alongside Terraform, generated scripts and documentation, and you want a real inheritance model so shared values are defined exactly once, Kapitan's inventory-plus-multiple-inputs approach fits in a way single-purpose templating tools do not. For a single chart shared with the world, reach for Helm; for light patching of manifests, reach for Kustomize; for a contextualised, multi-output single source of truth, Kapitan is the more natural home — and the three are not mutually exclusive, since Kapitan can render Helm charts and emit Kustomize-friendly bases as just two more outputs.
+Both, however, are Kubernetes-shaped and largely single-output. Kapitan earns its place when your problem is broader: many environments, many services, and many *kinds* of output that all need to stay in sync from one set of parameters. If you are coordinating Kubernetes manifests alongside Terraform, generated scripts and documentation, and you want a real inheritance model so shared values are defined exactly once, Kapitan's inventory-plus-multiple-inputs approach fits in a way single-purpose templating tools do not. For a single chart shared with the world, reach for Helm; for light patching of manifests, reach for Kustomize; for a contextualised, multi-output single source of truth, Kapitan is the more natural home. The three are not mutually exclusive anyway, since Kapitan can render Helm charts and emit Kustomize-friendly bases as just two more outputs.

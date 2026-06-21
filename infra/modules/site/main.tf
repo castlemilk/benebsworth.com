@@ -48,6 +48,56 @@ resource "aws_cloudfront_origin_access_control" "oac" {
   signing_protocol                  = "sigv4"
 }
 
+# Security response headers. Static export can't set headers in app code, so
+# they're applied at the edge.
+#
+# CSP notes (validated against the built output):
+#   - script-src/style-src need 'unsafe-inline': the static export inlines the
+#     theme (anti-FOUC) + Next bootstrap scripts and ~hundreds of style="..."
+#     attributes, and a static site can't mint per-request nonces. Still useful:
+#     it pins script/style/connect to 'self' and blocks framing/object/base.
+#   - img-src allows https://i.ytimg.com for the YouTube talk thumbnails on /about.
+#   - fonts are self-hosted by next/font (no Google Fonts host needed).
+resource "aws_cloudfront_response_headers_policy" "security" {
+  name = "security-${replace(var.domain, ".", "-")}"
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      include_subdomains         = true
+      preload                    = true
+      override                   = true
+    }
+    content_type_options {
+      override = true
+    }
+    frame_options {
+      frame_option = "DENY"
+      override     = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+    content_security_policy {
+      override = true
+      content_security_policy = join("; ", [
+        "default-src 'self'",
+        "base-uri 'self'",
+        "object-src 'none'",
+        "frame-ancestors 'none'",
+        "form-action 'self'",
+        "script-src 'self' 'unsafe-inline'",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: https://i.ytimg.com",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "frame-src 'none'",
+        "upgrade-insecure-requests",
+      ])
+    }
+  }
+}
+
 resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
   default_root_object = "index.html"
@@ -60,12 +110,13 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   default_cache_behavior {
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "s3"
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
-    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6" # Managed-CachingOptimized
+    allowed_methods            = ["GET", "HEAD"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = "s3"
+    viewer_protocol_policy     = "redirect-to-https"
+    compress                   = true
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6" # Managed-CachingOptimized
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.security.id
     function_association {
       event_type   = "viewer-request"
       function_arn = aws_cloudfront_function.rewrite.arn

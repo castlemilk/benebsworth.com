@@ -37,9 +37,12 @@ function remarkImageBasePath(basePath?: string) {
 // attacher with `basePath`; the attacher returns the transformer.
 
 /**
- * Reads intrinsic pixel dimensions from a PNG / GIF / JPEG header. Zero-dep and
- * best-effort: returns null on anything it can't parse (SVG, WebP, missing file)
- * so the build never breaks — the image just ships without explicit dimensions.
+ * Reads intrinsic pixel dimensions from a PNG / GIF / JPEG / WebP header.
+ * Zero-dep and best-effort: returns null on anything it can't parse (SVG,
+ * missing file) so the build never breaks — the image just ships without
+ * explicit dimensions. WebP matters most here: nearly every hero/inline image
+ * on the site is `.webp`, so parsing it is what actually reserves layout space
+ * and prevents CLS on long-form posts.
  */
 function imageDimensions(file: string): { width: number; height: number } | null {
   try {
@@ -47,9 +50,35 @@ function imageDimensions(file: string): { width: number; height: number } | null
     const buf = Buffer.alloc(65536)
     const n = fs.readSync(fd, buf, 0, 65536, 0)
     fs.closeSync(fd)
-    if (n < 24) return null
+    if (n < 30) return null
     if (buf[0] === 0x89 && buf[1] === 0x50) return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) } // PNG
     if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) return { width: buf.readUInt16LE(6), height: buf.readUInt16LE(8) } // GIF
+    // WebP: "RIFF"...."WEBP" then a 4CC chunk header. Three encodings carry the
+    // canvas size in different layouts (VP8 lossy / VP8L lossless / VP8X extended).
+    if (
+      buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 && // RIFF
+      buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50 // WEBP
+    ) {
+      const fourcc = buf.toString('ascii', 12, 16)
+      if (fourcc === 'VP8 ') {
+        // Lossy: 14-bit width/height little-endian at offsets 26/28.
+        return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff }
+      }
+      if (fourcc === 'VP8L') {
+        // Lossless: 14-bit (size-1) fields packed across bytes 21..24 after the 0x2f sig.
+        const b1 = buf[21], b2 = buf[22], b3 = buf[23], b4 = buf[24]
+        const width = 1 + (((b2 & 0x3f) << 8) | b1)
+        const height = 1 + (((b4 & 0x0f) << 10) | (b3 << 2) | ((b2 & 0xc0) >> 6))
+        return { width, height }
+      }
+      if (fourcc === 'VP8X') {
+        // Extended: 24-bit (size-1) canvas dimensions little-endian at offsets 24/27.
+        const width = 1 + (buf[24] | (buf[25] << 8) | (buf[26] << 16))
+        const height = 1 + (buf[27] | (buf[28] << 8) | (buf[29] << 16))
+        return { width, height }
+      }
+      return null
+    }
     if (buf[0] === 0xff && buf[1] === 0xd8) { // JPEG: scan for a Start-Of-Frame marker
       let o = 2
       while (o < n - 8) {
@@ -108,6 +137,14 @@ export function MdxContent({
         source={source}
         components={mdxComponents}
         options={{
+          // next-mdx-remote v6 defaults `blockJS` to true, which injects a
+          // remark plugin that strips JSX *expression* attributes — so
+          // `params={{ ... }}` and `height={420}` on lab embeds were silently
+          // dropped (string attrs like `effect`/`caption` survived, masking it).
+          // Our MDX is first-party, version-controlled content, so restore
+          // standard MDX expression handling.
+          blockJS: false,
+          blockDangerousJS: false,
           mdxOptions: {
             // remark-math parses `$...$` and `$$...$$` into math nodes;
             // rehype-katex renders them as KaTeX HTML.

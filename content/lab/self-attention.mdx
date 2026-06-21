@@ -1,25 +1,34 @@
 <LabSide effect="self-attention" height={400} params={{ tokens: 6, heads: 3, temperature: 0.8, speed: 1 }} caption="Multi-head self-attention in motion. The highlighted token is the query; arcs and particles flow to each key with density ∝ attention weight. Each head (different hue) attends at a different preferred offset, and that preference drifts over time.">
 
-## The Core Idea
+## The core idea
 
-Self-attention lets every token in a sequence build its representation as a **weighted average of the others**. The weights aren't fixed — they're computed by asking, for each pair of tokens, *how relevant is this one to me?* In a transformer this is the scaled dot-product $\operatorname{softmax}(QK^\top/\sqrt{d_k})$, but the visual essence is simpler: some tokens matter a lot (bright, fast-moving streams), most matter a little (faint arcs).
+Self-attention lets every token in a sequence rebuild itself as a **weighted average of the others** — but the weights aren't fixed. They're computed on the fly by asking, for each pair of tokens, *how relevant is this one to me?* Some tokens matter a lot, most matter a little, and crucially the same token attends differently depending on what it currently is. That single trick — content deciding its own routing — is what lets transformers model long-range structure without any hard-wired notion of distance.
 
-This lab renders that mechanism as a live particle network. The bright, pulsing node is the current **query** — it cycles through the sequence. The coloured arcs are its **attention weights** to each **key**, one hue per head, with particles flowing along them at a density proportional to the weight.
+This lab renders the mechanism as a live particle network. The bright, pulsing node is the current **query**; it cycles through the sequence. The coloured arcs are its attention weights to every **key**, one hue per head, with particles flowing along them at a density proportional to the weight.
 
 </LabSide>
 
-## What to watch
+## How it works
 
-- **The query spotlight moves.** Every second or so a new token becomes the query and its outgoing pattern redraws. Notice how the *same* token attends differently depending on what it is.
-- **Heads specialise.** Each head has a slowly drifting "preferred relative offset" — head 0 tends to look nearby, higher heads reach further across the sequence. Turn the **Heads** control up and you'll see several distinct attention patterns overlaid in different hues, exactly as multi-head attention does in a real model.
-- **Temperature sharpens or flattens.** Drag it low and each query collapses onto one near-certain key (the arcs thin to a single bright stream — the "greedy" regime where training gradients vanish). Drag it high and the distribution flattens, every token weighted near-equally (the signal washes out). The useful middle is where real models live.
-
-## The mechanism
-
-For the active query $q$ and a candidate key $k$, a head computes a compatibility score and normalises over all keys:
+Each token is projected into a query vector $q$ and a key vector $k$. For the active query and a candidate key, a head computes a compatibility score — the dot product — scales it down, then normalises across all keys with a softmax so the weights sum to one:
 
 $$
 \alpha_{q,k} = \operatorname{softmax}_k\!\left(\frac{q \cdot k}{\sqrt{d_k}}\right)
 $$
 
-The arcs above draw $\alpha$ directly. Add more **Tokens** to grow the sequence; add more **Heads** to stack independent attention patterns. The whole picture is the contents of a single transformer block's attention layer, running forever.
+The $1/\sqrt{d_k}$ factor keeps the scores from blowing up as the dimension grows, which would otherwise push the softmax into a saturated, gradient-starved corner. The arcs above draw $\alpha$ directly: brightness and particle density are the weight. The new representation of the query is then $\sum_k \alpha_{q,k}\,v_k$ — the average of the value vectors, weighted by exactly these arcs.
+
+## Where it shows up
+
+The whole picture is the contents of a single transformer block's attention layer, the building block under every modern language and vision model. Two things are worth watching:
+
+- **Heads specialise.** Each head has a slowly drifting preferred relative offset — lower heads look nearby, higher heads reach across the sequence. Stack several and you see distinct patterns overlaid in different hues, exactly as multi-head attention does in a real model.
+- **Temperature is the knife edge.** Drag it low and each query collapses onto one near-certain key (the greedy regime where gradients vanish); drag it high and the distribution flattens until every token is weighted near-equally and the signal washes out. Real models live in the useful middle.
+
+## The knobs
+
+- **Tokens** — length of the sequence; more tokens, more keys to attend over.
+- **Heads** — number of independent attention patterns stacked, one hue each.
+- **Temperature** — sharpens (low) or flattens (high) the softmax over keys.
+- **Speed** — pace of the query cycle and particle flow.
+- **Color** — base hue the per-head palette is derived from.

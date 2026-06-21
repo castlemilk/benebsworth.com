@@ -15,9 +15,33 @@ keywords: >-
   cloud,pipelines,tutorial,docker-for-mac,minikube,registry,task,taskrun,pipeline
   resource,production,dockerless,security,googlecloudplatform,googlecloud
 release: true
+takeaways:
+  - >-
+    A local Kubernetes cluster (Minikube, Docker-for-Mac, KinD, microk8s) closes
+    the docker-compose-to-prod gap by running tests against the app's real
+    runtime, not a Docker-only approximation.
+  - >-
+    Kustomize is template-free overlays on explicit base resources, so it's
+    cognitively lighter than Helm's Sprig templating but loses dynamic
+    generation; ships inside kubectl with partial feature support.
+  - >-
+    Skaffold gives a local build-test-deploy loop with hot-reload, copying
+    source straight into running interpreted-language containers, and is the
+    only DX tool that integrates with Kustomize.
+  - >-
+    Minikube tunnel solves local ingress by natively routing the host to
+    in-cluster ClusterIPs, sidestepping the usual NodePort port-mapping dance
+    for ports 80/443.
 markdown_url: /blog/kubernetes-cicd-part-1/
 canonical_url: 'https://benebsworth.com/blog/kubernetes-cicd-part-1/'
 ---
+## Key takeaways
+
+- A local Kubernetes cluster (Minikube, Docker-for-Mac, KinD, microk8s) closes the docker-compose-to-prod gap by running tests against the app's real runtime, not a Docker-only approximation.
+- Kustomize is template-free overlays on explicit base resources, so it's cognitively lighter than Helm's Sprig templating but loses dynamic generation; ships inside kubectl with partial feature support.
+- Skaffold gives a local build-test-deploy loop with hot-reload, copying source straight into running interpreted-language containers, and is the only DX tool that integrates with Kustomize.
+- Minikube tunnel solves local ingress by natively routing the host to in-cluster ClusterIPs, sidestepping the usual NodePort port-mapping dance for ports 80/443.
+
 Developer experience is a challenging topic when it comes to Kubernetes. This is mainly associated with the complexity
  involving the understanding of the primitives in kubernetes, such as networking into the cluster, the `Pod` construct and getting configuration into an app. The theory and understanding of Kubernetes itself will be out of scope for this discussion; instead we'll focus on how we can reduce the burden of these complexities, and
  demonstrate how we can get closer to unifying the local developer environment with a kubernetes production run-time environment.
@@ -47,7 +71,7 @@ These tools give us a local cluster that we can then deploy our application, and
 
 With our application running with its required dependencies, we can then run tests suites for validating conformance/integration and performance, where because we are running in a Kubernetes cluster, we are more accurately representing the reality of the applications runtime environment.
 
-![local-clusters](/blog/kubernetes-cicd-part-1/local-clusters.webp)
+![Comparison table of local Kubernetes cluster tools: Minikube, Docker for Mac with Kubernetes, KinD, and microk8s](/blog/kubernetes-cicd-part-1/local-clusters.webp)
 
 *A Comparison of the different local cluster tools available*
 
@@ -67,7 +91,7 @@ Let's go through the available templating/configuration management options we ha
 
 * **jsonnet** - A lower-level data templating language, providing effectively an extension on the JSON specification. [jsonnet](https://jsonnet.org/) is a very rich templating language, and can act as a base language to build higher level abstractions on-top of. However as a bespoke templating language, it does have the implications of learning another language, deriving from JSON - when most other resources will be YAML based - which adds extra complexity into your configuration management. There'd have to be a justification for utilising jsonnet as your primary templating mechanism, when you factor in the current Kubernetes ecosystem of tooling, jsonnet does feel to fork as a non-contiguous framework for configuration management.
 
-![configuration-management](/blog/kubernetes-cicd-part-1/configuration-management.webp)
+![Comparison of Kubernetes configuration management tooling: Helm, Kustomize, Kapitan, and jsonnet](/blog/kubernetes-cicd-part-1/configuration-management.webp)
 
 *A Comparison of the different configuration management tooling in the Kubernetes ecosystem*
 
@@ -87,7 +111,7 @@ The tools we're going to go through here are specially aiming at making the deve
 
 * **Draft** - Perhaps one of the first generation tools in making the local developer experience more manageable on Kubernetes, it was the continual evolution of Helm, where it tried to look at how applications could be package, and also then deployed in the cleanest way possible. The development of *Draft* seems to slow to a halt, where the last change was over *5 months* ago.
 
-![developer-experience](/blog/kubernetes-cicd-part-1/developer-experience.webp)
+![Comparison of Kubernetes developer experience tools: Skaffold, Garden, Tilt, and Draft](/blog/kubernetes-cicd-part-1/developer-experience.webp)
 
 *A Comparison of the different developer experience tools*
 
@@ -107,7 +131,7 @@ Link: https://github.com/castlemilk/kubernetes-cicd
 
 *Clone this repository to run through the up-coming steps as we go*.Contained within this repository is a fullstack application which has the following topology
 
-![example-fullstack-application](/blog/kubernetes-cicd-part-1/example-fullstack-application.webp)
+![Topology diagram of the example fullstack application from the kubernetes-cicd repository](/blog/kubernetes-cicd-part-1/example-fullstack-application.webp)
 
 *Fullstack architecture for example application*
 
@@ -123,7 +147,7 @@ In order to produce an example developer workflow, we've chosen the following se
 
 Now if we look at translating the above top level topology, into a more specific set of Kubernetes resources, and the tools we'll use locally we have the following
 
-![local-fullstack-deployment](/blog/kubernetes-cicd-part-1/local-fullstack-deployment.webp)
+![Local development deployment of the fullstack app as Kubernetes resources using Minikube, Kustomize, and Skaffold](/blog/kubernetes-cicd-part-1/local-fullstack-deployment.webp)
 
 *Local development deployment representation and associated tools*
 
@@ -297,7 +321,7 @@ Hopefully you see the following:
 
 The end-to-end install steps for standing up the depicted remote architecture can be found in the `kubernetes-cicd` repo in the docs section [here](https://github.com/castlemilk/kubernetes-cicd/blob/master/docs/install.md)
 
-![remote-architecture](/blog/kubernetes-cicd-part-1/remote-architecture.webp)
+![Remote cluster architecture running Istio and Knative on GKE for the kubernetes-cicd example](/blog/kubernetes-cicd-part-1/remote-architecture.webp)
 
 *Remote cluster architecture. We'll unpack the details in this diagram is much more detail in this blog series. Including the ins and outs of productionizing Istio and Knative on GKE.*
 
@@ -313,7 +337,7 @@ With a working local deployment of our application we need to gain confidence in
 
 A contrast to our local development environment is shown below. Note that we now have external DNS names and some Istio constructs introduced. All of this configuration is contained within the *Kustomize* overlay found in `app/deploy/overlays/staging`. You'll see that there's additional `bases` for the staging and production environments which contain the required Istio configuration to enable ingress to our application from outside the cluster
 
-![local-development-stg](/blog/kubernetes-cicd-part-1/local-development-stg.webp)
+![Staging environment deployment with external DNS and Istio ingress constructs for end-to-end deployment](/blog/kubernetes-cicd-part-1/local-development-stg.webp)
 
 *Staging environment and associated ingress access and tooling required to carry out end-to-end deployment*
 

@@ -13,6 +13,10 @@ provider "dnsimple" {
 }
 variable "dnsimple_account" {
   type = string
+  # DNSimple's API path needs the NUMERIC account id (54968), not the account
+  # name ("benebsworth") — the name yields `GET /v2/benebsworth/... 401`. Default
+  # it so staging plan/apply only needs the (secret) token passed.
+  default = "54968"
 }
 variable "dnsimple_token" {
   type      = string

@@ -1,12 +1,26 @@
+## The core idea
+
+Hand a cloud of drifting particles a vector field and they organise themselves into rivers. Each particle reads a single number — an angle — from a smooth noise field beneath it, steps that way, and reads again. Nothing coordinates them, yet because neighbouring particles sample nearby noise values, they fall into the same currents. The result is the unmistakable look of streamlines: braided, sweeping, alive. It's the cheapest way to make motion that feels organic rather than mechanical.
+
 ## How it works
 
-A field of particles drifts across the canvas. Each frame, every particle samples a
-deterministic value-noise field at its current position to get a flow angle
-(`noise(x·scale, y·scale + time) · 2π`), then steps one unit in that direction. Because
-neighbouring points sample nearby noise values, the particles fall into smooth, river-like
-streams. As with the orbits, we never fully clear the canvas — a translucent fill each
-frame leaves a fading trail, so the streams read as flowing lines rather than dots. Lower
-**Trail** = longer streaks.
+The field is **value noise** — a deterministic, continuous function `noise(x, y)` that varies smoothly with position. Each frame, every particle samples it at its current location and turns the result into a heading:
+
+```
+angle = noise(x · scale, y · scale + t · 0.0002) · 2π
+```
+
+The particle then steps one unit along that heading:
+
+$$x \mathrel{+}= \cos(\theta)\cdot s, \qquad y \mathrel{+}= \sin(\theta)\cdot s$$
+
+Smoothness is the whole trick. Because `noise` changes gradually, two particles a few pixels apart get nearly the same angle, so they flow in parallel instead of scattering. The slow `t · 0.0002` term is a gentle drift through the field over time, so the currents breathe rather than freeze. Particles that wander off an edge wrap around to the opposite side, keeping the field full.
+
+## Trails and what to watch for
+
+The canvas is never fully cleared. Each frame paints a translucent fill of the background colour, so older positions fade out gradually rather than vanishing — that's what turns moving dots into continuous streaks. Lower **Trail** means a fainter fill and longer-lived streaks.
+
+Watch the **Noise scale**. At small values the field has broad, gentle gradients and the particles form long laminar sweeps; crank it up and the field oscillates over short distances, breaking the flow into tight eddies and turbulence. This is the same family of technique behind generative art "flow field" plots, fluid-like background animations, and the painterly motion in tools like Processing — and it's a close cousin of how games scatter grass, hair, or magnetic field lines.
 
 ## Knobs
 

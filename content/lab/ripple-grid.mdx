@@ -1,11 +1,24 @@
+## The core idea
+
+A regular lattice of dots samples an invisible wave field. A handful of sources drift across the canvas, each radiating concentric ripples, and every dot reports the combined disturbance it feels at that instant. Where crests pile on crests the dots swell bright; where a crest meets a trough they cancel and the dots shrink to dim points. The result is a breathing grid of interference fringes — the same physics that paints the bright-and-dark bands of a ripple tank or a double-slit experiment, rendered as a field of pulsing dots.
+
 ## How it works
 
-A regular grid of dots samples a wave field. A few sources drift around the canvas, and at
-each dot we sum `sin(distance · freq − time)` from every source — classic wave
-interference, where overlapping crests reinforce and crests-meeting-troughs cancel. The
-averaged sum drives both the dot's radius and its opacity, so the grid breathes in bright
-ridges and dark valleys that sweep outward from the moving sources. With more **Sources**
-the interference pattern gets richer and less predictable.
+Each source $i$ sits at a drifting position $(x_i, y_i)$, tracing a slow Lissajous path so the pattern never settles. For a dot at distance $d_i$ from that source, its contribution is a travelling circular wave:
+
+```
+contribution = sin(d · freq − ω·t)
+```
+
+The dot sums this over every active source and divides by their count, giving an averaged disturbance $v \in [-1, 1]$:
+
+$$v = \frac{1}{N}\sum_{i=1}^{N} \sin\!\left(d_i \cdot \text{freq} - \omega t\right)$$
+
+That single number drives the dot's appearance. Remapped to $[0, 1]$, it sets both the radius ($r = 1 + (v{\cdot}0.5{+}0.5)\cdot\text{amp}$) and the opacity, so peaks render as fat, opaque dots and nulls as faint specks. Sweep your eye across the grid and you're reading the wavefronts directly: rings of equal phase expand from each source, and where two ring systems overlap, the familiar hyperbolic fringes of two-source interference appear.
+
+## Why it never repeats
+
+With a single source you get clean, expanding rings — pretty, but predictable. Add a second and the magic starts: the fixed difference in path length to the two sources carves stationary-looking fringe lines through the moving rings, exactly the interference pattern Young observed with light. Because the sources here are *moving*, those fringes themselves drift, bend, and reconnect, so the field never quite repeats. Crank the source count and the superposition becomes dense and quasi-random — many incommensurate wavelengths beating against each other, the visual signature of a field with no dominant period. It's a small reminder that "complex" patterns often need only a few simple oscillators added together.
 
 ## Knobs
 

@@ -8,7 +8,7 @@ import { Breadcrumb } from '@/components/site/breadcrumb'
 import { LAB_EFFECTS, getEffect, CATEGORIES } from '@/lib/lab/registry'
 import { EffectPlayground } from '@/components/lab/effect-playground'
 import { MdxContent } from '@/components/mdx/mdx-content'
-import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
+import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 
 const CATEGORY_ACCENT: Record<string, string> = {
   art: '#00e0b8',
@@ -95,7 +95,7 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
       price: '0',
       priceCurrency: 'USD',
     },
-    author: { '@type': 'Person', name: 'Ben Ebsworth', url: SITE_URL },
+    author: authorLd,
   }
   return (
     <>

@@ -11,10 +11,34 @@ keywords: >-
   kubernetes,local development,minikube,docker,docker
   registry,macOS,testing,homebrew,virtualbox,docker-for-desktop,docker-for-mac
 release: true
+takeaways:
+  - >-
+    A LoadBalancer service in Minikube has no real external IP until you run
+    `minikube tunnel`, which routes the cluster CIDR through the VM and makes
+    the assigned ClusterIP directly reachable.
+  - >-
+    kubectl context lives in `~/.kube/config`; kubectx makes switching between
+    minikube and a remote cluster a one-word command instead of verbose config
+    edits.
+  - >-
+    `kubectl get events -w` against etcd is often the fastest way to debug a
+    stuck workload, exposing scheduling failures and image-pull errors the
+    deployment status hides.
+  - >-
+    Unlike docker-for-mac (which auto-exposes the first LoadBalancer on
+    localhost via VPNKit), Minikube assigns unpredictable IPs, so an ingress
+    controller plus /etc/hosts mapping gives a stable entrypoint.
 markdown_url: /blog/install-minikube/
 canonical_url: 'https://benebsworth.com/blog/install-minikube/'
 ---
-![Minikube](/blog/install-minikube/minikube.png)
+## Key takeaways
+
+- A LoadBalancer service in Minikube has no real external IP until you run `minikube tunnel`, which routes the cluster CIDR through the VM and makes the assigned ClusterIP directly reachable.
+- kubectl context lives in `~/.kube/config`; kubectx makes switching between minikube and a remote cluster a one-word command instead of verbose config edits.
+- `kubectl get events -w` against etcd is often the fastest way to debug a stuck workload, exposing scheduling failures and image-pull errors the deployment status hides.
+- Unlike docker-for-mac (which auto-exposes the first LoadBalancer on localhost via VPNKit), Minikube assigns unpredictable IPs, so an ingress controller plus /etc/hosts mapping gives a stable entrypoint.
+
+![The Minikube logo, the Kubernetes community tool for running a Kubernetes cluster locally on MacOS](/blog/install-minikube/minikube.png)
 Minikube is a "blessed" or kubernetes community endorsed mechanism to run a [Kubernetes](https://kubernetes.io) cluster locally. Minikube provides a streamlined way of managing the bootstrap process of the Kubernetes cluster as well as the interaction of the chosen virtualization tooling, on MacOS this could be either [Virtualbox](https://www.virtualbox.org/wiki/Downloads), [HyperKit](https://github.com/moby/hyperkit), [VMware](https://my.vmware.com/en/web/vmware/info/slug/desktop_end_user_computing/vmware_fusion/11_0).
 
 In this post we'll try and capture all of the common steps required to standup a local environment to enable test and development of applications locally. Some of the challenges we'll address are as follows:
@@ -58,7 +82,7 @@ With the required tools installed we can now start a local kubernetes cluster by
 foo@bar:~$ minikube start
 ```
 
-![install-minikube](/blog/install-minikube/minikube-install.gif)
+![Animated terminal showing the minikube start command bootstrapping a local Kubernetes cluster in VirtualBox](/blog/install-minikube/minikube-install.gif)
 
 Once installed we can check the status of our cluster by running the following:
 

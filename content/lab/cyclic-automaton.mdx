@@ -1,13 +1,21 @@
+## The core idea
+
+A cyclic cellular automaton is a grid where every cell holds a colour from a fixed cycle, and the only rule is "wait your turn." Each colour can only ever advance to the *next* one in the cycle, and only when enough neighbours already hold that next colour. From pure random noise, this single constraint is enough to organise the whole grid into rotating spirals — order emerging spontaneously, with no global coordination and no notion of distance.
+
 ## How it works
 
-This is a cyclic cellular automaton. Each cell holds a state from `0` to `states − 1`. On
-every tick, a cell looks at its four orthogonal neighbours: if at least **Threshold** of
-them already hold the *next* state `(s + 1) % states`, the cell advances to that state;
-otherwise it waits. Because the "next" state chases its predecessor around the cycle, the
-grid self-organises out of random noise into spirals and rotating spiral cores. The colour
-of a cell is its state index mapped around the hue wheel (`hsl(state/states · 360 …)`) — so
-the **Hue base** knob is kept for consistency, but the live palette is derived from state, not
-from that single colour.
+Each cell holds a state from `0` to `states − 1`. On every tick, a cell looks at its four orthogonal (von Neumann) neighbours and counts how many already hold the *next* state `(s + 1) mod states`. If at least **Threshold** of them do, the cell advances; otherwise it waits another tick:
+
+```
+next(s) = (s + 1) mod states  if  count(neighbours == (s+1) mod states) ≥ threshold
+        = s                    otherwise
+```
+
+The update is synchronous — every cell decides from the *same* old grid before any of them change — and the grid wraps toroidally, so there are no edges to disrupt the pattern. Because state `s + 1` can only ever recruit state `s`, each colour relentlessly chases its predecessor around the cycle. A small kink in the noise becomes a wavefront; a wavefront that curves around a defect becomes a spiral that pumps colour outward forever.
+
+## Why spirals win
+
+This is a discrete cousin of the excitable media that produce real spiral waves — heart tissue, the Belousov–Zhabotinsky reaction, slime-mould aggregation. The signature is the same: transient noise first, then a few rotating cores take over and the spirals tile the plane, since a spiral is the most efficient way to keep a cyclic wave self-sustaining. Watch the **Threshold** knob to feel the phase transition. At low thresholds a cell advances at the slightest provocation and the grid churns into chaotic static; raise it and advancement becomes choosy, demanding consensus, which lets coherent spiral cores nucleate and lock in. There is a narrow band where the system is "just excitable enough" — too eager and it's noise, too reluctant and it freezes. The interesting structure lives on that edge.
 
 ## Knobs
 

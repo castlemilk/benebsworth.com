@@ -12,10 +12,33 @@ keywords: >-
   templates,sprig,values,releases,helm install,helm upgrade,helm
   rollback,repositories,kustomize,CI/CD,yaml,kubectl
 release: true
+takeaways:
+  - >-
+    Helm 3 dropped the server-side Tiller component: it's a client-only binary
+    using your kubeconfig/RBAC and stores release state as Secrets in the
+    namespace.
+  - >-
+    A chart's `version` (SemVer of the templates) and `appVersion` (the deployed
+    app's version) are deliberately independent fields in Chart.yaml.
+  - >-
+    Each install/upgrade creates a new revision Helm retains, so `helm rollback`
+    makes deployments reversible during an incident instead of reconstructing
+    state by hand.
+  - >-
+    Reach for Kustomize when you own the manifests and variation is small; reach
+    for Helm to package for others or when you need releases, history and
+    rollback.
 markdown_url: /blog/using-helm/
 canonical_url: 'https://benebsworth.com/blog/using-helm/'
 ---
-[Helm](https://helm.sh/) is the package manager for Kubernetes. Where `kubectl apply` deals in individual manifests, Helm deals in _charts_ — versioned, parameterised bundles of resources that you can install, upgrade and roll back as a single unit. If you have ever copied a folder of YAML between environments and hand-edited the image tag, replica count and namespace each time, Helm is the tool that turns that ritual into a templated, versioned artefact.
+## Key takeaways
+
+- Helm 3 dropped the server-side Tiller component: it's a client-only binary using your kubeconfig/RBAC and stores release state as Secrets in the namespace.
+- A chart's `version` (SemVer of the templates) and `appVersion` (the deployed app's version) are deliberately independent fields in Chart.yaml.
+- Each install/upgrade creates a new revision Helm retains, so `helm rollback` makes deployments reversible during an incident instead of reconstructing state by hand.
+- Reach for Kustomize when you own the manifests and variation is small; reach for Helm to package for others or when you need releases, history and rollback.
+
+[Helm](https://helm.sh/) is the package manager for Kubernetes. Where `kubectl apply` deals in individual manifests, Helm deals in _charts_: versioned, parameterised bundles of resources that you can install, upgrade and roll back as a single unit. If you have ever copied a folder of YAML between environments and hand-edited the image tag, replica count and namespace each time, Helm is the tool that turns that ritual into a templated, versioned artefact.
 
 It is worth being explicit that this post is about Helm 3. The architecture changed meaningfully from Helm 2: there is no longer a server-side **Tiller** component sitting in your cluster with broad permissions. Helm 3 is a client-only binary that talks to the Kubernetes API directly using your existing kubeconfig and RBAC, and it stores release state as Secrets in the release's namespace. That single change removed most of the security objections people had with early Helm.
 
@@ -35,7 +58,7 @@ mychart
     └── NOTES.txt     # printed after install
 ```
 
-`Chart.yaml` carries the metadata. The important fields are `version` (the chart's own [SemVer](https://semver.org/), bumped when you change the templates) and `appVersion` (the version of the application the chart deploys — these are deliberately independent). `values.yaml` holds the defaults, and everything under `templates/` is rendered against those values to produce the manifests Helm sends to the cluster.
+`Chart.yaml` carries the metadata. The important fields are `version` (the chart's own [SemVer](https://semver.org/), bumped when you change the templates) and `appVersion` (the version of the application the chart deploys, deliberately independent). `values.yaml` holds the defaults, and everything under `templates/` is rendered against those values to produce the manifests Helm sends to the cluster.
 
 ## Templating with Go templates and Sprig
 
@@ -61,11 +84,11 @@ spec:
           {{- end }}
 ```
 
-The interesting parts are the bits that go beyond substitution. `default` and `toYaml` come from Sprig; `include` and `nindent` are how you compose and indent named templates defined in `_helpers.tpl`. The `{{-` and `-}}` trim markers chew up surrounding whitespace, which matters because the output has to be valid YAML. Conditionals (`if`/`else`), iteration (`range`) and the full Sprig toolkit are all available, and this is exactly the power that makes Helm capable of expressing complex, optional configuration — and also the power that makes a sprawling chart hard to read.
+The interesting parts are the bits that go beyond substitution. `default` and `toYaml` come from Sprig; `include` and `nindent` are how you compose and indent named templates defined in `_helpers.tpl`. The `{{-` and `-}}` trim markers chew up surrounding whitespace, which matters because the output has to be valid YAML. Conditionals (`if`/`else`), iteration (`range`) and the full Sprig toolkit are all available, and this is exactly the power that makes Helm capable of expressing complex, optional configuration. It is also the power that makes a sprawling chart hard to read.
 
 ## Releases and revisions
 
-When you install a chart you create a **release** — a named instance of that chart running in the cluster. Each `install` or `upgrade` produces a new **revision**, and Helm keeps the history. This is the feature that earns Helm its keep: deployments become reversible.
+When you install a chart you create a **release**, a named instance of that chart running in the cluster. Each `install` or `upgrade` produces a new **revision**, and Helm keeps the history. This is the feature that earns Helm its keep: deployments become reversible.
 
 ```bash
 # install a release named "web" from a local chart
@@ -86,7 +109,7 @@ helm rollback web 3
 
 ## Repositories
 
-Charts are shared through repositories — these days most commonly an [OCI](https://helm.sh/docs/topics/registries/) registry, the same place your container images live, though the classic HTTP `index.yaml` repositories are still everywhere:
+Charts are shared through repositories. These days that most commonly means an [OCI](https://helm.sh/docs/topics/registries/) registry, the same place your container images live, though the classic HTTP `index.yaml` repositories are still everywhere:
 
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -101,4 +124,4 @@ This versioning-and-distribution story is genuinely Helm's strongest argument. P
 
 The two tools solve overlapping problems with opposite philosophies. [Kustomize](https://kustomize.io/) is template-free: you start from concrete, valid manifests and layer patches over them per environment. There are no `{{ }}` braces and the output is always real Kubernetes YAML, which keeps things legible and easy to reason about.
 
-Helm leans the other way — it asks you to author logic up front so a single chart can stretch across many situations through values and conditionals. I tend to reach for **Kustomize** when I own the manifests and the variation between environments is small and structural: replica counts, resource limits, image tags. I reach for **Helm** when I am _packaging_ something for other people to consume, when the variation is large or optional, or when I want first-class releases, revision history and `rollback`. They are not mutually exclusive either — running Helm to render a chart and then post-processing the output with Kustomize is a perfectly reasonable pattern, and one I have used to bend an upstream chart to fit without forking it.
+Helm leans the other way: it asks you to author logic up front so a single chart can stretch across many situations through values and conditionals. I tend to reach for **Kustomize** when I own the manifests and the variation between environments is small and structural: replica counts, resource limits, image tags. I reach for **Helm** when I am _packaging_ something for other people to consume, when the variation is large or optional, or when I want first-class releases, revision history and `rollback`. They are not mutually exclusive either. Running Helm to render a chart and then post-processing the output with Kustomize is a perfectly reasonable pattern, and one I have used to bend an upstream chart to fit without forking it.

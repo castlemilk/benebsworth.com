@@ -34,6 +34,7 @@ export default function BlogPage() {
     description: p.description,
     tags: p.tags,
     heroImage: p.heroImage,
+    readingTime: p.readingTime,
   }))
 
   const ld = [

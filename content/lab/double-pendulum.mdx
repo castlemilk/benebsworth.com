@@ -1,51 +1,31 @@
-<LabSide effect="double-pendulum" height={340} params={{ pendulums: 3, length: 0.5, gravity: 1.5, speed: 1, trail: 0.08 }} caption="Three double pendulums with nearly identical initial conditions. They start in sync, then diverge — the hallmark of chaos.">
+<LabSide effect="double-pendulum" height={340} params={{ pendulums: 3, length: 0.5, gravity: 1.5, speed: 1, trail: 0.08 }} caption="Three double pendulums released from near-identical angles. They start in lockstep, then peel apart — the signature of chaos.">
 
-## The Core Idea
+## The core idea
 
-The double pendulum is the gateway drug to chaos theory. Take one pendulum hanging from the tip of another, let it go, and watch deterministic equations produce behaviour that looks utterly random. Tiny differences in the starting angle — invisible to the naked eye — diverge exponentially until the two paths are completely different. This is **sensitive dependence on initial conditions**, the defining feature of chaotic systems.
+The double pendulum is the simplest mechanical system that goes properly chaotic. Hang one pendulum from the tip of another, give it a push, and fully deterministic equations produce motion that looks indistinguishable from random. The beauty is that nothing is hidden: there is no noise, no luck. Yet two copies started a hair's breadth apart in angle will, within seconds, swing wildly out of sync. That is **sensitive dependence on initial conditions** — chaos in its purest, most visible form.
 
 </LabSide>
 
-## The Mathematics
+## How it works
 
-The double pendulum has two degrees of freedom: angles θ₁ and θ₂. The equations of motion come from the Lagrangian `L = T − V` (kinetic minus potential energy). They are coupled, nonlinear, and have no closed-form solution:
+The system has two degrees of freedom: the angles θ₁ and θ₂ of the upper and lower arms. The equations of motion fall out of the Lagrangian `L = T − V` (kinetic minus potential energy). They are coupled, nonlinear, and have no closed-form solution:
 
 ```
 θ₁'' = [−g(2m₁+m₂)sin θ₁ − m₂g sin(θ₁−2θ₂) − 2sin(θ₁−θ₂)m₂(θ₂'²l₂ + θ₁'²l₁cos(θ₁−θ₂))]
         / [l₁(2m₁ + m₂ − m₂cos(2θ₁−2θ₂))]
-
-θ₂'' = [2sin(θ₁−θ₂)(θ₁'²l₁(m₁+m₂) + g(m₁+m₂)cos θ₁ + θ₂'²l₂m₂cos(θ₁−θ₂))]
-        / [l₂(2m₁ + m₂ − m₂cos(2θ₁−2θ₂))]
 ```
 
-The key nonlinearity is the `sin(θ₁ − θ₂)` coupling and the `cos(2θ₁ − 2θ₂)` in the denominator. These terms prevent analytical solution and create the sensitive dependence on initial conditions.
+The `sin(θ₁ − θ₂)` coupling and the `cos(2θ₁ − 2θ₂)` in the denominator are the troublemakers: they tie the two arms together nonlinearly, which both blocks an analytic solution and seeds the exponential divergence. The simulation integrates these equations numerically, advancing every pendulum in small time steps and tracing the path of each lower tip.
 
-<LabSide effect="double-pendulum" height={280} params={{ pendulums: 3, length: 0.5, gravity: 1.5, speed: 0.8, trail: 0.04 }} reverse={true} caption="Three pendulums, tighter trail. The initial cluster of paths rapidly spreads — trajectory divergence in action.">
+## Chaos is not randomness
 
-Try increasing the number of pendulums (1–3) and watch how the initially identical paths rapidly diverge. The trail persistence slider shows the history — longer trails reveal how the paths fan out over time.
+Here is the subtle part: the double pendulum is **deterministic**. Given exact initial conditions, its entire future is fixed. The trouble is that you can never measure those conditions exactly, and chaos relentlessly amplifies microscopic uncertainty into macroscopic unpredictability. Two trajectories starting δ₀ apart separate roughly like $\delta(t) \approx \delta_0\,e^{\lambda t}$, and a positive Lyapunov exponent λ is the formal definition of chaos. At low energy — small swings — the motion is nearly linear and well-behaved. Push the arms past horizontal and the nonlinear terms take over. This same mechanism is why weather forecasts decay after about ten days: not faulty physics, but a chaotic atmosphere outrunning our knowledge of its present state.
 
-</LabSide>
+## The knobs
 
-## The Lyapunov exponent
-
-Chaos is quantified by the **Lyapunov exponent** λ. If two nearby trajectories start distance δ₀ apart, after time t they are typically separated by:
-
-```
-δ(t) ≈ δ₀ · e^(λt)
-```
-
-For the double pendulum at high energy, λ > 0 — trajectories diverge exponentially. A positive Lyapunov exponent is the mathematical definition of chaos. It means that predicting the system's state more than a few seconds into the future requires impossibly precise knowledge of the present.
-
-### Energy and order
-
-At low energy (small angles), the double pendulum behaves almost linearly — it oscillates gently, and the two segments move in near-unison. Crank up the initial angle past ~90°, and the nonlinear terms kick in. Past 180°, you're in full chaos territory.
-
-## Chaos ≠ randomness
-
-Here's the subtle point: the double pendulum is **deterministic**. Given exact initial conditions, the future is fully determined. But in practice, you can never know the initial conditions exactly — and chaos amplifies that microscopic uncertainty into macroscopic unpredictability. This is why weather forecasts degrade after ~10 days, not because the physics is wrong, but because the atmosphere is a chaotic system.
-
-## Further reading
-
-- Strogatz, *Nonlinear Dynamics and Chaos* — Chapter 9 covers the double pendulum in detail.
-- [Double pendulum (Wikipedia)](https://en.wikipedia.org/wiki/Double_pendulum)
-- [Chaos theory](https://en.wikipedia.org/wiki/Chaos_theory)
+- **Pendulums** — how many copies to run (1–3). With more than one, they start almost identically and visibly diverge.
+- **Length** — the arm length, which sets the natural timescale of the swing.
+- **Gravity** — the gravitational pull; stronger gravity means faster, more energetic motion.
+- **Speed** — the simulation rate, fast-forwarding the integration.
+- **Trail** — how long the tip's path lingers. Longer trails reveal how the cluster of paths fans out over time.
+- **Color** — the accent hue for the trails and bobs.

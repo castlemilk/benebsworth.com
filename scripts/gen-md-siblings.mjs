@@ -92,6 +92,17 @@ const COMPONENT_DESCRIPTIONS = {
     'An interactive open-addressing hash table visualiser for the "how Python dicts really work" post. Inserting keys animates the djb2 hash being computed and the probe sequence ricocheting through slots (collisions flashed orange, the landing slot in the blog accent); deletes leave tombstones that lookups must probe past, and crossing the 2/3 load factor triggers an animated 2× resize and rehash. A probe-strategy toggle (Linear, Quadratic, Python-style Perturbed) shows how each walk clusters differently. The rendered post has the live version.',
   StorageEngineSim:
     'A dual-pane interactive contrasting the two on-disk storage philosophies for the "B-trees vs LSM-trees" post. A B-tree (read-optimised, update-in-place, with real top-down node splits that push the median up) sits beside an LSM-tree (write-optimised: a memtable that flushes to immutable L0 SSTable runs which then size-tier-compact into L1). Controls — Insert key, Insert ×8, a read-heavy/write-heavy workload toggle, and Reset — drive live counters (page writes, SSTable writes, live vs total bytes) and a qualitative read/write/space amplification readout illustrating the RUM-conjecture trade-off. The rendered post has the live version.',
+  // KV-cache compression post — five interactive explainers.
+  KvCacheCompressor:
+    'The centrepiece for the KV-cache compression post: frames the cache as a 4-D tensor (2·layers·KV-heads·tokens·head_dim, fp16) and lets the reader select a compression method to see which axis it attacks. Tabs: fp16 (baseline), TurboQuant 4-bit (precision axis — quantise each number to 4 bits), StreamingLLM and H2O (sequence axis — drop middle tokens, keep sinks + recent), Cross-layer sharing/CLA (layers axis), and linear attention/GLA (collapse the sequence into a fixed recurrent state). Selecting a method morphs a schematic of one layer\'s KV slab, updates a relative-footprint bar, and shows a card with the axis attacked, the keep/drop rule, the cost class (zero-shot lossless vs lossy vs needs-retraining), and the measured HumanEval-X Go pass@1. The rendered post has the live version.',
+  KvQuantDial:
+    'A TurboQuant quantisation explainer. Shows a 16-value group of cached numbers; a bit-width selector (fp16 / 8-bit / 4-bit) draws the quantisation grid and snaps each value to its nearest of 2^bits levels, drawing the residual error; a "rotate" toggle applies a fixed orthogonal (Hadamard) rotation that spreads a lone outlier across the group so the same levels land closer to every value — the trick that makes 4-bit essentially lossless. Read-outs: bits per value (including the per-group scale overhead at group size 32), memory ratio, and mean reconstruction error. The rendered post has the live version.',
+  KvEvictionWindow:
+    'The eviction failure-mode animation. Plots a token sequence (prompt + generated) along a token axis and shades what a streaming/H2O KV cache keeps (4 attention sinks + a recent window of budget−4 tokens) versus evicts, as generation advances. Controls: budget (64 / 256 / 512), prompt length, a generation scrubber + play, and a streaming/H2O policy toggle. The verdict line states whether the whole prompt is still cached: once the context length (prompt + generated) exceeds the budget, the prompt body scrolls out of the recent window and is evicted — the model writes code for a problem it can no longer see. The rendered post has the live version.',
+  KvAblationLedger:
+    'The attribution payoff chart. Lists every config from the compound-compression ablation as a pass@1 bar (exact counts out of 164) against the fp16 baseline, grouped as: quantise-only (8-bit and 4-bit sit on the baseline — lossless), evict @ budget 256 (streaming, H2O, and streaming+quant all collapse to the same 37.8% — so the budget is the cause, not the policy or the quantisation), evict @ budget 512 (recovers to baseline; streaming-512 + 4-bit is the recommended best), and needs-training (cross-layer and linear-attention collapse to 0% zero-shot). A toggle switches the bars to relative cache footprint. The rendered post has the live version.',
+  KvContextHistogram:
+    'Shows why the 15-problem smoke set was blind. A histogram of measured prompt lengths (tokens ≈ chars/4): the smoke set (15 problems, all under 48 tokens) overlaid on the full HumanEval-X Go set (164 problems, median ~100, max 334), with a movable eviction-budget line at 256 or 512. The smoke set never crosses 256, so a 256-token budget never evicted anything there. A "generated so far" slider shifts the distribution right (effective context = prompt + output), showing the count of problems that overflow the budget — and lose their prompt mid-generation — climbing far past the 4-of-164 visible at prefill. The rendered post has the live version.',
   // Note: the .md sibling script processes these and other MDX components
   // (IngressFlowBasic, EgressFlowBasic, EgressFlowAdvanced) the same way
   // — see entries above for the istio-patterns post.
@@ -218,7 +229,18 @@ function processPost(slugDir) {
   // Skip if title/date missing (would've thrown at build time anyway).
   if (!data.title || !data.date) return null
 
-  const body = absolutiseImages(stripMdx(content, slugDir), slugDir)
+  let body = absolutiseImages(stripMdx(content, slugDir), slugDir)
+
+  // Lead the markdown sibling with a "Key takeaways" section (from the post's
+  // `takeaways` frontmatter) so AI crawlers reading the .md get a citable,
+  // verbatim summary up front without parsing the whole article.
+  if (Array.isArray(data.takeaways) && data.takeaways.length) {
+    body =
+      '## Key takeaways\n\n' +
+      data.takeaways.map((t) => `- ${t}`).join('\n') +
+      '\n\n' +
+      body
+  }
 
   // Build the markdown frontmatter + body. We keep the original YAML
   // frontmatter so any tooling that consumes it (including the post

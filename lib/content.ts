@@ -10,10 +10,38 @@ function require_(cond: unknown, msg: string): asserts cond {
   if (!cond) throw new Error(`content validation: ${msg}`)
 }
 
-export type LoadedPost = BlogPost & { body: string; release: boolean }
+export type LoadedPost = BlogPost & {
+  body: string
+  release: boolean
+  dateModified?: string
+  /** Skimmable insights for the post header + JSON-LD abstract + .md siblings. */
+  takeaways?: string[]
+  /** Plain-prose word count (code/math/JSX stripped) — drives readingTime + SEO. */
+  wordCount: number
+  /** Estimated read time in minutes (≈230 wpm), min 1. */
+  readingTime: number
+}
 
 /** Minimal post shape for list/feed views — excludes the heavy `body` MDX source. */
-export type BlogPostSummary = Pick<LoadedPost, 'slug' | 'title' | 'date' | 'description' | 'tags' | 'heroImage'>
+export type BlogPostSummary = Pick<LoadedPost, 'slug' | 'title' | 'date' | 'description' | 'tags' | 'heroImage' | 'readingTime'>
+
+/**
+ * Word count over the rendered prose only — strip fenced code, JSX/component
+ * tags, and KaTeX math so the number reflects reading effort (and the SEO
+ * content-depth signal), not markup. Computed once at load so the post page,
+ * cards, feed and JSON-LD all agree.
+ */
+function readingStats(body: string): { wordCount: number; readingTime: number } {
+  const wordCount = body
+    .replace(/```[\s\S]*?```/g, ' ') // fenced code
+    .replace(/<[^>]+>/g, ' ')        // JSX / component tags
+    .replace(/\$\$[\s\S]*?\$\$/g, ' ') // display math
+    .replace(/\$[^$]+\$/g, ' ')      // inline math
+    .replace(/[#*_`>~|]/g, ' ')      // markdown punctuation
+    .split(/\s+/)
+    .filter(Boolean).length
+  return { wordCount, readingTime: Math.max(1, Math.round(wordCount / 230)) }
+}
 
 /**
  * A post is published iff it is not an explicit draft and its `release`
@@ -32,6 +60,7 @@ export function getAllPosts(): LoadedPost[] {
     const { data, content } = matter(raw)
     require_(data.title, `${slug}: missing title`)
     require_(data.date, `${slug}: missing date`)
+    const { wordCount, readingTime } = readingStats(content)
     return {
       slug,
       title: String(data.title),
@@ -41,6 +70,17 @@ export function getAllPosts(): LoadedPost[] {
         ? data.labels.split(',').map((t) => t.trim()).filter(Boolean)
         : data.labels) ?? []) as string[],
       heroImage: String(data.heroImage ?? data.hero_image ?? ''),
+      // Optional freshness signal. When a post is materially revised, set
+      // `dateModified` in frontmatter; otherwise JSON-LD/OG fall back to `date`.
+      dateModified: data.dateModified ?? data.date_modified
+        ? String(data.dateModified ?? data.date_modified)
+        : undefined,
+      // Optional skimmable insights — rendered as a "Key takeaways" block.
+      takeaways: Array.isArray(data.takeaways) && data.takeaways.length
+        ? (data.takeaways as unknown[]).map(String)
+        : undefined,
+      wordCount,
+      readingTime,
       draft: Boolean(data.draft ?? false),
       release: data.release !== false,
       body: content,

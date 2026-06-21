@@ -26,3 +26,9 @@ export const TokenSampler = dynamic(() => import('./token-sampler').then(m => ({
 export const MoEBlock = dynamic(() => import('./moe-block').then(m => ({ default: m.MoEBlock })), { ssr: false, loading })
 export const HashTableDemo = dynamic(() => import('./hash-table-demo').then(m => ({ default: m.HashTableDemo })), { ssr: false, loading })
 export const StorageEngineSim = dynamic(() => import('./storage-engine-sim').then(m => ({ default: m.StorageEngineSim })), { ssr: false, loading })
+
+export const KvCacheCompressor = dynamic(() => import('./kv-cache-compressor').then(m => ({ default: m.KvCacheCompressor })), { ssr: false, loading })
+export const KvQuantDial = dynamic(() => import('./kv-quant-dial').then(m => ({ default: m.KvQuantDial })), { ssr: false, loading })
+export const KvEvictionWindow = dynamic(() => import('./kv-eviction-window').then(m => ({ default: m.KvEvictionWindow })), { ssr: false, loading })
+export const KvAblationLedger = dynamic(() => import('./kv-ablation-ledger').then(m => ({ default: m.KvAblationLedger })), { ssr: false, loading })
+export const KvContextHistogram = dynamic(() => import('./kv-context-histogram').then(m => ({ default: m.KvContextHistogram })), { ssr: false, loading })

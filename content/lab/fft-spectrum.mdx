@@ -1,50 +1,42 @@
 <LabSide effect="fft-spectrum" height={340} params={{ waveType: "sine", noise: -40 }} caption="A pure sine wave produces a single sharp peak in the frequency spectrum. All energy concentrated at one frequency.">
 
-## The Core Idea
+## The core idea
 
-Every signal is a sum of sinusoids. The **Fast Fourier Transform (FFT)** is the algorithm that performs this decomposition — taking N time-domain samples and producing N frequency-domain bins, each representing the energy at a particular frequency. It's O(N log N) instead of the naive O(N²), which is the difference between "takes a second" and "takes a week."
+Every signal is a sum of sinusoids. The **Fast Fourier Transform (FFT)** is the algorithm that performs this decomposition — turning a window of time-domain samples into a set of frequency bins, each holding the energy at one frequency. What makes it beautiful is the cost: the FFT does in O(N log N) what the naive sum does in O(N²), which is the difference between a real-time analyser and a slideshow.
 
 </LabSide>
 
-## The Mathematics
+## How it works
 
-The Discrete Fourier Transform (DFT) maps N samples `x[0], ..., x[N−1]` to N frequency bins:
+The Discrete Fourier Transform (DFT) maps N samples `x[0], …, x[N−1]` to N complex bins:
 
 ```
-X[k] = Σₙ x[n] · e^(−j2πkn/N)     for k = 0, ..., N−1
+X[k] = Σₙ x[n] · e^(−j2πkn/N)     for k = 0, …, N−1
 ```
 
-Each `X[k]` is a complex number whose magnitude represents energy at frequency `f = k·fs/N` and whose phase represents timing.
+Each `X[k]` is a complex number: its magnitude is the energy at frequency `f = k·fs/N`, its phase the timing. Computed directly that double loop is N² multiply-adds. The FFT instead exploits the periodicity of the complex exponential to split each DFT into two half-size DFTs and recurses — the Cooley–Tukey radix-2 trick. This visualiser runs a 2048-point FFT (11 recursion stages) over a 48 kHz signal, so it does ~22,500 operations instead of ~4.2 million per frame — roughly 180× fewer.
 
-The FFT exploits the periodicity of the complex exponential to factor the DFT into two half-size DFTs, then recurses. For a 1024-point FFT, that's 10,240 operations instead of 1,048,576 — a 100× speedup.
+The resulting 1024 magnitude bins are folded into 256 bars spread on a **log frequency axis** from 20 Hz to 20 kHz, which is why a 440 Hz tone and its harmonics sit where your ear would put them.
 
-<LabSide effect="fft-spectrum" height={280} params={{ waveType: "square", noise: -40 }} reverse={true} caption="A square wave's spectrum shows odd harmonics (3f, 5f, 7f, ...) at 1/n amplitude.">
+<LabSide effect="fft-spectrum" height={280} params={{ waveType: "square", noise: -40 }} reverse={true} caption="A square wave's spectrum shows odd harmonics (3f, 5f, 7f, …) at 1/n amplitude.">
 
-### Different waveforms, different spectra
+### Every waveform has a fingerprint
 
-Switch the waveform control to see the spectral signatures:
+The shape of a signal in time and the shape of its spectrum are two views of the same thing:
 
-- **Sine**: Single peak. All energy at the fundamental.
-- **Square**: Odd harmonics at 1/n amplitude. Sharp edges require many harmonics.
-- **Sawtooth**: All harmonics at 1/n. The richest spectrum.
-- **Chirp**: Frequency sweeps upward → energy spreads across a band.
-
-</LabSide>
-
-<LabSide effect="fft-spectrum" height={280} params={{ waveType: "sine", noise: -10 }} caption="Sine wave with heavy noise (−10 dB SNR). The peak is still visible — the FFT pulls signals out of noise.">
-
-### Adding noise
-
-The FFT is a powerful tool for detecting signals buried in noise. A single-frequency signal concentrates all its energy in one bin, while noise spreads evenly. The **processing gain** of an N-point FFT is approximately `10·log₁₀(N/2)` dB — a 1024-point FFT gives ~27 dB of gain.
+- **Sine**: a single peak — all energy at the fundamental.
+- **Square / Triangle**: odd harmonics only; square falls off as 1/n, triangle as 1/n², so the triangle's spectrum dies away far faster.
+- **Sawtooth**: every harmonic at 1/n — the richest line spectrum.
+- **Two tones**: two clean peaks, the textbook test of frequency resolution.
+- **Chirp**: a frequency that sweeps upward smears its energy across a whole band.
 
 </LabSide>
 
-## Windowing
+## Pulling signals out of noise
 
-In practice, signals don't start and stop cleanly at FFT boundaries. **Spectral leakage** occurs when the signal period doesn't align with the FFT length — energy smears across adjacent bins. Window functions (Hann, Hamming, Blackman) taper the edges to reduce leakage at the cost of slightly wider main lobes.
+A periodic signal piles all its energy into a few bins; broadband noise spreads thinly across every bin. So the FFT acts as a matched comb — even when the time-domain trace looks like static, the peak still pokes above the floor. The **processing gain** of an N-point FFT is about `10·log₁₀(N/2)` dB, so this 2048-point transform buys roughly 30 dB. The catch is **spectral leakage**: when a tone's period doesn't divide the window evenly, its energy bleeds into neighbours. A tapering window fixes most of it — this renderer applies a **Hann window** before every transform, trading a slightly wider peak for far less smearing.
 
-## Further reading
+## The knobs
 
-- [Fast Fourier transform (Wikipedia)](https://en.wikipedia.org/wiki/Fast_Fourier_transform)
-- Lyons, *Understanding Digital Signal Processing* — the most accessible DSP textbook.
-- Cooley & Tukey (1965), *An Algorithm for the Machine Calculation of Complex Fourier Series*.
+- **Waveform** — choose the source signal: sine, square, sawtooth, triangle, two tones, or an upward chirp.
+- **Noise (dB)** — adds white noise from −60 dB (effectively clean) up to 0 dB, where the signal is buried. Watch how high you can push it before the peak vanishes.

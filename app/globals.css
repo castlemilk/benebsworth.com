@@ -264,11 +264,14 @@
   88%  { opacity: 1; }
   100% { stroke-dashoffset: 0; opacity: 0; }
 }
-/* Each letter snaps in with a crisp scale overshoot as the head passes its cell. */
+/* Each letter ignites in place — a quick opacity fade — exactly as the head
+   passes its cell, so the glyphs reveal along the drawing line. Opacity ONLY
+   (no scale/translate): an SVG-text transform relies on `transform-box: fill-box`,
+   which mobile Safari/WebKit doesn't honour for <text>, so the scale would anchor
+   at the SVG origin and the letter would slide in from the corner. */
 @keyframes glyphsettle {
-  0%   { opacity: 0; transform: scale(.45); }
-  60%  { opacity: 1; transform: scale(1.14); }
-  100% { opacity: 1; transform: scale(1); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .word text { transform-box: fill-box; transform-origin: center; }

@@ -74,15 +74,22 @@ export function GridNav({ latest }: { latest: Latest }) {
     setSeed(Math.floor(Math.random() * 1e9))
     function fit() {
       const w = window.innerWidth, h = window.innerHeight
-      const cols = w < 560 || h > w ? 4 : 5
-      const rows = cols === 4 ? 5 : 4
+      const portrait = h > w
+      const cols = w < 560 || portrait ? 4 : 5
+      // On a tall portrait phone/tablet the 4-wide grid is width-bound, so it
+      // renders short and floats in the middle of the viewport. Add a row there
+      // so the crossword grows down and the hero actually fills the screen
+      // (≤2 of the extra cells fall through to empty dotted cells — fine, it
+      // reads as crossword negative space). Desktop/landscape are untouched.
+      const rows = cols === 4 ? (portrait && h >= 740 ? 6 : 5) : 4
       // The grid claims most of the viewport and keeps scaling up on large screens
       // rather than capping at a fixed pixel box. The width/height budgets grow with
       // the viewport (so a 1440p/4K monitor gets a much bigger grid) but stay clamped
-      // so ultra-wide/4K never blows out, and CELL_MAX is the final ceiling. Small
-      // screens are untouched: the fractional fit + the 62px floor still bind there.
-      const availW = Math.min(w * 0.94, 1760)
-      const availH = Math.min(h * 0.72, 1040)
+      // so ultra-wide/4K never blows out, and CELL_MAX is the final ceiling. Portrait
+      // claims more height so the taller grid fills it; small screens stay bound by
+      // the fractional width fit + the 62px floor.
+      const availW = Math.min(w * (portrait ? 0.96 : 0.94), 1760)
+      const availH = Math.min(h * (portrait ? 0.8 : 0.72), 1100)
       const PAD_FRAC = 0.5
       const CELL_MIN = 62, CELL_MAX = 220
       const raw = Math.min(availW / (cols + PAD_FRAC * 2), availH / (rows + PAD_FRAC * 2))
@@ -105,7 +112,9 @@ export function GridNav({ latest }: { latest: Latest }) {
   // never clipped by the SVG bounds, and so labels open into empty header space
   // rather than colliding with the shuffle button / content below the grid. cy is
   // shifted down by LABEL_PAD to claim that top room; left/right padding stays PAD.
-  const LABEL_PAD = cell * 0.34
+  // On narrow (touch) layouts hover labels rarely open, so trim this so the grid
+  // sits closer to the header instead of carrying a tall empty band up top.
+  const LABEL_PAD = cell * (cols < 5 ? 0.12 : 0.34)
   const W = cols * cell + PAD * 2, H = rows * cell + PAD * 2 + LABEL_PAD
   const cx = (c: number) => PAD + c * cell + cell / 2
   const cy = (r: number) => PAD + LABEL_PAD + r * cell + cell / 2
@@ -171,13 +180,18 @@ export function GridNav({ latest }: { latest: Latest }) {
   )
 
   return (
-    <main className="font-mono relative flex min-h-screen flex-col items-center gap-4 p-4 sm:p-6">
+    <main className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 p-4 sm:justify-start sm:gap-4 sm:p-6">
       <ThemeToggle className="absolute right-4 top-4" />
-      <header className="w-full pt-2 text-center sm:pt-4">
-        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>
-        <p className="mt-1.5 font-mono text-[0.6rem] uppercase tracking-[0.32em] text-muted sm:text-[0.7rem] lg:text-[0.8rem] lg:tracking-[0.38em]">INFRA | SOFTWARE | HARDWARE</p>
+      <header className="w-full pt-3 text-center sm:pt-4">
+        <h1 className="font-display text-[2.1rem] font-bold leading-none tracking-[-0.03em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>
+        <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-muted sm:text-[0.7rem] lg:text-[0.8rem] lg:tracking-[0.38em]">INFRA | SOFTWARE | HARDWARE</p>
       </header>
-      <div className="flex w-full flex-1 items-center justify-center">
+      {/* Mobile: the whole title+matrix+shuffle block is centred by the main's
+          justify-center, so the matrix sits tight under the header and the leftover
+          height splits into even margins above the title and below the shuffle.
+          Desktop restores justify-start + a flex-1 wrapper that centres the grid in
+          the hero with the shuffle pinned to the bottom. */}
+      <div className="flex w-full items-center justify-center sm:flex-1">
       <div className="relative" style={{ width: W, height: H }}>
       {/* Shared GPU blob, behind the SVG. Mounted only after mount (client-only GL,
           no SSR/hydration concern); fades in per word on hover/focus. */}
@@ -246,7 +260,7 @@ export function GridNav({ latest }: { latest: Latest }) {
                 {path.map(([c, r], i) => (
                   <text key={i} x={cx(c)} y={cy(r)} textAnchor="middle" dominantBaseline="central"
                     fill={accent} fontWeight={700} fontSize={Math.round(cell * 0.46)}
-                    className="motion-safe:animate-[glyphsettle_.34s_cubic-bezier(.34,1.56,.64,1)_backwards]"
+                    className="motion-safe:animate-[glyphsettle_.2s_ease-out_backwards]"
                     style={{ animationDelay: `${letterDelay(i)}ms` }}>{w.text[i]}</text>
                 ))}
               </g>

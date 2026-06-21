@@ -42,22 +42,37 @@ else
   npm run build:archive
 fi
 
-# Two passes. `output: 'export'` copies public/** (favicon, OG images,
+# Three passes. `output: 'export'` copies public/** (favicon, OG images,
 # public/blog/**, public/projects/*) into out/ with NON-hashed names; only
-# _next/static/** is content-hashed. So ONLY _next/static/* may be cached
-# immutably; everything else (HTML, images, robots, sitemap, feed) gets a short
-# cache so updates propagate.
+# _next/static/** is content-hashed.
 #
-# Pass 2's `--exclude '_next/static/*'` also stops its own --delete from wiping
-# the immutable assets pass 1 just uploaded. The ARCHIVE_EXCLUDE expansion uses
+#   Pass 1 — _next/static/*  : content-hashed → immutable, 1 year.
+#   Pass 2 — media (images/fonts/video) : not hashed, but every deploy issues a
+#            CloudFront invalidation (/*) so the edge is always fresh; only
+#            BROWSER repeat-loads use this window. 1 day is a big win over the
+#            old 60s without leaving redesign iterations stale for long — raise
+#            to a week+ once content settles.
+#   Pass 3 — everything else (HTML, sitemap, feed, robots, llms, .md siblings)
+#            : short 60s cache so content/markup updates propagate fast.
+#
+# Each pass's filters partition the keyspace, so the per-pass `--delete` never
+# wipes another pass's freshly-uploaded keys. The ARCHIVE_EXCLUDE expansion uses
 # the bash 3.2-safe form so an empty array doesn't trip `set -u`.
+MEDIA_GLOBS=('*.webp' '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg' '*.avif' '*.ico' '*.woff' '*.woff2' '*.mp4' '*.webm')
+MEDIA_INCLUDE=(); MEDIA_EXCLUDE=()
+for g in "${MEDIA_GLOBS[@]}"; do MEDIA_INCLUDE+=(--include "$g"); MEDIA_EXCLUDE+=(--exclude "$g"); done
+
 aws --profile "$PROFILE" s3 sync out/ "s3://$BUCKET" --delete \
   "${ARCHIVE_EXCLUDE[@]+"${ARCHIVE_EXCLUDE[@]}"}" \
   --exclude '*' --include '_next/static/*' \
   --cache-control 'public,max-age=31536000,immutable'
 aws --profile "$PROFILE" s3 sync out/ "s3://$BUCKET" --delete \
   "${ARCHIVE_EXCLUDE[@]+"${ARCHIVE_EXCLUDE[@]}"}" \
-  --exclude '_next/static/*' \
+  --exclude '*' "${MEDIA_INCLUDE[@]}" --exclude '_next/static/*' \
+  --cache-control 'public,max-age=86400'
+aws --profile "$PROFILE" s3 sync out/ "s3://$BUCKET" --delete \
+  "${ARCHIVE_EXCLUDE[@]+"${ARCHIVE_EXCLUDE[@]}"}" \
+  --exclude '_next/static/*' "${MEDIA_EXCLUDE[@]}" \
   --cache-control 'public,max-age=60'
 
 aws --profile "$PROFILE" cloudfront create-invalidation --distribution-id "$DIST_ID" --paths '/*'

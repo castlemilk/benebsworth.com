@@ -1,0 +1,168 @@
+---
+title: Repair is just solving in disguise
+date: '2026-06-21T00:00:00.000Z'
+description: >-
+  I gave a 160M-parameter Go model a reflect-and-fix loop so it could bootstrap
+  past its own ceiling. It fixed zero bugs. The reason runs deeper than the code
+  — and it taught me my model had been memorising all along.
+labels: 'machine-learning,llm'
+release: true
+heroImage: /blog/repair-is-just-solving/hero.webp
+takeaways:
+  - >-
+    A self-correction critic built on a base model inherits that base's ceiling:
+    to repair a failed solution it has to solve the problem, and the base failed
+    because it couldn't.
+  - >-
+    pass@1 on a benchmark the model trained on measures memorisation, not skill.
+    My 160M model scored 83% on the leaked set and 0% on fresh problems of the
+    same difficulty.
+  - >-
+    Most of my early 'wins' were measurement bugs: a brace-truncating eval, a
+    missing goimports pass, and a headline +3.4 points that was a single problem
+    flipping against a weak baseline.
+  - >-
+    You cannot bootstrap a model past what it cannot already do. Genuine
+    capability comes from a bigger model or a broader corpus, not a cleverer
+    loop on top of a small one.
+markdown_url: /blog/repair-is-just-solving/
+canonical_url: 'https://benebsworth.com/blog/repair-is-just-solving/'
+---
+## Key takeaways
+
+- A self-correction critic built on a base model inherits that base's ceiling: to repair a failed solution it has to solve the problem, and the base failed because it couldn't.
+- pass@1 on a benchmark the model trained on measures memorisation, not skill. My 160M model scored 83% on the leaked set and 0% on fresh problems of the same difficulty.
+- Most of my early 'wins' were measurement bugs: a brace-truncating eval, a missing goimports pass, and a headline +3.4 points that was a single problem flipping against a weak baseline.
+- You cannot bootstrap a model past what it cannot already do. Genuine capability comes from a bigger model or a broader corpus, not a cleverer loop on top of a small one.
+
+Here is a claim I was sure I could make true: a small code model that reads its own failing test output, reflects on what went wrong, and rewrites the code will beat the same model writing code in one shot. Give it a feedback loop and it climbs. That is the whole premise of a self-improving system.
+
+So I built one. A 160M-parameter Go model drafts a function, I run `go test`, and if the tests fail the model gets the error and produces a reflection plus a revision. Train that critic on enough verified examples of "here's a broken attempt, here's the fix", and it should learn to repair.
+
+It fixed zero bugs. Not "a disappointing one or two" — zero, across every variant I tried. And chasing *why* turned into the most useful week I've spent on this project, because the answer wasn't a hyperparameter. It was a fact about what a small model can and can't be taught.
+
+## The setup
+
+Tekhne is my standing experiment in capability density: how much can you wring out of a deliberately tiny model? The base here is a 160M Go coder, SFT'd on HumanEval-X Go. On the full 164-problem benchmark it sits at 57.9% pass@1, which for a model this size is already punching above its weight.
+
+The reflective loop, which I'd been calling a Reflective Code Transformer, works like this. Start from the Go checkpoint, bolt on two extra transformer layers (16 → 18), freeze the original 16, and train only the new layers plus the head on transcripts shaped as `attempt → trace → reflection → revision`. At inference: draft, execute, and if the tests fail, feed the failure back and let the new layers emit a fix.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+For training data I needed verified repair traces: a failing attempt, the real error, and a revision that actually compiles and passes. I sampled drafts from the base model, kept the ones that failed, and used Gemini 2.5 Flash through the Vertex API as the teacher to write the reflection and the canonical fix. (The teacher hopping from Kimi to the `gemini` CLI to raw Vertex REST is its own saga of free tiers being quietly strangled. Another post.)
+
+That gave me 497 verified transcripts: 437 in-distribution HumanEval-X Go failures with canonical-solution revisions, plus 60 cross-domain MBPP repairs for variety. Seven times more data than my first attempt, and the same benchmark family as the eval. Everything pointed the right way.
+
+## The result that wouldn't move
+
+I trained the critic on all 497 traces, watched the validation loss fall to a healthy 0.90, and ran it on a held-out 30-problem slice.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+Twenty-two out of thirty, before and after. The critic fixed none of the eight failures. And this was with more data, cleaner training, and a much better loss than the run before it.
+
+Now, an earlier version of this experiment had given me a lovely "+3.4 points, 76.7%" result that I'd half-believed. So before concluding anything, I went back to check whether *that* number was real. It wasn't. It was one problem out of thirty flipping, measured against a weak 43.3% base from an undertrained checkpoint. A 1/30 artifact dressed up as a trend.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Before you call a change an improvement, ask how many problems actually moved. "+3.4 points" on a 30-problem set is exactly one problem. Against a noisy baseline, that's not a result — it's a coin landing the way you hoped.
+
+## Two bugs hiding in the ruler
+
+When a number won't move, suspect the ruler before the model. Two of my eight "failures" weren't the critic's fault at all.
+
+The first was brutal. My `build_full_code` helper reassembled the model's revision by extracting the first `{...}` block — which silently truncated *any* revision containing nested braces. A correct fix with an inner loop or struct literal became a compile error before it ever reached `go test`. The critic was sometimes right and I was throwing the answer away.
+
+The second was subtler and more interesting. The eval ran `go test` without first running `goimports`. So a revision that was logically perfect but left an unused import counted as a hard failure. Three of the eight held-out "failures" were pure import housekeeping — the kind any real pipeline fixes for free.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Run `goimports` and the base model's true score on that slice is 25/30, not 22/30. The eval had been *undercounting the base by ten points* on the full benchmark. I'd been trying to beat a baseline I'd accidentally handicapped.
+
+With both bugs fixed, the honest picture got sharper, not better. True base: 83.3%. Real logic bugs among the failures: five. Critic fixes of those five: still zero.
+
+## Why repair is just solving
+
+Here's the part I should have seen coming. Look at what the critic is actually asked to do. Given a failed attempt and an error, *produce the correct code*. For a genuine logic bug — not an unused import, an actual wrong algorithm — producing the correct code means solving the problem.
+
+And the base fails those five problems precisely because it can't solve them. The critic is the same 160M base with two extra layers welded on. It shares the base's ceiling. It can learn the *shape* of a good reflection, the calm "the loop was missing a termination condition" prose, and then emit code that's still wrong, because knowing how to narrate a fix is not the same as knowing the fix.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+To repair a solution you have to be able to solve the problem. A critic built on a model that couldn't solve it can't repair it either. It just learns to sound like it did.
+
+This reframes the whole loop. The most a draft-execute-revise loop can do is give the base model more *chances* — more samples, conditioned on the failure. That's real, but it's bounded by what the base could reach on its own by resampling. The honest way to write that down is the standard pass@k estimator:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\text{pass@}k = \mathbb{E}_{\text{problems}}\left[\,1 - \frac{\binom{n-c}{k}}{\binom{n}{k}}\,\right]
+```
+
+$$
+\text{pass@}k = \mathbb{E}_{\text{problems}}\left[\,1 - \frac{\binom{n-c}{k}}{\binom{n}{k}}\,\right]
+$$
+
+If a problem has $c = 0$ correct samples in the base's whole output distribution, no amount of $k$ saves it, and no reflection layer trained on the same base changes $c$. The critic can reorder which solvable problems get solved first. It cannot manufacture a solution the base never had.
+
+## So I went looking for the ceiling
+
+At this point the user steering the session said, reasonably: stop and think about how to push a 160M model to 90%. And then, the question that actually mattered — try an unseen benchmark.
+
+Because here's the uncomfortable thing about that 83.3%. HumanEval-X Go was in the training data. A high pass@1 on a benchmark you trained on tells you the model memorised the benchmark. It does not tell you the model can write Go.
+
+So I generated 25 fresh Go problems of comparable difficulty, never seen in training, verified that the canonical solutions compiled and passed, and ran the model.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+Zero. Not low — zero, and zero again at pass@10 with execution filtering. The model that "scored 83%" could not solve a single novel problem of the same difficulty. It wasn't a weak coder. It was a lookup table that had memorised one specific benchmark and learned, in any real sense, nothing.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+A leaked benchmark doesn't measure a small model's skill. It measures how completely it overfit. The gap between 83% leaked and 0% unseen *is* the memorisation, laid out as a single subtraction.
+
+The last thing I tried was the obvious repair for *that*: continually fine-tune on a few hundred diverse Go problems so the model learns to code rather than recite. I built 250 fresh problems and trained at a deliberately safe learning rate. The unseen score stayed at 0 of 25. And the memorised HumanEval-X slice collapsed from around 60% to 2.5% — one problem out of forty. The lookup table was brittle enough that nudging it toward generality shattered the one thing it was good at, without buying any generality back.
+
+## What I actually learned
+
+The honest bottom line is not a tidy success, and I'd rather report it straight. A 160M critic can't beat its base, because repair is solving and it shares the ceiling. And this particular base wasn't really solving anything — it had memorised a benchmark. You can't bootstrap a model past what it can't already do, however clever the loop on top.
+
+If I wanted the number to go up tomorrow, the cheapest honest win is already sitting there: run `goimports` and sample the base a few times. That reaches 83.3% on the leaked set with no critic at all, and it would almost certainly beat any 160M reflection layer. The loop was the interesting idea. The plumbing was the actual lever.
+
+Where this goes next is the harder, slower path — a less overfit base trained on a genuinely large and diverse corpus, where the model has real headroom to repair into. The whole appeal of a self-improving loop is getting something for nearly nothing. This week was a clean reminder that the "nearly nothing" has to include a model that already knows how to do the thing. Watch this space.
+
+## Reading further
+
+- [Evaluating Large Language Models Trained on Code](https://arxiv.org/abs/2107.03374) (Chen et al., 2021) — the Codex paper, and the source of the pass@k estimator above.
+- [Self-Refine: Iterative Refinement with Self-Feedback](https://arxiv.org/abs/2303.17651) (Madaan et al., 2023) — self-correction that works, and a useful contrast: it leans on a base strong enough that repair lands inside its ceiling.
+- [Large Language Models Cannot Self-Correct Reasoning Yet](https://arxiv.org/abs/2310.01798) (Huang et al., 2023) — the careful negative result; intrinsic self-correction often doesn't help, for reasons that rhyme with what I hit here.

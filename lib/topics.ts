@@ -85,6 +85,7 @@ const BY_SLUG: Record<string, Topic> = {
   'b-trees-vs-lsm-trees': TOPIC.software,
   'shrinking-the-kv-cache': TOPIC.software,
   'learning-by-rolling-downhill': TOPIC.software,
+  'repair-is-just-solving': TOPIC.software,
   'every-wire-is-an-rlc-circuit': TOPIC.ee,
   'am-fm-qam-the-modulation-zoo': TOPIC.ee,
   'software-defined-radio-in-100-lines': TOPIC.ee,

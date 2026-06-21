@@ -17,7 +17,17 @@ export const createRenderer = (
   const fg = theme?.fg ?? '#c8d8e8'
   const accent = '#00b4d8'
 
-  const margin = { left: 60, right: 60, top: 80, bottom: 60 }
+  // Margins are the design values at full lab size (w/h ≥ 400 → 60/80, unchanged),
+  // but shrink proportionally on tiny canvases (e.g. the ~62px landing mini-embed)
+  // so the plot area — and the derived `scale` and joint-arc radius — stay POSITIVE.
+  // Fixed 60/80 margins made pw/ph negative below ~140px, yielding a negative arc
+  // radius and a per-frame canvas throw.
+  const margin = {
+    left: Math.min(60, w * 0.15),
+    right: Math.min(60, w * 0.15),
+    top: Math.min(80, h * 0.2),
+    bottom: Math.min(60, h * 0.15),
+  }
   const pw = w - margin.left - margin.right
   const ph = h - margin.top - margin.bottom
 
@@ -145,7 +155,7 @@ export const createRenderer = (
 
       function arc(cx: number, cy: number, r: number, start: number, end: number) {
         ctx.beginPath()
-        ctx.arc(cx, cy, r, start, end)
+        ctx.arc(cx, cy, Math.max(0, r), start, end)
         ctx.stroke()
       }
 

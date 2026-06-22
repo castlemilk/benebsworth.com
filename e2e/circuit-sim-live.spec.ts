@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = 'http://localhost:3000'
+const BASE = process.env.CS_BASE ?? ''
 
 test.describe('live simulation validation', () => {
   test('voltage divider: DC voltages are correct', async ({ page }) => {
@@ -19,9 +19,8 @@ test.describe('live simulation validation', () => {
     await page.getByRole('button', { name: '▶ Run' }).click()
     await page.waitForTimeout(2000) // Let sim accumulate data
 
-    // Check the probes list shows the auto-probed node
-    const probesSection = page.getByText('Probes')
-    await expect(probesSection).toBeVisible({ timeout: 2000 })
+    // Check the scope shows the auto-probed channel (legend rms readout)
+    await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 2000 })
 
     // The scope canvas should be rendering (verify it exists and has content)
     const canvases = page.locator('canvas')
@@ -45,8 +44,8 @@ test.describe('live simulation validation', () => {
     await page.getByText('RC Low-Pass Filter').click()
     await page.waitForTimeout(500)
 
-    // The auto-probed node should be visible in the probes list
-    await expect(page.getByText('CH1')).toBeVisible({ timeout: 2000 })
+    // The auto-probed node should appear as a scope channel
+    await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 2000 })
 
     // Run with 100ms duration at 10µs steps
     await page.getByRole('button', { name: '▶ Run' }).click()
@@ -56,8 +55,8 @@ test.describe('live simulation validation', () => {
     const stopBtn = page.getByRole('button', { name: /Stop/ }).first()
     if (await stopBtn.isVisible({ timeout: 1000 })) await stopBtn.click()
 
-    // Verify the probes section still shows after stop
-    await expect(page.getByText('Probes')).toBeVisible({ timeout: 2000 })
+    // Verify the scope channel still shows after stop
+    await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 2000 })
   })
 
   test('RLC tank: ringing causes voltage oscillations visible in scope', async ({ page }) => {
@@ -168,9 +167,9 @@ test.describe('interaction edge cases', () => {
     await page.keyboard.press('Delete')
     await page.waitForTimeout(300)
 
-    // Delete should remove component — validation will update
-    // Verify the probes section is still visible (circuit still exists)
-    await expect(page.getByText('Probes')).toBeVisible({ timeout: 2000 })
+    // Delete should remove component — validation will update.
+    // The auto-probed channel persists (nodeV probe), so its rms readout stays.
+    await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 2000 })
   })
 
   test('rapid run/stop does not crash or leak', async ({ page }) => {
@@ -236,21 +235,21 @@ test.describe('interaction edge cases', () => {
     await page.getByText('Two-Stage RC Filter').click()
     await page.waitForTimeout(500)
 
-    // Auto-probe gives us CH1 — should be visible in probes list
-    await expect(page.getByText('CH1')).toBeVisible({ timeout: 3000 })
+    // Auto-probe gives us one scope channel — its rms readout is visible.
+    await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 3000 })
 
     // Remove the auto-probe by clicking ×
     await page.locator('button').filter({ hasText: '×' }).first().click()
     await page.waitForTimeout(200)
 
-    // CH1 should be gone from probes list
-    await expect(page.getByText('CH1')).not.toBeVisible({ timeout: 2000 })
+    // With no probes, the channel legend (and its rms readout) disappears
+    await expect(page.getByText(/rms/)).toHaveCount(0, { timeout: 2000 })
 
     // Load another sample — auto-probe should reappear
     await page.getByRole('button', { name: 'Circuit library' }).click()
     await page.getByText('Voltage Divider').click()
     await page.waitForTimeout(500)
 
-    await expect(page.getByText('CH1')).toBeVisible({ timeout: 3000 })
+    await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 3000 })
   })
 })

@@ -10,6 +10,8 @@ interface Props {
   onWaveform: (id: string, partial: Partial<Waveform>) => void
   onProbe?: (kind: ProbeKind, ref: number | string) => void
   onToggleSwitch?: (id: string) => void
+  /** Called when an editable field loses focus — closes the undo-coalescing window. */
+  onEndEdit?: () => void
 }
 
 const VALUE_LABEL: Record<string, string> = {
@@ -24,7 +26,7 @@ const WAVE_KINDS: { kind: WaveformKind; label: string }[] = [
   { kind: 'square', label: 'Square' },
 ]
 
-export function Inspector({ comp, onValue, onWaveform, onProbe, onToggleSwitch }: Props) {
+export function Inspector({ comp, onValue, onWaveform, onProbe, onToggleSwitch, onEndEdit }: Props) {
   if (!comp) {
     return (
       <div className="rounded-xl border border-[#1b2a38] bg-[#0a1118] p-4">
@@ -41,7 +43,7 @@ export function Inspector({ comp, onValue, onWaveform, onProbe, onToggleSwitch }
   const kind: WaveformKind = wf?.kind ?? 'dc'
 
   return (
-    <div className="rounded-xl border border-[#1b2a38] bg-[#0a1118] p-4 flex flex-col gap-3">
+    <div className="rounded-xl border border-[#1b2a38] bg-[#0a1118] p-4 flex flex-col gap-3" onBlur={() => onEndEdit?.()}>
       <div className="flex items-center justify-between">
         <p className="text-[10px] font-mono uppercase tracking-wider text-[#5c8294]/70">Inspector</p>
         <span className="text-[10px] font-mono text-[#22c8ee]/80">{COMPONENT_LABELS[comp.type]} · {comp.id}</span>

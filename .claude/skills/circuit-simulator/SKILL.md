@@ -16,6 +16,7 @@ lib/lab/circuit-sim/          ← HEADLESS engine (no React/DOM/canvas; vitest n
   devices.ts      → per-device STAMP registry (DC_STAMPS / TRANSIENT_STAMPS), StampContext, SolveEnv
   mna.ts          → assembleMNA(): builds the real MNA system by dispatching stamps
   solver.ts       → solveCircuit() (linear OR Newton-Raphson), solveDC(), LU (luDecompose/luSolve)
+  operating-point.ts → solveOperatingPoint(): DC node V + per-device branch I/power for the live overlay
   transient.ts    → transientStep(): trapezoidal companion step (delegates to solveCircuit)
   complex-solver.ts → cluSolve(): complex LU (interleaved re/im) for AC
   ac.ts           → acSweep(): complex MNA per log-spaced freq → Bode (mag dB + phase deg)
@@ -34,18 +35,35 @@ lib/lab/circuit-sim/          ← HEADLESS engine (no React/DOM/canvas; vitest n
 
 components/lab/circuit-sim/   ← React/Canvas layer
   instrument.ts        → INSTRUMENT palette (theme-independent dark) + voltageColor() heat ramp
-  circuit-canvas.tsx   → Pointer-Events canvas: place/drag/wire/pan/pinch-zoom/click-probe + draw
-  inspector.tsx        → selected-component editor: value, waveform editor, switch toggle, probe buttons
-  scope-canvas.tsx     → oscilloscope (trigger, volts/div, freeze, per-channel measurements)
+  circuit-canvas.tsx   → Pointer-Events canvas: place/drag/wire/pan/pinch-zoom/click-probe + draw;
+                         DC-overlay annotations (node V chips + branch I), HTML5 drop-to-place, ResizeObserver
+  inspector.tsx        → selected-component editor: value, waveform editor, switch toggle, probe buttons (onEndEdit closes undo coalesce)
+  scope-canvas.tsx     → oscilloscope (trigger, volts/div, freeze, per-channel measurements) + draggable Δt/ΔV cursors
   bode-canvas.tsx      → magnitude(dB) + phase(deg) vs log-frequency
   analysis-panel.tsx   → tabs: Transient (scope) | AC (Bode)
   scope-panel.tsx      → drawFlowParticles() (animated current on wires)
-  component-palette.tsx, toolbar.tsx, gallery-dialog.tsx
+  circuit-studio.tsx   → fullscreen "Studio" popout (createPortal): IDE layout — top run/transport bar, left palette,
+                         canvas, right inspector + probe-manager, bottom analysis dock, status bar; resizable docks
+                         (pointer-capture splitters, localStorage), keyboard shortcuts, Fullscreen API
+  probe-manager.tsx    → editable channel list: rename / recolour / show-hide / remove probes
+  studio-tour.tsx      → dismissable spotlight coach-mark walkthrough (data-tour anchors in circuit-studio); auto-opens
+                         once per browser (localStorage cs.studio.tourSeen), replayable via the studio header "?" button
+  react-bits.tsx       → StarBorder + ShinyText (reactbits.dev-style) for the "Open Studio" CTA (keyframes in globals.css: cs-star-*, cs-shine)
+  component-palette.tsx (draggable + Duplicate), toolbar.tsx, gallery-dialog.tsx
 
-app/lab/circuit-sim/          ← Next route: page.tsx (metadata) + circuit-sim-page.tsx (wires it up, ?c= hydration)
+app/lab/circuit-sim/          ← Next route: page.tsx (metadata) + circuit-sim-page.tsx (wires it up, ?c= hydration,
+                                 "Pop out to Studio" toggle — embedded view + studio SHARE one useCircuitEditor)
 ```
 
 **Iron rule:** the engine (`lib/lab/circuit-sim/`) is headless — never import React/JSX/DOM/canvas there. Placement validation, the solver, and all tests run without a browser.
+
+## Editor hook (`use-circuit-editor.ts`) — the single source of UI state
+
+One `useCircuitEditor()` instance drives BOTH the embedded widget and the fullscreen studio (passed as `editor`). Beyond placement/wiring/probing it owns: **undo/redo** (`past`/`future` circuit snapshots, coalesced per gesture via a `historyCoalesce` key — drags/typing collapse to one step; `endInteraction()` closes the window), **duplicateComponent**, **pause/resume/step + `simSpeed`** (Run resumes a paused sweep unless the topology changed; `runFrame` is a pure stepper — it deep-copies companion `{vPrev,iPrev}` so it never mutates the caller), **DC overlay** (`showDcOverlay` → derived `dcOp` recomputed off the live circuit when not running), and **probe edits** (rename/recolour/visibility/clear).
+
+## Studio (`circuit-studio.tsx`)
+
+Fullscreen overlay portalled to `document.body` (z-100). Esc is owned by the canvas only when it has something to cancel (placing/wiring/selection) — it `stopPropagation`s then, else bubbles to the studio's window listener which closes it. Number keys 1–9 place components, Space run/pause, S step, ⌘Z/⌘⇧Z undo/redo, ⌘D duplicate, O dc-overlay, F fullscreen.
 
 ## Data model (`types.ts`)
 
@@ -127,7 +145,9 @@ Programmatic test API: `assertDC(circuit,{node:V},tol)`, `assertTransient(...)`,
 
 ## Testing
 
-vitest `node` env; the suite covers solver/transient/devices/mna/ac/complex-solver/results/measure/diode-switch/opamp/validator/placement/wiring/yaml/storage/laws/verifier. `placement.test.ts` validates every sample (zero error-severity issues — no diagonal wires; grid-aligned terminals). Run: `npx vitest run lib/lab/circuit-sim/`.
+vitest `node` env; the suite covers solver/transient/devices/mna/ac/complex-solver/results/measure/**operating-point**/diode-switch/opamp/validator/placement/wiring/yaml/storage/laws/verifier. `placement.test.ts` validates every sample (zero error-severity issues — no diagonal wires; grid-aligned terminals). Run: `npx vitest run lib/lab/circuit-sim/`.
+
+**E2E** (`e2e/circuit-sim*.spec.ts`, incl. `circuit-sim-studio.spec.ts` for the popout): Playwright. Specs use `const BASE = process.env.CS_BASE ?? ''` — default (relative URLs) runs against the **static export** that `playwright.config` serves at `:4321` (so `npm run build` first), or set `CS_BASE=http://localhost:3000` to run against a live `next dev`. Studio assertions key off `data-testid="circuit-studio"` / `studio-run` and the status-bar text; the scope-channel signal is the legend `rms` readout (NOT a "Probes"/"CH1" label — those rotted once already).
 
 ## References
 

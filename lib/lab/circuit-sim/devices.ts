@@ -99,10 +99,10 @@ const stampCurrentSource: StampFn = (c, ctx, env) => {
 
 // ── Diode (nonlinear, Newton-Raphson companion) ────────────────────
 
-const D_IS = 1e-14      // saturation current
-const D_N = 1           // emission coefficient
-const D_VT = 0.025852   // thermal voltage @ ~300K
-const D_GMIN = 1e-12    // shunt conductance for convergence
+export const D_IS = 1e-14      // saturation current
+export const D_N = 1           // emission coefficient
+export const D_VT = 0.025852   // thermal voltage @ ~300K
+export const D_GMIN = 1e-12    // shunt conductance for convergence
 const D_VCRIT = D_N * D_VT * Math.log((D_N * D_VT) / (Math.SQRT2 * D_IS))
 
 /** SPICE-style junction voltage limiting to keep Newton iterations stable. */

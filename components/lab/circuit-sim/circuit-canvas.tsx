@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Circuit, CircuitComponent, ComponentType, Probe, ProbeKind, SimulationState } from '@/lib/lab/circuit-sim/types'
 import { SNAP_RADIUS } from '@/lib/lab/circuit-sim/types'
+import type { OperatingPoint } from '@/lib/lab/circuit-sim/operating-point'
 import { componentCurrent, componentVoltage } from '@/lib/lab/circuit-sim/results'
 import {
   drawGrid,
@@ -18,6 +19,9 @@ import { INSTRUMENT, voltageColor } from './instrument'
 import { computeManhattanPath } from '@/lib/lab/circuit-sim/wiring'
 import { drawFlowParticles } from './scope-panel'
 
+/** dataTransfer MIME used when dragging a component type from the palette. */
+export const DRAG_MIME = 'application/x-circuit-component'
+
 interface Props {
   circuit: Circuit
   placingType: ComponentType | null
@@ -25,6 +29,8 @@ interface Props {
   selectedId: string | null
   probes: Probe[]
   sim: SimulationState | null
+  /** DC operating point to overlay when not running (node voltages + branch currents). */
+  dcOp?: OperatingPoint | null
   panX: number
   panY: number
   zoom: number
@@ -40,6 +46,8 @@ interface Props {
   onAddProbe: (kind: ProbeKind, ref: number | string) => void
   onRemoveProbe: (id: string) => void
   onRotate: (id: string) => void
+  /** Called when a pointer gesture ends — closes the undo-coalescing window. */
+  onEndInteraction?: () => void
 }
 
 export function CircuitCanvas({
@@ -49,13 +57,17 @@ export function CircuitCanvas({
   selectedId,
   probes,
   sim,
+  dcOp,
   panX, panY, zoom,
   onPlaceComponent, onSelectComponent, onMoveComponent,
   onDeleteComponent, onStartWire, onCompleteWire, onCancelWiring, onCancelPlacing,
-  onPanZoom, onAddProbe, onRemoveProbe, onRotate,
+  onPanZoom, onAddProbe, onRemoveProbe, onRotate, onEndInteraction,
 }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  // Bumped by a ResizeObserver so the canvas redraws when its container resizes
+  // (responsive layout, studio docks, fullscreen) — there's no other dep change then.
+  const [resizeTick, setResizeTick] = useState(0)
   const [hoveredTerminal, setHoveredTerminal] = useState<{
     compId: string; nodeId: number; x: number; y: number
   } | null>(null)
@@ -137,7 +149,7 @@ export function CircuitCanvas({
       if (distToSegment(wx, wy, sx, sy, ex, ey) < threshold) return wire.nodeA
     }
     return null
-  }, [circuit.components])
+  }, [circuit.components, circuit.wires])
 
   // ── Render ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -162,15 +174,18 @@ export function CircuitCanvas({
     ctx.fillStyle = colors.bg
     ctx.fillRect(0, 0, w, h)
 
-    // Voltage scale for live node-heat coloring (baseline 5V, grows with the circuit).
+    // Heat-coloring source: the running sim takes precedence, else the DC overlay.
+    const live = sim?.running ?? false
+    const heatV: Float64Array | null = live ? sim!.nodeVoltages : (dcOp ? dcOp.nodeVoltages : null)
+    const heat = !!heatV
+    // Voltage scale for node-heat coloring (baseline 5V, grows with the circuit).
     let vmax = 5
-    if (sim) {
-      for (const v of sim.nodeVoltages) {
+    if (heatV) {
+      for (const v of heatV) {
         const a = Math.abs(v)
         if (isFinite(a) && a > vmax) vmax = a
       }
     }
-    const live = sim?.running ?? false
 
     ctx.save()
     ctx.translate(panX, panY)
@@ -223,17 +238,18 @@ export function CircuitCanvas({
         inc(`${gridSnap(wp.x)},${gridSnap(wp.y)}`)
       }
 
-      // Live: tint the wire by its node voltage (heat) with a phosphor glow.
-      const nv = sim && wire.nodeA < sim.nodeVoltages.length ? sim.nodeVoltages[wire.nodeA] : undefined
-      const wireColor = live && nv !== undefined && isFinite(nv) ? voltageColor(nv, vmax, colors) : undefined
+      // Tint the wire by its node voltage (heat) with a phosphor glow — when a sim
+      // is running OR the DC operating-point overlay is active.
+      const nv = heatV && wire.nodeA < heatV.length ? heatV[wire.nodeA] : undefined
+      const wireColor = heat && nv !== undefined && isFinite(nv) ? voltageColor(nv, vmax, colors) : undefined
 
       // Draw wire segments
       let px = fromTx, py = fromTy
       for (const wp of waypoints) {
-        drawWireSegment(ctx, px, py, wp.x, wp.y, colors, wireColor, live)
+        drawWireSegment(ctx, px, py, wp.x, wp.y, colors, wireColor, heat)
         px = wp.x; py = wp.y
       }
-      drawWireSegment(ctx, px, py, toTx, toTy, colors, wireColor, live)
+      drawWireSegment(ctx, px, py, toTx, toTy, colors, wireColor, heat)
     }
 
     // ── Draw junction dots ───────────────────────────────────────
@@ -321,12 +337,17 @@ export function CircuitCanvas({
     for (const comp of circuit.components) {
       drawComponent(ctx, comp, colors, comp.id === selectedId)
 
-      // Draw terminal dots — heat-tinted by node voltage while running.
+      // Draw terminal dots — heat-tinted by node voltage (live sim or DC overlay).
       for (const t of getAllTerminals(comp)) {
         const hovered = hoveredTerminal?.compId === comp.id && hoveredTerminal.nodeId === t.node
-        const tv = live ? sim!.nodeVoltages[t.node] : undefined
+        const tv = heatV ? heatV[t.node] : undefined
         drawTerminal(ctx, t.x, t.y, colors, hovered, tv !== undefined && isFinite(tv) ? voltageColor(tv, vmax, colors) : undefined)
       }
+    }
+
+    // ── DC operating-point overlay (node voltage chips + branch currents) ──
+    if (dcOp && !live) {
+      drawDcOverlay(ctx, circuit, dcOp, colors)
     }
 
     // ── Probe markers (voltage on nodes, current/diff on components) ──
@@ -379,7 +400,16 @@ export function CircuitCanvas({
     }
 
     ctx.restore()
-  }, [circuit, selectedId, hoveredTerminal, wiringFrom, panX, panY, zoom, probes, sim])
+  }, [circuit, selectedId, hoveredTerminal, wiringFrom, panX, panY, zoom, probes, sim, dcOp, resizeTick])
+
+  // Redraw on container resize (studio docks / fullscreen / responsive reflow).
+  useEffect(() => {
+    const wrap = wrapRef.current
+    if (!wrap || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(() => setResizeTick(t => t + 1))
+    ro.observe(wrap)
+    return () => ro.disconnect()
+  }, [])
 
   // Toggle a probe: add if not present, remove if already probing this target.
   const toggleProbe = useCallback((kind: ProbeKind, ref: number | string) => {
@@ -526,13 +556,16 @@ export function CircuitCanvas({
     pointersRef.current.delete(e.pointerId)
     if (pointersRef.current.size < 2) pinchRef.current = null
     else seedPinch() // re-establish a clean pair from the remaining pointers
+    const wasDragging = !!dragRef.current
     dragRef.current = null
     panRef.current = null
     if (place && !wasPinching && placingType) {
       const pos = canvasToWorld(e.clientX, e.clientY)
       onPlaceComponent(placingType, gridSnap(pos.x), gridSnap(pos.y))
     }
-  }, [canvasToWorld, placingType, onPlaceComponent, seedPinch])
+    // End of a gesture → close the undo-coalescing window (so each drag is one step).
+    if (wasDragging) onEndInteraction?.()
+  }, [canvasToWorld, placingType, onPlaceComponent, seedPinch, onEndInteraction])
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => endPointer(e, true), [endPointer])
   const handlePointerCancel = useCallback((e: React.PointerEvent) => endPointer(e, false), [endPointer])
@@ -550,17 +583,24 @@ export function CircuitCanvas({
   }, [panX, panY, zoom, onPanZoom])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    // Keys the canvas owns are stopped here so an enclosing listener (e.g. the
+    // Studio's window keydown) doesn't ALSO act on them — otherwise Esc would both
+    // deselect and close the studio, and 'r' would rotate twice (180°).
     if (e.key === 'Escape') {
-      if (placingType) { onCancelPlacing(); return }
-      if (wiringFrom) { onCancelWiring(); return }
-      onSelectComponent(null)
+      // Progressively cancel; stop propagation only when we actually consumed the
+      // Esc, so that with nothing to cancel it can bubble (e.g. the Studio closes).
+      if (placingType) { e.stopPropagation(); onCancelPlacing(); return }
+      if (wiringFrom) { e.stopPropagation(); onCancelWiring(); return }
+      if (selectedId) { e.stopPropagation(); onSelectComponent(null); return }
       return
     }
-    if (e.key === 'Delete' || e.key === 'Backspace') { if (selectedId) onDeleteComponent(selectedId) }
-    if (e.key === 'r' && selectedId) onRotate(selectedId)
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      if (selectedId) { e.stopPropagation(); onDeleteComponent(selectedId) }
+    }
+    if (e.key === 'r' && selectedId) { e.stopPropagation(); onRotate(selectedId) }
     if (e.key === 'p' && selectedId) {
       const comp = circuit.components.find(c => c.id === selectedId)
-      if (comp) toggleProbe('nodeV', comp.nodeA)
+      if (comp) { e.stopPropagation(); toggleProbe('nodeV', comp.nodeA) }
     }
   }, [placingType, wiringFrom, selectedId, onDeleteComponent, onSelectComponent, onCancelPlacing, onCancelWiring, onRotate, toggleProbe, circuit.components])
 
@@ -571,6 +611,22 @@ export function CircuitCanvas({
     if (selectedId) onDeleteComponent(selectedId)
   }, [placingType, wiringFrom, selectedId, onCancelPlacing, onCancelWiring, onDeleteComponent])
 
+  // Drag a component type from the palette and drop it onto the canvas.
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    if (e.dataTransfer.types.includes(DRAG_MIME)) {
+      e.preventDefault()
+      e.dataTransfer.dropEffect = 'copy'
+    }
+  }, [])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    const type = e.dataTransfer.getData(DRAG_MIME) as ComponentType
+    if (!type) return
+    e.preventDefault()
+    const pos = canvasToWorld(e.clientX, e.clientY)
+    onPlaceComponent(type, gridSnap(pos.x), gridSnap(pos.y))
+  }, [canvasToWorld, onPlaceComponent])
+
   return (
     <div
       ref={wrapRef}
@@ -579,6 +635,8 @@ export function CircuitCanvas({
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onContextMenu={handleContextMenu}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       <canvas
         ref={canvasRef}
@@ -599,8 +657,83 @@ export function CircuitCanvas({
           Wiring — click terminal to connect · Esc to cancel
         </div>
       )}
+      {dcOp && !(sim?.running) && (
+        <div className="absolute bottom-3 left-3 px-2.5 py-1 text-[10px] font-mono bg-[#0f1820]/90 border border-[#ffb37a]/40 rounded-md text-[#ffb37a] pointer-events-none">
+          DC operating point
+        </div>
+      )}
     </div>
   )
+}
+
+/** Rounded-rect path (avoids relying on ctx.roundRect for older runtimes). */
+function rr(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.arcTo(x + w, y, x + w, y + h, r)
+  ctx.arcTo(x + w, y + h, x, y + h, r)
+  ctx.arcTo(x, y + h, x, y, r)
+  ctx.arcTo(x, y, x + w, y, r)
+  ctx.closePath()
+}
+
+/** Small pill of annotation text with a tinted border, drawn in world coords. */
+function drawValueChip(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, text: string, color: string, center = false,
+) {
+  ctx.save()
+  ctx.font = 'bold 9px monospace'
+  const tw = ctx.measureText(text).width
+  const padX = 3, h = 12
+  const bx = center ? x - tw / 2 - padX : x
+  const by = y - h / 2
+  ctx.fillStyle = 'rgba(6,10,16,0.85)'
+  rr(ctx, bx, by, tw + padX * 2, h, 3); ctx.fill()
+  ctx.strokeStyle = color
+  ctx.globalAlpha = 0.45
+  ctx.lineWidth = 0.75
+  rr(ctx, bx, by, tw + padX * 2, h, 3); ctx.stroke()
+  ctx.globalAlpha = 1
+  ctx.fillStyle = color
+  ctx.textBaseline = 'middle'
+  ctx.textAlign = center ? 'center' : 'left'
+  ctx.fillText(text, center ? x : bx + padX, y + 0.5)
+  ctx.restore()
+}
+
+function formatVolts(v: number): string {
+  const a = Math.abs(v)
+  if (a >= 1000) return `${(v / 1000).toFixed(2)}kV`
+  if (a > 0 && a < 1) return `${(v * 1000).toFixed(0)}mV`
+  return `${v.toFixed(2)}V`
+}
+
+/** Annotate the schematic with DC node voltages (at nodes) and branch currents (on bodies). */
+function drawDcOverlay(
+  ctx: CanvasRenderingContext2D,
+  circuit: Circuit,
+  dcOp: OperatingPoint,
+  _colors: typeof INSTRUMENT,
+) {
+  // Branch currents above each component body.
+  for (const comp of circuit.components) {
+    if (comp.type === 'GND') continue
+    const i = dcOp.currents.get(comp.id)
+    if (i === undefined || !isFinite(i) || Math.abs(i) < 1e-12) continue
+    drawValueChip(ctx, comp.x, comp.y - 24, formatAmps(i), '#8fe6a4', true)
+  }
+  // Node voltage chips — one per unique non-ground node, at its first terminal.
+  const seen = new Set<number>()
+  for (const comp of circuit.components) {
+    for (const t of getAllTerminals(comp)) {
+      if (t.node <= 0 || seen.has(t.node)) continue
+      seen.add(t.node)
+      const v = dcOp.nodeVoltages[t.node]
+      if (v === undefined || !isFinite(v)) continue
+      drawValueChip(ctx, t.x + 9, t.y - 9, formatVolts(v), '#ffc69e')
+    }
+  }
 }
 
 /** Draw a probe marker (ring + label + optional live reading) at a world point. */

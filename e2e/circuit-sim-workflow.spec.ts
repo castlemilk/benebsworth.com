@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = 'http://localhost:3000'
+const BASE = process.env.CS_BASE ?? ''
 
 test('complete flow: load → probe → run → scope → stop → switch → reset', async ({ page }) => {
   const errors: string[] = []
@@ -14,7 +14,8 @@ test('complete flow: load → probe → run → scope → stop → switch → re
 
   await expect(page.locator('canvas')).toHaveCount(2, { timeout: 5000 })
   await expect(page.getByText('Circuit ready')).toBeVisible({ timeout: 5000 })
-  await expect(page.getByText('Probes')).toBeVisible({ timeout: 3000 })
+  // Auto-probe adds a scope channel — its legend shows the rms readout.
+  await expect(page.getByText(/rms/).first()).toBeVisible({ timeout: 3000 })
 
   await page.getByRole('button', { name: '▶ Run' }).click()
   await page.waitForTimeout(500)

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = 'http://localhost:3000'
+const BASE = process.env.CS_BASE ?? ''
 
 test.describe('Circuit Simulator', () => {
   test('page loads with all UI elements', async ({ page }) => {

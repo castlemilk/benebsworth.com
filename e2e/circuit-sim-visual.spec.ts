@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = 'http://localhost:3000'
+const BASE = process.env.CS_BASE ?? ''
 
 test('debug: verify wires are rendered on canvas', async ({ page }) => {
   await page.goto(`${BASE}/lab/circuit-sim/`)

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const BASE = 'http://localhost:3000'
+const BASE = process.env.CS_BASE ?? ''
 
 test.describe('stress and edge cases', () => {
   test('load every sample, run briefly, no crashes', async ({ page }) => {

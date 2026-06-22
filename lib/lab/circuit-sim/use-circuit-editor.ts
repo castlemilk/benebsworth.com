@@ -17,6 +17,7 @@ import type { Waveform } from './types'
 import { transientStep } from './transient'
 import { validateCircuit, type CircuitDiagnostic } from './validator'
 import { solveDC } from './solver'
+import { solveOperatingPoint, type OperatingPoint } from './operating-point'
 import { nodeVoltage, componentCurrent, componentVoltage } from './results'
 import { acSweep, type ACOptions, type BodeResult } from './ac'
 import { serializeCircuit, deserializeCircuit } from './yaml'
@@ -45,9 +46,16 @@ function makeProbe(kind: ProbeKind, ref: number | string, circuit: Circuit, colo
 }
 
 const MAX_SCOPE_SAMPLES = 2000
+const HISTORY_LIMIT = 80
 
 interface CircuitEditorState {
   circuit: Circuit
+  /** Undo stack (older circuit snapshots, most recent last). */
+  past: Circuit[]
+  /** Redo stack (newer circuit snapshots, most recent first). */
+  future: Circuit[]
+  /** Coalescing key for the in-flight gesture (drags/typing collapse to one undo step). */
+  historyCoalesce: string | null
   /** Currently active tool/component type being placed */
   placingType: ComponentType | null
   /** Currently dragging component id */
@@ -60,10 +68,14 @@ interface CircuitEditorState {
   selectedId: string | null
   /** Simulation state */
   sim: SimulationState | null
+  /** True when the sim is stopped mid-run with state intact (Run resumes vs restarts). */
+  paused: boolean
   /** Simulation timestep in seconds */
   dt: number
   /** Total simulation time limit */
   simDuration: number
+  /** Playback rate multiplier for the transient loop (sim-seconds per frame). */
+  simSpeed: number
   /** Active probes (scope channels) */
   probes: Probe[]
   /** Oscilloscope display settings */
@@ -74,6 +86,10 @@ interface CircuitEditorState {
   acOptions: ACOptions
   /** Latest computed Bode result (AC mode) */
   bode: BodeResult | null
+  /** Show the DC operating point (node V + branch I) overlaid on the schematic. */
+  showDcOverlay: boolean
+  /** Latest solved DC operating point (when the overlay is on and no sim is running). */
+  dcOp: OperatingPoint | null
   /** Validation errors */
   errors: CircuitDiagnostic[]
   /** View offset (pan) */
@@ -100,22 +116,91 @@ function newSimState(): SimulationState {
   }
 }
 
+/**
+ * Advance the transient sim by one animation frame's worth of steps. Pure:
+ * clones the incoming sim state + probe ring buffers, never mutates them, so it's
+ * safe to call from both the rAF loop and a manual single-step. Returns the new
+ * sim state and probe array (or the originals if nothing could be stepped).
+ */
+function runFrame(
+  circuit: Circuit,
+  simIn: SimulationState,
+  probesIn: Probe[],
+  dt: number,
+  simDuration: number,
+  speed: number,
+): { sim: SimulationState; probes: Probe[] } {
+  // Deep-copy companion state: transientStep mutates {vPrev,iPrev} objects in place,
+  // so the *values* must be cloned too (a shallow new Map would share them by reference
+  // and leak mutations back into the caller's sim — breaking this function's purity).
+  const simState: SimulationState = {
+    ...simIn,
+    capState: new Map([...simIn.capState].map(([k, v]) => [k, { ...v }])),
+    indState: new Map([...simIn.indState].map(([k, v]) => [k, { ...v }])),
+  }
+  const probes = probesIn.length > 0 ? probesIn.map(p => ({ ...p, samples: p.samples.slice() })) : probesIn
+
+  let t = simState.time
+  const targetTime = Math.min(t + dt * 100 * speed, simDuration)
+  const maxSteps = Math.min(2000, Math.max(20, Math.round(200 * speed)))
+  let stepCount = 0
+  while (t < targetTime && stepCount < maxSteps) {
+    const voltages = transientStep(circuit, simState, dt)
+    if (!voltages) break
+    simState.nodeVoltages = voltages
+    simState.time = t + dt
+
+    for (const p of probes) {
+      let val = 0
+      if (p.kind === 'nodeV') {
+        val = nodeVoltage(simState, p.ref as number)
+      } else {
+        const comp = circuit.components.find(c => c.id === p.ref)
+        if (comp) val = p.kind === 'compI' ? componentCurrent(circuit, comp, simState) : componentVoltage(simState, comp)
+      }
+      p.samples[p.writeIdx] = val
+      p.writeIdx = (p.writeIdx + 1) % MAX_SCOPE_SAMPLES
+      p.count = Math.min(p.count + 1, MAX_SCOPE_SAMPLES)
+    }
+
+    t += dt
+    stepCount++
+  }
+  simState.time = t
+
+  // Continuous sweep: when time reaches the window end, wrap for the next pass.
+  if (t >= simDuration) {
+    simState.time = 0
+    simState.capState.clear()
+    simState.indState.clear()
+    simState.nodeVoltages = new Float64Array(circuit.nextNodeId).fill(0)
+  }
+  return { sim: simState, probes }
+}
+
 export function useCircuitEditor() {
   const [state, setState] = useState<CircuitEditorState>({
     circuit: newCircuit(),
+    past: [],
+    future: [],
+    historyCoalesce: null,
     placingType: null,
     draggingId: null,
     wiringFrom: null,
     wiringFromNode: null,
     selectedId: null,
     sim: null,
+    paused: false,
     dt: 1e-5,
     simDuration: 0.1,
+    simSpeed: 1,
     probes: [],
     scopeSettings: DEFAULT_SCOPE_SETTINGS,
     analysisMode: 'transient',
     acOptions: { fStart: 1, fStop: 1e6, points: 140 },
     bode: null,
+    showDcOverlay: false,
+    dcOp: null,
     errors: [],
     panX: 0,
     panY: 0,
@@ -147,12 +232,77 @@ export function useCircuitEditor() {
     setState(prev => ({ ...prev, bode }))
   }, [state.analysisMode, state.circuit, state.probes, state.acOptions])
 
+  // DC operating-point overlay: resolve the steady state whenever the overlay is
+  // on and no live transient is running (the running sim owns the heat coloring).
+  useEffect(() => {
+    if (!state.showDcOverlay || state.sim?.running) {
+      setState(prev => (prev.dcOp ? { ...prev, dcOp: null } : prev))
+      return
+    }
+    const errors = validateCircuit(state.circuit)
+    if (errors.some(e => e.severity === 'error')) {
+      setState(prev => (prev.dcOp ? { ...prev, dcOp: null } : prev))
+      return
+    }
+    const op = solveOperatingPoint(state.circuit)
+    setState(prev => ({ ...prev, dcOp: op }))
+  }, [state.showDcOverlay, state.circuit, state.sim?.running])
+
   const mutate = useCallback((fn: (s: CircuitEditorState) => Partial<CircuitEditorState>) => {
     setState(prev => {
       const updates = fn(prev)
       return { ...prev, ...updates }
     })
   }, [])
+
+  // ── Edit history ─────────────────────────────────────────────────
+  // Commit a new circuit, checkpointing the previous one for undo. A coalesce key
+  // collapses a continuous gesture (a drag, a burst of keystrokes) into one step.
+  function commit(s: CircuitEditorState, nextCircuit: Circuit, coalesceKey?: string): Partial<CircuitEditorState> {
+    if (coalesceKey && coalesceKey === s.historyCoalesce) {
+      return { circuit: nextCircuit }
+    }
+    const past = [...s.past, s.circuit]
+    if (past.length > HISTORY_LIMIT) past.shift()
+    return { circuit: nextCircuit, past, future: [], historyCoalesce: coalesceKey ?? null }
+  }
+
+  /** Close the current coalescing window so the next edit starts a fresh undo step. */
+  const endInteraction = useCallback(() => {
+    mutate(s => (s.historyCoalesce ? { historyCoalesce: null } : {}))
+  }, [mutate])
+
+  const undo = useCallback(() => {
+    mutate(s => {
+      if (s.past.length === 0) return {}
+      const prev = s.past[s.past.length - 1]
+      const selValid = prev.components.some(c => c.id === s.selectedId)
+      return {
+        circuit: prev,
+        past: s.past.slice(0, -1),
+        future: [s.circuit, ...s.future].slice(0, HISTORY_LIMIT),
+        historyCoalesce: null,
+        selectedId: selValid ? s.selectedId : null,
+        probes: pruneProbes(s.probes, prev),
+      }
+    })
+  }, [mutate])
+
+  const redo = useCallback(() => {
+    mutate(s => {
+      if (s.future.length === 0) return {}
+      const next = s.future[0]
+      const selValid = next.components.some(c => c.id === s.selectedId)
+      return {
+        circuit: next,
+        past: [...s.past, s.circuit].slice(-HISTORY_LIMIT),
+        future: s.future.slice(1),
+        historyCoalesce: null,
+        selectedId: selValid ? s.selectedId : null,
+        probes: pruneProbes(s.probes, next),
+      }
+    })
+  }, [mutate])
 
   // ── Circuit editing ──────────────────────────────────────────────
 
@@ -183,8 +333,34 @@ export function useCircuitEditor() {
       }
       circuit.components.push(comp)
       return {
-        circuit: { ...circuit, nextNodeId: circuit.nextNodeId, nextCompId: circuit.nextCompId },
+        ...commit(s, { ...circuit, nextNodeId: circuit.nextNodeId, nextCompId: circuit.nextCompId }),
         placingType: null,
+        selectedId: id,
+      }
+    })
+  }, [mutate])
+
+  const duplicateComponent = useCallback((id: string) => {
+    mutate(s => {
+      const src = s.circuit.components.find(c => c.id === id)
+      if (!src || src.type === 'GND') return {}
+      const circuit = { ...s.circuit, components: [...s.circuit.components] }
+      const newId = `c${circuit.nextCompId++}`
+      // Fresh, unconnected nodes so the copy is independent of the original.
+      const clone: CircuitComponent = {
+        ...src,
+        id: newId,
+        nodeA: circuit.nextNodeId++,
+        nodeB: circuit.nextNodeId++,
+        nodeC: src.nodeC !== undefined ? circuit.nextNodeId++ : undefined,
+        x: src.x + 60,
+        y: src.y + 40,
+        waveform: src.waveform ? { ...src.waveform } : undefined,
+      }
+      circuit.components.push(clone)
+      return {
+        ...commit(s, { ...circuit, nextNodeId: circuit.nextNodeId, nextCompId: circuit.nextCompId }),
+        selectedId: newId,
       }
     })
   }, [mutate])
@@ -197,9 +373,12 @@ export function useCircuitEditor() {
     mutate(s => {
       const idx = s.circuit.components.findIndex(c => c.id === id)
       if (idx === -1) return {}
+      const cur = s.circuit.components[idx]
+      if (cur.x === gx && cur.y === gy) return {}
       const components = [...s.circuit.components]
-      components[idx] = { ...components[idx], x: gx, y: gy }
-      return { circuit: { ...s.circuit, components } }
+      components[idx] = { ...cur, x: gx, y: gy }
+      // Coalesce the whole drag into a single undo step.
+      return commit(s, { ...s.circuit, components }, `move:${id}`)
     })
   }, [mutate])
 
@@ -212,8 +391,9 @@ export function useCircuitEditor() {
       const deletedNodes = new Set([comp.nodeA, comp.nodeB, comp.nodeC ?? -1])
       const wires = s.circuit.wires.filter(w => !deletedNodes.has(w.nodeA) && !deletedNodes.has(w.nodeB))
       return {
-        circuit: { ...s.circuit, components, wires },
+        ...commit(s, { ...s.circuit, components, wires }),
         selectedId: s.selectedId === id ? null : s.selectedId,
+        probes: s.probes.filter(p => !((p.kind === 'compI' || p.kind === 'compV') && p.ref === id)),
       }
     })
   }, [mutate])
@@ -246,6 +426,7 @@ export function useCircuitEditor() {
           let nc = c
           if (c.nodeA === drop) nc = { ...nc, nodeA: keep }
           if (c.nodeB === drop) nc = { ...nc, nodeB: keep }
+          if (c.nodeC === drop) nc = { ...nc, nodeC: keep }
           return nc
         })
         wires = wires.map(w => {
@@ -271,7 +452,7 @@ export function useCircuitEditor() {
       wires.push(newWire)
 
       return {
-        circuit: { ...s.circuit, components, wires },
+        ...commit(s, { ...s.circuit, components, wires }),
         wiringFrom: null,
         wiringFromNode: null,
       }
@@ -288,7 +469,7 @@ export function useCircuitEditor() {
       if (idx === -1) return {}
       const components = [...s.circuit.components]
       components[idx] = { ...components[idx], value }
-      return { circuit: { ...s.circuit, components } }
+      return commit(s, { ...s.circuit, components }, `val:${id}`)
     })
   }, [mutate])
 
@@ -308,7 +489,9 @@ export function useCircuitEditor() {
       } else {
         components[idx] = { ...comp, waveform: wf }
       }
-      return { circuit: { ...s.circuit, components } }
+      // Switching the waveform kind is a discrete edit; field tweaks coalesce.
+      const key = partial.kind !== undefined ? undefined : `wf:${id}`
+      return commit(s, { ...s.circuit, components }, key)
     })
   }, [mutate])
 
@@ -318,7 +501,7 @@ export function useCircuitEditor() {
       if (idx === -1 || s.circuit.components[idx].type !== 'SW') return {}
       const components = [...s.circuit.components]
       components[idx] = { ...components[idx], closed: !components[idx].closed }
-      return { circuit: { ...s.circuit, components } }
+      return commit(s, { ...s.circuit, components })
     })
   }, [mutate])
 
@@ -329,7 +512,7 @@ export function useCircuitEditor() {
       const components = [...s.circuit.components]
       const comp = components[idx]
       components[idx] = { ...comp, rotation: ((comp.rotation + 90) % 360) as 0 | 90 | 180 | 270 }
-      return { circuit: { ...s.circuit, components } }
+      return commit(s, { ...s.circuit, components })
     })
   }, [mutate])
 
@@ -341,13 +524,19 @@ export function useCircuitEditor() {
     mutate(() => ({ zoom: Math.max(0.3, Math.min(3, z)) }))
   }, [mutate])
 
+  const resetView = useCallback(() => {
+    mutate(() => ({ panX: 0, panY: 0, zoom: 1 }))
+  }, [mutate])
+
   // ── Simulation ───────────────────────────────────────────────────
 
   const resetSimulation = useCallback(() => {
-    mutate(() => ({
-      sim: newSimState(),
-      probes: [],
-      errors: [],
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    mutate(s => ({
+      sim: null,
+      paused: false,
+      // Keep the probe channels but clear their captured traces.
+      probes: s.probes.map(p => ({ ...p, samples: new Float64Array(MAX_SCOPE_SAMPLES), writeIdx: 0, count: 0 })),
     }))
   }, [mutate])
 
@@ -363,6 +552,22 @@ export function useCircuitEditor() {
     mutate(s => ({ probes: s.probes.filter(p => p.id !== id) }))
   }, [mutate])
 
+  const clearProbes = useCallback(() => {
+    mutate(() => ({ probes: [] }))
+  }, [mutate])
+
+  const renameProbe = useCallback((id: string, label: string) => {
+    mutate(s => ({ probes: s.probes.map(p => (p.id === id ? { ...p, label } : p)) }))
+  }, [mutate])
+
+  const setProbeColor = useCallback((id: string, color: string) => {
+    mutate(s => ({ probes: s.probes.map(p => (p.id === id ? { ...p, color } : p)) }))
+  }, [mutate])
+
+  const toggleProbeVisible = useCallback((id: string) => {
+    mutate(s => ({ probes: s.probes.map(p => (p.id === id ? { ...p, visible: !p.visible } : p)) }))
+  }, [mutate])
+
   const setScopeSettings = useCallback((partial: Partial<ScopeSettings>) => {
     mutate(s => ({ scopeSettings: { ...s.scopeSettings, ...partial } }))
   }, [mutate])
@@ -372,6 +577,7 @@ export function useCircuitEditor() {
     mutate(s => ({
       analysisMode: mode,
       sim: mode === 'ac' && s.sim ? { ...s.sim, running: false } : s.sim,
+      paused: mode === 'ac' ? false : s.paused,
     }))
   }, [mutate])
 
@@ -379,36 +585,15 @@ export function useCircuitEditor() {
     mutate(s => ({ acOptions: { ...s.acOptions, ...partial } }))
   }, [mutate])
 
-  const runSimulation = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+  const setSimSpeed = useCallback((speed: number) => {
+    mutate(() => ({ simSpeed: Math.max(0.1, Math.min(8, speed)) }))
+  }, [mutate])
 
-    mutate(s => {
-      const errors = validateCircuit(s.circuit)
-      if (errors.some(e => e.severity === 'error')) {
-        return { errors }
-      }
+  const setShowDcOverlay = useCallback((show: boolean) => {
+    mutate(() => ({ showDcOverlay: show }))
+  }, [mutate])
 
-      const sim = newSimState()
-      sim.running = true
-      sim.time = 0
-
-      // Allocate voltage array
-      const maxNode = s.circuit.nextNodeId
-      sim.nodeVoltages = new Float64Array(maxNode).fill(0)
-
-      return { sim, errors }
-    })
-
-    // Use ref-based approach for the rAF loop to avoid stale closures
-    // We'll trigger the loop outside the state update
-    setTimeout(() => {
-      startSimLoop()
-    }, 0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // This approach of calling mutate inside raf is problematic due to stale closures.
-  // Instead we use a ref-based simulation loop.
+  // Ref mirror so the rAF loop always reads the latest state without stale closures.
   const stateRef = useRef(state)
   stateRef.current = state
 
@@ -416,73 +601,55 @@ export function useCircuitEditor() {
     function loop() {
       const s = stateRef.current
       if (!s.sim?.running) return
-
-      const targetTime = Math.min(s.sim.time + s.dt * 100, s.simDuration)
-      let t = s.sim.time
-      const dt = s.dt
-      const simState = { ...s.sim, capState: new Map(s.sim.capState), indState: new Map(s.sim.indState) }
-      let probes = [...s.probes]
-      // Clone each probe's ring buffer once per frame, then write in place.
-      if (probes.length > 0) {
-        probes = probes.map(p => ({ ...p, samples: p.samples.slice() }))
-      }
-
-      let stepCount = 0
-      while (t < targetTime && stepCount < 200) {
-        const voltages = transientStep(s.circuit, simState, dt)
-        if (!voltages) break
-
-        simState.nodeVoltages = voltages
-        simState.time = t + dt
-
-        // Record one sample per probe (value depends on probe kind).
-        for (const p of probes) {
-          let val = 0
-          if (p.kind === 'nodeV') {
-            val = nodeVoltage(simState, p.ref as number)
-          } else {
-            const comp = s.circuit.components.find(c => c.id === p.ref)
-            if (comp) val = p.kind === 'compI' ? componentCurrent(s.circuit, comp, simState) : componentVoltage(simState, comp)
-          }
-          p.samples[p.writeIdx] = val
-          p.writeIdx = (p.writeIdx + 1) % MAX_SCOPE_SAMPLES
-          p.count = Math.min(p.count + 1, MAX_SCOPE_SAMPLES)
-        }
-
-        t += dt
-        stepCount++
-      }
-
-      simState.time = t
-
-      // Continuous sweep: when time reaches duration, reset for next sweep
-      if (t >= s.simDuration) {
-        simState.time = 0
-        simState.capState.clear()
-        simState.indState.clear()
-        simState.nodeVoltages = new Float64Array(s.circuit.nextNodeId).fill(0)
-      }
-
-      // Update state via functional setState to avoid stale closure issues
-      setState(prev => ({
-        ...prev,
-        sim: simState as SimulationState,
-        probes,
-      }))
-
-      if (simState.running) {
-        rafRef.current = requestAnimationFrame(loop)
-      }
+      const { sim, probes } = runFrame(s.circuit, s.sim, s.probes, s.dt, s.simDuration, s.simSpeed)
+      sim.running = true
+      setState(prev => ({ ...prev, sim, probes }))
+      rafRef.current = requestAnimationFrame(loop)
     }
-
     rafRef.current = requestAnimationFrame(loop)
   }, [])
+
+  /** Initialise a fresh sim state sized to the current circuit (t = 0). */
+  function freshSim(circuit: Circuit): SimulationState {
+    const sim = newSimState()
+    sim.time = 0
+    sim.nodeVoltages = new Float64Array(circuit.nextNodeId).fill(0)
+    return sim
+  }
+
+  const runSimulation = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    mutate(s => {
+      const errors = validateCircuit(s.circuit)
+      if (errors.some(e => e.severity === 'error')) return { errors }
+      // Resume from a paused state, otherwise start a fresh sweep at t = 0. If the
+      // topology changed while paused (node count differs), restart fresh so we don't
+      // carry stale companion energy / mis-sized arrays into the new circuit.
+      const canResume = s.paused && s.sim && s.sim.nodeVoltages.length === s.circuit.nextNodeId
+      const sim = canResume ? { ...s.sim!, running: true } : (() => { const x = freshSim(s.circuit); x.running = true; return x })()
+      return { sim, paused: false, errors }
+    })
+    setTimeout(() => startSimLoop(), 0)
+  }, [mutate, startSimLoop])
 
   const stopSimulation = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     mutate(s => ({
       sim: s.sim ? { ...s.sim, running: false } : null,
+      paused: s.sim ? true : false,
     }))
+  }, [mutate])
+
+  const stepSimulation = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    mutate(s => {
+      const errors = validateCircuit(s.circuit)
+      if (errors.some(e => e.severity === 'error')) return { errors }
+      const base = s.paused && s.sim && s.sim.nodeVoltages.length > 0 ? s.sim : freshSim(s.circuit)
+      const { sim, probes } = runFrame(s.circuit, base, s.probes, s.dt, s.simDuration, s.simSpeed)
+      sim.running = false
+      return { sim, probes, paused: true, errors }
+    })
   }, [mutate])
 
   const setDt = useCallback((dt: number) => {
@@ -519,8 +686,9 @@ export function useCircuitEditor() {
         if (count > bestCount) { bestCount = count; bestNode = n }
       }
 
-      mutate(() => ({
-        circuit,
+      mutate(s => ({
+        ...commit(s, circuit),
+        selectedId: null,
         probes: bestNode > 0 ? [makeProbe('nodeV', bestNode, circuit, 0)] : [],
       }))
       return true
@@ -536,20 +704,27 @@ export function useCircuitEditor() {
     wiringFrom: state.wiringFrom,
     selectedId: state.selectedId,
     sim: state.sim,
+    paused: state.paused,
     dt: state.dt,
     simDuration: state.simDuration,
+    simSpeed: state.simSpeed,
     probes: state.probes,
     scopeSettings: state.scopeSettings,
     analysisMode: state.analysisMode,
     acOptions: state.acOptions,
     bode: state.bode,
+    showDcOverlay: state.showDcOverlay,
+    dcOp: state.dcOp,
     errors: state.errors,
     panX: state.panX,
     panY: state.panY,
     zoom: state.zoom,
+    canUndo: state.past.length > 0,
+    canRedo: state.future.length > 0,
     // Actions
     setPlacingType,
     placeComponent,
+    duplicateComponent,
     selectComponent,
     moveComponent,
     deleteComponent,
@@ -562,14 +737,25 @@ export function useCircuitEditor() {
     rotateComponent,
     setPan,
     setZoom,
+    resetView,
+    endInteraction,
+    undo,
+    redo,
     resetSimulation,
     addProbe,
     removeProbe,
+    clearProbes,
+    renameProbe,
+    setProbeColor,
+    toggleProbeVisible,
     setScopeSettings,
     setAnalysisMode,
     setAcOptions,
+    setSimSpeed,
+    setShowDcOverlay,
     runSimulation,
     stopSimulation,
+    stepSimulation,
     setDt,
     setSimDuration,
     getDCSolution,
@@ -577,3 +763,12 @@ export function useCircuitEditor() {
     importYaml,
   }
 }
+
+/** Drop component-referencing probes whose component no longer exists (post undo/redo). */
+function pruneProbes(probes: Probe[], circuit: Circuit): Probe[] {
+  const ids = new Set(circuit.components.map(c => c.id))
+  const kept = probes.filter(p => !((p.kind === 'compI' || p.kind === 'compV') && !ids.has(p.ref as string)))
+  return kept.length === probes.length ? probes : kept
+}
+
+export type CircuitEditor = ReturnType<typeof useCircuitEditor>

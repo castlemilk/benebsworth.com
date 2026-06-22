@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
-const BASE = 'http://localhost:3000'
+const BASE = process.env.CS_BASE ?? ''
 
 test('debug: dump validation state for RC filter', async ({ page }) => {
   await page.goto(`${BASE}/lab/circuit-sim/`)
   await page.waitForTimeout(1000)
-  await page.getByRole('button', { name: '📐 Load example...' }).click()
+  await page.getByRole('button', { name: 'Circuit library' }).click()
   await page.waitForTimeout(300)
   await page.getByText('RC Low-Pass Filter').click()
   await page.waitForTimeout(1500)

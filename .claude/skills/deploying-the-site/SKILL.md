@@ -1,6 +1,6 @@
 ---
 name: deploying-the-site
-description: Use when deploying benebsworth.com (staging or prod), changing CloudFront/S3/DNS/cache/security headers, or touching infra/ Terraform — covers the content-deploy path, the S3 remote-state backend, the staging-vs-prod architecture split (prod adopted + self-contained), and the Terraform-managed prod headers/CSP.
+description: Use when deploying benebsworth.com (staging or prod) or changing its infra/DNS/headers. The live site is on CLOUDFLARE PAGES (deploy via `npm run deploy:pages:*`; DNS/zone in `infra/cloudflare/` Terraform; headers/CSP in `public/_headers`; GA4 + CF analytics). The legacy AWS S3+CloudFront path (3-pass `aws s3 sync`, adopted prod Terraform, DNSimple) is kept DORMANT as the rollback fallback — documented below.
 ---
 
 # Deploying benebsworth.com

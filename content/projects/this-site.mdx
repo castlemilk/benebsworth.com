@@ -8,8 +8,8 @@ link: { url: "https://github.com/castlemilk/benebsworth.com", outbound: true }
 technologies:
   - { text: Next.js, color: "#7c5cff" }
   - { text: React, color: "#61dafb" }
+  - { text: Cloudflare, color: "#f38020" }
   - { text: Terraform, color: "#844fba" }
-  - { text: AWS, color: "#ff9900" }
 ---
 
 ## Overview
@@ -39,6 +39,7 @@ server, no runtime cost. Content (blog posts, projects, the about timeline) is
 Shiki. The animations are hand-rolled Canvas 2D on a shared harness that pauses
 off-screen and respects reduced motion — no animation library.
 
-It deploys to **AWS** (private S3 origin + CloudFront with OAC) provisioned entirely
-with **Terraform**, fronted by DNSimple. The whole thing — source, infra, and the
-generative bits — is on [GitHub](https://github.com/castlemilk/benebsworth.com).
+It deploys to **Cloudflare Pages** (global edge CDN, HTTPS, per-branch preview
+deploys), with **Cloudflare** handling DNS, edge redirects and security headers —
+the DNS and zone config managed in **Terraform**. The whole thing — source, infra,
+and the generative bits — is on [GitHub](https://github.com/castlemilk/benebsworth.com).

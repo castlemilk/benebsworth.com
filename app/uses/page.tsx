@@ -53,7 +53,7 @@ const USES: { group: string; accent: string; items: { name: string; note: React.
       { name: 'MDX', note: 'posts are React-in-Markdown, so figures are live' },
       { name: 'Shiki + KaTeX', note: 'code highlighting and typeset math' },
       { name: 'HTML canvas', note: 'every lab simulation, hand-rolled' },
-      { name: 'S3 + CloudFront', note: 'deploy target, Terraform-managed' },
+      { name: 'Cloudflare Pages', note: 'global edge CDN + DNS, Terraform-managed' },
     ],
   },
   {

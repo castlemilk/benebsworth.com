@@ -17,10 +17,12 @@
     "e2e": "playwright test",
     "proto:gen": "buf generate",
     "build:archive": "bash scripts/build-archive.sh",
-    "deploy:next": "bash scripts/deploy.sh staging",
-    "deploy:prod": "bash scripts/deploy.sh prod",
+    "deploy:next": "bash scripts/deploy-pages.sh staging",
+    "deploy:prod": "bash scripts/deploy-pages.sh prod",
     "deploy:pages:next": "bash scripts/deploy-pages.sh staging",
-    "deploy:pages:prod": "bash scripts/deploy-pages.sh prod"
+    "deploy:pages:prod": "bash scripts/deploy-pages.sh prod",
+    "deploy:aws:next": "bash scripts/deploy.sh staging",
+    "deploy:aws:prod": "bash scripts/deploy.sh prod"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

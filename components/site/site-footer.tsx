@@ -13,6 +13,8 @@ export function SiteFooter() {
             <li><Link href="/lab/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Lab</Link></li>
             <li><Link href="/lab/circuit-sim/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Circuit Sim</Link></li>
             <li><Link href="/about/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">About</Link></li>
+            <li><Link href="/now/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Now</Link></li>
+            <li><Link href="/uses/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Uses</Link></li>
           </ul>
         </div>
         <div>

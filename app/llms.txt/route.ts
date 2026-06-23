@@ -48,6 +48,8 @@ export function GET() {
   for (const u of [
     { name: 'Home', url: '/', desc: 'Landing page with the latest post and a random lab matrix.' },
     { name: 'About', url: '/about/', desc: 'Career timeline, talks, skills, certifications.' },
+    { name: 'Now', url: '/now/', desc: "What Ben is focused on right now — work, building, learning, writing." },
+    { name: 'Uses', url: '/uses/', desc: 'Tools, languages, platform stack and how this site is built.' },
     { name: 'Projects', url: '/projects/', desc: 'Open-source and side projects.' },
     { name: 'Blog', url: '/blog/', desc: 'Long-form writing with interactive figures.' },
     { name: 'Lab', url: '/lab/', desc: '30+ interactive canvas simulations, parameterised.' },

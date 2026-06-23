@@ -4,7 +4,7 @@ locals {
     automatic_https_rewrites = "on"
     min_tls_version          = "1.2"
     http3                    = "on"
-    ssl                      = "strict" # Pages origin is HTTPS → full(strict)
+    ssl                      = "strict" # all proxied origins are now Pages (HTTPS) → safe
   }
 }
 

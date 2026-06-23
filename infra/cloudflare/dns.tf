@@ -50,23 +50,39 @@ resource "cloudflare_dns_record" "cicd_ns" {
   ttl      = 3600
 }
 
-# NOTE: `google_verify` (TXT), `apex`, and `www` are intentionally NOT managed
-# here. When the zone was added to Cloudflare, the auto-scan already imported:
-#   - the google-site-verification TXT (kept as-is)
-#   - apex + www as A/AAAA records → the CloudFront anycast IPs, PROXIED (orange),
-#     which is what currently serves prod via Cloudflare → CloudFront.
-# They're left untouched so prod keeps serving. At the Pages cutover they get
-# REPLACED with CNAME → "<project>.pages.dev" (proxied) — handled in that phase,
-# not as transitional CloudFront-IP records. Managing them here now would either
-# conflict (TXT already exists) or disrupt the working apex/www.
+# apex + www → Cloudflare Pages (cut over from CloudFront; apex uses CNAME
+# flattening). The A/AAAA → CNAME swap was done via the API to control downtime,
+# then imported into state — so these now match reality.
+resource "cloudflare_dns_record" "apex" {
+  zone_id = var.cloudflare_zone_id
+  name    = "@"
+  type    = "CNAME"
+  content = "benebsworth.pages.dev"
+  ttl     = 1
+  proxied = true
+}
 
-# `next` was MISSING after the premature NS move (auto-import didn't catch the
-# CNAME); restored here. Re-points to the staging Pages project at cutover.
+resource "cloudflare_dns_record" "www" {
+  zone_id = var.cloudflare_zone_id
+  name    = "www"
+  type    = "CNAME"
+  content = "benebsworth.pages.dev"
+  ttl     = 1
+  proxied = true
+}
+
+# Managed OUTSIDE Terraform (via the Cloudflare API): the google-site-verification
+# TXT (auto-imported with the zone), the Pages custom domains, and the www→apex
+# 301 (a http_request_dynamic_redirect ruleset). See pages.tf for the rationale.
+
+# `next` → staging Pages project (cut over from CloudFront). Proxied so Cloudflare
+# serves Pages + provisions the edge cert. Rollback = content back to the
+# CloudFront target (d1qwco52fxejjm.cloudfront.net), proxied=false.
 resource "cloudflare_dns_record" "next" {
   zone_id = var.cloudflare_zone_id
   name    = "next"
   type    = "CNAME"
-  content = "d1qwco52fxejjm.cloudfront.net"
-  ttl     = 300
-  proxied = false
+  content = "benebsworth-next.pages.dev"
+  ttl     = 1
+  proxied = true
 }

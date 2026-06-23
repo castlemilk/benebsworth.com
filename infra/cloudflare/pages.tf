@@ -15,12 +15,12 @@ resource "cloudflare_pages_project" "next" {
   production_branch = "lab-expansion-8-posts"
 }
 
-# ── Custom domains — uncomment per the cutover (spec Phase D) ────────────────
-# resource "cloudflare_pages_domain" "next" {
-#   account_id   = var.cloudflare_account_id
-#   project_name = cloudflare_pages_project.next.name
-#   name         = "next.benebsworth.com"
-# }
+# ── Custom domains are managed OUT-OF-BAND via the Cloudflare API, not here ──
+# The `cloudflare_pages_domain` provider resource makes an extra cert-status call
+# that the scoped token can't do (needs SSL&Certificates:Edit), so it 401s — but
+# the plain domain-add API call works. Custom domains attached via:
+#   POST /accounts/<acct>/pages/projects/<project>/domains  {"name": "<host>"}
+# Attached so far: next.benebsworth.com → benebsworth-next.
 # resource "cloudflare_pages_domain" "apex" {
 #   account_id   = var.cloudflare_account_id
 #   project_name = cloudflare_pages_project.prod.name

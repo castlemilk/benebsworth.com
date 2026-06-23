@@ -1,6 +1,21 @@
+# Auth: prefer a scoped API token; fall back to the Global API Key + email
+# (set ONE). The Global Key has full access — used to finish the migration after
+# the scoped token kept dropping permissions on each edit.
 variable "cloudflare_api_token" {
   type      = string
   sensitive = true
+  default   = ""
+}
+
+variable "cloudflare_email" {
+  type    = string
+  default = ""
+}
+
+variable "cloudflare_global_api_key" {
+  type      = string
+  sensitive = true
+  default   = ""
 }
 
 variable "cloudflare_account_id" {

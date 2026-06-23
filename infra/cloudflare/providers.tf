@@ -16,5 +16,8 @@ terraform {
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  # Token if provided, else fall back to Global API Key + email.
+  api_token = var.cloudflare_api_token != "" ? var.cloudflare_api_token : null
+  api_key   = var.cloudflare_api_token == "" && var.cloudflare_global_api_key != "" ? var.cloudflare_global_api_key : null
+  email     = var.cloudflare_api_token == "" && var.cloudflare_email != "" ? var.cloudflare_email : null
 }

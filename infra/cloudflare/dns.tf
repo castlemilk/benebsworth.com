@@ -50,35 +50,18 @@ resource "cloudflare_dns_record" "cicd_ns" {
   ttl      = 3600
 }
 
-resource "cloudflare_dns_record" "google_verify" {
-  zone_id = var.cloudflare_zone_id
-  name    = "@"
-  type    = "TXT"
-  content = "google-site-verification=1xudaaFggITzBja9R3XeRC6JhSZTyvh1ij6WOZHcbFw"
-  ttl     = 3600
-}
+# NOTE: `google_verify` (TXT), `apex`, and `www` are intentionally NOT managed
+# here. When the zone was added to Cloudflare, the auto-scan already imported:
+#   - the google-site-verification TXT (kept as-is)
+#   - apex + www as A/AAAA records → the CloudFront anycast IPs, PROXIED (orange),
+#     which is what currently serves prod via Cloudflare → CloudFront.
+# They're left untouched so prod keeps serving. At the Pages cutover they get
+# REPLACED with CNAME → "<project>.pages.dev" (proxied) — handled in that phase,
+# not as transitional CloudFront-IP records. Managing them here now would either
+# conflict (TXT already exists) or disrupt the working apex/www.
 
-# ── Website records — grey-cloud → current CloudFront during transition ──────
-# Flip to the Pages projects (content = "<project>.pages.dev", proxied = true)
-# during the staged cutover (spec Phase D).
-resource "cloudflare_dns_record" "apex" {
-  zone_id = var.cloudflare_zone_id
-  name    = "@"
-  type    = "CNAME" # Cloudflare flattens CNAME at the apex
-  content = "d1nnawiq8qdjgb.cloudfront.net"
-  ttl     = 300
-  proxied = false
-}
-
-resource "cloudflare_dns_record" "www" {
-  zone_id = var.cloudflare_zone_id
-  name    = "www"
-  type    = "CNAME"
-  content = "d1nnawiq8qdjgb.cloudfront.net"
-  ttl     = 300
-  proxied = false
-}
-
+# `next` was MISSING after the premature NS move (auto-import didn't catch the
+# CNAME); restored here. Re-points to the staging Pages project at cutover.
 resource "cloudflare_dns_record" "next" {
   zone_id = var.cloudflare_zone_id
   name    = "next"

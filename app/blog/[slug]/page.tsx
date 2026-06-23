@@ -126,7 +126,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           room because sticky elements stay in normal flow. */}
       <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] xl:grid-cols-[minmax(0,1fr)_16rem]">
-          <article className="min-w-0">
+          {/* data-pagefind-body scopes the search index to just the post content
+              (nav/footer/TOC are excluded). The trailing author/related block is
+              ignored so "more posts" titles don't pollute results. */}
+          <article data-pagefind-body className="min-w-0">
         {/* ── Post header spans the full (wide) page frame — editorial title +
             accent rule fill the screen. Only the long-form prose below is capped
             to a comfortable reading measure (~44rem ≈ 74ch). ── */}
@@ -194,7 +197,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* "Try it in the lab" footer. Uses the post's tags to find
               matching lab effects, with a daily-rotating random fallback
               when no overlap exists. */}
-          <div className="max-w-[44rem]">
+          <div data-pagefind-ignore className="max-w-[44rem]">
             <AuthorBio />
             <RelatedLabs tags={p.tags} labels={p.tags} limit={3} />
             <RelatedPosts currentSlug={slug} tags={p.tags} />

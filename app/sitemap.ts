@@ -30,6 +30,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/blog/`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.9 },
     { url: `${base}/about/`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
     { url: `${base}/lab/`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.9 },
+    { url: `${base}/now/`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.5 },
+    { url: `${base}/uses/`, lastModified: now, changeFrequency: 'yearly' as const, priority: 0.4 },
   ]
   const posts = getPublishedPosts().map((p) => ({
     url: `${base}/blog/${p.slug}/`,

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { SiteSearch } from '@/components/search/site-search'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 import { cn } from '@/lib/utils'
 
@@ -80,6 +81,7 @@ export function SiteNav() {
               )
             })}
           </nav>
+          <SiteSearch />
           <ThemeToggle />
         </div>
       </div>

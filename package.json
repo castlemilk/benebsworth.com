@@ -8,7 +8,7 @@
     "md:siblings": "node scripts/gen-md-siblings.mjs",
     "prebuild": "node scripts/gen-md-siblings.mjs",
     "build": "next build",
-    "postbuild": "node scripts/og-rewrite.mjs",
+    "postbuild": "node scripts/og-rewrite.mjs && pagefind --site out",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -18,13 +18,16 @@
     "proto:gen": "buf generate",
     "build:archive": "bash scripts/build-archive.sh",
     "deploy:next": "bash scripts/deploy.sh staging",
-    "deploy:prod": "bash scripts/deploy.sh prod"
+    "deploy:prod": "bash scripts/deploy.sh prod",
+    "deploy:pages:next": "bash scripts/deploy-pages.sh staging",
+    "deploy:pages:prod": "bash scripts/deploy-pages.sh prod"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
     "@next/mdx": "^16.2.6",
+    "@next/third-parties": "^16.2.9",
     "@tailwindcss/typography": "^0.5.19",
     "animejs": "^4.4.1",
     "class-variance-authority": "^0.7.1",
@@ -66,13 +69,15 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^17.6.0",
     "jsdom": "^27.0.1",
+    "pagefind": "^1.5.2",
     "postcss": "^8.5.15",
     "serve": "^14.2.6",
     "tailwindcss": "^4.3.0",
     "ts-proto": "^2.11.8",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.7",
+    "wrangler": "^4.103.0"
   },
   "browserslist": [
     "defaults and fully supports es6-module-dynamic-import"

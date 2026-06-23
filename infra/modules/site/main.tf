@@ -86,7 +86,9 @@ resource "aws_cloudfront_response_headers_policy" "security" {
         "object-src 'none'",
         "frame-ancestors 'none'",
         "form-action 'self'",
-        "script-src 'self' 'unsafe-inline'",
+        // 'wasm-unsafe-eval' permits WebAssembly compilation (Pagefind search) —
+        // it does NOT enable JS eval(), so it's a narrow, targeted relaxation.
+        "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: https://i.ytimg.com",
         "font-src 'self'",

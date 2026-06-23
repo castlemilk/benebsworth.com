@@ -29,7 +29,7 @@ resource "aws_cloudfront_response_headers_policy" "security" {
   name    = "security-benebsworth-com"
   security_headers_config {
     content_security_policy {
-      content_security_policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; connect-src 'self'; frame-src 'none'; upgrade-insecure-requests"
+      content_security_policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; connect-src 'self'; frame-src 'none'; upgrade-insecure-requests"
       override                = true
     }
     content_type_options {

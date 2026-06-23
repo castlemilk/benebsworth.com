@@ -5,7 +5,28 @@ description: Use when deploying benebsworth.com (staging or prod), changing Clou
 
 # Deploying benebsworth.com
 
-Static Next.js (`output: 'export'`) → `out/` → **S3 + CloudFront**. NOT Vercel (ignore the Vercel session plugins). Two environments:
+> **⚡ NOW ON CLOUDFLARE PAGES (migrated 2026-06-23).** The live site is served by
+> **Cloudflare Pages**, not S3+CloudFront. Deploy with **`npm run deploy:pages:next`**
+> (staging → project `benebsworth-next`) / **`npm run deploy:pages:prod`** (prod →
+> `benebsworth`) — `scripts/deploy-pages.sh` builds then `wrangler pages deploy out`
+> (passing `--branch` = each project's production branch so it's a prod deploy, not a
+> preview; needs `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in env).
+> DNS is on Cloudflare (NS `luke`/`mckinley`, zone `b18684990f8bbad83a5dada1824ad388`);
+> headers/CSP live in `public/_headers`; www→apex is a CF `http_request_dynamic_redirect`
+> ruleset. GA4 wired (`NEXT_PUBLIC_GA_MEASUREMENT_ID`); CF Web Analytics = Pages dashboard
+> toggle. Cloudflare IaC: `infra/cloudflare/` (Terraform, global-key auth, plan clean —
+> Pages custom domains + www-redirect + google-verify TXT are API/dashboard-managed, not
+> TF). Full detail + gotchas: the `cloudflare-migration` auto-memory + `docs/superpowers/`.
+>
+> **Rollback to AWS** = point the apex/www/next CNAME *content* back at the CloudFront
+> targets (`d1nnawiq8qdjgb.cloudfront.net` prod, `d1qwco52fxejjm.cloudfront.net` next).
+> AWS S3 + both CloudFront dists are kept **dormant** (still Deployed, 0 DNS pointing at
+> them) for exactly this — rollback is a DNS change, no rebuild.
+>
+> **Everything below describes the now-DORMANT S3+CloudFront setup** — kept as the
+> rollback target + historical reference.
+
+Static Next.js (`output: 'export'`) → `out/`. The dormant AWS path was **S3 + CloudFront** (NOT Vercel — ignore the Vercel session plugins). Two (now-dormant) environments:
 
 | Env | URL | Distribution | Bucket |
 |---|---|---|---|

@@ -1,0 +1,126 @@
+---
+title: Why everything becomes a bell curve
+date: '2026-06-23T00:00:00.000Z'
+author: Ben Ebsworth
+description: >-
+  The bell curve turns up in heights, measurement errors, exam marks and sensor
+  noise, and that is not a coincidence — it is a theorem. We work through the
+  central limit theorem with a Galton board and a random walk: why adding up
+  enough independent things, almost whatever they are, always lands on the same
+  curve, and when it doesn't.
+labels: 'mathematics,statistics,probability'
+release: true
+heroImage: /blog/why-everything-becomes-a-bell-curve/hero.webp
+takeaways:
+  - >-
+    The bell curve isn't one distribution among many; it's the attractor that
+    sums of independent things fall into. Add enough of almost anything and you
+    get a Gaussian — the central limit theorem.
+  - >-
+    The width of the sum grows like √n, not n, which is why averaging many noisy
+    measurements sharpens the estimate.
+  - >-
+    The theorem has a price of entry: finite variance and rough independence.
+    Fat-tailed things (incomes, market moves) never settle onto the bell, and
+    assuming they do is how people get badly burned.
+markdown_url: /blog/why-everything-becomes-a-bell-curve/
+canonical_url: 'https://benebsworth.com/blog/why-everything-becomes-a-bell-curve/'
+---
+## Key takeaways
+
+- The bell curve isn't one distribution among many; it's the attractor that sums of independent things fall into. Add enough of almost anything and you get a Gaussian — the central limit theorem.
+- The width of the sum grows like √n, not n, which is why averaging many noisy measurements sharpens the estimate.
+- The theorem has a price of entry: finite variance and rough independence. Fat-tailed things (incomes, market moves) never settle onto the bell, and assuming they do is how people get badly burned.
+
+Here's something a bit odd once you notice it. The same curve keeps showing up in completely unrelated places: the heights of a thousand people, the errors in a batch of measurements, the marks on an exam, the noise on a sensor line, the spread of a dart-throw. Different causes, different units, and yet the histogram is always that same humped, symmetric bell. That can't be a coincidence, and it isn't. It's about the closest thing statistics has to a law of nature, and I think it's genuinely beautiful once you see *why* it has to be true.
+
+The short version: when you add up a lot of independent random things, the sum stops caring what the individual things looked like and settles onto one fixed shape. That's the central limit theorem (CLT), and the rest of this post is us working out why the bell, and not some other curve, is the one everything falls into.
+
+## Watch it happen
+
+Let's start by building one. A Galton board is a triangle of pegs; you drop a ball in the top and at every peg it bounces left or right, roughly fifty-fifty. By the time it reaches the bottom it's made a string of independent little decisions, and where it lands records how many went right. Drop one ball and it's anyone's guess. Drop a few thousand and a shape appears.
+
+> [GaltonBoard component] An interactive Galton board (quincunx) illustrating the Central Limit Theorem for the "why everything becomes a bell curve" post. Balls rain through a triangular array of pegs, each peg deflecting a ball left or right on a fair coin-flip, and pile into n+1 bottom bins to form a binomial histogram with an orange Normal(μ=n/2, σ²=n/4) curve overlaid. The reader presses drop to animate balls falling and drags a rows slider (6–14 peg rows); as the rows increase the histogram tightens onto the bell curve. The rendered post has the live version.
+
+Each ball's final bin is a sum of $n$ independent $\pm 1$ steps, so the bins follow the binomial distribution: bin $k$ collects a fraction $\binom{n}{k}/2^n$ of the balls. Crank the rows up and the binomial gets smoother and smoother until it's indistinguishable from the bell curve drawn over the top. We didn't put the bell there. It emerged from nothing more than "add up a lot of coin flips".
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+This is the part worth sitting with. The Gaussian isn't winning a popularity contest among distributions; it's a **fixed point**. If you take two independent Gaussians and add them, you get another Gaussian. No other "nice" shape with finite spread survives being added to copies of itself like that. So when you sum many independent things, the sum is pulled toward the one shape that's stable under summing, and it stays there. The individual things can be coin flips, uniform spinners, dice, lopsided yes/no events. The lumps and asymmetries average out, and what's left is the attractor.
+
+## A sum is a walk
+
+There's a second way to picture the same fact, and it connects to a thing I find I reach for constantly: a sum of random steps is just a random walk. Each step nudges you left or right; the position after $n$ steps is the running total. Watch a few walks and you'll see them fan out from the origin, and the cloud of where-they-end-up is (of course) a bell.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+The walk makes one thing visible that the static histogram hides: the spread grows, but slowly. After $n$ steps the cloud is wider, yet not $n$ times wider. The typical distance from the start grows like $\sqrt{n}$, because the variances add while the standard deviation (the width you actually see) is their square root. That single fact is why averaging works: average $n$ noisy measurements and the noise shrinks like $1/\sqrt{n}$, so a hundred readings are ten times sharper than one, not a hundred times. Diminishing returns, baked into the maths.
+
+## The theorem, stated plainly
+
+Take independent, identically distributed random variables $X_1, \dots, X_n$, each with mean $\mu$ and a *finite* variance $\sigma^2$. Their variances add:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\operatorname{Var}\!\left(\sum_{i=1}^{n} X_i\right) = n\sigma^2
+```
+
+$$
+\operatorname{Var}\!\left(\sum_{i=1}^{n} X_i\right) = n\sigma^2
+$$
+
+Now centre the sum (subtract its mean) and rescale it by that $\sqrt{n}$ width. The claim of the CLT is that this standardised sum stops depending on the details of $X$ at all and converges to a single distribution:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+Z_n = \frac{\sum_{i=1}^{n} X_i - n\mu}{\sigma\sqrt{n}} \;\xrightarrow{\;d\;}\; \mathcal{N}(0,1)
+```
+
+$$
+Z_n = \frac{\sum_{i=1}^{n} X_i - n\mu}{\sigma\sqrt{n}} \;\xrightarrow{\;d\;}\; \mathcal{N}(0,1)
+$$
+
+and that limit is the bell curve itself, whose density is
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\varphi(z) = \frac{1}{\sqrt{2\pi}}\, e^{-z^2/2}
+```
+
+$$
+\varphi(z) = \frac{1}{\sqrt{2\pi}}\, e^{-z^2/2}
+$$
+
+What I love here is how little the theorem asks for. It doesn't care whether $X$ is a coin flip or a die or a lopsided spinner. It only needs the pieces to be roughly independent and to have a finite variance. Hand it that, and out comes the same curve every single time.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+If you want the intuition rather than the proof: adding independent things multiplies their characteristic functions (their Fourier transforms), and the Gaussian is the function whose shape is its own Fourier transform. Repeated multiplying-and-rescaling washes out every feature except that self-similar one. So the bell is, loosely, the Fourier-stable fixed point of summing. The rigorous version is exactly this argument done carefully, and it's one of the tidier proofs in mathematics.
+
+## When it doesn't work
+
+A theorem is only as trustworthy as its assumptions, and the CLT's assumptions are quietly load-bearing. Push on them and the bell goes away.
+
+The big one is *finite variance*. The proof leans on $\sigma^2$ being a real, finite number to rescale by. Some distributions don't have that. The classic troublemaker is the Cauchy: average a thousand Cauchy samples and you get... another Cauchy, exactly as wild as a single sample. No sharpening, no bell, no convergence. Its tails are too heavy; rare enormous values dominate the sum no matter how many you take.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+This isn't a maths-class curiosity. Plenty of real quantities are fat-tailed: incomes, city sizes, file sizes, insurance losses, the daily moves of a market. They look bell-ish in the calm middle, so it's tempting to model them as normal, and then a "twelve-sigma" event that the bell says happens once in the age of the universe shows up twice a decade. The CLT is a promise about *thin-tailed, finite-variance, independent* things. Borrow it for anything else and the maths will be quietly, expensively wrong. Independence matters too: correlate the pieces and the variances no longer simply add, and the convergence slows or stalls.
+
+Some food for thought, and I don't have a clean answer: the bell curve is so good at describing the well-behaved middle of things that it trains our intuition to expect the middle everywhere. A lot of expensive surprises (financial blow-ups, "unprecedented" failures) are really just someone's bell-curve intuition meeting a fat-tailed world. Worth keeping a little suspicion handy whenever a histogram looks reassuringly normal.
+
+## So why is everything a bell curve?
+
+Because so much of what we measure is secretly a *sum*. A person's height is a sum of many small genetic and environmental nudges. A measurement error is a sum of many tiny independent errors in the apparatus. Sensor noise is a sum of countless little physical disturbances. Each of those is a Galton board you can't see, dropping its ball through a thousand invisible pegs, and the CLT guarantees where the pile ends up. The bell isn't a fact about heights or errors or noise. It's a fact about adding, and adding is everywhere.
+
+I want to come back to the Gaussian from the other direction in a later post, because it's *also* the maximum-entropy distribution for a given variance, which is a completely different reason for it to be everywhere and yet lands on the same curve. Same shape, two unrelated stories. That kind of coincidence-that-isn't is my favourite thing in maths. Watch this space.
+
+## Reading further
+
+- **de Moivre (1733) and Laplace**: the bell curve was first found exactly here, as the limit of the binomial — the Galton board, two centuries early. A nice account is in any history-of-statistics text; Stigler's *The History of Statistics* is the standard one.
+- **Galton, *Natural Inheritance* (1889)**: where the quincunx (the board above) comes from, and a lovely period read on the idea of regression to the mean. [galton.org](https://galton.org/books/natural-inheritance/)
+- **Strogatz, *The Joy of x***: the gentlest correct explanation of why the bell is special, if you want intuition over proof.
+- **Taleb, *The Black Swan***: the case against borrowing the bell for fat-tailed things, argued at length and with feeling. Read it as the warning callout above, expanded to a book.

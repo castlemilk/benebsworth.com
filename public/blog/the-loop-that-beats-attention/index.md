@@ -1,0 +1,182 @@
+---
+title: The loop that beats attention
+date: '2026-06-24T10:00:00.000Z'
+author: Ben Ebsworth
+description: >-
+  Attention won by reading every token at once, and the bill was quadratic
+  compute plus a cache that grows forever. State-space models like Mamba go back
+  to the recurrent loop everyone thought was dead: a fixed-size summary carried
+  forward in linear time. We work out why the loop came back, the one change
+  that made it competitive, the trick that keeps it parallel, and why its little
+  finite memory is both the win and the catch.
+labels: 'software,machine-learning,llm,sequence-models,mamba'
+release: true
+heroImage: /blog/the-loop-that-beats-attention/hero.webp
+takeaways:
+  - >-
+    Attention's cost is structural: O(n²) compute because every token reads
+    every other, and a KV cache that grows linearly and never stops. A
+    state-space model carries a fixed-size state forward in O(n) and never
+    re-reads the past.
+  - >-
+    Plain S4 already had the linear-time recurrence and still lost, because its
+    A, B, C were fixed for every token. A time-invariant filter can't choose to
+    ignore a token; making the update input-dependent is the whole fix.
+  - >-
+    The recurrence isn't doomed to be serial: because the state update is
+    associative, a parallel scan computes all n states in O(log n) depth, so the
+    loop trains as parallel as a transformer.
+  - >-
+    A finite state is lossy by construction. State-space models win on long,
+    streaming context and lose on exact copying and retrieval, which is why the
+    strongest systems are hybrids that keep a few attention layers.
+markdown_url: /blog/the-loop-that-beats-attention/
+canonical_url: 'https://benebsworth.com/blog/the-loop-that-beats-attention/'
+---
+## Key takeaways
+
+- Attention's cost is structural: O(n²) compute because every token reads every other, and a KV cache that grows linearly and never stops. A state-space model carries a fixed-size state forward in O(n) and never re-reads the past.
+- Plain S4 already had the linear-time recurrence and still lost, because its A, B, C were fixed for every token. A time-invariant filter can't choose to ignore a token; making the update input-dependent is the whole fix.
+- The recurrence isn't doomed to be serial: because the state update is associative, a parallel scan computes all n states in O(log n) depth, so the loop trains as parallel as a transformer.
+- A finite state is lossy by construction. State-space models win on long, streaming context and lose on exact copying and retrieval, which is why the strongest systems are hybrids that keep a few attention layers.
+
+In the [transformer post](/blog/a-transformer-reads-everything-at-once/) I made attention sound like an unalloyed win: every token reads every other token in a single parallel step, so there's no slow recurrent baton crawling left to right. That parallelism is exactly what let attention be trained on a GPU, and it's why the old recurrent networks were left for dead.
+
+Here's the catch I glossed over. Reading every token against every other costs you $n^2$ work for a sequence of length $n$, and at generation time you have to keep every past token's keys and values around in a cache that grows without limit. I spent a [whole post](/blog/shrinking-the-kv-cache/) on tricks to shrink that cache. State-space models ask a more radical question: what if you never re-read the past at all?
+
+## The bill attention can't stop paying
+
+Slide the context length up on this and watch the two costs pull apart. Attention's work climbs as the square of the length while a state-space model's climbs in a straight line, and the gap is the whole reason anyone went back to the loop.
+
+> [CostRace component] An interactive cost race for the "loop that beats attention" (Mamba) post. A context-length slider drives two growing areas — attention scaling as the square of sequence length, a state-space model scaling linearly — with live counters and a ratio that climbs as you lengthen the context, plus a faint linearly-growing KV-cache overlay. It makes the O(n²) versus O(n) gap something you watch rather than take on faith. The rendered post has the live version.
+
+The square is structural, not an implementation detail. If token 4,000 must attend to all 3,999 tokens before it, and so must every other token, you've signed up for $n^2$ comparisons no matter how clever your kernels are. And the cache that holds those keys and values grows one slab per token, forever. For a chatbot that's annoying; for a model meant to read a whole codebase or an hour of audio, it's the binding constraint.
+
+## Going back to the baton
+
+So we go back to the idea the transformer threw away: a running summary, updated one token at a time. Not an LSTM's tangle of gated nonlinearities, though. A plain *linear* recurrence with learnable matrices.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+h_t = \mathbf{A}\, h_{t-1} + \mathbf{B}\, x_t, \qquad y_t = \mathbf{C}\, h_t
+```
+
+$$
+h_t = \mathbf{A}\, h_{t-1} + \mathbf{B}\, x_t, \qquad y_t = \mathbf{C}\, h_t
+$$
+
+Read it slowly, because the payoff is in the shapes. The state $h_t$ has a *fixed* size, set once and never growing. To process the next token you update that one state and move on, so inference is $O(n)$ overall and the memory you carry between steps is $O(1)$, completely independent of how much text you've already read. Where attention's cost grows with the conversation, this doesn't.
+
+Which probably looks too simple to compete with attention, and honestly it should. Getting from "too simple" to "actually competitive" took until 2023, and it's worth seeing what was missing.
+
+## Where A, B and C come from
+
+These matrices aren't picked out of the air. The cleanest way to read equation (1) is as a *discretisation* of an underlying continuous-time system, $x'(t) = Ax + Bu$, sampled at a step size $\Delta$. The discrete matrices are what you get when you ask "if the continuous system runs for $\Delta$ seconds, where does the state land?".
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\overline{\mathbf{A}} = \exp(\Delta \mathbf{A}), \qquad \overline{\mathbf{B}} = (\Delta \mathbf{A})^{-1}\big(\exp(\Delta \mathbf{A}) - \mathbf{I}\big)\,\Delta \mathbf{B}
+```
+
+$$
+\overline{\mathbf{A}} = \exp(\Delta \mathbf{A}), \qquad \overline{\mathbf{B}} = (\Delta \mathbf{A})^{-1}\big(\exp(\Delta \mathbf{A}) - \mathbf{I}\big)\,\Delta \mathbf{B}
+$$
+
+The clever bit in S4 was choosing the structure of $A$ (the HiPPO construction) so that the state provably keeps a useful compression of a long history rather than forgetting it after a few steps. I'll wave at that rather than derive it; the point you need is that the matrices encode a principled, long memory, not an arbitrary one.
+
+## The same loop is also a convolution
+
+Now the duality that makes the whole thing trainable. Unroll the recurrence, and the output is just the input convolved with one long, fixed kernel.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+y = x * \mathbf{K}, \qquad \mathbf{K} = \big(\mathbf{C}\overline{\mathbf{B}},\ \mathbf{C}\,\overline{\mathbf{A}}\,\overline{\mathbf{B}},\ \mathbf{C}\,\overline{\mathbf{A}}^{2}\overline{\mathbf{B}},\ \dots\big)
+```
+
+$$
+y = x * \mathbf{K}, \qquad \mathbf{K} = \big(\mathbf{C}\overline{\mathbf{B}},\ \mathbf{C}\,\overline{\mathbf{A}}\,\overline{\mathbf{B}},\ \mathbf{C}\,\overline{\mathbf{A}}^{2}\overline{\mathbf{B}},\ \dots\big)
+$$
+
+One operation, two ways to compute it. At inference you run the recurrence: cheap, streaming, $O(1)$ state. At training you treat the whole sequence as a single convolution and do it in one parallel shot, which (since a long convolution is a multiplication in the frequency domain, the [Fourier](/blog/every-wave-is-a-circle/) trick) S4 evaluated with an FFT. That's how a "recurrent" model trained as fast as a transformer. Hold onto this duality; in a moment we lose it and have to win it back.
+
+## Why the first version underperformed
+
+Here's the puzzle that stumped the field for a while. S4 had the linear-time recurrence *and* the convolution trick, yet transformers still beat it on language. Why?
+
+Because $A$, $B$ and $C$ were *time-invariant*: the same filter applied to every token, regardless of what that token was. A fixed kernel has no way to say "this token is a delimiter I should ignore" or "this is the variable name I'll need later, hold onto it". It treats the word *the* and the one fact that answers the question with exactly the same response. Attention, by contrast, decides what to look at based on content. That missing content-awareness is the whole gap.
+
+## Selectivity: let the input steer the state
+
+Mamba's fix is almost cheeky in its directness. Make the step size and the read/write matrices *functions of the current token*.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\Delta_t,\ \mathbf{B}_t,\ \mathbf{C}_t = \operatorname{Linear}(x_t)
+```
+
+$$
+\Delta_t,\ \mathbf{B}_t,\ \mathbf{C}_t = \operatorname{Linear}(x_t)
+$$
+
+Recall from equation (2) that a big $\Delta$ takes a big step and writes the current input in strongly, while a small $\Delta$ barely moves the state. Make $\Delta$ depend on the token and you've handed the model a remember/forget gate: open it wide to overwrite the state with an important token, leave it nearly shut to let a filler word pass through untouched. Step through it here and watch the single fixed-size state get steered token by token, with attention's all-pairs wiring drawn above for contrast.
+
+> [SelectiveScan component] A selective-scan visualiser for the Mamba/state-space post. Tokens stream past while a single fixed-size state vector updates each step through an input-dependent gate (Mamba's selectivity), lighting up when a token is written/remembered and staying dim when it is ignored, computed from the real recurrence h_t = Δ·write + (1−Δ)·decay·h_{t-1}. A row of all-pairs attention arcs sits above it for contrast, so you can see the difference between reading everything and carrying one steerable summary. The rendered post has the live version.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+This is the picture the loop is replacing. Every particle wires to every other one, all at once: the $O(n^2)$ all-pairs network that reads the whole sequence in a single step. The state-space model keeps only the one travelling summary above, so the contrast is literal. Attention holds every token and pays for it; the loop holds a fixed-size digest and steers it.
+
+## The catch, and the parallel scan that saves it
+
+There's a price for selectivity, and it's the duality we were told to hold onto.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The moment $A$, $B$ and $C$ depend on the token, the kernel $K$ in equation (3) is no longer fixed across the sequence, so the FFT-convolution that made S4 fast is gone. Mamba doesn't get the convolution view back. It gives it up, and rescues parallelism a different way. The post's whole pivot is this: the fix for *quality* (input-dependence) breaks the trick for *speed*, so a second, older trick has to put the speed back.
+
+That older trick is the parallel scan, and it's the prettiest idea in the post.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+A linear recurrence is *associative*: applying step $t$ and then step $t{+}1$ to a state is itself a single step of the same form, so partial steps can be combined in any grouping you like. That is exactly the precondition for a parallel prefix scan, the same primitive that turns a serial cumulative sum into an $O(\log n)$-depth operation on a GPU. The recurrence only *looked* serial because we wrote it left to right. Blelloch's 1990 work on prefix sums had the machinery waiting decades before the architecture needed it.
+
+So Mamba computes all $n$ states with a scan in $O(\log n)$ depth instead of an $O(n)$ crawl, keeps the whole thing in fast on-chip memory, and never materialises the full sequence of states. The loop trains in parallel after all.
+
+## The catch you can't optimise away
+
+I've been selling the win. Here's the honest cost, and it's not a bug you can patch out.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+A fixed-size state is a compressed summary of an unbounded past, and no amount of training removes the compression. Ask a state-space model to copy a long random string back verbatim, or to fetch the exact token sitting at position 4,000, and it struggles where attention, which literally kept every token's key and value, does not. The finite state is the source of the linear-time win *and* the source of the retrieval weakness. They are the same fact wearing two hats.
+
+Which is why nobody actually had to pick a side.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Production systems like Jamba interleave a few attention layers, for the exact lookups a finite state can't do, with many state-space layers that carry the long-context bulk at linear cost. The cheap loop does the heavy lifting; the occasional expensive attention layer handles the retrieval. The field didn't crown a winner, it built a hybrid, and that's usually the sign of two ideas that are each right about something different.
+
+One honest aside before the recap. If equation (1) looks familiar to anyone who's done control or signals, that's because it *is* familiar. $h_t = A h_{t-1} + B x_t,\ y_t = C h_t$ is the standard discrete-time linear state-space model, the same $(A, B, C)$ an engineer writes down for a filter or feeds to a Kalman filter. The "hidden state" a control engineer means by *state* is, almost word for word, the "hidden state" the old RNN meant. What's new isn't the equation. It's making $A$, $B$, $C$ learned and input-dependent and stacking the thing fifty layers deep. Mamba quietly reunited two fields that had been writing down the same maths for different reasons.
+
+## So, which loop wins
+
+Attention reads everything and pays for it forever. The state-space model reads once, keeps a small steerable summary, and trades exact recall for linear cost. Neither strictly wins, which is why the field, sensibly, kept both, layered together. The thing I find satisfying is that the "dead" recurrent loop didn't come back unchanged. It came back having borrowed a content-gate from attention and a parallel scan from 1990s parallel computing, and only then could it compete.
+
+## Recap
+
+Attention's $n^2$ cost and ever-growing cache are structural. A linear recurrence with a fixed-size state fixes both, at $O(n)$ time and $O(1)$ memory per step. S4 had that already and lost, because a time-invariant filter can't choose what to ignore. Mamba makes the update input-dependent (selectivity), which costs it the convolution trick and forces a parallel scan to keep training fast. The finite state is the whole bargain: linear cost in exchange for fuzzy recall, which is why the best systems hybridise it with a little attention.
+
+## Reading further
+
+- **Gu & Dao (2023), *Mamba: Linear-Time Sequence Modeling with Selective State Spaces***: selectivity (S6) and the hardware-aware scan, the central reference here. [arXiv:2312.00752](https://arxiv.org/abs/2312.00752)
+- **Gu, Goel & Ré (2021), *Efficiently Modeling Long Sequences with Structured State Spaces (S4)***: the continuous-time SSM, HiPPO, and the convolution view. [arXiv:2111.00396](https://arxiv.org/abs/2111.00396)
+- **Smith, Warrington & Linderman (2022), *Simplified State Space Layers (S5)***: the parallel-scan formulation that bridges S4's convolution to Mamba's scan. [arXiv:2208.04933](https://arxiv.org/abs/2208.04933)
+- **Blelloch (1990), *Prefix Sums and Their Applications***: the associative scan primitive, decades older than the architecture that needed it. [cs.cmu.edu](https://www.cs.cmu.edu/~guyb/papers/Ble93.pdf)
+- **Rush, *The Annotated S4***: a runnable, heavily-annotated walk through the discretisation and the kernel. [srush.github.io](https://srush.github.io/annotated-s4/)
+- **Lieber et al. (2024), *Jamba: A Hybrid Transformer-Mamba Language Model***: the hybrid that keeps exact retrieval while paying linear cost for the bulk. [arXiv:2403.19887](https://arxiv.org/abs/2403.19887)
+
+Next I want to take that parallel scan apart on its own, because the prefix-sum primitive quietly powers half of modern GPU code and it deserves its own bench. Watch this space.

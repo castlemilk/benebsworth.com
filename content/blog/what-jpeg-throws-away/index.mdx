@@ -1,0 +1,98 @@
+---
+title: "What JPEG throws away"
+date: "2026-06-23T00:00:00.000Z"
+author: Ben Ebsworth
+description: "A JPEG is often a tenth the size of the raw image and you can't see the difference. Where did ninety percent of the data go? We follow an 8×8 block through the discrete cosine transform and quantisation to find out: JPEG sorts a picture by spatial frequency, then quietly bins the fine detail your eyes barely register."
+labels: electrical-engineering,signals,compression
+release: true
+heroImage: /blog/what-jpeg-throws-away/hero.webp
+takeaways:
+  - "JPEG works by changing what it stores: instead of pixels, it stores how much of each spatial frequency a small block contains, using the discrete cosine transform."
+  - "The DCT compacts almost all of a block's energy into a few low-frequency coefficients, so quantisation can round the rest to zero — and the rest is the fine detail the eye is least sensitive to."
+  - "Push the quality down and you see the cost directly: the 8×8 block grid appears and sharp edges ring, because you've thrown away the high-frequency coefficients that described them."
+---
+
+Save a photo as a JPEG and it's often a tenth the size of the raw original, sometimes less, and you'd struggle to spot the difference. That should bother you a little. Where did ninety percent of the information go? It can't be free. The answer is that JPEG is very good at finding the parts of an image your eyes don't actually use, and throwing exactly those away. It's not magic compression; it's a careful model of what human vision ignores. Let's follow a single tile of an image through the machine and watch the data disappear.
+
+This is, underneath, the same frequency-domain idea as the [Fourier series](/blog/every-wave-is-a-circle/) (re-describing a signal by which waves it's made of), applied to pictures. If that post was about sound and circles, this is the same trick in two dimensions, doing something eminently practical.
+
+## Stop storing pixels
+
+JPEG's first move is to stop thinking in pixels. It chops the image into 8×8 blocks and asks a different question of each one: not "what are these 64 brightness values" but "how much of each *spatial frequency* is in this block". A flat patch of sky is almost all low frequency (it barely changes across the block); a patch with a sharp edge or fine texture has high-frequency content. The tool that re-expresses a block this way is the **discrete cosine transform** (DCT), a close cousin of the Fourier transform that uses cosines:
+
+<Equation id="eqn:dct" number="1" caption="The 2-D DCT-II: re-express an 8×8 block of pixels f(x,y) as 64 frequency coefficients F(u,v), from the flat average (top-left) to the finest checkerboard (bottom-right)." latex="F(u,v) = \tfrac{1}{4} C(u)C(v) \sum_{x=0}^{7}\sum_{y=0}^{7} f(x,y) \cos\!\frac{(2x{+}1)u\pi}{16}\cos\!\frac{(2y{+}1)v\pi}{16}">
+
+$$
+F(u,v) = \tfrac{1}{4} C(u)C(v) \sum_{x=0}^{7}\sum_{y=0}^{7} f(x,y) \cos\!\frac{(2x{+}1)u\pi}{16}\cos\!\frac{(2y{+}1)v\pi}{16}
+$$
+
+with $C(0) = 1/\sqrt{2}$ and $C(k)=1$ otherwise.
+
+</Equation>
+
+The output is another 8×8 grid, but now each cell is a *coefficient*: how much of one particular cosine pattern the block contains. The top-left cell ($u=v=0$) is the block's average brightness, the "DC" term; move right and down and the patterns get finer, up to a fine checkerboard in the bottom-right corner. Here's a block, its coefficients, and the reconstruction, side by side. Drag the quality down and watch what happens.
+
+<DctBlock />
+
+## The detail clusters where you'll miss it
+
+Here's the property that makes the whole thing work, and you can see it in the coefficient panel: for real images, almost all the magnitude piles up in the top-left, the low frequencies. The fine, high-frequency coefficients are mostly small. That's called **energy compaction**, and the DCT is famously good at it for natural images. So most of a block is described by a handful of numbers, and the rest is small change.
+
+<Callout type="thinking" title="The DCT sorts detail by how much you'll notice it">
+
+This is the quiet brilliance. The transform doesn't *delete* anything: it's perfectly reversible, the reconstruction at top quality is exact. What it does is *reorganise* the block so that the important, low-frequency structure and the negligible, high-frequency detail end up in separate, labelled boxes. Once they're sorted, you can keep the big boxes and discard the small ones. And it happens that human vision is far more sensitive to low spatial frequencies (broad shapes and gradients) than to high ones (fine texture), so "the small coefficients" and "the detail you won't miss" are largely the same set. The DCT lines the data up so the throwing-away is easy and cheap to your eye.
+
+</Callout>
+
+## The actual throwing-away
+
+Sorting doesn't save space by itself; the discarding happens at the next step, **quantisation**. Each coefficient is divided by a number from a quantisation table and rounded:
+
+<Equation id="eqn:quant" number="2" caption="Quantisation: divide each coefficient by a table value tuned to human vision, then round. Large divisors on the high-frequency cells round most of them to exactly zero — and zeros compress away to almost nothing." latex="F_q(u,v) = \operatorname{round}\!\left(\frac{F(u,v)}{Q(u,v)}\right)">
+
+$$
+F_q(u,v) = \operatorname{round}\!\left(\frac{F(u,v)}{Q(u,v)}\right)
+$$
+
+</Equation>
+
+The table $Q$ uses small divisors for the low frequencies (keep them precise) and large divisors for the high ones (crush them). A high-frequency coefficient divided by a big number and rounded becomes zero, and a block full of zeros compresses to almost nothing in the final lossless step. That's where the ninety percent goes: into runs of zeros that used to be faint detail.
+
+<Callout type="info" title="The quant table is a model of your eyes">
+
+The standard JPEG quantisation table isn't arbitrary. It was tuned against experiments on human contrast sensitivity. It throws away high-frequency *luminance* aggressively, and high-frequency *colour* even more aggressively, because the eye is least sensitive there (it's also why JPEG stores colour at lower resolution than brightness). The "quality" slider just scales this whole table up or down. So a JPEG isn't a generic compressor that happens to work on images; it's a compressor with a model of your visual system baked into a little 8×8 table of numbers.
+
+</Callout>
+
+To get the picture back, you multiply the quantised coefficients by the table again (recovering approximations of the originals, the rounding now permanent) and run the DCT in reverse:
+
+<Equation id="eqn:idct" number="3" caption="The inverse DCT rebuilds the block from its (now quantised) coefficients. Because quantisation rounded the small ones to zero, the reconstruction is close but no longer exact — that's the 'lossy' in lossy compression." latex="f(x,y) = \tfrac{1}{4}\sum_{u=0}^{7}\sum_{v=0}^{7} C(u)C(v)\,F(u,v) \cos\!\frac{(2x{+}1)u\pi}{16}\cos\!\frac{(2y{+}1)v\pi}{16}">
+
+$$
+f(x,y) = \tfrac{1}{4}\sum_{u=0}^{7}\sum_{v=0}^{7} C(u)C(v)\,F(u,v) \cos\!\frac{(2x{+}1)u\pi}{16}\cos\!\frac{(2y{+}1)v\pi}{16}
+$$
+
+</Equation>
+
+## You can push it too far
+
+Drag the quality slider all the way down in the demo and the trick stops hiding. Two things appear. First, the **8×8 grid** becomes visible. Because each block is quantised independently, neighbours stop agreeing at their edges and the tiling shows through. Second, sharp edges **ring**: an edge needs lots of high-frequency coefficients to stay crisp, and once you've binned those away, the inverse DCT reconstructs the edge as a wobble, the same overshoot the [Fourier series shows at a discontinuity](/blog/every-wave-is-a-circle/) (the Gibbs phenomenon, in two dimensions). Those two artefacts, blocking and ringing, are the visible signature of JPEG running out of room.
+
+<Callout type="warning" title="Why heavily-shared JPEGs look crunchy">
+
+Every time an image is re-saved as JPEG it gets quantised again, and the damage accumulates. This is "generation loss", the reason a meme that's been screenshotted and re-shared a hundred times looks like it's been through a war. It's also why you should keep a lossless master (PNG, or the raw) of anything you'll edit repeatedly, and only export to JPEG at the end. Quantisation is a one-way door; walk through it once per save.
+
+</Callout>
+
+Some food for thought: JPEG, MP3, and most of the media you consume are built on the same philosophy: find the limits of human perception and store only up to them. MP3 throws away sounds your ear masks; JPEG throws away detail your eye glosses over. There's something a bit unsettling and a bit wonderful about how much of our digital world is shaped precisely around the gaps in our own senses. We're not storing reality; we're storing the part of it we can tell apart.
+
+## Recap
+
+JPEG stops storing pixels and starts storing spatial frequencies, using the DCT to sort each 8×8 block so the important low-frequency structure separates cleanly from the negligible high-frequency detail. Quantisation then rounds the high frequencies toward zero, guided by a table tuned to human vision, and the resulting runs of zeros compress away. Done gently it's invisible; pushed hard it shows its hand as blocking and ringing. Ninety percent of the file was detail you were never going to see.
+
+## Reading further
+
+- **Wallace (1991), *The JPEG Still Picture Compression Standard***: the original overview from the committee that designed it, and still the clearest end-to-end description. [ieeexplore / PDF](https://www.cs.cmu.edu/~chuck/lennapg/lenna_files/wallace_1991.pdf)
+- **Ahmed, Natarajan & Rao (1974)**: the paper that introduced the discrete cosine transform itself, the mathematical engine under the whole format. [the DCT paper](https://ieeexplore.ieee.org/document/1672377)
+- **Pennebaker & Mitchell, *JPEG: Still Image Data Compression Standard***: the deep reference book if you want every stage including the entropy coding the post skipped.
+- **Christopher Olah-style visual treatments and the *Unraveling JPEG* interactive (Omar Shehata, parametric.press)**: a gorgeous interactive walk through every stage if you want to poke at a real image. [parametric.press/issue-01/unraveling-the-jpeg](https://parametric.press/issue-01/unraveling-the-jpeg/)

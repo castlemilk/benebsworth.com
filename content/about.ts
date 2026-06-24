@@ -4,10 +4,21 @@ export const about: About = {
   bio: "Self-driven engineer who builds across the whole stack of computing — from electrical and embedded hardware, up through distributed software platforms, to the product and developer experience on top. An electrical & computer systems background grounds how I design and build; years operating large-scale platforms shape how I make it reliable; and I work AI-native, treating LLMs and agents as a core part of the toolchain rather than a bolt-on. This place is where I explore new ideas and sharpen my ability to take creations from concept to production. I'm glad you've stopped by.",
   timeline: [
     {
-      when: 'December 2023 — present',
-      title: 'Senior Software Engineer · Atlassian',
+      when: '2024 — present',
+      title: 'Senior Software Engineer, Kubernetes Platform · Atlassian',
       detail:
-        'Working in the Micros platform team — responsible for the running and support of Atlassian products and services on top of AWS. Building and operating the internal platform, developer tooling, and orchestration that thousands of Atlassian services deploy and run on.',
+        "Atlassian's Kubernetes platform team — responsible for service deployment and operating large fleets of clusters. Building the core services that enable deployment, release validation, and richer observability across the fleet.",
+      logo: '/about/logos/atlassian-logo.png',
+      company: 'Atlassian',
+      color: '#2684ff',
+      kind: 'work',
+      tech: ['Go', 'Kubernetes', 'AWS', 'GCP', 'Python', 'Terraform', 'Istio'],
+    },
+    {
+      when: 'December 2023 — 2024',
+      title: 'Senior Software Engineer, Micros Platform · Atlassian',
+      detail:
+        "Core team for Micros — Atlassian's internal PaaS, running 4000+ services on AWS. Built and operated the internal platform, developer tooling, and orchestration that thousands of Atlassian services deploy and run on.",
       logo: '/about/logos/atlassian-logo.png',
       company: 'Atlassian',
       color: '#2684ff',

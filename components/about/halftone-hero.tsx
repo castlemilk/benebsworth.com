@@ -16,10 +16,12 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from 're
  * "reveal mask" — so the photo shows through wherever it's been brushed. The
  * strokes ACCUMULATE: each interaction reveals a little more of the face.
  *
- * Persistence: the reveal mask is serialised to localStorage, so the work a
- * visitor does survives reloads. Once revealed coverage crosses a threshold,
- * the remaining halftone dissolves to a full reveal that is also persisted —
- * "the more you interact, the more it reveals, until it's fully revealed."
+ * Persistence: the reveal mask is serialised to sessionStorage, so the work a
+ * visitor does survives reloads/navigation WITHIN a session — but a fresh visit
+ * starts hidden again, so the reveal is re-experienceable. Once revealed
+ * coverage crosses a threshold, the remaining halftone dissolves to a full
+ * reveal that is also persisted for the session — "the more you interact, the
+ * more it reveals, until it's fully revealed."
  *
  * A small reset tick in the metadata strip clears the persisted state so the
  * reveal can be replayed.
@@ -47,18 +49,24 @@ const MASK_H = Math.round((MASK_W * IMG_H) / IMG_W) // 458
 // once the face itself is mostly developed — a handful of deliberate strokes.
 const FINISH_AT = 0.55
 
-const LS_MASK = 'about:portrait-reveal:v2:mask'
-const LS_DONE = 'about:portrait-reveal:v2:done'
+// Reveal state is SESSION-scoped: a fresh visit always re-presents the halftone
+// cover (so the develop-the-portrait effect is re-experienceable), while reloads
+// and navigation within the same session keep your progress.
+const SS_MASK = 'about:portrait-reveal:v3:mask'
+const SS_DONE = 'about:portrait-reveal:v3:done'
+// Old localStorage keys (the previous persist-forever behaviour) — purged once
+// on mount so a returning visitor isn't stuck on a fully-revealed portrait.
+const OLD_LOCAL_KEYS = ['about:portrait-reveal:v2:mask', 'about:portrait-reveal:v2:done']
 
 const HALFTONE_SRC = '/about/portrait-main-halftone.png'
 const PHOTO_SRC = '/about/portrait-main.webp'
 
-// Reading localStorage can THROW (sandboxed iframe, Safari "block all cookies",
+// Reading sessionStorage can THROW (sandboxed iframe, Safari "block all cookies",
 // private mode) — not just on write. Guard the reads so a blocked-storage
 // visitor still gets a fully interactive (just non-persistent) portrait.
-const lsGet = (k: string): string | null => {
+const ssGet = (k: string): string | null => {
   try {
-    return window.localStorage.getItem(k)
+    return window.sessionStorage.getItem(k)
   } catch {
     return null
   }
@@ -152,7 +160,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
     const mask = maskRef.current
     if (!mask) return
     try {
-      window.localStorage.setItem(LS_MASK, mask.toDataURL('image/png'))
+      window.sessionStorage.setItem(SS_MASK, mask.toDataURL('image/png'))
     } catch {
       /* quota / privacy mode — non-fatal, reveal just won't persist */
     }
@@ -161,8 +169,8 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
   const finish = useCallback(() => {
     setDone(true)
     try {
-      window.localStorage.setItem(LS_DONE, '1')
-      window.localStorage.removeItem(LS_MASK)
+      window.sessionStorage.setItem(SS_DONE, '1')
+      window.sessionStorage.removeItem(SS_MASK)
     } catch {
       /* non-fatal */
     }
@@ -172,6 +180,13 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
   useEffect(() => {
     if (typeof window === 'undefined') return
     let alive = true
+
+    // one-time purge of the old persist-forever localStorage state
+    try {
+      for (const k of OLD_LOCAL_KEYS) window.localStorage.removeItem(k)
+    } catch {
+      /* non-fatal */
+    }
 
     // offscreen mask canvas — context created once with the readback flag
     const mask = document.createElement('canvas')
@@ -194,13 +209,13 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
         if (!alive) return
         halftoneRef.current = half
 
-        const isDone = lsGet(LS_DONE) === '1'
+        const isDone = ssGet(SS_DONE) === '1'
         if (isDone) {
           setDone(true)
           setTouched(true)
           setCoverage(1)
         } else {
-          const saved = lsGet(LS_MASK)
+          const saved = ssGet(SS_MASK)
           if (saved) {
             try {
               const m = await loadImg(saved)
@@ -363,8 +378,8 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
 
   const reset = () => {
     try {
-      window.localStorage.removeItem(LS_MASK)
-      window.localStorage.removeItem(LS_DONE)
+      window.sessionStorage.removeItem(SS_MASK)
+      window.sessionStorage.removeItem(SS_DONE)
     } catch {
       /* non-fatal */
     }

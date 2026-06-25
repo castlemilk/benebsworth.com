@@ -48,12 +48,27 @@ message Certification {
   string badge = 5;
 }
 
+// Where a skill traces back to: a role, a degree, or independent work.
+message SkillSource {
+  string label = 1; // "Atlassian", "Monash University", "This site & labs"
+  string kind = 2;  // "work" | "education" | "personal"
+  string when = 3;  // "2018 → now", "2014", ""
+  string color = 4; // accent (company/issuer colour)
+}
+message Skill {
+  string name = 1;
+  string note = 2;     // one-line "how I acquired / use it"
+  string category = 3; // grouping label, e.g. "AI-Native"
+  string since = 4;    // overall span, e.g. "2016 → now"
+  repeated SkillSource sources = 5;
+}
+
 message About {
   string bio = 1;
   repeated TimelineEntry timeline = 2;
   repeated SpeakingEvent speaking = 3;
   repeated Certification certifications = 4;
-  repeated string skills = 5;
+  repeated Skill skills = 5;
 }
 
 enum ArtifactKind {

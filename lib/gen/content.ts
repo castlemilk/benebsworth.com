@@ -4,6 +4,8 @@
 //   protoc               unknown
 // source: content.proto
 
+/* eslint-disable */
+
 export const protobufPackage = "content";
 
 export enum ArtifactKind {
@@ -74,12 +76,35 @@ export interface Certification {
   badge: string;
 }
 
+/** Where a skill traces back to: a role, a degree, or independent work. */
+export interface SkillSource {
+  /** "Atlassian", "Monash University", "This site & labs" */
+  label: string;
+  /** "work" | "education" | "personal" */
+  kind: string;
+  /** "2018 → now", "2014", "" */
+  when: string;
+  /** accent (company/issuer colour) */
+  color: string;
+}
+
+export interface Skill {
+  name: string;
+  /** one-line "how I acquired / use it" */
+  note: string;
+  /** grouping label, e.g. "AI-Native" */
+  category: string;
+  /** overall span, e.g. "2016 → now" */
+  since: string;
+  sources: SkillSource[];
+}
+
 export interface About {
   bio: string;
   timeline: TimelineEntry[];
   speaking: SpeakingEvent[];
   certifications: Certification[];
-  skills: string[];
+  skills: Skill[];
 }
 
 export interface Artifact {
@@ -92,6 +117,9 @@ export interface Artifact {
   glyph: string;
 }
 
+// ── MANUAL ADDITION (re-apply after `npm run proto:gen`) ──────────────────
+// `category` / `LabCategory` are not in content.proto — they're hand-added to
+// the generated type. buf regeneration drops them, so they must be restored.
 export type LabCategory = 'art' | 'maths' | 'physics' | 'engineering' | 'ai' | 'cosmology'
 
 export interface LabEffect {
@@ -102,3 +130,4 @@ export interface LabEffect {
   category: LabCategory;
   homeEmbedSafe: boolean;
 }
+// ── END MANUAL ADDITION ───────────────────────────────────────────────────

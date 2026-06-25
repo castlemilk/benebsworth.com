@@ -313,6 +313,8 @@ a:focus-visible .word .snake-body {
    components/landing/word-blob.tsx. The letter + connector glow below stays. */
 
 @keyframes skillmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* skill expander popover entrance (about page toolkit) */
+@keyframes skillpop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 
 /* ── ReactBits-style StarBorder + ShinyText (circuit-sim "Open Studio" CTA) ──
    A light "star" rides each edge; the label sweeps a shimmer. Both degrade to a

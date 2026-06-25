@@ -1,6 +1,6 @@
 ---
 title: Why Gravity Is Geometry
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-03-31T00:00:00.000Z'
 description: >-
   Gravity is not a force that pulls objects together. It is the shape of curved
   spacetime, and a falling object is simply coasting in a straight line through

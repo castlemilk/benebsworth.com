@@ -1,6 +1,6 @@
 ---
 title: 'Dark Matter: the Unseen Gravity'
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-05-04T00:00:00.000Z'
 description: >-
   Galaxies spin as though they weigh five times more than every star and gas
   cloud we can see. Either most of the universe is matter that emits no light,

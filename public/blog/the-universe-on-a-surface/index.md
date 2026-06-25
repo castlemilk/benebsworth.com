@@ -1,6 +1,6 @@
 ---
 title: The Universe on a Surface
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-04-28T00:00:00.000Z'
 description: >-
   The most information you can pack into a region is set by its boundary area,
   not its volume. In a deep sense the contents of a 3-D space are written on a

@@ -1,6 +1,6 @@
 ---
 title: Dark Energy and the Runaway Universe
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-06-09T00:00:00.000Z'
 description: >-
   The expansion of the universe is speeding up, which forces a strange
   conclusion: roughly 70% of everything is a smooth, invisible energy that

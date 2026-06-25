@@ -1,6 +1,6 @@
 ---
 title: How Space Itself Expands
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-04-11T00:00:00.000Z'
 description: >-
   Distant galaxies aren't flying through space away from us. The space between
   them is stretching, governed by a single number whose entire history one

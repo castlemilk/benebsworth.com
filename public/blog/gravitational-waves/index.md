@@ -1,6 +1,6 @@
 ---
 title: 'Gravitational Waves: Hearing Spacetime Ring'
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-06-03T00:00:00.000Z'
 description: >-
   When two black holes spiral together they shake spacetime itself. In 2015 a
   detector with 4 km arms felt the ripple as a fifth-of-a-second chirp,

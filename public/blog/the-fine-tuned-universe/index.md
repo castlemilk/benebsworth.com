@@ -1,6 +1,6 @@
 ---
 title: The Fine-Tuned Universe
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-06-19T00:00:00.000Z'
 description: >-
   Nudge a handful of the constants of nature by a fraction of a percent and you
   get a sterile cosmos: no stars, no atoms, no chemistry. That apparent

@@ -1,6 +1,6 @@
 ---
 title: The Cosmic Distance Ladder
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-05-09T00:00:00.000Z'
 description: >-
   We never measure a cosmic distance directly. We bootstrap from parallax to
   Cepheids to Type Ia supernovae, each rung calibrating the next, all the way

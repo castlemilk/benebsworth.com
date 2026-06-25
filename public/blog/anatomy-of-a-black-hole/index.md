@@ -1,6 +1,6 @@
 ---
 title: Anatomy of a Black Hole
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-04-16T00:00:00.000Z'
 description: >-
   A black hole is mostly empty geometry. The only real surface is the event
   horizon, and every feature worth a name — photon sphere, ISCO, shadow, Hawking

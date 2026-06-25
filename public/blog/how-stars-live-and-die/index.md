@@ -1,6 +1,6 @@
 ---
 title: How Stars Live and Die
-date: '2026-06-25T00:00:00.000Z'
+date: '2026-05-17T00:00:00.000Z'
 description: >-
   A star's whole life is one long stalemate between gravity pulling in and
   fusion pushing out — and whether it ends as a white dwarf, a neutron star, or

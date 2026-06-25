@@ -37,15 +37,21 @@ function galaxyData(n: number, seed: number) {
   const r = rand(seed)
   const pos = new Float32Array(n * 3), col = new Float32Array(n * 3), siz = new Float32Array(n)
   for (let i = 0; i < n; i++) {
+    // ~28% of points pack into a bright bulge; the rest trace the arms.
+    const inCore = i % 10 < 3
+    const f = inCore ? Math.pow(r(), 2.2) * 0.32 : Math.pow(r(), 0.7)
     const arm = i % 2
-    const f = Math.pow(r(), 0.7)
-    const ang = arm * Math.PI + f * 5.5 + (r() - 0.5) * 0.5
-    pos[i * 3] = Math.cos(ang) * f + (r() - 0.5) * 0.08
+    const ang = arm * Math.PI + f * 5.5 + (r() - 0.5) * (0.35 + f * 0.4)
+    const jitter = inCore ? 0.04 : 0.07
+    pos[i * 3] = Math.cos(ang) * f + (r() - 0.5) * jitter
     pos[i * 3 + 1] = (r() - 0.5) * 0.05 * (1 - f)
-    pos[i * 3 + 2] = Math.sin(ang) * f + (r() - 0.5) * 0.08
+    pos[i * 3 + 2] = Math.sin(ang) * f + (r() - 0.5) * jitter
     const core = 1 - f
-    col[i * 3] = 0.6 + core * 0.4; col[i * 3 + 1] = 0.5 + core * 0.45; col[i * 3 + 2] = 0.85 + core * 0.15
-    siz[i] = (5 + r() * 9) * (0.4 + core)
+    // brighter, warmer toward the core; additive blending sums these up
+    col[i * 3] = (0.85 + core * 0.55) * 1.1
+    col[i * 3 + 1] = (0.7 + core * 0.5) * 1.1
+    col[i * 3 + 2] = (1.0 + core * 0.1)
+    siz[i] = (7 + r() * 11) * (0.55 + core * 0.9)
   }
   return { pos, col, siz }
 }
@@ -210,16 +216,19 @@ export function createUniverseGL(canvas: HTMLCanvasElement): UniverseGL {
       }
       case 'hand': { const b = sph(5, C.skin, [1, 1, 1], 1); b.scale = [0.7, 1, 0.4]; m.push(b); break }
       case 'human': spin = 0.15
-        m.push(sph(5, C.skin, [1, 1, 1], 0.2, [0, 0.78, 0]))
-        m.push(box([0.3, 0.45, 0.7], [0.34, 0.7, 0.22], [0, 0.2, 0]))
-        m.push(box([0.2, 0.22, 0.3], [0.14, 0.8, 0.16], [-0.12, -0.5, 0]))
-        m.push(box([0.2, 0.22, 0.3], [0.14, 0.8, 0.16], [0.12, -0.5, 0])); break
+        m.push(sph(5, C.skin, [1, 1, 1], 0.17, [0, 0.82, 0]))                 // head
+        m.push(box([0.3, 0.45, 0.7], [0.32, 0.66, 0.22], [0, 0.28, 0]))       // torso
+        m.push(box(C.skin, [0.11, 0.6, 0.13], [-0.26, 0.32, 0]))              // arms
+        m.push(box(C.skin, [0.11, 0.6, 0.13], [0.26, 0.32, 0]))
+        m.push(box([0.2, 0.22, 0.3], [0.13, 0.78, 0.15], [-0.11, -0.46, 0]))  // legs
+        m.push(box([0.2, 0.22, 0.3], [0.13, 0.78, 0.15], [0.11, -0.46, 0])); break
       case 'car': spin = 0.15
         m.push(box(C.mars, [1.8, 0.5, 0.8], [0, 0, 0]))
         m.push(box([0.6, 0.7, 0.85], [0.9, 0.45, 0.7], [0, 0.4, 0])); break
-      case 'whale': spin = 0.12
-        { const b = sph(5, C.whale, C.white, 1); b.scale = [2, 0.7, 0.7]; m.push(b) }
-        m.push({ geom: 'cone', surface: 0, color: C.whale, color2: C.whale, pos: [1.9, 0, 0], scale: [0.5, 0.6, 0.5], tilt: [0, 0, 1.57], cull: false }); break
+      case 'whale': spin = 0.1
+        { const b = sph(5, C.whale, C.white, 1); b.scale = [2, 0.8, 0.9]; m.push(b) }              // body
+        m.push({ geom: 'cone', surface: 0, color: C.whale, color2: C.whale, pos: [0.05, 0.72, 0], scale: [0.18, 0.45, 0.1], tilt: [0, 0, -0.25], cull: false }) // dorsal fin
+        m.push({ geom: 'cone', surface: 0, color: C.whale, color2: C.whale, pos: [1.9, 0, 0], scale: [0.45, 0.55, 0.85], tilt: [0, 0, 1.57], cull: false }); break // fluke
       case 'pitch': m.push(box([0.2, 0.55, 0.3], [1.6, 0.05, 1], [0, 0, 0])); break
       case 'skyscraper': spin = 0.18; m.push(box(C.metal, [0.5, 1.8, 0.5], [0, 0, 0])); break
       case 'city': spin = 0.12; m.push(box([0.5, 0.55, 0.62], [1.6, 0.2, 1.6], [0, 0, 0])); break
@@ -238,7 +247,9 @@ export function createUniverseGL(canvas: HTMLCanvasElement): UniverseGL {
       case 'lightyear': case 'proxima': m.push(sph(2, C.sun, C.sunCore, 0.3)); break
       case 'nebula': p.push(makePoints(blobData(300, 11, [0.6, 0.4, 0.85], 1))); m.push(sph(2, C.sunCore, C.star, 0.08)); break
       case 'cluster-stars': p.push(makePoints(blobData(500, 13, C.star, 0.95))); break
-      case 'milkyway': p.push(makePoints(galaxyData(2200, 21), 1.1)); spin = 0.18; break
+      case 'milkyway':
+        m.push(sph(2, [1.0, 0.92, 0.72], [1.0, 0.8, 0.5], 0.12)) // emissive bulge glow
+        p.push(makePoints(galaxyData(3400, 21), 1.05)); spin = 0.18; break
       case 'localgroup': case 'virgo': spin = 0.1
         for (let i = 0; i < 5; i++) p.push(makePoints(galaxyData(420, 30 + i), 1.0 + i * 0.2, [Math.sin(i * 2.4) * 0.6, Math.sin(i * 1.7) * 0.4, Math.cos(i * 2.1) * 0.6])); break
       case 'laniakea': case 'cosmicweb': p.push(makePoints(webData(900, 41))); spin = 0.06; break

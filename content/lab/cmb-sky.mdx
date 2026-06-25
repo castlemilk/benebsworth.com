@@ -1,0 +1,46 @@
+<LabSide effect="cmb-sky" height={440} params={{ omegaB: 0.022, omegaM: 0.32, tilt: 0.965, view: "spectrum" }} caption="The cosmic microwave background. Switch to the map to see the mottled sky — temperature ripples at the one-part-in-100,000 level — and to the spectrum to see those same ripples sorted by angular size, with the acoustic peaks laid bare.">
+
+## The core idea
+
+When the universe was about 380,000 years old it had cooled enough for protons and electrons to combine into neutral hydrogen. The fog of free electrons that had been scattering light cleared in an instant, and the photons streaming through have been travelling, undisturbed, ever since. We catch them today as a faint microwave glow filling the whole sky — the **cosmic microwave background**, a snapshot of the universe at the surface of last scattering.
+
+Its temperature is astonishingly uniform: 2.725 K in every direction. But not *perfectly* uniform. Map it precisely and you find ripples of about one part in 100,000 — patches a hundred-thousandth of a degree hotter or colder than the mean. Those tiny ripples are the seeds of everything. The slightly denser patches went on to collapse into galaxies and clusters; the voids became the empty stretches between them. The map view here is one such patch of sky; the hot and cold blobs are roughly a degree across, and that scale is not an accident.
+
+## How it works
+
+Before recombination the universe was a hot plasma of photons and baryons, bound together so tightly they behaved as a single fluid. Gravity pulled this fluid into the dark-matter potential wells; radiation pressure pushed back out. The result was **acoustic oscillations** — literally sound waves ringing through the primordial plasma. When the photons broke free, whatever phase each wave was caught in got frozen into the temperature pattern.
+
+To analyse it we expand the temperature field over the sphere in spherical harmonics and read off the power at each angular scale. The natural summary is the **angular power spectrum**, the variance contributed by each multipole $\ell$ (where angular scale $\approx 180^\circ / \ell$):
+
+$$ \frac{\Delta T(\hat n)}{T} = \sum_{\ell m} a_{\ell m}\, Y_{\ell m}(\hat n), \qquad C_\ell = \big\langle |a_{\ell m}|^2 \big\rangle. $$
+
+By convention we plot not $C_\ell$ itself but the quantity that gives equal weight per logarithmic interval in scale:
+
+$$ \mathcal{D}_\ell = \frac{\ell(\ell+1)}{2\pi}\,C_\ell \quad [\mu\text{K}^2]. $$
+
+The peaks are the harmonics of the sound waves. The **first peak**, near $\ell \approx 220$, marks the mode that had just reached maximum compression when the photons were released — its wavelength is the sound horizon, the farthest a wave could travel before recombination. Its angular size on the sky is a standard ruler: because a fixed physical scale subtends a smaller angle when seen from farther away, the peak's position pins down the geometry and distance to last scattering. Higher harmonics give the second, third and further peaks.
+
+The map below is built from the same spectrum: a band-limited Gaussian random field whose Fourier amplitudes follow $\sqrt{C_\ell}$, so its mottling carries the acoustic scale directly. Change the sliders and the blobs change with it.
+
+</LabSide>
+
+## What to watch for
+
+The two views are the same physics seen two ways. The blobs in the **map** are about a degree across precisely because the first acoustic peak sits at $\ell \approx 220$; that angle is the loudest note the early universe could play.
+
+In the **spectrum**, watch how the sliders move the peaks — each does something physically distinct:
+
+- **Baryon density** loads the oscillator. Baryons add inertia to the photon–baryon fluid, so it falls deeper into the wells before pressure can stop it. That deepens the *compression* phases and shallows the *rarefaction* phases, which boosts the **odd** peaks (first, third) and suppresses the **even** peaks (second). The first-to-second peak height ratio is therefore a direct **baryometer** — drag $\Omega_b h^2$ up and watch the ratio climb. This is how we weigh the ordinary matter in the universe without ever seeing it.
+
+- **Matter density** sets the distance to last scattering, and so the angle the sound horizon subtends. Lower $\Omega_m$ pushes the whole comb of peaks to *higher* $\ell$ (smaller angles); raise it and they march left. The peak positions are how the CMB measures the geometry of space and finds it flat.
+
+- **Tilt**, the scalar spectral index $n_s$, sets the slope of the primordial fluctuations laid down by inflation. A "red" tilt ($n_s < 1$, as observed) means slightly less power on small scales — the right-hand peaks sag relative to the left. A perfectly scale-invariant input would be $n_s = 1$; the measured departure is one of inflation's cleaner predictions.
+
+Past $\ell \approx 1000$ the spectrum falls away exponentially. That is **Silk damping**: on small scales photons random-walk out of the over-dense regions during recombination and smear the contrast away, erasing the smallest ripples.
+
+## Knobs
+
+- **Baryon density Ω_b h²** — the physical density of ordinary (baryonic) matter. Raising it boosts the odd compression peaks and suppresses the even rarefaction peaks, lifting the first-to-second peak ratio. The single most legible effect in the panel.
+- **Matter density Ω_m** — the total matter density today. It fixes the distance to the surface of last scattering and so the angular scale of the peaks: lower values slide the whole peak comb to higher $\ell$, higher values slide it lower.
+- **Tilt n_s** — the spectral index of the primordial fluctuations. Below 1 it tilts power away from small scales, dropping the higher peaks; at 1 the input is scale-invariant.
+- **View** — switch between the mottled **temperature map** (the sky as you would image it) and the **power spectrum** (the same ripples sorted by angular size). The two are a Fourier pair: one is what you measure, the other is what you fit.

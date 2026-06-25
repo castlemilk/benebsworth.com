@@ -1,0 +1,47 @@
+<LabSide effect="gw-chirp" height={380} params={{ m1: 36, m2: 29, showSpectrogram: true }} caption="A binary inspiral strain h(t): the chirp sweeps up in frequency and amplitude to merger, then rings down. The spectrogram tracks the rising frequency.">
+
+## The core idea
+
+When two compact objects — black holes or neutron stars — orbit each other, they stir spacetime and radiate **gravitational waves**. Carrying energy away costs the orbit: the pair spiral inward, speed up, and radiate harder still. The signal you "hear" is a rising tone whose pitch and loudness climb together — the **chirp** — ending in a violent merger and a brief **ringdown** as the new black hole settles. In September 2015 LIGO caught exactly this from two black holes of about 36 and 29 solar masses, the first direct detection of a gravitational wave.
+
+## How it works
+
+To leading order the rate at which the wave frequency climbs is fixed almost entirely by one number, the **chirp mass**:
+
+$$
+\mathcal{M}_c = \frac{(m_1 m_2)^{3/5}}{(m_1 + m_2)^{1/5}}
+$$
+
+The quadrupole formula then gives a sweep that runs away to a singular **coalescence time** $t_c$:
+
+$$
+\frac{df}{dt} = \frac{96}{5}\,\pi^{8/3}\,\mathcal{M}_c^{5/3}\,f^{11/3}
+\quad\Longrightarrow\quad
+f(t) = \frac{1}{\pi}\left(\frac{5}{256}\right)^{3/8}\mathcal{M}_c^{-5/8}\,(t_c - t)^{-3/8}
+$$
+
+The amplitude grows alongside the frequency, $A(t) \propto \mathcal{M}_c^{5/3} f(t)^{2/3}$, and the strain is just that envelope times the wave's phase, $h(t) = A(t)\cos\varphi(t)$ with $\varphi = 2\pi\!\int\! f\,dt$.
+
+The inspiral can't continue forever. Near the **innermost stable circular orbit** of the total mass $M = m_1 + m_2$ there are no more stable orbits, the holes plunge and merge, and the signal hands over to a damped sinusoid at the remnant's quasi-normal-mode frequency:
+
+$$
+f_{\text{ISCO}} = \frac{c^3}{6^{3/2}\pi G M},
+\qquad
+h_{\text{ring}}(t) = A_r\,e^{-(t-t_c)/\tau}\cos\!\big(2\pi f_{\text{qnm}}(t-t_c)\big)
+$$
+
+This renderer integrates the closed-form sweep, synthesises $h(t)$, and sweeps a playhead across it.
+
+</LabSide>
+
+## What to watch for
+
+The single most important quantity is the **chirp mass**, not the individual masses. Two very different pairs with the same $\mathcal{M}_c$ sweep through frequency in nearly the same way — which is precisely how detectors weigh distant black holes they will never see. Watch the **spectrogram**: the bright track curving upward is $f(t)\propto(t_c-t)^{-3/8}$, and it gets brighter as the amplitude builds, because louder really does mean closer to merger.
+
+Lighter binaries are the high-pitched ones. Because $f_{\text{ISCO}} \propto 1/M$, a pair of 5-solar-mass objects merges up near a few hundred hertz while a pair of 80-solar-mass giants rings at only tens of hertz. Slide the masses and watch the whole event compress or stretch, and the merger line slide left or right. After the dashed merger marker the trace turns warm: that short, exponentially-fading wobble is the remnant black hole shedding its last asymmetry — the "ringing" of spacetime itself.
+
+## Knobs
+
+- **m₁ (M☉)** — the first object's mass in solar masses (5–80). Together with m₂ it sets the chirp mass and the merger frequency.
+- **m₂ (M☉)** — the second object's mass (5–80). Make the pair lighter to push the merger to higher frequency and shorten the whole event; heavier to lower the pitch.
+- **Spectrogram** — toggle the rising frequency track above the waveform. It makes the $(t_c-t)^{-3/8}$ sweep and the amplitude build directly visible.

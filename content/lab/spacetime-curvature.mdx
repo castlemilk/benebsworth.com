@@ -1,0 +1,48 @@
+<LabSide effect="spacetime-curvature" height={420} params={{ mass: 1.2, geodesics: true, lightRays: true, spin: 0.3 }} caption="A central mass dents the spacetime grid into a funnel. Test particles orbit on precessing ellipses; light rays bend as they skim past.">
+
+## The core idea
+
+Einstein's great reversal was to stop thinking of gravity as a force and start thinking of it as *shape*. Mass and energy tell spacetime how to curve, and that curvature tells everything else how to move. There is no force reaching out to grab the planets — they simply travel as straight as they can through a geometry that is no longer flat.
+
+The picture here is the famous **rubber sheet**: a flat grid with a heavy mass placed in the middle, sagging it into a well. It is only an analogy — a 2D *embedding* of curved 3D space, and it cheats by using ordinary gravity to make the sheet sag — but it gets the essential intuition right. Roll a marble across the dented sheet and it curves toward the dip without anything pulling it sideways. That is a planet "falling" around the Sun.
+
+## How it works
+
+The sheet is **Flamm's paraboloid** — the actual spatial geometry of a slice through the Schwarzschild solution, drawn as a surface of revolution. For a mass $M$ with Schwarzschild radius $r_s = 2GM/c^2$, the embedded depth is
+
+$$z(r) = 2\sqrt{r_s\,(r - r_s)} \qquad (r > r_s)$$
+
+Far from the mass it flattens out; near $r_s$ it plunges toward the horizon. (The lab uses a softened, finite version of this funnel so the well stays legible.)
+
+The orbiting particles follow **geodesics** — the straightest possible paths through the curved geometry. In the equatorial plane, with $u = 1/r$, a massive body obeys
+
+$$\frac{d^2u}{d\varphi^2} + u = \frac{GM}{L^2} + 3GM\,u^2$$
+
+The first term on the right is plain Newtonian gravity, which alone gives a closed ellipse. The second, $3GM\,u^2$, is the General-Relativistic correction — and because it is *not* periodic with the orbit, it makes the ellipse slowly **rotate**. That is the precession you can watch in the lab, and it is exactly what explains Mercury's anomalous perihelion advance of 43 arcseconds per century.
+
+Light takes the same kind of path but, being massless, drops the Newtonian source term entirely:
+
+$$\frac{d^2u}{d\varphi^2} + u = 3GM\,u^2$$
+
+Integrate a ray coming in with impact parameter $b$ and it bends by the deflection angle
+
+$$\Delta\varphi \approx \frac{4GM}{c^2 b}$$
+
+That factor of four is the whole story of 1919: it is *twice* what a naive Newtonian "falling photon" predicts, and Eddington's eclipse measurement of starlight grazing the Sun matched the relativistic value, not the Newtonian one.
+
+</LabSide>
+
+## What to watch for
+
+Raise the **mass** and the well deepens dramatically: the rings bunch up near the centre, the orbits precess faster, and the light rays whip around through larger angles. Push the mass high enough and the inner rays curve so hard they spiral into the centre rather than escaping — the toy version of a photon being captured by a black hole.
+
+Turn on **spin** and the whole well begins to swirl. This is **frame dragging** (the Lense–Thirring effect): a rotating mass doesn't just curve spacetime, it drags it around with it, like a spoon stirring honey. Watch how prograde orbits — those going the same way as the spin — get whipped forward, while the sheet itself twists. Around a real spinning black hole this dragging becomes so total inside the *ergosphere* that nothing can stand still.
+
+The deepest thing to notice is that the marbles and the light rays are doing the *same thing*: coasting freely, following the local geometry, never pushed. The only difference is their speed through it. Gravity, in this view, isn't a thing that acts on objects — it's the stage they all move across.
+
+## Knobs
+
+- **Mass M** — how heavy the central object is, in geometrised units where $G = c = 1$. Bigger mass means a deeper well, a larger horizon $r_s = 2M$, sharper light-bending, and faster orbital precession.
+- **Geodesics** — toggle the orbiting test particles. With them on, watch the ellipses slowly rotate: that rosette is the $3GM\,u^2$ relativistic correction at work.
+- **Light rays** — toggle the incoming light rays (yellow). Each enters straight from the left at a different impact parameter and bends by roughly $4GM/c^2b$ — the ones passing closest bend the most.
+- **Spin a** — add rotation to the central mass. The well swirls and prograde paths get dragged forward (Lense–Thirring frame dragging). Set it to zero for the static Schwarzschild case.

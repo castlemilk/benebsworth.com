@@ -1,0 +1,37 @@
+<LabCanvas effect="holographic-bound" height={360} params={{ radius: 6, showVolume: true, pixelScale: 3 }} caption="A horizon tiled into Planck-area pixels. The bars on the right race r² area-growth against r³ volume-growth — and read out the Bekenstein–Hawking entropy S = A/4." />
+
+## The core idea
+
+How much information can you cram into a region of space? The obvious guess is "one bit per smallest cell", so the answer should grow with the **volume** — double the radius and you get eight times the room. That guess is wrong. The most information a region can ever hold grows only with the **area of its boundary**. Pack matter in until it collapses into a black hole — the densest thing physics allows — and the entropy you end up with is fixed not by what's inside, but by the surface wrapped around it. Space behaves like a hologram: a three-dimensional bulk completely described on its two-dimensional edge.
+
+## How it works
+
+Measure everything in Planck units, where the natural pixel of area is one Planck area $\ell_P^2 \approx 2.6\times10^{-70}\,\text{m}^2$. For a sphere of radius $r$ (in Planck lengths) the surface and the interior grow at different rates:
+
+$$A = 4\pi r^2 \qquad V = \tfrac{4}{3}\pi r^3$$
+
+The Bekenstein–Hawking result says the entropy of a black hole whose horizon has area $A$ is
+
+$$S = \frac{A}{4} \quad\text{(in units of } k_B\text{, with } A \text{ in Planck areas)}$$
+
+and the information that bounds — the maximum number of bits — is just that entropy divided by $\ln 2$:
+
+$$I = \frac{S}{\ln 2} = \frac{A}{4\ln 2}.$$
+
+So the storable information tracks $A \propto r^2$, never $V \propto r^3$. The wasted ratio
+
+$$\frac{V}{A} = \frac{r}{3}$$
+
+grows without limit: the bigger the box, the larger the fraction of interior cells whose state can never be set independently. The visualisation tiles the sphere's surface into Planck pixels — the tile count *is* the area — and the right-hand bars (log-scaled so both fit) let you watch $r^2$ fall ever further behind $r^3$ as you drag the radius.
+
+## What to watch for
+
+At small $r$ the area and volume bars sit close together. Push the radius up and the $r^3$ bar pulls decisively ahead — yet the *information* you could ever store stays pinned to the slower $r^2$ surface. That gap is the whole point: the interior grid (the orange cells) is mostly bits you are not allowed to use.
+
+It is genuinely strange that the most extreme object we know — a black hole — stores its information on a surface, one quarter-bit per Planck area, rather than smeared through its volume. That single fact is the seed of the **holographic principle** ('t Hooft, Susskind) and, made precise in the AdS/CFT correspondence, the closest thing we have to a working theory of quantum gravity. A caveat worth keeping: the bound describes the *maximum* a region can hold, and the boundary *encodes* the bulk — it does not mean ordinary matter literally lives on a wall.
+
+## Knobs
+
+- **Radius r (ℓ_P)** — the sphere's radius in Planck lengths (1–12). Drag it and watch the area bar ($r^2$) lose the race to the volume bar ($r^3$), while the ratio $V/A = r/3$ climbs.
+- **Show volume cells** — overlays a faint interior grid of Planck cells (the $r^3$ "bits you'd naïvely expect"), to contrast with the surface tiling that actually sets the limit.
+- **Pixel scale** — how many Planck lengths one drawn tile stands for (1–6). Lower values tile the horizon more finely (more pixels, slower); higher values keep the surface legible at large radius.

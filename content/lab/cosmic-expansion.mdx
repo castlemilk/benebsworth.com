@@ -1,0 +1,47 @@
+<LabSide effect="cosmic-expansion" height={420} params={{ mode: "lambda", omegaM: 0.3, omegaLambda: 0.7, hubble: 1 }} caption="A comoving grid of galaxies carried apart by the expansion. The scale factor a(t) below traces the universe's whole history; galaxies redden as the space between us stretches their light.">
+
+## The core idea
+
+Galaxies are not flying *through* space like shrapnel from an explosion — the space *between* them is stretching. Pick any two distant galaxies and the gap grows, with no centre and no edge; every observer sees everyone else receding, and the farther away a galaxy is, the faster it goes. That is Hubble's law, and it is what you get when a smooth, even filling of matter is allowed to expand under its own gravity.
+
+One number captures the whole picture: the **scale factor** $a(t)$, the size of the universe relative to today (where we set $a = 1$ now). Every comoving distance is multiplied by $a(t)$. Run the film backwards and $a \to 0$ — everything piled into one searingly dense point, the Big Bang. Run it forwards and the universe's fate hangs on a tug-of-war between the gravity of its contents and the push of dark energy.
+
+## How it works
+
+The expansion obeys the **Friedmann equation**, Einstein's field equations specialised to a homogeneous, isotropic universe. Writing it with the present-day density parameters $\Omega_M$ (matter) and $\Omega_\Lambda$ (the cosmological constant) gives:
+
+$$ \left(\frac{\dot a}{a}\right)^2 = H_0^2\left[\,\Omega_M\,a^{-3} + \Omega_\Lambda + \Omega_k\,a^{-2}\,\right] $$
+
+Each term dilutes differently as space grows. Matter thins out as volume, $a^{-3}$; the cosmological constant $\Omega_\Lambda$ stays *constant* — vacuum energy that does not dilute; and the curvature term is fixed by the others through
+
+$$ \Omega_k = 1 - \Omega_M - \Omega_\Lambda. $$
+
+Taking the square root and rescaling time to $\tau = H_0 t$ leaves a single ordinary differential equation the simulation integrates with RK4:
+
+$$ \frac{da}{d\tau} = \sqrt{\,\frac{\Omega_M}{a} + \Omega_\Lambda\,a^2 + \left(1 - \Omega_M - \Omega_\Lambda\right)}. $$
+
+Light carries the story too. A photon's wavelength is stretched by exactly the same factor as space, so light emitted when the universe was size $a_{\text{emit}}$ and caught today arrives **redshifted** by
+
+$$ 1 + z = \frac{a_{\text{now}}}{a_{\text{emit}}}. $$
+
+A galaxy whose light set out when the cosmos was half its present size reaches us at $z = 1$. In the panel, distant galaxies redden as $a$ climbs — you are watching cosmological redshift happen.
+
+</LabSide>
+
+## What to watch for
+
+The **Cosmic fate** selector snaps the densities to the four textbook universes, and the $a(\tau)$ curve below the field tells you which future you have chosen:
+
+- An **open** universe ($\Omega_M < 1$, no $\Lambda$) has positive curvature energy to spare. Gravity slows it but never wins — $a$ rises forever, ever more slowly.
+- The **flat** Einstein–de Sitter case ($\Omega_M = 1$) sits exactly on the knife-edge: it expands without limit, but the rate $\dot a$ creeps towards zero.
+- A **closed** universe ($\Omega_M > 1$) has enough matter to halt the expansion. Watch $a$ rise, stall at a maximum, then reverse — gravity drags everything back to a **Big Crunch**, and the simulation rebounds to do it again.
+- Switch on a cosmological constant (**$\Lambda$ accelerating**, $\Omega_M + \Omega_\Lambda \approx 1$) and the curve turns *upward*: once the thinning matter can no longer hold dark energy back, the expansion accelerates. This is our universe — flat, matter-light, and running away.
+
+Notice that with $\Lambda$ on, redshifts climb without bound as the runaway expansion stretches light from ever-receding galaxies. In the recollapsing closed model the redshift first grows, then would turn to a *blueshift* on the way down as the gaps shrink again.
+
+## Knobs
+
+- **Cosmic fate** — picks one of the four canonical universes (open, flat, closed, or $\Lambda$-accelerating) and loads its density mix. Dragging either density slider away from a preset relabels the fate to match what you have dialled.
+- **Ω_M (matter)** — the present-day matter density relative to the critical density. More matter means stronger gravity: it slows the expansion and, if large enough, forces a recollapse.
+- **Ω_Λ (dark energy)** — the cosmological-constant density. Even a modest amount eventually dominates the diluting matter and tips the universe into accelerating expansion.
+- **H₀ (expansion rate)** — the Hubble constant, here a dimensionless playback rate. It sets how fast cosmic time runs in the animation without changing which fate you are heading towards.

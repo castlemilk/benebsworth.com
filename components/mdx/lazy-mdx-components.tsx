@@ -55,3 +55,9 @@ export const SurfaceCodeLattice = dynamic(() => import('./surface-code-lattice')
 export const ThresholdCurve = dynamic(() => import('./threshold-curve').then(m => ({ default: m.ThresholdCurve })), { ssr: false, loading })
 export const DenoisingPlanner = dynamic(() => import('./denoising-planner').then(m => ({ default: m.DenoisingPlanner })), { ssr: false, loading })
 export const ModeCollapseStrip = dynamic(() => import('./mode-collapse-strip').then(m => ({ default: m.ModeCollapseStrip })), { ssr: false, loading })
+
+// Cosmology flagship widgets (black-hole-cosmology essay).
+export const SchwarzschildCalculator = dynamic(() => import('./schwarzschild-calculator').then(m => ({ default: m.SchwarzschildCalculator })), { ssr: false, loading })
+export const HolographicReduction = dynamic(() => import('./holographic-reduction').then(m => ({ default: m.HolographicReduction })), { ssr: false, loading })
+export const NestedUniverses = dynamic(() => import('./nested-universes').then(m => ({ default: m.NestedUniverses })), { ssr: false, loading })
+export const WhiteHoleBounce = dynamic(() => import('./white-hole-bounce').then(m => ({ default: m.WhiteHoleBounce })), { ssr: false, loading })

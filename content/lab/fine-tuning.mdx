@@ -1,0 +1,38 @@
+<LabCanvas effect="fine-tuning" height={420} params={{ alpha: 137, gravity: 0, lambda: 1, nDims: 3 }} caption="Four cosmic dials feed a habitability panel. At the observed settings every precondition for complexity survives; almost any nudge gives a dead universe." />
+
+## The core idea
+
+A handful of numbers in the laws of physics are not predicted by any deeper theory we have — they are simply measured. The strength of electromagnetism, the strength of gravity, the energy in empty space, the number of dimensions we can move through. What is unsettling is how *particular* their values seem to be. Wind several of them off their observed settings and you do not get a stranger universe; you get a dead one — no stable atoms, no stars, no galaxies, nothing that could ever notice it was there. This panel turns four of those dials into sliders and reports, for each setting, which preconditions for complex structure still hold. Most of the dial space is lethal, and that narrowness is the whole puzzle of cosmic fine-tuning.
+
+## How it works
+
+Each precondition is a small, deliberately legible viability test — order-of-magnitude physics, not a cosmology code — that passes only inside a narrow window. The fine-structure constant sets the strength of electromagnetism,
+
+$$
+\alpha = \frac{e^2}{4\pi\varepsilon_0\,\hbar c} \approx \frac{1}{137}
+$$
+
+and stable chemistry needs it close to that value: too large and the innermost electrons of heavy atoms approach the speed of light ($\alpha Z \to 1$, the relativistic instability); too small and chemical bonds are too feeble to hold molecules together. Stars are a tug-of-war between gravity squeezing a core and the electromagnetic (Coulomb) barrier, set by $\alpha$, resisting fusion. The dimensionless **gravitational coupling**
+
+$$
+\alpha_G = \frac{G m_p^2}{\hbar c} \approx 6\times 10^{-39}
+$$
+
+is some $10^{36}$ times weaker than $\alpha$, and that vast ratio is what lets a star live for billions rather than millions of years. The energy of empty space — the **cosmological constant** $\Lambda$ — must be tiny: in the Friedmann equation it competes with matter,
+
+$$
+\left(\frac{\dot a}{a}\right)^2 = \frac{8\pi G}{3}\,\rho - \frac{k c^2}{a^2} + \frac{\Lambda c^2}{3}
+$$
+
+so a large positive $\Lambda$ blows space apart before galaxies can condense (Weinberg's anthropic bound), while a negative one recollapses the universe in a Big Crunch before stars even form. Finally the **number of large spatial dimensions** $n$ enters through the force law: a $1/r^{\,n-1}$ force gives stable bound orbits and a stable atom only for $n = 3$. The panel multiplies the four scores together, so a single failure kills the lot.
+
+## What to watch for
+
+Start at the observed settings — $1/\alpha = 137$, gravity ×1, $\Lambda$ ×1, $n = 3$ — and every bar is green, the galaxy spins up, the starfield is dense. Now nudge **one** dial. Drag $1/\alpha$ down toward 95 and the atoms bar fails first (inner shells go relativistic); push it up past 170 and bonds go limp. Crank gravity a couple of decades either way and stars either never ignite or burn out before biology could begin. Slide $\Lambda$ up and the universe disperses; slide it negative and it crunches. And no matter how carefully you balance the other three, moving $n$ off 3 turns the whole panel red — Ehrenfest's 1917 argument that only three dimensions permit stable orbits and stable atoms at all. The lesson is the *fragility*: the green region is a thin spike in a four-dimensional space that is overwhelmingly dead. Whether that demands a multiverse, a selection effect, or simply a deeper theory that fixes the numbers is exactly the live debate — Rees's *Just Six Numbers*, Barrow and Tipler's anthropic principle, Smolin's cosmological natural selection.
+
+## Knobs
+
+- **Fine structure 1/α** — the inverse fine-structure constant (40–260), reading 137 at our value. It governs chemistry and the stellar Coulomb barrier; a few per cent off-tune already breaks atoms or stars.
+- **Gravity (log₁₀×)** — gravity's strength as powers of ten relative to observed (−6 … +6 decades). Too weak and cores never reach fusion temperature; too strong and stars live only megayears.
+- **Λ (×observed)** — the cosmological constant in multiples of its measured value (−120 … +120). Large positive disperses space before structure forms; negative recollapses it. The viable window is astonishingly narrow.
+- **Large space dims n** — the number of large spatial dimensions (1–6). Only $n = 3$ admits stable orbits and bound atoms; every other value is a dead universe whatever the other dials say.

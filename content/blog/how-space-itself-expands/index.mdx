@@ -1,0 +1,157 @@
+---
+title: "How Space Itself Expands"
+date: "2026-06-25T00:00:00.000Z"
+description: "Distant galaxies aren't flying through space away from us. The space between them is stretching, governed by a single number whose entire history one equation predicts."
+labels: cosmology,astrophysics,relativity,physics
+release: true
+author: Ben Ebsworth
+heroImage: /blog/how-space-itself-expands/hero.webp
+takeaways:
+  - "A galaxy's redshift is not a Doppler shift from motion through space; it's the stretching of the light's wavelength by the space it crossed while in flight."
+  - "One dimensionless number, the scale factor a(t), encodes the whole size history of the universe — and the Friedmann equation turns the present-day matter and energy budget into its entire future and past."
+  - "The Hubble 'constant' is only constant in space, not in time: H(t) = ȧ/a changes as the universe evolves, and right now it's heading toward a constant because dark energy has taken over."
+  - "Recession velocity is proportional to distance, so beyond a certain distance galaxies recede faster than light — with no physics broken, because nothing is moving through space to do it."
+---
+
+Here is a claim worth resisting: the galaxies rushing away from us are not, for the most part, moving. They sit more or less still in their own patch of space, drifting only slightly the way any object drifts. What grows is the distance between us, and it grows because the space in the gap is being manufactured. New space, continuously, everywhere at once. The galaxy isn't travelling away from you down a road. The road itself is getting longer underneath it.
+
+That sounds like wordplay until you notice it makes a different prediction. If galaxies were shrapnel from an explosion, their redshift would be an ordinary Doppler shift, the same thing that drops the pitch of a passing siren. But the cosmological redshift isn't that. The light leaves a distant galaxy with some wavelength, travels for a billion years, and arrives stretched, because the space it was crossing stretched while it was in flight. The photon got longer along with everything else. Same equations of motion, completely different cause, and the difference is the whole subject of this essay.
+
+<LabSide effect="cosmic-expansion" height={380} params={{ omegaM: 0.3, omegaLambda: 0.7, hubble: 70, mode: "lambda" }} caption="A grid of galaxies under Hubble flow. Every galaxy sees every other one receding, and the farther ones recede faster — yet no galaxy is the centre, and none is moving through the grid. The grid itself is being stretched.">
+
+Watch the grid expand. Pick any galaxy and pretend you live there: every other galaxy moves away from you, and the distant ones move away fastest. Now pick a different galaxy and the story is identical. There's no centre, no point the others are fleeing from. The whole pattern is just the grid getting bigger while each galaxy stays put on its own intersection. Switch **mode** between open, flat, and the dark-energy case and the long-run fate changes. Everything below is an attempt to explain what single number controls this, and why one 1922 equation predicts its entire history.
+
+</LabSide>
+
+## The scale factor: one number for the size of everything
+
+Start with the trick that makes cosmology tractable. Instead of tracking the absolute position of every galaxy, lay down a coordinate grid that expands along with the universe and let the galaxies sit on it. These are **comoving coordinates**. A galaxy that isn't doing anything special keeps the same comoving coordinates forever, even as the real, physical distance to it balloons. The grid stretches; the labels stay fixed.
+
+All of the stretching is then bundled into a single dimensionless function of time, the **scale factor** $a(t)$. By convention $a = 1$ today. At half the present size $a = 0.5$, and at the Big Bang $a = 0$. The physical distance between two galaxies, the **proper distance** you'd measure with an absurdly long ruler frozen at one instant, is just the fixed comoving distance multiplied by this one number:
+
+<Equation id="eqn:proper-distance" number="1" caption="Proper distance is the unchanging comoving distance scaled by a(t). All cosmic expansion lives in that single factor." latex="d_{\text{proper}}(t) = a(t)\, d_{\text{comoving}}">
+
+$$
+d_{\text{proper}}(t) = a(t)\, d_{\text{comoving}}
+$$
+
+</Equation>
+
+This is the move that tames the problem. The comoving distance is a property of the pair of galaxies and never changes. Every bit of time-dependence, the entire expanding-universe story, is squeezed into $a(t)$. Find $a(t)$ and you know how the size of the universe has run from the Big Bang to now and onward. Cosmology becomes the project of solving for one function.
+
+<Callout type="thinking" title="Why this isn't just a relabelling">
+
+It would be fair to suspect we've hidden the physics inside a coordinate choice. We haven't. The comoving grid is the rest frame of the cosmic fluid: the average matter, the cosmic microwave background, the large-scale flow. A galaxy at rest in this frame has no peculiar motion, yet the proper distance to it still grows. That growth is physical, it stretches light and dilutes matter, and it can't be transformed away by any choice of coordinates. The scale factor is measuring something real about geometry, not bookkeeping.
+
+</Callout>
+
+## Hubble's law falls out for free
+
+Once distance is $a(t)$ times a constant, the recession velocity is forced. Differentiate equation (1) with respect to time. The comoving part is fixed, so only $a$ varies, and you get $\dot{d}_{\text{proper}} = \dot{a}\, d_{\text{comoving}}$. Divide and substitute back, and the comoving distance cancels into the proper distance:
+
+$$
+v = \dot{d}_{\text{proper}} = \frac{\dot{a}}{a}\, d_{\text{proper}}
+$$
+
+The factor out front is the **Hubble parameter**, $H = \dot{a}/a$, the fractional rate at which the scale factor is growing.
+
+<Equation id="eqn:hubble-param" number="2" caption="The Hubble parameter is the fractional expansion rate. Its value today is the Hubble constant H₀; dimensions of inverse time." latex="H(t) = \frac{\dot{a}(t)}{a(t)}">
+
+$$
+H(t) = \frac{\dot{a}(t)}{a(t)}
+$$
+
+</Equation>
+
+Evaluate it now and you have the famous **Hubble constant** $H_0$, and the whole thing collapses to the linear relation Edwin Hubble announced in 1929: recession velocity proportional to distance, $v = H_0 D$. He measured it the hard way, distances and Doppler-like redshifts for 22 galaxies, and found the line. We just derived it in three lines of algebra from the assumption that space scales uniformly.
+
+The linearity is the tell. A Doppler shift from random motion would have no reason to grow with distance; near and far galaxies would scatter. But if every proper distance is the same comoving distance times the same $a(t)$, then twice as far means twice the recession speed, automatically. The straight line through Hubble's data is the fingerprint of uniform expansion. Georges Lemaître had in fact derived the relation from general relativity two years earlier, in a Belgian journal almost nobody read, which is why it's now the **Hubble–Lemaître law**.
+
+<Callout type="warning" title="The Hubble constant is not constant">
+
+The name is a historical accident and it misleads everyone. $H_0$ is constant in *space*, the same value measured from any galaxy, but it is not constant in *time*. The Hubble parameter $H(t) = \dot{a}/a$ changes as the universe evolves, and for most of cosmic history it has been falling as expansion decelerated under gravity. The subscript zero means "evaluated today", nothing more. Quote $H_0$ and you've quoted one frame of a film.
+
+</Callout>
+
+So far this is all kinematics: *if* space scales by $a(t)$, *then* galaxies obey Hubble's law. It says nothing about *why* $a(t)$ does what it does, or what it'll do next. For that we need the dynamics, and the dynamics come from gravity.
+
+## The Friedmann equation: gravity writes the script
+
+In 1922 Alexander Friedmann took Einstein's field equations and asked what they say about a universe that's the same everywhere and in every direction. Einstein had assumed the universe was static and bolted on a term to keep it that way. Friedmann didn't assume; he solved, and the solution refused to sit still. A homogeneous, isotropic universe must expand or contract. It cannot hover. Out of that came the equation that governs $a(t)$:
+
+<Equation id="eqn:friedmann" number="3" caption="The Friedmann equation: the expansion rate set by matter density ρ, spatial curvature k, and the cosmological constant Λ." latex="\left(\frac{\dot{a}}{a}\right)^2 = \frac{8\pi G}{3}\rho - \frac{kc^2}{a^2} + \frac{\Lambda c^2}{3}">
+
+$$
+\left(\frac{\dot{a}}{a}\right)^2 = \frac{8\pi G}{3}\rho - \frac{kc^2}{a^2} + \frac{\Lambda c^2}{3}
+$$
+
+</Equation>
+
+The left side is $H^2$, the square of the expansion rate. The right side is the bill: three contributions that decide how fast space grows. Read it as a budget.
+
+The first term, $\frac{8\pi G}{3}\rho$, is ordinary gravitating stuff, matter and radiation. Density $\rho$ pulls; more of it means a faster-changing $a$, and crucially it brakes the expansion over time as gravity tugs back. The second term carries the **spatial curvature** $k$, which is $+1$, $0$, or $-1$ for a universe that's closed (like a 3-sphere), flat, or open (saddle-shaped). The third term is the **cosmological constant** $\Lambda$, Einstein's old fudge, resurrected. Unlike matter it doesn't dilute as space grows; it's a fixed energy of space itself, and it pushes outward without ever weakening.
+
+That single equation is the engine. Hand it the present density, curvature, and $\Lambda$, and it tells you $\dot{a}$ at every value of $a$, which you integrate to get $a(t)$ over all of cosmic history, forward and backward. The past asks: run it backward and $a$ shrinks to zero in finite time. That zero is the Big Bang. Not an explosion somewhere in space, but the moment $a(t) \to 0$ where every proper distance vanishes at once, everywhere.
+
+<Callout type="info" title="The Big Bang had no location">
+
+If $a(t) \to 0$ then *every* proper distance goes to zero together, by equation (1). Two galaxies a billion light-years apart and two a metre apart both collapse to zero separation at the same instant. There's no point in today's space you can label "where it happened", because the Big Bang happened at every point. It wasn't an event *in* space; it was the moment space began. Asking what's north of the North Pole is the usual analogy, and it's a good one: the question has grammar but no referent.
+
+</Callout>
+
+## The critical density and the shape of space
+
+The Friedmann equation hides a beautiful piece of accounting. Set the curvature term to zero and ask what density makes the universe exactly flat. Rearranging equation (3) gives a threshold:
+
+<Equation id="eqn:critical-density" number="4" caption="The critical density: the dividing line between an open, flat, and closed universe, set entirely by today's expansion rate." latex="\rho_c = \frac{3H_0^2}{8\pi G}">
+
+$$
+\rho_c = \frac{3H_0^2}{8\pi G}
+$$
+
+</Equation>
+
+Plug in the measured $H_0$ and this works out to roughly $10^{-26}$ kilograms per cubic metre, about five hydrogen atoms in a volume the size of a phone box. That's the whole universe averaged out: emptier than the best laboratory vacuum by an absurd margin. The ratio of the actual density to this critical value is written $\Omega$, and it decides the geometry. If $\Omega = 1$, the density is exactly critical and space is flat. More than critical ($\Omega > 1$) curves it closed; less ($\Omega < 1$) leaves it open.
+
+The remarkable observational fact is that $\Omega$ comes out within a per cent of $1$. Space is flat, as far as anyone can measure, which is itself a puzzle the standard model handles with inflation but doesn't fully explain. The budget that adds up to that flat $\Omega = 1$ is strange, though.
+
+<StatGroup>
+  <Stat label="Dark energy" value="68.3%" context="the cosmological constant Λ, pushing expansion" />
+  <Stat label="Dark matter" value="26.8%" context="gravitates, but emits no light" />
+  <Stat label="Ordinary matter" value="4.9%" context="everything we've ever seen or touched" />
+</StatGroup>
+
+Everything made of atoms, every star and planet and person, is under five per cent of the total. The rest is dark matter that gravitates without shining and dark energy that does the opposite of gravitate. These aren't optional extras you sprinkle on top. They are *terms in equation (3)*: the density $\rho$ includes dark matter, and $\Lambda$ *is* the dark energy. The composition of the universe is literally the coefficients of the equation that sets its fate.
+
+## Why expansion is accelerating
+
+For billions of years the matter term dominated. Density was high, gravity was winning, and the expansion decelerated. Picture a ball thrown upward, slowing as gravity pulls it back. Everyone expected the universe to do the same, the only question being whether it had enough density to eventually halt and recollapse, or would coast outward forever.
+
+In 1998 two teams measuring distant supernovae found the opposite. The expansion isn't slowing. It bottomed out around six billion years ago and has been *speeding up* since. The ball, halfway up, started rising faster. The culprit is the $\Lambda$ term. As space expanded, matter thinned out and its term in equation (3) faded, while the cosmological constant held steady, because it's an energy of space itself and there's only ever more space. Once $\Lambda$ overtook matter, the brake became an accelerator.
+
+<PullQuote>
+Matter dilutes and weakens; the cosmological constant doesn't. Give expansion enough time and the term that never fades must win. The universe's long-run fate was decided the moment dark energy outpaced gravity.
+</PullQuote>
+
+Look again at equation (2) under a dominant $\Lambda$. If the right-hand side of the Friedmann equation is a constant, then $H = \dot{a}/a$ is constant, which means $a$ grows exponentially: $a(t) \propto e^{Ht}$. The Hubble parameter, after falling for most of history, is now levelling off toward a fixed value and the universe is sliding into exponential growth. Distant galaxies will redshift away until they fade from view entirely. The night sky of the far future is lonelier than ours.
+
+<Callout type="success" title="Recession faster than light, no rules broken">
+
+Because $v = H_0 D$ has no ceiling, galaxies past a certain distance, the Hubble radius, recede *faster than light*. This sounds illegal and isn't. Special relativity forbids anything moving *through* space faster than light. It says nothing about how fast space can stretch. Nothing is travelling; the gap is simply lengthening, and there's no speed limit on the manufacture of new space. Those galaxies aren't breaking physics. They're being carried apart by geometry, and many of them are already beyond any signal we could ever send.
+
+</Callout>
+
+## What the equation actually buys you
+
+Run the machine forward from the measured ingredients and one number falls out that's worth pausing on: the age of the universe. Integrate equation (3) backward from today's expansion rate and composition until $a = 0$, and the elapsed time is **13.787 billion years**, pinned to about twenty million years by the Planck satellite's data. That figure isn't read off a fossil. It's computed, the time it takes to wind $a(t)$ down to zero given how fast it's growing now and what it's made of. The Big Bang has a birthday because the Friedmann equation has a definite integral.
+
+There's a crack in the picture, and it's currently the liveliest argument in cosmology. Measure $H_0$ from the nearby universe, using supernovae and the distance ladder, and you get about **73** km/s/Mpc. Measure it from the early universe, by reading the cosmic microwave background and running the Friedmann equation forward, and you get about **67.7**. Both methods are careful, both have shrunk their error bars, and the two numbers stubbornly refuse to meet. This is the **Hubble tension**, and nobody yet knows whether it's a measurement subtlety or a sign that equation (3) is missing a term. A clean discrepancy in a number this fundamental is exactly where new physics tends to hide.
+
+Step back and the shape of the whole subject is one function and one equation. The scale factor $a(t)$ is the size of everything, comoving coordinates hold the galaxies still while it grows, and Hubble's law is the immediate consequence. The Friedmann equation takes the universe's inventory, ordinary matter, dark matter, dark energy, curvature, and turns it into the complete history of $a(t)$: a Big Bang at one end, deceleration under gravity, a handover to dark energy six billion years ago, and an accelerating, exponential future at the other. The galaxies were never the story. The space between them was. Some food for thought, next time one of them looks like it's running away.
+
+## Reading further
+
+- [Friedmann, *On the Curvature of Space* (Zeitschrift für Physik 10, 1922)](https://www.scirp.org/reference/referencespapers?referenceid=4067236). The founding paper, where the dynamic-universe solution first emerges from Einstein's equations against the prevailing belief in a static cosmos.
+- [Hubble, *A Relation between Distance and Radial Velocity among Extra-Galactic Nebulae* (PNAS 15, 1929)](https://www.pnas.org/doi/10.1073/pnas.15.3.168). The observational confirmation: 22 galaxies, a straight line, and the empirical birth of $v = H_0 D$.
+- [Ryden, *Introduction to Cosmology* (2nd ed., Cambridge)](https://www.amazon.co.uk/Introduction-Cosmology-Barbara-Ryden/dp/1107154839). The standard pedagogical treatment of the scale factor, the Friedmann equations, and the FLRW geometry, drawn carefully and from first principles.
+- [Lemaître's expanding universe and the long road to credit (Science)](https://www.science.org/content/article/move-over-hubble-discovery-expanding-cosmos-assigned-little-known-belgian-astronomer). How Lemaître derived the expanding solution and the Hubble constant two years before Hubble, and why recognition took decades.

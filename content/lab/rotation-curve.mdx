@@ -1,0 +1,42 @@
+<LabSide effect="rotation-curve" height={380} params={{ diskMass: 1, haloMass: 1.4, haloScale: 8, showHalo: true }} caption="A face-on disc galaxy beside its rotation curve v(r). The visible disc alone (teal) predicts a Keplerian decline; a dark-matter halo (violet) flattens the total (orange) to match what we observe.">
+
+## The core idea
+
+Spin a planet around the Sun and the outer worlds crawl while the inner ones race — speed falls off as $v \propto r^{-1/2}$ because nearly all the mass sits in the middle. A spiral galaxy should behave the same way once you pass the bright central bulge: the visible stars and gas thin out exponentially, so the enclosed mass stops growing and the orbital speed ought to decline.
+
+It doesn't. When Vera Rubin and Kent Ford measured the speeds of gas clouds out in the dark edges of galaxies in the 1970s, the curves went **flat** — stars 30,000 light-years out orbit just as fast as ones a third of the way in. Something with a lot of mass, spread far beyond the glowing disc and giving off no light, is holding those outer stars in their fast orbits. We call it dark matter, and rotation curves are its clearest fingerprint.
+
+## How it works
+
+A star on a circular orbit is held by the gravity of everything inside its radius. Balancing the centripetal requirement against Newton's law gives the master equation:
+
+$$ v(r)^2 = \frac{G\,M(<r)}{r} $$
+
+Everything hinges on $M(<r)$, the mass enclosed within radius $r$.
+
+**The visible disc** has an exponential surface density $\Sigma(r) \propto e^{-r/R_d}$, so its enclosed mass saturates once you are a few scale-lengths out:
+
+$$ M_{\text{disc}}(<r) = M_{\text{disc}}\left[\,1 - \left(1 + \tfrac{r}{R_d}\right)e^{-r/R_d}\,\right] $$
+
+Beyond the bright disc $M_{\text{disc}}(<r)$ barely changes, so $v^2 \propto 1/r$ — the **Keplerian decline** (the teal curve).
+
+**A dark-matter halo** is far more diffuse. Modelling it as a pseudo-isothermal sphere, $\rho(r) \propto 1/\!\left(1 + (r/r_s)^2\right)$, its enclosed mass keeps climbing:
+
+$$ M_{\text{halo}}(<r) = 4\pi \rho_0 r_s^3\left[\frac{r}{r_s} - \arctan\!\frac{r}{r_s}\right] \;\xrightarrow{\;r \gg r_s\;}\; \propto r $$
+
+Because the enclosed halo mass grows roughly in step with $r$, its contribution $v_{\text{halo}}^2 = G M_{\text{halo}}/r$ tends to a **constant** — a flat curve. The two contributions add in quadrature, $v^2 = v_{\text{disc}}^2 + v_{\text{halo}}^2$, and the halo props up the falling disc curve into the flat orange line we observe.
+
+</LabSide>
+
+## What to watch for
+
+Turn the halo **off** and the total curve collapses onto the teal disc-only line: it rises through the bulge, peaks near one disc scale-length, then sags as $r^{-1/2}$. That sag is the prediction from the light alone — and it's wrong by a factor of two in the outskirts of real galaxies.
+
+Turn the halo **on** and watch the outer curve lift and level off. The stars in the galaxy panel respond too: with the halo, the outer stars sweep around far faster than their luminous gravity could ever manage. Nudge the halo scale $r_s$ to feel the trade-off — a compact halo flattens the curve early but contributes little at the very edge; an extended one keeps lifting the curve all the way out. There is no single dial that mimics this with visible matter only, which is exactly why the missing-mass problem refused to go away.
+
+## Knobs
+
+- **Disc mass** — the total mass of the luminous, baryonic disc (stars and gas). More disc raises and broadens the peak, but its curve always eventually declines.
+- **Halo mass** — the amount of dark matter. Set it to zero to recover the pure Keplerian-declining baryonic prediction; raise it to flatten and lift the outer curve.
+- **Halo scale $r_s$** — the core radius of the dark-matter halo (in kiloparsecs). Small values concentrate the halo near the centre; large values spread it out so it dominates the far outskirts.
+- **Dark-matter halo** — toggle the halo on or off. Off shows what the visible galaxy predicts on its own; on shows what we actually see.

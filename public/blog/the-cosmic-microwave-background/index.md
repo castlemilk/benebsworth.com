@@ -1,0 +1,202 @@
+---
+title: 'The Cosmic Microwave Background: the universe''s baby photo'
+date: '2026-06-25T00:00:00.000Z'
+description: >-
+  The oldest light in existence is a near-perfect blackbody at 2.725 K with hot
+  and cold ripples of one part in 100,000 — and those ripples are sound waves
+  frozen into the infant universe at the moment it turned transparent.
+labels: 'cosmology,astrophysics,cmb,early universe'
+release: true
+author: Ben Ebsworth
+heroImage: /blog/the-cosmic-microwave-background/hero.webp
+takeaways:
+  - >-
+    The CMB is the most perfect blackbody ever measured — 2.72548 K with
+    deviations under 0.005% — because it was minted in thermal equilibrium and
+    has only stretched, never reshaped, for 13.8 billion years.
+  - >-
+    Its hot and cold spots are not actually at different temperatures; they are
+    photons climbing out of gravitational wells of different depth. The map is a
+    relief of density, not of heat.
+  - >-
+    The ripples are standing sound waves in the pre-recombination plasma, caught
+    mid-oscillation when the universe turned transparent. The first acoustic
+    peak is the loudest note the early universe could ring.
+  - >-
+    One frozen wavelength — the sound horizon, about 150 megaparsecs — shows up
+    both as a peak in the CMB and as a faint shell in the galaxy distribution,
+    giving cosmology a ruler 13.8 billion years long.
+markdown_url: /blog/the-cosmic-microwave-background/
+canonical_url: 'https://benebsworth.com/blog/the-cosmic-microwave-background/'
+---
+## Key takeaways
+
+- The CMB is the most perfect blackbody ever measured — 2.72548 K with deviations under 0.005% — because it was minted in thermal equilibrium and has only stretched, never reshaped, for 13.8 billion years.
+- Its hot and cold spots are not actually at different temperatures; they are photons climbing out of gravitational wells of different depth. The map is a relief of density, not of heat.
+- The ripples are standing sound waves in the pre-recombination plasma, caught mid-oscillation when the universe turned transparent. The first acoustic peak is the loudest note the early universe could ring.
+- One frozen wavelength — the sound horizon, about 150 megaparsecs — shows up both as a peak in the CMB and as a faint shell in the galaxy distribution, giving cosmology a ruler 13.8 billion years long.
+
+Here is a photograph of the universe when it was 380,000 years old, and it fits in a sentence: a uniform glow at 2.725 kelvin, the same in every direction, dappled with hot and cold patches that differ by one part in a hundred thousand. That is the whole image. It sounds like a near-blank sky, almost nothing happening. Yet those faint patches, a few millionths of a degree across the mean, are not noise and not random. They are sound. Pressure waves that were ringing through the infant universe got frozen in place the instant the cosmos turned transparent, and we are still looking at the snapshot.
+
+The claim worth resisting is that "the oldest light" should be some exotic, scrambled, hard-to-read signal. It is the opposite. The cosmic microwave background is the cleanest, most boringly thermal spectrum nature has ever handed us, a blackbody so perfect that for thirty years no experiment could find a flaw in it. The information isn't in the spectrum. It's in the one-part-in-100,000 deviations from perfect smoothness, and decoding them turns a featureless glow into the most detailed measurement we have of what the universe is made of.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+Look at the map first, before any maths. The whole sky is one blackbody at 2.725 K, so this view subtracts that mean and amplifies what's left by a factor of about 100,000 to make the ripples visible. Every warm and cool patch is a place where the early universe was very slightly denser or thinner than average. Now drag the **baryon density** control and watch the curve underneath: the heights of those bumps swing up and down. Those bumps are the fingerprint of sound, and their pattern is set by the recipe of the cosmos. Everything below is an attempt to explain why a baby photo of the universe is, in the most literal sense, a recording of music.
+
+## A glow from every direction at once
+
+In 1964 Arno Penzias and Robert Wilson were trying to do radio astronomy with a horn antenna at Bell Labs, and they had a problem: a faint hiss in the receiver that would not go away. It came from every direction in the sky, day and night, every season, the same. They checked everything. They cooled the amplifier, they hunted for loose connections, they famously evicted a pair of pigeons nesting in the horn and scrubbed out the droppings. The hiss stayed. It corresponded to an excess antenna temperature of about 3.5 kelvin that had no business being there.
+
+Thirty miles away at Princeton, a group led by Robert Dicke was building an antenna specifically to look for exactly this: the leftover heat of a hot early universe, predicted decades earlier and then more or less forgotten. When Penzias phoned to describe the nuisance, Dicke hung up and said to his team, "Boys, we've been scooped." The hiss was the universe. Penzias and Wilson had measured, by accident, the afterglow of the Big Bang, and it won them the 1978 Nobel Prize.
+
+What they had found was light with a very particular character. Not starlight, not the glow of any object, but radiation with a *thermal* spectrum: the exact shape a perfect absorber and emitter produces when it sits at one temperature. That shape has a name and a formula.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+I_\nu(\nu, T) = \frac{8\pi h \nu^3}{c^3}\,\frac{1}{e^{h\nu/k_B T} - 1}
+```
+
+$$
+I_\nu(\nu, T) = \frac{8\pi h \nu^3}{c^3}\,\frac{1}{e^{h\nu/k_B T} - 1}
+$$
+
+Here $\nu$ is frequency, $T$ the temperature, $h$ the Planck constant, $k_B$ the Boltzmann constant, and $c$ the speed of light. The curve rises, peaks, and falls, and its whole shape is fixed by a single number, $T$. Plug in $T = 2.725$ K and you get a peak near 160 GHz, a wavelength of about a millimetre, squarely in the microwave band. Wien's displacement law is the shorthand for where that peak sits.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\lambda_\text{peak}\, T = 2.898 \times 10^{-3}\ \text{m·K}
+```
+
+$$
+\lambda_\text{peak}\, T = 2.898 \times 10^{-3}\ \text{m·K}
+$$
+
+In 1990 the COBE satellite's FIRAS instrument measured this spectrum across many frequencies at once and produced what is still one of the most famous plots in physics: the data points fall on the theoretical blackbody curve so exactly that the error bars are smaller than the width of the line. John Mather presented it to a room of astronomers and got a standing ovation, which is not a thing that normally happens to a spectrum. The deviations from a perfect Planck curve are under 0.005%. Nothing else in nature comes this close.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+A perfect blackbody spectrum only forms in thermal equilibrium: matter and radiation packed densely enough to trade energy freely until everything shares one temperature. The early universe was exactly that, a hot opaque plasma. The fact that the CMB is *this* thermal is the fingerprint of that equilibrium. It rules out the light coming from stars (which produce messy, non-thermal spectra) or from any energy dumped in *after* the plasma thinned out. A late energy release would distort the curve, and the under-0.005% limit says no such distortion happened. The blandness is the proof.
+
+## The day the universe turned transparent
+
+Why was there a hot plasma, and why did it stop being one? Wind the clock back. The universe is expanding, so it was once smaller, denser, and hotter. Run far enough back and you reach a state where everything is a soup of protons, electrons, and photons at thousands of degrees. At that temperature electrons cannot stay bound to protons: every time one tries to settle into a hydrogen atom, a photon comes along and knocks it loose again. So the electrons roam free, and free electrons are extremely good at scattering light. A photon could not travel any meaningful distance before bouncing off an electron. The universe was a glowing fog.
+
+Then expansion cooled it. Around 380,000 years after the Big Bang the temperature fell to roughly 3,000 K, and below that threshold the photons no longer had the energy to keep electrons stripped from protons. Electrons and protons paired up into neutral hydrogen, a transition cosmologists call *recombination* (a slightly odd name, since they had never been combined before). Suddenly there were almost no free electrons left to scatter light. The fog cleared. Photons that had been bouncing around for thousands of years streamed off in straight lines, and most of them have been travelling, untouched, ever since.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+It helps to picture the CMB not as an event but as a place. Look out in any direction and you see deeper into the past, because light takes time to arrive. Look far enough and you reach the distance whose light left at recombination. That spherical shell, centred on you, is the *last-scattering surface*: the wall of the glowing fog as it was the instant it cleared. Every CMB photon you catch left that wall 13.8 billion years ago. It is not nearby and it is not local. The comoving distance to it is about 46 billion light-years, and every observer in the universe sits at the centre of their own such sphere.
+
+There is one more piece of bookkeeping. That fog was glowing at 3,000 K, the colour of a dim red star, not a chilly 2.725 K. So why is the CMB cold? Because the universe has expanded by a factor of about 1,100 since then, and expansion stretches the wavelength of every photon by that same factor. A blackbody whose every wavelength is stretched uniformly stays a blackbody, just a cooler one. The temperature scales inversely with the stretch.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+T_\text{now} = \frac{T_\text{emit}}{1 + z} \approx \frac{3000\ \text{K}}{1090} \approx 2.725\ \text{K}
+```
+
+$$
+T_\text{now} = \frac{T_\text{emit}}{1 + z} \approx \frac{3000\ \text{K}}{1090} \approx 2.725\ \text{K}
+$$
+
+This is the single most common thing to get wrong about the CMB. It is not radiation from cold matter. It is radiation from hot matter, emitted at 3,000 K, and then redshifted by a thousandfold journey through expanding space until it arrives as microwaves. The light didn't cool by losing heat to its surroundings. Space itself stretched underneath it.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+  
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+## The ripples are sound
+
+Now to the patches. For a long time everyone expected the CMB to carry tiny temperature variations, because the universe today is lumpy: galaxies, clusters, vast empty voids. That structure had to grow from somewhere, from small seeds of overdensity in the early universe. Gravity would amplify the seeds over billions of years. So the seeds should be visible as faint hot and cold mottling on the last-scattering surface. COBE found them in 1992, at the level of about 30 microkelvin, confirming $\Delta T / T \approx 10^{-5}$ and earning George Smoot and John Mather a second Nobel for the mission. But the mottling is not random static. It has a very specific structure, and the structure is the interesting part.
+
+Go back to before recombination. The plasma was a tight coupling of two ingredients: baryons (the protons and electrons, which have mass and gravity) and photons (which have enormous pressure). Picture an overdense patch. Gravity pulls baryons inward, compressing the patch. But compressing photons raises their pressure, and that pressure pushes back out. In, out, in, out. The patch oscillates. Across the whole universe, every overdense region is bouncing between gravitational infall and radiation pressure. The plasma is ringing like a struck bell.
+
+These oscillations are genuine sound waves, pressure waves in a medium, and they travel at a specific speed set by how stiff the photon-baryon fluid is.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+c_s = c\,\sqrt{\frac{1}{3(1+R)}} \approx \frac{c}{\sqrt{3}} \approx 1.7 \times 10^{5}\ \text{km/s}
+```
+
+$$
+c_s = c\,\sqrt{\frac{1}{3(1+R)}} \approx \frac{c}{\sqrt{3}} \approx 1.7 \times 10^{5}\ \text{km/s}
+$$
+
+Here $R$ is the ratio of baryon to photon energy density; in the early plasma it is small, so $c_s$ sits close to $c/\sqrt{3}$, roughly 170,000 kilometres per second. That is the speed of sound in the early universe: over half the speed of light. These were not gentle ripples on a pond. They were relativistic shock-fast pressure waves screaming through a fluid hotter than the centre of a star.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+The hot and cold spots are not warm and cool regions of gas. They are snapshots of standing sound waves, caught mid-vibration at the instant the universe stopped being able to carry sound at all.
+
+Then recombination happened, and the music stopped. The moment the electrons bound up into neutral hydrogen, the photons decoupled from the baryons and streamed away. Without photon pressure, the restoring force vanished. The sound waves froze. Whatever phase each wave happened to be caught in (fully compressed, fully rarefied, somewhere between) is the phase it kept forever, printed onto the photons that left at that instant. The CMB temperature map is a photograph of standing waves, stilled at the click of the shutter.
+
+## Why the spots are a relief map, not a heat map
+
+Here is the second thing almost everyone gets wrong, and it is subtle. The hot spots are not hotter and the cold spots are not colder, not really. Every patch of the last-scattering surface emits blackbody radiation at essentially the same 3,000 K. So why do they look different by the time they reach us?
+
+Because the photons have to climb out of gravitational wells of different depth. A dense patch is a deeper well. A photon leaving a deep well loses energy fighting its way out, which redshifts it, which makes it look *colder*. So the densest patches, the ones that will eventually grow into galaxy clusters, appear as *cold* spots in the map. Underdense patches sit in shallow wells, lose less energy escaping, and look warmer. This is the Sachs-Wolfe effect: the temperature you measure is the local emission temperature shifted by the gravitational potential the photon had to escape.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\frac{\Delta T}{T} = \frac{1}{3}\,\frac{\Phi}{c^2}
+```
+
+$$
+\frac{\Delta T}{T} = \frac{1}{3}\,\frac{\Phi}{c^2}
+$$
+
+So the CMB map is a relief map of the early universe's density, drawn in the currency of gravitational potential, not a thermometer reading of hot and cold gas. A "cold spot" is a flag planted on an overdensity. Read the map that way and it inverts: the dark patches are where the matter was piling up, the bright patches are where it was thinning out. The cosmic web of galaxies and voids we live in today is the grown-up version of this exact pattern.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+It is tempting to read "one part in 100,000" as "the early universe was almost perfectly uniform, almost nothing there". That gets the lesson backwards. Those tiny seeds were not negligible; they were *exactly the right size*. Gravity is an amplifier with a billion-year fuse: a density contrast of $10^{-5}$ at recombination grows, by gravitational instability, into the order-unity contrast of galaxies and empty voids today. Had the seeds been much smaller, no structure would have formed and the universe would be a thin uniform gas with no stars and no us. Much bigger, and it would have collapsed into black holes too fast. The number is not "almost nothing". It is the setting that makes a universe with structure in it.
+
+## Reading the recipe off the power spectrum
+
+The single most powerful thing you can do with the CMB is stop looking at individual spots and ask a statistical question instead: at what *angular size* are the spots most prominent? Take the whole map and decompose it into ripples of every scale, the way you'd break a chord into its constituent notes. Plot how much power sits at each angular scale, and you get the CMB power spectrum, the curve under the lab above. It is not a smooth slope. It has a series of clear peaks.
+
+Those peaks are the frozen sound waves, sorted by wavelength. Here is the elegant part. All these oscillations started at the same time, at the Big Bang, and all stopped at the same time, at recombination. So a wave's phase at the freeze depends only on how fast it oscillated. The wave that had just completed exactly one half-cycle, compressing to maximum density right as the music stopped, produces the strongest signal. Its wavelength is the *sound horizon*: the distance a sound wave could travel from the Big Bang to recombination.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+r_s = \int_0^{t_\text{rec}} c_s(t)\,\frac{dt}{a(t)} \approx 150\ \text{Mpc}
+```
+
+$$
+r_s = \int_0^{t_\text{rec}} c_s(t)\,\frac{dt}{a(t)} \approx 150\ \text{Mpc}
+$$
+
+That comes out to about 150 megaparsecs in comoving distance, and it is the loudest note the early universe could play, the fundamental tone of a struck bell whose size was the whole observable cosmos. The first peak in the power spectrum *is* this note. The second peak is the wave that completed a full cycle (compressed, then rarefied to maximum) by recombination, the first overtone. The third is the next harmonic, and so on. The CMB power spectrum is a harmonic series, the resonant modes of the entire universe.
+
+And the heights of those peaks read out the recipe. The exact positions and relative heights depend on how much baryonic matter there was (baryons add inertia, deepening the compressions and boosting odd peaks over even ones), how much total matter, how fast the universe was expanding. By fitting the observed peaks, Planck pinned down the universe's composition: about 5% ordinary matter, 27% dark matter, 68% dark energy. That entire inventory falls out of measuring where the bumps sit in a curve. When you drag the baryon control in the lab and watch the peaks heave up and down, you are doing the thing cosmologists do for a living: turning the dials until the predicted music matches the recording.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The sound horizon does not only show up in the CMB. Those same frozen sound waves left a faint preferred separation in the matter itself: galaxies are very slightly more likely to be found about 150 Mpc apart than at neighbouring distances, a shell of overdensity that was the crest of the wave when it froze. This is the *baryon acoustic oscillation* signal, and it has been measured directly in the late-time galaxy distribution at redshifts around 0.1 to 0.6. The very same ruler, stamped into the plasma at z ≈ 1090, reappears in the galaxies billions of years later. Comparing its apparent size at the two epochs measures how the universe expanded in between, which is how we weigh dark energy. One wave, two photographs, 13 billion years apart.
+
+## What the baby photo actually tells us
+
+Step back and look at what this featureless glow has given us. The temperature, 2.72548 K, is a thermometer reading on the universe at 380,000 years old, redshifted into our instruments. The blackbody perfection certifies that the early universe really was a hot dense equilibrium, the Big Bang picture rather than some steady alternative. The one-part-in-100,000 ripples are the seeds of every galaxy, caught the instant before gravity began amplifying them. And the harmonic series of acoustic peaks weighs out the contents of the cosmos to a few per cent, ordinary matter against dark matter against dark energy, from nothing more than the pattern of frozen sound.
+
+There is something almost unreasonable about how much survives in this signal. A pressure wave bounced through a plasma for 400,000 years, got caught mid-oscillation, and then coasted untouched for 13.8 billion years across an expanding universe, and we can still read its phase off a satellite map. The early universe rang like a bell, the bell went silent at recombination, and the last reverberation is still arriving, stretched into microwaves, faint enough to mistake for pigeon droppings, carrying the recipe of everything. Some food for thought, the next time you tune a radio between stations and catch a hiss: a fraction of that static is the universe's baby photo, 13.8 billion years in the post.
+
+## Reading further
+
+- [Penzias & Wilson, *A Measurement of Excess Antenna Temperature at 4080 Mc/s* (ApJ 142, 1965)](https://ui.adsabs.harvard.edu/abs/1965ApJ...142..419P/abstract). The accidental discovery paper, barely two pages; the understated tone is half the charm given what they'd found.
+- [Mather et al., *Measurement of the CMB Spectrum by the COBE FIRAS Instrument* (ApJ 420, 1994)](https://ui.adsabs.harvard.edu/abs/1994ApJ...420..439M/abstract). The blackbody measurement that drew a standing ovation: deviations from Planck under 0.005%.
+- [Planck Collaboration, *Planck 2018 results V: CMB power spectra and likelihoods* (A&A 641, 2020)](https://www.aanda.org/articles/aa/full_html/2020/09/aa36386-19/aa36386-19.html). The definitive modern measurement of the acoustic peaks and the cosmic recipe they encode.
+- [Ryden, *Introduction to Cosmology* (2nd ed., Cambridge, 2016), ch. 9](https://www.cambridge.org/9781107154834). The clearest textbook treatment of recombination, the sound horizon, and how the power spectrum turns into cosmological parameters.

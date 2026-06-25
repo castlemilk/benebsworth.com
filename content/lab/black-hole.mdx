@@ -1,0 +1,41 @@
+<LabCanvas effect="black-hole" height={400} params={{ mass: 1.4, showPhotonSphere: true, showISCO: true, lensing: true, infall: true }} caption="A Schwarzschild black hole: the dark shadow ringed by lensed starlight, with the horizon, photon sphere and ISCO marked, and a probe reddening as it falls in." />
+
+## The core idea
+
+A black hole is not a thing sitting in space — it is a region of spacetime so steeply curved that nothing, not even light, can climb back out. Karl Schwarzschild wrote down the first exact solution to Einstein's field equations in 1916, only months after the equations themselves appeared, and astonishingly the geometry around any non-spinning, uncharged mass depends on just *one* number: the total mass M. Every length you can name about the hole is a multiple of a single scale, the **Schwarzschild radius**. Shrink the Sun to within that radius and it would become a black hole; the radius works out to about three kilometres.
+
+## How it works
+
+The defining scale is the Schwarzschild radius, where the escape velocity reaches the speed of light:
+
+$$
+r_s = \frac{2GM}{c^2}
+$$
+
+Three special surfaces sit at fixed multiples of it:
+
+- **Event horizon** at $r = r_s$ — the point of no return. Cross it and every future-pointing path leads inward.
+- **Photon sphere** at $r = 1.5\,r_s$ — where gravity bends light so hard it can orbit on a circle. The orbit is unstable, so it acts like a knife-edge that piles light into a bright ring.
+- **ISCO** at $r = 3\,r_s$ — the *innermost stable circular orbit*. Inside it no matter can hold a circular path, so an accretion disc has a sharp inner edge here.
+
+Light from the background sky is deflected by the curvature. For a ray passing at impact parameter $b$ the bending angle is
+
+$$
+\alpha = \frac{4GM}{c^2\,b} = \frac{2\,r_s}{b}
+$$
+
+— exactly twice the value Newtonian gravity would give, the factor of two being Einstein's 1915 prediction confirmed at the 1919 eclipse. Rays aimed within the critical impact parameter $b_c = \tfrac{3\sqrt{3}}{2}\,r_s \approx 2.6\,r_s$ spiral in and are captured, so a distant observer sees a dark disc — the **shadow** — slightly *larger* than the horizon itself, hugged by a thin photon ring.
+
+## What to watch for
+
+The shadow is bigger than the horizon. That is the lensing at work: the black region you see has the radius of the critical impact parameter, $2.6\,r_s$, not the $r_s$ of the horizon. Starlight that would otherwise have passed close by is swept around the hole and smeared into the bright ring at the shadow's edge — this is the structure the Event Horizon Telescope imaged for M87\* in 2019.
+
+Watch the **infalling probe**. From far away it never quite arrives. Two effects redshift its light, and both diverge at the horizon: gravitational time dilation, $1+z = 1/\sqrt{1 - r_s/r}$, and the Doppler shift of its growing infall speed. So the probe reddens, dims, and appears to freeze just above the horizon — even though, in its own proper time, it sails across in a finite (and rather short) span and meets the singularity soon after.
+
+## Knobs
+
+- **Mass (r_s)** — sets the Schwarzschild radius, and with it every other surface, since they all scale linearly with $r_s$. Crank it up to swallow the frame.
+- **Photon sphere (1.5 r_s)** — toggles the amber unstable light-orbit ring.
+- **ISCO (3 r_s)** — toggles the teal innermost-stable-orbit circle, the inner edge an accretion disc would have.
+- **Gravitational lensing** — bends and magnifies the background star field into the photon ring and carves out the shadow. Turn it off to see the bare horizon with the sky undistorted.
+- **Infalling probe** — drops a probe in along a fixed bearing and reads out its radius and total redshift $1+z$ as both run away near the horizon.

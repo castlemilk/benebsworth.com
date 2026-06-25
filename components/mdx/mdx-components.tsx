@@ -49,6 +49,10 @@ import {
   ThresholdCurve,
   DenoisingPlanner,
   ModeCollapseStrip,
+  SchwarzschildCalculator,
+  HolographicReduction,
+  NestedUniverses,
+  WhiteHoleBounce,
 } from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
@@ -88,6 +92,10 @@ export const mdxComponents: MDXComponents = {
   ThresholdCurve,
   DenoisingPlanner,
   ModeCollapseStrip,
+  SchwarzschildCalculator,
+  HolographicReduction,
+  NestedUniverses,
+  WhiteHoleBounce,
   IngressFlowBasic,
   EgressFlowBasic,
   EgressFlowAdvanced,

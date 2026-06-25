@@ -62,6 +62,15 @@ export const LAB_EFFECTS: LabEntry[] = [
   { slug: 'circuit-sim', title: 'Circuit Simulator', blurb: 'Drag-and-drop circuit builder with SPICE-style transient simulation and a built-in oscilloscope.', tags: ['circuits', 'spice', 'mna', 'oscilloscope'], category: 'engineering', homeEmbedSafe: false },
   // ── Cosmology ───────────────────────────────────────────────────────
   { slug: 'universe-scale', title: 'Universe Scale', blurb: 'A logarithmic zoom from the Planck length to the observable universe — ant, whale, Everest, Earth, Sun, galaxy.', tags: ['scale', 'cosmology', 'powers of ten', 'log'], category: 'cosmology', homeEmbedSafe: false },
+  { slug: 'spacetime-curvature', title: 'Spacetime Curvature', blurb: 'A mass curving an embedding sheet, with geodesics and bending light rays.', tags: ['general relativity', 'geodesics', 'gravity'], category: 'cosmology', homeEmbedSafe: true },
+  { slug: 'black-hole', title: 'Black Hole', blurb: 'Schwarzschild geometry: event horizon, photon sphere, ISCO, lensing shadow, and an infalling probe.', tags: ['black hole', 'schwarzschild', 'event horizon'], category: 'cosmology', homeEmbedSafe: true },
+  { slug: 'holographic-bound', title: 'Holographic Bound', blurb: 'Entropy scales with area, not volume — pixels tiling a horizon, and the Bekenstein bound.', tags: ['holographic principle', 'entropy', 'bekenstein bound'], category: 'cosmology', homeEmbedSafe: false },
+  { slug: 'cosmic-expansion', title: 'Cosmic Expansion', blurb: 'The FLRW scale factor a(t), Hubble flow, redshift, and the fate of the universe.', tags: ['cosmology', 'flrw', 'hubble', 'dark energy'], category: 'cosmology', homeEmbedSafe: true },
+  { slug: 'cmb-sky', title: 'CMB Sky', blurb: 'The last-scattering temperature map and its acoustic-peak power spectrum.', tags: ['cmb', 'cosmology', 'acoustic peaks'], category: 'cosmology', homeEmbedSafe: true },
+  { slug: 'rotation-curve', title: 'Galaxy Rotation Curve', blurb: 'Keplerian decline vs the observed flat curve, and the dark-matter halo that flattens it.', tags: ['dark matter', 'galaxy', 'rotation curve'], category: 'cosmology', homeEmbedSafe: true },
+  { slug: 'hr-diagram', title: 'HR Diagram', blurb: "A star's evolutionary track across the Hertzsprung-Russell diagram, by initial mass.", tags: ['stars', 'stellar evolution', 'hr diagram'], category: 'cosmology', homeEmbedSafe: false },
+  { slug: 'gw-chirp', title: 'Gravitational-Wave Chirp', blurb: 'A compact-binary inspiral strain h(t): chirp, merger, and ringdown, with a spectrogram.', tags: ['gravitational waves', 'ligo', 'inspiral'], category: 'cosmology', homeEmbedSafe: true },
+  { slug: 'fine-tuning', title: 'Fine-Tuning Dials', blurb: 'Nudge the constants of nature and watch a habitability readout collapse off-tune.', tags: ['anthropic', 'fine-tuning', 'multiverse'], category: 'cosmology', homeEmbedSafe: false },
 ]
 
 export function getEffect(slug: string): LabEntry | undefined {
@@ -113,4 +122,14 @@ export const EFFECT_LOADERS: Record<string, () => Promise<EffectModule>> = {
   'reaction-diffusion': () => import('@/components/lab/effects/reaction-diffusion').then(m => m.reactionDiffusion),
   'gradient-descent': () => import('@/components/lab/effects/gradient-descent').then(m => m.gradientDescent),
   'pathfinding': () => import('@/components/lab/effects/pathfinding').then(m => m.pathfinding),
+  // ── Cosmology ───────────────────────────────────────────────────────
+  'spacetime-curvature': () => import('@/components/lab/effects/spacetime-curvature').then(m => m.spacetimeCurvature),
+  'black-hole': () => import('@/components/lab/effects/black-hole').then(m => m.blackHole),
+  'holographic-bound': () => import('@/components/lab/effects/holographic-bound').then(m => m.holographicBound),
+  'cosmic-expansion': () => import('@/components/lab/effects/cosmic-expansion').then(m => m.cosmicExpansion),
+  'cmb-sky': () => import('@/components/lab/effects/cmb-sky').then(m => m.cmbSky),
+  'rotation-curve': () => import('@/components/lab/effects/rotation-curve').then(m => m.rotationCurve),
+  'hr-diagram': () => import('@/components/lab/effects/hr-diagram').then(m => m.hrDiagram),
+  'gw-chirp': () => import('@/components/lab/effects/gw-chirp').then(m => m.gwChirp),
+  'fine-tuning': () => import('@/components/lab/effects/fine-tuning').then(m => m.fineTuning),
 }

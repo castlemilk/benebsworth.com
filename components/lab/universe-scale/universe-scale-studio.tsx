@@ -181,7 +181,6 @@ export function UniverseScaleStudio({
     if (!ctx) return
     let raf = 0
     let lastReadout = 0
-    let lastT = 0
 
     const draw = (t: number) => {
       const { w, h, dpr } = dimsRef.current
@@ -302,7 +301,6 @@ export function UniverseScaleStudio({
     }
 
     const frame = (now: number) => {
-      lastT = now
       const live = inViewRef.current && !reducedRef.current
       if (tourRef.current && live && now - lastReadout > 60) {
         setViewLog(viewLogRef.current); lastReadout = now

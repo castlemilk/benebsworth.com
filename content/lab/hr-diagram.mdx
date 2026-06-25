@@ -1,0 +1,43 @@
+<LabSide effect="hr-diagram" height={420} params={{ initialMass: 1, metallicity: 1, animateTrack: true }} caption="The Hertzsprung–Russell diagram. A Sun-mass star traces its life: main sequence → red giant → white dwarf.">
+
+## The core idea
+
+Plot a few thousand stars with luminosity up the side and surface temperature across the bottom and they don't scatter randomly — they fall onto a handful of narrow strips. That pattern, found independently by Ejnar Hertzsprung and Henry Norris Russell around 1910, is the single most useful diagram in stellar astronomy. The long diagonal **main sequence** is where stars spend roughly nine-tenths of their lives fusing hydrogen. The cool, brilliant **giant branch** sits above and to the right; the hot, faint **white dwarfs** huddle below and to the left. A star's position is set almost entirely by one number — its mass — and as it ages it *moves*, tracing an evolutionary track you can read straight off the chart.
+
+## How it works
+
+A main-sequence star of mass $M$ (in solar masses) settles onto the band according to two empirical scaling laws:
+
+$$
+\frac{L}{L_\odot} \approx M^{3.5}, \qquad \frac{R}{R_\odot} \approx M^{0.7}
+$$
+
+Luminosity climbs steeply with mass — double the mass and you brighten elevenfold. The surface temperature then follows from the Stefan–Boltzmann law, $L = 4\pi R^2 \sigma T^4$, rearranged to
+
+$$
+T_\text{eff} = T_\odot \left(\frac{L}{L_\odot}\right)^{1/4} \left(\frac{R}{R_\odot}\right)^{-1/2}, \qquad T_\odot = 5772\,\text{K}
+$$
+
+so a heavier star is both more luminous *and* hotter — it slides up and to the left along the sequence. How long it lingers there is the fuel divided by the burn rate, $t_\text{MS} \approx 10\,\text{Gyr} \cdot M / L \approx 10\,\text{Gyr} \cdot M^{-2.5}$. A 10 $M_\odot$ star is thousands of times brighter than the Sun and burns out in a few tens of millions of years; a red dwarf sips its hydrogen for trillions.
+
+When the core hydrogen runs out the star leaves the sequence: the core contracts, the envelope balloons, and it climbs the **red-giant branch** — cool surface, enormous radius, huge luminosity. What it leaves behind depends on the starting mass:
+
+$$
+M \lesssim 8\,M_\odot \rightarrow \text{white dwarf}, \quad
+8 \lesssim M \lesssim 25 \rightarrow \text{neutron star}, \quad
+M \gtrsim 25 \rightarrow \text{black hole}
+$$
+
+</LabSide>
+
+## What to watch for
+
+Drag the **mass** up and watch the starting point march to the upper-left — bright and blue — while the predicted main-sequence lifetime in the corner collapses from gigayears to mere megayears. That trade-off is the whole story of stellar demographics: the showy blue stars are rare and short-lived, the dim red ones outlive the present age of the universe many times over.
+
+Follow a full track and notice the right-angle: stars cross the diagram nearly *horizontally* (cooling at almost constant luminosity) on their way to the giant branch, then drop almost *vertically* to the remnant. The remnant marker changes character with mass — a fading white-dwarf trail for Sun-like stars, a flag at the hot-faint corner for the neutron star, and an event-horizon ring (no photosphere, so nothing to plot) for the black hole.
+
+## Knobs
+
+- **Initial mass** — the star's birth mass in solar masses (0.3–40). It sets *everything*: where the track starts, how luminous and hot the star is, how long it lives, and which remnant it leaves.
+- **Metallicity** — the abundance of elements heavier than helium, relative to the Sun (0.1–2.5 $Z_\odot$). Metal-poor stars are slightly hotter and fainter at fixed mass, nudging the track a touch to the left.
+- **Animate track** — toggle the evolution. On, the star walks its track over a few seconds; off, the whole path is drawn at once so you can compare shapes across masses.

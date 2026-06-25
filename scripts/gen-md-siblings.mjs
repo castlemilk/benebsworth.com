@@ -37,6 +37,14 @@ const COMPONENT_DESCRIPTIONS = {
     'Two-column layout pairing prose with an embedded interactive lab effect (Canvas 2D). The `effect` prop names a lab simulation; the surrounding text explains what to watch for. The rendered post has the live, controllable version.',
   UniverseScale:
     'Embedded "Universe Scale" explorer: a logarithmic zoom across 62 orders of magnitude, from the Planck length to the observable universe (ant, human, whale, skyscraper, Mount Everest, Earth, Sun, galaxy, cosmic web). The `focus` prop sets the initial scale. Markers at the Sun\'s Schwarzschild radius and the Planck length link to the black-hole-cosmology essay. The rendered post has the live, scrollable canvas.',
+  SchwarzschildCalculator:
+    'Interactive calculator: a mass slider (log scale) computes the Schwarzschild radius r_s = 2GM/c^2, with presets (a person, the Earth, the Sun, Sagittarius A*, the observable universe). It highlights that the observable universe sits at roughly its own Schwarzschild radius. The rendered post has the live widget.',
+  HolographicReduction:
+    'Interactive diagram of the holographic principle: a 3-D bulk region beside its 2-D boundary, with a radius slider showing volume growing as r^3 while the maximum entropy (information) grows only as the boundary area r^2 (in Planck units). The rendered post has the live version.',
+  NestedUniverses:
+    'Interactive, clearly-speculative ladder of nested universes: a 4-D bulk universe whose black-hole horizon is our 3+1-D universe, whose black holes in turn encode 2-D "universes", and so on. Click a level to descend; each shows its dimensionality and what plays the role of its Big Bang. The rendered post has the live version.',
+  WhiteHoleBounce:
+    'Interactive schematic of gravitational collapse with a toggle between two endings: a classical singularity, or an Einstein-Cartan torsion bounce (Poplawski) where collapse rebounds into an expanding new universe whose rebound is a white-hole-like Big Bang. The rendered post has the live version.',
   FfnnFlow:
     'Interactive SVG diagram (feed-forward network). See the rendered post for a live, animated visualisation with input sliders, edge weights, and a per-frame activation readout.',
   RnnFlow:

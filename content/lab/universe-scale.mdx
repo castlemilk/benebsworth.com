@@ -1,0 +1,47 @@
+## The core idea
+
+Human intuition is linear, but the universe is not. The jump from an ant to a person is
+the same *visual* step here as the jump from the Sun to the entire Solar System, because the
+slider measures **orders of magnitude**, not metres. One notch is always a factor of ten.
+
+That is the only honest way to put a quark and a galaxy on the same screen. From the Planck
+length at $10^{-35}$ m to the observable universe at nearly $10^{27}$ m is sixty-two factors
+of ten, and a linear ruler long enough to show both would have the atom and the galaxy
+indistinguishably close to one end.
+
+## How it works
+
+Every object carries one number: its size in metres. The zoom level is a single value,
+$\log_{10}$ of the size currently framed at the centre. An object of real size $s$ is drawn
+at an apparent diameter
+
+```
+px = refPx · 10^(log10(s) − viewLog)
+```
+
+so each decade you scroll multiplies the on-screen size by ten. Things swell in from a dot,
+fill the frame, and balloon away as you pass their scale, which is exactly the feeling of
+the old *Powers of Ten* film. A faint ring grid marks each decade, so even in the stretches
+where nothing of known size lives (there is a long, genuinely empty gap between a proton and
+the Planck length) you can still read where you are.
+
+The two ◇ markers are where the ladder touches real gravitational physics. One sits at the
+**Sun's Schwarzschild radius**, $r_s = 2GM/c^2 \approx 2.95$ km: shrink the Sun inside that
+and it becomes a black hole. The other sits at the **Planck length**. Both link through to
+the essay on whether our whole universe might sit inside a black hole.
+
+## What to watch for
+
+- Hit **tour** and ride from the ant out to the Milky Way without touching anything.
+- Notice how empty the universe is. Between the atom and the Solar System, almost every frame
+  is mostly grid: matter clumps at a few favoured scales and leaves vast gaps between them.
+- The observable universe, right at the top, is the one object whose mass sits *at its own
+  Schwarzschild radius*. That coincidence is where the black-hole-cosmology story begins.
+
+## Knobs
+
+- **Scroll / drag** — zoom the size axis in and out.
+- **Slider** — jump anywhere across the 62 decades directly.
+- **Jump chips** — snap to the Planck length, an atom, the ant, a human, the Earth, the Sun,
+  the galaxy, or the whole universe.
+- **Tour** — an automatic ant → galaxy fly-through.

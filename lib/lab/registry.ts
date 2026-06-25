@@ -8,6 +8,7 @@ export const CATEGORIES: { key: LabCategory; label: string; glyph: string; blurb
   { key: 'physics', label: 'Physics', glyph: 'ψ', blurb: 'Waves, quantum states, and condensed-matter phenomena.' },
   { key: 'engineering', label: 'Electrical Engineering', glyph: 'Ω', blurb: 'Circuits, signal processing, control systems, and software radio.' },
   { key: 'ai', label: 'AI & Machine Learning', glyph: '✦', blurb: 'Attention, transformers, and the mechanics of deep models.' },
+  { key: 'cosmology', label: 'Cosmology', glyph: '✷', blurb: 'Spacetime, black holes, and the structure of the universe — from the Planck length to the cosmic web.' },
 ]
 
 // Lightweight metadata only — NO controls, defaults, or canvas code.
@@ -59,6 +60,8 @@ export const LAB_EFFECTS: LabEntry[] = [
   { slug: 'gradient-descent', title: 'Gradient Descent', blurb: 'SGD, Momentum, RMSProp, and Adam racing down a loss landscape — ravines, saddles, and local minima.', tags: ['optimization', 'deep-learning', 'training'], category: 'ai', homeEmbedSafe: true },
   { slug: 'pathfinding', title: 'A* Pathfinder', blurb: 'A*, Dijkstra, and greedy best-first search — the heuristic pulling the frontier toward the goal.', tags: ['search', 'graphs', 'a-star'], category: 'ai', homeEmbedSafe: true },
   { slug: 'circuit-sim', title: 'Circuit Simulator', blurb: 'Drag-and-drop circuit builder with SPICE-style transient simulation and a built-in oscilloscope.', tags: ['circuits', 'spice', 'mna', 'oscilloscope'], category: 'engineering', homeEmbedSafe: false },
+  // ── Cosmology ───────────────────────────────────────────────────────
+  { slug: 'universe-scale', title: 'Universe Scale', blurb: 'A logarithmic zoom from the Planck length to the observable universe — ant, whale, Everest, Earth, Sun, galaxy.', tags: ['scale', 'cosmology', 'powers of ten', 'log'], category: 'cosmology', homeEmbedSafe: false },
 ]
 
 export function getEffect(slug: string): LabEntry | undefined {

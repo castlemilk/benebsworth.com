@@ -32,6 +32,7 @@ const ACCENT = {
   violet: '#b16cea', // physics
   green: '#34d399', // software / computer science
   amber: '#f5a623', // electrical engineering / signals
+  indigo: '#6366f1', // cosmology / astrophysics
 } as const
 
 const TOPIC = {
@@ -50,6 +51,7 @@ const TOPIC = {
   physics: { icon: '/topics/technology.png', label: 'Physics', accent: ACCENT.violet },
   software: { icon: '/topics/technology.png', label: 'Software', accent: ACCENT.green },
   ee: { icon: '/topics/technology.png', label: 'Electrical Eng', accent: ACCENT.amber },
+  cosmology: { icon: '/topics/technology.png', label: 'Cosmology', accent: ACCENT.indigo },
 } satisfies Record<string, Topic>
 
 export { TOPIC }
@@ -104,6 +106,22 @@ const BY_SLUG: Record<string, Topic> = {
   'smith-chart-is-geometry': TOPIC.ee,
   'pll-from-first-principles': TOPIC.ee,
   'filters-from-poles-and-zeros': TOPIC.ee,
+  // Physics foundations for the cosmology desk (violet)
+  'why-gravity-is-geometry': TOPIC.physics,
+  'anatomy-of-a-black-hole': TOPIC.physics,
+  'the-universe-on-a-surface': TOPIC.physics,
+  'how-space-itself-expands': TOPIC.physics,
+  // Cosmology & astrophysics desk (indigo)
+  'universe-inside-a-black-hole': TOPIC.cosmology,
+  'the-cosmic-distance-ladder': TOPIC.cosmology,
+  'the-cosmic-microwave-background': TOPIC.cosmology,
+  'dark-matter-the-unseen-gravity': TOPIC.cosmology,
+  'dark-energy-and-the-runaway-universe': TOPIC.cosmology,
+  'how-stars-live-and-die': TOPIC.cosmology,
+  'gravitational-waves': TOPIC.cosmology,
+  'why-the-night-sky-is-dark': TOPIC.cosmology,
+  'the-fine-tuned-universe': TOPIC.cosmology,
+  'the-first-three-minutes': TOPIC.cosmology,
 }
 
 /**
@@ -119,6 +137,7 @@ const TAG_RULES: Array<{ match: string[]; topic: Topic }> = [
   { match: ['algorithms'], topic: TOPIC.algorithms },
   { match: ['gcp'], topic: TOPIC.gcp },
   { match: ['kubernetes', 'containers', 'ci/cd', 'knative', 'skaffold'], topic: TOPIC.kubernetes },
+  { match: ['cosmology', 'astrophysics', 'black hole', 'cosmic', 'relativity', 'spacetime'], topic: TOPIC.cosmology },
   { match: ['personal', 'general'], topic: TOPIC.general },
 ]
 

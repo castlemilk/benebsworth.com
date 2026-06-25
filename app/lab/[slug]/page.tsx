@@ -15,10 +15,12 @@ const CATEGORY_ACCENT: Record<string, string> = {
   maths: '#7c5cff',
   physics: '#ff7a59',
   engineering: '#00b4d8',
+  cosmology: '#6366f1',
 }
 
 export function generateStaticParams() {
-  return LAB_EFFECTS.filter(e => e.slug !== 'circuit-sim').map((e) => ({ slug: e.slug }))
+  const dedicated = new Set(['circuit-sim', 'universe-scale'])
+  return LAB_EFFECTS.filter(e => !dedicated.has(e.slug)).map((e) => ({ slug: e.slug }))
 }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params

@@ -31,6 +31,12 @@ const OUT = join(ROOT, 'public/blog')
  * the markdown link back to the canonical post will see it.
  */
 const COMPONENT_DESCRIPTIONS = {
+  LabCanvas:
+    'Embedded interactive lab effect (Canvas 2D) with live controls. The `effect` prop names a simulation from the lab registry (e.g. "black-hole", "cosmic-expansion"); the rendered post shows the running canvas plus sliders. This placeholder stands in for the markdown-only sibling.',
+  LabSide:
+    'Two-column layout pairing prose with an embedded interactive lab effect (Canvas 2D). The `effect` prop names a lab simulation; the surrounding text explains what to watch for. The rendered post has the live, controllable version.',
+  UniverseScale:
+    'Embedded "Universe Scale" explorer: a logarithmic zoom across 62 orders of magnitude, from the Planck length to the observable universe (ant, human, whale, skyscraper, Mount Everest, Earth, Sun, galaxy, cosmic web). The `focus` prop sets the initial scale. Markers at the Sun\'s Schwarzschild radius and the Planck length link to the black-hole-cosmology essay. The rendered post has the live, scrollable canvas.',
   FfnnFlow:
     'Interactive SVG diagram (feed-forward network). See the rendered post for a live, animated visualisation with input sliders, edge weights, and a per-frame activation readout.',
   RnnFlow:

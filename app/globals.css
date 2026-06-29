@@ -315,6 +315,11 @@ a:focus-visible .word .snake-body {
 @keyframes skillmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 /* skill expander popover entrance (about page toolkit) */
 @keyframes skillpop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+/* hiking journey-map route draw-in (visible by default; animates only when motion is allowed) */
+@keyframes jm-draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .jm-route { stroke-dasharray: 1; stroke-dashoffset: 1; animation: jm-draw 1.6s ease-out 0.15s forwards; }
+}
 
 /* ── ReactBits-style StarBorder + ShinyText (circuit-sim "Open Studio" CTA) ──
    A light "star" rides each edge; the label sweeps a shimmer. Both degrade to a
@@ -400,4 +405,24 @@ a:focus-visible .word .snake-body {
 .prose .katex-display {
   margin-top: 1.75rem;
   margin-bottom: 1.75rem;
+}
+
+/* ── Trailkit (hiking guide components) ───────────────────────────── */
+@layer base {
+  :root {
+    --trail-easy: #4f9d8f;
+    --trail-moderate: #5aa0b5;
+    --trail-hard: #c2693a;
+    --trail-severe: #b4453a;
+    --trail-extreme: #2b2b30;
+  }
+  .dark {
+    --trail-extreme: #d6d6dc;
+  }
+  /* gentle draw-in for trailkit SVG accents; respects reduced-motion via the
+     global * { animation-duration: 0.001ms } rule already in this file. */
+  @keyframes trail-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
 }

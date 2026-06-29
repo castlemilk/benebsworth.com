@@ -39,9 +39,16 @@ waypoints from `content/hiking.ts` — never re-type those numbers.
 3. **Structure** — `TrailSummary` up top → `TrailMap` → `## Day by day` `Stages` →
    `## Side trips` `Quest`s → `## Where you sleep` `Stop`s → `## Landmarks` →
    `## What grows / lives here` `Flora`/`Fauna` → `## Gear` `GearList`.
-4. **Voice** — house voice (curious, first-person-plural, British spelling), em-dash
+4. **Theme to the hike's colour** — `TrailSummary`/`TrailMap` already wear the
+   hike's `accent` via `hike="slug"`. The structural components default to the site
+   teal, so to make the whole guide wear the hike's colour, set `accent="#xxxxxx"`
+   (the hike's hex from `content/hiking.ts`) on each section *wrapper* —
+   `<Stages accent>`, `<TrailGrid accent>`, `<GearList accent>`, and each standalone
+   `<Quest accent>`. The accent **cascades**: a `<Stage>`/`<Stop>`/`<Flora>` without
+   its own `accent` inherits the wrapper's (via the `--accent` custom property).
+5. **Voice** — house voice (curious, first-person-plural, British spelling), em-dash
    budget ≤1 per 600–800 words.
-5. **Link** — add the hike to `GUIDE_SLUG` in `app/hiking/[slug]/page.tsx`.
+6. **Link** — add the hike to `GUIDE_SLUG` in `app/hiking/[slug]/page.tsx`.
 
 ## Verify checklist
 - [ ] `npm run typecheck` clean.

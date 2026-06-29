@@ -11,7 +11,7 @@
 **Branch:** `trailkit-hiking-mdx` (already created; the design spec is committed there at `docs/superpowers/specs/2026-06-29-trailkit-hiking-mdx-design.md`).
 
 **Conventions (read before starting):**
-- Components are `'use client'` only if they use hooks/interaction; otherwise plain server components. All must SSR (no `ssr:false` dynamic import — that path renders nothing in the static export and hurts SEO). The lazy registry `components/mdx/lazy-mdx-components.tsx` is therefore NOT used by Trailkit.
+- **Every Trailkit component `.tsx` file MUST begin with `'use client'`** (the first line). Trailkit is a client-component library: the components use `useId` (in `ContourMotif`) and pass icon-component references as props (e.g. `icon={WaterIcon}`), both of which require the client boundary, and the cards compose shared client primitives. They STILL server-render: plain `'use client'` components are prerendered to static HTML by `next build` (static export) and then hydrate — only `dynamic(..., { ssr:false })` skips SSR, and Trailkit NEVER uses that. So the lazy registry `components/mdx/lazy-mdx-components.tsx` is NOT used by Trailkit. The pure-logic modules `difficulty.ts` and `hike-binding.ts` are plain `.ts` (no directive). (This matches the repo's lab components, which are all `'use client'` and still appear in the static HTML.)
 - Every visual block wrapper uses `not-prose` and must NOT emit a `<p>` directly around MDX children (MDX wraps text in `<p>`, and `<p>` inside `<p>` is invalid → hydration error). Use `<div>` and style descendant paragraphs with `[&_p]:…` like `components/mdx/editorial-components.tsx`'s `PullQuote`.
 - Per-hike accent is injected as the inline CSS var `--accent` (and `--ink` where the existing `.accent-ink` light-mode darkening helps). Default accent is the blog teal `var(--color-blog)`.
 - British spelling, house voice in any prose.
@@ -328,6 +328,8 @@ The shared brand layer every component composes.
 
 Create `components/mdx/trailkit/icons.tsx`. Single-stroke, 24×24, `currentColor`, 1.5px. Each icon is a tiny component taking `{ className?: string }`:
 ```tsx
+'use client'
+
 import type { SVGProps } from 'react'
 
 type IconProps = SVGProps<SVGSVGElement>
@@ -381,6 +383,8 @@ export type IconKind = keyof typeof KIND_ICON
 
 Create `components/mdx/trailkit/primitives.tsx`:
 ```tsx
+'use client'
+
 import { useId, type CSSProperties, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 

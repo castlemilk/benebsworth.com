@@ -7,6 +7,7 @@ description: >-
   grows and moves in the oldest wilderness in Australia.
 labels: 'hiking, trail-guide'
 release: true
+heroImage: /blog/overland-track-guide/hero.webp
 takeaways:
   - >-
     Sixty-five kilometres, six days, one direction. The core route is a string

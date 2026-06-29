@@ -5,6 +5,12 @@ import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
 import { TrailMap } from './trailkit/trail-map'
 import { TrailSummary } from './trailkit/trail-summary'
 import { Stages, Stage, Checkpoint } from './trailkit/stages'
+import { TrailGrid } from './trailkit/trail-grid'
+import { Stop } from './trailkit/stop'
+import { Landmark } from './trailkit/landmark'
+import { Quest } from './trailkit/quest'
+import { Flora, Fauna } from './trailkit/species'
+import { GearList, Gear } from './trailkit/gear'
 import { UniverseScale } from './universe-scale-embed'
 import {
   IngressFlowBasic,
@@ -118,6 +124,14 @@ export const mdxComponents: MDXComponents = {
   Stages,
   Stage,
   Checkpoint,
+  TrailGrid,
+  Stop,
+  Landmark,
+  Quest,
+  Flora,
+  Fauna,
+  GearList,
+  Gear,
   Callout,
   Equation,
   h2: (p) => <h2 className="font-display mt-12 scroll-mt-32 text-[clamp(1.85rem,1.35rem+2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-fg" {...p} />,

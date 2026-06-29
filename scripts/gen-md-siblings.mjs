@@ -175,6 +175,22 @@ const COMPONENT_DESCRIPTIONS = {
     'One day/segment of a trail: a timeline entry with an optional "Day N" label, a from → to headline, and stat chips for distance, ascent, descent and walking time, followed by narrative prose that may contain <Checkpoint> markers. The structured per-day route detail of the guide.',
   Checkpoint:
     'Inline milestone/checkpoint marker, usable in prose or inside a <Stage>: an icon (pass, summit, water, junction, viewpoint, camp, hut or generic milestone), a name, an optional altitude, and an optional note. Marks the key points along a day\'s walk.',
+  TrailGrid:
+    'Responsive grid wrapper (1–3 columns) for laying out Stop / Landmark / Flora / Fauna cards side by side.',
+  Stop:
+    'Accommodation card for a trail guide: a hut, rifugio, campsite, hotel, bivvy or refuge, with an icon, altitude, capacity, water/meals flags, a booking note and a description. Where you sleep along the route.',
+  Landmark:
+    'Card for a notable feature along the route — a summit, gorge, lake, pass, monument, glacier or viewpoint — with an optional photo, altitude, compass bearing and a "why it matters" note.',
+  Quest:
+    'A "side-quest" card: an optional detour or side-trip off the main trail (a side summit, a hidden gorge), framed playfully but informatively with the extra distance, ascent and time it costs, how much harder it is, and the payoff for doing it.',
+  Flora:
+    'Species card for a plant seen along the trail: common name, Latin name, when/where it appears, an optional photo and a short note. A leaf icon marks it.',
+  Fauna:
+    'Species card for an animal seen along the trail: common name, Latin name, how likely you are to see it (common/occasional/rare), when/where, an optional photo and a note. A track icon marks it.',
+  GearList:
+    'Gear checklist for the trail, grouped into Worn / In the pack / Safety / Optional. Each <Gear> item can be flagged essential and carry a short note. Renders as a two-column grouped list.',
+  Gear:
+    'A single gear item inside a <GearList> (name, group, essential flag, note). Data-only — it is rendered by its parent <GearList>.',
 }
 
 /**

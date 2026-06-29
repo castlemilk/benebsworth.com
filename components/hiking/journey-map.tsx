@@ -19,13 +19,22 @@ export function JourneyMap({
   hike,
   active,
   onSelect,
+  compact = false,
+  showElevation = true,
 }: {
   hike: Hike
-  active: string | null
-  onSelect: (name: string | null) => void
+  active?: string | null
+  onSelect?: (name: string | null) => void
+  /** glyph mode: hides start/end chips + stat band, tightens the plate */
+  compact?: boolean
+  /** show the elevation-profile strip (default true) */
+  showElevation?: boolean
 }) {
   const uid = useId().replace(/:/g, '')
   const [hover, setHover] = useState<number | null>(null)
+  const [selfActive, setSelfActive] = useState<string | null>(null)
+  const activeName = active !== undefined ? active : selfActive
+  const select = onSelect ?? setSelfActive
   const wps = hike.waypoints
   const pts = useMemo(() => wps.map(project), [wps])
   const peakIdx = useMemo(() => peakIndex(wps), [wps])
@@ -38,7 +47,7 @@ export function JourneyMap({
   const maxE = Math.max(...elevs)
 
   const accent = hike.accent || '#5b9e6f'
-  const focus = hover ?? wps.findIndex((w) => w.name === active)
+  const focus = hover ?? wps.findIndex((w) => w.name === activeName)
   const focusIdx = focus >= 0 ? focus : null
 
   return (
@@ -105,7 +114,7 @@ export function JourneyMap({
                   className="cursor-pointer"
                   onMouseEnter={() => setHover(i)}
                   onMouseLeave={() => setHover((h) => (h === i ? null : h))}
-                  onClick={() => onSelect(active === wps[i].name ? null : wps[i].name)}
+                  onClick={() => select(activeName === wps[i].name ? null : wps[i].name)}
                 >
                   {/* hit area */}
                   <circle cx={p.x} cy={p.y} r={3.4} fill="transparent" />
@@ -144,44 +153,52 @@ export function JourneyMap({
           )}
 
           {/* start / end chips */}
-          <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-bg/55 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-fg/60 backdrop-blur-sm">
-            ▸ {wps[0]?.name}
-          </span>
-          <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-bg/55 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-fg/60 backdrop-blur-sm">
-            {wps[wps.length - 1]?.name} ⛰
-          </span>
+          {!compact && (
+            <>
+              <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-bg/55 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-fg/60 backdrop-blur-sm">
+                ▸ {wps[0]?.name}
+              </span>
+              <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-bg/55 px-2 py-1 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-fg/60 backdrop-blur-sm">
+                {wps[wps.length - 1]?.name} ⛰
+              </span>
+            </>
+          )}
         </div>
 
         {/* ── elevation profile strip ───────────────────────────────── */}
-        <div className="border-t border-[var(--color-border)] bg-bg/30 px-1 pt-1">
-          <svg viewBox="0 0 100 20" className="h-12 w-full" preserveAspectRatio="none" aria-hidden>
-            <defs>
-              <linearGradient id={`pf-${uid}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="color-mix(in srgb, var(--accent) 40%, transparent)" />
-                <stop offset="100%" stopColor="color-mix(in srgb, var(--accent) 3%, transparent)" />
-              </linearGradient>
-            </defs>
-            <path d={`${profile.area}`} fill={`url(#pf-${uid})`} />
-            <path d={`${profile.line}`} fill="none" stroke="var(--accent)" strokeWidth={0.4} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-            {profile.marks.map((m, i) => (
-              <line key={i} x1={m.x} y1={m.y} x2={m.x} y2={20} stroke="color-mix(in srgb, var(--color-fg) 14%, transparent)" strokeWidth={0.2} vectorEffect="non-scaling-stroke" />
-            ))}
-          </svg>
-        </div>
+        {showElevation && (
+          <div className="border-t border-[var(--color-border)] bg-bg/30 px-1 pt-1">
+            <svg viewBox="0 0 100 20" className="h-12 w-full" preserveAspectRatio="none" aria-hidden>
+              <defs>
+                <linearGradient id={`pf-${uid}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="color-mix(in srgb, var(--accent) 40%, transparent)" />
+                  <stop offset="100%" stopColor="color-mix(in srgb, var(--accent) 3%, transparent)" />
+                </linearGradient>
+              </defs>
+              <path d={`${profile.area}`} fill={`url(#pf-${uid})`} />
+              <path d={`${profile.line}`} fill="none" stroke="var(--accent)" strokeWidth={0.4} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+              {profile.marks.map((m, i) => (
+                <line key={i} x1={m.x} y1={m.y} x2={m.x} y2={20} stroke="color-mix(in srgb, var(--color-fg) 14%, transparent)" strokeWidth={0.2} vectorEffect="non-scaling-stroke" />
+              ))}
+            </svg>
+          </div>
+        )}
       </div>
 
       {/* ── stat band + legend ─────────────────────────────────────── */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-        <dl className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-muted">
-          <Stat v={`${hike.distanceKm} km`} l="distance" />
-          <Stat v={`${hike.days} days`} l="on trail" />
-          <Stat v={`+${hike.elevationGainM.toLocaleString()} m`} l="ascent" />
-          <Stat v={`${hike.maxAltitudeM.toLocaleString()} m`} l="high point" />
-        </dl>
-        <p className="font-mono text-[0.62rem] text-muted/70">
-          elev {minE.toLocaleString()}–{maxE.toLocaleString()} m · {wps.length} waypoints
-        </p>
-      </div>
+      {!compact && (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <dl className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-muted">
+            <Stat v={`${hike.distanceKm} km`} l="distance" />
+            <Stat v={`${hike.days} days`} l="on trail" />
+            <Stat v={`+${hike.elevationGainM.toLocaleString()} m`} l="ascent" />
+            <Stat v={`${hike.maxAltitudeM.toLocaleString()} m`} l="high point" />
+          </dl>
+          <p className="font-mono text-[0.62rem] text-muted/70">
+            elev {minE.toLocaleString()}–{maxE.toLocaleString()} m · {wps.length} waypoints
+          </p>
+        </div>
+      )}
     </figure>
   )
 }

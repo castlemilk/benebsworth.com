@@ -169,6 +169,12 @@ const COMPONENT_DESCRIPTIONS = {
     'Bespoke route map for a hike — a stylised topographic plate (not a geographic map) showing the trail as a smooth line through numbered waypoints over a faint contour backdrop, with a peak marker on the high point and an elevation-profile strip beneath. Driven by the hike\'s normalised waypoints and per-hike accent colour. The `hike` prop names a hike from content/hiking.ts to auto-bind its waypoints; alternatively pass explicit `waypoints`. The rendered post has the live, hoverable version.',
   TrailSummary:
     'Hero "at a glance" card for a trail guide. Shows the headline stats (distance, days on trail, total ascent, high point) with icons, a derived or explicit difficulty band (easy → extreme, trail-grade colour), and optional season window and gear class. An expandable "more" panel reveals secondary figures (avg km/day, ascent/day). The `hike` prop auto-binds the stats and accent colour from content/hiking.ts; an optional inline mini route map can be shown. The rendered post has the live, interactive card.',
+  Stages:
+    'Wrapper for an ordered list of <Stage> day-segments, rendered as a vertical timeline with a topographic contour spine. Use it to lay out a trail day by day.',
+  Stage:
+    'One day/segment of a trail: a timeline entry with an optional "Day N" label, a from → to headline, and stat chips for distance, ascent, descent and walking time, followed by narrative prose that may contain <Checkpoint> markers. The structured per-day route detail of the guide.',
+  Checkpoint:
+    'Inline milestone/checkpoint marker, usable in prose or inside a <Stage>: an icon (pass, summit, water, junction, viewpoint, camp, hut or generic milestone), a name, an optional altitude, and an optional note. Marks the key points along a day\'s walk.',
 }
 
 /**

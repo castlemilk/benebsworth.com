@@ -4,6 +4,7 @@ import { Equation } from './equation'
 import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
 import { TrailMap } from './trailkit/trail-map'
 import { TrailSummary } from './trailkit/trail-summary'
+import { Stages, Stage, Checkpoint } from './trailkit/stages'
 import { UniverseScale } from './universe-scale-embed'
 import {
   IngressFlowBasic,
@@ -114,6 +115,9 @@ export const mdxComponents: MDXComponents = {
   UniverseScale,
   TrailMap,
   TrailSummary,
+  Stages,
+  Stage,
+  Checkpoint,
   Callout,
   Equation,
   h2: (p) => <h2 className="font-display mt-12 scroll-mt-32 text-[clamp(1.85rem,1.35rem+2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-fg" {...p} />,

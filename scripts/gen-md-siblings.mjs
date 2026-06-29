@@ -167,6 +167,8 @@ const COMPONENT_DESCRIPTIONS = {
   // — see entries above for the istio-patterns post.
   TrailMap:
     'Bespoke route map for a hike — a stylised topographic plate (not a geographic map) showing the trail as a smooth line through numbered waypoints over a faint contour backdrop, with a peak marker on the high point and an elevation-profile strip beneath. Driven by the hike\'s normalised waypoints and per-hike accent colour. The `hike` prop names a hike from content/hiking.ts to auto-bind its waypoints; alternatively pass explicit `waypoints`. The rendered post has the live, hoverable version.',
+  TrailSummary:
+    'Hero "at a glance" card for a trail guide. Shows the headline stats (distance, days on trail, total ascent, high point) with icons, a derived or explicit difficulty band (easy → extreme, trail-grade colour), and optional season window and gear class. An expandable "more" panel reveals secondary figures (avg km/day, ascent/day). The `hike` prop auto-binds the stats and accent colour from content/hiking.ts; an optional inline mini route map can be shown. The rendered post has the live, interactive card.',
 }
 
 /**

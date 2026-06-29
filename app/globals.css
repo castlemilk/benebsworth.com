@@ -410,6 +410,9 @@ a:focus-visible .word .snake-body {
 /* ── Trailkit (hiking guide components) ───────────────────────────── */
 @layer base {
   :root {
+    /* global default accent so standalone Trailkit components render in the site
+       teal; a themed wrapper (Stages/TrailGrid accent) overrides it via cascade. */
+    --accent: var(--color-blog);
     --trail-easy: #4f9d8f;
     --trail-moderate: #5aa0b5;
     --trail-hard: #c2693a;

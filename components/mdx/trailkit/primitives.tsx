@@ -3,9 +3,13 @@
 import { useId, type CSSProperties, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
-/** Inline style that sets the per-component accent (default = blog teal). */
+/** Inline style that sets the per-component accent. Returns `{}` when no accent
+ *  is given so the element INHERITS `--accent` from its nearest ancestor — a
+ *  themed wrapper (`<Stages accent>`, `<TrailGrid accent>`) or the global
+ *  `:root` default (blog teal). This is what lets a wrapper's accent cascade to
+ *  every child card without each child re-asserting (and resetting) it. */
 export function accentStyle(accent?: string): CSSProperties {
-  return { ['--accent' as string]: accent || 'var(--color-blog)' } as CSSProperties
+  return accent ? ({ ['--accent' as string]: accent } as CSSProperties) : {}
 }
 
 /** Faint topographic contour motif — the connective brand texture. Pure SVG,

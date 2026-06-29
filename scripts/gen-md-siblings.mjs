@@ -165,6 +165,8 @@ const COMPONENT_DESCRIPTIONS = {
   // Note: the .md sibling script processes these and other MDX components
   // (IngressFlowBasic, EgressFlowBasic, EgressFlowAdvanced) the same way
   // — see entries above for the istio-patterns post.
+  TrailMap:
+    'Bespoke route map for a hike — a stylised topographic plate (not a geographic map) showing the trail as a smooth line through numbered waypoints over a faint contour backdrop, with a peak marker on the high point and an elevation-profile strip beneath. Driven by the hike\'s normalised waypoints and per-hike accent colour. The `hike` prop names a hike from content/hiking.ts to auto-bind its waypoints; alternatively pass explicit `waypoints`. The rendered post has the live, hoverable version.',
 }
 
 /**

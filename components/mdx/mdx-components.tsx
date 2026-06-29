@@ -2,6 +2,7 @@ import type { MDXComponents } from 'mdx/types'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
 import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
+import { TrailMap } from './trailkit/trail-map'
 import { UniverseScale } from './universe-scale-embed'
 import {
   IngressFlowBasic,
@@ -110,6 +111,7 @@ export const mdxComponents: MDXComponents = {
   ColorLegend,
   ZooMiniMap,
   UniverseScale,
+  TrailMap,
   Callout,
   Equation,
   h2: (p) => <h2 className="font-display mt-12 scroll-mt-32 text-[clamp(1.85rem,1.35rem+2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-fg" {...p} />,

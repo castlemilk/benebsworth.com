@@ -859,6 +859,8 @@ git commit -m "feat(trailkit): <TrailSummary> hero card with derived difficulty 
 
 Create `components/mdx/trailkit/stages.tsx`:
 ```tsx
+'use client'
+
 import type { ReactNode } from 'react'
 import { accentStyle, StatChip } from './primitives'
 import { DistanceIcon, AscentIcon, DescentIcon, DurationIcon, KIND_ICON, type IconKind } from './icons'

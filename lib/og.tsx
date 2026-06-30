@@ -36,6 +36,7 @@ export function renderOgCard({
   glyph,
   iconDataUri,
   tags,
+  backgroundUri,
 }: {
   eyebrow: string
   title: string
@@ -48,6 +49,9 @@ export function renderOgCard({
   iconDataUri?: string
   /** Optional tag list shown as a small monospace row at the bottom. */
   tags?: string[]
+  /** Optional full-bleed background image (data URI) — replaces the glows/dot-grid
+      with the photo + a dark scrim for text legibility. */
+  backgroundUri?: string
 }) {
   return new ImageResponse(
     (
@@ -61,19 +65,34 @@ export function renderOgCard({
           fontFamily: 'sans-serif',
         }}
       >
-        {/* accent glow, top-left */}
-        <div style={{ position: 'absolute', top: -240, left: -180, width: 680, height: 680, borderRadius: 9999, background: `radial-gradient(circle, ${accent} 0%, transparent 70%)`, opacity: 0.5 }} />
-        {/* cool secondary glow, bottom-right */}
-        <div style={{ position: 'absolute', bottom: -260, right: -200, width: 620, height: 620, borderRadius: 9999, background: 'radial-gradient(circle, #7c5cff 0%, transparent 70%)', opacity: 0.22 }} />
-        {/* faint dot grid */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1.5px, transparent 1.5px)',
-            backgroundSize: '34px 34px',
-          }}
-        />
+        {backgroundUri ? (
+          <>
+            {/* full-bleed hike art (pre-cropped to exactly 1200×630) */}
+            { }
+            <img src={backgroundUri} width={1200} height={630} style={{ position: 'absolute', top: 0, left: 0 }} alt="" />
+            {/* scrim for text legibility (Satori has no blur, so use stacked gradients):
+                darken the left two-thirds (eyebrow/title/footer-left) + the bottom strip,
+                leaving the right side of the art clear. */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(100deg, rgba(8,8,11,0.80) 0%, rgba(8,8,11,0.30) 46%, transparent 78%)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(8,8,11,0.12) 0%, rgba(8,8,11,0.04) 45%, rgba(8,8,11,0.66) 100%)' }} />
+          </>
+        ) : (
+          <>
+            {/* accent glow, top-left */}
+            <div style={{ position: 'absolute', top: -240, left: -180, width: 680, height: 680, borderRadius: 9999, background: `radial-gradient(circle, ${accent} 0%, transparent 70%)`, opacity: 0.5 }} />
+            {/* cool secondary glow, bottom-right */}
+            <div style={{ position: 'absolute', bottom: -260, right: -200, width: 620, height: 620, borderRadius: 9999, background: 'radial-gradient(circle, #7c5cff 0%, transparent 70%)', opacity: 0.22 }} />
+            {/* faint dot grid */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1.5px, transparent 1.5px)',
+                backgroundSize: '34px 34px',
+              }}
+            />
+          </>
+        )}
         {/* inner frame */}
         <div style={{ position: 'absolute', top: 28, left: 28, right: 28, bottom: 28, border: '1px solid rgba(255,255,255,0.10)', borderRadius: 26 }} />
 

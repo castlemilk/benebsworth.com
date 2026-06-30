@@ -20,6 +20,17 @@ export function publicDataUri(relPath: string, mime: string): string | undefined
   }
 }
 
+/** Like publicDataUri but reads a repo-relative path (build-time only inputs that
+    should NOT ship in the public bundle, e.g. per-hike OG source art). */
+export function repoFileDataUri(relPath: string, mime: string): string | undefined {
+  try {
+    const buf = fs.readFileSync(path.join(process.cwd(), relPath))
+    return `data:${mime};base64,${buf.toString('base64')}`
+  } catch {
+    return undefined
+  }
+}
+
 const BRAND_DOTS = ['#00e0b8', '#7c5cff', '#ff7a59'] // blog · project · about accents
 
 /**

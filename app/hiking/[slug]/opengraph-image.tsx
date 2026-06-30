@@ -1,4 +1,4 @@
-import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE, publicDataUri } from '@/lib/og'
+import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE, repoFileDataUri } from '@/lib/og'
 import { hikes, getHike } from '@/content/hiking'
 
 export const dynamic = 'force-static'
@@ -14,7 +14,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const { slug } = await params
   const h = getHike(slug)
   // per-hike painterly art (brandbrain) if present, else the stat-card fallback
-  const backgroundUri = publicDataUri(`/og/hike/${slug}.png`, 'image/png')
+  const backgroundUri = repoFileDataUri(`og-art/hike/${slug}.jpg`, 'image/jpeg')
   return renderOgCard({
     eyebrow: h ? (h.status === 'planned' ? 'Hiking · Planned' : `Hiking · ${h.year}`) : 'Hiking',
     title: h?.name ?? 'Hike',

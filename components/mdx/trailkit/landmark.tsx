@@ -17,9 +17,14 @@ export function Landmark(props: LandmarkProps) {
   const Icon = (props.kind && KIND_ICON[props.kind as IconKind]) || KIND_ICON.viewpoint
   return (
     <TrailCard accent={props.accent} motif className="p-0">
-      {props.image && (
-        <img src={props.image} alt={props.alt ?? props.name} className="h-44 w-full object-cover" loading="lazy" />
-      )}
+      {/* real photo, else the muted brandbrain default-art fallback */}
+      <img
+        src={props.image || '/trailkit/default-landmark.webp'}
+        alt={props.image ? props.alt ?? props.name : ''}
+        aria-hidden={props.image ? undefined : true}
+        className="h-44 w-full object-cover"
+        loading="lazy"
+      />
       <div className="p-5">
         <div className="flex items-center gap-2.5">
           <span className="text-[1.2rem]" style={{ color: 'var(--accent)' }}><Icon /></span>

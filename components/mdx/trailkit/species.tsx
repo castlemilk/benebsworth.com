@@ -17,7 +17,14 @@ function SpeciesCard({ kind, props }: { kind: 'flora' | 'fauna'; props: SpeciesP
   const Icon = kind === 'flora' ? LeafIcon : TrackIcon
   return (
     <TrailCard accent={props.accent} className="overflow-hidden p-0">
-      {props.image && <img src={props.image} alt={props.alt ?? props.name} className="h-40 w-full object-cover" loading="lazy" />}
+      {/* real photo, else the muted brandbrain default-art fallback */}
+      <img
+        src={props.image || `/trailkit/default-${kind}.webp`}
+        alt={props.image ? props.alt ?? props.name : ''}
+        aria-hidden={props.image ? undefined : true}
+        className="h-40 w-full object-cover"
+        loading="lazy"
+      />
       <div className="p-5">
         <div className="flex items-center gap-2.5">
           <span className="text-[1.15rem]" style={{ color: 'var(--accent)' }}><Icon /></span>

@@ -65,8 +65,18 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
           items={[{ label: 'Home', href: '/' }, { label: 'Hiking', href: '/hiking/' }, { label: hike.name }]}
         />
 
+        {/* ── Art banner ──────────────────────────────────────────── */}
+        {hike.hero && (
+          <Reveal>
+            <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--color-border)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={hike.hero} alt={hike.name} className="aspect-[2/1] w-full object-cover sm:aspect-[12/5]" />
+            </div>
+          </Reveal>
+        )}
+
         {/* ── Hero ─────────────────────────────────────────────────── */}
-        <header className="pt-8 pb-12 md:pt-12">
+        <header className="pt-8 pb-10 md:pt-10">
           <Reveal>
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.25em]" style={{ color: accent }}>
               <span>{planned ? 'Planned' : `Completed · ${hike.year}`}</span>

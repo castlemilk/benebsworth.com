@@ -87,5 +87,8 @@ playwright-report/
 # serena MCP workspace
 .serena/
 
+# LLM benchmark API response cache
+.cache/
+
 # old Gatsby site kept locally for reference (1.1GB)
 legacy/

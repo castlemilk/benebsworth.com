@@ -1,0 +1,5 @@
+## What the results mean
+
+RLC step response requires the model to classify damping (underdamped, critically damped, overdamped) and pick a stable integrator. Claude 4 handled both well, including the corner case where R approaches zero. Gemini 2.5 Pro produced the cleanest plots but initially mis-labelled the critically-damped threshold. GPT-5 was fastest and correct for standard values, but its numeric solver rang when Q was high.
+
+Electronics tasks reward conservative numerics over clever shortcuts. A small timestep and explicit damping classification go a long way.

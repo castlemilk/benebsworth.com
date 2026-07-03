@@ -1,0 +1,19 @@
+## The brief
+
+Write a Python module that provides three functions: a constant-time string comparison, a PBKDF2-based password hash with a random salt, and a verify function. Include unit tests that demonstrate both success and failure paths.
+
+This task is small in scope but dense in subtlety. The model must prioritise security properties over convenience or brevity.
+
+## What a strong output looks like
+
+- `hmac.compare_digest` or an equivalent constant-time loop for comparison.
+- `hashlib.pbkdf2_hmac` with SHA-256, a random 16-byte salt, and at least 100,000 iterations.
+- Storage format that encodes salt, iteration count, and hash together, e.g. `pbkdf2_sha256$<iterations>$<salt>$<hash>`.
+- Unit tests covering: correct password verifies, wrong password fails, different salts produce different hashes, comparison function rejects early mismatches in constant time.
+
+## Scoring notes
+
+- **40% timing-attack resistance** — comparison leaks no information through short-circuiting or memory-access patterns.
+- **30% salt handling** — random, unique salts encoded safely in the stored hash.
+- **20% correctness** — verify returns true only for the exact original password.
+- **10% test coverage** — tests exercise real failure modes, not just the happy path.

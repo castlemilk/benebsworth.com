@@ -1,0 +1,23 @@
+## What this benchmark is trying to measure
+
+Most public LLM leaderboards rank models on multiple-choice reasoning, code completion, or chat helpfulness. Those are useful signals, but they rarely capture the messy, end-to-end work of turning a vague creative brief into a runnable artifact: a physics simulation, a tiny game, a security-critical utility, or a polished UI.
+
+This benchmark asks each model to produce a **self-contained, runnable output** from a single prompt. There are no retrieval tools, no multi-turn scaffolding, and no hand-tuned system messages beyond the provider defaults. The tasks are chosen to stress different failure modes:
+
+- **Spatial reasoning** — does the model keep 3D coordinate systems, collisions, and integration stable?
+- **Game-state management** — can it track entities, win/lose conditions, and user input without leaks?
+- **Security awareness** — does it write code that is *correct* and *safe* under adversarial timing?
+- **UI taste** — can it produce responsive, accessible markup and motion that actually holds together?
+- **Mathematical rigour** — does it finish a derivation, enumerate edge cases, and avoid hallucinated roots?
+- **Physical correctness** — are the units, damping regimes, and numeric solvers internally consistent?
+
+Each task is scored on a 0–100 rubric and run across multiple iterations so we can separate a lucky single-shot from a repeatable capability.
+
+## How to read the numbers
+
+- **Score** is the task rubric average across iterations (correctness, completeness, style, robustness).
+- **Runtime** is wall-clock model inference time for one iteration, in milliseconds.
+- **Cost** is computed from reported input/output tokens and the published per-model price card.
+- **Tokens** are as returned by the provider API; they reflect prompt length plus generated output.
+
+Scores are synthetic and anchored to the rubric, not to an absolute "human expert" baseline. Treat them as a directional comparison across models on the same prompt rather than a universal ranking.

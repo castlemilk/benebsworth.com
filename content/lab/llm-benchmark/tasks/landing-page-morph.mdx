@@ -1,0 +1,20 @@
+## The brief
+
+Build a single-file React + Tailwind landing page with a hero, feature grid, pricing cards, and a dark/light theme toggle. Use only built-in browser APIs and inline styles if Tailwind is unavailable.
+
+The page must work without a build step, so the model should choose a CDN-based React setup and utility classes that render directly in the browser. The theme toggle must persist across reloads using `localStorage` and respect the system preference by default.
+
+## What a strong output looks like
+
+- Semantic landmarks: `<header>`, `<main>`, `<section>`, `<footer>`.
+- Accessible interactive elements: focus states, `aria-pressed` on the theme toggle, visible focus rings.
+- Responsive grid that becomes a single column on mobile and expands gracefully on desktop.
+- Theme classes applied to `<html>` or `<body>` with CSS variables; no flash of the wrong theme on load.
+- Cohesive colour palette and typography rather than random Tailwind shades.
+
+## Scoring notes
+
+- **35% responsive layout** — readable and usable from 320px to 1440px.
+- **30% accessibility** — landmarks, focus management, colour contrast, meaningful alt text.
+- **25% visual consistency** — spacing, typography, and colour form a single design system.
+- **10% theme behaviour** — no flash, persistence, and system-preference fallback.

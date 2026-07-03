@@ -1,0 +1,15 @@
+## Advanced Electronics
+
+This category asks for an interactive circuit solver. The model must understand the second-order dynamics of a series RLC circuit, classify the damping regime, and implement a numeric solver that stays stable as the user sweeps $R$, $L$, and $C$.
+
+The artifact must plot the step response live and give immediate visual feedback when the circuit moves from underdamped ringing to overdamped sluggishness.
+
+### Common failure modes
+
+- **Wrong damping classification** — treating every response as underdamped regardless of $\alpha$ vs $\omega_0$.
+- **Unstable explicit integration** when the time step is too coarse for the chosen $L$ and $C$.
+- **Missing units or mislabelled axes** make the plot unreadable.
+
+### Task: Circuit Builder Teaser
+
+Build a Canvas 2D page that adjusts $R$, $L$, $C$ and plots the series RLC step response. Correctness of damping classification and solver stability drive the score.

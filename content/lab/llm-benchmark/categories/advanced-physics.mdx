@@ -1,0 +1,15 @@
+## Advanced Physics
+
+A physical simulation is only convincing if the units, periods, and numeric integration agree. This category asks for a classic desk-toy simulation: a row of pendulums with slightly different lengths that produce visual beats.
+
+The model must choose appropriate small-angle or full-sin integration, expose user controls, and keep the animation stable for long runs. The visual beat pattern is the observable signature of physical correctness.
+
+### Common failure modes
+
+- **Using a constant period for all pendulums** destroys the beat phenomenon.
+- **Energy drift** from a poor integrator makes the wave pattern drift over time.
+- **Ignoring pendulum-string geometry** makes the bobs slide rather than swing.
+
+### Task: Physics Pendulum Wave
+
+Simulate a pendulum wave desk toy in Canvas 2D. Physical accuracy of periods, stable integration, and visual clarity of beats are scored.

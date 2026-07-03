@@ -1,0 +1,20 @@
+## The brief
+
+Write a single-file HTML/Canvas simulation of a pendulum wave: $N$ pendulums with slightly different lengths that produce visual beats. Expose sliders for $N$ and gravity.
+
+The beat pattern arises because pendulums with carefully chosen lengths cycle in and out of phase. A strong model will derive the correct relationship between length and period rather than guessing.
+
+## What a strong output looks like
+
+- Period $T_i = 2\pi \sqrt{L_i/g}$ used to update each pendulum independently.
+- Lengths chosen so that the ensemble completes a full beat cycle in a pleasing time, often 30–60 seconds.
+- Smooth integration using $\theta_{i+1} = \theta_i + \omega_i \Delta t$ and $\omega_{i+1} = \omega_i - (g/L) \sin\theta \, \Delta t$.
+- Sliders that update $N$ and $g$ without crashing the animation.
+- Optional small-angle toggle to show the difference between $\sin\theta$ and $\theta$.
+
+## Scoring notes
+
+- **40% physical accuracy** — periods match the simple-pendulum formula and the beat pattern is observable.
+- **30% stable integration** — energy does not drift visibly over a one-minute run.
+- **20% visual clarity** — bobs, strings, and trails make the beat pattern easy to read.
+- **10% controls** — sliders are responsive and the animation stays stable while they move.

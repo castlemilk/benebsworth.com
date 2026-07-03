@@ -1,0 +1,26 @@
+## The brief
+
+Create a single-file HTML/Canvas page that lets the user adjust $R$, $L$, $C$ values and plots the step response of a series RLC circuit in real time.
+
+The step response of a series RLC circuit is governed by a second-order linear ODE. The model must classify the damping regime, choose an appropriate numeric method, and keep the plot readable as parameters sweep across orders of magnitude.
+
+## What a strong output looks like
+
+- Derivation or clear statement of the governing equation:
+
+$$L \frac{d^2i}{dt^2} + R \frac{di}{dt} + \frac{1}{C} i = \frac{V_s}{L}$$
+
+- Damping classification using $\alpha = R/2L$ and $\omega_0 = 1/\sqrt{LC}$:
+  - underdamped when $\alpha < \omega_0$,
+  - critically damped when $\alpha = \omega_0$,
+  - overdamped when $\alpha > \omega_0$.
+- Adaptive or small fixed time step to keep the solver stable.
+- Log-scaled or normalised sliders that handle ranges from milliohms to kiloohms and microhenries to henries.
+- Clear axis labels and a live regime indicator.
+
+## Scoring notes
+
+- **40% damping classification** — the displayed regime matches the chosen parameters.
+- **30% solver stability** — no divergence, ringing artifacts from the integrator itself, or NaN values.
+- **20% usability** — sliders are labelled, the plot auto-scales, and the curve is readable.
+- **10% explanation** — the page or code explains the physics in terms a reader can follow.

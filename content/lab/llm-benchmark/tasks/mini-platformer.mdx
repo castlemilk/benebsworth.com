@@ -1,0 +1,20 @@
+## The brief
+
+Create a single-file HTML/Canvas platformer. The player should be able to run, jump, collect coins, and reach a goal flag. Include a reset button and a simple parallax background. No external assets beyond a small amount of CSS.
+
+The prompt leaves room for interpretation: camera behaviour, level layout, physics constants, and visual styling are all up to the model. The best outputs fill those gaps with sensible defaults rather than leaving them undefined.
+
+## What a strong output looks like
+
+- Solid, one-way platforms that the player can jump up through but land on.
+- A compact level with clear visual affordances for hazards, coins, and the goal.
+- Restart that fully resets game state — coins reappear, the timer resets, and the player spawns at the start.
+- Parallax background tied to camera movement rather than raw player position.
+- Controls feel responsive: arrow keys or WASD, plus space to jump.
+
+## Scoring notes
+
+- **40% playability** — a human can complete the level without unfair deaths or stuck states.
+- **30% collision correctness** — no falling through floors, no wall-clipping, no phantom ground contacts.
+- **20% completeness** — coins, goal, reset, and a parallax background are all present and working.
+- **10% polish** — particles, squash-and-stretch, coyote time, or sound effects.

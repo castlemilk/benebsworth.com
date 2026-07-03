@@ -22,7 +22,8 @@
     "deploy:pages:next": "bash scripts/deploy-pages.sh staging",
     "deploy:pages:prod": "bash scripts/deploy-pages.sh prod",
     "deploy:aws:next": "bash scripts/deploy.sh staging",
-    "deploy:aws:prod": "bash scripts/deploy.sh prod"
+    "deploy:aws:prod": "bash scripts/deploy.sh prod",
+    "benchmark:run": "tsx scripts/run-benchmark.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -34,6 +35,7 @@
     "animejs": "^4.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "exifr": "^7.1.3",
     "gray-matter": "^4.0.3",
     "katex": "^0.17.0",
     "lucide-react": "^1.17.0",
@@ -76,6 +78,7 @@
     "serve": "^14.2.6",
     "tailwindcss": "^4.3.0",
     "ts-proto": "^2.11.8",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1",
     "vitest": "^4.1.7",

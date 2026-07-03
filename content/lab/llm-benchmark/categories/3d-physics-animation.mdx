@@ -1,0 +1,15 @@
+## 3D Physics & Animation
+
+This category tests whether a model can generate a self-contained Three.js scene with non-trivial physics: mutual gravitational attraction, softening to avoid singularities, velocity-colour mapping, and a frame budget that holds at 60fps in a modern browser.
+
+The artifact must ship as a single HTML file with no external assets beyond a CDN-hosted Three.js. That constraint forces the model to reason about vector math, integration order, and rendering state in one shot.
+
+### Common failure modes
+
+- **Naïve $O(n^2)$ gravity** without softening collapses into numeric blow-up within seconds.
+- **Confusing camera, world, and screen coordinates** produces a black canvas or wildly off-screen objects.
+- **Forgetting to clamp delta time** makes the simulation frame-rate dependent.
+
+### Task: N-Body Field
+
+Generate a gravity field of 200 mutually gravitating particles. The scoring rubric weights frame stability, visual coherence, and correctness of the integration equally.

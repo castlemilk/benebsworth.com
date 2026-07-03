@@ -1,0 +1,20 @@
+## The brief
+
+Generate a single-file HTML page that uses Three.js to simulate 200 mutually gravitating particles in 3D. Each particle should feel the gravitational pull of every other particle, with a softening term to prevent division by zero when two particles get close. Colour should encode velocity magnitude so the structure of the field is visible even when the camera is still.
+
+The prompt is intentionally minimal: no camera controls are specified, no initial conditions are given, and no performance hints are provided. The model has to invent a stable initial configuration and a fast enough integrator on its own.
+
+## What a strong output looks like
+
+- A stable initial cloud that does not immediately collapse or explode.
+- Barnes-Hut or at least vectorised $O(n^2)$ force evaluation that hits the 16ms frame budget.
+- Softened gravitational force, e.g. $F_{ij} \propto \frac{m_i m_j}{(r^2 + \varepsilon^2)^{3/2}}$.
+- Velocity-colour mapping using a shader or per-particle colour update.
+- Responsive resize handling and a modest camera position.
+
+## Scoring notes
+
+- **40% correctness** — integration conserves energy well enough that the cloud stays coherent for at least 30 seconds.
+- **30% visual coherence** — colour mapping, camera framing, and particle sizing make the motion readable.
+- **20% robustness** — no NaN positions, no visible stutter, graceful behaviour across viewport sizes.
+- **10% polish** — small extras like reset, pause, or parameter sliders.

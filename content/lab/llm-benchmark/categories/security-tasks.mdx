@@ -1,0 +1,15 @@
+## Security Tasks
+
+Security code is easy to make *look* right and hard to make *be* right. This category asks for two primitives that every web backend needs but many implementations get subtly wrong: constant-time comparison and salted password hashing.
+
+The model is expected to understand timing side-channels, random salt generation, parameter selection for PBKDF2, and how to write unit tests that actually exercise the failure modes.
+
+### Common failure modes
+
+- **Early-return comparison** leaks password length and byte-wise differences through timing.
+- **Reused or deterministic salts** defeat the purpose of salting.
+- **Hard-coded iteration counts** or weak hash algorithms that ignore the current threat model.
+
+### Task: Crypto Hash Race
+
+Implement a Python module with constant-time comparison, PBKDF2 password hashing, and verification. Timing-attack resistance, salt handling, and test coverage drive the score.

@@ -1,0 +1,5 @@
+## What the results mean
+
+Security tasks are unforgiving: one incorrect comparison or salt mishandling drops the score to zero. Claude 4 and Gemini 2.5 Pro both produced constant-time helpers and correct PBKDF2 parameters. GPT-5 was faster but initially used a variable-time string comparison, which the grader flagged immediately.
+
+This is the category where **saying less is safer**. Models that add clever optimisations often introduce timing channels. The top scorers kept the implementation boring and correct.

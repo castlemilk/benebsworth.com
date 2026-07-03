@@ -1,0 +1,15 @@
+## Advanced Game Building
+
+A playable game is one of the most unforgiving artifacts to generate. The model must design player input, physics, collision detection, collectibles, a win condition, and a reset flow — all in a single file — and the result has to be *fun enough* that a real human can complete it.
+
+This category deliberately keeps the prompt short (“a platformer with run, jump, coins, and a goal flag”) to see how much implicit structure the model fills in: parallax backgrounds, coyote time, sound, particles, UI chrome.
+
+### Common failure modes
+
+- **Collision detection done backwards** lets the player fall through floors or stick to walls.
+- **State leaks between runs** mean reset leaves coins collected or the win flag already triggered.
+- **No frame-independent motion** makes the game feel different on 120Hz vs 60Hz displays.
+
+### Task: Mini Platformer
+
+Build a Canvas 2D platformer level. Playability, collision correctness, and absence of game-breaking bugs are the scoring pillars.

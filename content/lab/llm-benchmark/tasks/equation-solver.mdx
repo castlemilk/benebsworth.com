@@ -1,0 +1,20 @@
+## The brief
+
+Solve the system $x^2 + y^2 = 25$ and $x \cdot y = 12$ over the reals. List every solution pair and justify the algebraic steps.
+
+This task rewards careful algebra more than brute-force guessing. The model should derive the quartic, factor it cleanly, back-substitute to find paired $(x, y)$ values, and verify that every candidate satisfies both original equations.
+
+## What a strong output looks like
+
+- Let $s = x + y$ and $p = xy = 12$. Then $x^2 + y^2 = s^2 - 2p = 25$, so $s^2 = 49$ and $s = \pm 7$.
+- Solve $t^2 - st + p = 0$ for each value of $s$.
+- For $s = 7$: roots $3$ and $4$, giving $(3, 4)$ and $(4, 3)$.
+- For $s = -7$: roots $-3$ and $-4$, giving $(-3, -4)$ and $(-4, -3)$.
+- Explicit verification that all four pairs satisfy both equations.
+
+## Scoring notes
+
+- **40% mathematical correctness** — all real solutions are found and no extraneous ones are introduced.
+- **30% completeness** — both $s = 7$ and $s = -7$ branches are explored.
+- **20% clarity of derivation** — each substitution is explained and reversible.
+- **10% verification** — solutions are checked in the original system, not just the derived polynomial.

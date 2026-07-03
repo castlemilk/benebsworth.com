@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { BarChart3 } from 'lucide-react'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
@@ -73,6 +75,22 @@ export default function LabPage() {
               Small canvas animations spanning generative art, mathematics, and physics — each with
               live knobs and a note on how it works. Tune them, share a link, steal the idea.
             </p>
+          </Reveal>
+          <Reveal delay={240}>
+            <Link
+              href="/lab/llm-benchmark/"
+              className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-muted)]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-surface-2)] text-[var(--color-fg)]">
+                <BarChart3 className="h-5 w-5" aria-hidden />
+              </span>
+              <div>
+                <p className="type-label text-fg">LLM Benchmark</p>
+                <p className="mt-0.5 type-body text-sm text-fg/60">
+                  Frontier models tested across code generation, reasoning, and UI tasks.
+                </p>
+              </div>
+            </Link>
           </Reveal>
         </section>
 

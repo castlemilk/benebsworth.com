@@ -1,0 +1,15 @@
+## UI Building
+
+A landing page seems simple until you ask for it to be responsive, accessible, theme-aware, and visually consistent across breakpoints. This category tests whether the model can produce markup and styling that survive contact with a real browser and a real user.
+
+The prompt is deliberately vague on colour and motion details to see whether the model invents a coherent design system or ships a pile of ad-hoc utilities.
+
+### Common failure modes
+
+- **Missing landmark roles** or non-focusable interactive elements hurt accessibility.
+- **Theme toggle that flashes the wrong mode** on load or forgets the user preference.
+- **Grid breakpoints that collapse into unreadable narrow columns** on tablet sizes.
+
+### Task: Landing Page Morph
+
+Build a React + Tailwind landing page with hero, features, pricing, and a dark/light toggle. Responsive layout, accessibility landmarks, and visual consistency are scored.

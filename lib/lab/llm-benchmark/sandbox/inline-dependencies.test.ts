@@ -84,7 +84,7 @@ describe('inlineDependenciesAsync', () => {
     expect(result.output).toContain('window.THREE = { Revision: "128" }')
     expect(result.output).toContain('window.THREE.OrbitControls = function() {}')
     expect(result.output).toContain('const { OrbitControls }')
-    expect(result.output).toContain('window.THREE.OrbitControls')
+    expect(result.output).toContain('const OrbitControls = window.THREE.OrbitControls')
     expect(result.inlined.length).toBe(2)
   })
 

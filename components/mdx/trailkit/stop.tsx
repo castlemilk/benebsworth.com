@@ -11,6 +11,8 @@ export interface StopProps {
   booking?: ReactNode
   water?: boolean; meals?: boolean
   note?: ReactNode
+  /** Optional thumbnail (co-located path or absolute URL) shown atop the card. */
+  image?: string; alt?: string
   accent?: string
 }
 
@@ -21,8 +23,12 @@ const TYPE_LABEL: Record<StopProps['type'], string> = {
 export function Stop(props: StopProps) {
   const Icon = KIND_ICON[props.type as IconKind] ?? KIND_ICON.hut
   return (
-    <TrailCard accent={props.accent} className="p-5">
-      <div className="flex items-start gap-3">
+    <TrailCard accent={props.accent} className={props.image ? 'overflow-hidden p-0' : 'p-5'}>
+      {props.image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={props.image} alt={props.alt ?? props.name} className="h-36 w-full object-cover" loading="lazy" />
+      )}
+      <div className={props.image ? 'flex items-start gap-3 p-5' : 'flex items-start gap-3'}>
         <span className="mt-0.5 text-[1.3rem]" style={{ color: 'var(--accent)' }}><Icon /></span>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-2">

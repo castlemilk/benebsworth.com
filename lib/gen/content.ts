@@ -107,6 +107,80 @@ export interface About {
   skills: Skill[];
 }
 
+/** A point along a hike's stylized journey map. */
+export interface HikeWaypoint {
+  name: string;
+  /** normalized 0..1 across the map (left→right) */
+  x: number;
+  /** normalized 0..1 down the map (0 = top) */
+  y: number;
+  /** metres (drives the marker + elevation profile) */
+  elev: number;
+  /** "Day 3", "" — optional stage label */
+  day: string;
+  note: string;
+}
+
+export interface Hike {
+  slug: string;
+  name: string;
+  /** "Pennine Alps" */
+  region: string;
+  /** "France → Switzerland" */
+  country: string;
+  /** "completed" | "planned" */
+  status: string;
+  /** "2023" or "planned" */
+  year: string;
+  /** "Aug–Sep 2023" — optional */
+  dates: string;
+  summary: string;
+  distanceKm: number;
+  days: number;
+  elevationGainM: number;
+  maxAltitudeM: number;
+  /** per-hike theme colour */
+  accent: string;
+  highlights: string[];
+  waypoints: HikeWaypoint[];
+  order: number;
+  /** optional cover image URL (admin-set; else placeholder) */
+  hero: string;
+}
+
+/**
+ * A managed image (lives in the GCS pool). Shared by the /admin image CRM across
+ * blogs and hikes; reusable across items.
+ */
+export interface Asset {
+  id: string;
+  url: string;
+  alt: string;
+  caption: string;
+  width: number;
+  height: number;
+  /** optional position/label (e.g. a hike waypoint, or "1") */
+  slot: string;
+  /** EXIF GPS latitude (0 = none) */
+  lat: number;
+  /** EXIF GPS longitude (0 = none) */
+  lng: number;
+  /** EXIF capture time (ISO), if present */
+  takenAt: string;
+  /** small webp variant for grids (falls back to url) */
+  thumb: string;
+}
+
+/**
+ * Per-item image assignment, stored at manifest/<type>/<slug>.json (public-read,
+ * rendered live by the page). hero/og are named slots; gallery is ordered.
+ */
+export interface ContentManifest {
+  hero: Asset | undefined;
+  og: Asset | undefined;
+  gallery: Asset[];
+}
+
 export interface Artifact {
   id: string;
   label: string;

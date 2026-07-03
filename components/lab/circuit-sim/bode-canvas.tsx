@@ -142,7 +142,8 @@ export function BodeCanvas({ bode, acOptions, onAcOptions }: Props) {
       for (let i = 0; i < bode.freqs.length; i++) {
         if (ch.mag[i] <= -199) { started = false; continue }
         const x = xOf(bode.freqs[i]), y = magY(ch.mag[i])
-        started ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
+        if (started) ctx.lineTo(x, y)
+        else ctx.moveTo(x, y)
         started = true
       }
       ctx.stroke()
@@ -153,7 +154,8 @@ export function BodeCanvas({ bode, acOptions, onAcOptions }: Props) {
       for (let i = 0; i < bode.freqs.length; i++) {
         if (ch.mag[i] <= -199) { started = false; continue }
         const x = xOf(bode.freqs[i]), y = phY(ch.phase[i])
-        started ? ctx.lineTo(x, y) : ctx.moveTo(x, y)
+        if (started) ctx.lineTo(x, y)
+        else ctx.moveTo(x, y)
         started = true
       }
       ctx.stroke()

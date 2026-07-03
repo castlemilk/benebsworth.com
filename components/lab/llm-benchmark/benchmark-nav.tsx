@@ -23,9 +23,17 @@ export function BenchmarkNav() {
   return (
     <nav
       aria-label="LLM Benchmark"
-      className="sticky top-[93px] z-30 -mx-6 border-b border-[var(--color-border)]/60 bg-[var(--color-bg)]/75 px-6 backdrop-blur-md backdrop-saturate-150 sm:-mx-8 sm:px-8"
+      className="sticky top-[93px] z-30 border-b border-[var(--color-border)]/60 bg-[var(--color-bg)]/75 backdrop-blur-md backdrop-saturate-150"
     >
-      <div className="flex items-center gap-2 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        className="mx-auto flex w-full max-w-6xl items-center gap-2 overflow-x-auto px-6 py-3 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        style={{
+          // Fade the right edge so a partly-scrolled pill reads as "more →"
+          // rather than a clipped, broken label.
+          WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent)',
+          maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent)',
+        }}
+      >
         <Link
           href={BENCHMARK_BASE_PATH}
           className={cn(

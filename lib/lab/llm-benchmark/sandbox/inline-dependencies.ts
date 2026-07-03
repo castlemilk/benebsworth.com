@@ -93,6 +93,24 @@ const KNOWN_DEPENDENCIES: KnownDependency[] = [
     aliases: ['https://cdn.tailwindcss.com/'],
     type: 'stylesheet',
   },
+  {
+    url: 'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
+    aliases: [
+      'https://unpkg.com/react@18.3.1/umd/react.production.min.js',
+      'https://unpkg.com/react@18/umd/react.production.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js',
+    ],
+    type: 'script',
+  },
+  {
+    url: 'https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js',
+    aliases: [
+      'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js',
+      'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js',
+    ],
+    type: 'script',
+  },
 ]
 
 const THREE_GLOBAL_ALIASES: Record<string, string> = {
@@ -164,6 +182,20 @@ function isExternalUrl(url: string): boolean {
 const fetchCache = new Map<string, string | undefined>()
 
 async function prefetchKnown(urls: Iterable<string>): Promise<void> {
+  const pending: Promise<void>[] = []
+  for (const url of urls) {
+    pending.push(
+      (async () => {
+        if (!fetchCache.has(url)) {
+          fetchCache.set(url, await fetchDependency(url))
+        }
+      })()
+    )
+  }
+  await Promise.all(pending)
+}
+
+async function prefetchAll(urls: Iterable<string>): Promise<void> {
   const pending: Promise<void>[] = []
   for (const url of urls) {
     pending.push(
@@ -273,6 +305,65 @@ async function ensureThreeGlobals(
   return block + html
 }
 
+const REACT_SCRIPTS = [
+  'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
+  'https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js',
+]
+
+function detectReactUsage(html: string): boolean {
+  let usesReact = false
+  html.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, (_match, code: string) => {
+    if (/\bReact\b/.test(code)) usesReact = true
+    return ''
+  })
+  return usesReact
+}
+
+async function ensureReactGlobals(
+  html: string,
+  inlined: string[],
+  failed: string[],
+  warnings: string[]
+): Promise<string> {
+  if (!detectReactUsage(html)) return html
+
+  const alreadyInlined = new Set(inlined)
+  const needed = REACT_SCRIPTS.filter((url) => !alreadyInlined.has(url))
+  if (needed.length === 0) return html
+
+  await prefetchKnown(needed)
+
+  const blocks: string[] = []
+  for (const url of needed) {
+    const content = fetchCache.get(url)
+    if (content === undefined) {
+      failed.push(url)
+      warnings.push(`could not fetch ${url} for React global injection`)
+      continue
+    }
+    inlined.push(url)
+    blocks.push(`<script>\n${content}\n</script>`)
+  }
+
+  if (blocks.length === 0) return html
+  const block = blocks.join('\n') + '\n'
+
+  const firstScript = html.search(/<script\b/i)
+  if (firstScript >= 0) {
+    return html.slice(0, firstScript) + block + html.slice(firstScript)
+  }
+  const headMatch = html.match(/<head[^>]*>/i)
+  if (headMatch && headMatch.index !== undefined) {
+    return (
+      html.slice(0, headMatch.index + headMatch[0].length) +
+      '\n' +
+      block +
+      html.slice(headMatch.index + headMatch[0].length)
+    )
+  }
+  return block + html
+}
+
 /**
  * Rewrite ES module imports inside <script type="module"> blocks so they
  * reference the globals provided by inlined library scripts instead of
@@ -308,6 +399,36 @@ function rewriteModuleScripts(
         'const THREE = window.THREE;'
       )
 
+      // import * as React from 'react'
+      rewritten = rewritten.replace(
+        /import\s+\*\s+as\s+React\s+from\s+["'][^"']*react[^"']*["'];?/gi,
+        'const React = window.React;'
+      )
+
+      // import React from 'react'
+      rewritten = rewritten.replace(
+        /import\s+React\s+from\s+["'][^"']*react[^"']*["'];?/gi,
+        'const React = window.React;'
+      )
+
+      // import { useState, ... } from 'react'
+      rewritten = rewritten.replace(
+        /import\s+\{\s*([^}]+)\s*\}\s+from\s+["'][^"']*react["'][^;]*;?/gi,
+        (_importMatch, names: string) => {
+          const bindings = names
+            .split(',')
+            .map((n) => n.trim())
+            .filter(Boolean)
+          return `const { ${bindings.join(', ')} } = window.React;`
+        }
+      )
+
+      // import ReactDOM from 'react-dom' or 'react-dom/client'
+      rewritten = rewritten.replace(
+        /import\s+ReactDOM\s+from\s+["'][^"']*react-dom[^"']*["'];?/gi,
+        'const ReactDOM = window.ReactDOM;'
+      )
+
       // import { OrbitControls, ... } from '...three...'
       rewritten = rewritten.replace(
         /import\s+\{\s*([^}]+)\s*\}\s+from\s+["'][^"']*three[^"']*["'];?/gi,
@@ -320,10 +441,10 @@ function rewriteModuleScripts(
           for (const name of bindings) {
             const globalRef = THREE_GLOBAL_ALIASES[name]
             if (globalRef) {
-              assignments.push(`${name} = ${globalRef}`)
+              assignments.push(`const ${name} = ${globalRef}`)
             } else {
               warnings.push(`unsupported Three.js module import: ${name}`)
-              assignments.push(`${name} = undefined`)
+              assignments.push(`const ${name} = undefined`)
             }
           }
           return `const { ${bindings.join(', ')} } = (() => { ${assignments.join('; ')}; return { ${bindings.join(', ')} }; })();`
@@ -406,16 +527,17 @@ export async function inlineDependenciesAsync(output: string): Promise<Dependenc
 
   let rewritten = output
 
-  // 1. Collect known external scripts / stylesheets.
-  const scripts = new Map<string, string>() // canonical -> original src
-  const styles = new Map<string, string>()
+  // 1. Collect all external script / stylesheet URLs and map them to canonical
+  // known URLs when possible. Unknown URLs are still fetched and inlined so
+  // models that pull in React, Vue, etc. from arbitrary CDNs continue to work.
+  const scriptUrls = new Map<string, string>() // absolute url -> original src
+  const styleUrls = new Map<string, string>()
 
   rewritten.replace(
     /<script\b[^>]*?\bsrc=["']([^"']+)["'][^>]*>(?:<\/script>)?/gi,
     (_match, src: string) => {
       const absolute = resolveUrl(src, 'https://example.com/')
-      const canonical = absolute ? URL_MAP.get(normalizeUrl(absolute)) : undefined
-      if (canonical) scripts.set(canonical, src)
+      if (absolute && isExternalUrl(absolute)) scriptUrls.set(absolute, src)
       else removed.push(src)
       return ''
     }
@@ -425,29 +547,30 @@ export async function inlineDependenciesAsync(output: string): Promise<Dependenc
     /<link\b[^>]*?\brel=["']stylesheet["'][^>]*?\bhref=["']([^"']+)["'][^>]*>/gi,
     (_match, href: string) => {
       const absolute = resolveUrl(href, 'https://example.com/')
-      const canonical = absolute ? URL_MAP.get(normalizeUrl(absolute)) : undefined
-      if (canonical) styles.set(canonical, href)
+      if (absolute && isExternalUrl(absolute)) styleUrls.set(absolute, href)
       else removed.push(href)
       return ''
     }
   )
 
-  // 2. Fetch all known dependencies in parallel.
-  await prefetchKnown([...scripts.keys(), ...styles.keys()])
+  // 2. Fetch every external resource in parallel.
+  const allUrls = new Set<string>([...scriptUrls.keys(), ...styleUrls.keys()])
+  await prefetchAll(allUrls)
 
-  // 3. Inline known <script src> and <link rel="stylesheet"> tags.
+  // 3. Inline all <script src> and <link rel="stylesheet"> tags.
   rewritten = rewritten.replace(
     /<script\b[^>]*?\bsrc=["']([^"']+)["'][^>]*>(?:<\/script>)?/gi,
     (match, src: string) => {
       const absolute = resolveUrl(src, 'https://example.com/')
-      const canonical = absolute ? URL_MAP.get(normalizeUrl(absolute)) : undefined
-      if (!canonical) return ''
-      const content = fetchCache.get(canonical)
+      if (!absolute || !isExternalUrl(absolute)) return ''
+      const canonical = URL_MAP.get(normalizeUrl(absolute))
+      const content = fetchCache.get(absolute)
       if (content === undefined) {
-        failed.push(canonical)
+        if (canonical) failed.push(canonical)
+        else removed.push(src)
         return ''
       }
-      inlined.push(canonical)
+      inlined.push(canonical ?? absolute)
       return `<script>\n${content}\n</script>`
     }
   )
@@ -456,14 +579,15 @@ export async function inlineDependenciesAsync(output: string): Promise<Dependenc
     /<link\b[^>]*?\brel=["']stylesheet["'][^>]*?\bhref=["']([^"']+)["'][^>]*>/gi,
     (match, href: string) => {
       const absolute = resolveUrl(href, 'https://example.com/')
-      const canonical = absolute ? URL_MAP.get(normalizeUrl(absolute)) : undefined
-      if (!canonical) return ''
-      const content = fetchCache.get(canonical)
+      if (!absolute || !isExternalUrl(absolute)) return ''
+      const canonical = URL_MAP.get(normalizeUrl(absolute))
+      const content = fetchCache.get(absolute)
       if (content === undefined) {
-        failed.push(canonical)
+        if (canonical) failed.push(canonical)
+        else removed.push(href)
         return ''
       }
-      inlined.push(canonical)
+      inlined.push(canonical ?? absolute)
       return `<style>\n${content}\n</style>`
     }
   )
@@ -478,10 +602,11 @@ export async function inlineDependenciesAsync(output: string): Promise<Dependenc
     }
   )
 
-  // 5. Ensure Three.js globals exist if the artifact uses Three.js modules
+  // 5. Ensure Three.js / React globals exist if the artifact uses modules
   // (must happen before rewriting module imports so the globals are already
   // injected ahead of any <script type="module">).
   rewritten = await ensureThreeGlobals(rewritten, inlined, failed, warnings)
+  rewritten = await ensureReactGlobals(rewritten, inlined, failed, warnings)
 
   // 6. Rewrite module imports and import maps for CSP-safe globals.
   const moduleRewrite = rewriteModuleScripts(rewritten, [])

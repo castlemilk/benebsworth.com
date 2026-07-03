@@ -33,6 +33,7 @@ const ACCENT = {
   green: '#34d399', // software / computer science
   amber: '#f5a623', // electrical engineering / signals
   indigo: '#6366f1', // cosmology / astrophysics
+  hiking: '#5b9e6f', // trail guides / the hiking desk
 } as const
 
 const TOPIC = {
@@ -52,6 +53,7 @@ const TOPIC = {
   software: { icon: '/topics/technology.png', label: 'Software', accent: ACCENT.green },
   ee: { icon: '/topics/technology.png', label: 'Electrical Eng', accent: ACCENT.amber },
   cosmology: { icon: '/topics/technology.png', label: 'Cosmology', accent: ACCENT.indigo },
+  hiking: { icon: '/topics/technology.png', label: 'Hiking', accent: ACCENT.hiking },
 } satisfies Record<string, Topic>
 
 export { TOPIC }
@@ -122,6 +124,9 @@ const BY_SLUG: Record<string, Topic> = {
   'why-the-night-sky-is-dark': TOPIC.cosmology,
   'the-fine-tuned-universe': TOPIC.cosmology,
   'the-first-three-minutes': TOPIC.cosmology,
+  // Hiking desk (trail guides)
+  'overland-track-guide': TOPIC.hiking,
+  'haute-route-guide': TOPIC.hiking,
 }
 
 /**
@@ -138,6 +143,7 @@ const TAG_RULES: Array<{ match: string[]; topic: Topic }> = [
   { match: ['gcp'], topic: TOPIC.gcp },
   { match: ['kubernetes', 'containers', 'ci/cd', 'knative', 'skaffold'], topic: TOPIC.kubernetes },
   { match: ['cosmology', 'astrophysics', 'black hole', 'cosmic', 'relativity', 'spacetime'], topic: TOPIC.cosmology },
+  { match: ['hiking', 'trail-guide', 'trek', 'trekking'], topic: TOPIC.hiking },
   { match: ['personal', 'general'], topic: TOPIC.general },
 ]
 

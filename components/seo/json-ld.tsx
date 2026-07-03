@@ -138,6 +138,35 @@ export function collectionPageLd({
   }
 }
 
+/** Dataset — for a measured collection like the LLM benchmark results. */
+export function datasetLd({
+  name,
+  description,
+  url,
+  variableMeasured,
+  keywords,
+}: {
+  name: string
+  description: string
+  url: string
+  variableMeasured?: string[]
+  keywords?: string[]
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name,
+    description,
+    url,
+    inLanguage: 'en-AU',
+    isAccessibleForFree: true,
+    creator: authorLd,
+    license: 'https://benebsworth.com/',
+    ...(variableMeasured ? { variableMeasured } : {}),
+    ...(keywords ? { keywords } : {}),
+  }
+}
+
 /** ProfilePage wrapping the Person — used on the about page. */
 export const profilePageLd = {
   '@context': 'https://schema.org',

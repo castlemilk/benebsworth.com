@@ -10,6 +10,7 @@ import { Breadcrumb } from '@/components/site/breadcrumb'
 import { tagColor } from '@/lib/tag-colors'
 import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
+import { BlogGallery } from '@/components/blog/blog-gallery'
 import { RelatedPosts } from '@/components/blog/related-posts'
 import { KeyTakeaways } from '@/components/blog/key-takeaways'
 import { AuthorBio } from '@/components/blog/author-bio'
@@ -95,7 +96,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     },
     image: {
       '@type': 'ImageObject',
-      url: `${url}opengraph-image`,
+      // The static export emits the OG asset as opengraph-image.png; the
+      // extensionless path 404s. (Mirrors profilePageLd in seo/json-ld.tsx.)
+      url: `${url}opengraph-image.png`,
       width: 1200,
       height: 630,
     },
@@ -194,6 +197,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <MobileToc />
           <MdxContent source={p.body} slug={p.slug} />
         </div>
+          {/* Live photo gallery managed in /admin (renders nothing until photos
+              are assigned to this post). */}
+          <BlogGallery slug={slug} />
           {/* "Try it in the lab" footer. Uses the post's tags to find
               matching lab effects, with a daily-rotating random fallback
               when no overlap exists. */}

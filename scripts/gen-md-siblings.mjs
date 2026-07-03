@@ -31,10 +31,8 @@ const OUT = join(ROOT, 'public/blog')
  * the markdown link back to the canonical post will see it.
  */
 const COMPONENT_DESCRIPTIONS = {
-  LabCanvas:
-    'Embedded interactive lab effect (Canvas 2D) with live controls. The `effect` prop names a simulation from the lab registry (e.g. "black-hole", "cosmic-expansion"); the rendered post shows the running canvas plus sliders. This placeholder stands in for the markdown-only sibling.',
-  LabSide:
-    'Two-column layout pairing prose with an embedded interactive lab effect (Canvas 2D). The `effect` prop names a lab simulation; the surrounding text explains what to watch for. The rendered post has the live, controllable version.',
+  // NOTE: LabCanvas / LabSide are described further down (near PllDiagram) —
+  // a duplicate pair used to live here and the later keys silently won.
   UniverseScale:
     'Embedded "Universe Scale" explorer: a logarithmic zoom across 62 orders of magnitude, from the Planck length to the observable universe (ant, human, whale, skyscraper, Mount Everest, Earth, Sun, galaxy, cosmic web). The `focus` prop sets the initial scale. Markers at the Sun\'s Schwarzschild radius and the Planck length link to the black-hole-cosmology essay. The rendered post has the live, scrollable canvas.',
   SchwarzschildCalculator:
@@ -191,6 +189,10 @@ const COMPONENT_DESCRIPTIONS = {
     'Gear checklist for the trail, grouped into Worn / In the pack / Safety / Optional. Each <Gear> item can be flagged essential and carry a short note. Renders as a two-column grouped list.',
   Gear:
     'A single gear item inside a <GearList> (name, group, essential flag, note). Data-only — it is rendered by its parent <GearList>.',
+  TrailFigure:
+    'A real-photo figure for a trail guide: a single bordered photo (a co-located path or an absolute GCS URL) with an optional accent meta eyebrow (e.g. "Day 3 · Pas de Chèvres"), a caption and a credit. The photo-led counterpart to the researched Landmark/Stop cards — drop one inline for a single beat, or wrap several in a <TrailGrid> for a 2-up strip of trip photos. The rendered post shows the actual image.',
+  StageProfile:
+    'A per-day route-profile minimap for a trail guide: the day\'s up-and-over elevation line with each village, hut, pass and lake pinned at its altitude (icon + name + metres), peaks labelled above the line and valleys below. Driven by an ordered `points` array ({name, elevM, kind}). The at-a-glance "what does today look like" sketch at the top of each <Stage>. The rendered post shows the live SVG profile.',
 }
 
 /**

@@ -1,10 +1,13 @@
 import type { BenchmarkTask, Scorer } from '../types'
 
+function tagCounts(html: string, tag: string): { opens: number; closes: number } {
+  const opens = html.match(new RegExp(`<${tag}\\b`, 'gi'))?.length ?? 0
+  const closes = html.match(new RegExp(`</${tag}\\s*>`, 'gi'))?.length ?? 0
+  return { opens, closes }
+}
+
 function hasBalancedTag(html: string, tag: string): boolean {
-  const open = new RegExp(`<${tag}\\b`, 'gi')
-  const close = new RegExp(`</${tag}>`, 'gi')
-  const opens = html.match(open)?.length ?? 0
-  const closes = html.match(close)?.length ?? 0
+  const { opens, closes } = tagCounts(html, tag)
   return opens > 0 && opens === closes
 }
 
@@ -18,28 +21,35 @@ export const htmlScorer: Scorer = {
     let score = 0
 
     // Core single-file HTML structure
-    if (lower.includes('<!doctype html') || lower.includes('<html')) score += 15
-    if (hasBalancedTag(html, 'html')) score += 15
+    if (lower.includes('<!doctype html') || lower.includes('<html')) score += 10
+    if (hasBalancedTag(html, 'html')) score += 10
     if (hasBalancedTag(html, 'body')) score += 10
 
-    // Common task tags
-    if (hasBalancedTag(html, 'script')) score += 15
-    if (lower.includes('<canvas')) {
-      if (hasBalancedTag(html, 'canvas')) score += 10
-    }
-    if (lower.includes('<style')) {
-      if (hasBalancedTag(html, 'style')) score += 5
-    }
+    // Real behaviour: at least one balanced <script> block
+    if (hasBalancedTag(html, 'script')) score += 25
 
-    // Obvious broken patterns
-    const hasBrokenPatterns =
-      /<<|>>/.test(html) ||
-      /<script\b[^>]*>([\s\S]*?)(?=<script\b|<\/body>|<\/html>|$)(?!.*?<\/script>)/i.test(html) ||
-      /<canvas\b[^>]*>([\s\S]*?)(?=<canvas\b|<\/body>|<\/html>|$)(?!.*?<\/canvas>)/i.test(html)
-    if (!hasBrokenPatterns) score += 15
+    // Substance: the page carries actual content, not just a skeleton —
+    // either script code or visible text once tags are stripped.
+    const scriptHasCode = /<script\b[^>]*>\s*\S[\s\S]*?<\/script>/i.test(html)
+    const visibleText = html.replace(/<[^>]*>/g, '').trim()
+    if (scriptHasCode || visibleText.length > 0) score += 15
+
+    // Cleanliness: tag-balance counting for script/canvas plus a simple
+    // doubled-bracket garbage check. (Balance counting instead of lookahead
+    // regexes, which false-positived on every well-formed page with a script.)
+    const script = tagCounts(html, 'script')
+    const canvas = tagCounts(html, 'canvas')
+    const hasGarbage = /<<|>>/.test(html)
+    if (!hasGarbage && script.opens === script.closes && canvas.opens === canvas.closes) {
+      score += 15
+    }
 
     // Looks like a runnable page
     if (lower.includes('</html>')) score += 10
+
+    // Bonus for optional tags being balanced when present
+    if (lower.includes('<canvas') && hasBalancedTag(html, 'canvas')) score += 5
+    if (lower.includes('<style') && hasBalancedTag(html, 'style')) score += 5
 
     return Math.min(100, score)
   },

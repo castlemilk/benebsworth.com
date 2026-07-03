@@ -8,11 +8,12 @@ import { Reveal } from '@/components/motion/reveal'
 import {
   BENCHMARK_MODELS,
   BENCHMARK_TASKS,
-  resultsForModel,
 } from '@/lib/lab/llm-benchmark/registry'
+import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
 import { aggregateResults } from '@/lib/lab/llm-benchmark/harness'
 import { modelIndexPath, modelPath } from '@/lib/lab/llm-benchmark/nav'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
+import { formatScore, formatRuntime, formatCost } from '@/components/lab/llm-benchmark/format'
 import { Cpu, DollarSign, Gauge, Clock, Hash, Layers } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -28,25 +29,15 @@ export const metadata: Metadata = {
     url: modelIndexPath(),
     siteName: 'Ben Ebsworth',
     locale: 'en_AU',
+    images: [{ url: '/lab/llm-benchmark/opengraph-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Models · LLM Benchmark · Lab',
     creator: '@benebsworth',
     site: '@benebsworth',
+    images: ['/lab/llm-benchmark/opengraph-image.png'],
   },
-}
-
-function formatScore(n: number): string {
-  return n.toFixed(1)
-}
-
-function formatMs(n: number): string {
-  return `${Math.round(n).toLocaleString()} ms`
-}
-
-function formatCost(n: number): string {
-  return `$${n.toFixed(4)}`
 }
 
 export default function ModelsIndexPage() {
@@ -134,7 +125,7 @@ export default function ModelsIndexPage() {
 
                     <div className="grid shrink-0 grid-cols-2 gap-3 sm:w-80">
                       <MiniStat icon={<Gauge className="h-4 w-4" />} label="Avg score" value={formatScore(stats.avgScore)} />
-                      <MiniStat icon={<Clock className="h-4 w-4" />} label="Avg runtime" value={formatMs(stats.avgRuntimeMs)} />
+                      <MiniStat icon={<Clock className="h-4 w-4" />} label="Avg runtime" value={formatRuntime(stats.avgRuntimeMs)} />
                       <MiniStat icon={<DollarSign className="h-4 w-4" />} label="Avg cost" value={formatCost(stats.avgCostUsd)} />
                       <MiniStat icon={<Hash className="h-4 w-4" />} label="Tasks" value={`${stats.count}`} />
                     </div>

@@ -19,6 +19,9 @@ export default tseslint.config(
       'legacy/**',
       // CloudFront rewrite is deployed separately
       'infra/**',
+      // Superpowers workflow DSL — log/parallel/agent/pipeline are injected
+      // globals at run time, so no-undef false-positives on every file.
+      '.superpowers/**',
     ],
   },
 

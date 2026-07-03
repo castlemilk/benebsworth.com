@@ -63,6 +63,7 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
   const [resetTick, setResetTick] = useState(0)
   const [runSpeed, setRunSpeed] = useState(1.2)
   const [gravityMul, setGravityMul] = useState(0.9)
+  const [focused, setFocused] = useState(false)
 
   const paramsRef = useRef({ runSpeed, gravityMul })
   paramsRef.current = { runSpeed, gravityMul }
@@ -325,8 +326,13 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
       }
     }
 
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
+    // Keys are scoped to the focusable wrapper (NOT window) so the game only
+    // captures Space/arrows/WASD — and only preventDefaults page scroll —
+    // while the player has clicked/tabbed into it.
+    const onBlur = () => keys.clear() // no stuck keys after focus leaves
+    wrap.addEventListener('keydown', onKeyDown)
+    wrap.addEventListener('keyup', onKeyUp)
+    wrap.addEventListener('blur', onBlur)
 
     const ro = new ResizeObserver(resize)
     ro.observe(wrap)
@@ -347,8 +353,9 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
       cancelAnimationFrame(raf)
       ro.disconnect()
       io.disconnect()
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
+      wrap.removeEventListener('keydown', onKeyDown)
+      wrap.removeEventListener('keyup', onKeyUp)
+      wrap.removeEventListener('blur', onBlur)
     }
   }, [resetTick])
 
@@ -400,8 +407,21 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
         </div>
       }
     >
-      <div ref={wrapRef} className="absolute inset-0">
+      <div
+        ref={wrapRef}
+        tabIndex={0}
+        role="application"
+        aria-label="Mini platformer game — click to control with arrows or WASD"
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="absolute inset-0 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#8b5cf6]/70"
+      >
         <canvas ref={canvasRef} className="block h-full w-full" />
+        {!focused && (
+          <span className="pointer-events-none absolute right-2 top-2 rounded-full bg-black/55 px-2.5 py-1 font-mono text-[0.62rem] text-white/90">
+            click to control
+          </span>
+        )}
       </div>
     </DemoFrame>
   )

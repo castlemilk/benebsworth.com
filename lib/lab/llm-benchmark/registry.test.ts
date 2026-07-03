@@ -3,14 +3,12 @@ import {
   BENCHMARK_CATEGORIES,
   BENCHMARK_MODELS,
   BENCHMARK_TASKS,
-  BENCHMARK_RESULTS,
   getCategory,
   getTask,
   getModel,
   tasksByCategory,
-  resultsForTask,
-  resultsForModel,
 } from './registry'
+import { BENCHMARK_RESULTS, resultsForTask, resultsForModel } from './results'
 
 describe('llm-benchmark registry', () => {
   it('has unique category slugs', () => {

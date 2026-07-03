@@ -39,7 +39,6 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Provider runner orchestrator | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Provider-specific API clients | `lib/lab/llm-benchmark/runners/{openai,anthropic,google,moonshot}.ts` |
 | Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text}.ts` |
-| Mock runner for dev/tests | `lib/lab/llm-benchmark/runners/mock.ts` |
 | Run script | `scripts/run-benchmark.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
@@ -94,23 +93,30 @@ Model `id` must be URL-safe and unique.
 
 ## Recording Results
 
-Results are persisted in `lib/lab/llm-benchmark/results.json` and typed in `BENCHMARK_RESULT`:
+Results are persisted in `lib/lab/llm-benchmark/results.json` and typed as `BenchmarkResult` in `lib/lab/llm-benchmark/types.ts`. One record aggregates `iterations` API calls per task × model:
 
 ```ts
 {
   taskId: string
   modelId: string
-  score: number        // 0-100; computed by automated scorers in the provider runner
-  runtimeMs: number
-  tokensIn: number
-  tokensOut: number
-  costUsd: number      // computed by estimateCost() from model pricing
+  score: number        // MEAN 0-100 score across SUCCESSFUL iterations (0 if none);
+                       // clamped 1..100 and rounded to 1 decimal
+  runtimeMs: number    // MEAN wall-clock per SUCCESSFUL iteration (0 if none)
+  tokensIn: number     // TOTAL across all iterations
+  tokensOut: number    // TOTAL across all iterations
+  costUsd: number      // TOTAL estimated spend across all iterations (estimateCost of the token totals)
   iterations: number   // how many API calls were aggregated into this result
-  status: 'success' | 'fail' | 'timeout'
+  iterationsSucceeded?: number // how many of them succeeded (absent on older records = all)
+  status: 'success' | 'partial' | 'fail' | 'timeout'
   createdAt: string    // ISO timestamp
-  output?: string      // representative generated output for side-by-side comparison
+  source?: 'live' | 'seeded' // 'live' = real harness run; 'seeded' = hand-authored sample data
+  output?: string      // representative generated output (first successful iteration)
 }
 ```
+
+Status semantics: `'success'` = every iteration succeeded; `'partial'` = some succeeded (score/runtime are computed over the successful ones); `'fail'` = none succeeded; `'timeout'` = none succeeded and the final error was a timeout.
+
+Source flag: the provider runner stamps `source: 'live'` on every record it produces; `scripts/seed-mock-results.mjs` stamps `source: 'seeded'` on every record it writes. The UI must always disclose seeded results and exclude them from headline verdicts.
 
 To regenerate results from live APIs, run the harness. To restore sample/mock outputs without calling APIs, run `node scripts/seed-mock-results.mjs`.
 
@@ -166,15 +172,15 @@ node scripts/seed-mock-results.mjs
 1. `scripts/run-benchmark.mjs` reads env vars and builds a `ProviderRunnerConfig`.
 2. `createProviderRunner()` in `lib/lab/llm-benchmark/runners/provider.ts`:
    - Runs `iterations` API calls per task/model.
-   - Wraps each call in a 10-minute timeout.
-   - Retries transient errors (network, timeout, 5xx) up to `maxRetries` times (default 2), but not 4xx auth/validation errors.
+   - Wraps each call in a 10-minute timeout (raised as an identifiable `TimeoutError`).
+   - Retries transient errors (network, timeout, 5xx, 429/408 rate-limit/overload) up to `maxRetries` times (default 2), but not other 4xx auth/validation errors. Rate-limit errors get a 4x longer backoff.
    - Logs start/completion/failure per iteration.
    - Strips Markdown code fences, removes leading/trailing prose, and extracts the first code block if the model wraps output.
    - Looks up successful API responses in `.cache/llm-benchmark-responses.json` and caches new ones.
-   - Scores successful outputs using a task-appropriate heuristic scorer (HTML or text/math).
-   - Aggregates all iterations into **one result per task/model**.
-3. `runBenchmark()` in `lib/lab/llm-benchmark/harness.ts` orchestrates independent task/model combinations in parallel (concurrency controlled by `RUN_CONCURRENCY`, default 3) and falls back to each task's `iterationsDefault`.
-4. Results are written to `lib/lab/llm-benchmark/results.json`.
+   - Scores EVERY successful iteration's output using a task-appropriate heuristic scorer (`selectScorer()` in `lib/lab/llm-benchmark/scorers/index.ts`) and publishes the mean.
+   - Aggregates all iterations into **one result per task/model** via the exported pure `aggregateRuns()` (status success/partial/fail/timeout, `iterationsSucceeded`, `source: 'live'`).
+3. `runBenchmark()` in `lib/lab/llm-benchmark/harness.ts` orchestrates independent task/model combinations in parallel (concurrency controlled by `RUN_CONCURRENCY`, default 3) and falls back to each task's `iterationsDefault`. A task/model job that throws is logged and skipped without aborting the rest of the run.
+4. Results are written to `lib/lab/llm-benchmark/results.json`. If the run fails part-way, `scripts/run-benchmark.mjs` still writes the partial results collected so far before exiting non-zero.
 
 ### Automated Scoring
 

@@ -1,6 +1,9 @@
 import { getPublishedPosts } from '@/lib/content'
 import { LAB_EFFECTS, CATEGORIES } from '@/lib/lab/registry'
 import { topicFor } from '@/lib/topics'
+import { hikes } from '@/content/hiking'
+import { BENCHMARK_TASKS, BENCHMARK_MODELS } from '@/lib/lab/llm-benchmark/registry'
+import { benchmarkPath, modelIndexPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
 export const dynamic = 'force-static'
 
 /**
@@ -53,6 +56,8 @@ export function GET() {
     { name: 'Projects', url: '/projects/', desc: 'Open-source and side projects.' },
     { name: 'Blog', url: '/blog/', desc: 'Long-form writing with interactive figures.' },
     { name: 'Lab', url: '/lab/', desc: '30+ interactive canvas simulations, parameterised.' },
+    { name: 'Hiking', url: '/hiking/', desc: 'Long-distance hiking journal — completed and planned multi-day routes with bespoke journey maps.' },
+    { name: 'LLM Benchmark', url: '/lab/llm-benchmark/', desc: 'A hands-on coding benchmark comparing frontier LLMs across real generative tasks.' },
   ]) {
     lines.push(`- [${u.name}](${base}${u.url}): ${u.desc}`)
   }
@@ -81,6 +86,26 @@ export function GET() {
     }
     lines.push('')
   }
+  lines.push('## LLM Benchmark')
+  lines.push('')
+  lines.push(
+    `A hands-on coding benchmark comparing ${BENCHMARK_MODELS.length} frontier models ` +
+      `across ${BENCHMARK_TASKS.length} real generative tasks (3D physics, games, security, ` +
+      `UI, maths, physics, electronics) with live, runnable demos of each model's output.`,
+  )
+  lines.push('')
+  lines.push(`- [Overview](${base}${benchmarkPath()}): The benchmark landing — categories, tasks and the leaderboard.`)
+  lines.push(`- [Models](${base}${modelIndexPath()}): Every model measured, with cost and context-window specs.`)
+  for (const t of BENCHMARK_TASKS) {
+    lines.push(`- [${t.title}](${base}${taskPath(t)}): ${t.blurb}`)
+  }
+  lines.push('')
+  lines.push('## Hiking')
+  lines.push('')
+  for (const h of hikes) {
+    lines.push(`- [${h.name}](${base}/hiking/${h.slug}/): ${h.summary}`)
+  }
+  lines.push('')
   lines.push('## Feeds')
   lines.push('')
   lines.push('- [RSS feed](https://benebsworth.com/feed.xml)')

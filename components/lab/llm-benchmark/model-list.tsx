@@ -1,5 +1,3 @@
-'use client'
-
 import { Brain, Coins, Maximize2, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { BENCHMARK_MODELS } from '@/lib/lab/llm-benchmark/registry'

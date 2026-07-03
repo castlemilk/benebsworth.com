@@ -40,21 +40,45 @@ async function main() {
     bustCache: RUN_BUST_CACHE,
   })
 
+  // Record every result as it completes so a mid-run failure can still write
+  // the partial results collected so far.
+  const collected = []
+  const recordingRunner = {
+    runTask: async (model, task, iterations) => {
+      const results = await runner.runTask(model, task, iterations)
+      collected.push(...results)
+      return results
+    },
+  }
+
+  // Replace existing results for the (model, task) combinations we just ran; keep everything else.
+  const writeResults = (fresh) => {
+    const freshKeys = new Set(fresh.map((r) => `${r.modelId}|${r.taskId}`))
+    const existing = BENCHMARK_RESULTS.filter((r) => !freshKeys.has(`${r.modelId}|${r.taskId}`))
+    const merged = [...existing, ...fresh]
+
+    const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
+    writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
+
+    console.log(`Wrote ${merged.length} results to ${outPath}`)
+    console.log(`Fresh runs: ${fresh.length}`)
+  }
+
   console.log(
     `Running ${ITERATIONS ?? 'default'} iteration(s) at concurrency ${CONCURRENCY} for: ${models.map((m) => m.name).join(', ')} on ${tasks.length} task(s)`
   )
-  const fresh = await runBenchmark(runner, tasks, models, ITERATIONS, CONCURRENCY)
 
-  // Replace existing results for the (model, task) combinations we just ran; keep everything else.
-  const freshKeys = new Set(fresh.map((r) => `${r.modelId}|${r.taskId}`))
-  const existing = BENCHMARK_RESULTS.filter((r) => !freshKeys.has(`${r.modelId}|${r.taskId}`))
-  const merged = [...existing, ...fresh]
-
-  const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
-  writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
-
-  console.log(`Wrote ${merged.length} results to ${outPath}`)
-  console.log(`Fresh runs: ${fresh.length}`)
+  try {
+    const fresh = await runBenchmark(recordingRunner, tasks, models, ITERATIONS, CONCURRENCY)
+    writeResults(fresh)
+  } catch (err) {
+    console.error(err)
+    if (collected.length > 0) {
+      console.error(`Run failed; writing ${collected.length} partial result(s) before exiting.`)
+      writeResults(collected)
+    }
+    process.exit(1)
+  }
 }
 
 main().catch((err) => {

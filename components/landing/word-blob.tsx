@@ -182,8 +182,11 @@ export function WordBlob({ width, height, className, ref }: Props) {
         const meshObj = new Mesh(gl, { geometry: new Triangle(gl), program })
         const canvas = gl.canvas as HTMLCanvasElement
         canvas.style.display = 'block'
-        canvas.style.width = `${w0}px`
-        canvas.style.height = `${h0}px`
+        // Fill the wrapper (which always matches the grid box) rather than
+        // fixed pixels, so the blob stays registered with the SVG even when
+        // the grid box is clamped to a narrow viewport by max-w-full.
+        canvas.style.width = '100%'
+        canvas.style.height = '100%'
         wrap.appendChild(canvas) // last GL step → on throw above, nothing is in the DOM
 
         let raf = 0
@@ -240,8 +243,10 @@ export function WordBlob({ width, height, className, ref }: Props) {
           if (w < 2 || h < 2) return
           renderer.setSize(w, h)
           program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height]
-          canvas.style.width = `${w}px`
-          canvas.style.height = `${h}px`
+          // CSS size stays 100% of the wrapper (set at init) — only the
+          // framebuffer resolution changes here.
+          canvas.style.width = '100%'
+          canvas.style.height = '100%'
           if (target !== 0 || cur > 0) ensure()
         }
 

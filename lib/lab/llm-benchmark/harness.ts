@@ -52,15 +52,26 @@ export function aggregateResults(results: BenchmarkResult[]): AggregateStats {
   }
 }
 
-async function runWithConcurrency<T>(jobs: (() => Promise<T>)[], concurrency: number): Promise<T[]> {
+async function runWithConcurrency<T>(
+  jobs: (() => Promise<T>)[],
+  concurrency: number
+): Promise<(T | undefined)[]> {
   if (concurrency < 1) concurrency = 1
-  const results: T[] = new Array(jobs.length)
+  const results: (T | undefined)[] = new Array(jobs.length)
   let index = 0
 
   async function worker() {
     while (index < jobs.length) {
       const i = index++
-      results[i] = await jobs[i]()
+      try {
+        results[i] = await jobs[i]()
+      } catch (err) {
+        // One failed task/model combination must not abort the whole run and
+        // discard every other job's results — log it and keep going.
+        console.error(
+          `[harness] job ${i + 1}/${jobs.length} failed: ${err instanceof Error ? (err.stack ?? err.message) : String(err)}`
+        )
+      }
     }
   }
 

@@ -69,6 +69,9 @@ export function SiteSearch() {
   const [status, setStatus] = useState<Status>('idle')
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef(0)
+  // Monotonic search id: a slow search (cold pagefind WASM load) must not
+  // resolve after a later keystroke's search and clobber the newer results.
+  const seqRef = useRef(0)
 
   // ⌘K / Ctrl-K toggles the palette from anywhere.
   useEffect(() => {
@@ -80,6 +83,18 @@ export function SiteSearch() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // The WebSite JSON-LD advertises `/?q={query}` as a SearchAction — honour it.
+  // Plain location parsing (NOT useSearchParams — that forces a Suspense
+  // boundary in the static export); runs once on mount, and the debounced
+  // search effect below picks the query up and runs it.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('q')
+    if (q) {
+      setQuery(q)
+      setOpen(true)
+    }
   }, [])
 
   // On open: warm the index, focus the field, lock body scroll.
@@ -96,27 +111,35 @@ export function SiteSearch() {
   }, [open])
 
   const runSearch = useCallback(async (q: string) => {
+    const id = ++seqRef.current
     if (!q.trim()) {
       setHits([])
       setStatus('idle')
       return
     }
     setStatus('loading')
-    const pf = await loadPagefind()
-    if (!pf) {
-      setStatus('unavailable')
-      return
+    try {
+      const pf = await loadPagefind()
+      if (id !== seqRef.current) return // superseded by a newer keystroke
+      if (!pf) {
+        setStatus('unavailable')
+        return
+      }
+      const res = await pf.search(q)
+      const data = await Promise.all(res.results.slice(0, 8).map((r) => r.data()))
+      if (id !== seqRef.current) return
+      const mapped: Hit[] = data.map((d) => ({
+        url: d.url,
+        title: d.meta?.title || d.sub_results?.[0]?.title || d.url,
+        excerpt: d.excerpt,
+      }))
+      setHits(mapped)
+      setActive(0)
+      setStatus(mapped.length ? 'ok' : 'empty')
+    } catch {
+      // A rejected search must never leave the dialog stuck on "loading".
+      if (id === seqRef.current) setStatus('unavailable')
     }
-    const res = await pf.search(q)
-    const data = await Promise.all(res.results.slice(0, 8).map((r) => r.data()))
-    const mapped: Hit[] = data.map((d) => ({
-      url: d.url,
-      title: d.meta?.title || d.sub_results?.[0]?.title || d.url,
-      excerpt: d.excerpt,
-    }))
-    setHits(mapped)
-    setActive(0)
-    setStatus(mapped.length ? 'ok' : 'empty')
   }, [])
 
   // Debounce the query so we don't search on every keystroke.

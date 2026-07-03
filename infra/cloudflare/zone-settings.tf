@@ -4,7 +4,14 @@ locals {
     automatic_https_rewrites = "on"
     min_tls_version          = "1.2"
     http3                    = "on"
-    ssl                      = "strict" # all proxied origins are now Pages (HTTPS) → safe
+    # `full` (not `strict`) because `paprika` proxies to a self-signed cert
+    # from cert-manager's selfsigned-issuer. The Free plan's Universal SSL
+    # wildcard cert at the edge covers *.benebsworth.com — that's the only
+    # thing making the cert valid in browsers. All other proxied hosts in
+    # this zone are Cloudflare Pages (HTTPS, valid). If we move paprika
+    # to a CA-signed origin cert, flip back to "strict" so a hostile origin
+    # can't serve an invalid cert.
+    ssl = "full"
   }
 }
 

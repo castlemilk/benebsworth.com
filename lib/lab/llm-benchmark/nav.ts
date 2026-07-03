@@ -24,6 +24,16 @@ export function modelPath(model: BenchmarkModel): string {
   return `${BENCHMARK_BASE_PATH}models/${model.id}/`
 }
 
+/**
+ * Static URL for a single result's generated output JSON, published by
+ * scripts/gen-benchmark-outputs.mjs. Fetched on demand by the comparison /
+ * generated-demo views so the ~2.8 MB of outputs never ships in the bundle
+ * or RSC payload.
+ */
+export function outputUrl(taskId: string, modelId: string): string {
+  return `/lab-data/llm-benchmark/outputs/${taskId}/${modelId}.json`
+}
+
 const ROOT_CRUMBS: Crumb[] = [
   { label: 'Home', href: '/' },
   { label: 'Lab', href: '/lab/' },

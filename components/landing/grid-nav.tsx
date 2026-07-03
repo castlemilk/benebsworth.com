@@ -44,6 +44,16 @@ const CASCADE = ['blog', 'project', 'about'] // draw order
 
 type Latest = { title: string; href: string } | null
 
+/** Tile lines for the newest post: "↳ NEW" plus the first two title words,
+ *  with a trailing ellipsis when the title continues — so the tile reads as an
+ *  intentional teaser instead of text clipped mid-phrase. */
+function latestLines(title: string): string[] {
+  const words = title.split(' ')
+  const shown = words.slice(0, 2)
+  if (words.length > shown.length && shown.length > 0) shown[shown.length - 1] += '…'
+  return ['↳ NEW', ...shown]
+}
+
 function useReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
@@ -175,12 +185,12 @@ export function GridNav({ latest }: { latest: Latest }) {
   const rng = mulberry32(seed)
   const picks = shuffle(ARTIFACTS, rng).slice(0, gaps.length).map((a) =>
     a.id === 'latest' && latest
-      ? { ...a, link: latest.href, lines: ['↳ NEW', ...latest.title.split(' ').slice(0, 2)] }
+      ? { ...a, link: latest.href, lines: latestLines(latest.title) }
       : a,
   )
 
   return (
-    <main className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 p-4 sm:justify-start sm:gap-4 sm:p-6">
+    <main className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 overflow-x-clip p-4 sm:justify-start sm:gap-4 sm:p-6">
       <ThemeToggle className="absolute right-4 top-4" />
       <header className="w-full pt-3 text-center sm:pt-4">
         <h1 className="font-display text-[2.1rem] font-bold leading-none tracking-[-0.03em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>
@@ -192,7 +202,12 @@ export function GridNav({ latest }: { latest: Latest }) {
           Desktop restores justify-start + a flex-1 wrapper that centres the grid in
           the hero with the shuffle pinned to the bottom. */}
       <div className="flex w-full items-center justify-center sm:flex-1">
-      <div className="relative" style={{ width: W, height: H }}>
+      {/* max-w-full + aspect-ratio (not a fixed height): if the computed grid is
+          ever wider than the viewport (e.g. a resize race before `fit` re-runs),
+          the box clamps to the container and the SVG scales down proportionally
+          instead of causing 20px of horizontal page wiggle. Normal case is
+          identical: width W, height W/(W/H) = H. */}
+      <div className="relative max-w-full" style={{ width: W, aspectRatio: `${W} / ${H}` }}>
       {/* Shared GPU blob, behind the SVG. Mounted only after mount (client-only GL,
           no SSR/hydration concern); fades in per word on hover/focus. */}
       {mounted && (
@@ -200,7 +215,7 @@ export function GridNav({ latest }: { latest: Latest }) {
           <WordBlob ref={blobRef} width={W} height={H} className="absolute inset-0" />
         </Suspense>
       )}
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary" className="relative">
+      <svg viewBox={`0 0 ${W} ${H}`} role="navigation" aria-label="Primary" className="relative block h-full w-full">
         {Array.from({ length: rows }).map((_, r) =>
           Array.from({ length: cols }).map((__, c) => (
             <circle key={`${c}-${r}`} cx={cx(c)} cy={cy(r)} r={Math.max(1.6, cell * 0.024)} fill="var(--color-dot)" opacity={0.5} />

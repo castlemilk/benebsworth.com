@@ -110,12 +110,12 @@ export const pathfinding: EffectModule = {
     const N = cols * rows
 
     // ── ALL mutable simulation state lives here, per-instance. ────────
-    let walls = new Uint8Array(N)         // 1 = obstacle
-    let gScore = new Float64Array(N)       // cost from start (∞ until reached)
-    let fScore = new Float64Array(N)       // priority used by the heap
-    let parent = new Int32Array(N)         // predecessor index (-1 = none)
-    let visited = new Uint8Array(N)        // 1 = closed (settled)
-    let inOpen = new Uint8Array(N)         // 1 = currently in the open set
+    const walls = new Uint8Array(N)         // 1 = obstacle
+    const gScore = new Float64Array(N)       // cost from start (∞ until reached)
+    const fScore = new Float64Array(N)       // priority used by the heap
+    const parent = new Int32Array(N)         // predecessor index (-1 = none)
+    const visited = new Uint8Array(N)        // 1 = closed (settled)
+    const inOpen = new Uint8Array(N)         // 1 = currently in the open set
     const heap = new MinHeap(fScore)
     let startIdx = 0
     let goalIdx = 0

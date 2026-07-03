@@ -11,8 +11,8 @@ import {
   getCategory,
   getModel,
   getTask,
-  resultsForTask,
 } from '@/lib/lab/llm-benchmark/registry'
+import { resultsForTask, stripOutput } from '@/lib/lab/llm-benchmark/results'
 import { aggregateResults } from '@/lib/lab/llm-benchmark/harness'
 import { loadTaskMdx, loadTaskPostMdx } from '@/lib/lab/llm-benchmark/content'
 import { Gauge, Clock, DollarSign, Hash, Terminal, Activity } from 'lucide-react'
@@ -21,6 +21,8 @@ import { BenchmarkDemo } from '@/components/lab/llm-benchmark/demos/demo-registr
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ModelOutputComparison } from '@/components/lab/llm-benchmark/model-output-comparison'
 import { GeneratedDemo } from '@/components/lab/llm-benchmark/generated-demo'
+import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
+import { formatScore, formatRuntime, formatCost, formatTokens } from '@/components/lab/llm-benchmark/format'
 import { modelPath } from '@/lib/lab/llm-benchmark/nav'
 
 export function generateStaticParams() {
@@ -50,6 +52,7 @@ export async function generateMetadata({
       url,
       siteName: 'Ben Ebsworth',
       locale: 'en_AU',
+      images: [{ url: '/lab/llm-benchmark/opengraph-image.png', width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -57,24 +60,9 @@ export async function generateMetadata({
       description: t?.blurb,
       creator: '@benebsworth',
       site: '@benebsworth',
+      images: ['/lab/llm-benchmark/opengraph-image.png'],
     },
   }
-}
-
-function formatScore(n: number): string {
-  return n.toFixed(1)
-}
-
-function formatMs(n: number): string {
-  return `${Math.round(n).toLocaleString()} ms`
-}
-
-function formatCost(n: number): string {
-  return `$${n.toFixed(4)}`
-}
-
-function formatTokens(n: number): string {
-  return n.toLocaleString()
 }
 
 function statusClass(status: string): string {
@@ -82,7 +70,7 @@ function statusClass(status: string): string {
     ? 'text-emerald-600 dark:text-emerald-400'
     : status === 'timeout'
       ? 'text-amber-600 dark:text-amber-400'
-      : 'text-red-600 dark:text-red-400'
+      : 'text-rose-600 dark:text-rose-400'
 }
 
 export default async function BenchmarkTaskPage({
@@ -205,7 +193,7 @@ export default async function BenchmarkTaskPage({
         {/* ── Generated demo ───────────────────────────────────────────── */}
         <Reveal delay={120}>
           <div className="mb-16">
-            <GeneratedDemo task={t} />
+            <GeneratedDemo task={t} results={results.map(stripOutput)} />
           </div>
         </Reveal>
 
@@ -222,53 +210,64 @@ export default async function BenchmarkTaskPage({
             <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
               <ResultStat label="Runs" value={overall.count.toString()} icon={<Hash className="h-4 w-4" />} />
               <ResultStat label="Avg score" value={formatScore(overall.avgScore)} icon={<Gauge className="h-4 w-4" />} />
-              <ResultStat label="Avg runtime" value={formatMs(overall.avgRuntimeMs)} icon={<Clock className="h-4 w-4" />} />
+              <ResultStat label="Avg runtime" value={formatRuntime(overall.avgRuntimeMs)} icon={<Clock className="h-4 w-4" />} />
               <ResultStat label="Avg cost" value={formatCost(overall.avgCostUsd)} icon={<DollarSign className="h-4 w-4" />} />
             </div>
           </Reveal>
 
           <Reveal delay={160}>
-            <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <table className="w-full min-w-[560px] text-left text-sm">
+                <caption className="sr-only">
+                  Per-model results for {t.title}: score, status, runtime, tokens, and cost.
+                </caption>
                 <thead className="bg-[var(--color-surface-2)] font-mono text-xs uppercase tracking-wider text-muted">
                   <tr>
-                    <th className="px-5 py-3">Model</th>
-                    <th className="px-5 py-3 text-right">Score</th>
-                    <th className="px-5 py-3 text-right">Status</th>
-                    <th className="px-5 py-3 text-right">Runtime</th>
-                    <th className="px-5 py-3 text-right">Tokens in</th>
-                    <th className="px-5 py-3 text-right">Tokens out</th>
-                    <th className="px-5 py-3 text-right">Cost</th>
+                    <th scope="col" className="px-5 py-3">Model</th>
+                    <th scope="col" className="px-5 py-3">Score</th>
+                    <th scope="col" className="px-5 py-3 text-right">Status</th>
+                    <th scope="col" className="px-5 py-3 text-right">Runtime</th>
+                    <th scope="col" className="px-5 py-3 text-right">Tokens in</th>
+                    <th scope="col" className="px-5 py-3 text-right">Tokens out</th>
+                    <th scope="col" className="px-5 py-3 text-right">Cost</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--color-border)]">
-                  {results.map((result) => {
-                    const model = getModel(result.modelId)
-                    return (
-                      <tr key={result.modelId} className="hover:bg-[var(--color-surface-2)]/50 transition-colors">
-                        <td className="px-5 py-3 font-medium">
-                          {model ? (
-                            <Link
-                              href={modelPath(model)}
-                              className="transition-colors hover:text-[var(--color-project)]"
-                            >
-                              {model.name}
-                            </Link>
-                          ) : (
-                            result.modelId
-                          )}
-                        </td>
-                        <td className="px-5 py-3 text-right font-mono">{formatScore(result.score)}</td>
-                        <td className={`px-5 py-3 text-right font-mono ${statusClass(result.status)}`}>
-                          {result.status}
-                        </td>
-                        <td className="px-5 py-3 text-right font-mono">{formatMs(result.runtimeMs)}</td>
-                        <td className="px-5 py-3 text-right font-mono">{formatTokens(result.tokensIn)}</td>
-                        <td className="px-5 py-3 text-right font-mono">{formatTokens(result.tokensOut)}</td>
-                        <td className="px-5 py-3 text-right font-mono">{formatCost(result.costUsd)}</td>
-                      </tr>
-                    )
-                  })}
+                  {results
+                    .slice()
+                    .sort((a, b) => b.score - a.score)
+                    .map((result) => {
+                      const model = getModel(result.modelId)
+                      return (
+                        <tr key={result.modelId} className="hover:bg-[var(--color-surface-2)]/50 transition-colors">
+                          <td className="whitespace-nowrap px-5 py-3 font-medium">
+                            {model ? (
+                              <Link
+                                href={modelPath(model)}
+                                className="transition-colors hover:text-[var(--color-project)]"
+                              >
+                                {model.name}
+                              </Link>
+                            ) : (
+                              result.modelId
+                            )}
+                            {result.source === 'seeded' && (
+                              <span className="ml-1.5 font-mono text-[0.6rem] text-muted">· sample</span>
+                            )}
+                          </td>
+                          <td className="px-5 py-3">
+                            <ScoreBar score={result.score} width="w-20" />
+                          </td>
+                          <td className={`whitespace-nowrap px-5 py-3 text-right font-mono ${statusClass(result.status)}`}>
+                            {result.status}
+                          </td>
+                          <td className="whitespace-nowrap px-5 py-3 text-right font-mono">{formatRuntime(result.runtimeMs)}</td>
+                          <td className="px-5 py-3 text-right font-mono">{formatTokens(result.tokensIn)}</td>
+                          <td className="px-5 py-3 text-right font-mono">{formatTokens(result.tokensOut)}</td>
+                          <td className="whitespace-nowrap px-5 py-3 text-right font-mono">{formatCost(result.costUsd)}</td>
+                        </tr>
+                      )
+                    })}
                   {results.length === 0 && (
                     <tr>
                       <td colSpan={7} className="px-5 py-8 text-center text-muted">
@@ -291,7 +290,7 @@ export default async function BenchmarkTaskPage({
           <Reveal delay={280}>
             <div className="mt-16">
               <h2 className="type-h2 mb-6">Generated outputs</h2>
-              <ModelOutputComparison results={results} taskTitle={t.title} />
+              <ModelOutputComparison taskId={t.id} results={results.map(stripOutput)} taskTitle={t.title} />
             </div>
           </Reveal>
 

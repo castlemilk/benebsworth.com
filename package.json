@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "md:siblings": "node scripts/gen-md-siblings.mjs",
-    "prebuild": "node scripts/gen-md-siblings.mjs",
+    "prebuild": "node scripts/gen-md-siblings.mjs && node scripts/gen-benchmark-outputs.mjs",
     "build": "next build",
     "postbuild": "node scripts/og-rewrite.mjs && pagefind --site out",
     "start": "next start",

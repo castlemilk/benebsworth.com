@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { BENCHMARK_CATEGORIES, tasksByCategory } from '@/lib/lab/llm-benchmark/registry'
-import { taskPath } from '@/lib/lab/llm-benchmark/nav'
+import { categoryPath } from '@/lib/lab/llm-benchmark/nav'
 import { Reveal } from '@/components/motion/reveal'
 
 export function CategoryGrid() {
@@ -14,7 +12,7 @@ export function CategoryGrid() {
         return (
           <Reveal key={cat.slug} delay={i * 60}>
             <Link
-              href={tasks[0] ? taskPath(tasks[0]) : `/lab/llm-benchmark/${cat.slug}/`}
+              href={categoryPath(cat)}
               className="group flex h-full flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition hover:border-[var(--color-muted)]"
             >
               <div className="flex items-start justify-between gap-3">

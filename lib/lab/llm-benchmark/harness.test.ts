@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { runBenchmark, aggregateResults } from './harness'
-import type { BenchmarkModel, BenchmarkResult, BenchmarkRunner, BenchmarkTask } from './types'
+import { runBenchmark, aggregateResults, estimateCost } from './harness'
+import { aggregateRuns, type IterationRun } from './runners/provider'
+import type { BenchmarkModel, BenchmarkResult, BenchmarkRunner, BenchmarkTask, Scorer } from './types'
 
 const model: BenchmarkModel = {
   id: 'test-model',
@@ -83,6 +84,153 @@ describe('runBenchmark', () => {
     const runner = createRecordingRunner([])
     const results = await runBenchmark(runner, [task], [model], 7)
     expect(results[0]?.iterations).toBe(7)
+  })
+
+  it('continues past a task/model job that throws and keeps the other results', async () => {
+    const throwingRunner: BenchmarkRunner = {
+      runTask: async (_model, _task, _iterations) => {
+        if (_model.id === 'boom') throw new Error('provider exploded')
+        return [
+          {
+            taskId: _task.id,
+            modelId: _model.id,
+            score: 50,
+            runtimeMs: 1,
+            tokensIn: 1,
+            tokensOut: 1,
+            costUsd: 0,
+            iterations: _iterations,
+            status: 'success',
+            createdAt: new Date().toISOString(),
+          },
+        ]
+      },
+    }
+    const boom = { ...model, id: 'boom' }
+    const results = await runBenchmark(throwingRunner, [task], [boom, model], 1, 1)
+    expect(results).toHaveLength(1)
+    expect(results[0]?.modelId).toBe('test-model')
+  })
+})
+
+describe('estimateCost', () => {
+  const pricedModel: BenchmarkModel = {
+    ...model,
+    costPer1kInputUsd: 0.003,
+    costPer1kOutputUsd: 0.015,
+  }
+
+  it('computes per-1k input pricing', () => {
+    // 1500 tokens in at $0.003/1k = $0.0045
+    expect(estimateCost(1500, 0, pricedModel)).toBeCloseTo(0.0045, 10)
+  })
+
+  it('computes per-1k output pricing', () => {
+    // 2000 tokens out at $0.015/1k = $0.03
+    expect(estimateCost(0, 2000, pricedModel)).toBeCloseTo(0.03, 10)
+  })
+
+  it('sums input and output costs', () => {
+    expect(estimateCost(1500, 1000, pricedModel)).toBeCloseTo(0.0045 + 0.015, 10)
+  })
+
+  it('returns 0 for zero tokens', () => {
+    expect(estimateCost(0, 0, pricedModel)).toBe(0)
+  })
+})
+
+describe('aggregateRuns', () => {
+  const scorer: Scorer = {
+    // Deterministic: score = output length (so mean-across-iterations is checkable).
+    score: (output: string) => output.length,
+  }
+
+  const success = (output: string, runtimeMs: number, tokensIn = 100, tokensOut = 200): IterationRun => ({
+    output,
+    tokensIn,
+    tokensOut,
+    runtimeMs,
+    status: 'success',
+  })
+  const failure = (timedOut = false): IterationRun => ({
+    output: timedOut ? 'Timeout after 1ms: x' : 'HTTP 500',
+    tokensIn: 0,
+    tokensOut: 0,
+    runtimeMs: 0,
+    status: 'fail',
+    timedOut,
+  })
+
+  it('all iterations succeed: status success, mean score and runtime, total tokens/cost', async () => {
+    const runs = [success('a'.repeat(80), 1000), success('b'.repeat(90), 3000)]
+    const result = await aggregateRuns(runs, 2, model, task, scorer, '2026-01-01T00:00:00.000Z')
+
+    expect(result.status).toBe('success')
+    expect(result.iterations).toBe(2)
+    expect(result.iterationsSucceeded).toBe(2)
+    expect(result.source).toBe('live')
+    // Mean score across BOTH successful iterations, not just the first.
+    expect(result.score).toBe(85)
+    // Mean runtime per successful iteration.
+    expect(result.runtimeMs).toBe(2000)
+    // Tokens are totals.
+    expect(result.tokensIn).toBe(200)
+    expect(result.tokensOut).toBe(400)
+    // Cost is the TOTAL spend across all iterations.
+    expect(result.costUsd).toBeCloseTo(estimateCost(200, 400, model), 10)
+    // First successful output is kept as the representative output.
+    expect(result.output).toBe('a'.repeat(80))
+    expect(result.createdAt).toBe('2026-01-01T00:00:00.000Z')
+  })
+
+  it('some iterations fail: status partial, stats over successful runs only', async () => {
+    const runs = [success('a'.repeat(60), 1500), failure(), success('b'.repeat(70), 2500)]
+    const result = await aggregateRuns(runs, 3, model, task, scorer)
+
+    expect(result.status).toBe('partial')
+    expect(result.iterationsSucceeded).toBe(2)
+    expect(result.score).toBe(65)
+    // Failed 0ms runs must not deflate the mean runtime.
+    expect(result.runtimeMs).toBe(2000)
+    expect(result.tokensIn).toBe(200)
+    expect(result.tokensOut).toBe(400)
+    expect(result.output).toBe('a'.repeat(60))
+  })
+
+  it('all iterations fail: status fail, score 0, error message as output', async () => {
+    const result = await aggregateRuns([failure(), failure()], 2, model, task, scorer)
+    expect(result.status).toBe('fail')
+    expect(result.iterationsSucceeded).toBe(0)
+    expect(result.score).toBe(0)
+    expect(result.runtimeMs).toBe(0)
+    expect(result.output).toBe('HTTP 500')
+  })
+
+  it('all fail with a final timeout: status timeout', async () => {
+    const result = await aggregateRuns([failure(false), failure(true)], 2, model, task, scorer)
+    expect(result.status).toBe('timeout')
+    expect(result.iterationsSucceeded).toBe(0)
+    expect(result.score).toBe(0)
+  })
+
+  it('clamps the mean score to 1..100 and rounds to one decimal', async () => {
+    const tiny = await aggregateRuns([success('', 10), success('x', 10)], 2, model, task, scorer)
+    // Empty-output "success" is demoted to a failure; the remaining score of 1 stays >= 1.
+    expect(tiny.status).toBe('partial')
+    expect(tiny.score).toBe(1)
+
+    const huge = await aggregateRuns([success('z'.repeat(500), 10)], 1, model, task, scorer)
+    expect(huge.score).toBe(100)
+
+    const fractional = await aggregateRuns(
+      [success('a'.repeat(80), 10), success('b'.repeat(85), 10), success('c'.repeat(91), 10)],
+      3,
+      model,
+      task,
+      scorer
+    )
+    // mean(80, 85, 91) = 85.333... -> rounded to one decimal
+    expect(fractional.score).toBe(85.3)
   })
 })
 

@@ -9,7 +9,9 @@ import { Reveal } from '@/components/motion/reveal'
 import { HikeJourney } from '@/components/hiking/hike-journey'
 import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
 
-const GUIDE_SLUG: Record<string, string> = { 'overland-track': 'overland-track-guide' }
+// Only hikes with a PUBLISHED trail guide. The Overland guide exists but is
+// kept unpublished (release: false), so it is intentionally not linked here.
+const GUIDE_SLUG: Record<string, string> = { 'haute-route': 'haute-route-guide' }
 
 export function generateStaticParams() {
   return hikes.map((h) => ({ slug: h.slug }))

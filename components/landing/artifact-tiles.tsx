@@ -10,6 +10,14 @@ type Props = {
   reducedMotion?: boolean
 }
 
+/** SVG <text> has no CSS ellipsis, so a long line would clip mid-word at the
+ *  tile edge. Cap each line to the characters that fit (mono ≈ 0.62em/char)
+ *  and end with '…' so truncation reads as intentional. */
+function fitLine(line: string, tileW: number, fontSize: number): string {
+  const maxChars = Math.max(3, Math.floor((tileW * 0.94) / (fontSize * 0.62)))
+  return line.length > maxChars ? `${line.slice(0, maxChars - 1)}…` : line
+}
+
 export function ArtifactTile({ artifact: a, cx, cy, cell, reducedMotion = false }: Props) {
   const s = cell * 0.84
   const x = cx - s / 2, y = cy - s / 2, rad = s * 0.16
@@ -34,11 +42,14 @@ export function ArtifactTile({ artifact: a, cx, cy, cell, reducedMotion = false 
             <rect x={x} y={y} width={s} height={s} rx={rad} />
           </clipPath>
           <g clipPath={`url(#cliptext-${a.id}-${Math.round(cx)}-${Math.round(cy)})`}>
-            {a.lines.map((ln, i) => (
-              <text key={i} x={cx} y={y + s * 0.32 + i * (s * 0.22)} textAnchor="middle"
-                fill={i === 0 ? 'var(--color-blog)' : 'var(--color-muted)'} fontSize={Math.round(s * (i === 0 ? 0.13 : 0.16))}
-                fontWeight={i === 0 ? 700 : 500}>{ln}</text>
-            ))}
+            {a.lines.map((ln, i) => {
+              const fs = Math.round(s * (i === 0 ? 0.13 : 0.16))
+              return (
+                <text key={i} x={cx} y={y + s * 0.32 + i * (s * 0.22)} textAnchor="middle"
+                  fill={i === 0 ? 'var(--color-blog)' : 'var(--color-muted)'} fontSize={fs}
+                  fontWeight={i === 0 ? 700 : 500}>{fitLine(ln, s, fs)}</text>
+              )
+            })}
           </g>
         </>
       )}

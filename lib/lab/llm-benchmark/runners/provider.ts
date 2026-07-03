@@ -1,4 +1,11 @@
-import type { BenchmarkModel, BenchmarkResult, BenchmarkRunner, BenchmarkTask, Scorer } from '../types'
+import type {
+  BenchmarkModel,
+  BenchmarkResult,
+  BenchmarkRunner,
+  BenchmarkStatus,
+  BenchmarkTask,
+  Scorer,
+} from '../types'
 import { estimateCost } from '../harness'
 import { generateOpenAI, type OpenAIConfig } from './openai'
 import { generateAnthropic, type AnthropicConfig } from './anthropic'
@@ -6,14 +13,8 @@ import { generateGoogle, type GoogleConfig } from './google'
 import { generateMoonshot, type MoonshotConfig } from './moonshot'
 import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
-import {
-  getCachedResponse,
-  setCachedResponse,
-  setBustCache,
-  saveQueue,
-  type CachedResponse,
-} from '../cache'
-import { htmlScorer, textScorer } from '../scorers'
+import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
+import { selectScorer } from '../scorers'
 import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
 
 export interface ProviderRunnerConfig {
@@ -77,13 +78,33 @@ function cleanOutput(output: string): string {
   return trimmed || output.trim()
 }
 
+export class TimeoutError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'TimeoutError'
+  }
+}
+
+export function isTimeoutError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false
+  // Runner-internal timeouts are TimeoutError; CLI runners throw plain Errors
+  // with a "Timeout after Nms" message, so fall back to message matching.
+  return err.name === 'TimeoutError' || /\btime(?:d[ -]?|-)?out\b/i.test(err.message)
+}
+
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
-  return Promise.race([
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const raced = Promise.race([
     promise,
     new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error(`Timeout after ${ms}ms: ${label}`)), ms)
+      timer = setTimeout(() => reject(new TimeoutError(`Timeout after ${ms}ms: ${label}`)), ms)
     }),
   ])
+  // Clear the timer whichever side wins, otherwise every call leaks a live
+  // timer that keeps the process alive for up to the full timeout window.
+  return raced.finally(() => {
+    if (timer !== undefined) clearTimeout(timer)
+  })
 }
 
 function extractStatus(err: unknown): number | undefined {
@@ -92,12 +113,28 @@ function extractStatus(err: unknown): number | undefined {
   return match ? Number(match[1]) : undefined
 }
 
+function isRateLimitError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false
+  const message = err.message.toLowerCase()
+  if (
+    message.includes('rate limit') ||
+    message.includes('too many requests') ||
+    message.includes('overloaded')
+  ) {
+    return true
+  }
+  return extractStatus(err) === 429
+}
+
 function isTransientError(err: unknown): boolean {
   if (!(err instanceof Error)) return false
   const message = err.message.toLowerCase()
 
   // Timeout
-  if (message.includes('timeout')) return true
+  if (isTimeoutError(err)) return true
+
+  // Rate limiting / overload — always retryable.
+  if (isRateLimitError(err)) return true
 
   // Network / DNS / socket errors
   if (
@@ -112,10 +149,11 @@ function isTransientError(err: unknown): boolean {
     return true
   }
 
-  // HTTP status markers inside error messages: retry 5xx, never 4xx auth/validation errors.
+  // HTTP status markers inside error messages: retry 5xx plus 429 (rate limit)
+  // and 408 (request timeout); never other 4xx auth/validation errors.
   const status = extractStatus(err)
   if (status !== undefined) {
-    return status >= 500
+    return status >= 500 || status === 429 || status === 408
   }
 
   return false
@@ -168,18 +206,6 @@ async function generateWithProvider(
   }
 }
 
-const HTML_CATEGORIES = new Set([
-  '3d-physics-animation',
-  'advanced-game-building',
-  'advanced-physics',
-  'advanced-electronics',
-  'ui-building',
-])
-
-function defaultScorer(task: BenchmarkTask): Scorer {
-  return HTML_CATEGORIES.has(task.category) ? htmlScorer : textScorer
-}
-
 async function generateOne(
   cfg: ProviderRunnerConfig,
   model: BenchmarkModel,
@@ -216,7 +242,9 @@ async function generateOne(
       if (!isTransientError(err) || attempt === maxRetries) {
         throw err
       }
-      const delayMs = 1000 * 2 ** attempt
+      // Rate limits deserve a much longer backoff than generic transient errors.
+      const baseDelayMs = 1000 * 2 ** attempt
+      const delayMs = isRateLimitError(err) ? baseDelayMs * 4 : baseDelayMs
       console.warn(
         `[harness] retry ${attempt + 1}/${maxRetries} for ${model.name} :: ${task.title} #${iterationIndex + 1} after ${delayMs}ms: ${err instanceof Error ? err.message : String(err)}`
       )
@@ -225,6 +253,90 @@ async function generateOne(
   }
 
   throw lastErr ?? new Error(`All retries exhausted for ${model.name} :: ${task.title}`)
+}
+
+/** One iteration's outcome, as collected by the runner before aggregation. */
+export interface IterationRun {
+  /** Cleaned model output on success; the error message on failure. */
+  output: string
+  tokensIn: number
+  tokensOut: number
+  runtimeMs: number
+  status: 'success' | 'fail'
+  /** Set on failed iterations whose failure was a timeout. */
+  timedOut?: boolean
+}
+
+/**
+ * Aggregate per-iteration runs into a single BenchmarkResult, per the
+ * contract documented on BenchmarkResult in ../types:
+ *  - score:      mean 0-100 score across SUCCESSFUL iterations (0 if none),
+ *                clamped to 1..100 and rounded to 1 decimal
+ *  - runtimeMs:  mean wall-clock per SUCCESSFUL iteration (0 if none)
+ *  - tokensIn/tokensOut: TOTALS across all iterations
+ *  - costUsd:    TOTAL estimated spend across all iterations
+ *  - status:     'success' = all iterations succeeded; 'partial' = some;
+ *                'fail' = none; 'timeout' = none, and the last error was a timeout
+ */
+export async function aggregateRuns(
+  runs: IterationRun[],
+  iterations: number,
+  model: BenchmarkModel,
+  task: BenchmarkTask,
+  scorer: Scorer,
+  createdAt: string = new Date().toISOString()
+): Promise<BenchmarkResult> {
+  // A "success" that produced no usable output can't be scored or displayed;
+  // treat it as a failed iteration.
+  const successRuns = runs.filter((r) => r.status === 'success' && r.output.trim().length > 0)
+
+  const totalTokensIn = runs.reduce((sum, r) => sum + r.tokensIn, 0)
+  const totalTokensOut = runs.reduce((sum, r) => sum + r.tokensOut, 0)
+
+  // Score EVERY successful iteration's output and publish the mean.
+  let score = 0
+  if (successRuns.length > 0) {
+    const scores = await Promise.all(successRuns.map((r) => scorer.score(r.output, task)))
+    const mean = scores.reduce((sum, s) => sum + s, 0) / scores.length
+    score = Math.round(Math.min(100, Math.max(1, mean)) * 10) / 10
+  }
+
+  // Mean runtime over SUCCESSFUL iterations only — failed runs report 0ms and
+  // would deflate the average.
+  const runtimeMs =
+    successRuns.length > 0
+      ? Math.round(successRuns.reduce((sum, r) => sum + r.runtimeMs, 0) / successRuns.length)
+      : 0
+
+  const lastFailed = [...runs].reverse().find((r) => r.status === 'fail')
+  const status: BenchmarkStatus =
+    runs.length > 0 && successRuns.length === runs.length
+      ? 'success'
+      : successRuns.length > 0
+        ? 'partial'
+        : lastFailed?.timedOut
+          ? 'timeout'
+          : 'fail'
+
+  // Keep the first successful output for inspection; fall back to the last
+  // run's output (an error message when every iteration failed).
+  const output = successRuns[0]?.output ?? runs[runs.length - 1]?.output ?? ''
+
+  return {
+    taskId: task.id,
+    modelId: model.id,
+    score,
+    runtimeMs,
+    tokensIn: totalTokensIn,
+    tokensOut: totalTokensOut,
+    costUsd: estimateCost(totalTokensIn, totalTokensOut, model),
+    iterations,
+    iterationsSucceeded: successRuns.length,
+    status,
+    createdAt,
+    source: 'live',
+    output,
+  }
 }
 
 /**
@@ -244,14 +356,8 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
   return {
     runTask: async (model: BenchmarkModel, task: BenchmarkTask, iterations: number): Promise<BenchmarkResult[]> => {
       const now = new Date().toISOString()
-      const scorer = cfg.scorer ?? defaultScorer(task)
-      const runs: {
-        output: string
-        tokensIn: number
-        tokensOut: number
-        runtimeMs: number
-        status: 'success' | 'fail'
-      }[] = []
+      const scorer = cfg.scorer ?? selectScorer(task)
+      const runs: IterationRun[] = []
 
       for (let i = 0; i < iterations; i++) {
         const label = `${model.name} :: ${task.title} #${i + 1}/${iterations}`
@@ -300,6 +406,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             tokensOut: 0,
             runtimeMs: 0,
             status: 'fail',
+            timedOut: isTimeoutError(err),
           })
         }
       }
@@ -307,37 +414,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
       // Make sure any cache writes queued by this task have flushed to disk.
       await saveQueue
 
-      const successRuns = runs.filter((r) => r.status === 'success')
-      const totalTokensIn = runs.reduce((sum, r) => sum + r.tokensIn, 0)
-      const totalTokensOut = runs.reduce((sum, r) => sum + r.tokensOut, 0)
-      const totalRuntimeMs = runs.reduce((sum, r) => sum + r.runtimeMs, 0)
-      const allSuccess = runs.length > 0 && runs.every((r) => r.status === 'success')
-
-      // Keep the first successful output for inspection; fall back to the last run's output
-      // (which will be an error message if every iteration failed).
-      const representativeOutput =
-        successRuns[0]?.output ?? runs[runs.length - 1]?.output ?? ''
-
-      // A success that produced no usable output is effectively a failure for scoring/display.
-      const hasUsableOutput = representativeOutput.trim().length > 0
-      const rawScore = allSuccess && hasUsableOutput ? await scorer.score(representativeOutput, task) : 0
-      const score = allSuccess && hasUsableOutput ? Math.max(1, Math.min(100, Math.round(rawScore))) : 0
-
-      return [
-        {
-          taskId: task.id,
-          modelId: model.id,
-          score,
-          runtimeMs: Math.round(totalRuntimeMs / iterations),
-          tokensIn: totalTokensIn,
-          tokensOut: totalTokensOut,
-          costUsd: estimateCost(totalTokensIn / iterations, totalTokensOut / iterations, model),
-          iterations,
-          status: allSuccess ? 'success' : 'fail',
-          createdAt: now,
-          output: representativeOutput,
-        },
-      ]
+      return [await aggregateRuns(runs, iterations, model, task, scorer, now)]
     },
   }
 }

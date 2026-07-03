@@ -71,6 +71,60 @@ message About {
   repeated Skill skills = 5;
 }
 
+// A point along a hike's stylized journey map.
+message HikeWaypoint {
+  string name = 1;
+  double x = 2;   // normalized 0..1 across the map (left→right)
+  double y = 3;   // normalized 0..1 down the map (0 = top)
+  int32 elev = 4; // metres (drives the marker + elevation profile)
+  string day = 5; // "Day 3", "" — optional stage label
+  string note = 6;
+}
+
+message Hike {
+  string slug = 1;
+  string name = 2;
+  string region = 3;            // "Pennine Alps"
+  string country = 4;           // "France → Switzerland"
+  string status = 5;            // "completed" | "planned"
+  string year = 6;              // "2023" or "planned"
+  string dates = 7;             // "Aug–Sep 2023" — optional
+  string summary = 8;
+  double distance_km = 9;
+  int32 days = 10;
+  int32 elevation_gain_m = 11;
+  int32 max_altitude_m = 12;
+  string accent = 13;           // per-hike theme colour
+  repeated string highlights = 14;
+  repeated HikeWaypoint waypoints = 15;
+  int32 order = 16;
+  string hero = 17;             // optional cover image URL (admin-set; else placeholder)
+}
+
+// A managed image (lives in the GCS pool). Shared by the /admin image CRM across
+// blogs and hikes; reusable across items.
+message Asset {
+  string id = 1;
+  string url = 2;
+  string alt = 3;
+  string caption = 4;
+  int32 width = 5;
+  int32 height = 6;
+  string slot = 7;      // optional position/label (e.g. a hike waypoint, or "1")
+  double lat = 8;       // EXIF GPS latitude (0 = none)
+  double lng = 9;       // EXIF GPS longitude (0 = none)
+  string taken_at = 10; // EXIF capture time (ISO), if present
+  string thumb = 11;    // small webp variant for grids (falls back to url)
+}
+
+// Per-item image assignment, stored at manifest/<type>/<slug>.json (public-read,
+// rendered live by the page). hero/og are named slots; gallery is ordered.
+message ContentManifest {
+  Asset hero = 1;
+  Asset og = 2;
+  repeated Asset gallery = 3;
+}
+
 enum ArtifactKind {
   ARTIFACT_KIND_UNSPECIFIED = 0;
   IMAGE = 1; TEXT = 2; ANIM = 3; AVATAR = 4; GLYPH = 5;

@@ -59,8 +59,12 @@ const results = seed.map(([taskId, modelId, score, runtimeMs, tokensIn, tokensOu
   tokensOut,
   costUsd: cost(tokensIn, tokensOut, modelId),
   iterations: 5,
+  iterationsSucceeded: 5,
   status: 'success',
   createdAt: '2026-06-30T00:00:00.000Z',
+  // Hand-authored sample data — the UI must disclose these and exclude them
+  // from headline verdicts (see BenchmarkSource in lib/lab/llm-benchmark/types.ts).
+  source: 'seeded',
   output: outputs[taskId]?.[modelId],
 }))
 

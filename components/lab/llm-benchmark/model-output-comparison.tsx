@@ -1,33 +1,30 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { BENCHMARK_MODELS, getModel } from '@/lib/lab/llm-benchmark/registry'
-import type { BenchmarkResult } from '@/lib/lab/llm-benchmark/types'
-import { modelPath } from '@/lib/lab/llm-benchmark/nav'
-import { formatScore } from './format'
+import type { BenchmarkResultMeta } from '@/lib/lab/llm-benchmark/results'
+import { modelPath, outputUrl } from '@/lib/lab/llm-benchmark/nav'
+import { ScoreBar } from './score-bar'
 import { cn } from '@/lib/utils'
-import { Code2, FileText, CheckCircle2, XCircle, Trophy } from 'lucide-react'
+import { Code2, FileText, CheckCircle2, XCircle, Trophy, Loader2, ArrowRight } from 'lucide-react'
 
 interface ModelOutputComparisonProps {
-  results: BenchmarkResult[]
+  taskId: string
+  results: BenchmarkResultMeta[]
   taskTitle: string
 }
 
-function getResultMap(results: BenchmarkResult[]) {
-  return new Map(results.map((r) => [r.modelId, r]))
-}
-
-export function ModelOutputComparison({ results, taskTitle }: ModelOutputComparisonProps) {
-  const byModel = useMemo(() => getResultMap(results), [results])
+export function ModelOutputComparison({ taskId, results, taskTitle }: ModelOutputComparisonProps) {
+  const byModel = useMemo(() => new Map(results.map((r) => [r.modelId, r])), [results])
 
   const [leftModelId, setLeftModelId] = useState<string>(BENCHMARK_MODELS[0]?.id ?? '')
-  const [rightModelId, setRightModelId] = useState<string>(BENCHMARK_MODELS[1]?.id ?? BENCHMARK_MODELS[0]?.id ?? '')
+  const [rightModelId, setRightModelId] = useState<string>(
+    BENCHMARK_MODELS[1]?.id ?? BENCHMARK_MODELS[0]?.id ?? '',
+  )
 
   const leftResult = byModel.get(leftModelId)
   const rightResult = byModel.get(rightModelId)
-  const leftModel = getModel(leftModelId)
-  const rightModel = getModel(rightModelId)
 
   return (
     <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
@@ -44,44 +41,21 @@ export function ModelOutputComparison({ results, taskTitle }: ModelOutputCompari
       <div className="grid divide-[var(--color-border)] md:grid-cols-2 md:divide-x">
         <OutputPane
           position="left"
+          taskId={taskId}
           selectedModelId={leftModelId}
           otherModelId={rightModelId}
           onSelect={setLeftModelId}
           result={leftResult}
           opposingResult={rightResult}
-          model={leftModel}
         />
         <OutputPane
           position="right"
+          taskId={taskId}
           selectedModelId={rightModelId}
           otherModelId={leftModelId}
           onSelect={setRightModelId}
           result={rightResult}
           opposingResult={leftResult}
-          model={rightModel}
-        />
-      </div>
-    </div>
-  )
-}
-
-function ScoreBadge({ score, isWinner }: { score: number; isWinner?: boolean }) {
-  const widthPct = Math.max(0, Math.min(100, score))
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between font-mono text-xs">
-        <span className="text-muted">Automated score</span>
-        <span className={cn('inline-flex items-center gap-1 font-semibold', score >= 80 ? 'text-emerald-600 dark:text-emerald-400' : score >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400')}>
-          {isWinner && <Trophy className="h-3.5 w-3.5" aria-hidden />}
-          {formatScore(score)}
-          <span className="text-fg/40">/100</span>
-        </span>
-      </div>
-      <div className="h-2 w-full overflow-hidden rounded-full border border-[var(--color-border)] bg-[var(--color-surface-2)]">
-        <div
-          className={cn('h-full transition-all duration-500', score >= 80 ? 'bg-emerald-500' : score >= 50 ? 'bg-amber-500' : 'bg-rose-500')}
-          style={{ width: `${widthPct}%` }}
-          aria-hidden
         />
       </div>
     </div>
@@ -90,21 +64,60 @@ function ScoreBadge({ score, isWinner }: { score: number; isWinner?: boolean }) 
 
 interface OutputPaneProps {
   position: 'left' | 'right'
+  taskId: string
   selectedModelId: string
   otherModelId: string
   onSelect: (modelId: string) => void
-  result?: BenchmarkResult
-  opposingResult?: BenchmarkResult
-  model?: ReturnType<typeof getModel>
+  result?: BenchmarkResultMeta
+  opposingResult?: BenchmarkResultMeta
 }
 
-function OutputPane({ position, selectedModelId, otherModelId, onSelect, result, opposingResult, model }: OutputPaneProps) {
-  const hasOutput = Boolean(result?.output && result.output.trim().length > 0)
+type OutputState =
+  | { phase: 'idle' }
+  | { phase: 'loading' }
+  | { phase: 'ready'; output: string }
+  | { phase: 'error' }
+
+function OutputPane({
+  position,
+  taskId,
+  selectedModelId,
+  otherModelId,
+  onSelect,
+  result,
+  opposingResult,
+}: OutputPaneProps) {
+  const model = getModel(selectedModelId)
+  const [state, setState] = useState<OutputState>({ phase: 'idle' })
+  const seq = useRef(0)
+
+  const hasOutput = Boolean(result?.hasOutput)
   const isSuccess = result?.status === 'success'
   const isWinner =
-    isSuccess &&
-    opposingResult?.status === 'success' &&
-    result.score > opposingResult.score
+    isSuccess && opposingResult?.status === 'success' && (result?.score ?? 0) > (opposingResult?.score ?? 0)
+
+  // Fetch the output on demand whenever the selected model (with an output) changes.
+  useEffect(() => {
+    if (!hasOutput) {
+      setState({ phase: 'idle' })
+      return
+    }
+    const id = ++seq.current
+    setState({ phase: 'loading' })
+    fetch(outputUrl(taskId, selectedModelId), { cache: 'force-cache' })
+      .then((res) => {
+        if (!res.ok) throw new Error(String(res.status))
+        return res.json()
+      })
+      .then((data: { output?: string }) => {
+        if (id !== seq.current) return
+        setState(data.output ? { phase: 'ready', output: data.output } : { phase: 'error' })
+      })
+      .catch(() => {
+        if (id !== seq.current) return
+        setState({ phase: 'error' })
+      })
+  }, [taskId, selectedModelId, hasOutput])
 
   return (
     <div className="flex min-h-[420px] flex-col">
@@ -125,9 +138,10 @@ function OutputPane({ position, selectedModelId, otherModelId, onSelect, result,
           {model && (
             <Link
               href={modelPath(model)}
-              className="shrink-0 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg"
+              aria-label={`${model.name} details`}
+              className="shrink-0 rounded-md p-1.5 text-muted transition-colors hover:text-fg"
             >
-              →
+              <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           )}
         </div>
@@ -139,41 +153,57 @@ function OutputPane({ position, selectedModelId, otherModelId, onSelect, result,
                 {isSuccess ? (
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
                 ) : (
-                  <XCircle className="h-3.5 w-3.5 text-red-500" aria-hidden />
+                  <XCircle className="h-3.5 w-3.5 text-rose-500" aria-hidden />
                 )}
                 {result.status}
               </span>
               <span>{Math.round(result.runtimeMs).toLocaleString()} ms</span>
               <span>${result.costUsd.toFixed(4)}</span>
+              {result.source === 'seeded' && <span className="text-muted/70">sample data</span>}
             </div>
-            <div className="mt-3">
-              <ScoreBadge score={result.score} isWinner={isWinner} />
+            <div className="mt-3 flex items-center gap-2">
+              {isWinner && <Trophy className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-hidden />}
+              <ScoreBar score={result.score} className="flex-1" />
             </div>
           </>
         )}
       </div>
 
       <div className="flex-1 bg-[var(--color-bg)] p-4">
-        {hasOutput ? (
+        {!hasOutput ? (
+          <EmptyPane />
+        ) : state.phase === 'ready' ? (
           <pre
             className={cn(
               'h-full max-h-[600px] overflow-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 font-mono text-xs leading-relaxed',
-              !isSuccess && 'text-red-600 dark:text-red-400'
+              !isSuccess && 'text-rose-600 dark:text-rose-400',
             )}
           >
-            <code>{result!.output}</code>
+            <code>{state.output}</code>
           </pre>
-        ) : (
-          <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+        ) : state.phase === 'error' ? (
+          <div className="flex h-full min-h-[280px] flex-col items-center justify-center text-center">
             <FileText className="h-8 w-8 text-muted" aria-hidden />
-            <p className="mt-3 text-sm text-fg/70">No captured output for this model yet.</p>
-            <p className="mt-1 max-w-xs text-xs text-muted">
-              Outputs are generated when the harness runs against a live API. Add a valid API key and run{' '}
-              <code className="rounded bg-[var(--color-surface-2)] px-1 py-0.5">npm run benchmark:run</code>.
-            </p>
+            <p className="mt-3 text-sm text-fg/70">Couldn’t load this output.</p>
+          </div>
+        ) : (
+          <div className="flex h-full min-h-[280px] items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-muted" aria-hidden />
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+function EmptyPane() {
+  return (
+    <div className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+      <FileText className="h-8 w-8 text-muted" aria-hidden />
+      <p className="mt-3 text-sm text-fg/70">This model hasn’t been run on this task yet.</p>
+      <p className="mt-1 max-w-xs text-xs text-muted">
+        Its output will appear here after the next benchmark run.
+      </p>
     </div>
   )
 }

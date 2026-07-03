@@ -9,10 +9,12 @@ import {
   BENCHMARK_MODELS,
   getModel,
   getTask,
-  resultsForModel,
 } from '@/lib/lab/llm-benchmark/registry'
+import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
 import { modelIndexPath, modelPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
+import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
+import { formatRuntime, formatCost } from '@/components/lab/llm-benchmark/format'
 import { Cpu, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -42,6 +44,7 @@ export async function generateMetadata({
       url,
       siteName: 'Ben Ebsworth',
       locale: 'en_AU',
+      images: [{ url: '/lab/llm-benchmark/opengraph-image.png', width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -49,20 +52,9 @@ export async function generateMetadata({
       description: m?.capabilities,
       creator: '@benebsworth',
       site: '@benebsworth',
+      images: ['/lab/llm-benchmark/opengraph-image.png'],
     },
   }
-}
-
-function formatScore(n: number): string {
-  return n.toFixed(1)
-}
-
-function formatMs(n: number): string {
-  return `${Math.round(n).toLocaleString()} ms`
-}
-
-function formatCost(n: number): string {
-  return `$${n.toFixed(4)}`
 }
 
 function statusClass(status: string): string {
@@ -70,7 +62,7 @@ function statusClass(status: string): string {
     ? 'text-emerald-600 dark:text-emerald-400'
     : status === 'timeout'
       ? 'text-amber-600 dark:text-amber-400'
-      : 'text-red-600 dark:text-red-400'
+      : 'text-rose-600 dark:text-rose-400'
 }
 
 export default async function ModelDetailPage({
@@ -147,44 +139,52 @@ export default async function ModelDetailPage({
           </Reveal>
 
           <Reveal delay={80}>
-            <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <table className="w-full min-w-[560px] text-left text-sm">
+                <caption className="sr-only">
+                  {model.name} per-task results: score, status, runtime, tokens, and cost.
+                </caption>
                 <thead className="bg-[var(--color-surface-2)] font-mono text-xs uppercase tracking-wider text-muted">
                   <tr>
-                    <th className="px-5 py-3">Task</th>
-                    <th className="px-5 py-3 text-right">Score</th>
-                    <th className="px-5 py-3 text-right">Status</th>
-                    <th className="px-5 py-3 text-right">Runtime</th>
-                    <th className="px-5 py-3 text-right">Tokens in</th>
-                    <th className="px-5 py-3 text-right">Tokens out</th>
-                    <th className="px-5 py-3 text-right">Cost</th>
+                    <th scope="col" className="px-5 py-3">Task</th>
+                    <th scope="col" className="px-5 py-3">Score</th>
+                    <th scope="col" className="px-5 py-3 text-right">Status</th>
+                    <th scope="col" className="px-5 py-3 text-right">Runtime</th>
+                    <th scope="col" className="px-5 py-3 text-right">Tokens in</th>
+                    <th scope="col" className="px-5 py-3 text-right">Tokens out</th>
+                    <th scope="col" className="px-5 py-3 text-right">Cost</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--color-border)]">
-                  {results.map((result) => {
-                    const task = getTask(result.taskId)
-                    if (!task) return null
-                    return (
-                      <tr key={result.taskId} className="hover:bg-[var(--color-surface-2)]/50 transition-colors">
-                        <td className="px-5 py-3">
-                          <Link
-                            href={taskPath(task)}
-                            className="font-medium transition-colors hover:text-[var(--color-project)]"
-                          >
-                            {task.title}
-                          </Link>
-                        </td>
-                        <td className="px-5 py-3 text-right font-mono">{formatScore(result.score)}</td>
-                        <td className={`px-5 py-3 text-right font-mono ${statusClass(result.status)}`}>
-                          {result.status}
-                        </td>
-                        <td className="px-5 py-3 text-right font-mono">{formatMs(result.runtimeMs)}</td>
-                        <td className="px-5 py-3 text-right font-mono">{result.tokensIn.toLocaleString()}</td>
-                        <td className="px-5 py-3 text-right font-mono">{result.tokensOut.toLocaleString()}</td>
-                        <td className="px-5 py-3 text-right font-mono">{formatCost(result.costUsd)}</td>
-                      </tr>
-                    )
-                  })}
+                  {results
+                    .slice()
+                    .sort((a, b) => b.score - a.score)
+                    .map((result) => {
+                      const task = getTask(result.taskId)
+                      if (!task) return null
+                      return (
+                        <tr key={result.taskId} className="hover:bg-[var(--color-surface-2)]/50 transition-colors">
+                          <td className="whitespace-nowrap px-5 py-3">
+                            <Link
+                              href={taskPath(task)}
+                              className="font-medium transition-colors hover:text-[var(--color-project)]"
+                            >
+                              {task.title}
+                            </Link>
+                          </td>
+                          <td className="px-5 py-3">
+                            <ScoreBar score={result.score} width="w-20" />
+                          </td>
+                          <td className={`whitespace-nowrap px-5 py-3 text-right font-mono ${statusClass(result.status)}`}>
+                            {result.status}
+                          </td>
+                          <td className="whitespace-nowrap px-5 py-3 text-right font-mono">{formatRuntime(result.runtimeMs)}</td>
+                          <td className="px-5 py-3 text-right font-mono">{result.tokensIn.toLocaleString()}</td>
+                          <td className="px-5 py-3 text-right font-mono">{result.tokensOut.toLocaleString()}</td>
+                          <td className="whitespace-nowrap px-5 py-3 text-right font-mono">{formatCost(result.costUsd)}</td>
+                        </tr>
+                      )
+                    })}
                   {results.length === 0 && (
                     <tr>
                       <td colSpan={7} className="px-5 py-8 text-center text-muted">

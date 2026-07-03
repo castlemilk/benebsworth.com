@@ -1,9 +1,10 @@
 import type { HikeWaypoint } from '@/lib/gen/content'
 
-// viewBox is 100 × 62 so 1 user-unit == 1% of width, making an HTML overlay
-// trivial to align with the SVG markers.
+// viewBox is 100 × 74 so 1 user-unit == 1% of width, making an HTML overlay
+// trivial to align with the SVG markers. The plate is deliberately tall so the
+// route + named landmark labels have room to breathe.
 export const VB_W = 100
-export const VB_H = 62
+export const VB_H = 74
 export const PAD_X = 9
 export const PAD_TOP = 9
 export const PAD_BOT = 9

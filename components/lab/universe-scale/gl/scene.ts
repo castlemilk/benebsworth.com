@@ -180,7 +180,8 @@ export function createUniverseGL(canvas: HTMLCanvasElement): UniverseGL {
 
   function buildSpec(id: string): ObjSpec {
     const m: MeshPart[] = []; const p: PointPart[] = []
-    let spin = 0.25, axis: 'y' | 'x' = 'y'
+    let spin = 0.25
+    const axis: 'y' | 'x' = 'y'
     switch (id) {
       case 'planck': p.push(makePoints(blobData(60, 1, C.cyan, 1.1))); spin = 0.6; break
       case 'quark': m.push(sph(5, C.cyan, C.cyan, 0.55)); break

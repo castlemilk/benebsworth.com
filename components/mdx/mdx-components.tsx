@@ -11,6 +11,8 @@ import { Landmark } from './trailkit/landmark'
 import { Quest } from './trailkit/quest'
 import { Flora, Fauna } from './trailkit/species'
 import { GearList, Gear } from './trailkit/gear'
+import { TrailFigure } from './trailkit/trail-figure'
+import { StageProfile } from './trailkit/stage-profile'
 import { UniverseScale } from './universe-scale-embed'
 import {
   IngressFlowBasic,
@@ -132,6 +134,8 @@ export const mdxComponents: MDXComponents = {
   Fauna,
   GearList,
   Gear,
+  TrailFigure,
+  StageProfile,
   Callout,
   Equation,
   h2: (p) => <h2 className="font-display mt-12 scroll-mt-32 text-[clamp(1.85rem,1.35rem+2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-fg" {...p} />,

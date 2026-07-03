@@ -139,6 +139,7 @@ const SKILL_META: SkillMeta[] = [
   { name: 'MCP', category: 'AI-Native', note: 'Model Context Protocol servers and tools for agent integrations.', since: '2024 → now', extra: [SELF] },
   { name: 'Anthropic & OpenAI APIs', category: 'AI-Native', note: 'The model APIs behind my AI-native projects.', since: '2023 → now', extra: [SELF] },
   { name: 'Prompt Engineering', category: 'AI-Native', note: 'Structured prompting, tool schemas, and evals.', since: '2023 → now', extra: [SELF] },
+  { name: 'LLM Benchmarking', category: 'AI-Native', note: 'Repeatable evals of frontier models across code generation, reasoning, and UI tasks.', since: '2026 → now', extra: [SELF] },
   { name: 'Embeddings / Vector Search', category: 'AI-Native', note: 'Semantic search and similarity over embeddings.', since: '2023 → now', extra: [SELF] },
 
   // ── Hardware & Signals ──────────────────────────────────────────────────

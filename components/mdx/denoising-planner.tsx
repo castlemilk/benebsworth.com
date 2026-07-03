@@ -470,7 +470,10 @@ export function DenoisingPlanner({
     if (!multimodal) return { upper: 0, lower: 0 }
     let upper = 0
     let lower = 0
-    for (const s of samples) (s.side === 1 ? (upper += 1) : (lower += 1))
+    for (const s of samples) {
+      if (s.side === 1) upper += 1
+      else lower += 1
+    }
     return { upper, lower }
   }, [multimodal, samples])
 

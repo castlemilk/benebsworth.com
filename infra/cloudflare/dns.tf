@@ -86,3 +86,28 @@ resource "cloudflare_dns_record" "next" {
   ttl     = 1
   proxied = true
 }
+
+# `paprika` → VKE paprika dev cluster Envoy Gateway LoadBalancer.
+# Proxied through Cloudflare so the Universal SSL wildcard cert at the edge
+# covers the TLS handshake (free; covers *.benebsworth.com). Origin serves
+# a self-signed cert from cert-manager's selfsigned-issuer, hence ssl="full"
+# in zone-settings.tf so CF accepts the origin cert without requiring a CA
+# signature. Envoy Gateway replaced ingress-nginx due to a Go crypto/x509
+# cert validation bug in ingress-nginx v1.12. When the cluster is
+# decommissioned delete this record.
+variable "paprika_lb_ip" {
+  type        = string
+  description = "IPv4 of the VKE Envoy Gateway LB that fronts paprika.benebsworth.com"
+  default     = "45.77.238.224"
+}
+
+resource "cloudflare_dns_record" "paprika" {
+  zone_id  = var.cloudflare_zone_id
+  name     = "paprika"
+  type     = "A"
+  content  = var.paprika_lb_ip
+  ttl      = 1  # ttl is ignored when proxied=true (CF sets it to auto)
+  proxied  = true
+  comment  = "VKE paprika Envoy Gateway LB (managed in this file; revisit when cluster is decommissioned)"
+  tags     = []
+}

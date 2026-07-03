@@ -2,9 +2,11 @@ import type {
   BenchmarkCategory,
   BenchmarkModel,
   BenchmarkTask,
-  BenchmarkResult,
 } from './types'
-import resultsJson from './results.json'
+
+// NOTE: results deliberately do NOT live in this module. This registry is
+// imported by 'use client' components, and results.json is ~2.8 MB of
+// generated model outputs. Server-side code reads results from ./results.
 
 // ── Categories ─────────────────────────────────────────────────────────
 export const BENCHMARK_CATEGORIES: BenchmarkCategory[] = [
@@ -115,12 +117,6 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
   },
 ]
 
-// ── Results ────────────────────────────────────────────────────────────
-// Results are persisted in results.json so they can be updated by the
-// harness without editing TypeScript. Run `npm run benchmark:run` to
-// execute live API calls and regenerate this file.
-export const BENCHMARK_RESULTS: BenchmarkResult[] = resultsJson as BenchmarkResult[]
-
 // ── Getters ────────────────────────────────────────────────────────────
 export function getCategory(slug: string): BenchmarkCategory | undefined {
   return BENCHMARK_CATEGORIES.find((c) => c.slug === slug)
@@ -136,12 +132,4 @@ export function getModel(id: string): BenchmarkModel | undefined {
 
 export function tasksByCategory(categorySlug: string): BenchmarkTask[] {
   return BENCHMARK_TASKS.filter((t) => t.category === categorySlug)
-}
-
-export function resultsForTask(taskId: string): BenchmarkResult[] {
-  return BENCHMARK_RESULTS.filter((r) => r.taskId === taskId)
-}
-
-export function resultsForModel(modelId: string): BenchmarkResult[] {
-  return BENCHMARK_RESULTS.filter((r) => r.modelId === modelId)
 }

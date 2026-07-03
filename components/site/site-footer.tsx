@@ -10,6 +10,7 @@ export function SiteFooter() {
             <li><Link href="/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Home</Link></li>
             <li><Link href="/projects/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Projects</Link></li>
             <li><Link href="/blog/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Blog</Link></li>
+            <li><Link href="/hiking/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Hiking</Link></li>
             <li><Link href="/lab/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Lab</Link></li>
             <li><Link href="/lab/circuit-sim/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">Circuit Sim</Link></li>
             <li><Link href="/about/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">About</Link></li>
@@ -32,12 +33,14 @@ export function SiteFooter() {
             <li><Link href="/lab/circuit-sim/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">
               <span className="inline-block mr-1.5 text-[var(--color-accent)]">⚡</span>Circuit Simulator
             </Link></li>
+            <li><Link href="/lab/llm-benchmark/" className="text-muted hover:text-fg transition-colors text-[0.8rem] leading-relaxed">
+              <span className="inline-block mr-1.5 text-[var(--color-accent)]">◧</span>LLM Benchmark
+            </Link></li>
           </ul>
         </div>
       </div>
       <div className="flex justify-between items-center">
         <span>© {new Date().getFullYear()} Ben Ebsworth</span>
-        <a href="/archive/" className="hover:text-fg transition-colors">view the old site →</a>
       </div>
     </footer>
   )

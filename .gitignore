@@ -92,3 +92,10 @@ playwright-report/
 
 # old Gatsby site kept locally for reference (1.1GB)
 legacy/
+public/lab-data/
+
+# Large raw model-generated HTML result variants (never commit — they execute in the browser)
+lib/lab/llm-benchmark/results-*-html.json
+
+# Temporary working directories for scripts and manual review
+tmp/

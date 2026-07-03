@@ -20,6 +20,7 @@ import Link from 'next/link'
 import { BenchmarkDemo } from '@/components/lab/llm-benchmark/demos/demo-registry'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ModelOutputComparison } from '@/components/lab/llm-benchmark/model-output-comparison'
+import { GeneratedDemo } from '@/components/lab/llm-benchmark/generated-demo'
 import { modelPath } from '@/lib/lab/llm-benchmark/nav'
 
 export function generateStaticParams() {
@@ -198,6 +199,13 @@ export default async function BenchmarkTaskPage({
             <div className="rounded-lg border border-[var(--color-border)]/60 bg-[var(--color-bg)] p-1">
               <BenchmarkDemo task={t} />
             </div>
+          </div>
+        </Reveal>
+
+        {/* ── Generated demo ───────────────────────────────────────────── */}
+        <Reveal delay={120}>
+          <div className="mb-16">
+            <GeneratedDemo task={t} />
           </div>
         </Reveal>
 

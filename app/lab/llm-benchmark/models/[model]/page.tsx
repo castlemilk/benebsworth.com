@@ -97,7 +97,7 @@ export default async function ModelDetailPage({
       <JsonLd data={[breadcrumb]} />
       <SiteNav />
       <BenchmarkNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 sm:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8">
         <Breadcrumb
           className="mb-10"
           items={[

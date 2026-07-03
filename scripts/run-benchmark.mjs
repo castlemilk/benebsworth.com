@@ -50,7 +50,7 @@ async function main() {
   const existing = BENCHMARK_RESULTS.filter((r) => !freshKeys.has(`${r.modelId}|${r.taskId}`))
   const merged = [...existing, ...fresh]
 
-  const outPath = resolve(process.cwd(), 'lib/lab/llm-benchmark/results.json')
+  const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
   writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
 
   console.log(`Wrote ${merged.length} results to ${outPath}`)

@@ -14,6 +14,7 @@ import {
   type CachedResponse,
 } from '../cache'
 import { htmlScorer, textScorer } from '../scorers'
+import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
 
 export interface ProviderRunnerConfig {
   openai?: OpenAIConfig
@@ -266,10 +267,29 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             timeoutMs,
             label
           )
+          let cleaned = cleanOutput(output)
+          if (/<html[\s>]|<!doctype|<head>|<body>|<script\b|<link\b|<style\b|<canvas\b|<svg\b/i.test(cleaned)) {
+            try {
+              const rewritten = await inlineDependenciesAsync(cleaned)
+              if (rewritten.inlined.length || rewritten.failed.length || rewritten.removed.length || rewritten.warnings.length) {
+                console.log(
+                  `[harness] sandboxed ${rewritten.inlined.length} deps, removed ${rewritten.removed.length}, failed ${rewritten.failed.length}, warnings ${rewritten.warnings.length} for ${label}`
+                )
+                for (const warning of rewritten.warnings) {
+                  console.warn(`[harness] sandbox warning for ${label}: ${warning}`)
+                }
+              }
+              cleaned = rewritten.output
+            } catch (inlineErr) {
+              console.warn(
+                `[harness] failed to inline dependencies for ${label}: ${inlineErr instanceof Error ? inlineErr.message : String(inlineErr)}`
+              )
+            }
+          }
           console.log(
             `[harness] completed ${label} in ${Date.now() - callStart}ms (${tokensIn}/${tokensOut} tokens)`
           )
-          runs.push({ output: cleanOutput(output), tokensIn, tokensOut, runtimeMs, status: 'success' })
+          runs.push({ output: cleaned, tokensIn, tokensOut, runtimeMs, status: 'success' })
         } catch (err) {
           console.error(
             `[harness] failed ${label} after ${Date.now() - callStart}ms: ${err instanceof Error ? err.message : String(err)}`
@@ -311,7 +331,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           runtimeMs: Math.round(totalRuntimeMs / iterations),
           tokensIn: totalTokensIn,
           tokensOut: totalTokensOut,
-          costUsd: estimateCost(totalTokensIn, totalTokensOut, model),
+          costUsd: estimateCost(totalTokensIn / iterations, totalTokensOut / iterations, model),
           iterations,
           status: allSuccess ? 'success' : 'fail',
           createdAt: now,

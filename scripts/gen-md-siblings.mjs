@@ -35,6 +35,8 @@ const COMPONENT_DESCRIPTIONS = {
   // a duplicate pair used to live here and the later keys silently won.
   UniverseScale:
     'Embedded "Universe Scale" explorer: a logarithmic zoom across 62 orders of magnitude, from the Planck length to the observable universe (ant, human, whale, skyscraper, Mount Everest, Earth, Sun, galaxy, cosmic web). The `focus` prop sets the initial scale. Markers at the Sun\'s Schwarzschild radius and the Planck length link to the black-hole-cosmology essay. The rendered post has the live, scrollable canvas.',
+  BlackHoleSim:
+    'Embedded "Black Hole Ray Tracer": a WebGL2 general-relativistic ray tracer that integrates the exact Schwarzschild null-geodesic equation per pixel (RK4), producing the shadow, the photon ring, and the gravitationally lensed accretion disk — with Shakura–Sunyaev disk temperatures, Doppler beaming, and blackbody colour. Presets (Cygnus X-1, Sgr A*, M87*, Gargantua, TON 618) drive a live readout of Schwarzschild radius, shadow angular size vs the EHT measurements, disk temperature, ISCO period, and Eddington luminosity. The rendered post has the live, draggable version; the full lab lives at /lab/black-hole-sim/.',
   SchwarzschildCalculator:
     'Interactive calculator: a mass slider (log scale) computes the Schwarzschild radius r_s = 2GM/c^2, with presets (a person, the Earth, the Sun, Sagittarius A*, the observable universe). It highlights that the observable universe sits at roughly its own Schwarzschild radius. The rendered post has the live widget.',
   HolographicReduction:

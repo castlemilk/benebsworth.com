@@ -1,0 +1,163 @@
+---
+title: Simulating a black hole
+date: "2026-07-04T00:00:00.000Z"
+description: "Ray tracing Schwarzschild geodesics in a fragment shader — how one differential equation produces the shadow, the photon ring, and Interstellar's lensed disk."
+labels: physics,general-relativity,simulation,webgl
+release: true
+heroImage: /blog/simulating-a-black-hole/hero.webp
+takeaways:
+  - "The dark patch in a black-hole image is not the event horizon. Light skimming the photon sphere sets a capture cross-section of radius √27 GM/c², so the shadow's diameter is about 2.6 times the horizon's."
+  - "One acceleration law, a = −(3/2) h² r̂/r⁴, is the exact equation of motion for light in Schwarzschild geometry. Integrated once per pixel, it reproduces the shadow, the photon ring, and every lensed arc."
+  - "The accretion disk's far side appears both above and below the hole because geodesics passing over and under the black hole bend toward the camera. Gargantua's halo is geometry, not artistic licence."
+  - "Interstellar's renderer computed Doppler beaming correctly and then deliberately switched it off: with it on, the disk's approaching side outshines the receding side by nearly two orders of magnitude, and Nolan judged the lopsided result too confusing for the audience."
+---
+
+Every pixel in an image of a black hole is the solution to a differential equation. Not shaded, not textured, not painted from a concept artist's reference: solved, one light ray per pixel, integrated backwards through curved spacetime until the ray escapes, hits something glowing, or falls in. And the black disc at the centre of such an image, the one everybody points at and calls the hole, is not the event horizon. It's the shadow, and its diameter is about 2.6 times the diameter of the horizon it hides.
+
+That second claim sounds like pedantry and isn't. When the Event Horizon Telescope showed us M87* in April 2019, the orange ring wrapped a dark patch about 42 microarcseconds across; the horizon of that black hole subtends roughly 16. The darkness overflows the thing that causes it, for reasons that are pure geometry. Interstellar's Gargantua, the EHT's glowing ring, and the toy below all come out of the same recipe, and by the end of this post we'll have built the whole thing: one metric, one acceleration law, a thermometer for the disk, and a pair of relativistic optics effects that Hollywood measured carefully and then deliberately turned off.
+
+<BlackHoleSim />
+
+Drag to orbit the camera and play before reading on. Try the M87* preset and check the shadow's angular size against the 42 μas the EHT measured; nothing in the shader was tuned to match that image, and it lands there anyway.
+
+## What you're actually looking at
+
+Start with the black patch. A Schwarzschild black hole's event horizon sits at the Schwarzschild radius $r_s = 2GM/c^2$, and if light travelled in straight lines the hole would block a disc of exactly that size. But light near the hole doesn't travel in straight lines. Inbound rays are bent inward, and there is a critical impact parameter, $b_c = \sqrt{27}\,GM/c^2 \approx 2.6\,r_s$, inside which a ray is captured no matter how it was aimed. The hole's capture cross-section for light is fatter than its geometric size, and the shadow is the image of that cross-section.
+
+<Callout type="info" title="The shadow is not the horizon">
+
+The EHT did not photograph an event horizon, and neither does this sim. The dark region is the set of camera pixels whose rays, traced backwards, spiral through the photon sphere and get captured. Its radius is $\sqrt{27}\,GM/c^2$, about 2.6 Schwarzschild radii, so the horizon sits well inside the darkness with room to spare. If you ever see a diagram where the black disc is labelled "event horizon", the label is wrong by a factor you can now quote.
+
+</Callout>
+
+The rim of the shadow is set by the photon sphere at $r = 1.5\,r_s$, the one radius where gravity can bend light into a circular orbit. The orbit is unstable, a marble balanced on a dome: nudge a photon outward and it escapes, nudge it inward and it's gone. Rays arriving with impact parameters just above $b_c$ wind once, twice, three times around the hole before escaping to the camera, and they pile up into the photon ring, a thin bright band hugging the shadow's edge. Each extra half-orbit contributes a fainter sub-ring exponentially closer to the critical curve, so the ring has structure all the way down, most of it far too fine for any telescope.
+
+Then there's the disk, and the feature that made Gargantua famous. A real accretion disk is a flat annulus in the hole's equatorial plane, like Saturn's rings, and from a nearly edge-on camera you'd expect the far side to be hidden behind the hole. Instead you see it twice. Light leaving the disk's far side and passing over the top of the hole gets bent down toward the camera, drawing an arc above the shadow; light passing underneath gets bent up, drawing a second arc below. The halo over and under Gargantua is the far side of the disk, delivered to you by two different families of geodesics; no artistic licence required. Background stars get the same treatment: as one drifts behind the hole its image splits in two, and a source exactly on the optical axis smears into a full Einstein ring.
+
+<StatGroup>
+  <Stat label="Shadow radius" value="2.6 r_s" context="√27 GM/c², the capture cross-section for light" />
+  <Stat label="M87* shadow" value="42 μas" context="EHT 2019 measured angular diameter" />
+  <Stat label="Sgr A* shadow" value="52 μas" context="EHT 2022 — 1,500× less mass, 2,000× closer" />
+  <Stat label="Photon sphere" value="1.5 r_s" context="unstable circular orbits for light" />
+</StatGroup>
+
+<Callout type="success" title="A prediction that waited a century">
+
+Schwarzschild wrote down his solution in 1916; the $\sqrt{27}$ capture radius follows from it in a few lines. Plug in the M87* mass measured from stellar dynamics, about $6.5 \times 10^9$ solar masses at 16.8 megaparsecs, and the predicted shadow diameter comes out a whisker under 40 μas. The EHT measured 42 ± 3. Sgr A*, with a completely different mass and distance, landed on its prediction too. General relativity, tested at the edge of a horizon, passed without a wobble.
+
+</Callout>
+
+If you want the full anatomy tour, horizon to Hawking glow, I've written one in [anatomy of a black hole](/blog/anatomy-of-a-black-hole/). Here we care about something narrower: how do you compute these pictures?
+
+<LabSide effect="spacetime-curvature" reverse height={380} caption="A mass curving the embedding sheet. The drawn paths are geodesics: the straightest possible lines the curved geometry allows. Light follows them for the same reason a great-circle route is the shortest way to fly, because there is nothing straighter available.">
+
+Before the equations, the picture. General relativity's claim is that gravity is a shape rather than a force: mass tells spacetime how to curve, and everything, matter and light alike, moves along geodesics, the straightest paths the curved geometry permits. A photon doesn't feel a tug. It goes dead straight through a region where "straight" has been bent, the way an aeroplane flying a great circle is going straight across a curved Earth.
+
+This is why light bends at all despite having no mass. The Newtonian force law needs a mass to pull on; geometry doesn't care what's moving through it. Watch the rays in this sheet skirt the well and you're seeing the qualitative content of everything below. (The longer argument for gravity-as-geometry lives in [why gravity is geometry](/blog/why-gravity-is-geometry/).)
+
+</LabSide>
+
+## One equation bends every ray
+
+The geometry outside any non-rotating mass is the Schwarzschild metric, the exact solution Einstein's equations force on you once you assume spherical symmetry and vacuum.
+
+<Equation id="eqn:schwarzschild" number="1" caption="The Schwarzschild metric: the spacetime interval around a non-rotating mass. The factor (1 − r_s/r) warps time in the first term and space in the second; everything in this post lives inside it." latex="ds^2 = -\left(1-\frac{r_s}{r}\right)c^2\,dt^2 + \left(1-\frac{r_s}{r}\right)^{-1}dr^2 + r^2\,d\Omega^2, \qquad r_s = \frac{2GM}{c^2}">
+
+$$
+ds^2 = -\left(1-\frac{r_s}{r}\right)c^2\,dt^2 + \left(1-\frac{r_s}{r}\right)^{-1}dr^2 + r^2\,d\Omega^2, \qquad r_s = \frac{2GM}{c^2}
+$$
+
+</Equation>
+
+A metric looks nothing like something you can hand to a GPU, but two symmetries rescue us. The geometry doesn't change with time, which gives every ray a conserved energy; and it doesn't change under rotation, which gives a conserved angular momentum $h$ and confines each ray to a single plane. Substitute $u = 1/r$ and the geodesic equations collapse to a one-line relation for the shape of the orbit, the same Binet trick that cracks the Kepler problem. For a massive particle the result is Newton's $GM/h^2$ term plus a relativistic correction. For light, something cleaner happens: the Newtonian term vanishes identically, and only the relativistic piece survives. Converting back from orbit-shape to a position you can step along a ray, in units where lengths are measured in Schwarzschild radii, the entire influence of general relativity on light is this:
+
+<Equation id="eqn:force-law" number="2" caption="The exact equation of motion for a light ray in Schwarzschild geometry, in units where r_s = 1, with h the ray's conserved angular momentum. This single line is what the shader integrates, per pixel, every frame." latex="\ddot{\mathbf{x}} = -\frac{3}{2}\,h^{2}\,\frac{\mathbf{x}}{r^{5}}, \qquad h = \lvert\, \mathbf{x} \times \dot{\mathbf{x}} \,\rvert">
+
+$$
+\ddot{\mathbf{x}} = -\frac{3}{2}\,h^{2}\,\frac{\mathbf{x}}{r^{5}}, \qquad h = \lvert\, \mathbf{x} \times \dot{\mathbf{x}} \,\rvert
+$$
+
+</Equation>
+
+I want to be clear about the status of that equation, because it looks too simple to be honest. It is not a Newtonian approximation and not a small-angle trick: for null geodesics in Schwarzschild spacetime, in these variables, equation (2) is exact. Every lensing feature in the sim, the shadow, the photon ring, the doubled disk, the Einstein rings, comes from integrating that one line. It's probably the best return on a single differential equation anywhere in computer graphics.
+
+The way to feel it, I think, is as Newtonian gravity with the wrong exponent. The pull on a light ray falls off as $1/r^4$ (the $\mathbf{x}/r^5$ carries the direction), far steeper than $1/r^2$. Far from the hole the ray barely notices and flies straight, which is why background lensing is subtle until you're close. Near the hole the steepness is savage, and a force this steep has a signature consequence: there is exactly one radius where light can circle, and one innermost radius where matter can hold a stable orbit.
+
+<Equation id="eqn:critical-radii" number="3" caption="The two critical radii of a Schwarzschild black hole: the photon sphere, where light can (unstably) orbit, and the ISCO, the innermost stable circular orbit for matter, which sets the accretion disk's inner edge." latex="r_{\mathrm{ph}} = \frac{3GM}{c^{2}} = 1.5\,r_s, \qquad r_{\mathrm{isco}} = \frac{6GM}{c^{2}} = 3\,r_s">
+
+$$
+r_{\mathrm{ph}} = \frac{3GM}{c^{2}} = 1.5\,r_s, \qquad r_{\mathrm{isco}} = \frac{6GM}{c^{2}} = 3\,r_s
+$$
+
+</Equation>
+
+The photon sphere we've met. The ISCO is its counterpart for matter, and it's the reason the disk has a hole in the middle: inside $3\,r_s$ no circular orbit is stable, so gas that drifts across the line stops orbiting and plunges, crossing the horizon in milliseconds. The disk's inner edge marks where stable orbits run out, not where the gas does.
+
+<LabCanvas effect="black-hole" height={380} params={{ mass: 1.5, showPhotonSphere: true, showISCO: true, lensing: true, infall: true }} caption="The 2D Schwarzschild lab: event horizon, photon sphere at 1.5 r_s, ISCO at 3 r_s, and an infalling probe. Watch orbits just outside the ISCO hold, and orbits just inside give up and spiral through the horizon." />
+
+<Callout type="warning" title="The plunging region">
+
+Between the ISCO and the horizon lies a band where nothing can hover on a circular orbit, however fast it moves. Gas there is committed: it spirals in on a timescale of a few orbital periods, and for a stellar-mass hole that's milliseconds. This is why the sim (and real disk models) can treat the inner edge as a hard cutoff. The plunging gas is dilute, fast, and briefly lived, and it radiates very little compared with the patient, grinding annuli outside the ISCO.
+
+</Callout>
+
+## The disk is a thermometer
+
+Equation (2) tells us where the light goes; it says nothing about what glows. The disk does, because it is a machine for turning orbital energy into heat. Neighbouring rings of gas orbit at different speeds, the shear rubs them against each other through magnetised turbulence, and the friction bleeds orbital energy into temperature while angular momentum ferries outward. Shakura and Sunyaev worked out the radial temperature profile in 1973, and it has held up remarkably well for a paper written before anyone knew what the viscosity actually was.
+
+<Equation id="eqn:shakura-sunyaev" number="4" caption="The Shakura–Sunyaev thin-disk temperature profile. Temperature vanishes at the inner edge r_in (the torque boundary condition), peaks just outside it at r ≈ 1.36 r_in, then falls as r^(−3/4)." latex="T(r) \propto r^{-3/4}\left(1 - \sqrt{r_{\mathrm{in}}/r}\right)^{1/4}">
+
+$$
+T(r) \propto r^{-3/4}\left(1 - \sqrt{r_{\mathrm{in}}/r}\right)^{1/4}
+$$
+
+</Equation>
+
+Each ring radiates roughly as a blackbody at its local temperature, so equation (4) is also a colour map: white-hot just outside the inner edge, cooling through yellow and orange as you move out. That's the palette the sim paints with. The counter-intuitive part is the trend with mass. The peak temperature scales as $(\dot{m}/M)^{1/4}$, where $\dot{m}$ is the accretion rate in Eddington units, so at a fixed Eddington fraction a heavier black hole runs a cooler disk. Bigger hole, bigger inner edge in kilometres, same energy spread over vastly more area.
+
+The numbers span the electromagnetic spectrum. A ten-solar-mass hole feeding near its Eddington limit runs an inner disk near $10^7$ kelvin and shines in X-rays; that's Cygnus X-1, and it's why we hunt stellar-mass black holes with X-ray telescopes. A $10^8$ solar-mass quasar disk peaks near $10^5$ kelvin, in the far ultraviolet, the "big blue bump" of quasar spectra. And M87*, at $6.5 \times 10^9$ solar masses and starved to roughly a millionth of Eddington, comes out at a few thousand kelvin on the thin-disk formula, down in the infrared. In truth a flow that dilute stops behaving like a thin disk at all: what the EHT actually imaged at 1.3 mm is synchrotron light from hot, tenuous plasma. The sim's disk is the honest Shakura–Sunyaev toy, which is the right cartoon for Gargantua and a knowing simplification for M87*.
+
+## Why one side of the ring blazes
+
+One more piece of physics stands between equation (4) and a correct image: the gas is moving at a good fraction of the speed of light, and relativity edits both the colour and the brightness of everything it emits. The whole edit is captured by a single number per pixel, the ratio of the frequency you receive to the frequency the gas emitted.
+
+<Equation id="eqn:g-factor" number="5" caption="The g-factor for gas on a circular Schwarzschild orbit: received frequency over emitted frequency. The numerator is gravitational redshift plus time dilation; the denominator is the ordinary Doppler effect for orbital speed β at angle θ to the line of sight." latex="g = \frac{\sqrt{1 - 3GM/(r c^{2})}}{1 - \beta\cos\theta}">
+
+$$
+g = \frac{\sqrt{1 - 3GM/(r c^{2})}}{1 - \beta\cos\theta}
+$$
+
+</Equation>
+
+Because photon number and phase-space volume are conserved along rays, the observed intensity picks up a factor of $g^4$. A fourth power is brutal. At the ISCO the orbital speed is half the speed of light, so for an edge-on disk the approaching side has $g \approx 1.41$ and the receding side $g \approx 0.47$: a ratio of three in frequency, and $3^4 \approx 80$ in brightness. The real image of an edge-on disk is violently lopsided, one blazing crescent and one side fading toward invisibility. Even face-on there's no escape, since the numerator alone gives $g \approx 0.71$ at the ISCO: the light spends energy climbing out of the well and arrives 30 per cent redder.
+
+<Callout type="thinking" title="Why Gargantua is symmetric">
+
+Interstellar's renderer, DNGR, got all of this right, and then the filmmakers switched it off on purpose. The team's own paper (James, von Tunzelmann, Franklin and Thorne, 2015) is candid: with Doppler beaming on, one side of Gargantua's disk blazes and the other nearly vanishes, and Christopher Nolan judged the lopsided disk too confusing for a general audience. So the released film shows the lensing, which is exact, with the beaming deliberately muted. Slide the beaming control in the sim to zero and you'll watch the physically-correct crescent relax into the movie's symmetric halo. It's a rare case where you can toggle an artistic decision on and off.
+
+</Callout>
+
+## The first render was hand-inked
+
+Some food for thought before we look under the hood: the first correct image of a black hole with an accretion disk was computed in 1979, by Jean-Pierre Luminet, on an IBM 7040 fed with punch cards at the Paris Observatory in Meudon. The machine solved the same geodesics the shader does and printed columns of numbers; the "renderer" was Luminet himself, placing individual dots of India ink on negative paper by hand, denser where the computed brightness was higher, then photographing the result. The image shows the lensed far side arcing over the hole and the beamed near side blazing on one side, beaming very much left on. Hold it next to the EHT's 2019 picture and the resemblance is uncanny, forty years early, from a computer with less memory than a hotel key card and a rendering pipeline you could spill. I find it genuinely humbling, and I say that as someone about to describe a 200-step integrator running per pixel at sixty frames a second as if it were an achievement.
+
+## How the sim works
+
+The pipeline is short enough to state completely. The whole simulation is a single fragment shader; there is no geometry, no meshes, nothing but mathematics per pixel. For each pixel we fire one ray from the camera and integrate it backwards through equation (2), which is legitimate because light paths are reversible. The integrator is fourth-order Runge-Kutta with 200 fixed steps, small steps near the hole being the price of the $1/r^4$ steepness. Each ray ends in one of three ways: it falls through the horizon and the pixel is black; it escapes past a bailout radius and samples the background star field, lensing included for free; or it crosses the equatorial plane between $r_{\mathrm{in}}$ and the disk's outer edge, in which case equation (4) gives a temperature, the temperature gives a blackbody colour, and equation (5) raised to the fourth power scales the brightness.
+
+Honesty about what's missing, because the omissions are load-bearing:
+
+- **Schwarzschild, not Kerr.** Real astrophysical holes spin, frame dragging distorts the photon orbits, and a fast-spinning hole's shadow flattens into a D shape. Gargantua was Kerr at 99.9 per cent of maximal spin; this sim is the non-rotating textbook case.
+- **A razor-thin, opaque disk.** The first disk crossing wins and the ray stops. There's no radiative transfer, no translucency, no disk thickness, no turbulent structure.
+- **Toy emission.** Pure blackbody colours from equation (4); real disks have atmospheres, spectral lines, and (for M87*) synchrotron in place of thermal emission.
+- **Fixed step count.** Rays that wind many times near the photon sphere are under-resolved, so the photon ring's sub-ring structure is only hinted at.
+
+Every one of those is fixable, and the first item is the interesting one: the Kerr metric replaces equation (2) with a slightly richer system, the shadow goes asymmetric, and the disk can tilt against the spin. That's probably the follow-up post. If this one leaves you wanting stranger territory, the question of what's on the *inside* of the horizon has [a post of its own](/blog/universe-inside-a-black-hole/). Watch this space; from well outside $b_c$, ideally.
+
+## Reading further
+
+- [Luminet, *Image of a spherical black hole with thin accretion disk* (A&A 75, 228, 1979)](https://ui.adsabs.harvard.edu/abs/1979A%26A....75..228L). The first computed image of a black hole, traced on an IBM 7040 and rendered by hand in India ink.
+- [Shakura & Sunyaev, *Black holes in binary systems. Observational appearance* (A&A 24, 337, 1973)](https://ui.adsabs.harvard.edu/abs/1973A%26A....24..337S). The thin-disk model behind equation (4), still the default language for accretion half a century on.
+- [James, von Tunzelmann, Franklin & Thorne, *Gravitational lensing by spinning black holes in astrophysics, and in the movie Interstellar* (Class. Quantum Grav. 32, 065001, 2015)](https://doi.org/10.1088/0264-9381/32/6/065001). The DNGR paper: how Gargantua was actually rendered, including the deliberate decision to mute Doppler beaming.
+- [EHT Collaboration, *First M87 Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole* (ApJL 875, L1, 2019)](https://doi.org/10.3847/2041-8213/ab0ec7). The measurement this post keeps checking itself against: a 42 μas shadow, right where Schwarzschild said.
+- [rantonels, *starless*](https://github.com/rantonels/starless). The open-source Schwarzschild ray tracer that popularised the equation-(2) formulation; the honest ancestor of this shader and many like it.

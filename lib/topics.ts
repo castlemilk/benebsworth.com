@@ -111,6 +111,7 @@ const BY_SLUG: Record<string, Topic> = {
   // Physics foundations for the cosmology desk (violet)
   'why-gravity-is-geometry': TOPIC.physics,
   'anatomy-of-a-black-hole': TOPIC.physics,
+  'simulating-a-black-hole': TOPIC.physics,
   'the-universe-on-a-surface': TOPIC.physics,
   'how-space-itself-expands': TOPIC.physics,
   // Cosmology & astrophysics desk (indigo)

@@ -19,7 +19,7 @@ const CATEGORY_ACCENT: Record<string, string> = {
 }
 
 export function generateStaticParams() {
-  const dedicated = new Set(['circuit-sim', 'universe-scale'])
+  const dedicated = new Set(['circuit-sim', 'universe-scale', 'black-hole-sim'])
   return LAB_EFFECTS.filter(e => !dedicated.has(e.slug)).map((e) => ({ slug: e.slug }))
 }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

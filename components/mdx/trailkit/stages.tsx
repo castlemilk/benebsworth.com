@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react'
 import { accentStyle, StatChip } from './primitives'
 import { DistanceIcon, AscentIcon, DescentIcon, DurationIcon, KIND_ICON, type IconKind } from './icons'
+import { stageAnchor } from '@/components/hiking/journey-core'
 
 export interface StageProps {
   day?: string | number
@@ -41,8 +42,13 @@ export function Stages({ children, accent }: { children?: ReactNode; accent?: st
 export function Stage(props: StageProps) {
   const time = fmtTime(props.timeHours)
   const label = props.day != null ? (typeof props.day === 'number' ? `Day ${props.day}` : props.day) : null
+  const anchor = stageAnchor(props.day) // e.g. "day-3" — journey-map waypoints link here
   return (
-    <li className="relative mb-10 last:mb-0" style={accentStyle(props.accent)}>
+    <li
+      id={anchor ?? undefined}
+      className="jm-stage relative mb-10 scroll-mt-24 last:mb-0"
+      style={accentStyle(props.accent)}
+    >
       {/* node on the spine */}
       <span className="absolute -left-[calc(1.5rem+5px)] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--color-bg)] sm:-left-[calc(2rem+5px)]" style={{ backgroundColor: 'var(--accent)' }} aria-hidden />
       {label && <p className="font-mono text-[0.66rem] uppercase tracking-[0.2em]" style={{ color: 'var(--accent)' }}>{label}</p>}

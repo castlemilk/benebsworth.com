@@ -51,6 +51,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${mono.variable} ${display.variable} ${sans.variable}`}
     >
       <body className="font-sans antialiased">
+        {/* Photos (hike galleries, trail-guide figures) are served from the GCS
+            bucket — warm the connection early. Hoisted into <head> by Next. */}
+        <link rel="preconnect" href="https://storage.googleapis.com" />
+        <link rel="dns-prefetch" href="https://storage.googleapis.com" />
         <a
           href="#main-content"
           className="skip-link"

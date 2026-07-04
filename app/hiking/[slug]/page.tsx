@@ -1,17 +1,13 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { hikes, getHike } from '@/content/hiking'
+import { hikes, getHike, guideForHike } from '@/content/hiking'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Reveal } from '@/components/motion/reveal'
 import { HikeJourney } from '@/components/hiking/hike-journey'
-import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld'
-
-// Only hikes with a PUBLISHED trail guide. The Overland guide exists but is
-// kept unpublished (release: false), so it is intentionally not linked here.
-const GUIDE_SLUG: Record<string, string> = { 'haute-route': 'haute-route-guide' }
+import { JsonLd, SITE_URL, breadcrumbLd, hikeLd } from '@/components/seo/json-ld'
 
 export function generateStaticParams() {
   return hikes.map((h) => ({ slug: h.slug }))
@@ -21,11 +17,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const h = getHike(slug)
   const url = `/hiking/${slug}/`
+  const title = h ? `${h.name} · Hiking` : 'Hike'
   return {
-    title: h ? h.name : 'Hike',
+    title,
     description: h?.summary,
+    keywords: h ? [h.name, h.region, h.country, 'hiking', 'trek', 'trail guide'] : undefined,
     alternates: { canonical: url },
-    openGraph: { type: 'article', title: h?.name, description: h?.summary, url, siteName: 'Ben Ebsworth', locale: 'en_AU' },
+    openGraph: { type: 'article', title: h ? h.name : undefined, description: h?.summary, url, siteName: 'Ben Ebsworth', locale: 'en_AU' },
     twitter: { card: 'summary_large_image', title: h?.name, description: h?.summary },
   }
 }
@@ -38,20 +36,13 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
   const accent = hike.accent || '#5b9e6f'
   const planned = hike.status === 'planned'
   const url = `${SITE_URL}/hiking/${slug}/`
-  const guide = GUIDE_SLUG[slug]
+  const guide = guideForHike(slug)
 
   return (
     <>
       <JsonLd
         data={[
-          {
-            '@context': 'https://schema.org',
-            '@type': 'CreativeWork',
-            name: hike.name,
-            description: hike.summary,
-            url,
-            keywords: [hike.region, hike.country, 'hiking', 'trek'].join(', '),
-          },
+          hikeLd(hike, guide),
           breadcrumbLd([
             { name: 'Home', url: `${SITE_URL}/` },
             { name: 'Hiking', url: `${SITE_URL}/hiking/` },
@@ -114,7 +105,7 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
           <p className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-muted">
             <span style={{ color: accent }}>▸</span> {planned ? 'Planned route' : 'The journey'}
           </p>
-          <HikeJourney hike={hike} />
+          <HikeJourney hike={hike} guideSlug={guide} />
         </Reveal>
 
         <div className="mt-16 flex flex-wrap items-center justify-between gap-4">

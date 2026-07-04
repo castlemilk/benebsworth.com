@@ -35,13 +35,13 @@ export function StageProfile({ points, accent }: { points: ProfilePoint[]; accen
   const n = points.length
   const peakIdx = elevs.indexOf(maxE)
 
-  // Stagger consecutive valley labels into two lanes so neighbours never collide
-  // at a narrow width (the 7-point days on mobile are the stress case). Peaks stay
-  // single-lane — they're spaced apart by the valleys between them.
+  // Stagger consecutive labels into two lanes (per side) so neighbours never
+  // collide at a narrow width (the 7-point days on mobile are the stress case).
   let belowN = 0
+  let aboveN = 0
   const xy: (Pt & { p: ProfilePoint; above: boolean; lane: number })[] = points.map((p, i) => {
     const above = ABOVE.has((p.kind ?? 'milestone') as IconKind)
-    const lane = above ? 0 : belowN++ % 2
+    const lane = above ? aboveN++ % 2 : belowN++ % 2
     return {
       x: padX + (i / (n - 1)) * (W - 2 * padX),
       y: padTop + (1 - (p.elevM - minE) / span) * (H - padTop - padBot),
@@ -54,8 +54,13 @@ export function StageProfile({ points, accent }: { points: ProfilePoint[]; accen
   const baseY = H - padBot + 8
   const area = `${line} L ${xy[n - 1].x.toFixed(1)} ${baseY} L ${xy[0].x.toFixed(1)} ${baseY} Z`
 
+  const srSummary = points
+    .map((p) => `${p.name} ${p.elevM.toLocaleString()} m${p.via ? ` (${p.via})` : ''}`)
+    .join(' → ')
+
   return (
     <figure className="not-prose my-5" style={accentStyle(accent)}>
+      <figcaption className="sr-only">Elevation profile: {srSummary}.</figcaption>
       <div className="relative w-full overflow-hidden rounded-[0.625rem] border border-[var(--color-border)] bg-[radial-gradient(120%_140%_at_50%_-10%,color-mix(in_srgb,var(--accent)_8%,var(--color-stage)),var(--color-stage))]">
         {/* aspect-locked stage for the SVG + overlay to share a coordinate space;
             a min-height keeps the labels from crushing on narrow phones */}
@@ -73,8 +78,9 @@ export function StageProfile({ points, accent }: { points: ProfilePoint[]; accen
             <path d={line} fill="none" stroke="var(--accent)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
 
-          {/* overlay: dots + labels pinned by percentage of the shared box */}
-          <div className="absolute inset-0">
+          {/* overlay: dots + labels pinned by percentage of the shared box
+              (aria-hidden — the sr-only figcaption above is the text alternative) */}
+          <div className="absolute inset-0" aria-hidden>
             {xy.map(({ x, y, p, above, lane }, i) => {
               const left = `${(x / W) * 100}%`
               const top = `${(y / H) * 100}%`

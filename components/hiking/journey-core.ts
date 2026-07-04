@@ -37,8 +37,11 @@ export function smoothPath(pts: Pt[]): string {
 }
 
 // Build an elevation profile (area + line paths over a 100×20 box) by walking the
-// waypoints along cumulative planar distance, interpolating elevation with a
-// smoothstep and a deterministic terrain wobble (so SSR and client agree).
+// waypoints along cumulative planar distance and interpolating elevation with a
+// smoothstep. No invented terrain: the line only encodes the authored waypoint
+// elevations. `marks` carries each waypoint's position ON the line so the
+// component can pin interactive dots to it (in HTML, so they survive the
+// strip's non-uniform preserveAspectRatio="none" stretch).
 export function buildProfile(wps: HikeWaypoint[]) {
   const pts = wps.map(project)
   const cum: number[] = [0]
@@ -54,6 +57,7 @@ export function buildProfile(wps: HikeWaypoint[]) {
   const N = 120
   const top = 2
   const bottom = 19
+  const elevToY = (e: number) => top + (1 - (e - minE) / span) * (bottom - top)
   const xy: Pt[] = []
   for (let s = 0; s <= N; s++) {
     const d = (s / N) * total
@@ -61,17 +65,28 @@ export function buildProfile(wps: HikeWaypoint[]) {
     while (seg < cum.length - 2 && cum[seg + 1] < d) seg++
     const t = (d - cum[seg]) / Math.max(0.0001, cum[seg + 1] - cum[seg])
     const ts = t * t * (3 - 2 * t) // smoothstep
-    let e = elevs[seg] + (elevs[seg + 1] - elevs[seg]) * ts
-    const wob = Math.sin(d * 1.7) * 0.5 + Math.sin(d * 0.6 + 1.3) * 0.5
-    e += wob * span * 0.05 * Math.sin(Math.PI * t)
-    const x = (s / N) * 100
-    const y = top + (1 - (e - minE) / span) * (bottom - top)
-    xy.push({ x, y })
+    const e = elevs[seg] + (elevs[seg + 1] - elevs[seg]) * ts
+    xy.push({ x: (s / N) * 100, y: elevToY(e) })
   }
   const line = xy.map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' ')
   const area = `${line} L 100 ${bottom} L 0 ${bottom} Z`
-  const marks = cum.map((c) => ({ x: (c / total) * 100, y: top }))
+  const marks = cum.map((c, i) => ({ x: (c / total) * 100, y: elevToY(elevs[i]) }))
   return { line, area, marks }
+}
+
+/**
+ * Canonical anchor id for a stage/day, shared by the trailkit <Stage> (which
+ * renders `id={stageAnchor(day)}`) and the journey map (which links waypoint
+ * day labels to it). `3` and `"Day 3"` both yield `day-3`.
+ */
+export function stageAnchor(day: string | number | undefined | null): string | null {
+  if (day == null || day === '') return null
+  const slug = String(day)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  if (!slug) return null
+  return slug.startsWith('day') ? slug.replace(/^day-?/, 'day-') : `day-${slug}`
 }
 
 /** Index of the highest waypoint (the peak marker). */

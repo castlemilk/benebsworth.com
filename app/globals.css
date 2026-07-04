@@ -317,8 +317,26 @@ a:focus-visible .word .snake-body {
 @keyframes skillpop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 /* hiking journey-map route draw-in (visible by default; animates only when motion is allowed) */
 @keyframes jm-draw { to { stroke-dashoffset: 0; } }
+/* gallery lightbox photo crossfade (degrades to instant under the global reduced-motion rule) */
+@keyframes jm-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
   .jm-route { stroke-dasharray: 1; stroke-dashoffset: 1; animation: jm-draw 1.6s ease-out 0.15s forwards; }
+}
+
+/* When a journey-map waypoint links to a trail-guide stage (#day-3), pulse the
+   landed stage so the reader's eye finds it. Accent tint fades out; the spine
+   node stays put. Skipped under reduced motion (target still scrolls into view). */
+@keyframes jm-stage-pulse {
+  0%   { background-color: color-mix(in srgb, var(--accent) 16%, transparent); }
+  100% { background-color: transparent; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .jm-stage:target {
+    animation: jm-stage-pulse 2.2s ease-out forwards;
+    border-radius: 0.5rem;
+    margin-left: -0.75rem;
+    padding-left: 0.75rem;
+  }
 }
 
 /* ── ReactBits-style StarBorder + ShinyText (circuit-sim "Open Studio" CTA) ──

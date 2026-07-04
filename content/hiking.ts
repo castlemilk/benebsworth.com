@@ -309,3 +309,14 @@ export const hikes: Hike[] = [
 export const completedHikes = hikes.filter((h) => h.status === 'completed').sort((a, b) => a.order - b.order)
 export const plannedHikes = hikes.filter((h) => h.status === 'planned').sort((a, b) => a.order - b.order)
 export const getHike = (slug: string) => hikes.find((h) => h.slug === slug)
+
+/**
+ * Hikes with a PUBLISHED long-form trail guide (a `/blog/<slug>` post). The
+ * single source of truth for cross-linking the /hiking overview ↔ the guide, in
+ * both directions. The Overland guide exists but is kept unpublished, so it is
+ * intentionally absent here. Add an entry when a new guide goes live.
+ */
+export const HIKE_GUIDE: Record<string, string> = { 'haute-route': 'haute-route-guide' }
+export const guideForHike = (hikeSlug: string): string | undefined => HIKE_GUIDE[hikeSlug]
+export const hikeForGuide = (guideSlug: string): string | undefined =>
+  Object.keys(HIKE_GUIDE).find((h) => HIKE_GUIDE[h] === guideSlug)

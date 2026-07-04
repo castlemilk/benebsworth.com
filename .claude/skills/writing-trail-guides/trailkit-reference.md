@@ -101,6 +101,13 @@ A stylised topographic route plate — a smooth line through numbered waypoints 
 | `accent` | `string` | optional | Colour override; wins over the bound hike's accent |
 | `showElevation` | `boolean` | optional | Show the elevation-profile strip (default `true`) |
 | `compact` | `boolean` | optional | Glyph mode — hides start/end chips and stat band, tightens the plate |
+| `linkStages` | `boolean` | optional | Default `true` in a guide: clicking a waypoint jumps to that day's `<Stage id="day-N">` on the same page (via the waypoint's `day` label). Set `false` to disable. |
+
+**Interactivity (automatic):** waypoints are keyboard-focusable buttons with
+≥44px touch targets; a pinned tooltip (touch-friendly) shows day/altitude/note;
+the elevation dots mirror the selection. For the drilldown to land, the hike's
+waypoint `day` labels must match the guide's `<Stage day>` numbers (both
+normalize to `#day-N`).
 
 ### Example
 
@@ -112,6 +119,84 @@ Compact (inside a `TrailSummary`):
 
 ```mdx
 <TrailMap hike="overland-track" compact showElevation />
+```
+
+---
+
+## `<StageProfile>`
+
+**Source:** `components/mdx/trailkit/stage-profile.tsx` → `ProfilePoint[]`
+
+A per-day elevation profile — the day's up-and-over line with each village, hut,
+pass and lake pinned at its height (passes/summits labelled above, valleys
+below). Drop one at the top of a `<Stage>`, after the stat chips. Purely a
+per-day sketch; it does not bind to `content/hiking.ts`. A screen-reader summary
+of the points is emitted automatically.
+
+### Props
+
+| Prop | Type | Required | Note |
+|------|------|----------|------|
+| `points` | `ProfilePoint[]` | **required** | At least 2 points, left→right along the day |
+| `accent` | `string` | optional | Colour override; otherwise inherits `--accent` from the wrapper |
+
+`ProfilePoint` = `{ name: string; elevM: number; kind?: IconKind; via?: string }`.
+`kind` chooses the icon and whether the label sits above (pass/summit/viewpoint/
+glacier/monument) or below (everything else). `via` is a tiny note under the
+label (e.g. `"gondola"`, `"swim"`, `"night"`).
+
+### Example
+
+```mdx
+<Stage day={2} from="Cabane de Louvie" to="Cabane de Prafleuri" distanceKm={13} ascentM={1100} timeHours="6–7">
+  <StageProfile accent="#4f9d8f" points={[
+    { name: 'Cabane de Louvie', elevM: 2230, kind: 'hut' },
+    { name: 'Col de Louvie', elevM: 2921, kind: 'pass' },
+    { name: 'Grand Désert', elevM: 2700, kind: 'glacier', via: 'boulder-field' },
+    { name: 'Col de Prafleuri', elevM: 2987, kind: 'pass' },
+    { name: 'Cabane de Prafleuri', elevM: 2624, kind: 'hut', via: 'night' },
+  ]} />
+
+  The crux day: two passes and the bouldery Grand Désert between them.
+</Stage>
+```
+
+---
+
+## `<TrailFigure>`
+
+**Source:** `components/mdx/trailkit/trail-figure.tsx` → `TrailFigureProps`
+
+A real-photo figure — the photo-led counterpart to the researched card
+components. The frame shrink-wraps each photo (portrait or landscape), and the
+photo opens full-size in a lightbox on click. Drop one inline for a single beat,
+or wrap several in `<TrailGrid>`.
+
+### Props
+
+| Prop | Type | Required | Note |
+|------|------|----------|------|
+| `src` | `string` | **required** | Co-located `/blog/...` path or an absolute `https` URL (real trip photos are served from GCS) |
+| `caption` | `ReactNode` | optional | Caption below the frame |
+| `alt` | `string` | optional | Explicit alt; falls back to a plain-string caption, else `meta` |
+| `meta` | `string` | optional | Accent eyebrow chip above the caption, e.g. `"Day 3 · Pas de Chèvres"` |
+| `accent` | `string` | optional | Per-figure accent; otherwise inherits `--accent` |
+| `wide` | `boolean` | optional | Cinematic 21:9 crop for a standalone hero moment (default hugs the natural aspect) |
+| `credit` | `string` | optional | Small credit line in the caption row |
+| `width` | `number` | optional | Intrinsic pixel width — with `height`, reserves the layout box before load (kills CLS) |
+| `height` | `number` | optional | Intrinsic pixel height (pair with `width`) |
+| `noZoom` | `boolean` | optional | Opt out of click-to-zoom |
+
+### Example
+
+```mdx
+<TrailFigure
+  src="https://storage.googleapis.com/benebsworth-hiking/assets/….webp"
+  meta="Day 3 · Pas de Chèvres"
+  caption="Down the ladders onto the Glacier de Cheilon."
+  width={1600}
+  height={1067}
+/>
 ```
 
 ---
@@ -435,16 +520,36 @@ These are the exact prop names from the source — common mis-spellings to avoid
 
 ---
 
-## Worked example
+## Worked examples
 
-See `content/blog/overland-track-guide/index.mdx` — the full Overland Track guide exercises every component in the order recommended by the authoring workflow:
+- **`content/blog/haute-route-guide/index.mdx`** — the **live flagship**
+  (photo-led personal trip report). Best reference for `<StageProfile>` per day,
+  inline `<TrailFigure>` photos, and the accent cascade in practice.
+- **`content/blog/overland-track-guide/index.mdx`** — exercises every component
+  in the recommended order (kept unpublished):
 
 1. `<TrailSummary>` with `hike`, `season`, `gearClass`, `map`
 2. `<TrailMap>` with `hike`
-3. `<Stages>` → `<Stage>` → `<Checkpoint>`
+3. `<Stages>` → `<Stage>` (+ `<StageProfile>` per day) → `<Checkpoint>`
 4. `<Quest>` (one per major side trip)
 5. `<TrailGrid>` → `<Stop>` (where you sleep)
 6. `<TrailGrid>` → `<Landmark>` (notable features)
 7. `<TrailGrid cols={3}>` → `<Flora>` (what grows here)
 8. `<TrailGrid cols={3}>` → `<Fauna>` (what lives here)
 9. `<GearList>` → `<Gear>` (what to carry)
+
+Inline `<TrailFigure>` photos anywhere they earn their place — especially inside
+`<Stage>` narrative.
+
+## Drilldown: linking waypoints to stages
+
+The journey map and the day-by-day spine are connected by day anchors. A
+`<Stage day={3}>` renders `id="day-3"`; a hike waypoint with `day: "Day 3"`
+resolves to the same `#day-3`. So:
+- **In a guide**, `<TrailMap hike="…">` clicks jump to the matching stage on the
+  page (disable with `linkStages={false}`).
+- **On the overview** `/hiking/<slug>/`, the waypoint tooltip links to
+  `/blog/<guide>/#day-3` when the hike is in `HIKE_GUIDE`.
+
+Keep waypoint `day` labels and `<Stage day>` numbers consistent and this works
+with zero per-hike wiring.

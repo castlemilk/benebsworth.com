@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { getPublishedPosts, getPost, isPublished } from '@/lib/content'
+import { hikeForGuide, getHike } from '@/content/hiking'
 import { topicFor } from '@/lib/topics'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { TopicMarker } from '@/components/blog/topic-marker'
@@ -68,6 +70,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!p || !isPublished(p)) notFound()
   const topic = topicFor(p)
   const url = `${SITE_URL}/blog/${slug}/`
+  // If this post is a published trail guide, it pairs with a data-driven hike
+  // overview at /hiking/<slug>/ (route map + gallery). Link both ways.
+  const hikeSlug = hikeForGuide(slug)
+  const relatedHike = hikeSlug ? getHike(hikeSlug) : undefined
   const published = new Date(p.date).toISOString()
   // wordCount (an SEO content-depth signal) and readingTime are computed once
   // at load in lib/content so the post header, cards and JSON-LD all agree.
@@ -108,6 +114,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     // Key takeaways double as the article abstract — a clean, citable summary
     // for Google and AI engines (mirrors the visible "Key takeaways" block).
     ...(p.takeaways?.length ? { abstract: p.takeaways.join(' ') } : {}),
+    // A trail guide is *about* its hike — tie the two entities together so the
+    // guide and the /hiking overview consolidate as one cluster.
+    ...(relatedHike
+      ? { about: { '@type': 'CreativeWork', name: relatedHike.name, url: `${SITE_URL}/hiking/${relatedHike.slug}/` } }
+      : {}),
   }
   const breadcrumb = breadcrumbLd([
     { name: 'Home', url: `${SITE_URL}/` },
@@ -193,6 +204,25 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           />
         </header>
         <div className="mt-10 max-w-[44rem]">
+          {relatedHike && (
+            <Link
+              href={`/hiking/${relatedHike.slug}/`}
+              className="group mb-8 flex items-center justify-between gap-4 rounded-xl border px-4 py-3 transition-colors"
+              style={{
+                borderColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 35%, transparent)`,
+                backgroundColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 7%, transparent)`,
+              }}
+            >
+              <span className="flex items-center gap-3">
+                <span className="text-lg" aria-hidden>⛰</span>
+                <span>
+                  <span className="block font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted">Part of Hiking · route overview</span>
+                  <span className="block font-display text-sm font-semibold text-fg">{relatedHike.name} — map, stats & gallery</span>
+                </span>
+              </span>
+              <span className="shrink-0 font-mono text-sm transition-transform group-hover:translate-x-0.5" style={{ color: relatedHike.accent || topic.accent }}>→</span>
+            </Link>
+          )}
           {p.takeaways?.length ? <KeyTakeaways items={p.takeaways} accent={topic.accent} /> : null}
           <MobileToc />
           <MdxContent source={p.body} slug={p.slug} />

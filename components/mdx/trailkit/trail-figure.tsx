@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { accentStyle } from './primitives'
 
 export interface TrailFigureProps {
@@ -25,6 +25,8 @@ export interface TrailFigureProps {
    *  photo-heavy guides. Optional — figures without dims behave as before. */
   width?: number
   height?: number
+  /** Opt out of click-to-zoom (default: zoomable). */
+  noZoom?: boolean
 }
 
 /**
@@ -33,24 +35,30 @@ export interface TrailFigureProps {
  * so an embedded snapshot sits naturally beside <Stage>/<Checkpoint>. Phone
  * shots come in both orientations: the frame shrink-wraps each photo (centred,
  * height-capped) so a portrait never towers and a landscape still fills the
- * column. Drop one inline for a single beat, or wrap several in <TrailGrid>.
+ * column. Click to open it full-size in a lightbox. Drop one inline for a single
+ * beat, or wrap several in <TrailGrid>.
  */
-export function TrailFigure({ src, caption, alt, meta, accent, wide, credit, width, height }: TrailFigureProps) {
+export function TrailFigure({ src, caption, alt, meta, accent, wide, credit, width, height, noZoom }: TrailFigureProps) {
+  const [zoom, setZoom] = useState(false)
   const altText = alt ?? (typeof caption === 'string' ? caption : meta ?? '')
   const hasDims = !!(width && height)
   // With known dims, reproduce the "natural size, capped by the column and by
   // 76vh of height" sizing as a pre-load-computable width so the box is
   // reserved before the bytes arrive: width = min(natural, column, 76vh·ratio),
   // height follows from the aspect ratio.
-  // TODO: no resized variants exist in GCS yet — once thumbnail/medium variants
-  // are generated, add srcset/sizes here instead of shipping the full-res file.
   const dimStyle =
     width && height && !wide
       ? { aspectRatio: `${width} / ${height}`, width: `min(100%, ${width}px, calc(76vh * ${(width / height).toFixed(4)}))` }
       : undefined
   return (
     <figure className={`not-prose my-8 ${wide ? 'w-full' : 'mx-auto w-fit max-w-full'}`} style={accentStyle(accent)}>
-      <div className="overflow-hidden rounded-[0.625rem] border border-[var(--color-border)] bg-surface transition-[border-color] duration-200 hover:border-[color-mix(in_srgb,var(--accent)_45%,var(--color-border))]">
+      <button
+        type="button"
+        onClick={noZoom ? undefined : () => setZoom(true)}
+        aria-label={noZoom ? undefined : `Enlarge photo${altText ? `: ${altText}` : ''}`}
+        className={`group relative block overflow-hidden rounded-[0.625rem] border border-[var(--color-border)] bg-surface p-0 leading-[0] transition-[border-color] duration-200 hover:border-[color-mix(in_srgb,var(--accent)_45%,var(--color-border))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] ${noZoom ? 'cursor-default' : 'cursor-zoom-in'} ${wide ? 'w-full' : ''}`}
+        disabled={noZoom}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={src}
@@ -62,7 +70,12 @@ export function TrailFigure({ src, caption, alt, meta, accent, wide, credit, wid
           className={wide ? 'aspect-[21/9] w-full object-cover' : hasDims ? 'block h-auto' : 'block h-auto max-h-[76vh] w-auto max-w-full'}
           style={dimStyle}
         />
-      </div>
+        {!noZoom && (
+          <span className="pointer-events-none absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/45 text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100" aria-hidden>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
+          </span>
+        )}
+      </button>
       {(caption || meta || credit) && (
         <figcaption className="mt-2.5 px-1">
           {meta && (
@@ -76,6 +89,67 @@ export function TrailFigure({ src, caption, alt, meta, accent, wide, credit, wid
           </span>
         </figcaption>
       )}
+      {zoom && <FigureZoom src={src} alt={altText} caption={caption} meta={meta} credit={credit} onClose={() => setZoom(false)} />}
     </figure>
+  )
+}
+
+/** Full-size single-photo overlay: scroll-locked, esc/click-out to close, with a
+ *  "full size" escape hatch to the raw file. Shares the visual language of the
+ *  hike gallery lightbox but stays self-contained (one photo, no navigation). */
+function FigureZoom({
+  src,
+  alt,
+  caption,
+  meta,
+  credit,
+  onClose,
+}: {
+  src: string
+  alt: string
+  caption?: ReactNode
+  meta?: string
+  credit?: string
+  onClose: () => void
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    const opener = document.activeElement as HTMLElement | null
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+      opener?.focus?.()
+    }
+  }, [onClose])
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={alt || 'Photo'}
+      className="fixed inset-0 z-[100] flex flex-col bg-black/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div className="flex items-center justify-end gap-2 p-3 sm:p-4" onClick={(e) => e.stopPropagation()}>
+        <a href={src} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/10 px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-wider text-white/90 transition-colors hover:bg-white/20">full size ↗</a>
+        <button type="button" className="rounded-full bg-white/10 px-3 py-1.5 font-mono text-xs text-white transition-colors hover:bg-white/20" onClick={onClose} aria-label="Close">esc ✕</button>
+      </div>
+      <div className="flex min-h-0 flex-1 items-center justify-center px-2 pb-2 sm:px-4" onClick={(e) => e.stopPropagation()}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={alt} className="max-h-full max-w-full rounded-lg object-contain" style={{ animation: 'jm-fade 0.28s ease-out' }} />
+      </div>
+      {(caption || meta || credit) && (
+        <div className="shrink-0 p-3 text-center sm:p-4" onClick={(e) => e.stopPropagation()}>
+          <p className="mx-auto max-w-3xl font-sans text-sm text-white/80">
+            {meta && <span className="mr-2 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-white/50">{meta}</span>}
+            {caption}
+            {credit && <span className="ml-2 font-mono text-[0.62rem] uppercase tracking-[0.1em] text-white/40">{credit}</span>}
+          </p>
+        </div>
+      )}
+    </div>
   )
 }

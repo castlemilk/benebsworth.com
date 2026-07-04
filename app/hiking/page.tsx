@@ -45,6 +45,10 @@ export default function HikingPage() {
             name: 'Hiking',
             description: 'Long-distance hikes and treks by Ben Ebsworth.',
             url: `${SITE_URL}/hiking/`,
+            items: [...completedHikes, ...plannedHikes].map((h) => ({
+              name: h.name,
+              url: `${SITE_URL}/hiking/${h.slug}/`,
+            })),
           }),
           breadcrumbLd([
             { name: 'Home', url: `${SITE_URL}/` },

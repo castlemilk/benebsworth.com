@@ -167,6 +167,76 @@ export function datasetLd({
   }
 }
 
+/**
+ * Structured data for a hike overview page. Modelled as a CreativeWork (a
+ * trip report / route overview) with the route's measured stats exposed via
+ * `additionalProperty`, spatial coverage (region + country as a Place), the
+ * per-hike OG art as `image`, and — when a published trail guide exists —
+ * `subjectOf` pointing at that guide, so Google and AI crawlers link the
+ * overview and the long-form guide as one entity cluster.
+ */
+export function hikeLd(
+  hike: {
+    slug: string
+    name: string
+    summary: string
+    region: string
+    country: string
+    year: string
+    status: string
+    distanceKm: number
+    days: number
+    elevationGainM: number
+    maxAltitudeM: number
+  },
+  guideSlug?: string,
+) {
+  const url = `${SITE_URL}/hiking/${hike.slug}/`
+  const num = (name: string, value: number, unitText: string) => ({
+    '@type': 'PropertyValue',
+    name,
+    value,
+    unitText,
+  })
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: hike.name,
+    headline: hike.name,
+    description: hike.summary,
+    url,
+    inLanguage: 'en-AU',
+    author: authorLd,
+    image: `${url}opengraph-image.png`,
+    keywords: [hike.name, hike.region, hike.country, 'hiking', 'trek', 'trail'].join(', '),
+    ...(hike.status === 'completed' && hike.year ? { dateCreated: hike.year, temporalCoverage: hike.year } : {}),
+    about: {
+      '@type': 'Place',
+      name: hike.region,
+      address: { '@type': 'PostalAddress', addressCountry: hike.country },
+    },
+    spatialCoverage: {
+      '@type': 'Place',
+      name: `${hike.region}, ${hike.country}`,
+    },
+    additionalProperty: [
+      num('Distance', hike.distanceKm, 'km'),
+      num('Duration', hike.days, 'days'),
+      num('Ascent', hike.elevationGainM, 'm'),
+      num('High point', hike.maxAltitudeM, 'm'),
+    ],
+    ...(guideSlug
+      ? {
+          subjectOf: {
+            '@type': 'BlogPosting',
+            url: `${SITE_URL}/blog/${guideSlug}/`,
+            name: `${hike.name} — trail guide`,
+          },
+        }
+      : {}),
+  }
+}
+
 /** ProfilePage wrapping the Person — used on the about page. */
 export const profilePageLd = {
   '@context': 'https://schema.org',

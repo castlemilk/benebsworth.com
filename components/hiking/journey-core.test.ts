@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { project, smoothPath, buildProfile, peakIndex, VB_W, VB_H } from './journey-core'
+import { project, smoothPath, buildProfile, peakIndex, stageAnchor, VB_W, VB_H } from './journey-core'
 import type { HikeWaypoint } from '@/lib/gen/content'
 
 const wp = (x: number, y: number, elev: number): HikeWaypoint =>
@@ -28,5 +28,23 @@ describe('journey-core', () => {
     expect(p.line.startsWith('M ')).toBe(true)
     expect(p.area.endsWith('Z')).toBe(true)
     expect(p.marks).toHaveLength(3)
+  })
+
+  it('buildProfile pins the highest waypoint to the top of the strip', () => {
+    const wps = [wp(0, 0.5, 100), wp(0.5, 0.2, 800), wp(1, 0.5, 200)]
+    const { marks } = buildProfile(wps)
+    // top=2 is the highest point; the peak mark should sit there, valleys lower.
+    expect(marks[1].y).toBeCloseTo(2, 5)
+    expect(marks[0].y).toBeGreaterThan(marks[1].y)
+    expect(marks[2].y).toBeGreaterThan(marks[1].y)
+  })
+
+  it('stageAnchor normalizes day labels and numbers to the same slug', () => {
+    expect(stageAnchor(3)).toBe('day-3')
+    expect(stageAnchor('Day 3')).toBe('day-3')
+    expect(stageAnchor('day 3')).toBe('day-3')
+    expect(stageAnchor('')).toBeNull()
+    expect(stageAnchor(null)).toBeNull()
+    expect(stageAnchor(undefined)).toBeNull()
   })
 })

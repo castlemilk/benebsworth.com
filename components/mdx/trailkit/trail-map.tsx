@@ -2,6 +2,7 @@
 
 import type { Hike, HikeWaypoint } from '@/lib/gen/content'
 import { JourneyMap } from '@/components/hiking/journey-map'
+import { stageAnchor } from '@/components/hiking/journey-core'
 import { getHikeDefaults } from './hike-binding'
 
 export interface TrailMapProps {
@@ -13,6 +14,12 @@ export interface TrailMapProps {
   accent?: string
   showElevation?: boolean
   compact?: boolean
+  /**
+   * Turn the map into a table of contents: clicking a waypoint jumps to that
+   * day's `<Stage>` on the same page. On by default when there are `<Stage>`
+   * anchors below (the standard guide layout). Set `false` to disable.
+   */
+  linkStages?: boolean
 }
 
 /** Build a minimal Hike object JourneyMap can render from explicit props. */
@@ -38,9 +45,17 @@ export function TrailMap(props: TrailMapProps) {
   }
   // allow accent override even when bound to a hike
   const withAccent = props.accent ? ({ ...hike, accent: props.accent } as Hike) : hike
+  // In a guide, waypoints link to their day's <Stage id="day-N"> on this page.
+  const dayHref =
+    props.linkStages === false
+      ? undefined
+      : (day: string) => {
+          const a = stageAnchor(day)
+          return a ? `#${a}` : null
+        }
   return (
     <div className="my-10">
-      <JourneyMap hike={withAccent} compact={props.compact} showElevation={props.showElevation ?? true} />
+      <JourneyMap hike={withAccent} compact={props.compact} showElevation={props.showElevation ?? true} dayHref={dayHref} />
     </div>
   )
 }

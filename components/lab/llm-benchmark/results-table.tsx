@@ -192,8 +192,11 @@ function ResultRow({ row, showTask }: { row: Row; showTask: boolean }) {
   const task = getTask(row.taskId)
   const category = task ? getCategory(task.category) : undefined
   const model = getModel(row.modelId)
+  // The whole row navigates to this run: the task page with this model
+  // preselected in the demo/comparison (see GeneratedDemo's ?model handling).
+  const runHref = task ? `${taskPath(task)}?model=${encodeURIComponent(row.modelId)}#run` : undefined
   return (
-    <tr className="border-b border-[var(--color-border)]/60 transition-colors last:border-0 hover:bg-[var(--color-surface-2)]/50">
+    <tr className="group relative cursor-pointer border-b border-[var(--color-border)]/60 transition-colors last:border-0 hover:bg-[var(--color-surface-2)]/50">
       <td className="py-3 pl-5">
         <div className="flex items-center gap-2.5">
           {showTask && category && (
@@ -202,9 +205,20 @@ function ResultRow({ row, showTask }: { row: Row; showTask: boolean }) {
             </span>
           )}
           <div className="flex min-w-0 flex-col">
+            {/* Stretched link: covers the whole row (tr is relative) so any cell
+                click opens the run. Named links below sit above it via z-10. */}
+            {runHref && (
+              <Link
+                href={runHref}
+                aria-label={`See ${model?.name ?? row.modelId} on ${task?.title ?? row.taskId}`}
+                // z-[5] sits above cell content (score bar is a positioned div)
+                // but below the named links (z-10), which stay independently clickable.
+                className="absolute inset-0 z-[5]"
+              />
+            )}
             {showTask &&
               (task ? (
-                <Link href={taskPath(task)} className="truncate font-medium hover:text-[var(--color-project)]">
+                <Link href={taskPath(task)} className="relative z-10 truncate font-medium hover:text-[var(--color-project)]">
                   {task.title}
                 </Link>
               ) : (
@@ -213,7 +227,7 @@ function ResultRow({ row, showTask }: { row: Row; showTask: boolean }) {
             {model ? (
               <Link
                 href={modelPath(model)}
-                className="truncate font-mono text-[0.72rem] text-fg/70 transition-colors hover:text-[var(--color-project)]"
+                className="relative z-10 w-fit truncate font-mono text-[0.72rem] text-fg/70 transition-colors hover:text-[var(--color-project)]"
               >
                 {model.name}
                 {row.source === 'seeded' && <span className="ml-1.5 text-[0.6rem] text-muted">· sample</span>}

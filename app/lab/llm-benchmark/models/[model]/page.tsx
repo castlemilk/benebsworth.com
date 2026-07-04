@@ -162,12 +162,21 @@ export default async function ModelDetailPage({
                     .map((result) => {
                       const task = getTask(result.taskId)
                       if (!task) return null
+                      // Whole row → this run (the task page with this model preselected).
+                      const runHref = `${taskPath(task)}?model=${encodeURIComponent(result.modelId)}#run`
                       return (
-                        <tr key={result.taskId} className="hover:bg-[var(--color-surface-2)]/50 transition-colors">
+                        <tr key={result.taskId} className="group relative cursor-pointer transition-colors hover:bg-[var(--color-surface-2)]/50">
                           <td className="whitespace-nowrap px-5 py-3">
+                            {/* Stretched link: whole row → this run. z-[5] covers cell
+                                content (score bar); the named link stays z-10. */}
                             <Link
-                              href={taskPath(task)}
-                              className="font-medium transition-colors hover:text-[var(--color-project)]"
+                              href={runHref}
+                              aria-label={`See ${model.name} on ${task.title}`}
+                              className="absolute inset-0 z-[5]"
+                            />
+                            <Link
+                              href={runHref}
+                              className="relative z-10 font-medium transition-colors hover:text-[var(--color-project)]"
                             >
                               {task.title}
                             </Link>

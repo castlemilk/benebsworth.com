@@ -15,6 +15,7 @@ import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
 import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
 import { selectScorer } from '../scorers'
+import { withSandboxConstraints } from '../prompts'
 import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
 
 export interface ProviderRunnerConfig {
@@ -209,12 +210,18 @@ async function generateWithProvider(
 async function generateOne(
   cfg: ProviderRunnerConfig,
   model: BenchmarkModel,
-  task: BenchmarkTask,
+  rawTask: BenchmarkTask,
   iterationIndex: number,
   bustCache: boolean,
   timeoutMs: number,
   label: string
 ): Promise<GenerationResponse> {
+  // HTML-category tasks get the demo-sandbox contract appended (self-contained
+  // doc, no CDNs, no runtime JSX) so models generate directly-runnable
+  // artifacts instead of relying on post-processing to patch them up. The
+  // amended prompt is also the cache key, so constraint changes re-run live.
+  const task = withSandboxConstraints(rawTask)
+
   if (!bustCache) {
     const cached = getCachedResponse(model.id, task.id, task.prompt, iterationIndex)
     if (cached) {
@@ -233,7 +240,10 @@ async function generateOne(
         timeoutMs,
         label
       )
-      if (!bustCache && response.output.trim().length > 0) {
+      // Same 40-char floor as aggregation: never cache degenerate outputs
+      // (e.g. a bare "DONE" from a file-handoff run that wrote nothing) — a
+      // poisoned cache would keep serving them on every non-busted rerun.
+      if (!bustCache && response.output.trim().length >= 40) {
         setCachedResponse(model.id, task.id, task.prompt, iterationIndex, response)
       }
       return response
@@ -287,17 +297,20 @@ export async function aggregateRuns(
   createdAt: string = new Date().toISOString()
 ): Promise<BenchmarkResult> {
   // A "success" that produced no usable output can't be scored or displayed;
-  // treat it as a failed iteration.
-  const successRuns = runs.filter((r) => r.status === 'success' && r.output.trim().length > 0)
+  // treat it as a failed iteration. The 40-char floor also catches degenerate
+  // acknowledgements — e.g. file-handoff runs where the CLI replied "DONE"
+  // without writing the artifact; no real artifact for any task is that short.
+  const successRuns = runs.filter((r) => r.status === 'success' && r.output.trim().length >= 40)
 
   const totalTokensIn = runs.reduce((sum, r) => sum + r.tokensIn, 0)
   const totalTokensOut = runs.reduce((sum, r) => sum + r.tokensOut, 0)
 
   // Score EVERY successful iteration's output and publish the mean.
   let score = 0
+  let iterationScores: number[] = []
   if (successRuns.length > 0) {
-    const scores = await Promise.all(successRuns.map((r) => scorer.score(r.output, task)))
-    const mean = scores.reduce((sum, s) => sum + s, 0) / scores.length
+    iterationScores = await Promise.all(successRuns.map((r) => scorer.score(r.output, task)))
+    const mean = iterationScores.reduce((sum, s) => sum + s, 0) / iterationScores.length
     score = Math.round(Math.min(100, Math.max(1, mean)) * 10) / 10
   }
 
@@ -318,9 +331,18 @@ export async function aggregateRuns(
           ? 'timeout'
           : 'fail'
 
-  // Keep the first successful output for inspection; fall back to the last
-  // run's output (an error message when every iteration failed).
-  const output = successRuns[0]?.output ?? runs[runs.length - 1]?.output ?? ''
+  // Publish the BEST-scoring successful iteration's output — the demo renders
+  // this artifact, so it should be the strongest run, not whichever happened
+  // to come first. Fall back to the last run's output (an error message when
+  // every iteration failed).
+  let output = runs[runs.length - 1]?.output ?? ''
+  if (successRuns.length > 0) {
+    let bestIdx = 0
+    for (let i = 1; i < iterationScores.length; i++) {
+      if (iterationScores[i] > iterationScores[bestIdx]) bestIdx = i
+    }
+    output = successRuns[bestIdx].output
+  }
 
   return {
     taskId: task.id,

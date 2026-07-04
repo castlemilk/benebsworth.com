@@ -29,9 +29,15 @@ export function modelPath(model: BenchmarkModel): string {
  * scripts/gen-benchmark-outputs.mjs. Fetched on demand by the comparison /
  * generated-demo views so the ~2.8 MB of outputs never ships in the bundle
  * or RSC payload.
+ *
+ * `version` is the output's content hash (BenchmarkResultMeta.outputVersion).
+ * The views fetch with `cache: 'force-cache'`, which never revalidates — the
+ * `?v=` param changes the cache key exactly when the artifact changes, so a
+ * harness rerun is never shadowed by a stale browser copy.
  */
-export function outputUrl(taskId: string, modelId: string): string {
-  return `/lab-data/llm-benchmark/outputs/${taskId}/${modelId}.json`
+export function outputUrl(taskId: string, modelId: string, version?: string): string {
+  const base = `/lab-data/llm-benchmark/outputs/${taskId}/${modelId}.json`
+  return version ? `${base}?v=${encodeURIComponent(version)}` : base
 }
 
 const ROOT_CRUMBS: Crumb[] = [

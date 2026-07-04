@@ -25,16 +25,20 @@ export async function generateCodex(
   task: BenchmarkTask
 ): Promise<GenerationResponse> {
   const codexModel = config.model ?? model.apiModelId
-  const baseArgs = ['exec', '--ephemeral', '--sandbox', 'read-only']
+  // workspace-write so codex can save ./artifact.html into the scratch cwd;
+  // --skip-git-repo-check because the scratch tmpdir is not a git repo and
+  // codex otherwise refuses with "Not inside a trusted directory" (verified
+  // against codex-cli 0.134.0).
+  const baseArgs = ['exec', '--ephemeral', '--skip-git-repo-check', '--sandbox', 'workspace-write']
   if (codexModel) baseArgs.push('-c', `model="${codexModel}"`)
   baseArgs.push('--')
 
   const runner: CliRunnerConfig = {
     command: 'codex',
-    buildArgs: (prompt) => [
-      ...baseArgs,
-      `${prompt}\n\nIMPORTANT: Do not create any files. Print the complete artifact source code inline as your only response.`,
-    ],
+    // Printing inline risks the extractor slicing the artifact; write it to a
+    // scratch-dir file and read it back instead.
+    artifactViaFile: true,
+    buildArgs: (prompt) => [...baseArgs, prompt],
     parseTokens: parseCodexTokens,
     timeoutMs: config.timeoutMs,
   }

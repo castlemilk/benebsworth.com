@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import type { BenchmarkResult } from './types'
 import resultsJson from './results.json'
 
@@ -19,11 +20,24 @@ import resultsJson from './results.json'
 export const BENCHMARK_RESULTS: BenchmarkResult[] = resultsJson as BenchmarkResult[]
 
 /** A result without its (potentially huge) generated output — safe to pass to client components. */
-export type BenchmarkResultMeta = Omit<BenchmarkResult, 'output'> & { hasOutput: boolean }
+export type BenchmarkResultMeta = Omit<BenchmarkResult, 'output'> & {
+  hasOutput: boolean
+  /**
+   * Short content hash of the output, appended as `?v=` to the on-demand
+   * output-JSON fetch. The demo fetches with `cache: 'force-cache'` (never
+   * revalidates), and the JSON path is stable across deploys — without a
+   * content-derived version, a rerun artifact would be shadowed by the
+   * browser's stale copy forever.
+   */
+  outputVersion: string
+}
 
 export function stripOutput(r: BenchmarkResult): BenchmarkResultMeta {
   const { output, ...meta } = r
-  return { ...meta, hasOutput: Boolean(output && output.trim().length > 0) }
+  const hasOutput = Boolean(output && output.trim().length > 0)
+  const outputVersion =
+    output && hasOutput ? createHash('sha256').update(output).digest('hex').slice(0, 10) : ''
+  return { ...meta, hasOutput, outputVersion }
 }
 
 export function resultsForTask(taskId: string): BenchmarkResult[] {

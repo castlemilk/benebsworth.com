@@ -178,8 +178,9 @@ describe('aggregateRuns', () => {
     expect(result.tokensOut).toBe(400)
     // Cost is the TOTAL spend across all iterations.
     expect(result.costUsd).toBeCloseTo(estimateCost(200, 400, model), 10)
-    // First successful output is kept as the representative output.
-    expect(result.output).toBe('a'.repeat(80))
+    // The BEST-scoring successful output is published (the demo renders it) —
+    // 'b'.repeat(90) scores 90 vs 80 under the length scorer.
+    expect(result.output).toBe('b'.repeat(90))
     expect(result.createdAt).toBe('2026-01-01T00:00:00.000Z')
   })
 
@@ -194,7 +195,8 @@ describe('aggregateRuns', () => {
     expect(result.runtimeMs).toBe(2000)
     expect(result.tokensIn).toBe(200)
     expect(result.tokensOut).toBe(400)
-    expect(result.output).toBe('a'.repeat(60))
+    // Best-scoring successful output wins (70 > 60 under the length scorer).
+    expect(result.output).toBe('b'.repeat(70))
   })
 
   it('all iterations fail: status fail, score 0, error message as output', async () => {
@@ -213,11 +215,22 @@ describe('aggregateRuns', () => {
     expect(result.score).toBe(0)
   })
 
+  it('demotes degenerate short outputs (e.g. a bare "DONE" acknowledgement)', async () => {
+    // A file-handoff iteration that never wrote the artifact leaves stdout
+    // "DONE" — under 40 chars, it must not count as a scoreable success nor be
+    // published as the representative output.
+    const runs = [success('DONE', 10), success('r'.repeat(64), 20)]
+    const result = await aggregateRuns(runs, 2, model, task, scorer)
+    expect(result.status).toBe('partial')
+    expect(result.iterationsSucceeded).toBe(1)
+    expect(result.output).toBe('r'.repeat(64))
+  })
+
   it('clamps the mean score to 1..100 and rounds to one decimal', async () => {
-    const tiny = await aggregateRuns([success('', 10), success('x', 10)], 2, model, task, scorer)
-    // Empty-output "success" is demoted to a failure; the remaining score of 1 stays >= 1.
+    const tiny = await aggregateRuns([success('', 10), success('x'.repeat(41), 10)], 2, model, task, scorer)
+    // Empty-output "success" is demoted to a failure; the remaining score stays clamped >= 1.
     expect(tiny.status).toBe('partial')
-    expect(tiny.score).toBe(1)
+    expect(tiny.score).toBe(41)
 
     const huge = await aggregateRuns([success('z'.repeat(500), 10)], 1, model, task, scorer)
     expect(huge.score).toBe(100)

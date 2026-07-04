@@ -120,19 +120,23 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
       render()
     }
 
+    // Only act while the game actually holds focus, so we never hijack page
+    // scroll or typing anywhere else on the page.
+    const gameFocused = () => document.activeElement === wrap || wrap.contains(document.activeElement)
+
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (!gameFocused()) return
       const key = e.key.toLowerCase()
-      if (['arrowleft', 'arrowright', 'arrowup', ' ', 'a', 'd', 'w'].includes(key)) {
-        e.preventDefault()
+      if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', ' ', 'a', 'd', 'w'].includes(key)) {
+        e.preventDefault() // lock the game: no page scroll / spacebar-page-down
         keys.add(key)
       }
       if (key === 'r') resetGame()
     }
 
     const onKeyUp = (e: KeyboardEvent) => {
-      const key = e.key.toLowerCase()
-      keys.delete(key)
+      if (!gameFocused()) return
+      keys.delete(e.key.toLowerCase())
     }
 
     const resolveCollisions = () => {
@@ -326,12 +330,13 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
       }
     }
 
-    // Keys are scoped to the focusable wrapper (NOT window) so the game only
-    // captures Space/arrows/WASD — and only preventDefaults page scroll —
-    // while the player has clicked/tabbed into it.
+    // Listen on window but act only while the game is focused (gameFocused()).
+    // Window-level capture is robust to focus landing on a descendant; the
+    // focus guard keeps it from ever hijacking page scroll or other inputs.
+    // `passive: false` is required so preventDefault() can cancel the scroll.
     const onBlur = () => keys.clear() // no stuck keys after focus leaves
-    wrap.addEventListener('keydown', onKeyDown)
-    wrap.addEventListener('keyup', onKeyUp)
+    window.addEventListener('keydown', onKeyDown, { passive: false })
+    window.addEventListener('keyup', onKeyUp)
     wrap.addEventListener('blur', onBlur)
 
     const ro = new ResizeObserver(resize)
@@ -353,8 +358,8 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
       cancelAnimationFrame(raf)
       ro.disconnect()
       io.disconnect()
-      wrap.removeEventListener('keydown', onKeyDown)
-      wrap.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
       wrap.removeEventListener('blur', onBlur)
     }
   }, [resetTick])
@@ -414,6 +419,7 @@ export function MiniPlatformerDemo({ className = '' }: { className?: string }) {
         aria-label="Mini platformer game — click to control with arrows or WASD"
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onPointerDown={() => wrapRef.current?.focus()}
         className="absolute inset-0 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#8b5cf6]/70"
       >
         <canvas ref={canvasRef} className="block h-full w-full" />

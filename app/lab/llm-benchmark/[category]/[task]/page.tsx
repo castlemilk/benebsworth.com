@@ -192,7 +192,9 @@ export default async function BenchmarkTaskPage({
 
         {/* ── Generated demo ───────────────────────────────────────────── */}
         <Reveal delay={120}>
-          <div className="mb-16">
+          {/* scroll-margin so the `#run` deep link (from results-table rows)
+              lands below the two sticky nav bars. */}
+          <div id="run" className="mb-16 scroll-mt-40">
             <GeneratedDemo task={t} results={results.map(stripOutput)} />
           </div>
         </Reveal>
@@ -239,12 +241,21 @@ export default async function BenchmarkTaskPage({
                     .map((result) => {
                       const model = getModel(result.modelId)
                       return (
-                        <tr key={result.modelId} className="hover:bg-[var(--color-surface-2)]/50 transition-colors">
+                        <tr key={result.modelId} className="group relative cursor-pointer transition-colors hover:bg-[var(--color-surface-2)]/50">
                           <td className="whitespace-nowrap px-5 py-3 font-medium">
+                            {/* Stretched link: whole row → this model's page. z-[5]
+                                covers cell content (score bar); the named link is z-10. */}
+                            {model && (
+                              <Link
+                                href={modelPath(model)}
+                                aria-label={`${model.name} — all tasks`}
+                                className="absolute inset-0 z-[5]"
+                              />
+                            )}
                             {model ? (
                               <Link
                                 href={modelPath(model)}
-                                className="transition-colors hover:text-[var(--color-project)]"
+                                className="relative z-10 transition-colors hover:text-[var(--color-project)]"
                               >
                                 {model.name}
                               </Link>
@@ -252,7 +263,7 @@ export default async function BenchmarkTaskPage({
                               result.modelId
                             )}
                             {result.source === 'seeded' && (
-                              <span className="ml-1.5 font-mono text-[0.6rem] text-muted">· sample</span>
+                              <span className="relative z-10 ml-1.5 font-mono text-[0.6rem] text-muted">· sample</span>
                             )}
                           </td>
                           <td className="px-5 py-3">

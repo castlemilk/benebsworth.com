@@ -23,6 +23,14 @@ export function ModelOutputComparison({ taskId, results, taskTitle }: ModelOutpu
     BENCHMARK_MODELS[1]?.id ?? BENCHMARK_MODELS[0]?.id ?? '',
   )
 
+  // Preselect the left pane from a `?model=` deep link (a results-table row).
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get('model')
+    if (!wanted || !BENCHMARK_MODELS.some((m) => m.id === wanted)) return
+    setLeftModelId(wanted)
+    setRightModelId((r) => (r === wanted ? BENCHMARK_MODELS.find((m) => m.id !== wanted)?.id ?? r : r))
+  }, [])
+
   const leftResult = byModel.get(leftModelId)
   const rightResult = byModel.get(rightModelId)
 
@@ -104,7 +112,7 @@ function OutputPane({
     }
     const id = ++seq.current
     setState({ phase: 'loading' })
-    fetch(outputUrl(taskId, selectedModelId), { cache: 'force-cache' })
+    fetch(outputUrl(taskId, selectedModelId, result?.outputVersion), { cache: 'force-cache' })
       .then((res) => {
         if (!res.ok) throw new Error(String(res.status))
         return res.json()
@@ -117,7 +125,7 @@ function OutputPane({
         if (id !== seq.current) return
         setState({ phase: 'error' })
       })
-  }, [taskId, selectedModelId, hasOutput])
+  }, [taskId, selectedModelId, hasOutput, result?.outputVersion])
 
   return (
     <div className="flex min-h-[420px] flex-col">

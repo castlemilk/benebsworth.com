@@ -16,12 +16,10 @@ export async function generateAgy(
   const agyModel = config.model ?? model.apiModelId ?? model.name
   const runner: CliRunnerConfig = {
     command: 'agy',
-    buildArgs: (prompt) => [
-      '-p',
-      `${prompt}\n\nIMPORTANT: Do not create any files. Print the complete artifact source code inline as your only response.`,
-      '--model',
-      agyModel,
-    ],
+    // agy print mode ("-p") truncates stdout around 10k chars, so the artifact
+    // is written to a scratch-dir file instead of being printed inline.
+    artifactViaFile: true,
+    buildArgs: (prompt) => ['-p', prompt, '--model', agyModel],
     timeoutMs: config.timeoutMs,
   }
   return generateFromCli(runner, model, task)

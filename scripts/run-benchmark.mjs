@@ -1,8 +1,8 @@
 import {
   BENCHMARK_MODELS,
   BENCHMARK_TASKS,
-  BENCHMARK_RESULTS,
 } from '../lib/lab/llm-benchmark/registry.ts'
+import { BENCHMARK_RESULTS } from '../lib/lab/llm-benchmark/results.ts'
 import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.ts'
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { writeFileSync } from 'node:fs'

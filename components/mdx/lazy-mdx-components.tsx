@@ -46,6 +46,13 @@ export const KvEvictionWindow = dynamic(() => import('./kv-eviction-window').the
 export const KvAblationLedger = dynamic(() => import('./kv-ablation-ledger').then(m => ({ default: m.KvAblationLedger })), { ssr: false, loading })
 export const KvContextHistogram = dynamic(() => import('./kv-context-histogram').then(m => ({ default: m.KvContextHistogram })), { ssr: false, loading })
 
+export const MemoryHierarchyChart = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.MemoryHierarchyChart })), { ssr: false, loading })
+export const DramRefreshCell = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.DramRefreshCell })), { ssr: false, loading })
+export const MemoryPackagingTradeoff = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.MemoryPackagingTradeoff })), { ssr: false, loading })
+export const AiMemorySizer = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.AiMemorySizer })), { ssr: false, loading })
+export const MemoryMarketBars = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.MemoryMarketBars })), { ssr: false, loading })
+export const MemoryKnowledgeGraph = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.MemoryKnowledgeGraph })), { ssr: false, loading })
+
 // Cutting-edge expansion: reasoning, state-space models (Mamba), QEC, diffusion policy.
 export const ReasoningTree = dynamic(() => import('./reasoning-tree').then(m => ({ default: m.ReasoningTree })), { ssr: false, loading })
 export const ComputeScaling = dynamic(() => import('./compute-scaling').then(m => ({ default: m.ComputeScaling })), { ssr: false, loading })

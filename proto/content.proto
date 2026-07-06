@@ -115,6 +115,8 @@ message Asset {
   double lng = 9;       // EXIF GPS longitude (0 = none)
   string taken_at = 10; // EXIF capture time (ISO), if present
   string thumb = 11;    // small webp variant for grids (falls back to url)
+  optional string item_type = 12; // 'blog' | 'hike' — the item this asset was uploaded from
+  optional string item_slug = 13; // slug of the item this asset was uploaded from
 }
 
 // Per-item image assignment, stored at manifest/<type>/<slug>.json (public-read,

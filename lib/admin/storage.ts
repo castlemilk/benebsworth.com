@@ -3,11 +3,16 @@ import { ADMIN } from './config'
 export type ItemType = 'blog' | 'hike'
 
 // GCS object layout (single bucket, all public-read):
-//   assets/<id>.webp              — the shared image pool
-//   library/index.json           — asset registry (catalogue + metadata)
-//   manifest/<type>/<slug>.json  — per-item assignment { hero, og, gallery[] }
-export const assetObject = (id: string) => `assets/${id}.webp`
-export const thumbObject = (id: string) => `assets/${id}-thumb.webp`
+//   assets/<type>/<slug>/<id>.webp  — per-item image pool
+//   library/index.json              — global asset registry (catalogue + metadata)
+//   manifest/<type>/<slug>.json     — per-item assignment { hero, og, gallery[] }
+//
+// Legacy flat pool (pre-namespacing): assets/<id>.webp. Existing assets keep
+// working because their full urls are stored in the registry/manifests.
+export const assetObject = (type: ItemType, slug: string, id: string) => `assets/${type}/${slug}/${id}.webp`
+export const thumbObject = (type: ItemType, slug: string, id: string) => `assets/${type}/${slug}/${id}-thumb.webp`
+export const legacyAssetObject = (id: string) => `assets/${id}.webp`
+export const legacyThumbObject = (id: string) => `assets/${id}-thumb.webp`
 export const manifestObject = (type: ItemType, slug: string) => `manifest/${type}/${slug}.json`
 export const libraryObject = () => 'library/index.json'
 

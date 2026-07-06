@@ -169,6 +169,12 @@ export interface Asset {
   takenAt: string;
   /** small webp variant for grids (falls back to url) */
   thumb: string;
+  /** 'blog' | 'hike' — the item this asset was uploaded from */
+  itemType?:
+    | string
+    | undefined;
+  /** slug of the item this asset was uploaded from */
+  itemSlug?: string | undefined;
 }
 
 /**

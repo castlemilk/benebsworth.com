@@ -113,7 +113,7 @@ export function AdminShell({ items }: { items: { blogs: CrmItem[]; hikes: CrmIte
 
   const uploadFiles = useCallback(
     async (files: FileList | null): Promise<Asset[]> => {
-      if (!files?.length || !getToken) return []
+      if (!files?.length || !getToken || !selItem) return []
       setError(null)
       const added: Asset[] = []
       try {
@@ -134,7 +134,7 @@ export function AdminShell({ items }: { items: { blogs: CrmItem[]; hikes: CrmIte
           if (!f.type.startsWith('image/')) continue
           setBusy(`Uploading ${i + 1}/${files.length}…`)
           try {
-            added.push(await uploadAsset(f, token, stamp + i))
+            added.push(await uploadAsset(f, token, stamp + i, selItem.type, selItem.slug))
           } catch (e) {
             // stop the batch, but STILL record what already reached the bucket
             // below — otherwise files 1..N-1 become orphaned GCS objects that
@@ -164,7 +164,7 @@ export function AdminShell({ items }: { items: { blogs: CrmItem[]; hikes: CrmIte
         setBusy(null)
       }
     },
-    [getToken, libLoaded],
+    [getToken, libLoaded, selItem],
   )
 
   const pick = useCallback((multi: boolean): Promise<Asset[]> => {

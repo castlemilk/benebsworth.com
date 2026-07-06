@@ -1,0 +1,14 @@
+{
+  "name": "@bnb/hike-annotate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Gemini (Antigravity `agy`)-driven hike photo classifier + geo-placer for the benebsworth.com GCS image manifests. Reads a hike's manifest, geocodes its waypoints, geo-matches each already-geo-tagged photo, classifies it with agy (caption/alt/scene/waypoint/hero/skip), proposes an annotated manifest + a review report, and writes back to GCS on approval.",
+  "bin": {
+    "hike-annotate": "bin/annotate.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  }
+}

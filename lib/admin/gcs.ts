@@ -124,10 +124,16 @@ async function readGeo(file: File): Promise<{ lat: number; lng: number; takenAt:
   return { lat, lng, takenAt }
 }
 
-/** Upload one image to the shared pool as a full + thumbnail webp; returns its
- *  Asset (with EXIF geo). Both variants are immutable-cached; grids use the
- *  thumb, lightboxes the full. */
-export async function uploadAsset(file: File, token: string, stamp: number): Promise<Asset> {
+/** Upload one image to a per-item pool as a full + thumbnail webp; returns its
+ *  Asset (with EXIF geo + item ownership). Both variants are immutable-cached;
+ *  grids use the thumb, lightboxes the full. */
+export async function uploadAsset(
+  file: File,
+  token: string,
+  stamp: number,
+  type: ItemType,
+  slug: string,
+): Promise<Asset> {
   const geo = await readGeo(file)
   // `from-image` applies EXIF orientation so phone photos aren't sideways.
   const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' })
@@ -135,17 +141,19 @@ export async function uploadAsset(file: File, token: string, stamp: number): Pro
   const thumb = await encode(bitmap, 480, 0.72)
   bitmap.close?.()
   const id = `${stamp}-${slugifyName(file.name)}`
-  await putMedia(assetObject(id), full.blob, token, 'image/webp')
-  await putMedia(thumbObject(id), thumb.blob, token, 'image/webp')
+  await putMedia(assetObject(type, slug, id), full.blob, token, 'image/webp')
+  await putMedia(thumbObject(type, slug, id), thumb.blob, token, 'image/webp')
   return {
     id,
-    url: publicUrl(assetObject(id)),
-    thumb: publicUrl(thumbObject(id)),
+    url: publicUrl(assetObject(type, slug, id)),
+    thumb: publicUrl(thumbObject(type, slug, id)),
     alt: '',
     caption: '',
     width: full.width,
     height: full.height,
     slot: '',
+    itemType: type,
+    itemSlug: slug,
     ...geo,
   }
 }

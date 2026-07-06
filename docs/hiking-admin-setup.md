@@ -1,10 +1,10 @@
 # Hiking admin — GCS + Google sign-in
 
-The hiking gallery editor is **backend-free**: signing in with Google on a hiking
-page yields an OAuth access token with the GCS read/write scope, and the browser
-uploads photos **directly** to the bucket. Security is the bucket's IAM (only the
-admin's account can write) + CORS — not the client-side email check (that only
-decides whether the editor UI renders).
+The image admin CRM is **backend-free**: signing in with Google on a hiking page
+(or any page with the admin gate) yields an OAuth access token with the GCS
+read/write scope, and the browser uploads photos **directly** to the bucket.
+Security is the bucket's IAM (only the admin's account can write) + CORS — not
+the client-side email check (that only decides whether the editor UI renders).
 
 ## Status — provisioned 2026-06-26 (Terraform)
 
@@ -46,16 +46,22 @@ this one step is manual (~3 min). In **console.cloud.google.com** with project
 
 Then on a hiking page: discreet **◐ admin** (bottom-right) → sign in → the inline
 **editor** appears on each hike. Add photos (auto-resized to webp, uploaded to
-`gs://benebsworth-hiking/hiking/<slug>/`), caption, assign waypoints, reorder,
-**Save** (writes `manifest.json`). Galleries read the manifest live — no redeploy.
+`gs://benebsworth-hiking/assets/hike/<slug>/`), caption, assign waypoints, reorder,
+**Save** (writes `manifest/hike/<slug>.json`). Galleries read the manifest live — no redeploy.
+
+Photos are namespaced by the item you upload from (`assets/<type>/<slug>/`), and
+tagged with `itemType`/`itemSlug` in the global `library/index.json`. That lets
+the `tools/hike-annotate` pipeline classify every photo for a hike without
+guessing which library assets belong to it.
 
 Dev-only: append `?previewAdmin=1` to preview the editor UI without real OAuth.
 
 ## Code map
 
-- `lib/hiking/config.ts` — public config (admin email is static here).
-- `components/hiking/admin/admin-context.tsx` — GIS token client (email + GCS scope).
-- `lib/hiking/gcs.ts` — browser resize→webp + direct GCS upload + manifest write.
-- `components/hiking/admin/gallery-editor.tsx` — the editor UI (admin-only).
+- `lib/admin/config.ts` — public config (admin email is static here).
+- `components/admin/admin-context.tsx` — GIS token client (email + GCS scope).
+- `lib/admin/gcs.ts` — browser resize→webp + direct GCS upload + manifest/library write.
+- `lib/admin/storage.ts` — GCS object layout (`assets/<type>/<slug>/`, `manifest/<type>/<slug>.json`, `library/index.json`).
+- `components/admin/admin-shell.tsx` — the editor UI (admin-only).
 - `components/hiking/hike-journey.tsx` — reads the live manifest; map + gallery + (admin) editor.
 - `infra/gcp/` — the bucket, IAM, and CORS as Terraform.

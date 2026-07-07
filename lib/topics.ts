@@ -108,6 +108,9 @@ const BY_SLUG: Record<string, Topic> = {
   'smith-chart-is-geometry': TOPIC.ee,
   'pll-from-first-principles': TOPIC.ee,
   'filters-from-poles-and-zeros': TOPIC.ee,
+  'how-dram-remembers-a-bit': TOPIC.ee,
+  'backpressure-is-the-system-saying-no': TOPIC.software,
+  'dspark-speculative-decoding': TOPIC.software,
   // Physics foundations for the cosmology desk (violet)
   'why-gravity-is-geometry': TOPIC.physics,
   'anatomy-of-a-black-hole': TOPIC.physics,

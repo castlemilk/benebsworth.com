@@ -54,7 +54,7 @@ In order to get started you'll require the follow dependencies
 * [Homebrew](https://brew.sh/)
 * familiarly with running/opening your terminal, more information can be found [here](https://blog.teamtreehouse.com/introduction-to-the-mac-os-x-command-line)
 * kubectl installed, following instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-  
+
 ## Install
 
 For MacOS the process is fairly straightforward via [Homebrew](https://brew.sh/). We simply run the following from your terminal:
@@ -103,8 +103,8 @@ We can then check our kubectl context by running the following:
 ```bash
 foo@bar:~$ kubectl config get-context contexts
 CURRENT   NAME                           CLUSTER                        AUTHINFO                       NAMESPACE
-          docker-for-desktop             docker-for-desktop-cluster     docker-for-desktop             
-*         minikube                       minikube                       minikube 
+          docker-for-desktop             docker-for-desktop-cluster     docker-for-desktop
+*         minikube                       minikube                       minikube
 ```
 
 Note that this output will show you what context is currently active. An alternative, and probably more effective way to manage context is via the [kubectx](https://github.com/ahmetb/kubectx) cli tool. This can be installed by simply running `brew install kubectx`. With this available we can run:
@@ -141,7 +141,7 @@ Deploy the application by pasting the following:
 
 ```bash
 cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: httpbin
@@ -321,6 +321,6 @@ Then you'd be able to curl your expose service as:
 curl httpbin.local:8080/anything
 ```
 
-This could then be scripted to support dynamically updated your `/etc/hosts` according to the allocated `ClusterIP` on the fly. 
+This could then be scripted to support dynamically updated your `/etc/hosts` according to the allocated `ClusterIP` on the fly.
 
 Watch this space on further content for enabling ingress to your cluster via a typical _ingress-controller_ like [nginx-ingress](https://github.com/kubernetes/ingress-nginx). Or via more sophisticated means, such as a _Service Mesh_ construct, where a gateway can be defined to enable access to services within the "Mesh". Such examples include [Istio](https://istio.io/), [Linkerd](https://linkerd.io/)  and [Consul Connect](https://learn.hashicorp.com/consul/getting-started/connect).

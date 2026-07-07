@@ -44,7 +44,7 @@ The challenge is as follows:
 **Example**
 
 > Sample input: [3, 5, -4, 8, 11, 1, -1, 6], 10
-> 
+>
 > Sample output: [-1, 11]
 
 ## Non-optimal solution
@@ -88,7 +88,7 @@ def twoNumberSum(array, targetSum):
 So now we're populating the `previousNum` set, a hash-based structure which gives us the "memory" or ability to evaluate whether any of the previously encountered numbers will be suitable to reach `targetSum`. Because it's a set, the `y in previousNum` membership check is `O(1)` rather than the `O(n)` scan a list would force. Effectively reducing the second iteration we were doing in the first approach.
 
 > Time: O(n) - we still have to iterate over the list once, and insertion and lookups are O(1) for a hash table
-> 
+>
 > Memory: O(n) - we are building a table of potentially n items, which we then lookup
 
 So the trade-off in this solution is to make use of memory to minimise additional computations, utilising the properties of a hash table which gives us `O(1)` insert and lookup capabilities. The key considerations that go into the trade-off would be what are you limited by in terms of computational resources, is it memory space or compute space, which one is more expensive?. An interesting philosophical extreme to consider is the correlation of compute space with time, and memory space with mass. Do you have infinite time, or infinite mass? An interest physical conundrum. If we look to some of the strange objects in our universe, such as a blackhole, which has infinite density at its [singularity](https://en.wikipedia.org/wiki/Gravitational_singularity), as it collapses a given mass into zero volume, effectively dividing by zero - where `Density = Mass/Volume`. What does this imply about the memory space of a blackhole?
@@ -122,7 +122,7 @@ def twoNumberSum(array, targetSum):
 With a known sorted list we can take advantage of the ordering to determine whether we should progress searching from the right side, or the left side, depending on whether the `total` is greater than or less than the `targetSum`.
 
 > If `total` is greater than `targetSum` then we can decrement the right index
-> 
+>
 > If `total` is less than `targetSum` then we can increment the left index
 
 This gives us the following [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity)

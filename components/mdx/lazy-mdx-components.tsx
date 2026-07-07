@@ -52,6 +52,8 @@ export const MemoryPackagingTradeoff = dynamic(() => import('./memory-chip-ecosy
 export const AiMemorySizer = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.AiMemorySizer })), { ssr: false, loading })
 export const MemoryMarketBars = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.MemoryMarketBars })), { ssr: false, loading })
 export const MemoryKnowledgeGraph = dynamic(() => import('./memory-chip-ecosystem').then(m => ({ default: m.MemoryKnowledgeGraph })), { ssr: false, loading })
+export const DeepSpecEli5Flow = dynamic(() => import('./deepspec-eli5-flow').then(m => ({ default: m.DeepSpecEli5Flow })), { ssr: false, loading })
+export const DeepSpecArchitecture = dynamic(() => import('./deepspec-architecture').then(m => ({ default: m.DeepSpecArchitecture })), { ssr: false, loading })
 
 // Cutting-edge expansion: reasoning, state-space models (Mamba), QEC, diffusion policy.
 export const ReasoningTree = dynamic(() => import('./reasoning-tree').then(m => ({ default: m.ReasoningTree })), { ssr: false, loading })

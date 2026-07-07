@@ -45,7 +45,7 @@ The most important chip in an AI server is not always the one doing the multiply
 
 That is the useful way to look at memory chips: not as a bucket of interchangeable RAM, but as a ladder of compromises. Every rung stores bits. Every rung pays a different price in latency, bandwidth, capacity, energy, durability, yield, and packaging complexity. SRAM is absurdly fast and too large to use for bulk storage. DRAM is dense enough for working memory but forgets unless refreshed. NAND remembers without power but writes slowly and wears out. HBM is still DRAM, but stacked vertically and wired to a processor with a very wide, very short interface. GDDR is also DRAM, but spread around a consumer graphics card on a circuit board because cost and volume matter.
 
-> [MemoryHierarchyChart component] Interactive component `MemoryHierarchyChart` — see the rendered post.
+> [MemoryHierarchyChart component] Interactive memory hierarchy chart comparing SRAM, DRAM, HBM, GDDR, LPDDR, CXL memory, and NAND across latency, bandwidth, capacity, power, and cost. The rendered post shows the live comparison surface and lets the reader inspect where each memory technology sits in the trade-off stack.
 
 Use the chart above as the map for the whole post. Training cares about reusing tensors close to the GPU. Inference cares about serving many requests while the key-value cache grows. Retrieval cares about moving cold data out of NAND and into faster tiers before the user notices. Memory is a placement problem first and a component list second.
 
@@ -74,7 +74,7 @@ A memory chip begins like other chips: grow or buy a silicon wafer, pattern it w
 
 DRAM is a density machine. The bit cell is a 1T-1C structure: one access transistor and one capacitor. Imec's DRAM overview is blunt about why that matters: the capacitor stores charge, the transistor gates access, and the rest of the chip has to sense, restore, decode, and move those tiny signals. The array wants extreme density. The periphery wants good analog sense amplifiers and reliable higher-voltage devices. The process has to serve both.
 
-> [DramRefreshCell component] Interactive component `DramRefreshCell` — see the rendered post.
+> [DramRefreshCell component] Interactive DRAM cell diagram showing a 1T1C bit cell: an access transistor gates a storage capacitor onto a precharged bitline, a sense amplifier resolves the tiny voltage difference, and the row is restored because the read disturbs the stored charge. The rendered post has the animated version.
 
 That leaking capacitor is the reason DRAM is "dynamic." Refresh is not a decorative background task. It is part of correctness. A row is opened, a tiny charge difference appears on the bit line, a sense amplifier decides whether the bit was a 0 or 1, and the row is restored. Reads disturb the value, so reads also become writes.
 
@@ -116,7 +116,7 @@ $$
 
 That equation is why HBM works. JEDEC's HBM4 release describes a 2048-bit interface and speeds up to 8 Gb/s per pin, giving up to about 2 TB/s per stack. A consumer RTX 5090 uses 32 GB of GDDR7 on a 512-bit interface; NVIDIA's spec page lists the 512-bit bus and 32 GB configuration, while Micron's GDDR7 material describes 32 Gb/s-class devices and system bandwidth above 1.5 TB/s. Both are DRAM. One buys bandwidth by surrounding a GPU with many fast packages. The other buys bandwidth by stacking memory beside compute on an advanced package.
 
-> [MemoryPackagingTradeoff component] Interactive component `MemoryPackagingTradeoff` — see the rendered post.
+> [MemoryPackagingTradeoff component] Interactive packaging comparison for DDR/GDDR/HBM-style memory placement. It contrasts board-level DRAM packages with stacked HBM close to logic, making the bandwidth-per-watt trade-off visible as a geometry problem: long fast traces versus short wide package links.
 
 ## The players: memory makers, package makers, and buyers
 
@@ -124,11 +124,11 @@ The DRAM supplier base is small because the entry fee is enormous. Leading-edge 
 
 NAND is still concentrated, but more plural. In 1Q26, TrendForce put Samsung first at 31.6%, SK hynix Group second at 17.6%, and Kioxia, Micron, and SanDisk each at 13.9%. YMTC, Nanya, Winbond, PSMC, and others matter in specific products and geographies, but they do not change the basic structure: buyers negotiate with a short list of suppliers.
 
-> [MemoryMarketBars component] Interactive component `MemoryMarketBars` — see the rendered post.
+> [MemoryMarketBars component] Interactive bar chart for the memory market snapshot used in the memory ecosystem post, showing DRAM and NAND supplier concentration and how a small supplier set shapes allocation under AI-driven demand.
 
 The graph view below is a deliberately small first slice of the ecosystem. It does not pretend every commercial link is public. Instead it separates direct disclosures from inferred supply-chain paths, so a reader can traverse ASML to TSMC to NVIDIA to Azure without mistaking the whole path for one disclosed contract.
 
-> [MemoryKnowledgeGraph component] Interactive component `MemoryKnowledgeGraph` — see the rendered post.
+> [MemoryKnowledgeGraph component] Interactive supply-chain knowledge graph connecting equipment makers, memory manufacturers, advanced packaging, accelerator vendors, hyperscalers, and memory technologies. Edges distinguish direct disclosures from inferred supply-chain paths so the ecosystem can be explored without overstating public relationships.
 
 The rest of the ecosystem matters just as much:
 
@@ -176,7 +176,7 @@ $$
 \text{bytes} = 2 \cdot L \cdot H_{kv} \cdot d \cdot T \cdot B \cdot b
 $$
 
-> [AiMemorySizer component] Interactive component `AiMemorySizer` — see the rendered post.
+> [AiMemorySizer component] Interactive AI memory sizing calculator for model weights and KV cache. It lets the reader vary layers, KV heads, head dimension, context length, batch size, and precision to see why inference throughput is often bounded by memory capacity and bandwidth.
 
 That is why serving systems obsess over paging and scheduling. PagedAttention and vLLM borrowed a virtual-memory idea: store KV cache in blocks instead of requiring every request to own one contiguous slab. The paper reports near-zero KV waste and 2x to 4x throughput improvement over prior systems at comparable latency. That kind of result is not a model-quality breakthrough. It is a memory-management breakthrough.
 

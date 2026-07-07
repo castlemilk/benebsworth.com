@@ -257,7 +257,7 @@ This `Makefile` entrypoint bundles a few commands together which give us a few n
   * **products.demo.local** - the frontend webapp
 
   * **api.demo.local** - backend API which serves our product information
-  
+
   This is done by setting the entries in `/etc/hosts`, which will **required you to enter your local machines password**.
 
 * runs `skaffold dev --profile local`, where the *local* profile maps to the local overlay in our *Kustomize* config. This will start a real-time event watching process, which will trigger re-deployments on config/source code changes. Additionally it will attach to the log output from our applications. This Skaffold command will also manage the building of our image so we have some artifact to deploy.
@@ -327,7 +327,7 @@ The end-to-end install steps for standing up the depicted remote architecture ca
 
 &nbsp;
 
-With a working local deployment of our application we need to gain confidence in our changes before rolling out to production. One way to do this would be to carry out the same deployment but to a "staging" environment. Some of the benefits and reasons we may want to deploy our application here first are as follows:  
+With a working local deployment of our application we need to gain confidence in our changes before rolling out to production. One way to do this would be to carry out the same deployment but to a "staging" environment. Some of the benefits and reasons we may want to deploy our application here first are as follows:
 
 * Within this staging environment we get to potentially interact with other microservices and other systems which may be only available in this remote context. We can then run our integration tests and other validations against this semi production-like environment.
 

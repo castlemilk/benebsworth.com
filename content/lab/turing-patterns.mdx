@@ -1,0 +1,38 @@
+<LabSide effect="reaction-diffusion" height={340} params={{ preset: "maze", speed: 14 }} caption="A uniform chemical field gets a few small disturbances. Local reaction and diffusion do the rest.">
+
+## The core idea
+
+Turing patterns are a wonderfully strange answer to the question "who drew the stripes?" In Alan Turing's 1952 model, there is no central artist and no hidden blueprint. Two substances react locally and diffuse through space at different rates. Under the right conditions, a uniform state becomes unstable and breaks into spots, stripes, waves, or labyrinths.
+
+</LabSide>
+
+The Gray-Scott system in this lab is one modern reaction-diffusion toy model. It tracks two fields, usually called $U$ and $V$:
+
+<Equation id="eqn:grayscott-lab" number="1" caption="Gray-Scott reaction-diffusion equations: local chemistry plus spatial diffusion." latex="\frac{\partial U}{\partial t}=D_U\nabla^2 U - UV^2 + F(1-U), \qquad \frac{\partial V}{\partial t}=D_V\nabla^2 V + UV^2 - (F+k)V">
+
+$$
+\frac{\partial U}{\partial t}=D_U\nabla^2 U - UV^2 + F(1-U), \qquad
+\frac{\partial V}{\partial t}=D_V\nabla^2 V + UV^2 - (F+k)V
+$$
+
+</Equation>
+
+The terms with $\nabla^2$ are diffusion: each field spreads out. The $UV^2$ terms are reaction: $V$ feeds on $U$ and makes more of itself. The $F$ and $k$ controls feed and kill the chemicals. Small changes in those two rates push the system into different regions of pattern space.
+
+<LabCanvas effect="reaction-diffusion" height={300} params={{ preset: "spots", speed: 12 }} caption="Spots are not placed one by one. They appear because the local rules make that spatial scale self-reinforcing." />
+
+## Why different diffusion matters
+
+If everything diffused at the same rate, disturbances would tend to smear out. Turing's counter-intuitive insight was that an inhibitor spreading faster than an activator can stabilise the large-scale field while letting local peaks survive. Local activation says "make more here". Wider inhibition says "but not too close to another one". The spacing between spots is not manually chosen; it falls out of the competition between reaction and diffusion.
+
+<Callout type="info" title="A pattern can be local all the way down">
+
+The grid never needs to know the final shape. Each cell only updates from its neighbours and the two chemical values at that point. The global pattern is what local rules look like after enough time.
+
+</Callout>
+
+## How to use this lab
+
+Try **Spots**, **Coral**, **Maze**, **Mitosis**, and **Waves**. They are different parameter regions in the same equations, not separate drawing algorithms. Then switch to **Custom** and nudge feed and kill rates. The interesting thing is how narrow the good regions can be. A tiny move changes spots into worms, worms into waves, or a lively pattern into a blank stable field.
+
+Some food for thought: the same mathematical shape appears outside biology. Cloud streets, vegetation bands, catalytic reactions, and some manufacturing defects all share the same moral. When local growth competes with longer-range smoothing or inhibition, space starts organising itself.

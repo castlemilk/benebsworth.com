@@ -1,0 +1,37 @@
+<LabSide effect="fft-spectrum" height={340} params={{ waveType: "sine", noise: -50 }} caption="A clean sine has one narrow peak. The only way to trust that peak is to know the sampling clock was fast enough.">
+
+## The core idea
+
+Aliasing is the most annoying kind of lie in signal processing: a high-frequency signal can arrive at the sampler and come out looking like a perfectly respectable low-frequency one. Nothing looks broken. The samples line up on a slower wave and the reconstruction tells a confident story that never happened.
+
+</LabSide>
+
+The rule that keeps this from happening is the **Nyquist-Shannon sampling theorem**. If the highest frequency you want to measure is $f_\text{max}$, the sample rate must be more than twice that:
+
+<Equation id="eqn:nyquist-rate-lab" number="1" caption="Nyquist rate: sample above twice the highest frequency you need to preserve." latex="f_s > 2 f_\text{max}">
+
+$$
+f_s > 2 f_\text{max}
+$$
+
+</Equation>
+
+That "more than twice" is not a polite suggestion. It is the boundary between a signal whose frequency content can be recovered and a signal whose high frequencies fold back into lower bins. The spectrum view makes the problem visible. A sine gives one peak, two tones give two peaks, and a square or sawtooth spreads energy into harmonics. Those harmonics are often the hidden trap: even if the fundamental is safely below Nyquist, the sharp edges may not be.
+
+<LabCanvas effect="fft-spectrum" height={300} params={{ waveType: "square", noise: -55 }} caption="A square wave is not one frequency. Its odd harmonics climb upward, and the high ones are exactly the frequencies a sampler can fold back if the front-end is not filtered." />
+
+## Why anti-alias filters exist
+
+Before an analogue signal reaches an analogue-to-digital converter, practical systems put a low-pass filter in front of it. The filter removes content above the safe band so the converter never has a chance to sample it incorrectly. This is why data sheets talk about analogue bandwidth, sample rate, and front-end filtering as one design. The converter by itself only records points in time; it does not know whether those points came from a slow wave or a fast wave wearing a slow-wave disguise.
+
+<Callout type="warning" title="The sampler cannot tell you it has been fooled">
+
+Aliasing is dangerous because the output still looks coherent. Noise looks messy, clipping looks ugly, but aliasing can draw a clean peak in the wrong place. If the acquisition chain did not filter before sampling, a tidy spectrum is not proof that the measured frequency is real.
+
+</Callout>
+
+## How to read this lab
+
+Switch between **Sine**, **Two Tones**, **Square**, **Sawtooth**, and **Chirp**. The sine is the easy case. Two tones show the analyzer separating independent components. Square and sawtooth show why real-world edges need bandwidth, not just a named fundamental. Add noise and watch the floor rise; that is a different failure mode from aliasing, but the lesson rhymes. A measurement is only meaningful when the signal you care about stays above the noise floor and below the folding boundary.
+
+Some food for thought: digital audio at 44.1 kHz did not pick that rate because humans enjoy awkward numbers. It is just high enough to represent roughly 20 kHz audio after allowing a transition band for the anti-alias filter. A lot of engineering is like that: a strange-looking number is often a compromise with a filter.

@@ -1,0 +1,37 @@
+<LabSide effect="bode-plotter" height={340} params={{ type: "lp", order: 2, normalizedFreq: 2 }} caption="A Bode plot separates magnitude from phase, which is exactly what you need when a feedback loop starts borrowing phase lag from every component in the path.">
+
+## The core idea
+
+Feedback is useful because it corrects error. The uncomfortable part is that the correction arrives late. Sensors, filters, computation, amplifiers, motors, plants, and cables all add delay or phase lag. If the loop comes back with enough gain and roughly 180 degrees of extra phase, the correction has turned into encouragement. The loop stops damping errors and starts feeding them.
+
+</LabSide>
+
+A stability margin is just slack. **Gain margin** asks how much extra gain the loop can tolerate before it crosses into oscillation. **Phase margin** asks how much extra phase lag it can tolerate at the frequency where the loop gain is 1. In open-loop terms, the dangerous point is:
+
+<Equation id="eqn:barkhausen-lab" number="1" caption="The oscillation boundary for a feedback loop: unity loop gain and a net phase shift of 180 degrees." latex="|L(j\omega)| = 1 \quad \text{and} \quad \angle L(j\omega) = -180^\circ">
+
+$$
+|L(j\omega)| = 1 \quad \text{and} \quad \angle L(j\omega) = -180^\circ
+$$
+
+</Equation>
+
+The lab here is a filter plot rather than a full control-loop simulator, but it gives the right intuition. Increase the order and the slope gets steeper. Move the pole frequency and the bend shifts across the axis. Higher-order filters buy sharper separation, but they also carry more phase rotation. That same trade shows up in control systems: the thing that makes your loop respond aggressively can also spend the phase budget.
+
+<LabCanvas effect="bode-plotter" height={300} params={{ type: "lp", order: 4, normalizedFreq: 1.2 }} caption="Higher order means sharper magnitude shaping, but also more phase movement through the transition band." />
+
+## Why margins beat vibes
+
+It is tempting to tune a loop by turning up gain until it reacts quickly, then backing off when it rings. That works in the same way tapping a bridge with your foot works: it tells you something, but not enough. A Bode plot lets you ask the loop a more useful question: how close are we to the frequency where the feedback changes sign?
+
+<Callout type="thinking" title="A stable loop is a loop with spare phase">
+
+The loop does not become unstable because gain is large in isolation. It becomes unstable when gain is still large at a frequency where the phase has rotated into positive feedback. Margins measure how far away that combined condition is.
+
+</Callout>
+
+## How to use this lab
+
+Start with a low-pass filter. Increase the order from 1 to 4 and watch the transition sharpen. Then change the pole frequency and notice that the whole bend moves. Switch to band-pass and notch modes to see a localised frequency region dominate the response. The practical habit is to read magnitude and phase together. A magnitude curve tells you what gets through; the phase curve tells you what arrives late.
+
+In a real design, you would overlay the plant, controller, sensor, actuator, and computation delay into one loop transfer function $L(s)$. This page is the smaller mental model. Every filter, every pole, and every delay takes a bite out of the margin. Enough small bites become a squeal.

@@ -1,0 +1,47 @@
+<LabSide effect="conformal-grid" height={340} params={{ map: "joukowski", density: 12, color: "#7c5cff" }} caption="The Joukowski transform bends a circle into an airfoil-like curve while preserving local angles away from singular points.">
+
+## The core idea
+
+Complex maps are geometry machines. Feed them a point $z = x + iy$, get back another point $w = f(z)$, and a whole grid bends with it. A conformal map has one especially nice property: locally, it preserves angles. Tiny shapes can stretch and rotate, but they do not shear into different corner angles. That makes conformal maps surprisingly useful for physics, because many two-dimensional fields care deeply about angles.
+
+</LabSide>
+
+The classic airfoil trick is the **Joukowski transform**:
+
+<Equation id="eqn:joukowski-lab" number="1" caption="The Joukowski map. Applied to a shifted circle, it creates an airfoil-like profile with a sharp trailing edge." latex="w = z + \frac{1}{z}">
+
+$$
+w = z + \frac{1}{z}
+$$
+
+</Equation>
+
+Run the lab with the **Joukowski** map selected. Straight grid lines wrap around and pinch into a shape that looks suspiciously like a wing section. The transform is not doing aerodynamics by itself, but it gives a clean route from a problem we can solve, flow around a circle, to a problem we care about, flow around a wing-like body. That was the magic of early theoretical aerodynamics: solve the easy geometry, then carry the solution through the map.
+
+<LabCanvas effect="conformal-grid" height={300} params={{ map: "inversion", density: 12, color: "#00e0b8" }} caption="Inversion is the other useful mental model: lines and circles trade places, and far-away geometry can fold into the local picture." />
+
+## What "conformal" buys you
+
+For analytic functions with non-zero derivative, the map is locally a rotation plus a scale. In symbols:
+
+<Equation id="eqn:conformal-linear-lab" number="2" caption="Local behaviour of a conformal map: near a point, it acts like multiplication by the complex derivative." latex="f(z_0 + \Delta z) \approx f(z_0) + f'(z_0)\Delta z">
+
+$$
+f(z_0 + \Delta z) \approx f(z_0) + f'(z_0)\Delta z
+$$
+
+</Equation>
+
+Multiplication by a complex number rotates and scales. It does not change the angle between two tiny line segments. This is why the grid remains orthogonal even after it gets wildly bent. The property is local, so large shapes can look completely transformed while the little crossing angles still behave.
+
+<Callout type="info" title="The wing is a coordinate trick first">
+
+The Joukowski airfoil is not a realistic full aircraft wing. It is a map that turns a solvable circle problem into a wing-shaped one while preserving the mathematical structure of potential flow. The useful lesson is not "all wings are circles"; it is that the right coordinates can make a hard boundary look easy.
+
+</Callout>
+
+## How to use this lab
+
+Try **Power**, **Inversion**, **Joukowski**, and **Exponential**. The power map opens and closes angles around the origin. Inversion flips near and far. Exponential wraps strips into circles. Joukowski pinches the grid into the wing-like form. The point of the demo is to stop seeing complex functions as formulae on a page and start seeing them as machines that move geometry around.
+
+Some food for thought: a lot of physics is choosing the coordinate system in which the mess becomes a straight line. Complex analysis just makes that habit very literal.

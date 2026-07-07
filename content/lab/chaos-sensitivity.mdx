@@ -1,0 +1,37 @@
+<LabSide effect="lorenz-attractor" height={340} params={{ points: 2, rho: 28, speed: 1, trail: 0.06 }} caption="Two trajectories begin nearly on top of each other. For a while they agree. Then the attractor pulls them into visibly different futures.">
+
+## The core idea
+
+Chaos does not mean randomness. The Lorenz equations are deterministic: if you know the exact starting point and exact parameters, the future is fixed. The problem is the word **exact**. Nearby starting points separate exponentially, so a tiny measurement error grows until the prediction is no better than a guess about which lobe comes next.
+
+</LabSide>
+
+The shorthand is **sensitive dependence on initial conditions**. If two states begin a distance $\delta_0$ apart, a chaotic system often grows that separation like:
+
+<Equation id="eqn:lyapunov-lab" number="1" caption="A positive Lyapunov exponent means small initial differences grow exponentially for some time." latex="\delta(t) \approx \delta_0 e^{\lambda t}, \qquad \lambda > 0">
+
+$$
+\delta(t) \approx \delta_0 e^{\lambda t}, \qquad \lambda > 0
+$$
+
+</Equation>
+
+That $\lambda$ is a Lyapunov exponent. Positive means the system stretches nearby states apart. The interesting part is that the Lorenz attractor is also bounded. Trajectories do not fly to infinity; they stay trapped in the butterfly-shaped region. So the system is both constrained and unpredictable. It has structure, but not long-term forecastability.
+
+<LabCanvas effect="lorenz-attractor" height={300} params={{ points: 5, rho: 28, speed: 1.4, trail: 0.04 }} caption="More trajectories make the same point noisier: the attractor is a shape, not a single repeating path." />
+
+## Prediction horizon
+
+Weather is the usual example because Lorenz found this behaviour while modelling convection. The lesson generalises. A chaotic system can have accurate short-term forecasts and useless long-term forecasts without changing its equations. The limiting factor is the precision of the state estimate. If each unit of time roughly multiplies uncertainty, then eventually the uncertainty is the size of the whole attractor.
+
+<Callout type="thinking" title="Chaos is not a lack of law">
+
+The law is perfectly clear. What fails is our ability to specify the starting state with infinite precision. A deterministic system can be practically unpredictable when it amplifies the uncertainty we cannot remove.
+
+</Callout>
+
+## How to use this lab
+
+Set **Trajectories** to 2 and watch the pair. They begin nearly identical, then split. Raise the speed if you want to see the divergence quickly, or lower the trail to make the current path easier to read. Now move $\rho$. The attractor changes character because $\rho$ controls how strongly the convective loop is driven. Below some values the motion is tame; around the classic $\rho = 28$ case, the butterfly appears.
+
+There is a nice conundrum here. The attractor makes the system easier to describe statistically. You can talk about where trajectories tend to spend time. But it makes individual futures harder to promise. That is a good pattern to remember: when point predictions fail, distributions may still tell the truth.

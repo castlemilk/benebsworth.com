@@ -1,0 +1,132 @@
+---
+title: "How DRAM remembers a bit"
+date: "2026-07-07T00:00:00.000Z"
+description: "The second memory-chip-series post goes inside one DRAM access: a capacitor leaks, a bitline is precharged, a row is activated, sense amplifiers turn a tiny voltage nudge into a full bit, and the row has to be restored before the data is safe again."
+labels: hardware,semiconductors,memory,systems
+release: true
+author: Ben Ebsworth
+takeaways:
+  - "A DRAM bit is a tiny charge on a capacitor, gated by one access transistor. Density comes from that simplicity; refresh comes from the leakage."
+  - "A read is destructive in spirit: activating a row shares charge with the bitline, the sense amplifier resolves it, then the whole row is written back."
+  - "Most of DRAM performance is row locality and scheduling. An open row is cheap to read again; switching rows costs activate and precharge time."
+  - "DDR, LPDDR, GDDR, and HBM are different ways to move rows of the same basic DRAM physics across different distances, powers, and package costs."
+---
+
+This follows on from [the first memory-chip post](/blog/memory-chip-ecosystem/), which treated memory as an ecosystem: SRAM near compute, DRAM as working memory, NAND as storage, HBM as stacked DRAM beside accelerators, and software trying to spend fewer bytes. Now let's zoom in until the market disappears and one bit is left on the table.
+
+DRAM's trick is almost rude in its simplicity. Store a 1 as charge on a tiny capacitor. Store a 0 as less charge. Use one transistor as a gate so the capacitor can be connected to a long wire when the chip wants to read or write it. Then pack billions of those cells into a grid.
+
+That is the whole bargain. One transistor plus one capacitor gives you density. The capacitor leaking gives you refresh. The long wires and tiny voltage differences give you latency. The rest of DRAM is the machinery needed to make that bargain reliable at scale.
+
+<DramRefreshCell />
+
+## The cell: one transistor, one capacitor
+
+The usual mental model is called **1T1C**: one access transistor, one storage capacitor. The transistor's gate connects to a **wordline**. The capacitor connects through that transistor to a **bitline**. Rows are wordlines; columns are bitlines. If a row is not selected, the access transistor is off and the capacitor is isolated. If a row is selected, every cell in that row connects to its bitline at once.
+
+The capacitor is tiny. That matters. It cannot drive a signal like a logic gate can. It only nudges the voltage on the bitline a little above or below a prepared midpoint. The chip needs an analogue helper, the **sense amplifier**, to notice that nudge and snap it into a full digital 0 or 1.
+
+<Callout type="thinking" title="DRAM reads a row, not a byte">
+
+The CPU asks for cache lines and programs ask for bytes, but the DRAM array works in rows. Activating a row connects thousands of cells to thousands of sense amplifiers. The chip then selects a smaller column slice to send out. That gap between what software names and what the array actually opens is where row-buffer behaviour comes from.
+
+</Callout>
+
+## Precharge: start from the middle
+
+Before a read, the bitline is not left at 0 or 1. It is **precharged** to about half the supply voltage, often described as $V_{DD}/2$. That midpoint makes the read symmetric. A charged cell pulls the bitline slightly up. A discharged cell pulls it slightly down. The sense amplifier can then compare the paired bitlines and decide which way the tiny imbalance points.
+
+So a closed DRAM bank is not empty. It is staged. Its bitlines are held at the midpoint, waiting for one row to be opened.
+
+## Activate: connect the whole row
+
+An **ACTIVATE** command selects a row. The wordline rises. Every access transistor in that row turns on. Each capacitor shares its charge with its bitline. Because the bitline is much larger than the capacitor, the voltage movement is small. This is the delicate part: the data exists as a tiny analogue difference for a short time.
+
+Then the sense amplifiers take over. They are cross-coupled circuits, a little positive-feedback latch. If one side is a hair higher, it drives itself high and the other side low. A tiny hint becomes a full logic level.
+
+<Equation id="eqn:dram-charge-sharing" number="1" caption="Charge sharing intuition: the cell capacitor nudges the much larger bitline capacitance away from its precharged midpoint." latex="\Delta V \approx \frac{C_\text{cell}}{C_\text{cell}+C_\text{bitline}}\left(V_\text{cell}-\frac{V_{DD}}{2}\right)">
+
+$$
+\Delta V \approx \frac{C_\text{cell}}{C_\text{cell}+C_\text{bitline}}\left(V_\text{cell}-\frac{V_{DD}}{2}\right)
+$$
+
+</Equation>
+
+This is why DRAM is both brilliant and fiddly. The cell can be small because the sense amplifier does the heavy lifting. But the chip now has timing rules around how long the row must remain active before the result is stable enough to read.
+
+## The destructive-read wrinkle
+
+Reading a DRAM cell disturbs it. The capacitor shared charge with the bitline; it no longer holds exactly what it held before the access. Luckily the sense amplifier, after resolving the value, also drives the bitline all the way to 0 or 1. Because the wordline is still open, that full-strength value charges or discharges the cell again. The row gets restored as part of the read.
+
+So a DRAM read is a read plus a refresh of the opened row. This is a nice little trick, but it creates another rule: once you open a row, you need to leave it open long enough for restoration to finish before you precharge the bank for another row.
+
+<StatGroup>
+  <Stat label="Cell shape" value="1T1C" context="one transistor, one capacitor per stored bit" />
+  <Stat label="Row access" value="whole row" context="activation fills the row buffer, then columns are selected" />
+  <Stat label="Refresh reason" value="leakage" context="charge slowly drains even when the row is not read" />
+</StatGroup>
+
+## The row buffer is the first cache
+
+After activation, the sense amplifiers hold the row's data. That set of latches is usually called the **row buffer**. Reads and writes to columns inside the already-open row are much cheaper than opening a different row, because the expensive analogue step has already happened.
+
+This is the origin of the timing names you see in memory specs:
+
+- **tRCD:** activate-to-read/write delay. Open the row, then wait before selecting a column.
+- **tCAS / CL:** column access latency. Ask for a column and wait for data.
+- **tRP:** precharge time. Close the current row and prepare the bank for another.
+- **tRAS:** minimum row active time. Keep the row open long enough to restore it safely.
+
+Those are not arbitrary benchmark decorations. They are the chip's physical ritual: prepare the bitlines, open a row, sense and restore it, read or write columns, close the row.
+
+<Callout type="info" title="Row hits are why memory controllers reorder work">
+
+If request A and request B hit the same open row, serving them together avoids another precharge and activate. Memory controllers exploit that locality where they can. The hard part is doing it without breaking ordering guarantees the CPU expects.
+
+</Callout>
+
+## Refresh: remembering takes work
+
+Even if nobody reads a row, the capacitors leak. Heat, defects, cell geometry, and time all conspire to blur the charge. The controller must periodically refresh rows by activating them and letting the sense amplifiers restore the stored values.
+
+Refresh is easy to describe and annoying to schedule. While a bank or rank is busy refreshing, it is not serving useful reads or writes. Modern DRAM hides a lot of that cost with bank-level organisation and controller scheduling, but the principle stays the same: memory that forgets must spend some of its life remembering.
+
+That gives DRAM its name. It is **dynamic** random-access memory because the stored value is not passively stable. SRAM holds state in a latch as long as power is present. NAND traps charge for storage without power. DRAM sits in between: dense enough to be working memory, volatile enough to need constant maintenance.
+
+## DDR, GDDR, and HBM are different escape routes
+
+Once you understand the row, the rest of the DRAM family becomes less mysterious. DDR, LPDDR, GDDR, and HBM all inherit the same broad cell-and-row physics. They differ in how they package, power, clock, channelise, and connect that row machinery to the processor.
+
+DDR DIMMs optimise for commodity server and desktop main memory: replaceable modules, capacity, cost, and enough channels to feed CPUs. LPDDR trades serviceability and some interface assumptions for lower power, which makes sense in phones and laptops. GDDR puts fast DRAM packages around a GPU on a board and drives high-speed signals across the PCB. HBM stacks DRAM dies and uses through-silicon vias plus a very wide package-level interface, so the wires are short and numerous instead of long and screamingly fast.
+
+<MemoryPackagingTradeoff />
+
+The cell did not become magical in HBM. The geometry around it changed. Instead of trying to push more bits down a relatively narrow external bus, HBM gives the processor a much wider local path to many DRAM banks. That is why it is so attractive for AI accelerators. The workloads need enormous bandwidth, and short wide links move bytes more efficiently than long fast board traces.
+
+<Callout type="success" title="The stack still starts with the same little bargain">
+
+HBM feels exotic because the package is exotic. But the reason it exists is still the basic DRAM bargain: the bit cell is dense and cheap enough to build huge working memories, while the interface has to fight the cost of reaching those bits quickly.
+
+</Callout>
+
+## The useful mental model
+
+When a program "loads from memory", picture this smaller sequence hiding underneath:
+
+1. The memory controller maps the address to a channel, rank, bank, row, and column.
+2. If the right row is already open, it can issue a column read.
+3. If another row is open, the bank must precharge first.
+4. The target row activates, sharing tiny capacitor charges onto bitlines.
+5. Sense amplifiers resolve and restore the whole row.
+6. The requested column burst leaves the chip.
+
+That is one access. A modern system overlaps many of them across banks, channels, ranks, caches, prefetchers, and queues, but this row-level story is still underneath. It explains why locality matters, why random access is slower than streaming, why refresh exists, and why "memory bandwidth" is not just a number printed on a box.
+
+The next natural post in this series is NAND, because it makes a different bargain. DRAM reads by disturbing and restoring a tiny capacitor. NAND stores charge behind an insulating barrier, keeps it without power, and then pays for that permanence with block erases, wear, and much more complicated error correction. Watch this space.
+
+## Reading further
+
+- [IBM, "Dynamic random-access memory (DRAM)"](https://www.ibm.com/history/dram): the Robert Dennard story and the historical reason the one-transistor cell mattered.
+- [Micron DDR4 SDRAM data sheet](https://www.mouser.com/datasheet/2/671/Micron_05092023_8gb_ddr4_sdram-3175546.pdf): useful for seeing real command names and timing parameters such as ACTIVATE, READ, WRITE, PRECHARGE, and REFRESH.
+- [University of Wisconsin CS 752 DRAM basics notes](https://pages.cs.wisc.edu/~sinclair/courses/cs752/fall2020/handouts/lecture/12-dram.pdf): a clear row-buffer explanation with activate/read/write/precharge sequencing.
+- [SK hynix, "Become a Semiconductor Expert with SK hynix: HBM"](https://news.skhynix.com/become-a-semiconductor-expert-with-sk-hynix-hbm/): a packaging-level view of HBM and through-silicon vias.

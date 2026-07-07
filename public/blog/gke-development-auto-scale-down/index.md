@@ -74,7 +74,7 @@ In order to authorize our Cloud Scheduler instance to successfully interact with
 
 ### create custom role
 
-We need to create a [custom role](https://cloud.google.com/iam/docs/creating-custom-roles#iam-custom-roles-testable-permissions-gcloud) with the specific permissions we need, 
+We need to create a [custom role](https://cloud.google.com/iam/docs/creating-custom-roles#iam-custom-roles-testable-permissions-gcloud) with the specific permissions we need,
 
 ```text
 gcloud iam roles create gke.scheduler \

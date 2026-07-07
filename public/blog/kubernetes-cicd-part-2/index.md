@@ -106,7 +106,7 @@ make component.tekton.install CLUSTER=[local|gke|...]
 On a successful deployment you should see the following `Pod`'s running:
 
 ```bash
-$ kubectl get po -n tekton-pipelines  
+$ kubectl get po -n tekton-pipelines
 NAME                                           READY   STATUS    RESTARTS   AGE
 tekton-pipelines-controller-55c6b5b9f6-5cnq2   1/1     Running   0          3m43s
 tekton-pipelines-webhook-6794d5bcc8-l5j2g      1/1     Running   0          3m43s

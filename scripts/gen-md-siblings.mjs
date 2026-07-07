@@ -134,6 +134,23 @@ const COMPONENT_DESCRIPTIONS = {
     'An interactive open-addressing hash table visualiser for the "how Python dicts really work" post. Inserting keys animates the djb2 hash being computed and the probe sequence ricocheting through slots (collisions flashed orange, the landing slot in the blog accent); deletes leave tombstones that lookups must probe past, and crossing the 2/3 load factor triggers an animated 2× resize and rehash. A probe-strategy toggle (Linear, Quadratic, Python-style Perturbed) shows how each walk clusters differently. The rendered post has the live version.',
   StorageEngineSim:
     'A dual-pane interactive contrasting the two on-disk storage philosophies for the "B-trees vs LSM-trees" post. A B-tree (read-optimised, update-in-place, with real top-down node splits that push the median up) sits beside an LSM-tree (write-optimised: a memtable that flushes to immutable L0 SSTable runs which then size-tier-compact into L1). Controls — Insert key, Insert ×8, a read-heavy/write-heavy workload toggle, and Reset — drive live counters (page writes, SSTable writes, live vs total bytes) and a qualitative read/write/space amplification readout illustrating the RUM-conjecture trade-off. The rendered post has the live version.',
+  // Memory-chip ecosystem and DRAM follow-up.
+  MemoryHierarchyChart:
+    'Interactive memory hierarchy chart comparing SRAM, DRAM, HBM, GDDR, LPDDR, CXL memory, and NAND across latency, bandwidth, capacity, power, and cost. The rendered post shows the live comparison surface and lets the reader inspect where each memory technology sits in the trade-off stack.',
+  DramRefreshCell:
+    'Interactive DRAM cell diagram showing a 1T1C bit cell: an access transistor gates a storage capacitor onto a precharged bitline, a sense amplifier resolves the tiny voltage difference, and the row is restored because the read disturbs the stored charge. The rendered post has the animated version.',
+  MemoryPackagingTradeoff:
+    'Interactive packaging comparison for DDR/GDDR/HBM-style memory placement. It contrasts board-level DRAM packages with stacked HBM close to logic, making the bandwidth-per-watt trade-off visible as a geometry problem: long fast traces versus short wide package links.',
+  AiMemorySizer:
+    'Interactive AI memory sizing calculator for model weights and KV cache. It lets the reader vary layers, KV heads, head dimension, context length, batch size, and precision to see why inference throughput is often bounded by memory capacity and bandwidth.',
+  MemoryMarketBars:
+    'Interactive bar chart for the memory market snapshot used in the memory ecosystem post, showing DRAM and NAND supplier concentration and how a small supplier set shapes allocation under AI-driven demand.',
+  MemoryKnowledgeGraph:
+    'Interactive supply-chain knowledge graph connecting equipment makers, memory manufacturers, advanced packaging, accelerator vendors, hyperscalers, and memory technologies. Edges distinguish direct disclosures from inferred supply-chain paths so the ecosystem can be explored without overstating public relationships.',
+  DeepSpecEli5Flow:
+    'Interactive ELI5 walkthrough for the DSpark post. It progressively compares three decoding systems: serial one-token-at-a-time generation, naive speculative decoding where a fast drafter guesses several tokens and the target verifies them, and DSpark scheduled speculation where the fast parallel draft is kept but a confidence scheduler trims low-value suffix tokens before they consume target-model capacity. The rendered component uses buttons to switch between the three stages and shows target work, accepted progress, and wasted or trimmed tokens.',
+  DeepSpecArchitecture:
+    'Interactive DSpark architecture walkthrough for the DeepSpec speculative-decoding post. It shows the target model producing an anchor token, a DFlash-style parallel drafter proposing a block, a lightweight sequential head improving intra-block coherence, a confidence scheduler multiplying per-token survival probabilities, and the target model verifying only the selected prefix. The system-view tab demonstrates the serving trade-off: light load verifies more of the draft block, while heavy load trims low-confidence suffix tokens before they consume target-model batch capacity.',
   // KV-cache compression post — five interactive explainers.
   KvCacheCompressor:
     'The centrepiece for the KV-cache compression post: frames the cache as a 4-D tensor (2·layers·KV-heads·tokens·head_dim, fp16) and lets the reader select a compression method to see which axis it attacks. Tabs: fp16 (baseline), TurboQuant 4-bit (precision axis — quantise each number to 4 bits), StreamingLLM and H2O (sequence axis — drop middle tokens, keep sinks + recent), Cross-layer sharing/CLA (layers axis), and linear attention/GLA (collapse the sequence into a fixed recurrent state). Selecting a method morphs a schematic of one layer\'s KV slab, updates a relative-footprint bar, and shows a card with the axis attacked, the keep/drop rule, the cost class (zero-shot lossless vs lossy vs needs-retraining), and the measured HumanEval-X Go pass@1. The rendered post has the live version.',
@@ -340,7 +357,7 @@ function processPost(slugDir) {
     ...data,
     markdown_url: `/blog/${slugDir}/`,
     canonical_url: `https://benebsworth.com/blog/${slugDir}/`,
-  })
+  }).replace(/[ \t]+$/gm, '')
 
   const dest = join(OUT, slugDir, 'index.md')
   mkdirSync(join(OUT, slugDir), { recursive: true })

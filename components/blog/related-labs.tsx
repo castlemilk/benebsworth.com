@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { tagColor } from '@/lib/tag-colors'
-import { LAB_EFFECTS, type LabEntry } from '@/lib/lab/registry'
+import { LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
 
 /**
  * <RelatedLabs> — a small footer block on a blog post that links to lab
@@ -65,7 +65,7 @@ export function RelatedLabs({
     if (cats) cats.forEach((c) => wantedCategories.add(c))
   }
 
-  const scored: Array<{ entry: LabEntry; score: number }> = LAB_EFFECTS
+  const scored: Array<{ entry: LabEntry; score: number }> = LAB_DEMO_EFFECTS
     .map((entry) => {
       const entryTags = entry.tags.map((t) => t.toLowerCase())
       const tagScore = query.reduce((acc, q) => {
@@ -88,8 +88,8 @@ export function RelatedLabs({
     // its sibling AI labs rather than unrelated random effects.
     const chosenSet = new Set(scored.map((s) => s.entry.slug))
     const fillerPool = wantedCategories.size > 0
-      ? LAB_EFFECTS.filter((e) => !chosenSet.has(e.slug) && wantedCategories.has(e.category))
-      : LAB_EFFECTS.filter((e) => !chosenSet.has(e.slug))
+      ? LAB_DEMO_EFFECTS.filter((e) => !chosenSet.has(e.slug) && wantedCategories.has(e.category))
+      : LAB_DEMO_EFFECTS.filter((e) => !chosenSet.has(e.slug))
     // Stable random: shuffle by hash of slug + day (changes daily, but
     // stable within a day so the layout doesn't flicker on every page
     // load).
@@ -104,7 +104,7 @@ export function RelatedLabs({
     // category with no labs yet), fall back to the top random effects so
     // the section never renders empty.
     if (chosen.length === 0) {
-      chosen = [...LAB_EFFECTS].slice(0, limit)
+      chosen = [...LAB_DEMO_EFFECTS].slice(0, limit)
     }
   }
 

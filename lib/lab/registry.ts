@@ -34,13 +34,13 @@ export const LAB_EFFECTS: LabEntry[] = [
   { slug: 'double-pendulum', title: 'Double Pendulum', blurb: 'Chaotic pendulums diverging from near-identical starting conditions.', tags: ['chaos', 'ode'], category: 'maths', homeEmbedSafe: true },
   { slug: 'phase-portrait', title: 'Phase Portrait', blurb: 'ODE trajectories flowing through vector fields — Lotka-Volterra, Van der Pol, Duffing.', tags: ['ode', 'dynamical systems'], category: 'maths', homeEmbedSafe: true },
   { slug: 'conformal-grid', title: 'Conformal Grid', blurb: 'Complex mappings deforming a Cartesian grid — Joukowski, power maps, inversion.', tags: ['complex analysis', 'differential geometry'], category: 'maths', homeEmbedSafe: true },
-  { slug: 'complex-maps-and-airfoils', title: 'Complex Maps and Airfoils', blurb: 'The Joukowski transform turning circles into airfoils, with conformal geometry as the translator.', tags: ['complex analysis', 'conformal mapping', 'aerodynamics'], category: 'maths', homeEmbedSafe: true },
+  { slug: 'complex-maps-and-airfoils', title: 'Complex Maps and Airfoils', blurb: 'The Joukowski transform turning circles into airfoils, with conformal geometry as the translator.', tags: ['complex analysis', 'conformal mapping', 'aerodynamics'], category: 'maths', homeEmbedSafe: false },
   { slug: 'random-walk', title: 'Random Walk', blurb: 'Stochastic walks converging to the Gaussian via the central limit theorem.', tags: ['statistics', 'probability'], category: 'maths', homeEmbedSafe: true },
   { slug: 'fourier-series', title: 'Fourier Series', blurb: 'Epicycles tracing waveforms — Gibbs phenomenon, harmonic decomposition.', tags: ['analysis', 'fourier'], category: 'maths', homeEmbedSafe: true },
   { slug: 'lorenz-attractor', title: 'Lorenz Attractor', blurb: 'The classic chaotic 3D butterfly — two trajectories diverge from near-identical starts.', tags: ['chaos', 'ode', 'butterfly effect'], category: 'maths', homeEmbedSafe: true },
-  { slug: 'chaos-sensitivity', title: 'Sensitive Dependence', blurb: 'Why deterministic systems can still become practically unpredictable when nearby states peel apart.', tags: ['chaos', 'prediction', 'lyapunov'], category: 'maths', homeEmbedSafe: true },
+  { slug: 'chaos-sensitivity', title: 'Sensitive Dependence', blurb: 'Why deterministic systems can still become practically unpredictable when nearby states peel apart.', tags: ['chaos', 'prediction', 'lyapunov'], category: 'maths', homeEmbedSafe: false },
   { slug: 'reaction-diffusion', title: 'Reaction-Diffusion', blurb: 'Gray-Scott Turing patterns — spots, stripes, mazes, and mitosis from two PDEs.', tags: ['pde', 'turing', 'pattern formation'], category: 'maths', homeEmbedSafe: true },
-  { slug: 'turing-patterns', title: 'Turing Patterns', blurb: 'Local reaction plus uneven diffusion can draw stripes, spots, and labyrinths without a central planner.', tags: ['reaction diffusion', 'turing', 'pattern formation'], category: 'maths', homeEmbedSafe: true },
+  { slug: 'turing-patterns', title: 'Turing Patterns', blurb: 'Local reaction plus uneven diffusion can draw stripes, spots, and labyrinths without a central planner.', tags: ['reaction diffusion', 'turing', 'pattern formation'], category: 'maths', homeEmbedSafe: false },
   // ── Physics ─────────────────────────────────────────────────────────
   { slug: 'wave-superposition', title: 'Wave Superposition', blurb: 'Interference of two plane waves — beats, standing waves, and nodes.', tags: ['waves', 'interference'], category: 'physics', homeEmbedSafe: true },
   { slug: 'bloch-sphere', title: 'Bloch Sphere', blurb: 'Qubit state precessing on the Bloch sphere under a magnetic Hamiltonian.', tags: ['quantum', 'qm'], category: 'physics', homeEmbedSafe: true },
@@ -50,14 +50,14 @@ export const LAB_EFFECTS: LabEntry[] = [
   // ── Engineering ──────────────────────────────────────────────────────
   { slug: 'rlc-resonance', title: 'RLC Resonance', blurb: 'Transient step response of a series RLC circuit — underdamped ringing vs critical damping.', tags: ['circuits', 'transient'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'fft-spectrum', title: 'FFT Spectrum', blurb: 'Real-time frequency analyzer with log-scale bins — sine, square, sawtooth, chirp waveforms.', tags: ['dsp', 'spectrum'], category: 'engineering', homeEmbedSafe: true },
-  { slug: 'aliasing-and-nyquist', title: 'Aliasing and Nyquist', blurb: 'What happens when a sampled signal masquerades as a slower wave because the clock was too lazy.', tags: ['dsp', 'sampling', 'nyquist'], category: 'engineering', homeEmbedSafe: true },
+  { slug: 'aliasing-and-nyquist', title: 'Aliasing and Nyquist', blurb: 'What happens when a sampled signal masquerades as a slower wave because the clock was too lazy.', tags: ['dsp', 'sampling', 'nyquist'], category: 'engineering', homeEmbedSafe: false },
   { slug: 'pid-tuner', title: 'PID Tuner', blurb: 'Step response of a PID-controlled 2nd-order plant — tune Kp, Ki, Kd and watch overshoot and settle.', tags: ['control', 'feedback'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'constellation-plot', title: 'Constellation Plot', blurb: 'QPSK / 16-QAM / 64-QAM scatter through an AWGN channel — adjustable SNR and EVM.', tags: ['communications', 'modulation'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'smith-chart', title: 'Smith Chart', blurb: 'Transmission line impedance matcher — animated reflection coefficient path as frequency sweeps.', tags: ['rf', 'impedance'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'inverse-kinematics', title: 'Inverse Kinematics', blurb: '2R planar robot arm solving for joint angles via analytic IK — drag the end-effector.', tags: ['robotics', 'kinematics'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'pll-lock-in', title: 'PLL Lock-In', blurb: 'Phase-locked loop tracking a chirped reference — P/PI loop filter, VCO frequency, lock-in visualisation.', tags: ['control', 'pll'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'bode-plotter', title: 'Bode Plotter', blurb: 'Frequency response of 1st–4th order filters — LP/HP/BP/Notch with animated pole movement.', tags: ['dsp', 'filters'], category: 'engineering', homeEmbedSafe: true },
-  { slug: 'feedback-stability-margins', title: 'Feedback Stability Margins', blurb: 'A Bode-plot view of how much phase and gain slack a feedback loop has before it rings or runs away.', tags: ['control', 'bode', 'stability'], category: 'engineering', homeEmbedSafe: true },
+  { slug: 'feedback-stability-margins', title: 'Feedback Stability Margins', blurb: 'A Bode-plot view of how much phase and gain slack a feedback loop has before it rings or runs away.', tags: ['control', 'bode', 'stability'], category: 'engineering', homeEmbedSafe: false },
   { slug: 'transmission-line', title: 'Transmission Line Pulse', blurb: 'TDR — a voltage pulse travels, reflects, and inverts on a mismatched line.', tags: ['rf', 'tdr', 'impedance'], category: 'engineering', homeEmbedSafe: true },
   { slug: 'am-modulation', title: 'AM Modulation', blurb: 'Carrier, message, modulated signal, and spectrum — envelope, sidebands, overmodulation.', tags: ['communications', 'modulation', 'rf'], category: 'engineering', homeEmbedSafe: true },
   // ── AI & Machine Learning ───────────────────────────────────────────
@@ -82,9 +82,29 @@ export const LAB_EFFECTS: LabEntry[] = [
 export function getEffect(slug: string): LabEntry | undefined {
   return LAB_EFFECTS.find((e) => e.slug === slug)
 }
-export const HOME_EMBED_EFFECTS = LAB_EFFECTS.filter((e) => e.homeEmbedSafe)
+
+const LAB_CONCEPT_GUIDE_SLUG_LIST = [
+  'aliasing-and-nyquist',
+  'feedback-stability-margins',
+  'complex-maps-and-airfoils',
+  'chaos-sensitivity',
+  'turing-patterns',
+] as const
+
+export const LAB_CONCEPT_GUIDE_SLUGS: ReadonlySet<string> = new Set(LAB_CONCEPT_GUIDE_SLUG_LIST)
+
+export function isLabConceptGuide(slug: string): boolean {
+  return LAB_CONCEPT_GUIDE_SLUGS.has(slug)
+}
+
+export const LAB_CONCEPT_GUIDES = LAB_EFFECTS.filter((e) => isLabConceptGuide(e.slug))
+export const LAB_DEMO_EFFECTS = LAB_EFFECTS.filter((e) => !isLabConceptGuide(e.slug))
+export const HOME_EMBED_EFFECTS = LAB_DEMO_EFFECTS.filter((e) => e.homeEmbedSafe)
 export function effectsByCategory(cat: LabCategory): LabEntry[] {
-  return LAB_EFFECTS.filter((e) => e.category === cat)
+  return LAB_DEMO_EFFECTS.filter((e) => e.category === cat)
+}
+export function conceptGuidesByCategory(cat: LabCategory): LabEntry[] {
+  return LAB_CONCEPT_GUIDES.filter((e) => e.category === cat)
 }
 
 // ── Dynamic effect module loaders (code-split per effect) ──────────────

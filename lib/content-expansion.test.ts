@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { getPublishedPosts } from './content'
-import { EFFECT_LOADERS, LAB_EFFECTS } from './lab/registry'
+import { EFFECT_LOADERS, LAB_DEMO_EFFECTS, LAB_EFFECTS, isLabConceptGuide } from './lab/registry'
 import { labPosterFor } from './lab/posters'
 
 const BLOG_ADDITIONS = [
@@ -51,6 +51,8 @@ describe('requested content expansion', () => {
       expect(entry, `${expected.slug} is registered`).toBeTruthy()
       expect(entry?.title).toBe(expected.title)
       expect(entry?.category).toBe(expected.category)
+      expect(isLabConceptGuide(expected.slug)).toBe(true)
+      expect(LAB_DEMO_EFFECTS.some((effect) => effect.slug === expected.slug)).toBe(false)
       expect(EFFECT_LOADERS[expected.slug], `${expected.slug} has a live effect loader`).toBeTypeOf('function')
 
       const explainerPath = path.join(process.cwd(), 'content/lab', `${expected.slug}.mdx`)

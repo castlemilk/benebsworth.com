@@ -2,7 +2,13 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { CATEGORIES, effectsByCategory, LAB_EFFECTS } from '@/lib/lab/registry'
+import {
+  CATEGORIES,
+  LAB_CONCEPT_GUIDES,
+  LAB_DEMO_EFFECTS,
+  LAB_EFFECTS,
+  effectsByCategory,
+} from '@/lib/lab/registry'
 import type { LabEntry } from '@/lib/lab/registry'
 import { tagColor } from '@/lib/tag-colors'
 import { LabCard } from '@/components/lab/lab-card'
@@ -67,7 +73,7 @@ export function LabContent({ navItems }: { navItems: CategoryNavItem[] }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    let results = LAB_EFFECTS
+    let results = q ? LAB_EFFECTS : LAB_DEMO_EFFECTS
     if (q) {
       results = results.filter(
         (e) =>
@@ -122,42 +128,63 @@ export function LabContent({ navItems }: { navItems: CategoryNavItem[] }) {
           )}
         </section>
       ) : (
-        /* ── Category sections ───────────────────────────── */
-        CATEGORIES.map((cat, ci) => {
-          const effects = effectsByCategory(cat.key)
-          if (effects.length === 0) return null
-          const accent = CATEGORY_ACCENT[cat.key] ?? '#7c5cff'
-
-          return (
-            <Reveal key={cat.key} delay={ci * 60}>
-              <section
-                id={`cat-${cat.key}`}
-                className="scroll-mt-36 border-l-2 py-16 pl-6 sm:pl-8"
-                style={{ borderColor: accent }}
-              >
+        <>
+          {LAB_CONCEPT_GUIDES.length > 0 && (
+            <Reveal>
+              <section className="border-y border-[var(--color-border)] py-16">
                 <div className="mb-8">
-                  <h2 className="type-h2">
-                    <span
-                      className="accent-ink mr-2 inline-block text-[0.85em]"
-                      style={{ '--ink': accent } as React.CSSProperties}
-                    >
-                      {cat.glyph}
-                    </span>
-                    <span className="opacity-40">·</span>
-                    <span className="ml-2">{cat.label}</span>
-                  </h2>
-                  <p className="mt-2 max-w-prose type-body text-fg/60">{cat.blurb}</p>
+                  <p className="type-label text-muted">Guides</p>
+                  <h2 className="mt-2 type-h2">Concept guides</h2>
+                  <p className="mt-2 max-w-prose type-body text-fg/60">
+                    Friendly walkthroughs that build from a live simulation into the underlying idea.
+                  </p>
                 </div>
-
                 <div className="grid gap-6 sm:grid-cols-2">
-                  {effects.map((e) => (
+                  {LAB_CONCEPT_GUIDES.map((e) => (
                     <LabCardLink key={e.slug} e={e} />
                   ))}
                 </div>
               </section>
             </Reveal>
-          )
-        })
+          )}
+
+          {/* ── Category sections ───────────────────────────── */}
+          {CATEGORIES.map((cat, ci) => {
+            const effects = effectsByCategory(cat.key)
+            if (effects.length === 0) return null
+            const accent = CATEGORY_ACCENT[cat.key] ?? '#7c5cff'
+
+            return (
+              <Reveal key={cat.key} delay={(ci + 1) * 60}>
+                <section
+                  id={`cat-${cat.key}`}
+                  className="scroll-mt-36 border-l-2 py-16 pl-6 sm:pl-8"
+                  style={{ borderColor: accent }}
+                >
+                  <div className="mb-8">
+                    <h2 className="type-h2">
+                      <span
+                        className="accent-ink mr-2 inline-block text-[0.85em]"
+                        style={{ '--ink': accent } as React.CSSProperties}
+                      >
+                        {cat.glyph}
+                      </span>
+                      <span className="opacity-40">·</span>
+                      <span className="ml-2">{cat.label}</span>
+                    </h2>
+                    <p className="mt-2 max-w-prose type-body text-fg/60">{cat.blurb}</p>
+                  </div>
+
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {effects.map((e) => (
+                      <LabCardLink key={e.slug} e={e} />
+                    ))}
+                  </div>
+                </section>
+              </Reveal>
+            )
+          })}
+        </>
       )}
     </>
   )

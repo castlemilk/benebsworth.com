@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
-import { LAB_EFFECTS, type LabEntry } from '@/lib/lab/registry'
+import { LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
 import { useEffectModule } from '@/lib/lab/use-effect-module'
 import { EffectCanvas } from '@/components/lab/effect-canvas'
 
@@ -26,7 +26,7 @@ export function LabMatrix({ count = 6 }: { count?: number }) {
   // doesn't flicker.
   useEffect(() => {
     const day = Math.floor(Date.now() / 86_400_000)
-    const sorted = [...LAB_EFFECTS].sort((a, b) => {
+    const sorted = [...LAB_DEMO_EFFECTS].sort((a, b) => {
       // Hash of slug + day, then subtract to get a stable random order
       const ha = hash(a.slug + ':' + day)
       const hb = hash(b.slug + ':' + day)
@@ -45,7 +45,7 @@ export function LabMatrix({ count = 6 }: { count?: number }) {
       if (document.hidden) return
       setPicks((prev) => {
         const used = new Set(prev.map((p) => p.slug))
-        const pool = LAB_EFFECTS.filter((e) => !used.has(e.slug))
+        const pool = LAB_DEMO_EFFECTS.filter((e) => !used.has(e.slug))
         if (pool.length === 0) return prev
         const idx = tickRef.current++ % prev.length
         const next = pool[Math.floor(Math.random() * pool.length)]

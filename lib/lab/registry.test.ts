@@ -1,5 +1,22 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { LAB_EFFECTS, HOME_EMBED_EFFECTS, getEffect, EFFECT_LOADERS } from './registry'
+import {
+  LAB_CONCEPT_GUIDES,
+  LAB_DEMO_EFFECTS,
+  LAB_EFFECTS,
+  HOME_EMBED_EFFECTS,
+  getEffect,
+  EFFECT_LOADERS,
+  effectsByCategory,
+  isLabConceptGuide,
+} from './registry'
+
+const CONCEPT_GUIDE_SLUGS = [
+  'aliasing-and-nyquist',
+  'feedback-stability-margins',
+  'complex-maps-and-airfoils',
+  'chaos-sensitivity',
+  'turing-patterns',
+]
 
 describe('lab registry', () => {
   // Loading ~45 effect modules serially inside the it() blows the default 5s
@@ -31,6 +48,19 @@ describe('lab registry', () => {
     }
   })
   it('home embed subset is non-empty', () => { expect(HOME_EMBED_EFFECTS.length).toBeGreaterThan(0) })
+  it('keeps concept guides separate from effect demo discovery lists', () => {
+    const demoSlugs = new Set(LAB_DEMO_EFFECTS.map((e) => e.slug))
+    const guideSlugs = new Set(LAB_CONCEPT_GUIDES.map((e) => e.slug))
+    const homeSlugs = new Set(HOME_EMBED_EFFECTS.map((e) => e.slug))
+
+    expect(guideSlugs).toEqual(new Set(CONCEPT_GUIDE_SLUGS))
+    for (const slug of CONCEPT_GUIDE_SLUGS) {
+      expect(isLabConceptGuide(slug)).toBe(true)
+      expect(demoSlugs.has(slug)).toBe(false)
+      expect(homeSlugs.has(slug)).toBe(false)
+      expect(effectsByCategory(getEffect(slug)!.category).some((e) => e.slug === slug)).toBe(false)
+    }
+  })
   it('getEffect resolves a known slug and rejects unknown', () => {
     expect(getEffect('orbits')?.title).toBe('Orbits')
     expect(getEffect('nope')).toBeUndefined()

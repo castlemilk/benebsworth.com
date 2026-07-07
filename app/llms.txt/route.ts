@@ -1,5 +1,5 @@
 import { getPublishedPosts } from '@/lib/content'
-import { LAB_EFFECTS, CATEGORIES } from '@/lib/lab/registry'
+import { LAB_CONCEPT_GUIDES, LAB_DEMO_EFFECTS, CATEGORIES } from '@/lib/lab/registry'
 import { topicFor } from '@/lib/topics'
 import { hikes } from '@/content/hiking'
 import { BENCHMARK_TASKS, BENCHMARK_MODELS } from '@/lib/lab/llm-benchmark/registry'
@@ -30,7 +30,7 @@ export function GET() {
   const recent = posts.slice(0, RECENT_POSTS)
   const labsByCategory = CATEGORIES.map((cat) => ({
     ...cat,
-    effects: LAB_EFFECTS.filter((e) => e.category === cat.key),
+    effects: LAB_DEMO_EFFECTS.filter((e) => e.category === cat.key),
   }))
 
   const lines: string[] = []
@@ -82,6 +82,14 @@ export function GET() {
     lines.push(`### ${cat.label} (${cat.effects.length})`)
     lines.push('')
     for (const e of cat.effects) {
+      lines.push(`- [${e.title}](${base}/lab/${e.slug}/): ${e.blurb}`)
+    }
+    lines.push('')
+  }
+  if (LAB_CONCEPT_GUIDES.length > 0) {
+    lines.push('## Lab concept guides')
+    lines.push('')
+    for (const e of LAB_CONCEPT_GUIDES) {
       lines.push(`- [${e.title}](${base}/lab/${e.slug}/): ${e.blurb}`)
     }
     lines.push('')

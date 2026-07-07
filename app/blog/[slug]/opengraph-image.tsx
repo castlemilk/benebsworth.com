@@ -1,4 +1,4 @@
-import { renderBlogOgCard, publicDataUri, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og'
+import { renderBlogOgCard, publicDataUri, publicOgImageDataUri, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og'
 import { getPublishedPosts, getPost } from '@/lib/content'
 import { topicFor } from '@/lib/topics'
 
@@ -20,12 +20,17 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const dateText = p
     ? new Date(p.date).toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' })
     : ''
+  const heroUri = p?.heroImage
+    ? await publicOgImageDataUri(p.heroImage, { width: 860, height: 980, fit: 'cover' })
+    : undefined
+
   return renderBlogOgCard({
     title: p?.title ?? 'Ben Ebsworth',
     description: p?.description,
     topicLabel: topic.label,
     dateText,
     accent: topic.accent,
+    heroUri,
     iconUri: publicDataUri(topic.icon, 'image/png'),
     authorUri: publicDataUri('about/portrait.jpg', 'image/jpeg'),
   })

@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p || !isPublished(p)) return { title: 'Not found' }
   const topic = topicFor(p)
   const url = `/blog/${slug}/`
+  const ogImage = `${url}opengraph-image.png`
   return {
     title: p.title,
     description: p.description,
@@ -53,6 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       authors: ['Ben Ebsworth'],
       tags: p.tags,
       section: topic.label,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: p.title }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -60,6 +62,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: p.description,
       creator: '@benebsworth',
       site: '@benebsworth',
+      images: [ogImage],
     },
   }
 }

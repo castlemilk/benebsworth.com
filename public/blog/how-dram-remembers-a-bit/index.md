@@ -7,6 +7,7 @@ description: >-
   tiny voltage nudge into a full bit, and the row has to be restored before the
   data is safe again.
 labels: 'hardware,semiconductors,memory,systems'
+heroImage: /blog/how-dram-remembers-a-bit/hero.webp
 release: true
 author: Ben Ebsworth
 takeaways:

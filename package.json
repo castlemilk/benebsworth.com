@@ -76,6 +76,7 @@
     "pagefind": "^1.5.2",
     "postcss": "^8.5.15",
     "serve": "^14.2.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.3.0",
     "ts-proto": "^2.11.8",
     "tsx": "^4.22.4",

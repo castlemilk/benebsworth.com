@@ -6,6 +6,7 @@ description: >-
   the same thing: a healthy system needs a controlled way to refuse more work
   before overload turns into collapse.
 labels: 'software,systems,queues,distributed-systems'
+heroImage: /blog/backpressure-is-the-system-saying-no/hero.webp
 release: true
 author: Ben Ebsworth
 takeaways:

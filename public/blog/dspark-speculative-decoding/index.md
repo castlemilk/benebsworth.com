@@ -6,6 +6,7 @@ description: >-
   drafter with a confidence scheduler that verifies only the prefix worth paying
   for.
 labels: 'ai,software,inference,llm,systems'
+heroImage: /blog/dspark-speculative-decoding/hero.webp
 release: true
 author: Ben Ebsworth
 dateModified: '2026-07-07T05:30:00.000Z'

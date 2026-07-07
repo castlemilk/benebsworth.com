@@ -1,17 +1,12 @@
 'use client'
 import { getEffect, EFFECT_LOADERS } from '@/lib/lab/registry'
 import { useEffectModule } from '@/lib/lab/use-effect-module'
+import { labPosterFor } from '@/lib/lab/posters'
 import { EffectCanvas } from './effect-canvas'
 
-// Bespoke labs (WebGL studios, the circuit builder) are NOT EffectModules, so
-// they have no EFFECT_LOADERS entry and the live-canvas preview can't render
-// them — they'd otherwise pulse forever. Those get a static poster captured
-// from the studio (scripts/capture-lab-poster.mjs); without one they fall
-// through to a neutral (non-pulsing) placeholder.
-const POSTERS: Record<string, string> = {
-  'universe-scale': '/lab/previews/universe-scale.jpg',
-}
-
+// Some entries get a static poster instead of a live mini-canvas: bespoke labs
+// without EffectModules, and explainers where an editorial thumbnail reads
+// better in a dense grid.
 const CARD_CLASS =
   'aspect-[16/9] w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-stage)]'
 
@@ -19,9 +14,8 @@ export function LabCard({ slug }: { slug: string }) {
   const e = getEffect(slug)!
   const effectModule = useEffectModule(slug)
 
-  const poster = POSTERS[slug]
+  const poster = labPosterFor(slug)
   if (poster) {
-    // eslint-disable-next-line @next/next/no-img-element
     return (
       <img
         src={poster}

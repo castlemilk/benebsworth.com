@@ -1,5 +1,6 @@
-import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE, publicDataUri } from '@/lib/og'
+import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE, publicDataUri, publicOgImageDataUri } from '@/lib/og'
 import { LAB_EFFECTS, getEffect } from '@/lib/lab/registry'
+import { labPosterFor } from '@/lib/lab/posters'
 
 export const dynamic = 'force-static'
 export const size = OG_SIZE
@@ -23,8 +24,9 @@ export function generateStaticParams() {
   return LAB_EFFECTS.map((e) => ({ slug: e.slug }))
 }
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const e = getEffect(params.slug)
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const e = getEffect(slug)
   if (!e) {
     return renderOgCard({
       eyebrow: 'benebsworth.com/lab',
@@ -40,14 +42,22 @@ export default async function Image({ params }: { params: { slug: string } }) {
     maths: '#7c5cff',
     physics: '#ff7a59',
     engineering: '#00b4d8',
+    ai: '#a855f7',
+    cosmology: '#6366f1',
   }
   const glyph: Record<string, string> = {
     art: '◆',
     maths: '∫',
     physics: 'ψ',
     engineering: 'Ω',
+    ai: '✦',
+    cosmology: '✷',
   }
   const iconPath = 'topics/technology.png'
+  const poster = labPosterFor(e.slug)
+  const posterUri = poster
+    ? await publicOgImageDataUri(poster, { width: 1200, height: 630, fit: 'cover' })
+    : undefined
 
   return renderOgCard({
     eyebrow: `Lab · ${e.category}`,
@@ -58,5 +68,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
     glyph: glyph[e.category],
     iconDataUri: publicDataUri(iconPath, 'image/png'),
     tags: e.tags.slice(0, 4),
+    backgroundUri: posterUri,
   })
 }

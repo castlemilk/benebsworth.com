@@ -32,6 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const description = e
     ? `${e.blurb} — ${e.title}, an interactive ${e.category} simulation in the lab. Drag the controls; watch the math.`
     : 'Lab effect'
+  const ogImage = `${url}opengraph-image.png`
   return {
     title: e ? `${e.title} · Lab` : 'Lab',
     description,
@@ -44,6 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url,
       siteName: 'Ben Ebsworth',
       locale: 'en_AU',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: e ? `${e.title} lab preview` : 'Lab preview' }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -51,6 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: e?.blurb,
       creator: '@benebsworth',
       site: '@benebsworth',
+      images: [ogImage],
     },
   }
 }
@@ -89,7 +92,7 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
     operatingSystem: 'Any (browser-based)',
     inLanguage: 'en-AU',
     isAccessibleForFree: true,
-    image: `${SITE_URL}/lab/${slug}/opengraph-image`,
+    image: `${SITE_URL}/lab/${slug}/opengraph-image.png`,
     featureList: e.tags.join(', '),
     keywords: e.tags.join(', '),
     offers: {

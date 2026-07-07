@@ -31,6 +31,39 @@ export function repoFileDataUri(relPath: string, mime: string): string | undefin
   }
 }
 
+export function imageMimeFromPath(relPath: string): string {
+  const ext = path.extname(relPath.split('?')[0] ?? '').toLowerCase()
+  if (ext === '.jpg' || ext === '.jpeg') return 'image/jpeg'
+  if (ext === '.webp') return 'image/webp'
+  if (ext === '.svg') return 'image/svg+xml'
+  return 'image/png'
+}
+
+export async function publicOgImageDataUri(
+  relPath: string,
+  options: { width?: number; height?: number; fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' } = {},
+): Promise<string | undefined> {
+  try {
+    const cleanPath = relPath.replace(/^\//, '')
+    const mime = imageMimeFromPath(cleanPath)
+    const buf = fs.readFileSync(path.join(process.cwd(), 'public', cleanPath))
+
+    if (mime === 'image/webp' || options.width || options.height) {
+      const sharp = (await import('sharp')).default
+      let img = sharp(buf)
+      if (options.width || options.height) {
+        img = img.resize({ width: options.width, height: options.height, fit: options.fit ?? 'cover' })
+      }
+      const png = await img.png().toBuffer()
+      return `data:image/png;base64,${png.toString('base64')}`
+    }
+
+    return `data:${mime};base64,${buf.toString('base64')}`
+  } catch {
+    return undefined
+  }
+}
+
 const BRAND_DOTS = ['#00e0b8', '#7c5cff', '#ff7a59'] // blog · project · about accents
 
 /**
@@ -204,6 +237,7 @@ export function renderBlogOgCard({
   topicLabel,
   dateText,
   accent = '#7c5cff',
+  heroUri,
   iconUri,
   authorUri,
 }: {
@@ -212,20 +246,26 @@ export function renderBlogOgCard({
   topicLabel: string
   dateText?: string
   accent?: string
+  heroUri?: string
   iconUri?: string
   authorUri?: string
 }) {
+  const hasHero = Boolean(heroUri)
+
   return new ImageResponse(
     (
       <div style={{ width: '100%', height: '100%', display: 'flex', background: '#08080b', position: 'relative', fontFamily: 'sans-serif' }}>
         {/* accent glow + dot grid + inner frame */}
         <div style={{ position: 'absolute', top: -260, left: -200, width: 720, height: 720, borderRadius: 9999, background: `radial-gradient(circle, ${accent} 0%, transparent 70%)`, opacity: 0.42 }} />
+        {hasHero ? (
+          <div style={{ position: 'absolute', bottom: -260, right: -220, width: 640, height: 640, borderRadius: 9999, background: `radial-gradient(circle, ${accent} 0%, transparent 70%)`, opacity: 0.18 }} />
+        ) : null}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.06) 1.5px, transparent 1.5px)', backgroundSize: '34px 34px' }} />
         <div style={{ position: 'absolute', top: 28, left: 28, right: 28, bottom: 28, border: '1px solid rgba(255,255,255,0.10)', borderRadius: 26 }} />
 
-        <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', padding: '70px 78px', gap: 52 }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', padding: '70px 78px', gap: hasHero ? 42 : 52 }}>
           {/* left: text column */}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1, maxWidth: hasHero ? 626 : 700 }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {/* eyebrow: brand dots + topic + date */}
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -240,7 +280,7 @@ export function renderBlogOgCard({
                 {dateText ? <div style={{ display: 'flex', color: '#7c7c8a', fontSize: 23, marginLeft: 16 }}>· {dateText}</div> : null}
               </div>
               {/* title */}
-              <div style={{ display: 'flex', marginTop: 28, fontSize: 56, fontWeight: 700, color: '#f5f5f7', lineHeight: 1.08, letterSpacing: -1.6 }}>
+              <div style={{ display: 'flex', marginTop: 28, fontSize: hasHero ? 53 : 56, fontWeight: 700, color: '#f5f5f7', lineHeight: 1.08, letterSpacing: -1.6 }}>
                 {truncate(title, 92)}
               </div>
               {/* description */}
@@ -264,20 +304,29 @@ export function renderBlogOgCard({
             </div>
           </div>
 
-          {/* right: topic thumbnail panel */}
+          {/* right: generated hero panel, falling back to the topic mark */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 312,
+              width: hasHero ? 430 : 312,
+              height: 490,
               borderRadius: 24,
               border: `1px solid ${accent}40`,
-              background: `radial-gradient(60% 60% at 50% 40%, ${accent}26, transparent 72%)`,
+              background: hasHero ? '#111116' : `radial-gradient(60% 60% at 50% 40%, ${accent}26, transparent 72%)`,
+              overflow: 'hidden',
+              position: 'relative',
             }}
           >
             { }
-            {iconUri ? <img src={iconUri} width={172} height={172} style={{ objectFit: 'contain' }} alt="" /> : null}
+            {heroUri ? (
+              <>
+                <img src={heroUri} width={430} height={490} style={{ objectFit: 'cover' }} alt="" />
+                <div style={{ position: 'absolute', inset: 0, border: `1px solid ${accent}50`, borderRadius: 24 }} />
+                <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 130, background: 'linear-gradient(180deg, transparent 0%, rgba(8,8,11,0.55) 100%)' }} />
+              </>
+            ) : iconUri ? <img src={iconUri} width={172} height={172} style={{ objectFit: 'contain' }} alt="" /> : null}
           </div>
         </div>
       </div>

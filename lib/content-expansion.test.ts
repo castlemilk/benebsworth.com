@@ -3,6 +3,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { getPublishedPosts } from './content'
 import { EFFECT_LOADERS, LAB_EFFECTS } from './lab/registry'
+import { labPosterFor } from './lab/posters'
 
 const BLOG_ADDITIONS = [
   {
@@ -35,6 +36,9 @@ describe('requested content expansion', () => {
       expect(post?.title).toBe(expected.title)
       expect(post?.takeaways?.length ?? 0).toBeGreaterThanOrEqual(3)
       expect(post?.wordCount ?? 0).toBeGreaterThan(900)
+      expect(post?.heroImage).toBe(`/blog/${expected.slug}/hero.webp`)
+      expect(fs.existsSync(path.join(process.cwd(), 'public', `blog/${expected.slug}/hero.webp`))).toBe(true)
+      expect(fs.existsSync(path.join(process.cwd(), 'content/blog', expected.slug, 'hero.webp'))).toBe(true)
       for (const tag of expected.tags) {
         expect(post?.tags).toContain(tag)
       }
@@ -52,6 +56,10 @@ describe('requested content expansion', () => {
       const explainerPath = path.join(process.cwd(), 'content/lab', `${expected.slug}.mdx`)
       expect(fs.existsSync(explainerPath), `${expected.slug} has an MDX explainer`).toBe(true)
       expect(fs.readFileSync(explainerPath, 'utf8').split(/\s+/).length).toBeGreaterThan(350)
+
+      const poster = labPosterFor(expected.slug)
+      expect(poster, `${expected.slug} has a static preview poster`).toBe(`/lab/previews/${expected.slug}.webp`)
+      expect(fs.existsSync(path.join(process.cwd(), 'public', poster!.replace(/^\//, '')))).toBe(true)
     }
   })
 })

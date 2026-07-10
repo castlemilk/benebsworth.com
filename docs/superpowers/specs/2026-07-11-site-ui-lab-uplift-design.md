@@ -23,7 +23,7 @@ Use the **technical dossier + live instrument plates** direction.
 
 - Keep the home grid as the signature experience.
 - Give conventional navigation a quiet but reliable path everywhere, including the home page.
-- Use one sticky site header; avoid a stack of sticky header, breadcrumb, and filter bars.
+- Use the site header as the only sticky layer; breadcrumbs and lab filters remain in document flow.
 - Standardise page gutters, hero rhythm, line lengths, and section labels.
 - Make the lab editorial and asymmetric at the top, then progressively denser for the long tail.
 - Concentrate motion in a few orchestrated moments and retain useful static states under reduced motion.
@@ -103,7 +103,7 @@ Light-mode accent ink must continue to use the existing contrast-safe mixing beh
 
 Create a small shared navigation module that exports primary links, secondary links, route matching, and semantic accent names. SiteNav, the home index, and SiteFooter consume this module so labels and destinations cannot drift.
 
-The route matcher is a pure function and receives unit tests for root, collection, and deep-detail paths.
+The route matcher normalises a missing trailing slash, matches root only to root, and matches a section only when the pathname equals its prefix or begins with that prefix followed by a segment boundary. It is a pure function with unit tests for root, collection, deep-detail, similarly prefixed non-matches, and trailing-slash variants.
 
 ### 2. SiteNav
 
@@ -114,11 +114,18 @@ SiteNav supports two presentations backed by the same content and menu behavior:
 
 Standard behavior:
 
-- A single CSS token defines the header block size and safe-area addition.
+- The total `--site-header-height` token includes the visual rail and `env(safe-area-inset-top)` exactly once. Header content applies the safe-area top padding; consumers do not add it again.
 - Desktop nav has aria-label="Primary".
 - The active link uses aria-current="page", accent ink, and a non-color marker.
 - Search, theme, and menu hit areas are at least 44 by 44 CSS pixels.
 - The active marker enters with a short opacity/transform reveal; it does not animate layout.
+
+Home overlay behavior:
+
+- At every viewport width, a labelled **Index** trigger appears at the top left, with Search writing and theme controls at the top right.
+- At desktop widths, Index opens an anchored, non-modal popover containing primary and secondary links. Outside pointer activation and Escape close it, and focus returns to the trigger.
+- At mobile widths, the same trigger opens the modal index sheet described below.
+- The overlay uses the shared navigation data and does not duplicate the brand heading.
 
 Mobile index behavior:
 
@@ -138,7 +145,8 @@ Keep the existing static Pagefind integration, but label it honestly as **Search
 - Use an explicit dialog title and search input label.
 - Add a visible close button.
 - Trap focus within the dialog and restore it to the search trigger.
-- Mark the results container and active result with listbox/option semantics, aria-selected, and aria-activedescendant.
+- The focused input uses the combobox pattern: `role="combobox"`, `aria-controls`, `aria-expanded`, `aria-autocomplete="list"`, and `aria-activedescendant` pointing at the active result ID.
+- The result container uses `role="listbox"`. Results use `role="option"`, stable IDs, `aria-selected`, and `tabIndex={-1}`; Arrow keys change the active descendant and Enter performs navigation.
 - Announce loading, unavailable, empty, and result-count changes through a polite live region.
 - Preserve Arrow Up, Arrow Down, Enter, Escape, Command-K, and Control-K behavior.
 - Keep body scroll locked while open.
@@ -146,9 +154,9 @@ Keep the existing static Pagefind integration, but label it honestly as **Search
 
 ### 4. Breadcrumb and sticky behavior
 
-- Collection-page breadcrumbs are static within their hero regions.
-- Deep article/detail breadcrumbs may remain sticky when useful, but derive their top position from the shared header-size token.
-- The lab category toolbar is the only sticky secondary surface on the lab index.
+- Breadcrumbs are static within collection and detail-page hero regions.
+- The lab category toolbar also remains in document flow.
+- The site header is the only sticky surface, including on the lab index and deep detail pages.
 - No component hard-codes another component's pixel height.
 
 ### 5. PageFrame and page rhythm
@@ -176,7 +184,8 @@ Rhythm targets:
 - SiteNav's home-overlay presentation provides a conventional Index control, writing search, and the theme toggle.
 - Preserve the crossword layout, shuffle behavior, WebGL word reaction, and artifact tiles.
 - Recompose Latest writing: one lead story with prominent art, followed by two border-separated editorial rows rather than three identical cards.
-- Recompose From the lab: one larger live tile and four supporting tiles; stop automatic tile replacement under reduced motion or while focus is inside the matrix.
+- Recompose From the lab: one larger live tile and four supporting static category plates. Supporting plates do not load effect modules; they use a poster when one exists and otherwise render a lightweight category glyph/grid treatment.
+- Supporting entries may continue the existing periodic content replacement for pointer users. The interval is never created under reduced motion, pauses while focus is anywhere in the matrix, and restarts with a full interval only after focus leaves the matrix.
 - Derive the experiment count from the registry rather than showing a stale hard-coded total.
 - Add the shared footer below the home content so all secondary destinations are reachable.
 
@@ -187,21 +196,22 @@ The index has three layers of density.
 #### Layer A: hero instrument plate
 
 - The hero uses a split layout on desktop and a compact stacked layout on mobile.
-- A featured concept-guide poster or static first frame appears in the first viewport.
+- `optic-flow-reveals-depth` is the deterministic hero feature. Its aliased Starfield renderer runs as the single live first-viewport canvas after loading; its poster is the loading, reduced-motion, and error fallback.
 - Hero copy remains concise.
 - The LLM Benchmark moves from the hero's primary action to a secondary utility rail after the featured guides.
 
 #### Layer B: concept guides
 
 - Rename the visual treatment to **Field guides** while retaining clear concept-guide semantics in code.
-- Feature the newest guide as a large editorial plate.
+- Add an explicit `LAB_FEATURED_GUIDE_SLUGS` order: `optic-flow-reveals-depth`, `negative-effective-mass`, then `cyclic-dominance-spirals`. The first is the large lead plate; the other two follow as prominent rows; existing guides follow in the current concept-guide list order.
 - Render the next guides as poster-led rows with title, thesis, and category; do not repeat tag-pill clusters.
 - All guides remain present and linkable.
 - Existing five guide posters remain; the three new guides receive captured posters.
 
 #### Layer C: experiment index
 
-- Each category has one live lead experiment plate.
+- Each category has one deterministic live lead experiment plate: Art `orbits`; Mathematics `double-pendulum`; Physics `wave-superposition`; Engineering `rlc-resonance`; AI `self-attention`; Cosmology `spacetime-curvature`.
+- If a lead renderer fails, the plate switches from its loading skeleton to an accessible category fallback with `role="status"` and the text “Interactive preview unavailable”; the link and written metadata remain usable.
 - Remaining experiments render as compact editorial rows with category marker, title, and blurb; they do not instantiate canvas renderers on the index.
 - The detail page remains the place for controls, tags, and the full live canvas.
 - Search/filter results use the same compact row component.
@@ -209,15 +219,31 @@ The index has three layers of density.
 
 ### 8. CategoryNav
 
-- The toolbar sits at top: var(--site-header-height) and accounts for safe area.
+- The toolbar remains in normal document flow below the hero/featured plate.
 - Search has a persistent accessible label and stable width; no focus-driven layout shift.
-- Clear search is removed from tab order when no query exists.
+- Clear search is conditionally rendered only when a non-empty query exists.
 - Category buttons expose aria-pressed.
 - All interactive targets meet the 44-pixel target.
 - Only opacity, color, and transform transition.
 - A polite live region reports result counts and current filter.
-- Query and category synchronise to q and category URL parameters using history replacement so Back, reload, and shared links preserve the view without requiring a server.
-- Invalid category parameters fall back to All.
+- A dedicated `lib/lab/index-url-state.ts` module parses and serialises `lab_q` and `lab_category`; it is separate from the effect-control URL module.
+- `lab_q` is trimmed, internal whitespace is collapsed, and the value is capped at 80 characters. Empty values are removed.
+- `lab_category` accepts only the six canonical registry keys. Missing, duplicated, or invalid values canonicalise to one valid value or are removed.
+- Serialisation preserves unrelated query parameters and uses `history.replaceState`, so reload, sharing, and Back from a detail page restore the final filter without creating a history entry for every keystroke.
+- With no lab filter, the hero, Field guides, benchmark rail, and all category sections render.
+- With either lab filter active, Field guides and the benchmark rail hide and one compact result section searches all `LAB_EFFECTS`, including guide aliases. Guide results carry a visible “Guide” label. Filtered results do not mount live lead canvases.
+- The All control clears both lab parameters and restores the editorial default view.
+
+### 9. Overlay coordination and effect load state
+
+SiteNav owns a single overlay state: none, index, or search. Opening one overlay closes the other before the next one opens. Consequently, only one component can own Escape, focus containment, body scroll lock, background inertness, and focus restoration at a time.
+
+- Search and the mobile index share one local dialog boundary built on the already-installed accessible UI primitives rather than separate hand-rolled focus traps.
+- The modal backdrop remains inside that boundary, so it can close the active dialog while the background page is inert.
+- The desktop home Index is a non-modal popover and cannot remain open when Search opens.
+- Command-K and Control-K always switch the overlay state to Search.
+
+Refactor effect loading to expose `loading`, `ready`, and `error` states instead of treating a rejected dynamic import as permanent loading. EffectPlayground, LabCanvas/LabSide, lead lab plates, and home live previews consume this state. On error they render a labelled unavailable plate while the server-rendered title, blurb, MDX body, and navigation remain readable.
 
 ## New animated lab guides
 
@@ -256,9 +282,11 @@ For all three guides:
 
 - Add metadata to LAB_EFFECTS with homeEmbedSafe false.
 - Add the slug to the concept-guide list.
+- Add the slug in the explicit featured-guide order described above.
 - Add an EFFECT_LOADERS alias to the source renderer.
 - Add a corresponding MDX file using LabSide and LabCanvas.
-- Add an editorial poster captured from a representative state.
+- Register an editorial poster in `lib/lab/posters.ts` at `public/lab/previews/<slug>.webp`.
+- Capture a deterministic 1280 by 720 frame with `scripts/capture-lab-poster.mjs` using the documented representative parameters, then verify dimensions and both-theme legibility before committing it.
 - Keep captions useful when animation is suppressed.
 
 ## Motion design
@@ -300,9 +328,9 @@ Under prefers-reduced-motion:
 - Long-tail lab rows do not call useEffectModule and therefore do not download or mount preview renderers.
 - Lead canvases retain offscreen, visibility, active-scroll, and reduced-motion pausing.
 - Poster images have explicit dimensions, lazy loading below the fold, and appropriate decoding.
-- URL filter parsing must reject unknown categories and tolerate malformed queries.
+- URL filter parsing follows the canonical `lab_q`/`lab_category` contract and never consumes global writing-search `q`.
 - Search continues to show an explicit unavailable state if Pagefind cannot load.
-- New guide pages remain readable if dynamic effect modules fail to load; the existing skeleton/content fallback remains.
+- Dynamic effect imports expose a terminal error state. New guide pages and existing effect pages keep their server-rendered text and replace a failed canvas with the labelled unavailable plate.
 
 ## Testing strategy
 
@@ -313,9 +341,11 @@ Use test-driven development for behavior changes.
 - Navigation route matching and shared link metadata.
 - Lab category metadata includes all six categories and unique semantic accents.
 - Lab registry includes the three guide slugs, keeps guides out of demo/home subsets, and resolves each renderer alias.
-- Lab filter URL parsing/serialization accepts valid input and rejects unknown categories.
+- Lab filter URL parsing/serialization covers valid values, whitespace, 80-character truncation, duplicates, invalid categories, clearing, and preservation of unrelated parameters.
+- Lab default and filtered collection selectors cover guide inclusion, deterministic lead exclusion, and empty results.
 - Home matrix rotation guard under reduced motion and focus.
-- Search/menu focus helpers if implemented as pure utilities.
+- Overlay arbitration ensures Index and Search cannot be open concurrently.
+- Effect-module loading reaches explicit ready and error states.
 
 ### End-to-end tests
 
@@ -323,12 +353,15 @@ Use test-driven development for behavior changes.
 - Standard desktop nav exposes Primary and aria-current.
 - Mobile index opens, focuses its first link, closes with Escape, and restores focus.
 - Search dialog traps focus, exposes labelled combobox/listbox state, closes, and restores focus.
+- Opening Search while Index is open closes Index and gives Search sole modal ownership.
 - Lab search and category buttons expose labels/pressed state, update the URL, and announce results.
+- Active lab filters hide Field guides/benchmark content, include matching guide aliases in compact results, and clear back to the default editorial view.
 - Lab index has no horizontal overflow at 390px.
 - The featured lab plate and compact long-tail rows both navigate to detail pages.
 - Each new guide renders its H1, full animation, MDX section, and inline animated figure.
 - New guides appear in Field guides and do not appear in demo-category lists or the home rotation pool.
 - Reduced-motion contexts render home and the three guides without page errors or automatic swapping.
+- A rejected effect-module request produces the unavailable plate while guide text remains readable.
 - Touch-target bounds are checked for the key navigation and lab-filter controls.
 
 ### Verification commands
@@ -349,6 +382,6 @@ Run the repository's complete unit tests, lint, typecheck, production build, and
 - The home page remains immediately recognisable as the current site.
 - Conventional navigation is predictable and accessible on every route.
 - Collection pages share a clear dossier rhythm without becoming templated card grids.
-- The lab shows an animated experiment in the first viewport and remains easy to scan through all entries.
+- The lab shows its live hero experiment in the first viewport when motion is allowed and the module is ready; reduced-motion, loading, and error states show its meaningful poster fallback.
 - Three new guide pages provide novel, technically sound, interactive explanations.
 - No regression in static export, light/dark theming, reduced motion, keyboard operation, or core E2E flows.

@@ -196,7 +196,7 @@ The index has three layers of density.
 #### Layer A: hero instrument plate
 
 - The hero uses a split layout on desktop and a compact stacked layout on mobile.
-- `optic-flow-reveals-depth` is the deterministic hero feature. Its aliased Starfield renderer runs as the single live first-viewport canvas after loading; its poster is the loading, reduced-motion, and error fallback.
+- `optic-flow-reveals-depth` is the deterministic hero feature. Its aliased Starfield renderer runs as the single live first-viewport canvas after loading. Loading and reduced-motion use its poster; an import failure uses the same poster-backed plate plus `role="status"` and “Interactive preview unavailable”.
 - Hero copy remains concise.
 - The LLM Benchmark moves from the hero's primary action to a secondary utility rail after the featured guides.
 
@@ -228,7 +228,7 @@ The index has three layers of density.
 - A polite live region reports result counts and current filter.
 - A dedicated `lib/lab/index-url-state.ts` module parses and serialises `lab_q` and `lab_category`; it is separate from the effect-control URL module.
 - `lab_q` is trimmed, internal whitespace is collapsed, and the value is capped at 80 characters. Empty values are removed.
-- `lab_category` accepts only the six canonical registry keys. Missing, duplicated, or invalid values canonicalise to one valid value or are removed.
+- `lab_category` accepts only the six canonical registry keys. When repeated values differ, the first valid value in query order wins; if none are valid, the parameter is removed. Repeated `lab_q` values likewise canonicalise to the first non-empty normalised value.
 - Serialisation preserves unrelated query parameters and uses `history.replaceState`, so reload, sharing, and Back from a detail page restore the final filter without creating a history entry for every keystroke.
 - With no lab filter, the hero, Field guides, benchmark rail, and all category sections render.
 - With either lab filter active, Field guides and the benchmark rail hide and one compact result section searches all `LAB_EFFECTS`, including guide aliases. Guide results carry a visible “Guide” label. Filtered results do not mount live lead canvases.

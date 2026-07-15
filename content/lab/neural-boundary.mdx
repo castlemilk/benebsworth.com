@@ -1,0 +1,48 @@
+<LabSide effect="neural-boundary" height={360} params={{ dataset: 'spiral', hidden: 12, lr: 0.1, activation: 'tanh' }} caption="A tiny neural net learning to separate two interleaved spirals. The indigo/orange surface is its confidence; the pale 0.5 valley between them is the decision boundary, bending live as the loss falls.">
+
+## The core idea
+
+A neural network with a single hidden layer is, on paper, a stack of weighted sums. Give it two coordinates and it returns one number between zero and one, a guess at which class a point belongs to. What looks like arithmetic becomes geometry the moment you colour every point on the plane by that guess: the network is carving the plane into regions, and the seam between them is what we call the decision boundary.
+
+Watch the canvas and you are watching that seam form. Early on the surface is a flat, almost random wash, because the weights start as noise. Then, step by step, the boundary curls toward the data. On the spiral it has to bend into an interleaved shape that no single straight line could ever draw. When the loss stops falling, training pauses on the finished surface for a beat, then resets and does it all again from fresh noise.
+
+</LabSide>
+
+## How it works
+
+Each point $x = (x_1, x_2)$ passes through $H$ hidden units. Every unit takes a weighted sum, adds a bias, and squashes it through a nonlinearity $\phi$ (tanh or ReLU). A second layer collapses those $H$ activations into one score, and a sigmoid $\sigma$ turns that score into a probability:
+
+$$
+h = \phi(W_1 x + b_1), \qquad \hat{y} = \sigma(w_2^\top h + b_2)
+$$
+
+Training compares $\hat{y}$ against the true label $t \in \{0, 1\}$ using binary cross-entropy, averaged over all $N$ points:
+
+$$
+L = -\frac{1}{N}\sum_{n} \Big[\, t_n \log \hat{y}_n + (1 - t_n)\log(1 - \hat{y}_n) \,\Big]
+$$
+
+The whole reason this pairing is used: for a sigmoid output with cross-entropy loss, the gradient at the output collapses to the elegantly simple $\partial L / \partial z = \hat{y} - t$, just the prediction minus the truth. Backpropagation pushes that error back through $w_2$ and $W_1$, and each frame nudges every weight a little way downhill.
+
+```text
+each frame:
+  repeat a few times:            # a few gradient steps
+    forward pass over all points
+    accumulate ∂L/∂W by backprop
+    W ← W − (lr / N) · ∂L/∂W
+  every 4th frame:
+    re-evaluate the net on a 44×44 grid → heatmap
+```
+
+The heatmap is deliberately coarse. Evaluating the net on a full-resolution grid every frame would be wasteful, so it runs on a small lattice, gets cached, and is scaled up smoothly behind the points.
+
+## Where it shows up
+
+This exact structure is the smallest honest example of how every deep model learns. Swap two coordinates for a thousand-dimensional embedding and one hidden layer for ninety, and the picture is unchanged: a differentiable function, a loss, and gradient descent bending a boundary until the errors shrink. The same shape underlies logistic regression (drop the hidden layer and the boundary can only be a straight line), support-vector machines, and the sigmoid gate of a control system deciding when to switch. Nonlinear hidden units are the only reason the spiral is learnable at all.
+
+## The knobs
+
+- **Dataset**: the toy problem to separate. XOR and circles are gentle, moons is harder, and the spiral is the real test of a curved boundary.
+- **Hidden units**: how many neurons the middle layer has. Too few and the boundary cannot bend enough to fit the spiral; more units buy sharper, tighter curves.
+- **Learning rate**: the size of each downhill step. Small values crawl safely; large ones descend fast but can overshoot and wobble.
+- **Activation**: the hidden nonlinearity. Tanh gives smooth, rounded boundaries; ReLU builds the surface from crisp, folded straight pieces.

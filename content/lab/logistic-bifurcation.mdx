@@ -1,0 +1,46 @@
+<LabSide effect="logistic-bifurcation" height={360} params={{ rMin: 2.5, rMax: 4.0, r: 3.7, iterations: 500, showCobweb: true }} caption="Sweep the growth rate r left to right: one steady state splits, splits again, then dissolves into chaos.">
+
+## The core idea
+
+Here is a population model simple enough to write on a napkin: next year's population is this year's, scaled by a growth rate $r$ and pinched back by crowding, $x_{n+1} = r\,x_n(1-x_n)$. There is no randomness in it: same seed, same $r$, same answer every time. Yet crank $r$ up and the tidy sequence stops settling, starts flickering between two values, then four, then behaves as if someone were rolling dice. Determinism and unpredictability turn out to be perfectly good roommates.
+
+The canvas draws that whole story at once. The horizontal axis is $r$, swept across the range you choose. For each vertical slice we iterate the map, throw away the early transient, and plot every value the population then visits. On the left you see a single curve (one stable outcome). Around $r=3$ it forks into two, then four, then a blur. The bright orange line marks your current $r$, and the small inset in the top corner shows the same iteration as a cobweb staircase.
+
+## How it works
+
+Start with the map itself, applied over and over:
+
+$$
+x_{n+1} = r\,x_n(1 - x_n)
+$$
+
+Its long-run behaviour is decided by the fixed point $x^{*} = 1 - 1/r$, the value that maps to itself. Whether the population actually settles there depends on the slope of the map at that point, $f'(x^{*}) = 2 - r$. While that slope sits inside the unit circle the fixed point attracts nearby orbits, so the population homes in on one number. Once $|2 - r| > 1$, at $r = 3$, the fixed point goes unstable and the orbit flips between two values instead: a period-2 cycle.
+
+That period then doubles again, and again, at ever-closer values of $r$. The gaps shrink by a near-constant factor:
+
+$$
+\delta = \lim_{n\to\infty}\frac{r_{n} - r_{n-1}}{r_{n+1} - r_{n}} \approx 4.6692
+$$
+
+This is the Feigenbaum constant, and the punchline is that it is universal: any map with a single smooth hump doubles at the same rate. The cascade piles up at $r \approx 3.5699$, beyond which lies chaos, threaded with narrow windows of order (look for the period-3 gap near $r = 3.83$).
+
+```text
+for each column, r in [rMin, rMax]:
+    x = 0.5
+    repeat transient times:  x = r*x*(1 - x)   # discard
+    repeat sample   times:   x = r*x*(1 - x)   # plot (r, x)
+```
+
+</LabSide>
+
+## Where it shows up
+
+The same forking picture appears far from ecology. You get it in a dripping tap as the flow rate rises, in the current through a driven diode circuit, in cardiac rhythms sliding toward fibrillation, and in models of turbulence onset. Because the doubling rate $\delta$ is universal, an engineer measuring period-doublings in a laser and a biologist counting them in an insect population read the same number off completely different apparatus. The route into chaos has a fixed accent, whatever the system speaking it.
+
+## The knobs
+
+- **r min**: sets the left edge of the sweep, the lowest growth rate on screen. Slide it toward 3 to zoom into the first few forks.
+- **r max**: sets the right edge. Push it to 4.0 to include the full chaotic band and the period windows inside it.
+- **Current r**: moves the orange marker and drives the cobweb inset, so you can inspect exactly what one slice is doing.
+- **Iterations**: how many steps each column runs. More iterations give a cleaner attractor and sharper forks, at the cost of a slightly longer recompute.
+- **Cobweb inset**: toggles the top-corner staircase that traces the map bouncing between the parabola and the $y=x$ line for your current $r$.

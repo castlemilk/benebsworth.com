@@ -1,0 +1,53 @@
+<LabSide effect="mandelbrot-julia" height={360} params={{ mode: "julia", maxIter: 160, zoom: 1.3, colourCycle: 0.6 }} caption="A Julia set breathing as its constant c drifts around a small circle in the complex plane.">
+
+## The core idea
+
+Two of the most famous pictures in mathematics come from a rule you could write on a napkin: square a number, add a constant, repeat. The twist is that the numbers are complex, so squaring rotates and stretches the plane rather than just growing a value. Feed almost any starting point through this loop and it either races off to infinity or stays politely bounded forever. Colour each pixel by how quickly it escapes and the boundary between those two fates turns out to be infinitely detailed.
+
+You are watching that boundary come alive. In Julia mode the constant $c$ traces a slow circle, and the whole filigree swells and thins in response. Switch to Mandelbrot and the shape freezes while the colours cycle, sweeping bands of teal, purple and orange across the escape gradient like moving contour lines.
+
+## How it works
+
+Every pixel is a complex number. We iterate the same quadratic map,
+
+$$
+z_{n+1} = z_n^2 + c
+$$
+
+and ask how long the orbit takes to leave a disc of radius 2. Once $|z_n| > 2$ the point is guaranteed to diverge, so we stop and record the iteration count $n$. Points that never leave within the iteration budget are treated as interior and painted dark.
+
+The two sets differ only in what stays fixed and what varies. For the **Mandelbrot** set we start at $z_0 = 0$ and let $c$ be the pixel. For a **Julia** set we fix one $c$ and let $z_0$ be the pixel. Same equation, two different questions.
+
+A raw integer count gives ugly colour bands, so we smooth it. Iterating to a larger escape radius, the fractional count becomes
+
+$$
+\nu = n + 1 - \frac{\log(\log|z_n|)}{\log 2}
+$$
+
+which interpolates cleanly between whole numbers. That $\nu$ then indexes a brand-tinted palette.
+
+```
+for each pixel p:
+  z, c = setup(mode, p)
+  n = 0
+  while n < maxIter and |z| <= R:
+    z = z*z + c
+    n += 1
+  nu = n + 1 - log(log|z|) / log2
+  colour = palette[nu * density + offset]
+```
+
+The loop runs at half resolution into an offscreen buffer, which then scales up to fill the frame, so the expensive per-pixel work only fires when a knob changes or on a gentle throttle.
+
+</LabSide>
+
+## Where it shows up
+
+The same escape-time bookkeeping appears wherever a simple map is iterated near a boundary. Newton's method for finding roots paints its own fractal basins, colouring which starting guess lands on which solution. Complex dynamics uses the Mandelbrot set as an atlas: each point records whether the matching Julia set is one connected piece or scattered dust. The self-similar roughness also echoes coastlines, turbulence and river networks, all cases where structure repeats across scales rather than settling onto a single length.
+
+## The knobs
+
+- **Set**: choose Julia, where $c$ drifts and the shape morphs, or Mandelbrot, where the plane holds still and the palette cycles.
+- **Max iterations**: the escape budget. Raising it sharpens the fine tendrils along the boundary, at the cost of more computation per frame.
+- **Zoom**: tightens the view around the centre, magnifying detail that keeps unfolding however close you look.
+- **Colour cycle**: sets how densely the palette repeats across the escape gradient, packing more or fewer bands into the same picture.

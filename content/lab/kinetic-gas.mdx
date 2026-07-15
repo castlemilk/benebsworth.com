@@ -1,0 +1,46 @@
+<LabSide effect="kinetic-gas" height={360} params={{ count: 140, temperature: 1.2, radius: 4, speed: 1.2 }} caption="Hard discs start at one shared speed and thermalise into the Maxwell-Boltzmann curve on the right.">
+
+## The core idea
+
+Every disc in the box starts with exactly the same speed, only the directions are random. Give it a few seconds and that tidy uniform speed dissolves into a lopsided spread: a handful of crawlers, a fat hump of middling movers, a thin tail of speed demons. Nothing steers the gas towards that shape. It falls out of collisions on its own.
+
+That spread is the Maxwell-Boltzmann distribution, and it is the whole of temperature in one picture. Colour tells the story on the left: slow discs glow indigo, fast ones flare orange. On the right you bin those speeds every frame, and the bars climb until they trace the smooth orange curve. Heat the gas and the hump slides towards higher speeds; cool it and everything crowds back towards zero.
+
+## How it works
+
+Each disc travels in a straight line until it meets a wall or another disc. A wall simply flips the perpendicular velocity component. The disc-on-disc case is where the physics lives. When two equal-mass discs overlap, you split them apart along the line joining their centres (the collision normal $\hat n$) and exchange only the velocity components along that normal:
+
+$$
+v_i' = v_i - \big[(v_i - v_j)\cdot \hat n\big]\,\hat n
+$$
+
+with the mirror update for the second disc. The tangential motion is left alone, so both momentum and kinetic energy survive every hit. Repeat a few thousand times and the memory of that uniform starting speed is gone.
+
+In two dimensions the equilibrium speed distribution works out to
+
+$$
+f(v) = \frac{m}{kT}\, v\, \exp\!\left(-\frac{m v^2}{2kT}\right)
+$$
+
+The lone factor of $v$ out front is the fingerprint of 2D: there are more ways to aim a fast velocity than a slow one, so the density starts at zero, peaks, then decays. You never measure $kT$ directly, so you read it off the gas itself. The mean of $v^2$ pins it down through $kT/m = \tfrac12\langle v^2\rangle$, and that single number scales the entire curve.
+
+```
+each frame:
+  move discs, reflect off walls, resolve overlaps
+  kT/m = mean(vx*vx + vy*vy) / 2
+  bin the current speeds, ease the bars toward the counts
+  draw f(v) using that kT/m
+```
+
+</LabSide>
+
+## Where it shows up
+
+This relaxation onto Maxwell-Boltzmann reaches well beyond a tray of billiard balls. It is why any gas left alone settles to a single temperature, why the nitrogen and oxygen molecules in the air around you share this exact speed profile, and why the stars in a globular cluster (trading energy gravitationally rather than mechanically) drift towards a similar equilibrium. Semiconductor engineers borrow the electron version to model thermal noise in a resistor, and atmospheric chemists watch the high-speed tail to predict reaction rates, since only the rare fast molecules carry enough energy to clear an activation barrier. The general lesson is that many random elastic exchanges erase how you started and leave one distribution behind, set only by the average energy.
+
+## The knobs
+
+- **Particle count**: how many discs share the box. More discs mean more collisions each second, so the histogram fills in faster and reads smoother. Changing it reseeds the gas.
+- **Temperature**: the initial speed scale, which fixes the average energy. Nudge it and every velocity is rescaled live, sliding the whole distribution towards faster or slower speeds.
+- **Disc radius**: the size of each disc, and therefore its collision cross-section. Fatter discs bump into each other more often and thermalise sooner. Changing it reseeds the gas.
+- **Speed**: a pure control on the simulation clock. It rescales how quickly the dance plays out without touching the physics or the equilibrium shape.

@@ -1,0 +1,49 @@
+<LabSide effect="k-means" height={360} params={{ k: 3, points: 160, blobs: 3, speed: 1 }} caption="Lloyd's algorithm sorting Gaussian blobs: points recolour to their nearest centroid, then each centroid glides to its cluster's mean.">
+
+## The core idea
+
+k-means never looks at any labels. You tell it only how many groups to find, not what they are, and yet it reliably rediscovers structure a person would have drawn by hand. The trick is a loop simple enough to run in your head: guess where the centres are, sort every point to its closest guess, then shift each guess to the middle of whatever it caught. Repeat until nothing moves.
+
+On the canvas you are watching that loop breathe. The small coloured dots are the samples; the big ringed markers are the centroids. Every half-second the points flicker to a new colour (the assign step), then the rings glide to the balance point of their fresh catch (the update step). The inertia readout at the top only ever falls, and once the centroids settle the scene pauses, then reseeds with new data.
+
+</LabSide>
+
+## How it works
+
+Each sample $x_i$ is a 2D vector. Given $k$ centroids $\mu_j$, the assign step picks, for every point, the nearest centre:
+
+$$
+c_i = \arg\min_j \lVert x_i - \mu_j \rVert^2
+$$
+
+The update step then replaces each centroid with the mean of the points that chose it:
+
+$$
+\mu_j = \frac{1}{|C_j|} \sum_{i \in C_j} x_i
+$$
+
+Both steps push down the same quantity, the within-cluster sum of squares (WCSS), also called inertia:
+
+$$
+J = \sum_{j=1}^{k} \sum_{i \in C_j} \lVert x_i - \mu_j \rVert^2
+$$
+
+Reassigning a point can only shorten its own distance, and setting a centroid to the mean is exactly the choice that minimises squared distance for a fixed grouping. So $J$ falls every step and the loop must halt. Where it halts depends on where it began, which is why this lab seeds the centres with k-means++ (pick the first point at random, then favour points far from the centres already chosen), spreading the initial guesses apart.
+
+```
+seed k centroids with k-means++
+repeat until no centroid moves:
+    assign:  cᵢ ← nearest centroid to xᵢ
+    update:  μⱼ ← mean of points where cᵢ = j
+```
+
+## Where it shows up
+
+The same alternate-and-average loop is a hard-assignment case of expectation-maximisation, the engine behind Gaussian mixture models, and it surfaces well beyond statistics. Vector quantisation compresses images and audio by swapping each block for its nearest codebook entry. Lloyd's algorithm relaxes points into evenly spaced Voronoi cells for meshing, stippling, and dithering. Colour palettes, product recommendations, and document topics all lean on the same move: let a few representative centres stand in for a crowd.
+
+## The knobs
+
+- **Clusters k**: how many centroids compete for points. Set it below or above the true blob count and you will see the fit strain, either merging distinct blobs or splitting one in half.
+- **Points**: the number of samples drawn from the blobs. More points make each mean steadier and the cells cleaner.
+- **Blobs**: how many Gaussian clusters actually generate the data, the honest structure that k is trying to recover.
+- **Speed**: how fast the assign and update cadence runs, and how quickly each centroid glides to its new mean.

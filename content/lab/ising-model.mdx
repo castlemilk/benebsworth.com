@@ -1,0 +1,53 @@
+<LabSide effect="ising-model" height={360} params={{ temperature: 2.2, J: 1.0, h: 0.0, speed: 1 }} caption="A square lattice of magnetic spins sitting just below its critical temperature, where domains of aligned orange and teal keep growing and dissolving.">
+
+## The core idea
+
+Heat a fridge magnet past a certain point and it stops being a magnet. Cool it back down and the magnetism returns. There is no gentle fade in between: the change happens at one sharp point, the critical temperature $T_c$, and the nearer you sit to that point the wilder the behaviour becomes. The 2D Ising model is the simplest system that reproduces this, using nothing more than a grid of arrows that each point up or down.
+
+Every cell on the canvas is a spin, orange for up and teal for down. Each spin would like to match its four neighbours, and temperature keeps knocking it out of line. Above $T_c$ you see salt-and-pepper noise with no memory and no structure. Below $T_c$ large aligned domains form and the whole sheet leans one colour. Right at $T_c$, where this demo starts, patches of every size flicker in and out at once, and the lattice never quite settles.
+
+## How it works
+
+The energy of the whole lattice rewards neighbours that agree:
+
+$$
+E = -J \sum_{\langle i j \rangle} s_i s_j - h \sum_i s_i
+$$
+
+Each spin is $s_i = \pm 1$, the coupling $J$ says how badly neighbours want to line up, and $h$ is an external field that tips the balance toward up or down. The pair sum $\langle i j \rangle$ runs over neighbouring cells, with the edges wrapped around so there are no walls.
+
+We never solve that energy directly. Instead we sample it with Metropolis Monte Carlo, a method (Monte Carlo just means we lean on random numbers) that visits each configuration in proportion to how likely thermodynamics says it should be. Pick a site, ask what flipping it would cost:
+
+$$
+\Delta E = 2\, s_k \left( J \sum_j s_j + h \right)
+$$
+
+If the flip lowers the energy, take it. If it raises the energy, still take it sometimes, with probability $e^{-\Delta E / T}$, because a warm system can borrow energy from its surroundings. That one rule, repeated about $L^2$ times per frame, is the entire simulation:
+
+```
+pick a random site k with spin s
+ΔE = 2·s·(J·Σ neighbours + h)
+if ΔE ≤ 0:                   flip s
+else if rand() < exp(−ΔE/T): flip s
+```
+
+The magic number falls out of Onsager's exact 1944 solution:
+
+$$
+T_c = \frac{2J}{\ln(1 + \sqrt{2})} \approx 2.269\,J
+$$
+
+Below $T_c$ the readout $|M|$, the average spin, climbs toward 1 as the lattice orders. Above $T_c$ it hovers near 0.
+
+</LabSide>
+
+## Where it shows up
+
+The Ising model is the fruit fly of statistical physics, and its reach goes well past magnets. The same "agree with your neighbours, but noise fights you" rule describes a binary alloy sorting its two metals, a liquid boiling into gas near its critical point, and simplified neurons that fire or rest. It also anchors universality: very different systems share identical critical exponents near their transition, so measuring one teaches you about the rest. Image denoising, spin glasses, and opinion-spreading models borrow the same structure.
+
+## The knobs
+
+- **Temperature T**: how much thermal jostling the spins feel. Cool below $T_c$ and domains lock in; heat above it and any order dissolves into noise. Park it near 2.27 to watch criticality itself.
+- **Coupling J**: how strongly neighbours want to agree. Raising $J$ also raises $T_c$, so a stiffer coupling needs more heat to melt. Changing $J$ re-randomises the lattice for a clean start.
+- **Field h**: an external bias. Push it positive and up-spins (orange) win even without much cooperation; push it negative and teal takes the sheet.
+- **Speed**: how many spin flips run each frame. Turn it up to evolve the pattern faster, without touching the underlying physics.

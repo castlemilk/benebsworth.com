@@ -1,0 +1,54 @@
+<LabSide effect="exoplanet-transit" height={360} params={{ planetRadius: 0.1, impact: 0.2, speed: 1, limbDarkening: true }} caption="A dark planet crosses a limb-darkened star while the light curve below records the dip its shadow carves out.">
+
+## The core idea
+
+You cannot see most exoplanets. They are tiny, dim, and drowned in the glare of their star. Yet we have confirmed thousands of them, and the trick is almost embarrassingly simple: watch the star's brightness and wait for it to dip. When a planet passes in front of its star along our line of sight, it blocks a sliver of light. Measure how much, and you have measured the planet.
+
+On the canvas the top panel is the star seen face on, warm and limb-darkened, with a dark disk sliding across it. The bottom panel is the light curve: relative brightness plotted against time. As the planet touches the stellar edge the flux begins to fall, flattens across the middle of the crossing, then climbs back to one once the planet clears the far limb. That little U-shaped notch is the entire signal, and its shape is dense with information.
+
+## How it works
+
+The headline number is the transit depth. To a first approximation the fraction of light lost equals the fraction of the stellar disk the planet covers, which is the ratio of their areas:
+
+$$
+\delta \approx \left(\frac{R_p}{R_\star}\right)^2
+$$
+
+A Jupiter-sized planet ($R_p/R_\star \approx 0.1$) hides about 1% of the light. An Earth ($R_p/R_\star \approx 0.009$) hides roughly 80 parts per million (ppm), which is why finding small worlds needs exquisitely stable photometry.
+
+That approximation hides the real subtlety, and this demo does not fake it. A star is not a flat coin of uniform brightness. You look straight through to the hot core at the centre and skim through cooler, higher layers near the edge, so the disk glows brighter in the middle and dimmer at the limb. A standard linear model captures this:
+
+$$
+I(\mu) = 1 - u\,(1 - \mu), \qquad \mu = \sqrt{1 - r^2}
+$$
+
+where $r$ is the fractional distance from disk centre and $u$ the limb-darkening coefficient. Every frame the flux is the star's total brightness minus whatever the planet's shadow removes, both computed as genuine integrals over the disk:
+
+$$
+F(t) = 1 - \frac{1}{F_0}\iint_{\text{planet}\,\cap\,\text{star}} I(r)\,dA,
+\qquad F_0 = \iint_{\text{star}} I(r)\,dA
+$$
+
+The renderer estimates that overlap numerically:
+
+```
+for each cell in the planet's bounding box:
+    if cell inside planet AND inside star:
+        blocked += I(distance from star centre)
+flux = 1 - blocked * cellArea / F0
+```
+
+Because the centre is brightest, a central transit runs a touch deeper than the naive $(R_p/R_\star)^2$ and its floor is gently rounded rather than flat. Raise the impact parameter $b$ and the planet only clips the fainter limb, so the dip grows shallow and V-shaped, until beyond $b \approx 1$ the crossing becomes a graze and then vanishes.
+
+</LabSide>
+
+## Where it shows up
+
+This is eclipse geometry, and the same overlap integral turns up wherever one disk slides over another. Eclipsing binary stars trace deeper versions of the very same curve. A solar eclipse is a transit with the Moon as the planet and you standing on the detector. Occultation timing, where a body passes behind a planet or asteroid, reads the sharp edges of the dip to size the occulter. NASA's Kepler and TESS (Transiting Exoplanet Survey Satellite) missions industrialised the idea, staring at hundreds of thousands of stars at once and letting software flag every recurring notch.
+
+## The knobs
+
+- **Planet radius Rp/R\***: the planet-to-star size ratio. It sets the depth, which scales as the square of this value, so doubling the radius quadruples the dip.
+- **Impact parameter b**: how high the crossing chord sits, measured in stellar radii. At $b = 0$ the planet cuts through the bright centre; near $b = 1$ it grazes the dim limb and the notch turns V-shaped and shallow.
+- **Speed**: how fast the planet sweeps, and how quickly the light curve scrolls. It changes the pace, not the physics.
+- **Limb darkening**: toggles the realistic brightness gradient. On, the star glows brighter at its centre and the floor of the dip rounds off. Off, the disk is uniform and the floor sits flat.

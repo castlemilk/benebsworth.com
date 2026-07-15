@@ -1,0 +1,182 @@
+---
+title: Chaos hides in one line of algebra
+date: '2026-07-12T00:00:00.000Z'
+description: >-
+  Turn one dial on a one-line population model and it forks from a steady state
+  to a 2-cycle, a 4-cycle, then chaos: the period-doubling cascade, the
+  Feigenbaum constant, and the same fingerprint hiding in the weather and a
+  swinging pendulum.
+labels: 'maths,chaos,dynamical-systems'
+release: true
+heroImage: /blog/chaos-in-one-equation/hero.webp
+author: Ben Ebsworth
+takeaways:
+  - >-
+    Chaos needs neither complexity nor randomness. One quadratic map, x →
+    r·x·(1−x), turns a steady state into a 2-cycle, a 4-cycle, and then
+    aperiodic chaos as you raise a single parameter.
+  - >-
+    The period-doubling cascade completes in a finite window of r, because each
+    fork arrives faster than the last by the Feigenbaum ratio δ ≈ 4.6692, and
+    that same constant governs every smooth one-hump map.
+  - >-
+    A positive Lyapunov exponent is the working definition of chaos, and it is
+    the shared fingerprint of the logistic map, the Lorenz weather model, and a
+    double pendulum.
+  - >-
+    Order hides inside the chaos: stable windows, like the period-3 window at r
+    ≈ 3.8284, reappear in the middle of the chaotic regime.
+markdown_url: /blog/chaos-in-one-equation/
+canonical_url: 'https://benebsworth.com/blog/chaos-in-one-equation/'
+---
+## Key takeaways
+
+- Chaos needs neither complexity nor randomness. One quadratic map, x → r·x·(1−x), turns a steady state into a 2-cycle, a 4-cycle, and then aperiodic chaos as you raise a single parameter.
+- The period-doubling cascade completes in a finite window of r, because each fork arrives faster than the last by the Feigenbaum ratio δ ≈ 4.6692, and that same constant governs every smooth one-hump map.
+- A positive Lyapunov exponent is the working definition of chaos, and it is the shared fingerprint of the logistic map, the Lorenz weather model, and a double pendulum.
+- Order hides inside the chaos: stable windows, like the period-3 window at r ≈ 3.8284, reappear in the middle of the chaotic regime.
+
+Here is a claim to be suspicious of: you can manufacture genuine, unpredictable chaos with a single line of algebra. One multiplication, one subtraction, no randomness, no noise, nothing hidden up a sleeve. Feed a number in, get a number out, feed that number back in, and repeat. Do it a few hundred times and, depending on one dial, the output either settles to a steady value, or ticks between two values forever, or never repeats and behaves for all practical purposes like a coin you cannot call.
+
+The line is the logistic map, and it started life as a toy model of a population. Think of $x_n$ as this year's headcount written as a fraction of the most the environment can hold, so $x_n$ lives between $0$ (extinct) and $1$ (packed to capacity). The dial $r$ is the growth rate. Small populations breed fast, which is the $r\,x_n$ part; crowded ones starve, which is the $(1 - x_n)$ part pulling the number back down. Turn $r$ up and you are asking what a faster-breeding species does to itself.
+
+> [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
+
+The purple smear is every long-run value the population settles into, plotted against the growth rate $r$ along the bottom. Drag the **Current r** slider and watch the orange marker walk left to right. On the left the population lands on one steady value. Push past $r = 3$ and the line forks in two: now it alternates between a boom year and a bust year, forever. Keep going and it forks again, and again, faster each time, until near $r \approx 3.57$ the forks blur into a solid band. That band is chaos. The small cobweb inset shows the actual iteration bouncing between the $y = x$ line and the parabola, so watch a tidy staircase turn into a scribble as you raise the dial. This picture is the whole post, and everything below is why it looks like this.
+
+## The whole model is one multiplication
+
+Written out, the map is almost embarrassingly small. This is the entire dynamical system:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+x_{n+1} = r\,x_n\,(1 - x_n)
+```
+
+$$
+x_{n+1} = r\,x_n\,(1 - x_n)
+$$
+
+Where does it come to rest? A fixed point is a value the map returns unchanged, $x^{*} = r\,x^{*}(1 - x^{*})$. There is the boring root $x^{*} = 0$ (extinction stays extinct), and one that matters:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+x^{*} = 1 - \frac{1}{r}
+```
+
+$$
+x^{*} = 1 - \frac{1}{r}
+$$
+
+For $r < 1$ this root is negative and meaningless, so the population dwindles to nothing. For $1 < r < 3$ it sits happily between $0$ and $1$ and the population settles there, which is exactly what you see on the left of the diagram. The question of whether it *stays* there is settled by the slope of the map at the fixed point. Differentiating equation (1) gives $f'(x) = r(1 - 2x)$, and plugging in equation (2) it collapses to a clean $f'(x^{*}) = 2 - r$. A fixed point holds firm while that slope has magnitude under $1$, so the steady state is stable for $1 < r < 3$ and loses its grip at exactly $r = 3$, where the slope hits $-1$. That is the first fork.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+There is no chance anywhere in equation (1). Give it a starting value and $r$, and every number after that is fixed for all time, as determined as $2 + 2 = 4$. Whatever unpredictability shows up on the right of the diagram was not smuggled in through noise, missing physics, or a bad random-number generator. It is generated by the arithmetic itself. That is the whole surprise, and it is why the logistic map is the cleanest teaching example of chaos we have.
+
+## The cascade: doubling, then doubling faster
+
+At $r = 3$ the steady state splits into a 2-cycle, a population that oscillates between a high year and a low year. Turn the dial further and that 2-cycle becomes unstable in the same way the fixed point did, and each branch splits again into a 4-cycle. Then an 8-cycle, a 16-cycle, and on up the powers of two. This is the period-doubling cascade, and the striking thing is not that it happens but how *quickly* it happens. The forks come at
+
+$$
+r_1 = 3, \quad r_2 \approx 3.4495, \quad r_3 \approx 3.5441, \quad r_4 \approx 3.5644, \; \dots
+$$
+
+Each gap is roughly four and a bit times shorter than the one before. Feigenbaum noticed that the ratio of successive gaps settles onto a fixed number:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\delta = \lim_{n\to\infty} \frac{r_n - r_{n-1}}{r_{n+1} - r_n} \approx 4.6692
+```
+
+$$
+\delta = \lim_{n\to\infty} \frac{r_n - r_{n-1}}{r_{n+1} - r_n} \approx 4.6692
+$$
+
+Because the gaps shrink geometrically, the whole infinite tower of doublings fits inside a finite stretch of $r$. Add up a geometric series with ratio $1/\delta$ and it converges. The doublings pile up at a limit point, the onset of chaos, at $r_\infty \approx 3.5699$. Past there the periodic order is spent, and the system is chaotic.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+It is tempting to picture the cascade as an ever-slowing approach to chaos, forks marching off toward $r = 4$. The opposite is true. The forks *accelerate*, so an infinite number of them are crammed into the sliver between $r = 3$ and $r_\infty \approx 3.5699$. By the time you have nudged the dial two-thirds of the way from the first fork to $r = 4$, order has already run out and you are deep in chaos with plenty of range to spare. Chaos is not the far end of the diagram. It arrives early.
+
+## One number that does not care what equation you used
+
+Here is where the logistic map stops being a cute biology model and starts being a fact about the world. That constant $\delta \approx 4.6692$ is not special to $r\,x(1-x)$. Take any smooth map with a single hump, a rounded maximum: the sine map $r\sin(\pi x)$, a cosine, a quartic, anything with one gentle peak. Every one of them period-doubles its way into chaos, and every one does it with the *same* $\delta$. The individual bifurcation values differ, the shape of the diagram differs, but the rate at which the forks accelerate is identical to the last digit you care to compute.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+The route into chaos has a speed limit, and it is the same speed limit for a population model, a dripping tap, and a convecting fluid: a number near 4.6692 that nobody put there on purpose.
+
+Feigenbaum found this in 1978 on a pocket calculator, watching the numbers from two completely different maps converge onto the same ratio and assuming at first that he had a bug. He did not. The constant is *universal* in the technical sense: it is a property of the whole class of one-hump maps, the way $\pi$ is a property of every circle rather than of any particular one. And the prediction is not just mathematical folklore. Experiments on convecting liquid helium, on electronic oscillators, on dripping taps, have all measured period-doubling cascades and read off a $\delta$ that agrees with 4.6692.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Swap $r\,x(1-x)$ for $r\sin(\pi x)$ and re-run the whole cascade. The forks land at different places, but measure the ratio of successive gaps and you get $4.6692$ again. This is what makes chaos theory a *theory* rather than a pile of case studies: the transition into chaos has structure that survives changing the equation, so measuring it in a lab tells you about a universality class, not just about one gadget on the bench.
+
+## Windows of order inside the chaos
+
+The chaotic band is not solid. Look again at the diagram between $r_\infty$ and $r = 4$ and you will spot vertical gaps, clean stripes where the scribble suddenly collapses back to a handful of points. These are windows of order, periodic cycles living in the middle of the chaos. The widest and most famous is the period-3 window, which opens abruptly at
+
+$$
+r = 1 + \sqrt{8} \approx 3.8284
+$$
+
+Drag the marker to about $3.84$ and watch the chaos snap into a clean 3-cycle, boom-boom-bust repeating cleanly. Then, as you nudge $r$ higher inside the window, that 3-cycle period-doubles into a 6-cycle, a 12-cycle, and cascades straight back into chaos, a perfect miniature of the whole diagram tucked inside itself. The structure is fractal: order and chaos interleaved at every scale.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+There is a theorem hiding in that window, and it has one of the best titles in mathematics: Li and Yorke's 1975 paper *Period Three Implies Chaos*. The result (a corollary of Sharkovskii's earlier ordering of the integers) says that if a continuous map of the interval has a cycle of period exactly $3$, then it must have cycles of *every* period, and an uncountable set of points that never settle into any cycle at all. So the mere existence of that period-3 window is a certificate that the full chaotic zoo is present. Find a 3-cycle and you have found everything.
+
+## The same fingerprint in a weather model
+
+So far this is a one-dimensional map, a number chasing its own tail. Real chaos usually lives in continuous systems, differential equations flowing through time, and the surprise is that the logistic map's essential feature carries straight over. That feature is *sensitive dependence on initial conditions*: two starts a hair apart are pulled exponentially far apart as the system runs. The rate of that pulling-apart is the Lyapunov exponent, and for the logistic map it is an average of the log-slope along the trajectory:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\lambda = \lim_{n\to\infty} \frac{1}{n} \sum_{i=0}^{n-1} \ln\bigl| f'(x_i) \bigr|, \quad f'(x) = r(1 - 2x)
+```
+
+$$
+\lambda = \lim_{n\to\infty} \frac{1}{n} \sum_{i=0}^{n-1} \ln\bigl| f'(x_i) \bigr|, \quad f'(x) = r(1 - 2x)
+$$
+
+The sign of $\lambda$ tells you everything. Where the map is periodic, $\lambda < 0$ and small errors heal. At every bifurcation and at $r_\infty$ it touches zero. Across the chaotic band $\lambda > 0$, and a positive Lyapunov exponent is the working definition of chaos in any system, discrete or continuous. If you plotted $\lambda$ against $r$ it would trace the diagram's mood exactly: negative in the ordered valleys, spiking positive in the chaos, dipping back below zero inside every window of order.
+
+> [LabCanvas component] Inline interactive lab canvas. Embeds any effect registered in `lib/lab/registry.ts` (referenced by its `effect` slug) as a live Canvas2D/WebGL visualisation, with the effect's own controls rendered below unless `controls={false}`. Optional `params` override the effect's defaults and `caption` adds a figcaption. The rendered post has the live, interactive version; this is a static placeholder for the markdown-only sibling — read the matching lab explainer under `/lab/<slug>/` for the full description of what the effect shows.
+
+Edward Lorenz found the same positive exponent in three coupled differential equations for convection back in 1963. His trajectory never settles to a point or a loop; it winds forever around a two-winged surface, close but never repeating, and two starts differing in the fourth decimal place end up on opposite wings. That is the butterfly effect, and it is equation (4) with a positive answer, dressed in continuous clothes. The logistic map and the Lorenz system are not analogies for each other. They are two rooms in the same house, and the house is nonlinear dynamics.
+
+## Chaos you can feel
+
+The last room is the one you can build on a desk. A double pendulum, one rod swinging off the end of another, obeys nothing but Newton's laws, exact and deterministic. It is also violently chaotic.
+
+> [LabCanvas component] Inline interactive lab canvas. Embeds any effect registered in `lib/lab/registry.ts` (referenced by its `effect` slug) as a live Canvas2D/WebGL visualisation, with the effect's own controls rendered below unless `controls={false}`. Optional `params` override the effect's defaults and `caption` adds a figcaption. The rendered post has the live, interactive version; this is a static placeholder for the markdown-only sibling — read the matching lab explainer under `/lab/<slug>/` for the full description of what the effect shows.
+
+Release the arms from almost the same angle and they track together for a beat, then peel apart into completely different motions and never reconcile. That window of agreement, a second or two before divergence, *is* the prediction horizon set by the Lyapunov exponent, the same quantity as equation (4), the same idea as the two dots on the Lorenz butterfly. Turn up the gravity and the divergence comes faster, a bigger exponent, a shorter horizon.
+
+Three rooms, then: a toy population model, a stripped-down weather model, and a swinging pendulum. A discrete map, a set of differential equations, and a lump of physical hardware. They share almost nothing on the surface, and underneath they share the one thing that matters, a route into chaos with a positive Lyapunov exponent and a structure that repeats itself as you zoom in. My own favourite consequence is the humbling one: the wall on weather forecasting near two weeks is not an engineering embarrassment waiting on a faster computer. It is the same mathematics as the fork at $r = 3$, and no supercomputer beats a logarithm. Something to sit with next time a forecast lets you down.
+
+Next time you see a system doubling its period, whatever it is made of, you will know what is coming, and roughly how fast. Watch this space.
+
+## Reading further
+
+- [May, *Simple mathematical models with very complicated dynamics* (Nature 261, 1976)](https://www.nature.com/articles/261459a0). The paper that put the logistic map on everyone's desk, arguing that even a first course should teach how simple nonlinear models misbehave. Short, opinionated, and still the best entry point.
+- [Feigenbaum, *Quantitative universality for a class of nonlinear transformations* (J. Stat. Phys. 19, 1978)](https://link.springer.com/article/10.1007/BF01020332). Where $\delta \approx 4.6692$ and its companion constant are pinned down, and where universality is argued for the whole class of one-hump maps.
+- [Strogatz, *Nonlinear Dynamics and Chaos*, chapter 10](https://www.stevenstrogatz.com/books/nonlinear-dynamics-and-chaos). The standard modern textbook treatment of the logistic map, the cobweb picture, Lyapunov exponents, and the renormalisation behind Feigenbaum's constants, drawn carefully.
+- [Lorenz, *Deterministic Nonperiodic Flow* (J. Atmos. Sci. 20, 1963)](https://journals.ametsoc.org/view/journals/atsc/20/2/1520-0469_1963_020_0130_dnf_2_0_co_2.xml). The continuous-time companion to this post: three equations, no randomness, and the first clear sighting of the butterfly effect.

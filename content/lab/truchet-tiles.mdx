@@ -1,0 +1,44 @@
+<LabSide effect="truchet-tiles" height={360} params={{ tiles: 14, style: "arcs", reseedSpeed: 0.4, lineWidth: 3.5 }} caption="Independent coin-flips per cell, yet the arcs weave into one unbroken maze.">
+
+## The core idea
+
+Here is the counter-intuitive part. Every cell in this grid decides its own orientation in total isolation, flipping a private coin that knows nothing about its neighbours. There is no planner stitching the picture together, no pass that checks whether the pieces line up. And yet the result is a single continuous labyrinth of interlocking loops, never a broken end in sight.
+
+What you are watching is a Truchet tiling. Each square holds one of two mirror versions of the same motif: two quarter-circle arcs. Because both versions place their arc endpoints at the exact midpoints of the cell edges, whatever a cell chooses, its curve meets the neighbour's curve cleanly at the shared border. Local randomness, global order. A slow teal ripple sweeps across the field, re-rolling cells as it passes, so the maze is forever rearranging without ever tearing.
+
+## How it works
+
+Give each cell a coordinate $(i, j)$. Its orientation comes from a small integer hash mixing those coordinates with an animation phase, reduced to a single bit:
+
+$$o_{i,j} = H(i,\, j,\, \lfloor \phi \rfloor) \bmod 2$$
+
+The hash $H$ is deterministic, so the whole field is reproducible from one seed. The arc radius is exactly half the cell width, $r = s/2$, which is what forces both arc ends onto edge midpoints and guarantees the join.
+
+The animation lives entirely in the phase field $\phi$. Rather than re-roll every cell each frame (that flickers like static), you advance a shallow diagonal gradient:
+
+$$\phi(i, j, t) = v\,t + m\,(i + j)$$
+
+with $v$ the reseed speed and $m$ a small slope. A cell re-rolls only when $\lfloor \phi \rfloor$ ticks over, and the $(i + j)$ term staggers those ticks along anti-diagonals, so the re-rolls arrive as a travelling wavefront. Freshly flipped cells glow, then fade.
+
+```
+for each cell (i, j):
+    phase = floor(v*t + m*(i + j))
+    o     = hash(i, j, phase + seed) & 1
+    draw motif in orientation o
+    if phase changed since last frame: flash this cell
+```
+
+Only the seed offset touches `Math.random`, and only when you change the grid. Everything after is a pure function of position and time.
+
+</LabSide>
+
+## Where it shows up
+
+Sébastien Truchet catalogued these tilings in 1704 while studying how a single two-tone square could be combined, and the trick keeps resurfacing. Maze generators lean on it for cheap, guaranteed-connected corridors. Circuit-board and pipe-routing art use the arc tile to fake plausible plumbing. The same "constrain the boundary, free the interior" principle drives Wang tiles, procedural texture synthesis, and the aperiodic monotile hunt that produced the hat in 2023. Even knitting and Islamic tilework reach for it: decide a rule at the edges and let the middle roll freely, and coherence comes for nothing.
+
+## The knobs
+
+- **Tiles across:** how many cells span the width. Fewer means big bold arcs; more means a fine, dense weave. Changing it re-seeds the field.
+- **Motif:** swap the tile. **Arcs** for flowing loops, **Diagonals** for a hard-edged maze, **Triangles** for a filled mosaic.
+- **Reseed wave:** how fast the diagonal wavefront advances. At zero the pattern freezes; wind it up and the field churns continuously.
+- **Line width:** stroke weight for arcs and diagonals, and the width of the background grout seams between triangles.

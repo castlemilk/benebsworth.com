@@ -1,0 +1,51 @@
+<LabSide effect="eye-diagram" height={360} params={{ rolloff: 0.35, snr: 20, bandwidth: 1, traces: 120 }} caption="A raised-cosine eye at 20 dB. Every two-symbol slice is stacked on one axis, and the open centre is the margin your receiver decides in.">
+
+## The core idea
+
+You cannot judge a digital link from a single clean bit. Send one pulse and it always looks fine. The honest question is what happens when thousands of pulses, each shaped and smeared and nudged by noise, are laid on top of one another. Do they still leave a gap the receiver can slice through, or do they blur into mush?
+
+The eye diagram answers that by folding a long bitstream back onto a two-symbol window and overlaying every slice with low opacity (persistence). Where the traces avoid each other, a bright "eye" opens up. The taller and wider that opening, the more room your receiver has to sample the right value. On the canvas the cyan traces are the overlaid waveforms, the dashed vertical line is the sampling instant, and the amber callipers measure how much vertical and horizontal margin you have left.
+
+## How it works
+
+The chain is short. Start with random symbols $b_k \in \{-1, +1\}$ at one per period $T$. Shape each one with a raised-cosine (RC) pulse, whose impulse response is deliberately zero at every neighbouring symbol centre:
+
+$$
+h(t) = \operatorname{sinc}\!\left(\tfrac{t}{T}\right)\,\frac{\cos(\pi \beta t / T)}{1 - (2\beta t / T)^2}
+$$
+
+The roll-off $\beta$ trades bandwidth for gentleness. Because $h(t)$ vanishes at $t = nT$, a perfectly sampled RC signal has zero inter-symbol interference (ISI), the smearing of one symbol into the next. A one-pole low-pass then band-limits the waveform, which reintroduces ISI as the channel narrows. Finally we add Gaussian noise whose spread comes from the signal-to-noise ratio (SNR):
+
+$$
+\sigma = 10^{-\text{SNR}/20}
+$$
+
+```
+for each 2-symbol window:
+    y = lowpass( raised_cosine(bits), bandwidth )
+    y += gaussian(0, sigma)
+    plot y over the shared 2T axis at low alpha
+```
+
+Eye height is the vertical gap at the sampling instant after backing off one $\sigma$ noise band on each side. Eye width is the span at the decision threshold where no trace strays near zero. Close either and a slicer will start guessing.
+
+</LabSide>
+
+## Where it shows up
+
+The same picture governs any link that makes a threshold decision on a noisy analogue waveform. High-speed serial lanes (PCI Express, USB, HDMI) are signed off on eye masks, optical transceivers quote eye margin in their datasheets, and hard-disk and flash read channels equalise until the eye reopens. The folding trick itself is broader than communications: astronomers phase-fold a faint periodic signal onto one cycle to pull a planet out of the noise, and the ISI you see here is just convolution, the same operator behind blur, reverb, and every finite-impulse-response filter.
+
+## The knobs
+
+- **Roll-off β**: how gently the raised-cosine pulse decays. More roll-off spends extra bandwidth to steepen the transitions, so the eye opens wider horizontally; near zero the pulse is a ringing sinc and the eye narrows.
+- **SNR (dB)**: the signal-to-noise ratio. Lower values fatten the noise band on every trace, and the eye squeezes shut vertically first.
+- **Bandwidth**: the channel low-pass cutoff in symbol rates. Drop it and neighbouring symbols smear together (ISI), collapsing the eye from the top and bottom.
+- **Overlaid traces**: how many two-symbol slices are stacked. More traces sample more bit patterns, so the persistence band fills in and the true worst-case boundary of the eye becomes visible.
+
+Changing the roll-off, bandwidth, or trace count reseeds the random bitstream, so you always see a fresh sweep of symbol patterns.
+
+## Further reading
+
+- [Eye pattern (Wikipedia)](https://en.wikipedia.org/wiki/Eye_pattern)
+- [Raised-cosine filter](https://en.wikipedia.org/wiki/Raised-cosine_filter)
+- Proakis, *Digital Communications*

@@ -76,6 +76,7 @@ const BY_SLUG: Record<string, Topic> = {
   'two-number-sum': TOPIC.algorithms,
   'hello-world': TOPIC.general,
   // Science deep-dives
+  'chaos-in-one-equation': TOPIC.maths,
   'lorenz-and-the-limits-of-prediction': TOPIC.maths,
   'phase-portraits-of-differential-equations': TOPIC.maths,
   'every-wave-is-a-circle': TOPIC.maths,
@@ -84,6 +85,8 @@ const BY_SLUG: Record<string, Topic> = {
   'band-gaps-are-bragg-reflection': TOPIC.physics,
   'normal-modes-to-chaos': TOPIC.physics,
   'quantum-tunnelling-you-can-see': TOPIC.physics,
+  'how-a-magnet-makes-up-its-mind': TOPIC.physics,
+  'a-neural-net-learns-a-shape': TOPIC.software,
   'a-star-search-visually': TOPIC.software,
   'how-python-dicts-really-work': TOPIC.software,
   'b-trees-vs-lsm-trees': TOPIC.software,

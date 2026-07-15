@@ -1,0 +1,48 @@
+<LabSide effect="boids-flocking" height={360} params={{ count: 120, separation: 1, alignment: 1, cohesion: 0.9, speed: 2 }} caption="A hundred agents, three local rules, no leader: the flock organises itself.">
+
+## The core idea
+
+A flock of starlings wheeling at dusk looks choreographed, as though every bird reads from the same score. It does not. There is no conductor, no plan, no bird that anyone follows. Each one watches only its handful of nearest neighbours and reacts to them. The sweeping, breathing shape you see is what that local reaction adds up to across the whole group.
+
+Craig Reynolds showed this in 1987 with a model he called boids. On the canvas you are watching roughly 120 agents, each a small triangle pointing where it is headed. Give every agent the same three instincts about its neighbours and clusters knit together, stretch, tear, and re-form. Nothing global is ever specified. The murmuration is emergent, built entirely from what each agent can see within a short radius.
+
+## How it works
+
+Every agent $i$ holds a position $\mathbf{p}_i$ and a velocity $\mathbf{v}_i$. Each frame, it looks at the set $N_i$ of neighbours within a perception radius $r$ and applies three steering rules, each a vector nudged onto its velocity.
+
+Separation pushes away from anyone too close, each crowding neighbour contributing an equal-length shove directly away from it:
+
+$$\mathbf{s}_i = \sum_{j \in N_i,\ d_{ij} < r_s} \frac{\mathbf{p}_i - \mathbf{p}_j}{d_{ij}}$$
+
+Alignment pulls the heading toward the neighbours' average velocity $\bar{\mathbf{v}}$, and cohesion pulls the position toward their centre of mass $\bar{\mathbf{p}}$. The three combine, each scaled by a weight, into one velocity update:
+
+$$\mathbf{v}_i \mathrel{+}= w_s\,\mathbf{s}_i + w_a(\bar{\mathbf{v}} - \mathbf{v}_i) + w_c(\bar{\mathbf{p}} - \mathbf{p}_i)$$
+
+Left alone, cohesion would let speeds run away, so a clamp caps the magnitude at $v_\text{max}$ while a floor stops anyone stalling. Then the position steps forward and the edges wrap, so an agent leaving the right side reappears on the left:
+
+$$\mathbf{v}_i \leftarrow \mathbf{v}_i\,\frac{v_\text{max}}{\lVert \mathbf{v}_i \rVert}\ \ \text{if}\ \lVert \mathbf{v}_i \rVert > v_\text{max}, \qquad \mathbf{p}_i \mathrel{+}= \mathbf{v}_i$$
+
+```
+for each agent i:
+  for each other agent j within radius r:   # O(n^2), squared distance
+    accumulate separation, avg velocity, centre
+  v_i += w_s*sep + w_a*(avg_v - v_i) + w_c*(centre - p_i)
+  clamp |v_i| to [v_min, v_max]
+  p_i += v_i ; wrap p_i to the canvas
+```
+
+The neighbour scan is order $n$ squared, which sounds alarming but is trivial at these sizes. Squared-distance rejection avoids square roots on far pairs, and a per-agent neighbour cap bounds the cost, so 250 agents still run smoothly.
+
+</LabSide>
+
+## Where it shows up
+
+The same three-rule skeleton keeps reappearing wherever many simple parts self-organise without a boss. Swarm robotics uses it so drones hold formation and dodge each other from onboard sensing alone. Crowd and traffic simulations lean on separation and alignment to keep pedestrians and cars flowing. Film studios have rendered stampedes and bat swarms this way since the early 1990s. Zoom out and the pattern rhymes with active-matter physics: schooling fish, swarming locusts, and even the aligned spins of a magnet all show global order emerging from purely local coupling, no central plan required.
+
+## The knobs
+
+- **Agents**: how many boids share the canvas. More of them thicken the flock and sharpen the murmuration; changing this reseeds the whole group from scratch.
+- **Separation**: how firmly each agent avoids crowding. Turn it up for airy, well-spaced ranks; turn it down and they clump into a dense blob.
+- **Alignment**: how eagerly agents match their neighbours' heading. High values give long, coherent streams; low values let the flock scatter into independent wanderers.
+- **Cohesion**: the pull toward the local centre of mass. More cohesion gathers loose agents into tight balls; less lets clusters drift apart and dissolve.
+- **Speed**: the maximum velocity, which sets how briskly the flock travels and how sharply it can turn.

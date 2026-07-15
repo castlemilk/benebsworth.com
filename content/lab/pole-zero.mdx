@@ -1,0 +1,51 @@
+<LabSide effect="pole-zero" height={360} params={{ wn: 1.5, zeta: 0.4, addZero: false, zeroLoc: -1, showBode: true }} caption="Two crosses on the s-plane decide how the step response rings and where the Bode curve peaks.">
+
+## The core idea
+
+A second-order system hides almost all of its personality in two numbers. Those numbers are its poles: a conjugate pair of points on the complex s-plane. You never watch them directly while a circuit or a motor runs, yet their position fixes the overshoot, the ringing, the settling time, and the resonant peak. Nudge the pair a little and the behaviour in time changes completely.
+
+The plane on the left is that map. The horizontal axis is the real part $\sigma$ (how fast things decay), and the vertical axis is the imaginary part $j\omega$ (how fast they oscillate). The cyan crosses are the poles; the amber ring is an optional zero. On the right the same system is retold twice: the step response you would catch on an oscilloscope, and the Bode magnitude you would measure with a network analyser. Drag the damping and all three views move together.
+
+## How it works
+
+The transfer function is the standard second-order form:
+
+$$
+H(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}
+$$
+
+Solving the denominator for its roots gives the pole pair:
+
+$$
+s = -\zeta\omega_n \pm j\,\omega_n\sqrt{1-\zeta^2}
+$$
+
+The real part is $-\zeta\omega_n$, so the damping ratio $\zeta$ pushes the poles left while $\omega_n$ sets how far they sit from the origin. When $\zeta \geq 1$ the square root turns real and the pair splits onto the $\sigma$ axis: two separate real poles, no oscillation. When $\zeta$ falls below zero the poles cross into the right half-plane (shaded red) and the response grows without bound.
+
+The step response is not a lookup here. It is integrated straight from the differential equation with a small time step, which is exactly why negative damping visibly diverges:
+
+```
+state = [x, v] = [0, 0]
+each frame:
+  for a few small dt steps:
+    a = -wn*wn*x - 2*zeta*wn*v + 1   # unit step input
+    advance (x, v) with RK4
+    plot y = wn*wn*x
+  once settled, pause, then retrigger
+```
+
+The lower panel sweeps frequency and plots $20\log_{10}|H(j\omega)|$. A lightly damped pair raises the tall peak near $\omega_n$; heavy damping flattens it into a gentle roll-off.
+
+</LabSide>
+
+## Where it shows up
+
+This one shape recurs wherever a system stores energy in two places and trades it back and forth. A mass on a spring, an RLC circuit swapping charge between capacitor and inductor, a car suspension, a drone holding altitude, the recovery of a control loop after a knock: each collapses to a pole pair and a damping ratio. The zero appears whenever a fast path bypasses the slow dynamics, as in a PD controller or a lead compensator, where it lifts the high-frequency gain and drags the transient a little earlier in time.
+
+## The knobs
+
+- **Natural freq ωn**: how far the poles sit from the origin. Higher values speed the whole response up and slide the Bode peak to the right.
+- **Damping ζ**: slides the poles left or right. Below zero is unstable, near zero rings hard, and at 1 the pair goes real and critically damped.
+- **Add real zero**: switches on the amber zero, adding a numerator factor that lifts the high-frequency gain and sharpens the early transient.
+- **Zero location**: where the zero sits on the negative real axis. The closer it creeps to the origin, the stronger its pull on the response.
+- **Show Bode magnitude**: toggles the lower frequency-response panel so the step response can stretch to fill the space.

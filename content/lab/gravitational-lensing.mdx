@@ -1,0 +1,51 @@
+<LabSide effect="gravitational-lensing" height={360} params={{ lensMass: 1.1, sourceX: 0.35, background: "grid", showRing: true }} caption="A foreground mass warps the background grid. As the source drifts behind the lens the distortion tightens into a full Einstein ring, then breaks back into arcs.">
+
+## The core idea
+
+Mass bends light. A galaxy sitting between you and a more distant source acts like a lens made of pure gravity, and the picture you receive is not the sky as it truly is. The light has been deflected on its way over, so a single background object can appear stretched, doubled, or wrapped into a bright circle.
+
+On the canvas the lens sits dead centre. The grid you see is the *background* as it actually appears once its light has been bent around the mass. Watch the source sweep slowly across: when it lines up behind the lens the grid smears into a closed loop of radius $\theta_E$, the Einstein ring. Slide it off axis and the ring splits into two curved arcs on opposite sides. Nothing about the source changed. Only the path its light took to reach you.
+
+## How it works
+
+Work in angular coordinates on the sky. Let $\theta$ be the direction you point your telescope and $\beta$ the true direction of the source. A point mass deflects a ray by
+
+$$
+\alpha(\theta) = \theta_E^2\,\frac{\theta}{|\theta|^2},
+$$
+
+a vector pointing along $\theta$ with magnitude $\theta_E^2 / |\theta|$. The closer your line of sight passes to the mass, the harder the bend. The lens equation then ties the two directions together:
+
+$$
+\beta = \theta - \alpha(\theta).
+$$
+
+This is easiest to render backwards. Rather than chase every source ray forwards, you loop over output directions $\theta$, compute where that light came from, and paint the background sampled at $\beta$:
+
+```
+for each output direction theta:
+    r2   = max(|theta|^2, epsilon)      # guard the centre
+    beta = theta - thetaE^2 * theta / r2
+    paint(theta, background_at(beta))
+```
+
+The floor on $|\theta|^2$ tames the $1/|\theta|^2$ singularity at the very centre. Solving the equation the other way, for a source at offset $\beta$, gives two images strung along the line through the lens:
+
+$$
+\theta_\pm = \tfrac{1}{2}\left(\beta \pm \sqrt{\beta^2 + 4\theta_E^2}\right).
+$$
+
+When $\beta \to 0$ the two solutions merge onto the ring $|\theta| = \theta_E$, and by symmetry the source appears everywhere around it at once.
+
+</LabSide>
+
+## Where it shows up
+
+The same inverse map appears anywhere a smooth field redirects what you sample. Refraction through a warm-air layer draws the shimmering mirage on a hot road by exactly this logic: sample the sky where the bent ray points, not where the object sits. Ray tracing a glass lens, tracing seismic waves through a slow patch of mantle, or reading a distorted reflection in a curved mirror all share the structure of one equation relating apparent position to true position through a deflection term. Astronomers even run it in reverse as a measuring tool, weighing dark matter by how much unseen mass is needed to produce the arcs we observe.
+
+## The knobs
+
+- **Lens mass (θ_E):** sets the Einstein radius through $\theta_E \propto \sqrt{\text{mass}}$. Heavier lenses bend light harder and grow the ring, swallowing more of the background into it.
+- **Source offset:** biases where the source sits relative to the lens. At zero it sweeps straight through the centre for a full ring; push it out and the alignment stays lopsided, so you get lasting twin arcs instead.
+- **Background:** swap the warped coordinate grid for a field of stars. In *stars* mode each background point is drawn at both of its image positions, brightening as it nears the ring.
+- **Einstein ring:** overlays the faint circle of radius $\theta_E$, the locus a perfectly aligned source collapses onto.

@@ -5,7 +5,7 @@ import {
 import { BENCHMARK_RESULTS } from '../lib/lab/llm-benchmark/results.ts'
 import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.ts'
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
-import { writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 const MODELS_TO_RUN = process.env.RUN_MODELS ? process.env.RUN_MODELS.split(',') : ['kimi-k2.7']
@@ -40,28 +40,37 @@ async function main() {
     bustCache: RUN_BUST_CACHE,
   })
 
-  // Record every result as it completes so a mid-run failure can still write
-  // the partial results collected so far.
+  // Replace existing results for the (model, task) combinations we just ran; keep everything else.
+  const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
+  const writeResults = (fresh) => {
+    const freshKeys = new Set(fresh.map((r) => `${r.modelId}|${r.taskId}`))
+    // Re-read the on-disk results on every write so concurrent runs (or a
+    // hand edit between iterations) aren't clobbered by the stale snapshot
+    // this process loaded at startup.
+    let baseline = BENCHMARK_RESULTS
+    try {
+      baseline = JSON.parse(readFileSync(outPath, 'utf8'))
+    } catch { /* first run or unreadable file — fall back to the startup snapshot */ }
+    const existing = baseline.filter((r) => !freshKeys.has(`${r.modelId}|${r.taskId}`))
+    const merged = [...existing, ...fresh]
+
+    writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
+
+    console.log(`Wrote ${merged.length} results to ${outPath}`)
+    console.log(`Fresh runs: ${fresh.length}`)
+  }
+
+  // Record every result as it completes and persist immediately: a long sweep
+  // (7 tasks × 5 iterations × 200s/call) must never lose finished work to a
+  // timeout, kill, or crash near the end.
   const collected = []
   const recordingRunner = {
     runTask: async (model, task, iterations) => {
       const results = await runner.runTask(model, task, iterations)
       collected.push(...results)
+      writeResults(collected)
       return results
     },
-  }
-
-  // Replace existing results for the (model, task) combinations we just ran; keep everything else.
-  const writeResults = (fresh) => {
-    const freshKeys = new Set(fresh.map((r) => `${r.modelId}|${r.taskId}`))
-    const existing = BENCHMARK_RESULTS.filter((r) => !freshKeys.has(`${r.modelId}|${r.taskId}`))
-    const merged = [...existing, ...fresh]
-
-    const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
-    writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
-
-    console.log(`Wrote ${merged.length} results to ${outPath}`)
-    console.log(`Fresh runs: ${fresh.length}`)
   }
 
   console.log(

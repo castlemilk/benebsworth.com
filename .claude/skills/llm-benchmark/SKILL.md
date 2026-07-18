@@ -39,6 +39,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Provider runner orchestrator | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Provider-specific API clients | `lib/lab/llm-benchmark/runners/{openai,anthropic,google,moonshot}.ts` |
 | Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text}.ts` |
+| Dependency sandbox | `lib/lab/llm-benchmark/sandbox/inline-dependencies.ts` |
+| Shared frame prelude (storage shim + error reporter) | `lib/lab/llm-benchmark/frame-prelude.ts` |
 | Run script | `scripts/run-benchmark.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
@@ -180,7 +182,7 @@ node scripts/seed-mock-results.mjs
    - Scores EVERY successful iteration's output using a task-appropriate heuristic scorer (`selectScorer()` in `lib/lab/llm-benchmark/scorers/index.ts`) and publishes the mean.
    - Aggregates all iterations into **one result per task/model** via the exported pure `aggregateRuns()` (status success/partial/fail/timeout, `iterationsSucceeded`, `source: 'live'`).
 3. `runBenchmark()` in `lib/lab/llm-benchmark/harness.ts` orchestrates independent task/model combinations in parallel (concurrency controlled by `RUN_CONCURRENCY`, default 3) and falls back to each task's `iterationsDefault`. A task/model job that throws is logged and skipped without aborting the rest of the run.
-4. Results are written to `lib/lab/llm-benchmark/results.json`. If the run fails part-way, `scripts/run-benchmark.mjs` still writes the partial results collected so far before exiting non-zero.
+4. Results are written to `lib/lab/llm-benchmark/results.json` **incrementally after every completed task** — a long sweep never loses finished work to a kill or timeout. Each write re-reads the on-disk file first so concurrent runs aren't clobbered. If the run fails part-way, `scripts/run-benchmark.mjs` still writes the partial results collected so far before exiting non-zero.
 
 ### Automated Scoring
 
@@ -256,9 +258,12 @@ export async function generateMyProvider(
 
 - **Kimi Code vs Moonshot**: Kimi Code API keys use `https://api.kimi.com/coding/v1`, not `https://api.moonshot.cn/v1`. Set `MOONSHOT_BASE_URL` accordingly.
 - **Kimi Code temperature**: The API only accepts `temperature: 1`. The Moonshot runner hardcodes this.
-- **Model name mapping**: Use `apiModelId` in the registry when the provider's model name differs from the URL-safe registry `id` (e.g. `kimi-k2.7` → `kimi-k2-7`).
+- **Kimi K3**: Model id is `k3` at the Kimi Code endpoint. It has always-on thinking with `reasoning_effort` (only `max` is currently supported) and a 1M context window. Pricing is flat: $3/M input tokens, $15/M output tokens. `temperature=1.0` is fixed.
+- **Model name mapping**: Use `apiModelId` in the registry when the provider's model name differs from the URL-safe registry `id` (e.g. `kimi-k2.7` → `kimi-k2-7`, `kimi-k3` → `k3`).
 - **Long runs**: Kimi K2.7 can take 30–200s per task. A full 5-iteration sweep can take 30–40 minutes. Use `RUN_ITERATIONS=1` for a quick smoke test.
 - **No output placeholder**: If a model has no result or a failed result with no output, the side-by-side comparison shows "No captured output for this model yet."
+- **Static artifacts**: `scripts/gen-benchmark-outputs.mjs` (prebuild, run under `tsx`) publishes `public/lab-data/llm-benchmark/outputs/<task>/<model>.json` plus a prelude-wrapped `.html` for every full HTML document. `public/_headers` serves that path with `Content-Security-Policy: sandbox allow-scripts` so artifacts are opaque-origin even opened top-level. The demo iframe uses srcdoc with the SAME prelude (`lib/lab/llm-benchmark/frame-prelude.ts`) — keep both paths on that one implementation.
+- **Sandbox dependency inlining**: external `<script src>`/`<link>` URLs are resolved to canonical classic builds BEFORE fetching (aliases like unpkg `three.module.js` would otherwise inline an ES-module build as a classic script — guaranteed syntax error). Each canonical URL inlines at most once; unknown module scripts keep `type="module"`.
 
 ## Verification Checklist
 

@@ -40,6 +40,18 @@ export function outputUrl(taskId: string, modelId: string, version?: string): st
   return version ? `${base}?v=${encodeURIComponent(version)}` : base
 }
 
+/**
+ * Static URL for the renderable HTML artifact itself, published alongside the
+ * JSON by scripts/gen-benchmark-outputs.mjs. Served with a CSP sandbox header
+ * (see public/_headers) so it can be iframed or opened full-page without ever
+ * touching the site origin. Only exists for outputs that look like HTML.
+ * Same `version` cache-busting contract as outputUrl().
+ */
+export function outputHtmlUrl(taskId: string, modelId: string, version?: string): string {
+  const base = `/lab-data/llm-benchmark/outputs/${taskId}/${modelId}.html`
+  return version ? `${base}?v=${encodeURIComponent(version)}` : base
+}
+
 const ROOT_CRUMBS: Crumb[] = [
   { label: 'Home', href: '/' },
   { label: 'Lab', href: '/lab/' },

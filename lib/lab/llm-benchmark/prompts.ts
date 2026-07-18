@@ -25,7 +25,13 @@ EXECUTION ENVIRONMENT — your artifact runs inside a locked-down sandboxed ifra
 - Inline ALL CSS and JavaScript. Nothing may load from the network: no <script src>, no <link href>, no @import, no CDN (React/Tailwind/three.js/fonts/images included). If you need a library, hand-write the code instead.
 - Write plain browser JavaScript only. No JSX, no <script type="text/babel">, no Babel standalone, no TypeScript, no build step, no runtime compilation.
 - localStorage/sessionStorage/cookies may be unavailable — feature-detect or wrap in try/catch; the page must still work without them.
-- No alert/confirm/prompt; render all feedback into the page itself.`
+- No alert/confirm/prompt; render all feedback into the page itself.
+
+QUALITY BAR — the artifact is showcased head-to-head against other frontier models:
+- Fill the viewport; default to a polished dark theme with a small overlay containing the title and any controls (sliders, buttons, stats).
+- Animate with requestAnimationFrame (cancel on unload); size canvases for devicePixelRatio and re-layout on window resize.
+- Every control must actually work. No placeholder text, no TODOs, no dead buttons, no lorem ipsum.
+- Make the first frame already look intentional — no unstyled white flash, no collapsed layout while scripts boot.`
 
 /**
  * Append the sandbox contract to tasks whose output is executed in the demo

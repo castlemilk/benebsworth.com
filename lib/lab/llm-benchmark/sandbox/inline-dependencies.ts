@@ -527,18 +527,23 @@ export async function inlineDependenciesAsync(output: string): Promise<Dependenc
 
   let rewritten = output
 
-  // 1. Collect all external script / stylesheet URLs and map them to canonical
-  // known URLs when possible. Unknown URLs are still fetched and inlined so
-  // models that pull in React, Vue, etc. from arbitrary CDNs continue to work.
-  const scriptUrls = new Map<string, string>() // absolute url -> original src
-  const styleUrls = new Map<string, string>()
+  // 1. Collect all external script / stylesheet URLs, resolving known aliases
+  // (e.g. unpkg three.module.js) to their canonical classic-build URL BEFORE
+  // fetching — inlining an ES-module build as a classic script is a guaranteed
+  // syntax error. Unknown URLs are still fetched and inlined so models that
+  // pull in React, Vue, etc. from arbitrary CDNs continue to work.
+  const scriptFetch = new Map<string, string>() // original src -> fetch url
+  const styleFetch = new Map<string, string>() // original href -> fetch url
 
   rewritten.replace(
     /<script\b[^>]*?\bsrc=["']([^"']+)["'][^>]*>(?:<\/script>)?/gi,
     (_match, src: string) => {
       const absolute = resolveUrl(src, 'https://example.com/')
-      if (absolute && isExternalUrl(absolute)) scriptUrls.set(absolute, src)
-      else removed.push(src)
+      if (absolute && isExternalUrl(absolute)) {
+        scriptFetch.set(src, URL_MAP.get(normalizeUrl(absolute)) ?? absolute)
+      } else {
+        removed.push(src)
+      }
       return ''
     }
   )
@@ -547,47 +552,67 @@ export async function inlineDependenciesAsync(output: string): Promise<Dependenc
     /<link\b[^>]*?\brel=["']stylesheet["'][^>]*?\bhref=["']([^"']+)["'][^>]*>/gi,
     (_match, href: string) => {
       const absolute = resolveUrl(href, 'https://example.com/')
-      if (absolute && isExternalUrl(absolute)) styleUrls.set(absolute, href)
-      else removed.push(href)
+      if (absolute && isExternalUrl(absolute)) {
+        styleFetch.set(href, URL_MAP.get(normalizeUrl(absolute)) ?? absolute)
+      } else {
+        removed.push(href)
+      }
       return ''
     }
   )
 
-  // 2. Fetch every external resource in parallel.
-  const allUrls = new Set<string>([...scriptUrls.keys(), ...styleUrls.keys()])
+  // 2. Fetch every external resource in parallel (aliases collapse to one fetch).
+  const allUrls = new Set<string>([...scriptFetch.values(), ...styleFetch.values()])
   await prefetchAll(allUrls)
 
-  // 3. Inline all <script src> and <link rel="stylesheet"> tags.
+  // 3. Inline all <script src> and <link rel="stylesheet"> tags. Each canonical
+  // URL is inlined at most once — duplicate CDN tags (models often list both
+  // unpkg and cdnjs copies of three.js) would otherwise redefine globals.
+  const alreadyInlined = new Set<string>()
   rewritten = rewritten.replace(
-    /<script\b[^>]*?\bsrc=["']([^"']+)["'][^>]*>(?:<\/script>)?/gi,
-    (match, src: string) => {
-      const absolute = resolveUrl(src, 'https://example.com/')
-      if (!absolute || !isExternalUrl(absolute)) return ''
-      const canonical = URL_MAP.get(normalizeUrl(absolute))
-      const content = fetchCache.get(absolute)
+    /<script\b([^>]*?)\bsrc=["']([^"']+)["']([^>]*)>(?:<\/script>)?/gi,
+    (match, beforeAttrs: string, src: string, afterAttrs: string) => {
+      const fetchUrl = scriptFetch.get(src)
+      if (!fetchUrl) return ''
+      if (alreadyInlined.has(fetchUrl)) {
+        removed.push(src)
+        return ''
+      }
+      const content = fetchCache.get(fetchUrl)
       if (content === undefined) {
-        if (canonical) failed.push(canonical)
+        if (URL_MAP.has(normalizeUrl(fetchUrl))) failed.push(fetchUrl)
         else removed.push(src)
         return ''
       }
-      inlined.push(canonical ?? absolute)
-      return `<script>\n${content}\n</script>`
+      alreadyInlined.add(fetchUrl)
+      inlined.push(fetchUrl)
+      // Known canonical URLs are classic builds. Unknown module scripts keep
+      // their module semantics — self-contained ESM still runs; one that
+      // imports bare specifiers would fail, but classic-inlining it would
+      // guarantee failure instead.
+      const isModule = /\btype=["']module["']/i.test(beforeAttrs + afterAttrs)
+      const typeAttr = isModule && !URL_MAP.has(normalizeUrl(fetchUrl)) ? ' type="module"' : ''
+      return `<script${typeAttr}>\n${content}\n</script>`
     }
   )
 
   rewritten = rewritten.replace(
     /<link\b[^>]*?\brel=["']stylesheet["'][^>]*?\bhref=["']([^"']+)["'][^>]*>/gi,
     (match, href: string) => {
-      const absolute = resolveUrl(href, 'https://example.com/')
-      if (!absolute || !isExternalUrl(absolute)) return ''
-      const canonical = URL_MAP.get(normalizeUrl(absolute))
-      const content = fetchCache.get(absolute)
+      const fetchUrl = styleFetch.get(href)
+      if (!fetchUrl) return ''
+      if (alreadyInlined.has(fetchUrl)) {
+        removed.push(href)
+        return ''
+      }
+      const content = fetchCache.get(fetchUrl)
       if (content === undefined) {
-        if (canonical) failed.push(canonical)
+        if (URL_MAP.has(normalizeUrl(fetchUrl))) failed.push(fetchUrl)
         else removed.push(href)
         return ''
       }
-      inlined.push(canonical ?? absolute)
+      alreadyInlined.add(fetchUrl)
+      inlined.push(fetchUrl)
       return `<style>\n${content}\n</style>`
     }
   )

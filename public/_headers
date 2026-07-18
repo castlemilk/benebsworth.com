@@ -8,3 +8,10 @@
 
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Model-generated benchmark artifacts: opaque origin (CSP sandbox) even when
+# opened top-level, and no network beyond inline content — model HTML must
+# never read site storage/cookies or phone home, whether framed or full-page.
+/lab-data/llm-benchmark/outputs/*
+  Content-Security-Policy: sandbox allow-scripts; default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; worker-src blob:; frame-ancestors 'self'
+  X-Content-Type-Options: nosniff

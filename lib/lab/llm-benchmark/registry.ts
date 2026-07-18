@@ -25,6 +25,7 @@ export const BENCHMARK_MODELS: BenchmarkModel[] = [
   { id: 'gpt-5', name: 'GPT-5', provider: 'OpenAI', costPer1kInputUsd: 0.0025, costPer1kOutputUsd: 0.010, contextWindow: 128000, capabilities: 'General purpose, fast, broad knowledge' },
   { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', provider: 'Google', costPer1kInputUsd: 0.00125, costPer1kOutputUsd: 0.010, contextWindow: 1000000, capabilities: 'Massive context, multimodal, strong STEM' },
   { id: 'kimi-k2.7', name: 'Kimi K2.7', provider: 'Moonshot AI', apiModelId: 'kimi-k2-7', costPer1kInputUsd: 0.0005, costPer1kOutputUsd: 0.002, contextWindow: 256000, capabilities: 'Long-context reasoning, strong coding and instruction following' },
+  { id: 'kimi-k3', name: 'Kimi K3', provider: 'Moonshot AI', apiModelId: 'k3', costPer1kInputUsd: 0.003, costPer1kOutputUsd: 0.015, contextWindow: 1048576, capabilities: 'Flagship open-weight MoE, 1M context, native vision, always-on reasoning, strong coding/agent' },
   { id: 'gemini-3.5-flash-agy', name: 'Gemini 3.5 Flash (agy)', provider: 'Agy', apiModelId: 'Gemini 3.5 Flash (High)', costPer1kInputUsd: 0.00035, costPer1kOutputUsd: 0.00105, contextWindow: 1000000, capabilities: 'Fast, cost-efficient multimodal reasoning via Agy CLI' },
   { id: 'codex-gpt-5.5', name: 'Codex GPT-5.5', provider: 'Codex', apiModelId: 'gpt-5.5', costPer1kInputUsd: 0.001, costPer1kOutputUsd: 0.003, contextWindow: 128000, capabilities: 'OpenAI Codex CLI agent, agentic coding workflow' },
 ]

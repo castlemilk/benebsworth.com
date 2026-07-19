@@ -17,7 +17,7 @@ Each post follows the established house format: MDX in `content/blog/<slug>/inde
 
 - [Kimi K3 blog post](https://www.kimi.com/blog/kimi-k3) — architecture, pricing, case studies, limitations. **Only claims present here may be stated as fact about K3.**
 - [Kimi K3 quickstart](https://platform.kimi.ai/docs/guide/kimi-k3-quickstart) — API details (max thinking, 131,072 default completion tokens, fixed temperature 1.0/top-p 0.95).
-- `lib/lab/llm-benchmark/results.json` — our measured data (fair 5-iteration sweeps of kimi-k2.7 and kimi-k3, plus single/partial runs of gemini-3.5-flash-agy and codex-gpt-5.5).
+- `lib/lab/llm-benchmark/results.json` — our measured data (5-iteration sweeps of kimi-k2.7 and kimi-k3; 4 of the 14 cells are `status: "partial"` and must be marked as such wherever quoted, plus earlier runs of gemini-3.5-flash-agy and codex-gpt-5.5).
 - DeltaNet lineage for post 3: Schlag et al. 2021 (DeltaNet), Yang et al. 2024 (Gated DeltaNet). Claims about KDA itself must come from the K3 blog; deeper mechanism is presented as "the family KDA belongs to", clearly signposted as such.
 - Existing posts to cross-link, not repeat: `a-transformer-reads-everything-at-once`, `attention-from-the-inside-out`, `shrinking-the-kv-cache`, `why-thinking-longer-makes-models-smarter`, `the-loop-that-beats-attention` (Mamba/SSM coverage).
 
@@ -29,7 +29,7 @@ Rules: no invented benchmark numbers, no invented K3 parameter counts beyond the
 - Labels: post 1 `software,machine-learning,deep-learning,llm`; post 2 `software,machine-learning,llm,benchmarking`; post 3 `software,machine-learning,llm,sequence-models,mamba`-adjacent (reuse `llm,sequence-models` pattern from the-loop post).
 - `lib/topics.ts` `BY_SLUG`: add all three slugs → `TOPIC.software` (green desk, matching the other LLM posts).
 - Voice: per the skill — curious engineer's notebook, "we/let's", hedged body, British spelling, em-dash budget (~1 per 600–800 words), 3–5 `<Callout>`s per post, 3–5 numbered `<Equation>`s for the derivation-heavy post 3.
-- Hero images: one per post, generated with `gpt-image-2` using the project `.env` `OPENAI_API_KEY` (no cross-project credential read needed), landscape 1536×1024, strict no-text clause, converted to webp q80 into BOTH `content/blog/<slug>/` and `public/blog/<slug>/`. Distinct visual metaphors:
+- Hero images: one per post, generated with `gpt-image-2` using `OPENAI_API_KEY` from the project `.env` (confirmed present via `grep -c "^OPENAI_API_KEY=" .env` → 1; the `writing-blog-posts` skill still says the key only lives in `~/projects/brandbrain/.env` — update that skill line as part of this work). Landscape 1536×1024, strict no-text clause, converted to webp q80 into BOTH `content/blog/<slug>/` and `public/blog/<slug>/`. Distinct visual metaphors:
   - Post 1: a vast dark hall of 896 small dormant cells, one aisle of 16 lit, a single token of light walking the aisle.
   - Post 2: a row of browser windows on a lab bench, each running a different glowing experiment, one window cracked (the failed run).
   - Post 3: a quill writing onto a stone tablet that edits one carved line instead of copying the whole tablet (delta update vs full rewrite).
@@ -41,9 +41,9 @@ Title: "How Kimi K3 works: 2.8 trillion parameters, 16 experts awake"
 Description: "Kimi K3 is the first open 3T-class model: 2.8T parameters, a 1M-token context, and only 16 of 896 experts active per token. We take the architecture apart — Kimi Delta Attention, Attention Residuals, and Stable LatentMoE — and what each one buys."
 
 Outline:
-1. **Hook** — the paradox: 2.8T parameters but sparse activation; first open 3T-class model; released 2026-07-16, weights due 2026-07-27. `<StatGroup>` with 2.8T / 1M / 16-of-896 / 2.5×.
-2. **Why sparse is the point** — reuse `<MoEBlock />` (existing router demo) for total-vs-active accounting; Quantile Balancing (router-score quantiles, no heuristic balancing hyperparameter), SiTU activation, Per-Head Muon — one paragraph each, flagged as "from the blog, report forthcoming".
-3. **KDA** — attention's cost shape at 1M tokens (forward-reference post 3); KDA as a gated delta-rule linear attention; the cache consequence: K3's serving cache is not a KV cache, prefix caching needed a new vLLM implementation; >90% cache-hit rate in coding workloads and the $0.30/$3.00 pricing split.
+1. **Hook** — the paradox: 2.8T parameters but sparse activation; first open 3T-class model; launched July 2026, full weights due "by July 27, 2026" (the blog's phrasing). `<StatGroup>` with 2.8T / 1M / 16-of-896 / 2.5×.
+2. **Why sparse is the point** — reuse `<MoEBlock />` for total-vs-active accounting, with an explicit caption/callout that it is an *illustrative* 2-of-64 toy while K3 routes 16 of 896 (the component's own convention already flags illustrative numbers); then Quantile Balancing (router-score quantiles, no heuristic balancing hyperparameter), SiTU activation, Per-Head Muon — one paragraph each, flagged as "from the blog, report forthcoming".
+3. **KDA** — attention's cost shape at 1M tokens (forward-reference post 3); the quickstart calls KDA "a hybrid linear attention mechanism" and post 3 unpacks the family it belongs to — the blog itself does not describe KDA's internals, so say exactly that. The cache consequence, in the blog's own terms: KDA "poses new challenges for conventional prefix caching", which is why a new vLLM implementation was needed; >90% cache-hit rate in coding workloads and the $0.30/$3.00 pricing split.
 4. **AttnRes** — NEW component `<AttnResDepth />`: earlier blocks as addressable memory; block n issues a query, earlier blocks' outputs are read with α weights instead of the plain residual sum. Contrast against the "residuals accumulate uniformly" mental model.
 5. **Systems layer** — MXFP4 weights / MXFP8 activations with quantization-aware training from SFT; fully balanced expert-parallel training (static shapes, no host sync on the critical path); supernode (64+ accelerator) recommendation; Mooncake disaggregated serving.
 6. **What it's for + limitations** — short tour of the blog's case studies (MiniTriton compiler, 48-hour chip design, kernel optimization, astrophysics pipeline) and the blog's own caveats: thinking-history sensitivity, excessive proactiveness, UX gap vs the frontier proprietary models.
@@ -58,14 +58,14 @@ Description: "Our 7-task harness renders what models actually generate in a sand
 
 Outline:
 1. **Hook** — K3 landed 2026-07-16; we already had a benchmark that executes model output live. What does a 2.8T model do to a platformer?
-2. **The harness in one minute** — 7 tasks (game, physics, electronics, UI, maths, security), each generated artifact rendered in a CSP-sandboxed iframe; 5 iterations, mean score; link to `/lab/llm-benchmark/`.
+2. **The harness in one minute** — 7 tasks (game, physics, electronics, UI, maths, security); the five HTML-category tasks render the generated artifact live in a CSP-sandboxed iframe, the maths and security tasks show the generated source; 5 iterations per task, mean score over successful iterations (partials marked †); link to `/lab/llm-benchmark/`.
 3. **How it broke** (the honest middle):
    - 10–15 minute max-thinking generations dying to idle-connection drops → SSE streaming fix.
    - Billing-cycle quota 403 mid-sweep → circuit breaker + merge protection ("an outage says nothing about the model").
    - K2.7 burning its whole 32k completion budget on reasoning and truncating (`finish_reason: 'length'`, empty content).
    - The n=1-vs-n=5 lesson: K2.7's original single-iteration scores weren't comparable to K3's 5-iteration means.
 4. **The fair table** — baked-in static table (no live fetch): both models, 7 tasks, scores from `results.json` at spec time (K3: 100/97.5/86.8/84/65/100/100; K2.7: 63/100/96.4/100/35/100/87). `<StatGroup>`: K3 avg ≈ 90.5 vs K2.7 ≈ 83.1; callouts for the three biggest gaps.
-5. **See for yourself** — NEW component `<ArtifactFrame taskId modelId />`: embeds the sandboxed static artifact (K3's n-body) inline via `/lab-data/llm-benchmark/outputs/...` (opaque-origin CSP; lazy-loaded iframe), plus links to the full comparison pages.
+5. **See for yourself** — NEW component `<ArtifactFrame taskId modelId version? />`: embeds K3's n-body artifact inline. **It must NOT iframe `/lab-data/...` directly** — the site-wide CSP is `frame-src https://accounts.google.com blob:`, which blocks even same-origin frame URLs. Use the exact `GeneratedDemo` pattern instead: fetch the output JSON via `outputUrl(taskId, modelId, version)` and render the artifact into an iframe via `srcDoc` + `withPrelude()` from `lib/lab/llm-benchmark/frame-prelude.ts` (srcdoc is not subject to `frame-src`). The "open full page" link may still point at the static extensionless artifact URL (top-level navigation is not `frame-src`-restricted, and the outputs path carries its own sandbox CSP). Lazy `dynamic(ssr:false)`, caption + open-full-page link, play gate under `prefers-reduced-motion`.
 6. **What we took from it** — K3 dominates the big interactive artifacts; K2.7 stays sharper on terse text/math; per-token cost vs wall-time trade-offs; the harness code is linked.
 7. **Reading further** — K3 blog, the lab benchmark, harness skill notes.
 
@@ -73,14 +73,14 @@ New component: `components/mdx/artifact-frame.tsx` — lazy `dynamic(ssr:false)`
 
 ## Post 3 — `delta-rule-linear-attention`
 
-Title: "The delta rule: how Kimi K3 reads a million tokens"
-Description: "Full attention pays an n² bill that a 1M-token context can't afford. Linear attention swaps the bill for a memory you write to — and the delta rule is what makes that memory smart. This is the family Kimi K3's KDA belongs to, from the kernel trick to gated delta updates."
+Title: "The delta rule: linear attention for a million-token context"
+Description: "Full attention pays an n² bill that a 1M-token context can't afford. Linear attention swaps the bill for a memory you write to — and the delta rule is what makes that memory smart. Kimi calls K3's KDA a 'hybrid linear attention mechanism'; this is the family it belongs to, from the kernel trick to gated delta updates."
 
 Outline:
 1. **The bill** — attention is O(n²) in sequence length; at 1M tokens that's 10¹² pair scores. NEW component `<AttentionCostCurve />`: log-scale quadratic vs linear cost to 1M, with markers at 128K and 1M. Cross-link `a-transformer-reads-everything-at-once` and `shrinking-the-kv-cache`.
 2. **The kernel trick** — drop the softmax, factor the sum; attention becomes "read from a matrix memory". 2–3 numbered equations (softmax attention → kernel form → linear recurrence).
 3. **Memory you write to** — NEW component `<DeltaMemory />`: write key→value pairs into a small matrix memory, retrieve by query; toggle "additive write" vs "delta rule write" to show how the delta rule *removes the old value before writing the new one* (Schlag et al. 2021), so keys don't smear.
-4. **Gating, and where KDA fits** — Gated DeltaNet (Yang et al. 2024) adds a forget gate; KDA is Kimi's production version of this family (the blog names KDA + "hybrid linear attention"); the-loop-that-beats-attention covered the SSM cousins (Mamba) — signposted comparison, not a re-explanation.
+4. **Gating, and where KDA fits** — Gated DeltaNet (Yang et al. 2024) adds a forget gate; KDA is Kimi's production entry in this family (the *quickstart* calls KDA "a hybrid linear attention mechanism" — attribute it there, not to the blog); the-loop-that-beats-attention covered the SSM cousins (Mamba) — signposted comparison, not a re-explanation.
 5. **The cache consequence** — a fixed-size state instead of a growing KV cache; why prefix caching had to be re-thought for KDA (the vLLM contribution), and the $0.30/MTok cache-hit price that falls out of it.
 6. **Reading further** — DeltaNet, Gated DeltaNet, K3 blog, the-loop post, Mamba paper.
 
@@ -96,14 +96,15 @@ New components:
 - `components/mdx/mdx-components.tsx` (4 registrations)
 - `scripts/gen-md-siblings.mjs` (4 COMPONENT_DESCRIPTIONS)
 - `lib/topics.ts` (3 BY_SLUG entries → TOPIC.software)
+- `.claude/skills/writing-blog-posts/SKILL.md` (hero-key line: project `.env` now also carries `OPENAI_API_KEY`)
 
 ## Verification (publish gate)
 
 1. `npm run build` passes; posts appear at `/blog/<slug>/`.
 2. All images in both `content/` and `public/`; zero 404s in network tab.
 3. All custom tags PascalCase + registered; drift check between `mdx-components.tsx` and `COMPONENT_DESCRIPTIONS` is clean.
-4. `.katex` element count matches the number of math blocks in each served post.
-5. Playwright DOM checks: each new component renders the expected node counts (16/896 grid cells, curve paths, memory slots); artifact iframe loads with 200.
+4. `.katex` element count matches the number of math blocks in each served post; every `<Equation>` has a unique `eqn:`-prefixed `id` AND a `latex` prop (load-bearing for post 3).
+5. Playwright DOM checks matched to the components actually built: `AttnResDepth` renders its block stack + α edges; `AttentionCostCurve` renders both curve paths + 2 markers; `DeltaMemory` renders its 4 slots and the additive/delta toggle; `MoEBlock` still renders its 64 cells; `ArtifactFrame` issues the output-JSON fetch (200) and its iframe carries a `srcdoc` containing the artifact markup (no frame URL — see the CSP note in post 2 §5).
 6. Both light and dark theme legible; mobile 390px no horizontal overflow.
 7. `npm run md:siblings` regenerated; `.md` siblings show component placeholders.
 8. `npm run typecheck`, `npm run test -- lib/lab/llm-benchmark/` stay green (harness untouched).

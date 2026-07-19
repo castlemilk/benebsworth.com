@@ -7,11 +7,19 @@ import { withPrelude } from '@/lib/lab/llm-benchmark/frame-prelude'
 import { AlertCircle, ExternalLink, Loader2, Play } from 'lucide-react'
 
 interface ArtifactFrameProps {
-  /** Benchmark task id, e.g. "n-body-field" (lib/lab/llm-benchmark/registry). */
+  /**
+   * Benchmark task id, e.g. "n-body-field" (lib/lab/llm-benchmark/registry).
+   * Precondition: must be an HTML-runnable task whose stored artifact is a
+   * full HTML document (no runtime compiler); curated embeds only.
+   */
   taskId: string
   /** Benchmark model id, e.g. "kimi-k3". */
   modelId: string
-  /** Content-hash cache-buster (BenchmarkResultMeta.outputVersion); optional. */
+  /**
+   * Content-hash cache-buster (BenchmarkResultMeta.outputVersion); optional.
+   * Tradeoff: without it, `force-cache` may shadow a re-baked artifact for
+   * returning visitors (see lib/lab/llm-benchmark/nav.ts docs).
+   */
   version?: string
   /** Small mono header above the frame. */
   title?: string
@@ -54,6 +62,14 @@ function ArtifactFrameInner({
     }
   }
 
+  // Reset to the idle/gated state whenever the artifact identity changes, so
+  // the old artifact never lingers beside a caption link that already points
+  // at the new model (mirrors GeneratedDemo). Declared before the auto-run
+  // effect so the reset lands first on a prop change.
+  useEffect(() => {
+    setState({ phase: 'idle' })
+  }, [taskId, modelId, version])
+
   // Auto-run on mount — except when the visitor prefers reduced motion, where
   // we leave a play gate so they opt in to the canvas/WebGL animation instead
   // of it starting under them (mirrors GeneratedDemo).
@@ -92,7 +108,10 @@ function ArtifactFrameInner({
               sandbox="allow-scripts"
             />
           ) : state.phase === 'error' ? (
-            <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+            <div
+              role="alert"
+              className="flex h-full flex-col items-center justify-center p-8 text-center"
+            >
               <AlertCircle className="h-8 w-8 text-rose-500" aria-hidden />
               <p className="mt-3 text-sm text-white/80">Couldn’t load this artifact.</p>
               <p className="mt-1 font-mono text-xs text-white/50">{state.message}</p>
@@ -107,6 +126,7 @@ function ArtifactFrameInner({
             </div>
           ) : state.phase === 'loading' ? (
             <div
+              role="status"
               className="flex h-full flex-col items-center justify-center gap-3"
               aria-label="Loading artifact"
             >
@@ -155,14 +175,17 @@ function ArtifactFrameInner({
   )
 }
 
-// Client-only, mirroring the BlackHoleSim embed: the fetch + sandboxed frame
-// never block the static post render, and the chunk is requested once.
+// Client-only (ssr: false), mirroring the BlackHoleSim embed: the fetch and
+// sandboxed frame never block the static post render. Promise.resolve loads
+// the inner component from this same module — no separate chunk is created.
+// The loading fallback takes its height from a CSS var set by the wrapper
+// below, so it matches the `height` prop instead of a hard-coded 480.
 const ArtifactFrameLazy = dynamic(() => Promise.resolve(ArtifactFrameInner), {
   ssr: false,
   loading: () => (
     <div
-      className="h-[480px] w-full animate-pulse rounded-xl border border-[var(--color-border)]"
-      style={{ background: '#0c0c10' }}
+      className="w-full animate-pulse rounded-xl border border-[var(--color-border)]"
+      style={{ background: '#0c0c10', height: 'var(--artifact-frame-height, 480px)' }}
       aria-hidden
     />
   ),
@@ -176,7 +199,10 @@ const ArtifactFrameLazy = dynamic(() => Promise.resolve(ArtifactFrameInner), {
  */
 export function ArtifactFrame(props: ArtifactFrameProps) {
   return (
-    <div className="not-prose my-8">
+    <div
+      className="not-prose my-8"
+      style={{ '--artifact-frame-height': `${props.height ?? 480}px` } as React.CSSProperties}
+    >
       <ArtifactFrameLazy {...props} />
     </div>
   )

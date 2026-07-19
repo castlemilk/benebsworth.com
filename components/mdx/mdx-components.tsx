@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
+import { AttentionCostCurve } from './attention-cost-curve'
 import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
 import { TrailMap } from './trailkit/trail-map'
 import { TrailSummary } from './trailkit/trail-summary'
@@ -80,6 +81,7 @@ export const mdxComponents: MDXComponents = {
   Stat,
   PullQuote,
   Figure,
+  AttentionCostCurve,
   PllDiagram,
   AttentionHeatmap,
   SoftmaxLab,

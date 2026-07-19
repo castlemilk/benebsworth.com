@@ -18,6 +18,7 @@ import { TrailFigure } from './trailkit/trail-figure'
 import { StageProfile } from './trailkit/stage-profile'
 import { UniverseScale } from './universe-scale-embed'
 import { BlackHoleSim } from './black-hole-sim-embed'
+import { ArtifactFrame } from './artifact-frame'
 import {
   IngressFlowBasic,
   EgressFlowBasic,
@@ -145,6 +146,7 @@ export const mdxComponents: MDXComponents = {
   ZooMiniMap,
   UniverseScale,
   BlackHoleSim,
+  ArtifactFrame,
   TrailMap,
   TrailSummary,
   Stages,

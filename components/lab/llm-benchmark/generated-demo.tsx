@@ -346,8 +346,8 @@ export function GeneratedDemo({ task, results, className = '' }: GeneratedDemoPr
                   isFullscreen
                     ? 'h-full min-h-0 flex-1'
                     : expanded
-                      ? 'h-[75vh]'
-                      : 'h-[420px] md:h-[520px]'
+                      ? 'h-[80vh]'
+                      : 'h-[480px] md:h-[600px]'
                 )}
                 // No allow-same-origin: the srcdoc runs at an opaque origin, so
                 // allow-scripts alone keeps arbitrary model-generated JS walled

@@ -50,16 +50,25 @@ window.addEventListener('unhandledrejection',function(e){var r=e&&e.reason;repor
 /** Insert the prelude into the artifact's <head> (falling back to <html> or the
  *  top) so the document keeps standards mode instead of the quirks mode that a
  *  node before <!DOCTYPE> would trigger. */
+/** Insert the prelude into the artifact's <head> (falling back to <html> or the
+ *  top) so the document keeps standards mode instead of the quirks mode that a
+ *  node before <!DOCTYPE> would trigger. Also guarantees a viewport meta —
+ *  without one, mobile frames lay the page out at a ~980px CSS width and the
+ *  artifact's own resize handling computes the wrong canvas size. */
 export function withPrelude(html: string): string {
+  const viewport = /<meta[^>]*name=["']viewport["']/i.test(html)
+    ? ''
+    : '<meta name="viewport" content="width=device-width, initial-scale=1">'
+  const prelude = viewport + FRAME_PRELUDE
   const head = html.match(/<head[^>]*>/i)
   if (head?.index !== undefined) {
     const at = head.index + head[0].length
-    return html.slice(0, at) + FRAME_PRELUDE + html.slice(at)
+    return html.slice(0, at) + prelude + html.slice(at)
   }
   const htmlTag = html.match(/<html[^>]*>/i)
   if (htmlTag?.index !== undefined) {
     const at = htmlTag.index + htmlTag[0].length
-    return html.slice(0, at) + '<head>' + FRAME_PRELUDE + '</head>' + html.slice(at)
+    return html.slice(0, at) + '<head>' + prelude + '</head>' + html.slice(at)
   }
-  return FRAME_PRELUDE + html
+  return prelude + html
 }

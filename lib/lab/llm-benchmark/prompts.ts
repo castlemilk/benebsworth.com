@@ -29,7 +29,9 @@ EXECUTION ENVIRONMENT — your artifact runs inside a locked-down sandboxed ifra
 
 QUALITY BAR — the artifact is showcased head-to-head against other frontier models:
 - Fill the viewport; default to a polished dark theme with a small overlay containing the title and any controls (sliders, buttons, stats).
+- The showcase frame is short and sometimes narrow — roughly 1200×600 CSS px on desktop and 380×480 on mobile. Keep HUD overlays compact (they must not cover the scene on small screens), and compose the scene so the critical action is visible at those sizes from the first frame.
 - Animate with requestAnimationFrame (cancel on unload); size canvases for devicePixelRatio and re-layout on window resize.
+- Include a viewport meta tag and make the layout work at 380px wide without horizontal scrolling.
 - Every control must actually work. No placeholder text, no TODOs, no dead buttons, no lorem ipsum.
 - Make the first frame already look intentional — no unstyled white flash, no collapsed layout while scripts boot.`
 

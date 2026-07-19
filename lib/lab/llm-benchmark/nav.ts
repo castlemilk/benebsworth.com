@@ -48,7 +48,8 @@ export function outputUrl(taskId: string, modelId: string, version?: string): st
  * Same `version` cache-busting contract as outputUrl().
  */
 export function outputHtmlUrl(taskId: string, modelId: string, version?: string): string {
-  const base = `/lab-data/llm-benchmark/outputs/${taskId}/${modelId}.html`
+  // Extensionless on purpose: Cloudflare Pages 308-redirects /x.html → /x.
+  const base = `/lab-data/llm-benchmark/outputs/${taskId}/${modelId}`
   return version ? `${base}?v=${encodeURIComponent(version)}` : base
 }
 

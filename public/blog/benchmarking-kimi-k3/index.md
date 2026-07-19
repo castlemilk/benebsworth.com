@@ -1,0 +1,141 @@
+---
+title: We pointed our own benchmark at Kimi K3 on launch week
+date: '2026-07-19T10:00:00.000Z'
+description: >-
+  Our 7-task harness renders (or shows) what models actually generate, live and
+  sandboxed. Running Kimi K3 against K2.7, Gemini and Codex broke the harness
+  three different ways before it produced a fair table — here's the data, and
+  what K3 is actually good at.
+labels: 'software,machine-learning,llm,benchmarking'
+release: true
+heroImage: /blog/benchmarking-kimi-k3/hero.webp
+takeaways:
+  - >-
+    On a fair 5-iteration comparison Kimi K3 leads our interactive-artifact
+    tasks outright: n-body 100 vs 63, landing page 65 vs 35, circuit builder 100
+    vs 87.
+  - >-
+    K2.7 still wins the terse text tasks (equations 100 vs 84, crypto 96.4 vs
+    86.8) — bigger is not better everywhere.
+  - >-
+    K2.7's worst score was a serving artifact: it burned its whole 32k
+    completion budget on reasoning and truncated before writing any answer.
+  - >-
+    A billing-quota outage halfway through a sweep taught the harness its best
+    lesson: never let a failed re-run overwrite good results.
+markdown_url: /blog/benchmarking-kimi-k3/
+canonical_url: 'https://benebsworth.com/blog/benchmarking-kimi-k3/'
+---
+## Key takeaways
+
+- On a fair 5-iteration comparison Kimi K3 leads our interactive-artifact tasks outright: n-body 100 vs 63, landing page 65 vs 35, circuit builder 100 vs 87.
+- K2.7 still wins the terse text tasks (equations 100 vs 84, crypto 96.4 vs 86.8) — bigger is not better everywhere.
+- K2.7's worst score was a serving artifact: it burned its whole 32k completion budget on reasoning and truncated before writing any answer.
+- A billing-quota outage halfway through a sweep taught the harness its best lesson: never let a failed re-run overwrite good results.
+
+Kimi K3 launched this month, and like everyone else we wanted to know what 2.8 trillion parameters actually buys you. Most people answer that question with a chat screenshot. We happened to have something better to hand: a benchmark we'd already built that doesn't ask models to talk about code, it makes them ship working artifacts, then runs the result live in the browser. So on launch week we pointed it at K3, with K2.7 as the returning champion. (We've already [taken the architecture apart](/blog/how-kimi-k3-works/); this post is about what the thing does when you make it work for a living.)
+
+The short version: K3 now tops our table, and it does it by winning the big, visual tasks outright. But getting a fair comparison out of the two models broke our harness three different ways first, and K2.7 still beats K3 on two tasks. The longer version is the interesting one, because the failures say as much about serving these models as the scores do.
+
+## The harness in one minute
+
+Our [LLM benchmark](/lab/llm-benchmark/) is seven tasks. Five of them ask for a single self-contained HTML page: a Three.js n-body gravity field, a playable platformer, a pendulum-wave desk toy, a series RLC (resistor, inductor, capacitor) circuit builder, and an animated landing page. Those five render live in a sandboxed iframe on each task page, so you watch the exact artifact the model emitted rather than trusting our summary of it. The other two, an equation solver and a constant-time password-hashing exercise, are text tasks, so their pages show the generated source instead.
+
+Each model gets 5 iterations per task, each iteration scored against a task-specific rubric, and the headline number is the mean over the successful iterations. Where at least one attempt failed, the score is marked † and averaged over what survived. Every task page also carries a side-by-side comparison of the raw outputs from all seven models we've run: K3 and K2.7, two Geminis, GPT-5, Claude and Codex.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The iframe is the honest part of the benchmark. It runs the artifact from an inline `srcdoc` at an opaque origin with `sandbox="allow-scripts"` and no same-origin access, so whatever JavaScript a model writes stays walled off from the page around it. What you see is byte-for-byte what the model produced, executing exactly as it would anywhere else. (The site's content security policy (CSP) blocks iframe URLs outright, which is why the frame is fed inline markup instead of a link.)
+
+## Three ways the harness broke
+
+### Idle sockets vs 15-minute generations
+
+K3 runs with its thinking effort pinned at max at launch, and a single artifact can take 10 to 15 minutes to generate. The first sweep against it died like this:
+
+```text
+[harness] Kimi K3 :: N-Body Field — iteration 1/5
+[harness]   … waiting on completion
+FetchError: fetch failed (connection idle, ~900s elapsed)
+```
+
+Nothing was wrong with the model. The HTTP connection simply sat idle while K3 thought, and something along the path, quite reasonably, reclaimed it after about 900 seconds. The fix was to make the Moonshot runner stream: `stream: true` with usage reporting, so server-sent events (SSE) keep the connection busy while the thinking trace pours in. The reader accumulates only the final-answer `content` deltas and deliberately discards the reasoning. Wall-time didn't change, but the dropouts stopped.
+
+### A quota outage mid-sweep
+
+Halfway through the first full sweep, Moonshot started answering every request with this:
+
+```text
+Moonshot error 403: {"error":{"message":"You've reached your usage limit for this billing cycle.","type":"access_terminated_error"}}
+[harness] quota/billing exhausted for Moonshot AI — skipping remaining iterations and all further Moonshot AI tasks this run
+```
+
+That taught the harness two lessons. The obvious one: stop hammering a dead provider. A circuit breaker now breaks the current task's iteration loop and skips every later job for that provider, so a sweep degrades in seconds instead of burning twenty minutes on 403s. The subtler one: a re-run that produces zero successful iterations must never overwrite a record that has real artifacts. `mergeResults()` now refuses exactly that swap, so re-running a task during an outage can't corrupt the baked data the site renders from.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+An outage says nothing about the model. A quota-killed sweep would have recorded K3 as scoring zero on tasks it never got to attempt, and an earlier version of the merge would happily have saved that over the good runs. Baked results should only ever be replaced by better measurements, never by infrastructure weather.
+
+### K2.7 thinks itself mute
+
+K2.7's landing-page score was a small mystery during the sweep: five iterations, one artifact, and a record showing 160,000 output tokens spent getting it. The runner logs explain where the tokens went. On four of the five attempts K2.7 burned its entire 32k completion budget on `reasoning_content` and got truncated before writing a single answer token:
+
+```text
+[harness] Kimi K2.7 :: Landing Page Morph — iteration 2/5
+[harness]   finish_reason: length — 32,000 completion tokens, 0 content tokens
+```
+
+The runner now treats that truncation (`finish_reason: length` with empty content) as a clear, retryable error instead of an empty success, which is what the † on its 35 means: one good page out of five tries. And it's hard to be too cross about it. "Write a complete animated landing page in one file" is exactly the sort of prompt that invites a reasoning model to plan forever.
+
+## One iteration is not a measurement
+
+The fourth problem was ours, not the providers'. K2.7's original scores came from single-iteration runs, while K3's were means of 5. Comparing the two was comparing noise to a trend: one lucky platformer does not make a 100. So we re-ran both models end to end, 5 iterations each, identical prompts, same scoring, and re-baked the table. Everything below is from that sweep.
+
+## The fair table
+
+| Task | Kimi K2.7 | Kimi K3 |
+|---|---|---|
+| N-Body Field | 63 | **100** |
+| Mini Platformer | **100** | 97.5 † |
+| Crypto Hash Race | **96.4** | 86.8 |
+| Equation Solver | **100** | 84 |
+| Landing Page Morph | 35 † | **65** |
+| Pendulum Wave | 100 † | 100 |
+| Circuit Builder | 87 | **100** † |
+
+Averaged across the seven tasks: K2.7 ≈ 83.1, K3 ≈ 90.5.
+
+The gaps are the story. K3 takes the n-body field by 37 points and the landing page by 30, the two most open-ended tasks on the board, and adds the circuit builder by 13. K2.7 keeps the two terse text tasks: the equation solver (100 vs 84) and the crypto exercise (96.4 vs 86.8), where the job is to say exactly the right thing with no decoration. The pendulum wave is a dead heat at 100 each, which we suspect says more about the task being saturated than about the models being equal.
+
+The platformer deserves its own sentence, because it's K3's only blemish on an artifact task. K2.7 went 5 for 5 at a perfect 100; K3 lost one iteration of five and averaged 97.5. Playing the two side by side, the difference is polish rather than capability, both ship a working game, but it does show the bigger model isn't uniformly stronger even on its home turf. One failed iteration in five is also exactly why the n=1 lesson above matters: had we kept K3's first single run, we'd have recorded either a 100 or a 0 depending on which iteration we happened to draw.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Bigger is not better everywhere. K3's wins are all on tasks where the answer is a small universe (a physics sim, an animated page, a circuit toy) and planning plus sheer generative ambition pay off. K2.7's wins are on tasks that reward restraint. If your workload is terse text and maths, the older, cheaper model is still the sharper tool.
+
+## See for yourself
+
+Tables are compressions; the artifacts are the thing. Here's K3's n-body field, the exact HTML it produced for the task, running live in the same sandbox the benchmark uses:
+
+> [ArtifactFrame component] Embeds a live model-generated HTML artifact from the site's LLM benchmark (fetched from /lab-data/llm-benchmark/outputs and run in a sandboxed srcdoc iframe). Props: taskId, modelId, optional version/title/caption/height.
+
+Every task page has the same live demo plus a side-by-side comparison of each model's output: try the [n-body field](/lab/llm-benchmark/3d-physics-animation/n-body-field/) for K3's best win, the [landing page morph](/lab/llm-benchmark/ui-building/landing-page-morph/) for the task that broke K2.7, or the [circuit builder](/lab/llm-benchmark/advanced-electronics/circuit-builder-teaser/) for a quieter one. The [benchmark index](/lab/llm-benchmark/) has the full board, Gemini and Codex included.
+
+## What we took from it
+
+A few honest conclusions, hedged appropriately for a 7-task, 5-iteration sample:
+
+- K3 owns the big interactive artifacts. All three of its wins are tasks that produce a whole working page, two of them at a perfect 100, and watching the n-body sim boot makes the difference visceral in a way a 37-point gap doesn't quite.
+- K2.7 stays sharper on terse text and maths, and it's dramatically cheaper to run. From the run records, a K3 task cost between \$0.09 and \$1.67, while K2.7 ran \$0.007 to \$0.32. Per task, K3 worked out roughly 6x pricier, and slower in wall-time too: its n-body run took about 11 minutes against K2.7's 4.
+- Serving behaviour is now a first-class input to our results. K2.7's worst mark traces back to the reasoning-budget truncation, not to a bad page; the model never got to speak. We'd expect its landing-page score to climb if Moonshot ever separates the reasoning budget from the answer budget.
+- The harness earned its keep this week. The code lives in the site repo at [`lib/lab/llm-benchmark/`](https://github.com/castlemilk/benebsworth.com/tree/master/lib/lab/llm-benchmark), runners, scorers, circuit breaker and all, and the baked records it produces are exactly what the pages render.
+
+Next up, probably: re-running the board once K3's thinking effort opens up beyond max, and getting Gemini and Codex through the same fair sweep so the table goes four-wide. Watch this space.
+
+## Reading further
+
+- [Kimi K3](https://www.kimi.com/blog/kimi-k3). The announcement post: parameter counts, official benchmarks, and the case-study videos.
+- [K3 quickstart](https://platform.kimi.ai/docs/guide/kimi-k3-quickstart). The API shape we ran against: thinking effort, automatic context caching, and the limits that matter.
+- [Our LLM benchmark](/lab/llm-benchmark/). The live version of everything in this post: all seven tasks, every model's artifacts, and the side-by-side source comparisons.
+- [How Kimi K3 works](/blog/how-kimi-k3-works/). The architecture post: 2.8T parameters, 16 experts awake, and what Kimi Delta Attention buys.
+- [The delta rule: linear attention for a million-token context](/blog/delta-rule-linear-attention/). The mechanism deep-dive behind KDA.

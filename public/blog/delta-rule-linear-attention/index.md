@@ -124,7 +124,7 @@ Which brings us to K3. Kimi's quickstart describes Kimi Delta Attention as "a hy
 
 Here's the honest signpost. Documented, from Kimi's own quickstart and blog: KDA is "a hybrid linear attention mechanism", it sits in K3 next to Gated MLA, and more detail is coming with the technical report. Inferred: that KDA's internals match the DeltaNet → Gated DeltaNet lineage this post walked through. The name is doing a lot of work in that inference, but it's a signposted guess, not a claim about KDA's documented internals.
 
-Even at the family level, though, one thing is already clear: this is no longer a niche research lineage. Whatever the exact internals, a member of the linear-attention family is carrying the first open model in the 3-trillion-parameter class, at a 1M-token context. That alone makes the delta rule worth an afternoon.
+Even at the family level, though, one thing is already clear: this is no longer a niche research lineage. Whatever the exact internals, a member of the linear-attention family is carrying the first open model in the 3-trillion-parameter class, at a 1M-token context. That alone makes the delta rule worth an afternoon. For the rest of the K3 story: the [architecture tour](/blog/how-kimi-k3-works/) takes the whole model apart (AttnRes, LatentMoE, the systems layer), and our [launch-week benchmark](/blog/benchmarking-kimi-k3/) shows what it actually does when you point real tasks at it.
 
 ## The cache consequence
 

@@ -403,7 +403,7 @@ grep -oE '^\s+[A-Z][A-Za-z0-9]+:' scripts/gen-md-siblings.mjs | tr -d ' :' | sor
 diff /tmp/registered.txt /tmp/described.txt || true
 ```
 
-Expected diff after this plan lands: exactly two lines — `< GithubLink` and `< Video` (both are registered as object *methods* in mdx-components.tsx so the registered-grep can't see them; they are described). The four new components (AttentionCostCurve, DeltaMemory, AttnResDepth, ArtifactFrame) must appear on BOTH sides. One pre-existing real drift gets fixed in this chunk: `Figure` is registered but has no description — add `Figure: 'A captioned layout image with optional credit and text-wrap placement (full, left, right, inset). Used for layout imagery with proper figure/caption semantics.'` to `COMPONENT_DESCRIPTIONS` and commit it with the chunk.
+Expected diff **before** this chunk's fixes: exactly three lines — `24d23 < Figure` (registered, no description) plus `> GithubLink` and `> Video` (both described, but registered as object *methods* with a colon in mdx-components.tsx, so the comma-grep can't see them — diff shows them as `>` described-only lines). After the `Figure` description below lands, expected diff: exactly the two `>` lines (`> GithubLink`, `> Video`). The four new components (AttentionCostCurve, DeltaMemory, AttnResDepth, ArtifactFrame) must appear on BOTH sides. Fix the real drift in this chunk: add `Figure: 'A captioned layout image with optional credit and text-wrap placement (full, left, right, inset). Used for layout imagery with proper figure/caption semantics.'` to `COMPONENT_DESCRIPTIONS` and stage it in this chunk's commit.
 
 ```bash
 python3 -m http.server 3128 --directory out &   # if 3128 is already bound from an earlier chunk, skip — the running server serves the rebuilt out/
@@ -413,10 +413,11 @@ python3 -m http.server 3128 --directory out &   # if 3128 is already bound from 
 - Each post 200s; hero webp 200s; components present with expected node counts (per chunk steps); katex counts match; no raw `$$` in HTML; light+dark screenshots; 390px no horizontal overflow; ArtifactFrame srcdoc non-empty.
 - Expected: all assertions pass. Save screenshots to `tmp/k3-posts/`.
 
-- [ ] **Step 3: Commit any fixes + the verify script**
+- [ ] **Step 3: Commit any fixes + the verify script + the Figure description**
 
 ```bash
-git add scripts/verify-k3-posts.mjs && git commit -m "test(blog): render verification for the K3 trilogy"
+git add scripts/verify-k3-posts.mjs scripts/gen-md-siblings.mjs
+git commit -m "test(blog): render verification for the K3 trilogy; describe Figure for md siblings"
 ```
 
 ### Task 5.2: Deploy

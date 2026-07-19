@@ -1,0 +1,148 @@
+---
+title: 'The delta rule: linear attention for a million-token context'
+date: '2026-07-19T11:00:00.000Z'
+description: >-
+  Full attention pays an n² bill that a 1M-token context can't afford. Linear
+  attention swaps the bill for a memory you write to — and the delta rule is
+  what makes that memory smart. Kimi calls K3's KDA a 'hybrid linear attention
+  mechanism'; this is the family it belongs to, from the kernel trick to gated
+  delta updates.
+labels: 'software,machine-learning,llm,sequence-models'
+release: true
+heroImage: /blog/delta-rule-linear-attention/hero.webp
+takeaways:
+  - >-
+    Full self-attention compares every token with every token: at 1M tokens
+    that's 10^12 pair scores per layer, and the KV cache grows without bound.
+  - >-
+    Drop the softmax and attention factors into a read from a fixed-size matrix
+    memory — cost per token stops depending on the past.
+  - >-
+    A plain additive memory smears collisions; the delta rule removes the old
+    value at a key before writing the new one, so re-writes replace instead of
+    blur.
+  - >-
+    Kimi's KDA is a production member of this family, and it changes serving: a
+    fixed state replaces the growing KV cache, which is why K3's cached input is
+    10x cheaper.
+markdown_url: /blog/delta-rule-linear-attention/
+canonical_url: 'https://benebsworth.com/blog/delta-rule-linear-attention/'
+---
+## Key takeaways
+
+- Full self-attention compares every token with every token: at 1M tokens that's 10^12 pair scores per layer, and the KV cache grows without bound.
+- Drop the softmax and attention factors into a read from a fixed-size matrix memory — cost per token stops depending on the past.
+- A plain additive memory smears collisions; the delta rule removes the old value at a key before writing the new one, so re-writes replace instead of blur.
+- Kimi's KDA is a production member of this family, and it changes serving: a fixed state replaces the growing KV cache, which is why K3's cached input is 10x cheaper.
+
+A million tokens of context sounds like a storage problem. It arrives as an arithmetic one.
+
+In [a transformer reads everything at once](/blog/a-transformer-reads-everything-at-once/) we let every token read every other token in a single parallel step, and that one trick carried the whole architecture. The price of it is easy to write down: for $n$ tokens of context, full self-attention scores every query against every key, $n^2$ pairs per layer, per head. At 128K tokens, already a long context by most standards, that works out to roughly $1.6 \times 10^{10}$ pair scores. At the 1M-token context Kimi K3 advertises, the bill is $10^{12}$: a trillion pairs, per layer per head, before the model has produced a single token of its own. And as we worked through in [the KV-cache post](/blog/shrinking-the-kv-cache/), the compute has a twin: the key–value (KV) cache grows one slab per token, without bound, until it caps how many requests you can batch.
+
+> [AttentionCostCurve component] Log-log SVG chart comparing attention work vs sequence length: a quadratic curve (full self-attention) against a linear curve (linear attention), from 1K to 1M tokens, with markers at 128K and 1M showing the exact work ratio at each point.
+
+Both curves are straight lines on log–log axes; only the slopes differ. Stretching the context from 128K to 1M makes the sequence 7.8× longer, so the linear bill grows 7.8× while the quadratic one grows about 61×, and at 1M tokens the two curves sit six orders of magnitude apart.[^units] You don't cross a gap like that with a faster kernel. You cross it by computing something else. Linear attention is that something else, and the delta rule, the real subject of this post, is what makes it work well enough to matter. It's also the family Kimi says K3's Kimi Delta Attention (KDA) belongs to, which is how a 2021 idea ended up carrying a production flagship in 2026.
+
+## Dropping the softmax
+
+Write full attention for one output position $i$ and stare at it for a second:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+y_i = \frac{\sum_{j} \exp\left(q_i^{\top} k_j\right) v_j}{\sum_{l} \exp\left(q_i^{\top} k_l\right)}
+```
+
+$$
+y_i = \frac{\sum_{j} \exp\left(q_i^{\top} k_j\right) v_j}{\sum_{l} \exp\left(q_i^{\top} k_l\right)}
+$$
+
+The exponential does two jobs: it makes every score positive, and it sharpens the distribution so a good match wins decisively over a mediocre one. The denominator keeps the weights summing to one. Both are nice to have. But notice the *shape* of the computation: every pair $(i, j)$ shows up explicitly, and that explicitness is exactly where the $n^2$ comes from. There's no way to share work between query positions, because each one re-touches every key.
+
+The kernel trick asks a cheeky question: what if we swapped the exponential for a similarity that *factorises*? Suppose we had a feature map $\phi$ with $\text{sim}(q, k) = \phi(q)^{\top} \phi(k)$. Then equation (1) becomes:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+y_i = \frac{\phi(q_i)^{\top} \sum_{j} \phi(k_j) v_j^{\top}}{\phi(q_i)^{\top} \sum_{j} \phi(k_j)}
+```
+
+$$
+y_i = \frac{\phi(q_i)^{\top} \sum_{j} \phi(k_j) v_j^{\top}}{\phi(q_i)^{\top} \sum_{j} \phi(k_j)}
+$$
+
+Look at what the regrouping buys. The numerator sums one outer product $\phi(k_j) v_j^{\top}$ per token over all $j$; the denominator sums the $\phi(k_j)$. Neither sum depends on $i$, so instead of recomputing them per query, we carry them forward as running accumulators, updated once per token. The work per token stops depending on how much past there is: linear in $n$ overall, with a fixed-size state instead of a growing cache. Katharopoulos et al. ran exactly this experiment in 2020 and showed a transformer still trains when you do it. Their paper's title, "Transformers are RNNs", tells you what they thought they'd found.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The catch hides inside "suppose we had a feature map". The exponential isn't just any positive similarity: it's sharp, and its normaliser adapts to every query. Linear replacements keep the positivity and give up most of the sharpness, and the state that replaces the cache has a *fixed size*, so it physically cannot keep everything. What it keeps, and what happens when two keys want the same slot, is the rest of this post.
+
+Drop the normaliser for a moment and watch the numerator's accumulator tick forward on its own. Written as a recurrence:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+M_t = M_{t-1} + v_t k_t^{\top}, \qquad y_t = M_t k_t
+```
+
+$$
+M_t = M_{t-1} + v_t k_t^{\top}, \qquad y_t = M_t k_t
+$$
+
+Read it as a little machine. $M$ is a matrix memory; each token writes its value $v_t$ under its key $k_t$ as an outer product; retrieval reads the memory with a key. No softmax, no per-token cache, just a $d \times d$ state carried forward. If writing outer products into a matrix smells like Hebbian learning, it should: Schmidhuber's fast-weight programmers did essentially this in the early nineties, and the paper we'll meet in a moment wears that lineage in its title. Some food for thought: the recurrent loop that attention replaced keeps turning up *inside* the mechanisms built to replace attention.
+
+## Collisions, smear, and the delta rule
+
+A fixed-size memory with an additive write has an obvious failure mode, and it's the same one a hash table has: two keys land in the same slot. With equation (3), a second write to a key doesn't replace the first, it *adds* to it, so retrieval returns the sum of everything ever written there: a smear that matches no single value you actually stored. Let's make that concrete with the smallest memory worth playing with:
+
+> [DeltaMemory component] Step-through demo of a small associative matrix memory: watch key-value writes accumulate with a plain additive rule versus the delta rule, which removes the old value at a key before writing the new one, so collisions replace instead of smear. Includes query/retrieval readout for both modes.
+
+Step the script through in additive mode. "moon" is written to slot K2, then re-written with a new value; the slot now holds the sum of the two, and a query for "moon" returns a blur. Then "mars" collides into K2 as well, and the punchline row turns into nonsense: the memory thinks "moon" is the pile-up of three unrelated writes. Additive writes are order-dependent sludge, and every collision makes the sludge thicker.
+
+The delta rule changes one thing. Before writing, *read* what the memory currently holds for this key, and write only the error:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+M_t = M_{t-1} + \beta \left( v_t - M_{t-1} k_t \right) k_t^{\top}
+```
+
+$$
+M_t = M_{t-1} + \beta \left( v_t - M_{t-1} k_t \right) k_t^{\top}
+$$
+
+This is the update Schlag, Irie and Schmidhuber proposed in 2021 in "Linear Transformers Are Secretly Fast Weight Programmers", and the model built on it is DeltaNet. The term $M_{t-1} k_t$ is the memory's current guess for this key; $v_t$ minus that guess is the surprise; the write stores only the surprise, scaled by a learning rate $\beta$. With $\beta = 1$ and well-separated keys the update is an exact replacement, which you can watch in the demo: flip to the delta rule and the same script leaves K2 holding precisely the latest write. A delta memory still can't hold two values under one key (nothing this size can), but it fails cleanly, with the newest write winning, instead of returning sludge. Probably the easiest way to feel the difference is to step to write 5 and flip the toggle back and forth.
+
+## Gating, and where KDA fits
+
+Two refinements turn this toy into something you can train at frontier scale, and both are about *controlled* forgetting. Gated DeltaNet (Yang et al., 2024) multiplies the whole memory by a learned per-step gate $\alpha_t \in (0, 1)$ before each write, so old contents decay unless the model keeps refreshing them: $M_t = \alpha_t M_{t-1} + \beta_t \left( v_t - M_{t-1} k_t \right) k_t^{\top}$. The gate hands the model a dial between "keep everything" and "forget quickly", tuned per head, per token. If that dial sounds like the selectivity trick in Mamba's state-space model (SSM) update, it is very much the same idea in a different costume; [the Mamba post](/blog/the-loop-that-beats-attention/) tours that side of the family, so I won't repeat it here.
+
+Which brings us to K3. Kimi's quickstart describes Kimi Delta Attention as "a hybrid linear attention mechanism", and the name plus the family resemblance points squarely at gated delta-rule linear attention of the kind we've just built up. The same blog post's architecture diagram places KDA blocks alongside something called Gated MLA, so "hybrid" presumably means the two interleaved: cheap linear-attention layers doing the long-range carrying, a few full-quality attention layers keeping exact recall honest. I say "presumably" deliberately.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Here's the honest signpost. Documented, from Kimi's own quickstart and blog: KDA is "a hybrid linear attention mechanism", it sits in K3 next to Gated MLA, and more detail is coming with the technical report. Inferred: that KDA's internals match the DeltaNet → Gated DeltaNet lineage this post walked through. The name is doing a lot of work in that inference, but it's a signposted guess, not a claim about KDA's documented internals.
+
+Even at the family level, though, one thing is already clear: this is no longer a niche research lineage. Whatever the exact internals, a member of the linear-attention family is carrying the first open model in the 3-trillion-parameter class, at a 1M-token context. That alone makes the delta rule worth an afternoon.
+
+## The cache consequence
+
+Back to systems, where this post started. [The KV-cache post](/blog/shrinking-the-kv-cache/) ended by calling linear attention the radical option: not a compression but a different computation. Here's what that difference buys at serving time. With full attention, decode step $t$ reads a cache of $t$ entries, so per-token cost and memory both grow with the context. With a linear-attention layer, decode reads and updates a *fixed-size* state: constant per-token cost, constant memory, no matter how long the context runs. Prefill still has to touch every prompt token once, and that's where caching re-enters the story: if the long prefix is unchanged between requests, you'd rather reuse its processed state than recompute a million tokens of it.
+
+Conventional prefix caching stores per-token KV slabs and replays them. A recurrent state isn't shaped like that, and the K3 blog is blunt about the consequence: KDA "poses new challenges for conventional prefix caching", so Kimi contributed a matching implementation to the vLLM community, with "KDA with prefill cache" making reuse work anyway. The effort was clearly worth it to them, and the price list shows why. Cache-hit input is billed at \$0.30 per million tokens (MTok) against \$3.00 for a cache miss, a 10× gap, with output at \$15.00 per MTok; Kimi reports a cache hit rate above 90% in coding workloads. A fixed state is what makes a million-token prefix cheap enough to reuse, and that 10:1 spread is the architecture showing up on the invoice.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+If you're building agents on a model priced like this, treat the long prefix as sacred: keep it byte-identical across turns, append rather than edit, and put anything volatile at the end. Every request that hits the cache pays a tenth of the input price; every unnecessary change to the prefix re-buys a million tokens at full price.
+
+## Reading further
+
+- [Linear Transformers Are Secretly Fast Weight Programmers](https://arxiv.org/abs/2102.11174). Schlag, Irie & Schmidhuber, ICML 2021. The DeltaNet paper: the delta rule as an error-correcting write for linear attention, with the fast-weight lineage made explicit.
+- [Gated Delta Networks: Improving Mamba2 with Delta Rule](https://arxiv.org/abs/2412.06464). Yang, Kautz & Hatamizadeh, 2024. Adds the learned forget gate and shows the delta rule and Mamba2 are closer cousins than either community admitted.
+- [Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention](https://arxiv.org/abs/2006.16236). Katharopoulos et al., ICML 2020. The kernel-trick regrouping from equation (2), shown to still train.
+- [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://arxiv.org/abs/2312.00752). Gu & Dao, 2023. The other branch of the family; our [loop that beats attention](/blog/the-loop-that-beats-attention/) post walks through it interactively.
+- [Kimi K3](https://www.kimi.com/blog/kimi-k3) and the [K3 quickstart](https://platform.moonshot.ai/docs/guide/kimi-k3-quickstart). The production instance: KDA, AttnRes, 1M context, and the pricing that makes the serving section concrete.
+
+When the K3 technical report lands (the weights are due by 27 July), the first thing I'll be checking is how much of this family tree made it into KDA verbatim, and what the "hybrid" split looks like in practice. Watch this space.
+
+[^units]: I'm using decimal units throughout (1K = 1,000, 1M = 1,000,000) so the ratios read cleanly: 1M/128K ≈ 7.8, and the quadratic bill grows by 7.8² ≈ 61. In binary units the context ratio is exactly 8 and the quadratic ratio exactly 64. Same story, tidier numbers either way.

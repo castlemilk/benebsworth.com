@@ -127,12 +127,38 @@ function isRateLimitError(err: unknown): boolean {
   return extractStatus(err) === 429
 }
 
+/**
+ * Quota/billing exhaustion (Moonshot "usage limit for this billing cycle",
+ * OpenAI insufficient_quota, Anthropic credit balance, ...). These are NOT
+ * transient: every subsequent call to the provider fails identically, so the
+ * runner fail-fast breaks the current task and trips a circuit breaker that
+ * skips the provider for the rest of the sweep — leaving existing results
+ * untouched instead of replacing them with quota-error failures.
+ */
+export function isQuotaError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false
+  const message = err.message.toLowerCase()
+  return (
+    message.includes('access_terminated_error') ||
+    message.includes('usage limit') ||
+    message.includes('insufficient_quota') ||
+    message.includes('exceeded your current quota') ||
+    message.includes('credit balance') ||
+    message.includes('billing cycle')
+  )
+}
+
 function isTransientError(err: unknown): boolean {
   if (!(err instanceof Error)) return false
   const message = err.message.toLowerCase()
 
   // Timeout
   if (isTimeoutError(err)) return true
+
+  // Truncated generation (reasoning consumed the completion budget) — worth a
+  // retry: sampling is stochastic at temperature 1 and the next attempt may
+  // finish. NOT loop-breaking, unlike quota/auth failures.
+  if (message.includes('truncated at the completion-token limit')) return true
 
   // Rate limiting / overload — always retryable.
   if (isRateLimitError(err)) return true
@@ -375,8 +401,20 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
     (process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUST_CACHE === 'true')
   setBustCache(bustCache)
 
+  // Circuit breaker: once a provider reports quota/billing exhaustion, every
+  // later call fails identically. Skipping its remaining jobs avoids burning
+  // the sweep on guaranteed failures — and since no result is recorded for a
+  // skipped job, existing good records are left untouched.
+  const trippedProviders = new Set<string>()
+
   return {
     runTask: async (model: BenchmarkModel, task: BenchmarkTask, iterations: number): Promise<BenchmarkResult[]> => {
+      if (trippedProviders.has(model.provider)) {
+        throw new Error(
+          `${model.provider} disabled for the rest of this run after a quota/billing error — skipping ${model.name} :: ${task.title}`
+        )
+      }
+
       const now = new Date().toISOString()
       const scorer = cfg.scorer ?? selectScorer(task)
       const runs: IterationRun[] = []
@@ -430,6 +468,21 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             status: 'fail',
             timedOut: isTimeoutError(err),
           })
+          if (isQuotaError(err)) {
+            trippedProviders.add(model.provider)
+            console.error(
+              `[harness] quota/billing exhausted for ${model.provider} — skipping remaining iterations and all further ${model.provider} tasks this run`
+            )
+            break
+          }
+          if (!isTransientError(err)) {
+            // Auth/validation failures repeat identically for the same prompt —
+            // don't burn the remaining iterations on guaranteed failures.
+            console.error(
+              `[harness] non-transient error — skipping remaining iterations for ${model.name} :: ${task.title}`
+            )
+            break
+          }
         }
       }
 

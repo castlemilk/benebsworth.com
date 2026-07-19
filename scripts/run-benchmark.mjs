@@ -2,7 +2,7 @@ import {
   BENCHMARK_MODELS,
   BENCHMARK_TASKS,
 } from '../lib/lab/llm-benchmark/registry.ts'
-import { BENCHMARK_RESULTS } from '../lib/lab/llm-benchmark/results.ts'
+import { BENCHMARK_RESULTS, mergeResults } from '../lib/lab/llm-benchmark/results.ts'
 import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.ts'
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -12,6 +12,7 @@ const MODELS_TO_RUN = process.env.RUN_MODELS ? process.env.RUN_MODELS.split(',')
 const TASKS_TO_RUN = process.env.RUN_TASKS ? process.env.RUN_TASKS.split(',') : undefined
 const ITERATIONS = process.env.RUN_ITERATIONS ? Number(process.env.RUN_ITERATIONS) : undefined
 const CONCURRENCY = process.env.RUN_CONCURRENCY ? Number(process.env.RUN_CONCURRENCY) : 3
+const TIMEOUT_MS = process.env.RUN_TIMEOUT_MS ? Number(process.env.RUN_TIMEOUT_MS) : undefined
 const RUN_BUST_CACHE = process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUST_CACHE === 'true'
 
 async function main() {
@@ -38,12 +39,14 @@ async function main() {
     agy: {},
     codex: {},
     bustCache: RUN_BUST_CACHE,
+    timeoutMs: TIMEOUT_MS,
   })
 
-  // Replace existing results for the (model, task) combinations we just ran; keep everything else.
+  // Replace existing results for the (model, task) combinations we just ran;
+  // keep everything else. mergeResults protects good baseline records from
+  // being overwritten by 0-success quota/outage failures.
   const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
   const writeResults = (fresh) => {
-    const freshKeys = new Set(fresh.map((r) => `${r.modelId}|${r.taskId}`))
     // Re-read the on-disk results on every write so concurrent runs (or a
     // hand edit between iterations) aren't clobbered by the stale snapshot
     // this process loaded at startup.
@@ -51,8 +54,11 @@ async function main() {
     try {
       baseline = JSON.parse(readFileSync(outPath, 'utf8'))
     } catch { /* first run or unreadable file — fall back to the startup snapshot */ }
-    const existing = baseline.filter((r) => !freshKeys.has(`${r.modelId}|${r.taskId}`))
-    const merged = [...existing, ...fresh]
+    const merged = mergeResults(baseline, fresh, (kept, dropped) => {
+      console.warn(
+        `[harness] kept existing ${kept.modelId} :: ${kept.taskId} (${kept.status}) — fresh run produced 0 successful iterations`
+      )
+    })
 
     writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
 

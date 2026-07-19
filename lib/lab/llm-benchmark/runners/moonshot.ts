@@ -29,6 +29,7 @@ async function readChatStream(
   let tokensIn = 0
   let tokensOut = 0
   let received = 0
+  let finishReason: string | undefined
 
   for (;;) {
     const { done, value } = await reader.read()
@@ -46,8 +47,9 @@ async function readChatStream(
       if (!payload || payload === '[DONE]') continue
       try {
         const json = JSON.parse(payload)
-        const delta = json.choices?.[0]?.delta
-        if (typeof delta?.content === 'string') content += delta.content
+        const choice = json.choices?.[0]
+        if (typeof choice?.delta?.content === 'string') content += choice.delta.content
+        if (typeof choice?.finish_reason === 'string') finishReason = choice.finish_reason
         if (json.usage) {
           tokensIn = json.usage.prompt_tokens ?? tokensIn
           tokensOut = json.usage.completion_tokens ?? tokensOut
@@ -56,6 +58,15 @@ async function readChatStream(
         // A split SSE payload or keep-alive comment — the next chunk completes it.
       }
     }
+  }
+
+  // Truncated generations are diagnosable failures, not empty successes: e.g.
+  // K2.7 can burn its whole 32k completion budget on reasoning_content and get
+  // cut before emitting a single content token (finish_reason 'length').
+  if (!content.trim() && finishReason === 'length') {
+    throw new Error(
+      `generation truncated at the completion-token limit before any content was emitted (${tokensOut} tokens, all reasoning)`
+    )
   }
 
   return { content, tokensIn, tokensOut }

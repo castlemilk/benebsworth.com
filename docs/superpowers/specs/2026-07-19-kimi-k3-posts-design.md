@@ -44,7 +44,7 @@ Outline:
 1. **Hook** — the paradox: 2.8T parameters but sparse activation; first open 3T-class model; launched July 2026, full weights due "by July 27, 2026" (the blog's phrasing). `<StatGroup>` with 2.8T / 1M / 16-of-896 / 2.5×.
 2. **Why sparse is the point** — reuse `<MoEBlock />` for total-vs-active accounting, with an explicit caption/callout that it is an *illustrative* 2-of-64 toy while K3 routes 16 of 896 (the component's own convention already flags illustrative numbers); then Quantile Balancing (router-score quantiles, no heuristic balancing hyperparameter), SiTU activation, Per-Head Muon — one paragraph each, flagged as "from the blog, report forthcoming".
 3. **KDA** — attention's cost shape at 1M tokens (forward-reference post 3); the quickstart calls KDA "a hybrid linear attention mechanism" and post 3 unpacks the family it belongs to — the blog itself does not describe KDA's internals, so say exactly that. The cache consequence, in the blog's own terms: KDA "poses new challenges for conventional prefix caching", which is why a new vLLM implementation was needed; >90% cache-hit rate in coding workloads and the $0.30/$3.00 pricing split.
-4. **AttnRes** — NEW component `<AttnResDepth />`: earlier blocks as addressable memory; block n issues a query, earlier blocks' outputs are read with α weights instead of the plain residual sum. Contrast against the "residuals accumulate uniformly" mental model.
+4. **AttnRes** — the blog says AttnRes "selectively retrieves representations across depth rather than accumulating them uniformly", with details deferred to the technical report. NEW component `<AttnResDepth />` visualises exactly that contract (a stack of blocks; block n reads earlier blocks' outputs through α-weighted paths rather than a plain residual sum) — with the query/α-weight mechanics explicitly framed in the prose as our mental model pending the report, not as documented fact.
 5. **Systems layer** — MXFP4 weights / MXFP8 activations with quantization-aware training from SFT; fully balanced expert-parallel training (static shapes, no host sync on the critical path); supernode (64+ accelerator) recommendation; Mooncake disaggregated serving.
 6. **What it's for + limitations** — short tour of the blog's case studies (MiniTriton compiler, 48-hour chip design, kernel optimization, astrophysics pipeline) and the blog's own caveats: thinking-history sensitivity, excessive proactiveness, UX gap vs the frontier proprietary models.
 7. **Reading further** — K3 blog, quickstart, Gated DeltaNet paper, our own benchmark post (post 2).
@@ -54,7 +54,7 @@ New component: `components/mdx/attn-res-depth.tsx` — static-step diagram (Flow
 ## Post 2 — `benchmarking-kimi-k3`
 
 Title: "We pointed our own benchmark at Kimi K3 on launch week"
-Description: "Our 7-task harness renders what models actually generate in a sandboxed iframe. Running Kimi K3 against K2.7, Gemini and Codex broke the harness three different ways before it produced a fair table — here's the data, and what K3 is actually good at."
+Description: "Our 7-task harness renders (or shows) what models actually generate, live and sandboxed. Running Kimi K3 against K2.7, Gemini and Codex broke the harness three different ways before it produced a fair table — here's the data, and what K3 is actually good at."
 
 Outline:
 1. **Hook** — K3 landed 2026-07-16; we already had a benchmark that executes model output live. What does a 2.8T model do to a platformer?
@@ -111,7 +111,7 @@ New components:
 
 ## Deployment
 
-`SKIP_ARCHIVE=1 npm run deploy:next` → verify on next.benebsworth.com → `npm run deploy:prod`. Prod currently carries the benchmark release (deployed 2026-07-19); posts ride the same pipeline.
+`npm run deploy:next` → verify on next.benebsworth.com → `npm run deploy:prod`. Prod currently carries the benchmark release (deployed 2026-07-19); posts ride the same pipeline.
 
 ## Out of scope
 

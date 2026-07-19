@@ -66,6 +66,8 @@ const COMPONENT_DESCRIPTIONS = {
     'Interactive step-by-step flow diagram (Istio advanced egress via egress gateway). See the rendered post for the live version.',
   GithubLink:
     'GitHub link card. The rendered post links to a repository; this card was inlined here for the human reader.',
+  Figure:
+    'A captioned layout image with optional credit and text-wrap placement (full, left, right, inset). Used for layout imagery with proper figure/caption semantics.',
   Video: 'Looping demo video. The rendered post embeds the video inline.',
   PullQuote:
     'Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.',

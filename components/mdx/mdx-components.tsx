@@ -3,6 +3,7 @@ import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
 import { AttentionCostCurve } from './attention-cost-curve'
 import { DeltaMemory } from './delta-memory'
+import { AttnResDepth } from './attn-res-depth'
 import { StatGroup, Stat, PullQuote, Figure } from './editorial-components'
 import { TrailMap } from './trailkit/trail-map'
 import { TrailSummary } from './trailkit/trail-summary'
@@ -84,6 +85,7 @@ export const mdxComponents: MDXComponents = {
   Figure,
   AttentionCostCurve,
   DeltaMemory,
+  AttnResDepth,
   PllDiagram,
   AttentionHeatmap,
   SoftmaxLab,

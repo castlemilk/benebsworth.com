@@ -167,6 +167,9 @@ const COMPONENT_DESCRIPTIONS = {
     'Log-log SVG chart comparing attention work vs sequence length: a quadratic curve (full self-attention) against a linear curve (linear attention), from 1K to 1M tokens, with markers at 128K and 1M showing the exact work ratio at each point.',
   DeltaMemory:
     'Step-through demo of a small associative matrix memory: watch key-value writes accumulate with a plain additive rule versus the delta rule, which removes the old value at a key before writing the new one, so collisions replace instead of smear. Includes query/retrieval readout for both modes.',
+  // K3 architecture post.
+  AttnResDepth:
+    'Contrast diagram of residual connections: a plain residual passes only the previous block\'s output upward, while attention residuals let a block read several earlier blocks\' outputs with different weights (alpha), i.e. selective retrieval across depth. Illustrated weights; K3 details pending the technical report.',
   // Cutting-edge expansion posts (reasoning, state-space models, QEC, diffusion policy).
   ReasoningTree:
     'An interactive reasoning tree for the "why thinking longer makes models smarter" post. It samples up to N chains of thought branching from one prompt, each ending in a final answer, with the majority answer lighting up as you raise N (self-consistency). A mode toggle switches from plain majority vote to a learned-verifier best-of-N, showing the verifier pick the correct chain on a seeded problem where the plurality is wrong. The rendered post has the live version.',

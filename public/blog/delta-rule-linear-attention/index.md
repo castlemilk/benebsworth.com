@@ -23,8 +23,9 @@ takeaways:
     blur.
   - >-
     Kimi's KDA is a production member of this family, and it changes serving: a
-    fixed state replaces the growing KV cache, which is why K3's cached input is
-    10x cheaper.
+    fixed state replaces the growing KV cache, and Kimi credits KDA's
+    prefill-cache design for token pricing that bills cached input at a tenth of
+    cache-miss.
 markdown_url: /blog/delta-rule-linear-attention/
 canonical_url: 'https://benebsworth.com/blog/delta-rule-linear-attention/'
 ---
@@ -33,7 +34,7 @@ canonical_url: 'https://benebsworth.com/blog/delta-rule-linear-attention/'
 - Full self-attention compares every token with every token: at 1M tokens that's 10^12 pair scores per layer, and the KV cache grows without bound.
 - Drop the softmax and attention factors into a read from a fixed-size matrix memory — cost per token stops depending on the past.
 - A plain additive memory smears collisions; the delta rule removes the old value at a key before writing the new one, so re-writes replace instead of blur.
-- Kimi's KDA is a production member of this family, and it changes serving: a fixed state replaces the growing KV cache, which is why K3's cached input is 10x cheaper.
+- Kimi's KDA is a production member of this family, and it changes serving: a fixed state replaces the growing KV cache, and Kimi credits KDA's prefill-cache design for token pricing that bills cached input at a tenth of cache-miss.
 
 A million tokens of context sounds like a storage problem. It arrives as an arithmetic one.
 
@@ -115,7 +116,7 @@ This is the update Schlag, Irie and Schmidhuber proposed in 2021 in "Linear Tran
 
 ## Gating, and where KDA fits
 
-Two refinements turn this toy into something you can train at frontier scale, and both are about *controlled* forgetting. Gated DeltaNet (Yang et al., 2024) multiplies the whole memory by a learned per-step gate $\alpha_t \in (0, 1)$ before each write, so old contents decay unless the model keeps refreshing them: $M_t = \alpha_t M_{t-1} + \beta_t \left( v_t - M_{t-1} k_t \right) k_t^{\top}$. The gate hands the model a dial between "keep everything" and "forget quickly", tuned per head, per token. If that dial sounds like the selectivity trick in Mamba's state-space model (SSM) update, it is very much the same idea in a different costume; [the Mamba post](/blog/the-loop-that-beats-attention/) tours that side of the family, so I won't repeat it here.
+Two refinements turn this toy into something you can train at frontier scale, and both are about *controlled* forgetting. Gated DeltaNet (Yang et al., 2024) multiplies the whole memory by a learned per-step gate $\alpha_t \in (0, 1)$ before each write, so old contents decay unless the model keeps refreshing them, and the retrieval inside the delta term reads from that already-decayed memory: $M_t = \alpha_t M_{t-1} + \beta_t \left( v_t - \alpha_t M_{t-1} k_t \right) k_t^{\top}$. The gate hands the model a dial between "keep everything" and "forget quickly", tuned per head, per token. If that dial sounds like the selectivity trick in Mamba's state-space model (SSM) update, it is very much the same idea in a different costume; [the Mamba post](/blog/the-loop-that-beats-attention/) tours that side of the family, so I won't repeat it here.
 
 Which brings us to K3. Kimi's quickstart describes Kimi Delta Attention as "a hybrid linear attention mechanism", and the name plus the family resemblance points squarely at gated delta-rule linear attention of the kind we've just built up. The same blog post's architecture diagram places KDA blocks alongside something called Gated MLA, so "hybrid" presumably means the two interleaved: cheap linear-attention layers doing the long-range carrying, a few full-quality attention layers keeping exact recall honest. I say "presumably" deliberately.
 
@@ -129,7 +130,7 @@ Even at the family level, though, one thing is already clear: this is no longer 
 
 Back to systems, where this post started. [The KV-cache post](/blog/shrinking-the-kv-cache/) ended by calling linear attention the radical option: not a compression but a different computation. Here's what that difference buys at serving time. With full attention, decode step $t$ reads a cache of $t$ entries, so per-token cost and memory both grow with the context. With a linear-attention layer, decode reads and updates a *fixed-size* state: constant per-token cost, constant memory, no matter how long the context runs. Prefill still has to touch every prompt token once, and that's where caching re-enters the story: if the long prefix is unchanged between requests, you'd rather reuse its processed state than recompute a million tokens of it.
 
-Conventional prefix caching stores per-token KV slabs and replays them. A recurrent state isn't shaped like that, and the K3 blog is blunt about the consequence: KDA "poses new challenges for conventional prefix caching", so Kimi contributed a matching implementation to the vLLM community, with "KDA with prefill cache" making reuse work anyway. The effort was clearly worth it to them, and the price list shows why. Cache-hit input is billed at \$0.30 per million tokens (MTok) against \$3.00 for a cache miss, a 10× gap, with output at \$15.00 per MTok; Kimi reports a cache hit rate above 90% in coding workloads. A fixed state is what makes a million-token prefix cheap enough to reuse, and that 10:1 spread is the architecture showing up on the invoice.
+Conventional prefix caching stores per-token KV slabs and replays them. A recurrent state isn't shaped like that, and the K3 blog is blunt about the consequence: KDA "poses new challenges for conventional prefix caching", so Kimi contributed a matching implementation to the vLLM community, with "KDA with prefill cache" making reuse work anyway. The effort was clearly worth it to them, and the price list shows why. Cache-hit input is billed at \$0.30 per million tokens (MTok) against \$3.00 for a cache miss, a 10× gap, with output at \$15.00 per MTok; Kimi reports a cache hit rate above 90% in coding workloads. A fixed state is what makes a million-token prefix cheap enough to reuse, and Kimi's own claim is the careful one: "KDA with prefill cache" lets them serve K3 at what they call "a highly competitive token price". Read the 10:1 spread as their pricing, enabled by that design, rather than a proven consequence of the fixed state alone.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
@@ -141,7 +142,7 @@ If you're building agents on a model priced like this, treat the long prefix as 
 - [Gated Delta Networks: Improving Mamba2 with Delta Rule](https://arxiv.org/abs/2412.06464). Yang, Kautz & Hatamizadeh, 2024. Adds the learned forget gate and shows the delta rule and Mamba2 are closer cousins than either community admitted.
 - [Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention](https://arxiv.org/abs/2006.16236). Katharopoulos et al., ICML 2020. The kernel-trick regrouping from equation (2), shown to still train.
 - [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://arxiv.org/abs/2312.00752). Gu & Dao, 2023. The other branch of the family; our [loop that beats attention](/blog/the-loop-that-beats-attention/) post walks through it interactively.
-- [Kimi K3](https://www.kimi.com/blog/kimi-k3) and the [K3 quickstart](https://platform.moonshot.ai/docs/guide/kimi-k3-quickstart). The production instance: KDA, AttnRes, 1M context, and the pricing that makes the serving section concrete.
+- [Kimi K3](https://www.kimi.com/blog/kimi-k3) and the [K3 quickstart](https://platform.kimi.ai/docs/guide/kimi-k3-quickstart). The production instance: KDA, AttnRes, 1M context, and the pricing that makes the serving section concrete.
 
 When the K3 technical report lands (the weights are due by 27 July), the first thing I'll be checking is how much of this family tree made it into KDA verbatim, and what the "hybrid" split looks like in practice. Watch this space.
 

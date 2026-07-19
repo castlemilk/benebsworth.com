@@ -119,7 +119,7 @@ Write the prompt as a concrete *scene* that captures the thesis, then end with t
 - *"B-trees vs LSM-trees"* → a serene balanced sorted tree facing a cascading waterfall of compacting sorted runs.
 - *"the modulation zoo"* → three dark vitrine panels holding a wobbling line, a circle, and a lattice grid of points.
 
-**Step 1 — generate (to a staging path).** The key lives in `~/projects/brandbrain/.env` (`OPENAI_API_KEY`). The sandbox blocks this cross-project `.env` read as "cross-purpose credential use" — surface it and get the user's OK, then run the gen (it also needs network egress, so it runs unsandboxed). `gpt-image-2` returns base64; use landscape `1536x1024`. Generate to a temp path first so a bad render never clobbers a good existing hero:
+**Step 1 — generate (to a staging path).** The key lives in this project's `.env` (`OPENAI_API_KEY`, confirmed present) and historically also in `~/projects/brandbrain/.env` — prefer the project `.env`; if it's ever absent, surface the cross-project read and get the user's OK. The sandbox blocks this cross-project `.env` read as "cross-purpose credential use" — surface it and get the user's OK, then run the gen (it also needs network egress, so it runs unsandboxed). `gpt-image-2` returns base64; use landscape `1536x1024`. Generate to a temp path first so a bad render never clobbers a good existing hero:
 
 ```bash
 # node fetch: POST gpt-image-2 {prompt: "<scene>\n\n<STRICT no-text>", n:1, size:"1536x1024"}

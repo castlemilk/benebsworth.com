@@ -33,6 +33,12 @@ export const HARNESS_MODELS: HarnessModel[] = [
     "displayName": "deepseek-v4-pro"
   },
   {
+    "id": "qwen/qwen3.8-max-preview",
+    "provider": "qwen",
+    "model": "qwen3.8-max-preview",
+    "displayName": "qwen3.8-max-preview"
+  },
+  {
     "id": "glm/glm-5.2",
     "provider": "glm",
     "model": "glm-5.2",

@@ -1,0 +1,25 @@
+The Omega harness evaluates LLM code-generation agents against real-world coding tasks. Each model is given a task description, an isolated workspace, and a set of tools (file edit, bash, search). The agent produces a patch, which is then verified against test cases.
+
+**Methodology**
+
+- Each task runs in an isolated worktree with the target repository checked out at a known commit
+- The agent receives the task description and has access to standard coding tools
+- Patches are applied and verified against the task's test suite
+- Failures are categorized by root cause: install failures, compile errors, test failures, timeouts, etc.
+- Token counts include the full context window consumed during the agent run
+- For external harnesses (claude-code, opencode) we parse structured output to capture cost, turn count, and per-tool call counts
+
+**Suites**
+
+- `fast` — quick smoke tests: simple bug fixes, feature additions, config changes (30s timeout)
+- `deep` — multi-file refactors, complex debugging, architecture changes (5min timeout)
+- `harder` — 12 capability-focused tasks across 4 categories: debug existing code, multi-file refactors, strict-spec APIs, and write-tests-for-given-code (3min timeout)
+- `hard` — real GitHub issues from popular repositories, requiring deep codebase understanding (10min timeout)
+
+**Scoring**
+
+A task passes if all test cases pass after applying the agent's patch. There is no partial credit — a task either passes or fails. Models are ranked by pass rate, with ties broken by total token usage (lower is better).
+
+**Beyond pass rate**
+
+The `harder` suite is designed to differentiate agents. Pass rate alone saturates fast — both claude-code and agy score 10/10 on `fast`. The dashboard also surfaces total tokens, total cost, average turns per task, and a per-tool breakdown so you can see which agent is more efficient at each task class.

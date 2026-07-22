@@ -1,0 +1,8 @@
+The harder suite contains 12 capability-focused tasks designed to differentiate agents that all pass the fast suite. Four categories:
+
+- **Debug existing code (3)** — agent must read code that has a real bug, identify it, and apply the smallest fix. Tests are NOT in the prompt.
+- **Multi-file refactor (3)** — agent must rename across imports, extract a helper, or split a monolith module while keeping existing tests passing.
+- **Strict-spec API (3)** — agent must implement an API with exact exports, error messages, and edge-case behaviour (token bucket, duration formatter, deep equality with cycle detection).
+- **Write tests for given code (3)** — agent is given a buggy implementation plus a hidden correct one plus a spec. Tests must pass on the correct impl.
+
+Most models with structured output (claude-code) report token counts, cost, turn counts, and per-tool breakdowns so you can see *how* each agent solved the tasks, not just whether.

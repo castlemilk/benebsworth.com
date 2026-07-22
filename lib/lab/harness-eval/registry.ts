@@ -21,6 +21,24 @@ export const HARNESS_MODELS: HarnessModel[] = [
     "displayName": "agy"
   },
   {
+    "id": "minimax/MiniMax-M3",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "displayName": "MiniMax-M3"
+  },
+  {
+    "id": "deepseek/deepseek-v4-pro",
+    "provider": "deepseek",
+    "model": "deepseek-v4-pro",
+    "displayName": "deepseek-v4-pro"
+  },
+  {
+    "id": "glm/glm-5.2",
+    "provider": "glm",
+    "model": "glm-5.2",
+    "displayName": "glm-5.2"
+  },
+  {
     "id": "external/codex",
     "provider": "external",
     "model": "codex",
@@ -44,13 +62,13 @@ export const HARNESS_SUITES: HarnessSuite[] = [
   {
     "slug": "harder",
     "label": "Harder Suite",
-    "description": "",
+    "description": "The harder suite contains 12 capability-focused tasks designed to differentiate agents that all pass the fast suite. Four categories:",
     "taskCount": 12
   },
   {
     "slug": "fast",
     "label": "Fast Suite",
-    "description": "",
+    "description": "The fast suite contains quick smoke tests — simple bug fixes, feature additions, and configuration changes. These tasks are designed to be solvable in under 30 seconds by a capable model, testing basic code generation, file editing, and rep",
     "taskCount": 10
   }
 ];

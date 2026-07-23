@@ -9,6 +9,7 @@ import type { CategoryNavItem } from '@/components/lab/category-nav'
 import { LabContent } from '@/components/lab/lab-content'
 import { Reveal } from '@/components/motion/reveal'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
+import { Terminal } from 'lucide-react'
 
 const CATEGORY_ACCENT: Record<string, string> = {
   art: '#00e0b8',
@@ -88,6 +89,36 @@ export default function LabPage() {
                 <p className="type-label text-fg">LLM Benchmark</p>
                 <p className="mt-0.5 type-body text-sm text-fg/60">
                   Frontier models tested across code generation, reasoning, and UI tasks.
+                </p>
+              </div>
+            </Link>
+          </Reveal>
+          <Reveal delay={300}>
+            <Link
+              href="/lab/harness-eval/"
+              className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-muted)]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-surface-2)] text-[var(--color-fg)]">
+                <Terminal className="h-5 w-5" aria-hidden />
+              </span>
+              <div>
+                <p className="type-label text-fg">Harness Eval</p>
+                <p className="mt-0.5 type-body text-sm text-fg/60">
+                  Per-model code-generation benchmarks across fast, deep, and hard suites.
+                </p>
+              </div>
+            </Link>
+            <Link
+              href="/lab/cost-dashboard/"
+              className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-muted)]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-surface-2)] text-[var(--color-fg)]">
+                <BarChart3 className="h-5 w-5" aria-hidden />
+              </span>
+              <div>
+                <p className="type-label text-fg">Cost &amp; Model Dashboard</p>
+                <p className="mt-0.5 type-body text-sm text-fg/60">
+                  Per-model token, cost, and duration across all benchmark suites — with budget alerts.
                 </p>
               </div>
             </Link>

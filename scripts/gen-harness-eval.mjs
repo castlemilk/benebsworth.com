@@ -29,7 +29,92 @@ function loadJsonFiles(prefix) {
   }).filter(Boolean);
 }
 
-function extractTaskResults(report) {
+/**
+ * Pricing map (USD per 1K tokens, prompt + completion).
+ * Used to estimate cost when the provider didn't return a cost field
+ * (e.g. z.ai GLM, kimi). Numbers are approximate public-list rates.
+ */
+const PRICING_USD_PER_1K = {
+  // Internal models
+  'kimi/moonshot-v1-128k': { prompt: 0.002, completion: 0.002 },
+  'kimi/moonshot-v1-32k': { prompt: 0.001, completion: 0.001 },
+  'kimi/moonshot-v1-8k': { prompt: 0.0003, completion: 0.0003 },
+  'minimax/MiniMax-M3': { prompt: 0.0003, completion: 0.0012 },
+  'deepseek/deepseek-v4-pro': { prompt: 0.00027, completion: 0.0011 },
+  'qwen/qwen3.8-max-preview': { prompt: 0.00026, completion: 0.00156 },
+  'glm/glm-5.2': { prompt: 0.0001, completion: 0.0003 },
+  // External CLIs — no cost data from PTY; just placeholder
+  'external/agy': null,
+  'external/opencode': null,
+  'external/claude-code': { prompt: 0.003, completion: 0.015 },
+  'external/codex': null,
+  'external/cursor-cli': null,
+  'external/aider': null,
+};
+
+/**
+ * For consensus (multi-agent) reports, sum the pricing of each constituent
+ * model. The cost is the union of what the candidates spent.
+ * Keyed by the consensus report's `modelId` (provider/model = consensus/<joined-models>).
+ */
+const CONSENSUS_COMPONENT_PRICING = {
+  'consensus/agy+MiniMax-M3+deepseek-v4-pro': {
+    'minimax/MiniMax-M3': { prompt: 0.0003, completion: 0.0012 },
+    'deepseek/deepseek-v4-pro': { prompt: 0.00027, completion: 0.0011 },
+  },
+  'consensus/external:agy+minimax/MiniMax-M3+deepseek/deepseek-v4-pro': {
+    'minimax/MiniMax-M3': { prompt: 0.0003, completion: 0.0012 },
+    'deepseek/deepseek-v4-pro': { prompt: 0.00027, completion: 0.0011 },
+  },
+  // For "consensus/agx+..." (lowercased) — match the actual modelId from the report
+  'consensus/external:agy+minimax/minimax-m3+deepseek/deepseek-v4-pro': {
+    'minimax/MiniMax-M3': { prompt: 0.0003, completion: 0.0012 },
+    'deepseek/deepseek-v4-pro': { prompt: 0.00027, completion: 0.0011 },
+  },
+};
+
+function estimateCostUsd(modelId, promptTokens, completionTokens, totalTokens) {
+  if (!promptTokens && !completionTokens && !totalTokens) return null;
+
+  // Consensus reports: sum the pricing of every constituent model.
+  if (modelId in CONSENSUS_COMPONENT_PRICING) {
+    const components = CONSENSUS_COMPONENT_PRICING[modelId];
+    let total = 0;
+    if (promptTokens || completionTokens) {
+      // Split the tokens evenly across the consensus members.
+      const n = Object.keys(components).length;
+      for (const p of Object.values(components)) {
+        total += ((promptTokens ?? 0) / n / 1000) * p.prompt;
+        total += ((completionTokens ?? 0) / n / 1000) * p.completion;
+      }
+    } else {
+      // 95/5 split, evenly distributed.
+      const n = Object.keys(components).length;
+      for (const p of Object.values(components)) {
+        total += ((totalTokens * 0.95) / n / 1000) * p.prompt;
+        total += ((totalTokens * 0.05) / n / 1000) * p.completion;
+      }
+    }
+    return Number(total.toFixed(6));
+  }
+
+  const pricing = PRICING_USD_PER_1K[modelId];
+  if (!pricing) return null;
+  let p, c;
+  if (promptTokens || completionTokens) {
+    p = (promptTokens ?? 0) / 1000 * pricing.prompt;
+    c = (completionTokens ?? 0) / 1000 * pricing.completion;
+  } else {
+    // Fallback: assume a 95/5 prompt/completion split (typical for agentic loops
+    // where most tokens are prompt/context). This is approximate but better than 0.
+    p = (totalTokens * 0.95) / 1000 * pricing.prompt;
+    c = (totalTokens * 0.05) / 1000 * pricing.completion;
+  }
+  return Number((p + c).toFixed(6));
+}
+
+function extractTaskResults(report, provider, model) {
+  const modelId = `${provider || ''}/${model || ''}`;
   return (report.results || []).map(r => {
     const agentRun = r.agentRun || {};
     let toolCalls;
@@ -40,6 +125,17 @@ function extractTaskResults(report) {
         toolCalls = undefined;
       }
     }
+    // Prefer real cost from the provider; fall back to estimate from tokens.
+    // For consensus (multi-agent) reports, the per-task agentRun is missing
+    // but the evaluation.metrics carries the aggregate across candidates.
+    const consensusMetrics = r.evaluation?.metrics ?? {};
+    const consensusTokens = consensusMetrics.totalCandidatesTokens ?? null;
+    const promptTokens = agentRun.promptTokens ?? null;
+    const completionTokens = agentRun.completionTokens ?? null;
+    const totalTokens = agentRun.totalTokens ?? r.usage?.totalTokens ?? consensusTokens ?? null;
+    const realCost = agentRun.costUsd ?? null;
+    const estimatedCost = realCost ?? estimateCostUsd(modelId, promptTokens, completionTokens, totalTokens);
+
     return {
       task: {
         id: r.task.id,
@@ -53,8 +149,10 @@ function extractTaskResults(report) {
       status: r.status || 'failed',
       durationMs: r.durationMs || 0,
       score: r.evaluation?.score,
-      tokens: agentRun.totalTokens ?? r.usage?.totalTokens,
-      costUsd: agentRun.costUsd ?? null,
+      tokens: agentRun.totalTokens ?? r.usage?.totalTokens ?? consensusTokens,
+      promptTokens,
+      completionTokens,
+      costUsd: estimatedCost,
       turns: agentRun.turnCount ?? null,
       toolCalls,
       failure: r.failureAnalysis ? {
@@ -83,7 +181,7 @@ function buildModelSummaries(modelEvalReports, benchmarkReports) {
             results: [],
           });
         }
-        modelMap.get(key).results.push(...extractTaskResults(result.report));
+        modelMap.get(key).results.push(...extractTaskResults(result.report, result.provider, result.model));
       }
     }
   }
@@ -97,7 +195,7 @@ function buildModelSummaries(modelEvalReports, benchmarkReports) {
         results: [],
       });
     }
-    modelMap.get(key).results.push(...extractTaskResults(report));
+    modelMap.get(key).results.push(...extractTaskResults(report, key.split('/')[0], key.split('/').slice(1).join('/')));
   }
 
   const summaries = [];

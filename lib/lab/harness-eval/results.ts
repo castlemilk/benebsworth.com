@@ -3,7 +3,7 @@ import type { HarnessEvalReport, HarnessTaskResult, HarnessModelSummary, Harness
 
 import resultsData from './results.json';
 
-export const EVAL_REPORT: HarnessEvalReport = resultsData as HarnessEvalReport;
+export const EVAL_REPORT = resultsData as unknown as HarnessEvalReport;
 export const ALL_SUMMARIES: HarnessModelSummary[] = EVAL_REPORT.models;
 
 export function resultsForModel(modelId: string): HarnessTaskResult[] {

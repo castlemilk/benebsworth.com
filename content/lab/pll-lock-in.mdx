@@ -2,7 +2,7 @@
 
 ## The core idea
 
-A **phase-locked loop** is a feedback circuit that forces a local oscillator to match the frequency *and* phase of an incoming signal. It is one of the most quietly ubiquitous structures in engineering — every radio front-end, CPU clock multiplier, WiFi chip, and grid-tied inverter contains one. The trick is elegant: compare phases, filter the difference, and use that error to steer the oscillator. When the loop locks, the local oscillator becomes a clean, noise-rejecting copy of a reference it may only see buried in noise.
+A **phase-locked loop** is a feedback circuit that forces a local oscillator to match the frequency *and* phase of an incoming signal. It is one of the most quietly ubiquitous structures in engineering: every radio front-end, CPU clock multiplier, WiFi chip, and grid-tied inverter contains one. The trick is elegant: compare phases, filter the difference, and use that error to steer the oscillator. When the loop locks, the local oscillator becomes a clean, noise-rejecting copy of a reference it may only see buried in noise.
 
 </LabSide>
 
@@ -10,9 +10,9 @@ A **phase-locked loop** is a feedback circuit that forces a local oscillator to 
 
 A PLL chains three blocks into a loop:
 
-1. **Phase detector (PD)** — produces an error from the phase difference. The classic sinusoidal detector outputs `e = sin(θref − θvco)`, which pushes the loop to *align* the two phases rather than drive them to zero.
-2. **Loop filter** — smooths the error. A bare gain gives a type-I loop; adding an integrator gives type-II.
-3. **VCO** — a voltage-controlled oscillator whose frequency is `ω = ω₀ + K·v`.
+1. **Phase detector (PD)**: produces an error from the phase difference. The classic sinusoidal detector outputs `e = sin(θref − θvco)`, which pushes the loop to *align* the two phases rather than drive them to zero.
+2. **Loop filter**: smooths the error. A bare gain gives a type-I loop; adding an integrator gives type-II.
+3. **VCO**: a voltage-controlled oscillator whose frequency is `ω = ω₀ + K·v`.
 
 Here the reference is a **chirp**, sweeping slowly across the VCO's free-running frequency so you can watch acquisition happen. Lock is reached when $\theta_{ref} - \theta_{vco}$ stops growing and the phase-error trace flattens onto zero.
 
@@ -26,16 +26,16 @@ Drop the loop bandwidth K and the PLL takes longer to capture the chirp, but it 
 
 The filter order changes the loop's *character*, not just its speed:
 
-- **Type-I** (proportional only) locks quickly but leaves a **static phase error** — it needs a steady offset to hold the VCO at the right frequency.
+- **Type-I** (proportional only) locks quickly but leaves a **static phase error**: it needs a steady offset to hold the VCO at the right frequency.
 - **Type-II** (PI filter) adds an integrator that accumulates the error until the steady-state phase error is driven to **zero**. This is the default for clock recovery, frequency synthesis, and demodulation, where residual phase offset is unacceptable.
 
 <LabSide effect="pll-lock-in" height={280} params={{ Kp: 4, order: "1" }} caption="First-order PLL, high bandwidth — locks fast but settles with a residual phase error. No integrator to erase it.">
 
 ## Where it shows up
 
-- **Frequency synthesis** — multiply a cheap crystal up to GHz local-oscillator tones.
-- **Clock recovery** — USB, PCIe, and Ethernet extract a clock straight from the data edges.
-- **FM demodulation** — a PLL locked to an FM carrier outputs a voltage proportional to instantaneous frequency.
+- **Frequency synthesis**: multiply a cheap crystal up to GHz local-oscillator tones.
+- **Clock recovery**: USB, PCIe, and Ethernet extract a clock straight from the data edges.
+- **FM demodulation**: a PLL locked to an FM carrier outputs a voltage proportional to instantaneous frequency.
 - **Grid synchronisation** — inverters lock to the 50/60 Hz mains before pushing current into it.
 
 </LabSide>

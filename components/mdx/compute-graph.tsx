@@ -359,10 +359,10 @@ export function ComputeGraph() {
             <>
               Backprop walks the graph in reverse. Each node already knows{' '}
               <span className="text-blog">∂e/∂itself</span>; to push it back one step you multiply by
-              the edge&rsquo;s local derivative — that&rsquo;s the chain rule, one edge at a time. The
+              the edge&rsquo;s local derivative. That&rsquo;s the chain rule, one edge at a time. The
               point: <span className="text-blog">b</span> feeds <span className="text-blog">both</span>{' '}
               c and d, so two gradient paths reach it and you <span className="text-blog">add</span> them
-              — ∂e/∂b = d + c. No fancy machinery, just multiply along edges and sum where they meet.
+              The result is ∂e/∂b = d + c. No fancy machinery, just multiply along edges and sum where they meet.
             </>
           ) : (
             <>

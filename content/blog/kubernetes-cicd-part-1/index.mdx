@@ -15,7 +15,7 @@ takeaways:
 
 Developer experience is a challenging topic when it comes to Kubernetes. This is mainly associated with the complexity
  involving the understanding of the primitives in kubernetes, such as networking into the cluster, the `Pod` construct and getting configuration into an app. The theory and understanding of Kubernetes itself will be out of scope for this discussion; instead we'll focus on how we can reduce the burden of these complexities, and
- demonstrate how we can get closer to unifying the local developer environment with a kubernetes production run-time environment.
+ show how we can get closer to unifying the local developer environment with a kubernetes production run-time environment.
 
 A common developer environment may consist of docker-compose, which will utilise the apps `Dockerfile` to stand up the app and its associated dependencies, perhaps a database etc. This can be an easy to setup and a coherent environment for most people familiar with Docker. However, this gives rise to a significant disconnect when it then comes to the approach of running the application in a Kubernetes environment. Where instead of a single `Dockerfile`, we will likely spawn a larger number of core resources. A common set of resources could be the following:
 
@@ -24,7 +24,7 @@ A common developer environment may consist of docker-compose, which will utilise
 * `ConfigMap` - Application configuration to be injecting into the `Deployment`
 * `Secret` - More sensitive credentials and configuration to be injected into the `Deployment`
 
-Additionally, for the resources mentioned, instead of talking to a Docker Daemon like in a common docker-compose scenario, they will be applied to the Kubernetes API server. Interacting with the Kubernetes based environment then requires gaining some familiarity with `kubectl` which is a CLI wrapper for interacting with the Kubernetes API server. It's this interface discrepancy or difference for local vs the remote runtime environment that gives rise to a disconnect to what developers will understand about their applications runtime environment. So the next question is; how can we make a case for entirely removing the need for Docker locally, instead shifting everything into a purely kubernetes based environment?
+Also, for the resources mentioned, instead of talking to a Docker Daemon like in a common docker-compose scenario, they will be applied to the Kubernetes API server. Interacting with the Kubernetes based environment then requires gaining some familiarity with `kubectl` which is a CLI wrapper for interacting with the Kubernetes API server. It's this interface discrepancy or difference for local vs the remote runtime environment that gives rise to a disconnect to what developers will understand about their applications runtime environment. So the next question is; how can we make a case for entirely removing the need for Docker locally, instead shifting everything into a purely kubernetes based environment?
 
 ## Local Clusters
 
@@ -54,7 +54,7 @@ Now that we have a locally running Kubernetes cluster, the next challenge is how
 
 Let's go through the available templating/configuration management options we have for our Kubernetes resources.
 
-* **Helm** - Perhaps one of the most popular mechanisms for templating kubernetes resources. Providing a rich templating language for dynamically generating resources based of a top level `values.yaml` file. Helm utilises [sprig](http://masterminds.github.io/sprig/) as the templating language. The dynamic templating capabilities often give rise to fairly complex helm templates which may be more cognitively to understand and extend. Helm has a vibrant ecosystem of existing `charts` which is the packaged form of a helm template, which capture deployment patterns for a wide variety of tools. Additionally Helm has a plugin ecosystem for extending the capabilities of the helm CLI. More information on helm can be found [here](https://helm.sh/)
+* **Helm** - Perhaps one of the most popular mechanisms for templating kubernetes resources. Providing a rich templating language for dynamically generating resources based of a top level `values.yaml` file. Helm utilises [sprig](http://masterminds.github.io/sprig/) as the templating language. The dynamic templating capabilities often give rise to fairly complex helm templates which may be more cognitively to understand and extend. Helm has a vibrant ecosystem of existing `charts` which is the packaged form of a helm template, which capture deployment patterns for a wide variety of tools. Also Helm has a plugin ecosystem for extending the capabilities of the helm CLI. More information on helm can be found [here](https://helm.sh/)
 
 * **Kustomize** - A "template free" way of representing Kubernetes resources. This is achieved by explicitly defining all of the resources required for your application, and then providing a straightforward way of mutating and/or extended resources based off `overlays` - a way to contextualize a group of resources, such as local vs non-prod vs prod. Kustomize has been built into the `kubectl` CLI, this makes it more readily available for basic use-cases, however not all of Kustomize's features are available via `kubectl`. Overall Kustomize could be described as cognitively less complex, achieving a similar function to Helm and other tools. This makes it a great candidate for simple deployment scenarios where you don't need dynamic templating capability. *Most of the examples/demo apps we'll go through in this series will utilise Kustomize*. More information on kustomize can be found [here](https://github.com/kubernetes-sigs/kustomize)
 
@@ -106,7 +106,7 @@ We have an end-to-end example which captures the local developer workflow using 
 
 &nbsp;
 
-In order to produce an example developer workflow, we've chosen the following selection of tooling, of which we've run through in detail at the beginning of this post. Some extra personal reasons for this specific selection is as follows:
+To produce an example developer workflow, we've chosen the following selection of tooling, of which we've run through in detail at the beginning of this post. Some extra personal reasons for this specific selection is as follows:
 
 * **Minikube** - Works reliably on Mac and has as vibrant community and information available online. Has some nice tooling for exposing services locally (via `minikube tunnel`)
 
@@ -122,7 +122,7 @@ Now if we look at translating the above top level topology, into a more specific
 
 &nbsp;
 
-In order to manage all of these resources, we're using *Kustomize*, let's take a look at what this configuration and file-system layout looks like. Within the `kubernetes-cicd` repository, inside the `app/deploy` folder we have the following file structure:
+To manage all of these resources, we're using *Kustomize*, let's take a look at what this configuration and file-system layout looks like. Within the `kubernetes-cicd` repository, inside the `app/deploy` folder we have the following file structure:
 
 ```text
 ├── backend
@@ -189,7 +189,7 @@ git clone https://github.com/castlemilk/kubernetes-cicd.git
 cd kubernetes-cicd
 ```
 
-In order to run the following sections we're going to need to install a few dependencies, these are:
+To run the following sections we're going to need to install a few dependencies, these are:
 
 * **kubectl** - cli tool to interact with kubernetes run - `brew install kubernetes-cli`
 
@@ -199,7 +199,7 @@ In order to run the following sections we're going to need to install a few depe
 
 * **minikube** - local kubernetes cluster provider - `brew install minikube`
 
-With all of these dependencies install we can now begin the creation of our local development environment.
+With all of these dependencies install we can now start the creation of our local development environment.
 
 #### 1. create kubernetes cluster
 
@@ -229,7 +229,7 @@ This `Makefile` entrypoint bundles a few commands together which give us a few n
   
   This is done by setting the entries in `/etc/hosts`, which will **required you to enter your local machines password**.
 
-* runs `skaffold dev --profile local`, where the *local* profile maps to the local overlay in our *Kustomize* config. This will start a real-time event watching process, which will trigger re-deployments on config/source code changes. Additionally it will attach to the log output from our applications. This Skaffold command will also manage the building of our image so we have some artifact to deploy.
+* runs `skaffold dev --profile local`, where the *local* profile maps to the local overlay in our *Kustomize* config. This will start a real-time event watching process, which will trigger re-deployments on config/source code changes. Also it will attach to the log output from our applications. This Skaffold command will also manage the building of our image so we have some artifact to deploy.
 
 At this point Skaffold has deployed our *Kustomize* overlay to our local running minikube cluster. Skaffold will start a watcher/tail on the logs of our application once we've successfully allowed ingress to our demo application. **leave this window open and open a new one to run the next steps**
 
@@ -257,7 +257,7 @@ To get a feel whats happening behind the scenes of the `skaffold ...` command, w
 
 * view the contents of the **Skaffold** config file - found in `app/skaffold.yaml`, get a feel for how the **build**, **test** and **deploy** steps work, as well as how we are creating a profile which corresponds to a **Kustomize** overlay
 
-If all else fails try and re-run the steps described above, where in summary they would be:
+If all else fails try and re-run the steps described above, which are:
 
 > 1. remove the deployed cluster and any created routes- `minikube delete && minikube tunnel -c
 > 2. recreate local cluster - `minikube start`

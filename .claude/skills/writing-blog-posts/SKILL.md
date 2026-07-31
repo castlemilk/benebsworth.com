@@ -705,6 +705,23 @@ What that voice actually does, with real lines from the early posts:
 
 **Blend, don't revert.** Keep the genuine improvements of the recent essays: the intuition-first lead, the interactive components, the 3–5 callouts/equations, the clean structure. Just put the person back in: a little "we", a hedge or two, one real aside, an earned bit of humour, British spelling, and a sign-off that points forward. The target is "Ben explaining something he's excited about", not "a confident narrator performing an essay".
 
+### Prose validation and anti-AI review
+
+Run the repository prose validator before calling a content change finished. It is based on the [episode 01 anti-slop writing notes](https://github.com/woosal1337/blog/tree/main/videos/ep01-the-cure-for-ai-slop) (pinned 2026-07-31), adapted to this site's MDX, interactive examples, and Australian/British house voice.
+
+```bash
+npm run lint:prose                 # audit every tracked reader-facing source
+mkdir -p reports && node scripts/lint-prose.mjs --format json > reports/prose-baseline.json
+npm run lint:prose:changed         # review only changed and untracked source files
+npm run lint:prose -- --ci         # fail on hard tells, masking errors, or dash-budget breaches
+```
+
+The manifest in `scripts/prose-sources.json` is the boundary: it covers blog posts, lab/project copy, hiking/about/now copy, and selected visible app/component text. It excludes generated `public/blog/**/*.md`, tests, admin/lab implementation code, and the trail-guide authoring skill. Do not hand-edit generated siblings; run `npm run md:siblings` after source changes and `npm run md:siblings:check` before publishing.
+
+Treat `ai-tell`, `marketing-adjective`, `reveal-construction`, and em-dash-budget findings as editorial defects. Replace them with the simplest phrase that preserves the author's meaning and technical precision. Treat long sentences, passive voice, nominalisations, and long paragraphs as review prompts, not mechanical rewrite instructions: keep a deliberate aside or a technical sentence when it earns its length. Masking errors are always defects; never silence one by changing the validator or by moving prose into code.
+
+The validator ignores code fences, inline code, URLs, JSX expressions/attributes, frontmatter fields other than `title`, `description`, and `takeaways`, and math delimiters. It still checks visible JSX text and reader-facing labels. Run it before `npm run build` and again after sibling generation so the published surface and the source agree.
+
 ## Build, preview, deploy
 
 - **Author/preview:** `npm run dev` → `/blog/<slug>/`. (If CSS looks stale, kill stray `next dev`, `rm -rf .next`, restart.)

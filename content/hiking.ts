@@ -20,7 +20,7 @@ export const hikes: Hike[] = [
     dates: '2025',
     accent: '#7c93c9',
     summary:
-      'The classic high route through the Dolomites — Lago di Braies south to Belluno, hut to hut beneath the pale vertical walls and across high cols, a string of rifugios stitched between limestone cathedrals.',
+      'The classic high route through the Dolomites: Lago di Braies south to Belluno, hut to hut beneath the pale vertical walls and across high cols, a string of rifugios stitched between limestone cathedrals.',
     distanceKm: 120,
     days: 10,
     elevationGainM: 6500,
@@ -49,7 +49,7 @@ export const hikes: Hike[] = [
     dates: '2025',
     accent: '#c2693a',
     summary:
-      'End to end along the spine of the West MacDonnell Ranges — Alice Springs Telegraph Station west to Mt Sonder. Red quartzite ridgelines, hidden gorges and waterholes, and the desert sky at night.',
+      'End to end along the spine of the West MacDonnell Ranges: Alice Springs Telegraph Station west to Mt Sonder. Red quartzite ridgelines, hidden gorges and waterholes, and the desert sky at night.',
     distanceKm: 223,
     days: 14,
     elevationGainM: 6500,
@@ -78,7 +78,7 @@ export const hikes: Hike[] = [
     dates: '2024',
     accent: '#5b8c5a',
     summary:
-      'Through the heart of the Tasmanian wilderness — Cradle Mountain south to Lake St Clair. Button-grass moorland, glacial tarns, rainforest and waterfalls, with side trips up Tasmania’s highest peaks.',
+      'Through the heart of the Tasmanian wilderness: Cradle Mountain south to Lake St Clair. Button-grass moorland, glacial tarns, rainforest and waterfalls, with side trips up Tasmania’s highest peaks.',
     distanceKm: 65,
     days: 6,
     elevationGainM: 2500,
@@ -107,7 +107,7 @@ export const hikes: Hike[] = [
     dates: 'July 2023',
     accent: '#4f9d8f',
     summary:
-      'The Swiss high traverse to the foot of the Matterhorn — walked from Le Châble over seven alpine passes through the Valais, by the Pas de Chèvres ladders and a string of glacier-fed lakes, to a Matterhorn finish at Zermatt.',
+      'The Swiss high traverse to the foot of the Matterhorn: walked from Le Châble over seven alpine passes through the Valais, by the Pas de Chèvres ladders and a string of glacier-fed lakes, to a Matterhorn finish at Zermatt.',
     distanceKm: 100,
     days: 7,
     elevationGainM: 7100,
@@ -138,7 +138,7 @@ export const hikes: Hike[] = [
     dates: '',
     accent: '#c79a4b',
     summary:
-      'The original royal road to Machu Picchu — Inca stone stairways over high passes and through cloud forest, arriving at the Sun Gate above the lost city at dawn.',
+      'The original royal road to Machu Picchu: Inca stone stairways over high passes and through cloud forest, arriving at the Sun Gate above the lost city at dawn.',
     distanceKm: 43,
     days: 4,
     elevationGainM: 2200,
@@ -166,7 +166,7 @@ export const hikes: Hike[] = [
     dates: '',
     accent: '#5aa0b5',
     summary:
-      'The full circuit of the Mont Blanc massif — a loop through three countries, around the highest mountain in the Alps, over a chain of high cols with the summit never far from view.',
+      'The full circuit of the Mont Blanc massif: a loop through three countries, around the highest mountain in the Alps, over a chain of high cols with the summit never far from view.',
     distanceKm: 170,
     days: 11,
     elevationGainM: 10000,
@@ -196,7 +196,7 @@ export const hikes: Hike[] = [
     dates: '',
     accent: '#6f9fd8',
     summary:
-      'Up the Khumbu valley to the foot of the highest mountain on Earth — Lukla to Base Camp, acclimatising through Sherpa villages and monasteries, to the viewpoint of Kala Patthar at 5,644 m.',
+      'Up the Khumbu valley to the foot of the highest mountain on Earth: Lukla to Base Camp, acclimatising through Sherpa villages and monasteries, to the viewpoint of Kala Patthar at 5,644 m.',
     distanceKm: 130,
     days: 12,
     elevationGainM: 5500,
@@ -225,7 +225,7 @@ export const hikes: Hike[] = [
     dates: '',
     accent: '#6cb3a0',
     summary:
-      'The full loop around the Paine massif — the wild back side over the John Gardner Pass above Grey Glacier, then the famous W, finishing under the granite towers at first light.',
+      'The full loop around the Paine massif: the wild back side over the John Gardner Pass above Grey Glacier, then the famous W, finishing under the granite towers at first light.',
     distanceKm: 130,
     days: 8,
     elevationGainM: 5000,

@@ -88,7 +88,7 @@ export default function CostDashboardPage() {
             <StatTile
               icon={<DollarSign className="h-4 w-4" aria-hidden />}
               label="Total cost"
-              value={data.stats.totalCostUsd > 0 ? formatCost(data.stats.totalCostUsd) : '—'}
+              value={data.stats.totalCostUsd > 0 ? formatCost(data.stats.totalCostUsd) : 'n/a'}
               hint={data.stats.modelsWithoutCostData > 0 ? `(${data.stats.modelsWithoutCostData} models have no cost data)` : undefined}
             />
             <StatTile
@@ -109,7 +109,7 @@ export default function CostDashboardPage() {
             <StatTile
               icon={<DollarSign className="h-4 w-4" aria-hidden />}
               label="Cost / solved"
-              value={data.stats.costPerSolvedTask > 0 ? formatCost(data.stats.costPerSolvedTask) : '—'}
+              value={data.stats.costPerSolvedTask > 0 ? formatCost(data.stats.costPerSolvedTask) : 'n/a'}
             />
           </section>
         </Reveal>
@@ -165,7 +165,7 @@ export default function CostDashboardPage() {
               Cost and token data comes from the model provider responses (where the API exposes
               usage). External CLIs like agy (PTY-based, no metrics parser) and providers that don't
               return cost in the chat response (e.g. z.ai GLM) show as{' '}
-              <span className="font-mono">—</span>. Pass-rate is computed from the harness server's
+              <span className="font-mono">n/a</span>. Pass-rate is computed from the harness server's
               own evaluation, not the model self-report.
             </p>
             <p className="mt-2">
@@ -292,20 +292,20 @@ function PerModelTable({ rows }: { rows: PerModelRow[] }) {
                 <Td num>
                   <PassRateCell passed={r.passed} total={r.tasks} />
                 </Td>
-                <Td num>{r.hasCostData ? formatCost(r.totalCostUsd) : <span className="text-fg/30">—</span>}</Td>
+                <Td num>{r.hasCostData ? formatCost(r.totalCostUsd) : <span className="text-fg/30">n/a</span>}</Td>
                 <Td num>
-                  {r.totalTokens > 0 ? formatTokens(r.totalTokens) : <span className="text-fg/30">—</span>}
+                  {r.totalTokens > 0 ? formatTokens(r.totalTokens) : <span className="text-fg/30">n/a</span>}
                 </Td>
                 <Td num>
                   {r.costPerSolvedTask !== null ? (
                     formatCost(r.costPerSolvedTask)
                   ) : (
-                    <span className="text-fg/30">—</span>
+                    <span className="text-fg/30">n/a</span>
                   )}
                 </Td>
                 <Td num>{formatDuration(r.avgDurationMs)}</Td>
                 <Td mono small>
-                  {topTools || <span className="text-fg/30">—</span>}
+                  {topTools || <span className="text-fg/30">n/a</span>}
                 </Td>
               </tr>
             );
@@ -350,8 +350,8 @@ function PerSuiteTable({ rows }: { rows: PerSuiteRow[] }) {
                 <Td num>
                   {r.passed}/{r.runs}
                 </Td>
-                <Td num>{r.totalCostUsd > 0 ? formatCost(r.totalCostUsd) : <span className="text-fg/30">—</span>}</Td>
-                <Td num>{r.totalTokens > 0 ? formatTokens(r.totalTokens) : <span className="text-fg/30">—</span>}</Td>
+                <Td num>{r.totalCostUsd > 0 ? formatCost(r.totalCostUsd) : <span className="text-fg/30">n/a</span>}</Td>
+                <Td num>{r.totalTokens > 0 ? formatTokens(r.totalTokens) : <span className="text-fg/30">n/a</span>}</Td>
                 <Td num>{formatDuration(r.totalDurationMs)}</Td>
               </tr>
             ))}
@@ -394,8 +394,8 @@ function PerComplexityTable({ rows }: { rows: PerComplexityRow[] }) {
                 <Td num>
                   {r.passed}/{r.runs}
                 </Td>
-                <Td num>{r.totalCostUsd > 0 ? formatCost(r.totalCostUsd) : <span className="text-fg/30">—</span>}</Td>
-                <Td num>{r.totalTokens > 0 ? formatTokens(r.totalTokens) : <span className="text-fg/30">—</span>}</Td>
+                <Td num>{r.totalCostUsd > 0 ? formatCost(r.totalCostUsd) : <span className="text-fg/30">n/a</span>}</Td>
+                <Td num>{r.totalTokens > 0 ? formatTokens(r.totalTokens) : <span className="text-fg/30">n/a</span>}</Td>
                 <Td num>{formatDuration(r.avgDurationMs)}</Td>
               </tr>
             ))}

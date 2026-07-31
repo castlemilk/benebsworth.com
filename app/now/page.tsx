@@ -111,7 +111,7 @@ export default function NowPage() {
           <AnimatedHeading text="What I'm doing now" as="h1" className="type-h1 mt-4" />
           <Reveal delay={160}>
             <p className="mt-7 max-w-2xl font-sans text-[1.2rem] leading-8 text-fg/70">
-              A snapshot of where my attention is right now — not a status feed, just the handful of
+              A snapshot of where my attention is right now. Not a status feed, just the handful of
               things that are front-of-mind this season.
             </p>
           </Reveal>

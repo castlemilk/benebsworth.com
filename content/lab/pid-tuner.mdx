@@ -2,7 +2,7 @@
 
 ## The core idea
 
-A **PID controller** is the workhorse of control engineering — the loop that keeps cruise control steady, a drone hovering, and a 3D printer's hotend at exactly 200°C. It looks at the error (setpoint minus measurement) and applies three corrections: proportional (push back on the error now), integral (chip away at accumulated drift), and derivative (anticipate where the error is heading). Three numbers, an entire discipline.
+A **PID controller** is the workhorse of control engineering: the loop that keeps cruise control steady, a drone hovering, and a 3D printer's hotend at exactly 200°C. It looks at the error (setpoint minus measurement) and applies three corrections: proportional (push back on the error now), integral (chip away at accumulated drift), and derivative (anticipate where the error is heading). Three numbers, an entire discipline.
 
 </LabSide>
 
@@ -14,34 +14,34 @@ The control law is a weighted sum of the present, the past, and the future of th
 u(t) = Kp·e(t) + Ki·∫e(τ)dτ + Kd·de/dt
 ```
 
-That signal `u(t)` drives the plant. Here the plant is a 2nd-order system — `G(s) = 4 / (s² + 2.828s + 4)`, a unit-gain Butterworth response with natural frequency ωₙ = 2 rad/s — which is a faithful stand-in for anything with inertia and a bit of damping: a motor, a heater, a suspension. Each gain pulls a different lever:
+That signal `u(t)` drives the plant. Here the plant is a 2nd-order system: `G(s) = 4 / (s² + 2.828s + 4)`, a unit-gain Butterworth response with natural frequency ωₙ = 2 rad/s: which is a faithful stand-in for anything with inertia and a bit of damping: a motor, a heater, a suspension. Each gain pulls a different lever:
 
 - **Proportional (Kp)**: force proportional to current error. More Kp means faster response but more overshoot, and on its own it always leaves a steady-state offset.
-- **Integral (Ki)**: accumulates error over time, driving the steady-state error to zero — at the cost of phase lag, so it adds overshoot and ringing.
+- **Integral (Ki)**: accumulates error over time, driving the steady-state error to zero: at the cost of phase lag, so it adds overshoot and ringing.
 - **Derivative (Kd)**: reacts to the *rate* of change, damping oscillation before it builds. It improves stability but amplifies measurement noise.
 
-The lower trace plots `u(t)` itself, clamped to ±10 — real actuators saturate, and watching the control effort hit its rails explains a lot of sluggish responses.
+The lower trace plots `u(t)` itself, clamped to ±10: real actuators saturate, and watching the control effort hit its rails explains a lot of sluggish responses.
 
 <LabSide effect="pid-tuner" height={280} params={{ Kp: 4, Ki: 0, Kd: 0, setpoint: 2 }} reverse={true} caption="Pure proportional control (Kp=4). Fast initial response, but sustained ringing and a persistent steady-state error.">
 
-Set Ki and Kd to zero and crank Kp up. The output overshoots, rings, and never quite lands on the setpoint — the classic limits of proportional-only control on display.
+Set Ki and Kd to zero and crank Kp up. The output overshoots, rings, and never quite lands on the setpoint: the classic limits of proportional-only control on display.
 
 </LabSide>
 
 ## Tuning without guesswork
 
-The gains interact in non-obvious ways, so blind fiddling rarely converges. The classic **Ziegler–Nichols** recipe gives a principled starting point: with Ki = Kd = 0, raise Kp until the loop oscillates with constant amplitude — that's the ultimate gain Kᵤ, with oscillation period Tᵤ. Then set:
+The gains interact in non-obvious ways, so blind fiddling rarely converges. The classic **Ziegler–Nichols** recipe gives a principled starting point: with Ki = Kd = 0, raise Kp until the loop oscillates with constant amplitude: that's the ultimate gain Kᵤ, with oscillation period Tᵤ. Then set:
 
 ```
 Kp = 0.6·Ku   Ki = 2·Kp/Tu   Kd = Kp·Tu/8
 ```
 
-It tends to overshoot, but it lands you in the right neighbourhood; fine-tune by hand from there. The deeper lesson is the universal trade-off — speed buys overshoot, integral action buys accuracy at the price of stability margin, and derivative action buys damping at the price of noise sensitivity. There is no free lunch, only a sweet spot.
+It tends to overshoot, but it lands you in the right neighbourhood; fine-tune by hand from there. The deeper lesson is the universal trade-off: speed buys overshoot, integral action buys accuracy at the price of stability margin, and derivative action buys damping at the price of noise sensitivity. There is no free lunch, only a sweet spot.
 
 ## The knobs
 
-- **Proportional Kp** — present-error gain. Raises responsiveness; too high and the loop rings or goes unstable.
-- **Integral Ki** — past-error gain. Eliminates steady-state offset; too high adds overshoot and slow oscillation.
+- **Proportional Kp**: present-error gain. Raises responsiveness; too high and the loop rings or goes unstable.
+- **Integral Ki**: past-error gain. Eliminates steady-state offset; too high adds overshoot and slow oscillation.
 - **Derivative Kd** — future-error (rate) gain. Damps overshoot; too high amplifies noise.
 - **Setpoint** — the target the plant output is driven toward; the step the controller must chase.
 

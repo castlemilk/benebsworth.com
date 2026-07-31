@@ -2,7 +2,7 @@
 
 ## The Core Idea
 
-Electrons in a crystal don't have a continuous range of allowed energies — they have **bands**: intervals of energy where states exist, separated by **gaps** where no states are allowed. This band structure determines whether a material is a conductor, semiconductor, or insulator. It's the single most important concept in solid-state physics.
+Electrons in a crystal don't have a continuous range of allowed energies: they have **bands**: intervals of energy where states exist, separated by **gaps** where no states are allowed. This band structure determines whether a material is a conductor, semiconductor, or insulator. It's the single most important concept in solid-state physics.
 
 </LabSide>
 
@@ -14,7 +14,7 @@ In a periodic potential `V(x) = V(x + a)`, the electron wavefunctions satisfy Bl
 ψₙₖ(x) = e^(ikx) · uₙₖ(x)
 ```
 
-where `uₙₖ(x)` has the same periodicity as the lattice. The energy `Eₙ(k)` forms continuous functions of k within each band n — but different bands are separated by gaps.
+where `uₙₖ(x)` has the same periodicity as the lattice. The energy `Eₙ(k)` forms continuous functions of k within each band n: but different bands are separated by gaps.
 
 For a 1D crystal with potential `V(x) = V₀ cos(2πx/a)`, we solve the Schrödinger equation using a plane-wave expansion. The Hamiltonian in the plane-wave basis is:
 
@@ -30,14 +30,14 @@ where `G = 2π/a` is the reciprocal lattice vector. Diagonalise this matrix for 
 
 The crystal potential `V₀` controls the band gap width. Drag the potential slider to see:
 
-- **V₀ → 0**: Free electrons. Bands overlap, no gaps — the "empty lattice" limit.
-- **V₀ → large**: Deep potential wells, tightly bound electrons. Wide gaps, narrow bands — the tight-binding limit.
+- **V₀ → 0**: Free electrons. Bands overlap, no gaps: the "empty lattice" limit.
+- **V₀ → large**: Deep potential wells, tightly bound electrons. Wide gaps, narrow bands: the tight-binding limit.
 
 </LabSide>
 
 ## Band gaps and material properties
 
-The **Fermi level** — the highest occupied energy at zero temperature — determines everything:
+The **Fermi level**, the highest occupied energy at zero temperature, determines everything:
 
 - **Conductor**: Fermi level cuts through a band. Electrons at the Fermi surface can accelerate → current flows.
 - **Insulator**: Fermi level sits in a large band gap (> 4 eV). Electrons can't reach the next band → no conduction.
@@ -47,7 +47,7 @@ The **Fermi level** — the highest occupied energy at zero temperature — dete
 
 ## The Brillouin zone
 
-Band structure is plotted within the **first Brillouin zone** — the range k ∈ [−π/a, π/a]. Beyond this, the bands repeat (translational symmetry of the reciprocal lattice). The zone boundaries (k = ±π/a) are where the most interesting physics happens: Bragg reflection opens the gaps.
+Band structure is plotted within the **first Brillouin zone**: the range k ∈ [−π/a, π/a]. Beyond this, the bands repeat (translational symmetry of the reciprocal lattice). The zone boundaries (k = ±π/a) are where the most interesting physics happens: Bragg reflection opens the gaps.
 
 </LabSide>
 

@@ -2,7 +2,7 @@
 
 ## The core idea
 
-The double pendulum is the simplest mechanical system that goes properly chaotic. Hang one pendulum from the tip of another, give it a push, and fully deterministic equations produce motion that looks indistinguishable from random. The beauty is that nothing is hidden: there is no noise, no luck. Yet two copies started a hair's breadth apart in angle will, within seconds, swing wildly out of sync. That is **sensitive dependence on initial conditions** — chaos in its purest, most visible form.
+The double pendulum is the simplest mechanical system that goes properly chaotic. Hang one pendulum from the tip of another, give it a push, and fully deterministic equations produce motion that looks indistinguishable from random. The beauty is that nothing is hidden: there is no noise, no luck. Yet two copies started a hair's breadth apart in angle will, within seconds, swing wildly out of sync. That is **sensitive dependence on initial conditions**: chaos in its purest, most visible form.
 
 </LabSide>
 
@@ -19,13 +19,13 @@ The `sin(θ₁ − θ₂)` coupling and the `cos(2θ₁ − 2θ₂)` in the deno
 
 ## Chaos is not randomness
 
-Here is the subtle part: the double pendulum is **deterministic**. Given exact initial conditions, its entire future is fixed. The trouble is that you can never measure those conditions exactly, and chaos relentlessly amplifies microscopic uncertainty into macroscopic unpredictability. Two trajectories starting δ₀ apart separate roughly like $\delta(t) \approx \delta_0\,e^{\lambda t}$, and a positive Lyapunov exponent λ is the formal definition of chaos. At low energy — small swings — the motion is nearly linear and well-behaved. Push the arms past horizontal and the nonlinear terms take over. This same mechanism is why weather forecasts decay after about ten days: not faulty physics, but a chaotic atmosphere outrunning our knowledge of its present state.
+Here is the subtle part: the double pendulum is **deterministic**. Given exact initial conditions, its entire future is fixed. The trouble is that you can never measure those conditions exactly, and chaos relentlessly amplifies microscopic uncertainty into macroscopic unpredictability. Two trajectories starting δ₀ apart separate roughly like $\delta(t) \approx \delta_0\,e^{\lambda t}$, and a positive Lyapunov exponent λ is the formal definition of chaos. At low energy: small swings: the motion is nearly linear and well-behaved. Push the arms past horizontal and the nonlinear terms take over. This same mechanism is why weather forecasts decay after about ten days: not faulty physics, but a chaotic atmosphere outrunning our knowledge of its present state.
 
 ## The knobs
 
-- **Pendulums** — how many copies to run (1–3). With more than one, they start almost identically and visibly diverge.
-- **Length** — the arm length, which sets the natural timescale of the swing.
-- **Gravity** — the gravitational pull; stronger gravity means faster, more energetic motion.
-- **Speed** — the simulation rate, fast-forwarding the integration.
+- **Pendulums**: how many copies to run (1–3). With more than one, they start almost identically and visibly diverge.
+- **Length**: the arm length, which sets the natural timescale of the swing.
+- **Gravity**: the gravitational pull; stronger gravity means faster, more energetic motion.
+- **Speed**: the simulation rate, fast-forwarding the integration.
 - **Trail** — how long the tip's path lingers. Longer trails reveal how the cluster of paths fans out over time.
 - **Color** — the accent hue for the trails and bobs.

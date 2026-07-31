@@ -1,6 +1,6 @@
 ## The brief
 
-Write a Python module that provides three functions: a constant-time string comparison, a PBKDF2-based password hash with a random salt, and a verify function. Include unit tests that demonstrate both success and failure paths.
+Write a Python module that provides three functions: a constant-time string comparison, a PBKDF2-based password hash with a random salt, and a verify function. Include unit tests that show both success and failure paths.
 
 This task is small in scope but dense in subtlety. The model must prioritise security properties over convenience or brevity.
 
@@ -13,7 +13,7 @@ This task is small in scope but dense in subtlety. The model must prioritise sec
 
 ## Scoring notes
 
-- **40% timing-attack resistance** — comparison leaks no information through short-circuiting or memory-access patterns.
+- **40% timing-attack resistance**: comparison leaks no information through short-circuiting or memory-access patterns.
 - **30% salt handling** — random, unique salts encoded safely in the stored hash.
 - **20% correctness** — verify returns true only for the exact original password.
 - **10% test coverage** — tests exercise real failure modes, not just the happy path.

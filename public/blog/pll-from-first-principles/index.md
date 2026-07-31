@@ -127,7 +127,7 @@ The lab uses a PFD-style phase detector, which is the most common choice in mode
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-The textbook lock range of a first-order PLL (no loop filter) is determined by the phase detector's linear range. A multiplier has a small linear range near lock and saturates for phase errors past roughly π/4. Once the loop slips out of this linear range, it can't re-acquire. This is the equivalent of a controller's saturation, and the fix is the same. A wider controller bandwidth (here, a higher loop filter gain) extends the lock range at the cost of noise rejection.
+The textbook lock range of a first-order PLL (no loop filter) is determined by the phase detector's linear range. A multiplier has a small linear range near lock and saturates for phase errors past roughly π/4. Once the loop slips out of this linear range, it can't re-lock. This is the equivalent of a controller's saturation, and the fix is the same. A wider controller bandwidth (here, a higher loop filter gain) extends the lock range at the cost of noise rejection.
 
 ## The VCO: integrator by design
 
@@ -198,8 +198,8 @@ The phase margin at the crossover is the stability margin. The textbook 45–60�
 Three concepts in PLL design, often confused:
 
 - **Lock range**: the range of frequencies the PLL can hold lock on, given that it is *already* locked. Set by the loop's linear range.
-- **Capture range** is the range of frequencies the PLL can acquire lock on, starting from *unlocked*. Smaller than the lock range; limited by the loop filter's bandwidth.
-- **Pull-in range** is the range from which the PLL will eventually acquire lock, after a slow transient. Larger than the capture range; set by the loop filter's natural frequency.
+- **Capture range** is the range of frequencies the PLL can lock on, starting from *unlocked*. Smaller than the lock range; limited by the loop filter's bandwidth.
+- **Pull-in range** is the range from which the PLL will eventually lock, after a slow transient. Larger than the capture range; set by the loop filter's natural frequency.
 
 > [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
 
@@ -227,7 +227,7 @@ The PLL lab at the top of this post is a sandbox for the dynamics described abov
 
 1. **Lock range vs. loop filter type.** Switch the filter dropdown between P, PI, and PID. With a small frequency step in the reference, watch the phase error settle. PI gives zero steady-state error; P does not. PID converges faster but with more overshoot.
 
-2. **Capture range vs. loop bandwidth.** With a chirped reference, the capture range is the maximum chirp slope at which the loop can still acquire. Increase the chirp rate until the loop fails. Notice that increasing K_p extends the capture range but the loop becomes noisier.
+2. **Capture range vs. loop bandwidth.** With a chirped reference, the capture range is the maximum chirp slope at which the loop can still lock. Increase the chirp rate until the loop fails. Notice that increasing K_p extends the capture range but the loop becomes noisier.
 
 3. **Stability and gain.** Crank K_p up until the loop starts oscillating. This is the **conditional stability** boundary of a Type-2 system. Reduce K_p until the oscillation just damps. That point is roughly your stability margin.
 

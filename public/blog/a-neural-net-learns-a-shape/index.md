@@ -44,7 +44,7 @@ The two-input case is the one you can actually see. Every example is an $(x_1, x
 
 > [LabSide component] Side-by-side lab layout: the same interactive lab effect as LabCanvas (referenced by its `effect` slug) rendered in one column with the post's prose (`children`) beside it, stacking vertically on mobile. `reverse` swaps the columns; `params` override defaults and `controls={false}` hides the effect's controls. Used to weave explanation and visualisation together rather than dropping the lab as an isolated figure. The rendered post has the live version; this is a placeholder for the markdown-only sibling.
 
-The lab on the right is a tiny network learning a hard dataset: two spirals wound into each other. Watch the background. That shading *is* the decision surface, the network's current guess at where one class ends and the other begins. At the start it's close to a flat smear across the plane, because the weights are random and the boundary hasn't learned to bend yet.
+The lab on the right is a tiny network learning a hard dataset: two spirals wound into each other. Watch the background. That shading *is* the decision surface, the network's current guess at where one class ends and the other starts. At the start it's close to a flat smear across the plane, because the weights are random and the boundary hasn't learned to bend yet.
 
 Leave it running. The surface warps, folds around one arm, then the other, and the two colours settle into interleaved bands. Nobody told the network "draw a spiral". It found that shape by being punished, over and over, for every point it got wrong.
 

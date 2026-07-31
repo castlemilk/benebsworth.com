@@ -40,7 +40,7 @@ export function GET() {
     '> Software, platform & hardware engineer based in Melbourne, Australia. ' +
       'Writing on Kubernetes, distributed systems, electrical engineering, ' +
       'signal processing, and AI. The site also hosts an interactive lab of ' +
-      'parameterised simulations — each lab is a working canvas-based model ' +
+      'parameterised simulations: each lab is a working canvas-based model ' +
       'with live controls, on a wide range of physics, math, and engineering topics.',
   )
   lines.push('')
@@ -51,7 +51,7 @@ export function GET() {
   for (const u of [
     { name: 'Home', url: '/', desc: 'Landing page with the latest post and a random lab matrix.' },
     { name: 'About', url: '/about/', desc: 'Career timeline, talks, skills, certifications.' },
-    { name: 'Now', url: '/now/', desc: "What Ben is focused on right now — work, building, learning, writing." },
+    { name: 'Now', url: '/now/', desc: "What Ben is focused on right now: work, building, learning, writing." },
     { name: 'Uses', url: '/uses/', desc: 'Tools, languages, platform stack and how this site is built.' },
     { name: 'Projects', url: '/projects/', desc: 'Open-source and side projects.' },
     { name: 'Blog', url: '/blog/', desc: 'Long-form writing with interactive figures.' },

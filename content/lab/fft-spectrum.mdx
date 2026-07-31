@@ -2,7 +2,7 @@
 
 ## The core idea
 
-Every signal is a sum of sinusoids. The **Fast Fourier Transform (FFT)** is the algorithm that performs this decomposition — turning a window of time-domain samples into a set of frequency bins, each holding the energy at one frequency. What makes it beautiful is the cost: the FFT does in O(N log N) what the naive sum does in O(N²), which is the difference between a real-time analyser and a slideshow.
+Every signal is a sum of sinusoids. The **Fast Fourier Transform (FFT)** is the algorithm that performs this decomposition: turning a window of time-domain samples into a set of frequency bins, each holding the energy at one frequency. What makes it beautiful is the cost: the FFT does in O(N log N) what the naive sum does in O(N²), which is the difference between a real-time analyser and a slideshow.
 
 </LabSide>
 
@@ -14,7 +14,7 @@ The Discrete Fourier Transform (DFT) maps N samples `x[0], …, x[N−1]` to N c
 X[k] = Σₙ x[n] · e^(−j2πkn/N)     for k = 0, …, N−1
 ```
 
-Each `X[k]` is a complex number: its magnitude is the energy at frequency `f = k·fs/N`, its phase the timing. Computed directly that double loop is N² multiply-adds. The FFT instead exploits the periodicity of the complex exponential to split each DFT into two half-size DFTs and recurses — the Cooley–Tukey radix-2 trick. This visualiser runs a 2048-point FFT (11 recursion stages) over a 48 kHz signal, so it does ~22,500 operations instead of ~4.2 million per frame — roughly 180× fewer.
+Each `X[k]` is a complex number: its magnitude is the energy at frequency `f = k·fs/N`, its phase the timing. Computed directly that double loop is N² multiply-adds. The FFT instead exploits the periodicity of the complex exponential to split each DFT into two half-size DFTs and recurses: the Cooley-Tukey radix-2 trick. This visualiser runs a 2048-point FFT (11 recursion stages) over a 48 kHz signal, so it does ~22,500 operations instead of ~4.2 million per frame: roughly 180× fewer.
 
 The resulting 1024 magnitude bins are folded into 256 bars spread on a **log frequency axis** from 20 Hz to 20 kHz, which is why a 440 Hz tone and its harmonics sit where your ear would put them.
 
@@ -24,9 +24,9 @@ The resulting 1024 magnitude bins are folded into 256 bars spread on a **log fre
 
 The shape of a signal in time and the shape of its spectrum are two views of the same thing:
 
-- **Sine**: a single peak — all energy at the fundamental.
+- **Sine**: a single peak: all energy at the fundamental.
 - **Square / Triangle**: odd harmonics only; square falls off as 1/n, triangle as 1/n², so the triangle's spectrum dies away far faster.
-- **Sawtooth**: every harmonic at 1/n — the richest line spectrum.
+- **Sawtooth**: every harmonic at 1/n: the richest line spectrum.
 - **Two tones**: two clean peaks, the textbook test of frequency resolution.
 - **Chirp**: a frequency that sweeps upward smears its energy across a whole band.
 
@@ -34,7 +34,7 @@ The shape of a signal in time and the shape of its spectrum are two views of the
 
 ## Pulling signals out of noise
 
-A periodic signal piles all its energy into a few bins; broadband noise spreads thinly across every bin. So the FFT acts as a matched comb — even when the time-domain trace looks like static, the peak still pokes above the floor. The **processing gain** of an N-point FFT is about `10·log₁₀(N/2)` dB, so this 2048-point transform buys roughly 30 dB. The catch is **spectral leakage**: when a tone's period doesn't divide the window evenly, its energy bleeds into neighbours. A tapering window fixes most of it — this renderer applies a **Hann window** before every transform, trading a slightly wider peak for far less smearing.
+A periodic signal piles all its energy into a few bins; broadband noise spreads thinly across every bin. So the FFT acts as a matched comb — even when the time-domain trace looks like static, the peak still pokes above the floor. The **processing gain** of an N-point FFT is about `10·log₁₀(N/2)` dB, so this 2048-point transform buys roughly 30 dB. The catch is **spectral leakage**: when a tone's period doesn't divide the window evenly, its energy bleeds into neighbours. A tapering window fixes most of it: this renderer applies a **Hann window** before every transform, trading a slightly wider peak for far less smearing.
 
 ## The knobs
 

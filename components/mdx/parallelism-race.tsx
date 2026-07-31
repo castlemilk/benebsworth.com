@@ -167,7 +167,7 @@ export function ParallelismRace() {
         >
           {/* ── RNN row ───────────────────────────────────────────── */}
           <text x={MARGIN} y={42} className="font-mono" style={{ fontSize: 12.5, fill: 'var(--color-fg)', fontWeight: 600 }}>
-            RNN — one word at a time
+            RNN: one word at a time
           </text>
           <text x={VB_W - MARGIN} y={42} textAnchor="end" className="font-mono" style={{ fontSize: 11.5, fill: accent }}>
             {rnnDone ? `done · ${n} steps` : `step ${Math.min(rnnStepsDone + (running ? 1 : 0), n)} / ${n}`}

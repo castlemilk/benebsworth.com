@@ -1,5 +1,5 @@
 ---
-title: The Overland Track in winter — a trail guide
+title: 'The Overland Track in winter: a trail guide'
 date: 2026-06-29T00:00:00.000Z
 description: >-
   Tasmania's great alpine walk in the quiet of winter: eight days from Cradle
@@ -38,13 +38,13 @@ The standard Overland is a one-way, six-day summer traverse from Ronny Creek to 
 
 ## The route
 
-The track runs south through the heart of Cradle Mountain–Lake St Clair National Park, a slice of the Tasmanian Wilderness World Heritage Area. You start in the button-grass flats of Cradle Valley, climb onto the alpine plateau on the first morning, then spend the next week traversing south: across moorland and tarns, through myrtle-beech rainforest, over the exposed saddle of Pelion Gap, beneath the Du Cane Range, and finally down to Lake St Clair. In winter the shape of the country does not change, but the colour does — snow on the dolerite, ice on the boardwalks, and the track reduced to a thin line between white hills.
+The track runs south through the heart of Cradle Mountain–Lake St Clair National Park, a slice of the Tasmanian Wilderness World Heritage Area. You start in the button-grass flats of Cradle Valley, climb onto the alpine plateau on the first morning, then spend the next week traversing south: across moorland and tarns, through myrtle-beech rainforest, over the exposed saddle of Pelion Gap, beneath the Du Cane Range, and finally down to Lake St Clair. In winter the shape of the country does not change, but the colour does: snow on the dolerite, ice on the boardwalks, and the track reduced to a thin line between white hills.
 
 > [TrailMap component] Bespoke route map for a hike — a stylised topographic plate (not a geographic map) showing the trail as a smooth line through numbered waypoints over a faint contour backdrop, with a peak marker on the high point and an elevation-profile strip beneath. Driven by the hike's normalised waypoints and per-hike accent colour. The `hike` prop names a hike from content/hiking.ts to auto-bind its waypoints; alternatively pass explicit `waypoints`. The rendered post has the live, hoverable version.
 
 ## Day by day
 
-These six stages are the spine of the route, but the numbers below reflect my winter timing — longer days, slower walking, and side trips folded in. If you are walking the standard summer itinerary you can compress days two and three, and skip the extra night at Kia Ora.
+These six stages are the spine of the route, but the numbers below reflect my winter timing: longer days, slower walking, and side trips folded in. If you are walking the standard summer itinerary you can compress days two and three, and skip the extra night at Kia Ora.
 
 > [Stages component] Wrapper for an ordered list of <Stage> day-segments, rendered as a vertical timeline with a topographic contour spine. Use it to lay out a trail day by day.
 
@@ -52,7 +52,7 @@ These six stages are the spine of the route, but the numbers below reflect my wi
 
 The shuttle from Launceston was meant to drop us at Ronny Creek around 6 am, but black ice had closed the road beyond the information centre. We walked the extra kilometre or so to the trailhead in the half-dark, boots crunching on frozen gravel. It was a rough start, but it also meant I met the group I would walk with for the rest of the trip: three friends and two of their sons, all of them faster and funnier than I had any right to hike with.
 
-I had worried about deep Tasmanian winter snow — stories of walkers post-holing for days — but the cover was light and beautiful, more like a hard frost than an alpine blizzard. A little rain and snow fell in the first hour, then the sky cleared. We stopped at the Overland Track signpost for the obligatory photo, then climbed past Crater Lake and up the chained pitch to Marions Lookout.
+I had worried about deep Tasmanian winter snow. Stories of walkers post-holing for days had filled my head, but the cover was light and beautiful, more like a hard frost than an alpine blizzard. A little rain and snow fell in the first hour, then the sky cleared. We stopped at the Overland Track signpost for the obligatory photo, then climbed past Crater Lake and up the chained pitch to Marions Lookout.
 
 > [TrailFigure component] A real-photo figure for a trail guide: a single bordered photo (a co-located path or an absolute GCS URL) with an optional accent meta eyebrow (e.g. "Day 3 · Pas de Chèvres"), a caption and a credit. The photo-led counterpart to the researched Landmark/Stop cards — drop one inline for a single beat, or wrap several in a <TrailGrid> for a 2-up strip of trip photos. The rendered post shows the actual image.
 
@@ -74,7 +74,7 @@ It was bad enough that my first thought was the Garmin inReach Mini 2 in my pack
 
 > [TrailFigure component] A real-photo figure for a trail guide: a single bordered photo (a co-located path or an absolute GCS URL) with an optional accent meta eyebrow (e.g. "Day 3 · Pas de Chèvres"), a caption and a credit. The photo-led counterpart to the researched Landmark/Stop cards — drop one inline for a single beat, or wrap several in a <TrailGrid> for a 2-up strip of trip photos. The rendered post shows the actual image.
 
-We stopped for lunch beside a half-frozen lake with Barn Bluff rising behind it, then continued on to Lake Windermere Hut. That afternoon, with the knee throbbing and the day still clear, I waded into the lake. It was July in Tasmania, so "swim" is a generous word — more of a gasp, a float, and a rapid exit. But the cold took the swelling down better than anything in my first-aid kit, and the reset was worth the shock.
+We stopped for lunch beside a half-frozen lake with Barn Bluff rising behind it, then continued on to Lake Windermere Hut. That afternoon, with the knee throbbing and the day still clear, I waded into the lake. It was July in Tasmania, so "swim" is a generous word: more of a gasp, a float, and a rapid exit. But the cold took the swelling down better than anything in my first-aid kit, and the reset was worth the shock.
 
 > [Checkpoint component] Inline milestone/checkpoint marker, usable in prose or inside a <Stage>: an icon (pass, summit, water, junction, viewpoint, camp, hut or generic milestone), a name, an optional altitude, and an optional note. Marks the key points along a day's walk.
 
@@ -88,7 +88,7 @@ I gave myself a rest morning at Windermere. The lake was perfectly still at dawn
 
 > [TrailFigure component] A real-photo figure for a trail guide: a single bordered photo (a co-located path or an absolute GCS URL) with an optional accent meta eyebrow (e.g. "Day 3 · Pas de Chèvres"), a caption and a credit. The photo-led counterpart to the researched Landmark/Stop cards — drop one inline for a single beat, or wrap several in a <TrailGrid> for a 2-up strip of trip photos. The rendered post shows the actual image.
 
-The longest day of the standard route, but not the hardest. The track runs south across open moor, drops through myrtle-beech rainforest to Frog Flats — the lowest point on the whole walk — and then climbs gently back to Pelion Plains. Mount Oakleigh's dolerite organ pipes come into view long before you reach the hut, and they dominated the evening light.
+The longest day of the standard route, but not the hardest. The track runs south across open moor, drops through myrtle-beech rainforest to Frog Flats: the lowest point on the whole walk: and then climbs gently back to Pelion Plains. Mount Oakleigh's dolerite organ pipes come into view long before you reach the hut, and they dominated the evening light.
 
 > [Checkpoint component] Inline milestone/checkpoint marker, usable in prose or inside a <Stage>: an icon (pass, summit, water, junction, viewpoint, camp, hut or generic milestone), a name, an optional altitude, and an optional note. Marks the key points along a day's walk.
 
@@ -98,7 +98,7 @@ The longest day of the standard route, but not the hardest. The track runs south
 
 <Stage day={4} from="New Pelion" to="Kia Ora" distanceKm={8.6} ascentM={300} descentM={300} timeHours="4–6 h" terrain="Rainforest climb to Pelion Gap, then down to Kia Ora.">
 
-This was the day I built the trip around. I left New Pelion before dawn to climb Mount Oakleigh for sunrise, reaching the summit while the light was still thin and pink. There was enough phone reception at the top for one brief call, and I used it to call my then-girlfriend — now wife — Jess. It felt like a small miracle, a private conversation from the top of a mountain in the middle of Tasmania.
+This was the day I built the trip around. I left New Pelion before dawn to climb Mount Oakleigh for sunrise, reaching the summit while the light was still thin and pink. There was enough phone reception at the top for one brief call, and I used it to call my then-girlfriend: now wife: Jess. It felt like a small miracle, a private conversation from the top of a mountain in the middle of Tasmania.
 
 By the time I got back to the hut the group was ready to move. We packed up, climbed through rainforest to Pelion Gap, and dropped down to Kia Ora Hut in the early afternoon. The gap itself is a wind-scoured saddle between Mount Ossa and Mount Pelion East, and the junction signposts point off in three directions: up, up, and down.
 
@@ -112,7 +112,7 @@ By the time I got back to the hut the group was ready to move. We packed up, cli
 
 <Stage day={5} from="Kia Ora" to="Bert Nichols (Windy Ridge)" distanceKm={9.6} ascentM={300} descentM={350} timeHours="4–5 h" terrain="Waterfall side trips, Du Cane Gap, and descent to Windy Ridge.">
 
-It was my birthday, and I did not remember until I got back to the hut. I spent the morning on a double side-quest: Mount Ossa first, then Mount Pelion East, returning to Kia Ora for lunch and a rest before pushing on. That is only possible if you are staying at Kia Ora a second night, which I was — it made the day feel generous rather than rushed.
+It was my birthday, and I did not remember until I got back to the hut. I spent the morning on a double side-quest: Mount Ossa first, then Mount Pelion East, returning to Kia Ora for lunch and a rest before pushing on. That is only possible if you are staying at Kia Ora a second night, which I was: it made the day feel generous rather than rushed.
 
 Mount Ossa is the reason many people walk the Overland. It is Tasmania's highest summit at 1,617 metres, and on a clear day the view takes in most of the park's named peaks. The route from Pelion Gap climbs through a scree gully and finishes on exposed boulders; under snow the rock is slick, and the drop on either side is real. Mount Pelion East is shorter and quieter, a good second summit if the legs are willing.
 
@@ -130,7 +130,7 @@ After lunch we packed up and walked the waterfall section of the main track: pas
 
 <Stage day={6} from="Bert Nichols" to="Narcissus · Lake St Clair" distanceKm={9.0} ascentM={120} descentM={330} timeHours="3 h" terrain="Mostly downhill forest walk to the lake shore.">
 
-The last morning was easy walking through forest to Narcissus Hut. I had planned to walk the full lakeshore track to Cynthia Bay, but the group was taking the ferry and I decided to join them. The lakeshore route is reputedly muddy and less well maintained, and after eight days — and a bruised knee — the ferry was the smarter finish. It also gave us time to make the shuttle back to Launceston and find a proper meal.
+The last morning was easy walking through forest to Narcissus Hut. I had planned to walk the full lakeshore track to Cynthia Bay, but the group was taking the ferry and I decided to join them. The lakeshore route is reputedly muddy and less well maintained, and after eight days and a bruised knee, the ferry was the smarter finish. It also gave us time to make the shuttle back to Launceston and find a proper meal.
 
 > [Checkpoint component] Inline milestone/checkpoint marker, usable in prose or inside a <Stage>: an icon (pass, summit, water, junction, viewpoint, camp, hut or generic milestone), a name, an optional altitude, and an optional note. Marks the key points along a day's walk.
 
@@ -148,7 +148,7 @@ The main track is the skeleton; the side trips are the reason you carry a light 
 
 > [Quest component] A "side-quest" card: an optional detour or side-trip off the main trail (a side summit, a hidden gorge), framed playfully but informatively with the extra distance, ascent and time it costs, how much harder it is, and the payoff for doing it.
 
-Leaves from Pelion Gap on the climb up from New Pelion. The route contours around Mount Doris, then climbs a scree gully and finishes on exposed boulders. Under snow the boulders are treacherous — save it for a settled, clear day. I combined it with Mount Pelion East in a single long birthday morning, but most walkers should allow a full day.
+Leaves from Pelion Gap on the climb up from New Pelion. The route contours around Mount Doris, then climbs a scree gully and finishes on exposed boulders. Under snow the boulders are treacherous, so save it for a settled, clear day. I combined it with Mount Pelion East in a single long birthday morning, but most walkers should allow a full day.
 
 > [Quest component] A "side-quest" card: an optional detour or side-trip off the main trail (a side summit, a hidden gorge), framed playfully but informatively with the extra distance, ascent and time it costs, how much harder it is, and the payoff for doing it.
 

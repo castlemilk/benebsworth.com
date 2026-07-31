@@ -17,7 +17,7 @@ takeaways:
 
 # Overview
 
-Through this article we will explore the current ecosystem of pipelining tooling and then demonstrate an end-to-end example of a Tekton based pipeline, as well as how we can enable things like **GitHub Webhooks** for triggering pipelines, and the tooling available for visualizing the state of our pipeline.
+Through this article we will explore the current ecosystem of pipelining tooling and then show an end-to-end example of a Tekton based pipeline, as well as how we can enable things like **GitHub Webhooks** for triggering pipelines, and the tooling available for visualizing the state of our pipeline.
 
 The pipelining we'll explore today acts to implement two hemispheres of application development and deployment - *Continuous Integration* (linting, testing, and build artifacts) and *Continuos Delivery* (Deploying our application and post-deployment validation/assessment).
 
@@ -50,9 +50,9 @@ So if we do a brief summary of each option i've consider "kubernetes-native", we
 * **ArgoCD** - A fast growing pipeline/workflow toolset. Providing a clean model for representing an applications life cycle through the available CRD's [Application](https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/application.yaml) and [Workflow](https://github.com/argoproj/argo/tree/master/examples#hello-world), these primitives provide an incredibly complete mechanism for deploying and managing a variety of Kubernetes based applications with potentially different requirements/setups. The *Argo Project* tooling also has nice integrations with common templating tools such as Helm,Skaffold, and Jsonnet. With these capabilities, ArgoCD seems to be the best solution available for enabling a production-grade CI/CD pipelining solution flexible enough to support most environments. Some more information on project layout and how to get started can be found [here](https://github.com/argoproj/argo-cd/blob/master/docs/getting_started.md).
 * **Tekton** - Providing primitive constructs for developing rich pipelining capabilities, where higher level abstractions and/or frameworks could be constructed on top. You could think of Tekton as providing a similar capability as *Argo Workflows*. The Tekton project has a number of actively developing tools within the [GitHub organization](https://github.com/tektoncd), looking to providing the peripheral capabilities like trigger/eventing, dashboard/ui and a cli. With backing from Google/GoogleCloudPlatform the project will hopefully continue to be extended and mature into having a stronger awareness of application delivery. Or in the meantime using something like Skaffold or ArgoCD's tooling via Tekton could be sufficient. I can see Tekton becoming a defacto standard for teams looking for a hybrid cloud solution for pipelining, where you can literally run it anywhere Kubernetes runs.
 * **Spinnaker** - Perhaps one of the most mature and fully featured solutions. Having been birthed out of the need of scaling to Netflix's size, it has a lot of features which meet a larger enterprises requirements. Consequently it is a fairly complex solution to run, comprised of over [10 microservices](https://www.spinnaker.io/reference/architecture/) which enable the end-to-end capability. This can all be deployed within a Kubernetes cluster and the [Kubernetes V2 provider](https://www.spinnaker.io/reference/providers/kubernetes-v2/) enables Spinnaker to manage a Kubernetes based application deployment environment natively. If you are within an organization looking to scale a pipelining solution across a number of Kubernetes cluster and a large number of applications, this could be a good fit.
-* **WeaveFlux** - With an strong focus on enabling [GitOps](https://www.weave.works/technologies/gitops/) workflows, WeaveFlux provides a structured way of managing the promotion of their concept of a `HelmRelease` through different environments. The `HelmRelease` is a [CRD](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) which is consumed by the WeaveFlux operation to work out which Helm chart to use and how it should release an associated version of an application. The GitOps workflow has some expectations around effectuating a Git repository with changes occurring in the release, so you must give access to your deployment repository. Additionally, it uses Helm's Tiller component, this has some security concerns - where the tiller component must have escalated privileges to deploy, which is harder to control via RBAC - something to be mitigated in [Helm v3](https://helm.sh/blog/helm-3-preview-pt2/). Some more information on a project layout and how to get started can be found [here](https://github.com/fluxcd/helm-operator-get-started)
+* **WeaveFlux** - With an strong focus on enabling [GitOps](https://www.weave.works/technologies/gitops/) workflows, WeaveFlux provides a structured way of managing the promotion of their concept of a `HelmRelease` through different environments. The `HelmRelease` is a [CRD](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) which is consumed by the WeaveFlux operation to work out which Helm chart to use and how it should release an associated version of an application. The GitOps workflow has some expectations around effectuating a Git repository with changes occurring in the release, so you must give access to your deployment repository. Also, it uses Helm's Tiller component, this has some security concerns - where the tiller component must have escalated privileges to deploy, which is harder to control via RBAC - something to be mitigated in [Helm v3](https://helm.sh/blog/helm-3-preview-pt2/). Some more information on a project layout and how to get started can be found [here](https://github.com/fluxcd/helm-operator-get-started)
 
-With these summaries in mind, we've got a practical implementation of one of these options (Tekton) below. The idea is to expand on each of these described options in more detail and also demonstrate the end-to-end capability available on the other options. All captured within the [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd)
+With these summaries in mind, we've got a practical implementation of one of these options (Tekton) below. The idea is to expand on each of these described options in more detail and also show the end-to-end capability available on the other options. All captured within the [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd)
 
 ## Tekton
 
@@ -92,7 +92,7 @@ The *Tekton* Dashboard provides visibility into the state of your `TaskRrun`, `C
 
 To install the tekton dashboard component we did need consider a few pre-requisites or dependencies to enable us to make the deployed dashboard available to external users. In the current repository we enable access via Istio, using something as complex as Istio may be unnecessary, however we also utilise Istio with Knative for the webhook trigger capability we describe later in the article - this allows us to trigger `PipelineRun`'s on GitHub PR's.
 
-In order to install istio run the following from the root of the [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd) repository:
+To install istio run the following from the root of the [kubernetes-cicd](https://github.com/castlemilk/kubernetes-cicd) repository:
 
 ```bash
 make components.istio.install CLUSTER=[local|gke|...]
@@ -124,9 +124,9 @@ Once everything has been successfully deployed you'll be able to navigate to you
 
 ### Tekton Webhook Extension
 
-As part of the experimental feature development actively occurring within the Tekton organization there's the capability to add the **Webhook Extension** onto the Tekton Dashboard UI. This extension then provides the capability to create and manage **GitHub Webhook's* via the Tekton Dashboard. This has some dependencies on [Knative](https://knative.dev/docs) in order to provide a serverless webhook endpoint for GitHub to hit, when hit it will trigger the creation of a `PipelineRun` which then executes your defined `Pipeline`.
+As part of the experimental feature development actively occurring within the Tekton organization there's the capability to add the **Webhook Extension** onto the Tekton Dashboard UI. This extension then provides the capability to create and manage **GitHub Webhook's* via the Tekton Dashboard. This has some dependencies on [Knative](https://knative.dev/docs) to provide a serverless webhook endpoint for GitHub to hit, when hit it will trigger the creation of a `PipelineRun` which then executes your defined `Pipeline`.
 
-In order to enable this we'll first install **Knative**, run the following:
+To enable this we'll first install **Knative**, run the following:
 
 ```bash
 make components.knative.install
@@ -150,7 +150,7 @@ This will restart your Tekton Dashboard `Pod` to have the changes take effect, o
 
 &nbsp;
 
-This extension will now give us to ability to create a webhook on a target repository. In order to do this, we specify the following:
+This extension will now give us to ability to create a webhook on a target repository. To do this, we specify the following:
 
 * target repository to create the webhook on
 * the required app-credentials token, created from your github profile [here](https://github.com/settings/tokens)
@@ -194,7 +194,7 @@ Where each labeled component is described as follows:
 1. **GitHub Events** - Tekton is capable of auto-configuration our target GitHub repository to hit a webhook endpoint on generated events such as `pull_request` and `push`.
 2. **Webhook Listener** - A [knative](https://knative.dev/docs/) based service, which ephemerally spins up when the webhook endpoint is hit by GitHub. This listener service will be responsible for creating a `PipelineRun` from the received GitHub event.
 3. **PipelineRun** - A core primitive in *Tekton* which is responsible for running a defined `Pipeline` resource. Both being represented as [Custom Resource Definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) and applied to our Kubernetes cluster.
-4. **Linting** - In order to ensure the quality of code being developed and the formatting and idiosyncrasies of the given languages used. We can also enforce certain syntaxes for things like `Dockerfile`'s, Kubernetes resources. In this case we are using [golangci-lint](https://github.com/golangci/golangci-lint) metalinter.
+4. **Linting** - To make sure the quality of code being developed and the formatting and idiosyncrasies of the given languages used. We can also enforce certain syntaxes for things like `Dockerfile`'s, Kubernetes resources. In this case we are using [golangci-lint](https://github.com/golangci/golangci-lint) metalinter.
 5. **Unit Tests** - These tests are being run during the pipeline, validating the functionality of specific functions within our application
 6. **Integration Tests** - A deeper end-to-end validation of the expected functionality is tested during the *Integration Testing* phase, these will check the developed API's responses meet a contact/expected payload. This runs via the in build golang testing capability. It will stimulate the application to make real interactions with any external systems - such as databases, other API's etc.
 7. **Build Backend Application (Golang)** - The golang app is built using [Kaniko](https://github.com/GoogleContainerTools/kaniko). This gives us a *Dockerless* and *Rootless* build capability of images, as well as some nice remote cache optimization options on a per-layer basis.

@@ -131,7 +131,7 @@ export function TableOfContents({
   //      to see every intermediate frame.
   //   2. Reduced motion. `behavior: 'auto'` is automatically
   //      instant for users with `prefers-reduced-motion: reduce`.
-  //      The `scroll-margin-top` on each heading ensures the target
+  //      The `scroll-margin-top` on each heading keeps the target
   //      lands 128px below the top — just below the sticky
   //      breadcrumb, so it's visible without further scrolling.
   const onClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {

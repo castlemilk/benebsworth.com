@@ -41,7 +41,7 @@ This is a article on how to NOT wake up with a massive GCP bill by forgetting yo
 
 ## Enable API's
 
-In order to start lets enable the required APIs we'll be using here.
+To start lets enable the required APIs we'll be using here.
 
 Firstly enable Google Kubernetes Engine,
 
@@ -70,7 +70,7 @@ gcloud beta container clusters create example \
 
 ## Create IAM
 
-In order to authorize our Cloud Scheduler instance to successfully interact with the GKE API, we need to create a *Service Account* with the correct IAM role permitting specifically the `container.clusters.update` permission. We can achieve by running the following commands
+To authorize our Cloud Scheduler instance to successfully interact with the GKE API, we need to create a *Service Account* with the correct IAM role permitting specifically the `container.clusters.update` permission. We can achieve by running the following commands
 
 ### create custom role
 
@@ -109,7 +109,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 
 ## Create Cloud Scheduler Job
 
-Finally the job can be created using our created *Service Account*. *Cloud Scheduler* uses the standard [CronJob](https://crontab.guru) syntax, I've used a 6 hour interval to be safe - ensuring the cluster gets scaled down regularly. The beauty of Kubernetes its so easy to stand everything back up its fairly trivial to just scale the cluster back up when required.
+Finally the job can be created using our created *Service Account*. *Cloud Scheduler* uses the standard [CronJob](https://crontab.guru) syntax, I've used a 6 hour interval to be safe - making sure the cluster gets scaled down regularly. The beauty of Kubernetes its so easy to stand everything back up its fairly trivial to just scale the cluster back up when required.
 
 ```text
 gcloud beta scheduler jobs create http gke-cluster-auto-scale-down \
@@ -127,6 +127,6 @@ Now you should be cooking with gas 🔥, experimenting with the confidence of ne
 
 ## Recap
 
-We've created a least-privileged mode of auto-scaling our GKE clusters down, ensuring we don't exceed our budgets unnecessarily. This is a basic prototype of the capability of *Cloud Scheduler*, I would advise checking out Terraform for a more robust and templated structure for your GCP resources.
+We've created a least-privileged mode of auto-scaling our GKE clusters down, making sure we don't exceed our budgets unnecessarily. This is a basic prototype of the capability of *Cloud Scheduler*, I would advise checking out Terraform for a more robust and templated structure for your GCP resources.
 
-Additionally we've also enabled [preemptible VMs](https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms) for our GKE cluster, which further reduces costing for a cluster used for prototyping and development.
+We've also enabled [preemptible VMs](https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms) for our GKE cluster, which reduces costs for a cluster used for prototyping and development.

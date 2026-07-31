@@ -82,7 +82,7 @@ This is the equation the lab is drawing. Each $c_n$ is a complex number, and a c
 
 > [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
 
-A complex number is a circle waiting to spin. Its magnitude is the radius, its argument is where the spin begins.
+A complex number is a circle waiting to spin. Its magnitude is the radius, its argument is where the spin starts.
 
 ## Computing the coefficients by projection
 

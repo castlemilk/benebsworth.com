@@ -18,19 +18,19 @@ dz/dt = x y − β z
 - **ρ** (Rayleigh number) sets the strength of convection. At ρ = 28 the flow is fully chaotic.
 - **β** is a geometric factor. Classic value: 8/3.
 
-The nonlinear $xz$ and $xy$ terms are what matter — they fold the flow back on itself. The trajectory is *bounded* (it never escapes) yet *non-periodic* (it never repeats), so it traces out a fractal surface of zero volume called a **strange attractor**. Here it's integrated with RK4 and the camera spins slowly so the depth reads.
+The nonlinear $xz$ and $xy$ terms are what matter: they fold the flow back on itself. The trajectory is *bounded* (it never escapes) yet *non-periodic* (it never repeats), so it traces out a fractal surface of zero volume called a **strange attractor**. Here it's integrated with RK4 and the camera spins slowly so the depth reads.
 
 </LabSide>
 
 ## What to watch for
 
-For ρ < 1 the only resting state is the motionless origin. Past ρ ≈ 24.06 the fixed points lose stability and the butterfly emerges: two lobes joined by a narrow bridge, the point looping one a few times before flipping — unpredictably — to the other.
+For ρ < 1 the only resting state is the motionless origin. Past ρ ≈ 24.06 the fixed points lose stability and the butterfly emerges: two lobes joined by a narrow bridge, the point looping one a few times before flipping: unpredictably: to the other.
 
-The deeper insight lives in the **two trajectories**. They start 10⁻⁴ apart, share for a while, then peel away exponentially. That exponential sensitivity (a positive Lyapunov exponent) is the "butterfly effect" made literal, and it's the real reason weather forecasts decay over a couple of weeks. The same shape recurs far beyond meteorology — in lasers, dynamos, chemical oscillators and electronic circuits — wherever simple feedback turns nonlinear.
+The deeper insight lives in the **two trajectories**. They start 10⁻⁴ apart, share for a while, then peel away exponentially. That exponential sensitivity (a positive Lyapunov exponent) is the "butterfly effect" made literal, and it's the real reason weather forecasts decay over a couple of weeks. The same shape recurs far beyond meteorology: in lasers, dynamos, chemical oscillators and electronic circuits — wherever simple feedback turns nonlinear.
 
 ## The knobs
 
-- **Trajectories** — how many points to integrate at once (1–5). Two or more reveals the divergence; each starts a hair further from the attractor.
-- **ρ** — the Rayleigh number (10–40). Drag it down toward 24 to watch chaos collapse into a steady orbit, or up to deform the wings.
-- **Speed** — integration step and spin rate together (0.2–4). Slow it to follow a single loop; speed it up to fill the attractor fast.
+- **Trajectories**, how many points to integrate at once (1 to 5). Two or more reveals the divergence; each starts a hair further from the attractor.
+- **ρ**, the Rayleigh number (10 to 40). Drag it down toward 24 to watch chaos collapse into a steady orbit, or up to deform the wings.
+- **Speed**, integration step and spin rate together (0.2 to 4). Slow it to follow a single loop; speed it up to fill the attractor fast.
 - **Trail** — how quickly the path fades (0.02–0.3). Low values leave long ghostly trails; high values keep only the freshest arc.

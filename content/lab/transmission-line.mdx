@@ -2,7 +2,7 @@
 
 ## The core idea
 
-Time Domain Reflectometry is how engineers "look down" a transmission line without cutting it open. You launch a fast voltage step into one end and watch what comes back. The amplitude and sign of the echo tell you exactly what waits at the far end — **no reflection means matched**, an **inverted echo means a short**, an **in-phase echo means an open**, and anything in between maps to an impedance that is neither 0 nor ∞.
+Time Domain Reflectometry is how engineers "look down" a transmission line without cutting it open. You launch a fast voltage step into one end and watch what comes back. The amplitude and sign of the echo tell you exactly what waits at the far end: **no reflection means matched**, an **inverted echo means a short**, an **in-phase echo means an open**, and anything in between maps to an impedance that is neither 0 nor ∞.
 
 ## The reflection coefficient
 
@@ -22,7 +22,7 @@ At the load, voltage and current must simultaneously satisfy the line's characte
 
 ## The telegrapher's equations
 
-A transmission line is not a lumped wire — it is a **distributed** LC network. Every infinitesimal slice has series inductance and shunt capacitance per unit length, and the telegrapher's equations describe how voltage and current ripple through that ladder. The upshot is a wave that travels at velocity $v = 1/\sqrt{LC}$ carrying a characteristic impedance $Z_0 = \sqrt{L/C}$. Reflection and transmission at a boundary then fall straight out of conserving charge and energy at the junction — there is no extra physics, just bookkeeping at the discontinuity.
+A transmission line is not a lumped wire: it is a **distributed** LC network. Every infinitesimal slice has series inductance and shunt capacitance per unit length, and the telegrapher's equations describe how voltage and current ripple through that ladder. The upshot is a wave that travels at velocity $v = 1/\sqrt{LC}$ carrying a characteristic impedance $Z_0 = \sqrt{L/C}$. Reflection and transmission at a boundary then fall straight out of conserving charge and energy at the junction: there is no extra physics, just bookkeeping at the discontinuity.
 
 ## Where it shows up
 

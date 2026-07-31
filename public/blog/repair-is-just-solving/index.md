@@ -3,8 +3,8 @@ title: Repair is just solving in disguise
 date: '2026-06-21T00:00:00.000Z'
 description: >-
   I gave a 160M-parameter Go model a reflect-and-fix loop so it could bootstrap
-  past its own ceiling. It fixed zero bugs. The reason runs deeper than the code
-  — and it taught me my model had been memorising all along.
+  past its own ceiling. It fixed zero bugs. The reason runs deeper than the
+  code, and it taught me my model had been memorising all along.
 labels: 'machine-learning,llm'
 release: true
 heroImage: /blog/repair-is-just-solving/hero.webp
@@ -39,7 +39,7 @@ Here is a claim I was sure I could make true: a small code model that reads its 
 
 So I built one. A 160M-parameter Go model drafts a function, I run `go test`, and if the tests fail the model gets the error and produces a reflection plus a revision. Train that critic on enough verified examples of "here's a broken attempt, here's the fix", and it should learn to repair.
 
-It fixed zero bugs. Not "a disappointing one or two" — zero, across every variant I tried. And chasing *why* turned into the most useful week I've spent on this project, because the answer wasn't a hyperparameter. It was a fact about what a small model can and can't be taught.
+It fixed zero bugs. Not one or two. Zero, across every variant I tried. And chasing *why* turned into the most useful week I've spent on this project, because the answer wasn't a hyperparameter. It was a fact about what a small model can and can't be taught.
 
 ## The setup
 
@@ -85,15 +85,15 @@ Now, an earlier version of this experiment had given me a lovely "+3.4 points, 7
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-Before you call a change an improvement, ask how many problems actually moved. "+3.4 points" on a 30-problem set is exactly one problem. Against a noisy baseline, that's not a result — it's a coin landing the way you hoped.
+Before you call a change an improvement, ask how many problems actually moved. "+3.4 points" on a 30-problem set is exactly one problem. Against a noisy baseline, that's not a result: it's a coin landing the way you hoped.
 
 ## Two bugs hiding in the ruler
 
 When a number won't move, suspect the ruler before the model. Two of my eight "failures" weren't the critic's fault at all.
 
-The first was brutal. My `build_full_code` helper reassembled the model's revision by extracting the first `{...}` block — which silently truncated *any* revision containing nested braces. A correct fix with an inner loop or struct literal became a compile error before it ever reached `go test`. The critic was sometimes right and I was throwing the answer away.
+The first was brutal. My `build_full_code` helper reassembled the model's revision by extracting the first `{...}` block, which silently truncated *any* revision containing nested braces. A correct fix with an inner loop or struct literal became a compile error before it ever reached `go test`. The critic was sometimes right and I was throwing the answer away.
 
-The second was subtler and more interesting. The eval ran `go test` without first running `goimports`. So a revision that was logically perfect but left an unused import counted as a hard failure. Three of the eight held-out "failures" were pure import housekeeping — the kind any real pipeline fixes for free.
+The second was subtler and more interesting. The eval ran `go test` without first running `goimports`. So a revision that was logically perfect but left an unused import counted as a hard failure. Three of the eight held-out "failures" were pure import housekeeping: the kind any real pipeline fixes for free.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
@@ -103,7 +103,7 @@ With both bugs fixed, the honest picture got sharper, not better. True base: 83.
 
 ## Why repair is just solving
 
-Here's the part I should have seen coming. Look at what the critic is actually asked to do. Given a failed attempt and an error, *produce the correct code*. For a genuine logic bug — not an unused import, an actual wrong algorithm — producing the correct code means solving the problem.
+Here's the part I should have seen coming. Look at what the critic is actually asked to do. Given a failed attempt and an error, *produce the correct code*. For a genuine logic bug, not an unused import but an actual wrong algorithm, producing the correct code means solving the problem.
 
 And the base fails those five problems precisely because it can't solve them. The critic is the same 160M base with two extra layers welded on. It shares the base's ceiling. It can learn the *shape* of a good reflection, the calm "the loop was missing a termination condition" prose, and then emit code that's still wrong, because knowing how to narrate a fix is not the same as knowing the fix.
 
@@ -111,7 +111,7 @@ And the base fails those five problems precisely because it can't solve them. Th
 
 To repair a solution you have to be able to solve the problem. A critic built on a model that couldn't solve it can't repair it either. It just learns to sound like it did.
 
-This reframes the whole loop. The most a draft-execute-revise loop can do is give the base model more *chances* — more samples, conditioned on the failure. That's real, but it's bounded by what the base could reach on its own by resampling. The honest way to write that down is the standard pass@k estimator:
+This reframes the whole loop. The most a draft-execute-revise loop can do is give the base model more *chances*: more samples, conditioned on the failure. That's real, but it's bounded by what the base could reach on its own by resampling. The honest way to write that down is the standard pass@k estimator:
 
 > [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
 
@@ -127,7 +127,7 @@ If a problem has $c = 0$ correct samples in the base's whole output distribution
 
 ## So I went looking for the ceiling
 
-At this point the user steering the session said, reasonably: stop and think about how to push a 160M model to 90%. And then, the question that actually mattered — try an unseen benchmark.
+At this point the user steering the session said, reasonably: stop and think about how to push a 160M model to 90%. And then, the question that actually mattered: try an unseen benchmark.
 
 Because here's the uncomfortable thing about that 83.3%. HumanEval-X Go was in the training data. A high pass@1 on a benchmark you trained on tells you the model memorised the benchmark. It does not tell you the model can write Go.
 
@@ -145,17 +145,17 @@ So I generated 25 fresh Go problems of comparable difficulty, never seen in trai
 
 > [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
 
-Zero. Not low — zero, and zero again at pass@10 with execution filtering. The model that "scored 83%" could not solve a single novel problem of the same difficulty. It wasn't a weak coder. It was a lookup table that had memorised one specific benchmark and learned, in any real sense, nothing.
+Zero. Not low: zero, and zero again at pass@10 with execution filtering. The model that "scored 83%" could not solve a single novel problem of the same difficulty. It wasn't a weak coder. It was a lookup table that had memorised one specific benchmark and learned, in any real sense, nothing.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
 A leaked benchmark doesn't measure a small model's skill. It measures how completely it overfit. The gap between 83% leaked and 0% unseen *is* the memorisation, laid out as a single subtraction.
 
-The last thing I tried was the obvious repair for *that*: continually fine-tune on a few hundred diverse Go problems so the model learns to code rather than recite. I built 250 fresh problems and trained at a deliberately safe learning rate. The unseen score stayed at 0 of 25. And the memorised HumanEval-X slice collapsed from around 60% to 2.5% — one problem out of forty. The lookup table was brittle enough that nudging it toward generality shattered the one thing it was good at, without buying any generality back.
+The last thing I tried was the obvious repair for *that*: continually fine-tune on a few hundred diverse Go problems so the model learns to code rather than recite. I built 250 fresh problems and trained at a deliberately safe learning rate. The unseen score stayed at 0 of 25. And the memorised HumanEval-X slice collapsed from around 60% to 2.5%: one problem out of forty. The lookup table was brittle enough that nudging it toward generality shattered the one thing it was good at, without buying any generality back.
 
 ## What I actually learned
 
-The honest bottom line is not a tidy success, and I'd rather report it straight. A 160M critic can't beat its base, because repair is solving and it shares the ceiling. And this particular base wasn't really solving anything — it had memorised a benchmark. You can't bootstrap a model past what it can't already do, however clever the loop on top.
+The honest bottom line is not a tidy success, and I'd rather report it straight. A 160M critic can't beat its base, because repair is solving and it shares the ceiling. And this particular base wasn't really solving anything: it had memorised a benchmark. You can't bootstrap a model past what it can't already do, however clever the loop on top.
 
 If I wanted the number to go up tomorrow, the cheapest honest win is already sitting there: run `goimports` and sample the base a few times. That reaches 83.3% on the leaked set with no critic at all, and it would almost certainly beat any 160M reflection layer. The loop was the interesting idea. The plumbing was the actual lever.
 

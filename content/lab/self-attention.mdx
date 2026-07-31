@@ -2,7 +2,7 @@
 
 ## The core idea
 
-Self-attention lets every token in a sequence rebuild itself as a **weighted average of the others** — but the weights aren't fixed. They're computed on the fly by asking, for each pair of tokens, *how relevant is this one to me?* Some tokens matter a lot, most matter a little, and crucially the same token attends differently depending on what it currently is. That single trick — content deciding its own routing — is what lets transformers model long-range structure without any hard-wired notion of distance.
+Self-attention lets every token in a sequence rebuild itself as a **weighted average of the others**: but the weights aren't fixed. They're computed on the fly by asking, for each pair of tokens, *how relevant is this one to me?* Some tokens matter a lot, most matter a little, and crucially the same token attends differently depending on what it currently is. That single trick: content deciding its own routing: is what lets transformers model long-range structure without any hard-wired notion of distance.
 
 This lab renders the mechanism as a live particle network. The bright, pulsing node is the current **query**; it cycles through the sequence. The coloured arcs are its attention weights to every **key**, one hue per head, with particles flowing along them at a density proportional to the weight.
 
@@ -10,25 +10,25 @@ This lab renders the mechanism as a live particle network. The bright, pulsing n
 
 ## How it works
 
-Each token is projected into a query vector $q$ and a key vector $k$. For the active query and a candidate key, a head computes a compatibility score — the dot product — scales it down, then normalises across all keys with a softmax so the weights sum to one:
+Each token is projected into a query vector $q$ and a key vector $k$. For the active query and a candidate key, a head computes a compatibility score: the dot product: scales it down, then normalises across all keys with a softmax so the weights sum to one:
 
 $$
 \alpha_{q,k} = \operatorname{softmax}_k\!\left(\frac{q \cdot k}{\sqrt{d_k}}\right)
 $$
 
-The $1/\sqrt{d_k}$ factor keeps the scores from blowing up as the dimension grows, which would otherwise push the softmax into a saturated, gradient-starved corner. The arcs above draw $\alpha$ directly: brightness and particle density are the weight. The new representation of the query is then $\sum_k \alpha_{q,k}\,v_k$ — the average of the value vectors, weighted by exactly these arcs.
+The $1/\sqrt{d_k}$ factor keeps the scores from blowing up as the dimension grows, which would otherwise push the softmax into a saturated, gradient-starved corner. The arcs above draw $\alpha$ directly: brightness and particle density are the weight. The new representation of the query is then $\sum_k \alpha_{q,k}\,v_k$: the average of the value vectors, weighted by exactly these arcs.
 
 ## Where it shows up
 
 The whole picture is the contents of a single transformer block's attention layer, the building block under every modern language and vision model. Two things are worth watching:
 
-- **Heads specialise.** Each head has a slowly drifting preferred relative offset — lower heads look nearby, higher heads reach across the sequence. Stack several and you see distinct patterns overlaid in different hues, exactly as multi-head attention does in a real model.
+- **Heads specialise.** Each head has a slowly drifting preferred relative offset: lower heads look nearby, higher heads reach across the sequence. Stack several and you see distinct patterns overlaid in different hues, exactly as multi-head attention does in a real model.
 - **Temperature is the knife edge.** Drag it low and each query collapses onto one near-certain key (the greedy regime where gradients vanish); drag it high and the distribution flattens until every token is weighted near-equally and the signal washes out. Real models live in the useful middle.
 
 ## The knobs
 
-- **Tokens** — length of the sequence; more tokens, more keys to attend over.
-- **Heads** — number of independent attention patterns stacked, one hue each.
+- **Tokens**: length of the sequence; more tokens, more keys to attend over.
+- **Heads**: number of independent attention patterns stacked, one hue each.
 - **Temperature** — sharpens (low) or flattens (high) the softmax over keys.
 - **Speed** — pace of the query cycle and particle flow.
 - **Color** — base hue the per-head palette is derived from.

@@ -899,7 +899,7 @@ export function StorageEngineSim() {
             LSM-tree
           </span>
           <span className="text-muted/80">
-            RUM conjecture: you can shrink any two of read / update / memory — never all three.
+            RUM conjecture: you can shrink any two of read / update / memory: never all three.
           </span>
         </div>
       </div>

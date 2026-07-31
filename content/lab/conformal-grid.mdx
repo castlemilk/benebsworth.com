@@ -2,7 +2,7 @@
 
 ## The Core Idea
 
-A **conformal map** is a function that preserves angles. Take a grid of perpendicular lines, apply the map, and — no matter how wildly the grid bends — every intersection is still a right angle. This seemingly abstract property makes conformal maps indispensable in aerodynamics (Joukowski airfoils), electrostatics (solving Laplace's equation by mapping to simpler geometries), and complex analysis (the Riemann mapping theorem).
+A **conformal map** is a function that preserves angles. Take a grid of perpendicular lines, apply the map, and: no matter how wildly the grid bends: every intersection is still a right angle. This seemingly abstract property makes conformal maps indispensable in aerodynamics (Joukowski airfoils), electrostatics (solving Laplace's equation by mapping to simpler geometries), and complex analysis (the Riemann mapping theorem).
 
 </LabSide>
 
@@ -10,10 +10,10 @@ A **conformal map** is a function that preserves angles. Take a grid of perpendi
 
 A function `w = f(z)` of a complex variable `z = x + iy` is conformal at every point where `f'(z) ≠ 0`. The derivative `f'(z)` simultaneously encodes:
 
-- **Scaling**: `|f'(z)|` — how much the map stretches lengths.
-- **Rotation**: `arg(f'(z))` — how much the map rotates.
+- **Scaling**: `|f'(z)|`: how much the map stretches lengths.
+- **Rotation**: `arg(f'(z))`: how much the map rotates.
 
-Because multiplication by a complex number is a rotation + scale (never a shear), infinitesimal circles map to infinitesimal circles — angles are preserved.
+Because multiplication by a complex number is a rotation + scale (never a shear), infinitesimal circles map to infinitesimal circles: angles are preserved.
 
 <LabSide effect="conformal-grid" height={280} params={{ map: "power", power: 3, density: 10 }} reverse={true} caption="z → z³ triples all angles. The origin is a branch point; three copies of the plane wrap around it.">
 
@@ -35,7 +35,7 @@ The power map takes the ray at angle θ to the ray at angle `nθ`, and stretches
 w = eˣ⁺ⁱʸ = eˣ(cos y + i sin y)
 ```
 
-The exponential map turns horizontal lines (constant y) into rays from the origin and vertical lines (constant x) into concentric circles. A rectangular grid in z-space maps to the polar grid in w-space — still orthogonal everywhere.
+The exponential map turns horizontal lines (constant y) into rays from the origin and vertical lines (constant x) into concentric circles. A rectangular grid in z-space maps to the polar grid in w-space: still orthogonal everywhere.
 
 </LabSide>
 
@@ -45,7 +45,7 @@ The exponential map turns horizontal lines (constant y) into rays from the origi
 w = z + 1/z
 ```
 
-Pick **Joukowski** in the playground and a circle offset from the origin maps to a smooth airfoil — the classic teardrop wing profile that made early aerodynamics tractable. Lines and circles in z-space bend into the wing's contour while every crossing stays perpendicular.
+Pick **Joukowski** in the playground and a circle offset from the origin maps to a smooth airfoil: the classic teardrop wing profile that made early aerodynamics tractable. Lines and circles in z-space bend into the wing's contour while every crossing stays perpendicular.
 
 ### Inversion: z → 1/z
 
@@ -55,7 +55,7 @@ w = 1/z
 
 Pick **Inversion** and the grid turns inside-out: points near the origin fly outward, the far field collapses inward, and straight lines that miss the origin become circles through it. It's the simplest map that swaps "near" and "far."
 
-Inversion is the simplest **Möbius transformation** `(az + b)/(cz + d)` — the family that maps circles to circles (straight lines counting as circles through infinity). Joukowski is built from it: `z + 1/z` is an inversion bolted onto the identity.
+Inversion is the simplest **Möbius transformation** `(az + b)/(cz + d)`: the family that maps circles to circles (straight lines counting as circles through infinity). Joukowski is built from it: `z + 1/z` is an inversion bolted onto the identity.
 
 ## Where angles break down
 

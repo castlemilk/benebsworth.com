@@ -23,7 +23,7 @@ const OG_IMAGE = { url: '/lab/llm-benchmark/opengraph-image.png', width: 1200, h
 export const metadata: Metadata = {
   title: 'LLM Benchmark · Lab',
   description:
-    'Head-to-head benchmark of frontier LLMs — Claude, GPT, Gemini, Kimi, Codex — across coding, physics, security, UI, maths, and electronics tasks, scored for correctness, runtime, and cost.',
+    'Head-to-head benchmark of frontier LLMs: Claude, GPT, Gemini, Kimi, and Codex, across coding, physics, security, UI, maths, and electronics tasks, scored for correctness, runtime, and cost.',
   alternates: { canonical: '/lab/llm-benchmark/' },
   openGraph: {
     type: 'website',

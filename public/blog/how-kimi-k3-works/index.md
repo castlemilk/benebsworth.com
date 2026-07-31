@@ -3,15 +3,15 @@ title: 'How Kimi K3 works: 2.8 trillion parameters, 16 experts awake'
 date: '2026-07-19T09:00:00.000Z'
 description: >-
   Kimi K3 is the first open 3T-class model: 2.8T parameters, a 1M-token context,
-  and only 16 of 896 experts active per token. We take the architecture apart —
-  Kimi Delta Attention, Attention Residuals, and Stable LatentMoE — and what
+  and only 16 of 896 experts active per token. We take the architecture apart:
+  Kimi Delta Attention, Attention Residuals, and Stable LatentMoE, plus what
   each one buys.
 labels: 'software,machine-learning,deep-learning,llm'
 release: true
 heroImage: /blog/how-kimi-k3-works/hero.webp
 takeaways:
   - >-
-    Kimi K3 is 2.8T parameters but activates only 16 of 896 experts per token —
+    Kimi K3 is 2.8T parameters but activates only 16 of 896 experts per token:
     capacity and compute are finally separate dials, worth ~2.5x the scaling
     efficiency of K2.
   - >-
@@ -28,7 +28,7 @@ canonical_url: 'https://benebsworth.com/blog/how-kimi-k3-works/'
 ---
 ## Key takeaways
 
-- Kimi K3 is 2.8T parameters but activates only 16 of 896 experts per token — capacity and compute are finally separate dials, worth ~2.5x the scaling efficiency of K2.
+- Kimi K3 is 2.8T parameters but activates only 16 of 896 experts per token: capacity and compute are finally separate dials, worth ~2.5x the scaling efficiency of K2.
 - KDA replaces full attention's growing bill with a fixed-size memory, and it changes serving too: cached input is $0.30/MTok against $3.00 uncached.
 - Attention Residuals let blocks retrieve from earlier depth selectively instead of inheriting one uniform residual stream.
 - It ships with honest caveats: keep the thinking history intact, expect it to take initiative, and the very top proprietary models still lead it.

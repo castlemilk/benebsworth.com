@@ -138,7 +138,7 @@ export default function Home() {
           </Link>
         </header>
         <p className="mb-6 max-w-2xl font-sans text-[0.95rem] leading-6 text-fg/65">
-          Small, working simulations — drag the controls on the full pages, or just watch the previews cycle here. The selection rotates daily.
+          Small, working simulations. Drag the controls on the full pages, or just watch the previews cycle here. The selection rotates daily.
         </p>
         <LabMatrix count={6} />
       </section>

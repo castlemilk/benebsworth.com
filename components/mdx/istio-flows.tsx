@@ -35,7 +35,7 @@ The \`2/2\` signifies that the given \`Pod\` has two containers, one being the *
     header: 'Gateway',
     description: `
 The \`Gateway\` resource can be consider the mechanism to define a _front-end_ listener, in terms of port and hostname.
-Additionally how to map terminated TLS certificates to a given host listener.
+Also how to map terminated TLS certificates to a given host listener.
 
 \`\`\`yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -231,7 +231,7 @@ spec:
   {
     header: 'DestinationRule',
     description: `
-In order to define more granular session information for a given _endpoint_ or _destination_ we utilise the \`DestinationRule \` _CRD_.
+To define more granular session information for a given _endpoint_ or _destination_ we utilise the \`DestinationRule \` _CRD_.
 This will inform an _Envoy_ proxy **how** it should establish a connection with a service either **internal** or **external** to the _service mesh_
 In the example below, we are specifying that we should use a mTLS based connection and which certificates to use when establishing the connection.
 
@@ -289,7 +289,7 @@ const egressAdvancedSteps: FlowStep[] = [
   {
     header: 'ServiceMesh - Egress Gateways',
     description: `
-A more complex _service mesh_ topology can be deployed which facilitates enabling more robust security boundaries.
+A more complex _service mesh_ topology can be deployed which creates more robust security boundaries.
 By having a _egressgateway_ service act as a "gateway" out of the mesh, it is possible to enforce traffic flows via \`NetworkPolicy\`
 to only allow egress from the _egressgateway_ service. This prevents a malicious actor bypassing the default routing behavior that
 services within the mesh will use.
@@ -447,7 +447,7 @@ spec:
     header: 'Egress Gateway - DestinationRule [global]',
     description: `
 For the final stage of the request handling that occurs within the _Service Mesh_, we have the below \`DestinationRule\`. This policy effectively instructs the _eggressgateway_
-to originate a _**mTLS**_ connection to the target destination, with the specified certificates for the mutual authentication handshake and validation.
+to open a _**mTLS**_ connection to the target destination, with the specified certificates for the mutual authentication handshake and validation.
 
 \`\`\`yaml
 apiVersion: networking.istio.io/v1alpha3

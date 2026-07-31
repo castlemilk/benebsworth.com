@@ -2,7 +2,7 @@
 
 ## The Core Idea
 
-You want a robot arm to reach a specific point in space. **Forward kinematics** asks: given joint angles, where is the end effector? **Inverse kinematics (IK)** asks the reverse: given a target position, what joint angles get us there? For a planar two-link arm (2R), the problem has an elegant closed-form solution. For real robots with 6+ joints, it requires iterative numerical methods — but the 2R case reveals all the geometry.
+You want a robot arm to reach a specific point in space. **Forward kinematics** asks: given joint angles, where is the end effector? **Inverse kinematics (IK)** asks the reverse: given a target position, what joint angles get us there? For a planar two-link arm (2R), the problem has an elegant closed-form solution. For real robots with 6+ joints, it requires iterative numerical methods: but the 2R case reveals all the geometry.
 
 </LabSide>
 
@@ -27,7 +27,7 @@ cos(θ₂) = (d² − L₁² − L₂²) / (2·L₁·L₂)
 θ₁ = atan2(ty, tx) − atan2(L₂·sin θ₂, L₁ + L₂·cos θ₂)
 ```
 
-The ± in θ₂ gives two solutions — "elbow up" and "elbow down." Both reach the same target; choosing between them depends on obstacle avoidance and joint limits.
+The ± in θ₂ gives two solutions: "elbow up" and "elbow down." Both reach the same target; choosing between them depends on obstacle avoidance and joint limits.
 
 <LabSide effect="inverse-kinematics" height={280} params={{ L1: 1.2, L2: 0.8 }} reverse={true} caption="Asymmetric links (L₁=1.2, L₂=0.8). The workspace boundary is an annulus — the arm can't reach too close or too far.">
 
@@ -37,7 +37,7 @@ Try adjusting L₁ and L₂ to see how the reachable workspace changes. When L�
 
 ## Singularities
 
-When the arm is fully extended (d = L₁ + L₂) or fully folded (d = |L₁ − L₂|), the Jacobian loses rank — the arm can't move in certain directions. These **singularities** are where IK breaks down numerically.
+When the arm is fully extended (d = L₁ + L₂) or fully folded (d = |L₁ − L₂|), the Jacobian loses rank: the arm can't move in certain directions. These **singularities** are where IK breaks down numerically.
 
 <LabSide effect="inverse-kinematics" height={280} params={{ L1: 1, L2: 0.5 }} caption="Asymmetric links — the dead zone near the base is clearly visible in the arm's movement.">
 
@@ -45,7 +45,7 @@ When the arm is fully extended (d = L₁ + L₂) or fully folded (d = |L₁ − 
 
 Real industrial robots have six joints. The IK problem becomes:
 
-- **Analytical**: For specific geometries (spherical wrist), closed-form solutions exist — fast but robot-specific.
+- **Analytical**: For specific geometries (spherical wrist), closed-form solutions exist: fast but robot-specific.
 - **Numerical**: Jacobian-based methods (`Δθ = J⁺·Δx`) — general but slower.
 - **Iterative**: CCD, FABRIK — heuristic methods popular in animation and games.
 

@@ -2,11 +2,11 @@
 
 ## The core idea
 
-Two identical mass-spring systems are joined by a third, weaker coupling spring. Pull one mass aside and release it, and something elegant happens: the energy refuses to stay put. It **sloshes** back and forth between the two masses, draining completely out of the one you displaced, filling the other, then returning. Nothing is lost — this is not decay. It is a **beat**, the slow interference pattern of two oscillators whose frequencies are almost, but not quite, the same.
+Two identical mass-spring systems are joined by a third, weaker coupling spring. Pull one mass aside and release it, and something elegant happens: the energy refuses to stay put. It **sloshes** back and forth between the two masses, draining completely out of the one you displaced, filling the other, then returning. Nothing is lost: this is not decay. It is a **beat**, the slow interference pattern of two oscillators whose frequencies are almost, but not quite, the same.
 
 ## How it works
 
-The system has two natural "shapes" of motion — **normal modes** — in which both masses oscillate at a single shared frequency forever:
+The system has two natural "shapes" of motion: **normal modes**: in which both masses oscillate at a single shared frequency forever:
 
 - **In phase (ω₁ = √(k/m))**: the masses move together, so the coupling spring is never stretched and k_c has no effect.
 - **Out of phase (ω₂ = √((k + 2k_c)/m))**: the masses move oppositely, stretching the coupling spring maximally and adding its stiffness.
@@ -18,13 +18,13 @@ x₁(t) = A cos(ω_beat·t) cos(ω_avg·t)
 x₂(t) = A sin(ω_beat·t) sin(ω_avg·t)
 ```
 
-with `ω_avg = (ω₂ + ω₁) / 2` the fast carrier and `ω_beat = (ω₂ − ω₁) / 2` the slow envelope. The amplitude of each mass is gated by a cosine and a sine that are a quarter-cycle out of step — so as one mass winds down, the other winds up. Stiffen the coupling and ω₂ pulls away from ω₁, widening the gap, shortening the beat period, and sloshing the energy faster.
+with `ω_avg = (ω₂ + ω₁) / 2` the fast carrier and `ω_beat = (ω₂ − ω₁) / 2` the slow envelope. The amplitude of each mass is gated by a cosine and a sine that are a quarter-cycle out of step: so as one mass winds down, the other winds up. Stiffen the coupling and ω₂ pulls away from ω₁, widening the gap, shortening the beat period, and sloshing the energy faster.
 
 </LabSide>
 
 ## Where it shows up
 
-This two-frequencies-from-one-coupling story is everywhere. It is why two slightly detuned guitar strings produce an audible wobble, why pushing a child on a swing in time with a neighbouring swing can pump energy across, and — in the quantum version — why a particle tunnels between two nearby wells, splitting a single level into a symmetric and antisymmetric pair. The same algebra governs molecular vibrations, coupled LC circuits, and avoided crossings in band structure. The lesson is general: couple two identical resonators and their degenerate frequency splits in two, and any localised excitation must beat between them.
+This two-frequencies-from-one-coupling story is everywhere. It is why two slightly detuned guitar strings produce an audible wobble, why pushing a child on a swing in time with a neighbouring swing can pump energy across, and: in the quantum version: why a particle tunnels between two nearby wells, splitting a single level into a symmetric and antisymmetric pair. The same algebra governs molecular vibrations, coupled LC circuits, and avoided crossings in band structure. The lesson is general: couple two identical resonators and their degenerate frequency splits in two, and any localised excitation must beat between them.
 
 ## The knobs
 

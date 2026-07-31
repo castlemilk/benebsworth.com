@@ -22,6 +22,7 @@ import matter from 'gray-matter'
 const ROOT = process.cwd()
 const SRC = join(ROOT, 'content/blog')
 const OUT = join(ROOT, 'public/blog')
+const CHECK_ONLY = process.argv.includes('--check')
 
 /**
  * Map of MDX component name → human-readable description, used when we
@@ -371,13 +372,18 @@ function processPost(slugDir) {
   }).replace(/[ \t]+$/gm, '')
 
   const dest = join(OUT, slugDir, 'index.md')
-  mkdirSync(join(OUT, slugDir), { recursive: true })
-  writeFileSync(dest, out)
+  if (CHECK_ONLY) {
+    if (!existsSync(dest) || readFileSync(dest, 'utf8') !== out) stale.push(relative(ROOT, dest))
+  } else {
+    mkdirSync(join(OUT, slugDir), { recursive: true })
+    writeFileSync(dest, out)
+  }
   return relative(ROOT, dest)
 }
 
 const written = []
 const skipped = []
+const stale = []
 for (const entry of readdirSync(SRC)) {
   if (!statSync(join(SRC, entry)).isDirectory()) continue
   const result = processPost(entry)
@@ -385,9 +391,26 @@ for (const entry of readdirSync(SRC)) {
   else skipped.push(entry)
 }
 
-console.log(`[md-siblings] wrote ${written.length} files:`)
+if (CHECK_ONLY && existsSync(OUT)) {
+  const expected = new Set(written)
+  const scan = (dir, prefix = '') => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const rel = prefix ? `${prefix}/${entry.name}` : entry.name
+      if (entry.isDirectory()) scan(join(dir, entry.name), rel)
+      else if (entry.name === 'index.md' && !expected.has(relative(ROOT, join(dir, entry.name)))) stale.push(relative(ROOT, join(dir, entry.name)))
+    }
+  }
+  scan(OUT)
+}
+
+console.log(`[md-siblings] ${CHECK_ONLY ? 'checked' : 'wrote'} ${written.length} files:`)
 for (const w of written) console.log(`  ${w}`)
 if (skipped.length) {
   console.log(`[md-siblings] skipped ${skipped.length} (draft / release:false):`)
   for (const s of skipped) console.log(`  ${s}`)
+}
+if (CHECK_ONLY && stale.length) {
+  console.error(`[md-siblings] stale or missing siblings (${stale.length}):`)
+  for (const path of stale) console.error(`  ${path}`)
+  process.exitCode = 1
 }

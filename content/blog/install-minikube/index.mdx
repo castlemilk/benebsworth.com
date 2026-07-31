@@ -23,7 +23,7 @@ In this post we'll try and capture all of the common steps required to standup a
 
 ## Pre-requisites
 
-In order to get started you'll require the follow dependencies
+To get started you'll require the follow dependencies
 
 * [Homebrew](https://brew.sh/)
 * familiarly with running/opening your terminal, more information can be found [here](https://blog.teamtreehouse.com/introduction-to-the-mac-os-x-command-line)
@@ -109,7 +109,7 @@ You'll note that the IP address `192.168.99.101` is the address allocated during
 
 ## exposing services
 
-Ok so let's deploy a basic example application known as [httpbin](https://github.com/postmanlabs/httpbin), and demonstrate how we can access this from our local machine in `localhost`.
+Ok so let's deploy a basic example application known as [httpbin](https://github.com/postmanlabs/httpbin), and show how we can access this from our local machine in `localhost`.
 
 Deploy the application by pasting the following:
 
@@ -147,7 +147,7 @@ This will deploy the `httpbin` application into our locally running Kubernetes c
 
 In the above resource we applied to the cluster, we created a `Deployment` this will translate to the creation of `Pods` with the specified replica factor, in this case we set a replica factor of 1.
 
-In order to view the pods that will be scheduled and deployed run the following (the namespace will default to `default` if not specified in your context or with the `[-n|--namespace]` flags in the `kubectl` command).
+To view the pods that will be scheduled and deployed run the following (the namespace will default to `default` if not specified in your context or with the `[-n|--namespace]` flags in the `kubectl` command).
 
 ```bash
 foo@bar:~$ kubectl get pods --namespace default

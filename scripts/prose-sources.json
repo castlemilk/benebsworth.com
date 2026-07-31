@@ -1,0 +1,31 @@
+{
+  "include": [
+    "content/blog/**/index.mdx",
+    "content/lab/**/*.mdx",
+    "content/projects/**/*.mdx",
+    "content/about.ts",
+    "content/hiking.ts",
+    "app/**/*.tsx",
+    "app/**/*.ts",
+    "components/**/*.tsx",
+    "app/llms.txt/route.ts",
+    "lib/topics.ts",
+    "lib/skill-provenance.ts",
+    "lib/content.ts"
+  ],
+  "exclude": [
+    "content/blog/_article-backlog.mdx",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "out/**",
+    ".next/**",
+    "public/blog/**/*.md",
+    "lib/lab/llm-benchmark/*.json",
+    "lib/lab/harness-eval/*.json",
+    "lib/lab/**/results.json",
+    ".claude/skills/writing-trail-guides/**",
+    ".claude/skills/writing-trail-guides/trailkit-reference.md",
+    "components/admin/**",
+    "components/lab/**"
+  ]
+}

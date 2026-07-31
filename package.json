@@ -11,6 +11,8 @@
     "postbuild": "node scripts/og-rewrite.mjs && pagefind --site out",
     "start": "next start",
     "lint": "eslint .",
+    "lint:prose": "node scripts/lint-prose.mjs",
+    "lint:prose:changed": "node scripts/lint-prose.mjs --changed",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

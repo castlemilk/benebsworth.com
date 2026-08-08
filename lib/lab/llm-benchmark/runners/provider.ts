@@ -1,4 +1,5 @@
 import type {
+  BenchmarkFailureReason,
   BenchmarkModel,
   BenchmarkResult,
   BenchmarkRunner,
@@ -192,6 +193,81 @@ function isTransientError(err: unknown): boolean {
   return false
 }
 
+/**
+ * Map a thrown error (or empty-body signal) to a BenchmarkFailureReason.
+ * Order matters: the most specific classification wins.
+ *
+ *   quota → rate-limit → auth → invalid → endpoint-hung/timeout →
+ *   truncated → empty-body → model-error
+ *
+ * `output` is the assistant content (may be empty) for the case where the
+ * provider returned 200 with a length finish and no usable content; pass it
+ * to distinguish `truncated` (reasoning burned the budget) from `empty_body`
+ * (the stream produced no deltas at all).
+ */
+export function classifyFailureReason(
+  err: unknown,
+  output?: { content: string; finishReason?: string }
+): BenchmarkFailureReason {
+  const message = err instanceof Error ? err.message.toLowerCase() : String(err).toLowerCase()
+  const status = extractStatus(err)
+
+  // Quota / billing — hard stop, every later call fails identically.
+  if (isQuotaError(err)) return 'quota_exhausted'
+
+  // Transient 429 / overload — the runner already retried; it still failed.
+  if (status === 429 || message.includes('rate limit') || message.includes('too many requests') || message.includes('overloaded')) {
+    return 'rate_limited'
+  }
+
+  // Auth / scope errors — never transient, never retry.
+  if (status === 401 || status === 403) return 'auth_error'
+
+  // Provider rejected the request shape.
+  if (status === 400 || message.includes('invalid request')) return 'invalid_request'
+
+  // Network-level failures that survived retries → endpoint genuinely unreachable
+  // or hung. Distinct from the per-call runner timeout (which surfaces as
+  // `endpoint_hung` via the TimeoutError path below — same outcome).
+  if (
+    message.includes('fetch failed') ||
+    message.includes('econnrefused') ||
+    message.includes('econnreset') ||
+    message.includes('etimedout') ||
+    message.includes('enotfound') ||
+    message.includes('socket hang up')
+  ) {
+    return 'endpoint_hung'
+  }
+
+  // Runner timeout (10-minute per-call cap). If the elapsed was near the cap,
+  // the endpoint was hanging; otherwise a generic timeout. We surface both as
+  // `endpoint_hung` because from the model's perspective the result is the same.
+  if (isTimeoutError(err)) return 'endpoint_hung'
+
+  // Truncated generation — reasoning consumed the completion budget before the
+  // model wrote any answer. The runners throw this explicitly so we can
+  // distinguish it from a generic model error.
+  if (message.includes('truncated at the completion-token limit')) return 'truncated'
+
+  // 5xx after retries — the provider is degraded.
+  if (status !== undefined && status >= 500) return 'model_error'
+
+  // The response was 200 but the assistant message carried no usable content.
+  // Distinguish truncated (reasoning consumed the budget) from a plain
+  // empty body (stream ended with no deltas).
+  if (output !== undefined) {
+    if (output.finishReason === 'length' && output.content.trim().length === 0) {
+      return 'truncated'
+    }
+    if (output.content.trim().length === 0) {
+      return 'empty_body'
+    }
+  }
+
+  return 'model_error'
+}
+
 function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
   switch (model.provider) {
     case 'OpenAI':
@@ -312,6 +388,10 @@ export interface IterationRun {
   status: 'success' | 'fail'
   /** Set on failed iterations whose failure was a timeout. */
   timedOut?: boolean
+  /** Classified failure reason; 'none' when status === 'success'. */
+  failureReason?: BenchmarkFailureReason
+  /** Raw finish_reason from the provider, when known. Used to disambiguate truncated vs empty_body. */
+  finishReason?: string
 }
 
 /**
@@ -368,6 +448,16 @@ export async function aggregateRuns(
           ? 'timeout'
           : 'fail'
 
+  // Aggregate failure reason: if everything succeeded, 'none'. Otherwise take
+  // the LAST failed iteration's reason (the most recent cause — if the loop
+  // kept retrying transient failures and finally hit a quota, quota is the
+  // dominant story). When multiple different reasons occurred, the per-iteration
+  // breakdown is lost — the UI surfaces a histogram of reasons for that.
+  const failureReason: BenchmarkFailureReason =
+    status === 'success'
+      ? 'none'
+      : (lastFailed?.failureReason ?? 'model_error')
+
   // Publish the BEST-scoring successful iteration's output — the demo renders
   // this artifact, so it should be the strongest run, not whichever happened
   // to come first. Fall back to the last run's output (an error message when
@@ -392,6 +482,10 @@ export async function aggregateRuns(
     iterations,
     iterationsSucceeded: successRuns.length,
     status,
+    failureReason,
+    // Per-iteration scores so the UI can show variance (Loop 3). Only present
+    // when at least one iteration produced a scoreable artifact.
+    iterationScores: iterationScores.length > 0 ? iterationScores : undefined,
     createdAt,
     source: 'live',
     output,
@@ -435,15 +529,30 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
         console.log(`[harness] starting ${label}`)
         const callStart = Date.now()
         try {
-          const { output, tokensIn, tokensOut, runtimeMs } = await generateOne(
-            cfg,
-            model,
-            task,
-            i,
-            bustCache,
-            timeoutMs,
-            label
-          )
+          // Empty-body retry (Loop 2): a 200 response with zero assistant
+          // deltas is a distinct failure mode from network/429 errors — the
+          // transient-retry inside generateOne won't catch it (it's not an
+          // error). Free-tier endpoints in particular occasionally return
+          // 200 with an empty stream when the shared pool is pressured; one
+          // more attempt with a short backoff recovers the vast majority.
+          // The retry only fires when the cache miss produced empty content;
+          // cached empty responses still replay (they're real data points).
+          const emptyBodyMaxAttempts = 3
+          let attempt = 0
+          let response: GenerationResponse | undefined
+          while (true) {
+            response = await generateOne(cfg, model, task, i, bustCache, timeoutMs, label)
+            const cleanedProbe = cleanOutput(response.output)
+            if (cleanedProbe.trim().length >= 40) break
+            attempt++
+            if (attempt >= emptyBodyMaxAttempts) break
+            const delayMs = 1500 * attempt
+            console.warn(
+              `[harness] empty body on attempt ${attempt}/${emptyBodyMaxAttempts} for ${label} (${response.tokensIn}/${response.tokensOut} tokens) — retrying after ${delayMs}ms`
+            )
+            await new Promise((resolve) => setTimeout(resolve, delayMs))
+          }
+          const { output, tokensIn, tokensOut, runtimeMs } = response
           let cleaned = cleanOutput(output)
           if (/<html[\s>]|<!doctype|<head>|<body>|<script\b|<link\b|<style\b|<canvas\b|<svg\b/i.test(cleaned)) {
             try {
@@ -463,13 +572,45 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
               )
             }
           }
-          console.log(
-            `[harness] completed ${label} in ${Date.now() - callStart}ms (${tokensIn}/${tokensOut} tokens)`
-          )
-          runs.push({ output: cleaned, tokensIn, tokensOut, runtimeMs, status: 'success' })
+          // Empty-body detection: the provider returned 200 with no usable
+          // assistant content after exhausting the empty-body retry loop above.
+          // Record as a failed iteration so it doesn't pad the success count
+          // with degenerate runs, and stamp the failure reason so the UI can
+          // show "empty_body" rather than burying it inside a partial.
+          if (cleaned.trim().length === 0) {
+            const reason = classifyFailureReason(new Error('empty body'), { content: cleaned, finishReason: undefined })
+            console.error(
+              `[harness] empty body for ${label} after ${Date.now() - callStart}ms and ${attempt + 1} attempt(s) (${tokensIn}/${tokensOut} tokens) — recording as ${reason}`
+            )
+            runs.push({
+              output: `empty body (${tokensIn}/${tokensOut} tokens)`,
+              tokensIn,
+              tokensOut,
+              runtimeMs,
+              status: 'fail',
+              timedOut: false,
+              failureReason: reason,
+            })
+            // No quota / non-transient break here — an empty body on a free
+            // endpoint is often a transient provider-pool blip; let the next
+            // iteration try again. The outer transient-retry already handled
+            // 429/5xx, so reaching here means the 200 itself was empty.
+            continue
+          }
+          if (attempt > 0) {
+            console.log(
+              `[harness] recovered empty body for ${label} on attempt ${attempt + 1} after ${Date.now() - callStart}ms (${tokensIn}/${tokensOut} tokens)`
+            )
+          } else {
+            console.log(
+              `[harness] completed ${label} in ${Date.now() - callStart}ms (${tokensIn}/${tokensOut} tokens)`
+            )
+          }
+          runs.push({ output: cleaned, tokensIn, tokensOut, runtimeMs, status: 'success', failureReason: 'none' })
         } catch (err) {
+          const reason = classifyFailureReason(err)
           console.error(
-            `[harness] failed ${label} after ${Date.now() - callStart}ms: ${err instanceof Error ? err.message : String(err)}`
+            `[harness] failed ${label} after ${Date.now() - callStart}ms [${reason}]: ${err instanceof Error ? err.message : String(err)}`
           )
           runs.push({
             output: err instanceof Error ? err.message : String(err),
@@ -478,6 +619,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             runtimeMs: 0,
             status: 'fail',
             timedOut: isTimeoutError(err),
+            failureReason: reason,
           })
           if (isQuotaError(err)) {
             trippedProviders.add(model.provider)

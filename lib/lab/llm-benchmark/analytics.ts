@@ -1,4 +1,8 @@
-import type { BenchmarkModel, BenchmarkResult } from './types'
+import type {
+  BenchmarkFailureReason,
+  BenchmarkModel,
+  BenchmarkResult,
+} from './types'
 import { BENCHMARK_MODELS } from './registry'
 import { BENCHMARK_RESULTS } from './results'
 import { aggregateResults, type AggregateStats } from './harness'
@@ -12,6 +16,36 @@ import { aggregateResults, type AggregateStats } from './harness'
  * headline consistently in one place.
  */
 
+/**
+ * Failure reasons that are **infrastructure weather** rather than model
+ * capability. A model that scores 0 because the free tier rate-limited it
+ * shouldn't be ranked the same as a model that scored 0 because it produced
+ * broken output. The model-only average excludes these so the reader sees
+ * the real capability number, with the reliability summary showing how
+ * much of the dataset was lost to infrastructure.
+ */
+const INFRA_FAILURE_REASONS: ReadonlySet<BenchmarkFailureReason> = new Set([
+  'rate_limited',
+  'quota_exhausted',
+  'endpoint_hung',
+  'empty_body',
+  'auth_error',
+  'invalid_request',
+])
+
+export interface ModelReliability {
+  /** Count of records grouped by failureReason (includes 'none' for successes). */
+  histogram: Partial<Record<BenchmarkFailureReason, number>>
+  /** How many records failed for *infrastructure* reasons (rate-limit, hang, quota, ...). */
+  infraFailures: number
+  /** How many records failed for *model* reasons (truncated or genuine model_error). */
+  modelFailures: number
+  /** Average score computed only over records that weren't lost to infrastructure. */
+  modelOnlyAvgScore: number
+  /** Number of records included in `modelOnlyAvgScore`. */
+  modelOnlySampleSize: number
+}
+
 export interface ModelRanking {
   model: BenchmarkModel
   stats: AggregateStats
@@ -21,6 +55,44 @@ export interface ModelRanking {
   seededOnly: boolean
   /** true if any result for this model is seeded sample data */
   hasSeeded: boolean
+  /** Failure breakdown — separates model capability from infra reliability. */
+  reliability: ModelReliability
+}
+
+/**
+ * Per-model failure breakdown. The `modelOnlyAvgScore` is the headline number
+ * for free-tier models with significant infra failure rates (e.g. gemma-4-31b
+ * flickers between 100 and 429 from the Google AI Studio shared pool — its
+ * raw 41.1 average is infrastructure weather, not capability).
+ */
+export function modelReliability(rs: BenchmarkResult[]): ModelReliability {
+  const histogram: Partial<Record<BenchmarkFailureReason, number>> = {}
+  let infraFailures = 0
+  let modelFailures = 0
+  let scored = 0
+  let scoreSum = 0
+  for (const r of rs) {
+    const reason: BenchmarkFailureReason = r.failureReason ?? (r.status === 'success' ? 'none' : 'model_error')
+    histogram[reason] = (histogram[reason] ?? 0) + 1
+    if (reason === 'none') {
+      scored++
+      scoreSum += r.score
+    } else if (INFRA_FAILURE_REASONS.has(reason)) {
+      infraFailures++
+    } else {
+      // 'truncated' and 'model_error' are capability signals, not infra.
+      modelFailures++
+      scored++
+      scoreSum += r.score
+    }
+  }
+  return {
+    histogram,
+    infraFailures,
+    modelFailures,
+    modelOnlyAvgScore: scored > 0 ? Math.round((scoreSum / scored) * 10) / 10 : 0,
+    modelOnlySampleSize: scored,
+  }
 }
 
 function isSeeded(r: BenchmarkResult): boolean {
@@ -46,8 +118,22 @@ export function rankModels(results: BenchmarkResult[] = BENCHMARK_RESULTS): Mode
       scorePerDollar,
       seededOnly: rs.length > 0 && rs.every(isSeeded),
       hasSeeded: rs.some(isSeeded),
+      reliability: modelReliability(rs),
     }
   }).sort((a, b) => b.stats.avgScore - a.stats.avgScore)
+}
+
+/**
+ * Ranks models by their **model-only** average — i.e. averaging only over
+ * records that weren't lost to infrastructure (rate-limits, hangs, quota).
+ * For free-tier models with flaky endpoints this is a far fairer number than
+ * the raw average; for frontier models with reliable endpoints the two are
+ * typically identical.
+ */
+export function rankModelsByModelQuality(results: BenchmarkResult[] = BENCHMARK_RESULTS): ModelRanking[] {
+  return [...rankModels(results)].sort(
+    (a, b) => b.reliability.modelOnlyAvgScore - a.reliability.modelOnlyAvgScore
+  )
 }
 
 export interface Verdict {

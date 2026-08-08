@@ -305,6 +305,9 @@ export default async function ModelDetailPage({
                           </td>
                           <td className="px-5 py-3">
                             <ScoreBar score={result.score} width="w-20" />
+                            {result.iterationScores && result.iterationScores.length > 1 && (
+                              <IterationSpread scores={result.iterationScores} />
+                            )}
                           </td>
                           <td className={`whitespace-nowrap px-5 py-3 text-right font-mono ${statusClass(result.status)}`}>
                             {result.status}
@@ -343,5 +346,35 @@ export default async function ModelDetailPage({
       </main>
       <SiteFooter />
     </>
+  )
+}
+
+/**
+ * Compact per-iteration variance indicator (Loop 3). Surfaces whether a 99.4
+ * average is "five consistent runs at 99" or "one lucky 100 averaged with
+ * four 74s". The tooltip carries the full distribution so the row stays
+ * scannable.
+ *
+ * Render: "{min}–{max}" with a σ hint when the spread is non-trivial.
+ * Hidden when all iterations scored the same (nothing to communicate).
+ */
+function IterationSpread({ scores }: { scores: number[] }) {
+  const min = Math.min(...scores)
+  const max = Math.max(...scores)
+  if (min === max) return null
+  const mean = scores.reduce((a, b) => a + b, 0) / scores.length
+  const variance =
+    scores.reduce((sum, s) => sum + (s - mean) ** 2, 0) / scores.length
+  const stddev = Math.sqrt(variance)
+  const tooltip = `Per-iteration scores: ${scores.map((s) => s.toFixed(1)).join(', ')} (σ=${stddev.toFixed(1)})`
+  return (
+    <div
+      title={tooltip}
+      className="mt-1 font-mono text-[10px] text-muted"
+      aria-label={tooltip}
+    >
+      {min.toFixed(0)}–{max.toFixed(0)}
+      <span className="ml-1 opacity-60">σ{stddev.toFixed(1)}</span>
+    </div>
   )
 }

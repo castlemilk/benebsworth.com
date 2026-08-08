@@ -32,6 +32,13 @@ async function main() {
     moonshot: process.env.MOONSHOT_API_KEY
       ? { apiKey: process.env.MOONSHOT_API_KEY, baseUrl: process.env.MOONSHOT_BASE_URL }
       : undefined,
+    openrouter: process.env.OPENROUTER_API_KEY
+      ? {
+          apiKey: process.env.OPENROUTER_API_KEY,
+          referer: process.env.OPENROUTER_REFERER ?? 'https://benebsworth.com/lab/llm-benchmark',
+          title: process.env.OPENROUTER_TITLE ?? 'Ben Ebsworth LLM Benchmark',
+        }
+      : undefined,
     openai: process.env.OPENAI_API_KEY ? { apiKey: process.env.OPENAI_API_KEY } : undefined,
     anthropic: process.env.ANTHROPIC_API_KEY ? { apiKey: process.env.ANTHROPIC_API_KEY } : undefined,
     google: process.env.GOOGLE_API_KEY ? { apiKey: process.env.GOOGLE_API_KEY } : undefined,

@@ -14,8 +14,24 @@ import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
 import { modelIndexPath, modelPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
-import { formatRuntime, formatCost } from '@/components/lab/llm-benchmark/format'
-import { Cpu, ArrowRight } from 'lucide-react'
+import {
+  formatRuntime,
+  formatCost,
+  formatPricingPer1M,
+  formatReleaseDate,
+  isFreeModel,
+} from '@/components/lab/llm-benchmark/format'
+import {
+  Cpu,
+  ArrowRight,
+  ExternalLink,
+  CalendarDays,
+  Building2,
+  GitBranch,
+  Scale,
+  Package,
+  Layers,
+} from 'lucide-react'
 import Link from 'next/link'
 
 export function generateStaticParams() {
@@ -65,6 +81,31 @@ function statusClass(status: string): string {
       : 'text-rose-600 dark:text-rose-400'
 }
 
+function MetaRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: React.ReactNode
+}) {
+  return (
+    <tr>
+      <th
+        scope="row"
+        className="w-44 px-5 py-3 font-mono text-xs uppercase tracking-wider text-muted"
+      >
+        <span className="inline-flex items-center gap-2">
+          <span className="text-fg/40">{icon}</span>
+          {label}
+        </span>
+      </th>
+      <td className="px-5 py-3 text-fg/80">{value}</td>
+    </tr>
+  )
+}
+
 export default async function ModelDetailPage({
   params,
 }: {
@@ -75,6 +116,7 @@ export default async function ModelDetailPage({
   if (!model) notFound()
 
   const results = resultsForModel(model.id)
+  const free = isFreeModel(model)
 
   const breadcrumb = breadcrumbLd([
     { name: 'Home', url: `${SITE_URL}/` },
@@ -116,19 +158,99 @@ export default async function ModelDetailPage({
             <h1 className="mt-3 type-h1">{model.name}</h1>
           </Reveal>
           <Reveal delay={160}>
-            <p className="mt-4 max-w-prose type-body text-fg/70">{model.capabilities}</p>
+            <p className="mt-4 max-w-prose type-body text-fg/70">{model.blurb ?? model.capabilities}</p>
           </Reveal>
           <Reveal delay={240}>
             <div className="mt-6 flex flex-wrap gap-3 font-mono text-xs text-muted">
+              {free && (
+                <span className="rounded-full border border-emerald-600/40 bg-emerald-600/10 px-3 py-1 text-emerald-600 dark:text-emerald-400">
+                  Free tier
+                </span>
+              )}
               <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1">
                 Context: {model.contextWindow.toLocaleString()} tokens
               </span>
               <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1">
-                In: ${(model.costPer1kInputUsd * 1000).toFixed(2)} / 1M tokens
+                {formatPricingPer1M(model)}
               </span>
-              <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1">
-                Out: ${(model.costPer1kOutputUsd * 1000).toFixed(2)} / 1M tokens
-              </span>
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="pb-14">
+          <Reveal>
+            <h2 className="type-h2 mb-6">Model metadata</h2>
+          </Reveal>
+          <Reveal delay={60}>
+            <div className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <table className="w-full min-w-[480px] text-left text-sm">
+                <caption className="sr-only">
+                  {model.name} metadata: company, family, release, license, parameters, and links.
+                </caption>
+                <tbody className="divide-y divide-[var(--color-border)]">
+                  <MetaRow
+                    icon={<Building2 className="h-4 w-4" />}
+                    label="Company"
+                    value={
+                      model.vendorUrl ? (
+                        <a
+                          href={model.vendorUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--color-project)]"
+                        >
+                          {model.company ?? model.provider}
+                          <ExternalLink className="h-3 w-3" aria-hidden />
+                        </a>
+                      ) : (
+                        model.company ?? model.provider
+                      )
+                    }
+                  />
+                  <MetaRow
+                    icon={<GitBranch className="h-4 w-4" />}
+                    label="Family"
+                    value={model.family ?? '—'}
+                  />
+                  <MetaRow
+                    icon={<CalendarDays className="h-4 w-4" />}
+                    label="Released"
+                    value={model.released ? formatReleaseDate(model.released) : '—'}
+                  />
+                  <MetaRow
+                    icon={<Scale className="h-4 w-4" />}
+                    label="License"
+                    value={model.license ?? '—'}
+                  />
+                  <MetaRow
+                    icon={<Package className="h-4 w-4" />}
+                    label="Parameters"
+                    value={model.params ?? '—'}
+                  />
+                  <MetaRow
+                    icon={<Layers className="h-4 w-4" />}
+                    label="Capabilities"
+                    value={model.tags?.length ? model.tags.map((t) => `#${t}`).join(' · ') : model.capabilities}
+                  />
+                  {model.modelCardUrl && (
+                    <MetaRow
+                      icon={<ExternalLink className="h-4 w-4" />}
+                      label="Model card"
+                      value={
+                        <a
+                          href={model.modelCardUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--color-project)]"
+                        >
+                          {model.provider === 'OpenRouter' ? 'OpenRouter' : 'Provider model page'}
+                          <ExternalLink className="h-3 w-3" aria-hidden />
+                        </a>
+                      }
+                    />
+                  )}
+                </tbody>
+              </table>
             </div>
           </Reveal>
         </section>

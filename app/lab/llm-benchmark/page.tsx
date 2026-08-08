@@ -69,10 +69,10 @@ export default function LlmBenchmarkPage() {
           }),
           datasetLd({
             name: 'Frontier LLM Benchmark Results',
-            description: `Scored results for ${BENCHMARK_MODELS.length} frontier language models across ${BENCHMARK_TASKS.length} runnable tasks (physics, game building, security, UI, mathematics, electronics), measuring correctness, runtime, and cost.`,
+            description: `Scored results for ${BENCHMARK_MODELS.length} language models — paid frontier models and open-weight free-tier models — across ${BENCHMARK_TASKS.length} runnable tasks (physics, game building, security, UI, mathematics, electronics), measuring correctness, runtime, and cost.`,
             url: `${SITE_URL}/lab/llm-benchmark/`,
             variableMeasured: ['Correctness score (0–100)', 'Inference runtime (ms)', 'Token usage', 'Estimated cost (USD)'],
-            keywords: ['LLM benchmark', 'Claude', 'GPT', 'Gemini', 'Kimi', 'code generation', 'model evaluation'],
+            keywords: ['LLM benchmark', 'Claude', 'GPT', 'Gemini', 'Kimi', 'Nemotron', 'Gemma', 'code generation', 'model evaluation'],
           }),
         ]}
       />
@@ -98,10 +98,12 @@ export default function LlmBenchmarkPage() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-4 max-w-prose type-body text-fg/70">
-              Head-to-head evaluations of {BENCHMARK_MODELS.length} frontier models — Claude, GPT,
-              Gemini, Kimi and Codex — across physics, game building, security, UI generation,
-              mathematics, and electronics. Each task asks for a single self-contained artifact,
-              run multiple times and scored for correctness, runtime, and cost.
+              Head-to-head evaluations of {BENCHMARK_MODELS.length} models — paid frontier models
+              (Claude, GPT, Gemini, Kimi, Codex) plus open-weight models on the OpenRouter free
+              tier (Nemotron, Gemma, GPT-OSS, North, Laguna, Ling) — across physics, game
+              building, security, UI generation, mathematics, and electronics. Each task asks for
+              a single self-contained artifact, run multiple times and scored for correctness,
+              runtime, and cost.
             </p>
           </Reveal>
         </section>

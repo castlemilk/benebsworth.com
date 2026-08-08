@@ -27,3 +27,26 @@ export function formatContextWindow(n: number): string {
   if (n >= 1_000) return `${(n / 1_000).toFixed(0)}k`
   return `${n}`
 }
+
+export function isFreeModel(model: {
+  costPer1kInputUsd: number
+  costPer1kOutputUsd: number
+}): boolean {
+  return model.costPer1kInputUsd === 0 && model.costPer1kOutputUsd === 0
+}
+
+/** Compact "$X in / $Y out / 1M" pricing; "Free" for the $0/$0 tier. */
+export function formatPricingPer1M(model: {
+  costPer1kInputUsd: number
+  costPer1kOutputUsd: number
+}): string {
+  if (isFreeModel(model)) return 'Free'
+  return `$${(model.costPer1kInputUsd * 1000).toFixed(2)} in / $${(model.costPer1kOutputUsd * 1000).toFixed(2)} out`
+}
+
+/** Short-form release date for a yyyy-mm-dd ISO string. */
+export function formatReleaseDate(iso: string): string {
+  const d = new Date(`${iso}T00:00:00Z`)
+  if (Number.isNaN(d.getTime())) return iso
+  return d.toLocaleDateString('en-AU', { year: 'numeric', month: 'short' })
+}

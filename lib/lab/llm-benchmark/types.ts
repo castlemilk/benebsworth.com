@@ -18,6 +18,24 @@ export interface BenchmarkModel {
   costPer1kOutputUsd: number
   contextWindow: number
   capabilities: string
+  /** Link to the provider's public model card (e.g. OpenRouter model page). */
+  modelCardUrl?: string
+  /** Link to the vendor's website. */
+  vendorUrl?: string
+  /** Vendor organisation name (e.g. 'NVIDIA'). */
+  company?: string
+  /** Model family (e.g. 'Nemotron 3'). */
+  family?: string
+  /** Release date as ISO yyyy-mm-dd. */
+  released?: string
+  /** Model license (e.g. 'Apache 2.0'). */
+  license?: string
+  /** Human-readable parameter count (e.g. '550B A55B'). */
+  params?: string
+  /** Short capability tags shown on cards. */
+  tags?: string[]
+  /** One-line description shown on model cards. */
+  blurb?: string
 }
 
 export interface BenchmarkCategory {

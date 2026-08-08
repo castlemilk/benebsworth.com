@@ -11,6 +11,7 @@ import { generateOpenAI, type OpenAIConfig } from './openai'
 import { generateAnthropic, type AnthropicConfig } from './anthropic'
 import { generateGoogle, type GoogleConfig } from './google'
 import { generateMoonshot, type MoonshotConfig } from './moonshot'
+import { generateOpenRouter, type OpenRouterConfig } from './openrouter'
 import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
 import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
@@ -23,6 +24,7 @@ export interface ProviderRunnerConfig {
   anthropic?: AnthropicConfig
   google?: GoogleConfig
   moonshot?: MoonshotConfig
+  openrouter?: OpenRouterConfig
   agy?: AgyConfig
   codex?: CodexConfig
   /** Per-call timeout in milliseconds. Defaults to 10 minutes. */
@@ -144,7 +146,11 @@ export function isQuotaError(err: unknown): boolean {
     message.includes('insufficient_quota') ||
     message.includes('exceeded your current quota') ||
     message.includes('credit balance') ||
-    message.includes('billing cycle')
+    message.includes('billing cycle') ||
+    // OpenRouter free tier: the per-model daily cap is a hard stop, not a
+    // transient rate limit — every later call fails identically.
+    message.includes('daily limit') ||
+    message.includes('no free model provider')
   )
 }
 
@@ -200,6 +206,9 @@ function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
     case 'Moonshot AI':
       if (!cfg.moonshot) throw new Error(`Moonshot config missing for ${model.id}`)
       return { provider: 'moonshot' as const, config: cfg.moonshot }
+    case 'OpenRouter':
+      if (!cfg.openrouter) throw new Error(`OpenRouter config missing for ${model.id}`)
+      return { provider: 'openrouter' as const, config: cfg.openrouter }
     case 'Agy':
       if (!cfg.agy) throw new Error(`Agy config missing for ${model.id}`)
       return { provider: 'agy' as const, config: cfg.agy }
@@ -226,6 +235,8 @@ async function generateWithProvider(
       return generateGoogle(config, model, task)
     case 'moonshot':
       return generateMoonshot(config, model, task)
+    case 'openrouter':
+      return generateOpenRouter(config, model, task)
     case 'agy':
       return generateAgy(config, model, task)
     case 'codex':

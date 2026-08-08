@@ -32,7 +32,14 @@ export function rankModels(results: BenchmarkResult[] = BENCHMARK_RESULTS): Mode
     const rs = results.filter((r) => r.modelId === model.id)
     const stats = aggregateResults(rs)
     const totalCost = rs.reduce((sum, r) => sum + r.costUsd, 0)
-    const scorePerDollar = totalCost > 0 ? stats.avgScore / totalCost : 0
+    // Free-tier models cost $0, so score-per-dollar is unbounded (infinity)
+    // rather than zero — a real result, and a more honest "best value" crown.
+    const scorePerDollar =
+      rs.length > 0 && totalCost === 0
+        ? Number.POSITIVE_INFINITY
+        : totalCost > 0
+          ? stats.avgScore / totalCost
+          : 0
     return {
       model,
       stats,
@@ -72,8 +79,16 @@ export function headlineVerdicts(rankings: ModelRanking[]): Verdict[] {
       label: 'Best value',
       modelId: bestValue.model.id,
       modelName: bestValue.model.name,
-      value: `${Math.round(bestValue.scorePerDollar).toLocaleString()}`,
-      detail: 'score per US dollar of total spend',
+      // Free-tier models score-per-dollar is unbounded; show ∞ rather than a
+      // meaningless number.
+      value:
+        Number.isFinite(bestValue.scorePerDollar)
+          ? `${Math.round(bestValue.scorePerDollar).toLocaleString()}`
+          : '∞',
+      detail:
+        Number.isFinite(bestValue.scorePerDollar)
+          ? 'score per US dollar of total spend'
+          : 'score per US dollar — $0 spend, unbounded value',
     },
     {
       label: 'Fastest',

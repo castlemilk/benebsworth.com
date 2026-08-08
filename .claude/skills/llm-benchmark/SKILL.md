@@ -66,7 +66,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
    - `contextWindow`, `capabilities`
 3. For API providers, ensure the runner config is wired and API keys are available. For CLI providers, ensure the CLI is installed and authenticated locally.
 4. Run the harness to generate results for the new model, or seed mock results.
-5. Run `npm run typecheck` and `npm run test -- lib/lab/llm-benchmark/`.
+5. Run `task bench:verify` (typecheck + the benchmark unit tests).
 
 Model `id` must be URL-safe and unique.
 
@@ -139,34 +139,44 @@ GOOGLE_API_KEY=...
 
 ### Commands
 
-```bash
-# Run all models, all tasks, using each task's iterationsDefault
-npm run benchmark:run
+The harness is wrapped by taskfiles/benchmark.yml — `task bench` prints the
+knobs, `task bench:run --summary` prints the cost/failure/caching semantics. The
+`RUN_*` env vars below still work if you call the script directly.
 
-# Run only Kimi K2.7
-RUN_MODELS=kimi-k2.7 npm run benchmark:run
+```bash
+# Cheapest check that the harness works: 1 model, 1 iteration
+task bench:smoke
+
+# Run all models, all tasks, using each task's iterationsDefault
+task bench:run
 
 # Run only specific models
-RUN_MODELS=kimi-k2.7,gpt-5 npm run benchmark:run
+task bench:run MODELS=kimi-k2.7
+task bench:run MODELS=kimi-k2.7,gpt-5
 
 # Run only a specific task (useful for debugging one provider)
-RUN_TASKS=equation-solver npm run benchmark:run
+task bench:run TASKS=equation-solver
 
 # Override iterations (default is each task's iterationsDefault, currently 5)
-RUN_ITERATIONS=1 npm run benchmark:run
+task bench:run MODELS=kimi-k2.7 ITER=1
 
 # Control parallel task/model combinations (default 3)
-RUN_CONCURRENCY=1 npm run benchmark:run
+task bench:run MODELS=kimi-k2.7 CONC=1
 
 # Skip the response cache and force fresh API calls
-RUN_BUST_CACHE=1 npm run benchmark:run
+task bench:run MODELS=kimi-k2.7 BUST=1
 
-# CLI-based providers (no API key needed; uses locally authenticated CLIs)
-RUN_MODELS=gemini-3.5-flash-agy npm run benchmark:run
-RUN_MODELS=codex-gpt-5.5 npm run benchmark:run
+# CLI-based providers (no API key needed; uses locally authenticated CLIs).
+# `bench:cli` FORCES concurrency 1 — agy is unreliable in parallel.
+task bench:cli MODELS=gemini-3.5-flash-agy
+task bench:cli MODELS=codex-gpt-5.5
 
 # Restore sample/mock outputs without API calls
-node scripts/seed-mock-results.mjs
+task bench:seed
+
+# After any results.json change: republish artifacts, then verify
+task bench:outputs
+task bench:verify
 ```
 
 ### How it works
@@ -268,10 +278,9 @@ export async function generateMyProvider(
 
 ## Verification Checklist
 
-- [ ] `npm run typecheck` passes
-- [ ] `npm run test -- lib/lab/llm-benchmark/` passes
-- [ ] `npm run build` statically generates new routes
+- [ ] `task bench:verify` passes (typecheck + benchmark unit tests)
+- [ ] `task build` statically generates new routes
 - [ ] New task has pre + post MDX files
 - [ ] New demo is exported and mapped
 - [ ] Results reference valid task and model IDs
-- [ ] After harness changes, a live smoke test succeeds (`RUN_MODELS=kimi-k2.7 RUN_ITERATIONS=1 npm run benchmark:run`)
+- [ ] After harness changes, a live smoke test succeeds (`task bench:smoke`)

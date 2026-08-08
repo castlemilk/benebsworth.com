@@ -99,3 +99,6 @@ lib/lab/llm-benchmark/results-*-html.json
 
 # Temporary working directories for scripts and manual review
 tmp/
+
+# Task runner fingerprint cache (Taskfile sources/generates checksums)
+.task/

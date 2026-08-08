@@ -1,14 +1,23 @@
 ---
 name: deploying-the-site
-description: Use when deploying benebsworth.com (staging or prod) or changing its infra/DNS/headers. The live site is on CLOUDFLARE PAGES (deploy via `npm run deploy:pages:*`; DNS/zone in `infra/cloudflare/` Terraform; headers/CSP in `public/_headers`; GA4 + CF analytics). The legacy AWS S3+CloudFront path (3-pass `aws s3 sync`, adopted prod Terraform, DNSimple) is kept DORMANT as the rollback fallback — documented below.
+description: Use when deploying benebsworth.com (staging or prod) or changing its infra/DNS/headers. The live site is on CLOUDFLARE PAGES (deploy via `task deploy:staging` / `task deploy:prod`; DNS/zone in `infra/cloudflare/` Terraform; headers/CSP in `public/_headers`; GA4 + CF analytics). The legacy AWS S3+CloudFront path (3-pass `aws s3 sync`, adopted prod Terraform, DNSimple) is kept DORMANT as the rollback fallback — documented below.
 ---
 
 # Deploying benebsworth.com
 
+> **⚙️ COMMANDS LIVE IN TASKFILES.** Every deploy command is a task with its
+> inputs, outputs and gotchas attached — `task deploy` lists the targets,
+> `task deploy:prod --summary` prints the long-form docs. The `npm run
+> deploy:*` scripts still work; they are thin aliases that delegate to Task.
+> Post-deploy checks are `task deploy:verify:staging` / `:prod` (they cache-bust,
+> because Cloudflare's edge can serve a pre-deploy response for a few seconds and
+> make a good deploy look broken). Rollback procedure: `task deploy:rollback:info`.
+
 > **⚡ NOW ON CLOUDFLARE PAGES (migrated 2026-06-23).** The live site is served by
-> **Cloudflare Pages**, not S3+CloudFront. Deploy with **`npm run deploy:pages:next`**
-> (staging → project `benebsworth-next`) / **`npm run deploy:pages:prod`** (prod →
-> `benebsworth`) — `scripts/deploy-pages.sh` builds then `wrangler pages deploy out`
+> **Cloudflare Pages**, not S3+CloudFront. Deploy with **`task deploy:staging`**
+> (→ project `benebsworth-next`) / **`task deploy:prod`** (→ `benebsworth`; it
+> prompts for confirmation) — `scripts/deploy-pages.sh` runs a from-scratch
+> `task build:clean` then `wrangler pages deploy out`
 > (passing `--branch` = each project's production branch so it's a prod deploy, not a
 > preview; needs `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in env).
 > DNS is on Cloudflare (NS `luke`/`mckinley`, zone `b18684990f8bbad83a5dada1824ad388`);
@@ -47,12 +56,12 @@ Prod **used to** be a landmine — empty local state + architecture drift made a
 ## Content deploy (the 99% case)
 
 ```bash
-SKIP_ARCHIVE=1 npm run deploy:next    # staging → scripts/deploy.sh staging
-SKIP_ARCHIVE=1 npm run deploy:prod    # prod    → scripts/deploy.sh prod
+task deploy:aws:staging    # → scripts/deploy.sh staging
+task deploy:aws:prod       # → scripts/deploy.sh prod (prompts)
 ```
-- `SKIP_ARCHIVE=1` skips the flaky legacy Gatsby `build:archive` (the script documents this).
+- The tasks set `SKIP_ARCHIVE=1` for you — it skips the flaky legacy Gatsby `build:archive` and adds `--exclude 'archive/*'` so `--delete` leaves the deployed archive keys alone.
 - After finishing deployable work, **auto-deploy to staging** for review without asking; **never auto-deploy prod** (see [[auto-deploy-staging]]).
-- `deploy.sh` does: `npm run build` → **3-pass `aws s3 sync`** → CloudFront `/*` invalidation.
+- `deploy.sh` does: `task build:clean` → **3-pass `aws s3 sync`** → CloudFront `/*` invalidation.
   - Pass 1: `_next/static/*` (content-hashed) → `max-age=31536000, immutable`.
   - Pass 2: media (`*.webp,png,jpg,jpeg,gif,svg,avif,ico,woff2,mp4,webm`) → `max-age=86400` (CDN invalidated each deploy, so only browser repeat-loads use this window; raise once content settles).
   - Pass 3: everything else (HTML, sitemap, feed, robots, llms, `.md` siblings) → `max-age=60`.

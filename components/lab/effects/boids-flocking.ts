@@ -135,7 +135,7 @@ export const BoidsFlocking: EffectModule = {
           vy[i] += sepY * avoidF
 
           // max-speed clamp (and a floor so nothing stalls)
-          let sp = Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i])
+          const sp = Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i])
           if (sp > maxSpeed) {
             const k = maxSpeed / sp
             vx[i] *= k; vy[i] *= k

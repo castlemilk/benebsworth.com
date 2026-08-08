@@ -12,6 +12,10 @@ esac
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
 : "${CLOUDFLARE_API_TOKEN:?set CLOUDFLARE_API_TOKEN}"
 : "${CLOUDFLARE_ACCOUNT_ID:?set CLOUDFLARE_ACCOUNT_ID}"
-npm run build
+# Always a from-scratch build. `task build` fingerprints its inputs and would
+# legitimately skip, but a deploy is the one place where "out/ is exactly this
+# working tree, with no stale chunk from an earlier run" is worth the extra ~60s.
+task build:clean
+
 npx wrangler pages deploy out --project-name="$PROJECT" --branch="$BRANCH" --commit-dirty=true
 echo "deployed $ENV -> Cloudflare Pages project $PROJECT"

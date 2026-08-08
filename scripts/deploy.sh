@@ -22,7 +22,8 @@ if [ -z "$DIST_ID" ] || [ -z "$BUCKET" ]; then
   exit 1
 fi
 
-npm run build
+# From-scratch build — see the note in deploy-pages.sh.
+task build:clean
 
 # The legacy Gatsby archive build (build:archive) requires a Linux / Node-16
 # environment with libvips available for sharp (Phase 5 finding). It frequently

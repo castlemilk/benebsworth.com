@@ -1,0 +1,100 @@
+# Tests: Vitest unit suite + Playwright e2e.
+#
+# The two suites have completely different contracts:
+#   unit — pure logic/fs, node environment, no build needed, seconds
+#   e2e  — drives a real browser against the BUILT out/ directory, minutes
+version: '3'
+
+vars:
+  OUT_DIR: out
+  E2E_PORT: 4321
+
+tasks:
+  default:
+    desc: Run the unit test suite
+    cmds:
+      - task: unit
+
+  unit:
+    desc: Vitest unit suite (node environment, no build required)
+    summary: |
+      `vitest run` over {components,lib,app}/**/*.{test,spec}.{ts,tsx}.
+
+      ENVIRONMENT  'node' by default — NOT jsdom. jsdom fails to start workers
+      under Vitest 4 (the @asamuzakjp/css-color ESM/CJS conflict), so a test
+      needing a DOM must opt in per-file with:
+
+        // @vitest-environment jsdom
+
+      EXCLUDED  legacy/ (old Gatsby), e2e/ (those import @playwright/test and
+      are run by `task test:e2e`), out/, .next/.
+
+      The `@/...` alias is mirrored from tsconfig in vitest.config.ts.
+    cmds:
+      - '{{.BIN}}/vitest run'
+
+  watch:
+    desc: Vitest in watch mode
+    cmds:
+      - '{{.BIN}}/vitest'
+
+  e2e:
+    desc: Playwright e2e against the built static site (builds first if needed)
+    summary: |
+      Playwright drives the REAL static export, not the dev server:
+      playwright.config.ts starts `npx serve out -l {{.E2E_PORT}}` and points
+      baseURL at http://localhost:{{.E2E_PORT}}.
+
+      That means e2e only tests what a deploy would actually ship — including
+      the postbuild artifacts (OG .png rewrite, Pagefind index, .md siblings)
+      that the dev server never produces. It also means a STALE out/ silently
+      tests old code, so this task depends on `build` first.
+
+      `reuseExistingServer: true` — if something is already listening on
+      {{.E2E_PORT}}, Playwright USES IT rather than starting its own. Confirm the
+      listener is yours before trusting a pass:
+
+        lsof -nP -iTCP:{{.E2E_PORT}} -sTCP:LISTEN
+
+      Browsers must be installed once: `task test:e2e:install`.
+    deps: [":build"]
+    cmds:
+      - '{{.BIN}}/playwright test {{.CLI_ARGS}}'
+
+  e2e:fast:
+    desc: Playwright e2e WITHOUT rebuilding (assumes out/ is current)
+    summary: |
+      Skips the build dependency. Only correct when you have just run
+      `task build` and have not touched app code since — otherwise you are
+      testing a stale export and a pass means nothing.
+    preconditions:
+      - sh: test -d {{.OUT_DIR}}
+        msg: "out/ does not exist — run `task build` or use `task test:e2e`"
+    cmds:
+      - '{{.BIN}}/playwright test {{.CLI_ARGS}}'
+
+  e2e:ui:
+    desc: Playwright in interactive UI mode
+    deps: [":build"]
+    cmds:
+      - '{{.BIN}}/playwright test --ui'
+
+  e2e:install:
+    desc: Install Playwright browser binaries (one-time per machine)
+    cmds:
+      - '{{.BIN}}/playwright install chromium'
+
+  serve:
+    desc: Serve the built out/ directory on :{{.E2E_PORT}} for manual inspection
+    summary: |
+      Serves the production export exactly as Playwright does. Prefer this over
+      `task dev` when verifying anything that depends on the postbuild steps
+      (OG images, search, .md siblings) or on production routing.
+
+      Verify the listener is yours before testing against it:
+        lsof -nP -iTCP:{{.E2E_PORT}} -sTCP:LISTEN
+    preconditions:
+      - sh: test -d {{.OUT_DIR}}
+        msg: "out/ does not exist — run `task build` first"
+    cmds:
+      - '{{.BIN}}/serve {{.OUT_DIR}} -l {{.E2E_PORT}}'

@@ -1,0 +1,85 @@
+# Git hooks.
+#
+# Hooks live in .githooks/ (version-controlled) and are activated per clone with
+# `git config core.hooksPath .githooks`. No npm dependency, nothing generated,
+# and the hook scripts are reviewable in the diff like any other code.
+#
+# The split is deliberate:
+#   pre-commit  ~15s   staged-file lint + typecheck + changed-prose lint
+#   pre-push    ~2-4m  unit tests + full build
+#
+# Commits stay fast; nothing broken leaves the machine. Bypass either with
+# SKIP_HOOKS=1 or git's own --no-verify.
+version: '3'
+
+tasks:
+  hooks:install:
+    desc: Activate the version-controlled git hooks (core.hooksPath = .githooks)
+    summary: |
+      Points git at .githooks/ instead of .git/hooks/. Idempotent, and safe to
+      re-run.
+
+      Per clone, once. `task setup` does it for you.
+
+      To go back to stock: `task git:hooks:uninstall`.
+    cmds:
+      - chmod +x .githooks/*
+      - git config core.hooksPath .githooks
+      - echo "git hooks active — core.hooksPath = .githooks"
+
+  hooks:uninstall:
+    desc: Deactivate the repo git hooks (restores git's default .git/hooks)
+    cmds:
+      - git config --unset core.hooksPath || true
+      - echo "git hooks deactivated"
+
+  pre-commit:
+    desc: Fast pre-commit gate — staged lint, typecheck, changed prose
+    summary: |
+      What .githooks/pre-commit runs. Roughly 15 seconds.
+
+        1. lint:staged      ESLint over staged .ts/.tsx ONLY, so unrelated
+                            pre-existing errors elsewhere cannot block you.
+        2. lint:types       tsc --noEmit. Whole-project by necessity — tsc needs
+                            the full program, there is no staged-file mode.
+        3. lint:prose:changed  the anti-slop prose linter over changed manifest
+                            files, in gating mode.
+
+      Deliberately EXCLUDES the build and the test suites: minutes-long gates on
+      every commit get bypassed, and a bypassed gate protects nothing. Those run
+      on push instead.
+
+      Bypass: SKIP_HOOKS=1 git commit ...   or   git commit --no-verify
+    cmds:
+      - task: ":lint:staged"
+      - task: ":lint:types"
+      - task: ":lint:prose:changed"
+
+  pre-push:
+    desc: Heavy pre-push gate — unit tests + full production build
+    summary: |
+      What .githooks/pre-push runs. Two to four minutes.
+
+        1. test:unit    the Vitest suite
+        2. build        full static export, including the pre/post phases
+
+      The build is in the gate because this site's failure mode is a build-time
+      one: a bad MDX file, a broken registry entry, or a missing demo export
+      typechecks fine and only explodes during the static export.
+
+      e2e is NOT here — it needs browsers installed and adds minutes. Run
+      `task ci` before anything you care about.
+
+      Bypass: SKIP_HOOKS=1 git push ...   or   git push --no-verify
+    cmds:
+      - task: ":test:unit"
+      - task: ":build"
+
+  hooks:test:
+    desc: Dry-run both hooks without committing or pushing
+    summary: |
+      Runs the pre-commit gate then the pre-push gate exactly as the hooks would,
+      so you can confirm a change to them works before trusting it in anger.
+    cmds:
+      - task: pre-commit
+      - task: pre-push

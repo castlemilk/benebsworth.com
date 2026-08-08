@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Heavy pre-push gate (~2-4m): unit tests + full static build.
+# Logic lives in taskfiles/git.yml (`task git:pre-push`).
+#
+# The build is in this gate on purpose: a bad MDX file, a broken benchmark
+# registry entry, or a missing demo export typechecks clean and only fails
+# during the static export.
+#
+# Bypass: SKIP_HOOKS=1 git push ...   or   git push --no-verify
+set -euo pipefail
+
+if [ "${SKIP_HOOKS:-}" = "1" ]; then
+  echo "pre-push: skipped (SKIP_HOOKS=1)"
+  exit 0
+fi
+
+if ! command -v task >/dev/null 2>&1; then
+  echo "pre-push: 'task' not found — install it (brew install go-task) or push with --no-verify" >&2
+  exit 1
+fi
+
+exec task git:pre-push

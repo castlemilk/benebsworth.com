@@ -1,0 +1,164 @@
+# benebsworth.com — task runner
+#
+# Every core command (build, test, lint, deploy, benchmark, infra) lives here
+# rather than in package.json, so each one can declare its real inputs, its real
+# outputs, and the domain knowledge needed to run it correctly.
+#
+#   task              # list every documented task
+#   task <name> --summary   # long-form docs for one task, incl. gotchas
+#
+# npm scripts are kept as thin aliases for tool compatibility (Next.js, IDEs),
+# but `task` is the supported entry point.
+version: '3'
+
+# Secrets and deploy credentials live in .env (gitignored). Optional: tasks that
+# genuinely need a variable declare it via `requires:` and fail loudly by name.
+dotenv: ['.env']
+
+vars:
+  # Task does NOT do npm's PATH munging, and it ignores an `env: PATH:` override
+  # (PATH is special-cased), so `tsc` / `next` / `eslint` would die with
+  # "executable file not found in $PATH". Every local binary is therefore
+  # invoked as {{.BIN}}/<name> — which also guarantees the repo's pinned version
+  # runs rather than whatever is installed globally.
+  BIN: '{{.ROOT_DIR}}/node_modules/.bin'
+  # Static export target. Produced by `task build`, consumed by e2e + every deploy.
+  OUT_DIR: out
+  NODE_MIN_MAJOR: 20
+
+includes:
+  build: ./taskfiles/build.yml
+  lint: ./taskfiles/lint.yml
+  test: ./taskfiles/test.yml
+  deploy: ./taskfiles/deploy.yml
+  bench: ./taskfiles/benchmark.yml
+  infra: ./taskfiles/infra.yml
+  git: ./taskfiles/git.yml
+
+tasks:
+  default:
+    desc: List all available tasks
+    silent: true
+    cmds:
+      - task --list
+
+  setup:
+    desc: Install dependencies and wire up git hooks (run once per clone)
+    summary: |
+      One-time setup for a fresh clone.
+
+        1. Verifies Node >= {{.NODE_MIN_MAJOR}} (.nvmrc pins 20). The main site needs
+           modern Node; ONLY the dormant legacy Gatsby archive needs Node 16,
+           and it builds in its own script.
+        2. npm ci (lockfile-exact install).
+        3. Installs the git hooks via core.hooksPath (see `task git:hooks:install`).
+
+      Does NOT create .env — copy the credentials in by hand. `task doctor`
+      reports which ones are missing and what they gate.
+    cmds:
+      - task: check:node
+      - npm ci
+      - task: git:hooks:install
+      - task: doctor
+
+  check:node:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        major="$(node -p 'process.versions.node.split(".")[0]')"
+        if [ "$major" -lt "{{.NODE_MIN_MAJOR}}" ]; then
+          echo "error: Node >= {{.NODE_MIN_MAJOR}} required (found $(node -v)); see .nvmrc" >&2
+          exit 1
+        fi
+
+  doctor:
+    desc: Report toolchain + credential readiness and what each missing item blocks
+    summary: |
+      Read-only diagnostic. Prints which tools and credentials are present and,
+      for each missing one, which tasks it blocks. Never mutates anything and
+      always exits 0 — it is a report, not a gate.
+    silent: true
+    cmds:
+      - |
+        echo "== toolchain"
+        printf '  %-22s %s\n' node "$(node -v 2>/dev/null || echo MISSING)"
+        printf '  %-22s %s\n' npm "$(npm -v 2>/dev/null || echo MISSING)"
+        printf '  %-22s %s\n' task "$(task --version 2>/dev/null || echo MISSING)"
+        for t in aws terraform; do
+          printf '  %-22s %s\n' "$t" "$(command -v $t >/dev/null 2>&1 && echo present || echo 'missing (system tool)')"
+        done
+        for t in wrangler pagefind playwright vitest tsx; do
+          printf '  %-22s %s\n' "$t" "$(test -x node_modules/.bin/$t && echo 'present (local)' || echo 'missing — run: npm ci')"
+        done
+        echo "== credentials (.env)"
+        check() {
+          if [ -n "$(printenv "$1")" ]; then printf '  %-26s set\n' "$1"
+          else printf '  %-26s MISSING  -> blocks: %s\n' "$1" "$2"; fi
+        }
+        check CLOUDFLARE_API_TOKEN   "deploy:staging, deploy:prod"
+        check CLOUDFLARE_ACCOUNT_ID  "deploy:staging, deploy:prod"
+        check OPENROUTER_API_KEY     "bench:run for openrouter models"
+        check MOONSHOT_API_KEY       "bench:run for kimi models"
+        check OPENAI_API_KEY         "bench:run for openai models"
+        check ANTHROPIC_API_KEY      "bench:run for anthropic models"
+        check GOOGLE_API_KEY         "bench:run for google models"
+        check DNSSIMPLE_TOKEN        "infra:aws:plan/apply ENV=staging (exported as TF_VAR_dnsimple_token)"
+        check TF_VAR_cloudflare_zone_id "infra:cf:plan/apply"
+        echo "== git hooks"
+        hp="$(git config --get core.hooksPath || true)"
+        if [ "$hp" = ".githooks" ]; then echo "  core.hooksPath = .githooks (installed)"
+        else echo "  core.hooksPath = ${hp:-<unset>}  -> run: task git:hooks:install"; fi
+
+  verify:
+    desc: Full local verification — lint, typecheck, prose, unit tests (no build)
+    summary: |
+      The "is my working tree healthy" gate. Runs the four fast checks in the
+      order that fails cheapest-first:
+
+        lint:eslint  ->  lint:types  ->  lint:prose  ->  test:unit
+
+      Excludes the build and e2e (both need a ~2-4 min static export); use
+      `task ci` for the everything-gate.
+    cmds:
+      - task: lint:eslint
+      - task: lint:types
+      - task: lint:prose
+      - task: test:unit
+
+  ci:
+    desc: Everything gate — verify + build + e2e (what a CI job would run)
+    summary: |
+      Full pipeline: `task verify`, then a clean production build, then the
+      Playwright e2e suite against the built out/ directory.
+
+      Expect 3-6 minutes. This is what `git push` triggers in reduced form
+      (see `task git:pre-push`, which skips e2e for speed).
+    cmds:
+      - task: verify
+      - task: build:clean
+      - task: test:e2e
+
+  clean:
+    desc: Remove build artifacts (.next, out, test-results, pagefind index)
+    summary: |
+      Removes generated output only — never touches node_modules, .env, .cache
+      (the LLM benchmark API response cache), or anything tracked by git.
+
+      Use when a stale build is suspected: Next dev/build routinely serves stale
+      lazy chunks, and clearing .next AND out is the reliable fix (clearing only
+      .next/cache is not).
+    cmds:
+      - rm -rf .next {{.OUT_DIR}} test-results playwright-report
+      - echo "cleaned .next, {{.OUT_DIR}}, test-results, playwright-report"
+
+  dev:
+    desc: Start the Next.js dev server on :3000
+    summary: |
+      `next dev`. Note the dev server does NOT run the prebuild/postbuild steps,
+      so these are absent locally: .md siblings (public/blog/*/index.md),
+      benchmark output JSON (public/lab-data/**), the OG .png rewrite, and the
+      Pagefind search index. Anything that depends on those must be checked
+      against a real `task build` + `task test:e2e`.
+    cmds:
+      - '{{.BIN}}/next dev'

@@ -1,0 +1,186 @@
+# LLM benchmark harness (/lab/llm-benchmark).
+#
+# The harness makes REAL, PAID API calls. Every task here states what it spends
+# and what it writes. The one file that matters is:
+#
+#   lib/lab/llm-benchmark/results.json   — COMMITTED, the published leaderboard
+#
+# It is written INCREMENTALLY after every completed task/model job, and every
+# write re-reads the file first, so a kill, timeout, or concurrent run never
+# loses finished work. mergeResults() additionally refuses to let a fresh run
+# with 0 successful iterations overwrite a baseline record that has successes —
+# a quota-killed re-run cannot corrupt good data.
+version: '3'
+
+vars:
+  RESULTS: lib/lab/llm-benchmark/results.json
+  CACHE: .cache/llm-benchmark-responses.json
+
+tasks:
+  default:
+    desc: Show benchmark harness usage and the knobs that control a run
+    silent: true
+    cmds:
+      - |
+        cat <<'EOF'
+        LLM benchmark harness
+
+          task bench:smoke                      1 iteration, 1 model — verify wiring, ~cents
+          task bench:run MODELS=a,b             run specific models, all tasks
+          task bench:run MODELS=a TASKS=t ITER=1
+          task bench:cli MODELS=codex-gpt-5.5   CLI providers (forced concurrency 1)
+          task bench:seed                       restore seeded sample data, NO API calls
+          task bench:outputs                    regenerate static output artifacts
+          task bench:verify                     typecheck + benchmark unit tests
+
+        Knobs (all optional):
+          MODELS=   comma-separated registry ids   (default: kimi-k2.7)
+          TASKS=    comma-separated task ids       (default: every task)
+          ITER=     iterations per task/model      (default: task's iterationsDefault, 5)
+          CONC=     parallel task/model jobs       (default: 3; MUST be 1 for CLI providers)
+          TIMEOUT=  per-call timeout ms            (default: 10 min)
+          BUST=1    ignore the response cache and force fresh paid calls
+        EOF
+
+  run:
+    desc: Run the harness against live provider APIs (SPENDS MONEY — writes results.json)
+    summary: |
+      Runs `iterations` API calls per task × model, scores every successful
+      output, aggregates into one record per pair, and merges into results.json.
+
+      COST  Real spend. A full sweep (all models × 7 tasks × 5 iterations) is
+      30-40 minutes and dollars, not cents. Scope it: always pass MODELS=, and
+      pass TASKS= when debugging one provider.
+
+      CREDENTIALS  Only the providers whose keys are present are configured;
+      a model whose key is missing simply fails its calls. Keys read from .env:
+      OPENROUTER_API_KEY, MOONSHOT_API_KEY (+ MOONSHOT_BASE_URL), OPENAI_API_KEY,
+      ANTHROPIC_API_KEY, GOOGLE_API_KEY. CLI providers (agy, codex) need no key —
+      they use the locally authenticated CLI.
+
+      CACHING  Successful responses cache to {{.CACHE}} (gitignored). The key
+      includes model, task, a SHA-256 of the prompt, and the iteration index.
+      Re-running is therefore nearly free unless you pass BUST=1.
+
+      FAILURE SEMANTICS
+        * Transient errors (network, timeout, 5xx, 429/408) retry up to 2x,
+          rate-limits with 4x backoff. Auth/validation 4xx do NOT retry — same
+          prompt, same guaranteed failure — and break the iteration loop.
+        * A quota error breaks the loop AND trips a per-provider circuit breaker
+          that skips that provider's remaining tasks, recording nothing.
+        * A job that throws is logged and skipped; the rest of the sweep runs on.
+
+      AFTER A RUN  results.json changed, so regenerate the static artifacts and
+      re-verify: `task bench:outputs && task bench:verify`. `task build` does the
+      artifact half automatically.
+    vars:
+      MODELS: '{{.MODELS | default ""}}'
+      TASKS: '{{.TASKS | default ""}}'
+      ITER: '{{.ITER | default ""}}'
+      CONC: '{{.CONC | default ""}}'
+      TIMEOUT: '{{.TIMEOUT | default ""}}'
+      BUST: '{{.BUST | default ""}}'
+    env:
+      RUN_MODELS: '{{.MODELS}}'
+      RUN_TASKS: '{{.TASKS}}'
+      RUN_ITERATIONS: '{{.ITER}}'
+      RUN_CONCURRENCY: '{{.CONC}}'
+      RUN_TIMEOUT_MS: '{{.TIMEOUT}}'
+      RUN_BUST_CACHE: '{{.BUST}}'
+    cmds:
+      - '{{.BIN}}/tsx scripts/run-benchmark.mjs'
+
+  smoke:
+    desc: One iteration of one model — cheapest possible check that the harness works
+    summary: |
+      The standard post-change smoke test: a single iteration for a single
+      model. Costs cents and takes under a couple of minutes.
+
+      Defaults to kimi-k2.7; override with MODELS=. It DOES write to
+      results.json (merged, not clobbered), which is intended — a smoke run is
+      still a real data point.
+    vars:
+      MODELS: '{{.MODELS | default "kimi-k2.7"}}'
+    cmds:
+      - task: run
+        vars: { MODELS: '{{.MODELS}}', ITER: '1' }
+
+  cli:
+    desc: Run CLI-backed providers (agy, codex) — forces concurrency 1
+    summary: |
+      CLI providers shell out to a locally-installed, locally-authenticated
+      binary (`agy -p ... --model ...`, `codex exec --ephemeral --sandbox
+      read-only ...`).
+
+      CONCURRENCY IS FORCED TO 1. Running agy in parallel is unreliable — this
+      task hardcodes CONC=1 rather than trusting the caller to remember.
+
+      Test the CLI by hand first; a broken login looks like a harness bug:
+        agy -p "say hi" --model "Gemini 3.5 Flash (High)"
+        codex exec --ephemeral --sandbox read-only "say hi"
+
+      Token counts are ESTIMATED when the CLI does not report them, so costs
+      for these models are approximate.
+    requires:
+      vars: [MODELS]
+    cmds:
+      - task: run
+        vars: { MODELS: '{{.MODELS}}', TASKS: '{{.TASKS}}', ITER: '{{.ITER}}', CONC: '1' }
+
+  seed:
+    desc: Restore seeded sample results without calling any API (free, offline)
+    summary: |
+      scripts/seed-mock-results.mjs writes hand-authored sample records from
+      scripts/sample-outputs.json, each stamped `source: 'seeded'`.
+
+      Seeded records are NOT real measurements. The UI must always disclose them
+      and exclude them from headline verdicts — `source` is the flag that makes
+      that possible, so never strip it.
+
+      Writes {{.RESULTS}}. Use for offline UI work, never to fill a gap in a
+      published comparison.
+    cmds:
+      - node scripts/seed-mock-results.mjs
+
+  merge:
+    desc: 'Merge per-model result files into results.json — `task bench:merge -- <model-id>...`'
+    summary: |
+      For the file-handoff workflow: a runner writes
+      lib/lab/llm-benchmark/results-<model-id>.json, and this folds it into the
+      main results.json.
+
+      Per model id: drops the existing records for that model, appends the fresh
+      ones, then DELETES the per-model file. Destructive on the source file by
+      design — do not point it at something you have not reviewed.
+    cmds:
+      - node scripts/merge-benchmark-results.mjs {{.CLI_ARGS}}
+
+  outputs:
+    desc: Regenerate the static per-result output artifacts from results.json
+    summary: |
+      Thin wrapper over `task build:gen:outputs`. Run after ANY change to
+      results.json so the on-demand output fetches match the leaderboard.
+      `task build` runs it automatically.
+    cmds:
+      - task: ":build:gen:outputs"
+
+  verify:
+    desc: Typecheck + run the benchmark unit tests
+    summary: |
+      The post-change gate from the skill's verification checklist. Does not
+      build — run `task build` separately when adding a task or model, to
+      confirm the new routes statically generate.
+    cmds:
+      - task: ":lint:types"
+      - '{{.BIN}}/vitest run lib/lab/llm-benchmark/'
+
+  cache:clear:
+    desc: Delete the cached provider responses (next run pays for fresh calls)
+    summary: |
+      Removes {{.CACHE}}. Equivalent to BUST=1 but permanent. Only do this when
+      you have a reason to distrust the cached responses — every subsequent run
+      re-pays for every call.
+    prompt: Delete the response cache? Every later run will re-pay for fresh API calls.
+    cmds:
+      - rm -f {{.CACHE}}
+      - echo "removed {{.CACHE}}"

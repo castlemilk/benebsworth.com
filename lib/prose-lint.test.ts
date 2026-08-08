@@ -335,7 +335,13 @@ describe('prose linter CLI', () => {
 
     const fixture = resolve(root, 'content/blog/prose-lint-hard-failure/index.mdx')
     mkdirSync(resolve(root, 'content/blog/prose-lint-hard-failure'), { recursive: true })
-    writeFileSync(fixture, '---\ntitle: Test\n---\n' + Array.from({ length: 4 }, () => 'one — two — three — four — five').join(' '))
+    // The fixture is written into the REAL content/blog tree (the prose CLI only
+    // accepts manifest paths), so a parallel vitest worker can observe it via
+    // getAllPosts(). Give it complete frontmatter — a missing `date` throws
+    // content-validation errors in lib/content.test.ts — plus an ancient date
+    // and draft:true so it can never displace the "latest post" assertion.
+    const frontmatter = '---\ntitle: Test\ndate: 1970-01-01\ndraft: true\n---\n'
+    writeFileSync(fixture, frontmatter + Array.from({ length: 4 }, () => 'one — two — three — four — five').join(' '))
     const hard = spawnSync(process.execPath, [cli, '--files', fixture, '--ci', '--format', 'json'], { cwd: root, encoding: 'utf8' })
     rmSync(resolve(root, 'content/blog/prose-lint-hard-failure'), { recursive: true, force: true })
     expect(hard.status).toBe(1)

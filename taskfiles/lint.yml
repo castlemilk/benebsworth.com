@@ -1,0 +1,107 @@
+# Static analysis: ESLint, TypeScript, and the bespoke prose linter.
+#
+# Three independent gates. They fail for different reasons and are kept
+# separate so a hook can run the cheap subset on changed files only.
+version: '3'
+
+tasks:
+  default:
+    desc: Run every static check — eslint, typecheck, prose
+    cmds:
+      - task: eslint
+      - task: types
+      - task: prose
+
+  eslint:
+    desc: ESLint over the whole repo
+    summary: |
+      `eslint .` using the flat config in eslint.config.mjs (typescript-eslint +
+      react + react-hooks + @next/eslint-plugin-next).
+
+      INPUT   every .ts/.tsx/.mjs/.js the flat config matches
+      OUTPUT  none (report only); exit 1 on any error
+    cmds:
+      - '{{.BIN}}/eslint .'
+
+  fix:
+    desc: ESLint with --fix (writes to your working tree)
+    summary: |
+      Mutates files. Run on a clean-ish tree so the autofix diff is reviewable
+      separately from your own changes.
+    cmds:
+      - '{{.BIN}}/eslint . --fix'
+
+  staged:
+    desc: ESLint over staged .ts/.tsx files only (used by the pre-commit hook)
+    summary: |
+      Lints exactly the files staged for commit, so an unrelated pre-existing
+      error elsewhere in the repo cannot block your commit.
+
+      Exits 0 with no output when no .ts/.tsx files are staged.
+      Deleted files are excluded (--diff-filter=ACMR).
+    silent: true
+    cmds:
+      - |
+        files="$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx)$' || true)"
+        if [ -z "$files" ]; then
+          echo "lint:staged — no staged TS files"
+          exit 0
+        fi
+        echo "$files" | tr '\n' ' ' | xargs '{{.BIN}}/eslint'
+
+  types:
+    desc: TypeScript typecheck (tsc --noEmit)
+    summary: |
+      Whole-project typecheck. There is no per-file mode: tsc needs the full
+      program, so this always runs repo-wide (a few seconds).
+
+      Run this after ANY `task build:gen:proto`, which wipes the manual
+      LabCategory block in lib/gen/content.ts and surfaces only as type errors.
+
+      OUTPUT  none; exit non-zero on any type error
+    cmds:
+      - '{{.BIN}}/tsc --noEmit'
+
+  prose:
+    desc: Anti-AI-slop prose linter over the tracked content manifest (report mode)
+    summary: |
+      scripts/lint-prose.mjs runs the deterministic prose rules in
+      scripts/prose-lint.mjs over the files listed in scripts/prose-sources.json.
+
+      Report mode: prints a table and ALWAYS exits 0. Use `task lint:prose:ci`
+      for the gating version.
+
+      Set `PROSE_BASE=<ref>` to lint only prose changed since that ref.
+    cmds:
+      - node scripts/lint-prose.mjs
+
+  prose:ci:
+    desc: Prose linter in gating mode (exit 1 on hard failures, 2 on rule errors)
+    summary: |
+      EXIT CODES — distinct on purpose:
+        0  clean
+        1  hard prose failures (banned constructions in your content)
+        2  linter-level error (bad input, manifest/masking rule violation) —
+           means the LINTER is misconfigured, not that your prose is bad
+
+      Treat a 2 as "fix the tooling", never as "rewrite the paragraph".
+    cmds:
+      - node scripts/lint-prose.mjs --ci
+
+  prose:changed:
+    desc: Prose linter over changed prose only, gating (used by the pre-commit hook)
+    summary: |
+      Lints only manifest files that differ from PROSE_BASE (default HEAD), in
+      --ci gating mode. This is the pre-commit variant: fast, and it cannot be
+      blocked by pre-existing prose debt elsewhere in the repo.
+    cmds:
+      - node scripts/lint-prose.mjs --changed --ci
+
+  prose:file:
+    desc: Prose-lint specific files — `task lint:prose:file -- content/blog/x/index.mdx`
+    summary: |
+      Explicit-file mode. Paths must be inside the prose manifest
+      (scripts/prose-sources.json); anything else is rejected with exit 2 and
+      "No supported prose files selected." Globs are supported.
+    cmds:
+      - node scripts/lint-prose.mjs --files {{.CLI_ARGS}}

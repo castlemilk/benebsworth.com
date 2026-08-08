@@ -101,7 +101,7 @@ export const KineticGas: EffectModule = {
     function resolvePair(i: number, j: number, r: number, d2: number) {
       const dx = px[j] - px[i]
       const dy = py[j] - py[i]
-      let dist2 = dx * dx + dy * dy
+      const dist2 = dx * dx + dy * dy
       if (dist2 >= d2) return
       let nx: number, ny: number, dist: number
       if (dist2 < 1e-6) {

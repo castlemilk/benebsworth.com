@@ -1,0 +1,190 @@
+# Deployment.
+#
+# THE LIVE SITE IS ON CLOUDFLARE PAGES (migrated 2026-06-23).
+#
+#   staging  https://next.benebsworth.com   project benebsworth-next
+#   prod     https://benebsworth.com        project benebsworth
+#
+# The AWS S3 + CloudFront stack is kept DORMANT as the rollback target — both
+# distributions are still Deployed with zero DNS pointing at them. Rolling back
+# is a DNS change (repoint the CNAME at the CloudFront target), NOT a rebuild.
+# The aws:* tasks below exist to keep that fallback exercisable.
+#
+# POLICY: staging deploys freely; prod deploys are gated behind a confirmation
+# prompt. Never deploy prod as a side effect of some other task.
+version: '3'
+
+vars:
+  OUT_DIR: out
+  STAGING_URL: https://next.benebsworth.com
+  PROD_URL: https://benebsworth.com
+  # Rollback targets — the dormant CloudFront distributions.
+  CF_DIST_PROD: d1nnawiq8qdjgb.cloudfront.net
+  CF_DIST_STAGING: d1qwco52fxejjm.cloudfront.net
+
+tasks:
+  default:
+    desc: Show deploy targets and how to reach them
+    silent: true
+    cmds:
+      - |
+        echo "staging : task deploy:staging   -> {{.STAGING_URL}}  (project benebsworth-next)"
+        echo "prod    : task deploy:prod      -> {{.PROD_URL}}       (project benebsworth, prompts)"
+        echo "verify  : task deploy:verify:staging | task deploy:verify:prod"
+        echo "rollback: task deploy:rollback:info"
+
+  staging:
+    desc: Build and deploy to Cloudflare Pages staging (next.benebsworth.com)
+    summary: |
+      Builds a clean static export and publishes it to the `benebsworth-next`
+      Pages project, then verifies the live site.
+
+      CREDENTIALS  CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID (from .env).
+
+      WHY --branch MATTERS  scripts/deploy-pages.sh passes --branch equal to the
+      project's configured production_branch (see infra/cloudflare/pages.tf).
+      wrangler treats any OTHER branch as a PREVIEW deployment, which lands on a
+      random *.pages.dev URL and never reaches the custom domain. Deploying from
+      a feature branch is fine — the flag, not your git branch, decides.
+
+      SAFE TO AUTOMATE. Staging is the review environment; deploy to it freely
+      after deployable work rather than asking.
+    requires:
+      vars: [CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID]
+    cmds:
+      - bash scripts/deploy-pages.sh staging
+      - task: verify:staging
+
+  prod:
+    desc: Build and deploy to Cloudflare Pages PRODUCTION (benebsworth.com) — prompts
+    prompt: Deploy to PRODUCTION (benebsworth.com)? This is publicly visible immediately.
+    summary: |
+      Publishes to the `benebsworth` Pages project, serving benebsworth.com.
+
+      Prompts before running; pass --yes to skip the prompt in an automated
+      context. Deploying prod publishes every unpublished-but-committed post and
+      lab page in the build — check `git status` and the content frontmatter
+      first.
+
+      Prod does NOT require the branch to be master: --branch is forced to the
+      project's production_branch so the deploy is a production one regardless
+      of the git branch you are on. That also means prod can end up serving code
+      that is not on master — deliberate, but worth stating in the deploy note.
+
+      AFTER DEPLOY  the verify step runs automatically. Cloudflare's edge can
+      still hand you a stale HTML response for a few seconds; the verify task
+      cache-busts to avoid a false negative.
+    requires:
+      vars: [CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID]
+    cmds:
+      - bash scripts/deploy-pages.sh prod
+      - task: verify:prod
+
+  verify:staging:
+    desc: Verify the staging site responds correctly
+    cmds:
+      - task: verify:url
+        vars: { URL: '{{.STAGING_URL}}' }
+
+  verify:prod:
+    desc: Verify the production site responds correctly (status + security headers)
+    cmds:
+      - task: verify:url
+        vars: { URL: '{{.PROD_URL}}' }
+
+  verify:url:
+    desc: 'Verify any deployed URL — `task deploy:verify:url URL=https://...`'
+    summary: |
+      Post-deploy smoke test. Checks the key routes return 200 and that the
+      security headers survived, then reports.
+
+      CACHE-BUSTS every request (?cb=<pid>). Without it, Cloudflare's edge can
+      serve a pre-deploy HTML response for a few seconds and make a good deploy
+      look broken. If a check fails, retry once with a cache-bust before
+      believing it.
+
+      Checks: /, /blog/, /lab/, /lab/llm-benchmark/, /sitemap.xml, /robots.txt,
+      plus CSP + HSTS + X-Frame-Options on the apex.
+    requires:
+      vars: [URL]
+    silent: true
+    cmds:
+      - |
+        fail=0
+        for path in / /blog/ /lab/ /lab/llm-benchmark/ /sitemap.xml /robots.txt; do
+          code="$(curl -s -o /dev/null -w '%{http_code}' "{{.URL}}${path}?cb=$$")"
+          if [ "$code" = "200" ]; then printf '  %-28s %s\n' "$path" "$code"
+          else printf '  %-28s %s  <-- FAIL\n' "$path" "$code"; fail=1; fi
+        done
+        hdrs="$(curl -sI "{{.URL}}/")"
+        for h in content-security-policy strict-transport-security x-frame-options; do
+          if printf '%s' "$hdrs" | grep -qi "^$h:"; then printf '  %-28s present\n' "$h"
+          else printf '  %-28s MISSING  <-- FAIL\n' "$h"; fail=1; fi
+        done
+        if [ "$fail" -ne 0 ]; then echo "verify FAILED for {{.URL}}" >&2; exit 1; fi
+        echo "verify OK — {{.URL}}"
+
+  rollback:info:
+    desc: Print the AWS rollback procedure (DNS-only, no rebuild)
+    summary: |
+      The dormant AWS stack exists precisely so a Cloudflare Pages problem is a
+      DNS change away from resolved.
+    silent: true
+    cmds:
+      - |
+        cat <<'EOF'
+        ROLLBACK — Cloudflare Pages -> dormant AWS CloudFront (no rebuild needed)
+
+          Both CloudFront distributions are still Deployed with 0 DNS pointing
+          at them, and both S3 buckets still hold a full site copy.
+
+          Repoint the CNAME *content* in the Cloudflare DNS zone:
+            benebsworth.com / www  ->  d1nnawiq8qdjgb.cloudfront.net   (prod)
+            next.benebsworth.com   ->  d1qwco52fxejjm.cloudfront.net   (staging)
+
+          The S3 copy is only as fresh as the last `task deploy:aws:*` run. If it
+          is stale, run that first — it is a normal deploy, just to the dormant
+          stack.
+        EOF
+
+  aws:staging:
+    desc: '[dormant fallback] Deploy to AWS S3+CloudFront staging'
+    summary: |
+      Legacy path. Kept exercisable so the rollback target does not rot.
+
+      Runs scripts/deploy.sh staging: build -> THREE `aws s3 sync` passes ->
+      CloudFront /* invalidation.
+
+      WHY THREE PASSES  `output: 'export'` copies public/** with NON-hashed
+      names; only _next/static/** is content-hashed. So each pass sets the
+      cache-control the content actually deserves:
+        1. _next/static/*          max-age=31536000, immutable
+        2. media (webp/png/woff2/mp4/...)  max-age=86400
+        3. everything else (HTML, sitemap, feed, robots, .md siblings)  max-age=60
+      The filters partition the keyspace, so each pass's --delete cannot wipe
+      another pass's freshly-uploaded keys.
+
+      SKIP_ARCHIVE=1 is forced: the legacy Gatsby archive build fails on this
+      machine, and skipping it adds `--exclude 'archive/*'` so --delete leaves
+      the already-deployed archive keys intact.
+
+      Needs working AWS credentials (default profile = account 299413881343 /
+      dev-deployer). DIST_ID/BUCKET come from terraform output or env override.
+    env:
+      SKIP_ARCHIVE: '1'
+    cmds:
+      - bash scripts/deploy.sh staging
+
+  aws:prod:
+    desc: '[dormant fallback] Deploy to AWS S3+CloudFront PRODUCTION — prompts'
+    prompt: Deploy to the dormant AWS PRODUCTION stack? Only correct during a rollback.
+    summary: |
+      Same three-pass mechanics as aws:staging, against the prod bucket
+      (benebsworth.com) and distribution E30L2WGIX5OPQG.
+
+      This only makes the dormant stack current — it does NOT move traffic.
+      Traffic moves when DNS moves (`task deploy:rollback:info`).
+    env:
+      SKIP_ARCHIVE: '1'
+    cmds:
+      - bash scripts/deploy.sh prod

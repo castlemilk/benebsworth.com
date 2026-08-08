@@ -1,0 +1,163 @@
+# Infrastructure as code.
+#
+# THREE INDEPENDENT STACKS. Confusing them with a content deploy has cost hours
+# before — infra and content are completely separate systems. A normal site
+# update is `task deploy:staging`, NOT anything in this file.
+#
+#   infra/cloudflare   LIVE   zone, DNS, Pages projects, analytics, zone settings
+#   infra/envs/prod    dormant  adopted AWS prod (S3 website origin + CloudFront)
+#   infra/envs/staging dormant  AWS staging via modules/site (OAC + rewrite fn)
+#   infra/gcp          LIVE   hiking photo bucket
+#
+# ALWAYS plan before apply, and read the plan. Never apply a plan you have not
+# looked at.
+version: '3'
+
+tasks:
+  default:
+    desc: Show the infra stacks and their state
+    silent: true
+    cmds:
+      - |
+        cat <<'EOF'
+        infra stacks
+
+          cloudflare   LIVE     task infra:cf:plan     / task infra:cf:apply
+          aws prod     dormant  task infra:aws:plan ENV=prod
+          aws staging  dormant  task infra:aws:plan ENV=staging
+          gcp          LIVE     task infra:gcp:plan    / task infra:gcp:apply
+
+        Content deploys are NOT infra: use `task deploy:staging` / `task deploy:prod`.
+
+        Not managed by Terraform (API/dashboard-managed, do not try to import):
+          Pages custom domains, the www->apex redirect ruleset,
+          the google-site-verification TXT record, the prod ACM cert + its DNS.
+        EOF
+
+  cf:plan:
+    desc: Terraform plan for the LIVE Cloudflare stack (zone, DNS, Pages)
+    summary: |
+      dir: infra/cloudflare
+
+      AUTH  Uses the Cloudflare GLOBAL API key, not a scoped token — a scoped
+      token cannot reach every resource in this stack. Credentials come from
+      .env via the provider config in providers.tf.
+
+      Expect "No changes" on a clean tree. Anything unexpected in the plan means
+      someone changed something in the dashboard — reconcile before applying.
+
+      Out of scope on purpose (API/dashboard-managed): Pages custom domains, the
+      www->apex http_request_dynamic_redirect ruleset, and the google-verify TXT.
+    dir: infra/cloudflare
+    cmds:
+      - terraform plan
+
+  cf:apply:
+    desc: Terraform apply for the LIVE Cloudflare stack — plan first, prompts
+    prompt: Apply Terraform to the LIVE Cloudflare zone (DNS + Pages)? A bad apply can take the site offline.
+    summary: |
+      Applies infra/cloudflare. This stack owns the DNS records that point the
+      site at Pages, so a wrong apply is a site outage.
+
+      Run `task infra:cf:plan` and read the plan first. Terraform will show it
+      again and ask for confirmation.
+    dir: infra/cloudflare
+    cmds:
+      - terraform apply
+
+  aws:plan:
+    desc: 'Terraform plan for a dormant AWS env — `task infra:aws:plan ENV=prod|staging`'
+    summary: |
+      dir: infra/envs/$ENV. Both envs use the REMOTE S3 backend
+      (benebsworth-tfstate-299413881343, keys prod/ and staging/), so state
+      survives a fresh clone — the old empty-local-state landmine cannot recur.
+
+      HISTORY WORTH KNOWING  prod once planned as "13 to create", which would
+      have recreated the bucket, distribution and cert and overwritten the live
+      DNS — a full outage. It was fixed by importing the live resources into a
+      SELF-CONTAINED infra/envs/prod (adopted.tf), decoupled from modules/site
+      because prod's architecture genuinely differs:
+
+        prod     S3 WEBSITE endpoint origin, public bucket, no OAC, no function,
+                 legacy forwarded-values cache. AWS-only — no DNSimple token.
+                 DNS + the ACM cert are managed OUTSIDE Terraform.
+        staging  S3 REST origin + OAC + the rewrite function + the security
+                 headers/CSP policy, via modules/site. Needs TF_VAR_dnsimple_token.
+
+      NEVER point prod at the OAC module.
+
+      DNSIMPLE GOTCHA (staging)  dnsimple_account must be the NUMERIC id 54968,
+      not the name "benebsworth". The name makes the provider request
+      GET /v2/benebsworth/... and 401 — which reads like a missing DNS record
+      but is purely an auth misconfiguration.
+
+      Both envs should plan clean ("No changes").
+    requires:
+      vars: [ENV]
+    dir: infra/envs/{{.ENV}}
+    env:
+      # .env stores the raw DNSimple token as DNSSIMPLE_TOKEN; Terraform wants
+      # TF_VAR_dnsimple_token. Mapped here so the staging env never has to be
+      # exported by hand (prod is AWS-only and ignores both).
+      TF_VAR_dnsimple_token: '{{.DNSSIMPLE_TOKEN}}'
+      # MUST be the numeric account id. The NAME ("benebsworth") makes the
+      # provider call GET /v2/benebsworth/... and 401 — which presents as a
+      # missing DNS record but is purely bad auth.
+      TF_VAR_dnsimple_account: '54968'
+    cmds:
+      - terraform plan
+
+  aws:apply:
+    desc: 'Terraform apply for a dormant AWS env — `task infra:aws:apply ENV=prod|staging`'
+    prompt: Apply Terraform to the AWS stack? Confirm the plan said only what you intended.
+    summary: |
+      Only run after `task infra:aws:plan ENV=<env>` showed "No changes" plus
+      exactly your intended edit.
+
+      The prod CloudFront response-headers policy `security-benebsworth-com`
+      (HSTS, nosniff, DENY, referrer policy, CSP) is Terraform-managed here in
+      adopted.tf — edit that block to change prod headers on the dormant stack.
+      The LIVE headers now come from public/_headers on Cloudflare Pages.
+    requires:
+      vars: [ENV]
+    dir: infra/envs/{{.ENV}}
+    env:
+      TF_VAR_dnsimple_token: '{{.DNSSIMPLE_TOKEN}}'
+      TF_VAR_dnsimple_account: '54968'
+    cmds:
+      - terraform apply
+
+  gcp:plan:
+    desc: Terraform plan for the GCP hiking photo bucket
+    summary: |
+      dir: infra/gcp. Provisions the hiking gallery bucket used by the /admin
+      image console. There is no backend service — IAM on the bucket IS the
+      security boundary, so review any policy change in the plan carefully.
+
+      Account: ben.ebsworth@gmail.com. Setup runbook: docs/hiking-admin-setup.md.
+    dir: infra/gcp
+    cmds:
+      - terraform plan
+
+  gcp:apply:
+    desc: Terraform apply for the GCP hiking photo bucket — prompts
+    prompt: Apply Terraform to the GCP hiking bucket? IAM on this bucket is the only access control.
+    dir: infra/gcp
+    cmds:
+      - terraform apply
+
+  headers:show:
+    desc: Show the live edge headers config (public/_headers) served by Cloudflare Pages
+    summary: |
+      On Cloudflare Pages the security headers and CSP are NOT Terraform —
+      they are public/_headers, shipped as part of the build. Editing that file
+      and deploying is how you change production headers.
+
+      The benchmark output artifacts path is served with a CSP sandbox header
+      from this file; model-generated HTML depends on it to run at an opaque
+      origin. Validate any CSP change by serving out/ locally
+      (`task test:serve`) and checking for `Refused to...` console errors before
+      deploying.
+    silent: true
+    cmds:
+      - cat public/_headers

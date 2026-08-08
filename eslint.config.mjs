@@ -15,6 +15,16 @@ export default tseslint.config(
       'dist/**',
       'coverage/**',
       '.git/**',
+      // Build/tool output directories. .vercel/ in particular holds a full
+      // bundled copy of the app — left unignored it contributed 5,939 of the
+      // repo's 5,941 lint errors and made `task lint` useless as a gate.
+      '.vercel/**',
+      '.wrangler/**',
+      '.cache/**',
+      'tmp/**',
+      'public/lab-data/**',
+      'test-results/**',
+      'playwright-report/**',
       // Legacy Gatsby code - too different to lint
       'legacy/**',
       // CloudFront rewrite is deployed separately

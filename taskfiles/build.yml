@@ -1,0 +1,202 @@
+# Build + code generation.
+#
+# The static export is a three-phase pipeline and every phase matters:
+#
+#   PRE   gen:md   -> public/blog/<slug>/index.md   (LLM-friendly .md siblings)
+#         gen:outputs -> public/lab-data/**          (benchmark output artifacts)
+#   MAIN  next build -> out/                         (output: 'export')
+#   POST  og-rewrite -> out/**/opengraph-image.png   (extensionless-404 fix)
+#         pagefind   -> out/pagefind/**              (client-side search index)
+#
+# Skipping a phase produces a build that looks fine locally and 404s in
+# production, so `task build` always runs all three.
+version: '3'
+
+vars:
+  OUT_DIR: out
+
+tasks:
+  default:
+    desc: Production static export into out/ (pre + build + post phases)
+    summary: |
+      Full static export. Equivalent to `npm run build` including its pre/post
+      hooks, but with declared inputs so repeat builds are skipped when nothing
+      changed (checksum fingerprint over app/, components/, lib/, content/,
+      public/ and the config files).
+
+      INPUTS   app/**, components/**, lib/**, content/**, public/** (non-generated),
+               next.config.mjs, package.json, tsconfig.json
+      OUTPUT   out/  — the complete deployable site, plus:
+                 out/**/opengraph-image.png  (renamed from extensionless)
+                 out/pagefind/**             (search index)
+                 out/index.html, sitemap.xml, feed.xml, robots.txt, llms.txt
+
+      GOTCHAS
+        * `output: 'export'` copies public/** verbatim with NON-hashed names;
+          only _next/static/** is content-hashed. That drives the cache-control
+          split in the AWS deploy path.
+        * OG images: Next emits them as EXTENSIONLESS files named
+          `opengraph-image`. Static hosting rewrites extensionless paths to
+          <path>/index.html, so they 404. The postbuild renames them to .png and
+          rewrites the HTML refs. Never skip it.
+        * The build logs `Failed to load dynamic font` warnings from OG image
+          generation and a Turbopack NFT "whole project was traced" warning via
+          next.config.mjs -> lib/og.tsx. Both are pre-existing and non-fatal.
+        * Force a rebuild despite the fingerprint with `task build --force`, or
+          use `task build:clean` for a from-scratch build.
+    sources:
+      - app/**/*
+      - components/**/*
+      - lib/**/*
+      - content/**/*
+      - public/**/*
+      - exclude: public/blog/*/index.md
+      - exclude: public/lab-data/**/*
+      - next.config.mjs
+      - postcss.config.mjs
+      - tsconfig.json
+      - package.json
+    generates:
+      - '{{.OUT_DIR}}/index.html'
+      - '{{.OUT_DIR}}/pagefind/pagefind.js'
+    method: checksum
+    cmds:
+      - task: gen:md
+      - task: gen:outputs
+      - '{{.BIN}}/next build'
+      - task: post
+
+  clean:
+    desc: From-scratch production build (clears .next and out/ first)
+    summary: |
+      Use when a build is suspected stale, when lazy `ssr:false` chunks look
+      wrong in a running app, or before any production deploy where you want
+      zero ambiguity about what is in out/.
+
+      Clears BOTH .next and out/ — clearing only .next/cache does not reliably
+      evict stale chunks.
+    cmds:
+      - rm -rf .next {{.OUT_DIR}}
+      - '{{.BIN}}/next build'
+      - task: post
+
+  post:
+    desc: Postbuild — OG extensionless fix + Pagefind search index
+    summary: |
+      Runs against an existing out/ directory.
+
+        1. scripts/og-rewrite.mjs — renames every extensionless
+           `out/**/opengraph-image` to `.png` and rewrites `opengraph-image?`
+           to `opengraph-image.png?` in the emitted HTML. Without this every
+           og:image / twitter:image URL 404s on static hosting.
+        2. pagefind --site out — builds out/pagefind/** from the rendered HTML.
+           Must run AFTER the HTML exists; running it against a partial out/
+           yields a silently incomplete search index.
+
+      Idempotent: re-running is safe (the rename and the HTML rewrite both
+      no-op once applied).
+    preconditions:
+      - sh: test -d {{.OUT_DIR}}
+        msg: "out/ does not exist — run `task build` first"
+    cmds:
+      - node scripts/og-rewrite.mjs
+      - '{{.BIN}}/pagefind --site {{.OUT_DIR}}'
+
+  gen:md:
+    desc: Generate LLM-friendly .md siblings for every published blog post
+    summary: |
+      scripts/gen-md-siblings.mjs reads each content/blog/<slug>/index.mdx,
+      strips MDX-only constructs, rewrites image paths to absolute URLs, and
+      writes public/blog/<slug>/index.md — served at /blog/<slug>/index.md and
+      advertised per-post via <link rel="alternate" type="text/markdown">.
+
+      INPUT   content/blog/**/index.mdx
+      OUTPUT  public/blog/<slug>/index.md  (COMMITTED — diffs show up in git)
+
+      Runs automatically as part of `task build`. Run it standalone after
+      editing a post to review the generated sibling before committing.
+    sources:
+      - content/blog/**/*.mdx
+      - scripts/gen-md-siblings.mjs
+    generates:
+      - public/blog/*/index.md
+    cmds:
+      - node scripts/gen-md-siblings.mjs
+
+  gen:outputs:
+    desc: Publish benchmark result outputs as static JSON/HTML artifacts
+    summary: |
+      scripts/gen-benchmark-outputs.mjs (runs under tsx) explodes
+      lib/lab/llm-benchmark/results.json into per-result files so client
+      components fetch outputs on demand instead of shipping the whole ~2.8 MB
+      results blob in the RSC payload.
+
+      INPUT   lib/lab/llm-benchmark/results.json
+      OUTPUT  public/lab-data/llm-benchmark/outputs/<taskId>/<modelId>.json
+              plus .html for artifacts that are full standalone documents
+              (NOT those needing the runtime Babel compiler)
+
+      The output directory is WIPED and regenerated each run so removed
+      task/model combinations do not linger. public/lab-data/ is gitignored —
+      it is a build artifact, regenerated on every build.
+
+      The .html artifacts are served under a CSP sandbox header (public/_headers)
+      so model-generated pages execute at an opaque origin.
+    sources:
+      - lib/lab/llm-benchmark/results.json
+      - lib/lab/llm-benchmark/frame-prelude.ts
+      - scripts/gen-benchmark-outputs.mjs
+    generates:
+      - public/lab-data/llm-benchmark/outputs/**/*.json
+    cmds:
+      - '{{.BIN}}/tsx scripts/gen-benchmark-outputs.mjs'
+
+  gen:proto:
+    desc: Regenerate protobuf types (buf generate) — see the footgun below
+    summary: |
+      Runs `buf generate` over proto/ into lib/gen/.
+
+      *** FOOTGUN ***
+      lib/gen/content.ts carries a MANUAL block (LabCategory / LabEffect.category)
+      that does NOT exist in the .proto source. `buf generate` WIPES it.
+
+      After running this task you MUST:
+        1. `task lint:types` — the wipe surfaces as type errors, and
+        2. re-apply the marked manual block in lib/gen/content.ts.
+
+      This task runs the typecheck for you and fails loudly if the block was
+      lost, so the wipe can never pass silently.
+    sources:
+      - proto/**/*.proto
+      - buf.gen.yaml
+      - buf.yaml
+    cmds:
+      - '{{.BIN}}/buf generate'
+      - cmd: |
+          if ! grep -q 'LabCategory' lib/gen/content.ts; then
+            echo "" >&2
+            echo "*** buf generate WIPED the manual LabCategory/LabEffect.category block" >&2
+            echo "*** in lib/gen/content.ts. Re-apply it (see git diff) before committing." >&2
+            exit 1
+          fi
+      - task: ":lint:types"
+
+  archive:
+    desc: Build the dormant legacy Gatsby archive into out/archive (needs Node 16 + libvips)
+    summary: |
+      Legacy Gatsby v2 site, prefixed at /archive. KNOWN TO FAIL on this dev
+      machine and is skipped by every normal deploy.
+
+      REQUIREMENTS (Node 16 is necessary but NOT sufficient)
+        1. Node <= 16.x (Gatsby v2 does not run on 18+).
+        2. System libvips (`brew install vips` / `apt-get install libvips-dev`).
+        3. A toolchain where the bundled old `sharp` native sources compile —
+           on Darwin 25.5 / Node 16.20.2 this FAILS with
+           `fatal error: 'vips/vips8' file not found`. The reliable path is a
+           Linux CI image (node:16-bullseye + libvips-dev), not this machine.
+
+      When skipped, out/archive/ is absent — which is why the AWS deploy path
+      passes `--exclude 'archive/*'` so `s3 sync --delete` leaves the
+      already-deployed archive keys alone.
+    cmds:
+      - bash scripts/build-archive.sh

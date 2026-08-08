@@ -41,7 +41,7 @@ mkdir -p public/blog/<slug>
 cp -R content/blog/<slug>/. public/blog/<slug>/ && rm -f public/blog/<slug>/index.mdx
 ```
 
-Preview with `npm run dev` (visit `/blog/<slug>/`); confirm images load (no 404 in the network tab). Ship with `SKIP_ARCHIVE=1 npm run deploy:next` (staging) then `npm run deploy:prod` — these are two independent targets, not a required sequence.
+Preview with `task dev` (visit `/blog/<slug>/`); confirm images load (no 404 in the network tab). Ship with `task deploy:staging` then `task deploy:prod` — these are two independent targets, not a required sequence.
 
 ### Full minimal example (`content/blog/<slug>/index.mdx`)
 
@@ -572,7 +572,7 @@ Posts that use 2-3 labs at strategic moments outperform posts that pack all labs
 
 ### Phase 4: Verify — does it actually work?
 
-**Step 4.1 — Build.** `npm run build` — must succeed. Build errors usually mean MDX syntax (unclosed tags, missing components, escaping issues).
+**Step 4.1 — Build.** `task build` — must succeed. Build errors usually mean MDX syntax (unclosed tags, missing components, escaping issues).
 
 **Step 4.2 — Visual check.** Visit the post in the browser (or via Playwright + the production server at `python3 -m http.server 3128 --directory out`):
 - Every lab renders
@@ -584,7 +584,7 @@ Posts that use 2-3 labs at strategic moments outperform posts that pack all labs
 
 **Step 4.4 — Regenerate the .md sibling** (see "LLM-readable .md sibling" in the Validation section). Verify the new post's components are in `COMPONENT_DESCRIPTIONS` of `scripts/gen-md-siblings.mjs` so the LLM-readable version has a useful placeholder.
 
-**Step 4.5 — Deploy.** `SKIP_ARCHIVE=1 npm run deploy:next` (staging) → verify → `npm run deploy:prod` (production). The two are independent, not sequential.
+**Step 4.5 — Deploy.** `task deploy:staging` → verify → `task deploy:prod` (production). The two are independent, not sequential.
 
 ### What makes a post engaging (insight, not just content)
 
@@ -619,11 +619,11 @@ Five qualities separate a post readers remember from a post readers skim:
 
 If **any** of these fail, the post is **not done** — no exceptions, no "I'll fix it after deploy". Each gate is hard and verifiable; each points at the deeper section that explains it.
 
-1. **`npm run build` passes.** A failed build is a broken post. Build errors are almost always MDX syntax (unclosed tag, unregistered component, bad escaping). See [Build, preview, deploy](#build-preview-deploy).
+1. **`task build` passes.** A failed build is a broken post. Build errors are almost always MDX syntax (unclosed tag, unregistered component, bad escaping). See [Build, preview, deploy](#build-preview-deploy).
 2. **Every image exists in BOTH `content/blog/<slug>/` and `public/blog/<slug>/`.** Only `public/` is served; nothing copies automatically. Confirm zero 404s in the network tab. See [Quickstart](#quickstart--add-a-post).
 3. **Every custom tag is PascalCase AND registered** in `components/mdx/mdx-components.tsx`. kebab-case tags and unregistered tags render as nothing. See [Bespoke interactive components](#bespoke-interactive-components).
 4. **Math is RENDERED, not raw.** Count `.katex` elements in the served HTML and confirm it matches the number of `$…$` + `$$…$$` blocks. Every `<Equation>` has a **unique** `eqn:`-prefixed `id` AND a `latex` prop (the copy buttons and `.md` sibling depend on it). See [Deep dive: math and equations](#deep-dive-math-and-equations).
-5. **`.md` sibling regenerated** (`npm run md:siblings`) AND every component used in the post has a `COMPONENT_DESCRIPTIONS` entry — no blank crawler placeholders. See [THE COMPONENT SYNC RULE](#the-component-sync-rule-keep-three-places-in-sync).
+5. **`.md` sibling regenerated** (`task build:gen:md`) AND every component used in the post has a `COMPONENT_DESCRIPTIONS` entry — no blank crawler placeholders. See [THE COMPONENT SYNC RULE](#the-component-sync-rule-keep-three-places-in-sync).
 6. **Renders in BOTH light and dark theme.** Callouts, sticky nav, breadcrumb, diagram colours all legible in each. See [Cross-theme verification](#6-cross-theme-verification).
 7. **Diagram accuracy verified by Playwright DOM check, not eyeball.** A diagram that renders is not a diagram that is correct — assert node counts / colours / cursor-on-trace against the data. See [Diagram accuracy](#diagram-accuracy--verifying-interactive-components).
 8. **Frontmatter has `title` + `date` + intended release/draft state.** `title`/`date` are required (build throws without them); set `release`/`draft` to the state you actually intend (defaults publish). See [Frontmatter](#frontmatter).
@@ -710,24 +710,24 @@ What that voice actually does, with real lines from the early posts:
 Run the repository prose validator before calling a content change finished. It is based on the [episode 01 anti-slop writing notes](https://github.com/woosal1337/blog/tree/main/videos/ep01-the-cure-for-ai-slop) (pinned 2026-07-31), adapted to this site's MDX, interactive examples, and Australian/British house voice.
 
 ```bash
-npm run lint:prose                 # audit every tracked reader-facing source
+task lint:prose                    # audit every tracked reader-facing source
 mkdir -p reports && node scripts/lint-prose.mjs --format json > reports/prose-baseline.json
-npm run lint:prose:changed         # review only changed and untracked source files
-npm run lint:prose -- --ci         # fail on hard tells, masking errors, or dash-budget breaches
+task lint:prose:changed            # gate only changed and untracked source files
+task lint:prose:ci                 # fail on hard tells, masking errors, or dash-budget breaches
 ```
 
-The manifest in `scripts/prose-sources.json` is the boundary: it covers blog posts, lab/project copy, hiking/about/now copy, and selected visible app/component text. It excludes generated `public/blog/**/*.md`, tests, admin/lab implementation code, and the trail-guide authoring skill. Do not hand-edit generated siblings; run `npm run md:siblings` after source changes and `npm run md:siblings:check` before publishing.
+The manifest in `scripts/prose-sources.json` is the boundary: it covers blog posts, lab/project copy, hiking/about/now copy, and selected visible app/component text. It excludes generated `public/blog/**/*.md`, tests, admin/lab implementation code, and the trail-guide authoring skill. Do not hand-edit generated siblings; run `task build:gen:md` after source changes and review the resulting `public/blog/<slug>/index.md` diff before publishing (there is no separate check script — `git diff` is the check).
 
 Treat `ai-tell`, `marketing-adjective`, `reveal-construction`, and em-dash-budget findings as editorial defects. Replace them with the simplest phrase that preserves the author's meaning and technical precision. Treat long sentences, passive voice, nominalisations, and long paragraphs as review prompts, not mechanical rewrite instructions: keep a deliberate aside or a technical sentence when it earns its length. Masking errors are always defects; never silence one by changing the validator or by moving prose into code.
 
-The validator ignores code fences, inline code, URLs, JSX expressions/attributes, frontmatter fields other than `title`, `description`, and `takeaways`, and math delimiters. It still checks visible JSX text and reader-facing labels. Run it before `npm run build` and again after sibling generation so the published surface and the source agree.
+The validator ignores code fences, inline code, URLs, JSX expressions/attributes, frontmatter fields other than `title`, `description`, and `takeaways`, and math delimiters. It still checks visible JSX text and reader-facing labels. Run it before `task build` and again after sibling generation so the published surface and the source agree.
 
 ## Build, preview, deploy
 
-- **Author/preview:** `npm run dev` → `/blog/<slug>/`. (If CSS looks stale, kill stray `next dev`, `rm -rf .next`, restart.)
-- **Build:** `npm run build` (static export to `out/`; `postbuild` runs `og-rewrite.mjs`). Spot-check `out/blog/<slug>/index.html` and that images resolved.
-- **Preview production build:** after `npm run build`, serve with `python3 -m http.server 3128 --directory out` and visit `http://localhost:3128`. The dev server doesn't run the prebuild/postbuild scripts, so the static export is the ground truth.
-- **Deploy:** staging `SKIP_ARCHIVE=1 npm run deploy:next` → `next.benebsworth.com`; prod `npm run deploy:prod`.
+- **Author/preview:** `task dev` → `/blog/<slug>/`. (If CSS looks stale, kill stray `next dev`, `rm -rf .next`, restart.)
+- **Build:** `task build` (static export to `out/`; `postbuild` runs `og-rewrite.mjs`). Spot-check `out/blog/<slug>/index.html` and that images resolved.
+- **Preview production build:** after `task build`, serve with `python3 -m http.server 3128 --directory out` and visit `http://localhost:3128`. The dev server doesn't run the prebuild/postbuild scripts, so the static export is the ground truth.
+- **Deploy:** staging `task deploy:staging` → `next.benebsworth.com`; prod `task deploy:prod`.
 
 ## Diagram accuracy — verifying interactive components
 
@@ -868,7 +868,7 @@ useEffect(() => {
 
 When multiple agents/subagents edit `components/mdx/mdx-components.tsx` concurrently, patches can leave the file in a syntactically broken state (nested imports, indent corruption). The file is small — if anything goes wrong, just `git checkout -- components/mdx/mdx-components.tsx` and re-add the registrations you need.
 
-Fix: after every round of patches, verify the file compiles (`npm run build`). If a component "doesn't exist" error appears, read the file to confirm the import + registration. If corrupted, `git checkout` and re-apply.
+Fix: after every round of patches, verify the file compiles (`task build`). If a component "doesn't exist" error appears, read the file to confirm the import + registration. If corrupted, `git checkout` and re-apply.
 
 ## Validation / sanity checklist
 
@@ -876,7 +876,7 @@ After building a post with interactive components, run this checklist before dep
 
 ### 1. Build and serve
 ```bash
-npm run build
+task build
 python3 -m http.server 3128 --directory out &
 # Visit http://localhost:3128 in preview
 ```
@@ -919,7 +919,7 @@ python3 -m http.server 3128 --directory out &
 ### 7. LLM-readable .md sibling
 After any content change, regenerate the .md sibling:
 ```bash
-npm run md:siblings   # or: node scripts/gen-md-siblings.mjs
+task build:gen:md    # or: node scripts/gen-md-siblings.mjs
 ```
 Verify the .md includes `<blockquote>` replacements for all custom components so LLM crawlers get a text description of them. For math content, verify the raw LaTeX `$$...$$` is preserved (the script leaves math in place, only the editorial frame is replaced).
 
@@ -953,9 +953,9 @@ python3 -c "import asyncio; ..."   # write to /tmp/verify_<lab>.py
 
 ### 10. Deployment
 ```bash
-SKIP_ARCHIVE=1 npm run deploy:next   # staging → next.benebsworth.com
+task deploy:staging                  # staging → next.benebsworth.com
 # Verify staging
-npm run deploy:prod                   # production
+task deploy:prod                     # production (prompts)
 ```
 
 ## Adjacent content

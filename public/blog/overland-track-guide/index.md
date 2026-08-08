@@ -88,7 +88,7 @@ I gave myself a rest morning at Windermere. The lake was perfectly still at dawn
 
 > [TrailFigure component] A real-photo figure for a trail guide: a single bordered photo (a co-located path or an absolute GCS URL) with an optional accent meta eyebrow (e.g. "Day 3 · Pas de Chèvres"), a caption and a credit. The photo-led counterpart to the researched Landmark/Stop cards — drop one inline for a single beat, or wrap several in a <TrailGrid> for a 2-up strip of trip photos. The rendered post shows the actual image.
 
-The longest day of the standard route, but not the hardest. The track runs south across open moor, drops through myrtle-beech rainforest to Frog Flats: the lowest point on the whole walk: and then climbs gently back to Pelion Plains. Mount Oakleigh's dolerite organ pipes come into view long before you reach the hut, and they dominated the evening light.
+The longest day of the standard route, but not the hardest. The track runs south across open moor, drops through myrtle-beech rainforest to Frog Flats, the lowest point on the whole walk, and then climbs gently back to Pelion Plains. Mount Oakleigh's dolerite organ pipes come into view long before you reach the hut, and they dominated the evening light.
 
 > [Checkpoint component] Inline milestone/checkpoint marker, usable in prose or inside a <Stage>: an icon (pass, summit, water, junction, viewpoint, camp, hut or generic milestone), a name, an optional altitude, and an optional note. Marks the key points along a day's walk.
 

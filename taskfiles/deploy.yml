@@ -33,6 +33,54 @@ tasks:
         echo "verify  : task deploy:verify:staging | task deploy:verify:prod"
         echo "rollback: task deploy:rollback:info"
 
+  auth:
+    desc: Verify the Cloudflare credentials actually work (not just that they are set)
+    summary: |
+      `task doctor` only reports whether CLOUDFLARE_API_TOKEN is PRESENT. This
+      task proves it is VALID and can reach Pages, by calling the account token
+      verify endpoint and then listing the Pages projects.
+
+      *** THE TRAP THAT HAS ALREADY COST ONE FALSE ALARM ***
+      The repo token is an ACCOUNT-OWNED token (`cfat_` prefix). Account tokens
+      MUST be verified at:
+
+        /client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify
+
+      Checking the USER endpoint instead:
+
+        /client/v4/user/tokens/verify        <-- WRONG for cfat_ tokens
+
+      returns a flatly misleading `{"success":false,"code":1000,"message":
+      "Invalid API Token"}` for a perfectly good token. That response means
+      "wrong endpoint for this token type", NOT "bad token". Do not rotate
+      credentials on the strength of a 1000 from the user endpoint — confirm
+      with this task first.
+    requires:
+      vars: [CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID]
+    silent: true
+    cmds:
+      - |
+        base="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID"
+        v="$(curl -s "$base/tokens/verify" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")"
+        if ! printf '%s' "$v" | grep -q '"success":true'; then
+          echo "  token verify FAILED against the account endpoint:" >&2
+          printf '  %s\n' "$v" >&2
+          echo "  (if you tested /user/tokens/verify instead, that is the wrong endpoint — see --summary)" >&2
+          exit 1
+        fi
+        echo "  token: valid and active (account-owned)"
+        curl -s "$base/pages/projects" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" > /tmp/cf-pages-$$.json
+        python3 - /tmp/cf-pages-$$.json <<'PYEOF'
+        import json, sys
+        d = json.load(open(sys.argv[1]))
+        if not d.get('success'):
+            print('  pages: NOT reachable with this token —', d.get('errors'))
+            raise SystemExit(1)
+        for p in d.get('result') or []:
+            print(f"  pages project: {p['name']:18s} production_branch={p.get('production_branch')}")
+        PYEOF
+        rm -f /tmp/cf-pages-$$.json
+
   staging:
     desc: Build and deploy to Cloudflare Pages staging (next.benebsworth.com)
     summary: |

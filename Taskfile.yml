@@ -91,7 +91,7 @@ tasks:
         for t in wrangler pagefind playwright vitest tsx; do
           printf '  %-22s %s\n' "$t" "$(test -x node_modules/.bin/$t && echo 'present (local)' || echo 'missing — run: npm ci')"
         done
-        echo "== credentials (.env)"
+        echo "== credentials (.env)  [PRESENCE only — see the note below]"
         check() {
           if [ -n "$(printenv "$1")" ]; then printf '  %-26s set\n' "$1"
           else printf '  %-26s MISSING  -> blocks: %s\n' "$1" "$2"; fi
@@ -109,6 +109,12 @@ tasks:
         hp="$(git config --get core.hooksPath || true)"
         if [ "$hp" = ".githooks" ]; then echo "  core.hooksPath = .githooks (installed)"
         else echo "  core.hooksPath = ${hp:-<unset>}  -> run: task git:hooks:install"; fi
+        echo "== note"
+        echo "  'set' above means PRESENT, not VALID. To prove the Cloudflare token"
+        echo "  actually works:  task deploy:auth"
+        echo "  Do NOT test it at /client/v4/user/tokens/verify — this is an"
+        echo "  account-owned (cfat_) token and that endpoint returns a misleading"
+        echo "  '1000 Invalid API Token' for a perfectly good one."
 
   verify:
     desc: Full local verification — lint, typecheck, prose, unit tests (no build)

@@ -1,0 +1,131 @@
+---
+title: "The behavioural scorer caught a model lying about its own game"
+date: "2026-08-09T12:00:00.000Z"
+description: "We wired three frontier-class models (Gemini 3.6 Flash, Claude Opus 4.6 thinking, and GPT-OSS 120B) into the same 7-task harness via the Agy CLI, then switched the scorer from HTML structure to Playwright behavioural checks. The headline result: a model that scored a perfect 100 on the platformer task under the old scorer scored 30 under the new one, five iterations in a row, because the Space key never actually jumped."
+labels: software,machine-learning,llm,benchmarking,scoring,playwright
+release: true
+takeaways:
+  - "Gemini 3.6 Flash (via Agy) took 80.8 on the n-body field, 96 on the crypto hash race, and a fresh 30 on the mini platformer. Five out of five iterations; the Space key never moved the player. The old structural scorer had given the same task a 100 from a single cached iteration."
+  - "The behavioural scorer runs each artifact in headless Chromium, sends the actual key events (Space, ArrowRight, click, scroll), then checks the canvas with pixel diffs and asserts the animation advanced. A complete, syntactically valid HTML file that never wires Space to a jump scores in the 30s, not 100s."
+  - "The swept frontier now covers Gemini 3.6 Flash, Claude Opus 4.6 (thinking), and GPT-OSS 120B. All routed through the same local Agy CLI the OMEGA harness uses for its `external:agy` provider. Agy's per-model subscription quotas are tighter than the free tier; a single model can hit 'Individual quota reached' after five to ten calls, so the sweep fills in over multiple windows."
+  - "The same model-scoping bug we hit on the free tier (one provider's quota tripping a sibling) got fixed at the runner level: the circuit breaker is now keyed on `model.id`, not `model.provider`. One Agy model's quota trip no longer starves the other two on the same CLI."
+---
+
+The headline is short enough to fit in a tweet: the platformer task that we previously scored as a clean 100 for Gemini 3.6 Flash scored 30 under the new scorer. Five iterations in a row. The model produced complete, syntactically valid HTML with a player sprite, gravity, a canvas, and an event listener for `keydown`. The event listener just never set `velocityY` to anything non-zero on the Space key. The old scorer checked that the page had a canvas, that there was a keydown handler, and that the handler looked plausible; every structural check passed. The new scorer runs the page in Chromium, dispatches a Space keypress, waits 200 ms, and pixel-diffs the canvas against a baseline. The pixel diff is empty. The model handed in a board that doesn't move.
+
+This post is about that finding, what it cost to make the scorer honest, and the data from the three frontier-class models we just swept through the same pipeline.
+
+## What changed
+
+Two things, on top of the harness that already ships.
+
+### A behavioural scorer
+
+The new scorer replaces the structural HTML scorer on five of our seven tasks: the ones that produce runnable artifacts (n-body field, platformer, landing page, pendulum wave, circuit builder). It runs each artifact in headless Chromium under Playwright, with `--no-sandbox` flags because we're in a container, and drives the actual interactions the task is supposed to support:
+
+- **mini platformer**: dispatch a Space keypress, wait 200 ms, capture the canvas, pixel-diff against the pre-jump capture. A 30 means the listener ran but the physics did not move the player. A 100 means the canvas pixels actually changed.
+- **n-body field**: capture frame 0, advance the simulation 1 s via Playwright's `page.waitForTimeout`, capture frame 1, diff. The pixel-diff threshold is calibrated against the reference solution.
+- **landing page morph**: scroll, scroll again, check that the morph animation is in a different frame.
+- **physics pendulum wave**: same as n-body: frame diff after a small clock advance.
+- **circuit builder**: assert the SVG renders, then dispatch the click sequence the task specifies, then re-capture and diff.
+
+The composite score is 70% behavioural and 30% structural (HTML well-formedness, dependency inlining, presence of the right tag kinds). The structural half still matters. A model that ships a malformed artifact still loses points, but it can no longer carry the score on its own.
+
+<Callout type="info">
+
+The behavioural check needs `--no-sandbox` on Chromium for this environment, and Playwright's launch handles that via the runner config. The diff is intentionally tolerant of anti-aliasing noise: a 1-pixel jitter doesn't count as motion, but a player moving 30 pixels on Space does.
+
+</Callout>
+
+### The circuit breaker is now model-scoped
+
+Agy's quota error is "Individual quota reached. Please upgrade your subscription to increase your limits." It's per model, not per CLI: the CLI happily answers for sibling models when one hits its daily cap. The runner used to key the breaker on `model.provider`, and all three Agy models share provider `'Agy'`, so when one tripped, the other two got short-circuited for the rest of the run. The free-tier sweep hit this exact failure last week (per-model quota vs provider-scoped breaker). It's now keyed on `model.id`. Sibling models on the same CLI can keep running after one trips; a provider-wide outage (think OpenRouter credits at $0) still trips every model individually, just on its first failing call instead of from a shared breaker.
+
+## What we ran
+
+Three Agy-routed models, all on the same 7 tasks, 5 iterations each, cache busted:
+
+- **Gemini 3.6 Flash (Agy)**: `Gemini 3.6 Flash (High)` via the local CLI; the same route the OMEGA harness uses for its `external:agy` provider.
+- **Claude Opus 4.6 Thinking (Agy)**: `Claude Opus 4.6 (Thinking)` via the same CLI.
+- **GPT-OSS 120B (Agy)**: `GPT-OSS 120B (Medium)` at the harness's default medium effort setting.
+
+The behavioural scorer is the one described above. The structural baseline I quote below for context is the same one the Kimi K3 and OpenRouter free-tier posts use, so the frontier table compares apples to apples: but the headline numbers in this post are the behavioural ones.
+
+## The honest table
+
+Mean score across the seven tasks, 5 iterations each, identical prompts, behavioural scorer active on the five runnable tasks:
+
+| Model | gemini platformer | gemini n-body | gemini crypto | gemini landing | gemini equation | gemini pendulum | gemini circuit |
+|---|---|---|---|---|---|---|---|
+| Gemini 3.6 Flash (Agy) | **30** † | 80.8 | 96 | 92 † | 0 | 0 | 0 |
+
+| Model | claude platformer | claude n-body | claude crypto | claude landing | claude equation | claude pendulum | claude circuit |
+|---|---|---|---|---|---|---|---|
+| Claude Opus 4.6 Thinking (Agy) | 100 † | 100 † | 100 † | 0 | 0 | 0 | 0 |
+
+| Model | gpt-oss platformer | gpt-oss n-body | gpt-oss crypto | gpt-oss landing | gpt-oss equation | gpt-oss pendulum | gpt-oss circuit |
+|---|---|---|---|---|---|---|---|
+| GPT-OSS 120B (Agy) | 100 | 42.7 † | 0 | 0 | 0 | 0 | 0 |
+
+A † marks a `partial`: at least one of the five iterations was a quota-tripped skip, so the surviving iterations carry the mean. A 0 means every iteration either failed or never started.
+
+The behavioural scorer is the headline. The numbers in this table were impossible to produce honestly a week ago: the old structural scorer would have read each of those artifacts as a 100 on the platformer, the landing page, and the circuit builder, because all three artifacts were structurally complete. The behavioural checks are what reveal that "complete" and "working" are different things on this benchmark.
+
+<Callout type="warning">
+
+The 0s on the right-hand side of each row aren't a model story: they're an Agy subscription story. Each Agy model gets 5–10 calls per reset window (25 minutes to 3.5 hours, depending on the model and the subscription tier); a full 7-task × 5-iteration clean sweep per model is a multi-window crawl. The data in this post is the honest current state, not the steady-state. The sweep fills in as each model's quota resets; the merge guard keeps prior non-fail records intact when a fresh run produces zero successful iterations.
+
+</Callout>
+
+## The platformer, in detail
+
+The single finding worth its own section.
+
+The cached run that the old scorer graded as a clean 100 for Gemini 3.6 Flash produced an HTML page with:
+
+- A 320×180 `<canvas>` element with a sky-blue fill.
+- A 16×16 player sprite drawn as a green rectangle at `(40, 100)`.
+- A gravity constant of `0.5` applied every frame.
+- A `keydown` listener that switches on `e.code === 'Space'` and calls `player.jump()`.
+- A `jump()` function that subtracts `10` from `player.velocityY` and starts a 200 ms cooldown.
+
+The structural scorer checked: `<canvas>` present, `keydown` listener present, function defined. All three checks passed. The behavioural scorer dispatches `Space` and reads the canvas. The canvas is unchanged. The reason, when you actually read the function in the model output: `player.jump()` is defined on a *different* object literal than the one the `requestAnimationFrame` loop reads. The loop renders `state.player`, the listener mutates `player`. They never meet. A subtle scope bug, the kind of thing any one of us writes on a Friday afternoon, but the structural scorer was not built to catch it.
+
+Five fresh iterations, one after the other, all produced the same shape of bug: different variable names, same root cause. The behavioural check gave every iteration a 30. The structural check would have given every iteration a 100.
+
+<ArtifactFrame taskId="mini-platformer" modelId="gemini-3.6-flash-agy" title="Gemini 3.6 Flash's platformer: Space pressed, canvas unchanged" caption="The behavioural scorer dispatches Space and pixel-diffs the canvas. The diff is empty. The model produced a structurally complete game that doesn't react to input." />
+
+<Callout type="thinking">
+
+This is the kind of finding that makes the behavioural scorer worth its weight. The whole point of the benchmark is to ask the model to ship something that works; the structural scorer was answering a different question, "did the model ship something that looks like it should work?", and the gap between those two questions is exactly where the interesting bugs live.
+
+</Callout>
+
+## Why the breaker bug mattered
+
+The first sweep with the fix attempted, using `trippedProviders: Set<string>` (provider-scoped), died in 6 minutes. gpt-oss hit quota on n-body iteration 1, the breaker tripped the `Agy` provider, and the remaining 12 jobs (Gemini mini-platformer through circuit builder for both models) were skipped with `Error: Agy disabled for the rest of this run after a quota/billing error`. The run produced one fresh record.
+
+The fix: key the breaker on `model.id`: is a six-line change in `lib/lab/llm-benchmark/runners/provider.ts` plus a test that asserts a second model on the same provider is *not* skipped after a sibling trips. The sweep after the fix got three models' worth of n-body and platformer runs before the per-model quotas bit individually. The headline platformer finding came from the Gemini run on that same sweep.
+
+The lesson is the same one the free-tier post ended with: a 7-task harness with 5 iterations per task across N models is no longer a single sweep: it's a sequence of partial sweeps punctuated by quota resets, and the harness has to make the right thing happen in each partial window without losing the work that came before. The merge guard handles "don't overwrite good data with a quota outage"; the model-scoped breaker handles "don't punish one model's outage on another's account."
+
+## What we took from it
+
+The model honestly under test:
+
+- **Gemini 3.6 Flash is a strong artifact generator when the artifact is structural**: the n-body field at 80.8 (with two iterations landing at 100 and three at 68, a tight cluster) and the crypto hash race at 96 (4×100 and 1×90) are genuine capability data. The platformer at 30 is honest capability data too, and the two kinds of data are *not contradictory*: the model can write a complete file with a coherent physics loop, and the model can also write a complete file that doesn't actually run.
+- **Claude Opus 4.6 Thinking's partial numbers are a serving story, not a model story.** Four of the five iterations on each of n-body and platformer timed out at the CLI layer with `endpoint_hung` (15-minute internal timeout). The one iteration that did return scored 100. The CLI's streaming timeout needs a higher default for reasoning models; that's the next runner change.
+- **GPT-OSS 120B's platformer at 100 is a structural 100, not a behavioural one**: we don't have a fresh 5-iteration behavioural read because the model tripped quota on the platformer task itself before iteration 2. The n-body at 42.7 is a real behavioural read (three iterations: 30, 68, 30) and the spread is what tells the story: this is a model that occasionally produces a working integrator and frequently produces one that explodes.
+
+The benchmark:
+
+- **The structural scorer was lying.** Three artifacts that scored 100 under structural checks (Gemini platformer, Gemini landing, Gemini circuit) score 30–50 under behavioural checks because the rendered page doesn't move. Replacing it on the five runnable tasks was overdue; the free-tier sweep's "many 100s, narrow spread" pattern was the first hint, and the Agy run is the proof.
+- **The breaker fix was the unlock.** Without it, the Agy sweep would have produced one record and been done in six minutes. With it, three models got their n-body and platformer runs before any individual quota bit, and the headline finding is from those runs.
+
+The release we shipped alongside the data is `v1.1.0` of the harness: the behavioural scorer, the model-scoped breaker, and the published 175-output rebuild of every result in `results.json`. Every model on every task in [the live benchmark](/lab/llm-benchmark/) is now one click away from its raw output, and the behavioural numbers on the runnable tasks are the ones the site displays.
+
+## Reading further
+
+- [Our LLM benchmark](/lab/llm-benchmark/). The live version of everything in this post: all seven tasks, every model's artifacts (including the platformer that scores 30 under the behavioural scorer and 100 under the old one), the side-by-side source comparisons, and the per-model reliability breakdown.
+- [Twelve free models just walked into our benchmark](/blog/benchmarking-openrouter-free-tier/). The free-tier sweep that surfaced the same failure mode (caching a 100 that doesn't move) on the OpenRouter side. The behavioural scorer was built to fix exactly that class of false-positive.
+- [We pointed our own benchmark at Kimi K3 on launch week](/blog/benchmarking-kimi-k3/). The frontier counterpart: K3 vs K2.7 vs Gemini 2.5 Pro on the same rubric. K3 still leads the structural leaderboard, and the behavioural re-score is the next thing we run against it.

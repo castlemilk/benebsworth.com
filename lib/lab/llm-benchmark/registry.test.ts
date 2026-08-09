@@ -65,7 +65,13 @@ describe('llm-benchmark registry', () => {
     //   - gemini-3.6-flash: registered but not yet swept (OpenRouter 402).
     // We assert >= rather than === so the test tolerates future exclusions
     // without a code change here, while still catching a drop in coverage.
-    const excluded = new Set(['nemotron-nano-12b-vl', 'gemini-3.6-flash'])
+    const excluded = new Set([
+      'nemotron-nano-12b-vl',     // free endpoint hangs
+      'gemini-3.6-flash',         // OpenRouter 402 (no credits)
+      'gemini-3.6-flash-agy',     // not yet swept
+      'claude-opus-4-6-thinking-agy', // not yet swept
+      'gpt-oss-120b-agy',         // not yet swept
+    ])
     const expected = BENCHMARK_MODELS.length - excluded.size
     expect(taskResults.length).toBeGreaterThanOrEqual(expected)
     expect(taskResults.every((r) => r.taskId === 'equation-solver')).toBe(true)

@@ -19,7 +19,17 @@ export async function generateAgy(
     // agy print mode ("-p") truncates stdout around 10k chars, so the artifact
     // is written to a scratch-dir file instead of being printed inline.
     artifactViaFile: true,
-    buildArgs: (prompt) => ['-p', prompt, '--model', agyModel],
+    buildArgs: (prompt) => [
+      '-p', prompt,
+      '--model', agyModel,
+      // Headless benchmark runs have no interactive permission prompt, so
+      // agy's tool calls (write_to_file for ./artifact.html) would otherwise
+      // be auto-denied with "no output produced — a tool required permission".
+      // --dangerously-skip-permissions auto-approves so the file handoff
+      // succeeds. This is safe in the benchmark context: the prompt, the
+      // scratch dir, and the write target are all controlled by us.
+      '--dangerously-skip-permissions',
+    ],
     timeoutMs: config.timeoutMs,
   }
   return generateFromCli(runner, model, task)

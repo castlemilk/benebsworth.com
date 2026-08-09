@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { htmlScorer } from './html'
 import { textScorer } from './text'
 import { selectScorer } from './index'
+import { behavioralScorer } from './behavioral'
 import { BENCHMARK_TASKS } from '../registry'
 
 const htmlTask = BENCHMARK_TASKS.find((t) => t.id === 'n-body-field')!
@@ -115,8 +116,11 @@ describe('text scorer', () => {
 })
 
 describe('selectScorer', () => {
-  it('routes HTML categories to the html scorer and the rest to text', () => {
-    expect(selectScorer(htmlTask)).toBe(htmlScorer)
+  it('routes HTML categories to the behavioral scorer and the rest to text', () => {
+    // HTML categories now use the Playwright-backed behavioral scorer (which
+    // composites 70% behavioral + 30% structural). The structural htmlScorer
+    // remains exported for callers that want the legacy pure-structural score.
+    expect(selectScorer(htmlTask)).toBe(behavioralScorer)
     expect(selectScorer(mathTask)).toBe(textScorer)
     expect(selectScorer(cryptoTask)).toBe(textScorer)
   })

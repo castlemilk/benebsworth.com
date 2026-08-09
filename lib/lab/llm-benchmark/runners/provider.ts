@@ -151,7 +151,11 @@ export function isQuotaError(err: unknown): boolean {
     // OpenRouter free tier: the per-model daily cap is a hard stop, not a
     // transient rate limit — every later call fails identically.
     message.includes('daily limit') ||
-    message.includes('no free model provider')
+    message.includes('no free model provider') ||
+    // Agy CLI subscription quota (per-model rate limit; not transient).
+    // Without this, the runner retries every iteration for ~3h until the
+    // quota resets, wasting the whole sweep window.
+    message.includes('individual quota reached')
   )
 }
 

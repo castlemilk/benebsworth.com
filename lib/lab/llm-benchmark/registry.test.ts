@@ -68,9 +68,6 @@ describe('llm-benchmark registry', () => {
     const excluded = new Set([
       'nemotron-nano-12b-vl',     // free endpoint hangs
       'gemini-3.6-flash',         // OpenRouter 402 (no credits)
-      'gemini-3.6-flash-agy',     // not yet swept
-      'claude-opus-4-6-thinking-agy', // not yet swept
-      'gpt-oss-120b-agy',         // not yet swept
     ])
     const expected = BENCHMARK_MODELS.length - excluded.size
     expect(taskResults.length).toBeGreaterThanOrEqual(expected)

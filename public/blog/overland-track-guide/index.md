@@ -98,7 +98,7 @@ The longest day of the standard route, but not the hardest. The track runs south
 
 <Stage day={4} from="New Pelion" to="Kia Ora" distanceKm={8.6} ascentM={300} descentM={300} timeHours="4–6 h" terrain="Rainforest climb to Pelion Gap, then down to Kia Ora.">
 
-This was the day I built the trip around. I left New Pelion before dawn to climb Mount Oakleigh for sunrise, reaching the summit while the light was still thin and pink. There was enough phone reception at the top for one brief call, and I used it to call my then-girlfriend: now wife: Jess. It felt like a small miracle, a private conversation from the top of a mountain in the middle of Tasmania.
+This was the day I built the trip around. I left New Pelion before dawn to climb Mount Oakleigh for sunrise, reaching the summit while the light was still thin and pink. There was enough phone reception at the top for one brief call, and I used it to call Jess, my then-girlfriend and now wife. It felt like a small miracle, a private conversation from the top of a mountain in the middle of Tasmania.
 
 By the time I got back to the hut the group was ready to move. We packed up, climbed through rainforest to Pelion Gap, and dropped down to Kia Ora Hut in the early afternoon. The gap itself is a wind-scoured saddle between Mount Ossa and Mount Pelion East, and the junction signposts point off in three directions: up, up, and down.
 

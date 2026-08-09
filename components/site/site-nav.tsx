@@ -13,6 +13,7 @@ const NAV_COLORS: Record<string, string> = {
   '/projects/': '#8b5cf6',
   '/blog/': '#f59e0b',
   '/lab/': '#f59e0b',
+  '/vectors/': '#00e0b8',
   '/hiking/': '#5b9e6f',
   '/about/': '#10b981',
 }
@@ -21,6 +22,7 @@ const navLinks = [
   { href: '/projects/', prefix: '/projects', label: 'projects' },
   { href: '/blog/', prefix: '/blog', label: 'blog' },
   { href: '/lab/', prefix: '/lab', label: 'lab' },
+  { href: '/vectors/', prefix: '/vectors', label: 'vectors' },
   { href: '/hiking/', prefix: '/hiking', label: 'hiking' },
   { href: '/about/', prefix: '/about', label: 'about' },
 ]

@@ -299,7 +299,7 @@ If all else fails try and re-run the steps described above, which are:
 
 With **Skaffold** in `dev` mode, it will reactively re-deploy the application on source code or config changes. To see this in action we can checkout the `feature/products` branch. This branch contains the baselined `v1` of the products app. We'll then checkout the `v2` branch `feature/ratings` which contains a "new" feature - product ratings will be rendered, and can be updated by users - which skaffold will automatically "hot-reload" for us.
 
-In order to see this in action, enure you've run steps 1-3 above, and you have the terminals still open from previously, this time open a 3rd window and run the following:
+To see this in action, make sure you've run steps 1–3 above and still have the terminals open. This time, open a third window and run the following:
 
 ```bash
 kubernetes-cicd git:(master) ✗ git checkout feature/products

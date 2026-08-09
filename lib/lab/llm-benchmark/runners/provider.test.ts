@@ -25,6 +25,16 @@ const MODEL: BenchmarkModel = {
   capabilities: '',
 }
 
+const MODEL2: BenchmarkModel = {
+  id: 'test-gemini',
+  name: 'Test Gemini',
+  provider: 'Moonshot AI',
+  costPer1kInputUsd: 0.001,
+  costPer1kOutputUsd: 0.002,
+  contextWindow: 1000,
+  capabilities: '',
+}
+
 const TASK: BenchmarkTask = {
   id: 'task-x',
   category: 'security-tasks',
@@ -66,7 +76,7 @@ describe('createProviderRunner quota handling', () => {
     generateMock.mockReset()
   })
 
-  it('trips the provider circuit breaker on quota errors: one call, then skips', async () => {
+  it('trips the model circuit breaker on quota errors: one call, then skips', async () => {
     generateMock.mockRejectedValue(
       new Error('Moonshot error 403: usage limit for this billing cycle (access_terminated_error)')
     )
@@ -77,9 +87,25 @@ describe('createProviderRunner quota handling', () => {
     expect(result.status).toBe('fail')
     expect(generateMock).toHaveBeenCalledTimes(1)
 
-    // Every later task for the same provider short-circuits without an API call.
+    // Every later task for the same model short-circuits without an API call.
     await expect(runner.runTask(MODEL, TASK, 5)).rejects.toThrow(/quota\/billing/i)
     expect(generateMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not trip other models on the same provider', async () => {
+    generateMock.mockRejectedValue(
+      new Error('Moonshot error 403: usage limit for this billing cycle (access_terminated_error)')
+    )
+    const runner = createProviderRunner({ moonshot: { apiKey: 'k' }, bustCache: true, maxRetries: 0 })
+
+    await runner.runTask(MODEL, TASK, 5)
+    expect(generateMock).toHaveBeenCalledTimes(1)
+
+    // A different model sharing the provider must still be able to run.
+    generateMock.mockResolvedValueOnce(OK)
+    const [result] = await runner.runTask(MODEL2, TASK, 1)
+    expect(result.status).toBe('success')
+    expect(generateMock).toHaveBeenCalledTimes(2)
   })
 
   it('breaks the iteration loop on non-transient errors', async () => {

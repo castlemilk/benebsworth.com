@@ -510,17 +510,23 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
     (process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUST_CACHE === 'true')
   setBustCache(bustCache)
 
-  // Circuit breaker: once a provider reports quota/billing exhaustion, every
+  // Circuit breaker: once a model reports quota/billing exhaustion, every
   // later call fails identically. Skipping its remaining jobs avoids burning
   // the sweep on guaranteed failures — and since no result is recorded for a
   // skipped job, existing good records are left untouched.
-  const trippedProviders = new Set<string>()
+  //
+  // Scoped per MODEL, not per provider: quota/billing exhaustion is a
+  // per-model condition (per-model daily caps, per-model subscription limits
+  // like Agy's "individual quota reached", per-model credit balances). A
+  // provider-wide outage still trips every model individually on its first
+  // failing call, so nothing is lost by keeping the breaker model-scoped.
+  const trippedModels = new Set<string>()
 
   return {
     runTask: async (model: BenchmarkModel, task: BenchmarkTask, iterations: number): Promise<BenchmarkResult[]> => {
-      if (trippedProviders.has(model.provider)) {
+      if (trippedModels.has(model.id)) {
         throw new Error(
-          `${model.provider} disabled for the rest of this run after a quota/billing error — skipping ${model.name} :: ${task.title}`
+          `${model.name} disabled for the rest of this run after a quota/billing error — skipping ${model.name} :: ${task.title}`
         )
       }
 
@@ -626,9 +632,9 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             failureReason: reason,
           })
           if (isQuotaError(err)) {
-            trippedProviders.add(model.provider)
+            trippedModels.add(model.id)
             console.error(
-              `[harness] quota/billing exhausted for ${model.provider} — skipping remaining iterations and all further ${model.provider} tasks this run`
+              `[harness] quota/billing exhausted for ${model.name} — skipping remaining iterations and all further ${model.name} tasks this run`
             )
             break
           }

@@ -77,6 +77,7 @@ describe('createProviderRunner quota handling', () => {
   })
 
   it('trips the model circuit breaker on quota errors: one call, then skips', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     generateMock.mockRejectedValue(
       new Error('Moonshot error 403: usage limit for this billing cycle (access_terminated_error)')
     )
@@ -90,6 +91,18 @@ describe('createProviderRunner quota handling', () => {
     // Every later task for the same model short-circuits without an API call.
     await expect(runner.runTask(MODEL, TASK, 5)).rejects.toThrow(/quota\/billing/i)
     expect(generateMock).toHaveBeenCalledTimes(1)
+
+    // The breaker log must reference the model (not the provider) so a
+    // user reading logs can see which subscription hit its cap. Per-model
+    // quotas (e.g. Agy "individual quota reached") need the model name, not
+    // the shared provider string — every Agy model uses provider 'Agy'.
+    const breakerLog = consoleErrorSpy.mock.calls
+      .map((args) => String(args[0]))
+      .find((line) => line.includes('quota/billing exhausted'))
+    expect(breakerLog).toBeDefined()
+    expect(breakerLog).toMatch(/Test Kimi/)
+    expect(breakerLog).not.toMatch(/Moonshot AI/)
+    consoleErrorSpy.mockRestore()
   })
 
   it('does not trip other models on the same provider', async () => {

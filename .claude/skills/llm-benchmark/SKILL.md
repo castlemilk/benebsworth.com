@@ -37,10 +37,13 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Categories, models, tasks, results | `lib/lab/llm-benchmark/registry.ts` |
 | Cost/aggregation helpers | `lib/lab/llm-benchmark/harness.ts` |
 | Provider runner orchestrator | `lib/lab/llm-benchmark/runners/provider.ts` |
-| Provider-specific API clients | `lib/lab/llm-benchmark/runners/{openai,anthropic,google,moonshot}.ts` |
-| Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text}.ts` |
+| Provider-specific API clients | `lib/lab/llm-benchmark/runners/{openai,anthropic,google,moonshot,openrouter}.ts` |
+| CLI-based providers (locally authenticated) | `lib/lab/llm-benchmark/runners/{cli,agy,codex}.ts` |
+| Sandbox contract (appended to HTML-runnable task prompts) | `lib/lab/llm-benchmark/prompts.ts` |
+| Failure classification + `isQuotaError` (per-model `Agy` "individual quota reached" included) | `lib/lab/llm-benchmark/runners/provider.ts` |
+| Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text,sandbox,checks,behavioral}.ts` |
 | Dependency sandbox | `lib/lab/llm-benchmark/sandbox/inline-dependencies.ts` |
-| Shared frame prelude (storage shim + error reporter) | `lib/lab/llm-benchmark/frame-prelude.ts` |
+| Shared frame prelude (DOCTYPE, CSS reset, storage shim, in-iframe error overlay) | `lib/lab/llm-benchmark/frame-prelude.ts` |
 | Run script | `scripts/run-benchmark.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
@@ -206,8 +209,9 @@ export interface Scorer {
 
 - `lib/lab/llm-benchmark/scorers/html.ts` — basic HTML validity heuristics (doctype, tag balance, closed scripts).
 - `lib/lab/llm-benchmark/scorers/text.ts` — generic text/math heuristics plus task-specific keyword checks.
+- `lib/lab/llm-benchmark/scorers/behavioral.ts` — Playwright-driven behavioural scorer (headless Chromium with `--no-sandbox`). Runs each artifact as it would render in the demo iframe, drives the actual key events the task requires (Space for platformer jump, ArrowRight for movement, scroll for landing page morph, click for circuit builder), and pixel-diffs the canvas against the pre-event baseline. Composite is 70% behavioural + 30% structural. Selected by `selectScorer()` for the five HTML-runnable categories (`ui-building`, `3d-physics-animation`, `advanced-game-building`, `advanced-physics`, `advanced-electronics`). The big catch: a model that emits structurally complete HTML that doesn't actually react to input scores 30, not 100 — visible in the gemini platformer run from the agy frontier sweep.
 
-The provider runner selects the HTML scorer for HTML-generating task categories (`ui-building`, `3d-physics-animation`, `advanced-game-building`, `advanced-physics`, `advanced-electronics`) and the text scorer for everything else. Scores are shown as a 0-100 badge in the side-by-side output comparison UI.
+The provider runner selects the HTML scorer for text tasks and the behavioural scorer for the five HTML-runnable task categories. Scores are shown as a 0-100 badge in the side-by-side output comparison UI.
 
 To add a new scorer:
 
@@ -272,9 +276,14 @@ export async function generateMyProvider(
 - **Model name mapping**: Use `apiModelId` in the registry when the provider's model name differs from the URL-safe registry `id` (e.g. `kimi-k2.7` → `kimi-k2-7`, `kimi-k3` → `k3`).
 - **Long runs**: Kimi K2.7 can take 30–200s per task. A full 5-iteration sweep can take 30–40 minutes. Use `RUN_ITERATIONS=1` for a quick smoke test.
 - **No output placeholder**: If a model has no result or a failed result with no output, the side-by-side comparison shows "No captured output for this model yet."
-- **Quota/billing exhaustion**: `isQuotaError()` in `runners/provider.ts` detects provider quota errors (Moonshot `access_terminated_error`, OpenAI `insufficient_quota`, Anthropic credit balance). The runner (a) breaks the current task's iteration loop on the first quota error, (b) trips a circuit breaker that throws on all later tasks for that provider (skipped jobs record nothing), and (c) never retries quota errors. `mergeResults()` in `results.ts` adds the second layer: a fresh result with 0 successful iterations never replaces a baseline record that has successes — so a quota-killed re-run can't corrupt good data. Non-transient errors (auth/validation) also break the iteration loop: same prompt, same guaranteed failure.
+- **Quota/billing exhaustion**: `isQuotaError()` in `runners/provider.ts` detects provider quota errors (Moonshot `access_terminated_error`, OpenAI `insufficient_quota`, Anthropic credit balance, Agy `individual quota reached`). The runner (a) breaks the current task's iteration loop on the first quota error, (b) trips a circuit breaker **keyed on `model.id` (not `model.provider`)** that throws on all later tasks for that model — sibling models on the same provider (e.g. all three Agy models sharing `provider: 'Agy'`) keep running, and (c) never retries quota errors. `mergeResults()` in `results.ts` adds the second layer: a fresh result with 0 successful iterations never replaces a baseline record that has successes — so a quota-killed re-run can't corrupt good data. Non-transient errors (auth/validation) also break the iteration loop: same prompt, same guaranteed failure.
+- **CLI providers + per-model subscription quotas**: Agy enforces per-model subscription caps ("individual quota reached" — each model has its own ~25min to ~3.5h reset window, not a shared pool). A single 5-iteration sweep per Agy model typically exceeds the quota; multi-window crawls are normal. The runner's breaker keys on `model.id` so one model tripping does not starve the others. Skip Claude-thinking and gpt-oss-med once their quota is gone; come back next window.
+- **Agy CLI flags**: headless agy needs `--dangerously-skip-permissions` to auto-approve the file handoff the benchmark relies on (agy writes the artifact to `./artifact.html` and the runner reads it back). Without it the CLI blocks on an interactive prompt that has no terminal.
+- **Frame prelude** (`lib/lab/llm-benchmark/frame-prelude.ts`) auto-injects, ahead of any model-generated markup: (1) `<!DOCTYPE html>` if the artifact omits one — without it, browsers enter quirks mode and canvas/CSS sizing comes out wrong; (2) a CSS reset (`margin:0;padding:0;min-height:100%;box-sizing:border-box`, dark backdrop, font stack); (3) a viewport meta if missing; (4) a localStorage/sessionStorage shim — the frame runs at an opaque origin (`sandbox="allow-scripts"`, no `allow-same-origin`), where real Storage access throws; (5) a runtime-error reporter that renders a fixed-position red overlay inside the iframe on the FIRST script error and forwards the same message to the parent via `postMessage` for a non-blocking parent-side bar. `ArtifactFrame` and `GeneratedDemo` both listen for the postMessage.
 - **Static artifacts**: `scripts/gen-benchmark-outputs.mjs` (prebuild, run under `tsx`) publishes `public/lab-data/llm-benchmark/outputs/<task>/<model>.json` plus a prelude-wrapped `.html` for every full HTML document. `public/_headers` serves that path with `Content-Security-Policy: sandbox allow-scripts` so artifacts are opaque-origin even opened top-level. The demo iframe uses srcdoc with the SAME prelude (`lib/lab/llm-benchmark/frame-prelude.ts`) — keep both paths on that one implementation.
 - **Sandbox dependency inlining**: external `<script src>`/`<link>` URLs are resolved to canonical classic builds BEFORE fetching (aliases like unpkg `three.module.js` would otherwise inline an ES-module build as a classic script — guaranteed syntax error). Each canonical URL inlines at most once; unknown module scripts keep `type="module"`.
+- **Sandbox prompt contract** (`lib/lab/llm-benchmark/prompts.ts`, appended to HTML-runnable tasks via `withSandboxConstraints()`): tells the model the iframe is opaque-origin / no-network, requires `<!DOCTYPE html><html><head><body>` skeleton, requires CSS-sized canvas + window resize handler (NOT attribute-sized), and asks for try/catch around the top-level script with the caught error rendered visibly. Tests in `prompts.test.ts`. The sandbox contract is appended to the task prompt at runtime — the prompt hash is part of the cache key, so any contract change requires a fresh sweep (`RUN_BUST_CACHE=1`) to take effect.
+- **Pre-commit hook blocking**: the `lint:prose:changed` task treats em-dash overuse (`em-dash-budget` rule) as a hard failure. If a new blog post trips it, count the em-dashes per line (budget 5/line) and convert `" — "` to `": "` or replace the dashes with other punctuation before committing.
 
 ## Verification Checklist
 

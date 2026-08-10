@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { outputUrl, outputHtmlUrl } from '@/lib/lab/llm-benchmark/nav'
 import { withPrelude } from '@/lib/lab/llm-benchmark/frame-prelude'
-import { AlertCircle, ExternalLink, Loader2, Play } from 'lucide-react'
+import { AlertCircle, ExternalLink, Loader2, Play, X } from 'lucide-react'
 
 interface ArtifactFrameProps {
   /**
@@ -44,6 +44,7 @@ function ArtifactFrameInner({
   height = 480,
 }: ArtifactFrameProps) {
   const [state, setState] = useState<LoadState>({ phase: 'idle' })
+  const [frameError, setFrameError] = useState<string | null>(null)
   const seq = useRef(0)
 
   async function run() {
@@ -62,12 +63,28 @@ function ArtifactFrameInner({
     }
   }
 
+  // Listen for the prelude's runtime-error reporter (postMessage from the
+  // sandboxed frame). Only the FIRST error is forwarded by the prelude —
+  // subsequent ones stay inside the in-iframe red overlay — so we just set
+  // and never overwrite. Mirrors the same wiring in GeneratedDemo.
+  useEffect(() => {
+    function onMessage(event: MessageEvent) {
+      const data = event.data as { __llmDemoError?: unknown } | null | undefined
+      if (!data || typeof data.__llmDemoError !== 'string') return
+      const message = data.__llmDemoError.slice(0, 200)
+      setFrameError((prev) => prev ?? message)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
+
   // Reset to the idle/gated state whenever the artifact identity changes, so
   // the old artifact never lingers beside a caption link that already points
   // at the new model (mirrors GeneratedDemo). Declared before the auto-run
   // effect so the reset lands first on a prop change.
   useEffect(() => {
     setState({ phase: 'idle' })
+    setFrameError(null)
   }, [taskId, modelId, version])
 
   // Auto-run on mount — except when the visitor prefers reduced motion, where
@@ -95,6 +112,25 @@ function ArtifactFrameInner({
         {title && (
           <div className="border-b border-white/10 px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-white/60">
             {title}
+          </div>
+        )}
+        {frameError && (
+          <div className="flex items-center gap-2 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-amber-400">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider">
+              Artifact error
+            </span>
+            <span className="min-w-0 flex-1 truncate font-mono text-xs text-amber-300/80">
+              {frameError}
+            </span>
+            <button
+              type="button"
+              onClick={() => setFrameError(null)}
+              aria-label="Dismiss artifact error"
+              className="shrink-0 rounded p-0.5 text-amber-400/70 transition-colors hover:bg-amber-500/20 hover:text-amber-300"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden />
+            </button>
           </div>
         )}
         <div className="relative" style={{ height }}>

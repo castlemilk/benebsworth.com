@@ -22,16 +22,22 @@ export const SANDBOX_CONSTRAINTS = `
 
 EXECUTION ENVIRONMENT — your artifact runs inside a locked-down sandboxed iframe (sandbox="allow-scripts", opaque origin, NO network access). Hard requirements:
 - Produce ONE complete, self-contained HTML document: <!DOCTYPE html> through </html>.
+- Use this exact skeleton: <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>...</title><style>...</style></head><body>...</body></html>. The DOCTYPE must be the very first node — a DOCTYPE after any other content still triggers quirks mode, and the canvas/CSS sizing comes out wrong. All visible content must live inside <body>, never as bare siblings of <html>.
 - Inline ALL CSS and JavaScript. Nothing may load from the network: no <script src>, no <link href>, no @import, no CDN (React/Tailwind/three.js/fonts/images included). If you need a library, hand-write the code instead.
 - Write plain browser JavaScript only. No JSX, no <script type="text/babel">, no Babel standalone, no TypeScript, no build step, no runtime compilation.
 - localStorage/sessionStorage/cookies may be unavailable — feature-detect or wrap in try/catch; the page must still work without them.
 - No alert/confirm/prompt; render all feedback into the page itself.
+- Wrap your top-level script body in try/catch and, on failure, write the error message into a visible <div role="alert"> inside <body>. The sandbox auto-injects an error overlay, but a model that catches its own errors and renders them gives a much better demo than one that crashes silently.
+
+LAYOUT — the showcase frame is short and sometimes narrow (~1200×600 CSS px on desktop, ~380×480 on mobile). Fill it; don't sit in the corner:
+- Set html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui} so the page fills the frame and inherits a dark backdrop.
+- Size any <canvas> with CSS — width:100%;height:100% or width:100vw;height:100vh — NOT with the canvas.width/canvas.height attributes, which set the bitmap (not the displayed size) and leave the canvas stuck at its initial size inside the larger frame.
+- Add a window 'resize' listener that recomputes the canvas backing store from window.innerWidth/innerHeight × devicePixelRatio and redraws the scene. A canvas that doesn't resize on viewport change is the single most common rendering bug in this benchmark.
+- Animate with requestAnimationFrame; cancel on window 'unload' to avoid leaks across navigations.
 
 QUALITY BAR — the artifact is showcased head-to-head against other frontier models:
 - Fill the viewport; default to a polished dark theme with a small overlay containing the title and any controls (sliders, buttons, stats).
 - The showcase frame is short and sometimes narrow — roughly 1200×600 CSS px on desktop and 380×480 on mobile. Keep HUD overlays compact (they must not cover the scene on small screens), and compose the scene so the critical action is visible at those sizes from the first frame.
-- Animate with requestAnimationFrame (cancel on unload); size canvases for devicePixelRatio and re-layout on window resize.
-- Include a viewport meta tag and make the layout work at 380px wide without horizontal scrolling.
 - Every control must actually work. No placeholder text, no TODOs, no dead buttons, no lorem ipsum.
 - Make the first frame already look intentional — no unstyled white flash, no collapsed layout while scripts boot.`
 

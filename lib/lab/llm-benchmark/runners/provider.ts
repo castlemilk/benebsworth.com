@@ -5,6 +5,7 @@ import type {
   BenchmarkRunner,
   BenchmarkStatus,
   BenchmarkTask,
+  IterationCheckResult,
   Scorer,
 } from '../types'
 import { estimateCost } from '../harness'
@@ -426,11 +427,23 @@ export async function aggregateRuns(
   const totalTokensIn = runs.reduce((sum, r) => sum + r.tokensIn, 0)
   const totalTokensOut = runs.reduce((sum, r) => sum + r.tokensOut, 0)
 
-  // Score EVERY successful iteration's output and publish the mean.
+  // Score EVERY successful iteration's output and publish the mean. When the
+  // scorer exposes a per-iteration breakdown (behavioural scorers), capture
+  // each iteration's checks alongside its score so the UI can show WHICH
+  // check tripped for a low score.
   let score = 0
   let iterationScores: number[] = []
+  let iterationCheckResults: IterationCheckResult[][] = []
   if (successRuns.length > 0) {
-    iterationScores = await Promise.all(successRuns.map((r) => scorer.score(r.output, task)))
+    if (scorer.scoreWithBreakdown) {
+      const breakdowns = await Promise.all(
+        successRuns.map((r) => scorer.scoreWithBreakdown!(r.output, task))
+      )
+      iterationScores = breakdowns.map((b) => b.score)
+      iterationCheckResults = breakdowns.map((b) => b.checks)
+    } else {
+      iterationScores = await Promise.all(successRuns.map((r) => scorer.score(r.output, task)))
+    }
     const mean = iterationScores.reduce((sum, s) => sum + s, 0) / iterationScores.length
     score = Math.round(Math.min(100, Math.max(1, mean)) * 10) / 10
   }
@@ -490,6 +503,11 @@ export async function aggregateRuns(
     // Per-iteration scores so the UI can show variance (Loop 3). Only present
     // when at least one iteration produced a scoreable artifact.
     iterationScores: iterationScores.length > 0 ? iterationScores : undefined,
+    // Per-iteration behavioural check outcomes, aligned by index with
+    // iterationScores. Only present when a behavioural scorer ran and at
+    // least one iteration produced checks.
+    iterationCheckResults:
+      iterationCheckResults.length > 0 ? iterationCheckResults : undefined,
     createdAt,
     source: 'live',
     output,

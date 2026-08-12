@@ -1,4 +1,4 @@
-import type { BenchmarkResult, BenchmarkTask, Scorer } from '../types'
+import type { BenchmarkTask, IterationCheckResult, Scorer } from '../types'
 import { htmlScorer } from './html'
 import { getChecksForTask } from './checks'
 import { runChecks, type CheckResult } from './sandbox'
@@ -97,6 +97,28 @@ export const behavioralScorer: Scorer = {
     const result = await scoreBehavioral(output, task)
     return result.score
   },
+  scoreWithBreakdown: async (
+    output: string,
+    task: BenchmarkTask
+  ): Promise<{ score: number; checks: IterationCheckResult[] }> => {
+    const result = await scoreBehavioral(output, task)
+    return { score: result.score, checks: toIterationCheckResults(result.checks) }
+  },
+}
+
+/**
+ * Map sandbox CheckResults to the persisted IterationCheckResult shape (the
+ * fields are identical; this keeps the persisted record free of Playwright
+ * types).
+ */
+function toIterationCheckResults(checks: CheckResult[]): IterationCheckResult[] {
+  return checks.map((c) => ({
+    name: c.name,
+    passed: c.passed,
+    points: c.points,
+    maxPoints: c.maxPoints,
+    detail: c.detail,
+  }))
 }
 
 /**

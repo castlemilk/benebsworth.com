@@ -99,6 +99,24 @@ export interface BenchmarkTask {
 }
 
 /**
+ * One behavioural check's outcome for a single iteration (mirrors the
+ * `CheckResult` shape used by the sandbox, but lives here so the persisted
+ * record has no Playwright/CLI types in it).
+ */
+export interface IterationCheckResult {
+  /** Short, stable name (e.g. 'space-jump-dispatch'). */
+  name: string
+  /** True if the check passed. */
+  passed: boolean
+  /** Points awarded for this check (0 if failed). */
+  points: number
+  /** Max points this check is worth. */
+  maxPoints: number
+  /** Free-text detail for the report. */
+  detail?: string
+}
+
+/**
  * One aggregated record per task × model.
  *
  * Field semantics (one record aggregates `iterations` API calls):
@@ -127,6 +145,18 @@ export interface BenchmarkResult {
    * Absent on older records (added when failure-reason classification landed).
    */
   iterationScores?: number[]
+  /**
+   * Per-iteration behavioural check results for interactive tasks (the five
+   * HTML-runnable categories: 3d-physics-animation, advanced-game-building,
+   * advanced-physics, advanced-electronics, ui-building). Each entry is the
+   * flat list of checks for that iteration (passed/failed + name + detail)
+   * so a reader can see WHY a model scored 30 on the platformer — which
+   * specific check (Space-dispatch, canvas-advance, ...) tripped.
+   *
+   * Absent on text-only tasks and older records; populated only by
+   * behavioural scorers that expose per-iteration check breakdowns.
+   */
+  iterationCheckResults?: IterationCheckResult[][]
   status: BenchmarkStatus
   /**
    * If status is not 'success', the dominant failure reason across the
@@ -155,4 +185,14 @@ export interface BenchmarkRunner {
 export interface Scorer {
   /** Score a generated output for a task. Returns 0-100. */
   score(output: string, task: BenchmarkTask): Promise<number> | number
+  /**
+   * Optional: score an output and return the composite score PLUS the
+   * per-check breakdown (used by behavioural scorers). When present, the
+   * runner persists each successful iteration's checks on the result so the
+   * UI can show *which* check tripped for a low score.
+   */
+  scoreWithBreakdown?(
+    output: string,
+    task: BenchmarkTask
+  ): Promise<{ score: number; checks: IterationCheckResult[] }> | { score: number; checks: IterationCheckResult[] }
 }

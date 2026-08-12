@@ -14,6 +14,7 @@ import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
 import { modelIndexPath, modelPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
+import { IterationChecks } from '@/components/lab/llm-benchmark/iteration-checks'
 import {
   formatRuntime,
   formatCost,
@@ -307,6 +308,9 @@ export default async function ModelDetailPage({
                             <ScoreBar score={result.score} width="w-20" />
                             {result.iterationScores && result.iterationScores.length > 1 && (
                               <IterationSpread scores={result.iterationScores} />
+                            )}
+                            {result.iterationCheckResults && (
+                              <IterationChecks results={result.iterationCheckResults} />
                             )}
                           </td>
                           <td className={`whitespace-nowrap px-5 py-3 text-right font-mono ${statusClass(result.status)}`}>

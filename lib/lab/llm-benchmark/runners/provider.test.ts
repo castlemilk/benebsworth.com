@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { BenchmarkModel, BenchmarkTask } from '../types'
-
 // Mock the wire + cache layers so the runner logic is exercised in isolation.
 vi.mock('./moonshot', () => ({ generateMoonshot: vi.fn() }))
 vi.mock('../cache', () => ({
@@ -10,8 +9,9 @@ vi.mock('../cache', () => ({
   saveQueue: Promise.resolve(),
 }))
 
-import { createProviderRunner, isQuotaError } from './provider'
+import { aggregateRuns, createProviderRunner, isQuotaError } from './provider'
 import { generateMoonshot } from './moonshot'
+import type { IterationRun } from './provider'
 
 const generateMock = vi.mocked(generateMoonshot)
 
@@ -140,5 +140,52 @@ describe('createProviderRunner quota handling', () => {
     expect(generateMock).toHaveBeenCalledTimes(2)
     expect(result.status).toBe('partial')
     expect(result.iterationsSucceeded).toBe(1)
+  })
+})
+
+describe('aggregateRuns', () => {
+  const runs = (n: number): IterationRun[] =>
+    Array.from({ length: n }, () => ({ ...OK, status: 'success' }))
+
+  it('persists no iterationCheckResults when the scorer has no breakdown', async () => {
+    const scorer = {
+      score: () => 50,
+    }
+    const result = await aggregateRuns(runs(3), 3, MODEL, TASK, scorer)
+    expect(result.iterationScores).toEqual([50, 50, 50])
+    expect(result.iterationCheckResults).toBeUndefined()
+  })
+
+  it('persists per-iteration checks aligned with iterationScores via scoreWithBreakdown', async () => {
+    const checks = [
+      { name: 'space-jump-dispatch', passed: true, points: 40, maxPoints: 40 },
+      { name: 'canvas-advance', passed: false, points: 0, maxPoints: 30, detail: 'pixels unchanged' },
+    ]
+    const scorer = {
+      score: () => 40,
+      scoreWithBreakdown: () => ({ score: 40, checks }),
+    }
+
+    const result = await aggregateRuns(runs(3), 3, MODEL, TASK, scorer)
+    expect(result.iterationScores).toEqual([40, 40, 40])
+    expect(result.iterationCheckResults).toHaveLength(3)
+    for (const it of result.iterationCheckResults!) {
+      expect(it).toEqual(checks)
+    }
+  })
+
+  it('drops the check breakdown when no iteration produced a scoreable artifact', async () => {
+    const scorer = {
+      score: () => 0,
+      scoreWithBreakdown: () => ({ score: 0, checks: [] }),
+    }
+
+    const failedRuns: IterationRun[] = [
+      { ...OK, status: 'fail', failureReason: 'quota_exhausted', output: 'error 403' },
+    ]
+    const result = await aggregateRuns(failedRuns, 5, MODEL, TASK, scorer)
+    expect(result.status).toBe('fail')
+    expect(result.iterationScores).toBeUndefined()
+    expect(result.iterationCheckResults).toBeUndefined()
   })
 })

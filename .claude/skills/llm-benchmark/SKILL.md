@@ -38,7 +38,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Cost/aggregation helpers | `lib/lab/llm-benchmark/harness.ts` |
 | Provider runner orchestrator | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Provider-specific API clients | `lib/lab/llm-benchmark/runners/{openai,anthropic,google,moonshot,openrouter}.ts` |
-| CLI-based providers (locally authenticated) | `lib/lab/llm-benchmark/runners/{cli,agy,codex}.ts` |
+| CLI-based providers (locally authenticated) | `lib/lab/llm-benchmark/runners/{cli,agy,codex,opencode}.ts` |
 | Sandbox contract (appended to HTML-runnable task prompts) | `lib/lab/llm-benchmark/prompts.ts` |
 | Failure classification + `isQuotaError` (per-model `Agy` "individual quota reached" included) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text,sandbox,checks,behavioral}.ts` |
@@ -231,16 +231,18 @@ The harness also supports providers that are locally-installed CLIs (e.g. `agy`,
 - `lib/lab/llm-benchmark/runners/cli.ts` — generic `spawn`-based CLI wrapper with stdin EOF, stdout parsing, token estimation, and timeout handling.
 - `lib/lab/llm-benchmark/runners/agy.ts` — wraps `agy -p <prompt> --model <model>`.
 - `lib/lab/llm-benchmark/runners/codex.ts` — wraps `codex exec --ephemeral --sandbox read-only <prompt>`.
+- `lib/lab/llm-benchmark/runners/opencode.ts` — wraps `opencode run -m <model> <prompt>` (model id is `provider/name` form, e.g. `opencode/deepseek-v4-flash-free`).
 
 To add a CLI provider:
 
 1. Create a runner file that builds a `CliRunnerConfig` and calls `generateFromCli()`.
-2. Add the model to `BENCHMARK_MODELS` with `provider` set to a unique value (e.g. `'Agy'`, `'Codex'`).
+2. Add the model to `BENCHMARK_MODELS` with `provider` set to a unique value (e.g. `'Agy'`, `'Codex'`, `'OpenCode'`).
 3. Wire the new provider case into `configForModel()` and `generateWithProvider()` in `lib/lab/llm-benchmark/runners/provider.ts`.
 4. The CLI must be installed and authenticated locally. Test it manually first:
    ```bash
    agy -p "say hi" --model "Gemini 3.5 Flash (High)"
    codex exec --ephemeral --sandbox read-only "say hi"
+   opencode run -m opencode/deepseek-v4-flash-free "say hi"
    ```
 
 CLI providers estimate token counts when the CLI doesn't report them, so costs are approximate.
@@ -279,6 +281,9 @@ export async function generateMyProvider(
 - **Quota/billing exhaustion**: `isQuotaError()` in `runners/provider.ts` detects provider quota errors (Moonshot `access_terminated_error`, OpenAI `insufficient_quota`, Anthropic credit balance, Agy `individual quota reached`). The runner (a) breaks the current task's iteration loop on the first quota error, (b) trips a circuit breaker **keyed on `model.id` (not `model.provider`)** that throws on all later tasks for that model — sibling models on the same provider (e.g. all three Agy models sharing `provider: 'Agy'`) keep running, and (c) never retries quota errors. `mergeResults()` in `results.ts` adds the second layer: a fresh result with 0 successful iterations never replaces a baseline record that has successes — so a quota-killed re-run can't corrupt good data. Non-transient errors (auth/validation) also break the iteration loop: same prompt, same guaranteed failure.
 - **CLI providers + per-model subscription quotas**: Agy enforces per-model subscription caps ("individual quota reached" — each model has its own ~25min to ~3.5h reset window, not a shared pool). A single 5-iteration sweep per Agy model typically exceeds the quota; multi-window crawls are normal. The runner's breaker keys on `model.id` so one model tripping does not starve the others. Skip Claude-thinking and gpt-oss-med once their quota is gone; come back next window.
 - **Agy CLI flags**: headless agy needs `--dangerously-skip-permissions` to auto-approve the file handoff the benchmark relies on (agy writes the artifact to `./artifact.html` and the runner reads it back). Without it the CLI blocks on an interactive prompt that has no terminal.
+- **opencode CLI quirks**: `opencode run -m opencode/<model> <prompt>` resolves relative paths against ITS OWN session directory (e.g. `/private/tmp`) rather than the process cwd — but prints the absolute path it wrote, so `cli.ts` fallback #3 reads it back. That shared path means OpenCode sweeps must run at `RUN_CONCURRENCY=1` (same as agy's file handoff). Command-line model ids are in `provider/name` form (the bare name fails with `ProviderModelNotFoundError: Model not found`). Iterations are slow (~4-8 min for a full HTML artifact on the free tier).
+- **Sweep process hangs**: behavioural scoring lazily launches a shared Playwright browser (`getBrowser()`); `scripts/run-benchmark.mjs` MUST call `closeSandbox()` before exiting or the process hangs after the final write. Fixed in the OpenCode provider commit; keep closeSandbox() in any new sweep/reporting script too.
+- **Per-iteration check results**: `aggregateRuns()` persists each successful iteration's behavioural checks as `iterationCheckResults` (aligned with `iterationScores`) when the scorer exposes `scoreWithBreakdown` (behaviouralScorer does). Old records can be backfilled from the stored best artifact with `npx tsx scripts/backfill-iteration-checks.mjs`. UI renders one pass/fail pill per check name.
 - **Frame prelude** (`lib/lab/llm-benchmark/frame-prelude.ts`) auto-injects, ahead of any model-generated markup: (1) `<!DOCTYPE html>` if the artifact omits one — without it, browsers enter quirks mode and canvas/CSS sizing comes out wrong; (2) a CSS reset (`margin:0;padding:0;min-height:100%;box-sizing:border-box`, dark backdrop, font stack); (3) a viewport meta if missing; (4) a localStorage/sessionStorage shim — the frame runs at an opaque origin (`sandbox="allow-scripts"`, no `allow-same-origin`), where real Storage access throws; (5) a runtime-error reporter that renders a fixed-position red overlay inside the iframe on the FIRST script error and forwards the same message to the parent via `postMessage` for a non-blocking parent-side bar. `ArtifactFrame` and `GeneratedDemo` both listen for the postMessage.
 - **Static artifacts**: `scripts/gen-benchmark-outputs.mjs` (prebuild, run under `tsx`) publishes `public/lab-data/llm-benchmark/outputs/<task>/<model>.json` plus a prelude-wrapped `.html` for every full HTML document. `public/_headers` serves that path with `Content-Security-Policy: sandbox allow-scripts` so artifacts are opaque-origin even opened top-level. The demo iframe uses srcdoc with the SAME prelude (`lib/lab/llm-benchmark/frame-prelude.ts`) — keep both paths on that one implementation.
 - **Sandbox dependency inlining**: external `<script src>`/`<link>` URLs are resolved to canonical classic builds BEFORE fetching (aliases like unpkg `three.module.js` would otherwise inline an ES-module build as a classic script — guaranteed syntax error). Each canonical URL inlines at most once; unknown module scripts keep `type="module"`.

@@ -5222,5 +5222,282 @@
         }
       ]
     ]
+  },
+  {
+    "taskId": "mini-platformer",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 68,
+    "runtimeMs": 242050,
+    "tokensIn": 4260,
+    "tokensOut": 20674,
+    "costUsd": 0,
+    "iterations": 5,
+    "iterationsSucceeded": 4,
+    "status": "partial",
+    "failureReason": "empty_body",
+    "iterationScores": [
+      87,
+      91,
+      3,
+      91
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 99.1% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.2% (threshold 2%)"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 99.2% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.2% (threshold 2%)"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no <canvas> found"
+        },
+        {
+          "name": "platformer-move",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 25,
+          "detail": "no <canvas> found"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 99.2% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.1% (threshold 2%)"
+        }
+      ]
+    ],
+    "createdAt": "2026-08-12T04:26:54.351Z",
+    "source": "live",
+    "output": "<canvas id=\"game\"></canvas>\n<div class=\"hud\">\n  <div class=\"title\">PARALLAX RUNNER</div>\n  <div class=\"stat\">Coins <b><span id=\"coinCount\">0</span></b> / <span id=\"coinTotal\">0</span></div>\n  <div class=\"stat\">Time <span id=\"clock\">0.0</span>s</div>\n  <button id=\"resetBtn\" type=\"button\">Reset</button>\n</div>\n<div class=\"hint\">&#8592; &#8594; / A D move &middot; Space / W / &#8593; jump &middot; R reset</div>\n<div id=\"touch\" class=\"touch hidden\">\n  <button data-key=\"ArrowLeft\" type=\"button\">&#9664;</button>\n  <div class=\"tright\">\n    <button data-key=\"Space\" type=\"button\">&#9650;</button>\n    <button data-key=\"ArrowRight\" type=\"button\">&#9654;</button>\n  </div>\n</div>\n<div id=\"winOverlay\" class=\"win hidden\"><div class=\"card\"><h2>Flag reached!</h2><p id=\"winStats\"></p><button id=\"againBtn\" type=\"button\">Play again</button></div></div>\n<div id=\"error\" role=\"alert\" hidden></div>\n<script>\n(function(){\n  'use strict';\n  var canvas=document.getElementById('game');\n  var ctx=canvas.getContext('2d');\n  var errorEl=document.getElementById('error');\n  var coinCountEl=document.getElementById('coinCount');\n  var coinTotalEl=document.getElementById('coinTotal');\n  var clockEl=document.getElementById('clock');\n  var resetBtn=document.getElementById('resetBtn');\n  var againBtn=document.getElementById('againBtn');\n  var winOverlay=document.getElementById('winOverlay');\n  var winStatsEl=document.getElementById('winStats');\n  function fail(msg){\n    errorEl.textContent='Error: '+msg;\n    errorEl.removeAttribute('hidden');\n  }\n  try {\n    var DPR=window.devicePixelRatio||1;\n    var LOGICAL_H=600;\n    var WORLD_W=3600;\n    var GRAV=2200;\n    var MOVE=420;\n    var JUMP=820;\n    var MAX_FALL=1500;\n    var COYOTE=0.09;\n    var BUFFER=0.12;\n    var FLAG_X=3530;\n    var solids=[];\n    function addSolid(x,y,w,h,oneWay){solids.push({x:x,y:y,w:w,h:h,oneWay:!!oneWay});}\n    addSolid(0,520,880,340,false);\n    addSolid(1010,520,900,340,false);\n    addSolid(2040,520,900,340,false);\n    addSolid(3070,520,530,340,false);\n    addSolid(3580,0,20,520,false);\n    addSolid(430,404,170,22,true);\n    addSolid(690,322,170,22,true);\n    addSolid(915,404,170,22,true);\n    addSolid(1260,386,180,22,true);\n    addSolid(1540,300,180,22,true);\n    addSolid(1845,392,170,22,true);\n    addSolid(2160,366,180,22,true);\n    addSolid(2520,296,180,22,true);\n    addSolid(2850,386,180,22,true);\n    addSolid(3210,332,200,22,true);\n    var coins=[];\n    function lineCoins(x0,y,n,step){for(var i=0;i<n;i++)coins.push({x:x0+i*step,y:y});}\n    function arcCoins(cx,cy,r,n,a0,a1){for(var i=0;i<n;i++){var a=a0+(a1-a0)*i/(n-1);coins.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r});}}\n    lineCoins(180,480,5,40);\n    arcCoins(515,386,50,7,Math.PI,Math.PI*2);\n    arcCoins(775,304,46,7,Math.PI,Math.PI*2);\n    lineCoins(800,480,3,40);\n    arcCoins(995,386,50,7,Math.PI,Math.PI*2);\n    lineCoins(1130,480,4,40);\n    arcCoins(1350,368,50,7,Math.PI,Math.PI*2);\n    lineCoins(1295,344,3,45);\n    arcCoins(1630,282,52,7,Math.PI,Math.PI*2);\n    lineCoins(1580,250,3,50);\n    arcCoins(1930,374,48,7,Math.PI,Math.PI*2);\n    lineCoins(2150,480,4,40);\n    arcCoins(2250,348,50,7,Math.PI,Math.PI*2);\n    lineCoins(2200,318,3,46);\n    arcCoins(2610,278,50,7,Math.PI,Math.PI*2);\n    lineCoins(2560,246,3,50);\n    arcCoins(2940,368,48,7,Math.PI,Math.PI*2);\n    lineCoins(3140,480,4,40);\n    arcCoins(3310,314,50,7,Math.PI,Math.PI*2);\n    lineCoins(3250,282,3,48);\n    lineCoins(3420,470,4,28);\n    coinTotalEl.textContent=coins.length;\n    var stars=[];\n    for(var i=0;i<110;i++){stars.push({x:Math.random(),y:Math.random()*0.6,size:Math.random()*1.6+0.5,tw:Math.random()*Math.PI*2,sp:Math.random()*1.5+0.5});}\n    var player={x:140,y:470,w:34,h:48,vx:0,vy:0,onGround:false,face:1,wasGrounded:false};\n    var respawn={x:140,y:472};\n    var coyote=0,jbuffer=0,lastBottom=0,landFlash=0;\n    var state='play';\n    var runTime=0,collected=0;\n    var particles=[],floaters=[];\n    var keys={};\n    var keyMap={ArrowLeft:1,KeyA:1,ArrowRight:1,KeyD:1,Space:1,ArrowUp:1,KeyW:1,KeyR:1};\n    window.addEventListener('keydown',function(e){\n      if(keyMap[e.code]){\n        if(e.code==='Space'&&e.target&&e.target.tagName==='BUTTON'){e.target.blur();}\n        e.preventDefault();\n        keys[e.code]=true;\n        if(e.code==='KeyR'){resetGame();}\n      }\n    });\n    window.addEventListener('keyup',function(e){keys[e.code]=false;});\n    var cssW=0,cssH=0,scale=1,viewW=0,camX=0;\n    function resize(){\n      cssW=window.innerWidth;cssH=window.innerHeight;\n      DPR=window.devicePixelRatio||1;\n      canvas.width=Math.round(cssW*DPR);\n      canvas.height=Math.round(cssH*DPR);\n      scale=DPR*(cssH/LOGICAL_H);\n      viewW=cssW/(cssH/LOGICAL_H);\n    }\n    window.addEventListener('resize',resize);\n    function resetGame(){\n      player.x=140;player.y=470;player.vx=0;player.vy=0;player.onGround=false;player.wasGrounded=false;player.face=1;\n      respawn={x:140,y:472};\n      coyote=0;jbuffer=0;landFlash=0;\n      keys._jumpHeld=false;\n      runTime=0;collected=0;state='play';\n      for(var i=0;i<coins.length;i++)coins[i].taken=false;\n      particles.length=0;floaters.length=0;\n      winOverlay.classList.add('hidden');\n      coinCountEl.textContent='0';\n    }\n    resetBtn.addEventListener('click',function(){resetGame();resetBtn.blur();});\n    againBtn.addEventListener('click',function(){resetGame();againBtn.blur();});\n    var touchEl=document.getElementById('touch');\n    if('ontouchstart' in window){\n      touchEl.classList.remove('hidden');\n      var touchBtns=touchEl.querySelectorAll('button');\n      for(var ti=0;ti<touchBtns.length;ti++){\n        (function(btn){\n          var k=btn.getAttribute('data-key');\n          var on=function(e){e.preventDefault();keys[k]=true;};\n          var off=function(e){e.preventDefault();keys[k]=false;};\n          btn.addEventListener('pointerdown',on);\n          btn.addEventListener('pointerup',off);\n          btn.addEventListener('pointercancel',off);\n          btn.addEventListener('pointerleave',off);\n        })(touchBtns[ti]);\n      }\n    }\n    function overlap(a,b){\n      return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;\n    }\n    function collideX(){\n      for(var i=0;i<solids.length;i++){\n        var s=solids[i];\n        if(s.oneWay)continue;\n        if(!overlap(player,s))continue;\n        if(player.vx>0)player.x=s.x-player.w;\n        else if(player.vx<0)player.x=s.x+s.w;\n        player.vx=0;\n      }\n    }\n    function collideY(){\n      player.onGround=false;\n      for(var i=0;i<solids.length;i++){\n        var s=solids[i];\n        if(!overlap(player,s))continue;\n        if(s.oneWay){\n          if(player.vy>0&&lastBottom<=s.y+10){\n            player.y=s.y-player.h;player.vy=0;player.onGround=true;\n          }\n          continue;\n        }\n        if(player.vy>0){player.y=s.y-player.h;player.vy=0;player.onGround=true;}\n        else if(player.vy<0){player.y=s.y+s.h;player.vy=0;}\n      }\n    }\n    function respawnPlayer(){\n      player.x=respawn.x;player.y=respawn.y;player.vx=0;player.vy=0;\n      dust(player.x+player.w/2,player.y+player.h,4);\n    }\n    function dust(x,y,n){\n      for(var i=0;i<n;i++){\n        particles.push({x:x+(Math.random()-0.5)*14,y:y,vx:(Math.random()-0.5)*90,vy:-Math.random()*70,grav:120,life:0.5+Math.random()*0.3,max:0.8,size:2.5+Math.random()*2,color:'rgba(180,180,220,0.5)'});\n      }\n    }\n    function coinBurst(x,y){\n      for(var i=0;i<10;i++){\n        var a=Math.random()*Math.PI*2,v=60+Math.random()*120;\n        particles.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40,grav:320,life:0.5+Math.random()*0.3,max:0.8,size:2+Math.random()*2.5,color:Math.random()<0.5?'#fcd34d':'#fef3c7'});\n      }\n    }\n    function confetti(){\n      var cols=['#fcd34d','#7dd3fc','#f87171','#4ade80','#c084fc','#fda4af'];\n      for(var i=0;i<120;i++){\n        var a=Math.random()*Math.PI*2,v=120+Math.random()*260;\n        particles.push({x:FLAG_X+18,y:430,vx:Math.cos(a)*v,vy:Math.sin(a)*v-160,grav:420,life:1.4+Math.random()*0.8,max:2.2,size:3+Math.random()*3,color:cols[i%cols.length]});\n      }\n    }\n    function update(dt){\n      runTime+=dt;\n      var left=keys['ArrowLeft']||keys['KeyA'];\n      var right=keys['ArrowRight']||keys['KeyD'];\n      var jumpPressed=keys['Space']||keys['ArrowUp']||keys['KeyW'];\n      var target=0;\n      if(left)target-=1;\n      if(right)target+=1;\n      if(target!==0){player.face=target;player.vx+=(target*MOVE-player.vx)*Math.min(1,dt*12);}\n      else{player.vx*=Math.max(0,1-dt*10);if(Math.abs(player.vx)<2)player.vx=0;}\n      if(jumpPressed&&!keys._jumpHeld){keys._jumpHeld=true;jbuffer=BUFFER;}\n      if(!jumpPressed)keys._jumpHeld=false;\n      if(jbuffer>0&&(player.onGround||coyote>0)){\n        player.vy=-JUMP;player.onGround=false;coyote=0;jbuffer=0;\n        dust(player.x+player.w/2,player.y+player.h,3);\n      }\n      jbuffer-=dt;\n      if(player.onGround){coyote=COYOTE;}else{coyote-=dt;}\n      var g=GRAV;\n      if(!jumpPressed&&player.vy<0)g=GRAV*2.4;\n      player.vy=Math.min(player.vy+g*dt,MAX_FALL);\n      lastBottom=player.y+player.h;\n      player.x+=player.vx*dt;\n      collideX();\n      player.y+=player.vy*dt;\n      collideY();\n      if(player.onGround&&!player.wasGrounded){\n        landFlash=1;\n        dust(player.x+player.w/2,player.y+player.h,2);\n      }\n      player.wasGrounded=player.onGround;\n      if(player.onGround){respawn.x=Math.max(10,Math.min(player.x,WORLD_W-50));respawn.y=player.y;}\n      if(player.y>1000){respawnPlayer();}\n      for(var i=0;i<coins.length;i++){\n        var c=coins[i];\n        if(c.taken)continue;\n        var px=player.x+player.w/2,py=player.y+player.h/2;\n        var dx=px-c.x,dy=py-c.y;\n        if(dx*dx+dy*dy<34*34){\n          c.taken=true;collected++;\n          coinCountEl.textContent=collected;\n          coinBurst(c.x,c.y);\n          floaters.push({x:c.x,y:c.y-16,life:0.7,text:'+1'});\n        }\n      }\n      if(player.x+player.w>=FLAG_X+2){\n        state='win';\n        winStatsEl.textContent='You collected '+collected+' of '+coins.length+' coins in '+runTime.toFixed(1)+'s.';\n        winOverlay.classList.remove('hidden');\n        confetti();\n      }\n    }\n    function stepParticles(dt){\n      for(var i=particles.length-1;i>=0;i--){\n        var pt=particles[i];\n        pt.x+=pt.vx*dt;pt.y+=pt.vy*dt;pt.vy+=pt.grav*dt;\n        pt.life-=dt;\n        if(pt.life<=0)particles.splice(i,1);\n      }\n      for(var i=floaters.length-1;i>=0;i--){\n        var f=floaters[i];\n        f.life-=dt;f.y-=40*dt;\n        if(f.life<=0)floaters.splice(i,1);\n      }\n    }\n    function updateCam(){\n      if(viewW>=WORLD_W){camX=-(viewW-WORLD_W)/2;return;}\n      var minCam=0,maxCam=WORLD_W-viewW;\n      var c=Math.max(minCam,Math.min(maxCam,player.x+player.w/2-viewW*0.38));\n      camX+=(c-camX)*0.12;\n      if(Math.abs(c-camX)<0.05)camX=c;\n    }\n    function drawLayer(factor,patternW,color,fn){\n      var off=-((camX*factor)%patternW);\n      if(off>0)off-=patternW;\n      ctx.fillStyle=color;\n      for(var x=off;x<viewW+patternW;x+=patternW)fn(x);\n    }\n    function drawParallax(){\n      drawLayer(0.1,760,'#232340',function(ox){\n        var peaks=[[0,190],[150,120],[300,220],[470,145],[650,200]];\n        for(var i=0;i<peaks.length;i++){\n          var px=ox+peaks[i][0],h=peaks[i][1];\n          ctx.beginPath();ctx.moveTo(px-120,440);ctx.lineTo(px,440-h);ctx.lineTo(px+120,440);ctx.closePath();ctx.fill();\n        }\n      });\n      drawLayer(0.22,620,'#2c2c4c',function(ox){\n        var bumps=[[80,75],[300,95],[540,60]];\n        for(var i=0;i<bumps.length;i++){\n          ctx.beginPath();ctx.arc(ox+bumps[i][0],470,bumps[i][1],Math.PI,0);ctx.fill();\n        }\n      });\n      drawLayer(0.38,480,'#3a3a60',function(ox){\n        var bushes=[[40,26],[180,32],[330,24],[470,30]];\n        for(var i=0;i<bushes.length;i++){\n          ctx.beginPath();ctx.arc(ox+bushes[i][0],505,bushes[i][1],Math.PI,0);ctx.fill();\n        }\n      });\n    }\n    function roundRect(x,y,w,h,r){\n      ctx.beginPath();\n      ctx.moveTo(x+r,y);\n      ctx.arcTo(x+w,y,x+w,y+h,r);\n      ctx.arcTo(x+w,y+h,x,y+h,r);\n      ctx.arcTo(x,y+h,x,y,r);\n      ctx.arcTo(x,y,x+w,y,r);\n      ctx.closePath();ctx.fill();\n    }\n    function drawSolids(){\n      for(var i=0;i<solids.length;i++){\n        var s=solids[i];\n        if(s.oneWay){\n          ctx.fillStyle='#5d5d8e';\n          ctx.fillRect(s.x,s.y,s.w,s.h);\n          ctx.fillStyle='#6f6fa2';\n          ctx.fillRect(s.x,s.y,s.w,5);\n          ctx.fillStyle='rgba(0,0,0,0.2)';\n          ctx.fillRect(s.x,s.y+s.h-6,s.w,6);\n        }else{\n          var grad=ctx.createLinearGradient(0,s.y,0,s.y+s.h);\n          grad.addColorStop(0,'#4b4b78');\n          grad.addColorStop(1,'#33335c');\n          ctx.fillStyle=grad;\n          ctx.fillRect(s.x,s.y,s.w,s.h);\n          ctx.fillStyle='rgba(0,0,0,0.16)';\n          ctx.fillRect(s.x,s.y+s.h-12,s.w,12);\n          ctx.fillStyle='#46d681';\n          ctx.fillRect(s.x,s.y,s.w,14);\n          ctx.fillStyle='rgba(255,255,255,0.14)';\n          ctx.fillRect(s.x,s.y,s.w,5);\n        }\n      }\n    }\n    function drawCoins(time){\n      for(var i=0;i<coins.length;i++){\n        var c=coins[i];\n        if(c.taken)continue;\n        var bob=Math.sin(time*2.4+c.x*0.05)*4;\n        var spin=Math.cos(time*3+c.x*0.07);\n        ctx.save();\n        ctx.translate(c.x,c.y+bob);\n        ctx.scale(Math.max(0.25,Math.abs(spin)),1);\n        ctx.beginPath();ctx.arc(0,0,13,0,Math.PI*2);\n        ctx.fillStyle='#b45309';ctx.fill();\n        ctx.beginPath();ctx.arc(0,0,11.5,0,Math.PI*2);\n        ctx.fillStyle='#fcd34d';ctx.fill();\n        ctx.beginPath();ctx.arc(0,0,8,0,Math.PI*2);\n        ctx.fillStyle='#fbbf24';ctx.fill();\n        ctx.strokeStyle='#b45309';ctx.lineWidth=2;\n        ctx.beginPath();ctx.arc(0,0,11.5,0,Math.PI*2);ctx.stroke();\n        ctx.beginPath();ctx.arc(0,0,4.5,0,Math.PI*2);ctx.stroke();\n        ctx.fillStyle='rgba(255,255,255,0.4)';\n        ctx.beginPath();ctx.arc(-4,-4,3,0,Math.PI*2);ctx.fill();\n        ctx.restore();\n      }\n    }\n    function drawFlag(time){\n      var px=FLAG_X;\n      ctx.fillStyle='#2c2c48';\n      ctx.beginPath();ctx.ellipse(px+8,520,32,10,0,0,Math.PI*2);ctx.fill();\n      ctx.strokeStyle='#cbd5e1';ctx.lineWidth=5;ctx.lineCap='round';\n      ctx.beginPath();ctx.moveTo(px,520);ctx.lineTo(px,360);ctx.stroke();\n      ctx.fillStyle='#fcd34d';\n      ctx.beginPath();ctx.arc(px,352,7,0,Math.PI*2);ctx.fill();\n      var wav=Math.sin(time*4)*5;\n      ctx.fillStyle='#f87171';\n      ctx.beginPath();\n      ctx.moveTo(px,366);\n      ctx.quadraticCurveTo(px+26,362+wav,px+52,380+wav);\n      ctx.quadraticCurveTo(px+34,390+wav*0.6,px,400);\n      ctx.closePath();ctx.fill();\n    }\n    function drawPlayer(time){\n      var p=player;\n      if(p.onGround){\n        ctx.globalAlpha=0.32;\n        ctx.fillStyle='#000';\n        ctx.beginPath();ctx.ellipse(p.x+p.w/2,522,18,5,0,0,Math.PI*2);ctx.fill();\n        ctx.globalAlpha=1;\n      }\n      var k=1+p.vy/2400;\n      k=Math.max(-0.1,Math.min(0.1,k));\n      var sy=1-k+landFlash*0.06;\n      var sx=1+k-landFlash*0.04;\n      ctx.save();\n      ctx.translate(p.x+p.w/2,p.y+p.h);\n      ctx.scale(sx,sy);\n      var running=p.onGround&&Math.abs(p.vx)>10;\n      var runPhase=time*(running?16:0);\n      var lift=running?4:0;\n      var legA=Math.sin(runPhase)*lift;\n      var legB=Math.sin(runPhase+Math.PI)*lift;\n      ctx.fillStyle='#0284c7';\n      ctx.fillRect(-13,-22+legA,10,14-legA);\n      ctx.fillRect(3,-22+legB,10,14-legB);\n      ctx.fillStyle='#38bdf8';\n      roundRect(-17,-46,34,26,8);\n      ctx.fillStyle='#0ea5e9';\n      roundRect(-17,-46,34,8,4);\n      ctx.fillStyle='#0284c7';\n      ctx.fillRect(-17,-30,34,5);\n      ctx.fillStyle='#0b1220';\n      roundRect(-13,-42,26,11,4);\n      ctx.fillStyle='#7dd3fc';\n      if(p.face>0){ctx.fillRect(1,-39,6,6);ctx.fillRect(9,-39,4,6);}\n      else{ctx.fillRect(-7,-39,4,6);ctx.fillRect(1,-39,6,6);}\n      ctx.strokeStyle='#7dd3fc';ctx.lineWidth=2;\n      ctx.beginPath();ctx.moveTo(0,-46);ctx.lineTo(0,-54);ctx.stroke();\n      ctx.fillStyle='#fcd34d';\n      ctx.beginPath();ctx.arc(0,-57,3,0,Math.PI*2);ctx.fill();\n      ctx.restore();\n    }\n    function drawParticles(){\n      for(var i=0;i<particles.length;i++){\n        var pt=particles[i];\n        var a=Math.max(0,pt.life/pt.max);\n        ctx.globalAlpha=a;\n        ctx.fillStyle=pt.color;\n        ctx.beginPath();ctx.arc(pt.x,pt.y,pt.size*(0.5+a*0.5),0,Math.PI*2);ctx.fill();\n      }\n      ctx.globalAlpha=1;\n    }\n    function drawFloaters(){\n      ctx.font='bold 16px ui-sans-serif,system-ui';\n      ctx.textAlign='center';\n      for(var i=0;i<floaters.length;i++){\n        var f=floaters[i];\n        ctx.globalAlpha=Math.min(1,f.life*1.6);\n        ctx.fillStyle='#fcd34d';\n        ctx.fillText(f.text,f.x,f.y);\n      }\n      ctx.globalAlpha=1;\n      ctx.textAlign='left';\n    }\n    function draw(time){\n      ctx.setTransform(DPR,0,0,DPR,0,0);\n      var grad=ctx.createLinearGradient(0,0,0,cssH);\n      grad.addColorStop(0,'#0b0b16');\n      grad.addColorStop(0.55,'#17172a');\n      grad.addColorStop(1,'#23233a');\n      ctx.fillStyle=grad;\n      ctx.fillRect(0,0,cssW,cssH);\n      for(var i=0;i<stars.length;i++){\n        var st=stars[i];\n        var a=0.5+0.5*Math.sin(time*st.sp+st.tw);\n        ctx.globalAlpha=0.22+0.55*a;\n        ctx.fillStyle='#c9cde6';\n        ctx.fillRect((st.x*cssW)%cssW,st.y*cssH,st.size,st.size);\n      }\n      ctx.globalAlpha=1;\n      var mx=Math.max(70,cssW-120),my=Math.max(64,cssH*0.12);\n      var mg=ctx.createRadialGradient(mx,my,8,mx,my,72);\n      mg.addColorStop(0,'rgba(250,244,220,0.16)');\n      mg.addColorStop(1,'rgba(250,244,220,0)');\n      ctx.fillStyle=mg;\n      ctx.beginPath();ctx.arc(mx,my,72,0,Math.PI*2);ctx.fill();\n      ctx.fillStyle='#f4eeda';\n      ctx.beginPath();ctx.arc(mx,my,26,0,Math.PI*2);ctx.fill();\n      ctx.fillStyle='#e0d8bc';\n      ctx.beginPath();ctx.arc(mx-9,my-6,5,0,Math.PI*2);ctx.fill();\n      ctx.beginPath();ctx.arc(mx+8,my+7,4,0,Math.PI*2);ctx.fill();\n      ctx.beginPath();ctx.arc(mx+4,my-11,3,0,Math.PI*2);ctx.fill();\n      ctx.setTransform(scale,0,0,scale,-camX*scale,0);\n      drawParallax();\n      drawSolids();\n      drawCoins(time);\n      drawFlag(time);\n      drawPlayer(time);\n      drawParticles();\n      drawFloaters();\n    }\n    var last=0,raf=0;\n    function frame(ts){\n      raf=requestAnimationFrame(frame);\n      var t=ts/1000;\n      var dt=Math.min(1/30,t-(last||t));\n      last=t;\n      try{\n        if(state==='play')update(dt);\n        landFlash=Math.max(0,landFlash-dt*4);\n        stepParticles(dt);\n        updateCam();\n        draw(t);\n        clockEl.textContent=runTime.toFixed(1);\n      }catch(err){\n        fail(String(err&&err.message||err));\n        cancelAnimationFrame(raf);\n      }\n    }\n    resize();\n    resetGame();\n    raf=requestAnimationFrame(frame);\n    window.addEventListener('unload',function(){cancelAnimationFrame(raf);});\n  } catch(e){\n    fail(String(e&&e.message||e));\n  }\n})();\n</script>\n</body></html>"
+  },
+  {
+    "taskId": "n-body-field",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 53,
+    "runtimeMs": 223604,
+    "tokensIn": 4250,
+    "tokensOut": 14218,
+    "costUsd": 0,
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100,
+      3,
+      68,
+      3,
+      91
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 100% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 99.2% (threshold 1%)"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "no <canvas> found"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no <canvas>"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 35% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "no <canvas> found"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no <canvas>"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 100% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 96.1% (threshold 1%)"
+        }
+      ]
+    ],
+    "createdAt": "2026-08-12T03:49:00.795Z",
+    "source": "live",
+    "output": "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>200-Body Gravity · N-Body Simulation</title>\n<style>\n  html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui,-apple-system,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif}\n  html,body{height:100%;overflow:hidden}\n  #scene{position:fixed;top:0;left:0;z-index:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}\n  #scene.dragging{cursor:grabbing}\n  .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.42) 100%)}\n  .hud{position:fixed;inset:0;z-index:5;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:12px;box-sizing:border-box;user-select:none;-webkit-user-select:none}\n  .hud-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}\n  .hud-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}\n  .panel{pointer-events:auto;background:rgba(16,16,24,.6);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:9px 12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 24px rgba(0,0,0,.35)}\n  h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.02em}\n  .sub{font-size:11px;color:#9aa0b4;margin-top:2px}\n  .stats{font-size:11px;line-height:1.55;color:#c4c8d8;font-variant-numeric:tabular-nums;text-align:right;min-width:168px}\n  .stats b{color:#fff;font-weight:600}\n  .controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap}\n  .ctl{display:flex;align-items:center;gap:6px;font-size:11px;color:#c4c8d8;white-space:nowrap}\n  .ctl output{min-width:36px;text-align:right;color:#ececf0;font-variant-numeric:tabular-nums}\n  button{cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#ececf0;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;letter-spacing:.01em;transition:background .15s,transform .05s}\n  button:hover{background:rgba(255,255,255,.16)}\n  button:active{transform:translateY(1px)}\n  button.play{background:rgba(80,140,255,.25);border-color:rgba(120,180,255,.5)}\n  input[type=range]{-webkit-appearance:none;appearance:none;width:88px;height:4px;border-radius:2px;background:rgba(255,255,255,.16);outline:none;margin:0}\n  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:13px;height:13px;border-radius:50%;background:#dfe6ff;border:2px solid #8fb0ff;box-shadow:0 0 8px rgba(120,170,255,.7)}\n  input[type=range]::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:#dfe6ff;border:2px solid #8fb0ff}\n  .hint{font-size:10.5px;color:#6d7289;letter-spacing:.04em}\n  #error{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:20;display:none;background:#3a0f12;border:1px solid #ff5f66;color:#ffd7d9;border-radius:10px;padding:10px 14px;font-size:12px;white-space:pre-wrap;max-width:min(90vw,560px);box-shadow:0 6px 30px rgba(0,0,0,.5)}\n  @media (max-width:560px){\n    .hud{padding:9px}\n    h1{font-size:13px}\n    .sub{font-size:10px}\n    .stats{font-size:10px;min-width:0}\n    .panel{padding:7px 10px}\n    .controls{gap:9px}\n    .ctl{font-size:10px}\n    .ctl .lbl{display:none}\n    input[type=range]{width:64px}\n    .hint{display:none}\n  }\n</style>\n</head>\n<body>\n<canvas id=\"scene\"></canvas>\n<div class=\"vignette\"></div>\n<div id=\"error\" role=\"alert\"></div>\n<div class=\"hud\">\n  <div class=\"hud-top\">\n    <div class=\"panel\">\n      <h1>200-Body Gravity</h1>\n      <div class=\"sub\">softened N-body &middot; velocity &rarr; colour &middot; 3D</div>\n    </div>\n    <div class=\"panel stats\" id=\"stats\"></div>\n  </div>\n  <div class=\"hud-bottom\">\n    <div class=\"panel controls\">\n      <button id=\"btnPause\" class=\"play\">Pause</button>\n      <label class=\"ctl\"><span class=\"lbl\">Speed</span><input id=\"slSpeed\" type=\"range\" min=\"0\" max=\"240\" value=\"60\"><output id=\"spdVal\">1.0&#215;</output></label>\n      <label class=\"ctl\"><span class=\"lbl\">Softening</span><input id=\"slSoft\" type=\"range\" min=\"1\" max=\"120\" value=\"14\"><output id=\"sftVal\">0.062</output></label>\n      <button id=\"btnReset\">Reset</button>\n    </div>\n    <div class=\"hint\">drag to orbit &middot; scroll to zoom &middot; space to pause</div>\n  </div>\n</div>\n<script>\n(function(){\n  'use strict';\n  try {\n\n    var canvas = document.getElementById('scene');\n    var ctx = canvas.getContext('2d');\n\n    var N = 200;\n    var G = 1.0;\n    var MASS = 0.008;\n    var TOTAL = N * MASS;\n\n    var pos = new Float32Array(N * 3);\n    var vel = new Float32Array(N * 3);\n    var acc = new Float32Array(N * 3);\n    var accOld = new Float32Array(N * 3);\n\n    var eps = 0.062;\n    var eps2 = eps * eps;\n\n    var simTime = 0, steps = 0, vmax = 1.3;\n    var W = 0, H = 0, dpr = 1;\n\n    function cross(a, b){ return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }\n\n    /* ---- velocity -> colour lookup table ---- */\n    var LUT_N = 96;\n    var LUT_RGB = [];\n    var LUT_CSS = [];\n    (function buildLUT(){\n      var stops = [\n        [0.00, [42, 20, 88]],\n        [0.25, [70, 96, 240]],\n        [0.50, [42, 204, 240]],\n        [0.68, [128, 236, 216]],\n        [0.82, [255, 226, 108]],\n        [0.92, [255, 158, 58]],\n        [1.00, [255, 244, 224]]\n      ];\n      for (var i = 0; i < LUT_N; i++) {\n        var t = i / (LUT_N - 1), r = 0, g = 0, b = 0;\n        for (var s = 0; s < stops.length - 1; s++) {\n          var a = stops[s], c = stops[s + 1];\n          if (t >= a[0] && t <= c[0]) {\n            var f = (c[0] === a[0]) ? 0 : (t - a[0]) / (c[0] - a[0]);\n            r = a[1][0] + (c[1][0] - a[1][0]) * f;\n            g = a[1][1] + (c[1][1] - a[1][1]) * f;\n            b = a[1][2] + (c[1][2] - a[1][2]) * f;\n            break;\n          }\n        }\n        r |= 0; g |= 0; b |= 0;\n        LUT_RGB.push([r, g, b]);\n        LUT_CSS.push('rgb(' + r + ',' + g + ',' + b + ')');\n      }\n    })();\n\n    /* ---- pre-rendered glow sprite + tinted atlas ---- */\n    var glow = (function(){\n      var c = document.createElement('canvas'); c.width = c.height = 128;\n      var g = c.getContext('2d');\n      var gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);\n      gr.addColorStop(0, 'rgba(255,255,255,1)');\n      gr.addColorStop(0.28, 'rgba(255,255,255,0.5)');\n      gr.addColorStop(0.6, 'rgba(255,255,255,0.12)');\n      gr.addColorStop(1, 'rgba(255,255,255,0)');\n      g.fillStyle = gr; g.fillRect(0, 0, 128, 128);\n      return c;\n    })();\n    var atlas = (function(){\n      var c = document.createElement('canvas');\n      c.width = LUT_RGB.length * 128; c.height = 128;\n      var g = c.getContext('2d');\n      for (var i = 0; i < LUT_RGB.length; i++) {\n        g.save();\n        g.translate(i * 128, 0);\n        g.drawImage(glow, 0, 0);\n        g.globalCompositeOperation = 'source-atop';\n        g.fillStyle = LUT_CSS[i];\n        g.fillRect(0, 0, 128, 128);\n        g.restore();\n      }\n      return c;\n    })();\n\n    /* ---- starfield ---- */\n    var stars = [];\n    function buildStars(){\n      stars.length = 0;\n      for (var i = 0; i < 230; i++) {\n        var th = Math.random() * Math.PI * 2;\n        var zz = Math.random() * 2 - 1;\n        var ss = Math.sqrt(Math.max(0, 1 - zz * zz));\n        var rad = 8 + Math.random() * 17;\n        stars.push({ x: rad*ss*Math.cos(th), y: rad*ss*Math.sin(th), z: rad*zz,\n                     s: 0.5 + Math.random()*0.9, a: 0.12 + Math.random()*0.5, p: Math.random()*6.2832 });\n      }\n    }\n\n    /* ---- camera ---- */\n    var cam = { theta: 0.65, phi: 0.5, dist: 3.7 };\n    var camB = null;\n    function updateCam(){\n      var th = cam.theta, ph = cam.phi, D = cam.dist;\n      var cp = Math.cos(ph), sp = Math.sin(ph), ct = Math.cos(th), st = Math.sin(th);\n      var pos = [D*cp*ct, D*sp, D*cp*st];\n      var fwd = [-pos[0], -pos[1], -pos[2]];\n      var l = Math.sqrt(fwd[0]*fwd[0] + fwd[1]*fwd[1] + fwd[2]*fwd[2]);\n      fwd = [fwd[0]/l, fwd[1]/l, fwd[2]/l];\n      var right = cross(fwd, [0, 1, 0]);\n      var up = cross(right, fwd);\n      camB = { pos: pos, right: right, up: up, fwd: fwd };\n    }\n\n    /* ---- physics ---- */\n    function computeAcc(){\n      var i, j, ix, jx, dx, dy, dz, d2, inv, f;\n      for (i = 0; i < N; i++){ ix = i*3; acc[ix] = 0; acc[ix+1] = 0; acc[ix+2] = 0; }\n      for (i = 0; i < N; i++){\n        ix = i*3;\n        for (j = i + 1; j < N; j++){\n          jx = j*3;\n          dx = pos[jx]-pos[ix]; dy = pos[jx+1]-pos[ix+1]; dz = pos[jx+2]-pos[ix+2];\n          d2 = dx*dx + dy*dy + dz*dz + eps2;\n          inv = 1 / Math.sqrt(d2);\n          f = G * MASS * inv * inv * inv;\n          acc[ix]   += dx*f; acc[ix+1] += dy*f; acc[ix+2] += dz*f;\n          acc[jx]   -= dx*f; acc[jx+1] -= dy*f; acc[jx+2] -= dz*f;\n        }\n      }\n    }\n\n    function step(dt){\n      var i, ix, hdt2 = 0.5 * dt * dt;\n      for (i = 0; i < N; i++){\n        ix = i*3;\n        pos[ix]   += vel[ix]*dt   + acc[ix]*hdt2;\n        pos[ix+1] += vel[ix+1]*dt + acc[ix+1]*hdt2;\n        pos[ix+2] += vel[ix+2]*dt + acc[ix+2]*hdt2;\n      }\n      for (i = 0; i < N; i++){\n        ix = i*3; accOld[ix] = acc[ix]; accOld[ix+1] = acc[ix+1]; accOld[ix+2] = acc[ix+2];\n      }\n      computeAcc();\n      for (i = 0; i < N; i++){\n        ix = i*3;\n        var hdt = 0.5 * dt;\n        vel[ix]   += (accOld[ix]   + acc[ix])   * hdt;\n        vel[ix+1] += (accOld[ix+1] + acc[ix+1]) * hdt;\n        vel[ix+2] += (accOld[ix+2] + acc[ix+2]) * hdt;\n      }\n    }\n\n    function initSim(){\n      for (var i = 0; i < N; i++){\n        var rr = Math.cbrt(Math.random());\n        var th = Math.random() * Math.PI * 2;\n        var zz = Math.random() * 2 - 1;\n        var ss = Math.sqrt(Math.max(0, 1 - zz * zz));\n        var x = rr * ss * Math.cos(th);\n        var y = rr * zz;\n        var z = rr * ss * Math.sin(th);\n        pos[i*3] = x; pos[i*3+1] = y; pos[i*3+2] = z;\n\n        var rr3 = rr * rr * rr;\n        var vc = Math.sqrt(G * TOTAL * rr3 / Math.max(rr, 1e-4));\n        var vm = vc * (0.72 + Math.random() * 0.5);\n        var ax = Math.random()*2 - 1, ay = Math.random()*2 - 1, az = Math.random()*2 - 1;\n        var tx = y*az - z*ay, ty = z*ax - x*az, tz = x*ay - y*ax;\n        var tl = Math.sqrt(tx*tx + ty*ty + tz*tz);\n        if (tl < 1e-4){ tx = 1; ty = 0; tz = 0; tl = 1; }\n        tx /= tl; ty /= tl; tz /= tl;\n        vel[i*3] = tx*vm; vel[i*3+1] = ty*vm; vel[i*3+2] = tz*vm;\n\n        var O = 0.22;\n        vel[i*3]   += O * z;\n        vel[i*3+2] += -O * x;\n      }\n      computeAcc();\n      simTime = 0; steps = 0; vmax = 1.3;\n    }\n\n    /* ---- render ---- */\n    function draw(time){\n      var focal = 0.95 * H;\n      var cx = W / 2, cy = H / 2;\n      var b = camB;\n      var px = b.pos[0], py = b.pos[1], pz = b.pos[2];\n      var rx = b.right[0], ry = b.right[1], rz = b.right[2];\n      var ux = b.up[0], uy = b.up[1], uz = b.up[2];\n      var fx = b.fwd[0], fy = b.fwd[1], fz = b.fwd[2];\n\n      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);\n      ctx.globalCompositeOperation = 'source-over';\n      var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.72);\n      bg.addColorStop(0, '#161631');\n      bg.addColorStop(0.55, '#0d0d17');\n      bg.addColorStop(1, '#07070c');\n      ctx.fillStyle = bg;\n      ctx.fillRect(0, 0, W, H);\n\n      ctx.globalCompositeOperation = 'lighter';\n\n      var i, st, sx, sy, xc, yc, zc, sc;\n      for (i = 0; i < stars.length; i++){\n        st = stars[i];\n        xc = st.x - px; yc = st.y - py; zc = st.z - pz;\n        var dzc = xc*fx + yc*fy + zc*fz;\n        if (dzc < 0.2) continue;\n        sc = focal / dzc;\n        sx = cx + (xc*rx + yc*ry + zc*rz) * sc;\n        sy = cy - (xc*ux + yc*uy + zc*uz) * sc;\n        var sz = st.s * sc * 0.028;\n        if (sz < 0.4) sz = 0.4;\n        var tw = 0.55 + 0.45 * Math.sin(time * 1.7 + st.p);\n        ctx.globalAlpha = st.a * tw;\n        ctx.fillStyle = '#cdd6ff';\n        ctx.fillRect(sx - sz/2, sy - sz/2, sz, sz);\n      }\n      ctx.globalAlpha = 1;\n\n      var maxS = 0, j, vx, vy, vz, spd;\n      for (i = 0; i < N; i++){\n        j = i*3;\n        vx = vel[j]; vy = vel[j+1]; vz = vel[j+2];\n        spd = Math.sqrt(vx*vx + vy*vy + vz*vz);\n        if (spd > maxS) maxS = spd;\n      }\n      if (maxS > 0) vmax = Math.max(vmax * 0.9995, maxS);\n      if (vmax < 0.15) vmax = 0.15;\n\n      for (i = 0; i < N; i++){\n        j = i*3;\n        xc = pos[j] - px; yc = pos[j+1] - py; zc = pos[j+2] - pz;\n        var d2c = xc*fx + yc*fy + zc*fz;\n        if (d2c < 0.2) continue;\n        sc = focal / d2c;\n        sx = cx + (xc*rx + yc*ry + zc*rz) * sc;\n        sy = cy - (xc*ux + yc*uy + zc*uz) * sc;\n        vx = vel[j]; vy = vel[j+1]; vz = vel[j+2];\n        spd = Math.sqrt(vx*vx + vy*vy + vz*vz);\n        var t = spd / vmax; if (t > 1) t = 1; else if (t < 0) t = 0;\n        var idx = (t * (LUT_RGB.length - 1)) | 0;\n        var size = 0.055 * sc;\n        if (size < 1.6) size = 1.6;\n        if (size > 90) size = 90;\n        ctx.drawImage(atlas, idx*128, 0, 128, 128, sx - size/2, sy - size/2, size, size);\n        var cr = size * 0.11;\n        if (cr < 0.9) cr = 0.9;\n        ctx.fillStyle = LUT_CSS[idx];\n        ctx.beginPath();\n        ctx.arc(sx, sy, cr, 0, 6.2832);\n        ctx.fill();\n      }\n    }\n\n    /* ---- HUD ---- */\n    var speed = 60;\n    var running = true;\n    var avgV = 0;\n    function updateStats(){\n      var sum = 0, out = 0;\n      for (var i = 0; i < N; i++){\n        var vx = vel[i*3], vy = vel[i*3+1], vz = vel[i*3+2];\n        sum += Math.sqrt(vx*vx + vy*vy + vz*vz);\n        var x = pos[i*3], y = pos[i*3+1], z = pos[i*3+2];\n        if (Math.sqrt(x*x + y*y + z*z) > 3.2) out++;\n      }\n      avgV = sum / N;\n      document.getElementById('stats').innerHTML =\n        '<b>' + N + '</b> particles &nbsp; t <b>' + simTime.toFixed(1) + '</b><br>' +\n        'fps <b>' + Math.round(fpsEma) + '</b> &nbsp; &epsilon; <b>' + eps.toFixed(3) + '</b><br>' +\n        '&#9001;v&#9002; <b>' + avgV.toFixed(2) + '</b> &nbsp; escaped <b>' + out + '</b>';\n    }\n\n    var slSpeed = document.getElementById('slSpeed');\n    var slSoft = document.getElementById('slSoft');\n    var btnPause = document.getElementById('btnPause');\n    var btnReset = document.getElementById('btnReset');\n\n    function setSpeed(v){\n      speed = v;\n      document.getElementById('spdVal').textContent = (v / 60).toFixed(1) + '\\u00d7';\n    }\n    function setEps(v){\n      eps = 0.004 + (v / 120) * 0.496;\n      eps2 = eps * eps;\n      document.getElementById('sftVal').textContent = eps.toFixed(3);\n    }\n    slSpeed.addEventListener('input', function(){ setSpeed(+this.value); });\n    slSoft.addEventListener('input', function(){ setEps(+this.value); });\n    btnPause.addEventListener('click', function(){\n      running = !running;\n      btnPause.textContent = running ? 'Pause' : 'Resume';\n      btnPause.classList.toggle('play', running);\n    });\n    btnReset.addEventListener('click', initSim);\n\n    window.addEventListener('keydown', function(e){\n      if (e.code === 'Space' || e.key === ' '){ e.preventDefault(); btnPause.click(); }\n      else if (e.key === 'r' || e.key === 'R'){ initSim(); }\n    });\n\n    /* ---- interaction ---- */\n    var dragging = false, pX = 0, pY = 0;\n    canvas.addEventListener('pointerdown', function(e){\n      dragging = true; pX = e.clientX; pY = e.clientY; idle = 0;\n      canvas.classList.add('dragging');\n      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}\n    });\n    canvas.addEventListener('pointermove', function(e){\n      if (!dragging) return;\n      var dx = e.clientX - pX, dy = e.clientY - pY;\n      pX = e.clientX; pY = e.clientY;\n      cam.theta -= dx * 0.006;\n      cam.phi += dy * 0.004;\n      if (cam.phi < 0.08) cam.phi = 0.08;\n      if (cam.phi > 1.5) cam.phi = 1.5;\n      idle = 0;\n    });\n    function endDrag(){ dragging = false; canvas.classList.remove('dragging'); }\n    canvas.addEventListener('pointerup', endDrag);\n    canvas.addEventListener('pointercancel', endDrag);\n    canvas.addEventListener('wheel', function(e){\n      e.preventDefault();\n      cam.dist *= Math.exp(e.deltaY * 0.0012);\n      if (cam.dist < 1.6) cam.dist = 1.6;\n      if (cam.dist > 10) cam.dist = 10;\n      idle = 0;\n    }, { passive: false });\n\n    /* ---- sizing / lifecycle ---- */\n    function resize(){\n      dpr = Math.min(window.devicePixelRatio || 1, 2);\n      W = window.innerWidth || 1;\n      H = window.innerHeight || 1;\n      canvas.width = Math.round(W * dpr);\n      canvas.height = Math.round(H * dpr);\n      buildStars();\n    }\n    window.addEventListener('resize', resize);\n    window.addEventListener('unload', function(){ cancelAnimationFrame(rafId); });\n    window.addEventListener('beforeunload', function(){ cancelAnimationFrame(rafId); });\n\n    /* ---- main loop ---- */\n    var rafId = 0, lastT = 0, idle = 4, fpsEma = 60, frameCount = 0;\n    function frame(t){\n      rafId = requestAnimationFrame(frame);\n      var dtF = Math.max(0, Math.min(0.05, (t - lastT) / 1000));\n      lastT = t;\n      if (dtF > 0) fpsEma = fpsEma * 0.92 + (1 / dtF) * 0.08;\n\n      if (running){\n        var targetDt = 0.02 * (speed / 60);\n        if (targetDt > 0){\n          var subs = Math.max(1, Math.ceil(targetDt / 0.02));\n          var sdt = targetDt / subs;\n          for (var k = 0; k < subs; k++) step(sdt);\n          simTime += targetDt;\n          steps++;\n        }\n      }\n\n      idle += dtF;\n      if (!dragging && idle > 3.5) cam.theta += 0.10 * dtF;\n      updateCam();\n\n      draw(t / 1000);\n\n      if (++frameCount % 20 === 0) updateStats();\n    }\n\n    resize();\n    initSim();\n    setSpeed(60);\n    setEps(14);\n    updateCam();\n    draw(0);\n    updateStats();\n    lastT = performance.now();\n    idle = 4;\n    rafId = requestAnimationFrame(frame);\n\n  } catch (err) {\n    var el = document.getElementById('error');\n    el.style.display = 'block';\n    var msg = (err && err.message) ? err.message : String(err);\n    if (err && err.stack) msg += '\\n' + err.stack.split('\\n').slice(0, 3).join('\\n');\n    el.textContent = 'Simulation error: ' + msg;\n  }\n})();\n</script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "crypto-hash-race",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 100,
+    "runtimeMs": 62984,
+    "tokensIn": 80,
+    "tokensOut": 4654,
+    "costUsd": 0,
+    "iterations": 5,
+    "iterationsSucceeded": 2,
+    "status": "partial",
+    "failureReason": "endpoint_hung",
+    "iterationScores": [
+      100,
+      100
+    ],
+    "createdAt": "2026-08-12T04:53:56.676Z",
+    "source": "live",
+    "output": "<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>secure_passwords.py — Constant-Time Comparison &amp; PBKDF2 Hashing</title>\n<style>\n  :root { color-scheme: light dark; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;\n    max-width: 900px; margin: 2.5rem auto; padding: 0 1.25rem;\n    line-height: 1.55; background: #fafaf9; color: #1c1917;\n  }\n  @media (prefers-color-scheme: dark) {\n    body { background: #1c1917; color: #f5f5f4; }\n    code, pre { background: #292524; border-color: #44403c; }\n    h1, h2 { color: #fafaf9; }\n  }\n  h1 { font-size: 1.6rem; border-bottom: 3px solid #d97706; padding-bottom: .35rem; }\n  h2 { font-size: 1.15rem; margin-top: 2.25rem; }\n  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }\n  pre {\n    background: #292524; color: #e7e5e4; border: 1px solid #44403c; border-radius: 8px;\n    padding: 1rem 1.25rem; overflow-x: auto; font-size: .85rem; line-height: 1.5;\n  }\n  pre code { background: none; border: none; }\n  .meta { color: #78716c; font-size: .9rem; margin-top: -.4rem; }\n  ul { padding-left: 1.3rem; }\n  li { margin: .3rem 0; }\n</style>\n</head>\n<body>\n\n<h1>secure_passwords.py</h1>\n<p class=\"meta\">Constant-time string comparison, PBKDF2 password hashing with a random salt, and verification — with unit tests.</p>\n\n<p>A single-file, dependency-free Python module. Uses only the standard library\n(<code>hashlib</code>, <code>hmac</code>, <code>os</code>, <code>secrets</code>,\n<code>base64</code>). The stored format is\n<code>pbkdf2_sha256$&lt;iterations&gt;$&lt;salt&gt;$&lt;hash&gt;</code>, where salt and\nhash are URL-safe base64 without padding.</p>\n\n<h2>Design notes</h2>\n<ul>\n  <li><strong>Constant-time compare:</strong> built on <code>hmac.compare_digest</code>, the canonical constant-time comparison primitive. A fallback pure-Python implementation is provided for platforms without it.</li>\n  <li><strong>Random salt:</strong> 16 bytes from <code>os.urandom</code> via the CSPRNG-backed <code>secrets</code> module.</li>\n  <li><strong>PBKDF2:</strong> SHA-256 with 600,000 iterations (OWASP 2023 minimum).</li>\n  <li><strong>Timing-safe verify:</strong> the digest comparison is constant-time; the parse failure path returns without doing any hashing work at all.</li>\n  <li><strong>Generic exception:</strong> invalid format and wrong password both surface as <code>False</code>/<code>ValueError</code> — callers should catch <code>ValueError</code> and treat it like <code>False</code> to avoid oracle leaks.</li>\n</ul>\n\n<h2>Module: <code>secure_passwords.py</code></h2>\n<pre><code>\"\"\"Secure password utilities.\n\nConstant-time string comparison, PBKDF2 password hashing with a random salt,\nand verification. Standard library only.\n\nStored format (URL-safe base64, no padding):\n    pbkdf2_sha256$&lt;iterations&gt;$&lt;salt&gt;$&lt;hash&gt;\n\"\"\"\n\nfrom __future__ import annotations\n\nimport base64\nimport hashlib\nimport hmac\nimport secrets\n\nALGORITHM = \"pbkdf2_sha256\"\nDEFAULT_ITERATIONS = 600_000  # OWASP 2023 minimum for PBKDF2-HMAC-SHA256\nSALT_BYTES = 16\nENCODING = \"utf-8\"\n\n\ndef _b64encode(data: bytes) -> str:\n    \"\"\"URL-safe base64 without padding.\"\"\"\n    return base64.urlsafe_b64encode(data).rstrip(b\"=\").decode(\"ascii\")\n\n\ndef _b64decode(text: str) -> bytes:\n    \"\"\"Decode URL-safe base64, tolerating absent padding.\"\"\"\n    padding = \"=\" * (-len(text) % 4)\n    return base64.urlsafe_b64decode(text + padding)\n\n\ndef constant_time_compare(a: str, b: str) -> bool:\n    \"\"\"Compare two strings in constant time.\n\n    Never short-circuits on length or prefix, so a timing side channel cannot\n    reveal how much of the secret an attacker already knows. Falls back to a\n    pure-Python XOR scan if hmac.compare_digest is unavailable.\n    \"\"\"\n    if hasattr(hmac, \"compare_digest\"):\n        return hmac.compare_digest(a, b)\n\n    # Pure-Python fallback: loop over the full length, always.\n    result = 0\n    for x, y in zip(a.encode(ENCODING), b.encode(ENCODING)):\n        result |= x ^ y\n    # Length leak only: pad difference into the accumulator.\n    result |= len(a) ^ len(b)\n    return result == 0\n\n\ndef hash_password(password: str, iterations: int = DEFAULT_ITERATIONS) -> str:\n    \"\"\"Hash a password with PBKDF2-HMAC-SHA256 and a fresh random salt.\n\n    Returns a self-describing string safe to store in a single column:\n        pbkdf2_sha256$&lt;iterations&gt;$&lt;salt&gt;$&lt;hash&gt;\n    \"\"\"\n    salt = secrets.token_bytes(SALT_BYTES)  # CSPRNG-backed\n    dk = hashlib.pbkdf2_hmac(\"sha256\", password.encode(ENCODING), salt, iterations)\n    return \"$\".join((ALGORITHM, str(iterations), _b64encode(salt), _b64encode(dk)))\n\n\ndef verify_password(password: str, stored: str) -> bool:\n    \"\"\"Verify a password against a stored hash in constant time.\n\n    Raises ValueError if the stored string is malformed or uses an unknown\n    algorithm. Callers that must not distinguish \"wrong password\" from \"bad\n    record\" should wrap the call and coerce ValueError to False.\n    \"\"\"\n    try:\n        algorithm, iterations_s, salt_s, hash_s = stored.split(\"$\")\n        iterations = int(iterations_s)\n    except (ValueError, AttributeError):\n        raise ValueError(\"malformed stored hash\") from None\n\n    if algorithm != ALGORITHM:\n        raise ValueError(f\"unsupported algorithm: {algorithm!r}\")\n\n    salt = _b64decode(salt_s)\n    expected = _b64decode(hash_s)\n    dk = hashlib.pbkdf2_hmac(\"sha256\", password.encode(ENCODING), salt, iterations)\n    return constant_time_compare(_b64encode(dk), _b64encode(expected))\n\n\n# Exposed for tests / tooling. Salt generation is kept private on purpose.\ndef _decode_parts(stored: str) -> tuple[int, bytes, bytes]:\n    \"\"\"Parse a stored hash into (iterations, salt, digest).\"\"\"\n    algorithm, iterations_s, salt_s, hash_s = stored.split(\"$\")\n    if algorithm != ALGORITHM:\n        raise ValueError(f\"unsupported algorithm: {algorithm!r}\")\n    return int(iterations_s), _b64decode(salt_s), _b64decode(hash_s)\n</code></pre>\n\n<h2>Tests: <code>test_secure_passwords.py</code></h2>\n<pre><code>import unittest\n\nfrom secure_passwords import (\n    constant_time_compare,\n    hash_password,\n    verify_password,\n    _decode_parts,\n)\n\n\nclass ConstantTimeCompareTests(unittest.TestCase):\n    def test_equal_strings(self):\n        self.assertTrue(constant_time_compare(\"hunter2\", \"hunter2\"))\n\n    def test_unequal_strings(self):\n        self.assertFalse(constant_time_compare(\"hunter2\", \"Hunter2\"))\n        self.assertFalse(constant_time_compare(\"hunter2\", \"hunter\"))\n\n    def test_empty_strings(self):\n        self.assertTrue(constant_time_compare(\"\", \"\"))\n        self.assertFalse(constant_time_compare(\"\", \"x\"))\n\n    def test_unicode(self):\n        self.assertTrue(constant_time_compare(\"pässwörd\", \"pässwörd\"))\n        self.assertFalse(constant_time_compare(\"pässwörd\", \"pässword\"))\n\n\nclass HashPasswordTests(unittest.TestCase):\n    def test_format(self):\n        stored = hash_password(\"correct horse battery staple\")\n        parts = stored.split(\"$\")\n        self.assertEqual(len(parts), 4)\n        self.assertEqual(parts[0], \"pbkdf2_sha256\")\n        self.assertTrue(parts[1].isdigit())\n\n    def test_salt_is_random_per_call(self):\n        a = hash_password(\"same password\")\n        b = hash_password(\"same password\")\n        self.assertNotEqual(a, b)  # different salt & digest even for same input\n\n    def test_roundtrip(self):\n        password = \"correct horse battery staple\"\n        self.assertTrue(verify_password(password, hash_password(password)))\n\n    def test_wrong_password(self):\n        stored = hash_password(\"right password\")\n        self.assertFalse(verify_password(\"wrong password\", stored))\n\n    def test_custom_iterations(self):\n        stored = hash_password(\"pw\", iterations=1000)\n        self.assertEqual(_decode_parts(stored)[0], 1000)\n        self.assertTrue(verify_password(\"pw\", stored))\n        self.assertFalse(verify_password(\"nope\", stored))\n\n    def test_salt_length(self):\n        stored = hash_password(\"pw\")\n        iterations, salt, _ = _decode_parts(stored)\n        self.assertEqual(len(salt), 16)\n\n\nclass VerifyPasswordTests(unittest.TestCase):\n    def test_rejects_malformed(self):\n        for bad in (\"\", \"pbkdf2_sha256\", \"foo$1$2\", \"nope$x$y$z\", None):\n            with self.subTest(bad=bad):\n                with self.assertRaises(ValueError):\n                    verify_password(\"pw\", bad)\n\n    def test_rejects_unknown_algorithm(self):\n        fake = \"$\".join((\"sha1\", \"1000\", \"c2FsdA\", \"aGFzaA\"))\n        with self.assertRaises(ValueError):\n            verify_password(\"pw\", fake)\n\n    def test_rejects_bad_base64(self):\n        stored = hash_password(\"pw\")\n        _, it, salt, digest = stored.split(\"$\")\n        bad = \"$\".join((_, it, \"!!!notbase64!!!\", digest))\n        with self.assertRaises(ValueError):\n            verify_password(\"pw\", bad)\n\n    def test_rejects_non_integer_iterations(self):\n        stored = hash_password(\"pw\")\n        _, salt_s, hash_s = stored.split(\"$\")[1:]\n        bad = \"$\".join((\"pbkdf2_sha256\", \"lots\", salt_s, hash_s))\n        with self.assertRaises(ValueError):\n            verify_password(\"pw\", bad)\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n</code></pre>\n\n<h2>Usage</h2>\n<pre><code>from secure_passwords import hash_password, verify_password\n\n# On account creation:\nstored = hash_password(\"hunter2\")\n\n# On login — treat ValueError exactly like False to avoid oracle leaks:\ntry:\n    ok = verify_password(provided, stored)\nexcept ValueError:\n    ok = False\nif not ok:\n    return 401\n</code></pre>\n\n<h2>Run the tests</h2>\n<pre><code>python -m unittest test_secure_passwords -v</code></pre>\n\n</body>\n</html>"
+  },
+  {
+    "taskId": "landing-page-morph",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 0,
+    "runtimeMs": 0,
+    "tokensIn": 0,
+    "tokensOut": 0,
+    "costUsd": 0,
+    "iterations": 1,
+    "iterationsSucceeded": 0,
+    "status": "timeout",
+    "failureReason": "endpoint_hung",
+    "createdAt": "2026-08-12T09:05:45.943Z",
+    "source": "live",
+    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Landing Page Morph #1/1"
+  },
+  {
+    "taskId": "equation-solver",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 0,
+    "runtimeMs": 0,
+    "tokensIn": 0,
+    "tokensOut": 0,
+    "costUsd": 0,
+    "iterations": 1,
+    "iterationsSucceeded": 0,
+    "status": "timeout",
+    "failureReason": "endpoint_hung",
+    "createdAt": "2026-08-12T09:15:45.975Z",
+    "source": "live",
+    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Equation Solver #1/1"
+  },
+  {
+    "taskId": "physics-pendulum-wave",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 0,
+    "runtimeMs": 0,
+    "tokensIn": 0,
+    "tokensOut": 0,
+    "costUsd": 0,
+    "iterations": 1,
+    "iterationsSucceeded": 0,
+    "status": "timeout",
+    "failureReason": "endpoint_hung",
+    "createdAt": "2026-08-12T09:25:46.025Z",
+    "source": "live",
+    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Physics Pendulum Wave #1/1"
+  },
+  {
+    "taskId": "circuit-builder-teaser",
+    "modelId": "deepseek-v4-flash-free",
+    "score": 0,
+    "runtimeMs": 0,
+    "tokensIn": 0,
+    "tokensOut": 0,
+    "costUsd": 0,
+    "iterations": 1,
+    "iterationsSucceeded": 0,
+    "status": "timeout",
+    "failureReason": "endpoint_hung",
+    "createdAt": "2026-08-12T09:35:46.079Z",
+    "source": "live",
+    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Circuit Builder Teaser #1/1"
   }
 ]

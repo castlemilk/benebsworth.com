@@ -5,6 +5,7 @@ import {
 import { BENCHMARK_RESULTS, mergeResults } from '../lib/lab/llm-benchmark/results.ts'
 import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.ts'
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
+import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -45,6 +46,7 @@ async function main() {
     // CLI-based providers use the user's locally-authenticated CLIs; no API key needed.
     agy: {},
     codex: {},
+    opencode: {},
     bustCache: RUN_BUST_CACHE,
     timeoutMs: TIMEOUT_MS,
   })
@@ -99,7 +101,12 @@ async function main() {
       console.error(`Run failed; writing ${collected.length} partial result(s) before exiting.`)
       writeResults(collected)
     }
-    process.exit(1)
+    process.exitCode = 1
+  } finally {
+    // Behavioural scoring lazily launches a shared Playwright browser; leaving
+    // it open keeps the event loop alive and the process hangs after the last
+    // result is written. Close it before exit.
+    await closeSandbox()
   }
 }
 

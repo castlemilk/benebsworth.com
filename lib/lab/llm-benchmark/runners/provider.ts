@@ -16,6 +16,7 @@ import { generateMoonshot, type MoonshotConfig } from './moonshot'
 import { generateOpenRouter, type OpenRouterConfig } from './openrouter'
 import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
+import { generateOpencode, type OpencodeConfig } from './opencode'
 import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
 import { selectScorer } from '../scorers'
 import { withSandboxConstraints } from '../prompts'
@@ -29,6 +30,7 @@ export interface ProviderRunnerConfig {
   openrouter?: OpenRouterConfig
   agy?: AgyConfig
   codex?: CodexConfig
+  opencode?: OpencodeConfig
   /** Per-call timeout in milliseconds. Defaults to 10 minutes. */
   timeoutMs?: number
   /** Maximum retries for transient failures. Defaults to 2. */
@@ -296,6 +298,9 @@ function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
     case 'Codex':
       if (!cfg.codex) throw new Error(`Codex config missing for ${model.id}`)
       return { provider: 'codex' as const, config: cfg.codex }
+    case 'OpenCode':
+      if (!cfg.opencode) throw new Error(`OpenCode config missing for ${model.id}`)
+      return { provider: 'opencode' as const, config: cfg.opencode }
     default:
       throw new Error(`Unsupported provider: ${model.provider}`)
   }
@@ -322,6 +327,8 @@ async function generateWithProvider(
       return generateAgy(config, model, task)
     case 'codex':
       return generateCodex(config, model, task)
+    case 'opencode':
+      return generateOpencode(config, model, task)
   }
 }
 

@@ -22,7 +22,8 @@ function parseCodexTokens(stdout: string, stderr: string): { tokensIn: number; t
 export async function generateCodex(
   config: CodexConfig,
   model: BenchmarkModel,
-  task: BenchmarkTask
+  task: BenchmarkTask,
+  iterationIndex = 0
 ): Promise<GenerationResponse> {
   const codexModel = config.model ?? model.apiModelId
   // workspace-write so codex can save ./artifact.html into the scratch cwd;
@@ -36,11 +37,14 @@ export async function generateCodex(
   const runner: CliRunnerConfig = {
     command: 'codex',
     // Printing inline risks the extractor slicing the artifact; write it to a
-    // scratch-dir file and read it back instead.
+    // scratch-dir file and read it back instead. Codex honors the spawn cwd,
+    // so each call's fresh mkdtemp scratch dir already isolates artifacts;
+    // the unique name is belt-and-braces for parallel jobs.
     artifactViaFile: true,
+    artifactName: (i) => `artifact-${model.id}-${task.id}-${i}.html`,
     buildArgs: (prompt) => [...baseArgs, prompt],
     parseTokens: parseCodexTokens,
     timeoutMs: config.timeoutMs,
   }
-  return generateFromCli(runner, model, task)
+  return generateFromCli(runner, model, task, iterationIndex)
 }

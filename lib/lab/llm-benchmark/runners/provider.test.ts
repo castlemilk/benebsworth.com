@@ -9,7 +9,7 @@ vi.mock('../cache', () => ({
   saveQueue: Promise.resolve(),
 }))
 
-import { aggregateRuns, createProviderRunner, isQuotaError } from './provider'
+import { aggregateRuns, classifyFailureReason, createProviderRunner, isQuotaError } from './provider'
 import { generateMoonshot } from './moonshot'
 import type { IterationRun } from './provider'
 
@@ -68,6 +68,24 @@ describe('isQuotaError', () => {
     expect(isQuotaError(new Error('fetch failed'))).toBe(false)
     expect(isQuotaError(new Error('Moonshot error 500: internal'))).toBe(false)
     expect(isQuotaError('not an error')).toBe(false)
+  })
+})
+
+describe('opencode free-tier bearer blip classification', () => {
+  const bearerError = new Error(
+    'Error: Upstream request failed: [invalid_bearer_credential] Missing or invalid bearer credential'
+  )
+
+  it('classifies invalid_bearer_credential as transient, not auth_error', () => {
+    // A revoked key would fail every attempt; this string fires intermittently
+    // on opencode's free tier under concurrency while the same key succeeds
+    // sequentially (0 occurrences in 5 sequential sweeps). It must be retried.
+    expect(classifyFailureReason(bearerError)).toBe('rate_limited')
+    expect(classifyFailureReason(bearerError)).not.toBe('auth_error')
+  })
+
+  it('keeps it out of the quota classification (no circuit breaker trip)', () => {
+    expect(isQuotaError(bearerError)).toBe(false)
   })
 })
 

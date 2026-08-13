@@ -13,26 +13,33 @@ export interface OpencodeConfig {
  *
  * opencode run is non-interactive: the prompt is passed on the command line
  * and the final reply is printed to stdout. Tools are available to the model
- * (write/edit/bash), so HTML artifacts are written to ./artifact.html and
- * handed back through the shared cli.ts file-handoff path.
+ * (write/edit/bash), so HTML artifacts are written to a file and handed back
+ * through the shared cli.ts file-handoff path.
  *
- * NOTE (verified 2026-08-12): opencode resolves relative paths against its
- * OWN session directory (/private/tmp here) rather than the process cwd, and
- * prints the absolute path it wrote — cli.ts fallback #3 (parse absolute
- * .html paths from stdout) reads it back. Because that path is shared, this
- * provider must run at concurrency 1, like the agy file-handoff route.
+ * NOTE (verified 2026-08-13): opencode resolves relative paths against its
+ * OWN session directory (e.g. /private/tmp) rather than the process cwd —
+ * but it prints the absolute path it wrote, and cli.ts fallback #3 (parse
+ * absolute .html paths from stdout) reads it back. Each iteration uses a
+ * unique artifact filename (model-task-index), so concurrent jobs never
+ * collide and sweeps can run at concurrency > 1.
  */
 export async function generateOpencode(
   config: OpencodeConfig,
   model: BenchmarkModel,
-  task: BenchmarkTask
+  task: BenchmarkTask,
+  iterationIndex = 0
 ): Promise<GenerationResponse> {
   const opencodeModel = config.model ?? model.apiModelId
   const runner: CliRunnerConfig = {
     command: 'opencode',
     artifactViaFile: true,
+    // Unique artifact per iteration (model + task + index): opencode resolves
+    // relative paths against ITS OWN session dir (verified: /private/tmp),
+    // so a shared name would let parallel jobs overwrite each other. The
+    // printed absolute path is read back regardless of where it lands.
+    artifactName: (i) => `artifact-${model.id}-${task.id}-${i}.html`,
     buildArgs: (prompt) => ['run', ...(opencodeModel ? ['-m', opencodeModel] : []), prompt],
     timeoutMs: config.timeoutMs,
   }
-  return generateFromCli(runner, model, task)
+  return generateFromCli(runner, model, task, iterationIndex)
 }

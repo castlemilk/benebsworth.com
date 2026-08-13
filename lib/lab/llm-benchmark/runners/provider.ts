@@ -190,6 +190,15 @@ function isTransientError(err: unknown): boolean {
     return true
   }
 
+  // opencode's free tier intermittently rejects concurrent sessions with
+  // "invalid_bearer_credential" even though the same key has hundreds of
+  // sequential successes (verified 2026-08-13: 0 occurrences across 5
+  // sequential sweeps, present in every parallel batch). That is a transient
+  // upstream pool/auth blip, NOT a broken key — retryable. A genuinely
+  // revoked key fails identically on every attempt and is bounded by
+  // maxRetries.
+  if (message.includes('invalid_bearer_credential')) return true
+
   // HTTP status markers inside error messages: retry 5xx plus 429 (rate limit)
   // and 408 (request timeout); never other 4xx auth/validation errors.
   const status = extractStatus(err)
@@ -226,6 +235,11 @@ export function classifyFailureReason(
   if (status === 429 || message.includes('rate limit') || message.includes('too many requests') || message.includes('overloaded')) {
     return 'rate_limited'
   }
+
+  // opencode free-tier pool blips: transient (see isTransientError) but
+  // surface them as rate_limited so the UI says "transient upstream" rather
+  // than implying a revoked key.
+  if (message.includes('invalid_bearer_credential')) return 'rate_limited'
 
   // Auth / scope errors — never transient, never retry.
   if (status === 401 || status === 403) return 'auth_error'
@@ -309,7 +323,8 @@ function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
 async function generateWithProvider(
   cfg: ProviderRunnerConfig,
   model: BenchmarkModel,
-  task: BenchmarkTask
+  task: BenchmarkTask,
+  iterationIndex: number
 ): Promise<GenerationResponse> {
   const { provider, config } = configForModel(model, cfg)
   switch (provider) {
@@ -324,11 +339,11 @@ async function generateWithProvider(
     case 'openrouter':
       return generateOpenRouter(config, model, task)
     case 'agy':
-      return generateAgy(config, model, task)
+      return generateAgy(config, model, task, iterationIndex)
     case 'codex':
-      return generateCodex(config, model, task)
+      return generateCodex(config, model, task, iterationIndex)
     case 'opencode':
-      return generateOpencode(config, model, task)
+      return generateOpencode(config, model, task, iterationIndex)
   }
 }
 
@@ -361,7 +376,7 @@ async function generateOne(
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await withTimeout(
-        generateWithProvider(cfg, model, task),
+        generateWithProvider(cfg, model, task, iterationIndex),
         timeoutMs,
         label
       )

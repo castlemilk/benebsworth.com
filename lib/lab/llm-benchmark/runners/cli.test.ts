@@ -142,3 +142,58 @@ describe('runCli process-group timeout', () => {
     await rm(dir, { recursive: true, force: true })
   }, 20_000)
 })
+
+describe('generateFromCli unique artifact names', () => {
+  it('reads the file named by artifactName(iterationIndex) via the printed absolute path', async () => {
+    // The CLI writes the artifact somewhere OTHER than the scratch cwd (this
+    // mirrors opencode/agy resolving against their own session dir) and only
+    // prints the absolute path. generateFromCli must read THAT file, not the
+    // scratch-dir name.
+    const dir = await mkdtemp(join(tmpdir(), 'llm-bench-name-test-'))
+    const script = join(dir, 'cli.mjs')
+    const artifactPath = join(dir, 'custom-2.html')
+    await writeFile(
+      script,
+      [
+        "import { writeFileSync } from 'node:fs'",
+        `writeFileSync('${artifactPath}', '<h1>NAME_TEST</h1>')`,
+        `console.log('${artifactPath}')`,
+        "console.log('DONE')",
+      ].join('\n')
+    )
+
+    const response = await generateFromCli(
+      {
+        command: process.execPath,
+        artifactViaFile: true,
+        artifactName: (i) => `custom-${i}.html`,
+        buildArgs: () => [script],
+      },
+      {
+        id: 'test',
+        name: 'Test',
+        provider: 'Test',
+        costPer1kInputUsd: 0,
+        costPer1kOutputUsd: 0,
+        contextWindow: 1000,
+        capabilities: '',
+      },
+      {
+        id: 't',
+        category: 'ui-building',
+        title: 'T',
+        blurb: '',
+        prompt: 'do it',
+        runtimeHint: '',
+        iterationsDefault: 1,
+        methodNotes: '',
+        demoComponentName: 'D',
+        slug: 't',
+      },
+      2 // iterationIndex → artifactName returns 'custom-2.html'
+    )
+
+    expect(response.output).toContain('<h1>NAME_TEST</h1>')
+    await rm(dir, { recursive: true, force: true })
+  }, 20_000)
+})

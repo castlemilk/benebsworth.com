@@ -23,10 +23,21 @@ export interface CliRunnerConfig {
   timeoutMs?: number
   /**
    * When true, the CLI is run inside a scratch temp dir and asked to write the
-   * artifact to ./artifact.html instead of printing it (print-mode stdout is
-   * often truncated). Falls back to stdout extraction if no file is produced.
+   * artifact to a file instead of printing it (print-mode stdout is often
+   * truncated). Falls back to stdout extraction if no file is produced.
    */
   artifactViaFile?: boolean
+  /**
+   * Per-iteration artifact filename. MUST return a unique name per iteration
+   * so concurrent runs (concurrency > 1) never collide: CLI agents resolve
+   * relative paths against their own session dir (opencode: /private/tmp;
+   * agy: its scratch) rather than the scratch dir, so a shared name means
+   * parallel runs overwrite each other's artifact. The name is embedded in
+   * the prompt and the printed absolute path is read back via the
+   * stdout-path fallback regardless of where the agent actually wrote it.
+   * Defaults to a constant 'artifact.html' (concurrency 1 only).
+   */
+  artifactName?: (iterationIndex: number) => string
 }
 
 export interface GenerationResponse {
@@ -39,10 +50,11 @@ export interface GenerationResponse {
 const INLINE_PRINT_SUFFIX =
   '\n\nIMPORTANT: Do not create any files. Print the complete artifact source code inline as your only response.'
 
-const FILE_ARTIFACT_SUFFIX =
-  '\n\nIMPORTANT: Save the complete artifact as a single self-contained file at ./artifact.html in the current working directory. Do not print the artifact to stdout — after writing the file, print the absolute path of the file you wrote, then DONE.'
+function fileArtifactSuffix(name: string): string {
+  return `\n\nIMPORTANT: Save the complete artifact as a single self-contained file at ./${name} in the current working directory. Do not print the artifact to stdout — after writing the file, print the absolute path of the file you wrote, then DONE.`
+}
 
-const ARTIFACT_FILENAME = 'artifact.html'
+const DEFAULT_ARTIFACT_FILENAME = 'artifact.html'
 
 function estimateTokensFromChars(chars: number): number {
   // Rough heuristic: ~4 characters per token for English/code.
@@ -172,10 +184,12 @@ function runCli(
 export async function generateFromCli(
   config: CliRunnerConfig,
   _model: BenchmarkModel,
-  task: BenchmarkTask
+  task: BenchmarkTask,
+  iterationIndex = 0
 ): Promise<GenerationResponse> {
   const start = Date.now()
   const timeoutMs = config.timeoutMs ?? 10 * 60 * 1000
+  const artifactName = config.artifactName?.(iterationIndex) ?? DEFAULT_ARTIFACT_FILENAME
 
   let scratchDir: string | undefined
   try {
@@ -183,7 +197,7 @@ export async function generateFromCli(
       scratchDir = await mkdtemp(join(tmpdir(), 'llm-bench-'))
     }
 
-    const suffix = config.artifactViaFile ? FILE_ARTIFACT_SUFFIX : INLINE_PRINT_SUFFIX
+    const suffix = config.artifactViaFile ? fileArtifactSuffix(artifactName) : INLINE_PRINT_SUFFIX
     const args = config.buildArgs(task.prompt + suffix, _model)
 
     const { stdout, stderr } = await runCli(config.command, args, {
@@ -195,10 +209,10 @@ export async function generateFromCli(
     let output: string | undefined
     if (scratchDir) {
       try {
-        const fileContents = await readFile(join(scratchDir, ARTIFACT_FILENAME), 'utf8')
+        const fileContents = await readFile(join(scratchDir, artifactName), 'utf8')
         if (fileContents.trim().length > 0) output = fileContents
       } catch {
-        // No ./artifact.html — fall through to the directory scan.
+        // No ./<artifactName> — fall through to the directory scan.
       }
       if (output === undefined) {
         // Agent CLIs sometimes name the file themselves (landing.html,
@@ -223,13 +237,13 @@ export async function generateFromCli(
         }
       }
       if (output === undefined) {
-        // Some agent CLIs (agy) resolve relative paths against their OWN
-        // workspace (e.g. ~/.gemini/antigravity-cli/scratch/) instead of the
-        // process cwd — but they print the absolute path they wrote to. Parse
-        // any absolute .html path from stdout and read the largest one that
-        // exists. NOTE: this shared workspace path is also why file-handoff
-        // CLIs must run at concurrency 1 — parallel iterations would
-        // overwrite each other's artifact.
+        // Some agent CLIs (opencode, agy) resolve relative paths against
+        // their OWN workspace (e.g. /private/tmp, ~/.gemini/.../scratch)
+        // instead of the process cwd — but they print the absolute path they
+        // wrote to. Parse any absolute .html path from stdout and read the
+        // largest one that exists. With unique artifactName per iteration
+        // (see CliRunnerConfig), parallel runs never collide here: each run
+        // prints and reads its own file.
         const pathCandidates = new Set<string>()
         const pathRe = /(?:file:\/\/)?(\/[^\s)\]"'<>]+\.html?)/gi
         let pm: RegExpExecArray | null

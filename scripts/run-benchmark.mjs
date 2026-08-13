@@ -16,6 +16,9 @@ const CONCURRENCY = process.env.RUN_CONCURRENCY ? Number(process.env.RUN_CONCURR
 const TIMEOUT_MS = process.env.RUN_TIMEOUT_MS ? Number(process.env.RUN_TIMEOUT_MS) : undefined
 const MAX_RETRIES = process.env.RUN_MAX_RETRIES !== undefined ? Number(process.env.RUN_MAX_RETRIES) : undefined
 const RUN_BUST_CACHE = process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUST_CACHE === 'true'
+// CLI file-handoff providers (agy/codex/opencode) write unique per-iteration
+// artifact files now, so concurrency > 1 is safe — but each opencode call is
+// slow (minutes), so the default of 3 is a reasonable sweep shape.
 
 async function main() {
   const models = BENCHMARK_MODELS.filter((m) => MODELS_TO_RUN.includes(m.id))

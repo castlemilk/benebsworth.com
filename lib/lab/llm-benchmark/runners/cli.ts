@@ -100,18 +100,39 @@ function runCli(
   options: { cwd?: string; env?: Record<string, string | undefined>; timeoutMs: number }
 ): Promise<{ stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
+    // detached: true puts the CLI in its own process group so a timeout can
+    // SIGTERM the whole group. CLIs like opencode spawn server grandchildren
+    // (bun server) that inherit the pipes; killing only the direct child
+    // leaves them alive, holding stdout open and leaking processes.
     const child = spawn(command, args, {
       cwd: options.cwd,
       env: { ...process.env, ...options.env },
       stdio: ['pipe', 'pipe', 'pipe'],
+      detached: true,
     })
 
     let stdout = ''
     let stderr = ''
+    let settled = false
+    const killGroup = (signal: NodeJS.Signals) => {
+      if (child.pid === undefined) return
+      try {
+        process.kill(-child.pid, signal)
+      } catch {
+        // Process group already gone.
+      }
+    }
     const timeout = setTimeout(() => {
-      child.kill('SIGTERM')
+      settled = true
+      killGroup('SIGTERM')
+      // Give the group a moment to die before escalating; a wedged child
+      // (e.g. a stuck server holding the pipes) gets SIGKILL.
+      setTimeout(() => killGroup('SIGKILL'), 1000)
       reject(new Error(`Timeout after ${options.timeoutMs}ms: ${command} ${args.join(' ')}`))
     }, options.timeoutMs)
+    // Never let a stray child keep the parent sweep process alive after the
+    // run finishes — the promise has already settled by then.
+    timeout.unref?.()
 
     child.stdout.setEncoding('utf8')
     child.stderr.setEncoding('utf8')
@@ -124,11 +145,16 @@ function runCli(
 
     child.on('error', (err) => {
       clearTimeout(timeout)
+      if (settled) return
+      settled = true
       reject(err)
     })
 
     const finish = (code: number | null) => {
+      if (settled) return
+      settled = true
       clearTimeout(timeout)
+      killGroup('SIGTERM')
       if (code !== 0 && code !== null) {
         reject(new Error(`CLI exited with code ${code}: ${stderr || stdout}`))
       } else {

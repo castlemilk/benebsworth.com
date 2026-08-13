@@ -60,22 +60,49 @@ describe('llm-benchmark registry', () => {
 
     const taskResults = resultsForTask('equation-solver')
     // All models except those legitimately excluded from the sweep should
-    // have a result. Exclusions:
-    //   - nemotron-nano-12b-vl: free endpoint hangs, excluded at run time.
-    //   - gemini-3.6-flash: registered but not yet swept (OpenRouter 402).
-    // We assert >= rather than === so the test tolerates future exclusions
-    // without a code change here, while still catching a drop in coverage.
-    const excluded = new Set([
+    // have a result. Exclusions are derived two ways so the assertion stays
+    // stable while models join/leave the board:
+    //   - documentedExcluded: models with a known reason not to sweep
+    //     (nemotron-nano-12b-vl: free endpoint hangs; gemini-3.6-flash:
+    //     OpenRouter 402 — no credits).
+    //   - unswept: models with NO results anywhere yet (registered ahead of
+    //     their first sweep — e.g. a freshly added provider). Auto-excluding
+    //     them means adding a model mid-sweep never breaks this test.
+    // We assert >= (never ===) so the test tolerates future exclusions
+    // without a code change here, while still catching a drop in coverage
+    // below the current floor.
+    const documentedExcluded = new Set([
       'nemotron-nano-12b-vl',     // free endpoint hangs
       'gemini-3.6-flash',         // OpenRouter 402 (no credits)
     ])
-    const expected = BENCHMARK_MODELS.length - excluded.size
+    const hasAnyResult = new Set(resultsForModelCoverage())
+    const expected =
+      BENCHMARK_MODELS.length -
+      documentedExcluded.size -
+      BENCHMARK_MODELS.filter((m) => !documentedExcluded.has(m.id) && !hasAnyResult.has(m.id)).length
     expect(taskResults.length).toBeGreaterThanOrEqual(expected)
     expect(taskResults.every((r) => r.taskId === 'equation-solver')).toBe(true)
-    expect(taskResults.every((r) => !excluded.has(r.modelId))).toBe(true)
+    expect(taskResults.every((r) => !documentedExcluded.has(r.modelId))).toBe(true)
+
+    // Data-loss floor: every task must keep a substantial board. This is the
+    // regression net for a bad merge/regen wiping records — it fires long
+    // before per-model assertions notice a missing row.
+    for (const task of BENCHMARK_TASKS) {
+      expect(
+        resultsForTask(task.id).length,
+        `${task.id} board size`,
+      ).toBeGreaterThanOrEqual(20)
+    }
 
     const modelResults = resultsForModel('claude-4')
     expect(modelResults.length).toBe(BENCHMARK_TASKS.length)
     expect(modelResults.every((r) => r.modelId === 'claude-4')).toBe(true)
   })
 })
+
+/** All model ids that have at least one result record (server-side only). */
+function resultsForModelCoverage(): string[] {
+  const seen = new Set<string>()
+  for (const r of BENCHMARK_RESULTS) seen.add(r.modelId)
+  return [...seen]
+}

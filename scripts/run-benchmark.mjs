@@ -112,7 +112,16 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+main().then(
+  () => {
+    // Hard exit: a stray CLI child (opencode server, agy daemon) that escaped
+    // its process-group kill would otherwise keep the sweep process alive
+    // forever after all results are written. All work (including the
+    // synchronous writeResults and the awaited saveQueue flush) is done.
+    process.exit(process.exitCode ?? 0)
+  },
+  (err) => {
+    console.error(err)
+    process.exit(1)
+  }
+)

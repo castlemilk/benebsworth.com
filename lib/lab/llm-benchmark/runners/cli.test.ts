@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { extractLikelyCode } from './cli'
+import { extractLikelyCode, generateFromCli } from './cli'
+import { spawn } from 'node:child_process'
+import { mkdtemp, writeFile, rm, readFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 const FULL_COMPONENT = [
   'export default function App() {',
@@ -71,4 +75,70 @@ describe('extractLikelyCode', () => {
     expect(result).toBe(truncated)
     expect(result.length).toBeGreaterThan(0)
   })
+})
+
+describe('runCli process-group timeout', () => {
+  it('kills the whole process group on timeout so CLI server grandchildren cannot leak', async () => {
+    // A CLI that spawns a grandchild inheriting the pipes, then sleeps: this
+    // mirrors opencode run (bun server child). The grandchild's pid is written
+    // to a file so the test can assert it died too.
+    const dir = await mkdtemp(join(tmpdir(), 'llm-bench-cli-test-'))
+    const pidFile = join(dir, 'grandchild.pid')
+    const script = join(dir, 'cli.mjs')
+    await writeFile(
+      script,
+      [
+        "import { spawn } from 'node:child_process'",
+        "import { writeFileSync } from 'node:fs'",
+        // Grandchild that holds stdout open via inherited pipe and outlives us.
+        "const kid = spawn(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { stdio: 'inherit' })",
+        `writeFileSync('${pidFile}', String(kid.pid))`,
+        'await new Promise(() => {})', // parent never exits
+      ].join('\n')
+    )
+
+    await expect(
+      generateFromCli(
+        {
+          command: process.execPath,
+          buildArgs: () => [script],
+          timeoutMs: 2500,
+        },
+        {
+          id: 'test',
+          name: 'Test',
+          provider: 'Test',
+          costPer1kInputUsd: 0,
+          costPer1kOutputUsd: 0,
+          contextWindow: 1000,
+          capabilities: '',
+        },
+        {
+          id: 't',
+          category: 'ui-building',
+          title: 'T',
+          blurb: '',
+          prompt: 'do it',
+          runtimeHint: '',
+          iterationsDefault: 1,
+          methodNotes: '',
+          demoComponentName: 'D',
+          slug: 't',
+        }
+      )
+    ).rejects.toThrow(/Timeout after 2500ms/)
+
+    // Give the SIGTERM → SIGKILL escalation a beat, then assert the
+    // grandchild is gone (ESRCH from process.kill(0) = dead).
+    await new Promise((r) => setTimeout(r, 2500))
+    const grandchildPid = Number(await readFile(pidFile, 'utf8'))
+    let alive = true
+    try {
+      process.kill(grandchildPid, 0)
+    } catch {
+      alive = false
+    }
+    expect(alive).toBe(false)
+    await rm(dir, { recursive: true, force: true })
+  }, 20_000)
 })

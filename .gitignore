@@ -97,6 +97,12 @@ public/lab-data/
 # Large raw model-generated HTML result variants (never commit — they execute in the browser)
 lib/lab/llm-benchmark/results-*-html.json
 
+# Stray artifacts a CLI model may drop in the repo root when its file-handoff
+# resolves against the process cwd (opencode/agy write ./artifact.html there
+# when the prompt's cwd resolution differs from the scratch dir).
+/artifact.html
+/artifact.debug.html
+
 # Temporary working directories for scripts and manual review
 tmp/
 

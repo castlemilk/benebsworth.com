@@ -1,0 +1,393 @@
+# LLM Benchmark Harness — Roadmap Backlog
+
+This file is the forward-looking backlog for the LLM benchmark harness on
+benebsworth.com (`/lab/llm-benchmark/`). It records **features, not bug fixes**
+— hardening that already shipped lives in the git log (see "Already shipped"
+at the bottom). Items are ordered by priority within each tier.
+
+## How to use this file
+
+- Pick an item, implement it, then mark it `[x]` and move the "Design sketch"
+  notes into the skill (`lib/lab/llm-benchmark/../.claude/skills/llm-benchmark/SKILL.md`)
+  so the runbook stays current.
+- Each item references the code it touches and the external example it was
+  inspired by (primarily the DeepSeek Harness, `dsh`).
+- Effort is rough relative sizing: S (< 1 session), M (1-3 sessions),
+  L (multi-session project).
+
+## Reference: DeepSeek Harness (dsh)
+
+**Repo:** https://github.com/deepseek-ai/deepseek-harness (MIT, 103k stars,
+"Everything is a Plugin", built on the Cordis plugin framework:
+https://github.com/cordiverse/cordis).
+
+The single most valuable ideas for this benchmark:
+
+1. **Session log as source of truth.** An append-only `SessionEvent` log with a
+   runtime invariant: *"model-visible means logged"* — anything that reached a
+   model request must be reconstructable from the log. Fork, resume,
+   transcripts, telemetry, and persistence all derive from this one stream.
+   (https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md,
+   https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/session.md)
+2. **Profiles + bundles + patchable config.** A running harness is a layered,
+   named composition; `dsh --dump-config` prints the booted tree and any row
+   is replaceable via a config patch. There is no privileged core.
+   (architecture.md § "Profiles and bundles")
+3. **Capability seams.** A seam = Service Definition + Service Provider +
+   Consumer. Filesystem, subprocess, sandbox, shell, subagent are all seams,
+   so one provider swap moves every consumer with it (e.g. pointing fs+shell
+   at a remote sandbox). (architecture.md § "Capability seams")
+4. **Telemetry is a first-class plugin**, not an afterthought.
+   (architecture.md § "Events" / dsh-base bundle description)
+5. **Benchmarks are just isolated invocations of the real harness.** Separate
+   workspace + session ID per task; the same tool that does real work runs the
+   eval. (https://github.com/deepseek-ai/deepseek-harness/blob/master/BENCHMARK.md,
+   https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/python-sdk.md)
+
+---
+
+# P1 — Core integrity
+
+## [ ] 1. Per-iteration event log ("model-visible means logged")
+
+**Problem.** A `BenchmarkResult` persists only the BEST iteration's artifact,
+the aggregate score, and `iterationScores`. The raw output of the other
+iterations, the exact prompt sent, per-check details, retry counts, and
+timings vanish when the sweep's /tmp log is deleted. Nobody can answer
+"what did iteration 3 actually emit and why did it score 3?" six months
+later — the exact trust property the benchmark exists to provide.
+
+**Why now.** This session repeatedly needed forensic data that no longer
+existed: the deepseek `[100,3,68,3,91]` n-body record could not be traced to
+specific artifacts, and the "22-token" iteration was indistinguishable from a
+short-error iteration after the fact.
+
+**Inspiration.** dsh session log (see Reference #1). Their runtime invariant
+is directly portable: if we record what we sent and what we got per
+iteration, every published score is reproducible.
+
+**Design sketch.**
+
+- New module `lib/lab/llm-benchmark/runlog.ts` with a small append-only
+  JSONL writer:
+  - `runlog.write(modelId, taskId, iterationIndex, event)` where events are:
+    - `{ type: 'request', ts, promptHash, promptLength, configSnapshot }`
+    - `{ type: 'response', ts, rawOutput, tokensIn, tokensOut, runtimeMs }`
+    - `{ type: 'clean', ts, output }` (post-`cleanOutput` / inline-deps)
+    - `{ type: 'retry', ts, attempt, error, delayMs }`
+    - `{ type: 'check', ts, iterationIndex, check: IterationCheckResult }`
+    - `{ type: 'aggregate', ts, result: BenchmarkResult }`
+  - Written from `runners/provider.ts` (in `generateOne` around
+    `generateWithProvider` / `aggregateRuns`) — one shared seam rather than
+    per-provider instrumentation.
+- Storage: `sweeps/<run-id>/<model>-<task>.jsonl`, `run-id` = timestamp;
+  gitignored. A `scripts/retrace.mjs --run <id> --model x --task y` reader
+  that replays an iteration's full lifecycle to stdout (the "transcript").
+- `BenchmarkResult` gains `runLogRef?: { runId, file }` pointing at its trace.
+- UI (P2 #7) can then render run traces per iteration.
+
+**Acceptance criteria.** A sweep writes one JSONL per (model, task); every
+successful and failed iteration appears with raw + cleaned output; a retrace
+script reproduces "why this score" for a given iteration from the log alone;
+no record is ever written to results.json without a `runLogRef`.
+
+**Effort.** M. **Dependencies.** none (foundational for #7).
+
+## [ ] 2. Sweep profiles with effective-config dump
+
+**Problem.** Sweep recipes are hand-assembled env var invocations
+(`RUN_MODELS=... RUN_TASKS=... RUN_ITERATIONS=... RUN_CONCURRENCY=...
+RUN_TIMEOUT_MS=... RUN_MAX_RETRIES=...`). We now have several real recipes
+(smoke, slow-model, agy-quota) that must be remembered and retyped
+correctly — get one wrong (e.g. forget `RUN_MAX_RETRIES=0` on a slow model)
+and a sweep burns hours on guaranteed retries.
+
+**Inspiration.** dsh profiles + `--dump-config` (Reference #2): named
+compositions that print the effective booted config before running.
+
+**Design sketch.**
+
+- `scripts/sweep-profiles.mjs` (or JSON in `lib/lab/llm-benchmark/sweep-profiles.json`):
+  - `smoke`: 1 model × 1 task × 1 iter, 10-min timeout, concurrency 1
+  - `fast-refresh`: 2 tasks × 5 iters, concurrency 2, 10-min cap
+  - `slow-model`: concurrency 2, `RUN_MAX_RETRIES=0`, 25-min cap (deepseek
+    lesson), `RUN_BUST_CACHE=1`
+  - `agy-quota`: concurrency 1, 5 iters, default timeouts
+- `run-benchmark.mjs` accepts `--profile <name> [--model x --task y ...]`
+  (overrides merge over the profile) and **prints the effective config**
+  before starting — the dsh `--dump-config` behavior: model(s), tasks,
+  iterations, concurrency, timeout, retries, bust-cache, expected duration
+  estimate from per-task historical `runtimeMs`.
+
+**Acceptance criteria.** Every documented sweep in the skill maps to a
+profile; `--profile` + overrides produces the same env-var behavior today;
+the pre-run dump shows exactly what will run.
+
+**Effort.** S–M.
+
+## [ ] 3. Forensic session retention (don't rm the scratch dir)
+
+**Problem.** `generateFromCli` (`lib/lab/llm-benchmark/runners/cli.ts`) creates
+a `mkdtemp` scratch dir per call and deletes it in `finally`. When a model
+writes to ITS OWN session dir instead of the scratch (opencode
+`/private/tmp`, agy's scratch), the artifact is orphaned and may be
+overwritten by the next iteration or left behind as repo-root junk
+(gitignored now, but unrecoverable and unlinked to the run).
+
+**Inspiration.** dsh keeps `session_root` as a first-class directory with a
+fresh session ID per task; the session JSONL + workspace are the run's
+persistence layer (python-sdk.md "Choose workspace and session IDs").
+
+**Design sketch.**
+
+- `run-benchmark.mjs` gains `SWEEP_ROOT` (default `sweeps/<ts>/`) and passes
+  it down; `generateFromCli` moves scratch dirs UNDER the sweep root
+  (`<sweep-root>/scratch/<model>-<task>-<n>/`) instead of `os.tmpdir()`.
+- On success the scratch dir is kept (gitignored); a `scripts/sweep-clean.mjs
+  --keep <n> --older-than <days>` prunes old runs.
+- Artifact handoff fallback #3 in cli.ts keeps working (absolute printed
+  path) but a successful read also **copies** the artifact into the sweep
+  root's `artifacts/` as `artifact-<model>-<task>-<n>.html`, so the run's
+  outputs survive regardless of where the model wrote them.
+- Outcome: every iteration's emitted artifact is recoverable post-hoc, and
+  #1's event log can link to it.
+
+**Acceptance criteria.** A sweep leaves a `sweeps/<ts>/` tree with scratch
+dirs + a copied artifact per successful iteration; repo root stays clean;
+prune script works; skill documents the layout.
+
+**Effort.** S–M. **Dependencies.** none (makes #1's file links concrete).
+
+---
+
+# P1 — Reliability and signal quality
+
+## [ ] 4. Distinct failure reason for CLI timeouts (`cli_timeout`)
+
+**Problem.** A CLI call that exceeds its cap is classified `endpoint_hung`
+(`classifyFailureReason`, `lib/lab/llm-benchmark/runners/provider.ts`), which
+reads as a network story. The deepseek sweeps showed the dominant failure is
+actually **generation too slow** (10-20 tok/s free tier; tasks needing 20-50k
+tokens can never finish in-window) — a capability story. The UI currently
+labels these `timeout` (status) but the reason column says `endpoint_hung`.
+
+**Why now.** The four deepseek timeout rows (landing, equation, pendulum,
+circuit) are the board's most interesting data and their classification is
+misleading to readers.
+
+**Design sketch.**
+
+- Add `'cli_timeout'` to `BenchmarkFailureReason` in `types.ts`.
+- In `classifyFailureReason`, detect the CLI timeout shape:
+  `Timeout after <ms>ms: <command> <args>` (from `runCli` in cli.ts) and the
+  `withTimeout` label shape, returning `cli_timeout`.
+- `provider.test.ts`: new assertions (CLI timeout ≠ endpoint_hung, still
+  transient → retried).
+- UI: `statusClass` already renders `timeout` amber; add the reason to the
+  failure-reason histogram/summary wherever it's surfaced (model page).
+
+**Acceptance criteria.** Deepseek-style slow-generation failures show
+`cli_timeout`; unit tests lock the classification; docs/skill updated.
+
+**Effort.** S.
+
+## [ ] 5. Quota-reset estimator
+
+**Problem.** Agy quota errors include "Resets in 57h27m" but the harness
+discards it. A sweep started right after a trip dies instantly on every
+iteration; the operator has to parse the error message themselves.
+
+**Inspiration.** dsh surfaces provider errors through the telemetry/session
+layers rather than burying them in retry logs; the point is operational
+decision-support from structured signals.
+
+**Design sketch.**
+
+- In `isQuotaError` / breaker trip site (`generateOne`, provider.ts), regex
+  `/(?:resets in|reset in)\s*(\d+h)?\s*(\d+m)?/i` from the error message and
+  log `[harness] next window for <model>: ~57h27m (resets ~Fri 02:04)`.
+- Persist `quotaNextResetAt?: string` on `BenchmarkResult` (from the breaker
+  path) so a failed sweep's records carry the next window; UI can show "retry
+  after" on timeout/quota rows.
+- `run-benchmark.mjs`: pre-flight check — if any target model has a stored
+  `quotaNextResetAt` in the future, warn and abort before burning calls.
+
+**Acceptance criteria.** A quota-killed sweep prints the next window; a
+subsequent sweep pre-flight warns about still-locked models; tests for the
+regex parsing.
+
+**Effort.** S.
+
+---
+
+# P2 — Presentation and composability
+
+## [ ] 6. Completion + value stats on the UI
+
+**Problem.** The model index and model page surface score first; a reader
+sees `53` for deepseek n-body but has to count rows to learn "3/7 tasks
+completed, 4 timeouts, ~$0". Completion rate and cost-per-point are the two
+numbers that make a partial board legible.
+
+**Design sketch.**
+
+- `components/lab/llm-benchmark/format.ts` + a small stats helper
+  (`aggregateResults` already exists in `harness.ts`): per model — tasks
+  completed (status success/partial), timeout count, mean runtime, total
+  cost, cost-per-point (`costUsd / max(score,0.1)` across tasks).
+- Model index page: a compact stat strip per model card (or the table the
+  index uses) with `x/7 done · N timeouts · $0.0 cost`.
+- Model page header: same strip under the model name.
+
+**Acceptance criteria.** Deepseek's partial board reads correctly at a glance;
+no layout regression on mobile; tests for the stats helper.
+
+**Effort.** S–M.
+
+## [ ] 7. Run-trace UI (render the event log)
+
+**Problem.** #1 produces the data but the benchmark pages only show
+aggregates + the best artifact. The side-by-side comparison
+(`components/lab/llm-benchmark/model-output-comparison.tsx`) compares final
+artifacts; it can't show *why* an iteration failed.
+
+**Inspiration.** dsh web app browses sessions and replays transcripts from
+the session log (architecture.md "Session log"; `dsh web`).
+
+**Design sketch.**
+
+- On the task page's run section (per model), an expandable "iteration
+  trace" panel fed by the run log JSONL (fetched like the on-demand output
+  JSONs via `gen-benchmark-outputs.mjs`-style static publication, or only
+  when `runLogRef` exists).
+- Shows per iteration: prompt hash/length, raw vs cleaned output diff, each
+  check (name/passed/points/detail — reuses `IterationChecks` pills), retry
+  events, timings.
+- Fall back to "no trace recorded (pre-event-log run)" on old records.
+
+**Acceptance criteria.** Any iteration from a logged sweep is browsable in
+the UI; old records degrade gracefully; demo remains snappy (lazy fetch).
+
+**Effort.** L. **Dependencies.** #1.
+
+## [ ] 8. Check/scorer registry formalization
+
+**Problem.** Task → scorer → checks selection is code: `selectScorer()`
+(`lib/lab/llm-benchmark/scorers/index.ts`) hardcodes the five HTML-runnable
+category ids, `getChecksForTask` (`scorers/checks.ts`) switches on task id,
+and `scripts/rescore-behavioral.mjs` + `scripts/backfill-iteration-checks.mjs`
+each hardcode the same five ids in their own BEHAVIOURAL_TASK_IDS set.
+Adding a sixth HTML task means touching four places.
+
+**Inspiration.** dsh: no privileged core; the task row declares its
+evaluator (tool/capability registration is config, architecture.md "Where
+new behavior goes"). Our `BenchmarkTask` is the natural home for that row.
+
+**Design sketch.**
+
+- `BenchmarkTask` gains optional `scorer?: 'behavioral' | 'html' | 'text'`
+  (default: current `selectScorer` heuristic → explicit beats heuristic).
+- `scorers/index.ts` reads the task field first, falls back to the heuristic
+  (backward compatible); `rescore-behavioral.mjs` and
+  `backfill-iteration-checks.mjs` derive their task set from the registry
+  instead of a duplicated constant.
+- `registry.test.ts`: assert every HTML-runnable task declares a scorer
+  (kills the "added a task, forgot it needs checks" failure mode).
+
+**Acceptance criteria.** Adding an HTML task requires only registry changes;
+no duplicated task-id sets remain; tests green.
+
+**Effort.** S–M.
+
+---
+
+# P3 — Board completion and experiments
+
+## [ ] 9. Board completion
+
+- **gemini-3.6-flash** — registered, ZERO results (OpenRouter 402, $0
+  credits). Needs an OpenRouter top-up ($5-10) then a normal sweep
+  (`gemini-3.6-flash`, all 7 tasks, 5 iters). The only model with no board
+  presence.
+- **codex `-pro` variants** — never run (no `OPENAI_API_KEY`; codex CLI uses
+  ChatGPT auth for the base tiers). Requires OpenAI API key to add.
+- **deepseek-v4-flash-free retry** — landing-page-morph, equation-solver,
+  physics-pendulum-wave, circuit-builder-teaser all recorded `cli_timeout`
+  (see #4) at 10-30 min caps. The free tier's latency is unstable (40s-15min
+  observed for the same task), so a future window may land them. Retry with
+  the slow-model profile; do NOT burn > 1 iteration each until one succeeds.
+- **nemotron-nano-12b-vl** — excluded (free endpoint hangs). Re-test
+  periodically; it is the only documented exclusion with no active plan.
+
+## [ ] 10. Sandbox backend seam (longer term)
+
+**Problem.** Playwright is the only sandbox backend; `getBrowser()`
+(`lib/lab/llm-benchmark/scorers/sandbox.ts`) hardcodes Chromium args, and the
+scorer has no way to run against a remote browser or a fallback (jsdom)
+without code changes. Also the sandbox policy actually applied per run is
+never logged.
+
+**Inspiration.** dsh `ctx.sandbox` seam (architecture.md "Capability seams"):
+one interface, swappable backends, and sandbox-policy facts logged per run
+(python-sdk.md "Sandbox-policy facts are logged as runtime user context").
+
+**Design sketch.**
+
+- `SandboxBackend` interface: `launch() → { newContext() }`, `close()`.
+  Implementations: `localChromium` (today's), `remotePlaywright` (via
+  `PLAYWRIGHT_WS_ENDPOINT`), `jsdomFallback` (structural checks only, tagged
+  `behaviouralFallback` — the `scoreBehavioral` catch path already has this
+  concept).
+- `run-benchmark.mjs`/runner log the active backend + policy into the event
+  log (#1) as a `sandboxPolicy` event.
+
+**Acceptance criteria.** A CI/container run can use the fallback without code
+changes; the applied sandbox policy is in the run log; existing behavior
+unchanged by default.
+
+**Effort.** M. **Dependencies.** #1 (for the policy log).
+
+## [ ] 11. Per-call telemetry (TTFT, tokens/s, cache, retries)
+
+**Problem.** `runtimeMs` is wall-clock only. We don't record time-to-first
+token, tokens/sec, cache hits, or retry counts per iteration — the signals
+that separate "model slow" from "network slow" (directly relevant to #4's
+classification story).
+
+**Design sketch.** Extend the event log (#1) `response`/`retry` events with
+`ttftMs`, `tokensPerSec`, `cacheHit`, `attempt`. `BenchmarkResult` gains an
+optional `telemetry?: { meanTtftMs, meanTokensPerSec, cacheHits, retries }`
+rolled up in `aggregateRuns`. Surface on the model page's runtime cell
+tooltip.
+
+**Acceptance criteria.** Sweeps record telemetry; a retrace or page tooltip
+shows TTFT/tokens-per-sec/cache/retries per iteration.
+
+**Effort.** M. **Dependencies.** #1.
+
+---
+
+# Already shipped (do not re-propose)
+
+- Model-scoped circuit breaker + per-model quota errors
+  (`trippedModels` keyed by model.id, provider.ts).
+- `BenchmarkFailureReason` taxonomy + `classifyFailureReason` (extend, don't
+  replace — see #4 for the CLI timeout gap).
+- Behavioral scorer (Playwright, 70/30 composite) + `iterationCheckResults`
+  + `IterationChecks` UI pills + backfill script.
+- Parallel CLI file-handoff (unique `artifact-<model>-<task>-<n>.html` per
+  iteration) + process-group timeout kill + hard exit on sweep completion.
+- opencode provider (deepseek-v4-flash-free) + bearer-blip transient
+  classification.
+- Registry coverage test (auto-excludes unswept models, per-task board
+  floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
+- Frame-prelude hardening + sandbox prompt contract + per-iteration
+  retry/empty-body recovery + `RUN_MAX_RETRIES`/`RUN_TIMEOUT_MS` env knobs.
+- Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
+
+## Skill sync
+
+Every shipped item above is documented in
+`.claude/skills/llm-benchmark/SKILL.md` (file map, sweep operations runbook,
+provider quirks). When implementing an item from this backlog, update the
+skill in the same commit.

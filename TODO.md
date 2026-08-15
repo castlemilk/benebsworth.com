@@ -149,6 +149,42 @@ Lessons for this benchmark:
 
 ---
 
+# Reference: Graphify (Graphify-Labs/graphify)
+
+**Repo:** https://github.com/Graphify-Labs/graphify ("Turn any codebase into
+a queryable knowledge graph", v8 branch, 106k stars, Apache-2.0/MIT).
+
+The tool this roadmap's deep-dives were processed with:
+
+- **Install:** `uv tool install graphifyy` (PyPI package is `graphifyy`,
+  command is `graphify`).
+- **Build a graph:** `graphify extract <dir> --code-only` (tree-sitter AST,
+  deterministic, zero LLM calls, nothing leaves the machine) then
+  `graphify cluster-only <dir>` for communities + `GRAPH_REPORT.md`.
+  Output: `graphify-out/{graph.json, GRAPH_REPORT.md, graph.html}`.
+- **Query it instead of grepping:** `graphify explain "Node"` (neighbors +
+  degree + community), `graphify path A B` (shortest path, hop by hop),
+  `graphify query "<question>"` (BFS subgraph), `graphify export
+  callflow-html` (Mermaid call-flow).
+- **Every edge is tagged** `EXTRACTED` (explicit in source) vs `INFERRED`
+  (resolved) — you always know what was read vs guessed.
+- **Report contents:** god nodes (most-connected concepts), communities
+  (Leiden clustering), surprising cross-file connections, `# NOTE:` /
+  `# WHY:` comments and doc refs as first-class nodes, suggested questions.
+- **Team workflow:** `graphify-out/` is meant to be committed to git; a
+  git hook auto-rebuilds on commit (AST only, no cost); a merge driver
+  union-merges `graph.json` on parallel commits; MCP server
+  (`python -m graphify.serve graphify-out/graph.json`) exposes
+  `query_graph` / `get_node` / `get_neighbors` / `shortest_path`.
+- **Their own benchmarks** (`BENCHMARKS.md`): LOCOMO recall@10 0.497 vs
+  mem0 0.048 / supermemory 0.149; LongMemEval-S QA 76%; blind-validated
+  judge agreement 90.6% (Cohen's kappa 0.81) — the code graph beats vector
+  memory for code-answer tasks, and their evaluation methodology (same
+  harness, same model, same budgets; blind judge + kappa) is a template
+  for ours (see #26).
+
+---
+
 # Reference: Paperclip (paperclipai)
 
 **Repo:** https://github.com/paperclipai/paperclip ("The open-source app
@@ -965,6 +1001,158 @@ reality; tests for the summary normalization.
 
 ---
 
+
+## [ ] 24. Prompt-regression probe layer (cheap narrow evals before sweeps)
+
+**Problem.** Full sweeps are expensive (hours). When the sandbox contract
+(`prompts.ts`) or a task prompt changes, there is no cheap gate between
+"prompt edit" and "spend a day re-sweeping" — the pre-commit suite tests
+the prompt TEXT, not the model's behavior under it.
+
+**Inspiration.** paperclip's two-stage eval plan stage 1 (`doc/plans/
+2026-03-13-agent-evals-framework.md` + `evals/promptfoo/promptfooconfig.yaml`):
+narrow behavior evals with deterministic assertions (contains /
+not-contains / inline JS + named metrics) across several models, run
+before the heavy path. Their release-gate cases show the probe style:
+"uses inline wake context before inbox exploration" ->
+`!output.includes('inbox-lite')`, i.e. assert what the model SHOULD NOT
+do as much as what it should. Also the `scoped wake payload` prompt-design
+pattern (embed state inline rather than make the model explore -
+`evals/promptfoo/tests/release-gates.yaml`).
+
+**Design sketch.**
+
+- `scripts/prompt-probe.mjs`: a mini eval runner (promptfoo-style, but on
+  our own runner substrate so it reuses opencode/agy/openrouter) with a
+  `probes/` dir of YAML cases. Each probe: a short prompt derived from the
+  sandbox contract + deterministic asserts on the reply.
+  - Probe set: `doctype-first` (reply starts with `<!DOCTYPE html>`),
+    `no-cdn` (no `script src`), `css-sized-canvas` (no attribute-sized
+    canvas), `try-catch-alert` (error renders `<div role="alert">`),
+    `no-alert-confirm` (doesn't call `window.alert`), `fills-viewport`
+    (body margin 0), `scoped-context` (uses provided inline facts, does
+    NOT explore/fetch - the paperclip wake-payload lesson).
+  - Cheap: 1 iteration x 2-3 representative models (deepseek-v4-flash-free
+    + one paid), 60s timeout, results table with per-probe pass/fail.
+- Wire as `task bench:probe`; run BEFORE any sweep after a prompt change
+  (skill runbook: "prompt changed -> `task bench:probe` -> sweep").
+- Probe failures block the sweep (release-gate semantics).
+
+**Acceptance criteria.** A sandbox-contract edit that breaks the DOCTYPE
+rule is caught by the probe in < 5 min; probes use the same runner
+substrate as sweeps; deterministic asserts only (no LLM judge).
+
+**Effort.** M. **Dependencies.** none (uses existing runners; feeds #21's
+bundle tracking).
+
+## [ ] 25. Failure regression corpus (production-case ingestion)
+
+**Problem.** Every broken artifact the benchmark discovers - the platformer
+iterations with no `<canvas>`, the n-body that never animates, the
+prompt-echoing free-tier outputs - is discarded after the sweep. They are
+exactly the regression cases a prompt/scorer change should re-test, and
+paperclip's Phase 4 is precisely "production-case ingestion".
+
+**Inspiration.** paperclip `doc/plans/2026-03-13-agent-evals-framework.md`
+Phase 4 ("Production-case ingestion" - grow the suite from real usage);
+their `mcp-gateway-gap-memo.md` / `mcp-gateway-run-summary.md` pattern
+(evals write gap memos from real failures). Graphify's
+`# NOTE:`-as-node idea (rationale comments become queryable first-class
+nodes) also applies: each corpus case should carry its provenance.
+
+**Design sketch.**
+
+- `scripts/ingest-failures.mjs`: after a sweep (or from the event log,
+  #1), collect every failed iteration (score < 40 OR a tripped check OR
+  `no <canvas>`-class findings) and write
+  `lib/lab/llm-benchmark/failure-corpus/<model>-<task>-<n>.html` +
+  `provenance.json` (`{ modelId, taskId, score, failedChecks, promptBundleHash, sweepRunId }`).
+- `scripts/probe-corpus.mjs`: re-run the corpus through the CURRENT
+  scorer/prompt and report "still broken" vs "now fixed" - the release-gate
+  for prompt/scorer changes ("did the deepseek platformer iteration that
+  emitted no canvas start emitting one?").
+- Corpus is gitignored for artifacts, committed for provenance metadata;
+  `verify-results.mjs` (#5) fails if a corpus case that used to be broken
+  is broken in a NEW way not covered by existing checks (drives #10's
+  check registry to grow).
+
+**Acceptance criteria.** After the next sweep, corpus contains the broken
+iterations with provenance; a prompt change re-probes them; the report
+shows fixed-vs-still-broken counts.
+
+**Effort.** M-L. **Dependencies.** #1 (event log) + #10 (check registry).
+
+## [ ] 26. Eval methodology rigor for reports (blind judging + agreement)
+
+**Problem.** The benchmark's published claims ("the behavioural scorer
+caught a model lying") rest on our own scoring. Any future claim that
+compares scoring approaches, or a model-vs-model verdict that hinges on
+judgement, should meet a documented methodology bar - otherwise it's
+anecdote.
+
+**Inspiration.** graphify `BENCHMARKS.md` methodology: every system "ran
+on the same harness with the same model and budgets", scored by "a judge
+blind-validated against a second judge (90.6% agreement, Cohen's kappa
+0.81)", with full per-system tables + reproduction commands. Paperclip's
+plan cites OpenAI eval best practices and LangSmith/Braintrust scorer
+docs for the same reason. Also dsh's postmortem discipline (#16): claims
+link their guardrails.
+
+**Design sketch.**
+
+- `docs/lab/llm-benchmark/eval-methodology.md`: a short standing doc
+  defining the bar for any NEW scoring component or comparison claim:
+  (1) same harness + same budgets across systems; (2) if a human judge or
+  LLM judge is used, blind + double-scored subset with Cohen's kappa
+  reported; (3) reproduction commands (which sweeps, which commits);
+  (4) per-claim guardrail links (test, invariant, or postmortem).
+- Add a `task bench:methodology-check` that verifies any blog/report
+  claiming a comparison cites its reproduction inputs (sweep ids from #1,
+  commit SHA) - mechanical, not judgmental.
+- The behavioral scorer's own audit trail (checks + iterationCheckResults)
+  is the existing evidence layer this doc formalizes.
+
+**Acceptance criteria.** The methodology doc exists and is linked from the
+skill; a report template mentions kappa for any judged comparison; the
+mechanical check passes on current posts.
+
+**Effort.** S.
+
+## [ ] 27. Committed code graph for this repo (graphify-out)
+
+**Problem.** Future agent sessions (and the user) traverse this benchmark
+module tree by grep. A committed, queryable graph makes "what connects the
+scorer to the runner?" a 5-second query instead of a read-through - the
+same tool this roadmap's reference studies were processed with.
+
+**Inspiration.** graphify's team workflow (README: "graphify-out/ is meant
+to be committed to git"; auto-rebuild hook; union merge driver) and the
+paperclip/dsh explorations above that were completed in minutes with it.
+
+**Design sketch.**
+
+- Install graphify (`uv tool install graphifyy`), run
+  `graphify extract . --code-only` on the repo (excluding `out/`,
+  `node_modules/`, `.next/` via existing .gitignore - it honors
+  `.gitignore` automatically), `graphify cluster-only .`, commit
+  `graphify-out/` (graph.json + GRAPH_REPORT.md; skip graph.html at
+  >5000-node limit or raise `GRAPHIFY_VIZ_NODE_LIMIT`).
+- `.githooks/post-commit` (or the existing pre-push): `graphify update .`
+  when tracked source changed - AST-only, ~seconds at this repo size.
+- Document in AGENTS.md/CLAUDE.md: "codebase questions -> `graphify query/
+  path/explain` before reading files" (mirrors graphify's own
+  query-first guidance); optionally expose via MCP
+  (`python -m graphify.serve graphify-out/graph.json`) for opencode.
+- Consider the same for the OMEGA harness repo (larger, packages/* tree -
+  the graph pays for itself there).
+
+**Acceptance criteria.** `graphify-out/` committed; a fresh clone can
+`graphify explain/query` without re-extraction; the post-commit hook
+rebuilds on change; CLAUDE.md documents query-first.
+
+**Effort.** S.
+
+---
 
 # Already shipped (do not re-propose)
 

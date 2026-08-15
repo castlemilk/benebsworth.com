@@ -55,13 +55,25 @@ export function isPublished(p: LoadedPost): boolean {
 export function getAllPosts(): LoadedPost[] {
   const slugs = fs.readdirSync(BLOG_DIR).filter((d) =>
     fs.existsSync(path.join(BLOG_DIR, d, 'index.mdx')))
-  const posts = slugs.map((slug) => {
-    const raw = fs.readFileSync(path.join(BLOG_DIR, slug, 'index.mdx'), 'utf8')
+  const posts: LoadedPost[] = []
+  for (const slug of slugs) {
+    // A post whose index.mdx vanishes between existsSync and readFileSync
+    // (an in-flight edit, or a test fixture being torn down in a parallel
+    // worker) is skipped, not fatal — the loader should never crash the
+    // build over transient FS races. Real corruption still surfaces as a
+    // readFileSync error below the existsSync filter (e.g. EISDIR/EPERM).
+    let raw: string
+    try {
+      raw = fs.readFileSync(path.join(BLOG_DIR, slug, 'index.mdx'), 'utf8')
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code === 'ENOENT') continue
+      throw err
+    }
     const { data, content } = matter(raw)
     require_(data.title, `${slug}: missing title`)
     require_(data.date, `${slug}: missing date`)
     const { wordCount, readingTime } = readingStats(content)
-    return {
+    posts.push({
       slug,
       title: String(data.title),
       date: String(data.date),
@@ -84,8 +96,8 @@ export function getAllPosts(): LoadedPost[] {
       draft: Boolean(data.draft ?? false),
       release: data.release !== false,
       body: content,
-    }
-  })
+    })
+  }
   return posts.sort((a, b) => +new Date(b.date) - +new Date(a.date))
 }
 

@@ -343,6 +343,11 @@ describe('prose linter CLI', () => {
     const frontmatter = '---\ntitle: Test\ndate: 1970-01-01\ndraft: true\n---\n'
     writeFileSync(fixture, frontmatter + Array.from({ length: 4 }, () => 'one — two — three — four — five').join(' '))
     const hard = spawnSync(process.execPath, [cli, '--files', fixture, '--ci', '--format', 'json'], { cwd: root, encoding: 'utf8' })
+    // Remove index.mdx FIRST, then the empty dir: a parallel worker scanning
+    // content/blog in getAllPosts() races this cleanup — recursive rmSync
+    // unlinks the file between its existsSync and readFileSync, surfacing a
+    // transient ENOENT in lib/content.test.ts (pre-push flake, 2026-08-13).
+    rmSync(resolve(root, 'content/blog/prose-lint-hard-failure/index.mdx'), { force: true })
     rmSync(resolve(root, 'content/blog/prose-lint-hard-failure'), { recursive: true, force: true })
     expect(hard.status).toBe(1)
 

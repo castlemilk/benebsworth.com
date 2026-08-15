@@ -28,6 +28,14 @@ https://github.com/deepseek-ai/deepseek-harness /tmp/dsh`, 2026-08-13):
 first (`cd /tmp/dsh && git pull`) since the repo is in active developer
 preview and its API churns.
 
+Items marked "paperclip study" were pulled from
+`git clone --depth 1 https://github.com/paperclipai/paperclip /tmp/paperclip`
+(2026-08-15) and processed with graphify v0.9.43 (`uv tool install
+graphifyy`; `graphify extract . --code-only` + `graphify cluster-only .` —
+fully local tree-sitter, no API keys). Graph output lives at
+`/tmp/paperclip/graphify-out/` (graph.json + GRAPH_REPORT.md). Re-run after
+pulling: `cd /tmp/paperclip && git pull && graphify update . --code-only`.
+
 ## Reference: DeepSeek Harness (dsh)
 
 **Repo:** https://github.com/deepseek-ai/deepseek-harness (MIT, 103k stars,
@@ -138,6 +146,222 @@ Lessons for this benchmark:
   ad-hoc per-page logic.
 - Retry-as-durable-event (#6 above) hardens the event-log design (#1) and the
   invariants suite (#5).
+
+---
+
+# Reference: Paperclip (paperclipai)
+
+**Repo:** https://github.com/paperclipai/paperclip ("The open-source app
+everyone uses to manage agents at work", MIT, TypeScript monorepo; 78k
+stars). Processed with graphify v0.9.43 (tree-sitter, code-only, fully
+local): **38,308 nodes / 108,097 edges / 974 communities** from 3,927
+source files in ~2 min. Clone at `/tmp/paperclip`, graph at
+`/tmp/paperclip/graphify-out/`.
+
+Key ideas for this benchmark:
+
+1. **Eval framework with a two-stage maturity plan** (`evals/` +
+   `doc/plans/2026-03-13-agent-evals-framework.md`). Stage 1: promptfoo
+   bootstrap — narrow behavior evals (categories: `core`, `governance`,
+   `mcp_gateway`, `phase5_memory`, `release_gates`) with deterministic
+   assertions (contains / not-contains / inline JS + named metrics) run
+   across multiple models via OpenRouter. Stage 2: first-party TS harness
+   running real scenarios against seeded state. Scoring model: deterministic
+   checks + structured rubrics + pairwise judging + efficiency metrics from
+   telemetry. **"Compare bundles, not just models"** — model + prompt +
+   skills + policy together.
+2. **Release-gate evals.** `tests/release-gates.yaml` — prompt-level policy
+   regressions that must hold before a release (alongside server/API and
+   QA gates): no spurious wake work, no duplicate checkout, scoped wake
+   payloads honored. Evals are a release gate, not an afterthought.
+3. **Adapter layer, industrialized** (`packages/adapters/` — 12 adapters:
+   claude-local, codex-local, gemini-local, grok-local, opencode-local,
+   pi-local, cursor-*, openclaw-gateway, hermes; `packages/adapter-utils/`).
+   Every local agent CLI runs behind an **execution-target abstraction**
+   (`execution-target.ts`): resolve + verify the command exists, resolve
+   timeout from policy, session identity + managed home dir, local vs remote
+   vs sandbox target, command-install checks, billing inference. ACP
+   (Agent Client Protocol) where available (`acpx-engine/`), raw spawn
+   otherwise — the same opencode/agy/codex runner pattern we hand-rolled in
+   `runners/`, but with a shared, tested substrate (`execution-target.test.ts`,
+   `command-managed-runtime.test.ts`, `local-process-sandbox.test.ts`, …).
+4. **Redaction as a first-class utility** (`command-redaction.ts`,
+   `log-redaction.ts`): regex-based secret scrubbing applied to command
+   lines AND logs (`SECRET_NAME_PATTERN` matches
+   `api_key|token|authorization|bearer|secret|passwd|password|credential|jwt|private_key|cookie|connectionstring`).
+   Confirms and enriches backlog #4 — scrub at THREE points (env passed to
+   the CLI, command lines we log, and captured output).
+5. **Sandbox managed runtimes + workspace sync** (`sandbox-managed-runtime.ts`,
+   `sandbox-file-sync.ts`, `git-workspace-sync.ts`, `workspace-restore-merge.ts`):
+   agents run inside sandboxes with file-sync back to the workspace — the
+   grown-up version of our scratch-dir + printed-path artifact handoff
+   (TODO #3). `session-compaction.ts` adds a compaction policy
+   (maxSessionRuns / maxRawInputTokens / maxSessionAgeHours) + native
+   context-management detection — the model for any future long-horizon task.
+6. **Tool gateway with access policy** (`server/src/services/tool-gateway.ts`,
+   a 154-degree graph hub; `tool-access-policy.ts`, secrets, activity logs,
+   approval paths; `mcp_gateway` eval category covers fail-closed, rate-limit
+   backoff, credential repair, approval drift). Their artifact-running
+   environment is mediated; ours is an opaque-origin iframe (effectively
+   fail-closed). The `mcp_gateway` eval cases are the checklist for any
+   future benchmark task that requires network/tool interactions.
+7. **Billing inference** (`adapter-utils/src/billing.ts`,
+   `inferOpenAiCompatibleBiller`): per-adapter usage + cost inference — a
+   sharper model than our crude `estimateCost` (tokens × rate).
+
+**Graphify meta-finding:** the graphify workflow itself is a tooling win for
+our OWN repos — code-only extraction is local, deterministic, ~2 min for
+3.9k files, and produces a queryable graph (`graphify query/path/explain`)
+plus god nodes + communities. Worth committing `graphify-out/` for the
+benchmark module tree and the OMEGA harness repo so future sessions
+traverse with queries instead of greps. (Their LOCOMO benchmark claims
+0.497 recall@10 vs mem0's 0.048 — code graph beats vector memory for
+code-answer tasks.)
+
+---
+
+# P2 — Adapter and eval hardening (paperclip study additions)
+
+## [ ] 19. Execution-target abstraction for CLI providers
+
+**Problem.** Each CLI provider in `runners/` hand-rolls spawn, timeout, and
+artifact handoff; there is no shared notion of "the execution target" —
+local process vs remote host vs sandbox — and no pre-flight verification
+that the CLI is installed (a missing `opencode` binary surfaces as a cryptic
+`ENOENT` in the middle of a sweep).
+
+**Inspiration.** paperclip `packages/adapter-utils/src/execution-target.ts`
+(+ `command-managed-runtime.ts`, `sandbox-managed-runtime.ts`): one shared
+substrate that resolves the command, verifies it exists, resolves the
+timeout from policy, carries session identity + managed home dir, and
+selects local/remote/sandbox execution — with per-mode tests.
+
+**Design sketch.**
+
+- `runners/execution-target.ts`: `resolveExecutionTarget(cfg, model, task)`
+  returning `{ command, args, env, cwd, timeoutMs, sandbox? }` after
+  pre-flight checks:
+  - command resolvable (`command -v` or `which`) with a clear error naming
+    the provider + install hint;
+  - timeout resolved from the provider config with a documented default;
+  - session identity (model/task/iteration) attached for logging.
+- Refactor `generateFromCli` to consume the target (behavior unchanged).
+- Pre-flight sweep check in `run-benchmark.mjs`: verify every targeted
+  CLI provider's command exists BEFORE the sweep starts (fail fast, not
+  mid-sweep).
+
+**Acceptance criteria.** Missing CLI errors at sweep start with an install
+hint; timeout resolution is single-source; existing sweeps behave
+identically; tests for command resolution + error paths.
+
+**Effort.** M.
+
+## [ ] 20. Redaction at three points (env, command lines, logs)
+
+**Problem.** #4 scrubs the env handed to the model CLI. Paperclip's
+`command-redaction.ts` + `log-redaction.ts` show the same hygiene belongs
+on the command lines we log (a `-m`/`--model` or env var containing a
+secret appears in `[harness]` logs and the run log) and on captured output
+before it reaches the event log (#1).
+
+**Inspiration.** paperclip `packages/adapter-utils/src/{command-redaction,log-redaction}.ts`
+— `SECRET_NAME_PATTERN` + bearer/assignment regexes.
+
+**Design sketch.** Port the `SECRET_NAME_PATTERN` regex set into
+`lib/lab/llm-benchmark/redact.ts` and apply it:
+- to every `[harness]`/`[rescore]` log line that embeds CLI args (the
+  `runCli` timeout error currently prints the FULL argv including any
+  `--api-key`-style flags);
+- to raw output before the event log stores it (#1);
+- to the `configSnapshot` in sweep dumps (#2).
+Test with the paperclip fixture patterns (bearer headers, `KEY=value`
+assignments, `--flag=value`).
+
+**Acceptance criteria.** A sweep log with a fake `API_KEY=…` env/flag shows
+`***REDACTED***`; unit tests for the three call sites.
+
+**Effort.** S–M. **Dependencies.** #1 (for log-output redaction).
+
+## [ ] 21. Bundle comparison + release-gate evals
+
+**Problem.** The benchmark compares models, but the biggest real-world
+lever is the prompt bundle (task prompt + sandbox constraints + system
+persona). The deepseek/platformer swings showed prompt changes matter; we
+have no way to track "results under prompt-bundle vN" or gate on prompt
+regressions.
+
+**Inspiration.** paperclip's "compare bundles, not just models" and the
+`release_gates` eval category — prompt-level policy regressions gate
+releases.
+
+**Design sketch.**
+
+- `BenchmarkResult` gains `promptBundle?: string` (a hash of the task
+  prompt + sandbox constraints + prelude version, recorded at sweep time —
+  `withSandboxConstraints` output is already hashed for the cache key).
+- `scripts/prompt-bundle-audit.mjs`: for a given model/task, compare
+  records under different `promptBundle` hashes and report score deltas —
+  the "did the prompt change help" question, per model.
+- `scripts/verify-results.mjs` (#5) gains a release-gate mode: records
+  whose prompt bundle differs from the current default are flagged
+  (`stale-prompt`) rather than silently displayed as current.
+- UI: the model/task page shows the bundle hash with a tooltip when it
+  differs from current.
+
+**Acceptance criteria.** Sweeps stamp `promptBundle`; the audit script
+reports per-bundle deltas; stale-prompt records are visibly flagged; tests
+cover the hashing + flagging.
+
+**Effort.** M. **Dependencies.** #5.
+
+## [ ] 22. Gateway-behavior task archetype (fail-closed/backoff/no-fabrication)
+
+**Problem.** All seven tasks are single-shot artifact generations. The
+interesting agentic failure modes — fail-closed on denied tools, backoff
+on rate limits, refusing to fabricate missing credentials, honoring
+approval — are untested because no task exercises them.
+
+**Inspiration.** paperclip's `mcp_gateway` eval category: 12 behavioral
+cases (denied tool → fail closed without retry/bypass; rate limit → back
+off without busy-looping; missing credential → block on repair without
+inventing secrets; approval drift → treat changed snapshots as stale).
+
+**Design sketch.** New task archetype `governance-interaction`: the artifact
+is a small HTML console wired to a fake gateway (in-page JS gateway with a
+stubbed auth/tool surface). New checks in `scorers/checks.ts`:
+`gateway-fail-closed` (denied action does not retry/bypass),
+`gateway-rate-backoff` (rate-limited action waits, no busy loop),
+`gateway-no-fabrication` (missing credential renders repair UI, no fake
+token). Category + registry row + demo component + pre/post MDX.
+
+**Acceptance criteria.** At least 3 of the paperclip `mcp_gateway` cases
+have a runnable artifact task; behavioral checks discriminate broken vs
+working gateways; the task appears on the board like any other.
+
+**Effort.** L.
+
+## [ ] 23. Billing inference per provider
+
+**Problem.** `estimateCost` (harness.ts) multiplies raw token counts by
+flat per-1k rates; CLI providers estimate tokens from char counts, so
+costs drift from reality (codex reports totals; opencode reports nothing).
+
+**Inspiration.** paperclip `adapter-utils/src/billing.ts`
+(`inferOpenAiCompatibleBiller`): per-adapter usage + cost inference with a
+shared `UsageSummary` shape.
+
+**Design sketch.** `CliRunnerConfig.parseTokens` already exists per
+provider — standardize its output into a `UsageSummary`-like shape
+(`{ inputTokens, outputTokens, cachedRead?, cachedWrite? }`) and let each
+provider carry a `biller` fn (codex: parse totals + heuristic split, as
+today; opencode/agy: char estimate, as today; api providers: pass through).
+`aggregateRuns` stores the summary; cost math stays in one place.
+
+**Acceptance criteria.** Token accounting is single-shape across all
+providers; a provider with real usage data (codex) reports closer to
+reality; tests for the summary normalization.
+
+**Effort.** S–M.
 
 ---
 

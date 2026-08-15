@@ -56,6 +56,88 @@ The single most valuable ideas for this benchmark:
    workspace + session ID per task; the same tool that does real work runs the
    eval. (https://github.com/deepseek-ai/deepseek-harness/blob/master/BENCHMARK.md,
    https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/guide/python-sdk.md)
+6. **Retries are durable, loop-level events.** `packages/llm/llm-retry` never
+   wraps the adapter call: every provider attempt stays one call, and each
+   retry opens a fresh turn over the same durable history, appending
+   `llm/retry` + `llm/retry-started` events with a canonical policy key
+   (provider + every behavior-affecting field). Honoring
+   `providerRetryAfterMs` replaces local backoff. The invariant companion
+   checks every retry event pairs with a started event and names the right
+   turn/step. (packages/llm/llm-retry/README.md)
+7. **Per-session composition ("presets").** An agent preset is a directory
+   holding an `agent.cordis.yml` that gives one session its own tools and
+   prompt sections while other sessions keep theirs; a preset naming a
+   process-global service is rejected at mount rather than colliding.
+   (packages/preset/README.md)
+8. **Projection is one pure function with an incremental cache.** Session
+   history is derived by folding `deriveEventMessage` over the log's surface
+   (O(new nodes), cached per generation, deep-frozen shared messages) — the
+   same function drives live history, external reconstruction, and pure
+   projections, so they can never disagree.
+   (packages/core/session/src/{index.ts,surface.ts})
+
+---
+
+# Deep-dive #2: graph analysis (2026-08-13)
+
+Processed the full package tree with a standalone graph script
+(`/tmp/dsh-graph.cjs`; edges = in-repo `peerDependencies`, the canonical
+runtime-dependency signal — same semantics as dsh's own
+`scripts/gen-module-graph.ts`).
+
+```mermaid
+flowchart TD
+  invariants --> session
+  invariants --> llm
+  invariants --> agent
+  invariants --> tools
+  session --> agent
+  llm --> agent
+  session --> tools
+  llm --> tools
+  agent --> agent-loop
+  agent --> system-prompt
+  session --> system-prompt
+  tools --> system-prompt
+  sandbox --> tool-bash
+  sandbox-policy --> tool-bash
+  sandbox --> tool-fs
+  sandbox-policy --> tool-fs
+```
+
+Topology facts:
+
+- **219 packages, 1089 edges, ZERO cycles.** The tree is a strict DAG —
+  the load-bearing claim behind "no privileged core": effects unwind on
+  unload only because dependencies never point upward. `collectPackageGraph`
+  enforces dependency-safe ordering structurally.
+- **`invariants` is the universal hub: 218/218 packages depend on it, and it
+  depends on nothing in-repo** (a leaf). Every package registers package-owned
+  runtime checks — the invariant registry is the connective tissue, not a
+  domain package.
+- **The core is tiny.** Five packages anchor the tree: `invariants` (218
+  consumers), `session` (80), `llm` (78), `agent` (58), `tools` (43).
+  Everything hangs off the session log + the LLM adapter seam — consistent
+  with "the log is the source of truth".
+- **The client/web group is 39 packages (18% of the tree)** — the UI surface
+  is as engineered as the runtime.
+- **Leaf composition packages consume the most** (`agent-spine-demo` 22 deps,
+  `client-ui-conversation` 19, `api-remotes` 15, `subagent` 15) — the heavy
+  consumers are compositions, not libraries.
+- **Every model-facing tool pulls the same pipeline stack** (`tool-bash`,
+  `tool-pwsh`, `tool-fs` each depend on `sandbox` + `sandbox-policy` +
+  `user-approval` + `system-prompt` + `tools`) — the tool pipeline is a
+  repeated composition, which is why the seam pattern pays off.
+
+Lessons for this benchmark:
+
+- Keep our own dependency direction strict (`types.ts` → `scorers`/`runners`
+  → `scripts`) and make it TESTED — see #17.
+- The "projection is one pure function" rule (#8 above) is the implementation
+  note for the run-trace UI (#9): one `projectIteration(log)` pure fold, never
+  ad-hoc per-page logic.
+- Retry-as-durable-event (#6 above) hardens the event-log design (#1) and the
+  invariants suite (#5).
 
 ---
 
@@ -595,6 +677,67 @@ exists.
 documented; the skill's sweep-operations runbook links them.
 
 **Effort.** S.
+
+---
+
+# P3 — Architecture guards (graph-analysis additions)
+
+## [ ] 17. Dependency-layering guard test
+
+**Problem.** The dsh graph analysis showed the whole 219-package tree is a
+strict zero-cycle DAG and that this is load-bearing ("no privileged core",
+effects unwind on unload). Our harness is small enough to keep honest with a
+cheap structural test instead of process discipline.
+
+**Inspiration.** dsh `scripts/gen-module-graph.ts` + `collectPackageGraph`
+(enforces dependency-safe ordering structurally) and the zero-cycle result of
+the 2026-08-13 analysis.
+
+**Design sketch.**
+
+- `lib/lab/llm-benchmark/layering.test.ts`: parse import statements across
+  the benchmark module tree (`types.ts`, `scorers/`, `runners/`, `scripts/`)
+  and assert:
+  - no cycles (Tarjan SCC, all components size 1);
+  - `types.ts` imports nothing from `scorers/`/`runners/`/`scripts/`;
+  - `scripts/` may import everything; `scorers/` and `runners/` never import
+    from `scripts/`.
+- Keep the rule documented in the skill's file map.
+
+**Acceptance criteria.** Test passes today; a deliberate cycle (e.g. a
+`runners/` file importing `scorers/` that imports back) fails the test;
+no per-file lint config needed.
+
+**Effort.** S.
+
+## [ ] 18. Sweep resume from event-log checkpoints
+
+**Problem.** A killed sweep (quota trip, timeout, crash) re-runs completed
+work from scratch on the next attempt. With the event log (#1) recording an
+`aggregate` event per completed (model, task), a resume can skip finished
+work — dsh's fork-with-boundary concept applied to sweep checkpoints.
+
+**Inspiration.** dsh `Session.fork(source, boundary, childId)` with typed
+rejection codes (`INVALID_BOUNDARY`, `OPEN_TURN`, `SESSION_NOT_FOUND`) and
+contiguous-seq boundaries (packages/core/session/src/index.ts) — resuming
+from a durable boundary is a first-class operation, not a heuristic.
+
+**Design sketch.**
+
+- `run-benchmark.mjs` gains `--resume <run-id>`: reads the target sweep's
+  event log, collects (model, task) pairs with a complete `aggregate` event,
+  and skips them (unless `RUN_BUST_CACHE=1` overrides).
+- Boundary rule: resume is valid only at an `aggregate` event (a completed
+  task), mirroring dsh's `OPEN_TURN` rejection — never resume mid-iteration.
+- Invalid boundary (missing log, corrupted tail) fails loud with a typed
+  error, not a silent partial run.
+- Merge safety unchanged: `mergeResults` still protects 0-success records.
+
+**Acceptance criteria.** Kill a sweep mid-run, resume with `--resume`, and
+completed tasks are skipped (log shows "resume: skipping <model> <task> (from
+run <id>)"); an invalid boundary errors; tests cover the boundary rule.
+
+**Effort.** M. **Dependencies.** #1 (event log), #3 (sweep retention).
 
 ---
 

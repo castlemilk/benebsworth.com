@@ -108,3 +108,10 @@ tmp/
 
 # Task runner fingerprint cache (Taskfile sources/generates checksums)
 .task/
+
+# graphify knowledge graph - commit the queryable graph, ignore regenerables
+graphify-out/cache/
+graphify-out/graph.html
+graphify-out/.graphify_*
+graphify-out/*/
+!graphify-out/manifest.json

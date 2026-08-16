@@ -411,38 +411,26 @@ the pre-run dump shows exactly what will run.
 
 **Effort.** S–M.
 
-## [ ] 3. Forensic session retention (don't rm the scratch dir)
+## [x] 3. Forensic session retention (don't rm the scratch dir)
 
-**Problem.** `generateFromCli` (`lib/lab/llm-benchmark/runners/cli.ts`) creates
-a `mkdtemp` scratch dir per call and deletes it in `finally`. When a model
-writes to ITS OWN session dir instead of the scratch (opencode
-`/private/tmp`, agy's scratch), the artifact is orphaned and may be
-overwritten by the next iteration or left behind as repo-root junk
-(gitignored now, but unrecoverable and unlinked to the run).
-
-**Inspiration.** dsh keeps `session_root` as a first-class directory with a
-fresh session ID per task; the session JSONL + workspace are the run's
-persistence layer (python-sdk.md "Choose workspace and session IDs").
-
-**Design sketch.**
-
-- `run-benchmark.mjs` gains `SWEEP_ROOT` (default `sweeps/<ts>/`) and passes
-  it down; `generateFromCli` moves scratch dirs UNDER the sweep root
-  (`<sweep-root>/scratch/<model>-<task>-<n>/`) instead of `os.tmpdir()`.
-- On success the scratch dir is kept (gitignored); a `scripts/sweep-clean.mjs
-  --keep <n> --older-than <days>` prunes old runs.
-- Artifact handoff fallback #3 in cli.ts keeps working (absolute printed
-  path) but a successful read also **copies** the artifact into the sweep
-  root's `artifacts/` as `artifact-<model>-<task>-<n>.html`, so the run's
-  outputs survive regardless of where the model wrote them.
-- Outcome: every iteration's emitted artifact is recoverable post-hoc, and
-  #1's event log can link to it.
-
-**Acceptance criteria.** A sweep leaves a `sweeps/<ts>/` tree with scratch
-dirs + a copied artifact per successful iteration; repo root stays clean;
-prune script works; skill documents the layout.
-
-**Effort.** S–M. **Dependencies.** none (makes #1's file links concrete).
+**Shipped.** `scripts/run-benchmark.mjs` computes one sweep root at startup
+(`SWEEP_ROOT` env, default `sweeps/<run-id>/` where the id is a
+filesystem-safe ISO timestamp from `sweepRunId()`), logs it, and calls
+`setSweepRoot()` — module-level state exported from `runners/cli.ts`, the
+`setBustCache` precedent, so no provider config signature changed. Under a
+sweep root `generateFromCli` puts its scratch at
+`<root>/scratch/<model>-<task>-<n>/` (reused on a retry) and NEVER deletes it
+— on success or failure: forensic value peaks when the iteration failed.
+Whichever of the three file-handoff paths wins also copies the bytes to
+`<root>/artifacts/artifact-<model>-<task>-<n>.html` with `{ flag: 'wx', mode:
+0o600 }` (the hardening carried over from #4), best-effort so it can never
+fail a run. With no sweep root (unit tests, library use) the original
+mkdtemp + delete-in-finally behaviour is byte-for-byte unchanged.
+`npx tsx scripts/sweep-clean.mjs [--keep 5] [--older-than 14] [--dry-run]`
+prunes whole run trees; the policy lives in the unit-tested pure
+`selectPrunable()` (`lib/lab/llm-benchmark/sweep.ts`) and deletes a run only
+when it is BOTH beyond the keep-count AND older than the age floor. `sweeps/`
+is gitignored; layout + rationale are in the skill.
 
 ---
 
@@ -1350,6 +1338,9 @@ with their capture metadata.
   classification.
 - Credential scrub on CLI spawns (`scrubEnv()` in `runners/cli.ts`, #4) —
   the model child never inherits an ambient key/token/secret.
+- Forensic sweep retention (#3): `sweeps/<run-id>/{scratch,artifacts}/` kept
+  on success AND failure, artifact copied out of wherever the model wrote it,
+  `scripts/sweep-clean.mjs` prunes (keep-count AND age floor).
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Frame-prelude hardening + sandbox prompt contract + per-iteration

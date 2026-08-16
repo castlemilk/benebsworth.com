@@ -45,6 +45,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Dependency sandbox | `lib/lab/llm-benchmark/sandbox/inline-dependencies.ts` |
 | Shared frame prelude (DOCTYPE, CSS reset, storage shim, in-iframe error overlay) | `lib/lab/llm-benchmark/frame-prelude.ts` |
 | Run script | `scripts/run-benchmark.mjs` |
+| Sweep run-id + prune policy (`sweepRunId`, `selectPrunable`) | `lib/lab/llm-benchmark/sweep.ts` |
+| Sweep prune script | `scripts/sweep-clean.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
 | Route/path helpers | `lib/lab/llm-benchmark/nav.ts` |
@@ -300,7 +302,54 @@ export async function generateMyProvider(
 - **Recording failure rows**: an all-failed task only persists a `fail`/`timeout` record after ALL its iterations complete (killing mid-task loses the row). To give a model honest rows on tasks it can't complete, run `RUN_ITERATIONS=1 RUN_TIMEOUT_MS=600000 RUN_MAX_RETRIES=0` over those tasks — each persists a `timeout` record (score 0, `cli_timeout` for CLI providers), the UI renders it amber, and the registry coverage test counts it.
 - **Long sweeps**: launch `nohup env ... npx tsx scripts/run-benchmark.mjs > /tmp/sweep.log 2>&1 &`; results are written incrementally after every task. `pgrep -f run-benchmark` for liveness; the log only grows on completion/retry, so check `ps -o etime -p $(pgrep -f "opencode run")` to distinguish "working" from "stalled". The sweep hard-exits after the final write (`closeSandbox()` + `process.exit`), so a zombie sweep is a bug, not a feature.
 - **Process hygiene** (`lib/lab/llm-benchmark/runners/cli.ts`): CLI children spawn `detached` in their own process group; a timeout SIGTERMs the group and SIGKILLs 1s later, so opencode's bun server grandchild dies with the parent (regression-tested in `cli.test.ts`). Stray `./artifact.html` the model drops in the repo root is gitignored.
+- **Forensic sweep retention** (see the dedicated section below): every run keeps its CLI scratch dirs and a copy of each handed-off artifact under `sweeps/<run-id>/`. Nothing is deleted at run time, including on failure; `npx tsx scripts/sweep-clean.mjs` is the cleanup path.
 - **Never push mid-sweep**: pre-push runs the full suite; the registry coverage test is now stable against partially-swept models (see below), but a sweep still races the build if results.json changes under it. Push between sweeps.
+
+## Forensic sweep retention (`sweeps/<run-id>/`)
+
+`scripts/run-benchmark.mjs` computes ONE sweep root at startup and logs it
+(`[harness] sweep root: sweeps/2026-08-16T09-30-12/`). The run id is a
+filesystem-safe ISO timestamp (`sweepRunId()` in `lib/lab/llm-benchmark/sweep.ts` —
+colons stripped, sortable). Override the whole path with `SWEEP_ROOT=` (absolute
+or repo-relative). `sweeps/` is gitignored.
+
+```
+sweeps/<run-id>/
+  scratch/<model-id>-<task-id>-<n>/          the CLI's actual working directory
+  artifacts/artifact-<model-id>-<task-id>-<n>.html   copy of the handed-off artifact
+```
+
+- **Plumbing**: `setSweepRoot(dir)` exported from `runners/cli.ts` — module-level
+  state, following the `setBustCache` precedent in `cache.ts`, because the sweep
+  root is a property of the RUN, not of any one provider config. With NO sweep
+  root set (unit tests, ad-hoc library use) `generateFromCli` keeps its original
+  behaviour exactly: `mkdtemp(tmpdir())` scratch, deleted in `finally`.
+- **Kept on failure too.** Under a sweep root the scratch dir is never deleted —
+  not on success, and deliberately not on failure. Forensic value peaks exactly
+  when an iteration failed: the half-written file, the wrongly-named file, or
+  the nothing-at-all is the evidence for why. Pruning is the cleanup path.
+- **Artifact copy**: whenever ANY of the three file-handoff paths in
+  `generateFromCli` wins (direct name, largest-HTML scan, printed absolute
+  path), the same bytes are copied into `artifacts/`. This is what makes an
+  iteration's output recoverable when the model wrote it into its OWN session
+  dir (opencode `/private/tmp`, agy's scratch) instead of the scratch. Written
+  `{ flag: 'wx', mode: 0o600 }` — exclusive create, owner-only. A retry of the
+  same iteration reuses the filename and hits `EEXIST`; that case unlinks and
+  re-creates exclusively rather than opening with `'w'`, so the
+  never-silently-clobber-another-writer guarantee survives. The copy is
+  best-effort: a failure logs `[harness] could not retain artifact …` and never
+  fails a run whose generation succeeded.
+- **Pruning**:
+  ```bash
+  npx tsx scripts/sweep-clean.mjs --dry-run              # show what would go
+  npx tsx scripts/sweep-clean.mjs                        # keep 5 newest + anything < 14d
+  npx tsx scripts/sweep-clean.mjs --keep 10 --older-than 30
+  ```
+  A run is deleted only when it is BOTH beyond the keep-count AND older than the
+  age floor (`selectPrunable()` in `sweep.ts`, unit-tested). The conjunction is
+  deliberate: keep-only would evict this morning's evidence after a burst of ten
+  sweeps in one afternoon, and age-only would evict every run you have after a
+  quiet month.
 
 ## Verification Checklist
 

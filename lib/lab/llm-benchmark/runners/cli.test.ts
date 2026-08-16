@@ -1,9 +1,33 @@
 import { describe, it, expect } from 'vitest'
-import { extractLikelyCode, generateFromCli, runCli, scrubEnv } from './cli'
+import { extractLikelyCode, generateFromCli, runCli, scrubEnv, setSweepRoot } from './cli'
 import { spawn } from 'node:child_process'
-import { mkdtemp, writeFile, rm, readFile } from 'node:fs/promises'
+import { mkdtemp, writeFile, rm, readFile, stat } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+
+const TEST_MODEL = {
+  id: 'test',
+  name: 'Test',
+  provider: 'Test',
+  costPer1kInputUsd: 0,
+  costPer1kOutputUsd: 0,
+  contextWindow: 1000,
+  capabilities: '',
+}
+
+const TEST_TASK = {
+  id: 't',
+  category: 'ui-building' as const,
+  title: 'T',
+  blurb: '',
+  prompt: 'do it',
+  runtimeHint: '',
+  iterationsDefault: 1,
+  methodNotes: '',
+  demoComponentName: 'D',
+  slug: 't',
+}
 
 const FULL_COMPONENT = [
   'export default function App() {',
@@ -195,6 +219,151 @@ describe('generateFromCli unique artifact names', () => {
 
     expect(response.output).toContain('<h1>NAME_TEST</h1>')
     await rm(dir, { recursive: true, force: true })
+  }, 20_000)
+})
+
+describe('generateFromCli sweep retention', () => {
+  it('keeps the scratch dir under the sweep root and copies the artifact to artifacts/ (0600)', async () => {
+    const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
+    const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
+    const script = join(scriptDir, 'cli.mjs')
+    // The fake CLI writes ./artifact.html relative to its cwd (the scratch dir),
+    // exercising the direct-name handoff path.
+    await writeFile(
+      script,
+      [
+        "import { writeFileSync } from 'node:fs'",
+        "writeFileSync('artifact.html', '<h1>SWEEP_KEEP</h1>')",
+        "console.log('DONE')",
+      ].join('\n')
+    )
+
+    try {
+      setSweepRoot(sweepRoot)
+      const response = await generateFromCli(
+        { command: process.execPath, artifactViaFile: true, buildArgs: () => [script] },
+        TEST_MODEL,
+        TEST_TASK,
+        0
+      )
+
+      expect(response.output).toContain('<h1>SWEEP_KEEP</h1>')
+
+      // Scratch dir survives, at the deterministic per-iteration path.
+      const scratch = join(sweepRoot, 'scratch', 'test-t-0')
+      expect(existsSync(scratch)).toBe(true)
+      expect(await readFile(join(scratch, 'artifact.html'), 'utf8')).toContain('SWEEP_KEEP')
+
+      // And the artifact is copied into the sweep root's artifacts/ dir.
+      const copy = join(sweepRoot, 'artifacts', 'artifact-test-t-0.html')
+      expect(await readFile(copy, 'utf8')).toContain('SWEEP_KEEP')
+      const info = await stat(copy)
+      expect(info.mode & 0o777).toBe(0o600)
+    } finally {
+      setSweepRoot(undefined)
+      await rm(sweepRoot, { recursive: true, force: true })
+      await rm(scriptDir, { recursive: true, force: true })
+    }
+  }, 20_000)
+
+  it('overwrites the artifact copy on a retry of the same iteration', async () => {
+    const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
+    const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
+    const script = join(scriptDir, 'cli.mjs')
+    await writeFile(
+      script,
+      [
+        "import { writeFileSync } from 'node:fs'",
+        "writeFileSync('artifact.html', `<h1>${process.env.BENCH_MARKER ?? 'first'}</h1>`)",
+        "console.log('DONE')",
+      ].join('\n')
+    )
+
+    try {
+      setSweepRoot(sweepRoot)
+      const config = { command: process.execPath, artifactViaFile: true, buildArgs: () => [script] }
+      await generateFromCli(config, TEST_MODEL, TEST_TASK, 0)
+      await generateFromCli(
+        { ...config, env: { BENCH_MARKER: 'second' } },
+        TEST_MODEL,
+        TEST_TASK,
+        0
+      )
+
+      const copy = join(sweepRoot, 'artifacts', 'artifact-test-t-0.html')
+      expect(await readFile(copy, 'utf8')).toContain('<h1>second</h1>')
+    } finally {
+      setSweepRoot(undefined)
+      await rm(sweepRoot, { recursive: true, force: true })
+      await rm(scriptDir, { recursive: true, force: true })
+    }
+  }, 30_000)
+
+  it('keeps the scratch dir when the CLI fails, so the failure is forensically inspectable', async () => {
+    const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
+    const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
+    const script = join(scriptDir, 'cli.mjs')
+    await writeFile(
+      script,
+      [
+        "import { writeFileSync } from 'node:fs'",
+        "writeFileSync('half-written.html', '<h1>PARTIAL</h1>')",
+        "console.error('boom')",
+        'process.exit(3)',
+      ].join('\n')
+    )
+
+    try {
+      setSweepRoot(sweepRoot)
+      await expect(
+        generateFromCli(
+          { command: process.execPath, artifactViaFile: true, buildArgs: () => [script] },
+          TEST_MODEL,
+          TEST_TASK,
+          4
+        )
+      ).rejects.toThrow(/exited with code 3/)
+
+      const scratch = join(sweepRoot, 'scratch', 'test-t-4')
+      expect(existsSync(scratch)).toBe(true)
+      expect(await readFile(join(scratch, 'half-written.html'), 'utf8')).toContain('PARTIAL')
+    } finally {
+      setSweepRoot(undefined)
+      await rm(sweepRoot, { recursive: true, force: true })
+      await rm(scriptDir, { recursive: true, force: true })
+    }
+  }, 20_000)
+
+  it('deletes the scratch dir when NO sweep root is set (unit-test / ad-hoc behaviour)', async () => {
+    const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
+    const script = join(scriptDir, 'cli.mjs')
+    // Record the scratch cwd OUTSIDE the scratch dir so the assertion survives
+    // the deletion we are asserting on.
+    const cwdFile = join(scriptDir, 'cwd.txt')
+    await writeFile(
+      script,
+      [
+        "import { writeFileSync } from 'node:fs'",
+        `writeFileSync(${JSON.stringify(cwdFile)}, process.cwd())`,
+        "writeFileSync('artifact.html', '<h1>EPHEMERAL</h1>')",
+        "console.log('DONE')",
+      ].join('\n')
+    )
+
+    try {
+      const response = await generateFromCli(
+        { command: process.execPath, artifactViaFile: true, buildArgs: () => [script] },
+        TEST_MODEL,
+        TEST_TASK,
+        0
+      )
+      expect(response.output).toContain('<h1>EPHEMERAL</h1>')
+      const scratch = await readFile(cwdFile, 'utf8')
+      expect(scratch).toContain('llm-bench-')
+      expect(existsSync(scratch)).toBe(false)
+    } finally {
+      await rm(scriptDir, { recursive: true, force: true })
+    }
   }, 20_000)
 })
 

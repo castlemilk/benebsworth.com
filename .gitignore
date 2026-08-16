@@ -103,6 +103,11 @@ lib/lab/llm-benchmark/results-*-html.json
 # sweeps use unique artifact-<model>-<task>-<n>.html names).
 /artifact*.html
 
+# Forensic sweep retention: per-run CLI scratch dirs + copied artifacts
+# (sweeps/<run-id>/{scratch,artifacts}/). Kept on purpose, including on
+# failure; prune with `npx tsx scripts/sweep-clean.mjs`.
+sweeps/
+
 # Temporary working directories for scripts and manual review
 tmp/
 

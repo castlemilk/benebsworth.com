@@ -6,8 +6,10 @@ import { BENCHMARK_RESULTS, mergeResults } from '../lib/lab/llm-benchmark/result
 import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.ts'
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
+import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
+import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
 import { readFileSync, writeFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { relative, resolve } from 'node:path'
 
 const MODELS_TO_RUN = process.env.RUN_MODELS ? process.env.RUN_MODELS.split(',') : ['kimi-k2.7']
 const TASKS_TO_RUN = process.env.RUN_TASKS ? process.env.RUN_TASKS.split(',') : undefined
@@ -19,6 +21,14 @@ const RUN_BUST_CACHE = process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUS
 // CLI file-handoff providers (agy/codex/opencode) write unique per-iteration
 // artifact files now, so concurrency > 1 is safe — but each opencode call is
 // slow (minutes), so the default of 3 is a reasonable sweep shape.
+
+// Forensic sweep root, computed ONCE at startup so every iteration of this run
+// writes under the same tree: sweeps/<run-id>/{scratch,artifacts}/. Gitignored
+// and never pruned by the run itself — `node scripts/sweep-clean.mjs` is the
+// cleanup path. Override with SWEEP_ROOT (absolute or repo-relative).
+const SWEEP_ROOT = resolve(process.cwd(), process.env.SWEEP_ROOT ?? `sweeps/${sweepRunId()}`)
+setSweepRoot(SWEEP_ROOT)
+console.log(`[harness] sweep root: ${relative(process.cwd(), SWEEP_ROOT)}/`)
 
 async function main() {
   const models = BENCHMARK_MODELS.filter((m) => MODELS_TO_RUN.includes(m.id))

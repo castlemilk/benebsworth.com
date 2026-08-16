@@ -1,6 +1,6 @@
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { spawn } from 'node:child_process'
-import { mkdtemp, readFile, readdir, rm, stat } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -55,6 +55,65 @@ function fileArtifactSuffix(name: string): string {
 }
 
 const DEFAULT_ARTIFACT_FILENAME = 'artifact.html'
+
+/**
+ * Sweep root for forensic retention, e.g. `<repo>/sweeps/2026-08-16T09-30-12`.
+ *
+ * Module-level rather than a `CliRunnerConfig` field (the `setBustCache`
+ * precedent in `cache.ts`): the sweep root is a property of the RUN, not of any
+ * one provider, and threading it through all three provider config signatures
+ * would put the same value in three places for no gain. `scripts/run-benchmark.mjs`
+ * sets it once at startup; library/unit-test callers leave it unset and keep the
+ * historical ephemeral-tmpdir behaviour.
+ */
+let sweepRoot: string | undefined
+
+/** Set (or clear, with `undefined`) the run's forensic sweep root. */
+export function setSweepRoot(dir: string | undefined): void {
+  sweepRoot = dir
+}
+
+export function getSweepRoot(): string | undefined {
+  return sweepRoot
+}
+
+/**
+ * Copy a successfully handed-off artifact into `<sweep-root>/artifacts/`.
+ *
+ * WHY a copy: the three handoff paths in `generateFromCli` read from wherever
+ * the agent actually wrote (scratch dir, or its OWN session dir — opencode
+ * `/private/tmp`, agy's scratch). Only the copy is guaranteed to be under the
+ * run's tree, named for the iteration that produced it, and therefore
+ * recoverable and linkable after the fact.
+ *
+ * `{ flag: 'wx', mode: 0o600 }` — exclusive create, owner-only — is the
+ * defensive default: never silently clobber, never widen permissions on
+ * model-authored HTML. The one legitimate clobber is a RETRY of the same
+ * iteration, which reuses the same filename; that case unlinks first and
+ * re-creates exclusively rather than opening with 'w', so the exclusive-create
+ * guarantee still holds against any OTHER writer racing us for the name.
+ *
+ * Never throws: retention is best-effort bookkeeping and must not fail a run
+ * whose generation already succeeded.
+ */
+async function retainArtifact(root: string, fileName: string, contents: string): Promise<void> {
+  try {
+    const dir = join(root, 'artifacts')
+    await mkdir(dir, { recursive: true })
+    const dest = join(dir, fileName)
+    try {
+      await writeFile(dest, contents, { flag: 'wx', mode: 0o600 })
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err
+      await rm(dest, { force: true })
+      await writeFile(dest, contents, { flag: 'wx', mode: 0o600 })
+    }
+  } catch (err) {
+    console.warn(
+      `[harness] could not retain artifact ${fileName}: ${err instanceof Error ? err.message : String(err)}`
+    )
+  }
+}
 
 function estimateTokensFromChars(chars: number): number {
   // Rough heuristic: ~4 characters per token for English/code.
@@ -219,22 +278,33 @@ export function runCli(
 
 export async function generateFromCli(
   config: CliRunnerConfig,
-  _model: BenchmarkModel,
+  model: BenchmarkModel,
   task: BenchmarkTask,
   iterationIndex = 0
 ): Promise<GenerationResponse> {
   const start = Date.now()
   const timeoutMs = config.timeoutMs ?? 10 * 60 * 1000
   const artifactName = config.artifactName?.(iterationIndex) ?? DEFAULT_ARTIFACT_FILENAME
+  // Snapshot the sweep root for the whole call: a concurrent setSweepRoot must
+  // not make the create and the cleanup disagree about which regime we are in.
+  const root = sweepRoot
 
   let scratchDir: string | undefined
   try {
     if (config.artifactViaFile) {
-      scratchDir = await mkdtemp(join(tmpdir(), 'llm-bench-'))
+      if (root) {
+        // Deterministic, per-iteration, and RETAINED (see the finally below).
+        // Reused as-is when it already exists, so a retry of the same iteration
+        // lands in the same place instead of failing on EEXIST.
+        scratchDir = join(root, 'scratch', `${model.id}-${task.id}-${iterationIndex}`)
+        await mkdir(scratchDir, { recursive: true })
+      } else {
+        scratchDir = await mkdtemp(join(tmpdir(), 'llm-bench-'))
+      }
     }
 
     const suffix = config.artifactViaFile ? fileArtifactSuffix(artifactName) : INLINE_PRINT_SUFFIX
-    const args = config.buildArgs(task.prompt + suffix, _model)
+    const args = config.buildArgs(task.prompt + suffix, model)
 
     const { stdout, stderr } = await runCli(config.command, args, {
       cwd: scratchDir ?? config.cwd,
@@ -299,6 +369,12 @@ export async function generateFromCli(
         if (best && best.contents.trim().length > 0) output = best.contents
       }
     }
+    // Every file-handoff path above (direct name, largest-HTML scan, printed
+    // absolute path) lands here with `output` set; stdout extraction below does
+    // not. Copy exactly the bytes we handed off, from whichever path won.
+    if (output !== undefined && root) {
+      await retainArtifact(root, `artifact-${model.id}-${task.id}-${iterationIndex}.html`, output)
+    }
     if (output === undefined) {
       output = extractLikelyCode(stdout)
     }
@@ -315,7 +391,13 @@ export async function generateFromCli(
       runtimeMs: Date.now() - start,
     }
   } finally {
-    if (scratchDir) {
+    // Under a sweep root the scratch dir is NEVER deleted — not on success and
+    // deliberately not on failure either. Forensic value peaks exactly when an
+    // iteration failed: the half-written file, the wrongly-named file, the
+    // nothing-at-all are the evidence for why. `scripts/sweep-clean.mjs` is the
+    // cleanup path, not this finally. Without a sweep root (unit tests, ad-hoc
+    // library use) the historical ephemeral-tmpdir behaviour is unchanged.
+    if (scratchDir && !root) {
       await rm(scratchDir, { recursive: true, force: true })
     }
   }

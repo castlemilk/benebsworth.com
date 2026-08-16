@@ -9,6 +9,7 @@ import type {
   Scorer,
 } from '../types'
 import { estimateCost } from '../harness'
+import { formatQuotaWindow, parseQuotaResetMs } from '../quota'
 import { generateOpenAI, type OpenAIConfig } from './openai'
 import { generateAnthropic, type AnthropicConfig } from './anthropic'
 import { generateGoogle, type GoogleConfig } from './google'
@@ -683,6 +684,10 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
       const now = new Date().toISOString()
       const scorer = cfg.scorer ?? selectScorer(task)
       const runs: IterationRun[] = []
+      // Set when a quota error states its own reset window (agy: "Resets in
+      // 57h27m"). Stamped onto the aggregate below so a sweep killed by quota
+      // leaves behind the answer to "when can I run this again?".
+      let quotaNextResetAt: string | undefined
 
       // One append-only log per (model, task) for this sweep. Undefined — and
       // therefore a complete no-op at every call site — when no run-log dir is
@@ -827,6 +832,16 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             console.error(
               `[harness] quota/billing exhausted for ${model.name} — skipping remaining iterations and all further ${model.name} tasks this run`
             )
+            // Providers usually state the next window in the error itself; keep
+            // it rather than making the operator parse the message by hand.
+            const resetMs = parseQuotaResetMs(err instanceof Error ? err.message : String(err))
+            if (resetMs !== undefined) {
+              const resetAt = new Date(Date.now() + resetMs)
+              quotaNextResetAt = resetAt.toISOString()
+              console.error(
+                `[harness] next window for ${model.name}: ~${formatQuotaWindow(resetMs)} (resets ~${resetAt.toLocaleString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' })})`
+              )
+            }
             break
           }
           if (!isTransientError(err)) {
@@ -849,7 +864,11 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
       await saveQueue
 
       try {
-        return [await aggregateRuns(runs, iterations, model, task, scorer, now, log)]
+        // Post-stamp rather than a seventh aggregateRuns parameter: the quota
+        // window is a property of THIS RUN's failure, not of the aggregation,
+        // and the signature has grown enough already.
+        const result = await aggregateRuns(runs, iterations, model, task, scorer, now, log)
+        return [quotaNextResetAt ? { ...result, quotaNextResetAt } : result]
       } finally {
         await log?.close()
       }

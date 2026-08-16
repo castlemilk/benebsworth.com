@@ -214,6 +214,44 @@ describe('createProviderRunner quota handling', () => {
     consoleErrorSpy.mockRestore()
   })
 
+  it('stamps the estimated next window when the quota error states one', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    generateMock.mockRejectedValue(
+      new Error('Agy error: individual quota reached. Resets in 2h')
+    )
+    const runner = createProviderRunner({ moonshot: { apiKey: 'k' }, bustCache: true, maxRetries: 0 })
+
+    const before = Date.now()
+    const [result] = await runner.runTask(MODEL, TASK, 5)
+    const after = Date.now()
+
+    expect(result.failureReason).toBe('quota_exhausted')
+    expect(result.quotaNextResetAt).toBeDefined()
+    const stamped = Date.parse(result.quotaNextResetAt!)
+    expect(stamped).toBeGreaterThanOrEqual(before + 2 * 60 * 60 * 1000)
+    expect(stamped).toBeLessThanOrEqual(after + 2 * 60 * 60 * 1000)
+
+    // The operator line names the model and the window, so a killed sweep's
+    // log answers "when can I run this again?" without re-reading raw errors.
+    const windowLog = consoleErrorSpy.mock.calls
+      .map((args) => String(args[0]))
+      .find((line) => line.includes('next window'))
+    expect(windowLog).toMatch(/Test Kimi/)
+    expect(windowLog).toMatch(/~2h/)
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('leaves the window absent when the quota error states none', async () => {
+    generateMock.mockRejectedValue(
+      new Error('Moonshot error 403: usage limit for this billing cycle (access_terminated_error)')
+    )
+    const runner = createProviderRunner({ moonshot: { apiKey: 'k' }, bustCache: true, maxRetries: 0 })
+
+    const [result] = await runner.runTask(MODEL, TASK, 5)
+    expect(result.failureReason).toBe('quota_exhausted')
+    expect(result.quotaNextResetAt).toBeUndefined()
+  })
+
   it('does not trip other models on the same provider', async () => {
     generateMock.mockRejectedValue(
       new Error('Moonshot error 403: usage limit for this billing cycle (access_terminated_error)')

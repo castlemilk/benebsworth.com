@@ -473,30 +473,24 @@ Runbook detail lives in the skill (Operational Gotchas). No UI change was
 needed: nothing under `components/`/`app/` renders failure reasons yet — the
 model page shows `status` only (see #8/#9 for surfacing them).
 
-## [ ] 7. Quota-reset estimator
+## [x] 7. Quota-reset estimator
 
-**Problem.** Agy quota errors include "Resets in 57h27m" but the harness
-discards it. A sweep started right after a trip dies instantly on every
-iteration; the operator has to parse the error message themselves.
-
-**Inspiration.** dsh surfaces provider errors through the telemetry/session
-layers rather than burying them in retry logs; the point is operational
-decision-support from structured signals.
-
-**Design sketch.**
-
-- In `isQuotaError` / breaker trip site (`generateOne`, provider.ts), regex
-  `/(?:resets in|reset in)\s*(\d+h)?\s*(\d+m)?/i` from the error message and
-  log `[harness] next window for <model>: ~57h27m (resets ~Fri 02:04)`.
-- Persist `quotaNextResetAt?: string` on `BenchmarkResult` (from the breaker
-  path) so a failed sweep's records carry the next window; UI can show "retry
-  after" on timeout/quota rows.
-- `run-benchmark.mjs`: pre-flight check — if any target model has a stored
-  `quotaNextResetAt` in the future, warn and abort before burning calls.
-
-**Acceptance criteria.** A quota-killed sweep prints the next window; a
-subsequent sweep pre-flight warns about still-locked models; tests for the
-regex parsing.
+**Shipped.** `lib/lab/llm-benchmark/quota.ts` holds the pure pieces:
+`parseQuotaResetMs()` (agy's `Resets in 57h27m`, plus `resets in 2h`,
+`Reset in 45m`, arbitrary whitespace, case-insensitive; a digitless
+`resets in` returns undefined, never 0), `formatQuotaWindow()`, and
+`quotaLockedModels(results, modelIds, now)`. At the breaker trip site in
+`runTask` the runner logs `[harness] next window for <model>: ~2h (resets ~Fri
+02:04)` and post-stamps `quotaNextResetAt` (ISO) onto the aggregate —
+post-stamp deliberately, so `aggregateRuns`'s signature didn't grow a seventh
+parameter. `mergeResults` carries that stamp from a dropped 0-success record
+onto the good record it kept (account metadata, not measurement data — every
+scored field is untouched); without it the stamp would only ever survive for
+(model, task) pairs with no prior success, i.e. never for the models worth
+pre-flighting. `scripts/run-benchmark.mjs` re-reads results.json fresh, and
+aborts with exit 1 BEFORE building the runner when a targeted model is still
+locked; `RUN_IGNORE_QUOTA_LOCK=1` proceeds with a warning. No UI change: still
+nothing under `components/`/`app/` renders failure/quota fields (see #8/#9).
 
 **Effort.** S.
 
@@ -1308,6 +1302,10 @@ with their capture metadata.
 - Forensic sweep retention (#3): `sweeps/<run-id>/{scratch,artifacts}/` kept
   on success AND failure, artifact copied out of wherever the model wrote it,
   `scripts/sweep-clean.mjs` prunes (keep-count AND age floor).
+- Quota-reset estimator (#7): `quota.ts` parses the provider's stated window,
+  the breaker stamps `BenchmarkResult.quotaNextResetAt` (carried through
+  `mergeResults`' protection path), and the sweep script pre-flight-aborts on a
+  still-locked model unless `RUN_IGNORE_QUOTA_LOCK=1`.
 - Per-iteration run log (#1): append-only `sweeps/<run-id>/<model>-<task>.jsonl`
   (header + request/response/retry/clean/failure/check/aggregate events,
   content-addressed `spill/`), `BenchmarkResult.runLogRef`, replayed by

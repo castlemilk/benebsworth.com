@@ -62,7 +62,8 @@ function succeededIterations(r: BenchmarkResult): number {
  * auth failure) never replaces a baseline record that did produce artifacts.
  * A quota outage says nothing about the model; clobbering good data with it
  * would corrupt the comparison. Such drops are logged by the caller-visible
- * `onProtect` hook.
+ * `onProtect` hook. The one thing a dropped record does contribute is its
+ * `quotaNextResetAt` estimate — see the carry-over comment below.
  */
 export function mergeResults(
   baseline: BenchmarkResult[],
@@ -75,7 +76,16 @@ export function mergeResults(
     const prev = byKey.get(key)
     if (prev && succeededIterations(prev) > 0 && succeededIterations(f) === 0) {
       onProtect?.(prev, f)
-      continue // keep the baseline record
+      // Keep the baseline record — but carry over the fresh run's estimated
+      // quota window if it has one. That stamp is operational METADATA about
+      // the ACCOUNT (when may I run again?), not measurement data about the
+      // model, so copying it forward doesn't violate the never-clobber-good-data
+      // contract: every scored field stays exactly as the good run left it.
+      // Without this the stamp would only ever survive for (model, task) pairs
+      // that had no prior success, and the pre-flight — which is the whole
+      // point of recording it — would be blind for well-covered models.
+      byKey.set(key, f.quotaNextResetAt ? { ...prev, quotaNextResetAt: f.quotaNextResetAt } : prev)
+      continue
     }
     byKey.set(key, f)
   }

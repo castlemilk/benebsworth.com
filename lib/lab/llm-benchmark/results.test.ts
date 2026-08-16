@@ -40,6 +40,37 @@ describe('mergeResults', () => {
     expect(onProtect).toHaveBeenCalledOnce()
   })
 
+  it('carries the dropped record’s quota window onto the record it kept', () => {
+    // The stamp is account metadata (when may I run again?), not measurement
+    // data — and without this carry-over it would be lost for exactly the
+    // models that HAVE good data, i.e. the ones a sweep is most likely to
+    // target, leaving the pre-flight blind.
+    const baseline = [makeResult()]
+    const fresh = [
+      makeResult({
+        score: 0,
+        status: 'fail',
+        iterationsSucceeded: 0,
+        output: 'individual quota reached. Resets in 57h27m',
+        quotaNextResetAt: '2026-01-03T09:27:00.000Z',
+      }),
+    ]
+    const merged = mergeResults(baseline, fresh)
+    expect(merged[0].status).toBe('success')
+    expect(merged[0].score).toBe(80)
+    expect(merged[0].output).toBe('real artifact')
+    expect(merged[0].quotaNextResetAt).toBe('2026-01-03T09:27:00.000Z')
+    // Purity: the caller's baseline array is untouched.
+    expect(baseline[0].quotaNextResetAt).toBeUndefined()
+  })
+
+  it('leaves the kept record alone when the dropped one has no quota window', () => {
+    const baseline = [makeResult({ quotaNextResetAt: '2026-01-03T09:27:00.000Z' })]
+    const fresh = [makeResult({ score: 0, status: 'fail', iterationsSucceeded: 0 })]
+    const merged = mergeResults(baseline, fresh)
+    expect(merged[0].quotaNextResetAt).toBe('2026-01-03T09:27:00.000Z')
+  })
+
   it('replaces a baseline success with a fresh success', () => {
     const baseline = [makeResult({ score: 70 })]
     const fresh = [makeResult({ score: 90 })]

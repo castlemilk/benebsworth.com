@@ -184,6 +184,18 @@ export interface BenchmarkResult {
    * runs with logging off.
    */
   runLogRef?: { runId: string; file: string }
+  /**
+   * When this model's quota is next expected to be available, as an ISO
+   * timestamp — parsed from the provider's own error text at the moment the
+   * circuit breaker tripped (agy says `Resets in 57h27m`).
+   *
+   * Present only on records from a run that a quota error killed AND whose
+   * error message stated a window; absent everywhere else, including quota
+   * trips whose message said nothing about a reset. It is an estimate from the
+   * provider, not a guarantee. `scripts/run-benchmark.mjs` pre-flights against
+   * it and refuses to start a sweep for a still-locked model.
+   */
+  quotaNextResetAt?: string
   /** 'live' (real harness run) or 'seeded' (hand-authored sample data). */
   source?: BenchmarkSource
   /** Raw generated output from the model (code, derivation, etc.) for side-by-side comparison. */

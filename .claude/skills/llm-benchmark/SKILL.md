@@ -47,6 +47,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Run script | `scripts/run-benchmark.mjs` |
 | Sweep run-id + prune policy (`sweepRunId`, `selectPrunable`) | `lib/lab/llm-benchmark/sweep.ts` |
 | Sweep prune script | `scripts/sweep-clean.mjs` |
+| Quota-reset parsing + pre-flight lock check (`parseQuotaResetMs`, `quotaLockedModels`) | `lib/lab/llm-benchmark/quota.ts` |
 | Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
@@ -305,6 +306,7 @@ export async function generateMyProvider(
 - **Long sweeps**: launch `nohup env ... npx tsx scripts/run-benchmark.mjs > /tmp/sweep.log 2>&1 &`; results are written incrementally after every task. `pgrep -f run-benchmark` for liveness; the log only grows on completion/retry, so check `ps -o etime -p $(pgrep -f "opencode run")` to distinguish "working" from "stalled". The sweep hard-exits after the final write (`closeSandbox()` + `process.exit`), so a zombie sweep is a bug, not a feature.
 - **Process hygiene** (`lib/lab/llm-benchmark/runners/cli.ts`): CLI children spawn `detached` in their own process group; a timeout SIGTERMs the group and SIGKILLs 1s later, so opencode's bun server grandchild dies with the parent (regression-tested in `cli.test.ts`). Stray `./artifact.html` the model drops in the repo root is gitignored.
 - **Forensic sweep retention** (see the dedicated section below): every run keeps its CLI scratch dirs and a copy of each handed-off artifact under `sweeps/<run-id>/`. Nothing is deleted at run time, including on failure; `npx tsx scripts/sweep-clean.mjs` is the cleanup path.
+- **Quota windows and the pre-flight** (`lib/lab/llm-benchmark/quota.ts`): when a quota error states its own window (agy: `individual quota reached. Resets in 57h27m`) the circuit-breaker trip logs `[harness] next window for <model>: ~57h27m (resets ~Fri 02:04)` and stamps `quotaNextResetAt` (ISO) on that run's record; `mergeResults` carries the stamp onto the good record it protected, so it survives even when the failed run is dropped. On the next sweep, `run-benchmark.mjs` re-reads results.json and ABORTS (exit 1, before any call) if a targeted model is still locked: `[harness] <model> is quota-locked until <ISO> (~Xh Ym from now)`. Escape hatch when the estimate is stale or wrong: `RUN_IGNORE_QUOTA_LOCK=1` proceeds with a warning.
 - **Never push mid-sweep**: pre-push runs the full suite; the registry coverage test is now stable against partially-swept models (see below), but a sweep still races the build if results.json changes under it. Push between sweeps.
 
 ## Forensic sweep retention (`sweeps/<run-id>/`)

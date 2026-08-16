@@ -9,6 +9,7 @@ import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
 import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
 import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
+import { formatQuotaWindow, quotaLockedModels } from '../lib/lab/llm-benchmark/quota.ts'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 
@@ -19,6 +20,8 @@ const CONCURRENCY = process.env.RUN_CONCURRENCY ? Number(process.env.RUN_CONCURR
 const TIMEOUT_MS = process.env.RUN_TIMEOUT_MS ? Number(process.env.RUN_TIMEOUT_MS) : undefined
 const MAX_RETRIES = process.env.RUN_MAX_RETRIES !== undefined ? Number(process.env.RUN_MAX_RETRIES) : undefined
 const RUN_BUST_CACHE = process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUST_CACHE === 'true'
+const IGNORE_QUOTA_LOCK =
+  process.env.RUN_IGNORE_QUOTA_LOCK === '1' || process.env.RUN_IGNORE_QUOTA_LOCK === 'true'
 // CLI file-handoff providers (agy/codex/opencode) write unique per-iteration
 // artifact files now, so concurrency > 1 is safe — but each opencode call is
 // slow (minutes), so the default of 3 is a reasonable sweep shape.
@@ -48,6 +51,39 @@ async function main() {
     process.exit(1)
   }
 
+  // Where results live. Read here (not just written) because the pre-flight
+  // below has to see the CURRENT on-disk state, not the snapshot bundled into
+  // BENCHMARK_RESULTS at import time.
+  const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
+  const readResults = () => {
+    try {
+      return JSON.parse(readFileSync(outPath, 'utf8'))
+    } catch {
+      return BENCHMARK_RESULTS // first run or unreadable file
+    }
+  }
+
+  // Quota pre-flight: a model whose last run died on a quota error with a
+  // stated reset window is guaranteed to fail every call until that window
+  // passes. Abort BEFORE creating the runner rather than burning a sweep (and
+  // a sweep tree, and log noise) on certain failures.
+  const locks = quotaLockedModels(readResults(), models.map((m) => m.id))
+  if (locks.length > 0) {
+    for (const lock of locks) {
+      const remainingMs = Date.parse(lock.until) - Date.now()
+      console.error(
+        `[harness] ${lock.modelId} is quota-locked until ${lock.until} (~${formatQuotaWindow(remainingMs)} from now)`
+      )
+    }
+    if (!IGNORE_QUOTA_LOCK) {
+      console.error(
+        '[harness] aborting before any calls — set RUN_IGNORE_QUOTA_LOCK=1 to run anyway (the estimate comes from the provider and can be wrong or stale)'
+      )
+      process.exit(1)
+    }
+    console.warn('[harness] RUN_IGNORE_QUOTA_LOCK=1 — proceeding despite the lock above')
+  }
+
   const runner = createProviderRunner({
     moonshot: process.env.MOONSHOT_API_KEY
       ? { apiKey: process.env.MOONSHOT_API_KEY, baseUrl: process.env.MOONSHOT_BASE_URL }
@@ -74,15 +110,11 @@ async function main() {
   // Replace existing results for the (model, task) combinations we just ran;
   // keep everything else. mergeResults protects good baseline records from
   // being overwritten by 0-success quota/outage failures.
-  const outPath = resolve(process.cwd(), process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
   const writeResults = (fresh) => {
     // Re-read the on-disk results on every write so concurrent runs (or a
     // hand edit between iterations) aren't clobbered by the stale snapshot
     // this process loaded at startup.
-    let baseline = BENCHMARK_RESULTS
-    try {
-      baseline = JSON.parse(readFileSync(outPath, 'utf8'))
-    } catch { /* first run or unreadable file — fall back to the startup snapshot */ }
+    const baseline = readResults()
     const merged = mergeResults(baseline, fresh, (kept, dropped) => {
       console.warn(
         `[harness] kept existing ${kept.modelId} :: ${kept.taskId} (${kept.status}) — fresh run produced 0 successful iterations`

@@ -37,7 +37,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { open, type FileHandle } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 
-import { redactValue } from './redact'
+import { redactText, redactValue } from './redact'
 import { parseRunLog, SPILL_PREVIEW_CHARS } from './runlog-format'
 import type {
   RunLogConfigSnapshot,
@@ -177,9 +177,19 @@ function spillLargeStrings(dir: string, value: unknown): unknown {
  * locator. Used for the aggregate event's artifact: the JSONL must stay small
  * enough to serve, and the bytes are already in the spill store (content
  * addressing dedupes with the `clean` event that produced them).
+ *
+ * REDACTS FIRST, exactly like `append` does. This is not belt-and-braces: the
+ * caller (`runners/provider.ts`) spills the aggregate's artifact OUTSIDE the
+ * append path, so without this the one spill file `publish-traces.mjs` actually
+ * serves would be the RAW artifact — breaching "a credential a model echoed
+ * back never lands in the JSONL or in a spill file". It also restores the
+ * dedupe: redaction is deterministic, so the aggregate's spill is byte-identical
+ * to (and therefore the same content-addressed file as) the `clean` event's
+ * spill of the same artifact. Skipping it produced TWO files, with the aggregate
+ * pointing at the unredacted one.
  */
 export function forceSpill(dir: string, content: string): SpilledString {
-  return writeSpill(dir, content)
+  return writeSpill(dir, redactText(content))
 }
 
 class JsonlRunLog implements RunLog {

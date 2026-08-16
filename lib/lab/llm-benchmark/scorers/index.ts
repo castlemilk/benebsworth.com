@@ -59,7 +59,23 @@ const HTML_CATEGORIES = new Set([
  * category heuristic is the fallback for unstamped rows.
  */
 export function selectScorer(task: BenchmarkTask): Scorer {
-  if (task.scorer) return SCORERS[task.scorer]
+  if (task.scorer) {
+    const scorer = SCORERS[task.scorer]
+    if (!scorer) {
+      // Mount-time-style rejection at FIRST USE. Returning undefined here used
+      // to surface as a `scorer.score is not a function` TypeError deep inside
+      // aggregateRuns — i.e. hours into a paid sweep, with a stack that names
+      // neither the task nor the typo'd name. A plugin that failed to register
+      // its scorer, or a row that declares a name nobody ships, is a
+      // configuration error and must read like one.
+      throw new Error(
+        `task "${task.id}" declares scorer "${task.scorer}", which is not registered ` +
+          `(registered: ${registeredScorerNames().sort().join(', ')}). ` +
+          `Built-ins live in scorers/index.ts; a plugin's scorers register from its \`scorers\` contribution.`
+      )
+    }
+    return scorer
+  }
   if (HTML_CATEGORIES.has(task.category)) return behavioralScorer
   return textScorer
 }

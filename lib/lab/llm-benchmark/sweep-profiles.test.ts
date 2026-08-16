@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   SWEEP_PROFILES,
   estimateSweepDuration,
+  excludedPluginModelConflicts,
   excludedPluginTaskConflicts,
   filterTasksByPlugins,
   isTaskEnabled,
@@ -350,6 +351,32 @@ describe('plugin task filtering', () => {
     expect(excludedPluginTaskConflicts(['equation-solver'], tasks, [])).toEqual([])
     expect(excludedPluginTaskConflicts(['tic-tac-toe'], tasks, ['community-tasks'])).toEqual([])
     expect(excludedPluginTaskConflicts(undefined, tasks, [])).toEqual([])
+  })
+
+  describe('excludedPluginModelConflicts', () => {
+    // Plugin MODELS are merged into BENCHMARK_MODELS unconditionally, so
+    // `--plugins` filtering tasks alone let a plugin's model (and generator)
+    // run under `--plugins none` while the run-log header snapshotted
+    // `plugins: []`.
+    const builtinModel = { id: 'kimi-k2.7' }
+    const pluginModel = { id: 'echo-1', pluginId: 'echo-provider' }
+
+    it('reports a selected plugin model whose plugin is not mounted', () => {
+      expect(excludedPluginModelConflicts([builtinModel, pluginModel], [])).toEqual([
+        { modelId: 'echo-1', pluginId: 'echo-provider' },
+      ])
+      expect(excludedPluginModelConflicts([pluginModel], ['community-tasks'])).toEqual([
+        { modelId: 'echo-1', pluginId: 'echo-provider' },
+      ])
+    })
+
+    it('reports nothing for built-ins, an active plugin, or the all-plugins default', () => {
+      expect(excludedPluginModelConflicts([builtinModel], [])).toEqual([])
+      expect(excludedPluginModelConflicts([pluginModel], ['echo-provider'])).toEqual([])
+      // `undefined` = every registered plugin, the default when --plugins is unset.
+      expect(excludedPluginModelConflicts([pluginModel], undefined)).toEqual([])
+      expect(excludedPluginModelConflicts([], [])).toEqual([])
+    })
   })
 })
 

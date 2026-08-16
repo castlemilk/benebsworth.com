@@ -391,7 +391,10 @@ function AggregateLine({ result }: { result: Record<string, unknown> }) {
             {num('iterationsSucceeded')}/{num('iterations')} succeeded
           </span>
         )}
-        {typeof result.failureReason === 'string' && (
+        {/* `failureReason` is 'none' on a successful aggregate — rendering that
+            in failure red says "something went wrong" about a clean run. Only a
+            real reason is worth the ink (and the colour). */}
+        {typeof result.failureReason === 'string' && result.failureReason !== 'none' && (
           <span className="text-rose-600 dark:text-rose-400">{result.failureReason}</span>
         )}
         {cost !== undefined && <span className="tabular-nums">${cost.toFixed(4)}</span>}

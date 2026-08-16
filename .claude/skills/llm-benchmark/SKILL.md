@@ -217,7 +217,10 @@ a flag); mixing it with real ids is fatal. A built-in task is ALWAYS eligible �
 bundle selection is not a task allowlist. An unknown plugin id exits 1 with the
 roster printed, and `--task <plugin task> --plugins none` is a **fatal
 conflict** (one flag asks for the task, the other unmounts its supplier) rather
-than a silently smaller sweep. `--dump-config` prints a `plugins` row with
+than a silently smaller sweep. The same is true of a plugin **MODEL**
+(`--model <plugin model> --plugins none`): plugin models are merged into the
+registry unconditionally, so without that check a plugin's model and generator
+ran while the run-log header snapshotted `plugins: []`. `--dump-config` prints a `plugins` row with
 provenance, the `tasks` row appends `[N excluded by plugin set]`, and the
 resolved set is written into every run log header's `configSnapshot.plugins`.
 
@@ -234,21 +237,36 @@ npx tsx scripts/run-benchmark.mjs --resume 2026-08-16T09-30-12 --dump-config
 npx tsx scripts/run-benchmark.mjs --profile slow-model --resume 2026-08-16T09-30-12
 ```
 
-- **Boundary rule.** A pair is complete iff its log parses AND holds an
-  `aggregate` event. Anything else — no log, torn tail from a mid-iteration
-  kill, unreadable header — re-runs **from scratch**, never mid-iteration. Both
-  decisions print a line (`resume: skipping …` / `resume: re-running … (incomplete:
-  N events, no aggregate)`), because a silent skip and a sweep that ran nothing
-  look identical in a transcript.
+- **Boundary rule.** A pair is skipped iff its log parses AND holds an
+  `aggregate` event **that recorded at least one success**. Anything else — no
+  log, torn tail from a mid-iteration kill, unreadable header — re-runs **from
+  scratch**, never mid-iteration. Every decision prints a line (`resume:
+  skipping …` / `resume: re-running … (incomplete: N events, no aggregate)`),
+  because a silent skip and a sweep that ran nothing look identical in a
+  transcript.
+- **A 0-success aggregate is complete and worthless.** A quota trip writes a
+  structurally perfect aggregate with `iterationsSucceeded: 0` (or status
+  `fail`/`timeout`). Counting that as "done" made a resume re-run everything
+  EXCEPT the pair the quota killed — the pair you resumed *for*. It re-runs, with
+  its own loud line: `resume: re-running … (aggregate recorded 0 successes)`.
 - **Same tree.** The sweep root IS `sweeps/<run-id>/` — no `-2` suffixing. Skipped
   pairs keep their logs and artifacts; only re-run pairs get truncated on reopen.
   `SWEEP_ROOT` + `--resume` is a fatal conflict (two destinations).
 - **Recovery.** The aggregate is durable *before* results.json is written, so a
-  kill in that window leaves a pair complete on disk but missing from the
-  published file. A resume re-derives it from the log (`resume: recovered …`),
-  un-spilling the artifact, and merges it through `mergeResults` — the
-  0-success protection is unchanged. This is the crash case's whole value: no
-  re-spend for bytes already stored.
+  kill in that window leaves a pair complete on disk but missing from — or
+  STALE in — the published file. A resume re-derives it from the log (`resume:
+  recovered …`), un-spilling the artifact, restamping the log's `quota` event as
+  `quotaNextResetAt`, and merges it through `mergeResults` — the 0-success
+  protection is unchanged. This is the crash case's whole value: no re-spend for
+  bytes already stored. Recovery fires when the pair is **absent** from
+  results.json, and also when the recorded record came from an **older run**
+  (its `runLogRef.runId` differs, or it predates the log header and has no ref)
+  — a re-swept pair is invisible to a plain key-presence test. A 0-success
+  aggregate is recovered only when the pair is absent (a fail record beats a
+  hole); it then re-runs anyway, and the rerun's merge replaces it if it
+  succeeds. Recovery runs **before** the quota pre-flight: it spends nothing,
+  and a quota-locked model is exactly the case with an unrecovered record — the
+  pre-flight then sees the recovered window too.
 - **`--bust-cache` / `RUN_BUST_CACHE=1` wins.** Cache-busting means "measure this
   again", so it overrides every skip and says so in one line. Don't combine them
   expecting a cheap resume.
@@ -591,6 +609,13 @@ git add lib/lab/llm-benchmark/results.json public/lab-data/traces && git commit
   (`traces-server.ts`) and renders a trace disclosure only for a record whose
   ref is in it — a static export can't probe for a file, and a 404 per
   historical row is not an acceptable "does it exist?" test.
+- **Three buckets, all reported.** Every wanted trace is `refreshed` (its source
+  sweep is on this machine — copy it, rebuild its index entry from the header),
+  `kept` (the source is gone but the published JSONL is committed — its existing
+  index entry is carried through verbatim), or `pruned` (no record claims it any
+  more). Only WANTEDNESS prunes; a missing source never does. Rebuilding the
+  index from sources alone used to drop committed traces the moment
+  `sweep-clean` ran — bytes still in the repo, invisible on the site.
 - **Idempotent and pruning.** Re-running is a no-op; a trace no record claims
   any more (a pair re-run under a new run id) is DELETED, as are spill files no
   surviving log references. A stale trace is evidence for a result the site no

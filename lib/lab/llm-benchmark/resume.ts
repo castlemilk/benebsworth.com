@@ -59,12 +59,30 @@ export interface RunLogCheckpoint {
   /** From the HEADER — the filename is ambiguous (both ids contain hyphens). */
   modelId?: string
   taskId?: string
+  /** The header's sweep run id — what a record's `runLogRef.runId` must match. */
+  runId?: string
+  /** The header's `createdAt` — the "is the recorded result older than this
+   *  log?" comparison for records that predate `runLogRef`. */
+  createdAt?: string
   /** Events after the header that parsed (a killed sweep leaves a torn tail). */
   events: number
-  /** True iff an `aggregate` event carrying a result object survived. */
+  /**
+   * True iff an `aggregate` event carrying a result object survived — i.e. the
+   * pair reached its DURABLE BOUNDARY. Says nothing about whether the pair
+   * SUCCEEDED: a quota trip produces a perfectly complete 0-success aggregate.
+   * `planResume` is where that distinction is drawn.
+   */
   complete: boolean
   /** The aggregate event's `result`, with `output` still in spilled form. */
   aggregate?: Record<string, unknown>
+  /**
+   * The last `quota` event's estimate, if the provider stated one. It lives in
+   * its own event precisely because the aggregate is written BEFORE the record
+   * is stamped with it (`runners/provider.ts` post-stamps the returned result),
+   * so a recovered record would otherwise lose the answer to "when can this run
+   * again?" — and with it the next sweep's quota pre-flight.
+   */
+  quotaNextResetAt?: string
   /** Why the header could not be read. Present = this log describes nothing. */
   headerError?: string
 }
@@ -127,13 +145,24 @@ export function readSweepCheckpoints(runDir: string): RunLogCheckpoint[] {
             typeof (event as { result?: unknown }).result === 'object' &&
             (event as { result?: unknown }).result !== null
         ) as { result: Record<string, unknown> } | undefined
+      // LAST quota event wins too — the newest estimate is the live one.
+      const quota = [...events]
+        .reverse()
+        .find(
+          (event) =>
+            event.type === 'quota' &&
+            typeof (event as { quotaNextResetAt?: unknown }).quotaNextResetAt === 'string'
+        ) as { quotaNextResetAt: string } | undefined
       return {
         file,
         modelId: header.modelId,
         taskId: header.taskId,
+        runId: header.runId,
+        createdAt: header.createdAt,
         events: events.length,
         complete: aggregate !== undefined,
         aggregate: aggregate?.result,
+        quotaNextResetAt: quota?.quotaNextResetAt,
       }
     } catch (err) {
       return {
@@ -156,8 +185,38 @@ export function readSweepCheckpoints(runDir: string): RunLogCheckpoint[] {
   return checkpoints
 }
 
-/** Why a pair is being re-run rather than skipped. */
-export type RerunReason = 'no-checkpoint' | 'incomplete' | 'unreadable-header' | 'bust-cache'
+/**
+ * Why a pair is being re-run rather than skipped.
+ *
+ * `failed` is the boundary rule's second half: a pair CAN reach its durable
+ * boundary and still have produced nothing. The aggregate a quota trip writes is
+ * structurally complete and records 0 successes — treating it as "done" made
+ * resume re-run everything EXCEPT the pair the quota actually killed, which is
+ * the precise opposite of the intent.
+ */
+export type RerunReason =
+  | 'no-checkpoint'
+  | 'incomplete'
+  | 'unreadable-header'
+  | 'bust-cache'
+  | 'failed'
+
+/**
+ * Did this aggregate record any successful iteration?
+ *
+ * Two signals, OR'd, because either alone has a hole:
+ *  - `iterationsSucceeded === 0` is the direct statement, but the field is
+ *    OPTIONAL (types.ts: "absent on older records = all succeeded"), so its
+ *    ABSENCE must never be read as zero.
+ *  - `status` is always present; 'fail' and 'timeout' both mean "none
+ *    succeeded" by definition ('partial' means some did, so it is left alone).
+ */
+function aggregateSucceededNothing(aggregate: Record<string, unknown>): boolean {
+  const succeeded = aggregate.iterationsSucceeded
+  if (typeof succeeded === 'number' && succeeded === 0) return true
+  const status = aggregate.status
+  return status === 'fail' || status === 'timeout'
+}
 
 export interface ResumeSkip {
   modelId: string
@@ -177,7 +236,22 @@ export interface ResumeRerun {
 export interface ResumeRecovery extends ResumeSkip {
   /** The aggregate event's result — feed to `recoverResultFromAggregate`. */
   aggregate: Record<string, unknown>
+  /** The log's quota estimate, if it stated one — restamped on the record. */
+  quotaNextResetAt?: string
+  /** Why this record is being re-derived, for the transcript. */
+  reason: RecoveryReason
 }
+
+/**
+ * Why a paid result is being re-derived from its log.
+ *
+ *  - `absent`  — results.json has no record for the pair at all (the original
+ *                crash window: aggregate fsynced, process killed before merge).
+ *  - `stale`   — results.json HAS a record, but for an OLDER run. A re-swept
+ *                pair whose newer aggregate never reached the file is invisible
+ *                to an "is the key present?" test, so the paid result rots.
+ */
+export type RecoveryReason = 'absent' | 'stale'
 
 export interface ResumePlan {
   runId?: string
@@ -194,15 +268,65 @@ export interface ResumePlan {
   skipKeys: Set<string>
 }
 
+/**
+ * What results.json already knows about one (model, task) pair.
+ *
+ * A KEY SET is not enough. "Is this pair recorded?" answers the crash-window
+ * question but not the RE-SWEEP one: a pair swept twice has a record from the
+ * first run sitting in results.json while the second run's aggregate — the one
+ * that was just paid for — never made it out of the log. So the recorded side
+ * has to carry enough to tell WHICH run the record came from.
+ */
+export interface RecordedResult {
+  modelId: string
+  taskId: string
+  /** ISO timestamp on the record. */
+  createdAt?: string
+  /** The record's own trace pointer; its `runId` is the discriminator. */
+  runLogRef?: { runId?: string; file?: string } | null
+}
+
 export interface ResumePlanInput {
   checkpoints: readonly RunLogCheckpoint[]
   modelIds: readonly string[]
   taskIds: readonly string[]
-  /** (model, task) pairs already present in results.json. */
-  recorded?: readonly { modelId: string; taskId: string }[]
+  /**
+   * The records already in results.json (pass the parsed file straight in —
+   * `BenchmarkResult` satisfies `RecordedResult` structurally).
+   */
+  recorded?: readonly RecordedResult[]
   /** `--bust-cache` / `RUN_BUST_CACHE=1` — forces every pair to re-run. */
   bustCache?: boolean
   runId?: string
+}
+
+/**
+ * Is the recorded result older than the checkpoint that is about to be skipped?
+ *
+ * Two tests, in preference order, because records come from two eras:
+ *
+ *  1. `runLogRef.runId` — exact, and the only honest answer once run logs exist:
+ *     a record pointing at a DIFFERENT run than the one being resumed was
+ *     written by an earlier sweep of the same pair, so the resume target's
+ *     aggregate never reached results.json.
+ *  2. `createdAt` vs the log HEADER's `createdAt` — the fallback for records
+ *     written before `runLogRef` existed. Only applied when there is no
+ *     runLogRef at all: a ref that names the target run is authoritative, and
+ *     timestamps must not be allowed to second-guess it.
+ *
+ * Unparsable or absent timestamps mean "cannot tell", which resolves to NOT
+ * stale — recovery overwrites a record, and a wrong overwrite is worse than a
+ * missed one (the operator can always re-run).
+ */
+function isRecordOlderThan(record: RecordedResult, checkpoint: RunLogCheckpoint): boolean {
+  const recordedRunId = record.runLogRef?.runId
+  if (typeof recordedRunId === 'string') {
+    return typeof checkpoint.runId === 'string' && recordedRunId !== checkpoint.runId
+  }
+  const logAt = Date.parse(checkpoint.createdAt ?? '')
+  const recordAt = Date.parse(record.createdAt ?? '')
+  if (Number.isNaN(logAt) || Number.isNaN(recordAt)) return false
+  return recordAt < logAt
 }
 
 /**
@@ -230,7 +354,10 @@ export function planResume({
     }
     byFile.set(checkpoint.file, checkpoint)
   }
-  const recordedKeys = new Set(recorded.map((r) => pairKey(r.modelId, r.taskId)))
+  // key → the record itself, not just its presence (see `RecordedResult`).
+  // Last write wins, matching results.json's own de-dup convention.
+  const recordedByKey = new Map<string, RecordedResult>()
+  for (const record of recorded) recordedByKey.set(pairKey(record.modelId, record.taskId), record)
 
   const plan: ResumePlan = {
     runId,
@@ -265,10 +392,41 @@ export function planResume({
         plan.rerun.push({ modelId, taskId, reason: 'incomplete', events: checkpoint.events, file: checkpoint.file })
         continue
       }
+      const aggregate = checkpoint.aggregate!
+      const record = recordedByKey.get(key)
+      const recovery = (reason: RecoveryReason): ResumeRecovery => ({
+        modelId,
+        taskId,
+        file: checkpoint.file,
+        aggregate,
+        quotaNextResetAt: checkpoint.quotaNextResetAt,
+        reason,
+      })
+
+      if (aggregateSucceededNothing(aggregate)) {
+        // The boundary was reached, but nothing was produced — a quota trip, an
+        // outage, an all-failed pair. Skipping it is how a resumed sweep re-ran
+        // everything EXCEPT the pair the quota killed.
+        plan.rerun.push({ modelId, taskId, reason: 'failed', events: checkpoint.events, file: checkpoint.file })
+        // Still worth recovering when nothing is recorded: a fail record beats a
+        // hole (it carries the status, the tokens spent, and — via M1 — the
+        // quota window the NEXT pre-flight needs). ORDER: the script recovers
+        // before the sweep runs, so the rerun's own merge lands afterwards and
+        // mergeResults resolves it normally — a successful rerun REPLACES the
+        // recovered fail record, and a rerun that also produces 0 successes is
+        // dropped in favour of the record we just restored. Recovering a STALE
+        // record here would be strictly worse than the older one it overwrote,
+        // so the stale path below is deliberately not applied to failures.
+        if (!record) plan.recover.push(recovery('absent'))
+        continue
+      }
+
       plan.skipped.push({ modelId, taskId, file: checkpoint.file })
       plan.skipKeys.add(key)
-      if (!recordedKeys.has(key)) {
-        plan.recover.push({ modelId, taskId, file: checkpoint.file, aggregate: checkpoint.aggregate! })
+      if (!record) {
+        plan.recover.push(recovery('absent'))
+      } else if (isRecordOlderThan(record, checkpoint)) {
+        plan.recover.push(recovery('stale'))
       }
     }
   }
@@ -297,11 +455,18 @@ function isSpilled(value: unknown): value is SpilledString {
  * A missing spill file degrades to the inline preview with a warning rather
  * than throwing — a truncated artifact is worse than a full one and better than
  * losing the record's score, tokens and status entirely.
+ *
+ * `options.quotaNextResetAt` re-attaches the log's `quota` event to the record.
+ * The runner POST-STAMPS that field onto the returned result, after the
+ * aggregate event has already been written, so the aggregate alone never
+ * carries it — and a recovered quota failure without it is a record the next
+ * sweep's quota pre-flight cannot see.
  */
 export function recoverResultFromAggregate(
   runDir: string,
   aggregate: Record<string, unknown>,
-  onWarn: (message: string) => void = () => {}
+  onWarn: (message: string) => void = () => {},
+  options: { quotaNextResetAt?: string } = {}
 ): BenchmarkResult & { output: string } {
   const { output, ...rest } = aggregate
   let text = ''
@@ -317,5 +482,11 @@ export function recoverResultFromAggregate(
       )
     }
   }
-  return { ...(rest as Omit<BenchmarkResult, 'output'>), output: text }
+  const recovered = { ...(rest as Omit<BenchmarkResult, 'output'>), output: text }
+  // The aggregate wins if it somehow already carries one; otherwise the log's
+  // quota event is the only surviving statement of the window.
+  if (options.quotaNextResetAt && !recovered.quotaNextResetAt) {
+    recovered.quotaNextResetAt = options.quotaNextResetAt
+  }
+  return recovered
 }

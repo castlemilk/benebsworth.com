@@ -48,6 +48,7 @@ import { formatQuotaWindow, quotaLockedModels } from '../lib/lab/llm-benchmark/q
 import {
   SWEEP_PROFILES,
   estimateSweepDuration,
+  excludedPluginModelConflicts,
   excludedPluginTaskConflicts,
   filterTasksByPlugins,
   formatDuration,
@@ -315,6 +316,14 @@ function reportResumePlan(plan) {
     console.log(`[harness] resume: skipping ${modelId} :: ${taskId} (aggregate found in run ${plan.runId})`)
   }
   for (const { modelId, taskId, reason, events } of plan.rerun) {
+    // A 0-success aggregate is COMPLETE and WORTHLESS — the quota-killed pair.
+    // It gets its own line rather than being lumped in with "incomplete",
+    // because the operator's question ("why is the pair I resumed FOR running
+    // again?") has a different answer.
+    if (reason === 'failed') {
+      console.log(`[harness] resume: re-running ${modelId} :: ${taskId} (aggregate recorded 0 successes)`)
+      continue
+    }
     const why =
       reason === 'incomplete'
         ? `incomplete: ${events} events, no aggregate`
@@ -353,6 +362,22 @@ async function main() {
   const models = BENCHMARK_MODELS.filter((m) => config.models.value.includes(m.id))
   if (models.length === 0) {
     console.error(`No matching models found for: ${config.models.value.join(', ')}`)
+    process.exit(1)
+  }
+  // The model-side twin of the task conflict check below. A plugin's MODEL is
+  // merged into the registry unconditionally, so without this `--model echo-1
+  // --plugins none` ran the plugin's model and generator while the run log's
+  // header snapshotted `plugins: []` — provenance that lies.
+  const modelConflicts = excludedPluginModelConflicts(models, ACTIVE_PLUGINS)
+  if (modelConflicts.length > 0) {
+    for (const { modelId, pluginId } of modelConflicts) {
+      console.error(
+        `Model "${modelId}" comes from plugin "${pluginId}", which this sweep does not mount (plugins: ${
+          ACTIVE_PLUGINS.length === 0 ? 'none — builtins only' : ACTIVE_PLUGINS.join(', ')
+        }, from ${config.plugins.source}).`
+      )
+    }
+    console.error('Add the plugin to --plugins, or drop the --model.')
     process.exit(1)
   }
 
@@ -398,13 +423,6 @@ async function main() {
     }
   }
 
-  // Quota pre-flight: a model whose last run died on a quota error with a
-  // stated reset window is guaranteed to fail every call until that window
-  // passes. Abort BEFORE creating the runner rather than burning a sweep (and
-  // a sweep tree, and log noise) on certain failures.
-  const results = readResults()
-  const locks = quotaLockedModels(results, models.map((m) => m.id))
-
   // Resume boundary resolution. Typed rejection, exit 1: an unreadable or
   // absent target must never degrade into "run the whole sweep again", which is
   // the exact spend this flag exists to avoid.
@@ -415,7 +433,7 @@ async function main() {
         checkpoints: readSweepCheckpoints(SWEEP_ROOT),
         modelIds: models.map((m) => m.id),
         taskIds: tasks.map((t) => t.id),
-        recorded: results,
+        recorded: readResults(),
         bustCache: config.bustCache.value,
         runId: RESUME_RUN_ID,
       })
@@ -428,6 +446,67 @@ async function main() {
       throw err
     }
   }
+
+  // Replace existing results for the (model, task) combinations we just ran;
+  // keep everything else. mergeResults protects good baseline records from
+  // being overwritten by 0-success quota/outage failures.
+  const writeResults = (fresh) => {
+    // Re-read the on-disk results on every write so concurrent runs (or a
+    // hand edit between iterations) aren't clobbered by the stale snapshot
+    // this process loaded at startup.
+    const baseline = readResults()
+    const merged = mergeResults(baseline, fresh, (kept, dropped) => {
+      console.warn(
+        `[harness] kept existing ${kept.modelId} :: ${kept.taskId} (${kept.status}) — fresh run produced 0 successful iterations`
+      )
+    })
+
+    writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
+
+    console.log(`Wrote ${merged.length} results to ${outPath}`)
+    console.log(`Fresh runs: ${fresh.length}`)
+  }
+
+  // Crash-window repair. The run log fsyncs its `aggregate` event BEFORE this
+  // script merges the record into results.json, so a kill in that gap leaves a
+  // pair that is provably complete on disk yet missing from (or stale in) the
+  // published file. Re-running it would pay again for bytes already stored, so
+  // re-derive the record from the log and merge it through the SAME
+  // mergeResults path — which keeps the 0-success protection intact (a dropped
+  // quota record is a legitimate absence, and merging it back is a no-op rather
+  // than a clobber).
+  //
+  // RUNS BEFORE THE QUOTA PRE-FLIGHT, deliberately. It is a local file
+  // operation that spends nothing, and a model locked out by quota is exactly
+  // the case where the log holds an unrecovered record — aborting first meant
+  // the free repair never happened on the runs that needed it most. Recovering
+  // first also gives the pre-flight better data: a recovered quota failure
+  // carries its `quotaNextResetAt`, so the lock it reports is the real one.
+  // Skipped under --dump-config, which promises to change nothing.
+  if (!args.dumpConfig && resumePlan && resumePlan.recover.length > 0) {
+    const recovered = resumePlan.recover.map((entry) => {
+      const result = recoverResultFromAggregate(
+        SWEEP_ROOT,
+        entry.aggregate,
+        (warning) => console.warn(`[harness] resume: ${entry.modelId} :: ${entry.taskId} — ${warning}`),
+        { quotaNextResetAt: entry.quotaNextResetAt }
+      )
+      console.log(
+        `[harness] resume: recovered ${entry.modelId} :: ${entry.taskId} from its run log` +
+          (entry.reason === 'stale' ? ' (results.json held an older run)' : '') +
+          (entry.quotaNextResetAt ? ` — quota window ${entry.quotaNextResetAt}` : '')
+      )
+      return result
+    })
+    writeResults(recovered)
+  }
+
+  // Quota pre-flight: a model whose last run died on a quota error with a
+  // stated reset window is guaranteed to fail every call until that window
+  // passes. Abort BEFORE creating the runner rather than burning a sweep (and
+  // a sweep tree, and log noise) on certain failures.
+  const results = readResults()
+  const locks = quotaLockedModels(results, models.map((m) => m.id))
 
   dumpConfig({ models, tasks, locks, outPath, resumePlan })
   dumpEstimate({ models, tasks, results, resumePlan })
@@ -497,45 +576,6 @@ async function main() {
     // records the bundle scope it ran under.
     plugins: ACTIVE_PLUGINS,
   })
-
-  // Replace existing results for the (model, task) combinations we just ran;
-  // keep everything else. mergeResults protects good baseline records from
-  // being overwritten by 0-success quota/outage failures.
-  const writeResults = (fresh) => {
-    // Re-read the on-disk results on every write so concurrent runs (or a
-    // hand edit between iterations) aren't clobbered by the stale snapshot
-    // this process loaded at startup.
-    const baseline = readResults()
-    const merged = mergeResults(baseline, fresh, (kept, dropped) => {
-      console.warn(
-        `[harness] kept existing ${kept.modelId} :: ${kept.taskId} (${kept.status}) — fresh run produced 0 successful iterations`
-      )
-    })
-
-    writeFileSync(outPath, JSON.stringify(merged, null, 2) + '\n')
-
-    console.log(`Wrote ${merged.length} results to ${outPath}`)
-    console.log(`Fresh runs: ${fresh.length}`)
-  }
-
-  // Crash-window repair. The run log fsyncs its `aggregate` event BEFORE
-  // runTask returns and this script merges the record into results.json, so a
-  // kill in that gap leaves a pair that is provably complete on disk yet
-  // missing from the published file. Re-running it would pay again for bytes
-  // already stored, so re-derive the record from the log and merge it through
-  // the SAME mergeResults path — which keeps the 0-success protection intact
-  // (a dropped quota record is a legitimate absence, and merging it back is a
-  // no-op rather than a clobber).
-  if (resumePlan && resumePlan.recover.length > 0) {
-    const recovered = resumePlan.recover.map((entry) => {
-      const result = recoverResultFromAggregate(SWEEP_ROOT, entry.aggregate, (warning) =>
-        console.warn(`[harness] resume: ${entry.modelId} :: ${entry.taskId} — ${warning}`)
-      )
-      console.log(`[harness] resume: recovered ${entry.modelId} :: ${entry.taskId} from its run log`)
-      return result
-    })
-    writeResults(recovered)
-  }
 
   // Record every result as it completes and persist immediately: a long sweep
   // (7 tasks × 5 iterations × 200s/call) must never lose finished work to a

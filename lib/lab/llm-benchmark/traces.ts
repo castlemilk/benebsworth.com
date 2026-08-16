@@ -139,6 +139,71 @@ export function findTraceEntry(
   return index.find((entry) => traceKey(entry) === key)
 }
 
+/**
+ * What publication should do with each trace a results.json wants.
+ *
+ * Three buckets, because there are three genuinely different states:
+ *
+ *  - `refresh` — the SOURCE (`sweeps/<runId>/<file>`) is on this machine, so the
+ *    published copy and its index entry are rebuilt from it. The only bucket
+ *    that reads a log or copies bytes.
+ *  - `keep` — the source is gone (a normal `sweep-clean`, or a checkout that
+ *    never ran the sweep) but the trace was ALREADY PUBLISHED AND COMMITTED.
+ *    Its existing index entry is carried through verbatim.
+ *  - `missing` — neither a source nor a published copy. Nothing to serve, and
+ *    nothing was lost; the script says so and moves on.
+ *
+ * The `keep` bucket is the whole point. Rebuilding the index from sources alone
+ * meant that republishing after `sweep-clean` REWROTE index.json without the
+ * still-committed traces: the JSONL and spill bytes stayed in the repo while the
+ * site stopped showing them — committed evidence made invisible, and orphaned.
+ * Pruning stays keyed on `wanted` alone (`staleTraceKeys`), so the only thing
+ * that removes a trace is "no record claims it any more".
+ */
+export interface TracePublicationPlan {
+  refresh: TraceRef[]
+  keep: TraceIndexEntry[]
+  missing: TraceRef[]
+}
+
+export function planTracePublication({
+  wanted,
+  publishedIndex,
+  publishedKeys,
+  sourceKeys,
+}: {
+  wanted: readonly TraceRef[]
+  /** Entries read from the existing `public/lab-data/traces/index.json`. */
+  publishedIndex: readonly TraceIndexEntry[]
+  /** `<runId>/<file>` keys whose JSONL is present in the publication dir. */
+  publishedKeys: readonly string[]
+  /** `<runId>/<file>` keys whose source JSONL is present under `sweeps/`. */
+  sourceKeys: readonly string[]
+}): TracePublicationPlan {
+  const sources = new Set(sourceKeys)
+  const published = new Set(publishedKeys)
+  const indexByKey = new Map(publishedIndex.map((entry) => [traceKey(entry), entry]))
+
+  const plan: TracePublicationPlan = { refresh: [], keep: [], missing: [] }
+  for (const ref of wanted) {
+    const key = traceKey(ref)
+    if (sources.has(key)) {
+      plan.refresh.push(ref)
+      continue
+    }
+    const existing = indexByKey.get(key)
+    // BOTH conditions: an index entry whose file is gone would publish a link
+    // to a 404, and a file with no entry has no modelId/taskId to list it by
+    // (those come from the log header, which is only readable from a source).
+    if (existing && published.has(key)) {
+      plan.keep.push(existing)
+      continue
+    }
+    plan.missing.push(ref)
+  }
+  return plan
+}
+
 /** Soft ceiling on total published trace bytes before the script warns. */
 export const TRACE_PUBLISH_SOFT_BUDGET_BYTES = 2 * 1024 * 1024
 

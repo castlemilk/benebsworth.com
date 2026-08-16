@@ -11,10 +11,22 @@
 //                                              actually references
 //
 // Idempotent and argument-free: run it after a sweep (and after any
-// results.json edit), then commit what it wrote. Stale runs — a trace whose
-// (runId, file) no longer matches any record, e.g. because the pair was re-run
-// under a new run id — are pruned, because a trace for a result the site no
-// longer shows is worse than no trace.
+// results.json edit), then commit what it wrote. Every wanted trace lands in
+// exactly one of three buckets, and the script reports all three:
+//
+//   refreshed  — the source sweep is on this machine: copy it and rebuild the
+//                index entry from its header
+//   kept       — the source is gone (`sweep-clean`, or someone else's sweep)
+//                but the published JSONL is COMMITTED: carry its existing
+//                index entry through verbatim. Rebuilding the index from
+//                sources alone used to drop these, leaving committed evidence
+//                orphaned on disk and invisible on the site
+//   pruned     — no results.json record claims the (runId, file) any more (the
+//                pair was re-run under a new run id): delete it, because a
+//                trace for a result the site no longer shows is worse than no
+//                trace
+//
+// Note that only WANTEDNESS prunes. A missing source never does.
 //
 // SPILL SIZE IS THE COST. Spill files hold whole artifacts; a full sweep's
 // worth can be megabytes of committed, served repo. This script never
@@ -33,6 +45,7 @@ import {
   TRACE_PUBLISH_SOFT_BUDGET_BYTES,
   collectSpillRefs,
   formatTraceBytes,
+  planTracePublication,
   staleTraceKeys,
   traceKey,
   traceRefsFromResults,
@@ -40,6 +53,7 @@ import {
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sweepsDir = resolve(root, process.env.SWEEPS_DIR ?? 'sweeps')
+const relativeSweeps = process.env.SWEEPS_DIR ?? 'sweeps'
 const outDir = join(root, 'public/lab-data/traces')
 const indexFile = join(outDir, 'index.json')
 
@@ -62,7 +76,34 @@ function publishedKeys() {
   return keys.sort()
 }
 
-const stale = staleTraceKeys(publishedKeys(), wanted)
+/** The index as it stands, so already-published traces survive a republish. */
+function readPublishedIndex() {
+  try {
+    const parsed = JSON.parse(readFileSync(indexFile, 'utf8'))
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return [] // never published, or a hand-mangled file — rebuild from scratch
+  }
+}
+
+const alreadyPublished = publishedKeys()
+const publishedIndex = readPublishedIndex()
+const stale = staleTraceKeys(alreadyPublished, wanted)
+
+// Which of the wanted traces have a SOURCE on this machine. `sweeps/` is
+// gitignored and pruned, so this set shrinks over time while the published
+// copies stay committed — which is exactly why the plan below has a "keep"
+// bucket rather than treating a missing source as "drop it from the index".
+const sourceKeys = wanted
+  .filter((ref) => existsSync(join(sweepsDir, ref.runId, ref.file)))
+  .map(traceKey)
+
+const plan = planTracePublication({
+  wanted,
+  publishedIndex,
+  publishedKeys: alreadyPublished,
+  sourceKeys,
+})
 
 mkdirSync(outDir, { recursive: true })
 
@@ -86,22 +127,25 @@ const index = []
 let logBytes = 0
 let spillBytes = 0
 let spillFiles = 0
-const missing = []
+const missing = plan.missing.map(traceKey)
 
-for (const ref of wanted) {
+// Carried through UNTOUCHED from the previous index: the source sweep is gone
+// but the published JSONL (and its spill files) are committed and still served.
+for (const entry of plan.keep) {
+  index.push(entry)
+}
+
+for (const ref of plan.refresh) {
   const source = join(sweepsDir, ref.runId, ref.file)
-  if (!existsSync(source)) {
-    // Expected and harmless: sweeps are pruned, and a checkout that never ran
-    // the sweep has none of them. The published copy (if any) stays as it is.
-    missing.push(traceKey(ref))
-    continue
-  }
 
   let log
   try {
     log = readRunLog(source)
   } catch (err) {
     console.warn(`  skipping ${traceKey(ref)}: ${err.message}`)
+    // An unreadable SOURCE must not silently delete a good published entry.
+    const existing = publishedIndex.find((e) => traceKey(e) === traceKey(ref))
+    if (existing && alreadyPublished.includes(traceKey(ref))) index.push(existing)
     continue
   }
 
@@ -142,7 +186,7 @@ let prunedSpill = 0
 const keepSpill = new Map()
 for (const entry of index) {
   const set = keepSpill.get(entry.runId) ?? new Set()
-  for (const ref of entry.spillRefs) set.add(ref)
+  for (const ref of entry.spillRefs ?? []) set.add(ref)
   keepSpill.set(entry.runId, set)
 }
 for (const [runId, keep] of keepSpill) {
@@ -159,15 +203,22 @@ index.sort((a, b) => traceKey(a).localeCompare(traceKey(b)))
 writeFileSync(indexFile, JSON.stringify(index, null, 2) + '\n')
 
 // ---- report --------------------------------------------------------------
-const total = logBytes + spillBytes
+// Three buckets, because "12 traces published" hides the interesting fact that
+// 9 of them only still exist because they were committed.
+const keptBytes = plan.keep.reduce((sum, entry) => sum + (entry.bytes ?? 0), 0)
+const total = logBytes + spillBytes + keptBytes
 console.log(
-  `[publish-traces] ${index.length} trace(s) published to public/lab-data/traces` +
-    ` — ${formatTraceBytes(logBytes)} of JSONL + ${spillFiles} spill file(s) (${formatTraceBytes(spillBytes)})` +
-    `, ${formatTraceBytes(total)} total.`
+  `[publish-traces] ${index.length} trace(s) in public/lab-data/traces` +
+    ` — ${plan.refresh.length} refreshed from ${relativeSweeps}, ${plan.keep.length} kept from the published index` +
+    ` (source sweep pruned), ${stale.length} pruned.`
+)
+console.log(
+  `[publish-traces] copied ${formatTraceBytes(logBytes)} of JSONL + ${spillFiles} spill file(s) (${formatTraceBytes(spillBytes)})` +
+    `; ${formatTraceBytes(keptBytes)} already committed. ${formatTraceBytes(total)} total.`
 )
 if (missing.length > 0) {
   console.log(
-    `[publish-traces] ${missing.length} referenced log(s) are not under ${sweepsDir} (pruned or run elsewhere) — nothing published for them.`
+    `[publish-traces] ${missing.length} referenced log(s) have neither a source under ${sweepsDir} nor a published copy — nothing to serve for them.`
   )
 }
 if (stale.length > 0 || prunedSpill > 0) {

@@ -330,7 +330,8 @@ run (`sweep-profiles.ts`).
 
 Precedence is flag > env > profile > default, like every other knob. Relevant
 symbols: `sweep-profiles.ts:PLUGINS_NONE`, `resolveSweepConfig`,
-`isTaskEnabled`, `filterTasksByPlugins`, `excludedPluginTaskConflicts`.
+`isTaskEnabled`, `filterTasksByPlugins`, `excludedPluginTaskConflicts`,
+`excludedPluginModelConflicts`.
 
 Bundle selection is **not** a task allowlist: it decides which plugins mount,
 and built-in tasks are unaffected. An unknown plugin id exits 1 with the
@@ -338,6 +339,17 @@ roster printed. Asking for a plugin task while excluding its plugin
 (`--task my-task --plugins none`) is a fatal contradiction, not a silently
 smaller sweep. `--dump-config` prints a `plugins` row with provenance, and the
 resolved set is recorded in every run log header's `configSnapshot.plugins`.
+
+**Contributed MODELS are gated the same way.** `filterTasksByPlugins` only ever
+filtered tasks, but a plugin's models are merged into `BENCHMARK_MODELS`
+unconditionally and its generators register the same way — so `--model
+<your-model> --plugins none` used to run your model and your generator while
+the run log's header claimed `plugins: []`. Naming a model whose plugin the
+sweep does not mount is now fatal, with the same message shape as the task
+conflict. The gate lives in `scripts/run-benchmark.mjs`, **not** inside
+`pluginGenerator()`: the runner is sweep-agnostic (library callers, unit tests
+and `retrace` use it with no bundle set at all), so the sweep is the only place
+that can honestly enforce a sweep-scoped rule.
 
 The stored profile `builtins-only` (`sweep-profiles.json`) is `"plugins": []`
 — the core task set only.

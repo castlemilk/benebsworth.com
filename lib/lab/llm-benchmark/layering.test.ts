@@ -54,11 +54,25 @@ function toId(abs: string): NodeId {
   return path.relative(REPO_ROOT, abs).split(path.sep).join('/')
 }
 
-/** Every non-test TypeScript module in the benchmark tree. */
+/**
+ * Every non-test TypeScript module in the benchmark tree — `.tsx` included.
+ *
+ * `.tsx` files (plugin demo components) are real modules that can carry real
+ * in-tree edges: a demo importing `../../runners/provider` would drag Playwright
+ * and node:fs into a client bundle, and a `.ts`-only scan could not see it. The
+ * rules below only ever concern IN-TREE edges, so a demo's `react` /
+ * `@/components/…` imports stay invisible to the graph exactly as a lib
+ * module's do.
+ */
 function collectLibModules(): NodeId[] {
   return walk(path.join(REPO_ROOT, LIB_DIR))
     .map(toId)
-    .filter((id) => id.endsWith('.ts') && !id.endsWith('.test.ts'))
+    .filter(
+      (id) =>
+        (id.endsWith('.ts') || id.endsWith('.tsx')) &&
+        !id.endsWith('.test.ts') &&
+        !id.endsWith('.test.tsx')
+    )
     .sort()
 }
 
@@ -121,6 +135,7 @@ function resolveRelative(fromId: NodeId, specifier: string): NodeId | null {
     `${base}.tsx`,
     `${base}.mjs`,
     path.join(base, 'index.ts'),
+    path.join(base, 'index.tsx'),
   ]) {
     if (isFile(candidate)) return toId(candidate)
   }
@@ -270,6 +285,8 @@ describe('llm-benchmark dependency layering', () => {
     expect(LIB_MODULES).toContain(`${LIB_DIR}/types.ts`)
     expect(LIB_MODULES).toContain(`${LIB_DIR}/runners/provider.ts`)
     expect(LIB_MODULES).toContain(`${LIB_DIR}/scorers/index.ts`)
+    // .tsx is in scope too — a plugin demo is a graph node, not a blind spot.
+    expect(LIB_MODULES.some((id) => id.endsWith('.tsx'))).toBe(true)
     expect(EDGES.length).toBeGreaterThan(30)
   })
 

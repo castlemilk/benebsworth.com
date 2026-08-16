@@ -6,6 +6,7 @@ import {
   formatTraceBytes,
   isSafePathSegment,
   isSafeSpillRef,
+  planTracePublication,
   staleTraceKeys,
   traceKey,
   traceRefsFromResults,
@@ -89,6 +90,82 @@ describe('staleTraceKeys', () => {
   it('is empty when publication is already exactly right (idempotent reruns)', () => {
     const wanted = [{ runId: 'r', file: 'm-t.jsonl' }]
     expect(staleTraceKeys(['r/m-t.jsonl'], wanted)).toEqual([])
+  })
+})
+
+describe('planTracePublication', () => {
+  const fresh = { runId: 'r-new', file: 'm-t.jsonl' }
+  const committed = { runId: 'r-old', file: 'm-u.jsonl' }
+  const committedEntry = {
+    runId: 'r-old',
+    file: 'm-u.jsonl',
+    modelId: 'kimi-k2.7',
+    taskId: 'u',
+    bytes: 4096,
+    spillRefs: ['spill/abcd.txt'],
+  }
+
+  it('keeps a committed trace whose SOURCE SWEEP IS GONE', () => {
+    // The regression: `sweep-clean` pruned sweeps/, so only the published copy
+    // survives. Rebuilding the index from sources alone dropped this entry and
+    // made committed evidence invisible while its bytes stayed in the repo.
+    const plan = planTracePublication({
+      wanted: [fresh, committed],
+      publishedIndex: [committedEntry],
+      publishedKeys: ['r-old/m-u.jsonl'],
+      sourceKeys: ['r-new/m-t.jsonl'],
+    })
+
+    expect(plan.refresh).toEqual([fresh])
+    expect(plan.keep).toEqual([committedEntry])
+    // …and it is NOT reported missing: nothing about it is absent.
+    expect(plan.missing).toEqual([])
+  })
+
+  it('prefers the source when there is one — a refresh re-derives the entry', () => {
+    const plan = planTracePublication({
+      wanted: [committed],
+      publishedIndex: [committedEntry],
+      publishedKeys: ['r-old/m-u.jsonl'],
+      sourceKeys: ['r-old/m-u.jsonl'],
+    })
+    expect(plan.refresh).toEqual([committed])
+    expect(plan.keep).toEqual([])
+  })
+
+  it('needs BOTH an index entry and a published file to keep', () => {
+    // An index entry with no file would publish a link to a 404; a file with no
+    // entry has no modelId/taskId (those come from the log header).
+    const entryOnly = planTracePublication({
+      wanted: [committed],
+      publishedIndex: [committedEntry],
+      publishedKeys: [],
+      sourceKeys: [],
+    })
+    expect(entryOnly.keep).toEqual([])
+    expect(entryOnly.missing).toEqual([committed])
+
+    const fileOnly = planTracePublication({
+      wanted: [committed],
+      publishedIndex: [],
+      publishedKeys: ['r-old/m-u.jsonl'],
+      sourceKeys: [],
+    })
+    expect(fileOnly.keep).toEqual([])
+    expect(fileOnly.missing).toEqual([committed])
+  })
+
+  it('leaves pruning to staleTraceKeys: an unwanted entry is in no bucket', () => {
+    const plan = planTracePublication({
+      wanted: [fresh],
+      publishedIndex: [committedEntry],
+      publishedKeys: ['r-old/m-u.jsonl'],
+      sourceKeys: ['r-new/m-t.jsonl'],
+    })
+    expect(plan.keep).toEqual([])
+    expect(staleTraceKeys(['r-new/m-t.jsonl', 'r-old/m-u.jsonl'], [fresh])).toEqual([
+      'r-old/m-u.jsonl',
+    ])
   })
 })
 

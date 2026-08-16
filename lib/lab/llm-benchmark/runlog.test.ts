@@ -24,6 +24,7 @@ import {
   SPILL_PREVIEW_CHARS,
   SPILL_THRESHOLD_BYTES,
   WRITE_BATCH_MAX_DELAY_MS,
+  forceSpill,
   getRunLogDir,
   openRunLog,
   readRunLog,
@@ -316,6 +317,35 @@ describe('redaction on the way in', () => {
     expect(spilled).toContain('API_KEY=***REDACTED***')
     // …and the inline preview, which is a slice of the same redacted string.
     expect(event.output.preview).not.toContain('secret123')
+  })
+
+  it('redacts inside forceSpill too, and dedupes with the clean event spill', async () => {
+    // `runners/provider.ts` force-spills the aggregate's artifact OUTSIDE the
+    // append path. When that bypassed redaction, a secret-bearing artifact
+    // produced TWO spill files — and the one the aggregate (and therefore
+    // publish-traces) pointed at was the RAW one.
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const log = openRunLog(META)!
+    const artifact = `<!doctype html><p>API_KEY=secret123</p>${'f'.repeat(SPILL_THRESHOLD_BYTES)}`
+    log.append({ type: 'clean', iterationIndex: 0, output: artifact })
+    const forced = forceSpill(log.dir, artifact)
+    log.append({ type: 'aggregate', result: { score: 90, output: forced } })
+    await log.close()
+
+    const spilled = readFileSync(join(dir, forced.spillRef), 'utf8')
+    expect(spilled).not.toContain('secret123')
+    expect(spilled).toContain('API_KEY=***REDACTED***')
+    expect(forced.preview).not.toContain('secret123')
+
+    // One artifact, one file: redaction is deterministic, so the content
+    // address of the forced spill equals the clean event's.
+    expect(readdirSync(join(dir, 'spill'))).toHaveLength(1)
+    const [clean] = readRunLog(join(dir, log.file)).events
+    if (clean.type !== 'clean' || typeof clean.output === 'string') {
+      throw new Error('expected the clean output to spill')
+    }
+    expect(forced.spillRef).toBe(clean.output.spillRef)
   })
 
   it('leaves benign artifact markup and the prompt hash byte-for-byte intact', async () => {

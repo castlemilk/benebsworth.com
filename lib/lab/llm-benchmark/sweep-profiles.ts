@@ -399,9 +399,17 @@ export interface PluginTaskRef {
  * registered plugins", so everything passes.
  */
 export function isTaskEnabled(task: PluginTaskRef, activePlugins: readonly string[] | undefined): boolean {
-  if (task.pluginId === undefined) return true
+  return isPluginRefEnabled(task, activePlugins)
+}
+
+/** The rule itself, over anything the registry stamps a `pluginId` on. */
+function isPluginRefEnabled(
+  ref: { pluginId?: string },
+  activePlugins: readonly string[] | undefined
+): boolean {
+  if (ref.pluginId === undefined) return true
   if (activePlugins === undefined) return true
-  return activePlugins.includes(task.pluginId)
+  return activePlugins.includes(ref.pluginId)
 }
 
 /** The tasks a sweep with this bundle set may run. */
@@ -430,6 +438,44 @@ export function excludedPluginTaskConflicts(
   return tasks
     .filter((task) => requested.has(task.id) && !isTaskEnabled(task, activePlugins))
     .map((task) => ({ taskId: task.id, pluginId: task.pluginId as string }))
+}
+
+/** A model as bundle selection sees it. Same shape as `PluginTaskRef`. */
+export interface PluginModelRef {
+  id: string
+  /** Stamped by the plugin registry. Absent = a built-in model. */
+  pluginId?: string
+}
+
+/**
+ * Selected models whose plugin is NOT mounted — the MODEL-SIDE TWIN of
+ * `excludedPluginTaskConflicts`.
+ *
+ * `--plugins` filtered tasks only. A plugin MODEL is merged into
+ * BENCHMARK_MODELS unconditionally (registry.ts) and its generator is
+ * registered the same way, so `--model echo-1 --plugins none` cheerfully ran a
+ * plugin's model while the run-log header snapshotted `plugins: []` — a trace
+ * that misdescribes the bundle scope it ran under. Provenance you cannot trust
+ * is worse than no provenance.
+ *
+ * Note the fix belongs HERE, in the sweep script's pre-flight, and NOT as a
+ * gate inside `pluginGenerator()`: the runner is sweep-agnostic (library
+ * callers, unit tests and `retrace` all use it with no bundle set at all), so
+ * teaching it about `--plugins` would make the registry's meaning depend on how
+ * it was invoked. Bundle selection is a property of a SWEEP; the sweep is the
+ * gate.
+ *
+ * Unlike tasks, every model in a sweep is explicitly named (the model flag
+ * always resolves to a concrete list), so there is no "requested" argument —
+ * being in the list IS the request.
+ */
+export function excludedPluginModelConflicts(
+  selectedModels: readonly PluginModelRef[],
+  activePlugins: readonly string[] | undefined
+): { modelId: string; pluginId: string }[] {
+  return selectedModels
+    .filter((model) => !isPluginRefEnabled(model, activePlugins))
+    .map((model) => ({ modelId: model.id, pluginId: model.pluginId as string }))
 }
 
 /** One (model, task) job a sweep is about to run. */

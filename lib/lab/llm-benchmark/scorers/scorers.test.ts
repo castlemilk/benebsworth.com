@@ -143,6 +143,24 @@ describe('selectScorer', () => {
     expect(selectScorer({ ...unstampedMath, category: 'brand-new-category' })).toBe(textScorer)
   })
 
+  it('throws — naming the task, the bad name and the registry — on an unregistered scorer', () => {
+    // A declared-but-unregistered name (a typo, or a plugin whose scorer
+    // contribution never registered) used to return undefined and blow up as a
+    // TypeError inside aggregateRuns, mid-sweep, after the money was spent.
+    let error: Error | undefined
+    try {
+      selectScorer({ ...mathTask, id: 'typo-task', scorer: 'behavioural' })
+    } catch (err) {
+      error = err as Error
+    }
+    expect(error, 'selectScorer must reject an unregistered name').toBeInstanceOf(Error)
+    expect(error!.message).toContain('typo-task')
+    expect(error!.message).toContain('behavioural')
+    // …and lists what IS registered, so the fix is readable off the message.
+    expect(error!.message).toContain('behavioral')
+    expect(error!.message).toContain('text')
+  })
+
   it('resolves every shipped task exactly as the pre-registry heuristic did', () => {
     // Behaviour lock: stamping `scorer` on the registry must not have moved a
     // single task to a different scorer. This replays the OLD implementation

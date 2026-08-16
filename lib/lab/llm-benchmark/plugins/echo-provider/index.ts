@@ -6,9 +6,11 @@ import type { BenchmarkModel } from '../../types'
  * that runs it, with zero edits to `runners/provider.ts`.
  *
  * Deliberately NOT on the roster (`plugins/index.ts`) — it generates fake
- * output and would pollute the board. It is registered by
- * `plugins/generators.test.ts` / `runners/provider.test.ts`, which is also the
- * proof of the acceptance criterion. Copy the shape, not the roster status.
+ * output and would pollute the board. THIS plugin is registered by
+ * `plugins/models.test.ts` (which is also the proof of the acceptance
+ * criterion: the contributed model reaches BENCHMARK_MODELS stamped with its
+ * pluginId); `runners/provider.test.ts` proves the generator half of the same
+ * shape with an inline fixture plugin. Copy the shape, not the roster status.
  *
  * The two rules a provider plugin must respect:
  *

@@ -159,19 +159,26 @@ describe('batching', () => {
     await log.close()
   })
 
-  it('serializes concurrent flushes so batches never interleave', async () => {
-    const dir = tempDir()
-    setRunLogDir(dir)
-    const log = openRunLog(META)!
-    for (let i = 0; i < 20; i++) {
-      log.append({ type: 'request', iterationIndex: i, promptHash: `h${i}`, promptLength: i })
-      void log.flush()
-    }
-    await log.close()
-    const { events } = readRunLog(join(dir, log.file))
-    expect(events).toHaveLength(20)
-    events.forEach((event, i) => expect(event.seq).toBe(i + 1))
-  })
+  // 20 serialized write+fsync round-trips: fast alone (~200-600ms) but can
+  // blow the default 5s under full-suite CPU/IO contention (observed twice in
+  // review). The generous cap keeps the assertion (ordering, not speed) honest.
+  it(
+    'serializes concurrent flushes so batches never interleave',
+    async () => {
+      const dir = tempDir()
+      setRunLogDir(dir)
+      const log = openRunLog(META)!
+      for (let i = 0; i < 20; i++) {
+        log.append({ type: 'request', iterationIndex: i, promptHash: `h${i}`, promptLength: i })
+        void log.flush()
+      }
+      await log.close()
+      const { events } = readRunLog(join(dir, log.file))
+      expect(events).toHaveLength(20)
+      events.forEach((event, i) => expect(event.seq).toBe(i + 1))
+    },
+    20_000
+  )
 })
 
 describe('spill', () => {

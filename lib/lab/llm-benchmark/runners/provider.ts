@@ -838,6 +838,10 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             if (resetMs !== undefined) {
               const resetAt = new Date(Date.now() + resetMs)
               quotaNextResetAt = resetAt.toISOString()
+              // Also logged as its own event: this run's record may never reach
+              // results.json (mergeResults drops a 0-success record), and the
+              // log has to answer "when can I run this again?" on its own.
+              log?.append({ type: 'quota', iterationIndex: i, quotaNextResetAt })
               console.error(
                 `[harness] next window for ${model.name}: ~${formatQuotaWindow(resetMs)} (resets ~${resetAt.toLocaleString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' })})`
               )

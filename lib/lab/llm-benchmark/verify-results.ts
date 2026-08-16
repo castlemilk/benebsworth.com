@@ -85,7 +85,7 @@ export const RESULT_CHECKS: CheckDef[] = [
     id: 'runlog-ref',
     title: 'every record with a run log points at it, and the log agrees',
     why:
-      "'Model-visible means logged' (#1): a published number with no retained trace cannot be defended a week later. If a sweep wrote sweeps/<run>/<model>-<task>.jsonl but the record has no runLogRef, the stamping path broke and the provenance is gone. In the other direction, a ref whose log names a different model/task, or that never recorded an aggregate, is a trace that does not describe this record.",
+      "'Model-visible means logged' (#1): a published number with no retained trace cannot be defended a week later. If a sweep wrote sweeps/<run>/<model>-<task>.jsonl but the record has no runLogRef, the stamping path broke and the provenance is gone. In the other direction, a ref whose log names a different model/task, or that never recorded an aggregate, is a trace that does not describe this record. One carve-out: a record OLDER than the log beside it was kept by mergeResults' never-clobber-good-data protection over a 0-success run, so it is legitimately ref-less and skips rather than fails.",
   },
   {
     id: 'runlog-seq',
@@ -357,6 +357,31 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
       continue
     }
     if (!record.runLogRef) {
+      // A record that PREDATES this log was not produced by it. That happens on
+      // exactly one healthy path: the log's run produced 0 successes (quota trip,
+      // every iteration failed) and mergeResults (results.ts) deliberately kept
+      // the older, good record instead — so the surviving record is legitimately
+      // ref-less, and failing here would arm a permanent pre-push failure after
+      // the first quota-tripped sweep against legacy records.
+      //
+      // REJECTED alternative: carrying `runLogRef` forward inside mergeResults'
+      // protection branch. That would point a KEPT success record at the FAILED
+      // run's trace — false provenance, and worse than no ref at all.
+      const recordAt = Date.parse(record.createdAt)
+      const logAt = Date.parse(entry.header.createdAt)
+      if (Number.isFinite(recordAt) && Number.isFinite(logAt) && recordAt < logAt) {
+        verdicts.push(
+          verdict(
+            'runlog-ref',
+            'skip',
+            logKey,
+            `record predates this log — the log's run produced 0 successes and was merge-protected away`
+          )
+        )
+        continue
+      }
+      // createdAt >= the log header: the record came from THIS run (or later) and
+      // still has no ref — the stamping path genuinely broke.
       verdicts.push(
         verdict('runlog-ref', 'fail', logKey, `run log ${log.file} exists but its record carries no runLogRef`)
       )

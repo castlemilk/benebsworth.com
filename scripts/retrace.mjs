@@ -162,6 +162,9 @@ function transcribe(runDir, file, options) {
           if (cleaned.body) console.log(indent(excerpt(cleaned.body, options)))
           break
         }
+        case 'quota':
+          console.log(`  [${ts}] quota    next window ~${event.quotaNextResetAt}`)
+          break
         case 'failure':
           console.log(
             `  [${ts}] FAILURE  ${event.failureReason}${event.timedOut ? ' (timed out)' : ''}: ${event.error}`

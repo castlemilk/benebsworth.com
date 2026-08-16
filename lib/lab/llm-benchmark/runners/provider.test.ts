@@ -241,6 +241,28 @@ describe('createProviderRunner quota handling', () => {
     consoleErrorSpy.mockRestore()
   })
 
+  it('records the estimated window as its own run-log event (the record may be dropped)', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const dir = mkdtempSync(join(tmpdir(), 'provider-quota-runlog-'))
+    setRunLogDir(dir)
+    generateMock.mockRejectedValue(new Error('Agy error: individual quota reached. Resets in 2h'))
+    const runner = createProviderRunner({ moonshot: { apiKey: 'k' }, bustCache: true, maxRetries: 0 })
+
+    const [result] = await runner.runTask(MODEL, TASK, 5)
+
+    const { events } = readRunLog(join(dir, runLogFileName(MODEL.id, TASK.id)))
+    const quota = events.find((e) => e.type === 'quota')
+    if (quota?.type !== 'quota') throw new Error('expected a quota event')
+    expect(quota.iterationIndex).toBe(0)
+    expect(quota.quotaNextResetAt).toBe(result.quotaNextResetAt)
+    // …and it lands BEFORE the aggregate, i.e. at the trip, not after the fold.
+    expect(events.indexOf(quota)).toBeLessThan(events.findIndex((e) => e.type === 'aggregate'))
+
+    setRunLogDir(undefined)
+    rmSync(dir, { recursive: true, force: true })
+    consoleErrorSpy.mockRestore()
+  })
+
   it('leaves the window absent when the quota error states none', async () => {
     generateMock.mockRejectedValue(
       new Error('Moonshot error 403: usage limit for this billing cycle (access_terminated_error)')

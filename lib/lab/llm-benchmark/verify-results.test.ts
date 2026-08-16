@@ -268,8 +268,10 @@ function fakeLog(
 const AGGREGATE_ONLY = [{ type: 'aggregate', seq: 1 }]
 
 describe('runLogRef ⇄ run log', () => {
-  it('fails when a run log exists on disk but the record carries no runLogRef', () => {
-    const record = goodRecord()
+  it('fails when a run log exists on disk but the record from that run carries no runLogRef', () => {
+    // createdAt AFTER the log header: this record came out of this very run, so
+    // a missing ref means the stamping path broke.
+    const record = goodRecord({ createdAt: '2026-08-16T09:31:00.000Z' })
     const verdicts = verifyResults([record], {
       runLogs: [log()],
       readLog: () => fakeLog('kimi-k2.7', 'n-body-field', AGGREGATE_ONLY),
@@ -278,6 +280,31 @@ describe('runLogRef ⇄ run log', () => {
     expect(verdict).toBeDefined()
     expect(verdict!.detail).toContain('kimi-k2.7-n-body-field.jsonl')
     expect(verdict!.why).toMatch(/trace/i)
+  })
+
+  it('skips a ref-less record that PREDATES the log — mergeResults kept it over a 0-success run', () => {
+    // The quota-trip shape: the sweep wrote a log, produced 0 successes, and
+    // mergeResults dropped the fresh record in favour of this older good one.
+    // Failing here would arm a permanent pre-push failure.
+    const record = goodRecord({ createdAt: '2026-08-01T00:00:00.000Z' })
+    const verdicts = verifyResults([record], {
+      runLogs: [log()],
+      readLog: () => fakeLog('kimi-k2.7', 'n-body-field', AGGREGATE_ONLY),
+    })
+    expect(failures(verdicts)).toEqual([])
+    const verdict = of(verdicts, 'runlog-ref').find((v) => v.level === 'skip')
+    expect(verdict).toBeDefined()
+    expect(verdict!.detail).toMatch(/predates/i)
+  })
+
+  it('still fails a ref-less record stamped at the same instant as the log header', () => {
+    // Boundary: `>=` is a genuine miss, not the merge-protection shape.
+    const record = goodRecord({ createdAt: '2026-08-16T09:30:12.000Z' })
+    const verdicts = verifyResults([record], {
+      runLogs: [log()],
+      readLog: () => fakeLog('kimi-k2.7', 'n-body-field', AGGREGATE_ONLY),
+    })
+    expect(of(verdicts, 'runlog-ref').find((v) => v.level === 'fail')).toBeDefined()
   })
 
   it('passes when the record names the log and the log agrees', () => {

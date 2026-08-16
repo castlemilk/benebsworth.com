@@ -22,6 +22,11 @@
 //
 // The effective config is printed before EVERY run, with the provenance of each
 // value, so what is about to be spent is visible before it is spent.
+//
+// BEHAVIOUR CHANGE (final-review pass): an unknown --model/--task id is now
+// FATAL, even when other ids in the same flag matched. It used to run the
+// partial set silently, which is how a typo'd id turned into a sweep of the
+// wrong shape that nobody noticed until the rows were missing.
 import {
   BENCHMARK_MODELS,
   BENCHMARK_TASKS,
@@ -41,7 +46,7 @@ import {
   parseSweepArgs,
   resolveSweepConfig,
 } from '../lib/lab/llm-benchmark/sweep-profiles.ts'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 
 function listProfiles() {
@@ -87,7 +92,27 @@ const IGNORE_QUOTA_LOCK =
 // writes under the same tree: sweeps/<run-id>/{scratch,artifacts}/. Gitignored
 // and never pruned by the run itself — `node scripts/sweep-clean.mjs` is the
 // cleanup path. Override with SWEEP_ROOT (absolute or repo-relative).
-const SWEEP_ROOT = resolve(process.cwd(), process.env.SWEEP_ROOT ?? `sweeps/${sweepRunId()}`)
+//
+// The default run id has one-second resolution, so two sweeps started in the
+// same second would derive the SAME root and interleave their run logs (one
+// file per model×task per sweep — the second writer truncates the first's log
+// on open). Suffix -2, -3, … past anything already on disk. An explicit
+// SWEEP_ROOT is used verbatim: that is the operator's stated choice, including
+// the deliberate "write into that existing tree" case.
+const SWEEP_ROOT = process.env.SWEEP_ROOT
+  ? resolve(process.cwd(), process.env.SWEEP_ROOT)
+  : uniqueSweepRoot(resolve(process.cwd(), `sweeps/${sweepRunId()}`))
+
+/** First free `<base>`, `<base>-2`, `<base>-3`, … (bounded; see above). */
+function uniqueSweepRoot(base) {
+  if (!existsSync(base)) return base
+  for (let n = 2; n < 100; n++) {
+    const candidate = `${base}-${n}`
+    if (!existsSync(candidate)) return candidate
+  }
+  // 99 same-second sweeps is not a real scenario; fall back rather than loop.
+  return base
+}
 
 /** `  label   value   (source)` — one row of the effective-config dump. */
 function row(label, value, source) {
@@ -167,13 +192,43 @@ function dumpEstimate({ models, tasks, results }) {
   )
 }
 
+/**
+ * Ids that matched nothing in the registry. A PARTIAL match used to run
+ * silently — `--model kimi-k2.7 --model kimi-k2.8` (typo) would sweep one model
+ * while the operator believed they were sweeping two, and the missing rows only
+ * surface hours later. parseSweepArgs already treats an unknown FLAG as fatal;
+ * an unknown ID is the same class of mistake.
+ */
+function unknownIds(requested, known) {
+  const ids = new Set(known)
+  return requested.filter((id) => !ids.has(id))
+}
+
+function reportUnknown(kind, unknown, known) {
+  console.error(
+    `Unknown ${kind} id(s): ${unknown.join(', ')} (known: ${known.slice(0, 6).join(', ')}${known.length > 6 ? `, … ${known.length - 6} more` : ''})`
+  )
+}
+
 async function main() {
+  const modelIds = BENCHMARK_MODELS.map((m) => m.id)
+  const unknownModels = unknownIds(config.models.value, modelIds)
+  if (unknownModels.length > 0) {
+    reportUnknown('model', unknownModels, modelIds)
+    process.exit(1)
+  }
   const models = BENCHMARK_MODELS.filter((m) => config.models.value.includes(m.id))
   if (models.length === 0) {
     console.error(`No matching models found for: ${config.models.value.join(', ')}`)
     process.exit(1)
   }
 
+  const taskIds = BENCHMARK_TASKS.map((t) => t.id)
+  const unknownTasks = config.tasks.value ? unknownIds(config.tasks.value, taskIds) : []
+  if (unknownTasks.length > 0) {
+    reportUnknown('task', unknownTasks, taskIds)
+    process.exit(1)
+  }
   const tasks = config.tasks.value
     ? BENCHMARK_TASKS.filter((t) => config.tasks.value.includes(t.id))
     : BENCHMARK_TASKS
@@ -246,9 +301,14 @@ async function main() {
     openai: process.env.OPENAI_API_KEY ? { apiKey: process.env.OPENAI_API_KEY } : undefined,
     anthropic: process.env.ANTHROPIC_API_KEY ? { apiKey: process.env.ANTHROPIC_API_KEY } : undefined,
     google: process.env.GOOGLE_API_KEY ? { apiKey: process.env.GOOGLE_API_KEY } : undefined,
-    // CLI-based providers use the user's locally-authenticated CLIs; no API key needed.
-    agy: {},
-    codex: {},
+    // CLI-based providers use the user's locally-authenticated CLIs; no API key
+    // needed — but each one gets the sweep's timeout explicitly. The outer
+    // withTimeout honours config.timeoutMs already; the INNER runCli timer comes
+    // from the per-provider config and otherwise stays at cli.ts's 10-minute
+    // default, so a --timeout-ms of 25m would be silently capped at 10m by the
+    // child-process kill (the slow-model profile promised 25 and delivered 10).
+    agy: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
+    codex: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
     opencode: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
     bustCache: config.bustCache.value,
     timeoutMs: TIMEOUT_MS,

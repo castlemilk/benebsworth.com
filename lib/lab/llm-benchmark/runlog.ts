@@ -141,6 +141,20 @@ export type RunLogEventInput =
       check: IterationCheckResult
     }
   | {
+      /**
+       * The provider stated a quota reset window while tripping this model's
+       * breaker. The same estimate is post-stamped onto the aggregate as
+       * `quotaNextResetAt`, but a 0-success run's record can be dropped by
+       * mergeResults — so without this event the ONLY surviving evidence of
+       * "when can this run again?" would live outside the log, breaching
+       * "reconstructable from the log alone".
+       */
+      type: 'quota'
+      iterationIndex: number
+      /** ISO timestamp of the estimated next window. */
+      quotaNextResetAt: string
+    }
+  | {
       /** The aggregated BenchmarkResult, with `output` always spilled. */
       type: 'aggregate'
       result: Record<string, unknown>
@@ -285,6 +299,15 @@ class JsonlRunLog implements RunLog {
     // leaves a stale tail after the new header.
     writeFileSync(this.path, '', { mode: 0o600 })
     this.handle = open(this.path, 'a')
+    // Nothing awaits this promise until the first batch (up to
+    // WRITE_BATCH_MAX_DELAY_MS later), so a FAST rejection (EACCES, ENOSPC, fd
+    // exhaustion) would be an unhandled rejection and, under Node's default
+    // --unhandled-rejections=throw, would kill the sweep — exactly the opposite
+    // of "degraded logging must never fail a sweep". Attaching a no-op handler
+    // to a DERIVED promise marks the rejection handled without consuming it:
+    // `.catch()` returns a new promise, and `this.handle` still rejects into
+    // writeBatch's try/catch, which reports it and drops the batch.
+    void this.handle.catch(() => {})
     // Header is queued like any other line, so it is always byte 0 of the
     // first batch and can never race an event.
     this.queue.push(JSON.stringify(header) + '\n')

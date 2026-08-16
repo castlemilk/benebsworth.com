@@ -185,6 +185,12 @@ npx tsx scripts/run-benchmark.mjs --profile slow-model --model a --model b --tas
   --iterations 1 --concurrency 1 --timeout-ms 600000 --max-retries 0 --bust-cache
 ```
 
+**An unknown `--model`/`--task` id is fatal**, including when other ids in the
+same flag resolve: the script prints `Unknown model id(s): …` with a sample of
+the known ids and exits 1 rather than silently sweeping the partial set. (A
+typo'd id used to run the wrong shape quietly.) The same applies to the
+`MODELS=`/`TASKS=` env layer, which feeds the same resolution.
+
 The env-var wrappers below are unchanged and still the right tool for anything
 that is not one of the stored recipes.
 
@@ -433,6 +439,7 @@ sweeps/<run-id>/
   | `clean` | after `cleanOutput` + dependency inlining | `output` — exactly the bytes the scorer sees |
   | `failure` | a failed iteration (terminal; retries are their own events) | `error`, `failureReason`, `timedOut` |
   | `check` | one per check per iteration, from `scoreWithBreakdown` | `iterationIndex` (the TRUE index, not a position among successes), `check` |
+  | `quota` | at a quota trip whose error stated a reset window | `quotaNextResetAt` (ISO) — same estimate as the aggregate's field, logged separately because a 0-success record can be dropped by `mergeResults` |
   | `aggregate` | once, at the end | `result` — the BenchmarkResult with the artifact always spilled |
 
 - **Spill.** Any string over 8 KB is written to `spill/<first-16-hex-of-sha256>.txt`
@@ -507,6 +514,13 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   whose record carries no `runLogRef` ("no record without a trace") or a ref
   whose log names a different model/task or never recorded an `aggregate`; and
   run-log `seq` integrity.
+- **The ref-less carve-out.** A run log whose record has no `runLogRef` only
+  FAILS when the record's `createdAt` is at or after the log header's. A record
+  that PREDATES the log beside it is the merge-protection shape: that run
+  produced 0 successes (quota trip), so `mergeResults` kept the older good
+  record, which legitimately has no ref — it skips. (Carrying the ref forward in
+  `mergeResults` was rejected: it would point a kept SUCCESS record at a FAILED
+  run's trace, which is false provenance.)
 - **`seq` gaps are a WARNING, not a failure** — a gap is the deliberate evidence
   that a failed batch was rolled back and dropped (see the contract at the top
   of `runlog.ts`). A duplicate or decreasing `seq` IS a failure: the append-only

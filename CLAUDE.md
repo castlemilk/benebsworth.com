@@ -87,6 +87,9 @@ incrementally and merge-protected, so a killed or quota-blocked run cannot
 destroy good baseline data. Seeded sample records carry `source: 'seeded'` and
 must stay disclosed in the UI.
 
+**A subtle + systemic + costly fix ships with a postmortem** — a write-up in
+`docs/postmortem/` naming the guardrails it motivated (criteria + template there).
+
 **Infra ≠ content deploy.** A site update is `task deploy:staging`. Terraform is
 a separate system; confusing the two has cost hours. Always plan before apply.
 

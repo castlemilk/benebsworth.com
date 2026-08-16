@@ -703,32 +703,24 @@ reason surfaced; existing structural score is the documented fallback.
 
 # P3 — Process (dsh study additions)
 
-## [ ] 16. Postmortem practice for harness incidents
+## [x] 16. Postmortem practice for harness incidents
 
-**Inspiration.** dsh `docs/postmortem/README.md`: incident write-ups
-"when a bug reached a place it shouldn't have" — executive summary (30
-seconds), timeline, root cause, guardrails; written when the bug is
-**subtle, systemic, and costly to rediscover**; every postmortem links the
-guardrails (tests, rules) it motivated.
-
-**Why now.** This session produced four textbook postmortems: the sweep
-hang (closeSandbox), the timeout-config miswire (RUN_TIMEOUT_MS not
-forwarded), the bearer-blip misclassification, and the mid-sweep
-results.json race. Each escaped because the harness lacked a check that now
-exists.
-
-**Design sketch.**
-
-- `docs/postmortem/README.md` with the dsh criteria + template (Executive
-  summary / Timeline / Root cause / Guardrails).
-- Write 0001-0004 for this session's four incidents, each linking the
-  guardrail (test, Taskfile task, skill section) that now prevents the
-  class.
-- Rule in AGENTS.md/CLAUDE.md: a subtle+systemic+costly fix ships with a
-  postmortem note or link.
-
-**Acceptance criteria.** 4 postmortems written; template + criteria
-documented; the skill's sweep-operations runbook links them.
+**Shipped.** `docs/postmortem/README.md` — the three-way criterion (subtle +
+systemic + costly to rediscover), the template (Executive summary / Timeline /
+Root cause / Guardrails), the rules (every cited guardrail verified to exist;
+mechanism not blame; dates from `git log -S`, "date unrecovered" over invention;
+60-line ceiling) and an index. Four founding write-ups, researched from history
+rather than memory: **0001** sweep hang (`ecd8703` browser → `fb30017`
+`closeSandbox` → `abece55` hard exit + process-group kill), **0002**
+timeout-config miswire (`9566605` fixed opencode ONLY; the class survived in
+agy/codex until `bdd8d49`/I2 — the argument for `fe95b14`'s effective-config
+dump; open gap recorded: nothing tests the forwarding itself), **0003** bearer
+blip (`5bcaf6c`, transient + `rate_limited`, on a measured distribution — 0/5
+sequential, every parallel batch), **0004** `results.json` race (`b124072`
+re-read + incremental writes, `e3debcb` `mergeResults` 0-success protection).
+CLAUDE.md gains the one-line rule under "Things that will bite you"; SKILL.md's
+sweep-operations runbook links the directory, and its stale "forwarded into the
+opencode CLI config" knob line is corrected to agy/codex/opencode.
 
 **Effort.** S.
 
@@ -1520,6 +1512,11 @@ without reading results.json; the server is read-only.
   in-step retry, retries survive a throw (`CallTelemetry` sink), cache
   replays counted but excluded from the means, counters 0-when-none and
   means absent-when-unmeasured, plus a `telemetry-sanity` verify check.
+- Postmortem practice (#16): `docs/postmortem/` — criteria (subtle + systemic +
+  costly to rediscover), template, verify-every-guardrail rule, and the four
+  founding write-ups (sweep hang, timeout-config miswire, bearer blip,
+  results.json race). CLAUDE.md carries the ship-a-postmortem rule; the skill's
+  sweep-operations runbook links the directory.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

@@ -9,6 +9,8 @@ import {
   tasksByCategory,
 } from './registry'
 import { BENCHMARK_RESULTS, resultsForTask, resultsForModel } from './results'
+import { behavioralTaskIds } from './scorers'
+import { getChecksForTask } from './scorers/checks'
 
 describe('llm-benchmark registry', () => {
   it('has unique category slugs', () => {
@@ -30,6 +32,48 @@ describe('llm-benchmark registry', () => {
     const categorySlugs = new Set(BENCHMARK_CATEGORIES.map((c) => c.slug))
     for (const task of BENCHMARK_TASKS) {
       expect(categorySlugs.has(task.category), `${task.slug} category`).toBe(true)
+    }
+  })
+
+  it('every task in an HTML-runnable category declares scorer: behavioral', () => {
+    // The "added a task, forgot it needs checks" net. A task in one of these
+    // categories renders as a live page and MUST be behaviourally scored; the
+    // category heuristic would still get it right, but leaving the row
+    // unstamped means the registry no longer tells the whole story and the
+    // check-coverage assertion below can't see the intent.
+    const HTML_RUNNABLE_CATEGORIES = new Set([
+      '3d-physics-animation',
+      'advanced-game-building',
+      'advanced-physics',
+      'advanced-electronics',
+      'ui-building',
+    ])
+    for (const task of BENCHMARK_TASKS) {
+      if (!HTML_RUNNABLE_CATEGORIES.has(task.category)) continue
+      expect(task.scorer, `${task.id} must declare its scorer`).toBe('behavioral')
+    }
+  })
+
+  it('every behaviourally-scored task has at least one check defined', () => {
+    // `getChecksForTask` returns [] for an unknown task id, and the behavioral
+    // scorer treats that as "fall back to the structural HTML score" — quiet,
+    // plausible-looking, and exactly the failure this test exists to catch: a
+    // new HTML task would score 100 on structurally-valid markup that doesn't
+    // actually react to input. There is no generic default check set, so an
+    // empty list is unambiguously a missing-checks bug, and we assert
+    // non-empty rather than assert against a hardcoded id list.
+    const behavioral = behavioralTaskIds(BENCHMARK_TASKS)
+    expect(behavioral.size).toBeGreaterThan(0)
+    for (const id of behavioral) {
+      expect(getChecksForTask(id).length, `${id} checks`).toBeGreaterThan(0)
+    }
+  })
+
+  it('every declared scorer name is one the registry knows about', () => {
+    const known = new Set(['behavioral', 'html', 'text'])
+    for (const task of BENCHMARK_TASKS) {
+      if (task.scorer === undefined) continue
+      expect(known.has(task.scorer), `${task.id} scorer ${task.scorer}`).toBe(true)
     }
   })
 

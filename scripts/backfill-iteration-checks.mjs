@@ -20,21 +20,16 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { BENCHMARK_TASKS } from '../lib/lab/llm-benchmark/registry.ts'
+import { behavioralTaskIds } from '../lib/lab/llm-benchmark/scorers/index.ts'
 import { scoreWithBreakdown } from '../lib/lab/llm-benchmark/scorers/behavioral.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const resultsPath = join(root, 'lib/lab/llm-benchmark/results.json')
 
-// Mirror of the scorer registry's behavioural selection (scorers/index.ts
-// selectScorer). Keep in sync: the five HTML-runnable categories.
-const BEHAVIOURAL_TASK_IDS = new Set([
-  'n-body-field',
-  'mini-platformer',
-  'landing-page-morph',
-  'physics-pendulum-wave',
-  'circuit-builder-teaser',
-])
+// Derived from the scorer registry (each task row declares its scorer), so
+// adding a behavioural task never leaves this script behind.
+const BEHAVIOURAL_TASK_IDS = behavioralTaskIds(BENCHMARK_TASKS)
 
 async function main() {
   const results = JSON.parse(readFileSync(resultsPath, 'utf8'))

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { htmlScorer } from './html'
 import { textScorer } from './text'
-import { selectScorer } from './index'
+import { behavioralTaskIds, selectScorer } from './index'
 import { behavioralScorer } from './behavioral'
 import { BENCHMARK_TASKS } from '../registry'
 
@@ -123,5 +123,59 @@ describe('selectScorer', () => {
     expect(selectScorer(htmlTask)).toBe(behavioralScorer)
     expect(selectScorer(mathTask)).toBe(textScorer)
     expect(selectScorer(cryptoTask)).toBe(textScorer)
+  })
+
+  it("prefers the task's own scorer declaration over its category", () => {
+    // A text-scored task sitting in an HTML-runnable category, and vice versa.
+    // Both would resolve the other way under the heuristic alone.
+    expect(selectScorer({ ...htmlTask, scorer: 'text' })).toBe(textScorer)
+    expect(selectScorer({ ...mathTask, scorer: 'behavioral' })).toBe(behavioralScorer)
+    // 'html' is a registered name even though no shipped task declares it.
+    expect(selectScorer({ ...mathTask, scorer: 'html' })).toBe(htmlScorer)
+  })
+
+  it('falls back to the category heuristic when no scorer is declared', () => {
+    const { scorer: _htmlScorerName, ...unstampedHtml } = htmlTask
+    const { scorer: _mathScorerName, ...unstampedMath } = mathTask
+    expect(selectScorer(unstampedHtml)).toBe(behavioralScorer)
+    expect(selectScorer(unstampedMath)).toBe(textScorer)
+    // A category nobody has heard of is text — the pre-existing default.
+    expect(selectScorer({ ...unstampedMath, category: 'brand-new-category' })).toBe(textScorer)
+  })
+
+  it('resolves every shipped task exactly as the pre-registry heuristic did', () => {
+    // Behaviour lock: stamping `scorer` on the registry must not have moved a
+    // single task to a different scorer. This replays the OLD implementation
+    // (category set only, ignoring task.scorer) over the full registry.
+    const LEGACY_HTML_CATEGORIES = new Set([
+      '3d-physics-animation',
+      'advanced-game-building',
+      'advanced-physics',
+      'advanced-electronics',
+      'ui-building',
+    ])
+    for (const task of BENCHMARK_TASKS) {
+      const legacy = LEGACY_HTML_CATEGORIES.has(task.category) ? behavioralScorer : textScorer
+      expect(selectScorer(task), `${task.id} scorer`).toBe(legacy)
+    }
+  })
+})
+
+describe('behavioralTaskIds', () => {
+  it('returns exactly the five behaviourally-scored tasks in the shipped registry', () => {
+    expect([...behavioralTaskIds(BENCHMARK_TASKS)].sort()).toEqual(
+      [
+        'circuit-builder-teaser',
+        'landing-page-morph',
+        'mini-platformer',
+        'n-body-field',
+        'physics-pendulum-wave',
+      ].sort(),
+    )
+  })
+
+  it('picks up a task declared behavioral regardless of its category', () => {
+    const extra = { ...mathTask, id: 'future-task', scorer: 'behavioral' as const }
+    expect(behavioralTaskIds([...BENCHMARK_TASKS, extra]).has('future-task')).toBe(true)
   })
 })

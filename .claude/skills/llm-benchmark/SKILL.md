@@ -42,6 +42,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Sandbox contract (appended to HTML-runnable task prompts) | `lib/lab/llm-benchmark/prompts.ts` |
 | Failure classification + `isQuotaError` (per-model `Agy` "individual quota reached" included) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text,sandbox,checks,behavioral}.ts` |
+| Scorer registry (`selectScorer`, `behavioralTaskIds`) | `lib/lab/llm-benchmark/scorers/index.ts` |
 | Dependency sandbox | `lib/lab/llm-benchmark/sandbox/inline-dependencies.ts` |
 | Shared frame prelude (DOCTYPE, CSS reset, storage shim, in-iframe error overlay) | `lib/lab/llm-benchmark/frame-prelude.ts` |
 | Run script | `scripts/run-benchmark.mjs` |
@@ -259,15 +260,17 @@ export interface Scorer {
 
 - `lib/lab/llm-benchmark/scorers/html.ts` — basic HTML validity heuristics (doctype, tag balance, closed scripts).
 - `lib/lab/llm-benchmark/scorers/text.ts` — generic text/math heuristics plus task-specific keyword checks.
-- `lib/lab/llm-benchmark/scorers/behavioral.ts` — Playwright-driven behavioural scorer (headless Chromium with `--no-sandbox`). Runs each artifact as it would render in the demo iframe, drives the actual key events the task requires (Space for platformer jump, ArrowRight for movement, scroll for landing page morph, click for circuit builder), and pixel-diffs the canvas against the pre-event baseline. Composite is 70% behavioural + 30% structural. Selected by `selectScorer()` for the five HTML-runnable categories (`ui-building`, `3d-physics-animation`, `advanced-game-building`, `advanced-physics`, `advanced-electronics`). The big catch: a model that emits structurally complete HTML that doesn't actually react to input scores 30, not 100 — visible in the gemini platformer run from the agy frontier sweep.
+- `lib/lab/llm-benchmark/scorers/behavioral.ts` — Playwright-driven behavioural scorer (headless Chromium with `--no-sandbox`). Runs each artifact as it would render in the demo iframe, drives the actual key events the task requires (Space for platformer jump, ArrowRight for movement, scroll for landing page morph, click for circuit builder), and pixel-diffs the canvas against the pre-event baseline. Composite is 70% behavioural + 30% structural. The big catch: a model that emits structurally complete HTML that doesn't actually react to input scores 30, not 100 — visible in the gemini platformer run from the agy frontier sweep.
 
-The provider runner selects the HTML scorer for text tasks and the behavioural scorer for the five HTML-runnable task categories. Scores are shown as a 0-100 badge in the side-by-side output comparison UI.
+**Each task declares its own scorer.** `BenchmarkTask.scorer` (`'behavioral' | 'html' | 'text'`) is read first by `selectScorer()`; the old "is the category one of the five HTML-runnable ones?" heuristic (`ui-building`, `3d-physics-animation`, `advanced-game-building`, `advanced-physics`, `advanced-electronics`) is only the FALLBACK for an unstamped row. All seven shipped tasks declare theirs explicitly, so the registry is the one place you read to know how a task is evaluated. Scripts never keep their own task-id set: `behavioralTaskIds(BENCHMARK_TASKS)` from `scorers/index.ts` derives it (`scripts/rescore-behavioral.mjs`, `scripts/backfill-iteration-checks.mjs`). Scores are shown as a 0-100 badge in the side-by-side output comparison UI.
+
+To add an HTML-runnable task: add the registry row with `scorer: 'behavioral'`, add its checks to `scorers/checks.ts` (`CHECKS_BY_TASK`) — `registry.test.ts` fails a behavioural task with zero checks, because zero checks silently degrades to the structural score, which happily gives 100 to a game that ignores input.
 
 To add a new scorer:
 
 1. Create `lib/lab/llm-benchmark/scorers/<name>.ts` and export a `Scorer`.
-2. Export it from `lib/lab/llm-benchmark/scorers/index.ts`.
-3. Update `selectScorer()` to return it for the relevant task(s).
+2. Export it from `lib/lab/llm-benchmark/scorers/index.ts` and register it in the `SCORERS` map there under a new `BenchmarkScorerName`.
+3. Declare `scorer: '<name>'` on the task rows that want it (no `selectScorer()` edit needed).
 4. Run typecheck and tests.
 
 ## Response Caching

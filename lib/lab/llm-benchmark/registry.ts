@@ -302,6 +302,13 @@ export function modelsByProvider(): Record<string, BenchmarkModel[]> {
 }
 
 // ── Tasks ──────────────────────────────────────────────────────────────
+//
+// Every row declares its `scorer` explicitly, including the text tasks. The
+// field is optional (an unstamped row falls back to the category heuristic in
+// `scorers/index.ts`), but stamping ALL of them means the registry is the one
+// place you read to know how a task is evaluated — a mixed convention where
+// some rows declare and others rely on the heuristic is the thing that made
+// this selection hard to follow in the first place.
 export const BENCHMARK_TASKS: BenchmarkTask[] = [
   {
     id: 'n-body-field',
@@ -314,6 +321,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by frame stability, visual coherence, and correct gravitational integration.',
     demoComponentName: 'NBodyFieldDemo',
     slug: 'n-body-field',
+    scorer: 'behavioral',
   },
   {
     id: 'mini-platformer',
@@ -326,6 +334,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by playability, collision correctness, and absence of game-breaking bugs.',
     demoComponentName: 'MiniPlatformerDemo',
     slug: 'mini-platformer',
+    scorer: 'behavioral',
   },
   {
     id: 'crypto-hash-race',
@@ -338,6 +347,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by timing-attack resistance, correct salt handling, and test coverage.',
     demoComponentName: 'CryptoHashRaceDemo',
     slug: 'crypto-hash-race',
+    scorer: 'text',
   },
   {
     id: 'landing-page-morph',
@@ -350,6 +360,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by responsive layout, accessibility landmarks, and visual consistency.',
     demoComponentName: 'LandingPageMorphDemo',
     slug: 'landing-page-morph',
+    scorer: 'behavioral',
   },
   {
     id: 'equation-solver',
@@ -362,6 +373,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by mathematical correctness, completeness of roots, and clarity of derivation.',
     demoComponentName: 'EquationSolverDemo',
     slug: 'equation-solver',
+    scorer: 'text',
   },
   {
     id: 'physics-pendulum-wave',
@@ -374,6 +386,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by physical accuracy of periods, stable integration, and visual clarity of beats.',
     demoComponentName: 'PhysicsPendulumWaveDemo',
     slug: 'physics-pendulum-wave',
+    scorer: 'behavioral',
   },
   {
     id: 'circuit-builder-teaser',
@@ -386,6 +399,7 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     methodNotes: 'Scores by correctness of damping classification and stability of the numeric solver.',
     demoComponentName: 'CircuitBuilderTeaserDemo',
     slug: 'circuit-builder-teaser',
+    scorer: 'behavioral',
   },
 ]
 

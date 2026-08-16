@@ -19,6 +19,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { BENCHMARK_TASKS } from '../lib/lab/llm-benchmark/registry.ts'
+import { behavioralTaskIds } from '../lib/lab/llm-benchmark/scorers/index.ts'
 import { scoreWithBreakdown } from '../lib/lab/llm-benchmark/scorers/behavioral.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 
@@ -42,14 +43,9 @@ async function main() {
   const resultsPath = join(root, 'lib/lab/llm-benchmark/results.json')
   const results = JSON.parse(readFileSync(resultsPath, 'utf8'))
 
-  // Tasks we behavioural-score (HTML + has canvas/keyboard).
-  const BEHAVIOURAL_TASK_IDS = new Set([
-    'n-body-field',
-    'mini-platformer',
-    'landing-page-morph',
-    'physics-pendulum-wave',
-    'circuit-builder-teaser',
-  ])
+  // Tasks we behavioural-score, DERIVED from the registry (each task row
+  // declares its scorer) rather than duplicated here.
+  const BEHAVIOURAL_TASK_IDS = behavioralTaskIds(BENCHMARK_TASKS)
 
   const filtered = results.filter((r) => {
     if (args.model && r.modelId !== args.model) return false

@@ -530,32 +530,27 @@ the UI; old records degrade gracefully; demo remains snappy (lazy fetch).
 
 **Effort.** L. **Dependencies.** #1.
 
-## [ ] 10. Check/scorer registry formalization
+## [x] 10. Check/scorer registry formalization
 
-**Problem.** Task → scorer → checks selection is code: `selectScorer()`
-(`lib/lab/llm-benchmark/scorers/index.ts`) hardcodes the five HTML-runnable
-category ids, `getChecksForTask` (`scorers/checks.ts`) switches on task id,
-and `scripts/rescore-behavioral.mjs` + `scripts/backfill-iteration-checks.mjs`
-each hardcode the same five ids in their own BEHAVIOURAL_TASK_IDS set.
-Adding a sixth HTML task means touching four places.
-
-**Inspiration.** dsh: no privileged core; the task row declares its
-evaluator (tool/capability registration is config, architecture.md "Where
-new behavior goes"). Our `BenchmarkTask` is the natural home for that row.
-
-**Design sketch.**
-
-- `BenchmarkTask` gains optional `scorer?: 'behavioral' | 'html' | 'text'`
-  (default: current `selectScorer` heuristic → explicit beats heuristic).
-- `scorers/index.ts` reads the task field first, falls back to the heuristic
-  (backward compatible); `rescore-behavioral.mjs` and
-  `backfill-iteration-checks.mjs` derive their task set from the registry
-  instead of a duplicated constant.
-- `registry.test.ts`: assert every HTML-runnable task declares a scorer
-  (kills the "added a task, forgot it needs checks" failure mode).
-
-**Acceptance criteria.** Adding an HTML task requires only registry changes;
-no duplicated task-id sets remain; tests green.
+**Shipped.** The task row declares its evaluator: `BenchmarkTask.scorer`
+(`'behavioral' | 'html' | 'text'`, optional) is read FIRST by `selectScorer()`
+against a `SCORERS` name→implementation map in
+`lib/lab/llm-benchmark/scorers/index.ts`; the five-HTML-category heuristic
+survives only as the fallback for an unstamped row, so behaviour is
+byte-identical for pre-existing rows (a test replays the old heuristic over the
+full registry and asserts every task resolves the same). All seven shipped
+tasks are stamped explicitly — including the two text tasks, so the registry is
+the single place you read to learn how a task is scored; `html` is registered
+but deliberately unclaimed (vocabulary for a future structural-only task).
+`behavioralTaskIds(tasks)` derives the behavioural id set from the registry,
+and both `scripts/rescore-behavioral.mjs` and
+`scripts/backfill-iteration-checks.mjs` now call it instead of each keeping a
+copy (candidate sets over the 183-record results.json verified identical:
+130 rescore / 3 backfill, before and after). `registry.test.ts` fails a task in
+an HTML-runnable category that doesn't declare `scorer: 'behavioral'`, and
+fails any behavioural task with zero entries in `CHECKS_BY_TASK` — there is no
+generic default check set, so empty means the artifact quietly falls back to
+the structural score that hands 100 to a game that ignores input.
 
 **Effort.** S–M.
 
@@ -1303,6 +1298,10 @@ with their capture metadata.
   run first in the pre-push gate.
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
+- Task-declared scorers (#10): `BenchmarkTask.scorer` beats the category
+  heuristic (now fallback only), `behavioralTaskIds()` feeds the rescore and
+  backfill scripts, and `registry.test.ts` fails an HTML-runnable task that
+  declares no scorer or defines no checks.
 - Frame-prelude hardening + sandbox prompt contract + per-iteration
   retry/empty-body recovery + `RUN_MAX_RETRIES`/`RUN_TIMEOUT_MS` env knobs.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).

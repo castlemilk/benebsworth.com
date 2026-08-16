@@ -92,6 +92,15 @@ export interface BenchmarkCategory {
   blurb: string
 }
 
+/**
+ * Name of a registered scorer, as declared on a task row.
+ *
+ * These are the three scorers exported from `scorers/index.ts`. The name is
+ * the vocabulary a task uses to pick its evaluator without the selection
+ * logic having to know anything about categories.
+ */
+export type BenchmarkScorerName = 'behavioral' | 'html' | 'text'
+
 export interface BenchmarkTask {
   id: string
   category: string
@@ -103,6 +112,16 @@ export interface BenchmarkTask {
   methodNotes: string
   demoComponentName: string
   slug: string
+  /**
+   * Which scorer evaluates this task's output. **Explicit declaration beats
+   * the category heuristic**: `selectScorer()` reads this field first and
+   * only falls back to "is this one of the HTML-runnable categories?" when
+   * it is absent. Absent is therefore backward compatible — an unstamped
+   * task scores exactly as it did before the field existed — but every task
+   * in the shipped registry declares one, and `registry.test.ts` fails a new
+   * HTML-runnable task that forgets to.
+   */
+  scorer?: BenchmarkScorerName
 }
 
 /**

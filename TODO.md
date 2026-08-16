@@ -747,31 +747,23 @@ documented; the skill's sweep-operations runbook links them.
 
 # P3 — Architecture guards (graph-analysis additions)
 
-## [ ] 17. Dependency-layering guard test
+## [x] 17. Dependency-layering guard test
 
-**Problem.** The dsh graph analysis showed the whole 219-package tree is a
-strict zero-cycle DAG and that this is load-bearing ("no privileged core",
-effects unwind on unload). Our harness is small enough to keep honest with a
-cheap structural test instead of process discipline.
-
-**Inspiration.** dsh `scripts/gen-module-graph.ts` + `collectPackageGraph`
-(enforces dependency-safe ordering structurally) and the zero-cycle result of
-the 2026-08-13 analysis.
-
-**Design sketch.**
-
-- `lib/lab/llm-benchmark/layering.test.ts`: parse import statements across
-  the benchmark module tree (`types.ts`, `scorers/`, `runners/`, `scripts/`)
-  and assert:
-  - no cycles (Tarjan SCC, all components size 1);
-  - `types.ts` imports nothing from `scorers/`/`runners/`/`scripts/`;
-  - `scripts/` may import everything; `scorers/` and `runners/` never import
-    from `scripts/`.
-- Keep the rule documented in the skill's file map.
-
-**Acceptance criteria.** Test passes today; a deliberate cycle (e.g. a
-`runners/` file importing `scorers/` that imports back) fails the test;
-no per-file lint config needed.
+**Shipped.** `lib/lab/llm-benchmark/layering.test.ts` parses the real import
+graph — every non-test `.ts` under `lib/lab/llm-benchmark/**` plus the
+`scripts/*.mjs` that reach into it — with a text scan for
+`from '…'` / `import('…')` / bare `import '…'`, resolves relative specifiers
+(`./x` → `x.ts`, `x/index.ts`, explicit `.ts`/`.mjs`) and asserts four rules:
+zero cycles (Tarjan SCC, every component size 1, self-imports included),
+`types.ts` imports nothing in-tree (it is the bottom layer), no lib module
+imports upward into `scripts/`, and no `scorers/**` file imports `runners/**`
+(the forward edge `runners/provider.ts` → `scorers/` is asserted to still
+exist, so that rule can't go vacuous). A fifth test guards the guard: a rename
+that empties the scan fails instead of passing vacuously, and unresolvable
+relative imports fail loudly. Failures name the cycle path
+(`provider.ts → scorers/index.ts → scorers/html.ts → provider.ts`) or the
+offending edge with file:line and specifier. Checker is small pure functions
+in the test file — deliberately not a lib module. No lint config, no new deps.
 
 **Effort.** S.
 
@@ -1302,6 +1294,10 @@ with their capture metadata.
   heuristic (now fallback only), `behavioralTaskIds()` feeds the rescore and
   backfill scripts, and `registry.test.ts` fails an HTML-runnable task that
   declares no scorer or defines no checks.
+- Dependency-layering guard (#17): `layering.test.ts` parses the benchmark
+  import graph and enforces the DAG — zero cycles (Tarjan SCC), `types.ts` a
+  leaf, no lib module importing upward into `scripts/`, no `scorers/` →
+  `runners/` reverse edge.
 - Frame-prelude hardening + sandbox prompt contract + per-iteration
   retry/empty-body recovery + `RUN_MAX_RETRIES`/`RUN_TIMEOUT_MS` env knobs.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).

@@ -57,6 +57,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Invariant verification script | `scripts/verify-results.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
+| Dependency-layering guard (enforces `types.ts` → `scorers/` → `runners/` → `scripts/`: zero import cycles, `types.ts` a leaf, nothing imports upward into `scripts/`, `scorers/` never imports `runners/`) | `lib/lab/llm-benchmark/layering.test.ts` |
 | Route/path helpers | `lib/lab/llm-benchmark/nav.ts` |
 | MDX loader | `lib/lab/llm-benchmark/content.ts` |
 | Category & task UI | `components/lab/llm-benchmark/*` |

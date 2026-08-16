@@ -23,6 +23,11 @@ import { aggregateResults, type AggregateStats } from './harness'
  * broken output. The model-only average excludes these so the reader sees
  * the real capability number, with the reliability summary showing how
  * much of the dataset was lost to infrastructure.
+ *
+ * `cli_timeout` is deliberately NOT in this set: a CLI run that blew the
+ * per-call cap was still generating when the timer fired, so "too slow to
+ * finish in-window" is the model's own limitation and counts as capability —
+ * the same way 'truncated' does.
  */
 const INFRA_FAILURE_REASONS: ReadonlySet<BenchmarkFailureReason> = new Set([
   'rate_limited',
@@ -80,7 +85,8 @@ export function modelReliability(rs: BenchmarkResult[]): ModelReliability {
     } else if (INFRA_FAILURE_REASONS.has(reason)) {
       infraFailures++
     } else {
-      // 'truncated' and 'model_error' are capability signals, not infra.
+      // 'truncated', 'cli_timeout' and 'model_error' are capability signals,
+      // not infra.
       modelFailures++
       scored++
       scoreSum += r.score

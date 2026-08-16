@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 // Mock the wire + cache layers so the runner logic is exercised in isolation.
 vi.mock('./moonshot', () => ({ generateMoonshot: vi.fn() }))
+vi.mock('./opencode', () => ({ generateOpencode: vi.fn() }))
 vi.mock('../cache', () => ({
   getCachedResponse: vi.fn(() => undefined),
   setCachedResponse: vi.fn(),
@@ -9,11 +10,20 @@ vi.mock('../cache', () => ({
   saveQueue: Promise.resolve(),
 }))
 
-import { aggregateRuns, classifyFailureReason, createProviderRunner, isQuotaError } from './provider'
+import {
+  aggregateRuns,
+  classifyFailureReason,
+  createProviderRunner,
+  isCliProvider,
+  isQuotaError,
+  TimeoutError,
+} from './provider'
 import { generateMoonshot } from './moonshot'
+import { generateOpencode } from './opencode'
 import type { IterationRun } from './provider'
 
 const generateMock = vi.mocked(generateMoonshot)
+const generateOpencodeMock = vi.mocked(generateOpencode)
 
 const MODEL: BenchmarkModel = {
   id: 'test-kimi',
@@ -32,6 +42,17 @@ const MODEL2: BenchmarkModel = {
   costPer1kInputUsd: 0.001,
   costPer1kOutputUsd: 0.002,
   contextWindow: 1000,
+  capabilities: '',
+}
+
+const CLI_MODEL: BenchmarkModel = {
+  id: 'test-deepseek',
+  name: 'Test DeepSeek',
+  provider: 'OpenCode',
+  apiModelId: 'opencode/deepseek-v4-flash-free',
+  costPer1kInputUsd: 0,
+  costPer1kOutputUsd: 0,
+  contextWindow: 128000,
   capabilities: '',
 }
 
@@ -86,6 +107,72 @@ describe('opencode free-tier bearer blip classification', () => {
 
   it('keeps it out of the quota classification (no circuit breaker trip)', () => {
     expect(isQuotaError(bearerError)).toBe(false)
+  })
+})
+
+describe('CLI timeout classification', () => {
+  // Raw shape thrown by runCli (cli.ts) when the spawned CLI blows its cap.
+  const rawCliTimeout = new Error(
+    'Timeout after 600000ms: opencode run -m opencode/deepseek-v4-flash-free build the artifact'
+  )
+  // Shape thrown by the runner's outer withTimeout — indistinguishable from an
+  // API provider timing out except for the model behind the label, which is
+  // why classification takes the provider as context.
+  const outerTimeout = new TimeoutError(
+    'Timeout after 600000ms: DeepSeek V4 Flash Free :: Landing Page Morph #1/1'
+  )
+
+  it('flags CLI-backed providers', () => {
+    expect(isCliProvider(CLI_MODEL)).toBe(true)
+    expect(isCliProvider({ ...CLI_MODEL, provider: 'Agy' })).toBe(true)
+    expect(isCliProvider({ ...CLI_MODEL, provider: 'Codex' })).toBe(true)
+    expect(isCliProvider(MODEL)).toBe(false)
+  })
+
+  it('classifies the raw runCli timeout as cli_timeout without context', () => {
+    expect(classifyFailureReason(rawCliTimeout)).toBe('cli_timeout')
+    expect(classifyFailureReason(rawCliTimeout)).not.toBe('endpoint_hung')
+  })
+
+  it('classifies the outer timeout as cli_timeout when the model is CLI-backed', () => {
+    expect(classifyFailureReason(outerTimeout, undefined, { cliProvider: true })).toBe('cli_timeout')
+  })
+
+  it('keeps API-provider timeouts as endpoint_hung', () => {
+    expect(classifyFailureReason(outerTimeout)).toBe('endpoint_hung')
+    expect(classifyFailureReason(outerTimeout, undefined, { cliProvider: false })).toBe('endpoint_hung')
+    expect(classifyFailureReason(new Error('fetch failed'), undefined, { cliProvider: true })).toBe(
+      'endpoint_hung'
+    )
+  })
+
+  it('records cli_timeout on a CLI model and still retries (transient)', async () => {
+    generateOpencodeMock.mockReset()
+    // Timeout on iteration 1, success on iteration 2: a timeout stays transient,
+    // so the loop must keep going rather than break like an auth failure.
+    generateOpencodeMock
+      .mockRejectedValueOnce(
+        new TimeoutError('Timeout after 600000ms: Test DeepSeek :: Task X #1/2')
+      )
+      .mockResolvedValueOnce(OK)
+    const runner = createProviderRunner({ opencode: {}, bustCache: true, maxRetries: 0 })
+
+    const [result] = await runner.runTask(CLI_MODEL, TASK, 2)
+    expect(generateOpencodeMock).toHaveBeenCalledTimes(2)
+    expect(result.status).toBe('partial')
+    expect(result.iterationsSucceeded).toBe(1)
+  })
+
+  it('reports cli_timeout as the aggregate reason when every iteration times out', async () => {
+    generateOpencodeMock.mockReset()
+    generateOpencodeMock.mockRejectedValue(
+      new TimeoutError('Timeout after 600000ms: Test DeepSeek :: Task X #1/1')
+    )
+    const runner = createProviderRunner({ opencode: {}, bustCache: true, maxRetries: 0 })
+
+    const [result] = await runner.runTask(CLI_MODEL, TASK, 1)
+    expect(result.status).toBe('timeout')
+    expect(result.failureReason).toBe('cli_timeout')
   })
 })
 

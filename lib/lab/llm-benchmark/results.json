@@ -5450,7 +5450,7 @@
     "iterations": 1,
     "iterationsSucceeded": 0,
     "status": "timeout",
-    "failureReason": "endpoint_hung",
+    "failureReason": "cli_timeout",
     "createdAt": "2026-08-12T09:05:45.943Z",
     "source": "live",
     "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Landing Page Morph #1/1"
@@ -5466,7 +5466,7 @@
     "iterations": 1,
     "iterationsSucceeded": 0,
     "status": "timeout",
-    "failureReason": "endpoint_hung",
+    "failureReason": "cli_timeout",
     "createdAt": "2026-08-12T09:15:45.975Z",
     "source": "live",
     "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Equation Solver #1/1"
@@ -5482,7 +5482,7 @@
     "iterations": 1,
     "iterationsSucceeded": 0,
     "status": "timeout",
-    "failureReason": "endpoint_hung",
+    "failureReason": "cli_timeout",
     "createdAt": "2026-08-12T09:25:46.025Z",
     "source": "live",
     "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Physics Pendulum Wave #1/1"
@@ -5498,7 +5498,7 @@
     "iterations": 1,
     "iterationsSucceeded": 0,
     "status": "timeout",
-    "failureReason": "endpoint_hung",
+    "failureReason": "cli_timeout",
     "createdAt": "2026-08-12T09:35:46.079Z",
     "source": "live",
     "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Circuit Builder Teaser #1/1"

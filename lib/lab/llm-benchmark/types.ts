@@ -18,6 +18,12 @@ export type BenchmarkStatus = 'success' | 'partial' | 'fail' | 'timeout'
  *  - 'endpoint_hung'     : fetch never completed (connect/socket stall, DNS,
  *                          or stream stalled past the runner timeout). Distinct
  *                          from 'timeout' which is a per-call cap.
+ *  - 'cli_timeout'       : the CLI-driven generation exceeded the per-call cap —
+ *                          a capability/speed story (the model was too slow to
+ *                          finish in-window; free CLI tiers run 10-20 tok/s and
+ *                          a 20-50k-token artifact simply cannot land inside a
+ *                          10-minute cap), NOT the network story 'endpoint_hung'
+ *                          tells
  *  - 'truncated'         : finish_reason 'length' with empty content — the
  *                          reasoning trace consumed the completion budget before
  *                          the model wrote any answer
@@ -33,6 +39,7 @@ export type BenchmarkFailureReason =
   | 'rate_limited'
   | 'quota_exhausted'
   | 'endpoint_hung'
+  | 'cli_timeout'
   | 'truncated'
   | 'empty_body'
   | 'auth_error'

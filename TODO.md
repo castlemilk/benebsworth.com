@@ -526,34 +526,18 @@ green on current results.json; wired into pre-push.
 
 # P1 — Reliability and signal quality
 
-## [ ] 6. Distinct failure reason for CLI timeouts (`cli_timeout`)
+## [x] 6. Distinct failure reason for CLI timeouts (`cli_timeout`)
 
-**Problem.** A CLI call that exceeds its cap is classified `endpoint_hung`
-(`classifyFailureReason`, `lib/lab/llm-benchmark/runners/provider.ts`), which
-reads as a network story. The deepseek sweeps showed the dominant failure is
-actually **generation too slow** (10-20 tok/s free tier; tasks needing 20-50k
-tokens can never finish in-window) — a capability story. The UI currently
-labels these `timeout` (status) but the reason column says `endpoint_hung`.
-
-**Why now.** The four deepseek timeout rows (landing, equation, pendulum,
-circuit) are the board's most interesting data and their classification is
-misleading to readers.
-
-**Design sketch.**
-
-- Add `'cli_timeout'` to `BenchmarkFailureReason` in `types.ts`.
-- In `classifyFailureReason`, detect the CLI timeout shape:
-  `Timeout after <ms>ms: <command> <args>` (from `runCli` in cli.ts) and the
-  `withTimeout` label shape, returning `cli_timeout`.
-- `provider.test.ts`: new assertions (CLI timeout ≠ endpoint_hung, still
-  transient → retried).
-- UI: `statusClass` already renders `timeout` amber; add the reason to the
-  failure-reason histogram/summary wherever it's surfaced (model page).
-
-**Acceptance criteria.** Deepseek-style slow-generation failures show
-`cli_timeout`; unit tests lock the classification; docs/skill updated.
-
-**Effort.** S.
+**Shipped.** `'cli_timeout'` is a first-class `BenchmarkFailureReason`:
+`classifyFailureReason(err, output, { cliProvider })` returns it for a timeout
+on a CLI-backed provider (`isCliProvider()` — `Agy`, `Codex`, `OpenCode`) or on
+the raw `runCli` message shape, so slow generation reads as capability rather
+than the network story `endpoint_hung` tells. It stays transient (retried), and
+counts as a MODEL failure in `analytics.ts`. The four deepseek timeout rows were
+reclassified via `scripts/backfill-failure-reasons.mjs --cli-timeouts-only`.
+Runbook detail lives in the skill (Operational Gotchas). No UI change was
+needed: nothing under `components/`/`app/` renders failure reasons yet — the
+model page shows `status` only (see #8/#9 for surfacing them).
 
 ## [ ] 7. Quota-reset estimator
 
@@ -1378,7 +1362,7 @@ with their capture metadata.
 - Model-scoped circuit breaker + per-model quota errors
   (`trippedModels` keyed by model.id, provider.ts).
 - `BenchmarkFailureReason` taxonomy + `classifyFailureReason` (extend, don't
-  replace — see #6 for the CLI timeout gap).
+  replace), including `cli_timeout` for CLI-provider timeouts (#6).
 - Behavioral scorer (Playwright, 70/30 composite) + `iterationCheckResults`
   + `IterationChecks` UI pills + backfill script.
 - Parallel CLI file-handoff (unique `artifact-<model>-<task>-<n>.html` per

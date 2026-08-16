@@ -79,12 +79,35 @@ The single most valuable ideas for this benchmark:
    prompt sections while other sessions keep theirs; a preset naming a
    process-global service is rejected at mount rather than colliding.
    (packages/preset/README.md)
-8. **Projection is one pure function with an incremental cache.** Session
-   history is derived by folding `deriveEventMessage` over the log's surface
-   (O(new nodes), cached per generation, deep-frozen shared messages) — the
-   same function drives live history, external reconstruction, and pure
-   projections, so they can never disagree.
-   (packages/core/session/src/{index.ts,surface.ts})
+ 8. **Projection is one pure function with an incremental cache.** Session
+    history is derived by folding `deriveEventMessage` over the log's surface
+    (O(new nodes), cached per generation, deep-frozen shared messages) — the
+    same function drives live history, external reconstruction, and pure
+    projections, so they can never disagree.
+    (packages/core/session/src/{index.ts,surface.ts})
+ 9. **Authorized session retrieval + log export** (`packages/session/
+    session-query/` family): trusted reads, relationship queries, SQLite
+    FTS search, bounded reads with result pages — independent of compaction;
+    `session-log-export/` adds a Web `/export` command (ZIP of the session
+    log via a Host endpoint). The read/tool surface is consumed separately
+    from persistence internals. (Inspires #30.)
+ 10. **Content-addressed attachment storage** (`packages/attachment/` +
+    `attachment-local/`): immutable, content-addressed bytes under
+    `DSH_HOME`; image limits; "bytes enter durable storage only when a user
+    prompt is submitted". (Inspires #31.)
+ 11. **Storage domain with typed forms** (`packages/storage/` +
+    `storage-domain/`): consumers use validated data forms over swappable
+    backends (json/sqlite) — `DomainSpec`/`Domain`, `domain/changed` events.
+    The model for our feedback sidecar (#14) and any future local state.
+ 12. **Session references** (`packages/context/session-reference/`): bounded,
+    read-only snapshots of OTHER sessions injected as sourced model-facing
+    context — `dsh-session:<base64url>` URI scheme, `@[label](uri)` mentions,
+    candidate ranking (same-cwd first), snapshot metadata recording capture
+    seq + omitted counts. (Inspires #32.)
+ 13. **Skills, jobs, plan-mode** (`packages/skill/`, `packages/jobs/`,
+    `packages/plan/`): provider-neutral skill catalog with discovery
+    priority; owner-isolated background jobs (observation/cancellation/
+    waiting); plan mode as logged per-agent collaboration state.
 
 ---
 
@@ -243,9 +266,43 @@ Key ideas for this benchmark:
    environment is mediated; ours is an opaque-origin iframe (effectively
    fail-closed). The `mcp_gateway` eval cases are the checklist for any
    future benchmark task that requires network/tool interactions.
-7. **Billing inference** (`adapter-utils/src/billing.ts`,
-   `inferOpenAiCompatibleBiller`): per-adapter usage + cost inference — a
-   sharper model than our crude `estimateCost` (tokens × rate).
+ 7. **Billing inference** (`adapter-utils/src/billing.ts`,
+    `inferOpenAiCompatibleBiller`): per-adapter usage + cost inference — a
+    sharper model than our crude `estimateCost` (tokens × rate).
+ 8. **Budget + cost governance** (`server/src/services/{budgets,costs}.ts`,
+    schema `budget_policies` / `budget_incidents` / `cost_events`): per-agent
+    budget policies, a cost-event row per run, incidents raised when a
+    policy trips. (Inspires #28.)
+ 9. **Quota-monitor auto-recovery** (`server/src/services/heartbeat.ts`
+    `PROVIDER_QUOTA_MONITOR_SERVICE_NAME`; runs persist
+    `providerQuotaRetryNotBefore`, heartbeat.ts:679): a monitor resumes
+    paused work once the quota wait elapses ("The previous reviewer run
+    reached provider quota. Resume this execution-review stage now").
+    (Inspires #29.)
+ 10. **Agent action audit** (`server/src/services/agent-action-audit.ts` +
+    `createActivityDetailsRedactor`, schema `activity_log`): every agent
+    action audited with redacted details, full-context provenance
+    (company/agent/issue/run refs) — the pattern behind our #25 provenance
+    and #1 event log.
+ 11. **Secrets lifecycle** (schema `company_secrets` + `*_versions` +
+    `*_proposals` + `*_bindings` + `secret_access_events`;
+    `run-secret-redaction.ts`): propose → version → bind → audited access,
+    with redaction at run boundaries. The grown-up version of our #4/#20
+    credential hygiene.
+ 12. **Plugin platform** (schema `plugin_*`: `plugin_state`, `plugin_config`,
+    `plugin_database`, `plugin_jobs`, `plugin_logs`, `plugin_webhooks`,
+    `plugin_entities`, `plugin_managed_resources`): third-party plugins with
+    per-plugin DB + webhooks + managed resources — a possible long-term
+    direction for #10's task/check registry.
+ 13. **Decision pipeline with training examples** (schema `decision_queues`
+    / `decisions` / `decision_training_examples`): decisions logged; real
+    decisions become training examples — the eval-framework analogue of our
+    failure corpus (#25) feeding check design.
+ 14. **Export fidelity** (`server/src/services/export-fidelity.ts`): exports
+    must round-trip the source data. (Pairs with #30.)
+ 15. **Telemetry client** (`server/src/telemetry.ts`, shared
+    `TelemetryClient`): opt-in, config-resolved, state-file persisted —
+    the shape for any opt-in usage telemetry on the benchmark site.
 
 **Graphify meta-finding:** the graphify workflow itself is a tooling win for
 our OWN repos — code-only extraction is local, deterministic, ~2 min for
@@ -1153,6 +1210,166 @@ paperclip/dsh explorations above that were completed in minutes with it.
 rebuilds on change; CLAUDE.md documents query-first.
 
 **Effort.** S.
+
+---
+
+## [ ] 28. Sweep budget governance (policies, incidents, cost events)
+
+**Problem.** Paid sweeps (codex, agy frontier models, OpenRouter top-up) can
+spend real money; today the only guard is manual "did it blow the budget?"
+review after the fact. A sweeps run of 7 tasks x 5 iterations on a paid
+model has no cap.
+
+**Inspiration.** paperclip's budget + cost governance: `server/src/services/
+budgets.ts` + `costs.ts`, schema `budget_policies.ts` / `budget_incidents.ts`
+/ `cost_events.ts` — per-agent/company budget policies, cost event rows per
+run, incidents raised when a policy is exceeded; and heartbeat's
+`providerQuotaRetryNotBefore` persistence. dsh's guard family
+(`packages/guard/timeout-policy/`: per-call deadlines as deployment policy)
+for the policy-shape.
+
+**Design sketch.**
+
+- `sweep-budget` section in run-benchmark env/profile (#2): `BUDGET_MAX_USD`
+  per (model, sweep) with a default off; cost accrues from `estimateCost`
+  per iteration (already computed; #23 sharpens it).
+- When the budget trips: stop the model's remaining iterations (reuse the
+  circuit-breaker skip path, `trippedModels`), log a `budget_incident`
+  event (model, task, spent, cap), persist on the affected records.
+- Event log (#1) records `cost_event` rows per iteration so spend is
+  auditable after the fact.
+- UI: model page shows total spend vs cap when a budget was set.
+
+**Acceptance criteria.** A `BUDGET_MAX_USD=$0.01` smoke run on any provider
+stops mid-sweep with an incident logged and no further calls; spent totals
+reconstructable from cost events.
+
+**Effort.** M. **Dependencies.** #2 (profiles), #23 (billing shape).
+
+## [ ] 29. Quota-monitor with auto-resume (recovery service)
+
+**Problem.** Agy/opencode quota lockouts killed sweeps repeatedly this
+session; recovery was manual ("wait for reset, relaunch"). paperclip solves
+exactly this with a quota review monitor that resumes work after the wait
+elapses.
+
+**Inspiration.** paperclip `server/src/services/heartbeat.ts`
+(7861: "The previous reviewer run reached provider quota. Resume this
+execution-review stage now that the quota wait has elapsed") +
+`PROVIDER_QUOTA_MONITOR_SERVICE_NAME`; runs persist
+`providerQuotaRetryNotBefore` (heartbeat.ts:679) and the dashboard buckets
+failures by `provider_quota`. Pairs with our #5 (quota-reset estimator) and
+#18 (sweep resume).
+
+**Design sketch.**
+
+- Persist `providerQuotaRetryNotBefore` on BenchmarkResult (from the breaker
+  path in provider.ts, reusing the #5 regex parse of "Resets in X").
+- `scripts/sweep-recovery.mjs`: a tiny monitor that reads the sweep root
+  (#3) + results.json, lists models with `quotaNextResetAt` in the future,
+  and when the clock passes the reset, relaunches the pending (model, task)
+  pairs via `--resume` (#18). Meant to run under `cron`/launchd, logging to
+  the sweep root.
+- `task bench:monitor` wrapper + skill runbook entry ("quota-locked? start
+  the monitor and walk away").
+
+**Acceptance criteria.** A simulated quota-locked sweep is auto-resumed by
+the monitor after the reset time; no duplicate runs (resume boundary rule);
+logs show monitor decisions.
+
+**Effort.** M. **Dependencies.** #3, #5, #18.
+
+## [ ] 30. Run-trace export on the site (session-log-export)
+
+**Problem.** The event log (#1) makes traces available locally; readers of
+the site have no way to download or re-verify a published score. dsh ships
+a Web `/export` command producing a ZIP of the session log; paperclip has
+`export-fidelity.ts` (fidelity checks for exports).
+
+**Inspiration.** dsh `packages/session/session-log-export/` (Web /export ->
+ZIP via Host endpoint, shared browser download state, result modal) +
+`docs/subsystems/session-query.md` (bounded reads, traces, filters, result
+pages). paperclip `server/src/services/export-fidelity.ts` (exports must
+round-trip the source data).
+
+**Design sketch.**
+
+- On the model/task pages, an "Export run trace" button per record with a
+  `runLogRef` (#1): serves `sweeps/<run-id>/<model>-<task>.jsonl` (+ the
+  artifact HTML) as a ZIP download via a route or static copy in
+  `public/lab-data/`.
+- `scripts/verify-results.mjs` (#5) gains an export-fidelity check: the
+  published export (public/lab-data or the ZIP) must reproduce the record's
+  score when re-projected (the "export round-trips" invariant).
+- UI disclosure: exports include the check-level data behind the score.
+
+**Acceptance criteria.** A reader can download a trace ZIP and re-verify the
+score from it; fidelity check fails if the export diverges from results.json.
+
+**Effort.** M. **Dependencies.** #1 (event log), #9 (trace UI).
+
+## [ ] 31. Content-addressed artifact store
+
+**Problem.** Artifacts are stored by run-scoped names
+(`artifact-<model>-<task>-<n>.html`); identical outputs across iterations or
+models (deepseek's repeated "no canvas" pages) duplicate storage, and
+nothing verifies an artifact matches what was scored.
+
+**Inspiration.** dsh `packages/attachment/` + `attachment-local`: content-
+addressed private storage, immutable references, image limits; "bytes enter
+durable storage only when a user prompt is submitted" (write-once
+discipline). Also their `domain` storage family (storage-domain: validated
+records over swappable json/sqlite backends).
+
+**Design sketch.**
+
+- `sweeps/<run-id>/artifacts/<sha256-prefix>.html`: write once, dedupe by
+  hash; the event log (#1) references artifacts by their content hash, not
+  by model/task name.
+- `BenchmarkResult.output` keeps the current inline behavior, but
+  `runLogRef`/trace records carry `artifactRef: sha256`.
+- `verify-results.mjs` (#5) gains a check: the artifact at the recorded hash
+  re-scores to the recorded iteration score (content-addressing makes this
+  a cheap exact-match check).
+- Site serves deduped artifacts via the hash (cache-friendly, stable URLs).
+
+**Acceptance criteria.** Identical artifacts across iterations store once;
+a tampered/regenerated artifact fails the hash check; the demo fetch path
+still works (URL now hash-derived).
+
+**Effort.** M. **Dependencies.** #1, #3.
+
+## [ ] 32. Cross-run references (`bench://` URIs + related-run snapshots)
+
+**Problem.** Run traces exist per record but nothing links them: a reader
+on the deepseek platformer page cannot jump to the n-body page's failed
+iterations that share a failure signature (no `<canvas>`), and an agent
+session cannot cite another run's evidence.
+
+**Inspiration.** dsh `packages/context/session-reference/`: bounded, read-
+only snapshots of OTHER sessions injected as sourced context — a URI scheme
+(`dsh-session:<base64url(json)>`), `@[label](uri)` mention syntax, candidate
+ranking (same-cwd first), and snapshot semantics that record what was
+omitted (capture seq, retained/omitted message counts). paperclip
+`catalog-provenance.ts` for the provenance side.
+
+**Design sketch.**
+
+- A `bench://<model>/<task>/<iteration>` URI scheme + `formatBenchReference()`
+  / `parseBenchReference()` helpers (mirroring the dsh encode/decode pair).
+- "Related runs" panel on the task page: same failure signature
+  (`failedChecks` intersection from `iterationCheckResults`), ranked like
+  `listCandidates` (same task first, then same model, then others).
+- Run-trace UI (#9) renders parsed `bench://` references as links; the
+  event log records cross-references with capture seq + omitted counts
+  (what the trace includes vs the full log) — dsh's snapshot semantics.
+- Future: the OMEGA harness agent can cite `bench://` evidence in reports.
+
+**Acceptance criteria.** `bench://` URIs round-trip; the related-runs panel
+links iterations sharing a failed check; cross-references appear in traces
+with their capture metadata.
+
+**Effort.** M-L. **Dependencies.** #1, #9.
 
 ---
 

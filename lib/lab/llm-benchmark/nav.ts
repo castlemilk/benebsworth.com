@@ -53,6 +53,30 @@ export function outputHtmlUrl(taskId: string, modelId: string, version?: string)
   return version ? `${base}?v=${encodeURIComponent(version)}` : base
 }
 
+/**
+ * Static URL for one published run log (JSONL), written by
+ * `scripts/publish-traces.mjs`. Fetched on demand by the run-trace disclosure.
+ *
+ * No `?v=` cache-buster, unlike the output URLs: the run id is part of the
+ * path and a sweep never rewrites a published run's log, so the URL is already
+ * content-stable — a re-run gets a new run id and therefore a new URL.
+ */
+export function traceUrl(runId: string, file: string): string {
+  return `/lab-data/traces/${encodeURIComponent(runId)}/${encodeURIComponent(file)}`
+}
+
+/**
+ * Static URL for one spill file inside a published run — the FULL bytes behind
+ * a `{ spillRef, preview, bytes }` field. `spillRef` is already relative to the
+ * run dir (`spill/<hash>.txt`).
+ */
+export function traceSpillUrl(runId: string, spillRef: string): string {
+  return `/lab-data/traces/${encodeURIComponent(runId)}/${spillRef
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/')}`
+}
+
 const ROOT_CRUMBS: Crumb[] = [
   { label: 'Home', href: '/' },
   { label: 'Lab', href: '/lab/' },

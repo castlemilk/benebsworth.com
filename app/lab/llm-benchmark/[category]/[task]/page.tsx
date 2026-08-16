@@ -24,6 +24,9 @@ import { ModelOutputComparison } from '@/components/lab/llm-benchmark/model-outp
 import { GeneratedDemo } from '@/components/lab/llm-benchmark/generated-demo'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
 import { SandboxContract } from '@/components/lab/llm-benchmark/sandbox-contract'
+import { RunTraceList } from '@/components/lab/llm-benchmark/run-trace'
+import { loadTraceIndex } from '@/lib/lab/llm-benchmark/traces-server'
+import { findTraceEntry } from '@/lib/lab/llm-benchmark/traces'
 import { formatScore, formatRuntime, formatCost, formatTokens } from '@/components/lab/llm-benchmark/format'
 import { modelPath } from '@/lib/lab/llm-benchmark/nav'
 
@@ -89,6 +92,20 @@ export default async function BenchmarkTaskPage({
   const postBody = loadTaskPostMdx(task)
   const results = resultsForTask(t.id)
   const overall = aggregateResults(results)
+
+  // Run traces are matched against the PUBLISHED index (read from the repo at
+  // build time), never probed for at runtime: this is a static export, so a
+  // record whose sweep logs were never published — every record written before
+  // the run log existed — must resolve to "no trace" without a 404.
+  const traceIndex = loadTraceIndex()
+  const traces = results
+    .map((result) => ({
+      entry: findTraceEntry(traceIndex, result.runLogRef),
+      modelName: getModel(result.modelId)?.name ?? result.modelId,
+    }))
+    .filter((item): item is { entry: NonNullable<typeof item.entry>; modelName: string } =>
+      Boolean(item.entry),
+    )
 
   const breadcrumb = breadcrumbLd([
     { name: 'Home', url: `${SITE_URL}/` },
@@ -316,6 +333,21 @@ export default async function BenchmarkTaskPage({
               </table>
             </div>
           </Reveal>
+
+          {/* Run traces — the event log behind the numbers above. Renders
+              nothing when no model on this task has a published trace. */}
+          {traces.length > 0 && (
+            <Reveal delay={200}>
+              <div className="mt-8">
+                <h3 className="type-h3 mb-1">Iteration traces</h3>
+                <p className="mb-4 max-w-prose text-sm text-fg/70">
+                  The append-only run log behind each row: the prompt that was sent, every retry,
+                  what each iteration emitted, and how the checks scored it.
+                </p>
+                <RunTraceList items={traces} untracedCount={results.length - traces.length} />
+              </div>
+            </Reveal>
+          )}
 
           <Reveal delay={240}>
             <div className="mt-8 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">

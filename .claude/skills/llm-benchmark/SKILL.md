@@ -51,8 +51,12 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Named sweep recipes (data) | `lib/lab/llm-benchmark/sweep-profiles.json` |
 | Profile loader + config resolution/provenance + duration estimate | `lib/lab/llm-benchmark/sweep-profiles.ts` |
 | Quota-reset parsing + pre-flight lock check (`parseQuotaResetMs`, `quotaLockedModels`) | `lib/lab/llm-benchmark/quota.ts` |
-| Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
+| Per-iteration run log (JSONL writer, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
+| Run-log record shapes + `parseRunLog` (browser-safe — the ONLY run-log module the UI may import) | `lib/lab/llm-benchmark/runlog-format.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
+| Trace publication decisions (pure) + build-time index read | `lib/lab/llm-benchmark/traces.ts`, `traces-server.ts` |
+| Trace publication script (`task bench:publish-traces`) | `scripts/publish-traces.mjs` |
+| Run-trace UI (the transcript, in the browser) | `components/lab/llm-benchmark/run-trace.tsx` |
 | Per-call telemetry (TTFT/decode-rate sink + `foldTelemetry`) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
@@ -560,6 +564,68 @@ points and detail, and the aggregate line (score, status, failureReason,
 `runLogRef`). Model/task filtering reads the HEADER, not the filename — both
 ids contain hyphens, so the name can't be split reliably. `SWEEPS_DIR`
 overrides the directory scanned.
+
+### Publishing a trace to the site (`task bench:publish-traces`)
+
+`sweeps/` is gitignored and pruned, and the site is a static export with no
+server — so a trace is readable on the web ONLY if it was copied into the repo
+and committed. That is what publication is, and why published traces are the
+one thing under the otherwise-generated `public/lab-data/` that git tracks
+(see the carve-out in `.gitignore`).
+
+**Runbook order after a sweep:**
+
+```bash
+task bench:outputs           # artifacts (results.json changed)
+task bench:verify-results    # data invariants, incl. the run-log checks
+task bench:publish-traces    # copy the referenced logs + their spill files in
+git add lib/lab/llm-benchmark/results.json public/lab-data/traces && git commit
+```
+
+- Publishes `public/lab-data/traces/<runId>/<file>` for every record with a
+  `runLogRef` whose log is present locally, plus ONLY the spill files that log
+  references (walked recursively — the writer spills any oversized string
+  anywhere in an event), plus `index.json` (`runId`, `file`, `modelId`,
+  `taskId` from each HEADER, `bytes`, `spillRefs`).
+- **The index is the authority.** The task page reads it at build time
+  (`traces-server.ts`) and renders a trace disclosure only for a record whose
+  ref is in it — a static export can't probe for a file, and a 404 per
+  historical row is not an acceptable "does it exist?" test.
+- **Idempotent and pruning.** Re-running is a no-op; a trace no record claims
+  any more (a pair re-run under a new run id) is DELETED, as are spill files no
+  surviving log references. A stale trace is evidence for a result the site no
+  longer shows.
+- **Spill bytes are the cost.** Spill files are whole artifacts, copied
+  verbatim — a clipped artifact would be evidence you can't trust. The script
+  prints the totals and WARNS past a 2 MB soft budget; the operator decides
+  whether to commit that much (pruning `sweeps/` first with
+  `npx tsx scripts/sweep-clean.mjs` publishes fewer runs).
+- Nothing in `prebuild` regenerates this: CI has no `sweeps/`, so publication
+  is a deliberate local step, exactly like a results.json commit.
+
+### Run-trace UI
+
+`components/lab/llm-benchmark/run-trace.tsx` is `retrace.mjs` in the browser,
+rendered on the task page under the results table as "Iteration traces": one
+collapsed disclosure per model that HAS a published trace. Expanding it fetches
+the JSONL once (`cache: 'force-cache'`; the run id is in the path, so a re-run
+gets a new URL and there is no cache-buster) and parses it with `parseRunLog`.
+
+- Per iteration: the request (prompt hash + length), each retry (kind, attempt,
+  delay, one-line error), each response (tokens, runtime, TTFT + tok/s when
+  measured, a cache-hit badge), the cleaned artifact, the checks as the shared
+  `IterationChecks` pills, plus `failure` / `quota` lines; then the aggregate.
+- Artifacts render as the log's own bounded preview with a `view full` link to
+  the published spill file — never inlined whole.
+- **Client-bundle rule:** the component imports `parseRunLog` from
+  `runlog-format.ts` ONLY. `runlog.ts` is the writer and is node-only
+  (`node:fs`, `node:crypto`); importing it from a client component would drag
+  those into the bundle. The types live in `runlog-format.ts` and `runlog.ts`
+  re-exports them, so the reader can never drift from the writer.
+- **Degrading.** A record with no `runLogRef`, or one whose ref is not in the
+  index, gets no disclosure; the section states the count of untraced runs in
+  one muted line, and renders nothing at all when the task has no traces —
+  which is the state of every task until the next sweep is published.
 
 ## Per-call telemetry (TTFT, decode rate, cache, retries)
 

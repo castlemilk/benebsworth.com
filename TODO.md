@@ -498,29 +498,31 @@ it as font-mono muted chips (`3/8 done · 4 timeouts`, zero segments omitted,
 landing-page model cards, the models index cards, and the model page header.
 10 helper tests in `analytics.test.ts`.
 
-## [ ] 9. Run-trace UI (render the event log)
+## [x] 9. Run-trace UI (render the event log)
 
-**Problem.** #1 produces the data but the benchmark pages only show
-aggregates + the best artifact. The side-by-side comparison
-(`components/lab/llm-benchmark/model-output-comparison.tsx`) compares final
-artifacts; it can't show *why* an iteration failed.
-
-**Inspiration.** dsh web app browses sessions and replays transcripts from
-the session log (architecture.md "Session log"; `dsh web`).
-
-**Design sketch.**
-
-- On the task page's run section (per model), an expandable "iteration
-  trace" panel fed by the run log JSONL (fetched like the on-demand output
-  JSONs via `gen-benchmark-outputs.mjs`-style static publication, or only
-  when `runLogRef` exists).
-- Shows per iteration: prompt hash/length, raw vs cleaned output diff, each
-  check (name/passed/points/detail — reuses `IterationChecks` pills), retry
-  events, timings.
-- Fall back to "no trace recorded (pre-event-log run)" on old records.
-
-**Acceptance criteria.** Any iteration from a logged sweep is browsable in
-the UI; old records degrade gracefully; demo remains snappy (lazy fetch).
+**Shipped.** The run log is readable on the site. The blocker was publication,
+not rendering: `sweeps/` is gitignored and pruned, so on a static-export site
+with no server the trace has to be COPIED INTO THE REPO to exist for a reader.
+`scripts/publish-traces.mjs` (`task bench:publish-traces`) copies each log a
+`runLogRef` names, plus only the spill files that log references, into
+`public/lab-data/traces/<runId>/` — carved out of the otherwise-generated
+`public/lab-data/` in `.gitignore` because these ARE the committed evidence —
+prunes traces no record claims any more, and writes `index.json` from the log
+HEADERS. That index is the authority: the task page reads it at build time and
+mounts a disclosure only for a record in it, so nothing ever 404-probes. The
+parser moved to a browser-safe `runlog-format.ts` (records + `parseRunLog`,
+re-exported by `runlog.ts` so reader and writer can't drift);
+`components/lab/llm-benchmark/run-trace.tsx` fetches the JSONL on expand and
+renders retrace.mjs's hierarchy — request, retries, responses with TTFT/tok-s
+and cache badges, the scored artifact as a bounded preview linking to the full
+spill file, the `IterationChecks` pills, failure/quota lines, then the
+aggregate. Untraced records get no per-row noise: one muted count, and the
+section is absent entirely when a task has none — which is every task today.
+**Nothing is published in this commit** (no existing record carries a
+`runLogRef`); the committed index is `[]` and the first real trace lands with
+the next sweep. Verified end-to-end against a local, uncommitted fixture rather
+than by back-stamping a ref onto a real record — fabricated provenance is the
+one thing this benchmark cannot ship.
 
 **Effort.** L. **Dependencies.** #1.
 
@@ -1436,6 +1438,13 @@ without reading results.json; the server is read-only.
   (header + request/response/retry/clean/failure/check/aggregate events,
   content-addressed `spill/`), `BenchmarkResult.runLogRef`, replayed by
   `scripts/retrace.mjs`.
+- Run-trace publication + UI (#9): `task bench:publish-traces` copies the logs
+  results.json references (and only their referenced spill files) into the
+  committed `public/lab-data/traces/`, prunes stale ones, and writes the
+  `index.json` the task page reads at build time; `runlog-format.ts` holds the
+  records + `parseRunLog` browser-safe, and `run-trace.tsx` renders
+  retrace.mjs's transcript in a lazy disclosure. Committed index is empty until
+  a real sweep is published — no back-stamped `runLogRef`s.
 - Sweep profiles + effective-config dump (#2): recipes as data in
   `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
   (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough

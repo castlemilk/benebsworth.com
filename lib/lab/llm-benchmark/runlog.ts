@@ -59,6 +59,14 @@ export interface RunLogConfigSnapshot {
   timeoutMs: number
   maxRetries: number
   bustCache: boolean
+  /**
+   * The plugin bundles mounted for this sweep (`[]` = builtins only), when the
+   * caller supplies them. Audit-only: it records the scope a run was resolved
+   * under, which the task list alone cannot show (a sweep can mount a plugin
+   * and run none of its tasks). Absent on library/test use and on logs written
+   * before the knob existed.
+   */
+  plugins?: string[]
 }
 
 /** Immutable first line of every run log. */

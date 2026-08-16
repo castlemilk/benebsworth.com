@@ -41,6 +41,13 @@ export interface ProviderRunnerConfig {
   scorer?: Scorer
   /** If true, ignore the response cache and always call the provider. */
   bustCache?: boolean
+  /**
+   * The plugin bundles this sweep mounted (`[]` = builtins only). AUDIT ONLY —
+   * the runner never reads it for behaviour; bundle selection filters the task
+   * list in `scripts/run-benchmark.mjs`, and this simply carries the resolved
+   * set into every run log's header snapshot so a trace records its own scope.
+   */
+  plugins?: string[]
 }
 
 interface GenerationResponse {
@@ -700,6 +707,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           timeoutMs,
           maxRetries: cfg.maxRetries ?? 2,
           bustCache,
+          plugins: cfg.plugins,
         },
       })
 

@@ -83,8 +83,28 @@ describe('setRunLogDir / openRunLog', () => {
     expect(header.modelId).toBe('test-model')
     expect(header.taskId).toBe('task-x')
     expect(header.configSnapshot).toEqual(META.configSnapshot)
+    // Optional and absent when the caller supplies none: run logs written
+    // before plugin bundle selection existed stay valid.
+    expect(header.configSnapshot.plugins).toBeUndefined()
     expect(typeof header.createdAt).toBe('string')
     expect(events).toEqual([])
+  })
+
+  it('carries the active plugin bundle set in the snapshot when the sweep supplies one', async () => {
+    // Audit trail for plugin bundle selection: a run log must answer "which
+    // plugins were mounted for this sweep?" without re-deriving it from the
+    // task list (a sweep that mounted a plugin but ran none of its tasks is
+    // indistinguishable otherwise).
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const log = openRunLog({
+      ...META,
+      configSnapshot: { ...META.configSnapshot, plugins: ['community-tasks'] },
+    })!
+    await log.close()
+
+    const { header } = readRunLog(join(dir, log.file))
+    expect(header.configSnapshot.plugins).toEqual(['community-tasks'])
   })
 
   it('truncates an existing file for the same model+task (one file per pair per sweep)', async () => {

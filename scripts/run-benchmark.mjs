@@ -5,6 +5,8 @@
 //   --profile <name>     apply a named recipe from lib/lab/llm-benchmark/sweep-profiles.json
 //   --model <id>         repeatable, or a comma list (default: kimi-k2.7)
 //   --task <id>          repeatable, or a comma list (default: every task)
+//   --plugins <a,b>      plugin bundles to mount (default: ALL registered);
+//                        `--plugins none` = builtins only. Repeatable/comma list.
 //   --iterations <n>     per task x model (default: the task's iterationsDefault)
 //   --concurrency <n>    parallel task/model jobs (default: 3)
 //   --timeout-ms <n>     per-call cap (default: the runner's 10 minutes)
@@ -15,8 +17,8 @@
 //
 // PRECEDENCE:  CLI flag  >  env var  >  profile  >  built-in default.
 //
-// The env vars (RUN_MODELS, RUN_TASKS, RUN_ITERATIONS, RUN_CONCURRENCY,
-// RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE) still work exactly as they
+// The env vars (RUN_MODELS, RUN_TASKS, RUN_PLUGINS, RUN_ITERATIONS,
+// RUN_CONCURRENCY, RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE) work as they
 // always have — the Taskfile wrappers and the skill runbook depend on it. They
 // are now the middle override layer rather than the only interface.
 //
@@ -43,10 +45,13 @@ import { formatQuotaWindow, quotaLockedModels } from '../lib/lab/llm-benchmark/q
 import {
   SWEEP_PROFILES,
   estimateSweepDuration,
+  excludedPluginTaskConflicts,
+  filterTasksByPlugins,
   formatDuration,
   parseSweepArgs,
   resolveSweepConfig,
 } from '../lib/lab/llm-benchmark/sweep-profiles.ts'
+import { getPlugins } from '../lib/lab/llm-benchmark/plugins/index.ts'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 
@@ -78,10 +83,22 @@ try {
   config = resolveSweepConfig({ flags: args.flags, env: process.env, profile: args.profile })
 } catch (err) {
   console.error(err.message)
-  console.error('')
-  listProfiles()
+  // The recipe list is the useful next step ONLY when a profile is in play; a
+  // bad --plugins id already prints its own roster, and burying that under 6
+  // unrelated lines is how a clear error becomes an unread one.
+  if (args.profile !== undefined) {
+    console.error('')
+    listProfiles()
+  }
   process.exit(1)
 }
+
+// Plugin bundle selection. `config.plugins.value === undefined` means "every
+// registered plugin" — resolved to the concrete roster HERE so the dump, the
+// task filter and the run-log snapshot all talk about the same explicit set
+// rather than about an absence.
+const ALL_PLUGIN_IDS = getPlugins().map((p) => p.id)
+const ACTIVE_PLUGINS = config.plugins.value ?? ALL_PLUGIN_IDS
 
 const IGNORE_QUOTA_LOCK =
   process.env.RUN_IGNORE_QUOTA_LOCK === '1' || process.env.RUN_IGNORE_QUOTA_LOCK === 'true'
@@ -143,12 +160,26 @@ function dumpConfig({ models, tasks, locks, outPath }) {
     )
   )
   row('models', `${models.length}: ${models.map((m) => m.name).join(', ')}`, config.models.source)
+  // The task count can shrink for TWO reasons (--task, and an unmounted
+  // plugin). The row's provenance covers only the first, so say the second out
+  // loud — "7 of 8 (default)" would otherwise read as a bug.
+  const excludedByPlugins = BENCHMARK_TASKS.length - filterTasksByPlugins(BENCHMARK_TASKS, ACTIVE_PLUGINS).length
   row(
     'tasks',
-    tasks.length === BENCHMARK_TASKS.length
+    (tasks.length === BENCHMARK_TASKS.length
       ? `all ${tasks.length}`
-      : `${tasks.length} of ${BENCHMARK_TASKS.length}: ${tasks.map((t) => t.id).join(', ')}`,
+      : `${tasks.length} of ${BENCHMARK_TASKS.length}: ${tasks.map((t) => t.id).join(', ')}`) +
+      (excludedByPlugins > 0 ? ` [${excludedByPlugins} excluded by plugin set]` : ''),
     config.tasks.source
+  )
+  row(
+    'plugins',
+    config.plugins.value === undefined
+      ? `all (${ALL_PLUGIN_IDS.length})${ALL_PLUGIN_IDS.length > 0 ? `: ${ALL_PLUGIN_IDS.join(', ')}` : ''}`
+      : ACTIVE_PLUGINS.length === 0
+        ? 'none — builtins only'
+        : `${ACTIVE_PLUGINS.length} of ${ALL_PLUGIN_IDS.length}: ${ACTIVE_PLUGINS.join(', ')}`,
+    config.plugins.source
   )
   // With no explicit iterations each task uses its own iterationsDefault; show
   // the distinct values rather than one number per task.
@@ -244,11 +275,27 @@ async function main() {
     reportUnknown('task', unknownTasks, taskIds)
     process.exit(1)
   }
-  const tasks = config.tasks.value
+  // Naming a task whose plugin this sweep does not mount is a self-contradicting
+  // instruction — fatal, like an unknown id, rather than a silently smaller run.
+  const conflicts = excludedPluginTaskConflicts(config.tasks.value, BENCHMARK_TASKS, ACTIVE_PLUGINS)
+  if (conflicts.length > 0) {
+    for (const { taskId, pluginId } of conflicts) {
+      console.error(
+        `Task "${taskId}" comes from plugin "${pluginId}", which this sweep does not mount (plugins: ${
+          ACTIVE_PLUGINS.length === 0 ? 'none — builtins only' : ACTIVE_PLUGINS.join(', ')
+        }, from ${config.plugins.source}).`
+      )
+    }
+    console.error('Add the plugin to --plugins, or drop the --task.')
+    process.exit(1)
+  }
+
+  const requested = config.tasks.value
     ? BENCHMARK_TASKS.filter((t) => config.tasks.value.includes(t.id))
     : BENCHMARK_TASKS
+  const tasks = filterTasksByPlugins(requested, ACTIVE_PLUGINS)
   if (tasks.length === 0) {
-    console.error(`No matching tasks found for: ${config.tasks.value.join(', ')}`)
+    console.error(`No matching tasks found for: ${config.tasks.value?.join(', ') ?? 'the active plugin set'}`)
     process.exit(1)
   }
 
@@ -328,6 +375,9 @@ async function main() {
     bustCache: config.bustCache.value,
     timeoutMs: TIMEOUT_MS,
     maxRetries: config.maxRetries.value,
+    // Audit only: stamped into every run log's header snapshot so a trace
+    // records the bundle scope it ran under.
+    plugins: ACTIVE_PLUGINS,
   })
 
   // Replace existing results for the (model, task) combinations we just ran;

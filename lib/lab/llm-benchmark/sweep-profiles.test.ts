@@ -2,10 +2,14 @@ import { describe, it, expect } from 'vitest'
 import {
   SWEEP_PROFILES,
   estimateSweepDuration,
+  excludedPluginTaskConflicts,
+  filterTasksByPlugins,
+  isTaskEnabled,
   parseSweepArgs,
   parseSweepProfiles,
   resolveSweepConfig,
 } from './sweep-profiles'
+import { getPlugins } from './plugins'
 import profilesJson from './sweep-profiles.json'
 import type { BenchmarkResult } from './types'
 
@@ -33,6 +37,19 @@ describe('parseSweepProfiles', () => {
       /a.*models.*array of strings/i
     )
     expect(() => parseSweepProfiles({ a: { description: 'x', tasks: [1] } })).toThrow(/a.*tasks.*array of strings/i)
+    expect(() => parseSweepProfiles({ a: { description: 'x', plugins: 'community-tasks' } })).toThrow(
+      /a.*plugins.*array of strings/i
+    )
+    expect(() => parseSweepProfiles({ a: { description: 'x', plugins: [{}] } })).toThrow(/a.*plugins.*array of strings/i)
+  })
+
+  it('accepts a plugins list in a profile, including the empty builtins-only list', () => {
+    const parsed = parseSweepProfiles({
+      bundled: { description: 'x', plugins: ['community-tasks'] },
+      bare: { description: 'x', plugins: [] },
+    })
+    expect(parsed.bundled.plugins).toEqual(['community-tasks'])
+    expect(parsed.bare.plugins).toEqual([])
   })
 
   it('rejects a non-object document or profile', () => {
@@ -44,8 +61,14 @@ describe('parseSweepProfiles', () => {
 describe('shipped profiles', () => {
   const resolved = (name: string) => resolveSweepConfig({ flags: {}, env: {}, profile: name })
 
-  it('exposes exactly the four documented recipes, each with a description', () => {
-    expect(Object.keys(SWEEP_PROFILES).sort()).toEqual(['agy-quota', 'fast-refresh', 'slow-model', 'smoke'])
+  it('exposes exactly the five documented recipes, each with a description', () => {
+    expect(Object.keys(SWEEP_PROFILES).sort()).toEqual([
+      'agy-quota',
+      'builtins-only',
+      'fast-refresh',
+      'slow-model',
+      'smoke',
+    ])
     for (const profile of Object.values(SWEEP_PROFILES)) {
       expect(profile.description.length).toBeGreaterThan(0)
     }
@@ -77,6 +100,13 @@ describe('shipped profiles', () => {
     expect(config.timeoutMs.value).toBe(25 * MINUTE)
     expect(config.bustCache).toEqual({ value: true, source: 'profile:slow-model' })
     expect(config.iterations.value).toBeUndefined()
+  })
+
+  it('builtins-only: an empty plugin bundle list, every other knob left alone', () => {
+    const config = resolved('builtins-only')
+    expect(config.plugins).toEqual({ value: [], source: 'profile:builtins-only' })
+    expect(config.iterations.source).toBe('default')
+    expect(config.concurrency.source).toBe('default')
   })
 
   it('agy-quota: concurrency 1, 5 iterations, default timeouts', () => {
@@ -188,6 +218,111 @@ describe('resolveSweepConfig', () => {
   })
 })
 
+describe('resolveSweepConfig — plugin bundles', () => {
+  it('defaults to undefined, meaning EVERY registered plugin (the pre-feature behaviour)', () => {
+    expect(resolveSweepConfig({ flags: {}, env: {} }).plugins).toEqual({ value: undefined, source: 'default' })
+  })
+
+  it('reads RUN_PLUGINS as a comma list', () => {
+    expect(resolveSweepConfig({ flags: {}, env: { RUN_PLUGINS: 'community-tasks' } }).plugins).toEqual({
+      value: ['community-tasks'],
+      source: 'env',
+    })
+  })
+
+  it('treats RUN_PLUGINS="" as unset, like every other list env var', () => {
+    expect(resolveSweepConfig({ flags: {}, env: { RUN_PLUGINS: '' } }).plugins.source).toBe('default')
+  })
+
+  it('reads "none" as the builtins-only set, from a flag or from the env', () => {
+    expect(resolveSweepConfig({ flags: { plugins: ['none'] }, env: {} }).plugins).toEqual({
+      value: [],
+      source: 'flag',
+    })
+    expect(resolveSweepConfig({ flags: {}, env: { RUN_PLUGINS: 'none' } }).plugins).toEqual({
+      value: [],
+      source: 'env',
+    })
+  })
+
+  it('refuses "none" mixed with real ids — the instruction contradicts itself', () => {
+    expect(() => resolveSweepConfig({ flags: { plugins: ['none', 'community-tasks'] }, env: {} })).toThrow(
+      /none.*builtins only.*cannot be combined/i
+    )
+  })
+
+  it('lets --plugins beat RUN_PLUGINS beat the profile', () => {
+    expect(
+      resolveSweepConfig({ flags: {}, env: { RUN_PLUGINS: 'community-tasks' }, profile: 'builtins-only' }).plugins
+    ).toEqual({ value: ['community-tasks'], source: 'env' })
+    expect(
+      resolveSweepConfig({
+        flags: { plugins: ['none'] },
+        env: { RUN_PLUGINS: 'community-tasks' },
+        profile: 'builtins-only',
+      }).plugins
+    ).toEqual({ value: [], source: 'flag' })
+  })
+
+  it('rejects an unknown plugin id, naming the roster (reject at mount, not on collision)', () => {
+    expect(() => resolveSweepConfig({ flags: { plugins: ['nope'] }, env: {} })).toThrow(
+      /unknown plugin id.*nope.*available: community-tasks/i
+    )
+    expect(() => resolveSweepConfig({ flags: {}, env: { RUN_PLUGINS: 'community-tasks,nope' } })).toThrow(
+      /unknown plugin id.*nope/i
+    )
+  })
+
+  it('validates against the live roster rather than a hardcoded list', () => {
+    const ids = getPlugins().map((p) => p.id)
+    expect(ids).toContain('community-tasks')
+    for (const id of ids) {
+      expect(resolveSweepConfig({ flags: { plugins: [id] }, env: {} }).plugins.value).toEqual([id])
+    }
+  })
+})
+
+describe('plugin task filtering', () => {
+  const builtin = { id: 'equation-solver' }
+  const contributed = { id: 'tic-tac-toe', pluginId: 'community-tasks' }
+  const other = { id: 'from-elsewhere', pluginId: 'other-plugin' }
+  const tasks = [builtin, contributed, other]
+
+  it('always keeps a built-in task, whatever the active set', () => {
+    expect(isTaskEnabled(builtin, undefined)).toBe(true)
+    expect(isTaskEnabled(builtin, [])).toBe(true)
+    expect(isTaskEnabled(builtin, ['community-tasks'])).toBe(true)
+  })
+
+  it('keeps a plugin task only when its plugin is active', () => {
+    expect(isTaskEnabled(contributed, undefined)).toBe(true) // undefined = all plugins
+    expect(isTaskEnabled(contributed, ['community-tasks'])).toBe(true)
+    expect(isTaskEnabled(contributed, [])).toBe(false)
+    expect(isTaskEnabled(contributed, ['other-plugin'])).toBe(false)
+  })
+
+  it('filters a task list down to the active bundle set', () => {
+    expect(filterTasksByPlugins(tasks, undefined)).toEqual(tasks)
+    expect(filterTasksByPlugins(tasks, [])).toEqual([builtin])
+    expect(filterTasksByPlugins(tasks, ['community-tasks'])).toEqual([builtin, contributed])
+  })
+
+  it('reports an explicitly-requested task whose plugin is excluded as a conflict', () => {
+    expect(excludedPluginTaskConflicts(['tic-tac-toe'], tasks, [])).toEqual([
+      { taskId: 'tic-tac-toe', pluginId: 'community-tasks' },
+    ])
+    expect(excludedPluginTaskConflicts(['tic-tac-toe', 'from-elsewhere'], tasks, ['community-tasks'])).toEqual([
+      { taskId: 'from-elsewhere', pluginId: 'other-plugin' },
+    ])
+  })
+
+  it('reports no conflict for built-ins, for an active plugin, or when no task was named', () => {
+    expect(excludedPluginTaskConflicts(['equation-solver'], tasks, [])).toEqual([])
+    expect(excludedPluginTaskConflicts(['tic-tac-toe'], tasks, ['community-tasks'])).toEqual([])
+    expect(excludedPluginTaskConflicts(undefined, tasks, [])).toEqual([])
+  })
+})
+
 describe('parseSweepArgs', () => {
   it('accepts a comma list for --model and --task', () => {
     const args = parseSweepArgs(['--model', 'a,b', '--task', 't1,t2'])
@@ -199,6 +334,12 @@ describe('parseSweepArgs', () => {
     const args = parseSweepArgs(['--model', 'a', '--model', 'b', '--task', 't1', '--task', 't2'])
     expect(args.flags.models).toEqual(['a', 'b'])
     expect(args.flags.tasks).toEqual(['t1', 't2'])
+  })
+
+  it('accepts a comma list and repeats for --plugins, like --model', () => {
+    expect(parseSweepArgs(['--plugins', 'a,b']).flags.plugins).toEqual(['a', 'b'])
+    expect(parseSweepArgs(['--plugins', 'a', '--plugins', 'b']).flags.plugins).toEqual(['a', 'b'])
+    expect(parseSweepArgs(['--plugins=none']).flags.plugins).toEqual(['none'])
   })
 
   it('accepts --flag=value as well as --flag value', () => {

@@ -22,5 +22,9 @@
     "description": "Agy per-model subscription window: serial, 5 iterations, default timeouts.",
     "concurrency": 1,
     "iterations": 5
+  },
+  "builtins-only": {
+    "description": "Core task set only: mounts no plugins ([] = builtins only). Compose with --iterations etc.",
+    "plugins": []
   }
 }

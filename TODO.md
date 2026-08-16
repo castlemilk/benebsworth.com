@@ -1358,30 +1358,24 @@ cache key changes with the override.
 
 **Effort.** M.
 
-## [ ] 37. Plugin bundle selection in sweep profiles
+## [x] 37. Plugin bundle selection in sweep profiles
 
-**Problem.** `sweep-profiles.json` (#2) picks models/tasks/iterations but
-not plugin sets — every profile sees every plugin. dsh profiles stack
-bundles; ours should let a sweep select which plugins (and therefore which
-tasks/checks) participate.
-
-**Inspiration.** dsh profiles + bundles (architecture.md): a profile lists
-the bundles it stacks; `--dump-config` shows the booted tree.
-
-**Design sketch.**
-
-- `sweep-profiles.json` gains `plugins?: string[]`; `resolveSweepConfig()`
-  validates plugin ids against the roster and errors on unknown ids (the
-  dsh "reject at mount rather than collide" discipline).
-- `run-benchmark.mjs` accepts `--plugins a,b` (overrides profile).
-- `--dump-config` lists the active plugin set so a sweep's scope is
-  auditable in the event log (#1 configSnapshot).
-
-**Acceptance criteria.** A profile with `plugins: []` sweeps built-ins
-only; a typo'd plugin id fails fast with the roster listed; dump-config
-shows the set.
-
-**Effort.** S.
+**Shipped.** A sweep now selects which plugin bundles it mounts, and
+therefore which contributed tasks participate. `sweep-profiles.json` takes
+`plugins?: string[]` (absent = every registered plugin, `[]` = builtins only)
+and ships a `builtins-only` recipe; the CLI takes `--plugins a,b` (repeatable
+or comma list) and the env layer `RUN_PLUGINS`, with `none` as the
+command-line spelling of "builtins only" (empty env var = unset, as with
+every other list knob). `resolveSweepConfig()` validates ids against the live
+roster and throws with the roster listed — reject at mount, not on collision.
+Filtering is two pure exported helpers (`filterTasksByPlugins` /
+`isTaskEnabled`: a built-in task always passes, a plugin task passes iff its
+plugin is active) plus `excludedPluginTaskConflicts`, so `--task tic-tac-toe
+--plugins none` is FATAL rather than a silently smaller run. `--dump-config`
+gains a `plugins` row with provenance, and the `tasks` row says how many the
+bundle set excluded. Audit trail: the resolved set rides
+`ProviderRunnerConfig.plugins` (documented audit-only, no behavioural effect)
+into every run log's `configSnapshot.plugins`.
 
 ## [ ] 38. Community plugin hosting + validation
 
@@ -1471,6 +1465,10 @@ without reading results.json; the server is read-only.
   `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
   (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough
   duration estimate from historical `runtimeMs`, `task bench:profile`.
+- Plugin bundle selection (#37): profile `plugins: []` / `--plugins a,b` /
+  `RUN_PLUGINS`, `none` = builtins only, unknown id fatal with the roster
+  listed, task filtering + explicit-task-vs-unmounted-plugin conflict fatal,
+  `plugins` row in `--dump-config`, resolved set in `configSnapshot.plugins`.
 - Results invariant verification (#5): `verify-results.ts` (eight checks, each
   with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
   run first in the pre-push gate.

@@ -183,10 +183,33 @@ task bench:profile -- slow-model --model deepseek-v4-flash-free
 # agy-quota    concurrency 1, 5 iterations, default timeouts — one agy quota window
 task bench:profile -- agy-quota --model gemini-3.6-flash-agy
 
+# builtins-only  mounts no plugins ("plugins": []) — the core task set only
+task bench:profile -- builtins-only --model kimi-k2.7
+
 # Overrides are flags (repeatable or comma lists); env vars still win over a profile:
 npx tsx scripts/run-benchmark.mjs --profile slow-model --model a --model b --task t1,t2 \
   --iterations 1 --concurrency 1 --timeout-ms 600000 --max-retries 0 --bust-cache
 ```
+
+**Plugin bundles** (`plugins` knob, #37). A sweep selects which plugins mount,
+and therefore which contributed tasks run. Profile field `"plugins": ["a","b"]`;
+flag `--plugins a,b` (repeatable or comma list); env `RUN_PLUGINS=a,b` (empty =
+unset, like every list env var). Three states, and **only three**:
+
+| Said as | Means |
+| --- | --- |
+| nothing anywhere | ALL registered plugins (the default; backward compatible) |
+| `--plugins none` / `RUN_PLUGINS=none` / `"plugins": []` | **builtins only** |
+| `--plugins community-tasks` / `"plugins": ["community-tasks"]` | exactly that set |
+
+`none` is the command-line spelling of the empty array (you cannot type `[]` in
+a flag); mixing it with real ids is fatal. A built-in task is ALWAYS eligible —
+bundle selection is not a task allowlist. An unknown plugin id exits 1 with the
+roster printed, and `--task <plugin task> --plugins none` is a **fatal
+conflict** (one flag asks for the task, the other unmounts its supplier) rather
+than a silently smaller sweep. `--dump-config` prints a `plugins` row with
+provenance, the `tasks` row appends `[N excluded by plugin set]`, and the
+resolved set is written into every run log header's `configSnapshot.plugins`.
 
 **An unknown `--model`/`--task` id is fatal**, including when other ids in the
 same flag resolve: the script prints `Unknown model id(s): …` with a sample of
@@ -351,7 +374,7 @@ export async function generateMyProvider(
 
 ## Sweep operations (hard-won runbook)
 
-- **Profiles first** (`lib/lab/llm-benchmark/sweep-profiles.json`): the four stored recipes are `smoke` (1 iter, conc 1, 10-min cap), `fast-refresh` (5 iters, conc 2, 10-min cap), `slow-model` (conc 2, maxRetries 0, 25-min cap, bustCache) and `agy-quota` (conc 1, 5 iters, default timeouts). Run one with `task bench:profile -- <name> --model <id>`; add `--dump-config` to print the effective config and exit without spending. Profiles deliberately do NOT pin model ids (they would rot) — pass `--model`/`--task`. Precedence is **flag > env > profile > default** and the pre-run dump names the source of every value, so "why did it retry?" is answerable from the log rather than from memory. Adding a knob means adding it in `sweep-profiles.ts` (validated allowlist — an unknown key in the JSON throws at import) AND in the script's flag table.
+- **Profiles first** (`lib/lab/llm-benchmark/sweep-profiles.json`): the five stored recipes are `smoke` (1 iter, conc 1, 10-min cap), `fast-refresh` (5 iters, conc 2, 10-min cap), `slow-model` (conc 2, maxRetries 0, 25-min cap, bustCache), `agy-quota` (conc 1, 5 iters, default timeouts) and `builtins-only` (`plugins: []` — no plugin bundles mounted, core task set only). Run one with `task bench:profile -- <name> --model <id>`; add `--dump-config` to print the effective config and exit without spending. Profiles deliberately do NOT pin model ids (they would rot) — pass `--model`/`--task`. Precedence is **flag > env > profile > default** and the pre-run dump names the source of every value, so "why did it retry?" is answerable from the log rather than from memory. Adding a knob means adding it in `sweep-profiles.ts` (validated allowlist — an unknown key in the JSON throws at import) AND in the script's flag table.
 - **Duration estimate**: the dump's `est. duration` is ROUGH — sum over (model, task) of the historical mean `runtimeMs` in results.json × iterations ÷ concurrency. It ignores retries, cache hits, scoring time and imperfect packing, and pairs with no history count as 0 (reported as such). Treat it as a lower bound, never as a budget.
 - **Env knobs** (`scripts/run-benchmark.mjs`): `RUN_MODELS`, `RUN_TASKS`, `RUN_ITERATIONS`, `RUN_CONCURRENCY` (CLI file-handoff providers are now parallel-safe — each iteration writes a unique `artifact-<model>-<task>-<n>.html`, so concurrency 2-3 cuts slow CLI sweeps ~3×), `RUN_BUST_CACHE=1`, `RUN_TIMEOUT_MS` (per-CALL cap; also forwarded into the opencode CLI config — text-only runners still use the 600s default), `RUN_MAX_RETRIES` (default 2; set `0` for slow-but-working models so a deterministic 25-min generation isn't retried 3×).
 - **Slow models** (deepseek-v4-flash-free lesson): free tiers can run 10-20 tok/s — a 5-8k token artifact takes 4-12 min, a 20-50k token one (landing, equation, pendulum, circuit) can exceed any sane window. Strategy: (1) expect partial boards — the UI and `mergeResults` handle `partial` honestly; (2) run the fast tasks at 5 iterations, then bound the rest; (3) when a task times out at 25-30 min, RECORD the failure rather than retrying forever.

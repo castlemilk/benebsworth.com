@@ -1,4 +1,5 @@
 import profilesJson from './sweep-profiles.json'
+import { getPlugins } from './plugins'
 import type { BenchmarkResult } from './types'
 
 /**
@@ -18,8 +19,11 @@ import type { BenchmarkResult } from './types'
  * / `default`) so `scripts/run-benchmark.mjs` can print the effective config
  * before spending money — the dsh `--dump-config` idea.
  *
- * Pure and dependency-free by design: the plain-JS run script imports it, and
- * so do the unit tests. Nothing here touches the filesystem or the clock.
+ * Pure by design: the plain-JS run script imports it, and so do the unit tests.
+ * Nothing here touches the filesystem or the clock. Its one in-tree dependency
+ * is the plugin roster (`./plugins`), read ONLY to validate `plugins` ids
+ * against what is actually registered — a typo'd bundle id must fail at
+ * resolution, not silently sweep the wrong task set.
  */
 
 /** One named recipe. Every field except `description` is optional. */
@@ -28,6 +32,12 @@ export interface SweepProfile {
   description: string
   models?: string[]
   tasks?: string[]
+  /**
+   * Plugin bundles this recipe mounts. Absent = every registered plugin (the
+   * pre-feature behaviour); `[]` = BUILTINS ONLY. Ids are validated against the
+   * roster in `plugins/index.ts` when the profile is resolved.
+   */
+  plugins?: string[]
   iterations?: number
   concurrency?: number
   timeoutMs?: number
@@ -35,7 +45,7 @@ export interface SweepProfile {
   bustCache?: boolean
 }
 
-const STRING_ARRAY_KEYS = ['models', 'tasks'] as const
+const STRING_ARRAY_KEYS = ['models', 'tasks', 'plugins'] as const
 const NUMBER_KEYS = ['iterations', 'concurrency', 'timeoutMs', 'maxRetries'] as const
 const BOOLEAN_KEYS = ['bustCache'] as const
 const PROFILE_KEYS = new Set<string>(['description', ...STRING_ARRAY_KEYS, ...NUMBER_KEYS, ...BOOLEAN_KEYS])
@@ -112,6 +122,8 @@ export interface Resolved<T> {
 export interface SweepFlags {
   models?: string[]
   tasks?: string[]
+  /** `--plugins a,b`, or `--plugins none` for builtins only. */
+  plugins?: string[]
   iterations?: number
   concurrency?: number
   timeoutMs?: number
@@ -124,6 +136,11 @@ export interface ResolvedSweepConfig {
   models: Resolved<string[]>
   /** undefined = every registered task. */
   tasks: Resolved<string[] | undefined>
+  /**
+   * Active plugin bundles. undefined = EVERY registered plugin (default, and
+   * the behaviour before this knob existed); `[]` = builtins only.
+   */
+  plugins: Resolved<string[] | undefined>
   /** undefined = each task's own iterationsDefault. */
   iterations: Resolved<number | undefined>
   concurrency: Resolved<number>
@@ -147,6 +164,51 @@ function envList(raw: string | undefined): string[] | undefined {
 
 function envNumber(raw: string | undefined): number | undefined {
   return raw ? Number(raw) : undefined
+}
+
+/**
+ * How an operator SAYS "builtins only" on a command line, where there is no way
+ * to type an empty array: `--plugins none` / `RUN_PLUGINS=none`. In a profile
+ * JSON the same thing is spelled `"plugins": []`.
+ */
+export const PLUGINS_NONE = 'none'
+
+/**
+ * Trim/drop blanks and fold the `none` sentinel into the empty set.
+ *
+ * `none` mixed with real ids is a self-contradicting instruction, so it throws
+ * rather than picking a winner.
+ */
+function normalizePlugins(list: readonly string[] | undefined, where: string): string[] | undefined {
+  if (list === undefined) return undefined
+  const ids = list.map((id) => id.trim()).filter((id) => id !== '')
+  if (ids.some((id) => id.toLowerCase() === PLUGINS_NONE)) {
+    if (ids.length > 1) {
+      throw new Error(`${where}: "${PLUGINS_NONE}" means builtins only and cannot be combined with plugin ids (got: ${ids.join(', ')})`)
+    }
+    return []
+  }
+  return ids
+}
+
+/** Ids registered by the roster in `plugins/index.ts`. */
+function rosterIds(): string[] {
+  return getPlugins().map((plugin) => plugin.id)
+}
+
+/**
+ * dsh's "reject at mount rather than collide": an unknown bundle id is fatal at
+ * resolution, with the roster printed, instead of quietly mounting nothing.
+ */
+function assertKnownPlugins(ids: readonly string[], where: string): void {
+  const available = rosterIds()
+  const known = new Set(available)
+  const unknown = ids.filter((id) => !known.has(id))
+  if (unknown.length > 0) {
+    throw new Error(
+      `Unknown plugin id(s): ${unknown.join(', ')} (available: ${available.length > 0 ? [...available].sort().join(', ') : '<none registered>'}; use "${PLUGINS_NONE}" for builtins only) [from ${where}]`
+    )
+  }
 }
 
 export interface ResolveInput {
@@ -188,9 +250,20 @@ export function resolveSweepConfig({ flags, env, profile: profileName }: Resolve
   const envBustCache =
     env.RUN_BUST_CACHE === '1' || env.RUN_BUST_CACHE === 'true' ? true : undefined
 
+  // Plugin bundles are normalized per LAYER (so the error names the layer that
+  // is wrong) and validated once, on the layer that actually won.
+  const plugins = pick<string[] | undefined>(
+    normalizePlugins(flags.plugins, '--plugins'),
+    normalizePlugins(envList(env.RUN_PLUGINS), 'RUN_PLUGINS'),
+    normalizePlugins(profile?.plugins, `sweep profile "${profileName}": plugins`),
+    undefined
+  )
+  if (plugins.value !== undefined) assertKnownPlugins(plugins.value, plugins.source)
+
   return {
     models: pick(flags.models, envList(env.RUN_MODELS), profile?.models, DEFAULT_MODELS),
     tasks: pick<string[] | undefined>(flags.tasks, envList(env.RUN_TASKS), profile?.tasks, undefined),
+    plugins,
     iterations: pick<number | undefined>(
       flags.iterations,
       envNumber(env.RUN_ITERATIONS),
@@ -226,8 +299,8 @@ const NUMERIC_FLAGS: Record<string, keyof SweepFlags> = {
 
 /**
  * Hand-rolled argv parsing (the `scripts/sweep-clean.mjs` house style — no
- * dependency). Supports `--flag value` and `--flag=value`; `--model`/`--task`
- * accept a comma list, repeat, or both.
+ * dependency). Supports `--flag value` and `--flag=value`;
+ * `--model`/`--task`/`--plugins` accept a comma list, repeat, or both.
  *
  * Throws on anything it does not understand: a typo'd flag silently ignored is
  * a sweep that runs the wrong shape and costs real money.
@@ -257,7 +330,7 @@ export function parseSweepArgs(argv: readonly string[]): SweepArgs {
     if (!Number.isFinite(value)) throw new Error(`${flag} requires a number`)
     return value
   }
-  const append = (key: 'models' | 'tasks', raw: string) => {
+  const append = (key: 'models' | 'tasks' | 'plugins', raw: string) => {
     const parts = raw
       .split(',')
       .map((part) => part.trim())
@@ -273,6 +346,8 @@ export function parseSweepArgs(argv: readonly string[]): SweepArgs {
       append('models', takeValue(arg, pending[++i]))
     } else if (arg === '--task') {
       append('tasks', takeValue(arg, pending[++i]))
+    } else if (arg === '--plugins') {
+      append('plugins', takeValue(arg, pending[++i]))
     } else if (arg in NUMERIC_FLAGS) {
       const key = NUMERIC_FLAGS[arg]
       ;(flags[key] as number) = takeNumber(arg, pending[++i])
@@ -288,6 +363,58 @@ export function parseSweepArgs(argv: readonly string[]): SweepArgs {
   }
 
   return { flags, profile, dumpConfig, listProfiles }
+}
+
+/**
+ * The minimum a task must expose for bundle filtering. Structural on purpose:
+ * this module stays independent of `registry.ts` (and of the DAG edge that
+ * would create), and the helpers stay trivially testable with plain objects.
+ */
+export interface PluginTaskRef {
+  id: string
+  /** Stamped by the plugin registry. Absent = a built-in task. */
+  pluginId?: string
+}
+
+/**
+ * Is this task in scope for the active bundle set?
+ *
+ * A built-in task (no `pluginId`) is ALWAYS eligible — bundle selection picks
+ * which plugins participate, it is not a task allowlist. `undefined` means "all
+ * registered plugins", so everything passes.
+ */
+export function isTaskEnabled(task: PluginTaskRef, activePlugins: readonly string[] | undefined): boolean {
+  if (task.pluginId === undefined) return true
+  if (activePlugins === undefined) return true
+  return activePlugins.includes(task.pluginId)
+}
+
+/** The tasks a sweep with this bundle set may run. */
+export function filterTasksByPlugins<T extends PluginTaskRef>(
+  tasks: readonly T[],
+  activePlugins: readonly string[] | undefined
+): T[] {
+  return tasks.filter((task) => isTaskEnabled(task, activePlugins))
+}
+
+/**
+ * Task ids explicitly asked for whose plugin is NOT mounted.
+ *
+ * `--task tic-tac-toe --plugins none` is a self-contradicting instruction: one
+ * flag names a task, the other unmounts the plugin that supplies it. Silently
+ * running nothing (or silently running it anyway) both hide the mistake, so the
+ * caller reports these and exits.
+ */
+export function excludedPluginTaskConflicts(
+  requestedTaskIds: readonly string[] | undefined,
+  tasks: readonly PluginTaskRef[],
+  activePlugins: readonly string[] | undefined
+): { taskId: string; pluginId: string }[] {
+  if (!requestedTaskIds) return []
+  const requested = new Set(requestedTaskIds)
+  return tasks
+    .filter((task) => requested.has(task.id) && !isTaskEnabled(task, activePlugins))
+    .map((task) => ({ taskId: task.id, pluginId: task.pluginId as string }))
 }
 
 /** One (model, task) job a sweep is about to run. */

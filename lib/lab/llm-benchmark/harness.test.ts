@@ -111,6 +111,44 @@ describe('runBenchmark', () => {
     expect(results).toHaveLength(1)
     expect(results[0]?.modelId).toBe('test-model')
   })
+
+  it('never calls the runner for a skipPairs pair (the resume skip)', async () => {
+    const called: string[] = []
+    const runner: BenchmarkRunner = {
+      runTask: async (m, t, iterations) => {
+        called.push(`${m.id}|${t.id}`)
+        return [
+          {
+            taskId: t.id,
+            modelId: m.id,
+            score: 50,
+            runtimeMs: 1,
+            tokensIn: 1,
+            tokensOut: 1,
+            costUsd: 0,
+            iterations,
+            status: 'success',
+            createdAt: new Date().toISOString(),
+          },
+        ]
+      },
+    }
+    const other = { ...model, id: 'other-model' }
+    const results = await runBenchmark(runner, [task], [model, other], 1, {
+      concurrency: 1,
+      skipPairs: new Set(['test-model|test-task']),
+    })
+    // Skipped means NOT RUN — no call, and therefore no fresh record either
+    // (the original run's record is already in results.json).
+    expect(called).toEqual(['other-model|test-task'])
+    expect(results.map((r) => r.modelId)).toEqual(['other-model'])
+  })
+
+  it('runs everything when skipPairs is empty or absent', async () => {
+    const runner = createRecordingRunner([])
+    expect(await runBenchmark(runner, [task], [model], 1, { skipPairs: new Set() })).toHaveLength(1)
+    expect(await runBenchmark(runner, [task], [model], 1, { concurrency: 2 })).toHaveLength(1)
+  })
 })
 
 describe('estimateCost', () => {

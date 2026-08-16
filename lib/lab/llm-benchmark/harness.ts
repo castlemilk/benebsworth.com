@@ -80,17 +80,34 @@ async function runWithConcurrency<T>(
   return results
 }
 
+export interface RunBenchmarkOptions {
+  concurrency?: number
+  /**
+   * `${modelId}|${taskId}` keys to leave OUT of the job list entirely — the
+   * resume path (`lib/lab/llm-benchmark/resume.ts`), which skips pairs a killed
+   * sweep already checkpointed. The set is computed by the caller; this
+   * function only declines to build those jobs, so a skipped pair costs no
+   * call, no run log (the writer truncates on open) and no fresh record.
+   *
+   * It is a PAIR set rather than a smaller `tasks`/`models` pair of lists
+   * because a resume's completed set is generally not a rectangle: a sweep dies
+   * partway through the cross product.
+   */
+  skipPairs?: ReadonlySet<string>
+}
+
 export async function runBenchmark(
   runner: BenchmarkRunner,
   tasks: BenchmarkTask[],
   models: BenchmarkModel[],
   iterations?: number,
-  concurrencyOrOptions?: number | { concurrency?: number }
+  concurrencyOrOptions?: number | RunBenchmarkOptions
 ): Promise<BenchmarkResult[]> {
   const concurrency =
     typeof concurrencyOrOptions === 'number'
       ? concurrencyOrOptions
       : (concurrencyOrOptions?.concurrency ?? 3)
+  const skipPairs = typeof concurrencyOrOptions === 'number' ? undefined : concurrencyOrOptions?.skipPairs
 
   const all: BenchmarkResult[] = []
 
@@ -98,6 +115,7 @@ export async function runBenchmark(
   for (const task of tasks) {
     const taskIterations = iterations ?? task.iterationsDefault
     for (const model of models) {
+      if (skipPairs?.has(`${model.id}|${task.id}`)) continue
       jobs.push(async () => {
         const runs = await runner.runTask(model, task, taskIterations)
         all.push(...runs)

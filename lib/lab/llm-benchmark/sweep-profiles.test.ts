@@ -208,6 +208,36 @@ describe('resolveSweepConfig', () => {
     expect(config.bustCache).toEqual({ value: true, source: 'env' })
   })
 
+  it('resolves the resume knob flag > env, with an empty env var reading as unset', () => {
+    expect(resolveSweepConfig({ flags: {}, env: {} }).resume).toEqual({ value: undefined, source: 'default' })
+    expect(resolveSweepConfig({ flags: {}, env: { RUN_RESUME: '' } }).resume).toEqual({
+      value: undefined,
+      source: 'default',
+    })
+    expect(resolveSweepConfig({ flags: {}, env: { RUN_RESUME: '2026-08-16T09-30-12' } }).resume).toEqual({
+      value: '2026-08-16T09-30-12',
+      source: 'env',
+    })
+    expect(
+      resolveSweepConfig({ flags: { resume: 'from-flag' }, env: { RUN_RESUME: 'from-env' } }).resume
+    ).toEqual({ value: 'from-flag', source: 'flag' })
+  })
+
+  it('gives resume NO profile layer — a resume names one dead run, not a recipe', () => {
+    // Guard both halves: the key is rejected by the schema, and no shipped
+    // profile can therefore redirect a sweep into an old tree.
+    expect(() => parseSweepProfiles({ a: { description: 'x', resume: 'run-1' } })).toThrow(
+      /a.*unknown key.*resume/i
+    )
+    for (const profile of Object.values(SWEEP_PROFILES)) {
+      expect(profile).not.toHaveProperty('resume')
+    }
+    // …and a profile can never be the source of a resolved resume value.
+    for (const name of Object.keys(SWEEP_PROFILES)) {
+      expect(resolveSweepConfig({ flags: {}, env: {}, profile: name }).resume.source).toBe('default')
+    }
+  })
+
   it('records the profile name it resolved against', () => {
     expect(resolveSweepConfig({ flags: {}, env: {}, profile: 'smoke' }).profile).toBe('smoke')
     expect(resolveSweepConfig({ flags: {}, env: {} }).profile).toBeUndefined()
@@ -364,6 +394,13 @@ describe('parseSweepArgs', () => {
     expect(args.flags.bustCache).toBe(true)
     expect(args.dumpConfig).toBe(true)
     expect(args.listProfiles).toBe(false)
+  })
+
+  it('parses --resume in both spellings and demands a value', () => {
+    expect(parseSweepArgs(['--resume', '2026-08-16T09-30-12']).flags.resume).toBe('2026-08-16T09-30-12')
+    expect(parseSweepArgs(['--resume=2026-08-16T09-30-12']).flags.resume).toBe('2026-08-16T09-30-12')
+    expect(() => parseSweepArgs(['--resume'])).toThrow(/--resume.*value/i)
+    expect(() => parseSweepArgs(['--resume', '--dump-config'])).toThrow(/--resume.*value/i)
   })
 
   it('leaves every knob unset for an empty argv', () => {

@@ -53,6 +53,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Quota-reset parsing + pre-flight lock check (`parseQuotaResetMs`, `quotaLockedModels`) | `lib/lab/llm-benchmark/quota.ts` |
 | Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
+| Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
@@ -214,6 +215,43 @@ conflict** (one flag asks for the task, the other unmounts its supplier) rather
 than a silently smaller sweep. `--dump-config` prints a `plugins` row with
 provenance, the `tasks` row appends `[N excluded by plugin set]`, and the
 resolved set is written into every run log header's `configSnapshot.plugins`.
+
+**Resuming a killed sweep** (`--resume <run-id>`, #18). A sweep that died to a
+quota trip, a timeout, or a kill has already paid for every (model, task) pair
+it finished, and the run log proves it: `runners/provider.ts` fsyncs an
+`aggregate` event as the last act of a completed pair.
+
+```bash
+# What would a resume skip? (spends nothing — do this first)
+npx tsx scripts/run-benchmark.mjs --resume 2026-08-16T09-30-12 --dump-config
+
+# Actually resume, same knobs as the original sweep
+npx tsx scripts/run-benchmark.mjs --profile slow-model --resume 2026-08-16T09-30-12
+```
+
+- **Boundary rule.** A pair is complete iff its log parses AND holds an
+  `aggregate` event. Anything else — no log, torn tail from a mid-iteration
+  kill, unreadable header — re-runs **from scratch**, never mid-iteration. Both
+  decisions print a line (`resume: skipping …` / `resume: re-running … (incomplete:
+  N events, no aggregate)`), because a silent skip and a sweep that ran nothing
+  look identical in a transcript.
+- **Same tree.** The sweep root IS `sweeps/<run-id>/` — no `-2` suffixing. Skipped
+  pairs keep their logs and artifacts; only re-run pairs get truncated on reopen.
+  `SWEEP_ROOT` + `--resume` is a fatal conflict (two destinations).
+- **Recovery.** The aggregate is durable *before* results.json is written, so a
+  kill in that window leaves a pair complete on disk but missing from the
+  published file. A resume re-derives it from the log (`resume: recovered …`),
+  un-spilling the artifact, and merges it through `mergeResults` — the
+  0-success protection is unchanged. This is the crash case's whole value: no
+  re-spend for bytes already stored.
+- **`--bust-cache` / `RUN_BUST_CACHE=1` wins.** Cache-busting means "measure this
+  again", so it overrides every skip and says so in one line. Don't combine them
+  expecting a cheap resume.
+- **No profile carries a resume.** It is flag > env only (`RUN_RESUME`); a stored
+  run id would be stale on its second use.
+- Typed failures, exit 1 with the code printed: `RESUME_TARGET_NOT_FOUND` (no
+  such dir), `RESUME_NO_CHECKPOINTS` (no readable run-log header in it),
+  `RESUME_SWEEP_ROOT_CONFLICT`. None of them degrade into a full re-sweep.
 
 **An unknown `--model`/`--task` id is fatal**, including when other ids in the
 same flag resolve: the script prints `Unknown model id(s): …` with a sample of

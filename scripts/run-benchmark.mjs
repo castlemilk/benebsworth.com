@@ -12,15 +12,18 @@
 //   --timeout-ms <n>     per-call cap (default: the runner's 10 minutes)
 //   --max-retries <n>    transient-error retries (default: 2; use 0 on slow models)
 //   --bust-cache         ignore the response cache and force fresh paid calls
+//   --resume <run-id>    land in sweeps/<run-id>/ and skip (model, task) pairs
+//                        that already have an `aggregate` event there
 //   --list-profiles      print the named recipes and exit
 //   --dump-config        print the effective config and exit WITHOUT running
 //
 // PRECEDENCE:  CLI flag  >  env var  >  profile  >  built-in default.
+// (`resume` is flag > env ONLY — see ResolvedSweepConfig.resume.)
 //
 // The env vars (RUN_MODELS, RUN_TASKS, RUN_PLUGINS, RUN_ITERATIONS,
-// RUN_CONCURRENCY, RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE) work as they
-// always have — the Taskfile wrappers and the skill runbook depend on it. They
-// are now the middle override layer rather than the only interface.
+// RUN_CONCURRENCY, RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE, RUN_RESUME)
+// work as they always have — the Taskfile wrappers and the skill runbook depend
+// on it. They are now the middle override layer rather than the only interface.
 //
 // The effective config is printed before EVERY run, with the provenance of each
 // value, so what is about to be spent is visible before it is spent.
@@ -51,6 +54,14 @@ import {
   parseSweepArgs,
   resolveSweepConfig,
 } from '../lib/lab/llm-benchmark/sweep-profiles.ts'
+import {
+  ResumeError,
+  pairKey,
+  planResume,
+  readSweepCheckpoints,
+  recoverResultFromAggregate,
+  resumeRunDir,
+} from '../lib/lab/llm-benchmark/resume.ts'
 import { getPlugins } from '../lib/lab/llm-benchmark/plugins/index.ts'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
@@ -117,9 +128,38 @@ const IGNORE_QUOTA_LOCK =
 // on open). Suffix -2, -3, … past anything already on disk. An explicit
 // SWEEP_ROOT is used verbatim: that is the operator's stated choice, including
 // the deliberate "write into that existing tree" case.
-const SWEEP_ROOT = process.env.SWEEP_ROOT
-  ? resolve(process.cwd(), process.env.SWEEP_ROOT)
-  : uniqueSweepRoot(resolve(process.cwd(), `sweeps/${sweepRunId()}`))
+//
+// A RESUME is the one case that deliberately lands in an EXISTING tree: the
+// whole point is to reuse `sweeps/<run-id>/`'s checkpoints, leave the skipped
+// pairs' logs and artifacts untouched, and let openRunLog truncate only the
+// pairs actually re-run. `uniqueSweepRoot` suffixing must therefore not apply,
+// and an explicit SWEEP_ROOT alongside --resume names two destinations at once
+// — a self-contradicting instruction, so it is fatal rather than arbitrated.
+const RESUME_RUN_ID = config.resume.value
+const SWEEPS_DIR = resolve(process.cwd(), process.env.SWEEPS_DIR ?? 'sweeps')
+
+let RESUME_DIR
+if (RESUME_RUN_ID) {
+  try {
+    RESUME_DIR = resumeRunDir(SWEEPS_DIR, RESUME_RUN_ID)
+  } catch (err) {
+    console.error(err instanceof ResumeError ? `${err.code}: ${err.message}` : err)
+    process.exit(1)
+  }
+  if (process.env.SWEEP_ROOT) {
+    console.error(
+      `RESUME_SWEEP_ROOT_CONFLICT: --resume ${RESUME_RUN_ID} lands in ${relative(process.cwd(), RESUME_DIR)}/, but SWEEP_ROOT=${process.env.SWEEP_ROOT} names a different destination.`
+    )
+    console.error('Unset SWEEP_ROOT, or drop --resume.')
+    process.exit(1)
+  }
+}
+
+const SWEEP_ROOT = RESUME_DIR
+  ? RESUME_DIR
+  : process.env.SWEEP_ROOT
+    ? resolve(process.cwd(), process.env.SWEEP_ROOT)
+    : uniqueSweepRoot(resolve(process.cwd(), `sweeps/${sweepRunId()}`))
 
 /** First free `<base>`, `<base>-2`, `<base>-3`, … (bounded; see above). */
 function uniqueSweepRoot(base) {
@@ -153,7 +193,7 @@ function row(label, value, source) {
  * The dsh `--dump-config` idea: print the booted config, with the provenance of
  * every value, before anything is spent.
  */
-function dumpConfig({ models, tasks, locks, outPath }) {
+function dumpConfig({ models, tasks, locks, outPath, resumePlan }) {
   console.log(
     redactText(
       `\n[harness] effective config${config.profile ? ` — profile "${config.profile}": ${SWEEP_PROFILES[config.profile].description}` : ''}`
@@ -197,7 +237,21 @@ function dumpConfig({ models, tasks, locks, outPath }) {
   )
   row('maxRetries', config.maxRetries.value ?? 'runner default (2)', config.maxRetries.source)
   row('bustCache', config.bustCache.value, config.bustCache.source)
-  row('sweep root', `${relative(process.cwd(), SWEEP_ROOT)}/`, process.env.SWEEP_ROOT ? 'env' : 'default')
+  if (resumePlan) {
+    row(
+      'resume',
+      `${resumePlan.runId}: ${resumePlan.skipped.length} complete, ${resumePlan.rerun.length} to run, ${resumePlan.recover.length} recovered` +
+        (resumePlan.bustCacheOverride
+          ? ` [bust-cache overrode ${resumePlan.overriddenSkips} skip(s)]`
+          : ''),
+      config.resume.source
+    )
+  }
+  row(
+    'sweep root',
+    `${relative(process.cwd(), SWEEP_ROOT)}/`,
+    RESUME_RUN_ID ? 'resume' : process.env.SWEEP_ROOT ? 'env' : 'default'
+  )
   row('results', relative(process.cwd(), outPath), process.env.RESULTS_OUT_PATH ? 'env' : 'default')
   row(
     'quota lock',
@@ -213,10 +267,13 @@ function dumpConfig({ models, tasks, locks, outPath }) {
  * Omitted entirely when nothing in this sweep has history — a "~0s" line would
  * read as a promise rather than an absence of evidence.
  */
-function dumpEstimate({ models, tasks, results }) {
+function dumpEstimate({ models, tasks, results, resumePlan }) {
   const pairs = []
   for (const task of tasks) {
     for (const model of models) {
+      // A resumed sweep will not run its skipped pairs, so their historical
+      // runtimes are not part of what the operator is about to wait for.
+      if (resumePlan?.skipKeys.has(pairKey(model.id, task.id))) continue
       pairs.push({
         modelId: model.id,
         taskId: task.id,
@@ -236,6 +293,36 @@ function dumpEstimate({ models, tasks, results }) {
     `~${formatDuration(estimate.totalMs)} (ROUGH: ${estimate.pairsWithHistory}/${pairs.length} pairs${missing})`,
     'history'
   )
+}
+
+/**
+ * The resume decisions, one loud line per pair.
+ *
+ * Both halves are loud on purpose. A silent skip is indistinguishable from a
+ * sweep that quietly ran nothing, and a silent re-run is indistinguishable from
+ * one that resumed correctly — the operator has to be able to read the boundary
+ * off the transcript.
+ */
+function reportResumePlan(plan) {
+  if (plan.bustCacheOverride) {
+    console.log(
+      `[harness] resume: bust-cache is on — resume skips overridden, all ${plan.rerun.length} pair(s) re-run` +
+        (plan.overriddenSkips > 0 ? ` (${plan.overriddenSkips} had a complete aggregate in run ${plan.runId})` : '')
+    )
+    return
+  }
+  for (const { modelId, taskId } of plan.skipped) {
+    console.log(`[harness] resume: skipping ${modelId} :: ${taskId} (aggregate found in run ${plan.runId})`)
+  }
+  for (const { modelId, taskId, reason, events } of plan.rerun) {
+    const why =
+      reason === 'incomplete'
+        ? `incomplete: ${events} events, no aggregate`
+        : reason === 'unreadable-header'
+          ? 'incomplete: run log header is unreadable'
+          : 'incomplete: no run log in the target sweep'
+    console.log(`[harness] resume: re-running ${modelId} :: ${taskId} (${why})`)
+  }
 }
 
 /**
@@ -318,11 +405,41 @@ async function main() {
   const results = readResults()
   const locks = quotaLockedModels(results, models.map((m) => m.id))
 
-  dumpConfig({ models, tasks, locks, outPath })
-  dumpEstimate({ models, tasks, results })
+  // Resume boundary resolution. Typed rejection, exit 1: an unreadable or
+  // absent target must never degrade into "run the whole sweep again", which is
+  // the exact spend this flag exists to avoid.
+  let resumePlan
+  if (RESUME_RUN_ID) {
+    try {
+      resumePlan = planResume({
+        checkpoints: readSweepCheckpoints(SWEEP_ROOT),
+        modelIds: models.map((m) => m.id),
+        taskIds: tasks.map((t) => t.id),
+        recorded: results,
+        bustCache: config.bustCache.value,
+        runId: RESUME_RUN_ID,
+      })
+    } catch (err) {
+      if (err instanceof ResumeError) {
+        console.error(`${err.code}: ${err.message}`)
+        console.error(`Check the run id — \`ls ${relative(process.cwd(), SWEEPS_DIR)}/\` lists the sweeps on disk.`)
+        process.exit(1)
+      }
+      throw err
+    }
+  }
+
+  dumpConfig({ models, tasks, locks, outPath, resumePlan })
+  dumpEstimate({ models, tasks, results, resumePlan })
   console.log('')
 
-  if (args.dumpConfig) return // --dump-config: show the shape, spend nothing.
+  if (args.dumpConfig) {
+    // --dump-config: show the shape, spend nothing. The resume decisions are
+    // part of the shape, so print them here too — this is the rehearsal an
+    // operator does before committing to a resumed sweep.
+    if (resumePlan) reportResumePlan(resumePlan)
+    return
+  }
 
   setSweepRoot(SWEEP_ROOT)
   // Per-iteration run logs live in the SAME tree: sweeps/<run-id>/<model>-<task>.jsonl
@@ -330,6 +447,7 @@ async function main() {
   // `npx tsx scripts/retrace.mjs --run <run-id>`.
   setRunLogDir(SWEEP_ROOT)
   console.log(`[harness] sweep root: ${relative(process.cwd(), SWEEP_ROOT)}/`)
+  if (resumePlan) reportResumePlan(resumePlan)
 
   if (locks.length > 0) {
     for (const lock of locks) {
@@ -400,6 +518,25 @@ async function main() {
     console.log(`Fresh runs: ${fresh.length}`)
   }
 
+  // Crash-window repair. The run log fsyncs its `aggregate` event BEFORE
+  // runTask returns and this script merges the record into results.json, so a
+  // kill in that gap leaves a pair that is provably complete on disk yet
+  // missing from the published file. Re-running it would pay again for bytes
+  // already stored, so re-derive the record from the log and merge it through
+  // the SAME mergeResults path — which keeps the 0-success protection intact
+  // (a dropped quota record is a legitimate absence, and merging it back is a
+  // no-op rather than a clobber).
+  if (resumePlan && resumePlan.recover.length > 0) {
+    const recovered = resumePlan.recover.map((entry) => {
+      const result = recoverResultFromAggregate(SWEEP_ROOT, entry.aggregate, (warning) =>
+        console.warn(`[harness] resume: ${entry.modelId} :: ${entry.taskId} — ${warning}`)
+      )
+      console.log(`[harness] resume: recovered ${entry.modelId} :: ${entry.taskId} from its run log`)
+      return result
+    })
+    writeResults(recovered)
+  }
+
   // Record every result as it completes and persist immediately: a long sweep
   // (7 tasks × 5 iterations × 200s/call) must never lose finished work to a
   // timeout, kill, or crash near the end.
@@ -413,18 +550,24 @@ async function main() {
     },
   }
 
+  const pairCount = models.length * tasks.length - (resumePlan?.skipKeys.size ?? 0)
   console.log(
-    `Running ${config.iterations.value ?? 'default'} iteration(s) at concurrency ${config.concurrency.value} for: ${models.map((m) => m.name).join(', ')} on ${tasks.length} task(s)`
+    `Running ${config.iterations.value ?? 'default'} iteration(s) at concurrency ${config.concurrency.value} for: ${models.map((m) => m.name).join(', ')} on ${tasks.length} task(s)` +
+      (resumePlan ? ` — ${pairCount} pair(s) after the resume skip` : '')
   )
 
+  if (pairCount === 0) {
+    console.log('[harness] resume: every requested pair is already complete — nothing to run.')
+  }
+
   try {
-    const fresh = await runBenchmark(
-      recordingRunner,
-      tasks,
-      models,
-      config.iterations.value,
-      config.concurrency.value
-    )
+    const fresh = await runBenchmark(recordingRunner, tasks, models, config.iterations.value, {
+      concurrency: config.concurrency.value,
+      // The pair-level job filter (see RunBenchmarkOptions.skipPairs): a
+      // skipped pair costs no call, and — because openRunLog truncates on
+      // reopen — its existing run log and artifacts survive untouched.
+      skipPairs: resumePlan?.skipKeys,
+    })
     writeResults(fresh)
   } catch (err) {
     console.error(err)

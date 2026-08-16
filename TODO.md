@@ -761,32 +761,36 @@ in the test file — deliberately not a lib module. No lint config, no new deps.
 
 **Effort.** S.
 
-## [ ] 18. Sweep resume from event-log checkpoints
+## [x] 18. Sweep resume from event-log checkpoints
 
-**Problem.** A killed sweep (quota trip, timeout, crash) re-runs completed
-work from scratch on the next attempt. With the event log (#1) recording an
-`aggregate` event per completed (model, task), a resume can skip finished
-work — dsh's fork-with-boundary concept applied to sweep checkpoints.
-
-**Inspiration.** dsh `Session.fork(source, boundary, childId)` with typed
-rejection codes (`INVALID_BOUNDARY`, `OPEN_TURN`, `SESSION_NOT_FOUND`) and
-contiguous-seq boundaries (packages/core/session/src/index.ts) — resuming
-from a durable boundary is a first-class operation, not a heuristic.
-
-**Design sketch.**
-
-- `run-benchmark.mjs` gains `--resume <run-id>`: reads the target sweep's
-  event log, collects (model, task) pairs with a complete `aggregate` event,
-  and skips them (unless `RUN_BUST_CACHE=1` overrides).
-- Boundary rule: resume is valid only at an `aggregate` event (a completed
-  task), mirroring dsh's `OPEN_TURN` rejection — never resume mid-iteration.
-- Invalid boundary (missing log, corrupted tail) fails loud with a typed
-  error, not a silent partial run.
-- Merge safety unchanged: `mergeResults` still protects 0-success records.
-
-**Acceptance criteria.** Kill a sweep mid-run, resume with `--resume`, and
-completed tasks are skipped (log shows "resume: skipping <model> <task> (from
-run <id>)"); an invalid boundary errors; tests cover the boundary rule.
+**Shipped.** `--resume <run-id>` / `RUN_RESUME` (flag > env; deliberately NO
+profile layer — a resume names one dead run, not a reusable recipe, and
+`parseSweepProfiles` rejects the key). `lib/lab/llm-benchmark/resume.ts` holds
+the whole rule: `readSweepCheckpoints()` reads every `sweeps/<run-id>/*.jsonl`
+and classifies it by HEADER ids (the filename is ambiguous — both ids contain
+hyphens); `planResume()` is pure and returns skip / rerun / recover sets.
+**Boundary = the `aggregate` event** (dsh's `OPEN_TURN`): the reader's
+corrupted-tail truncation means a mid-iteration kill yields a log with no
+aggregate, so that pair re-runs FROM SCRATCH, loudly, never stitched. Typed
+rejections exit 1 with the code printed: `RESUME_TARGET_NOT_FOUND`,
+`RESUME_NO_CHECKPOINTS` (missing dir / zero readable headers),
+`RESUME_SWEEP_ROOT_CONFLICT` (explicit `SWEEP_ROOT` + `--resume` name two
+destinations). The sweep root IS the target dir — `uniqueSweepRoot()` suffixing
+is bypassed, so skipped pairs' logs and artifacts survive untouched while
+`openRunLog` truncates only the pairs re-run. Skipping is a job-list filter
+(`RunBenchmarkOptions.skipPairs`, a pair set because a dead sweep's completed
+set is not a rectangle), so a skip costs no call and produces no fresh record.
+**Recovery** closes the real crash window: the aggregate is fsynced BEFORE
+`writeResults` merges the record, so a kill in that gap leaves a pair complete
+on disk and absent from results.json — `recoverResultFromAggregate()` re-derives
+it, un-spills `output`, and merges through the same `mergeResults` path (0-success
+protection intact). `--bust-cache` overrides every skip with one line saying so.
+`--dump-config` gains a `resume` row (N complete, M to run, K recovered) and the
+duration estimate drops skipped pairs. Tests: `resume.test.ts` (17, real
+`openRunLog` fixtures in temp dirs — complete / no-aggregate / truncated-mid-
+aggregate / unreadable-header / recovery round-trip / missing-spill fallback),
+plus the knob's precedence in `sweep-profiles.test.ts` and the job filter in
+`harness.test.ts`.
 
 **Effort.** M. **Dependencies.** #1 (event log), #3 (sweep retention).
 
@@ -1474,6 +1478,12 @@ without reading results.json; the server is read-only.
   heuristic (now fallback only), `behavioralTaskIds()` feeds the rescore and
   backfill scripts, and `registry.test.ts` fails an HTML-runnable task that
   declares no scorer or defines no checks.
+- Sweep resume (#18): `--resume <run-id>` / `RUN_RESUME` (flag > env, no
+  profile layer), `resume.ts` (`readSweepCheckpoints` / pure `planResume` /
+  `recoverResultFromAggregate`), boundary = the `aggregate` event, typed
+  rejections `RESUME_TARGET_NOT_FOUND` / `RESUME_NO_CHECKPOINTS` /
+  `RESUME_SWEEP_ROOT_CONFLICT`, `runBenchmark({ skipPairs })` job filter, and
+  log-derived recovery for the aggregate-flushed-but-unmerged crash window.
 - Dependency-layering guard (#17): `layering.test.ts` parses the benchmark
   import graph and enforces the DAG — zero cycles (Tarjan SCC), `types.ts` a
   leaf, no lib module importing upward into `scripts/`, no `scorers/` →

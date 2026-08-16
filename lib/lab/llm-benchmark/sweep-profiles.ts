@@ -130,6 +130,8 @@ export interface SweepFlags {
   maxRetries?: number
   /** Presence-only: there is no --no-bust-cache, so `false` means "not passed". */
   bustCache?: boolean
+  /** `--resume <run-id>`: skip pairs already checkpointed in that sweep. */
+  resume?: string
 }
 
 export interface ResolvedSweepConfig {
@@ -149,6 +151,14 @@ export interface ResolvedSweepConfig {
   /** undefined = the runner's own default of 2. */
   maxRetries: Resolved<number | undefined>
   bustCache: Resolved<boolean>
+  /**
+   * Sweep run id to resume from (`sweeps/<run-id>/`), or undefined for a fresh
+   * sweep. FLAG > ENV only — there is deliberately no profile layer: a profile
+   * is a reusable recipe, and a resume names one specific dead run, so a stored
+   * `resume` would either be stale on its second use or silently redirect an
+   * unrelated sweep into an old tree. `parseSweepProfiles` rejects the key.
+   */
+  resume: Resolved<string | undefined>
   /** The profile this config resolved against, if any. */
   profile?: string
 }
@@ -279,6 +289,9 @@ export function resolveSweepConfig({ flags, env, profile: profileName }: Resolve
     timeoutMs: pick<number | undefined>(flags.timeoutMs, envNumber(env.RUN_TIMEOUT_MS), profile?.timeoutMs, undefined),
     maxRetries: pick<number | undefined>(flags.maxRetries, envMaxRetries, profile?.maxRetries, undefined),
     bustCache: pick(flags.bustCache || undefined, envBustCache, profile?.bustCache || undefined, false),
+    // No profile layer by design (see ResolvedSweepConfig.resume). An empty
+    // RUN_RESUME reads as unset, like every other env knob here.
+    resume: pick<string | undefined>(flags.resume, env.RUN_RESUME || undefined, undefined, undefined),
     profile: profileName,
   }
 }
@@ -348,6 +361,8 @@ export function parseSweepArgs(argv: readonly string[]): SweepArgs {
       append('tasks', takeValue(arg, pending[++i]))
     } else if (arg === '--plugins') {
       append('plugins', takeValue(arg, pending[++i]))
+    } else if (arg === '--resume') {
+      flags.resume = takeValue(arg, pending[++i])
     } else if (arg in NUMERIC_FLAGS) {
       const key = NUMERIC_FLAGS[arg]
       ;(flags[key] as number) = takeNumber(arg, pending[++i])

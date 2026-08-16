@@ -28,13 +28,15 @@ https://github.com/deepseek-ai/deepseek-harness /tmp/dsh`, 2026-08-13):
 first (`cd /tmp/dsh && git pull`) since the repo is in active developer
 preview and its API churns.
 
-Items marked "paperclip study" were pulled from
-`git clone --depth 1 https://github.com/paperclipai/paperclip /tmp/paperclip`
-(2026-08-15) and processed with graphify v0.9.43 (`uv tool install
-graphifyy`; `graphify extract . --code-only` + `graphify cluster-only .` —
-fully local tree-sitter, no API keys). Graph output lives at
-`/tmp/paperclip/graphify-out/` (graph.json + GRAPH_REPORT.md). Re-run after
-pulling: `cd /tmp/paperclip && git pull && graphify update . --code-only`.
+Both reference clones are graphified (graphify, code-only, zero API cost)
+for exploration — query with `graphify explain|path|query` from the repo
+root (graphs may go stale after `git pull`; refresh with
+`graphify update . --code-only`):
+
+| Repo | Clone | Graph | Stats |
+| --- | --- | --- | --- |
+| deepseek-harness | `/tmp/dsh` | `/tmp/dsh/graphify-out/` | 38,262 nodes / 83,865 edges / 1,243 communities. God nodes: `Context` (1,281 edges), `SessionId` (740), `SessionEvent` (345), `Session` (268), `dsh-invariants` (434) — confirms the log-as-truth + invariants-hub architecture |
+| paperclip | `/tmp/paperclip` | `/tmp/paperclip/graphify-out/` | 38,308 nodes / 108,097 edges / 974 communities (built 2026-08-15, commit b38d6ddb) |
 
 ## Reference: DeepSeek Harness (dsh)
 

@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 // Mock the wire + cache layers so the runner logic is exercised in isolation.
 vi.mock('./moonshot', () => ({ generateMoonshot: vi.fn() }))
@@ -21,6 +24,7 @@ import {
 import { generateMoonshot } from './moonshot'
 import { generateOpencode } from './opencode'
 import type { IterationRun } from './provider'
+import { readRunLog, runLogFileName, setRunLogDir, spillPreview } from '../runlog'
 
 const generateMock = vi.mocked(generateMoonshot)
 const generateOpencodeMock = vi.mocked(generateOpencode)
@@ -245,6 +249,156 @@ describe('createProviderRunner quota handling', () => {
     expect(generateMock).toHaveBeenCalledTimes(2)
     expect(result.status).toBe('partial')
     expect(result.iterationsSucceeded).toBe(1)
+  })
+})
+
+describe('run log integration', () => {
+  let dir: string
+
+  beforeEach(() => {
+    generateMock.mockReset()
+    dir = mkdtempSync(join(tmpdir(), 'provider-runlog-'))
+  })
+
+  afterEach(() => {
+    // Module-level state: leaving it set would make every later test write logs.
+    setRunLogDir(undefined)
+    rmSync(dir, { recursive: true, force: true })
+  })
+
+  it('logs the whole lifecycle of an iteration that retried once, and stamps runLogRef', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    setRunLogDir(dir)
+    generateMock
+      .mockRejectedValueOnce(new Error('fetch failed'))
+      .mockResolvedValueOnce(OK)
+
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 1,
+      timeoutMs: 5000,
+      // Simple scorer (no scoreWithBreakdown) — there should be no check events.
+      scorer: { score: () => 55 },
+    })
+    const [result] = await runner.runTask(MODEL, TASK, 1)
+
+    const file = join(dir, runLogFileName(MODEL.id, TASK.id))
+    const { header, events } = readRunLog(file)
+
+    expect(header.type).toBe('header')
+    expect(header.modelId).toBe(MODEL.id)
+    expect(header.taskId).toBe(TASK.id)
+    expect(header.configSnapshot).toEqual({
+      iterations: 1,
+      timeoutMs: 5000,
+      maxRetries: 1,
+      bustCache: true,
+    })
+
+    expect(events.map((e) => e.type)).toEqual([
+      'request',
+      'retry',
+      'response',
+      'clean',
+      'aggregate',
+    ])
+    events.forEach((event, i) => expect(event.seq).toBe(i + 1))
+
+    const request = events[0]
+    if (request.type !== 'request') throw new Error('expected a request event')
+    expect(request.iterationIndex).toBe(0)
+    expect(request.promptHash).toMatch(/^[0-9a-f]{64}$/)
+    expect(request.promptLength).toBeGreaterThan(0)
+
+    const retry = events[1]
+    if (retry.type !== 'retry') throw new Error('expected a retry event')
+    expect(retry.kind).toBe('transient')
+    expect(retry.attempt).toBe(1)
+    expect(retry.error).toContain('fetch failed')
+    expect(retry.delayMs).toBeGreaterThan(0)
+
+    const response = events[2]
+    if (response.type !== 'response') throw new Error('expected a response event')
+    expect(response.cacheHit).toBe(false)
+    expect(spillPreview(response.rawOutput)).toBe(OK.output)
+    expect(response.tokensIn).toBe(OK.tokensIn)
+    expect(response.tokensOut).toBe(OK.tokensOut)
+
+    const clean = events[3]
+    if (clean.type !== 'clean') throw new Error('expected a clean event')
+    expect(spillPreview(clean.output)).toBe(OK.output)
+
+    const aggregate = events[4]
+    if (aggregate.type !== 'aggregate') throw new Error('expected an aggregate event')
+    const logged = aggregate.result as Record<string, unknown>
+    expect(logged.score).toBe(55)
+    expect(logged.status).toBe('success')
+    expect(logged.runLogRef).toEqual({ runId: header.runId, file: runLogFileName(MODEL.id, TASK.id) })
+    // The artifact is referenced, never inlined, in the aggregate line.
+    const spilled = logged.output as { spillRef: string; bytes: number }
+    expect(spilled.spillRef).toMatch(/^spill\/[0-9a-f]{16}\.txt$/)
+    expect(readFileSync(join(dir, spilled.spillRef), 'utf8')).toBe(OK.output)
+
+    // The published record points back at its trace.
+    expect(result.runLogRef).toEqual({ runId: header.runId, file: runLogFileName(MODEL.id, TASK.id) })
+    warn.mockRestore()
+  })
+
+  it('logs one check event per check per iteration, naming the true iteration index', async () => {
+    setRunLogDir(dir)
+    const checks = [
+      { name: 'space-jump-dispatch', passed: true, points: 40, maxPoints: 40 },
+      { name: 'canvas-advance', passed: false, points: 0, maxPoints: 30, detail: 'pixels unchanged' },
+    ]
+    // Iteration 0 fails non-transiently... use a transient failure so the loop
+    // keeps going: iteration 0 fails, iteration 1 succeeds. The single check
+    // pair must therefore be stamped iterationIndex 1, not 0.
+    generateMock
+      .mockRejectedValueOnce(new TimeoutError('Timeout after 5000ms: Test Kimi :: Task X #1/2'))
+      .mockResolvedValueOnce(OK)
+
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      scorer: { score: () => 40, scoreWithBreakdown: () => ({ score: 40, checks }) },
+    })
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const [result] = await runner.runTask(MODEL, TASK, 2)
+    consoleError.mockRestore()
+
+    const { events } = readRunLog(join(dir, runLogFileName(MODEL.id, TASK.id)))
+    const failure = events.find((e) => e.type === 'failure')
+    if (failure?.type !== 'failure') throw new Error('expected a failure event')
+    expect(failure.iterationIndex).toBe(0)
+    expect(failure.timedOut).toBe(true)
+    expect(failure.failureReason).toBe('endpoint_hung')
+
+    const checkEvents = events.filter((e) => e.type === 'check')
+    expect(checkEvents).toHaveLength(2)
+    for (const event of checkEvents) {
+      if (event.type !== 'check') throw new Error('expected a check event')
+      expect(event.iterationIndex).toBe(1)
+    }
+    expect(checkEvents.map((e) => (e.type === 'check' ? e.check.name : ''))).toEqual([
+      'space-jump-dispatch',
+      'canvas-advance',
+    ])
+    expect(result.status).toBe('partial')
+  })
+
+  it('writes no log and keeps the record ref-free when no run-log dir is set', async () => {
+    generateMock.mockResolvedValue(OK)
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      scorer: { score: () => 55 },
+    })
+    const [result] = await runner.runTask(MODEL, TASK, 1)
+    expect(result.runLogRef).toBeUndefined()
+    expect(readdirSync(dir)).toEqual([])
   })
 })
 

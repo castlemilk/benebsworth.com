@@ -18,6 +18,7 @@ import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
 import { generateOpencode, type OpencodeConfig } from './opencode'
 import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
+import { forceSpill, hashPrompt, openRunLog, type RunLog } from '../runlog'
 import { selectScorer } from '../scorers'
 import { withSandboxConstraints } from '../prompts'
 import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
@@ -390,7 +391,10 @@ async function generateOne(
   iterationIndex: number,
   bustCache: boolean,
   timeoutMs: number,
-  label: string
+  label: string,
+  // Passed EXPLICITLY rather than read from module state: several (model, task)
+  // jobs run concurrently and a shared "current log" would interleave them.
+  log?: RunLog
 ): Promise<GenerationResponse> {
   // HTML-category tasks get the demo-sandbox contract appended (self-contained
   // doc, no CDNs, no runtime JSX) so models generate directly-runnable
@@ -398,10 +402,29 @@ async function generateOne(
   // amended prompt is also the cache key, so constraint changes re-run live.
   const task = withSandboxConstraints(rawTask)
 
+  // "Model-visible means logged": record the exact prompt that will be sent
+  // BEFORE anything can consume it — including on a cache hit, where the
+  // replayed response still answers to this prompt.
+  log?.append({
+    type: 'request',
+    iterationIndex,
+    promptHash: hashPrompt(task.prompt),
+    promptLength: task.prompt.length,
+  })
+
   if (!bustCache) {
     const cached = getCachedResponse(model.id, task.id, task.prompt, iterationIndex)
     if (cached) {
       console.log(`[harness] cache hit ${model.name} :: ${task.title} #${iterationIndex + 1}`)
+      log?.append({
+        type: 'response',
+        iterationIndex,
+        rawOutput: cached.output,
+        tokensIn: cached.tokensIn,
+        tokensOut: cached.tokensOut,
+        runtimeMs: cached.runtimeMs,
+        cacheHit: true,
+      })
       return cached
     }
   }
@@ -416,6 +439,15 @@ async function generateOne(
         timeoutMs,
         label
       )
+      log?.append({
+        type: 'response',
+        iterationIndex,
+        rawOutput: response.output,
+        tokensIn: response.tokensIn,
+        tokensOut: response.tokensOut,
+        runtimeMs: response.runtimeMs,
+        cacheHit: false,
+      })
       // Same 40-char floor as aggregation: never cache degenerate outputs
       // (e.g. a bare "DONE" from a file-handoff run that wrote nothing) — a
       // poisoned cache would keep serving them on every non-busted rerun.
@@ -431,6 +463,14 @@ async function generateOne(
       // Rate limits deserve a much longer backoff than generic transient errors.
       const baseDelayMs = 1000 * 2 ** attempt
       const delayMs = isRateLimitError(err) ? baseDelayMs * 4 : baseDelayMs
+      log?.append({
+        type: 'retry',
+        iterationIndex,
+        attempt: attempt + 1,
+        error: err instanceof Error ? err.message : String(err),
+        delayMs,
+        kind: 'transient',
+      })
       console.warn(
         `[harness] retry ${attempt + 1}/${maxRetries} for ${model.name} :: ${task.title} #${iterationIndex + 1} after ${delayMs}ms: ${err instanceof Error ? err.message : String(err)}`
       )
@@ -474,13 +514,20 @@ export async function aggregateRuns(
   model: BenchmarkModel,
   task: BenchmarkTask,
   scorer: Scorer,
-  createdAt: string = new Date().toISOString()
+  createdAt: string = new Date().toISOString(),
+  // Explicit, not module state — concurrent (model, task) jobs each own one.
+  log?: RunLog
 ): Promise<BenchmarkResult> {
   // A "success" that produced no usable output can't be scored or displayed;
   // treat it as a failed iteration. The 40-char floor also catches degenerate
   // acknowledgements — e.g. file-handoff runs where the CLI replied "DONE"
   // without writing the artifact; no real artifact for any task is that short.
-  const successRuns = runs.filter((r) => r.status === 'success' && r.output.trim().length >= 40)
+  // Indices are carried alongside so `check` events can name the TRUE iteration
+  // number rather than a position within the filtered successes.
+  const successEntries = runs
+    .map((run, index) => ({ run, index }))
+    .filter(({ run }) => run.status === 'success' && run.output.trim().length >= 40)
+  const successRuns = successEntries.map((entry) => entry.run)
 
   const totalTokensIn = runs.reduce((sum, r) => sum + r.tokensIn, 0)
   const totalTokensOut = runs.reduce((sum, r) => sum + r.tokensOut, 0)
@@ -499,6 +546,13 @@ export async function aggregateRuns(
       )
       iterationScores = breakdowns.map((b) => b.score)
       iterationCheckResults = breakdowns.map((b) => b.checks)
+      // One event per check per iteration: "why this score" has to be
+      // answerable from the log alone, not just from the composite.
+      breakdowns.forEach((breakdown, i) => {
+        for (const check of breakdown.checks) {
+          log?.append({ type: 'check', iterationIndex: successEntries[i].index, check })
+        }
+      })
     } else {
       iterationScores = await Promise.all(successRuns.map((r) => scorer.score(r.output, task)))
     }
@@ -546,7 +600,7 @@ export async function aggregateRuns(
     output = successRuns[bestIdx].output
   }
 
-  return {
+  const result: BenchmarkResult = {
     taskId: task.id,
     modelId: model.id,
     score,
@@ -567,9 +621,29 @@ export async function aggregateRuns(
     iterationCheckResults:
       iterationCheckResults.length > 0 ? iterationCheckResults : undefined,
     createdAt,
+    // Every record produced under an active run log points back at its trace —
+    // the acceptance criterion for #1: nothing reaches results.json unexplained.
+    ...(log ? { runLogRef: { runId: log.runId, file: log.file } } : {}),
     source: 'live',
     output,
   }
+
+  if (log) {
+    // The artifact is ALWAYS spilled here, whatever its size: the JSONL has to
+    // stay small enough to serve, and content addressing means these bytes cost
+    // nothing extra (the `clean` event that produced them spilled to the same
+    // file).
+    const { output: artifact, ...rest } = result
+    log.append({
+      type: 'aggregate',
+      result: {
+        ...rest,
+        ...(artifact ? { output: forceSpill(log.dir, artifact) } : {}),
+      },
+    })
+  }
+
+  return result
 }
 
 /**
@@ -610,6 +684,20 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
       const scorer = cfg.scorer ?? selectScorer(task)
       const runs: IterationRun[] = []
 
+      // One append-only log per (model, task) for this sweep. Undefined — and
+      // therefore a complete no-op at every call site — when no run-log dir is
+      // set, which is the case for unit tests and library use.
+      const log = openRunLog({
+        modelId: model.id,
+        taskId: task.id,
+        configSnapshot: {
+          iterations,
+          timeoutMs,
+          maxRetries: cfg.maxRetries ?? 2,
+          bustCache,
+        },
+      })
+
       for (let i = 0; i < iterations; i++) {
         const label = `${model.name} :: ${task.title} #${i + 1}/${iterations}`
         console.log(`[harness] starting ${label}`)
@@ -627,12 +715,20 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           let attempt = 0
           let response: GenerationResponse | undefined
           while (true) {
-            response = await generateOne(cfg, model, task, i, bustCache, timeoutMs, label)
+            response = await generateOne(cfg, model, task, i, bustCache, timeoutMs, label, log)
             const cleanedProbe = cleanOutput(response.output)
             if (cleanedProbe.trim().length >= 40) break
             attempt++
             if (attempt >= emptyBodyMaxAttempts) break
             const delayMs = 1500 * attempt
+            log?.append({
+              type: 'retry',
+              iterationIndex: i,
+              attempt,
+              error: `empty body (${response.tokensIn}/${response.tokensOut} tokens)`,
+              delayMs,
+              kind: 'empty_body',
+            })
             console.warn(
               `[harness] empty body on attempt ${attempt}/${emptyBodyMaxAttempts} for ${label} (${response.tokensIn}/${response.tokensOut} tokens) — retrying after ${delayMs}ms`
             )
@@ -668,6 +764,13 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             console.error(
               `[harness] empty body for ${label} after ${Date.now() - callStart}ms and ${attempt + 1} attempt(s) (${tokensIn}/${tokensOut} tokens) — recording as ${reason}`
             )
+            log?.append({
+              type: 'failure',
+              iterationIndex: i,
+              error: `empty body after ${attempt + 1} attempt(s) (${tokensIn}/${tokensOut} tokens)`,
+              failureReason: reason,
+              timedOut: false,
+            })
             runs.push({
               output: `empty body (${tokensIn}/${tokensOut} tokens)`,
               tokensIn,
@@ -692,6 +795,9 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
               `[harness] completed ${label} in ${Date.now() - callStart}ms (${tokensIn}/${tokensOut} tokens)`
             )
           }
+          // The artifact that will actually be scored — post cleanOutput and
+          // post dependency-inlining, i.e. exactly the bytes the scorer sees.
+          log?.append({ type: 'clean', iterationIndex: i, output: cleaned })
           runs.push({ output: cleaned, tokensIn, tokensOut, runtimeMs, status: 'success', failureReason: 'none' })
         } catch (err) {
           // Pass the provider shape so a timeout on a locally-spawned CLI is
@@ -700,6 +806,13 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           console.error(
             `[harness] failed ${label} after ${Date.now() - callStart}ms [${reason}]: ${err instanceof Error ? err.message : String(err)}`
           )
+          log?.append({
+            type: 'failure',
+            iterationIndex: i,
+            error: err instanceof Error ? err.message : String(err),
+            failureReason: reason,
+            timedOut: isTimeoutError(err),
+          })
           runs.push({
             output: err instanceof Error ? err.message : String(err),
             tokensIn: 0,
@@ -724,13 +837,22 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             )
             break
           }
+        } finally {
+          // Checkpoint discipline (dsh `session-checkpoint-policy`): make the
+          // iteration durable at its boundary, so a killed sweep loses at most
+          // the in-flight iteration rather than the whole task's evidence.
+          await log?.flush()
         }
       }
 
       // Make sure any cache writes queued by this task have flushed to disk.
       await saveQueue
 
-      return [await aggregateRuns(runs, iterations, model, task, scorer, now)]
+      try {
+        return [await aggregateRuns(runs, iterations, model, task, scorer, now, log)]
+      } finally {
+        await log?.close()
+      }
     },
   }
 }

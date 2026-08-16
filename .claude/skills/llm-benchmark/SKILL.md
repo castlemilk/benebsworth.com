@@ -47,6 +47,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Run script | `scripts/run-benchmark.mjs` |
 | Sweep run-id + prune policy (`sweepRunId`, `selectPrunable`) | `lib/lab/llm-benchmark/sweep.ts` |
 | Sweep prune script | `scripts/sweep-clean.mjs` |
+| Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
+| Run-log replay ("transcript") script | `scripts/retrace.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
 | Route/path helpers | `lib/lab/llm-benchmark/nav.ts` |
@@ -350,6 +352,90 @@ sweeps/<run-id>/
   deliberate: keep-only would evict this morning's evidence after a burst of ten
   sweeps in one afternoon, and age-only would evict every run you have after a
   quiet month.
+
+## Run log (`sweeps/<run-id>/<model>-<task>.jsonl`)
+
+**The invariant: model-visible means logged.** Anything that reached a model
+request must be reconstructable from the log alone — the exact prompt, every
+attempt, the raw response, the artifact that was actually scored, each check's
+verdict, and the aggregate that landed in results.json. A `BenchmarkResult`
+keeps only the BEST iteration's artifact plus the aggregate score, so without
+this file "what did iteration 3 emit and why did it score 3?" is unanswerable a
+week later. Borrowed from the dsh session log
+(`session-persistence-jsonl`).
+
+`scripts/run-benchmark.mjs` calls `setRunLogDir(SWEEP_ROOT)` with the SAME root
+it gives `setSweepRoot()`, so logs sit beside the scratch dirs and artifacts:
+
+```
+sweeps/<run-id>/
+  <model-id>-<task-id>.jsonl      one append-only log per (model, task)
+  spill/<sha256[:16]>.txt         content-addressed store for large strings
+  scratch/… artifacts/…           (see Forensic sweep retention, above)
+```
+
+- **Header first.** Line 0 is `{ type: 'header', seq: 0, version, runId,
+  modelId, taskId, createdAt, configSnapshot }`; `configSnapshot` is the
+  effective `{ iterations, timeoutMs, maxRetries, bustCache }`. Every later
+  line is one event and `seq` is contiguous (line i has `seq === i`) — the
+  writer owns the counter.
+- **Event vocabulary** (all carry `type`, `seq`, `ts`, and `iterationIndex`
+  where applicable):
+
+  | Event | Emitted | Payload |
+  | --- | --- | --- |
+  | `request` | once per iteration, before the first provider call (and before the cache lookup, so cache hits still record their prompt) | `promptHash` (sha256 of the post-`withSandboxConstraints` prompt), `promptLength` |
+  | `response` | every response that came back, **including cache replays** | `rawOutput`, `tokensIn`, `tokensOut`, `runtimeMs`, `cacheHit` |
+  | `retry` | transient retries inside `generateOne`; empty-body retries in the `runTask` loop | `attempt`, `error`, `delayMs`, `kind: 'transient' \| 'empty_body'` |
+  | `clean` | after `cleanOutput` + dependency inlining | `output` — exactly the bytes the scorer sees |
+  | `failure` | a failed iteration (terminal; retries are their own events) | `error`, `failureReason`, `timedOut` |
+  | `check` | one per check per iteration, from `scoreWithBreakdown` | `iterationIndex` (the TRUE index, not a position among successes), `check` |
+  | `aggregate` | once, at the end | `result` — the BenchmarkResult with the artifact always spilled |
+
+- **Spill.** Any string over 8 KB is written to `spill/<first-16-hex-of-sha256>.txt`
+  and replaced in the event by `{ spillRef, preview (2 KB), bytes }`. Content
+  addressing means a `response`, its `clean` artifact and the `aggregate` that
+  published it collapse to one file when the bytes are identical, and the JSONL
+  stays small enough to serve.
+- **Flush at iteration boundaries.** Appends coalesce into 200 ms batches (one
+  write + one `fsync`, serialized so batches never interleave), but `runTask`
+  awaits `flush()` in a `finally` at the end of EVERY iteration and `close()`
+  before returning. Guarantee: a killed sweep loses at most the in-flight
+  iteration. A failed batch write rolls the file back to its last durable
+  length and is dropped with a `console.warn` — degraded logging never fails a
+  sweep.
+- **Crash recovery.** `readRunLog()` keeps complete lines and stops at the
+  first unparsable one (a killed sweep leaves a truncated tail); only a
+  missing/invalid header throws.
+- **`BenchmarkResult.runLogRef`** = `{ runId, file }` is stamped on every
+  record produced while logging is on, so results.json points back at its
+  trace. (#5's verifier will assert this.)
+- **Plumbing note:** the log instance is passed EXPLICITLY into `generateOne`
+  and `aggregateRuns`. It is deliberately NOT module-level "current log" state
+  like `setSweepRoot` — several (model, task) jobs run concurrently and would
+  interleave into each other's file. The same pair never runs concurrently, so
+  one file per pair needs no locking. Re-running the same pair in the same
+  sweep root truncates the file: one file = the latest run of that pair.
+- **With no run-log dir set** (unit tests, library use) `openRunLog` returns
+  `undefined` and every call site no-ops through `?.` — behaviour is
+  byte-for-byte what it was before.
+
+### Retrace (reading a run log back)
+
+```bash
+npx tsx scripts/retrace.mjs --run 2026-08-16T09-30-12                 # every log in the run
+npx tsx scripts/retrace.mjs --run <id> --model kimi-k2.7 --task nbody # one pair
+npx tsx scripts/retrace.mjs --run <id> --iteration 2                  # one iteration (0-based)
+npx tsx scripts/retrace.mjs --run <id> --full                         # inline full spill content
+```
+
+Prints a per-iteration transcript: prompt hash/length, each attempt (cache hit,
+retries with their delays), response size/tokens/runtime, the cleaned artifact
+(8-line excerpt by default, spill refs resolved), each check's pass/fail with
+points and detail, and the aggregate line (score, status, failureReason,
+`runLogRef`). Model/task filtering reads the HEADER, not the filename — both
+ids contain hyphens, so the name can't be split reliably. `SWEEPS_DIR`
+overrides the directory scanned.
 
 ## Verification Checklist
 

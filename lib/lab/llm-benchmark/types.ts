@@ -172,6 +172,18 @@ export interface BenchmarkResult {
    */
   failureReason?: BenchmarkFailureReason
   createdAt: string
+  /**
+   * Pointer to the per-iteration run log that produced this record —
+   * `sweeps/<runId>/<file>` (see `lib/lab/llm-benchmark/runlog.ts`). The log
+   * holds what the aggregate cannot: the exact prompt hash, every iteration's
+   * raw and cleaned output, retries, timings, and per-check verdicts. Replay it
+   * with `npx tsx scripts/retrace.mjs --run <runId>`.
+   *
+   * Present on every record produced by a sweep that had run logging enabled
+   * (i.e. a run-log dir was set); absent on older records and on library/unit
+   * runs with logging off.
+   */
+  runLogRef?: { runId: string; file: string }
   /** 'live' (real harness run) or 'seeded' (hand-authored sample data). */
   source?: BenchmarkSource
   /** Raw generated output from the model (code, derivation, etc.) for side-by-side comparison. */

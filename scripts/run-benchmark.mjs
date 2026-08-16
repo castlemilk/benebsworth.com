@@ -7,6 +7,7 @@ import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
+import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
 import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
@@ -28,6 +29,10 @@ const RUN_BUST_CACHE = process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUS
 // cleanup path. Override with SWEEP_ROOT (absolute or repo-relative).
 const SWEEP_ROOT = resolve(process.cwd(), process.env.SWEEP_ROOT ?? `sweeps/${sweepRunId()}`)
 setSweepRoot(SWEEP_ROOT)
+// Per-iteration run logs live in the SAME tree: sweeps/<run-id>/<model>-<task>.jsonl
+// (+ a shared content-addressed spill/ store). Replay one with
+// `npx tsx scripts/retrace.mjs --run <run-id>`.
+setRunLogDir(SWEEP_ROOT)
 console.log(`[harness] sweep root: ${relative(process.cwd(), SWEEP_ROOT)}/`)
 
 async function main() {

@@ -317,67 +317,34 @@ code-answer tasks.)
 
 # P1 — Core integrity
 
-## [ ] 1. Per-iteration event log ("model-visible means logged")
+## [x] 1. Per-iteration event log ("model-visible means logged")
 
-**Problem.** A `BenchmarkResult` persists only the BEST iteration's artifact,
-the aggregate score, and `iterationScores`. The raw output of the other
-iterations, the exact prompt sent, per-check details, retry counts, and
-timings vanish when the sweep's /tmp log is deleted. Nobody can answer
-"what did iteration 3 actually emit and why did it score 3?" six months
-later — the exact trust property the benchmark exists to provide.
-
-**Why now.** This session repeatedly needed forensic data that no longer
-existed: the deepseek `[100,3,68,3,91]` n-body record could not be traced to
-specific artifacts, and the "22-token" iteration was indistinguishable from a
-short-error iteration after the fact.
-
-**Inspiration.** dsh session log (see Reference #1). Their runtime invariant
-is directly portable: if we record what we sent and what we got per
-iteration, every published score is reproducible.
-
-**Design sketch.**
-
-- New module `lib/lab/llm-benchmark/runlog.ts` with a small append-only
-  JSONL writer. On-disk contract borrowed from dsh's
-  `session-persistence-jsonl` backend (packages/session/session-persistence-jsonl):
-  - First logical line is an immutable header record
-    `{ type: 'header', version, runId, modelId, taskId, createdAt, configSnapshot }`;
-    every later line is one event. `seq` stays contiguous (`events[i].seq === i`).
-  - Append-only: flushed events are never rewritten; each append batch is
-    `fsync`ed; a caught write failure rolls the file back to its prior length.
-  - Crash recovery: on load, keep complete records, truncate from the first
-    incomplete tail line (raw mode; dsh does the same with compressed frames).
-  - Batching: coalesce a fixed window (`writeBatchMaxDelayMs` ≈ 200 in dsh)
-    so a busy iteration doesn't fsync per event; flush bypasses the window.
-  - Spill (dsh `spill/` family): large outputs are NOT inlined in the log —
-    the event stores a bounded preview + a locator (`artifacts/<file>`), full
-    content lives in the sweep's artifact store (see #3). This keeps JSONL
-    files small enough to serve to the UI.
-  - Checkpoints (dsh `session-checkpoint-policy` wraps llm+tools at semantic
-    boundaries): flush the log at iteration boundaries, so a killed sweep
-    loses at most the in-flight iteration.
-  - Events:
-    - `{ type: 'request', ts, promptHash, promptLength, configSnapshot }`
-    - `{ type: 'response', ts, rawOutput | spillRef, tokensIn, tokensOut, runtimeMs }`
-    - `{ type: 'clean', ts, output | spillRef }` (post-`cleanOutput` / inline-deps)
-    - `{ type: 'retry', ts, attempt, error, delayMs }`
-    - `{ type: 'check', ts, iterationIndex, check: IterationCheckResult }`
-    - `{ type: 'aggregate', ts, result: BenchmarkResult }`
-  - Written from `runners/provider.ts` (in `generateOne` around
-    `generateWithProvider` / `aggregateRuns`) — one shared seam rather than
-    per-provider instrumentation.
-- Storage: `sweeps/<run-id>/<model>-<task>.jsonl`, `run-id` = timestamp;
-  gitignored. A `scripts/retrace.mjs --run <id> --model x --task y` reader
-  that replays an iteration's full lifecycle to stdout (the "transcript").
-- `BenchmarkResult` gains `runLogRef?: { runId, file }` pointing at its trace.
-- UI (P2 #9) can then render run traces per iteration.
-
-**Acceptance criteria.** A sweep writes one JSONL per (model, task); every
-successful and failed iteration appears with raw + cleaned output; a retrace
-script reproduces "why this score" for a given iteration from the log alone;
-no record is ever written to results.json without a `runLogRef`.
-
-**Effort.** M. **Dependencies.** none (foundational for #7).
+**Shipped.** `lib/lab/llm-benchmark/runlog.ts` is an append-only JSONL log, one
+file per (model, task) per sweep at `sweeps/<run-id>/<model>-<task>.jsonl` —
+the SAME root `setSweepRoot` retains scratch and artifacts under, wired from
+`scripts/run-benchmark.mjs` via `setRunLogDir()` (module-level, the
+`setSweepRoot` precedent). Line 0 is an immutable header
+(`version`, `runId`, `modelId`, `taskId`, `createdAt`, `configSnapshot` =
+iterations/timeoutMs/maxRetries/bustCache); every later line is one event with
+a contiguous writer-owned `seq`. Events: `request` (prompt sha256 + length),
+`response` (raw output, tokens, runtimeMs, `cacheHit`), `retry`
+(`kind: transient | empty_body`, attempt, delayMs), `clean` (the artifact
+actually scored), `failure` (error + failureReason + timedOut), `check` (one
+per check per iteration, stamped with the TRUE iteration index), `aggregate`
+(the BenchmarkResult, artifact always spilled). Appends coalesce into 200ms
+batches (one write + one fsync, serialized); `runTask` flushes at every
+iteration boundary and closes before returning, so a killed sweep loses at
+most the in-flight iteration. Strings over 8 KB spill to
+`spill/<sha256[:16]>.txt` (content-addressed — identical artifacts across
+`response`/`clean`/`aggregate` cost one file) leaving a 2 KB preview + byte
+count inline. Readers keep the complete prefix and stop at the first
+unparsable line; only a missing header throws. The log instance is threaded
+EXPLICITLY through `generateOne`/`aggregateRuns` — concurrent (model, task)
+jobs would corrupt a shared module-level "current log". `BenchmarkResult`
+gains `runLogRef?: { runId, file }`, stamped on every record produced while
+logging is on. Replay with `npx tsx scripts/retrace.mjs --run <run-id>
+[--model x] [--task y] [--iteration n] [--full]`. With no run-log dir set
+(unit tests, library use) behaviour is byte-for-byte unchanged.
 
 ## [ ] 2. Sweep profiles with effective-config dump
 
@@ -1341,6 +1308,10 @@ with their capture metadata.
 - Forensic sweep retention (#3): `sweeps/<run-id>/{scratch,artifacts}/` kept
   on success AND failure, artifact copied out of wherever the model wrote it,
   `scripts/sweep-clean.mjs` prunes (keep-count AND age floor).
+- Per-iteration run log (#1): append-only `sweeps/<run-id>/<model>-<task>.jsonl`
+  (header + request/response/retry/clean/failure/check/aggregate events,
+  content-addressed `spill/`), `BenchmarkResult.runLogRef`, replayed by
+  `scripts/retrace.mjs`.
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Frame-prelude hardening + sandbox prompt contract + per-iteration

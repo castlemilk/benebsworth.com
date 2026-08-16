@@ -13,6 +13,13 @@ vi.mock('node:fs/promises', async (importOriginal) => {
 })
 import { open } from 'node:fs/promises'
 
+// Every test here does real write+fsync round-trips; several also wait out the
+// 200ms batch window. Fast in isolation (~200-600ms each) but repeatedly
+// observed blowing the default 5s under full-suite CPU/IO contention (three
+// separate sessions). The raised cap keeps the assertions — which are about
+// ordering and durability, never speed — honest under load.
+vi.setConfig({ testTimeout: 20_000 })
+
 import {
   SPILL_PREVIEW_CHARS,
   SPILL_THRESHOLD_BYTES,

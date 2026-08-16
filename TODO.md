@@ -834,31 +834,32 @@ identically; tests for command resolution + error paths.
 
 **Effort.** M.
 
-## [ ] 20. Redaction at three points (env, command lines, logs)
+## [x] 20. Redaction at three points (command lines, logs, config snapshots)
 
-**Problem.** #4 scrubs the env handed to the model CLI. Paperclip's
-`command-redaction.ts` + `log-redaction.ts` show the same hygiene belongs
-on the command lines we log (a `-m`/`--model` or env var containing a
-secret appears in `[harness]` logs and the run log) and on captured output
-before it reaches the event log (#1).
+**Shipped.** `lib/lab/llm-benchmark/redact.ts` (pure, dependency-free) ports
+paperclip's `command-redaction.ts` name set as one exported
+`SECRET_NAME_PATTERN`, plus `redactText` (four linear regex passes behind a
+single name probe: authorization/bearer headers keep the scheme and lose the
+value; `NAME=`/`NAME:`/`"NAME": "…"` assignments keep the name and the
+quotes; `--flag value` / `--flag=value` lose the value), `redactArgs`
+(flag-aware over an argv array, so the prompt element survives intact) and
+`redactValue` (deep, for records). Applied at the three surfaces: `runCli`'s
+timeout and non-zero-exit errors (which flow onward into results.json `output`
+and the run log's `failure` event), the run log's `append`/header encode
+(BEFORE spilling, so spill files are redacted too — redaction is
+deterministic, so content addressing still dedupes), and the `--dump-config`
+`row()` choke point. Deliberate divergences from paperclip, all because our
+strings are model-authored HTML: no high-entropy-literal rules (name-adjacent
+redaction ONLY — a bare `sk-…`/hash/JWT survives, an explicit non-goal), no
+bare `key` in the name set and a required word-boundary end so `data-key`,
+`@keyframes`, `keydown`, `--max-tokens` and `"tokensIn"` are untouched, `<`/`>`
+terminate a value so a match can't eat the rest of an artifact, and a `(?<!--)`
+guard so a `--token: #333` CSS custom property survives. Idempotent (tested).
+30 unit tests in `redact.test.ts` plus seam tests in `cli.test.ts` (real spawn,
+secret-bearing stderr + a `--api-key` timeout) and `runlog.test.ts` (inline
+field, spill file, benign-markup/`promptHash` passthrough).
 
-**Inspiration.** paperclip `packages/adapter-utils/src/{command-redaction,log-redaction}.ts`
-— `SECRET_NAME_PATTERN` + bearer/assignment regexes.
-
-**Design sketch.** Port the `SECRET_NAME_PATTERN` regex set into
-`lib/lab/llm-benchmark/redact.ts` and apply it:
-- to every `[harness]`/`[rescore]` log line that embeds CLI args (the
-  `runCli` timeout error currently prints the FULL argv including any
-  `--api-key`-style flags);
-- to raw output before the event log stores it (#1);
-- to the `configSnapshot` in sweep dumps (#2).
-Test with the paperclip fixture patterns (bearer headers, `KEY=value`
-assignments, `--flag=value`).
-
-**Acceptance criteria.** A sweep log with a fake `API_KEY=…` env/flag shows
-`***REDACTED***`; unit tests for the three call sites.
-
-**Effort.** S–M. **Dependencies.** #1 (for log-output redaction).
+**Effort.** S–M.
 
 ## [ ] 21. Bundle comparison + release-gate evals
 
@@ -1298,6 +1299,12 @@ with their capture metadata.
   import graph and enforces the DAG — zero cycles (Tarjan SCC), `types.ts` a
   leaf, no lib module importing upward into `scripts/`, no `scorers/` →
   `runners/` reverse edge.
+- Value-based redaction (#20): `redact.ts` (`SECRET_NAME_PATTERN`,
+  `redactText`/`redactArgs`/`redactValue`) applied to `runCli`'s error
+  messages, every run-log record before spilling, and the `--dump-config`
+  rows. Name-adjacent only — bare high-entropy literals are an explicit
+  non-goal, and artifact HTML (`data-key`, `@keyframes`, `--token:`) is
+  untouched.
 - Frame-prelude hardening + sandbox prompt contract + per-iteration
   retry/empty-body recovery + `RUN_MAX_RETRIES`/`RUN_TIMEOUT_MS` env knobs.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).

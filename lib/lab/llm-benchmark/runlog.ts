@@ -22,6 +22,9 @@
  *    is one write + one fsync; `flush()` bypasses the window
  *  - a failed batch rolls the file back to its last durable length and is
  *    DROPPED (degraded logging must never fail a sweep)
+ *  - every string in every record (header included) is value-redacted on the
+ *    way in (`redact.ts`), BEFORE spilling — so a credential a model echoed
+ *    back never lands in the JSONL or in a spill file
  *  - strings over SPILL_THRESHOLD_BYTES are content-addressed into `spill/`
  *    and replaced in-line by `{ spillRef, preview, bytes }`
  *  - readers keep the complete prefix and stop at the first unparsable line
@@ -34,6 +37,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { open, type FileHandle } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 
+import { redactValue } from './redact'
 import type { BenchmarkFailureReason, IterationCheckResult } from './types'
 
 /** Strings at or above this many bytes are spilled rather than inlined. */
@@ -309,8 +313,12 @@ class JsonlRunLog implements RunLog {
     // writeBatch's try/catch, which reports it and drops the batch.
     void this.handle.catch(() => {})
     // Header is queued like any other line, so it is always byte 0 of the
-    // first batch and can never race an event.
-    this.queue.push(JSON.stringify(header) + '\n')
+    // first batch and can never race an event. Redacted like any other record:
+    // today `configSnapshot` holds four numbers/booleans and cannot carry a
+    // secret, so this is a no-op — it is here so that a knob added to the
+    // snapshot later (a base URL with an embedded credential, an echoed env
+    // value) is covered by construction rather than by remembering.
+    this.queue.push(JSON.stringify(redactValue(header)) + '\n')
     this.schedule()
   }
 
@@ -321,7 +329,13 @@ class JsonlRunLog implements RunLog {
     }
     try {
       const record = {
-        ...(spillLargeStrings(this.dir, event) as Record<string, unknown>),
+        // Redact BEFORE spilling, so the content-addressed spill files hold
+        // redacted bytes too (redaction is deterministic, so addressing still
+        // dedupes across the response/clean/aggregate events that share an
+        // artifact). Nothing is excluded: raw output, cleaned output, error
+        // strings and the aggregate result all pass through. `promptHash` is
+        // hex and unaffected by design.
+        ...(spillLargeStrings(this.dir, redactValue(event)) as Record<string, unknown>),
         seq: this.seq++,
         ts: new Date().toISOString(),
       }

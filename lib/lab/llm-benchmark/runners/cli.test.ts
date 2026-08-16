@@ -445,3 +445,31 @@ describe('runCli credential scrub', () => {
     }
   }, 30_000)
 })
+
+describe('runCli error-message redaction', () => {
+  it('redacts a secret-bearing stderr in the non-zero-exit error', async () => {
+    await expect(
+      runCli(
+        process.execPath,
+        ['-e', 'console.error("auth failed for API_KEY=sk-live-abc123"); process.exit(3)'],
+        { timeoutMs: 20_000 }
+      )
+    ).rejects.toThrow(/CLI exited with code 3: auth failed for API_KEY=\*\*\*REDACTED\*\*\*/)
+  }, 30_000)
+
+  it('redacts a secret flag value in the timeout message but keeps the prompt', async () => {
+    const prompt = 'Build a keyboard demo with @keyframes.'
+    await expect(
+      runCli(
+        process.execPath,
+        // `--` so node treats the rest as script args rather than its own flags.
+        ['-e', 'setInterval(() => {}, 1000)', '--', '--api-key', 'sk-live-abc123', prompt],
+        { timeoutMs: 500 }
+      )
+    ).rejects.toThrow(
+      new RegExp(
+        `Timeout after 500ms: .*--api-key \\*\\*\\*REDACTED\\*\\*\\* ${prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`
+      )
+    )
+  }, 30_000)
+})

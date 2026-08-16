@@ -1,4 +1,5 @@
 import type { BenchmarkModel, BenchmarkTask } from '../types'
+import { redactArgs, redactText } from '../redact'
 import { spawn } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -235,7 +236,17 @@ export function runCli(
       // Give the group a moment to die before escalating; a wedged child
       // (e.g. a stuck server holding the pipes) gets SIGKILL.
       setTimeout(() => killGroup('SIGKILL'), 1000)
-      reject(new Error(`Timeout after ${options.timeoutMs}ms: ${command} ${args.join(' ')}`))
+      // Both error messages below are REDACTED at the source (`redact.ts`).
+      // They do not stay local: the harness puts them in `[harness]` sweep log
+      // lines, in results.json's `output` for a failed record, and in the run
+      // log's `failure` event — so one redaction here covers all three. The
+      // argv also carries the whole PROMPT, which redactText leaves intact
+      // except for any credential assignment actually inside it.
+      reject(
+        new Error(
+          `Timeout after ${options.timeoutMs}ms: ${redactText(command)} ${redactArgs(args).join(' ')}`
+        )
+      )
     }, options.timeoutMs)
     // Never let a stray child keep the parent sweep process alive after the
     // run finishes — the promise has already settled by then.
@@ -263,7 +274,7 @@ export function runCli(
       clearTimeout(timeout)
       killGroup('SIGTERM')
       if (code !== 0 && code !== null) {
-        reject(new Error(`CLI exited with code ${code}: ${stderr || stdout}`))
+        reject(new Error(`CLI exited with code ${code}: ${redactText(stderr || stdout)}`))
       } else {
         resolve({ stdout, stderr })
       }

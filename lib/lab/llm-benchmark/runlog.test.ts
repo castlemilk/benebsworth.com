@@ -258,6 +258,73 @@ describe('spill', () => {
   })
 })
 
+describe('redaction on the way in', () => {
+  it('redacts a secret in an inlined string field', async () => {
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const log = openRunLog(META)!
+    log.append({
+      type: 'failure',
+      iterationIndex: 0,
+      error: 'CLI exited with code 1: API_KEY=secret123',
+      failureReason: 'auth_error',
+      timedOut: false,
+    })
+    await log.close()
+
+    const [event] = readRunLog(join(dir, log.file)).events
+    expect(event.type === 'failure' && event.error).toBe(
+      'CLI exited with code 1: API_KEY=***REDACTED***'
+    )
+    expect(readFileSync(join(dir, log.file), 'utf8')).not.toContain('secret123')
+  })
+
+  it('redacts BEFORE spilling, so the spill file holds no secret either', async () => {
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const log = openRunLog(META)!
+    const big = `<!doctype html><p>API_KEY=secret123</p>${'e'.repeat(SPILL_THRESHOLD_BYTES)}`
+    log.append({ type: 'clean', iterationIndex: 0, output: big })
+    await log.close()
+
+    const [event] = readRunLog(join(dir, log.file)).events
+    if (event.type !== 'clean' || typeof event.output === 'string') {
+      throw new Error('expected the output to spill')
+    }
+    const spilled = readFileSync(join(dir, event.output.spillRef), 'utf8')
+    expect(spilled).not.toContain('secret123')
+    expect(spilled).toContain('API_KEY=***REDACTED***')
+    // …and the inline preview, which is a slice of the same redacted string.
+    expect(event.output.preview).not.toContain('secret123')
+  })
+
+  it('leaves benign artifact markup and the prompt hash byte-for-byte intact', async () => {
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const log = openRunLog(META)!
+    const html = '<div data-key="physics">@keyframes spin</div>'
+    const promptHash = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+    log.append({ type: 'request', iterationIndex: 0, promptHash, promptLength: 10 })
+    log.append({ type: 'clean', iterationIndex: 0, output: html })
+    await log.close()
+
+    const [request, clean] = readRunLog(join(dir, log.file)).events
+    expect(request.type === 'request' && request.promptHash).toBe(promptHash)
+    expect(clean.type === 'clean' && clean.output).toBe(html)
+  })
+
+  it('redacts the header record too (no-op for today’s config snapshot)', async () => {
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const log = openRunLog(META)!
+    await log.close()
+
+    const { header } = readRunLog(join(dir, log.file))
+    expect(header.configSnapshot).toEqual(META.configSnapshot)
+    expect(header.modelId).toBe(META.modelId)
+  })
+})
+
 describe('readRunLog', () => {
   it('keeps the complete prefix and ignores a truncated tail line (crash recovery)', async () => {
     const dir = tempDir()

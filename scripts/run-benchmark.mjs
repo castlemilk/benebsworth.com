@@ -37,6 +37,7 @@ import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
 import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
+import { redactText } from '../lib/lab/llm-benchmark/redact.ts'
 import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
 import { formatQuotaWindow, quotaLockedModels } from '../lib/lab/llm-benchmark/quota.ts'
 import {
@@ -114,9 +115,21 @@ function uniqueSweepRoot(base) {
   return base
 }
 
-/** `  label   value   (source)` — one row of the effective-config dump. */
+/**
+ * `  label   value   (source)` — one row of the effective-config dump.
+ *
+ * Every value goes through `redactText`. HONEST NOTE: no row can carry a
+ * credential TODAY — the dump prints model names, task ids, integers, booleans
+ * and repo-relative paths, and the provider API keys read further down in
+ * `main()` are never printed at all. This is not cargo-culted anyway: `row` is
+ * the single choke point through which any future knob would be echoed
+ * (profiles are data in `sweep-profiles.json` and an operator adding, say, a
+ * `baseUrl` row would otherwise print `https://user:pass@host` unredacted), and
+ * the cost is one `SECRET_NAME_PATTERN.test` per line.
+ */
 function row(label, value, source) {
-  console.log(`  ${label.padEnd(14)}${String(value).padEnd(48)}${source ? `(${source})` : ''}`.trimEnd())
+  const text = redactText(String(value))
+  console.log(`  ${label.padEnd(14)}${text.padEnd(48)}${source ? `(${source})` : ''}`.trimEnd())
 }
 
 /**
@@ -125,7 +138,9 @@ function row(label, value, source) {
  */
 function dumpConfig({ models, tasks, locks, outPath }) {
   console.log(
-    `\n[harness] effective config${config.profile ? ` — profile "${config.profile}": ${SWEEP_PROFILES[config.profile].description}` : ''}`
+    redactText(
+      `\n[harness] effective config${config.profile ? ` — profile "${config.profile}": ${SWEEP_PROFILES[config.profile].description}` : ''}`
+    )
   )
   row('models', `${models.length}: ${models.map((m) => m.name).join(', ')}`, config.models.source)
   row(

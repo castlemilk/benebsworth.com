@@ -346,37 +346,29 @@ logging is on. Replay with `npx tsx scripts/retrace.mjs --run <run-id>
 [--model x] [--task y] [--iteration n] [--full]`. With no run-log dir set
 (unit tests, library use) behaviour is byte-for-byte unchanged.
 
-## [ ] 2. Sweep profiles with effective-config dump
+## [x] 2. Sweep profiles with effective-config dump
 
-**Problem.** Sweep recipes are hand-assembled env var invocations
-(`RUN_MODELS=... RUN_TASKS=... RUN_ITERATIONS=... RUN_CONCURRENCY=...
-RUN_TIMEOUT_MS=... RUN_MAX_RETRIES=...`). We now have several real recipes
-(smoke, slow-model, agy-quota) that must be remembered and retyped
-correctly — get one wrong (e.g. forget `RUN_MAX_RETRIES=0` on a slow model)
-and a sweep burns hours on guaranteed retries.
-
-**Inspiration.** dsh profiles + `--dump-config` (Reference #2): named
-compositions that print the effective booted config before running.
-
-**Design sketch.**
-
-- `scripts/sweep-profiles.mjs` (or JSON in `lib/lab/llm-benchmark/sweep-profiles.json`):
-  - `smoke`: 1 model × 1 task × 1 iter, 10-min timeout, concurrency 1
-  - `fast-refresh`: 2 tasks × 5 iters, concurrency 2, 10-min cap
-  - `slow-model`: concurrency 2, `RUN_MAX_RETRIES=0`, 25-min cap (deepseek
-    lesson), `RUN_BUST_CACHE=1`
-  - `agy-quota`: concurrency 1, 5 iters, default timeouts
-- `run-benchmark.mjs` accepts `--profile <name> [--model x --task y ...]`
-  (overrides merge over the profile) and **prints the effective config**
-  before starting — the dsh `--dump-config` behavior: model(s), tasks,
-  iterations, concurrency, timeout, retries, bust-cache, expected duration
-  estimate from per-task historical `runtimeMs`.
-
-**Acceptance criteria.** Every documented sweep in the skill maps to a
-profile; `--profile` + overrides produces the same env-var behavior today;
-the pre-run dump shows exactly what will run.
-
-**Effort.** S–M.
+**Shipped.** Recipes are DATA in `lib/lab/llm-benchmark/sweep-profiles.json`
+(`smoke`, `fast-refresh`, `slow-model`, `agy-quota` — each a one-line
+description plus any of models/tasks/iterations/concurrency/timeoutMs/
+maxRetries/bustCache). `sweep-profiles.ts` validates the file at import
+(unknown key, wrong type, or missing description throws — `retries` instead of
+`maxRetries` must not silently pass) and holds the pure, unit-tested
+`resolveSweepConfig()`/`parseSweepArgs()`/`estimateSweepDuration()`.
+`scripts/run-benchmark.mjs` is a thin shell over them and takes `--profile`,
+`--model`/`--task` (repeatable or comma list), `--iterations`,
+`--concurrency`, `--timeout-ms`, `--max-retries`, `--bust-cache`,
+`--list-profiles`, `--dump-config`. **Precedence: CLI flag > env var > profile
+> built-in default**; with no profile and no flags the env-only behaviour is
+byte-identical (including `RUN_MAX_RETRIES=""` reading as 0), so the Taskfile
+wrappers and the runbook are untouched. Every run first prints the effective
+config with the PROVENANCE of each value (`flag`/`env`/`profile:<name>`/
+`default`) plus sweep root, results path, quota-lock status, and a ROUGH
+duration estimate (sum of historical mean `runtimeMs` per (model, task) ×
+iterations ÷ concurrency; pairs with no history count 0 and are reported).
+`--dump-config` prints that and exits without spending; an unknown profile
+lists the available ones and exits 1. Taskfile: `task bench:profiles` (list),
+`task bench:profile -- <name> [flags]` (run/dump).
 
 ## [x] 3. Forensic session retention (don't rm the scratch dir)
 
@@ -1310,6 +1302,10 @@ with their capture metadata.
   (header + request/response/retry/clean/failure/check/aggregate events,
   content-addressed `spill/`), `BenchmarkResult.runLogRef`, replayed by
   `scripts/retrace.mjs`.
+- Sweep profiles + effective-config dump (#2): recipes as data in
+  `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
+  (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough
+  duration estimate from historical `runtimeMs`, `task bench:profile`.
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Frame-prelude hardening + sandbox prompt contract + per-iteration

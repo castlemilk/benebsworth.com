@@ -1,0 +1,26 @@
+{
+  "smoke": {
+    "description": "Cheapest wiring check: 1 iteration, no parallelism, 10-min cap. Pass --model/--task.",
+    "iterations": 1,
+    "concurrency": 1,
+    "timeoutMs": 600000
+  },
+  "fast-refresh": {
+    "description": "Re-measure a fast API model: 5 iterations, concurrency 2, 10-min cap.",
+    "iterations": 5,
+    "concurrency": 2,
+    "timeoutMs": 600000
+  },
+  "slow-model": {
+    "description": "Slow free-tier/CLI model: no retries, 25-min cap, cache busted, concurrency 2.",
+    "concurrency": 2,
+    "maxRetries": 0,
+    "timeoutMs": 1500000,
+    "bustCache": true
+  },
+  "agy-quota": {
+    "description": "Agy per-model subscription window: serial, 5 iterations, default timeouts.",
+    "concurrency": 1,
+    "iterations": 5
+  }
+}

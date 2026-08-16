@@ -1,3 +1,27 @@
+// Run the LLM benchmark harness against live providers (SPENDS MONEY).
+//
+//   npx tsx scripts/run-benchmark.mjs [--profile <name>] [overrides...]
+//
+//   --profile <name>     apply a named recipe from lib/lab/llm-benchmark/sweep-profiles.json
+//   --model <id>         repeatable, or a comma list (default: kimi-k2.7)
+//   --task <id>          repeatable, or a comma list (default: every task)
+//   --iterations <n>     per task x model (default: the task's iterationsDefault)
+//   --concurrency <n>    parallel task/model jobs (default: 3)
+//   --timeout-ms <n>     per-call cap (default: the runner's 10 minutes)
+//   --max-retries <n>    transient-error retries (default: 2; use 0 on slow models)
+//   --bust-cache         ignore the response cache and force fresh paid calls
+//   --list-profiles      print the named recipes and exit
+//   --dump-config        print the effective config and exit WITHOUT running
+//
+// PRECEDENCE:  CLI flag  >  env var  >  profile  >  built-in default.
+//
+// The env vars (RUN_MODELS, RUN_TASKS, RUN_ITERATIONS, RUN_CONCURRENCY,
+// RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE) still work exactly as they
+// always have — the Taskfile wrappers and the skill runbook depend on it. They
+// are now the middle override layer rather than the only interface.
+//
+// The effective config is printed before EVERY run, with the provenance of each
+// value, so what is about to be spent is visible before it is spent.
 import {
   BENCHMARK_MODELS,
   BENCHMARK_TASKS,
@@ -10,16 +34,49 @@ import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
 import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
 import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
 import { formatQuotaWindow, quotaLockedModels } from '../lib/lab/llm-benchmark/quota.ts'
+import {
+  SWEEP_PROFILES,
+  estimateSweepDuration,
+  formatDuration,
+  parseSweepArgs,
+  resolveSweepConfig,
+} from '../lib/lab/llm-benchmark/sweep-profiles.ts'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 
-const MODELS_TO_RUN = process.env.RUN_MODELS ? process.env.RUN_MODELS.split(',') : ['kimi-k2.7']
-const TASKS_TO_RUN = process.env.RUN_TASKS ? process.env.RUN_TASKS.split(',') : undefined
-const ITERATIONS = process.env.RUN_ITERATIONS ? Number(process.env.RUN_ITERATIONS) : undefined
-const CONCURRENCY = process.env.RUN_CONCURRENCY ? Number(process.env.RUN_CONCURRENCY) : 3
-const TIMEOUT_MS = process.env.RUN_TIMEOUT_MS ? Number(process.env.RUN_TIMEOUT_MS) : undefined
-const MAX_RETRIES = process.env.RUN_MAX_RETRIES !== undefined ? Number(process.env.RUN_MAX_RETRIES) : undefined
-const RUN_BUST_CACHE = process.env.RUN_BUST_CACHE === '1' || process.env.RUN_BUST_CACHE === 'true'
+function listProfiles() {
+  console.log('Sweep profiles (lib/lab/llm-benchmark/sweep-profiles.json):\n')
+  const width = Math.max(...Object.keys(SWEEP_PROFILES).map((name) => name.length))
+  for (const [name, profile] of Object.entries(SWEEP_PROFILES)) {
+    console.log(`  ${name.padEnd(width)}  ${profile.description}`)
+  }
+  console.log('\nUse: npx tsx scripts/run-benchmark.mjs --profile <name> [--model <id>] [--task <id>]')
+}
+
+let args
+try {
+  args = parseSweepArgs(process.argv.slice(2))
+} catch (err) {
+  console.error(err.message)
+  console.error('Usage: npx tsx scripts/run-benchmark.mjs [--profile <name>] [--model <id>] [--task <id>] ...')
+  process.exit(1)
+}
+
+if (args.listProfiles) {
+  listProfiles()
+  process.exit(0)
+}
+
+let config
+try {
+  config = resolveSweepConfig({ flags: args.flags, env: process.env, profile: args.profile })
+} catch (err) {
+  console.error(err.message)
+  console.error('')
+  listProfiles()
+  process.exit(1)
+}
+
 const IGNORE_QUOTA_LOCK =
   process.env.RUN_IGNORE_QUOTA_LOCK === '1' || process.env.RUN_IGNORE_QUOTA_LOCK === 'true'
 // CLI file-handoff providers (agy/codex/opencode) write unique per-iteration
@@ -31,23 +88,97 @@ const IGNORE_QUOTA_LOCK =
 // and never pruned by the run itself — `node scripts/sweep-clean.mjs` is the
 // cleanup path. Override with SWEEP_ROOT (absolute or repo-relative).
 const SWEEP_ROOT = resolve(process.cwd(), process.env.SWEEP_ROOT ?? `sweeps/${sweepRunId()}`)
-setSweepRoot(SWEEP_ROOT)
-// Per-iteration run logs live in the SAME tree: sweeps/<run-id>/<model>-<task>.jsonl
-// (+ a shared content-addressed spill/ store). Replay one with
-// `npx tsx scripts/retrace.mjs --run <run-id>`.
-setRunLogDir(SWEEP_ROOT)
-console.log(`[harness] sweep root: ${relative(process.cwd(), SWEEP_ROOT)}/`)
+
+/** `  label   value   (source)` — one row of the effective-config dump. */
+function row(label, value, source) {
+  console.log(`  ${label.padEnd(14)}${String(value).padEnd(48)}${source ? `(${source})` : ''}`.trimEnd())
+}
+
+/**
+ * The dsh `--dump-config` idea: print the booted config, with the provenance of
+ * every value, before anything is spent.
+ */
+function dumpConfig({ models, tasks, locks, outPath }) {
+  console.log(
+    `\n[harness] effective config${config.profile ? ` — profile "${config.profile}": ${SWEEP_PROFILES[config.profile].description}` : ''}`
+  )
+  row('models', `${models.length}: ${models.map((m) => m.name).join(', ')}`, config.models.source)
+  row(
+    'tasks',
+    tasks.length === BENCHMARK_TASKS.length
+      ? `all ${tasks.length}`
+      : `${tasks.length} of ${BENCHMARK_TASKS.length}: ${tasks.map((t) => t.id).join(', ')}`,
+    config.tasks.source
+  )
+  // With no explicit iterations each task uses its own iterationsDefault; show
+  // the distinct values rather than one number per task.
+  const perTaskDefaults = [...new Set(tasks.map((t) => t.iterationsDefault))].join('/')
+  row(
+    'iterations',
+    config.iterations.value ?? `per-task default (${perTaskDefaults})`,
+    config.iterations.source
+  )
+  row('concurrency', config.concurrency.value, config.concurrency.source)
+  row(
+    'timeoutMs',
+    config.timeoutMs.value ? `${config.timeoutMs.value} (${formatDuration(config.timeoutMs.value)})` : 'runner default',
+    config.timeoutMs.source
+  )
+  row('maxRetries', config.maxRetries.value ?? 'runner default (2)', config.maxRetries.source)
+  row('bustCache', config.bustCache.value, config.bustCache.source)
+  row('sweep root', `${relative(process.cwd(), SWEEP_ROOT)}/`, process.env.SWEEP_ROOT ? 'env' : 'default')
+  row('results', relative(process.cwd(), outPath), process.env.RESULTS_OUT_PATH ? 'env' : 'default')
+  row(
+    'quota lock',
+    locks.length === 0
+      ? 'none'
+      : locks.map((l) => `${l.modelId} until ${l.until}`).join('; ') + (IGNORE_QUOTA_LOCK ? ' (IGNORED)' : ''),
+    locks.length === 0 ? '' : IGNORE_QUOTA_LOCK ? 'RUN_IGNORE_QUOTA_LOCK' : 'would abort'
+  )
+}
+
+/**
+ * Rough duration estimate from historical mean runtimeMs per (model, task).
+ * Omitted entirely when nothing in this sweep has history — a "~0s" line would
+ * read as a promise rather than an absence of evidence.
+ */
+function dumpEstimate({ models, tasks, results }) {
+  const pairs = []
+  for (const task of tasks) {
+    for (const model of models) {
+      pairs.push({
+        modelId: model.id,
+        taskId: task.id,
+        iterations: config.iterations.value ?? task.iterationsDefault,
+      })
+    }
+  }
+  const estimate = estimateSweepDuration(results, pairs, config.concurrency.value)
+  if (estimate.pairsWithHistory === 0) {
+    row('est. duration', 'unknown — no historical runtimes for these pairs', 'history')
+    return
+  }
+  const missing =
+    estimate.pairsWithoutHistory > 0 ? `, ${estimate.pairsWithoutHistory} pair(s) with no history count as 0` : ''
+  row(
+    'est. duration',
+    `~${formatDuration(estimate.totalMs)} (ROUGH: ${estimate.pairsWithHistory}/${pairs.length} pairs${missing})`,
+    'history'
+  )
+}
 
 async function main() {
-  const models = BENCHMARK_MODELS.filter((m) => MODELS_TO_RUN.includes(m.id))
+  const models = BENCHMARK_MODELS.filter((m) => config.models.value.includes(m.id))
   if (models.length === 0) {
-    console.error(`No matching models found for: ${MODELS_TO_RUN.join(', ')}`)
+    console.error(`No matching models found for: ${config.models.value.join(', ')}`)
     process.exit(1)
   }
 
-  const tasks = TASKS_TO_RUN ? BENCHMARK_TASKS.filter((t) => TASKS_TO_RUN.includes(t.id)) : BENCHMARK_TASKS
+  const tasks = config.tasks.value
+    ? BENCHMARK_TASKS.filter((t) => config.tasks.value.includes(t.id))
+    : BENCHMARK_TASKS
   if (tasks.length === 0) {
-    console.error(`No matching tasks found for: ${TASKS_TO_RUN.join(', ')}`)
+    console.error(`No matching tasks found for: ${config.tasks.value.join(', ')}`)
     process.exit(1)
   }
 
@@ -67,7 +198,22 @@ async function main() {
   // stated reset window is guaranteed to fail every call until that window
   // passes. Abort BEFORE creating the runner rather than burning a sweep (and
   // a sweep tree, and log noise) on certain failures.
-  const locks = quotaLockedModels(readResults(), models.map((m) => m.id))
+  const results = readResults()
+  const locks = quotaLockedModels(results, models.map((m) => m.id))
+
+  dumpConfig({ models, tasks, locks, outPath })
+  dumpEstimate({ models, tasks, results })
+  console.log('')
+
+  if (args.dumpConfig) return // --dump-config: show the shape, spend nothing.
+
+  setSweepRoot(SWEEP_ROOT)
+  // Per-iteration run logs live in the SAME tree: sweeps/<run-id>/<model>-<task>.jsonl
+  // (+ a shared content-addressed spill/ store). Replay one with
+  // `npx tsx scripts/retrace.mjs --run <run-id>`.
+  setRunLogDir(SWEEP_ROOT)
+  console.log(`[harness] sweep root: ${relative(process.cwd(), SWEEP_ROOT)}/`)
+
   if (locks.length > 0) {
     for (const lock of locks) {
       const remainingMs = Date.parse(lock.until) - Date.now()
@@ -83,6 +229,8 @@ async function main() {
     }
     console.warn('[harness] RUN_IGNORE_QUOTA_LOCK=1 — proceeding despite the lock above')
   }
+
+  const TIMEOUT_MS = config.timeoutMs.value
 
   const runner = createProviderRunner({
     moonshot: process.env.MOONSHOT_API_KEY
@@ -102,9 +250,9 @@ async function main() {
     agy: {},
     codex: {},
     opencode: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
-    bustCache: RUN_BUST_CACHE,
+    bustCache: config.bustCache.value,
     timeoutMs: TIMEOUT_MS,
-    maxRetries: MAX_RETRIES,
+    maxRetries: config.maxRetries.value,
   })
 
   // Replace existing results for the (model, task) combinations we just ran;
@@ -141,11 +289,17 @@ async function main() {
   }
 
   console.log(
-    `Running ${ITERATIONS ?? 'default'} iteration(s) at concurrency ${CONCURRENCY} for: ${models.map((m) => m.name).join(', ')} on ${tasks.length} task(s)`
+    `Running ${config.iterations.value ?? 'default'} iteration(s) at concurrency ${config.concurrency.value} for: ${models.map((m) => m.name).join(', ')} on ${tasks.length} task(s)`
   )
 
   try {
-    const fresh = await runBenchmark(recordingRunner, tasks, models, ITERATIONS, CONCURRENCY)
+    const fresh = await runBenchmark(
+      recordingRunner,
+      tasks,
+      models,
+      config.iterations.value,
+      config.concurrency.value
+    )
     writeResults(fresh)
   } catch (err) {
     console.error(err)

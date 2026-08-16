@@ -25,6 +25,9 @@ tasks:
         cat <<'EOF'
         LLM benchmark harness
 
+          task bench:profiles                   list the named sweep profiles
+          task bench:profile -- smoke --model kimi-k2.7 --task equation-solver
+          task bench:profile -- slow-model --model x --dump-config   (print config, run nothing)
           task bench:smoke                      1 iteration, 1 model — verify wiring, ~cents
           task bench:run MODELS=a,b             run specific models, all tasks
           task bench:run MODELS=a TASKS=t ITER=1
@@ -40,7 +43,40 @@ tasks:
           CONC=     parallel task/model jobs       (default: 3; MUST be 1 for CLI providers)
           TIMEOUT=  per-call timeout ms            (default: 10 min)
           BUST=1    ignore the response cache and force fresh paid calls
+
+        Precedence when both are used: CLI flag > env var (the knobs above) >
+        profile > built-in default. Every run prints its effective config first.
         EOF
+
+  profiles:
+    desc: List the named sweep profiles (no API calls, free)
+    summary: |
+      Profiles are data in lib/lab/llm-benchmark/sweep-profiles.json — named
+      compositions of the same knobs `bench:run` takes, so a recipe (25-min cap
+      + zero retries for a slow model, say) is stored rather than retyped.
+    cmds:
+      - '{{.BIN}}/tsx scripts/run-benchmark.mjs --list-profiles'
+
+  profile:
+    desc: 'Run a named sweep profile (SPENDS MONEY) — `task bench:profile -- <name> [flags]`'
+    summary: |
+      Wrapper over `scripts/run-benchmark.mjs --profile <name>`. Everything after
+      `--` is passed through, so overrides are flags rather than env vars:
+
+        task bench:profile -- smoke --model kimi-k2.7 --task equation-solver
+        task bench:profile -- slow-model --model deepseek-v4-flash-free
+        task bench:profile -- agy-quota --model gemini-3.6-flash-agy
+
+      Add `--dump-config` to print the effective config (with the provenance of
+      every value and a rough duration estimate) and exit WITHOUT running —
+      always worth doing before a long or expensive sweep.
+
+      Cost, credential, caching and failure semantics are identical to
+      `bench:run --summary`; read that first.
+    requires:
+      vars: [CLI_ARGS]
+    cmds:
+      - '{{.BIN}}/tsx scripts/run-benchmark.mjs --profile {{.CLI_ARGS}}'
 
   run:
     desc: Run the harness against live provider APIs (SPENDS MONEY — writes results.json)

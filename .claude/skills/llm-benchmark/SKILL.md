@@ -47,6 +47,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Run script | `scripts/run-benchmark.mjs` |
 | Sweep run-id + prune policy (`sweepRunId`, `selectPrunable`) | `lib/lab/llm-benchmark/sweep.ts` |
 | Sweep prune script | `scripts/sweep-clean.mjs` |
+| Named sweep recipes (data) | `lib/lab/llm-benchmark/sweep-profiles.json` |
+| Profile loader + config resolution/provenance + duration estimate | `lib/lab/llm-benchmark/sweep-profiles.ts` |
 | Quota-reset parsing + pre-flight lock check (`parseQuotaResetMs`, `quotaLockedModels`) | `lib/lab/llm-benchmark/quota.ts` |
 | Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
@@ -151,6 +153,39 @@ The harness is wrapped by taskfiles/benchmark.yml — `task bench` prints the
 knobs, `task bench:run --summary` prints the cost/failure/caching semantics. The
 `RUN_*` env vars below still work if you call the script directly.
 
+**Prefer a profile over a hand-typed recipe.** The four sweep shapes below are
+stored in `lib/lab/llm-benchmark/sweep-profiles.json`; the env vars are the
+override layer, not the interface. Precedence: **CLI flag > env var > profile >
+built-in default**, and every run prints its effective config (with the
+provenance of each value + a rough duration estimate) before spending.
+
+```bash
+# What recipes exist
+task bench:profiles                  # or: npx tsx scripts/run-benchmark.mjs --list-profiles
+
+# Print exactly what a sweep WOULD do, spend nothing (do this before long runs)
+task bench:profile -- slow-model --model deepseek-v4-flash-free --dump-config
+
+# smoke        1 iteration, concurrency 1, 10-min cap — cheapest wiring check
+task bench:profile -- smoke --model kimi-k2.7 --task equation-solver
+
+# fast-refresh 5 iterations, concurrency 2, 10-min cap — re-measure a fast API model
+task bench:profile -- fast-refresh --model kimi-k2.7
+
+# slow-model   concurrency 2, maxRetries 0, 25-min cap, cache busted (deepseek lesson)
+task bench:profile -- slow-model --model deepseek-v4-flash-free
+
+# agy-quota    concurrency 1, 5 iterations, default timeouts — one agy quota window
+task bench:profile -- agy-quota --model gemini-3.6-flash-agy
+
+# Overrides are flags (repeatable or comma lists); env vars still win over a profile:
+npx tsx scripts/run-benchmark.mjs --profile slow-model --model a --model b --task t1,t2 \
+  --iterations 1 --concurrency 1 --timeout-ms 600000 --max-retries 0 --bust-cache
+```
+
+The env-var wrappers below are unchanged and still the right tool for anything
+that is not one of the stored recipes.
+
 ```bash
 # Cheapest check that the harness works: 1 model, 1 iteration
 task bench:smoke
@@ -189,7 +224,9 @@ task bench:verify
 
 ### How it works
 
-1. `scripts/run-benchmark.mjs` reads env vars and builds a `ProviderRunnerConfig`.
+1. `scripts/run-benchmark.mjs` resolves flags + env + profile into one effective
+   config (`resolveSweepConfig()` in `lib/lab/llm-benchmark/sweep-profiles.ts`),
+   prints it with per-value provenance, and builds a `ProviderRunnerConfig`.
 2. `createProviderRunner()` in `lib/lab/llm-benchmark/runners/provider.ts`:
    - Runs `iterations` API calls per task/model.
    - Wraps each call in a 10-minute timeout (raised as an identifiable `TimeoutError`).
@@ -300,6 +337,8 @@ export async function generateMyProvider(
 
 ## Sweep operations (hard-won runbook)
 
+- **Profiles first** (`lib/lab/llm-benchmark/sweep-profiles.json`): the four stored recipes are `smoke` (1 iter, conc 1, 10-min cap), `fast-refresh` (5 iters, conc 2, 10-min cap), `slow-model` (conc 2, maxRetries 0, 25-min cap, bustCache) and `agy-quota` (conc 1, 5 iters, default timeouts). Run one with `task bench:profile -- <name> --model <id>`; add `--dump-config` to print the effective config and exit without spending. Profiles deliberately do NOT pin model ids (they would rot) — pass `--model`/`--task`. Precedence is **flag > env > profile > default** and the pre-run dump names the source of every value, so "why did it retry?" is answerable from the log rather than from memory. Adding a knob means adding it in `sweep-profiles.ts` (validated allowlist — an unknown key in the JSON throws at import) AND in the script's flag table.
+- **Duration estimate**: the dump's `est. duration` is ROUGH — sum over (model, task) of the historical mean `runtimeMs` in results.json × iterations ÷ concurrency. It ignores retries, cache hits, scoring time and imperfect packing, and pairs with no history count as 0 (reported as such). Treat it as a lower bound, never as a budget.
 - **Env knobs** (`scripts/run-benchmark.mjs`): `RUN_MODELS`, `RUN_TASKS`, `RUN_ITERATIONS`, `RUN_CONCURRENCY` (CLI file-handoff providers are now parallel-safe — each iteration writes a unique `artifact-<model>-<task>-<n>.html`, so concurrency 2-3 cuts slow CLI sweeps ~3×), `RUN_BUST_CACHE=1`, `RUN_TIMEOUT_MS` (per-CALL cap; also forwarded into the opencode CLI config — text-only runners still use the 600s default), `RUN_MAX_RETRIES` (default 2; set `0` for slow-but-working models so a deterministic 25-min generation isn't retried 3×).
 - **Slow models** (deepseek-v4-flash-free lesson): free tiers can run 10-20 tok/s — a 5-8k token artifact takes 4-12 min, a 20-50k token one (landing, equation, pendulum, circuit) can exceed any sane window. Strategy: (1) expect partial boards — the UI and `mergeResults` handle `partial` honestly; (2) run the fast tasks at 5 iterations, then bound the rest; (3) when a task times out at 25-30 min, RECORD the failure rather than retrying forever.
 - **Recording failure rows**: an all-failed task only persists a `fail`/`timeout` record after ALL its iterations complete (killing mid-task loses the row). To give a model honest rows on tasks it can't complete, run `RUN_ITERATIONS=1 RUN_TIMEOUT_MS=600000 RUN_MAX_RETRIES=0` over those tasks — each persists a `timeout` record (score 0, `cli_timeout` for CLI providers), the UI renders it amber, and the registry coverage test counts it.

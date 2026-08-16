@@ -244,7 +244,10 @@ describe('createProviderRunner quota handling', () => {
     consoleErrorSpy.mockRestore()
   })
 
-  it('records the estimated window as its own run-log event (the record may be dropped)', async () => {
+  // Real write+fsync round-trips through the run log: fast alone but observed
+  // blowing the default 5s cap under full-suite IO contention (four separate
+  // sessions). The assertion is about event content, never speed.
+  it('records the estimated window as its own run-log event (the record may be dropped)', { timeout: 20_000 }, async () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const dir = mkdtempSync(join(tmpdir(), 'provider-quota-runlog-'))
     setRunLogDir(dir)

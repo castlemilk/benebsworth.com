@@ -1257,6 +1257,197 @@ with their capture metadata.
 
 ---
 
+# P2 — Plugin system (implemented 2026-08-16, future work)
+
+The plugin system shipped: see the "Already shipped" entry. This section
+captures the future work the system enables. All items reference the
+implementation files (`lib/lab/llm-benchmark/plugins/`).
+
+## [x] 33. Plugin system core (SHIPPED)
+
+`lib/lab/llm-benchmark/plugins/{registry,index}.ts` + example
+`plugins/community-tasks/`: tasks, named behavioral checks, scorers, demo
+components, and task-page cards registered without touching core files;
+roster = static imports in `plugins/index.ts`; `unregisterPlugin()` unwinds;
+pluginId stamped on contributed tasks (attribution chip on the task page);
+client-bundle rule (checks use `import type` only). 656 tests green, build
+generates the tic-tac-toe page. Design intent: dsh's "no privileged core",
+sized for a static-export site (load-time registration, not runtime install).
+
+## [ ] 34. Plugin authoring guide + template generator
+
+**Problem.** The community-tasks plugin is the only worked example; writing
+a new plugin requires copying its shape (manifest + index + checks + demo)
+by hand and knowing the client-bundle rule.
+
+**Inspiration.** paperclip `packages/adapters/AUTHORING.md` (a maintained
+authoring doc per adapter family) and dsh's cookbook
+(`docs/cookbook/adding-a-package.md`, `adding-a-tool.md`, `adding-an-llm-
+adapter.md`, `adding-a-conversation-node.md`).
+
+**Design sketch.**
+
+- `docs/lab/llm-benchmark/plugins-authoring.md`: the extension-point
+  catalogue (tasks, checks, scorers, demos, taskCards), the client-bundle
+  rule, the manifest fields, and the "checks MUST declare their point
+  budget and threshold rationale" convention (mirroring the builtin checks'
+  calibration comments).
+- `scripts/plugin-scaffold.mjs <id> <name>`: generates a plugin dir with
+  manifest.json, index.ts, checks.ts (two stub checks with budget
+  placeholders), demo.tsx, and a registry.test.ts snippet — then prints the
+  roster import to add.
+- `task bench:plugin-scaffold` wrapper; the skill's plugin section links
+  the guide.
+
+**Acceptance criteria.** A new plugin is scaffolded in one command and
+builds/tests green with no core edits; the guide documents every extension
+point with a code reference.
+
+**Effort.** S-M.
+
+## [ ] 35. Plugin-provided runners (new providers as plugins)
+
+**Problem.** Runners are wired through `ProviderRunnerConfig` +
+`configForModel` + `generateWithProvider` — a new provider touches
+`runners/provider.ts` in three places. The plugin seam makes "ship a
+provider" a first-class contribution.
+
+**Inspiration.** dsh "add a model provider: register its adapter on
+`ctx.llm`" (architecture.md "Where new behavior goes") — one registration,
+no switch-case edits.
+
+**Design sketch.**
+
+- `BenchmarkPlugin.runners?: Record<string, BenchmarkRunnerFactory>` where
+  the factory takes the model and returns a `BenchmarkRunner` (the
+  `runTask` shape already exists in types.ts).
+- `runners/provider.ts` gains a plugin-runners registry consulted when
+  `configForModel` hits an unknown provider (instead of throwing); the
+  switch stays for built-ins.
+- Models contributed by plugins (`BenchmarkPlugin.models?`) can declare the
+  plugin-provided provider id; registry merges them like tasks.
+- Collision + validation rules mirror the task/check registries.
+
+**Acceptance criteria.** A plugin can register a model + runner pair that
+runs in a sweep with zero `provider.ts` edits; built-in behavior unchanged;
+tests cover the fallback path.
+
+**Effort.** M. **Dependencies.** none (types already expose BenchmarkRunner).
+
+## [ ] 36. Plugin prompt overrides (per-plugin sandbox contract)
+
+**Problem.** The "customise via prompting" half of the ask: today
+`withSandboxConstraints` (prompts.ts) applies one global contract. A plugin
+task may need its own constraints (e.g. gateway-behavior tasks need
+network-ish affordances; #22), and a plugin should be able to ship them
+with the task instead of a core-file edit.
+
+**Inspiration.** dsh per-session composition: an agent preset gives one
+session its own prompt sections and tools while others keep theirs
+(packages/preset/README.md, "one process can run several differently
+composed agents at once").
+
+**Design sketch.**
+
+- `BenchmarkTask.sandboxConstraints?: string` — a plugin task may carry its
+  own constraint text; `withSandboxConstraints(task)` returns the task's
+  own when present, else the global contract. The prompt hash (cache key)
+  already incorporates the prompt, so a change re-runs sweeps naturally.
+- Plugin-provided `systemPrompt` contributions merged like demos.
+- The task page renders the applied contract (not just the raw prompt) so
+  readers see what the model actually received — the "prompting in the UI"
+  transparency half.
+
+**Acceptance criteria.** A plugin task with custom constraints scores under
+them (behavioral run reflects them); the UI shows which contract applied;
+cache key changes with the override.
+
+**Effort.** M.
+
+## [ ] 37. Plugin bundle selection in sweep profiles
+
+**Problem.** `sweep-profiles.json` (#2) picks models/tasks/iterations but
+not plugin sets — every profile sees every plugin. dsh profiles stack
+bundles; ours should let a sweep select which plugins (and therefore which
+tasks/checks) participate.
+
+**Inspiration.** dsh profiles + bundles (architecture.md): a profile lists
+the bundles it stacks; `--dump-config` shows the booted tree.
+
+**Design sketch.**
+
+- `sweep-profiles.json` gains `plugins?: string[]`; `resolveSweepConfig()`
+  validates plugin ids against the roster and errors on unknown ids (the
+  dsh "reject at mount rather than collide" discipline).
+- `run-benchmark.mjs` accepts `--plugins a,b` (overrides profile).
+- `--dump-config` lists the active plugin set so a sweep's scope is
+  auditable in the event log (#1 configSnapshot).
+
+**Acceptance criteria.** A profile with `plugins: []` sweeps built-ins
+only; a typo'd plugin id fails fast with the roster listed; dump-config
+shows the set.
+
+**Effort.** S.
+
+## [ ] 38. Community plugin hosting + validation
+
+**Problem.** Third-party plugins need a trust story: manifest validation,
+capability whitelisting (a plugin could register a task whose demo runs
+arbitrary JS in the browser), and a place to publish.
+
+**Inspiration.** dsh bundles (out-of-tree plugins installed into a profile,
+patchable) + paperclip's plugin platform (schema `plugin_*`: per-plugin DB,
+webhooks, managed resources).
+
+**Design sketch.**
+
+- `plugins/validate-plugin.ts`: manifest schema checks (id/name/version
+  required, task ids unique, check names resolve at load — the registry
+  already throws; a `validate` mode collects ALL errors instead of the
+  first).
+- Capability declaration: `BenchmarkPlugin.capabilities?: ('tasks' |
+  'checks' | 'scorers' | 'demos' | 'runners' | 'prompts')[]` — a reviewer
+  can see at a glance what a plugin can touch; a `.graphifyignore`-style
+  policy can deny demo registration for untrusted plugins.
+- `scripts/plugin-fetch.mjs <git-url>`: clone a plugin repo into
+  `plugins/third-party/<id>/` + registry in `plugins/index.ts` (manual
+  review step required — never auto-register).
+
+**Acceptance criteria.** `validate` reports all manifest problems at once;
+a plugin declaring no demos cannot be reviewed as one that can; the fetch
+script leaves a clear review checklist.
+
+**Effort.** M-L.
+
+## [ ] 39. Benchmark data as an MCP server (plugin)
+
+**Problem.** Agents (opencode sessions, the OMEGA harness) can't query the
+benchmark programmatically; a `bench://` URI (#32) is the reference syntax,
+but the read side needs a transport.
+
+**Inspiration.** graphify's MCP server (`python -m graphify.serve
+graphify-out/graph.json` exposing query_graph/get_node/get_neighbors/
+shortest_path) — a read-only MCP stdio server over static data.
+
+**Design sketch.**
+
+- `plugins/bench-mcp/` (a plugin with no tasks — a server contribution):
+  `tools/bench-mcp.ts` implements an MCP stdio server over results.json +
+  the run-log store: `bench.list_models`, `bench.get_result`, `bench.get_trace`,
+  `bench.related_runs` (the #32 ranking), `bench.checks_used`.
+- Registered via a `server` contribution on BenchmarkPlugin; the MCP server
+  loads the same registries (read-only).
+- Wire into the skill's agent instructions ("query the benchmark via MCP
+  when the answer lives in results").
+
+**Acceptance criteria.** An agent session can answer "what did deepseek
+score on the platformer and which check tripped?" through the MCP server
+without reading results.json; the server is read-only.
+
+**Effort.** M. **Dependencies.** #32 (related-runs ranking), #30 (traces).
+
+---
+
 # Already shipped (do not re-propose)
 
 - Model-scoped circuit breaker + per-model quota errors

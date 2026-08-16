@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { withSandboxConstraints, SANDBOX_CONSTRAINTS } from './prompts'
+import { withSandboxConstraints, appliedSandboxConstraints, SANDBOX_CONSTRAINTS } from './prompts'
+import { hashPrompt } from './runlog'
 import type { BenchmarkTask } from './types'
 
 function makeTask(overrides: Partial<BenchmarkTask> = {}): BenchmarkTask {
@@ -87,5 +88,87 @@ describe('withSandboxConstraints', () => {
     const task = makeTask({ prompt: 'Build it.' })
     const out = withSandboxConstraints(task)
     expect(out.prompt).toMatch(/No alert\/confirm\/prompt/)
+  })
+})
+
+describe('per-task sandboxConstraints override', () => {
+  const CUSTOM = 'BOARD — render nine clickable cells.'
+
+  it('undefined + HTML category → the global contract is appended (heuristic)', () => {
+    const task = makeTask({ category: 'ui-building', prompt: 'X' })
+    expect(withSandboxConstraints(task).prompt).toBe('X' + SANDBOX_CONSTRAINTS)
+  })
+
+  it('undefined + text category → untouched', () => {
+    const task = makeTask({ category: 'advanced-mathematics', prompt: 'Solve x.' })
+    expect(withSandboxConstraints(task)).toBe(task)
+  })
+
+  it('empty string + HTML category → NO contract, overriding the heuristic', () => {
+    const task = makeTask({ category: 'ui-building', prompt: 'X', sandboxConstraints: '' })
+    const out = withSandboxConstraints(task)
+    expect(out.prompt).toBe('X')
+    expect(appliedSandboxConstraints(task)).toBe('')
+  })
+
+  it('custom text + text category → appended despite the category (explicit beats heuristic)', () => {
+    const task = makeTask({
+      category: 'advanced-mathematics',
+      prompt: 'Solve x.',
+      sandboxConstraints: CUSTOM,
+    })
+    const out = withSandboxConstraints(task)
+    expect(out.prompt).toBe(`Solve x.\n\n${CUSTOM}`)
+    expect(out.prompt).not.toContain('EXECUTION ENVIRONMENT')
+  })
+
+  it('custom text + HTML category → the custom contract replaces the global one', () => {
+    const task = makeTask({
+      category: 'advanced-game-building',
+      prompt: 'Build it.',
+      sandboxConstraints: CUSTOM,
+    })
+    const out = withSandboxConstraints(task)
+    expect(out.prompt).toBe(`Build it.\n\n${CUSTOM}`)
+    expect(out.prompt).not.toContain('EXECUTION ENVIRONMENT')
+  })
+
+  it('separates a custom contract from the prompt with a blank line, like the global one', () => {
+    const task = makeTask({ prompt: 'Build it.', sandboxConstraints: CUSTOM })
+    expect(withSandboxConstraints(task).prompt).toMatch(/Build it\.\n\nBOARD/)
+    expect(SANDBOX_CONSTRAINTS.startsWith('\n\n')).toBe(true)
+  })
+
+  it('preserves every other field and never mutates the original task', () => {
+    const task = makeTask({ prompt: 'Build it.', sandboxConstraints: CUSTOM, checks: ['a'] })
+    const snapshot = JSON.parse(JSON.stringify(task))
+    const out = withSandboxConstraints(task)
+    expect(task).toEqual(snapshot)
+    expect({ ...out, prompt: task.prompt }).toEqual(task)
+  })
+
+  it('appliedSandboxConstraints reports the exact text the amended prompt gained', () => {
+    const cases: BenchmarkTask[] = [
+      makeTask({ category: 'ui-building', prompt: 'X' }),
+      makeTask({ category: 'advanced-mathematics', prompt: 'X' }),
+      makeTask({ category: 'ui-building', prompt: 'X', sandboxConstraints: '' }),
+      makeTask({ category: 'ui-building', prompt: 'X', sandboxConstraints: CUSTOM }),
+    ]
+    for (const task of cases) {
+      expect(withSandboxConstraints(task).prompt).toBe(task.prompt + appliedSandboxConstraints(task))
+    }
+  })
+
+  it('changes the amended prompt — and therefore the cache key — when the override changes', () => {
+    const base = makeTask({ prompt: 'Build it.' })
+    const a = withSandboxConstraints({ ...base, sandboxConstraints: 'CONTRACT A' })
+    const b = withSandboxConstraints({ ...base, sandboxConstraints: 'CONTRACT B' })
+    const inherited = withSandboxConstraints(base)
+    expect(a.prompt).not.toBe(b.prompt)
+    expect(a.prompt).not.toBe(inherited.prompt)
+    // promptHash (runlog) and the cache key (cache.ts) are both derived from
+    // the amended prompt, so an override edit re-runs rather than replaying.
+    expect(hashPrompt(a.prompt)).not.toBe(hashPrompt(b.prompt))
+    expect(hashPrompt(a.prompt)).not.toBe(hashPrompt(inherited.prompt))
   })
 })

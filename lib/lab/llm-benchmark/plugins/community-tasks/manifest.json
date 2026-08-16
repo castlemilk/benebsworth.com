@@ -9,7 +9,8 @@
       "category": "advanced-game-building",
       "title": "Tic-Tac-Toe",
       "scorer": "behavioral",
-      "checks": ["ttt-grid-interacts", "ttt-win-detected"]
+      "checks": ["ttt-grid-interacts", "ttt-win-detected"],
+      "sandboxConstraints": "task-specific (DOM-board contract; replaces the global canvas-oriented one — see index.ts)"
     }
   ]
 }

@@ -133,6 +133,26 @@ export interface BenchmarkTask {
    */
   checks?: string[]
   /**
+   * This task's own sandbox contract — the text `withSandboxConstraints()`
+   * appends to `prompt` before it reaches the model. **Explicit beats the
+   * category heuristic**, like `scorer` (#10). Three states:
+   *
+   * - `undefined` — inherit: the global `SANDBOX_CONSTRAINTS` (prompts.ts)
+   *   is appended iff `category` is one of the HTML-runnable ones. This is
+   *   what every built-in task does.
+   * - `''` — explicitly NO contract, even for an HTML-runnable category.
+   *   For a task whose whole point is that the model gets no scaffolding.
+   * - non-empty — append exactly this text (separated by a blank line),
+   *   whatever the category. It REPLACES the global contract rather than
+   *   extending it; to extend, interpolate `SANDBOX_CONSTRAINTS` yourself.
+   *
+   * Lets a plugin ship task-specific constraints instead of editing a core
+   * file. The amended prompt is the cache key and the run log's
+   * `promptHash`, so changing this re-runs the task rather than replaying a
+   * cached response — by design.
+   */
+  sandboxConstraints?: string
+  /**
    * The plugin that contributed this task, when it did not ship in the
    * built-in registry. Surfaced in the UI for attribution and used by the
    * loader for collision diagnostics.

@@ -23,6 +23,7 @@ import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ModelOutputComparison } from '@/components/lab/llm-benchmark/model-output-comparison'
 import { GeneratedDemo } from '@/components/lab/llm-benchmark/generated-demo'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
+import { SandboxContract } from '@/components/lab/llm-benchmark/sandbox-contract'
 import { formatScore, formatRuntime, formatCost, formatTokens } from '@/components/lab/llm-benchmark/format'
 import { modelPath } from '@/lib/lab/llm-benchmark/nav'
 
@@ -186,6 +187,9 @@ export default async function BenchmarkTaskPage({
               <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-fg/90">
                 {t.prompt}
               </p>
+              {/* What the model ACTUALLY received: the task prompt plus the
+                  applied sandbox contract (global, task-specific, or none). */}
+              <SandboxContract task={t} />
             </div>
           </div>
         </Reveal>

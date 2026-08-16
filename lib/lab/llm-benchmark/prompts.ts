@@ -42,10 +42,43 @@ QUALITY BAR — the artifact is showcased head-to-head against other frontier mo
 - Make the first frame already look intentional — no unstyled white flash, no collapsed layout while scripts boot.`
 
 /**
+ * The exact text `withSandboxConstraints` appends to this task's prompt —
+ * `''` when nothing is appended. Three states, mirroring `task.scorer`
+ * (#10): **explicit beats the category heuristic**.
+ *
+ * | `task.sandboxConstraints` | Applied |
+ * | --- | --- |
+ * | `undefined` | the global `SANDBOX_CONSTRAINTS`, iff the category is HTML-runnable |
+ * | `''` | nothing, even for an HTML-runnable category |
+ * | non-empty | that text, whatever the category |
+ *
+ * A custom contract is separated from the prompt by a blank line, the same
+ * way the global constant leads with `\n\n`.
+ *
+ * Exported so the task page can render the applied contract from the real
+ * source rather than a copy of the text
+ * (`components/lab/llm-benchmark/sandbox-contract.tsx`).
+ */
+export function appliedSandboxConstraints(task: BenchmarkTask): string {
+  const custom = task.sandboxConstraints
+  if (custom !== undefined) {
+    const trimmed = custom.trim()
+    return trimmed === '' ? '' : `\n\n${trimmed}`
+  }
+  return HTML_CATEGORIES.has(task.category) ? SANDBOX_CONSTRAINTS : ''
+}
+
+/**
  * Append the sandbox contract to tasks whose output is executed in the demo
- * iframe. Text-output tasks (maths, security analysis) are untouched.
+ * iframe, honouring a per-task override (see `appliedSandboxConstraints`).
+ * Text-output tasks (maths, security analysis) are untouched by default.
+ *
+ * The amended prompt is what the model receives, what `hashPrompt` records
+ * as `promptHash`, and what keys the response cache — so editing a task's
+ * constraints re-runs it instead of replaying a stale response.
  */
 export function withSandboxConstraints(task: BenchmarkTask): BenchmarkTask {
-  if (!HTML_CATEGORIES.has(task.category)) return task
-  return { ...task, prompt: task.prompt + SANDBOX_CONSTRAINTS }
+  const constraints = appliedSandboxConstraints(task)
+  if (constraints === '') return task
+  return { ...task, prompt: task.prompt + constraints }
 }

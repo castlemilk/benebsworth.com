@@ -83,6 +83,45 @@ A contributed task legitimately has **zero results** until its first sweep.
 a flagship model covers the whole board) skips rows with a `pluginId` for
 exactly that reason. Do not add results by hand to satisfy it.
 
+### Prompt contract — `prompts.ts:withSandboxConstraints`
+
+The harness appends a sandbox contract to the prompt before it reaches the
+model: what the iframe allows (opaque origin, no network, no runtime
+compilation) and what a good artifact looks like. A task may ship its own via
+`BenchmarkTask.sandboxConstraints` instead of editing `prompts.ts`. Explicit
+beats the category heuristic, exactly like `scorer`:
+
+| `sandboxConstraints` | Applied to the prompt |
+| --- | --- |
+| absent (`undefined`) | the global `SANDBOX_CONSTRAINTS`, **iff** the category is one of the five HTML-runnable ones. What every built-in does. |
+| `''` | nothing, even for an HTML-runnable category — an explicit "this task gets no scaffolding". |
+| non-empty string | that text, blank-line separated, **whatever the category**. It REPLACES the global contract; to extend instead, interpolate `SANDBOX_CONSTRAINTS` into your own string. |
+
+Two consequences worth knowing before you write one:
+
+- **It changes the cache key.** The amended prompt is hashed into the run
+  log's `promptHash` and keys the response cache, so editing a task's
+  contract makes the next sweep re-run it rather than replay a cached
+  response. That is the intended behaviour — a task scored under a different
+  contract is a different measurement — but it means a contract edit costs a
+  sweep.
+- **It is public.** The task page renders the *applied* contract in a
+  collapsed "Sandbox contract" disclosure under the prompt
+  (`components/lab/llm-benchmark/sandbox-contract.tsx`), labelled global or
+  task-specific, or a one-line "none" note. The text comes from
+  `appliedSandboxConstraints(task)`, so it cannot drift from what was sent.
+
+Write one when the global contract is *wrong* for your task, not merely
+verbose. The worked example is tic-tac-toe: the global contract spends most
+of its guidance on canvas CSS sizing, resize listeners and
+`requestAnimationFrame`, which a DOM board does not have, and says nothing
+about the two things its checks assert — a click marks a cell whose own text
+content is the mark, and a three-in-a-row announces a winner in visible page
+text. Its override keeps the sandbox-hygiene half of the global contract
+verbatim and replaces the canvas half with board rules. Constraints that the
+checks do not test are decoration; constraints the checks test but the prompt
+never stated are a trap.
+
 ### Checks — `scorers/checks.ts:getChecksForTask` / `CHECK_REGISTRY`
 
 `scorers/checks.ts` merges `pluginChecks()` into `CHECK_REGISTRY` at load. A
@@ -239,6 +278,8 @@ The stored profile `builtins-only` (`sweep-profiles.json`) is `"plugins": []`
 1. `task bench:plugin-scaffold -- <id> "<Name>"`.
 2. Fill in the task row: prompt, blurb, runtimeHint, methodNotes, category.
 3. Implement both checks; state each budget **and** its threshold rationale.
+   If the global sandbox contract is wrong for the task, set
+   `sandboxConstraints` (and say why in a comment).
 4. Replace the placeholder demo (keep the export name).
 5. Add the roster lines to `plugins/index.ts`.
 6. Add coverage to `plugins/registry.test.ts`: the task merges into

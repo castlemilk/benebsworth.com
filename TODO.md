@@ -1321,35 +1321,27 @@ tests cover the fallback path.
 
 **Effort.** M. **Dependencies.** none (types already expose BenchmarkRunner).
 
-## [ ] 36. Plugin prompt overrides (per-plugin sandbox contract)
+## [x] 36. Plugin prompt overrides (per-task sandbox contract)
 
-**Problem.** The "customise via prompting" half of the ask: today
-`withSandboxConstraints` (prompts.ts) applies one global contract. A plugin
-task may need its own constraints (e.g. gateway-behavior tasks need
-network-ish affordances; #22), and a plugin should be able to ship them
-with the task instead of a core-file edit.
-
-**Inspiration.** dsh per-session composition: an agent preset gives one
-session its own prompt sections and tools while others keep theirs
-(packages/preset/README.md, "one process can run several differently
-composed agents at once").
-
-**Design sketch.**
-
-- `BenchmarkTask.sandboxConstraints?: string` — a plugin task may carry its
-  own constraint text; `withSandboxConstraints(task)` returns the task's
-  own when present, else the global contract. The prompt hash (cache key)
-  already incorporates the prompt, so a change re-runs sweeps naturally.
-- Plugin-provided `systemPrompt` contributions merged like demos.
-- The task page renders the applied contract (not just the raw prompt) so
-  readers see what the model actually received — the "prompting in the UI"
-  transparency half.
-
-**Acceptance criteria.** A plugin task with custom constraints scores under
-them (behavioral run reflects them); the UI shows which contract applied;
-cache key changes with the override.
-
-**Effort.** M.
+**Shipped.** A task can now carry its own sandbox contract instead of an
+edit to `prompts.ts`. `BenchmarkTask.sandboxConstraints?: string` has three
+states, explicit-beats-heuristic like `scorer` (#10): absent = the global
+`SANDBOX_CONSTRAINTS` iff the category is HTML-runnable (unchanged
+behaviour), `''` = no contract even for an HTML category, non-empty = that
+text appended blank-line separated whatever the category, REPLACING the
+global one. `appliedSandboxConstraints(task)` is the single source of the
+appended text (`''` for none) — `withSandboxConstraints` composes it, and
+the task page renders it in a collapsed "Sandbox contract" `<details>`
+under the prompt (`components/lab/llm-benchmark/sandbox-contract.tsx`,
+labelled global / task-specific / none) so a reader sees what the model
+actually received, never a copy of the text. The amended prompt is still
+the cache key and `promptHash`, so an override edit re-runs the task rather
+than replaying — locked by a test. Worked example: the `community-tasks`
+tic-tac-toe task ships a DOM-board contract (cells' own text content is the
+mark, empty at start, winner announced in visible text) in place of the
+canvas-oriented global one — which changes its cache key by design.
+*systemPrompt half deferred — no runner consumes a system prompt today, so
+plugin-provided system prompts would be dead plumbing.*
 
 ## [x] 37. Plugin bundle selection in sweep profiles
 
@@ -1462,6 +1454,11 @@ without reading results.json; the server is read-only.
   `RUN_PLUGINS`, `none` = builtins only, unknown id fatal with the roster
   listed, task filtering + explicit-task-vs-unmounted-plugin conflict fatal,
   `plugins` row in `--dump-config`, resolved set in `configSnapshot.plugins`.
+- Per-task sandbox contract (#36): `BenchmarkTask.sandboxConstraints`
+  (absent = global-iff-HTML-category, `''` = none, non-empty = replaces the
+  global), `appliedSandboxConstraints()` as the single source, collapsed
+  "Sandbox contract" disclosure on the task page, tic-tac-toe as the worked
+  override. systemPrompt contributions deliberately NOT built (no consumer).
 - Results invariant verification (#5): `verify-results.ts` (eight checks, each
   with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
   run first in the pre-push gate.

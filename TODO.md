@@ -1307,6 +1307,14 @@ with their capture metadata.
   untouched.
 - Frame-prelude hardening + sandbox prompt contract + per-iteration
   retry/empty-body recovery + `RUN_MAX_RETRIES`/`RUN_TIMEOUT_MS` env knobs.
+- **Plugin system** (dsh-inspired, 2026-08-16): `lib/lab/llm-benchmark/plugins/`
+  — plugins contribute tasks, named behavioral checks, scorers, demo
+  components, and task-page cards to the shared registries; roster in
+  `plugins/index.ts`; `unregisterPlugin()` unwinds; tasks stamped `pluginId`
+  with attribution chip on the task page; client-bundle rule (checks use
+  `import type` only). Ships `community-tasks` as the worked example
+  (tic-tac-toe task + `ttt-grid-interacts`/`ttt-win-detected` DOM checks +
+  demo + manifest.json). Tests in `plugins/registry.test.ts`.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

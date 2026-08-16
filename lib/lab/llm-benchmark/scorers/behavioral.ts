@@ -49,7 +49,7 @@ async function scoreBehavioral(
   task: BenchmarkTask,
   options: BehavioralScoreOptions = {}
 ): Promise<BehavioralScoreResult> {
-  const checks = getChecksForTask(task.id)
+  const checks = getChecksForTask(task)
   const structural = htmlScorer.score(html, task) as number
 
   if (checks.length === 0) {

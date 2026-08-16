@@ -162,7 +162,7 @@ describe('selectScorer', () => {
 })
 
 describe('behavioralTaskIds', () => {
-  it('returns exactly the five behaviourally-scored tasks in the shipped registry', () => {
+  it('returns exactly the built-in behaviourally-scored tasks plus plugin tasks', () => {
     expect([...behavioralTaskIds(BENCHMARK_TASKS)].sort()).toEqual(
       [
         'circuit-builder-teaser',
@@ -170,6 +170,9 @@ describe('behavioralTaskIds', () => {
         'mini-platformer',
         'n-body-field',
         'physics-pendulum-wave',
+        // contributed by the community-tasks plugin (declares scorer:
+        // 'behavioral' and its own checks)
+        'tic-tac-toe',
       ].sort(),
     )
   })

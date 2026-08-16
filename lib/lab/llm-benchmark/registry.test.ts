@@ -9,7 +9,7 @@ import {
   tasksByCategory,
 } from './registry'
 import { BENCHMARK_RESULTS, resultsForTask, resultsForModel } from './results'
-import { behavioralTaskIds } from './scorers'
+import { behavioralTaskIds, registeredScorerNames } from './scorers'
 import { getChecksForTask } from './scorers/checks'
 
 describe('llm-benchmark registry', () => {
@@ -65,12 +65,14 @@ describe('llm-benchmark registry', () => {
     const behavioral = behavioralTaskIds(BENCHMARK_TASKS)
     expect(behavioral.size).toBeGreaterThan(0)
     for (const id of behavioral) {
-      expect(getChecksForTask(id).length, `${id} checks`).toBeGreaterThan(0)
+      const task = BENCHMARK_TASKS.find((t) => t.id === id)
+      expect(task, `${id} task row`).toBeDefined()
+      expect(getChecksForTask(task!).length, `${id} checks`).toBeGreaterThan(0)
     }
   })
 
   it('every declared scorer name is one the registry knows about', () => {
-    const known = new Set(['behavioral', 'html', 'text'])
+    const known = new Set(registeredScorerNames())
     for (const task of BENCHMARK_TASKS) {
       if (task.scorer === undefined) continue
       expect(known.has(task.scorer), `${task.id} scorer ${task.scorer}`).toBe(true)
@@ -128,18 +130,23 @@ describe('llm-benchmark registry', () => {
     expect(taskResults.every((r) => r.taskId === 'equation-solver')).toBe(true)
     expect(taskResults.every((r) => !documentedExcluded.has(r.modelId))).toBe(true)
 
-    // Data-loss floor: every task must keep a substantial board. This is the
-    // regression net for a bad merge/regen wiping records — it fires long
-    // before per-model assertions notice a missing row.
+    // Data-loss floor: every BUILT-IN task must keep a substantial board.
+    // This is the regression net for a bad merge/regen wiping records — it
+    // fires long before per-model assertions notice a missing row. Plugin
+    // tasks are exempt: a freshly contributed task legitimately has zero
+    // results until its first sweep.
     for (const task of BENCHMARK_TASKS) {
+      if (task.pluginId) continue
       expect(
         resultsForTask(task.id).length,
         `${task.id} board size`,
       ).toBeGreaterThanOrEqual(20)
     }
 
+    // A flagship model must cover the whole BUILT-IN board; plugin tasks are
+    // exempt until they are swept (no model has tic-tac-toe results yet).
     const modelResults = resultsForModel('claude-4')
-    expect(modelResults.length).toBe(BENCHMARK_TASKS.length)
+    expect(modelResults.length).toBe(BENCHMARK_TASKS.filter((t) => !t.pluginId).length)
     expect(modelResults.every((r) => r.modelId === 'claude-4')).toBe(true)
   })
 })

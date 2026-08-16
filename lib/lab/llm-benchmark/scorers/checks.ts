@@ -1,4 +1,6 @@
+import type { BenchmarkTask } from '../types'
 import type { CheckContext, CheckFn, CheckResult } from './sandbox'
+import { pluginChecks } from '../plugins'
 
 /**
  * Per-task behavioral checks for the interactive benchmark tasks.
@@ -325,6 +327,50 @@ const CHECKS_BY_TASK: Record<string, CheckFn[]> = {
   'circuit-builder-teaser': circuitChecks,
 }
 
-export function getChecksForTask(taskId: string): CheckFn[] {
-  return CHECKS_BY_TASK[taskId] ?? []
+/**
+ * Named check registry. Built-in checks register under their stable result
+ * names; plugin checks merge in via `pluginChecks()`. A task that declares
+ * `checks: [...]` resolves each name through this registry — the seam that
+ * lets plugins ship evaluators for their own tasks.
+ */
+const CHECK_REGISTRY: Record<string, CheckFn> = {}
+
+function registerCheck(name: string, fn: CheckFn): void {
+  CHECK_REGISTRY[name] = fn
+}
+
+registerCheck('platformer-jump', miniPlatformerChecks[0])
+registerCheck('platformer-move', miniPlatformerChecks[1])
+registerCheck('nbody-renders', nBodyChecks[0])
+registerCheck('nbody-animates', nBodyChecks[1])
+registerCheck('landing-structure', landingPageChecks[0])
+registerCheck('landing-animates', landingPageChecks[1])
+registerCheck('pendulum-renders', pendulumChecks[0])
+registerCheck('pendulum-animates', pendulumChecks[1])
+registerCheck('circuit-structure', circuitChecks[0])
+registerCheck('circuit-interact', circuitChecks[1])
+Object.assign(CHECK_REGISTRY, pluginChecks())
+
+/**
+ * Resolve the behavioral checks for a task.
+ *
+ * A task row with an explicit `checks` list gets exactly those named checks
+ * (resolved through the registry, so a plugin can contribute them); an
+ * unknown name fails loudly rather than silently scoring with no checks.
+ * Tasks without a `checks` list fall back to the per-task map, preserving
+ * the pre-plugin behavior.
+ */
+export function getChecksForTask(task: BenchmarkTask): CheckFn[] {
+  if (task.checks && task.checks.length > 0) {
+    return task.checks.map((name) => {
+      const fn = CHECK_REGISTRY[name]
+      if (!fn) {
+        throw new Error(
+          `Unknown check '${name}' for task '${task.id}' — is it registered (builtin or via a plugin)?`
+        )
+      }
+      return fn
+    })
+  }
+  return CHECKS_BY_TASK[task.id] ?? []
 }

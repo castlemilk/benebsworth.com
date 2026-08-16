@@ -2,6 +2,7 @@ import type { BenchmarkScorerName, BenchmarkTask, Scorer } from '../types'
 import { htmlScorer } from './html'
 import { textScorer } from './text'
 import { behavioralScorer } from './behavioral'
+import { pluginScorers } from '../plugins'
 
 /**
  * The scorer registry: name → implementation. A task row declares one of
@@ -11,11 +12,29 @@ import { behavioralScorer } from './behavioral'
  * are a vocabulary for future tasks (a structural-only HTML task is a
  * reasonable thing to want), and a registry with a hole in it is worse than
  * one with a currently-unused entry.
+ *
+ * Plugins extend the registry via `registerScorer()` (or their `scorers`
+ * contribution, merged at module load) — the open-registry half of the
+ * "everything is a plugin" story.
  */
-const SCORERS: Record<BenchmarkScorerName, Scorer> = {
+const SCORERS: Record<string, Scorer> = {
   behavioral: behavioralScorer,
   html: htmlScorer,
   text: textScorer,
+}
+
+/** Register a named scorer (built-ins at load; plugins via the roster). */
+export function registerScorer(name: string, scorer: Scorer): void {
+  SCORERS[name] = scorer
+}
+
+/** Names every task may declare in `scorer` (built-ins + plugins). */
+export function registeredScorerNames(): string[] {
+  return Object.keys(SCORERS)
+}
+
+for (const [name, scorer] of Object.entries(pluginScorers())) {
+  registerScorer(name, scorer)
 }
 
 /**

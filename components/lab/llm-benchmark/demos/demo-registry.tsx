@@ -1,6 +1,7 @@
 'use client'
 
 import type { BenchmarkTask } from '@/lib/lab/llm-benchmark/types'
+import { pluginDemos } from '@/lib/lab/llm-benchmark/plugins'
 import {
   NBodyFieldDemo,
   MiniPlatformerDemo,
@@ -11,6 +12,8 @@ import {
   CircuitBuilderTeaserDemo,
 } from './index'
 
+// Built-in demos first; plugin demos merge in by name (plugins win on
+// collision, matching the registry's "later registration wins" rule).
 const DEMO_COMPONENTS: Record<string, React.ComponentType<{ className?: string }>> = {
   NBodyFieldDemo,
   MiniPlatformerDemo,
@@ -19,6 +22,7 @@ const DEMO_COMPONENTS: Record<string, React.ComponentType<{ className?: string }
   EquationSolverDemo,
   PhysicsPendulumWaveDemo,
   CircuitBuilderTeaserDemo,
+  ...pluginDemos(),
 }
 
 export function BenchmarkDemo({

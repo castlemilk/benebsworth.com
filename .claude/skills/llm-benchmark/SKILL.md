@@ -546,6 +546,36 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check
   that can't state its bug is synthetic — it will be muted, not fixed.
 
+## Plugin system (dsh-inspired)
+
+The harness has a plugin system (`lib/lab/llm-benchmark/plugins/`): a plugin
+contributes tasks, behavioral checks, scorers, demo components, and task-page
+cards to the shared registries without touching core files. There is no
+privileged plugin — the built-ins are just the first registrants, and every
+registration unwinds on `unregisterPlugin()`.
+
+- **Roster** (`plugins/index.ts`): each shipped plugin is imported statically
+  and registered there — adding a plugin = one import + one
+  `registerPlugin()` call. `registry.ts` merges `pluginTasks()` into
+  `BENCHMARK_TASKS`; `scorers/checks.ts` merges `pluginChecks()` into the
+  named check registry; `scorers/index.ts` merges `pluginScorers()`;
+  `demo-registry.tsx` merges `pluginDemos()`; the task page renders
+  `pluginTaskCard(task)`.
+- **Task rows** declare `scorer` (name) + `checks` (names): the check names
+  resolve through the registry (built-in + plugin); an unknown name throws
+  loudly rather than silently scoring with no checks. Tasks without a
+  `checks` list keep the per-task fallback map. Contributed tasks are
+  stamped `pluginId` (shown as an attribution chip on the task page).
+- **Client-bundle rule**: anything imported by `registry.ts`/`demo-registry`
+  reaches the client bundle, so plugin CHECK files must use
+  `import type { CheckFn }` — never a runtime import of `scorers/sandbox.ts`
+  (that pulls Playwright in). Demo components may import React freely.
+- **Example**: `plugins/community-tasks/` (manifest.json + index.ts +
+  checks.ts + demo.tsx) ships the tic-tac-toe task with its own DOM-based
+  checks (`ttt-grid-interacts`, `ttt-win-detected`) — the template for new
+  plugins. Tests in `plugins/registry.test.ts` cover registration,
+  collisions, unwind, and integration.
+
 ## Verification Checklist
 
 - [ ] `task bench:verify` passes (typecheck + benchmark unit tests)

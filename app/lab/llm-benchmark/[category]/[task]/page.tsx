@@ -13,6 +13,7 @@ import {
   getTask,
 } from '@/lib/lab/llm-benchmark/registry'
 import { resultsForTask, stripOutput } from '@/lib/lab/llm-benchmark/results'
+import { getPlugin, pluginTaskCard } from '@/lib/lab/llm-benchmark/plugins'
 import { aggregateResults } from '@/lib/lab/llm-benchmark/harness'
 import { loadTaskMdx, loadTaskPostMdx } from '@/lib/lab/llm-benchmark/content'
 import { Gauge, Clock, DollarSign, Hash, Terminal, Activity } from 'lucide-react'
@@ -153,6 +154,14 @@ export default async function BenchmarkTaskPage({
               <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1">
                 Default iterations: {t.iterationsDefault}
               </span>
+              {t.pluginId && (
+                <span
+                  title={`Contributed by the '${t.pluginId}' plugin`}
+                  className="rounded-full border border-[var(--color-project)]/40 bg-[var(--color-project)]/10 px-3 py-1 text-[var(--color-project)]"
+                >
+                  {getPlugin(t.pluginId)?.name ?? t.pluginId} plugin
+                </span>
+              )}
             </div>
           </Reveal>
         </section>
@@ -189,6 +198,19 @@ export default async function BenchmarkTaskPage({
             </div>
           </div>
         </Reveal>
+
+        {/* ── Plugin task card (optional UI extension) ──────────────────── */}
+        {(() => {
+          const Card = pluginTaskCard(t)
+          if (!Card) return null
+          return (
+            <Reveal delay={100}>
+              <div className="mb-16">
+                <Card task={t} />
+              </div>
+            </Reveal>
+          )
+        })()}
 
         {/* ── Generated demo ───────────────────────────────────────────── */}
         <Reveal delay={120}>

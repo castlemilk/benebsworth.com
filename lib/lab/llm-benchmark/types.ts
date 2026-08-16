@@ -95,11 +95,14 @@ export interface BenchmarkCategory {
 /**
  * Name of a registered scorer, as declared on a task row.
  *
- * These are the three scorers exported from `scorers/index.ts`. The name is
- * the vocabulary a task uses to pick its evaluator without the selection
- * logic having to know anything about categories.
+ * These are the three built-in scorers exported from `scorers/index.ts`; a
+ * plugin can register more via `registerScorer()`. The name is the
+ * vocabulary a task uses to pick its evaluator without the selection
+ * logic having to know anything about categories. The `(string & {})`
+ * widening lets plugin-provided scorer names typecheck while built-ins
+ * stay exhaustively enumerated.
  */
-export type BenchmarkScorerName = 'behavioral' | 'html' | 'text'
+export type BenchmarkScorerName = 'behavioral' | 'html' | 'text' | (string & {})
 
 export interface BenchmarkTask {
   id: string
@@ -122,6 +125,19 @@ export interface BenchmarkTask {
    * HTML-runnable task that forgets to.
    */
   scorer?: BenchmarkScorerName
+  /**
+   * Named behavioral checks for this task, resolved through the check
+   * registry (`scorers/checks.ts`) — built-in names plus any a plugin
+   * registered. When present, it REPLACES the per-task fallback map;
+   * when absent, the fallback map (or no checks) applies.
+   */
+  checks?: string[]
+  /**
+   * The plugin that contributed this task, when it did not ship in the
+   * built-in registry. Surfaced in the UI for attribution and used by the
+   * loader for collision diagnostics.
+   */
+  pluginId?: string
 }
 
 /**

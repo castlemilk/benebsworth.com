@@ -3,6 +3,7 @@ import type {
   BenchmarkModel,
   BenchmarkTask,
 } from './types'
+import { pluginTasks } from './plugins'
 
 // NOTE: results deliberately do NOT live in this module. This registry is
 // imported by 'use client' components, and results.json is ~2.8 MB of
@@ -309,7 +310,7 @@ export function modelsByProvider(): Record<string, BenchmarkModel[]> {
 // place you read to know how a task is evaluated — a mixed convention where
 // some rows declare and others rely on the heuristic is the thing that made
 // this selection hard to follow in the first place.
-export const BENCHMARK_TASKS: BenchmarkTask[] = [
+const BUILTIN_TASKS: BenchmarkTask[] = [
   {
     id: 'n-body-field',
     category: '3d-physics-animation',
@@ -401,6 +402,15 @@ export const BENCHMARK_TASKS: BenchmarkTask[] = [
     slug: 'circuit-builder-teaser',
     scorer: 'behavioral',
   },
+]
+
+// Tasks contributed by plugins are merged after the built-in roster and
+// stamped with their pluginId (provenance + collision diagnostics live in
+// plugins/registry.ts; registry.test.ts enforces id uniqueness across the
+// merged set).
+export const BENCHMARK_TASKS: BenchmarkTask[] = [
+  ...BUILTIN_TASKS,
+  ...pluginTasks(),
 ]
 
 // ── Getters ────────────────────────────────────────────────────────────

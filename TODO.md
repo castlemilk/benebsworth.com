@@ -607,36 +607,31 @@ existing behavior unchanged by default.
 
 **Effort.** M. **Dependencies.** #1 (for the policy log).
 
-## [ ] 13. Per-call telemetry (TTFT, tokens/s, cache, retries)
+## [x] 13. Per-call telemetry (TTFT, tokens/s, cache, retries)
 
-**Problem.** `runtimeMs` is wall-clock only. We don't record time-to-first
-token, tokens/sec, cache hits, or retry counts per iteration — the signals
-that separate "model slow" from "network slow" (directly relevant to #6's
-classification story).
+**Shipped.** `runtimeMs` is no longer the only timing signal. Instrumented:
+**streaming API providers** (moonshot, openrouter — first non-empty
+`delta.content` = a true first-token boundary) and **CLI providers** (agy,
+codex, opencode — `runCli` stamps the first stdout chunk, a first-OUTPUT proxy
+that reads LOW because agent banners precede decoding). Deliberately NOT
+instrumented: **openai, anthropic, google** — single-shot non-streaming
+`fetch`es expose exactly one timestamp, so TTFT is unobservable there and the
+record is absence, not a faked response-arrival time. Making them observable
+means switching them to streaming first.
 
-**Design sketch.** Extend the event log (#1) `response`/`retry` events with
-`ttftMs`, `tokensPerSec`, `cacheHit`, `attempt`. `BenchmarkResult` gains an
-optional `telemetry?: { meanTtftMs, meanTokensPerSec, cacheHits, retries }`
-rolled up in `aggregateRuns`. Surface on the model page's runtime cell
-tooltip.
-
-**Fold semantics reference.** dsh `packages/session/session-stats` folds the
-same figures from its log with exact rules we should copy:
-- `llmMs` = `step/start` → `assistant/message` per step (retry waits inside
-  the step count as model time).
-- `ttftMs` = `step/start` → first non-empty delta; the FIRST attempt's
-  boundary survives an in-step retry (`resetForRetry` parity — don't reset
-  TTFT on retry).
-- `decodeMs`/`decodeTokens` = first token → assembled message, only over
-  steps carrying both.
-- Every field is 0 until its first contributing event; clients read the
-  value, never key presence.
-
-**Acceptance criteria.** Sweeps record telemetry; a retrace or page tooltip
-shows TTFT/tokens-per-sec/cache/retries per iteration; the fold follows the
-session-stats semantics above.
-
-**Effort.** M. **Dependencies.** #1.
+`GenerationResponse.ttftMs?` carries the measurement; the run log's `response`
+event gains `ttftMs?` / `tokensPerSec?` / `rateKind?`; `BenchmarkResult.telemetry`
+= `{ meanTtftMs?, meanTokensPerSec?, rateKind?, cacheHits, retries }` folded by
+`foldTelemetry()` in `aggregateRuns`. Fold rules (dsh `session-stats` parity):
+the FIRST attempt's TTFT survives an in-step retry (`CallTelemetry` sink, so
+the retry count also survives a THROW); the rate is `decode` (tokensOut /
+(runtime − ttft)) where both timestamps exist and the labelled `wall-clock`
+fallback otherwise, `mixed` when a record has both; cache replays are counted
+in `cacheHits` and excluded from BOTH means (nothing was generated). Counters
+are 0-when-none (read the value); the two means are ABSENT-when-unmeasured
+(a 0ms TTFT is physically impossible, so 0 would be a lie). `verify-results`
+gains a `telemetry-sanity` check; `retrace` prints ttft/tok-s per response.
+No UI — the model-page surface stays deferred to #9's trace UI.
 
 ---
 
@@ -1517,6 +1512,14 @@ without reading results.json; the server is read-only.
   templates in `scripts/templates/plugin/*.tmpl`, pure helpers + tests in
   `plugins/scaffold.ts`). Scaffold does not touch the roster; an unrostered
   plugin is dead code and stays green.
+- Per-call telemetry (#13): `GenerationResponse.ttftMs` (streaming APIs =
+  first `delta.content`; CLIs = first stdout chunk, a first-OUTPUT proxy;
+  openai/anthropic/google unobservable while non-streaming — absent, never
+  faked), `response` event `ttftMs`/`tokensPerSec`/`rateKind`, and
+  `BenchmarkResult.telemetry` folded by `foldTelemetry()` — TTFT survives an
+  in-step retry, retries survive a throw (`CallTelemetry` sink), cache
+  replays counted but excluded from the means, counters 0-when-none and
+  means absent-when-unmeasured, plus a `telemetry-sanity` verify check.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

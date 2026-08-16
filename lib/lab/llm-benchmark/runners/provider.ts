@@ -441,6 +441,68 @@ async function generateWithProvider(
   }
 }
 
+/**
+ * Per-iteration measurement sink, OWNED by the `runTask` loop and MUTATED by
+ * `generateOne`.
+ *
+ * WHY a mutable sink rather than widening `generateOne`'s return value: the
+ * retry count matters most when the call ultimately THROWS (an iteration that
+ * failed after two retries is the headline "infrastructure, not model" signal),
+ * and a return value is never delivered on the throw path. The sink records
+ * what happened regardless of how the call ended. It is created fresh per
+ * iteration and never shared, so there is no cross-iteration aliasing.
+ */
+interface CallTelemetry {
+  /**
+   * Retries inside this iteration — transient (network/429/timeout) here, plus
+   * the empty-body retries the runTask loop adds. Same population as the log's
+   * `retry` events, so the two can be cross-checked.
+   */
+  retries: number
+  /** True when a response was replayed from the cache (nothing was generated). */
+  cacheHit: boolean
+  /**
+   * TTFT of the FIRST attempt that produced observable output. dsh
+   * `resetForRetry` parity: a retry inside the step does NOT reset the
+   * boundary, so this is written once and never overwritten.
+   */
+  ttftMs?: number
+}
+
+/**
+ * Project a finished iteration's sink onto the `IterationRun` fields, keeping
+ * "absent = not measured" (no `ttftMs: undefined` keys, no `retries: 0` noise).
+ */
+function telemetryFields(tel: CallTelemetry): Pick<IterationRun, 'ttftMs' | 'cacheHit' | 'retries'> {
+  return {
+    ...(tel.ttftMs !== undefined ? { ttftMs: tel.ttftMs } : {}),
+    ...(tel.cacheHit ? { cacheHit: true } : {}),
+    ...(tel.retries > 0 ? { retries: tel.retries } : {}),
+  }
+}
+
+/** Output tokens per second, with the label saying WHICH rate it is. */
+function computeRate(
+  tokensOut: number,
+  runtimeMs: number,
+  ttftMs: number | undefined
+): { tokensPerSec: number; rateKind: 'decode' | 'wall-clock' } | undefined {
+  if (tokensOut <= 0) return undefined
+  // Decode rate — the honest one: generation time only, prefill/queue excluded.
+  if (ttftMs !== undefined && runtimeMs > ttftMs) {
+    return {
+      tokensPerSec: Math.round((tokensOut / ((runtimeMs - ttftMs) / 1000)) * 10) / 10,
+      rateKind: 'decode',
+    }
+  }
+  // Documented fallback: wall-clock. DEPRESSED by queue/prefill and therefore
+  // not comparable to a decode rate — which is exactly why it is labelled.
+  if (runtimeMs > 0) {
+    return { tokensPerSec: Math.round((tokensOut / (runtimeMs / 1000)) * 10) / 10, rateKind: 'wall-clock' }
+  }
+  return undefined
+}
+
 async function generateOne(
   cfg: ProviderRunnerConfig,
   model: BenchmarkModel,
@@ -451,7 +513,9 @@ async function generateOne(
   label: string,
   // Passed EXPLICITLY rather than read from module state: several (model, task)
   // jobs run concurrently and a shared "current log" would interleave them.
-  log?: RunLog
+  log?: RunLog,
+  // Mutated in place — see CallTelemetry for why this is not a return value.
+  tel?: CallTelemetry
 ): Promise<GenerationResponse> {
   // HTML-category tasks get the demo-sandbox contract appended (self-contained
   // doc, no CDNs, no runtime JSX) so models generate directly-runnable
@@ -473,6 +537,10 @@ async function generateOne(
     const cached = getCachedResponse(model.id, task.id, task.prompt, iterationIndex)
     if (cached) {
       console.log(`[harness] cache hit ${model.name} :: ${task.title} #${iterationIndex + 1}`)
+      if (tel) tel.cacheHit = true
+      // No ttftMs / tokensPerSec on a replay: nothing was generated, and
+      // republishing the original call's timings as if they were measured now
+      // would put a fabricated latency in this run's telemetry.
       log?.append({
         type: 'response',
         iterationIndex,
@@ -496,6 +564,12 @@ async function generateOne(
         timeoutMs,
         label
       )
+      // First attempt to produce observable output wins the boundary and keeps
+      // it for the rest of the iteration (dsh `resetForRetry` parity).
+      if (tel && tel.ttftMs === undefined && response.ttftMs !== undefined) {
+        tel.ttftMs = response.ttftMs
+      }
+      const rate = computeRate(response.tokensOut, response.runtimeMs, response.ttftMs)
       log?.append({
         type: 'response',
         iterationIndex,
@@ -504,6 +578,10 @@ async function generateOne(
         tokensOut: response.tokensOut,
         runtimeMs: response.runtimeMs,
         cacheHit: false,
+        // Conditional spread, not `?? null`: an absent key is the documented
+        // "not measured" signal and null would read as a measured zero.
+        ...(response.ttftMs !== undefined ? { ttftMs: response.ttftMs } : {}),
+        ...(rate ?? {}),
       })
       // Same 40-char floor as aggregation: never cache degenerate outputs
       // (e.g. a bare "DONE" from a file-handoff run that wrote nothing) — a
@@ -520,6 +598,7 @@ async function generateOne(
       // Rate limits deserve a much longer backoff than generic transient errors.
       const baseDelayMs = 1000 * 2 ** attempt
       const delayMs = isRateLimitError(err) ? baseDelayMs * 4 : baseDelayMs
+      if (tel) tel.retries++
       log?.append({
         type: 'retry',
         iterationIndex,
@@ -552,6 +631,64 @@ export interface IterationRun {
   failureReason?: BenchmarkFailureReason
   /** Raw finish_reason from the provider, when known. Used to disambiguate truncated vs empty_body. */
   finishReason?: string
+  /**
+   * Time to first observable output for this iteration, ms. Absent when the
+   * provider could not measure it (see `GenerationResponse.ttftMs`) and on
+   * cache replays, where nothing was generated. Never 0. It CAN be present on
+   * a failed iteration — an attempt that produced output before a later
+   * attempt threw did genuinely observe that latency.
+   */
+  ttftMs?: number
+  /** True when this iteration was served from the response cache. */
+  cacheHit?: boolean
+  /** Retries this iteration burned (transient + empty-body). Absent = 0. */
+  retries?: number
+}
+
+/**
+ * Fold per-iteration measurements into `BenchmarkResult.telemetry`.
+ *
+ * Rules (documented on the type, restated here because this is where they are
+ * enforced):
+ *  - `cacheHits` / `retries` count over EVERY iteration, failures included —
+ *    a failure after two retries is precisely the signal being collected.
+ *  - `meanTtftMs` averages only the iterations that measured a TTFT, and is
+ *    ABSENT when none did (0 would be a physically impossible latency).
+ *  - `meanTokensPerSec` averages only the iterations a rate was computable
+ *    for, and cache replays are excluded from BOTH means: nothing was
+ *    generated, so their timings describe some earlier call.
+ *  - `rateKind` reports whether those rates were decode rates, wall-clock
+ *    fallbacks, or a mix — a rate whose kind is unknown is not readable.
+ */
+function foldTelemetry(runs: IterationRun[]): NonNullable<BenchmarkResult['telemetry']> {
+  const cacheHits = runs.filter((r) => r.cacheHit).length
+  const retries = runs.reduce((sum, r) => sum + (r.retries ?? 0), 0)
+
+  const measured = runs.filter((r) => !r.cacheHit)
+  const ttfts = measured.map((r) => r.ttftMs).filter((v): v is number => v !== undefined)
+
+  const rates = measured
+    .map((r) => computeRate(r.tokensOut, r.runtimeMs, r.ttftMs))
+    .filter((v): v is { tokensPerSec: number; rateKind: 'decode' | 'wall-clock' } => v !== undefined)
+
+  const kinds = new Set(rates.map((r) => r.rateKind))
+  const rateKind: 'decode' | 'wall-clock' | 'mixed' | undefined =
+    kinds.size === 0 ? undefined : kinds.size > 1 ? 'mixed' : [...kinds][0]
+
+  return {
+    ...(ttfts.length > 0
+      ? { meanTtftMs: Math.round(ttfts.reduce((a, b) => a + b, 0) / ttfts.length) }
+      : {}),
+    ...(rates.length > 0
+      ? {
+          meanTokensPerSec:
+            Math.round((rates.reduce((a, b) => a + b.tokensPerSec, 0) / rates.length) * 10) / 10,
+        }
+      : {}),
+    ...(rateKind ? { rateKind } : {}),
+    cacheHits,
+    retries,
+  }
 }
 
 /**
@@ -677,6 +814,10 @@ export async function aggregateRuns(
     // least one iteration produced checks.
     iterationCheckResults:
       iterationCheckResults.length > 0 ? iterationCheckResults : undefined,
+    // Always emitted: the counters are meaningful at 0 ("no cache hits, no
+    // retries" is a fact, not a gap), and the measurement fields inside carry
+    // their own absence.
+    telemetry: foldTelemetry(runs),
     createdAt,
     // Every record produced under an active run log points back at its trace —
     // the acceptance criterion for #1: nothing reaches results.json unexplained.
@@ -764,6 +905,8 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
         const label = `${model.name} :: ${task.title} #${i + 1}/${iterations}`
         console.log(`[harness] starting ${label}`)
         const callStart = Date.now()
+        // Fresh per iteration; generateOne mutates it (see CallTelemetry).
+        const tel: CallTelemetry = { retries: 0, cacheHit: false }
         try {
           // Empty-body retry (Loop 2): a 200 response with zero assistant
           // deltas is a distinct failure mode from network/429 errors — the
@@ -777,12 +920,15 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           let attempt = 0
           let response: GenerationResponse | undefined
           while (true) {
-            response = await generateOne(cfg, model, task, i, bustCache, timeoutMs, label, log)
+            response = await generateOne(cfg, model, task, i, bustCache, timeoutMs, label, log, tel)
             const cleanedProbe = cleanOutput(response.output)
             if (cleanedProbe.trim().length >= 40) break
             attempt++
             if (attempt >= emptyBodyMaxAttempts) break
             const delayMs = 1500 * attempt
+            // Empty-body retries are retries too — same population as the
+            // `retry` events, so the log and the roll-up agree.
+            tel.retries++
             log?.append({
               type: 'retry',
               iterationIndex: i,
@@ -841,6 +987,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
               status: 'fail',
               timedOut: false,
               failureReason: reason,
+              ...telemetryFields(tel),
             })
             // No quota / non-transient break here — an empty body on a free
             // endpoint is often a transient provider-pool blip; let the next
@@ -860,7 +1007,15 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           // The artifact that will actually be scored — post cleanOutput and
           // post dependency-inlining, i.e. exactly the bytes the scorer sees.
           log?.append({ type: 'clean', iterationIndex: i, output: cleaned })
-          runs.push({ output: cleaned, tokensIn, tokensOut, runtimeMs, status: 'success', failureReason: 'none' })
+          runs.push({
+            output: cleaned,
+            tokensIn,
+            tokensOut,
+            runtimeMs,
+            status: 'success',
+            failureReason: 'none',
+            ...telemetryFields(tel),
+          })
         } catch (err) {
           // Pass the provider shape so a timeout on a locally-spawned CLI is
           // recorded as cli_timeout (too slow) rather than endpoint_hung.
@@ -883,6 +1038,9 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             status: 'fail',
             timedOut: isTimeoutError(err),
             failureReason: reason,
+            // The retry count survives the throw — that is the whole reason
+            // CallTelemetry is a sink rather than a return value.
+            ...telemetryFields(tel),
           })
           if (isQuotaError(err)) {
             trippedModels.add(model.id)

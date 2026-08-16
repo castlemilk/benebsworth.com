@@ -53,6 +53,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Quota-reset parsing + pre-flight lock check (`parseQuotaResetMs`, `quotaLockedModels`) | `lib/lab/llm-benchmark/quota.ts` |
 | Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
+| Per-call telemetry (TTFT/decode-rate sink + `foldTelemetry`) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
@@ -506,7 +507,7 @@ sweeps/<run-id>/
   | Event | Emitted | Payload |
   | --- | --- | --- |
   | `request` | once per iteration, before the first provider call (and before the cache lookup, so cache hits still record their prompt) | `promptHash` (sha256 of the post-`withSandboxConstraints` prompt), `promptLength` |
-  | `response` | every response that came back, **including cache replays** | `rawOutput`, `tokensIn`, `tokensOut`, `runtimeMs`, `cacheHit` |
+  | `response` | every response that came back, **including cache replays** | `rawOutput`, `tokensIn`, `tokensOut`, `runtimeMs`, `cacheHit`, and (when measured) `ttftMs`, `tokensPerSec`, `rateKind` — see Per-call telemetry |
   | `retry` | transient retries inside `generateOne`; empty-body retries in the `runTask` loop | `attempt`, `error`, `delayMs`, `kind: 'transient' \| 'empty_body'` |
   | `clean` | after `cleanOutput` + dependency inlining | `output` — exactly the bytes the scorer sees |
   | `failure` | a failed iteration (terminal; retries are their own events) | `error`, `failureReason`, `timedOut` |
@@ -558,6 +559,55 @@ points and detail, and the aggregate line (score, status, failureReason,
 `runLogRef`). Model/task filtering reads the HEADER, not the filename — both
 ids contain hyphens, so the name can't be split reliably. `SWEEPS_DIR`
 overrides the directory scanned.
+
+## Per-call telemetry (TTFT, decode rate, cache, retries)
+
+Wall-clock `runtimeMs` cannot separate "the model is slow" from "the network
+or queue is slow" — the same distinction the `cli_timeout` vs `endpoint_hung`
+taxonomy exists to draw. TTFT is the queue+prefill half; the decode rate is
+the generation half.
+
+- **Fields.** `GenerationResponse.ttftMs?` (`types.ts`) → run-log `response`
+  event `ttftMs?` / `tokensPerSec?` / `rateKind?` → `BenchmarkResult.telemetry`
+  = `{ meanTtftMs?, meanTokensPerSec?, rateKind?, cacheHits, retries }`,
+  folded by `foldTelemetry()` inside `aggregateRuns`.
+- **Where TTFT is real, and where it is a proxy.**
+  - *Streaming APIs* (`moonshot.ts`, `openrouter.ts`): the first NON-EMPTY
+    `delta.content` — a true first-token boundary, measured from before the
+    fetch so it includes connect/queue/prefill.
+  - *CLI providers* (agy, codex, opencode via `runCli`): the first **stdout**
+    chunk. This is first OUTPUT, not first token — an agent CLI's banner or
+    spinner usually lands before the model decodes anything, so CLI TTFT
+    reads **low**. Treat it as a proxy, not a number to compare against an
+    API model's TTFT.
+  - *`openai.ts` / `anthropic.ts` / `google.ts`*: **not instrumented, on
+    purpose.** They are single-shot non-streaming `fetch`es with exactly one
+    observable timestamp; stamping response-arrival time as TTFT would make
+    TTFT == runtimeMs and the decode rate infinite. To close this gap,
+    convert them to streaming first — do not backfill a fake.
+- **Fold rules (dsh `session-stats` parity).**
+  - The FIRST attempt's TTFT survives an in-step retry (`resetForRetry`
+    parity) — a retry never re-starts the clock.
+  - `rateKind: 'decode'` = tokensOut / (runtime − ttft). `'wall-clock'` =
+    tokensOut / runtime, the documented fallback when no first-token boundary
+    exists; it is depressed by queue time and is NOT comparable to a decode
+    rate. `'mixed'` = a record folded over some of each — read it as a lower
+    bound.
+  - Cache replays are counted in `cacheHits` and excluded from BOTH means:
+    nothing was generated, so their timings describe some earlier call.
+  - `retries` counts transient AND empty-body retries, over failed iterations
+    too. It rides a mutable `CallTelemetry` sink rather than `generateOne`'s
+    return value precisely because the interesting case (failed after two
+    retries) ends in a throw, and a throw delivers no return value.
+- **Presence is NOT uniform, and the difference is the contract.** The
+  counters (`cacheHits`, `retries`) are always present and 0-when-none —
+  read the value, never key on presence. The two means are ABSENT when
+  nothing measured them, because a 0ms TTFT is physically impossible and a
+  0 tok/s decode rate is an infinitely slow model; `verify-results`'
+  `telemetry-sanity` check fails a record that publishes either as 0, or a
+  `meanTokensPerSec` with no `rateKind`.
+- **No UI.** The model-page surface is deferred to backlog #9's trace UI;
+  today the numbers are readable through `retrace.mjs` and results.json.
 
 ## Verifying the results themselves (`task bench:verify-results`)
 

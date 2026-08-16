@@ -451,6 +451,48 @@ describe('run log integration', () => {
     expect(result.status).toBe('partial')
   })
 
+  it('carries ttftMs/tokensPerSec/rateKind on the response event when the provider measured them', async () => {
+    setRunLogDir(dir)
+    generateMock.mockResolvedValue({ ...OK, tokensOut: 300, runtimeMs: 1600, ttftMs: 100 })
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      scorer: { score: () => 55 },
+    })
+    await runner.runTask(MODEL, TASK, 1)
+
+    const { events } = readRunLog(join(dir, runLogFileName(MODEL.id, TASK.id)))
+    const response = events.find((e) => e.type === 'response')
+    if (response?.type !== 'response') throw new Error('expected a response event')
+    expect(response.ttftMs).toBe(100)
+    // decode rate: 300 tokens over (1600 - 100)ms = 200 tok/s
+    expect(response.tokensPerSec).toBe(200)
+    expect(response.rateKind).toBe('decode')
+  })
+
+  it('omits the telemetry fields entirely when the provider could not measure them', async () => {
+    setRunLogDir(dir)
+    // A non-streaming API provider: no first-token boundary is observable.
+    generateMock.mockResolvedValue({ ...OK, tokensOut: 200, runtimeMs: 1000 })
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      scorer: { score: () => 55 },
+    })
+    await runner.runTask(MODEL, TASK, 1)
+
+    const { events } = readRunLog(join(dir, runLogFileName(MODEL.id, TASK.id)))
+    const response = events.find((e) => e.type === 'response')
+    if (response?.type !== 'response') throw new Error('expected a response event')
+    // No `null` noise: the key is simply not on the record.
+    expect('ttftMs' in response).toBe(false)
+    // The wall-clock fallback is still published, but LABELLED as such.
+    expect(response.tokensPerSec).toBe(200)
+    expect(response.rateKind).toBe('wall-clock')
+  })
+
   it('writes no log and keeps the record ref-free when no run-log dir is set', async () => {
     generateMock.mockResolvedValue(OK)
     const runner = createProviderRunner({
@@ -463,6 +505,55 @@ describe('run log integration', () => {
     expect(result.runLogRef).toBeUndefined()
     expect(readdirSync(dir)).toEqual([])
   })
+})
+
+describe('runTask telemetry threading', () => {
+  beforeEach(() => {
+    generateMock.mockReset()
+  })
+
+  it('keeps the FIRST attempt TTFT across an in-step empty-body retry, and counts the retry', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    generateMock
+      // Under the 40-char floor → the runTask empty-body retry fires.
+      .mockResolvedValueOnce({ output: 'DONE', tokensIn: 10, tokensOut: 2, runtimeMs: 300, ttftMs: 50 })
+      .mockResolvedValueOnce({ ...OK, tokensOut: 100, runtimeMs: 1050, ttftMs: 900 })
+
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      scorer: { score: () => 55 },
+    })
+    const [result] = await runner.runTask(MODEL, TASK, 1)
+    warn.mockRestore()
+
+    expect(result.status).toBe('success')
+    // dsh `resetForRetry` parity: a retry inside the step does NOT reset TTFT.
+    expect(result.telemetry?.meanTtftMs).toBe(50)
+    expect(result.telemetry?.retries).toBe(1)
+    expect(result.telemetry?.cacheHits).toBe(0)
+  }, 20_000)
+
+  it('counts transient retries even when the iteration ultimately FAILED', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    generateMock.mockRejectedValue(new Error('fetch failed'))
+
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 1,
+      scorer: { score: () => 55 },
+    })
+    const [result] = await runner.runTask(MODEL, TASK, 1)
+    warn.mockRestore()
+    error.mockRestore()
+
+    expect(result.status).toBe('fail')
+    // The retry happened; a return-value-only channel would have lost it to the throw.
+    expect(result.telemetry?.retries).toBe(1)
+  }, 20_000)
 })
 
 describe('plugin-provided generators', () => {
@@ -613,6 +704,78 @@ describe('aggregateRuns', () => {
     for (const it of result.iterationCheckResults!) {
       expect(it).toEqual(checks)
     }
+  })
+
+  describe('telemetry roll-up', () => {
+    const scorer = { score: () => 50 }
+    const base = { output: 'x'.repeat(80), tokensIn: 10, status: 'success' as const }
+
+    it('means over CONTRIBUTING iterations only; counters exact; rateKind mixed', async () => {
+      const mixed: IterationRun[] = [
+        // decode rate: 500 tokens over (1200 - 200)ms = 500 tok/s
+        { ...base, tokensOut: 500, runtimeMs: 1200, ttftMs: 200 },
+        // no TTFT observable (non-streaming API) → wall-clock 250/1s = 250 tok/s
+        { ...base, tokensOut: 250, runtimeMs: 1000 },
+        // cache replay: nothing was generated, so neither mean may include it
+        { ...base, tokensOut: 9999, runtimeMs: 5, cacheHit: true },
+        // a failure that burned two retries
+        {
+          output: 'fetch failed',
+          tokensIn: 0,
+          tokensOut: 0,
+          runtimeMs: 0,
+          status: 'fail',
+          failureReason: 'endpoint_hung',
+          retries: 2,
+        },
+      ]
+
+      const result = await aggregateRuns(mixed, 4, MODEL, TASK, scorer)
+      expect(result.telemetry).toEqual({
+        meanTtftMs: 200,
+        meanTokensPerSec: 375,
+        rateKind: 'mixed',
+        cacheHits: 1,
+        retries: 2,
+      })
+    })
+
+    it('reports rateKind decode when every contributing iteration carried a TTFT', async () => {
+      const runsWithTtft: IterationRun[] = [
+        { ...base, tokensOut: 100, runtimeMs: 600, ttftMs: 100 },
+        { ...base, tokensOut: 300, runtimeMs: 1500, ttftMs: 500 },
+      ]
+      const result = await aggregateRuns(runsWithTtft, 2, MODEL, TASK, scorer)
+      expect(result.telemetry?.rateKind).toBe('decode')
+      expect(result.telemetry?.meanTtftMs).toBe(300)
+      // (100 / 0.5s = 200) and (300 / 1.0s = 300) → 250
+      expect(result.telemetry?.meanTokensPerSec).toBe(250)
+    })
+
+    it('omits meanTtftMs entirely when nothing measured it (absence = not measured)', async () => {
+      const result = await aggregateRuns(
+        [{ ...base, tokensOut: 200, runtimeMs: 2000 }],
+        1,
+        MODEL,
+        TASK,
+        scorer
+      )
+      expect(result.telemetry?.meanTtftMs).toBeUndefined()
+      expect('meanTtftMs' in result.telemetry!).toBe(false)
+      expect(result.telemetry?.rateKind).toBe('wall-clock')
+      expect(result.telemetry?.meanTokensPerSec).toBe(100)
+    })
+
+    it('keeps the counters at 0 (present, readable) when nothing contributed', async () => {
+      const result = await aggregateRuns(
+        [{ output: 'boom', tokensIn: 0, tokensOut: 0, runtimeMs: 0, status: 'fail' }],
+        1,
+        MODEL,
+        TASK,
+        scorer
+      )
+      expect(result.telemetry).toEqual({ cacheHits: 0, retries: 0 })
+    })
   })
 
   it('drops the check breakdown when no iteration produced a scoreable artifact', async () => {

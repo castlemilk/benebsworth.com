@@ -107,6 +107,28 @@ export interface GenerationResponse {
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /**
+   * Time-to-first-observable-output, in ms from the same call start
+   * `runtimeMs` is measured from. **Optional because it is genuinely not
+   * observable everywhere** — absence means "not measured", never "zero"
+   * (a 0ms TTFT is physically impossible, so a 0 would be a lie).
+   *
+   * Who sets it, and what the boundary actually is:
+   *  - **Streaming API providers** (`moonshot.ts`, `openrouter.ts`): the
+   *    arrival of the first non-empty `delta.content` chunk. This is a true
+   *    first-TOKEN boundary.
+   *  - **CLI providers** (`cli.ts` `runCli`, so agy/codex/opencode): the first
+   *    stdout chunk from the spawned process. CAVEAT: that is first OUTPUT,
+   *    not first token — an agent CLI's banner//spinner chrome can land before
+   *    the model has decoded anything, so CLI TTFT is a proxy that reads LOW.
+   *  - **Non-streaming API providers** (`openai.ts`, `anthropic.ts`,
+   *    `google.ts`): NOT SET. A single-shot `fetch` gives exactly one
+   *    timestamp — the assembled response — so there is no first-token
+   *    boundary to observe. Stamping response-arrival time here would make
+   *    TTFT == runtimeMs and the decode rate infinite; the honest record is
+   *    absence. Instrumenting them means switching them to streaming first.
+   */
+  ttftMs?: number
 }
 
 /**
@@ -309,6 +331,50 @@ export interface BenchmarkResult {
    * it and refuses to start a sweep for a still-locked model.
    */
   quotaNextResetAt?: string
+  /**
+   * Per-call timing/efficiency rolled up over this record's iterations.
+   *
+   * WHY: `runtimeMs` is wall-clock only, and wall-clock cannot tell "the model
+   * is slow" from "the network/queue is slow" — the distinction the
+   * `cli_timeout` vs `endpoint_hung` taxonomy exists to make. TTFT is the
+   * queue/prefill half and the decode rate is the generation half.
+   *
+   * Presence rules are deliberately NOT uniform (dsh `session-stats` says "0
+   * until the first contributing event; clients read the value, never key
+   * presence" — that rule is right for counters and wrong for latencies here):
+   *  - `cacheHits` / `retries` are COUNTERS: always present, 0 meaning "none
+   *    happened". Read the value; never key on presence.
+   *  - `meanTtftMs` / `meanTokensPerSec` are MEASUREMENTS: absent means "no
+   *    iteration could measure it". 0 would be a physically impossible TTFT
+   *    and an infinitely slow decode, so absence is the honest signal here.
+   *  - `rateKind` is present iff `meanTokensPerSec` is — it says WHICH rate the
+   *    number is, and a rate without its label is unreadable.
+   *
+   * Absent entirely on records written before this shipped.
+   */
+  telemetry?: {
+    /**
+     * Mean TTFT over the iterations that measured one. See
+     * `GenerationResponse.ttftMs` for which providers can and cannot.
+     */
+    meanTtftMs?: number
+    /** Mean tokens/sec over the iterations a rate was computable for. */
+    meanTokensPerSec?: number
+    /**
+     * What `meanTokensPerSec` measures:
+     *  - `'decode'`     — tokensOut / (runtime − ttft): the real decode rate.
+     *  - `'wall-clock'` — tokensOut / runtime: the documented fallback when no
+     *                     first-token boundary was observable. It is DEPRESSED
+     *                     by queue/prefill time and is not comparable to a
+     *                     decode rate.
+     *  - `'mixed'`      — some iterations of each; treat as a lower bound.
+     */
+    rateKind?: 'decode' | 'wall-clock' | 'mixed'
+    /** Iterations served from the response cache (nothing was generated). */
+    cacheHits: number
+    /** Retries across all iterations — transient AND empty-body, failures included. */
+    retries: number
+  }
   /** 'live' (real harness run) or 'seeded' (hand-authored sample data). */
   source?: BenchmarkSource
   /** Raw generated output from the model (code, derivation, etc.) for side-by-side comparison. */

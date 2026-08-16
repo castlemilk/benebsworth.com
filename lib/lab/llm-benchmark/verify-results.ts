@@ -88,6 +88,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "'Model-visible means logged' (#1): a published number with no retained trace cannot be defended a week later. If a sweep wrote sweeps/<run>/<model>-<task>.jsonl but the record has no runLogRef, the stamping path broke and the provenance is gone. In the other direction, a ref whose log names a different model/task, or that never recorded an aggregate, is a trace that does not describe this record. One carve-out: a record OLDER than the log beside it was kept by mergeResults' never-clobber-good-data protection over a 0-success run, so it is legitimately ref-less and skips rather than fails.",
   },
   {
+    id: 'telemetry-sanity',
+    title: 'telemetry means are measurements, not placeholder zeros',
+    why:
+      "telemetry's contract is that a MEASUREMENT is absent when unmeasured while a COUNTER is 0 — because a 0ms TTFT is physically impossible and a 0 tok/s decode rate is an infinitely slow model. A producer that 'helpfully' defaults meanTtftMs to 0 (the natural mistake when copying dsh's counter rule onto a latency) would publish an impossible number that reads as the FASTEST model on the board. Likewise a meanTokensPerSec with no rateKind is unreadable: decode rates and wall-clock fallbacks differ by the whole queue time and must never be compared silently.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -268,6 +274,27 @@ function checkFailureReason(r: BenchmarkResult): Verdict {
   return verdict('failure-reason', 'pass', key)
 }
 
+function checkTelemetry(r: BenchmarkResult): Verdict {
+  const key = recordKey(r)
+  const t = r.telemetry
+  if (!t) return verdict('telemetry-sanity', 'skip', key, 'no telemetry (record predates the field)')
+  if (t.meanTtftMs !== undefined && !(t.meanTtftMs > 0)) {
+    return verdict('telemetry-sanity', 'fail', key, `meanTtftMs ${t.meanTtftMs} — present but not a positive latency`)
+  }
+  if (t.meanTokensPerSec !== undefined && !(t.meanTokensPerSec > 0)) {
+    return verdict('telemetry-sanity', 'fail', key, `meanTokensPerSec ${t.meanTokensPerSec} — present but not a positive rate`)
+  }
+  if ((t.meanTokensPerSec !== undefined) !== (t.rateKind !== undefined)) {
+    return verdict(
+      'telemetry-sanity',
+      'fail',
+      key,
+      `meanTokensPerSec ${t.meanTokensPerSec ?? '(absent)'} with rateKind ${t.rateKind ?? '(absent)'} — a rate without its kind, or a kind without its rate`
+    )
+  }
+  return verdict('telemetry-sanity', 'pass', key)
+}
+
 type ParsedLog = { header: RunLogHeader; events: RunLogEvent[] }
 
 function checkSeq(log: FoundRunLog, parsed: ParsedLog): Verdict {
@@ -313,6 +340,7 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
     verdicts.push(checkStatusConsistency(r))
     verdicts.push(checkRegistry(r, tasks, models))
     verdicts.push(checkFailureReason(r))
+    verdicts.push(checkTelemetry(r))
   }
 
   const runLogs = opts.runLogs ?? []

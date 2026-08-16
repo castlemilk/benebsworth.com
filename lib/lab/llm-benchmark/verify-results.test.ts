@@ -232,6 +232,36 @@ describe('failureReason sanity', () => {
   })
 })
 
+describe('telemetry sanity', () => {
+  it('skips a record written before telemetry existed', () => {
+    expect(of(verifyResults([goodRecord()]), 'telemetry-sanity')[0].level).toBe('skip')
+  })
+
+  it('passes counters-only telemetry (0 is a fact, absence is the measurement signal)', () => {
+    const record = goodRecord({ telemetry: { cacheHits: 0, retries: 0 } })
+    expect(of(verifyResults([record]), 'telemetry-sanity')[0].level).toBe('pass')
+  })
+
+  it('passes a fully-measured roll-up', () => {
+    const record = goodRecord({
+      telemetry: { meanTtftMs: 420, meanTokensPerSec: 33.5, rateKind: 'decode', cacheHits: 1, retries: 2 },
+    })
+    expect(of(verifyResults([record]), 'telemetry-sanity')[0].level).toBe('pass')
+  })
+
+  it('fails a placeholder 0 meanTtftMs (physically impossible, reads as the fastest model)', () => {
+    const record = goodRecord({ telemetry: { meanTtftMs: 0, cacheHits: 0, retries: 0 } })
+    const verdict = of(verifyResults([record]), 'telemetry-sanity')[0]
+    expect(verdict.level).toBe('fail')
+    expect(verdict.detail).toContain('meanTtftMs 0')
+  })
+
+  it('fails a rate with no rateKind (decode and wall-clock are not comparable)', () => {
+    const record = goodRecord({ telemetry: { meanTokensPerSec: 33.5, cacheHits: 0, retries: 0 } })
+    expect(of(verifyResults([record]), 'telemetry-sanity')[0].level).toBe('fail')
+  })
+})
+
 // ---------------------------------------------------------------------------
 // Filesystem-dependent checks, driven entirely through injected inputs.
 // ---------------------------------------------------------------------------

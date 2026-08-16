@@ -222,6 +222,61 @@ describe('generateFromCli unique artifact names', () => {
   }, 20_000)
 })
 
+describe('runCli first-output telemetry (TTFT proxy)', () => {
+  it('stamps ttftMs at the FIRST stdout chunk, well before the process exits', async () => {
+    const started = Date.now()
+    const { stdout, ttftMs } = await runCli(
+      process.execPath,
+      [
+        '-e',
+        // First output at ~150ms, process alive for ~500ms more: a ttft that
+        // equalled the total runtime would prove we timed the wrong boundary.
+        'setTimeout(() => { console.log("first"); setTimeout(() => console.log("last"), 500) }, 150)',
+      ],
+      { timeoutMs: 20_000 }
+    )
+    const totalMs = Date.now() - started
+
+    expect(stdout).toContain('first')
+    expect(stdout).toContain('last')
+    expect(ttftMs).toBeDefined()
+    // Generous lower bound (CI timers drift); node startup alone pushes past it.
+    expect(ttftMs!).toBeGreaterThanOrEqual(140)
+    expect(ttftMs!).toBeLessThanOrEqual(totalMs)
+    // The point of the measurement: first output, not completion.
+    expect(ttftMs!).toBeLessThan(totalMs - 200)
+  }, 30_000)
+
+  it('leaves ttftMs ABSENT when the CLI never writes to stdout (no faked zero)', async () => {
+    const { ttftMs } = await runCli(
+      process.execPath,
+      ['-e', 'console.error("only stderr here")'],
+      { timeoutMs: 20_000 }
+    )
+    expect(ttftMs).toBeUndefined()
+  }, 30_000)
+})
+
+describe('generateFromCli first-output telemetry', () => {
+  it('threads the CLI first-output boundary onto the response, bounded by runtimeMs', async () => {
+    const response = await generateFromCli(
+      {
+        command: process.execPath,
+        buildArgs: () => [
+          '-e',
+          `setTimeout(() => { console.log(${JSON.stringify('<h1>' + 'x'.repeat(60) + '</h1>')}) }, 150)`,
+        ],
+      },
+      TEST_MODEL,
+      TEST_TASK
+    )
+
+    expect(response.ttftMs).toBeDefined()
+    expect(response.ttftMs!).toBeGreaterThanOrEqual(140)
+    expect(response.ttftMs!).toBeLessThanOrEqual(response.runtimeMs)
+  }, 30_000)
+})
+
 describe('generateFromCli sweep retention', () => {
   it('keeps the scratch dir under the sweep root and copies the artifact to artifacts/ (0600)', async () => {
     const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))

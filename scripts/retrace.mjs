@@ -150,8 +150,14 @@ function transcribe(runDir, file, options) {
           break
         case 'response': {
           const raw = renderValue(runDir, event.rawOutput, options)
+          // Telemetry is optional by contract (absent = not measured), and the
+          // rate is meaningless without its kind — so print them together or
+          // not at all rather than showing a bare number.
+          const ttft = event.ttftMs !== undefined ? `  ttft ${event.ttftMs}ms` : ''
+          const rate =
+            event.tokensPerSec !== undefined ? `  ${event.tokensPerSec} tok/s (${event.rateKind})` : ''
           console.log(
-            `  [${ts}] response ${event.cacheHit ? 'CACHE HIT' : 'live'}  ${event.tokensIn} in / ${event.tokensOut} out tokens  ${event.runtimeMs}ms  raw: ${raw.summary}`
+            `  [${ts}] response ${event.cacheHit ? 'CACHE HIT' : 'live'}  ${event.tokensIn} in / ${event.tokensOut} out tokens  ${event.runtimeMs}ms${ttft}${rate}  raw: ${raw.summary}`
           )
           if (raw.body) console.log(indent(excerpt(raw.body, options)))
           break

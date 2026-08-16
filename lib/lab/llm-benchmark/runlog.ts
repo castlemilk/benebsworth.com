@@ -118,6 +118,22 @@ export type RunLogEventInput =
       tokensOut: number
       runtimeMs: number
       cacheHit: boolean
+      /**
+       * Time to first observable output, ms from the same start `runtimeMs`
+       * is measured from. ABSENT when unmeasurable (non-streaming API
+       * providers) or meaningless (cache replays generated nothing) — never
+       * 0, which would be a physically impossible TTFT. See
+       * `GenerationResponse.ttftMs` for the per-provider story.
+       */
+      ttftMs?: number
+      /**
+       * Output tokens per second, computed at the append site from
+       * `tokensOut`/`runtimeMs`/`ttftMs`. Absent on cache replays and when no
+       * positive window exists. ALWAYS read alongside `rateKind`.
+       */
+      tokensPerSec?: number
+      /** Which rate `tokensPerSec` is. Present iff `tokensPerSec` is. */
+      rateKind?: 'decode' | 'wall-clock'
     }
   | {
       /**

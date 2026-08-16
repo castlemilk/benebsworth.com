@@ -10,6 +10,8 @@ export interface GenerationResponse {
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /** See the canonical contract on `GenerationResponse` in ../types. */
+  ttftMs?: number
 }
 
 /**
@@ -21,7 +23,7 @@ export interface GenerationResponse {
 async function readChatStream(
   body: ReadableStream<Uint8Array>,
   onProgress?: (bytes: number) => void
-): Promise<{ content: string; tokensIn: number; tokensOut: number }> {
+): Promise<{ content: string; tokensIn: number; tokensOut: number; firstTokenAt?: number }> {
   const reader = body.getReader()
   const decoder = new TextDecoder()
   let buffer = ''
@@ -30,6 +32,11 @@ async function readChatStream(
   let tokensOut = 0
   let received = 0
   let finishReason: string | undefined
+  // Wall-clock of the first NON-EMPTY content delta — a true first-token
+  // boundary. Never moved by a later delta, and never set by a reasoning-only
+  // or keep-alive chunk (which is why it is stamped inside the content branch
+  // rather than on the first byte off the socket).
+  let firstTokenAt: number | undefined
 
   for (;;) {
     const { done, value } = await reader.read()
@@ -48,7 +55,10 @@ async function readChatStream(
       try {
         const json = JSON.parse(payload)
         const choice = json.choices?.[0]
-        if (typeof choice?.delta?.content === 'string') content += choice.delta.content
+        if (typeof choice?.delta?.content === 'string' && choice.delta.content.length > 0) {
+          if (firstTokenAt === undefined) firstTokenAt = Date.now()
+          content += choice.delta.content
+        }
         if (typeof choice?.finish_reason === 'string') finishReason = choice.finish_reason
         if (json.usage) {
           tokensIn = json.usage.prompt_tokens ?? tokensIn
@@ -69,7 +79,7 @@ async function readChatStream(
     )
   }
 
-  return { content, tokensIn, tokensOut }
+  return { content, tokensIn, tokensOut, firstTokenAt }
 }
 
 export async function generateMoonshot(
@@ -113,7 +123,7 @@ export async function generateMoonshot(
   if (!res.body) throw new Error('Moonshot response had no body')
 
   let lastLog = 0
-  const { content, tokensIn, tokensOut } = await readChatStream(res.body, (bytes) => {
+  const { content, tokensIn, tokensOut, firstTokenAt } = await readChatStream(res.body, (bytes) => {
     // Liveness in the harness log: a generation that stops emitting bytes is
     // visible as a stalled progress line instead of a silent hang.
     if (bytes - lastLog >= 64 * 1024) {
@@ -122,5 +132,14 @@ export async function generateMoonshot(
     }
   })
 
-  return { output: content, tokensIn, tokensOut, runtimeMs: Date.now() - start }
+  return {
+    output: content,
+    tokensIn,
+    tokensOut,
+    runtimeMs: Date.now() - start,
+    // Measured from the SAME `start` as runtimeMs (i.e. before the fetch), so
+    // TTFT includes connect + queue + prefill — which is the point: that is the
+    // half of the latency that is not decoding.
+    ...(firstTokenAt !== undefined ? { ttftMs: firstTokenAt - start } : {}),
+  }
 }

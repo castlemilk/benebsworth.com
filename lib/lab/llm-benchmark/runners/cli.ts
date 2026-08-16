@@ -46,6 +46,8 @@ export interface GenerationResponse {
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /** See the canonical contract on `GenerationResponse` in ../types. */
+  ttftMs?: number
 }
 
 const INLINE_PRINT_SUFFIX =
@@ -198,12 +200,27 @@ export function scrubEnv(env: Record<string, string | undefined>): Record<string
   return scrubbed
 }
 
+/**
+ * Spawn a CLI and collect its output.
+ *
+ * `ttftMs` is the time from just-before-spawn to the FIRST stdout chunk — the
+ * only first-output boundary a piped child process makes observable. Two
+ * honesty caveats, both deliberate:
+ *  - it is first OUTPUT, not first TOKEN: an agent CLI's banner, model line or
+ *    progress chrome usually lands before the model has decoded anything, so
+ *    for a chatty CLI this reads LOW;
+ *  - it is stdout only. stderr chatter does not count, because that is where
+ *    the chrome most reliably goes.
+ *
+ * Absent (not 0) when the child never wrote to stdout.
+ */
 export function runCli(
   command: string,
   args: string[],
   options: { cwd?: string; env?: Record<string, string | undefined>; timeoutMs: number }
-): Promise<{ stdout: string; stderr: string }> {
+): Promise<{ stdout: string; stderr: string; ttftMs?: number }> {
   return new Promise((resolve, reject) => {
+    const spawnedAt = Date.now()
     // detached: true puts the CLI in its own process group so a timeout can
     // SIGTERM the whole group. CLIs like opencode spawn server grandchildren
     // (bun server) that inherit the pipes; killing only the direct child
@@ -221,6 +238,7 @@ export function runCli(
 
     let stdout = ''
     let stderr = ''
+    let ttftMs: number | undefined
     let settled = false
     const killGroup = (signal: NodeJS.Signals) => {
       if (child.pid === undefined) return
@@ -255,6 +273,8 @@ export function runCli(
     child.stdout.setEncoding('utf8')
     child.stderr.setEncoding('utf8')
     child.stdout.on('data', (chunk) => {
+      // First chunk only — a later chunk must never move the boundary.
+      if (ttftMs === undefined) ttftMs = Date.now() - spawnedAt
       stdout += chunk
     })
     child.stderr.on('data', (chunk) => {
@@ -276,7 +296,7 @@ export function runCli(
       if (code !== 0 && code !== null) {
         reject(new Error(`CLI exited with code ${code}: ${redactText(stderr || stdout)}`))
       } else {
-        resolve({ stdout, stderr })
+        resolve({ stdout, stderr, ...(ttftMs !== undefined ? { ttftMs } : {}) })
       }
     }
     child.on('exit', finish)
@@ -317,7 +337,7 @@ export async function generateFromCli(
     const suffix = config.artifactViaFile ? fileArtifactSuffix(artifactName) : INLINE_PRINT_SUFFIX
     const args = config.buildArgs(task.prompt + suffix, model)
 
-    const { stdout, stderr } = await runCli(config.command, args, {
+    const { stdout, stderr, ttftMs } = await runCli(config.command, args, {
       cwd: scratchDir ?? config.cwd,
       env: config.env,
       timeoutMs,
@@ -400,6 +420,12 @@ export async function generateFromCli(
       tokensIn,
       tokensOut,
       runtimeMs: Date.now() - start,
+      // Passed through as measured by runCli (from spawn), while runtimeMs is
+      // measured from `start` (before the scratch-dir mkdir). The scratch setup
+      // is sub-millisecond-to-a-few-ms, so ttftMs <= runtimeMs still holds; the
+      // alternative — rebasing onto `start` — would inflate TTFT with our own
+      // bookkeeping, which is not the model's latency.
+      ...(ttftMs !== undefined ? { ttftMs } : {}),
     }
   } finally {
     // Under a sweep root the scratch dir is NEVER deleted — not on success and

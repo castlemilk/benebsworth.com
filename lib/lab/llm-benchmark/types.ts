@@ -82,7 +82,65 @@ export interface BenchmarkModel {
   tags?: string[]
   /** One-line description shown on model cards. */
   blurb?: string
+  /**
+   * The plugin that contributed this model, when it did not ship in the
+   * built-in registry (mirrors `BenchmarkTask.pluginId`). Stamped by
+   * `registerPlugin()`; never set it by hand. A plugin model normally pairs
+   * with a plugin generator for the same `provider` string — see
+   * `PluginGeneratorFactory`.
+   */
+  pluginId?: string
 }
+
+/**
+ * What one generation call returns, whatever produced it.
+ *
+ * This is the harness's GENERATION SEAM: every built-in runner
+ * (`runners/openai.ts`, `runners/agy.ts`, …) resolves to this shape, and it is
+ * the contract a plugin-provided generator implements. It lives in `types.ts`
+ * — the bottom layer — so the plugin registry can name it without importing
+ * anything from `runners/` (which would invert the layering and close a
+ * cycle; see `layering.test.ts`).
+ */
+export interface GenerationResponse {
+  output: string
+  tokensIn: number
+  tokensOut: number
+  runtimeMs: number
+}
+
+/**
+ * A plugin-provided generation function for one provider.
+ *
+ * Plugins plug in HERE, not at `BenchmarkRunner.runTask`: everything the
+ * runner wraps around a generation call — transient retries, the response
+ * cache, empty-body recovery, run-log events, the quota circuit breaker and
+ * scoring — is the harness's value, and a plugin that replaced the loop would
+ * fork the trust story (two code paths producing "the same" numbers). A
+ * generator answers exactly one question: given a model and a task, what did
+ * the provider return?
+ */
+export type PluginGenerate = (
+  model: BenchmarkModel,
+  task: BenchmarkTask,
+  iterationIndex: number
+) => Promise<GenerationResponse>
+
+/**
+ * How a plugin declares a generator: a LAZY factory that dynamically imports
+ * the implementation.
+ *
+ * A generator is node-only by nature (it spawns a CLI or holds an API key),
+ * while `plugins/registry.ts` is reachable from `demo-registry.tsx` and
+ * therefore from the browser bundle. A static import of the implementation in
+ * the plugin's `index.ts` would drag node code into that graph; the factory
+ * defers it to first use inside `runners/provider.ts`, which is node-only
+ * already. `provider.ts` awaits the factory once and caches the resolved
+ * function for the process.
+ *
+ *     generators: { Echo: () => import('./generate').then((m) => m.echoGenerate) }
+ */
+export type PluginGeneratorFactory = () => Promise<PluginGenerate>
 
 export interface BenchmarkCategory {
   slug: string

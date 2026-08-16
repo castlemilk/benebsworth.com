@@ -70,14 +70,15 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Landing intro | `content/lab/llm-benchmark/index.mdx` |
 | Routes | `app/lab/llm-benchmark/**` |
 | Plugin registry + roster + worked example | `lib/lab/llm-benchmark/plugins/{registry,index}.ts`, `plugins/community-tasks/` |
+| Plugin-provided provider (generator + model) | `lib/lab/llm-benchmark/plugins/echo-provider/`, built-in names in `lib/lab/llm-benchmark/providers.ts` |
 | Plugin authoring guide | `docs/lab/llm-benchmark/plugins-authoring.md` |
 | Plugin scaffold (`task bench:plugin-scaffold`) | `scripts/plugin-scaffold.mjs` + `scripts/templates/plugin/*.tmpl`, pure helpers in `lib/lab/llm-benchmark/plugins/scaffold.ts` |
 | Skill | `.claude/skills/llm-benchmark/SKILL.md` |
 
 ## Adding a Model
 
-1. Edit `lib/lab/llm-benchmark/registry.ts`.
-2. Append to `BENCHMARK_MODELS` with:
+1. Edit `lib/lab/llm-benchmark/registry.ts` (core model) — or contribute it from a plugin via `BenchmarkPlugin.models`, which merges into `BENCHMARK_MODELS` and is the right move when the model needs a provider the harness has no built-in runner for (ship a `generators` entry with it, #35).
+2. Append to `BUILTIN_MODELS` with:
    - `id`, `name`, `provider`
    - `apiModelId` (optional) — the provider's exact API/CLI model name if it differs from `id`
    - `costPer1kInputUsd`, `costPer1kOutputUsd`
@@ -317,8 +318,8 @@ The harness also supports providers that are locally-installed CLIs (e.g. `agy`,
 To add a CLI provider:
 
 1. Create a runner file that builds a `CliRunnerConfig` and calls `generateFromCli()`.
-2. Add the model to `BENCHMARK_MODELS` with `provider` set to a unique value (e.g. `'Agy'`, `'Codex'`, `'OpenCode'`).
-3. Wire the new provider case into `configForModel()` and `generateWithProvider()` in `lib/lab/llm-benchmark/runners/provider.ts`.
+2. Add the model to `BUILTIN_MODELS` with `provider` set to a unique value (e.g. `'Agy'`, `'Codex'`, `'OpenCode'`).
+3. Wire the new provider case into `configForModel()` and `generateWithProvider()` in `lib/lab/llm-benchmark/runners/provider.ts`, and add the name to `providers.ts:BUILTIN_PROVIDERS`. (A provider that does not belong in core ships as a plugin instead — `generators` + `models`, no core edit; see #35.)
 4. The CLI must be installed and authenticated locally. Test it manually first:
    ```bash
    agy -p "say hi" --model "Gemini 3.5 Flash (High)"
@@ -594,6 +595,14 @@ registration unwinds on `unregisterPlugin()`.
   loudly rather than silently scoring with no checks. Tasks without a
   `checks` list keep the per-task fallback map. Contributed tasks are
   stamped `pluginId` (shown as an attribution chip on the task page).
+- **Providers as plugins** (#35): `generators` (keyed by `model.provider`,
+  values are LAZY `() => import('./generate')` factories — the impl is
+  node-only) + `models` (merged into `BENCHMARK_MODELS`, stamped `pluginId`).
+  The seam is the GENERATION call (`PluginGenerate`), not `runTask`, so a
+  plugin provider inherits retries/cache/run log/quota breaker/scoring;
+  `configForModel` consults the map only for providers its switch doesn't
+  know, and shadowing a built-in provider is rejected at registration.
+  Example: `plugins/echo-provider/` (unrostered).
 - **Client-bundle rule**: anything imported by `registry.ts`/`demo-registry`
   reaches the client bundle, so plugin CHECK files must use
   `import type { CheckFn }` — never a runtime import of `scorers/sandbox.ts`

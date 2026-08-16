@@ -1292,34 +1292,33 @@ coupling was found and removed: `scorers.test.ts` pinned the behavioural task
 list including plugin ids, making every contribution a core edit — the
 built-in half stays pinned, the plugin half is now derived from the roster.
 
-## [ ] 35. Plugin-provided runners (new providers as plugins)
+## [x] 35. Plugin-provided runners (new providers as plugins)
 
-**Problem.** Runners are wired through `ProviderRunnerConfig` +
-`configForModel` + `generateWithProvider` — a new provider touches
-`runners/provider.ts` in three places. The plugin seam makes "ship a
-provider" a first-class contribution.
-
-**Inspiration.** dsh "add a model provider: register its adapter on
-`ctx.llm`" (architecture.md "Where new behavior goes") — one registration,
-no switch-case edits.
-
-**Design sketch.**
-
-- `BenchmarkPlugin.runners?: Record<string, BenchmarkRunnerFactory>` where
-  the factory takes the model and returns a `BenchmarkRunner` (the
-  `runTask` shape already exists in types.ts).
-- `runners/provider.ts` gains a plugin-runners registry consulted when
-  `configForModel` hits an unknown provider (instead of throwing); the
-  switch stays for built-ins.
-- Models contributed by plugins (`BenchmarkPlugin.models?`) can declare the
-  plugin-provided provider id; registry merges them like tasks.
-- Collision + validation rules mirror the task/check registries.
-
-**Acceptance criteria.** A plugin can register a model + runner pair that
-runs in a sweep with zero `provider.ts` edits; built-in behavior unchanged;
-tests cover the fallback path.
-
-**Effort.** M. **Dependencies.** none (types already expose BenchmarkRunner).
+**Shipped.** A plugin can ship a provider: `BenchmarkPlugin.generators`
+(keyed by the `model.provider` string) + `BenchmarkPlugin.models`, with zero
+`provider.ts` cases. **The seam is generation, not the run loop** — the
+sketch's `runners: Record<string, BenchmarkRunnerFactory>` was dropped for
+`generators: Record<string, () => Promise<PluginGenerate>>`, one level lower:
+a generator returns the same `GenerationResponse` the built-in runners do
+(now in `types.ts`, the leaf), so a plugin provider inherits retries, the
+cache, empty-body recovery, run-log events, the quota breaker and scoring
+rather than forking them into a second code path whose numbers only claim to
+be comparable. The factory is **lazy** because it must be: the implementation
+is node-only and `plugins/registry.ts` is in the client-bundle graph, so the
+plugin's `index.ts` references it as `() => import('./generate')` and
+`runners/provider.ts` (node-only) awaits it once and caches per provider.
+`configForModel`'s default case consults the plugin map instead of throwing
+immediately; the throw remains for a genuinely unknown provider and now lists
+both sets. `registry.ts` merges `pluginModels()` into `BENCHMARK_MODELS`
+(stamped `pluginId`) exactly like tasks, and throws at merge on a duplicate
+built-in model id — silent shadowing there would misattribute results.
+Registration rejects a generator key that shadows a built-in provider
+(`providers.ts:BUILTIN_PROVIDERS`, a leaf both layers can import) or another
+plugin's, and a model whose provider nothing can generate. Worked example +
+proof: `plugins/echo-provider/` (unrostered) and the "plugin-provided
+generators" block in `runners/provider.test.ts` — registers a model/generator
+pair, runs `runTask`, asserts the aggregate scores and counts like any
+provider, and that the lazy factory is awaited once across two iterations.
 
 ## [x] 36. Plugin prompt overrides (per-task sandbox contract)
 
@@ -1459,6 +1458,13 @@ without reading results.json; the server is read-only.
   global), `appliedSandboxConstraints()` as the single source, collapsed
   "Sandbox contract" disclosure on the task page, tic-tac-toe as the worked
   override. systemPrompt contributions deliberately NOT built (no consumer).
+- Plugin-provided providers (#35): `BenchmarkPlugin.generators` (lazy
+  `() => import()` factories keyed by provider name) + `models` merged into
+  `BENCHMARK_MODELS`; the seam is the GENERATION call (`PluginGenerate` in
+  types.ts), not `runTask`, so a plugin provider inherits retries/cache/run
+  log/quota breaker/scoring. Shadowing a built-in provider or another
+  plugin's generator is rejected at registration; `plugins/echo-provider/` is
+  the unrostered worked example.
 - Results invariant verification (#5): `verify-results.ts` (eight checks, each
   with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
   run first in the pre-push gate.

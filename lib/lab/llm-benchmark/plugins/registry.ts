@@ -1,7 +1,8 @@
 import type { ComponentType } from 'react'
-import type { BenchmarkTask, BenchmarkScorerName } from '../types'
+import type { BenchmarkModel, BenchmarkTask, BenchmarkScorerName, PluginGeneratorFactory } from '../types'
 import type { CheckFn } from '../scorers/sandbox'
 import type { Scorer } from '../types'
+import { BUILTIN_PROVIDERS, isBuiltinProvider } from '../providers'
 
 /**
  * Plugin system for the benchmark harness (dsh-inspired, sized for this
@@ -27,7 +28,10 @@ import type { Scorer } from '../types'
  * `registry.ts` / `demo-registry.tsx` reaches the client bundle, so plugin
  * check files MUST use `import type { CheckFn }` — never a runtime import
  * of `scorers/sandbox.ts` (which pulls Playwright in). Demo components may
- * import React freely.
+ * import React freely. The same rule is why `generators` holds lazy
+ * `() => import(...)` factories rather than functions: a generator spawns
+ * CLIs and holds keys, and must not be resolved until `runners/provider.ts`
+ * (node-only) asks for it.
  */
 
 /** One plugin's contribution set. All fields optional; an empty plugin is legal (metadata only). */
@@ -50,6 +54,28 @@ export interface BenchmarkPlugin {
   demos?: Record<string, ComponentType<{ className?: string }>>
   /** Extra UI slots rendered on a task page, keyed by task id. */
   taskCards?: Record<string, ComponentType<{ task: BenchmarkTask }>>
+  /**
+   * Generators keyed by PROVIDER name — the exact `BenchmarkModel.provider`
+   * string a contributed model declares. `runners/provider.ts` consults this
+   * map when its built-in switch does not know a provider, instead of
+   * throwing; the built-in cases are untouched.
+   *
+   * The value is a LAZY factory (`() => import('./generate').then(…)`), never
+   * the function itself: this module is in the client-bundle graph and a
+   * generator is node-only. See `PluginGeneratorFactory` in `types.ts`.
+   *
+   * A key that collides with a built-in provider or with another plugin's
+   * generator is rejected at registration — silently shadowing the OpenAI
+   * runner is not a contribution, it is a supply-chain surprise.
+   */
+  generators?: Record<string, PluginGeneratorFactory>
+  /**
+   * Models contributed by this plugin, merged into `BENCHMARK_MODELS` exactly
+   * like tasks and stamped with `pluginId`. A model whose `provider` is
+   * neither built-in nor generator-backed (by this plugin or an already
+   * registered one) is rejected at registration — it could never run.
+   */
+  models?: BenchmarkModel[]
 }
 
 const plugins = new Map<string, BenchmarkPlugin>()
@@ -70,7 +96,49 @@ export function registerPlugin(plugin: BenchmarkPlugin): void {
       if (other !== task && other.id === task.id) fail(`plugin '${plugin.id}' declares task '${task.id}' twice`)
     }
   }
+  // Generators: reject BEFORE anything is mounted. A provider name is a
+  // routing key, so a collision is not "last wins" like a check or a demo —
+  // it silently reroutes an existing model's traffic.
+  for (const provider of Object.keys(plugin.generators ?? {})) {
+    if (isBuiltinProvider(provider)) {
+      fail(
+        `plugin '${plugin.id}' generator '${provider}' collides with a built-in provider (${BUILTIN_PROVIDERS.join(', ')})`
+      )
+    }
+    const owner = generatorOwner(provider)
+    if (owner) fail(`plugin '${plugin.id}' generator '${provider}' is already provided by plugin '${owner}'`)
+  }
+  for (const model of plugin.models ?? []) {
+    if (model.pluginId) fail(`plugin '${plugin.id}' model '${model.id}' sets pluginId itself (stamped automatically)`)
+    for (const other of plugin.models ?? []) {
+      if (other !== model && other.id === model.id) fail(`plugin '${plugin.id}' declares model '${model.id}' twice`)
+    }
+    for (const p of plugins.values()) {
+      if ((p.models ?? []).some((m) => m.id === model.id)) {
+        fail(`plugin '${plugin.id}' model '${model.id}' duplicates a model from plugin '${p.id}'`)
+      }
+    }
+    // A model whose provider nothing can generate is dead on arrival — it
+    // would only fail at sweep time, one iteration at a time.
+    const runnable =
+      isBuiltinProvider(model.provider) ||
+      Object.hasOwn(plugin.generators ?? {}, model.provider) ||
+      generatorOwner(model.provider) !== undefined
+    if (!runnable) {
+      fail(
+        `plugin '${plugin.id}' model '${model.id}' declares provider '${model.provider}', which is neither built-in nor provided by a plugin generator`
+      )
+    }
+  }
   plugins.set(plugin.id, plugin)
+}
+
+/** Which registered plugin owns a generator for this provider, if any. */
+function generatorOwner(provider: string): string | undefined {
+  for (const p of plugins.values()) {
+    if (Object.hasOwn(p.generators ?? {}, provider)) return p.id
+  }
+  return undefined
 }
 
 /** Unregister a plugin, unwinding its contributions (tests / hot reload). */
@@ -93,6 +161,37 @@ export function pluginTasks(): BenchmarkTask[] {
     for (const t of p.tasks ?? []) out.push({ ...t, pluginId: p.id })
   }
   return out
+}
+
+/** Models from all plugins, stamped with `pluginId`. */
+export function pluginModels(): BenchmarkModel[] {
+  const out: BenchmarkModel[] = []
+  for (const p of plugins.values()) {
+    for (const m of p.models ?? []) out.push({ ...m, pluginId: p.id })
+  }
+  return out
+}
+
+/**
+ * Generator factories from all plugins, keyed by provider name.
+ *
+ * Unlike checks/scorers/demos this is NOT last-wins: `registerPlugin` rejects
+ * a duplicate provider key outright, so the merge below can never overwrite.
+ */
+export function pluginGenerators(): Record<string, PluginGeneratorFactory> {
+  const out: Record<string, PluginGeneratorFactory> = {}
+  for (const p of plugins.values()) Object.assign(out, p.generators ?? {})
+  return out
+}
+
+/** The generator factory for a provider name, if a plugin provides one. */
+export function pluginGenerator(provider: string): PluginGeneratorFactory | undefined {
+  return pluginGenerators()[provider]
+}
+
+/** Provider names currently backed by a plugin generator (for diagnostics). */
+export function pluginProviderNames(): string[] {
+  return Object.keys(pluginGenerators())
 }
 
 /** Checks from all plugins, merged by name (later plugins win on collision). */

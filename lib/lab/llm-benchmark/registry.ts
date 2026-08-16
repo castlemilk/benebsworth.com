@@ -3,7 +3,7 @@ import type {
   BenchmarkModel,
   BenchmarkTask,
 } from './types'
-import { pluginTasks } from './plugins'
+import { pluginModels, pluginTasks } from './plugins'
 
 // NOTE: results deliberately do NOT live in this module. This registry is
 // imported by 'use client' components, and results.json is ~2.8 MB of
@@ -21,7 +21,7 @@ export const BENCHMARK_CATEGORIES: BenchmarkCategory[] = [
 ]
 
 // ── Models ─────────────────────────────────────────────────────────────
-export const BENCHMARK_MODELS: BenchmarkModel[] = [
+const BUILTIN_MODELS: BenchmarkModel[] = [
   { id: 'claude-4', name: 'Claude 4', provider: 'Anthropic', costPer1kInputUsd: 0.003, costPer1kOutputUsd: 0.015, contextWindow: 200000, capabilities: 'Strong reasoning, long context, excellent code generation' },
   { id: 'gpt-5', name: 'GPT-5', provider: 'OpenAI', costPer1kInputUsd: 0.0025, costPer1kOutputUsd: 0.010, contextWindow: 128000, capabilities: 'General purpose, fast, broad knowledge' },
   { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', provider: 'Google', costPer1kInputUsd: 0.00125, costPer1kOutputUsd: 0.010, contextWindow: 1000000, capabilities: 'Massive context, multimodal, strong STEM' },
@@ -287,6 +287,31 @@ export const BENCHMARK_MODELS: BenchmarkModel[] = [
     blurb: '33B-A3B coding agent model from Poolside, a step forward from Laguna XS.2.',
   },
 ]
+
+// Models contributed by plugins are merged after the built-in roster and
+// stamped with their pluginId, exactly like tasks. A plugin model normally
+// arrives with a plugin GENERATOR for the same `provider` string
+// (`plugins/registry.ts:generators`), which is what lets a contribution ship
+// a model the harness has no built-in runner for. Cross-plugin duplicate ids
+// are rejected at registration; a duplicate of a BUILT-IN id throws here (the
+// registration side cannot see this array without closing an import cycle).
+export const BENCHMARK_MODELS: BenchmarkModel[] = mergeModels()
+
+function mergeModels(): BenchmarkModel[] {
+  const builtinIds = new Set(BUILTIN_MODELS.map((m) => m.id))
+  const contributed = pluginModels()
+  for (const m of contributed) {
+    // Louder than the task equivalent (a test) because the failure is silent:
+    // `getModel(id)` would keep returning the BUILT-IN row while every result
+    // recorded under that id looks like the plugin's. Reject at mount.
+    if (builtinIds.has(m.id)) {
+      throw new Error(
+        `[registry] plugin '${m.pluginId}' contributes duplicate model id '${m.id}' (already a built-in model)`
+      )
+    }
+  }
+  return [...BUILTIN_MODELS, ...contributed]
+}
 
 // ── Providers ───────────────────────────────────────────────────────────
 export const BENCHMARK_PROVIDERS: string[] = [

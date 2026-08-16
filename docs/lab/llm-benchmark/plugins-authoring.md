@@ -43,6 +43,8 @@ lib/lab/llm-benchmark/plugins/<id>/
 | `scorers` | no | `Record<name, Scorer>` — the names a task row's `scorer` may use. |
 | `demos` | no | `Record<demoComponentName, ComponentType<{ className?: string }>>`. |
 | `taskCards` | no | `Record<taskId, ComponentType<{ task }>>` — extra UI on a task page. |
+| `generators` | no | `Record<providerName, () => Promise<PluginGenerate>>` — a provider the harness has no built-in runner for. Lazy factories only. |
+| `models` | no | `BenchmarkModel[]` merged into `BENCHMARK_MODELS`, stamped with `pluginId`. |
 
 Every field except the three identity fields is optional; a metadata-only
 plugin is legal.
@@ -168,6 +170,73 @@ the CSS custom properties (`--color-stage`, `--color-surface`, `--color-fg`,
 `--color-muted`, `--color-border`), self-contained (no network, clean up any
 rAF/timer).
 
+### Providers — `plugins/registry.ts:generators` + `models`
+
+A plugin can ship a **provider**: the generator that talks to it, and the
+models that run on it, with no edit to `runners/provider.ts`. Worked example:
+`lib/lab/llm-benchmark/plugins/echo-provider/` (deliberately unrostered — it
+generates fake output; copy its shape, not its roster status).
+
+```ts
+// index.ts — client-bundle safe: types and a lazy import, no node code.
+export const echoProvider: BenchmarkPlugin = {
+  id: 'echo-provider',
+  name: 'Echo Provider',
+  version: '1.0.0',
+  models: [{ id: 'echo-1', name: 'Echo 1', provider: 'Echo', /* … */ }],
+  generators: { Echo: () => import('./generate').then((m) => m.echoGenerate) },
+}
+```
+
+**The seam is generation, not the run loop.** A `PluginGenerate`
+(`types.ts`) answers one question — given a model, a task and an iteration
+index, what did the provider return (`{ output, tokensIn, tokensOut,
+runtimeMs }`)? Everything wrapped around that call is inherited unchanged:
+transient retries with backoff, the response cache, empty-body recovery,
+run-log `request`/`response`/`retry`/`clean` events, the per-model quota
+circuit breaker, output cleaning, dependency inlining, and scoring. That is
+deliberate — a plugin that replaced `runTask` would fork the trust story, with
+two code paths producing numbers that claim to be comparable. (The TODO's
+original sketch said `runners: Record<string, BenchmarkRunnerFactory>`; the
+shipped seam is one level lower for that reason.)
+
+Rules, all enforced at registration (`registerPlugin`) unless noted:
+
+- The **key is the provider name** — the exact `BenchmarkModel.provider`
+  string. `configForModel` consults this map only when its built-in switch
+  does not know the provider; the built-in cases are untouched.
+- A key that collides with a built-in provider (`providers.ts:BUILTIN_PROVIDERS`
+  — OpenAI, Anthropic, Google, Moonshot AI, OpenRouter, Agy, Codex, OpenCode)
+  is **rejected**. Unlike checks/scorers/demos, provider keys are not
+  last-wins: shadowing a built-in silently reroutes an existing model's
+  traffic.
+- A key another plugin already provides is **rejected** too.
+- A contributed model whose `provider` is neither built-in nor
+  generator-backed is **rejected** — it could never run.
+- Model `id`s must be unique across plugins (rejected at registration) and
+  against built-ins (thrown by the registry merge at module load — a
+  duplicate would make `getModel()` return the built-in row while results
+  recorded under that id look like the plugin's).
+- Never set `pluginId` on a model; `registerPlugin` stamps it.
+
+**The lazy factory is not optional.** The generator implementation is
+node-only (it spawns a CLI, holds an API key, imports `node:*`), and
+`plugins/registry.ts` is reachable from `demo-registry.tsx` and therefore from
+the browser bundle. `index.ts` must reference the implementation only through
+`() => import('./generate')`; `runners/provider.ts` — node-only already —
+awaits it at first use and caches the resolved function per provider for the
+process (`clearPluginGeneratorCache()` exists for tests and hot reload).
+
+An unknown provider with no plugin generator still throws, now listing both
+the built-in and the plugin-provided sets.
+
+One known gap: `isCliProvider()` (which turns a timeout into `cli_timeout` —
+"the model was too slow" — rather than `endpoint_hung` — "the endpoint died")
+reads a hard-coded set of built-in CLI providers, so a plugin provider that
+spawns a CLI has its timeouts classified as `endpoint_hung`. Everything else
+in the failure taxonomy applies unchanged. Fix it when a plugin CLI provider
+actually exists, not before.
+
 ### Task cards — `plugins/registry.ts:pluginTaskCard`
 
 `Record<taskId, ComponentType<{ task: BenchmarkTask }>>`, rendered as an extra
@@ -182,7 +251,9 @@ Anything imported at **run time** by `plugins/registry.ts` or
 Playwright.
 
 > Plugin check files MUST use `import type { CheckFn }` — never a runtime
-> import of `scorers/sandbox.ts`.
+> import of `scorers/sandbox.ts`. Plugin generators MUST be declared as lazy
+> `() => import('./generate')` factories — never a static import of the
+> implementation.
 
 Demo components may import React freely. The rule is stated in the module doc
 of `plugins/registry.ts` and asserted for the generated template in
@@ -284,7 +355,9 @@ The stored profile `builtins-only` (`sweep-profiles.json`) is `"plugins": []`
 5. Add the roster lines to `plugins/index.ts`.
 6. Add coverage to `plugins/registry.test.ts`: the task merges into
    `BENCHMARK_TASKS` with your `pluginId`, and its declared checks resolve
-   through `getChecksForTask()`.
+   through `getChecksForTask()`. Shipping a provider? Mirror
+   `runners/provider.test.ts`'s "plugin-provided generators" block — register
+   the pair, run `runTask`, assert the aggregate.
 7. `task verify` — lint, typecheck, prose, unit tests.
 8. `task build` — confirms the task page statically generates and the demo
    resolves.

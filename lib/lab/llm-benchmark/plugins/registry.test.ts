@@ -9,10 +9,14 @@ import {
   pluginChecks,
   pluginDemos,
   pluginTaskCards,
+  pluginGenerator,
+  pluginGenerators,
+  pluginModels,
+  pluginProviderNames,
   type BenchmarkPlugin,
 } from '../plugins'
 import type { CheckFn } from '../scorers/sandbox'
-import type { BenchmarkTask } from '../types'
+import type { BenchmarkModel, BenchmarkTask, PluginGenerate } from '../types'
 
 const probeCheck: CheckFn = async () => ({
   name: 'probe-check',
@@ -86,6 +90,118 @@ describe('plugin registry (runtime registration)', () => {
     unregisterPlugin('probe-plugin')
     expect(getPlugins().find((p) => p.id === 'probe-plugin')).toBeUndefined()
     expect(pluginTasks().find((t) => t.id === 'probe-task')).toBeUndefined()
+  })
+})
+
+const probeGenerate: PluginGenerate = async () => ({
+  output: 'x'.repeat(80),
+  tokensIn: 1,
+  tokensOut: 2,
+  runtimeMs: 3,
+})
+
+const probeModel: BenchmarkModel = {
+  id: 'probe-model',
+  name: 'Probe Model',
+  provider: 'ProbeProvider',
+  costPer1kInputUsd: 0,
+  costPer1kOutputUsd: 0,
+  contextWindow: 1000,
+  capabilities: '',
+}
+
+const generatorPlugin: BenchmarkPlugin = {
+  id: 'probe-generator-plugin',
+  name: 'Probe Generator Plugin',
+  version: '0.0.1',
+  models: [probeModel],
+  generators: { ProbeProvider: async () => probeGenerate },
+}
+
+describe('plugin generators + models (registration rules)', () => {
+  beforeEach(() => unregisterPlugin('probe-generator-plugin'))
+  afterEach(() => {
+    unregisterPlugin('probe-generator-plugin')
+    unregisterPlugin('probe-generator-plugin-2')
+  })
+
+  it('registers a generator + model pair and stamps pluginId on the model', () => {
+    registerPlugin(generatorPlugin)
+    expect(pluginProviderNames()).toContain('ProbeProvider')
+    expect(pluginGenerator('ProbeProvider')).toBeDefined()
+    expect(pluginGenerators()['ProbeProvider']).toBeDefined()
+    const merged = pluginModels().find((m) => m.id === 'probe-model')
+    expect(merged?.pluginId).toBe('probe-generator-plugin')
+    // The registered object is not mutated — the stamp is on the copy.
+    expect(probeModel.pluginId).toBeUndefined()
+  })
+
+  it('rejects a generator whose key shadows a built-in provider', () => {
+    // Silently rerouting every OpenAI model through a plugin is the one thing
+    // a provider seam must never allow.
+    expect(() =>
+      registerPlugin({ ...generatorPlugin, models: [], generators: { OpenAI: async () => probeGenerate } })
+    ).toThrow(/collides with a built-in provider/)
+  })
+
+  it('rejects a generator another plugin already provides', () => {
+    registerPlugin(generatorPlugin)
+    expect(() =>
+      registerPlugin({
+        ...generatorPlugin,
+        id: 'probe-generator-plugin-2',
+        models: [],
+      })
+    ).toThrow(/already provided by plugin 'probe-generator-plugin'/)
+  })
+
+  it('rejects a model whose provider nothing can generate', () => {
+    expect(() =>
+      registerPlugin({
+        id: 'probe-generator-plugin-2',
+        name: 'Orphan',
+        version: '0.0.1',
+        models: [{ ...probeModel, id: 'orphan-model', provider: 'NoSuchProvider' }],
+      })
+    ).toThrow(/neither built-in nor provided by a plugin generator/)
+  })
+
+  it('accepts a model on a built-in provider (no generator needed)', () => {
+    registerPlugin({
+      id: 'probe-generator-plugin-2',
+      name: 'Builtin-backed',
+      version: '0.0.1',
+      models: [{ ...probeModel, id: 'builtin-backed-model', provider: 'OpenRouter' }],
+    })
+    expect(pluginModels().map((m) => m.id)).toContain('builtin-backed-model')
+  })
+
+  it('rejects a model that sets its own pluginId, and a duplicate model id', () => {
+    expect(() =>
+      registerPlugin({ ...generatorPlugin, id: 'probe-generator-plugin-2', models: [{ ...probeModel, pluginId: 'x' }] })
+    ).toThrow(/sets pluginId itself/)
+    expect(() =>
+      registerPlugin({ ...generatorPlugin, id: 'probe-generator-plugin-2', models: [probeModel, { ...probeModel }] })
+    ).toThrow(/declares model 'probe-model' twice/)
+  })
+
+  it('rejects a model id another plugin already contributed', () => {
+    registerPlugin(generatorPlugin)
+    expect(() =>
+      registerPlugin({
+        id: 'probe-generator-plugin-2',
+        name: 'Copycat',
+        version: '0.0.1',
+        models: [{ ...probeModel, provider: 'OpenRouter' }],
+      })
+    ).toThrow(/duplicates a model from plugin 'probe-generator-plugin'/)
+  })
+
+  it('unwinds generators and models on unregister', () => {
+    registerPlugin(generatorPlugin)
+    unregisterPlugin('probe-generator-plugin')
+    expect(pluginProviderNames()).not.toContain('ProbeProvider')
+    expect(pluginModels().find((m) => m.id === 'probe-model')).toBeUndefined()
   })
 })
 

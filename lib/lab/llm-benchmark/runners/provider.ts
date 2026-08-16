@@ -5,7 +5,10 @@ import type {
   BenchmarkRunner,
   BenchmarkStatus,
   BenchmarkTask,
+  GenerationResponse,
   IterationCheckResult,
+  PluginGenerate,
+  PluginGeneratorFactory,
   Scorer,
 } from '../types'
 import { estimateCost } from '../harness'
@@ -23,6 +26,10 @@ import { forceSpill, hashPrompt, openRunLog, type RunLog } from '../runlog'
 import { selectScorer } from '../scorers'
 import { withSandboxConstraints } from '../prompts'
 import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
+import { BUILTIN_PROVIDERS } from '../providers'
+// The roster (not `../plugins/registry`) so a consumer that only imports the
+// runner still gets the shipped plugins' generators registered.
+import { pluginGenerator, pluginProviderNames } from '../plugins'
 
 export interface ProviderRunnerConfig {
   openai?: OpenAIConfig
@@ -50,12 +57,9 @@ export interface ProviderRunnerConfig {
   plugins?: string[]
 }
 
-interface GenerationResponse {
-  output: string
-  tokensIn: number
-  tokensOut: number
-  runtimeMs: number
-}
+// `GenerationResponse` — every runner's return shape, and the contract a
+// plugin generator implements — lives in types.ts (the bottom layer) so
+// `plugins/registry.ts` can name it without importing from runners/.
 
 function stripCodeFences(output: string): string {
   return output
@@ -334,6 +338,35 @@ export function classifyFailureReason(
   return 'model_error'
 }
 
+/**
+ * Resolved plugin generators, keyed by provider name.
+ *
+ * A plugin declares its generator as a lazy `() => import(...)` factory (the
+ * implementation is node-only and the plugin registry is in the client-bundle
+ * graph). The factory is awaited ONCE per provider per process and the
+ * promise cached: a sweep is hundreds of iterations, and re-importing the
+ * module — or worse, re-running whatever setup it does at import — on every
+ * call would be a per-iteration tax with no upside. A rejected factory is
+ * evicted so a transient import failure is not cached as permanent.
+ */
+const resolvedPluginGenerators = new Map<string, Promise<PluginGenerate>>()
+
+function resolvePluginGenerator(provider: string, factory: PluginGeneratorFactory): Promise<PluginGenerate> {
+  const cached = resolvedPluginGenerators.get(provider)
+  if (cached) return cached
+  const pending = factory().catch((err: unknown) => {
+    resolvedPluginGenerators.delete(provider)
+    throw err
+  })
+  resolvedPluginGenerators.set(provider, pending)
+  return pending
+}
+
+/** Drop the resolved-generator cache (tests and hot reload; never a sweep). */
+export function clearPluginGeneratorCache(): void {
+  resolvedPluginGenerators.clear()
+}
+
 function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
   switch (model.provider) {
     case 'OpenAI':
@@ -360,8 +393,17 @@ function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
     case 'OpenCode':
       if (!cfg.opencode) throw new Error(`OpenCode config missing for ${model.id}`)
       return { provider: 'opencode' as const, config: cfg.opencode }
-    default:
-      throw new Error(`Unsupported provider: ${model.provider}`)
+    default: {
+      // Unknown to the switch — ask the plugins before giving up. This is the
+      // whole extension seam: a contributed provider needs no case here.
+      const factory = pluginGenerator(model.provider)
+      if (factory) return { provider: 'plugin' as const, config: factory }
+      const fromPlugins = pluginProviderNames()
+      throw new Error(
+        `Unsupported provider: ${model.provider} (built-in: ${BUILTIN_PROVIDERS.join(', ')}; ` +
+          `plugin-provided: ${fromPlugins.length ? fromPlugins.join(', ') : 'none'})`
+      )
+    }
   }
 }
 
@@ -389,6 +431,13 @@ async function generateWithProvider(
       return generateCodex(config, model, task, iterationIndex)
     case 'opencode':
       return generateOpencode(config, model, task, iterationIndex)
+    case 'plugin': {
+      // Everything around this call — retries, cache, empty-body recovery,
+      // run log, quota breaker, scoring — is unchanged, which is the point:
+      // a plugin provider is measured by exactly the same machinery.
+      const generate = await resolvePluginGenerator(model.provider, config)
+      return generate(model, task, iterationIndex)
+    }
   }
 }
 

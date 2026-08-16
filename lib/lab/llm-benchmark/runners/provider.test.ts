@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { BenchmarkModel, BenchmarkTask } from '../types'
+import type { BenchmarkModel, BenchmarkTask, PluginGenerate } from '../types'
 // Mock the wire + cache layers so the runner logic is exercised in isolation.
 vi.mock('./moonshot', () => ({ generateMoonshot: vi.fn() }))
 vi.mock('./opencode', () => ({ generateOpencode: vi.fn() }))
@@ -16,11 +16,14 @@ vi.mock('../cache', () => ({
 import {
   aggregateRuns,
   classifyFailureReason,
+  clearPluginGeneratorCache,
   createProviderRunner,
   isCliProvider,
   isQuotaError,
   TimeoutError,
 } from './provider'
+import { registerPlugin, unregisterPlugin } from '../plugins'
+import { BUILTIN_PROVIDERS } from '../providers'
 import { generateMoonshot } from './moonshot'
 import { generateOpencode } from './opencode'
 import type { IterationRun } from './provider'
@@ -459,6 +462,125 @@ describe('run log integration', () => {
     const [result] = await runner.runTask(MODEL, TASK, 1)
     expect(result.runLogRef).toBeUndefined()
     expect(readdirSync(dir)).toEqual([])
+  })
+})
+
+describe('plugin-provided generators', () => {
+  const PLUGIN_MODEL: BenchmarkModel = {
+    id: 'test-plugin-model',
+    name: 'Test Plugin Model',
+    provider: 'TestProvider',
+    costPer1kInputUsd: 0,
+    costPer1kOutputUsd: 0,
+    contextWindow: 1000,
+    capabilities: '',
+  }
+
+  beforeEach(() => {
+    clearPluginGeneratorCache()
+    unregisterPlugin('test-provider-plugin')
+  })
+  afterEach(() => {
+    clearPluginGeneratorCache()
+    unregisterPlugin('test-provider-plugin')
+  })
+
+  it('still throws for an unknown provider, naming the built-in and plugin sets', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const runner = createProviderRunner({ bustCache: true, maxRetries: 0, scorer: { score: () => 50 } })
+
+    const [result] = await runner.runTask({ ...PLUGIN_MODEL, provider: 'NoSuchProvider' }, TASK, 1)
+    expect(result.status).toBe('fail')
+    const logged = consoleErrorSpy.mock.calls.map((c) => String(c[0])).join('\n')
+    expect(logged).toMatch(/Unsupported provider: NoSuchProvider/)
+    expect(logged).toMatch(/built-in: OpenAI, Anthropic/)
+    expect(logged).toMatch(/plugin-provided: none/)
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('runs a plugin model end to end — scored and aggregated like any provider', async () => {
+    // The acceptance criterion: a plugin registers a model + generator pair and
+    // the sweep machinery treats it as a first-class provider, with no
+    // provider.ts case for 'TestProvider'.
+    const generate = vi.fn<PluginGenerate>(async () => ({ ...OK, output: 'p'.repeat(120) }))
+    registerPlugin({
+      id: 'test-provider-plugin',
+      name: 'Test Provider Plugin',
+      version: '0.0.1',
+      models: [PLUGIN_MODEL],
+      generators: { TestProvider: async () => generate },
+    })
+
+    const runner = createProviderRunner({ bustCache: true, maxRetries: 0, scorer: { score: () => 77 } })
+    const [result] = await runner.runTask(PLUGIN_MODEL, TASK, 2)
+
+    expect(generate).toHaveBeenCalledTimes(2)
+    expect(generate.mock.calls[0][2]).toBe(0)
+    expect(generate.mock.calls[1][2]).toBe(1)
+    expect(result.status).toBe('success')
+    expect(result.iterationsSucceeded).toBe(2)
+    expect(result.iterationScores).toEqual([77, 77])
+    expect(result.score).toBe(77)
+    expect(result.modelId).toBe('test-plugin-model')
+    expect(result.tokensIn).toBe(OK.tokensIn * 2)
+    expect(result.tokensOut).toBe(OK.tokensOut * 2)
+  })
+
+  it('awaits the lazy factory exactly once and caches it for the process', async () => {
+    const generate = vi.fn<PluginGenerate>(async () => ({ ...OK, output: 'p'.repeat(120) }))
+    const factory = vi.fn(async () => generate as PluginGenerate)
+    registerPlugin({
+      id: 'test-provider-plugin',
+      name: 'Test Provider Plugin',
+      version: '0.0.1',
+      models: [PLUGIN_MODEL],
+      generators: { TestProvider: factory },
+    })
+
+    const runner = createProviderRunner({ bustCache: true, maxRetries: 0, scorer: { score: () => 60 } })
+    await runner.runTask(PLUGIN_MODEL, TASK, 2)
+
+    expect(generate).toHaveBeenCalledTimes(2)
+    expect(factory).toHaveBeenCalledTimes(1)
+  })
+
+  it('classifies a plugin generator failure like any other provider error', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    registerPlugin({
+      id: 'test-provider-plugin',
+      name: 'Test Provider Plugin',
+      version: '0.0.1',
+      models: [PLUGIN_MODEL],
+      generators: {
+        TestProvider: async () => async () => {
+          throw new Error('TestProvider error 401: bad key')
+        },
+      },
+    })
+
+    const runner = createProviderRunner({ bustCache: true, maxRetries: 0, scorer: { score: () => 50 } })
+    const [result] = await runner.runTask(PLUGIN_MODEL, TASK, 2)
+    expect(result.status).toBe('fail')
+    expect(result.failureReason).toBe('auth_error')
+    consoleErrorSpy.mockRestore()
+  })
+})
+
+describe('built-in provider list', () => {
+  it('names exactly the providers configForModel can route', async () => {
+    // Keeps `providers.ts:BUILTIN_PROVIDERS` — which plugins/registry.ts uses
+    // to reject a shadowing generator — honest about the switch it mirrors: a
+    // routable provider fails with "config missing", never "Unsupported".
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const runner = createProviderRunner({ bustCache: true, maxRetries: 0, scorer: { score: () => 50 } })
+    for (const provider of BUILTIN_PROVIDERS) {
+      consoleErrorSpy.mockClear()
+      await runner.runTask({ ...MODEL, id: `probe-${provider}`, provider }, TASK, 1)
+      const logged = consoleErrorSpy.mock.calls.map((c) => String(c[0])).join('\n')
+      expect(logged, provider).toMatch(/config missing/)
+      expect(logged, provider).not.toMatch(/Unsupported provider/)
+    }
+    consoleErrorSpy.mockRestore()
   })
 })
 

@@ -1,0 +1,17 @@
+{
+  "id": "echo-provider",
+  "name": "Echo Provider",
+  "version": "1.0.0",
+  "description": "Example plugin that ships a provider (generator) and the model that uses it.",
+  "rostered": false,
+  "generators": {
+    "Echo": "lazy import of ./generate#echoGenerate (node-only)"
+  },
+  "models": [
+    {
+      "id": "echo-1",
+      "name": "Echo 1",
+      "provider": "Echo"
+    }
+  ]
+}

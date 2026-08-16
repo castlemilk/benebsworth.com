@@ -23,7 +23,8 @@ probe  →  register  →  validate  →  sweep  →  analyze  →  publish
 1. **Probe** — query `https://openrouter.ai/api/v1/models` with your key,
    filter `pricing.prompt === '0' && pricing.completion === '0'` to find the
    current free catalog. The catalog rotates (models appear/disappear weekly).
-2. **Register** — append to `BENCHMARK_MODELS` in `lib/lab/llm-benchmark/registry.ts`
+2. **Register** — append to `BUILTIN_MODELS` in `lib/lab/llm-benchmark/registry.ts`
+   (the array `BENCHMARK_MODELS` merges with plugin-contributed models)
    with `id`, `name`, `provider: 'OpenRouter'`, `apiModelId` (full `:free` slug),
    `costPer1kInputUsd: 0`, `costPer1kOutputUsd: 0`, plus the optional metadata
    (modelCardUrl, vendorUrl, company, family, released, license, params, tags,

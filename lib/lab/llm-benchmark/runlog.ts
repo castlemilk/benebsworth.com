@@ -12,7 +12,11 @@
  *
  * On-disk contract (`session-persistence-jsonl` in dsh):
  *  - line 0 is an immutable header record; every later line is one event
- *  - `seq` is contiguous and writer-owned: line i has `seq === i`
+ *  - `seq` is writer-owned and contiguous on the healthy path: line i has
+ *    `seq === i`. Because seq is assigned at append time and a failed batch is
+ *    dropped (below), a rollback leaves a GAP in the on-disk sequence — that
+ *    gap is deliberate forensic evidence that events were lost to a write
+ *    failure, not silently renumbered away
  *  - append-only — flushed bytes are never rewritten
  *  - appends are coalesced into batches (WRITE_BATCH_MAX_DELAY_MS), each batch
  *    is one write + one fsync; `flush()` bypasses the window

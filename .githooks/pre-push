@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-# Heavy pre-push gate (~2-4m): unit tests + full static build.
+# Heavy pre-push gate (~2-4m): results invariants + unit tests + full static build.
 # Logic lives in taskfiles/git.yml (`task git:pre-push`).
 #
 # The build is in this gate on purpose: a bad MDX file, a broken benchmark
 # registry entry, or a missing demo export typechecks clean and only fails
-# during the static export.
+# during the static export. The results-invariant check leads because it is
+# seconds and catches the one class the build cannot see: results.json data
+# that is internally inconsistent (drifted score, status vs counts, a run log
+# with no record pointing at it).
 #
 # Bypass: SKIP_HOOKS=1 git push ...   or   git push --no-verify
 set -euo pipefail

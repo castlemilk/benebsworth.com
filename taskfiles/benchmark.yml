@@ -35,6 +35,7 @@ tasks:
           task bench:seed                       restore seeded sample data, NO API calls
           task bench:outputs                    regenerate static output artifacts
           task bench:verify                     typecheck + benchmark unit tests
+          task bench:verify-results             results.json + run-log invariants (free)
 
         Knobs (all optional):
           MODELS=   comma-separated registry ids   (default: kimi-k2.7)
@@ -209,6 +210,34 @@ tasks:
     cmds:
       - task: ":lint:types"
       - '{{.BIN}}/vitest run lib/lab/llm-benchmark/'
+
+  verify-results:
+    desc: Check results.json + the retained run logs for internal consistency (free, offline)
+    summary: |
+      The anti-regression gate for the DATA, not the code: `task bench:verify`
+      typechecks and unit-tests the harness, this one interrogates what the
+      harness produced.
+
+      Eight checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
+      WHY it exists — printed on failure): score is exactly the `aggregateRuns`
+      aggregation of `iterationScores`; `iterationCheckResults` is index-aligned
+      with them; succeeded <= ran with one score per success; `status` agrees
+      with the counts; `taskId`/`modelId` resolve in the registry;
+      `failureReason` is in the taxonomy and consistent with `status`; every run
+      log on disk is named by its record's `runLogRef` and every ref's log
+      matches the record and holds an `aggregate` event; run-log `seq` is
+      strictly increasing (a GAP is dropped-batch evidence — a warning; a
+      duplicate or decrease is a failure).
+
+      Records that predate a field skip the checks that need it. Seeded records
+      are exempt from the run-log checks only. The log checks skip entirely
+      when nothing is under `sweeps/`.
+
+      Exit 1 on any failure. Add `-- --strict` to fail on warnings too, and
+      `-- --quiet` for just the summary. Run it after every sweep, before push
+      (the pre-push hook runs it) and before deploy.
+    cmds:
+      - '{{.BIN}}/tsx scripts/verify-results.mjs {{.CLI_ARGS}}'
 
   cache:clear:
     desc: Delete the cached provider responses (next run pays for fresh calls)

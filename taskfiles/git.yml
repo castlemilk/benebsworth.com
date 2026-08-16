@@ -60,18 +60,25 @@ tasks:
     summary: |
       What .githooks/pre-push runs. Two to four minutes.
 
-        1. test:unit    the Vitest suite
-        2. build        full static export, including the pre/post phases
+        1. bench:verify-results  results.json + run-log invariants (seconds)
+        2. test:unit             the Vitest suite
+        3. build                 full static export, including the pre/post phases
 
       The build is in the gate because this site's failure mode is a build-time
       one: a bad MDX file, a broken registry entry, or a missing demo export
       typechecks fine and only explodes during the static export.
+
+      The results check is first because it is the cheapest and guards the one
+      file a bad sweep or a hand-merge can silently corrupt — a drifted score or
+      a status that disagrees with its iteration counts typechecks, tests and
+      builds perfectly. Its run-log half skips when there is no `sweeps/`.
 
       e2e is NOT here — it needs browsers installed and adds minutes. Run
       `task ci` before anything you care about.
 
       Bypass: SKIP_HOOKS=1 git push ...   or   git push --no-verify
     cmds:
+      - task: ":bench:verify-results"
       - task: ":test:unit"
       - task: ":build"
 

@@ -409,44 +409,36 @@ scrubbed env, and `codex` reaches its authenticated usage-limit response
 identically with and without the scrub. The `{ flag: 'wx', mode: 0o600 }`
 artifact-write hardening stays with #3.
 
-## [ ] 5. Results invariants verification (anti-regression)
+## [x] 5. Results invariants verification (anti-regression)
 
-**Problem.** The benchmark's integrity today rests on `registry.test.ts`
-(static checks) and manual reading. dsh ships a **runtime invariant
-registry**: every package registers package-owned checks
-(`packages/runtime-diagnostics/invariants`), plus a
-`verify-package-invariants` tool that rejects unexplained gaps. We want the
-equivalent: a post-sweep verification that results.json + run logs are
-internally consistent BEFORE deploy/push.
-
-**Inspiration.** dsh `packages/runtime-diagnostics/invariants/` —
-configurable registry, per-package `./invariant` companions, "runtime
-assertions are deliberately not synthetic" (a check exists only when the
-package owns an observable relationship).
-
-**Design sketch.**
-
-- `scripts/verify-results.mjs` running a checksuite over results.json:
-  - `score === round(mean(iterationScores))` for every record with
-    `iterationScores` (currently the mean is taken over successful runs —
-    assert the invariant holds, or document the exception).
-  - `iterationScores.length === iterationCheckResults.length` when both
-    present (index-aligned contract from the event-log work).
-  - `iterationsSucceeded <= iterations`; `status` matches
-    (`success` ⇔ all succeeded, `partial` ⇔ some, `fail`/`timeout` ⇔ none).
-  - every record's `taskId`/`modelId` resolve in the registry (already a
-    test, make it a runnable script for CI/manual use).
-  - every record has a `runLogRef` when the run log exists (after #1).
-- Wire as `task bench:verify-results` in Taskfile + a pre-push hook step
-  (guarded: skips when no `sweeps/` dir exists yet).
-- dsh-style "empty installer with a reason" discipline: each check documents
-  WHY it exists (which shipped bug it would have caught).
-
-**Acceptance criteria.** Script finds the deepseek-style inconsistencies
-(score vs iterationScores drift, index misalignment) in synthetic fixtures;
-green on current results.json; wired into pre-push.
-
-**Effort.** M. **Dependencies.** #1 (for the runLogRef check).
+**Shipped.** `lib/lab/llm-benchmark/verify-results.ts` holds the pure checksuite
+(dsh's `packages/runtime-diagnostics/invariants`): `verifyResults(results,
+{ runLogs, readLog })` returns one `Verdict { check, level: pass|warn|fail|skip,
+recordKey, detail, why }` per check per record, and `summarizeVerdicts()` the
+counts. Each of the eight checks in `RESULT_CHECKS` carries the WHY it exists —
+the bug it would have caught — and the report prints it on failure; a check
+nobody can justify is synthetic and gets muted rather than fixed. The checks:
+score is EXACTLY `aggregateRuns`' `Math.round(Math.min(100, Math.max(1,
+mean(iterationScores))) * 10) / 10`; `iterationCheckResults` index-aligned with
+`iterationScores`; succeeded <= ran with one score per success; `status` derived
+from the same counts; `taskId`/`modelId` resolve in the registry;
+`failureReason` in the taxonomy (a `Record<BenchmarkFailureReason, true>`, so a
+new reason is a compile error here) and consistent with `status`; **runLogRef ⇄
+run log** both ways (a log on disk whose record has no ref FAILS — "no record
+without a trace"; a ref must name a log whose header matches the record and that
+holds an `aggregate` event; a ref to a pruned log is a skip); and run-log `seq`
+strictly increasing — a GAP is dropped-batch evidence (WARN, per the runlog.ts
+contract), a duplicate or decrease is a FAILURE. Records predating a field skip
+the checks that need it; seeded records are exempt from the run-log checks only;
+the single-entry `iterationCheckResults` written by
+`scripts/backfill-iteration-checks.mjs` (one breakdown for the one published
+artifact) is a documented skip, not a failure. `scripts/verify-results.mjs` is a
+thin shell — loads results (`RESULTS_OUT_PATH`), scans `sweeps/` (`SWEEPS_DIR`),
+prints failures-with-WHY then warnings then `N checks, N records, N failures, N
+warnings, N skipped`, exits 1 on any failure (`--strict` also on warnings,
+`--quiet` for the summary alone). `task bench:verify-results`, and first in the
+pre-push gate (seconds, and the log half skips with no `sweeps/`). Green on the
+current 183 records: 0 failures, 0 warnings, 512 skipped.
 
 ---
 
@@ -1306,6 +1298,9 @@ with their capture metadata.
   `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
   (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough
   duration estimate from historical `runtimeMs`, `task bench:profile`.
+- Results invariant verification (#5): `verify-results.ts` (eight checks, each
+  with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
+  run first in the pre-push gate.
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Frame-prelude hardening + sandbox prompt contract + per-iteration

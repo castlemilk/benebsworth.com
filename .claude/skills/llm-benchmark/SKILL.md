@@ -52,6 +52,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Quota-reset parsing + pre-flight lock check (`parseQuotaResetMs`, `quotaLockedModels`) | `lib/lab/llm-benchmark/quota.ts` |
 | Per-iteration run log (JSONL writer + reader, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
+| Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
+| Invariant verification script | `scripts/verify-results.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
 | Route/path helpers | `lib/lab/llm-benchmark/nav.ts` |
@@ -478,9 +480,57 @@ points and detail, and the aggregate line (score, status, failureReason,
 ids contain hyphens, so the name can't be split reliably. `SWEEPS_DIR`
 overrides the directory scanned.
 
+## Verifying the results themselves (`task bench:verify-results`)
+
+`task bench:verify` checks the CODE. This checks the DATA — results.json and
+the retained run logs — and it is free, offline and seconds long.
+
+```bash
+task bench:verify-results                 # after every sweep, before push/deploy
+task bench:verify-results -- --strict     # warnings are failures too
+task bench:verify-results -- --quiet      # summary line only
+npx tsx scripts/verify-results.mjs        # same thing without task
+```
+
+- **When to run.** After any sweep, backfill, merge, or hand edit of
+  results.json; before a deploy. The pre-push hook runs it first (cheapest
+  gate), so a corrupted results.json cannot leave the machine.
+- **What it catches.** Eight invariants, each carrying the WHY it exists (the
+  report prints that WHY on failure): `score` drifted from the `aggregateRuns`
+  aggregation of `iterationScores`; `iterationCheckResults` misaligned with
+  `iterationScores` (the UI pairs them by index — a misalignment attributes one
+  iteration's failed checks to another's score); more iterations succeeded than
+  ran, or a scores array shorter than the successes it claims; a `status` that
+  disagrees with its counts (a `partial` published as `success`); ids that no
+  longer resolve in the registry (renaming a model silently empties the board);
+  a `failureReason` outside the taxonomy or on a `success`; a run log on disk
+  whose record carries no `runLogRef` ("no record without a trace") or a ref
+  whose log names a different model/task or never recorded an `aggregate`; and
+  run-log `seq` integrity.
+- **`seq` gaps are a WARNING, not a failure** — a gap is the deliberate evidence
+  that a failed batch was rolled back and dropped (see the contract at the top
+  of `runlog.ts`). A duplicate or decreasing `seq` IS a failure: the append-only
+  contract was violated and the log can't be trusted as a replay.
+- **Exit semantics.** 0 clean, 1 on any failure; `--strict` also exits 1 on
+  warnings. The summary is one line: `N checks, N records, N failures, N
+  warnings, N skipped`.
+- **Skips are expected and are not weakening.** Records that predate a field
+  (`iterationScores`, `iterationsSucceeded`) skip the checks needing it; seeded
+  records are exempt from the run-log checks only (they never had a run); a
+  `runLogRef` whose file has been pruned from `sweeps/` skips; and the
+  single-entry `iterationCheckResults` that
+  `scripts/backfill-iteration-checks.mjs` writes (one breakdown for the one
+  published artifact) is a documented shape, not a misalignment. Current
+  baseline: 183 records → 0 failures, 0 warnings, 512 skipped.
+- **Adding a check.** Put it in `RESULT_CHECKS` with a `why` naming the bug it
+  would have caught, keep it pure (filesystem inputs are injected as
+  `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check
+  that can't state its bug is synthetic — it will be muted, not fixed.
+
 ## Verification Checklist
 
 - [ ] `task bench:verify` passes (typecheck + benchmark unit tests)
+- [ ] `task bench:verify-results` passes (results.json + run-log invariants)
 - [ ] `task build` statically generates new routes
 - [ ] New task has pre + post MDX files
 - [ ] New demo is exported and mapped

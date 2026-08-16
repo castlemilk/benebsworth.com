@@ -69,6 +69,9 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Category text | `content/lab/llm-benchmark/categories/<slug>.mdx` |
 | Landing intro | `content/lab/llm-benchmark/index.mdx` |
 | Routes | `app/lab/llm-benchmark/**` |
+| Plugin registry + roster + worked example | `lib/lab/llm-benchmark/plugins/{registry,index}.ts`, `plugins/community-tasks/` |
+| Plugin authoring guide | `docs/lab/llm-benchmark/plugins-authoring.md` |
+| Plugin scaffold (`task bench:plugin-scaffold`) | `scripts/plugin-scaffold.mjs` + `scripts/templates/plugin/*.tmpl`, pure helpers in `lib/lab/llm-benchmark/plugins/scaffold.ts` |
 | Skill | `.claude/skills/llm-benchmark/SKILL.md` |
 
 ## Adding a Model
@@ -599,6 +602,16 @@ registration unwinds on `unregisterPlugin()`.
   checks (`ttt-grid-interacts`, `ttt-win-detected`) — the template for new
   plugins. Tests in `plugins/registry.test.ts` cover registration,
   collisions, unwind, and integration.
+- **Authoring**: `docs/lab/llm-benchmark/plugins-authoring.md` — every
+  extension point with its code reference, the client-bundle rule, the
+  manifest fields, the point-budget/rationale convention for checks, roster
+  ordering (later registration wins name collisions), and sweep bundle
+  selection. Scaffold a new plugin with
+  `task bench:plugin-scaffold -- <id> "<Display Name>"`
+  (`scripts/plugin-scaffold.mjs` + `scripts/templates/plugin/*.tmpl`; pure
+  helpers in `plugins/scaffold.ts`). The scaffold does NOT edit the roster —
+  an unrostered plugin is dead code and `task verify` stays green on it.
+  `manifest.json` is descriptive metadata only; nothing loads it.
 
 ## Verification Checklist
 

@@ -1268,36 +1268,29 @@ client-bundle rule (checks use `import type` only). 656 tests green, build
 generates the tic-tac-toe page. Design intent: dsh's "no privileged core",
 sized for a static-export site (load-time registration, not runtime install).
 
-## [ ] 34. Plugin authoring guide + template generator
+## [x] 34. Plugin authoring guide + template generator (SHIPPED)
 
-**Problem.** The community-tasks plugin is the only worked example; writing
-a new plugin requires copying its shape (manifest + index + checks + demo)
-by hand and knowing the client-bundle rule.
+**Shipped.** `docs/lab/llm-benchmark/plugins-authoring.md` — extension-point
+catalogue (tasks/checks/scorers/demos/taskCards) with a file:symbol reference
+each, the client-bundle rule, manifest fields (and the honest note that
+`manifest.json` is descriptive metadata nothing loads), the point-budget +
+threshold-rationale convention for checks, roster registration and
+collision ordering, sweep bundle selection (`--plugins` / `none`), and the
+`pluginId` attribution chip. `task bench:plugin-scaffold -- <id> "<Name>"`
+→ `scripts/plugin-scaffold.mjs` renders `scripts/templates/plugin/*.tmpl`
+into `plugins/<id>/`; pure validation/naming/render helpers live in
+`plugins/scaffold.ts` with tests in `plugins/scaffold.test.ts`.
 
-**Inspiration.** paperclip `packages/adapters/AUTHORING.md` (a maintained
-authoring doc per adapter family) and dsh's cookbook
-(`docs/cookbook/adding-a-package.md`, `adding-a-tool.md`, `adding-an-llm-
-adapter.md`, `adding-a-conversation-node.md`).
+Templates are `.tmpl` files, not string literals in a `.ts` module, because
+`layering.test.ts` text-scans in-tree `.ts` imports and would read a template's
+`from './checks'` as an unresolvable import.
 
-**Design sketch.**
-
-- `docs/lab/llm-benchmark/plugins-authoring.md`: the extension-point
-  catalogue (tasks, checks, scorers, demos, taskCards), the client-bundle
-  rule, the manifest fields, and the "checks MUST declare their point
-  budget and threshold rationale" convention (mirroring the builtin checks'
-  calibration comments).
-- `scripts/plugin-scaffold.mjs <id> <name>`: generates a plugin dir with
-  manifest.json, index.ts, checks.ts (two stub checks with budget
-  placeholders), demo.tsx, and a registry.test.ts snippet — then prints the
-  roster import to add.
-- `task bench:plugin-scaffold` wrapper; the skill's plugin section links
-  the guide.
-
-**Acceptance criteria.** A new plugin is scaffolded in one command and
-builds/tests green with no core edits; the guide documents every extension
-point with a code reference.
-
-**Effort.** S-M.
+The scaffold deliberately does NOT edit the roster: an unrostered plugin is
+typechecked and linted but imported by nothing, so `task verify` stays green
+(verified both ways, plus `task build` with a throwaway rostered). One core
+coupling was found and removed: `scorers.test.ts` pinned the behavioural task
+list including plugin ids, making every contribution a core edit — the
+built-in half stays pinned, the plugin half is now derived from the roster.
 
 ## [ ] 35. Plugin-provided runners (new providers as plugins)
 
@@ -1503,6 +1496,14 @@ without reading results.json; the server is read-only.
   `import type` only). Ships `community-tasks` as the worked example
   (tic-tac-toe task + `ttt-grid-interacts`/`ttt-win-detected` DOM checks +
   demo + manifest.json). Tests in `plugins/registry.test.ts`.
+- Plugin authoring guide + scaffold generator (#34):
+  `docs/lab/llm-benchmark/plugins-authoring.md` (every extension point with a
+  file:symbol reference, client-bundle rule, point-budget convention, roster
+  ordering, sweep bundle selection, attribution chip) +
+  `task bench:plugin-scaffold -- <id> "<Name>"` (`scripts/plugin-scaffold.mjs`,
+  templates in `scripts/templates/plugin/*.tmpl`, pure helpers + tests in
+  `plugins/scaffold.ts`). Scaffold does not touch the roster; an unrostered
+  plugin is dead code and stays green.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

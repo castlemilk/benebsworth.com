@@ -1,0 +1,71 @@
+import type { CheckContext, CheckFn } from '../../scorers/sandbox'
+
+/**
+ * Behavioral checks for the __PLUGIN_NAME__ plugin.
+ *
+ * CLIENT-BUNDLE RULE: this file is reachable from `plugins/registry.ts`, and
+ * anything registry.ts imports at RUNTIME reaches the client bundle. Import
+ * types from `scorers/sandbox` with `import type` ONLY — a value import
+ * drags Playwright into the browser build.
+ *
+ * POINT BUDGET + THRESHOLD RATIONALE (required convention, mirroring the
+ * built-in checks in scorers/checks.ts): every check declares its maximum
+ * points and says WHY the budget and any threshold are what they are. The
+ * composite behavioral score is normalised across a task's checks, so the
+ * split below is a statement about what matters, not an arbitrary number.
+ *
+ * TODO: replace the placeholder budgets. Calibrate so a fully-working
+ * artifact lands near the structural HTML scorer's ceiling (95-100) and a
+ * broken one drops to 30-50 — not the 100 a tag-balance check would give it.
+ */
+const MAX_POINTS = {
+  // TODO(budget): "it rendered at all" is table stakes — a small share of the
+  // total, enough to separate a blank page from a broken interaction.
+  renders: 20,
+  // TODO(budget): the behavioural claim this task actually exists to test
+  // carries the majority of the budget.
+  responds: 40,
+}
+
+/**
+ * __CHECK_RENDERS__: the artifact painted something.
+ *
+ * Threshold rationale: any non-whitespace body text counts. This check is a
+ * floor, not a quality bar — it exists so a page that throws on load is
+ * distinguishable from one that renders but does not react.
+ */
+export const __PLUGIN_EXPORT__Renders: CheckFn = async (ctx: CheckContext) => {
+  const text = await ctx.page.evaluate(() => document.body?.innerText?.trim() ?? '')
+  const passed = text.length > 0
+  return {
+    name: '__CHECK_RENDERS__',
+    passed,
+    points: passed ? MAX_POINTS.renders : 0,
+    maxPoints: MAX_POINTS.renders,
+    detail: passed ? `body rendered ${text.length} chars` : 'body is empty',
+  }
+}
+
+/**
+ * __CHECK_RESPONDS__: TODO — assert the interaction this task is about.
+ *
+ * Drive the page through `ctx.page` (evaluate / click / waitForTimeout),
+ * then assert on what a USER would see: DOM text, an attribute, or a canvas
+ * pixel diff (see `pixelDiffScore` in scorers/checks.ts for the canvas
+ * technique). Locate elements generically so any reasonable implementation
+ * passes the locator step — the behavioural claim should be about response,
+ * not about markup the prompt never demanded.
+ *
+ * STUB: fails deliberately. An always-pass stub would silently inflate every
+ * score for this task; failing loudly keeps an unimplemented check visible.
+ */
+export const __PLUGIN_EXPORT__Responds: CheckFn = async (ctx: CheckContext) => {
+  void ctx
+  return {
+    name: '__CHECK_RESPONDS__',
+    passed: false,
+    points: 0,
+    maxPoints: MAX_POINTS.responds,
+    detail: 'stub check — not implemented yet',
+  }
+}

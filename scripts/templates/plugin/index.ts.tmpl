@@ -1,0 +1,61 @@
+import type { BenchmarkPlugin } from '../registry'
+import type { BenchmarkTask } from '../../types'
+import { __PLUGIN_EXPORT__Renders, __PLUGIN_EXPORT__Responds } from './checks'
+import { __DEMO_COMPONENT__ } from './demo'
+
+/**
+ * TODO: replace this stub task with the real one.
+ *
+ * Every field below is required by `BenchmarkTask` (lib/lab/llm-benchmark/
+ * types.ts). The ones that are load-bearing rather than cosmetic:
+ *
+ *   category  must be a slug in BENCHMARK_CATEGORIES (registry.ts). The five
+ *             HTML-runnable ones ('3d-physics-animation',
+ *             'advanced-game-building', 'advanced-physics',
+ *             'advanced-electronics', 'ui-building') MUST also declare
+ *             `scorer: 'behavioral'` — registry.test.ts fails otherwise.
+ *   scorer    a name `registeredScorerNames()` knows.
+ *   checks    names resolved through the check registry (built-in + plugin);
+ *             an unknown name throws in getChecksForTask() rather than
+ *             silently scoring with no checks.
+ *   demoComponentName
+ *             must match a key in this plugin's `demos` map (or a built-in
+ *             demo); demo-registry.tsx renders "Demo not found" otherwise.
+ *   id/slug   unique across built-ins AND every other plugin.
+ *
+ * Do NOT set `pluginId` here — registerPlugin() stamps it and rejects a task
+ * that sets its own.
+ */
+const __PLUGIN_EXPORT__Task: BenchmarkTask = {
+  id: '__TASK_ID__',
+  category: 'advanced-game-building',
+  title: '__TASK_TITLE__',
+  blurb: 'TODO: one sentence shown on the task card.',
+  prompt: 'TODO: the exact prompt sent to the model. Be specific about the artifact contract the checks below assert.',
+  runtimeHint: 'Browser, DOM interaction, no canvas required',
+  iterationsDefault: 3,
+  methodNotes: 'TODO: how this task is scored, in the reader’s terms.',
+  demoComponentName: '__DEMO_COMPONENT__',
+  slug: '__TASK_ID__',
+  scorer: 'behavioral',
+  checks: ['__CHECK_RENDERS__', '__CHECK_RESPONDS__'],
+}
+
+/** Scaffolded by `task bench:plugin-scaffold`. See docs/lab/llm-benchmark/plugins-authoring.md. */
+export const __PLUGIN_EXPORT__: BenchmarkPlugin = {
+  id: '__PLUGIN_ID__',
+  name: '__PLUGIN_NAME__',
+  version: '0.1.0',
+  description: 'TODO: one line describing what this plugin contributes.',
+  tasks: [__PLUGIN_EXPORT__Task],
+  checks: {
+    '__CHECK_RENDERS__': __PLUGIN_EXPORT__Renders,
+    '__CHECK_RESPONDS__': __PLUGIN_EXPORT__Responds,
+  },
+  demos: {
+    __DEMO_COMPONENT__,
+  },
+  // Optional extension points, omitted by the scaffold:
+  //   scorers:   Record<string, Scorer>                     — a task's `scorer` name
+  //   taskCards: Record<taskId, ComponentType<{ task }>>     — extra UI on the task page
+}

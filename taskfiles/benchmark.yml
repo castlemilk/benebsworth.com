@@ -239,6 +239,29 @@ tasks:
     cmds:
       - '{{.BIN}}/tsx scripts/verify-results.mjs {{.CLI_ARGS}}'
 
+  plugin-scaffold:
+    desc: 'Scaffold a new plugin — `task bench:plugin-scaffold -- <id> "<Display Name>"`'
+    summary: |
+      Generates lib/lab/llm-benchmark/plugins/<id>/ from the templates in
+      scripts/templates/plugin/: manifest.json, index.ts (a BenchmarkPlugin
+      wired to a stub task), checks.ts (two stub checks with point-budget
+      placeholders and `import type` discipline) and demo.tsx. Prints the two
+      roster lines to add to plugins/index.ts plus the wiring checklist.
+
+      Free and offline — no API calls. Refuses to overwrite an existing
+      directory, and refuses an id that collides with a registered plugin or
+      an existing directory.
+
+      It does NOT edit the roster. Until you add the printed import the plugin
+      is dead code: `task verify` typechecks and lints it but nothing imports
+      it, so an unrostered scaffold cannot break the published task set.
+
+      Guide: docs/lab/llm-benchmark/plugins-authoring.md
+    requires:
+      vars: [CLI_ARGS]
+    cmds:
+      - '{{.BIN}}/tsx scripts/plugin-scaffold.mjs {{.CLI_ARGS}}'
+
   cache:clear:
     desc: Delete the cached provider responses (next run pays for fresh calls)
     summary: |

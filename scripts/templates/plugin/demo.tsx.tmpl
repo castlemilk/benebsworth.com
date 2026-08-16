@@ -1,0 +1,39 @@
+'use client'
+
+import { useState } from 'react'
+
+/**
+ * Placeholder demo for the __PLUGIN_NAME__ plugin.
+ *
+ * Conventions (see plugins/community-tasks/demo.tsx for the worked example):
+ *   - `'use client'` — demos render in the browser; the task page is static.
+ *   - Named export whose name matches the task's `demoComponentName`.
+ *   - Props are exactly `{ className?: string }`.
+ *   - Theme via CSS custom properties (--color-stage / -surface / -fg /
+ *     -muted / -border), never hard-coded colours.
+ *   - Self-contained: no network, no shared state; clean up any rAF/timer.
+ *   - The demo should mirror the artifact contract the task prompt asks the
+ *     model for, so the page shows a reader what "working" looks like.
+ *
+ * TODO: replace the body below with the real demo.
+ */
+export function __DEMO_COMPONENT__({ className = '' }: { className?: string }) {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div
+      className={`flex min-h-[16rem] flex-col items-center justify-center gap-4 rounded-2xl bg-[var(--color-stage)] p-6 ${className}`}
+      data-plugin-demo="__PLUGIN_ID__"
+    >
+      <p className="text-sm text-[var(--color-muted)]">
+        Placeholder demo for <span className="text-[var(--color-fg)]">__PLUGIN_NAME__</span>
+      </p>
+      <button
+        onClick={() => setCount((c) => c + 1)}
+        className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-1 text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
+      >
+        interactions: {count}
+      </button>
+    </div>
+  )
+}

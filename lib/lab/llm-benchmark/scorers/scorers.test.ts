@@ -163,17 +163,28 @@ describe('selectScorer', () => {
 
 describe('behavioralTaskIds', () => {
   it('returns exactly the built-in behaviourally-scored tasks plus plugin tasks', () => {
+    // The BUILT-IN half is pinned by hand — that is the regression net (a task
+    // that silently stops being behaviourally scored, or one that quietly
+    // starts). The PLUGIN half is derived from the roster instead: pinning it
+    // would make every contributed task a core-file edit, which is exactly the
+    // coupling the plugin system exists to remove. Deriving still asserts
+    // something real — that a plugin task declaring `scorer: 'behavioral'`
+    // reaches `behavioralTaskIds` at all.
+    const builtins = [
+      'circuit-builder-teaser',
+      'landing-page-morph',
+      'mini-platformer',
+      'n-body-field',
+      'physics-pendulum-wave',
+    ]
+    const contributed = BENCHMARK_TASKS.filter((t) => t.pluginId && t.scorer === 'behavioral').map(
+      (t) => t.id,
+    )
+    // Sanity: the shipped roster contributes at least the community-tasks one,
+    // so the derived half can never go vacuously empty.
+    expect(contributed).toContain('tic-tac-toe')
     expect([...behavioralTaskIds(BENCHMARK_TASKS)].sort()).toEqual(
-      [
-        'circuit-builder-teaser',
-        'landing-page-morph',
-        'mini-platformer',
-        'n-body-field',
-        'physics-pendulum-wave',
-        // contributed by the community-tasks plugin (declares scorer:
-        // 'behavioral' and its own checks)
-        'tic-tac-toe',
-      ].sort(),
+      [...builtins, ...contributed].sort(),
     )
   })
 

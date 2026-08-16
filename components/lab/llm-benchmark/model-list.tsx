@@ -1,8 +1,11 @@
 import { Brain, Coins, Maximize2, ArrowRight, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { BENCHMARK_MODELS } from '@/lib/lab/llm-benchmark/registry'
+import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
+import { modelCompletion } from '@/lib/lab/llm-benchmark/analytics'
 import { modelPath } from '@/lib/lab/llm-benchmark/nav'
 import { formatContextWindow, isFreeModel } from './format'
+import { StatStrip } from './stat-strip'
 import { Reveal } from '@/components/motion/reveal'
 
 const MODEL_BRAND: Record<string, string> = {
@@ -18,6 +21,9 @@ export function ModelList() {
       {BENCHMARK_MODELS.map((model, i) => {
         const brand = MODEL_BRAND[model.provider] ?? '#7c5cff'
         const free = isFreeModel(model)
+        // Server component: reading results.json here is build-time only, and
+        // the completion stats are plain numbers by the time they render.
+        const stats = modelCompletion(resultsForModel(model.id))
         return (
           <Reveal key={model.id} delay={i * 60}>
             <div className="group relative flex h-full flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-surface-2)]">
@@ -52,6 +58,8 @@ export function ModelList() {
               </div>
 
               <p className="mt-3 type-body text-fg/65">{model.blurb ?? model.capabilities}</p>
+
+              <StatStrip stats={stats} className="mt-3" />
 
               <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[var(--color-border)] pt-4">
                 <div className="flex items-center gap-2">

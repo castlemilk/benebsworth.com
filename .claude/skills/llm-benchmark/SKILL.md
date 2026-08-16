@@ -61,6 +61,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Route/path helpers | `lib/lab/llm-benchmark/nav.ts` |
 | MDX loader | `lib/lab/llm-benchmark/content.ts` |
 | Category & task UI | `components/lab/llm-benchmark/*` |
+| Per-model completion + value stats (`modelCompletion`: live-only `x/y done`, timeouts, total cost, cost-per-point = `totalCost / max(meanScore, 0.1)`) | `lib/lab/llm-benchmark/analytics.ts` → `components/lab/llm-benchmark/stat-strip.tsx` |
 | Side-by-side output comparison | `components/lab/llm-benchmark/model-output-comparison.tsx` |
 | Interactive demos | `components/lab/llm-benchmark/demos/*.tsx` |
 | Demo-to-task mapping | `components/lab/llm-benchmark/demos/demo-registry.tsx` |

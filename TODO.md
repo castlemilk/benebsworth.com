@@ -482,27 +482,21 @@ nothing under `components/`/`app/` renders failure/quota fields (see #8/#9).
 
 # P2 — Presentation and composability
 
-## [ ] 8. Completion + value stats on the UI
+## [x] 8. Completion + value stats on the UI
 
-**Problem.** The model index and model page surface score first; a reader
-sees `53` for deepseek n-body but has to count rows to learn "3/7 tasks
-completed, 4 timeouts, ~$0". Completion rate and cost-per-point are the two
-numbers that make a partial board legible.
-
-**Design sketch.**
-
-- `components/lab/llm-benchmark/format.ts` + a small stats helper
-  (`aggregateResults` already exists in `harness.ts`): per model — tasks
-  completed (status success/partial), timeout count, mean runtime, total
-  cost, cost-per-point (`costUsd / max(score,0.1)` across tasks).
-- Model index page: a compact stat strip per model card (or the table the
-  index uses) with `x/7 done · N timeouts · $0.0 cost`.
-- Model page header: same strip under the model name.
-
-**Acceptance criteria.** Deepseek's partial board reads correctly at a glance;
-no layout regression on mobile; tests for the stats helper.
-
-**Effort.** S–M.
+**Shipped.** `modelCompletion()` in `analytics.ts` — pure, seeded-excluded
+(hand-authored sample data can never inflate completion; a seeded-only model
+reads `attempted: 0`), `tasksTotal` defaulting to `BENCHMARK_TASKS.length` so
+plugin tasks count. Done = success|partial; timeouts counted separately;
+`meanScore`/`meanRuntimeMs` average over COMPLETED tasks only (a timeout burns
+the whole per-call cap and would measure the sweep's patience, not the model);
+`costPerPoint = totalCostUsd / max(meanScore, 0.1)` — total spend, so tasks
+that were paid for and then failed still count, and the clamp keeps a
+0-scoring model finite. `components/lab/llm-benchmark/stat-strip.tsx` renders
+it as font-mono muted chips (`3/8 done · 4 timeouts`, zero segments omitted,
+"no runs yet" with no live records, flex-wrap so it reflows on mobile) on the
+landing-page model cards, the models index cards, and the model page header.
+10 helper tests in `analytics.test.ts`.
 
 ## [ ] 9. Run-trace UI (render the event log)
 
@@ -1496,6 +1490,11 @@ without reading results.json; the server is read-only.
   rows. Name-adjacent only — bare high-entropy literals are an explicit
   non-goal, and artifact HTML (`data-key`, `@keyframes`, `--token:`) is
   untouched.
+- Completion + value stat strips (#8): `modelCompletion()` in `analytics.ts`
+  (live-only, `x/{BENCHMARK_TASKS.length} done`, timeout count, total cost,
+  cost-per-point `totalCost / max(meanScore, 0.1)`) rendered by
+  `components/lab/llm-benchmark/stat-strip.tsx` on the model cards and model
+  page header.
 - Frame-prelude hardening + sandbox prompt contract + per-iteration
   retry/empty-body recovery + `RUN_MAX_RETRIES`/`RUN_TIMEOUT_MS` env knobs.
 - **Plugin system** (dsh-inspired, 2026-08-16): `lib/lab/llm-benchmark/plugins/`

@@ -14,6 +14,8 @@ import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
 import { modelIndexPath, modelPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
+import { StatStrip } from '@/components/lab/llm-benchmark/stat-strip'
+import { modelCompletion } from '@/lib/lab/llm-benchmark/analytics'
 import { IterationChecks } from '@/components/lab/llm-benchmark/iteration-checks'
 import {
   formatRuntime,
@@ -160,6 +162,9 @@ export default async function ModelDetailPage({
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-4 max-w-prose type-body text-fg/70">{model.blurb ?? model.capabilities}</p>
+          </Reveal>
+          <Reveal delay={200}>
+            <StatStrip stats={modelCompletion(results)} className="mt-4 text-xs" />
           </Reveal>
           <Reveal delay={240}>
             <div className="mt-6 flex flex-wrap gap-3 font-mono text-xs text-muted">

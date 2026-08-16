@@ -3,7 +3,7 @@ import type {
   BenchmarkModel,
   BenchmarkResult,
 } from './types'
-import { BENCHMARK_MODELS } from './registry'
+import { BENCHMARK_MODELS, BENCHMARK_TASKS } from './registry'
 import { BENCHMARK_RESULTS } from './results'
 import { aggregateResults, type AggregateStats } from './harness'
 
@@ -103,6 +103,72 @@ export function modelReliability(rs: BenchmarkResult[]): ModelReliability {
 
 function isSeeded(r: BenchmarkResult): boolean {
   return r.source === 'seeded'
+}
+
+export interface ModelCompletion {
+  /** How many tasks the model COULD have run — the merged registry roster (built-ins + plugin tasks). */
+  tasksTotal: number
+  /** Tasks that produced a usable artifact: status 'success' or 'partial'. */
+  tasksDone: number
+  /** Records whose status is 'timeout' — the "ran out of clock" bucket. */
+  timeouts: number
+  /** Live records of any status (done + timed out + failed). 0 = never swept. */
+  attempted: number
+  /** Mean wall clock over COMPLETED tasks only. */
+  meanRuntimeMs: number
+  /** Mean score over COMPLETED tasks only. */
+  meanScore: number
+  /** Total spend across every live record, including the ones that failed. */
+  totalCostUsd: number
+  /** Dollars per point of mean score — see `modelCompletion` for the formula. */
+  costPerPoint: number
+}
+
+/**
+ * Per-model completion + value stats for the model cards and the model page
+ * header. Answers "how much of the board did this model actually finish, and
+ * what did that cost" without the reader counting table rows.
+ *
+ * SEEDED RECORDS ARE EXCLUDED from every field. Hand-authored sample data must
+ * never inflate a model's completion — a model whose whole board is seeded
+ * reads as `attempted: 0` ("no runs yet"), same as one that was never swept.
+ * A record with no `source` is treated as live (the field postdates the
+ * earliest records, and everything hand-authored carries 'seeded' explicitly).
+ *
+ * Averages (`meanScore`, `meanRuntimeMs`) cover COMPLETED tasks only: a
+ * timeout scores 0 and burns the full per-call cap, so folding it into the
+ * means would say something about the sweep's patience rather than about the
+ * model's work. The timeouts are reported as their own count instead.
+ *
+ * COST-PER-POINT = `totalCostUsd / max(meanScore, 0.1)` — the whole bill for
+ * this model divided by the quality it averaged, i.e. "dollars per point of
+ * mean score". Total (not mean) cost is the numerator on purpose: it is the
+ * number actually paid, so a model that burned spend on tasks it then failed
+ * is charged for them. The 0.1 clamp keeps a 0-scoring model finite rather
+ * than Infinity. Free-tier models are exactly 0, which reads honestly (they
+ * cost nothing per point) — the "unbounded value" framing belongs to
+ * `scorePerDollar`, which divides the other way.
+ */
+export function modelCompletion(
+  results: BenchmarkResult[],
+  tasksTotal: number = BENCHMARK_TASKS.length
+): ModelCompletion {
+  const live = results.filter((r) => !isSeeded(r))
+  const done = live.filter((r) => r.status === 'success' || r.status === 'partial')
+  const totalCostUsd = live.reduce((sum, r) => sum + r.costUsd, 0)
+  const meanScore = done.length > 0 ? done.reduce((s, r) => s + r.score, 0) / done.length : 0
+  const meanRuntimeMs =
+    done.length > 0 ? done.reduce((s, r) => s + r.runtimeMs, 0) / done.length : 0
+  return {
+    tasksTotal,
+    tasksDone: done.length,
+    timeouts: live.filter((r) => r.status === 'timeout').length,
+    attempted: live.length,
+    meanRuntimeMs,
+    meanScore,
+    totalCostUsd,
+    costPerPoint: totalCostUsd > 0 ? totalCostUsd / Math.max(meanScore, 0.1) : 0,
+  }
 }
 
 export function rankModels(results: BenchmarkResult[] = BENCHMARK_RESULTS): ModelRanking[] {

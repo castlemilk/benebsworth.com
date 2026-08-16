@@ -11,6 +11,8 @@ import {
 } from '@/lib/lab/llm-benchmark/registry'
 import { resultsForModel } from '@/lib/lab/llm-benchmark/results'
 import { aggregateResults } from '@/lib/lab/llm-benchmark/harness'
+import { modelCompletion } from '@/lib/lab/llm-benchmark/analytics'
+import { StatStrip } from '@/components/lab/llm-benchmark/stat-strip'
 import { modelIndexPath, modelPath } from '@/lib/lab/llm-benchmark/nav'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import {
@@ -196,7 +198,8 @@ function ModelCard({
   model: (typeof BENCHMARK_MODELS)[number]
   index: number
 }) {
-  const stats = aggregateResults(resultsForModel(model.id))
+  const results = resultsForModel(model.id)
+  const stats = aggregateResults(results)
   const free = isFreeModel(model)
   const runHref = modelPath(model)
 
@@ -231,6 +234,8 @@ function ModelCard({
             </div>
 
             <p className="mt-4 max-w-prose text-fg/70">{model.blurb ?? model.capabilities}</p>
+
+            <StatStrip stats={modelCompletion(results)} className="mt-3" />
 
             <div className="mt-4 flex flex-wrap gap-2 font-mono text-xs text-muted">
               <span className="rounded-full border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-1">

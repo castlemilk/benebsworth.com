@@ -448,40 +448,19 @@ prune script works; skill documents the layout.
 
 # P1 — Security and integrity
 
-## [ ] 4. Credential scrub for CLI spawns
+## [x] 4. Credential scrub for CLI spawns
 
-**Problem.** `runCli` (`lib/lab/llm-benchmark/runners/cli.ts`) spawns the model
-CLI with `env: { ...process.env, ...options.env }` — the model-running process
-inherits EVERYTHING: `OPENROUTER_API_KEY`, `MOONSHOT_API_KEY`,
-`ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, Cloudflare tokens, GitHub tokens,
-OMEGA credentials. The model's output (the artifact) is then **published
-publicly** on the benchmark site. A stressed model dumping `env` (we have seen
-prompt-echoing and empty-body degeneracy from free-tier models) would leak
-every credential in the repo environment into a public HTML page.
-
-**Inspiration.** dsh `docs/defensive-patterns.md` — "Never hand untrusted
-output the ambient environment": spawned commands get a scrubbed env
-(drop `*KEY*`/`*SECRET*`/`*TOKEN*`/`*PASSWORD*`); spill/temp files use a
-private (0700) dir, random names, and exclusive owner-only opens (`'wx'`,
-`0o600`) to prevent symlink races and disclosure.
-
-**Design sketch.**
-
-- `cli.ts` `runCli`: filter `process.env` through a scrubber before merging
-  `options.env` — drop (or blank) any key matching
-  `/(key|secret|token|password|auth|credential|private)/i`, unless the
-  provider's `env` override explicitly re-adds it.
-- Verify opencode/agy/codex still authenticate with the scrubbed env (they
-  use their own credential stores — opencode `~/.config/opencode` + keychain;
-  agy/codex similar). Add a smoke test asserting a spawned child does NOT
-  see the parent's API keys.
-- Artifact copy path (from #3) writes with `{ flag: 'wx', mode: 0o600 }`.
-
-**Acceptance criteria.** A CLI child's `process.env` in tests contains no
-`*KEY*`/`*TOKEN*`/`*PASSWORD*` vars from the parent; the three CLI providers
-still run authenticated; unit test for the scrubber.
-
-**Effort.** S. **Dependencies.** none.
+**Shipped.** `scrubEnv()` (exported from `runners/cli.ts`) drops every
+credential-shaped key (`/(key|secret|token|password|auth|credential|private)/i`)
+from the inherited environment; `runCli` spawns with
+`{ ...scrubEnv(process.env), ...options.env }`, so a provider that ever needs a
+credential re-adds it by name (opt-in, never ambient). No allowlist: nothing a
+child needs (PATH, HOME, TMPDIR, SHELL, TERM, LANG/LC_*, USER) matches. Unit
+tests plus a real-spawn test asserting the child cannot see a poisoned parent
+`*_API_KEY` are in `cli.test.ts`. Verified live: `agy` replies "OK" under the
+scrubbed env, and `codex` reaches its authenticated usage-limit response
+identically with and without the scrub. The `{ flag: 'wx', mode: 0o600 }`
+artifact-write hardening stays with #3.
 
 ## [ ] 5. Results invariants verification (anti-regression)
 
@@ -1369,6 +1348,8 @@ with their capture metadata.
   iteration) + process-group timeout kill + hard exit on sweep completion.
 - opencode provider (deepseek-v4-flash-free) + bearer-blip transient
   classification.
+- Credential scrub on CLI spawns (`scrubEnv()` in `runners/cli.ts`, #4) —
+  the model child never inherits an ambient key/token/secret.
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Frame-prelude hardening + sandbox prompt contract + per-iteration

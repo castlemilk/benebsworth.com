@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { extractLikelyCode, generateFromCli } from './cli'
+import { extractLikelyCode, generateFromCli, runCli, scrubEnv } from './cli'
 import { spawn } from 'node:child_process'
 import { mkdtemp, writeFile, rm, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -196,4 +196,83 @@ describe('generateFromCli unique artifact names', () => {
     expect(response.output).toContain('<h1>NAME_TEST</h1>')
     await rm(dir, { recursive: true, force: true })
   }, 20_000)
+})
+
+describe('scrubEnv', () => {
+  it('drops every credential-shaped key', () => {
+    const scrubbed = scrubEnv({
+      OPENROUTER_API_KEY: 'sk-or-secret',
+      MY_SECRET: 'shh',
+      AUTH_HEADER: 'Bearer x',
+      GH_TOKEN: 'ghp_x',
+      DB_PASSWORD: 'hunter2',
+      PRIVATE_THING: 'rsa',
+      SOME_CREDENTIAL: 'blob',
+    })
+    expect(Object.keys(scrubbed)).toEqual([])
+  })
+
+  it('keeps the vars a child process actually needs', () => {
+    const scrubbed = scrubEnv({
+      PATH: '/usr/bin',
+      HOME: '/Users/x',
+      NODE_ENV: 'test',
+      TMPDIR: '/tmp',
+      LANG: 'en_AU.UTF-8',
+      OPENROUTER_API_KEY: 'sk-or-secret',
+    })
+    expect(scrubbed).toEqual({
+      PATH: '/usr/bin',
+      HOME: '/Users/x',
+      NODE_ENV: 'test',
+      TMPDIR: '/tmp',
+      LANG: 'en_AU.UTF-8',
+    })
+  })
+
+  it('matches case-insensitively', () => {
+    const scrubbed = scrubEnv({ my_api_key: 'a', Some_Token: 'b', aWs_SeCrEt: 'c', plain: 'd' })
+    expect(scrubbed).toEqual({ plain: 'd' })
+  })
+
+  it('does not mutate the input env', () => {
+    const source = { OPENROUTER_API_KEY: 'sk-or-secret', PATH: '/usr/bin' }
+    scrubEnv(source)
+    expect(source.OPENROUTER_API_KEY).toBe('sk-or-secret')
+  })
+})
+
+describe('runCli credential scrub', () => {
+  it('hides parent credentials from the child while keeping PATH', async () => {
+    process.env.FAKE_TEST_API_KEY = 'leak-me-if-you-can'
+    try {
+      const { stdout } = await runCli(
+        process.execPath,
+        ['-e', 'console.log(JSON.stringify(process.env))'],
+        { timeoutMs: 20_000 }
+      )
+      const childEnv = JSON.parse(stdout) as Record<string, string>
+      expect(childEnv.FAKE_TEST_API_KEY).toBeUndefined()
+      expect(Object.keys(childEnv).filter((k) => /(key|secret|token|password|auth|credential|private)/i.test(k))).toEqual(
+        []
+      )
+      expect(childEnv.PATH).toBe(process.env.PATH)
+    } finally {
+      delete process.env.FAKE_TEST_API_KEY
+    }
+  }, 30_000)
+
+  it('lets a provider env override re-add a scrubbed var', async () => {
+    process.env.FAKE_TEST_API_KEY = 'parent-value'
+    try {
+      const { stdout } = await runCli(
+        process.execPath,
+        ['-e', 'console.log(process.env.FAKE_TEST_API_KEY ?? "<absent>")'],
+        { timeoutMs: 20_000, env: { FAKE_TEST_API_KEY: 'explicitly-allowed' } }
+      )
+      expect(stdout.trim()).toBe('explicitly-allowed')
+    } finally {
+      delete process.env.FAKE_TEST_API_KEY
+    }
+  }, 30_000)
 })

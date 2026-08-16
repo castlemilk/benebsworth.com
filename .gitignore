@@ -92,7 +92,14 @@ playwright-report/
 
 # old Gatsby site kept locally for reference (1.1GB)
 legacy/
-public/lab-data/
+
+# Generated static lab data (rebuilt by prebuild from committed sources) —
+# EXCEPT published run traces, which are the opposite kind of file: they are
+# the forensic evidence behind results.json, they can only be produced on the
+# machine that ran the sweep (`sweeps/` is gitignored and pruned), and a CI
+# build could never regenerate them. See scripts/publish-traces.mjs.
+public/lab-data/*
+!public/lab-data/traces/
 
 # Large raw model-generated HTML result variants (never commit — they execute in the browser)
 lib/lab/llm-benchmark/results-*-html.json

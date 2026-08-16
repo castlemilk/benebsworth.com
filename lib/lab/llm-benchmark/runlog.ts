@@ -38,13 +38,34 @@ import { open, type FileHandle } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 
 import { redactValue } from './redact'
-import type { BenchmarkFailureReason, IterationCheckResult } from './types'
+import { parseRunLog, SPILL_PREVIEW_CHARS } from './runlog-format'
+import type {
+  RunLogConfigSnapshot,
+  RunLogEvent,
+  RunLogEventInput,
+  RunLogHeader,
+  SpilledString,
+} from './runlog-format'
+
+// The record shapes and the pure reader live in `runlog-format.ts` — a
+// browser-safe module, so the run-trace UI can parse the same bytes without
+// pulling node:fs into the client bundle. They are re-exported here so the
+// node-side callers keep importing everything from one place, and so there is
+// only ever one definition of each record.
+export {
+  parseRunLog,
+  spillPreview,
+  SPILL_PREVIEW_CHARS,
+  type RunLogConfigSnapshot,
+  type RunLogEvent,
+  type RunLogEventInput,
+  type RunLogHeader,
+  type Spillable,
+  type SpilledString,
+} from './runlog-format'
 
 /** Strings at or above this many bytes are spilled rather than inlined. */
 export const SPILL_THRESHOLD_BYTES = 8 * 1024
-
-/** How much of a spilled string stays inline as a preview. */
-export const SPILL_PREVIEW_CHARS = 2048
 
 /**
  * Coalescing window for batched writes (dsh's `writeBatchMaxDelayMs`). A busy
@@ -52,144 +73,6 @@ export const SPILL_PREVIEW_CHARS = 2048
  * one write + one fsync instead of one per event.
  */
 export const WRITE_BATCH_MAX_DELAY_MS = 200
-
-/** The knobs in effect for this (model, task) job, captured at open time. */
-export interface RunLogConfigSnapshot {
-  iterations: number
-  timeoutMs: number
-  maxRetries: number
-  bustCache: boolean
-  /**
-   * The plugin bundles mounted for this sweep (`[]` = builtins only), when the
-   * caller supplies them. Audit-only: it records the scope a run was resolved
-   * under, which the task list alone cannot show (a sweep can mount a plugin
-   * and run none of its tasks). Absent on library/test use and on logs written
-   * before the knob existed.
-   */
-  plugins?: string[]
-}
-
-/** Immutable first line of every run log. */
-export interface RunLogHeader {
-  type: 'header'
-  seq: 0
-  version: 1
-  runId: string
-  modelId: string
-  taskId: string
-  createdAt: string
-  configSnapshot: RunLogConfigSnapshot
-}
-
-/** A string too large to inline: full bytes live at `spillRef`. */
-export interface SpilledString {
-  /** Path relative to the run-log dir, e.g. `spill/9f86d081884c7d65.txt`. */
-  spillRef: string
-  /** First SPILL_PREVIEW_CHARS characters of the original string. */
-  preview: string
-  /** Byte length of the original string. */
-  bytes: number
-}
-
-/** A field that is inlined when small and spilled when large. */
-export type Spillable = string | SpilledString
-
-/** Human-readable text for a possibly-spilled field. */
-export function spillPreview(value: Spillable): string {
-  return typeof value === 'string' ? value : value.preview
-}
-
-/** One event, as passed to `append` (the writer owns `seq` and `ts`). */
-export type RunLogEventInput =
-  | {
-      /** Emitted once per iteration attempt sequence, before the first provider call. */
-      type: 'request'
-      iterationIndex: number
-      /** SHA-256 of the exact prompt sent (post `withSandboxConstraints`). */
-      promptHash: string
-      promptLength: number
-    }
-  | {
-      /** Every response that came back, including cache replays. */
-      type: 'response'
-      iterationIndex: number
-      rawOutput: Spillable
-      tokensIn: number
-      tokensOut: number
-      runtimeMs: number
-      cacheHit: boolean
-      /**
-       * Time to first observable output, ms from the same start `runtimeMs`
-       * is measured from. ABSENT when unmeasurable (non-streaming API
-       * providers) or meaningless (cache replays generated nothing) — never
-       * 0, which would be a physically impossible TTFT. See
-       * `GenerationResponse.ttftMs` for the per-provider story.
-       */
-      ttftMs?: number
-      /**
-       * Output tokens per second, computed at the append site from
-       * `tokensOut`/`runtimeMs`/`ttftMs`. Absent on cache replays and when no
-       * positive window exists. ALWAYS read alongside `rateKind`.
-       */
-      tokensPerSec?: number
-      /** Which rate `tokensPerSec` is. Present iff `tokensPerSec` is. */
-      rateKind?: 'decode' | 'wall-clock'
-    }
-  | {
-      /**
-       * A retried attempt. `transient` retries happen inside `generateOne`
-       * (network/429/timeout); `empty_body` retries happen in the runTask loop
-       * (HTTP 200 with no usable content, which is not an error).
-       */
-      type: 'retry'
-      iterationIndex: number
-      attempt: number
-      error: string
-      delayMs: number
-      kind: 'transient' | 'empty_body'
-    }
-  | {
-      /** The post-cleanOutput / inline-deps artifact that was actually scored. */
-      type: 'clean'
-      iterationIndex: number
-      output: Spillable
-    }
-  | {
-      /** A failed iteration (terminal — retries are their own events). */
-      type: 'failure'
-      iterationIndex: number
-      error: string
-      failureReason: BenchmarkFailureReason
-      timedOut: boolean
-    }
-  | {
-      /** One scorer check for one iteration. */
-      type: 'check'
-      iterationIndex: number
-      check: IterationCheckResult
-    }
-  | {
-      /**
-       * The provider stated a quota reset window while tripping this model's
-       * breaker. The same estimate is post-stamped onto the aggregate as
-       * `quotaNextResetAt`, but a 0-success run's record can be dropped by
-       * mergeResults — so without this event the ONLY surviving evidence of
-       * "when can this run again?" would live outside the log, breaching
-       * "reconstructable from the log alone".
-       */
-      type: 'quota'
-      iterationIndex: number
-      /** ISO timestamp of the estimated next window. */
-      quotaNextResetAt: string
-    }
-  | {
-      /** The aggregated BenchmarkResult, with `output` always spilled. */
-      type: 'aggregate'
-      result: Record<string, unknown>
-    }
-
-/** One event as persisted: the input plus the writer-owned envelope. */
-export type RunLogEvent = RunLogEventInput & { seq: number; ts: string }
 
 export interface RunLog {
   /** Sweep run id (basename of the run-log dir). */
@@ -488,40 +371,12 @@ export function openRunLog(meta: {
 }
 
 /**
- * Read a run log back.
+ * Read a run log back off disk.
  *
- * Crash-recovery semantics: parsing stops at the FIRST unparsable or
- * non-record line and everything after it is ignored, because a sweep killed
- * mid-batch leaves a truncated tail. Only a missing/invalid HEADER throws —
- * without it the file describes nothing.
+ * The parsing (and its crash-recovery semantics) is `parseRunLog` in
+ * `runlog-format.ts`; this is the node-side file wrapper, and passes the path
+ * as the label so error messages still name the offending file.
  */
 export function readRunLog(file: string): { header: RunLogHeader; events: RunLogEvent[] } {
-  const lines = readFileSync(file, 'utf8').split('\n')
-
-  let header: RunLogHeader
-  try {
-    header = JSON.parse(lines[0] ?? '') as RunLogHeader
-  } catch {
-    throw new Error(`${file}: missing or unparsable run-log header on line 1`)
-  }
-  if (!header || header.type !== 'header') {
-    throw new Error(`${file}: first line is not a run-log header record`)
-  }
-
-  const events: RunLogEvent[] = []
-  for (const line of lines.slice(1)) {
-    if (line.trim() === '') break
-    let parsed: unknown
-    try {
-      parsed = JSON.parse(line)
-    } catch {
-      break // truncated tail from a killed sweep — keep the complete prefix
-    }
-    if (!parsed || typeof parsed !== 'object' || typeof (parsed as RunLogEvent).type !== 'string') {
-      break
-    }
-    events.push(parsed as RunLogEvent)
-  }
-
-  return { header, events }
+  return parseRunLog(readFileSync(file, 'utf8'), file)
 }

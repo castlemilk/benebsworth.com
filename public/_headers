@@ -15,3 +15,11 @@
 /lab-data/llm-benchmark/outputs/*
   Content-Security-Policy: sandbox allow-scripts; default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; worker-src blob:; frame-ancestors 'self'
   X-Content-Type-Options: nosniff
+
+# Published run traces (JSONL + spill/*.txt). The spill files are raw model
+# output — the same untrusted bytes as an artifact — so a "view full" link that
+# opens one top-level must land in a fully sandboxed, script-less document, and
+# must never be sniffed into HTML.
+/lab-data/traces/*
+  Content-Security-Policy: sandbox; default-src 'none'; frame-ancestors 'self'
+  X-Content-Type-Options: nosniff

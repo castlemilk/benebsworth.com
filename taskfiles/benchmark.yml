@@ -239,6 +239,34 @@ tasks:
     cmds:
       - '{{.BIN}}/tsx scripts/verify-results.mjs {{.CLI_ARGS}}'
 
+  publish-traces:
+    desc: Copy the run logs results.json points at into public/lab-data/traces (free, offline)
+    summary: |
+      Makes the forensic evidence PUBLIC. `sweeps/` is gitignored and pruned, so
+      a run log exists only on the machine that ran the sweep — a CI build has
+      none. This copies every log a results.json record references, plus ONLY
+      the spill files that log actually references, into
+      `public/lab-data/traces/<runId>/`, and writes `index.json` (runId, file,
+      modelId, taskId from each log's HEADER). The task page reads that index at
+      build time and the "Iteration trace" disclosure fetches the JSONL on
+      demand — so a trace that is not published simply does not render, and the
+      UI never 404-probes.
+
+      Published traces ARE COMMITTED (the `.gitignore` carves them out of the
+      otherwise-generated `public/lab-data/`). Idempotent, no arguments: it also
+      PRUNES traces no record claims any more, and spill files no surviving log
+      references — a trace for a replaced run is evidence for a result the site
+      no longer shows.
+
+      Spill files are whole artifacts and are copied VERBATIM (a clipped
+      artifact is evidence you cannot trust). The script prints the byte totals
+      and warns past a 2 MB soft budget; you decide whether to commit that much.
+
+      Runbook order after a sweep:
+        task bench:verify-results  →  task bench:publish-traces  →  commit
+    cmds:
+      - '{{.BIN}}/tsx scripts/publish-traces.mjs'
+
   plugin-scaffold:
     desc: 'Scaffold a new plugin — `task bench:plugin-scaffold -- <id> "<Display Name>"`'
     summary: |

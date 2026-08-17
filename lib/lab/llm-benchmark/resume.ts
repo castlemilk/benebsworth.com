@@ -76,6 +76,14 @@ export interface RunLogCheckpoint {
   /** The aggregate event's `result`, with `output` still in spilled form. */
   aggregate?: Record<string, unknown>
   /**
+   * The header's `configSnapshot.plugins` — the plugin bundle scope the sweep
+   * ran under (`[]` = builtins only). Absent on logs written before the knob
+   * existed, and on library/test use. Surfaced because a RESUME has to be
+   * launched under the same scope: a child that mounted every plugin would
+   * resolve a task set the original sweep never had.
+   */
+  plugins?: string[]
+  /**
    * The last `quota` event's estimate, if the provider stated one. It lives in
    * its own event precisely because the aggregate is written BEFORE the record
    * is stamped with it (`runners/provider.ts` post-stamps the returned result),
@@ -162,6 +170,9 @@ export function readSweepCheckpoints(runDir: string): RunLogCheckpoint[] {
         events: events.length,
         complete: aggregate !== undefined,
         aggregate: aggregate?.result,
+        plugins: Array.isArray(header.configSnapshot?.plugins)
+          ? header.configSnapshot.plugins.filter((id): id is string => typeof id === 'string')
+          : undefined,
         quotaNextResetAt: quota?.quotaNextResetAt,
       }
     } catch (err) {
@@ -432,6 +443,32 @@ export function planResume({
   }
 
   return plan
+}
+
+/**
+ * The models this sweep will ACTUALLY call — those with at least one pair the
+ * resume is not skipping.
+ *
+ * WHY THIS EXISTS. `--resume` narrows the work but not the SHAPE: the child is
+ * still launched with the full `--model` set (the monitor derives it from the
+ * tree's headers, and a hand-run resume repeats the original knobs), so the
+ * quota pre-flight, reading that set verbatim, would abort the whole sweep over
+ * a lock on a model whose every pair is already complete — a model this run is
+ * never going to call. That disagreed with the recovery monitor, which locks
+ * over PENDING models only (`recoveryPlan`): the monitor said `resume`, the
+ * child aborted, and the monitor's stop-on-nonzero killed the watch.
+ *
+ * Pure, and deliberately expressed over the same (model × task) cross product
+ * `planResume` walks, keyed by the same `pairKey`, so "pending" means exactly
+ * what the plan means by it. Input order is preserved — the pre-flight's
+ * messages read in the operator's model order.
+ */
+export function modelsWithPendingPairs(
+  modelIds: readonly string[],
+  taskIds: readonly string[],
+  skipKeys: ReadonlySet<string>
+): string[] {
+  return modelIds.filter((modelId) => taskIds.some((taskId) => !skipKeys.has(pairKey(modelId, taskId))))
 }
 
 function isSpilled(value: unknown): value is SpilledString {

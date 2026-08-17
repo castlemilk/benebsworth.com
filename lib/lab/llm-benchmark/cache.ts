@@ -1,12 +1,39 @@
+/**
+ * On-disk response cache for the benchmark harness.
+ *
+ * The key is everything that changes what a REPLAY would be a replay OF:
+ * (model, task, amended prompt, iteration index, frame-prelude fingerprint).
+ * See `buildCacheKey` for why the prelude is in there.
+ */
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 
+import { framePreludeFingerprint } from './prompt-bundle'
+import type { UsageProvenance } from './types'
+
+/**
+ * The generation payload a cache hit replays.
+ *
+ * Structurally a subset of `GenerationResponse`, and the optional fields are
+ * declared HERE rather than left to widening: `setCachedResponse` is called
+ * with a whole response object, but every consumer builds a `CachedResponse`
+ * field by field, and a field the type does not know about is silently dropped
+ * on the way through. `usageSource` and `ttftMs` are provenance — losing them
+ * turns "estimated" into "unknown", which is then presented as reported.
+ *
+ * Absent means absent, on both: `ttftMs` has no zero (a 0ms first token is
+ * impossible) and `usageSource` defaults to `'estimated'` at the consumer.
+ */
 export interface CachedResponse {
   output: string
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /** Where the token counts came from — see `GenerationResponse.usageSource`. */
+  usageSource?: UsageProvenance
+  /** Time-to-first-observable-output of the ORIGINAL call, in ms. */
+  ttftMs?: number
 }
 
 export interface CacheEntry {
@@ -30,9 +57,35 @@ function hashPrompt(prompt: string): string {
   return createHash('sha256').update(prompt).digest('hex').slice(0, 16)
 }
 
-function buildCacheKey(modelId: string, taskId: string, prompt: string, iterationIndex: number): string {
+/**
+ * The cache key: (model, task, amended prompt, iteration, PRELUDE).
+ *
+ * WHY THE PRELUDE IS IN HERE. `promptBundleHash` — the stamp that tells the
+ * board "these numbers describe conditions that no longer exist" — covers the
+ * amended prompt AND `framePreludeFingerprint()`. The cache used to cover only
+ * the prompt, so a prelude edit staled every stored record while leaving every
+ * cache entry reachable: the re-sweep the stale marker asked for hit the cache,
+ * replayed the OLD bytes, and `aggregateRuns` stamped them with the NEW bundle
+ * hash. The warnings cleared and nothing had been regenerated — the worst
+ * possible outcome, because it looks like the fix.
+ *
+ * Keying on it makes the cache honour the promise the bundle hash makes: change
+ * the prelude, and the next sweep really does re-generate. Entries written
+ * under the old key shape simply become unreachable — a cold cache after a
+ * prelude edit, which is exactly the intent and costs one sweep.
+ *
+ * `preludeFingerprint` is injectable for tests only; production passes the real
+ * one.
+ */
+export function buildCacheKey(
+  modelId: string,
+  taskId: string,
+  prompt: string,
+  iterationIndex: number,
+  preludeFingerprint: string = framePreludeFingerprint()
+): string {
   const promptHash = hashPrompt(prompt)
-  return `${modelId}::${taskId}::${promptHash}::${iterationIndex}`
+  return `${modelId}::${taskId}::${promptHash}::${iterationIndex}::${preludeFingerprint}`
 }
 
 function load(): void {

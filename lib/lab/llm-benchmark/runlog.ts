@@ -230,11 +230,14 @@ class JsonlRunLog implements RunLog {
     // writeBatch's try/catch, which reports it and drops the batch.
     void this.handle.catch(() => {})
     // Header is queued like any other line, so it is always byte 0 of the
-    // first batch and can never race an event. Redacted like any other record:
-    // today `configSnapshot` holds four numbers/booleans and cannot carry a
-    // secret, so this is a no-op — it is here so that a knob added to the
-    // snapshot later (a base URL with an embedded credential, an echoed env
-    // value) is covered by construction rather than by remembering.
+    // first batch and can never race an event. Redacted like any other record —
+    // there is no bypass, and that matters more than it used to:
+    // `configSnapshot` has since grown STRING fields (`plugins[]`, the
+    // `promptBundle` hash) on top of the original numbers/booleans. Those are
+    // ids and a hex digest, so redaction is still a no-op on them in practice;
+    // the point is that the next knob (a base URL with an embedded credential,
+    // an echoed env value) is covered by construction rather than by someone
+    // remembering.
     this.queue.push(JSON.stringify(redactValue(header)) + '\n')
     this.schedule()
   }

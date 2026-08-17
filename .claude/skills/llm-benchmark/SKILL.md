@@ -279,6 +279,13 @@ npx tsx scripts/run-benchmark.mjs --profile slow-model --resume 2026-08-16T09-30
   succeeds. Recovery runs **before** the quota pre-flight: it spends nothing,
   and a quota-locked model is exactly the case with an unrecovered record — the
   pre-flight then sees the recovered window too.
+- **The quota pre-flight is scoped to the remaining work.** On a resume, a model
+  whose every pair is already complete is never called, so its quota lock cannot
+  affect the run and does not abort it (`modelsWithPendingPairs`, filtered by the
+  plan's `skipKeys`). Non-resume sweeps call every model and pre-flight every
+  model, unchanged. This is also what keeps the recovery monitor honest: it locks
+  over PENDING models only, so before this the monitor said `resume` and the child
+  it spawned aborted — killing the whole watch on its stop-on-nonzero.
 - **`--bust-cache` / `RUN_BUST_CACHE=1` wins.** Cache-busting means "measure this
   again", so it overrides every skip and says so in one line. Don't combine them
   expecting a cheap resume.
@@ -320,12 +327,31 @@ task bench:monitor -- --watch --go --interval 30
 - **A 0-success aggregate counts as pending** — same rule as the resume
   (`planResume` reason `failed`). That is the quota-killed pair, the whole point.
 - **The child's shape.** It spawns
-  `tsx scripts/run-benchmark.mjs --resume <id> --model … --task …` with the
-  model/task ids read from the tree's run-log HEADERS, one child at a time,
+  `tsx scripts/run-benchmark.mjs --resume <id> --model … --task … [--plugins …]`
+  with the ids read from the tree's run-log HEADERS, one child at a time,
   newest first, stdio inherited, stopping at the first nonzero exit. Without
-  those flags the harness would fall back to its DEFAULT model set and sweep
-  something nobody asked for. The child re-runs its own pre-flight, so a lock the
-  monitor missed still aborts before a call.
+  those flags the harness would fall back to its DEFAULT model set and its full
+  plugin roster and sweep something nobody asked for. The child re-runs its own
+  pre-flight, so a lock the monitor missed still aborts before a call — and that
+  pre-flight now scopes to models with PENDING pairs, matching the monitor's own
+  lock scope, so a `resume` verdict can no longer become an abort in the child.
+- **Plugin scope is replayed too.** `--plugins` comes from the headers'
+  `configSnapshot.plugins`: a recorded set is passed verbatim (`[]` → `--plugins
+  none`), and headers that recorded NOTHING (logs older than the knob) get no
+  flag, so the child defaults to every plugin exactly as before. If the headers
+  in one tree DISAGREE, the monitor resumes under their union and prints a
+  `WARNING … disagree about the plugin scope` line — check the tree.
+- **Runaway brake (`--watch --go`).** A run failing for a NON-quota reason exits
+  its child ZERO and stays pending, so a naive watch respawns it every interval
+  forever, at real cost. Per run id per monitor session the loop tracks attempts
+  and whether a spawn increased the tree's completed count: a spawn that made **no
+  progress** stops that run for the session (`NO PROGRESS …` / `STALLED …`), and
+  every run is capped at **3** spawns regardless (`MAX_RESUME_ATTEMPTS`). A
+  stopped run then prints as `stalled — … not resuming again this session`; it is
+  a printed session state, not a fourth `recoveryPlan` verdict. Nothing is
+  persisted — restarting the monitor clears it, which is you saying "I looked at
+  it". A watch whose only remaining work is stalled exits 1 rather than sleeping
+  forever. One-shot `--go` needs no such memory: it spawns each ready run once.
 - **The shape is reconstructed, not recorded.** The sweep's original
   `--model`/`--task` are not persisted anywhere, so the monitor derives them as
   every model seen × every task seen in the headers. A deliberately RAGGED sweep
@@ -922,6 +948,16 @@ prompt TEXT, the probes test what a model DOES when it reads it.
 - **Asserts run on the RAW reply.** No `cleanOutput`, no fence stripping: a
   probe that ran on cleaned text could not see "the model narrated before the
   DOCTYPE". Tolerances are stated in the probe's own pattern.
+- **…but "raw" only means raw on the API path.** CLI providers (agy/codex/
+  opencode — including the DEFAULT probe model) never hand back an HTTP reply:
+  `runners/cli.ts` returns the file-handoff artifact or `extractLikelyCode(stdout)`,
+  which strips narration before the DOCTYPE to get an artifact out of a chatty
+  terminal. So **preamble-sensitive probes (`doctype-first`) cannot fail on a CLI
+  model** — point them at an API-provider model (`--model <api-model>`) for the
+  assert to mean anything. The NEGATIVE probes (`no-cdn`, `try-catch-alert`,
+  `scoped-context`, `css-sized-canvas`, `fills-viewport`) bite everywhere:
+  extraction removes prose, not code. The extraction is not going to change — it
+  is what makes CLI models usable in the sweep at all.
 - **Cost.** One generation per (probe × model), through `generateForProbe` —
   the real provider seam, with no cache, no retries, no scoring, no run log,
   and no write to `results.json`. Default model is the cheapest registered FREE
@@ -952,8 +988,23 @@ makes that axis nameable.
   task-specific, or none) + a separator + `framePreludeFingerprint()` (a digest
   of the `FRAME_PRELUDE` **source constant**, not a hand-bumped version number —
   the one time someone forgets to bump is the time it matters). The rule:
-  **anything that changes what the model SEES or the environment its artifact is
-  SCORED IN**.
+  **anything that changes what the model SEES, or the environment its artifact is
+  DISPLAYED/PUBLISHED in**.
+- **The prelude is the DISPLAY environment, not the scoring one.** `withPrelude`
+  wraps the artifact for the live frame (`artifact-frame`, `generated-demo`) and
+  the published `.html` (`gen-benchmark-outputs.mjs`). The behavioural scorer does
+  NOT use it — `scorers/sandbox.ts` does `page.setContent(rawArtifact)`. So a
+  prelude edit re-runs sweeps and marks history stale because **the published
+  rendering changed**, not because a check would flip. Aligning scorer and display
+  is tracked as TODO #12 and deliberately deferred: injecting the prelude into
+  scoring would silently shift every stored behavioural score.
+- **A prelude edit really does re-generate.** `framePreludeFingerprint()` is part
+  of the response-cache key (`cache.ts`), not just the bundle hash. Before that it
+  was not: a prelude edit staled every record, and the re-sweep hit the cache
+  (same prompt), replayed the old bytes, and `aggregateRuns` stamped them with the
+  NEW bundle — warnings cleared with nothing regenerated. Entries written under
+  the old key shape are simply unreachable, so expect one cold-cache sweep after a
+  prelude change.
 - **What is NOT hashed, on purpose.** The task id/slug/title — the hash answers
   "same conditions?", and a rename changes no condition, so a rename must not
   invalidate history; two different tasks with identical prompts + environment

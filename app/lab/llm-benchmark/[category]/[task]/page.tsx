@@ -321,7 +321,7 @@ export default async function BenchmarkTaskPage({
                                 is "these numbers describe the prompt above". */}
                             {result.promptBundle && result.promptBundle !== currentBundle && (
                               <span
-                                title={`Scored under prompt bundle ${result.promptBundle}; current is ${currentBundle}. The prompt, its sandbox contract, or the frame prelude has changed since this run.`}
+                                title={`Produced under prompt bundle ${result.promptBundle}; current is ${currentBundle}. The prompt, its sandbox contract, or the frame prelude this artifact is published in has changed since this run.`}
                                 className="relative z-10 ml-1.5 font-mono text-[0.6rem] text-muted"
                               >
                                 · bundle {result.promptBundle.slice(0, 8)} (stale)

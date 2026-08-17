@@ -5,10 +5,13 @@ import { join } from 'node:path'
 
 import { forceSpill, openRunLog, runLogFileName, setRunLogDir } from './runlog'
 import {
+  MAX_RESUME_ATTEMPTS,
   RecoveryLockError,
   acquireRecoveryLock,
+  derivePluginScope,
   listSweepRunDirs,
   recoveryPlan,
+  shouldRespawn,
 } from './recovery'
 import type { BenchmarkResult } from './types'
 
@@ -347,5 +350,109 @@ describe('acquireRecoveryLock', () => {
     const path = join(tempDir(), '.recovery.lock')
     acquireRecoveryLock(path, { pid: 4242, isAlive: () => true })
     expect(() => acquireRecoveryLock(path, { pid: 4242, isAlive: () => true })).not.toThrow()
+  })
+})
+
+describe('derivePluginScope', () => {
+  it('says nothing when no header recorded a scope (legacy logs)', () => {
+    // `undefined` is not `[]`: the caller must pass NO --plugins, letting the
+    // child default to every plugin exactly as it did before the passthrough.
+    expect(derivePluginScope([{}, { plugins: undefined }])).toEqual({ mixed: false })
+  })
+
+  it('replays a unanimous scope, including the builtins-only empty set', () => {
+    expect(derivePluginScope([{ plugins: ['community-tasks'] }, { plugins: ['community-tasks'] }])).toEqual({
+      plugins: ['community-tasks'],
+      mixed: false,
+    })
+    expect(derivePluginScope([{ plugins: [] }, { plugins: [] }])).toEqual({ plugins: [], mixed: false })
+  })
+
+  it('ignores headers that stated nothing when others did', () => {
+    expect(derivePluginScope([{ plugins: ['a'] }, {}])).toEqual({ plugins: ['a'], mixed: false })
+  })
+
+  it('unions a disagreeing tree and flags it', () => {
+    expect(derivePluginScope([{ plugins: ['a'] }, { plugins: ['b', 'a'] }])).toEqual({
+      plugins: ['a', 'b'],
+      mixed: true,
+    })
+    // Builtins-only vs a mounted plugin is a disagreement too — the superset
+    // wins, because dropping a plugin drops tasks the tree provably ran.
+    expect(derivePluginScope([{ plugins: [] }, { plugins: ['a'] }])).toEqual({ plugins: ['a'], mixed: true })
+  })
+
+  it('is order-insensitive within one recorded set', () => {
+    expect(derivePluginScope([{ plugins: ['b', 'a'] }, { plugins: ['a', 'b'] }])).toEqual({
+      plugins: ['a', 'b'],
+      mixed: false,
+    })
+  })
+})
+
+describe('recoveryPlan plugin scope', () => {
+  it('carries the tree headers scope onto the candidate', async () => {
+    const { sweepsDir, runDirs } = tempSweeps('2026-08-16T09-30-12')
+    setRunLogDir(runDirs[0])
+    const scoped = openRunLog({
+      modelId: 'kimi-k2.7',
+      taskId: 'landing-page',
+      configSnapshot: { ...SNAPSHOT, plugins: ['community-tasks'] },
+    })!
+    await scoped.close()
+
+    const plan = recoveryPlan({ sweepDirs: listSweepRunDirs(sweepsDir), results: [], now: NOW })
+    expect(plan.candidates[0].plugins).toEqual(['community-tasks'])
+    expect(plan.candidates[0].pluginsMixed).toBe(false)
+  })
+
+  it('leaves the scope absent for a legacy tree', async () => {
+    const { sweepsDir, runDirs } = tempSweeps('2026-08-16T09-30-12')
+    await writeIncompleteLog(runDirs[0], 'kimi-k2.7', 'landing-page')
+    const plan = recoveryPlan({ sweepDirs: listSweepRunDirs(sweepsDir), results: [], now: NOW })
+    expect(plan.candidates[0].plugins).toBeUndefined()
+    expect(plan.candidates[0].pluginsMixed).toBe(false)
+  })
+})
+
+describe('shouldRespawn', () => {
+  it('always allows the first attempt', () => {
+    expect(shouldRespawn({ attempts: 0 })).toEqual({ respawn: true, reason: 'first-attempt' })
+  })
+
+  it('allows a respawn when the last one completed more pairs', () => {
+    expect(shouldRespawn({ attempts: 1, completedBefore: 2, completedAfter: 5 })).toEqual({
+      respawn: true,
+      reason: 'progress',
+    })
+  })
+
+  it('refuses a respawn when the last one completed nothing new — the runaway', () => {
+    // The exact --watch --go failure: child exits 0, aggregate has 0 successes,
+    // planResume still says pending, so a naive loop respawns every interval
+    // forever at real cost.
+    expect(shouldRespawn({ attempts: 1, completedBefore: 3, completedAfter: 3 })).toEqual({
+      respawn: false,
+      reason: 'no-progress',
+    })
+  })
+
+  it('treats a decreased count as no progress', () => {
+    expect(shouldRespawn({ attempts: 1, completedBefore: 4, completedAfter: 1 }).respawn).toBe(false)
+  })
+
+  it('refuses when attempts were made but the counts are unknown', () => {
+    expect(shouldRespawn({ attempts: 2 })).toEqual({ respawn: false, reason: 'no-progress' })
+  })
+
+  it('caps total attempts regardless of progress', () => {
+    expect(MAX_RESUME_ATTEMPTS).toBe(3)
+    // Progress every single time, and it still stops at the cap.
+    expect(shouldRespawn({ attempts: 2, completedBefore: 1, completedAfter: 2 }).respawn).toBe(true)
+    expect(shouldRespawn({ attempts: 3, completedBefore: 1, completedAfter: 2 })).toEqual({
+      respawn: false,
+      reason: 'attempt-cap',
+    })
+    expect(shouldRespawn({ attempts: 9, completedBefore: 1, completedAfter: 2 }).reason).toBe('attempt-cap')
   })
 })

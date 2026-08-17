@@ -445,11 +445,16 @@ export interface BenchmarkResult {
     retries: number
   }
   /**
-   * The prompt bundle this record was scored under — `promptBundleHash(task)`
+   * The prompt bundle this record was produced under — `promptBundleHash(task)`
    * at sweep time (`prompt-bundle.ts`): a short sha256 over the AMENDED prompt
    * (task prompt + the applied sandbox contract) plus the frame-prelude
-   * fingerprint. In one line: everything that changes what the model saw, or
-   * the environment its artifact was scored in.
+   * fingerprint. In one line: everything that changes what the model SAW, or
+   * the environment its artifact is DISPLAYED/PUBLISHED in.
+   *
+   * NOT the scoring environment: the behavioural scorer loads the raw artifact,
+   * never `withPrelude` (see prompt-bundle.ts's header and TODO #12). A prelude
+   * change stales history because the published rendering changed, not because
+   * a check would flip.
    *
    * WHY it is on the record and not derived at read time: it is only derivable
    * for the CURRENT prompt. A stored score's bundle is history, and history is

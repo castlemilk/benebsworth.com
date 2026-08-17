@@ -242,6 +242,20 @@ function excerpt(text: string, max = 80): string {
  * regression it exists to catch ("the model narrated before the DOCTYPE").
  * Where a tolerance is wanted, the probe states it in its own pattern.
  *
+ * CAVEAT — "raw" is only raw on the API path. `generateForProbe` goes through
+ * the same providers a sweep uses, and the CLI providers (`runners/cli.ts`,
+ * i.e. agy/codex/opencode — including the DEFAULT probe model) do not return a
+ * raw HTTP reply at all: they return the file-handoff artifact, or
+ * `extractLikelyCode(stdout)`, which strips narration before the DOCTYPE as
+ * part of getting an artifact out of a chatty terminal session. So a
+ * PREAMBLE-SENSITIVE probe (`doctype-first`, whose first assert is
+ * `starts-with <!DOCTYPE`) cannot fail on a CLI model — it is asserting against
+ * text the extractor already cleaned. Run those against an API-provider model
+ * (`--model <api-model>`) for the assert to mean anything. Every NEGATIVE
+ * assert ("did not emit a CDN link", "did not call fetch") bites everywhere,
+ * because extraction removes prose, not code. The extraction is deliberately
+ * left alone: it is what makes CLI models usable in the sweep at all.
+ *
  * Returns ALL failures. A prompt edit usually breaks several behaviours at
  * once, and fixing them one round-trip at a time is the expensive way.
  */

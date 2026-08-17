@@ -69,8 +69,11 @@ describe('promptBundleHash', () => {
   })
 
   it('changes when the frame-prelude fingerprint changes', () => {
-    // The prelude is the ENVIRONMENT the artifact is scored in — a change to
-    // it invalidates a stored score just as surely as a prompt edit does.
+    // The prelude is the environment the artifact is DISPLAYED and PUBLISHED
+    // in (not the one it is scored in — the behavioural scorer loads the raw
+    // artifact; see TODO #12). A change to it makes a stored record describe a
+    // rendering that no longer exists, which is staleness just as surely as a
+    // prompt edit is.
     const t = task()
     expect(promptBundleHash(t, 'fingerprint-a')).not.toBe(promptBundleHash(t, 'fingerprint-b'))
     expect(promptBundleHash(t)).toBe(promptBundleHash(t, framePreludeFingerprint()))

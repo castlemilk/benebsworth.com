@@ -578,6 +578,15 @@ scorer has no way to run against a remote browser or a fallback (jsdom)
 without code changes. Also the sandbox policy actually applied per run is
 never logged.
 
+**Scorer/display parity (deferred here on purpose).** The behavioural scorer
+loads the RAW artifact (`page.setContent(html)`), while the live frame and the
+published `.html` load `withPrelude(html)` — so checks run in a different
+environment from the one readers see, and `promptBundle` names the DISPLAY
+environment, not the scoring one. Injecting the prelude into scoring would
+silently shift every stored behavioural score and destroy history
+comparability, so the divergence is documented (prompt-bundle.ts, types.ts) and
+the decision belongs to this item.
+
 **Inspiration.** dsh `ctx.sandbox` seam (docs/subsystems/sandbox.md):
 - One interface, swappable backends; consumers wrap argv before spawning.
 - **Modes are a small closed vocabulary**: `read-only | workspace-write |

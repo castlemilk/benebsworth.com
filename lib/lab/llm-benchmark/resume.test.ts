@@ -6,6 +6,7 @@ import { join } from 'node:path'
 import { forceSpill, openRunLog, runLogFileName, setRunLogDir } from './runlog'
 import {
   ResumeError,
+  modelsWithPendingPairs,
   pairKey,
   planResume,
   readSweepCheckpoints,
@@ -499,5 +500,72 @@ describe('recoverResultFromAggregate', () => {
     const noOutput: Record<string, unknown> = { ...sampleResult('m', 't', '') }
     delete noOutput.output
     expect(recoverResultFromAggregate(dir, noOutput).output).toBe('')
+  })
+})
+
+describe('modelsWithPendingPairs', () => {
+  it('drops a model whose every pair is already skipped', () => {
+    const models = ['kimi-k2.7', 'claude-opus-5']
+    const tasks = ['landing-page', 'equation-solver']
+    // kimi finished both pairs; opus finished neither.
+    const skipKeys = new Set([pairKey('kimi-k2.7', 'landing-page'), pairKey('kimi-k2.7', 'equation-solver')])
+    expect(modelsWithPendingPairs(models, tasks, skipKeys)).toEqual(['claude-opus-5'])
+  })
+
+  it('keeps a model with even one pending pair', () => {
+    const skipKeys = new Set([pairKey('kimi-k2.7', 'landing-page')])
+    expect(modelsWithPendingPairs(['kimi-k2.7'], ['landing-page', 'equation-solver'], skipKeys)).toEqual([
+      'kimi-k2.7',
+    ])
+  })
+
+  it('is the identity when nothing is skipped, in input order', () => {
+    const models = ['z-model', 'a-model']
+    expect(modelsWithPendingPairs(models, ['t1'], new Set())).toEqual(models)
+  })
+
+  it('returns nothing when every pair is skipped', () => {
+    const skipKeys = new Set([pairKey('m', 't1'), pairKey('m', 't2')])
+    expect(modelsWithPendingPairs(['m'], ['t1', 't2'], skipKeys)).toEqual([])
+  })
+
+  it('agrees with the plan it is derived from — this is the quota pre-flight scope', async () => {
+    // The regression: a resume where the LOCKED model has nothing left to run.
+    // The pre-flight must not see it, or the child aborts on a lock that cannot
+    // possibly affect this run (and the monitor's watch dies with it).
+    const dir = tempDir()
+    await writeCompleteLog(dir, 'kimi-k2.7', 'landing-page')
+    await writeIncompleteLog(dir, 'claude-opus-5', 'landing-page')
+    const plan = planResume({
+      checkpoints: readSweepCheckpoints(dir),
+      modelIds: ['kimi-k2.7', 'claude-opus-5'],
+      taskIds: ['landing-page'],
+      recorded: [sampleResult('kimi-k2.7', 'landing-page', 'x')],
+    })
+    expect(modelsWithPendingPairs(['kimi-k2.7', 'claude-opus-5'], ['landing-page'], plan.skipKeys)).toEqual([
+      'claude-opus-5',
+    ])
+    // ...and it matches the models the plan itself says are pending.
+    expect(modelsWithPendingPairs(['kimi-k2.7', 'claude-opus-5'], ['landing-page'], plan.skipKeys)).toEqual([
+      ...new Set(plan.rerun.map((entry) => entry.modelId)),
+    ])
+  })
+})
+
+describe('readSweepCheckpoints plugin scope', () => {
+  it('surfaces the header configSnapshot.plugins, and leaves it absent when unrecorded', async () => {
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const scoped = openRunLog({
+      modelId: 'kimi-k2.7',
+      taskId: 'landing-page',
+      configSnapshot: { ...SNAPSHOT, plugins: ['community-tasks'] },
+    })!
+    await scoped.close()
+    await writeIncompleteLog(dir, 'claude-opus-5', 'landing-page')
+
+    const checkpoints = readSweepCheckpoints(dir)
+    expect(checkpoints.find((c) => c.modelId === 'kimi-k2.7')!.plugins).toEqual(['community-tasks'])
+    expect(checkpoints.find((c) => c.modelId === 'claude-opus-5')!.plugins).toBeUndefined()
   })
 })

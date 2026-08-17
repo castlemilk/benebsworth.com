@@ -3,12 +3,12 @@
  *
  * The board compares MODELS, but the biggest lever on a score is the PROMPT
  * BUNDLE: the task prompt, the sandbox contract appended to it, and the frame
- * prelude injected into the artifact before it is rendered and scored. Change
- * any of those and last month's numbers describe an experiment that no longer
- * exists — silently, because nothing in the record says which bundle it ran
- * under. That is not hypothetical: tic-tac-toe's stored results were scored
- * under the OLD global sandbox contract, and when its task-specific contract
- * landed (#36) nothing marked them stale.
+ * prelude the artifact is published and displayed inside. Change any of those
+ * and last month's numbers describe an experiment that no longer exists —
+ * silently, because nothing in the record says which bundle it ran under. That
+ * is not hypothetical: tic-tac-toe's stored results were scored under the OLD
+ * global sandbox contract, and when its task-specific contract landed (#36)
+ * nothing marked them stale.
  *
  * So a record gets stamped with `promptBundle` — the short hash computed here.
  *
@@ -21,14 +21,26 @@
  *     records as `promptHash`.
  *  2. **The frame-prelude fingerprint** — a digest of `FRAME_PRELUDE`, the
  *     markup injected ahead of the artifact in both the live frame and the
- *     published .html. It is not shown to the model, but it IS the environment
- *     the artifact executes and is scored in (the storage shim, the error
- *     reporter, the CSS reset, the viewport meta). A prelude edit can flip a
- *     behavioural check without a single prompt byte changing.
+ *     published .html (`withPrelude`, used by `components/mdx/artifact-frame`,
+ *     `components/lab/llm-benchmark/generated-demo` and
+ *     `scripts/gen-benchmark-outputs.mjs`). It is not shown to the model; it is
+ *     the environment the artifact is DISPLAYED and PUBLISHED in — the storage
+ *     shim, the error reporter, the CSS reset, the viewport meta.
  *
- * The rule, in one line: **anything that changes what the model sees OR the
- * environment its artifact is scored in belongs in the hash; nothing else
- * does.**
+ *     NOT the scoring environment, and the doc used to claim otherwise. The
+ *     behavioural scorer loads the RAW artifact (`scorers/behavioral.ts` →
+ *     `runChecks` → `scorers/sandbox.ts` `page.setContent(html)`); it never
+ *     calls `withPrelude`. So a prelude edit changes what a READER sees, not
+ *     what a check sees. Aligning the two is a real (and deliberately deferred)
+ *     change — TODO #12 — because injecting the prelude into scoring would
+ *     silently shift every stored behavioural score and destroy the history
+ *     this hash exists to protect.
+ *
+ * The rule, in one line: **anything that changes what the model SEES, or the
+ * environment its artifact is DISPLAYED/PUBLISHED in, belongs in the hash;
+ * nothing else does.** A prelude edit therefore re-runs sweeps (it is part of
+ * the response cache key too — `cache.ts`) and marks history stale because the
+ * published rendering changed, not because a check would flip.
  *
  * Deliberately NOT in the hash:
  *  - the task id/slug/title (see the id test in prompt-bundle.test.ts — the
@@ -68,7 +80,9 @@ function shortSha256(input: string): string {
 }
 
 /**
- * Digest of the frame prelude — the artifact's execution environment.
+ * Digest of the frame prelude — the environment the artifact is DISPLAYED and
+ * PUBLISHED in (`withPrelude`), not the one it is scored in (the behavioural
+ * scorer loads the raw artifact; see the module header and TODO #12).
  *
  * Hashing the SOURCE CONSTANT rather than a hand-maintained version number is
  * the point: a version number is only correct while someone remembers to bump

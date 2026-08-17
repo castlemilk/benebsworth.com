@@ -58,6 +58,7 @@ import {
 } from '../lib/lab/llm-benchmark/sweep-profiles.ts'
 import {
   ResumeError,
+  modelsWithPendingPairs,
   pairKey,
   planResume,
   readSweepCheckpoints,
@@ -517,8 +518,24 @@ async function main() {
   // stated reset window is guaranteed to fail every call until that window
   // passes. Abort BEFORE creating the runner rather than burning a sweep (and
   // a sweep tree, and log noise) on certain failures.
+  //
+  // SCOPED TO WHAT THIS RUN WILL CALL. On a resume the model set is the
+  // original sweep's shape, not the remaining work: pairs already at their
+  // durable boundary are skipped, so a model whose every pair is complete is
+  // never called and its quota lock is irrelevant. Pre-flighting it anyway
+  // aborted resumes that had nothing to do with the locked model — and made the
+  // recovery monitor (which locks over PENDING models only) disagree with the
+  // child it spawns, turning a `resume` verdict into a nonzero exit that stops
+  // the whole watch. Non-resume sweeps call every model, so the set is unchanged.
   const results = readResults()
-  const locks = quotaLockedModels(results, models.map((m) => m.id))
+  const preflightModelIds = resumePlan
+    ? modelsWithPendingPairs(
+        models.map((m) => m.id),
+        tasks.map((t) => t.id),
+        resumePlan.skipKeys
+      )
+    : models.map((m) => m.id)
+  const locks = quotaLockedModels(results, preflightModelIds)
 
   // CLI pre-flight: resolve every targeted CLI provider's binary on PATH. A
   // missing one used to surface as an ENOENT mid-sweep, AFTER the earlier calls

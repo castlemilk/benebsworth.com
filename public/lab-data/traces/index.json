@@ -167,13 +167,57 @@
     ]
   },
   {
-    "runId": "2026-08-17T06-56-21",
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-circuit-builder-teaser.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "circuit-builder-teaser",
+    "bytes": 46193,
+    "spillRefs": [
+      "spill/5095ec38474d851d.txt",
+      "spill/7153093ef5cbe0dc.txt",
+      "spill/c7b1e9d5d4d897bd.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-crypto-hash-race.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "crypto-hash-race",
+    "bytes": 29746,
+    "spillRefs": [
+      "spill/389e68c381895ffa.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
     "file": "nemotron-nano-12b-vl-equation-solver.jsonl",
     "modelId": "nemotron-nano-12b-vl",
     "taskId": "equation-solver",
-    "bytes": 3548,
+    "bytes": 14316,
     "spillRefs": [
       "spill/3f6032fc0ef82ac2.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-landing-page-morph.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "landing-page-morph",
+    "bytes": 40797,
+    "spillRefs": [
+      "spill/c6853d62ef4160fc.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-mini-platformer.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "mini-platformer",
+    "bytes": 56945,
+    "spillRefs": [
+      "spill/21065228e2fdaaa0.txt",
+      "spill/403c212d4e832eaa.txt",
+      "spill/d43ffbe5153632ef.txt"
     ]
   },
   {
@@ -188,6 +232,26 @@
       "spill/aee6240c5e675f30.txt",
       "spill/d2a73a93f1c9b853.txt",
       "spill/f07865d294542a1b.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-physics-pendulum-wave.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "physics-pendulum-wave",
+    "bytes": 38547,
+    "spillRefs": [
+      "spill/30469385d0712553.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-tic-tac-toe.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "tic-tac-toe",
+    "bytes": 50197,
+    "spillRefs": [
+      "spill/372e815603a83380.txt"
     ]
   }
 ]

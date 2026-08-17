@@ -1,0 +1,53 @@
+import hashlib
+import os
+import unittest
+
+def secure_strcmp(str1, str2):
+    """Constant-time string comparison"""
+    return hmac.compare_digest(str1, str2)
+
+def generate_salt():
+    """Generate a random salt"""
+    return os.urandom(16)
+
+def generate_password_hash(password, salt=None):
+    """Generate a PBKDF2-based password hash with a random salt"""
+    if salt is None:
+        salt = generate_salt()
+
+    hash_len = 32  # You can adjust this value for different hash lengths
+    iterations = 100000  # You can adjust this value for different iterations
+
+    return f"{iterations}${hashlib.sha256(password.encode()).hexdigest()}${salt.hex()}"
+
+def verify_password(password, password_hash):
+    """Verify a password against a PBKDF2-based password hash"""
+    stored_iterations, stored_hash, stored_salt = password_hash.split("$")
+    iterations = int(stored_iterations)
+    salt = bytes.fromhex(stored_salt)
+
+    hash_len = 32  # Same value as in generate_password_hash
+    computed_hash = hashlib.pbkdf2_hmac(
+        "sha256", password.encode(), bytes.fromhex(salt.encode()), iterations, hash_len
+    )
+
+    return secure_strcmp(hashlib.sha256(computed_hash).hexdigest(), stored_hash)
+
+class TestPasswordHashing(unittest.TestCase):
+    def test_secure_strcmp(self):
+        self.assertTrue(secure_strcmp("hello", "hello"))
+        self.assertFalse(secure_strcmp("hello", "world"))
+
+    def test_generate_password_hash(self):
+        password = "***REDACTED***"
+        password_hash = generate_password_hash(password)
+        self.assertIn(f"{password_hash.split('$')[0]}${hashlib.sha256(password.encode()).hexdigest()}", password_hash)
+
+    def test_verify_password(self):
+        password = "***REDACTED***"
+        password_hash = generate_password_hash(password)
+        self.assertTrue(verify_password(password, password_hash))
+        self.assertFalse(verify_password("wrong", password_hash))
+
+if __name__ == "__main__":
+    unittest.main()

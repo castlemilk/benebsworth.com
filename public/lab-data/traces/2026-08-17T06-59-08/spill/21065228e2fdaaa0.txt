@@ -1,0 +1,229 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Platformer Challenge</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+#controls{position:fixed;top:10px;left:10px;z-index:10;background:#111116;padding:10px;border-radius:5px}
+#controls button{margin-right:5px;padding:5px 10px;border:1px solid #333;background:#222;color:#fff}
+canvas{width:100%;height:100%;display:block}
+#reset{position:fixed;bottom:15px;left:50%;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="controls">
+  <button id="start">Start</button>
+  <button id="reset">Reset</button>
+</div>
+<div style="position:fixed;bottom:10px;right:0;background:#111;padding:10px;border-radius:5px;color:white">
+  Controls: arrow keys to move, space to jump
+</div>
+<script>
+try{
+  const canvas=document.getElementById('game');
+  const ctx=canvas.getContext('2d');
+  let width=window.innerWidth;
+  let height=window.innerHeight;
+  canvas.width=width*window.devicePixelRatio;
+  canvas.height=height*window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio,window.devicePixelRatio);
+  
+  // Level design (dark background, landscape)
+  const groundY=height-50;
+  const grassStart=width*0.2;
+  const grassEnd=width*0.8;
+  const flagX=width*0.9;
+  const flagY=height*0.6;
+  
+  class Player{
+    constructor(){
+      this.x=10;
+      this.y=groundY-64;
+      this.width=64;
+      this.height=64;
+      this.velocityX=0;
+      this.velocityY=0;
+      this.gravity=0.8;
+      this.jumpStrength=-15;
+      this.isJumping=false;
+      this.onGround=false;
+    }
+    
+    update(){
+      // Apply gravity
+      this.velocityY+=this.gravity;
+      
+      // Update position
+      this.y+=this.velocityY;
+      
+      // Ground collision
+      if(this.y > groundY-64){
+        this.y=groundY-64;
+        this.velocityY=0;
+        this.onGround=true;
+      } else {
+        this.onGround=false;
+      }
+      
+      // X movement
+      this.x+=this.velocityX;
+    }
+    
+    applyFriction(friction){
+      this.velocityX*=friction;
+    }
+    
+    jump(){
+      if(this.onGround){
+        this.velocityY=this.jumpStrength;
+        this.onGround=false;
+      }
+    }
+    
+    draw(ctx){
+      // Player body
+      ctx.fillStyle='#45aaf2';
+      ctx.fillRect(this.x,this.y,this.width,this.height);
+      
+      // Shadow
+      ctx.fillStyle='#ccc';
+      ctx.fillRect(this.x,this.y+4,32,8);
+    }
+    
+    updatePosition(keys){
+      if(keys.ArrowLeft) this.velocityX=-5;
+      if(keys.ArrowRight) this.velocityX=5;
+    }
+  }
+  
+  function Particle(x,y,color){
+    this.x=x;
+    this.y=y;
+    this.size=Math.random()*3+2;
+    this.color=color;
+    this.fadeSpeed=0.02;
+    
+    this.update=()=>{
+      this.y-=1;
+      this.size-=this.fadeSpeed;
+    };
+    
+    this.draw=ctx=>{
+      ctx.fillStyle=this.color;
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+      ctx.fill();
+    };
+  }
+  
+  const player=new Player();
+  let coins=[];
+  let particles=[];
+  
+  function checkCoinCollection(){
+    coins.forEach((coin,i)=>{
+      const distance=Math.sqrt(
+        Math.pow(player.x+player.width/2-coin.x,2)+
+        Math.pow(player.y+player.height/2-coin.y,2)
+      );
+      if(distance<coin.radius+8){
+        particles.push(new Particle(coin.x,coin.y,'gold'));
+        coins.splice(i,1);
+      }
+    });
+  }
+  
+  function createCoins(){
+    const num=8;
+    for(let i=0;i<num;i++){
+      const x=Math.random()*(grassEnd-grassStart)+grassStart;
+      coins.push({x,y:groundY-64,radius:8});
+    }
+  }
+  
+  function drawGrass(){
+    ctx.fillStyle='#0f0';
+    ctx.fillRect(grassStart,groundY-64,Math.max(0,grassEnd-grassStart),32);
+  }
+  
+  function drawFlag(){
+    ctx.fillStyle='#00ff00';
+    ctx.fillRect(flagX-10,flagY-20,20,40);
+    ctx.fillStyle='#000';
+    ctx.fillText('GOAL',flagX-4,flagY-3);
+  }
+  
+  function clearScreen(){
+    ctx.fillStyle='rgba(0,12,16,0.9)';
+    ctx.fillRect(0,0,width,height);
+  }
+  
+  function drawLevel(){
+    drawGrass();
+    coins.forEach(coin=>ctx.beginPath().arc(coin.x,coin.y,coin.radius,0,Math.PI*2).fill());
+    drawFlag();
+  }
+  
+  function animate(timestamp){
+    clearScreen();
+    
+    // Ground drawing
+    ctx.fillStyle='#8b4513';
+    ctx.fillRect(0,groundY,width,100);
+    
+    drawLevel();
+    player.draw(ctx);
+    
+    particles.forEach(p=>p.draw(ctx));
+  }
+  
+  const keys={};
+  document.addEventListener('keydown',e=>{
+    keys[e.code]=true;
+    if(e.code==='Space'&&player.onGround) player.jump();
+  });
+  document.addEventListener('keyup',e=>keys[e.code]=false);
+  
+  window.addEventListener('resize',()=>{
+    width=window.innerWidth;
+    height=window.innerHeight;
+    canvas.width=width*window.devicePixelRatio;
+    canvas.height=height*window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio,window.devicePixelRatio);
+    player.y=groundY-64;
+    player.velocityY=0;
+    coins=[];
+    createCoins();
+    window.requestAnimationFrame(animate);
+  });
+  
+  document.getElementById('start').addEventListener('click',()=>{
+    particles=[];
+    coins=[];
+    createCoins();
+    player.x=10;
+    player.y=groundY-64;
+    player.velocityX=0;
+    player.velocityY=0;
+    window.requestAnimationFrame(animate);
+  });
+  
+  document.getElementById('reset').addEventListener('click',()=>{
+    window.requestAnimationFrame(animate);
+  });
+  
+  window.addEventListener('unload',()=>{
+    cancelRequestAnimationFrame(animate);
+  });
+  
+  createCoins();
+  window.requestAnimationFrame(animate);
+}
+catch(err){
+  document.body.innerHTML=`<div role="alert" style="position:absolute;top:0;left:0;right:0;background:#f00;color:#fff;padding:10px;text-align:center">${err.message}</div>`;
+}
+</script>
+</body>
+</html>

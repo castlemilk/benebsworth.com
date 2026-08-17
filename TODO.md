@@ -554,7 +554,7 @@ the structural score that hands 100 to a game that ignores input.
 
 # P3 — Board completion and experiments
 
-## [ ] 11. Board completion
+## [x] 11. Board completion (codex -pro variants remain opt-in — paid, awaiting go-ahead)
 
 - **gemini-3.6-flash** — registered, ZERO results (OpenRouter 402, $0
   credits). Needs an OpenRouter top-up ($5-10) then a normal sweep
@@ -571,10 +571,14 @@ the structural score that hands 100 to a game that ignores input.
   2026-08-17T05-41-46, trace published; `npx tsx scripts/retrace.mjs --run
   2026-08-17T05-41-46 --task landing-page-morph` shows the whole story).
   First sweep to exercise bundles + run logs + published traces end to end.
-- **gemini-3.6-flash + nemotron re-test** — still blocked: the OpenRouter
-  ACCOUNT is topped up (2026-08-17) but `OPENROUTER_API_KEY` is absent from
-  .env and the shell environment. Add the key, then: smoke → fast-refresh
-  sweep (gemini) and a 1-iteration probe (nemotron).
+- **[x] gemini-3.6-flash** — DONE 2026-08-17: full board 8/8, 40/40 calls,
+  zero retries, four 100s, $0.0029 total. First model swept on the
+  plugin-contributed tic-tac-toe task.
+- **[x] nemotron-nano-12b-vl** — DONE 2026-08-17: the endpoint no longer
+  hangs (exclusion reason obsolete). Full board 8/8 via smoke + fast-refresh
+  + a `--resume` after an external stop (the #18 boundary rules skipped the
+  completed pair, zero waste); 38/40 iterations, 2 empty-body blips
+  recovered, $0. Scores 26-100 — a real (weak-but-present) board.
 
 ## [ ] 12. Sandbox backend seam (longer term)
 

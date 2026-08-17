@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hotseat Tic-Tac-Toe</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    .board{display:grid;grid:3fr/3fr;gap:10px;margin:20px auto;max-width:380px;}
+    .cell{width:100%;aspect-ratio:1;padding:5px;background:#21212d;color:#ececf0;border-radius:8px;text-align:center;font-size:2em;cursor:pointer}
+    #controls{text-align:center;margin:10px 0}
+    #restart{padding:10px 20px;background:#444;border:0;color:#ececf0;margin-top:10px;cursor:pointer;min-width:120px}
+    #status{display:block;margin:0 auto 10px;color:#fff;font-size:1.5em}
+  </style>
+</head>
+<body>
+  <div class="board" id="board">
+    <div class="cell" data-row="0" data-col="0"> </div>
+    <div class="cell" data-row="0" data-col="1"> </div>
+    <div class="cell" data-row="0" data-col="2"> </div>
+    <div class="cell" data-row="1" data-col="0"> </div>
+    <div class="cell" data-row="1" data-col="1"> </div>
+    <div class="cell" data-row="1" data-col="2"> </div>
+    <div class="cell" data-row="2" data-col="0"> </div>
+    <div class="cell" data-row="2" data-col="1"> </div>
+    <div class="cell" data-row="2" data-col="2"> </div>
+  </div>
+  <div id="status"></div>
+  <div id="controls">
+    <button id="restart">Restart</button>
+  </div>
+
+  <script>
+    try {
+      const board = document.getElementById('board');
+      const status = document.getElementById('status');
+      const restartBtn = document.getElementById('restart');
+      let grid = Array(9).fill(null);
+      let currentPlayer = 'X';
+
+      function checkWinner(gridCopy, player) {
+        const lines = [
+          [0,1,2],[3,4,5],[6,7,8], // rows
+          [0,3,6],[1,4,7],[2,5,8], // columns
+          [0,4,8],[2,4,6] // diagonals
+        ];
+        return lines.some(line => 
+          line.every(index => gridCopy[index] === player)
+        );
+      }
+
+      function playMove(cellIdx) {
+        if(grid[cellIdx] !== null || 
+           document.querySelector('#status').textContent.includes('wins')) return;
+
+        grid[cellIdx] = currentPlayer;
+        board.children[cellIdx].textContent = `${currentPlayer}`;
+        
+        const winner = checkWinner(grid, currentPlayer);
+        if(winner) {
+          status.textContent = `${currentPlayer} wins!`;
+          board.children.forEach(cell => cell.removeEventListener('click', handleClick));
+          return;
+        }
+        
+        if(grid.every(cell => cell !== null)) {
+          status.textContent = "It's a draw!";
+          board.children.forEach(cell => cell.removeEventListener('click', handleClick));
+          return;
+        }
+
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        status.textContent = `${currentPlayer}'s turn`;
+      }
+
+      function handleClick(e) {
+        const idx = Array.from(board.children).indexOf(e.target);
+        playMove(idx);
+      }
+
+      function initializeGame() {
+        grid = Array(9).fill(null);
+        board.children.forEach(cell => {
+          cell.textContent = ' ';
+          cell.addEventListener('click', handleClick);
+        });
+        status.textContent = `${currentPlayer}'s turn`;
+        document.body.style.cursor = 'default';
+      }
+
+      board.addEventListener('click', function(e) {
+        if(e.target.matches('.cell')) playMove(Array.from(board.children).indexOf(e.target));
+      });
+
+      restartBtn.addEventListener('click', initializeGame);
+      initializeGame();
+    } catch(e) {
+      const errorDiv = document.createElement('div');
+      errorDiv.setAttribute('role', 'alert');
+      errorDiv.textContent = `Error: ${e.message}`;
+      document.body.appendChild(errorDiv);
+    }
+  </script>
+</body>
+</html>

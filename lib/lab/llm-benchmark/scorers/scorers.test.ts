@@ -3,6 +3,7 @@ import { htmlScorer } from './html'
 import { textScorer } from './text'
 import { behavioralTaskIds, selectScorer } from './index'
 import { behavioralScorer } from './behavioral'
+import { executableScorer } from './executable'
 import { BENCHMARK_TASKS } from '../registry'
 
 const htmlTask = BENCHMARK_TASKS.find((t) => t.id === 'n-body-field')!
@@ -121,8 +122,11 @@ describe('selectScorer', () => {
     // composites 70% behavioral + 30% structural). The structural htmlScorer
     // remains exported for callers that want the legacy pure-structural score.
     expect(selectScorer(htmlTask)).toBe(behavioralScorer)
-    expect(selectScorer(mathTask)).toBe(textScorer)
-    expect(selectScorer(cryptoTask)).toBe(textScorer)
+    // Both text tasks moved to the composite EXECUTABLE scorer in #15; the
+    // structural textScorer survives as its 30% component and as the
+    // category-heuristic fallback below.
+    expect(selectScorer(mathTask)).toBe(executableScorer)
+    expect(selectScorer(cryptoTask)).toBe(executableScorer)
   })
 
   it("prefers the task's own scorer declaration over its category", () => {
@@ -161,10 +165,15 @@ describe('selectScorer', () => {
     expect(error!.message).toContain('text')
   })
 
-  it('resolves every shipped task exactly as the pre-registry heuristic did', () => {
-    // Behaviour lock: stamping `scorer` on the registry must not have moved a
-    // single task to a different scorer. This replays the OLD implementation
-    // (category set only, ignoring task.scorer) over the full registry.
+  it('resolves every shipped task as the pre-registry heuristic did, bar the two DECLARED exceptions', () => {
+    // Behaviour lock, with an explicit escape hatch. #10 stamped `scorer` on
+    // every row and asserted nothing moved; #15 deliberately MOVED two rows to
+    // the executable scorer. The lock stays useful only if the exceptions are
+    // enumerated here — an unlisted move is still a regression, and reading
+    // this list tells you exactly which tasks are scored differently from what
+    // their category implies (and therefore whose stored records were produced
+    // under a different scorer — see
+    // docs/lab/llm-benchmark/executable-scoring-impact.md).
     const LEGACY_HTML_CATEGORIES = new Set([
       '3d-physics-animation',
       'advanced-game-building',
@@ -172,9 +181,14 @@ describe('selectScorer', () => {
       'advanced-electronics',
       'ui-building',
     ])
+    const DECLARED_EXCEPTIONS: Record<string, typeof executableScorer> = {
+      'crypto-hash-race': executableScorer,
+      'equation-solver': executableScorer,
+    }
     for (const task of BENCHMARK_TASKS) {
       const legacy = LEGACY_HTML_CATEGORIES.has(task.category) ? behavioralScorer : textScorer
-      expect(selectScorer(task), `${task.id} scorer`).toBe(legacy)
+      const expected = DECLARED_EXCEPTIONS[task.id] ?? legacy
+      expect(selectScorer(task), `${task.id} scorer`).toBe(expected)
     }
   })
 })

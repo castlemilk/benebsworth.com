@@ -1,7 +1,7 @@
 /**
  * Value-based redaction for text the harness LOGS or PERSISTS.
  *
- * `scrubEnv` in `runners/cli.ts` is the NAME-based half of credential hygiene:
+ * `scrubEnv` in `env-scrub.ts` is the NAME-based half of credential hygiene:
  * it stops a secret reaching the model child in the first place. This module is
  * the VALUE-based half — it stops a secret that is already inside a string from
  * reaching a durable surface. Three of those exist:

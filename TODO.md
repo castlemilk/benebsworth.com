@@ -667,34 +667,48 @@ feedback data in results.json or the run log.
 
 **Effort.** M.
 
-## [ ] 15. Executable scoring for code tasks (code-runtime)
+## [x] 15. Executable scoring for code tasks (code-runtime)
 
-**Problem.** Text tasks (crypto-hash-race, equation-solver) are scored
-structurally only — the model's code is never RUN. dsh's `code-runtime`
-family executes one model-written program against host bindings and captures
-what it printed/returned, with a failure taxonomy.
+**Shipped.** `scorers/executable.ts` (composite, 70% executed / 30%
+structural) is registered as `executable` in the SCORERS map and stamped on
+both text task rows. `scorers/code-runtime.ts` extracts the model's program
+(fenced block, `<script>` — including the `type="text/plain"` blocks the codex
+models use — `<pre><code>` with tags stripped and entities decoded, or a bare
+artifact) and runs it in a SUBPROCESS under a budget: hard timeout with a
+process-group SIGTERM→SIGKILL, output cap, throwaway cwd, and an ALLOWLIST env
+(`MINIMAL_ENV_KEYS`, still passed through the now-shared
+`env-scrub.ts` `scrubEnv`). JS runs under node 22's `--experimental-permission`
+(a real fs/child/worker boundary); Python has no equivalent, so the module doc
+states plainly that this is a budget and a blast-radius reduction, NOT a
+security sandbox — acceptable because the harness already runs these same
+artifacts in local Chromium during behavioural scoring.
 
-**Inspiration.** dsh `packages/code-runtime/` (service definition +
-worker-thread backend + Code Mode consumer) and its failure taxonomy
-(docs/subsystems/code-runtime.md).
+Checks come from the prompt and nothing else. crypto-hash-race's four clauses
+become `module-executes` / `constant-time-compare` / `salted-hash-random` /
+`verify-round-trip` / `unit-tests-pass` (100 pts), asserted by a stdlib-only
+Python driver that DISCOVERS the module's API by introspection (no invented
+test vectors, no required names); equation-solver runs the program and verifies
+every printed pair by substitution into x²+y²=25, xy=12. Breakdowns are
+`IterationCheckResult[]`, so the UI pills, corpus and MCP consume them
+unchanged (smoke-tested: `bench_get_result` surfaces the failing checks with
+their reasons, `bench_checks_used` reports the 100-point budget).
 
-**Design sketch.**
+`codeFallback` is narrower than this sketch said, deliberately: only
+`no-probe` / `extraction-failed` / `runtime-unavailable` fall back (verified
+identical to the old `text` score on all 29 fallback records). A crash, a hang
+or a wrong answer is the MODEL's result and scores accordingly, with
+`runtime-error` / `timeout` / `wrong-output` in the check detail — treating a
+crash as a fallback would have handed a broken module its full structural
+score.
 
-- New scorer family `scorers/executable.ts` for tasks that emit runnable
-  code: extract the model's program from the artifact, run it in a worker
-  thread (or `node -e` sandboxed), assert on stdout/return value.
-- First candidate: `crypto-hash-race` — run the generated solver against
-  the task's test vectors and check the hashes; `equation-solver` — evaluate
-  the returned solution against the system.
-- Composite stays honest: behavioral-style 70/30 with a `codeFallback`
-  reason when the program can't be executed (same pattern as
-  `behaviouralFallback` in `scorers/behavioral.ts`).
-- Execution budget: per-call timeout + output cap (dsh worker-thread
-  isolation + execution-budget discipline).
-
-**Acceptance criteria.** crypto/equation scores now reflect executed
-behavior; a program that fails at runtime scores low with the failure
-reason surfaced; existing structural score is the documented fallback.
+**Records NOT re-scored** — results.json is untouched.
+`scripts/measure-executable-impact.mjs` measures the change instead;
+`docs/lab/llm-benchmark/executable-scoring-impact.md` has the table. Headline:
+7 of 27 executable crypto artifacts (26%) call a stdlib module they never
+imported (NameError on the first call) and 2 more never parse, while
+`codex-gpt-5.6-terra` goes 80.4 → 96 — the scorer reorders, it is not just
+harsher. All 28 equation-solver answers are prose, so that task is unchanged
+until a model answers with code.
 
 **Effort.** L.
 
@@ -1403,6 +1417,12 @@ declared checks resolve).
   replace), including `cli_timeout` for CLI-provider timeouts (#6).
 - Behavioral scorer (Playwright, 70/30 composite) + `iterationCheckResults`
   + `IterationChecks` UI pills + backfill script.
+- Executable scorer (#15): `scorers/executable.ts` + `scorers/code-runtime.ts`
+  RUN the model's program (subprocess, timeout/output cap/allowlisted env;
+  node `--experimental-permission` for JS, no equivalent for Python and the
+  docs say so) for crypto-hash-race + equation-solver, 70/30 composite with a
+  narrow `codeFallback`. Stored records deliberately NOT re-scored — impact
+  measured in `docs/lab/llm-benchmark/executable-scoring-impact.md`.
 - Parallel CLI file-handoff (unique `artifact-<model>-<task>-<n>.html` per
   iteration) + process-group timeout kill + hard exit on sweep completion.
 - opencode provider (deepseek-v4-flash-free) + bearer-blip transient

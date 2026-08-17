@@ -1,5 +1,6 @@
 import type { BenchmarkModel, BenchmarkTask, UsageProvenance } from '../types'
 import { redactArgs, redactText } from '../redact'
+import { scrubEnv } from '../env-scrub'
 import { resolveExecutionTarget, type CliRunnerConfig } from './execution-target'
 import { contentAddressedName } from '../content-address'
 import { spawn } from 'node:child_process'
@@ -194,37 +195,11 @@ export function extractLikelyCode(stdout: string): string {
   return lines.slice(start, end + 1).join('\n').trim()
 }
 
-/** Anything whose NAME looks like a credential is not handed to a model CLI. */
-const CREDENTIAL_KEY = /(key|secret|token|password|auth|credential|private)/i
-
-/**
- * Strip credential-shaped variables out of an environment block.
- *
- * WHY: the CLI child we spawn IS the model, and its output is published
- * publicly on the benchmark site. A model that dumps `env` — degenerate
- * free-tier behaviour we have already seen in other forms (prompt echoing,
- * empty bodies) — would put every key in the repo environment
- * (OPENROUTER_API_KEY, ANTHROPIC_API_KEY, Cloudflare/GitHub tokens, …) into a
- * public HTML page. The model CLIs authenticate from their own local
- * credential stores (opencode `~/.config/opencode` + keychain, agy `~/.gemini`,
- * codex `~/.codex`), so they need none of it.
- *
- * Deliberately broad: SSH_AUTH_SOCK, GITHUB_TOKEN and friends go too. Nothing
- * a child actually needs (PATH, HOME, TMPDIR, SHELL, TERM, LANG/LC_*, USER)
- * matches the pattern, so there is no allowlist to keep in sync.
- *
- * CONTRACT: this is applied to the INHERITED env only. A provider's explicit
- * `env` override is merged AFTER the scrub, so a runner that genuinely needs a
- * credential can re-add it by name — opt-in, never ambient.
- */
-export function scrubEnv(env: Record<string, string | undefined>): Record<string, string | undefined> {
-  const scrubbed: Record<string, string | undefined> = {}
-  for (const [key, value] of Object.entries(env)) {
-    if (CREDENTIAL_KEY.test(key)) continue
-    scrubbed[key] = value
-  }
-  return scrubbed
-}
+// `scrubEnv` lives at the lib layer (`../env-scrub`) because the executable
+// scorer spawns the model's PROGRAM and needs the same hygiene, and
+// `scorers/**` may not import `runners/**`. Re-exported here so every existing
+// caller (and cli.test.ts) keeps importing it from './cli'.
+export { scrubEnv } from '../env-scrub'
 
 /**
  * Spawn a CLI and collect its output.

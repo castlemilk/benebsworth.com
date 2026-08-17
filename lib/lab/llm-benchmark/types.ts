@@ -229,14 +229,14 @@ export interface BenchmarkCategory {
 /**
  * Name of a registered scorer, as declared on a task row.
  *
- * These are the three built-in scorers exported from `scorers/index.ts`; a
+ * These are the four built-in scorers exported from `scorers/index.ts`; a
  * plugin can register more via `registerScorer()`. The name is the
  * vocabulary a task uses to pick its evaluator without the selection
  * logic having to know anything about categories. The `(string & {})`
  * widening lets plugin-provided scorer names typecheck while built-ins
  * stay exhaustively enumerated.
  */
-export type BenchmarkScorerName = 'behavioral' | 'html' | 'text' | (string & {})
+export type BenchmarkScorerName = 'behavioral' | 'executable' | 'html' | 'text' | (string & {})
 
 /**
  * Which sandbox backend the behavioural scorer runs artifacts in (#12).

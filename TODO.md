@@ -1074,41 +1074,16 @@ locks the cutoff after every shipped bench post).
 
 **Effort.** S.
 
-## [ ] 27. Committed code graph for this repo (graphify-out)
+## [x] 27. Committed code graph for this repo (graphify-out)
 
-**Problem.** Future agent sessions (and the user) traverse this benchmark
-module tree by grep. A committed, queryable graph makes "what connects the
-scorer to the runner?" a 5-second query instead of a read-through - the
-same tool this roadmap's reference studies were processed with.
-
-**Inspiration.** graphify's team workflow (README: "graphify-out/ is meant
-to be committed to git"; auto-rebuild hook; union merge driver) and the
-paperclip/dsh explorations above that were completed in minutes with it.
-
-**Design sketch.**
-
-- Install graphify (`uv tool install graphifyy`), run
-  `graphify extract . --code-only` on the repo (excluding `out/`,
-  `node_modules/`, `.next/` via existing .gitignore - it honors
-  `.gitignore` automatically), `graphify cluster-only .`, commit
-  `graphify-out/` (graph.json + GRAPH_REPORT.md; skip graph.html at
-  >5000-node limit or raise `GRAPHIFY_VIZ_NODE_LIMIT`).
-- `.githooks/post-commit` (or the existing pre-push): `graphify update .`
-  when tracked source changed - AST-only, ~seconds at this repo size.
-- Document in AGENTS.md/CLAUDE.md: "codebase questions -> `graphify query/
-  path/explain` before reading files" (mirrors graphify's own
-  query-first guidance); optionally expose via MCP
-  (`python -m graphify.serve graphify-out/graph.json`) for opencode.
-- Consider the same for the OMEGA harness repo (larger, packages/* tree -
-  the graph pays for itself there).
-
-**Acceptance criteria.** `graphify-out/` committed; a fresh clone can
-`graphify explain/query` without re-extraction; the post-commit hook
-rebuilds on change; CLAUDE.md documents query-first.
-
-**Effort.** S.
-
----
+**Shipped 2026-08-17.** Graph was already committed (graphify 0.9.43,
+`graphify-out/{graph.json,GRAPH_REPORT.md,manifest.json}`, regenerables
+gitignored); this pass refreshed it to the current tree (6797 nodes / 11489
+edges / 517 communities), added `.githooks/post-commit` (AST-only rebuild on
+source commits, one-commit lag documented in the hook), and CLAUDE.md's
+"query the graph first" section. `graphify explain/path/query` verified
+against the refreshed graph. The OMEGA-harness-repo half of the sketch is
+out of scope for this repo. **Effort.** S.
 
 ## [x] 28. Sweep budget governance (policies, incidents, cost events)
 

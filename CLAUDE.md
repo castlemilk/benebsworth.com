@@ -110,3 +110,18 @@ e2e/                Playwright specs
 
 For depth beyond this file, read the task summaries (`task <name> --summary`) and
 the skills in `.claude/skills/`.
+
+## Codebase questions: query the graph first
+
+A committed, queryable code graph lives in `graphify-out/` (rebuilt by the
+post-commit hook on source changes — expect a one-commit lag). Before grepping
+or reading through the tree, try:
+
+```bash
+graphify explain "SymbolOrConcept"   # neighbors, degree, community
+graphify path A B                    # shortest path between two symbols
+graphify query "how does X reach Y"  # BFS subgraph for a question
+```
+
+`GRAPH_REPORT.md` lists god nodes and communities — a 30-second map of what
+connects to what.

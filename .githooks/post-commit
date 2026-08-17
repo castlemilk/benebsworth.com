@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Rebuild the committed code graph when the commit touched source (TODO #27).
+# AST-only (`graphify update .`), no LLM calls, a few seconds at this repo
+# size. The rebuilt graphify-out/ lands in the WORKING TREE — it rides along
+# with the NEXT commit rather than amending this one (amending from a
+# post-commit hook re-triggers the hook and rewrites the SHA under tools
+# that just read it; a one-commit lag on a derived artifact is the honest
+# trade). Skips quietly when graphify isn't installed or nothing relevant
+# changed.
+#
+# Bypass: SKIP_HOOKS=1 (same convention as the other hooks).
+[ -n "$SKIP_HOOKS" ] && exit 0
+command -v graphify >/dev/null 2>&1 || exit 0
+# Only rebuild when the commit touched code the graph indexes.
+if git diff-tree --no-commit-id --name-only -r HEAD | grep -qE '\.(ts|tsx|mjs|py)$'; then
+  graphify update . >/dev/null 2>&1 || echo "[post-commit] graphify update failed (non-blocking)"
+fi
+exit 0

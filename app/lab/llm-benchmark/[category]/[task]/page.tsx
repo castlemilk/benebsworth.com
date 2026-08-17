@@ -25,6 +25,7 @@ import { GeneratedDemo } from '@/components/lab/llm-benchmark/generated-demo'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
 import { SandboxContract } from '@/components/lab/llm-benchmark/sandbox-contract'
 import { RunTraceList } from '@/components/lab/llm-benchmark/run-trace'
+import { RelatedRunsPanel } from '@/components/lab/llm-benchmark/related-runs'
 import { loadTraceIndex } from '@/lib/lab/llm-benchmark/traces-server'
 import { findTraceEntry } from '@/lib/lab/llm-benchmark/traces'
 import { formatScore, formatRuntime, formatCost, formatTokens } from '@/components/lab/llm-benchmark/format'
@@ -367,6 +368,16 @@ export default async function BenchmarkTaskPage({
               </div>
             </Reveal>
           )}
+
+          {/* Cross-run references: the runs elsewhere on the board that failed
+              the same checks. Renders nothing when no record on this task has
+              a failure signature with a neighbour (every text-only task, and
+              every clean sweep). */}
+          <Reveal delay={220}>
+            {/* The panel owns its own top margin so that rendering nothing
+                leaves no gap behind. */}
+            <RelatedRunsPanel results={results} />
+          </Reveal>
 
           <Reveal delay={240}>
             <div className="mt-8 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">

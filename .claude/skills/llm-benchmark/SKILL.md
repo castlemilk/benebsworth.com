@@ -58,6 +58,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Trace publication decisions (pure) + build-time index read | `lib/lab/llm-benchmark/traces.ts`, `traces-server.ts` |
 | Trace publication script (`task bench:publish-traces`) | `scripts/publish-traces.mjs` |
 | Run-trace UI (the transcript, in the browser) | `components/lab/llm-benchmark/run-trace.tsx` |
+| Cross-run refs: `bench://` format/parse/resolve, failure signatures, related-run ranking (pure, browser-safe) | `lib/lab/llm-benchmark/bench-ref.ts` |
+| "Related runs" panel (server-only — reads the whole board) | `components/lab/llm-benchmark/related-runs.tsx` |
 | Trace export assembly (browser-safe: JSONL + spill + generated README → ZIP) | `lib/lab/llm-benchmark/trace-export.ts` |
 | STORE-only ZIP writer (browser-safe, dependency-free, CRC-32 inline) | `lib/lab/llm-benchmark/zip.ts` |
 | Export-fidelity gate (published tree vs results.json, pure) | `lib/lab/llm-benchmark/export-fidelity.ts` |
@@ -810,6 +812,37 @@ gets a new URL and there is no cache-buster) and parses it with `parseRunLog`.
   index, gets no disclosure; the section states the count of untraced runs in
   one muted line, and renders nothing at all when the task has no traces —
   which is the state of every task until the next sweep is published.
+
+## Citing benchmark evidence (`bench://` cross-run references, #32)
+
+- **Format.** `bench://<modelId>/<taskId>[/<iterationIndex>][?run=<runId>]` —
+  plain text, not base64 (the dsh `dsh-session:` scheme encodes arbitrary JSON;
+  ours is three ids that are already URL-safe, and a citation should be legible
+  in a log line). `formatBenchRef` / `parseBenchRef` in
+  `lib/lab/llm-benchmark/bench-ref.ts` round-trip it; parsing NEVER throws —
+  garbage comes back as a typed code (`bad-scheme`, `bad-iteration`, …).
+- **Cite this, in reports and PRs**, instead of prose like "the nemotron
+  platformer run": `bench://gpt-oss-20b/mini-platformer/1?run=2026-08-16T09-30-12`.
+  Pin `?run=` when the claim is about specific evidence — `resolveBenchRef`
+  refuses (`run-mismatch`) once a later sweep replaces that record, which is the
+  point: a citation must not silently re-point at different numbers.
+- **Verify a ref you are given**: `resolveBenchRef(uri, { models, tasks,
+  results })` → the record (+ that iteration's score and checks), then replay
+  the underlying evidence with `npx tsx scripts/retrace.mjs --run <runId>
+  --model <m> --task <t> --iteration <n>`, or `--dir <extracted-export>` when
+  working from a downloaded trace ZIP rather than a local `sweeps/` tree.
+- **Failure signatures.** `failureSignature(record)` = the checks that failed in
+  ANY iteration (empty for text tasks and pre-check records);
+  `relatedRuns(target, all, { limit })` ranks the runs sharing ≥1 of them —
+  same task, then same model, then elsewhere; bigger intersection wins, ties
+  break newest-first. Seeded records are excluded on both sides.
+- **In the UI.** The task page renders a "Related runs" panel per live record
+  with neighbours (build-time, from results.json — the caption says so; there is
+  no live query on a static export). Links land on
+  `#trace-<modelId>` — the target's trace disclosure (`traceAnchorId` /
+  `benchRefPath` in `nav.ts`). The run-trace UI linkifies any `bench://` string
+  appearing in an event's error/detail text; **nothing in the harness emits one
+  today** — that rendering exists for agent- or human-written citations.
 
 ## Trace export + export fidelity (#30)
 

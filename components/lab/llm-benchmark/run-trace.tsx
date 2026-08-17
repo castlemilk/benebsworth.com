@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { ChevronRight, Download, ExternalLink } from 'lucide-react'
 
 import { parseRunLog } from '@/lib/lab/llm-benchmark/runlog-format'
 import type { RunLogEvent, Spillable } from '@/lib/lab/llm-benchmark/runlog-format'
-import { traceSpillUrl, traceUrl } from '@/lib/lab/llm-benchmark/nav'
+import { benchRefPath, traceAnchorId, traceSpillUrl, traceUrl } from '@/lib/lab/llm-benchmark/nav'
+import { tokenizeBenchRefs } from '@/lib/lab/llm-benchmark/bench-ref'
 import { formatTraceBytes } from '@/lib/lab/llm-benchmark/traces'
 import type { TraceIndexEntry } from '@/lib/lab/llm-benchmark/traces'
 import { buildTraceExport } from '@/lib/lab/llm-benchmark/trace-export'
@@ -89,9 +91,12 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
 
   return (
     <details
+      // The landing spot for a cross-run reference (`bench://<model>/<task>`);
+      // scroll-margin clears the two sticky nav bars, as `#run` does above.
+      id={traceAnchorId(entry.modelId)}
+      className="scroll-mt-40 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]"
       open={open}
       onToggle={(e) => setOpen(e.currentTarget.open)}
-      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]"
     >
       <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 font-mono text-xs text-fg/80 marker:content-none">
         <ChevronRight
@@ -350,7 +355,9 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
       return (
         <Row label="retry" tone="warn">
           attempt {event.attempt} ({event.kind}) after {event.delayMs.toLocaleString()} ms —{' '}
-          <span className="text-fg/60">{oneLine(event.error)}</span>
+          <span className="text-fg/60">
+            <EventText text={oneLine(event.error)} />
+          </span>
         </Row>
       )
 
@@ -396,7 +403,9 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
       return (
         <Row label="failure" tone="bad">
           {event.failureReason}
-          {event.timedOut && ' (timed out)'} — <span className="text-fg/60">{oneLine(event.error)}</span>
+          {event.timedOut && ' (timed out)'} — <span className="text-fg/60">
+            <EventText text={oneLine(event.error)} />
+          </span>
         </Row>
       )
 
@@ -517,6 +526,41 @@ function AggregateLine({ result }: { result: Record<string, unknown> }) {
         </div>
       )}
     </div>
+  )
+}
+
+/**
+ * Free text from an event (an error, a detail), with any `bench://` reference
+ * in it rendered as a link to the run it cites.
+ *
+ * NOTHING IN THE HARNESS EMITS ONE TODAY — no runner, scorer or run-log writer
+ * produces a `bench://` string. This exists so that when an agent (or a human
+ * note) cites cross-run evidence in text that lands in a log, the trace reads
+ * as a link rather than as a slug. An unparseable or unknown-task ref stays
+ * plain text: `tokenizeBenchRefs` only yields a ref part for a valid URI, and
+ * `benchRefPath` returns undefined for a task that is no longer on the board.
+ */
+function EventText({ text }: { text: string }) {
+  const parts = tokenizeBenchRefs(text)
+  if (!parts.some((p) => p.kind === 'ref')) return <>{text}</>
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.kind === 'text') return <span key={i}>{part.value}</span>
+        const href = benchRefPath(part.ref)
+        if (!href) return <span key={i}>{part.value}</span>
+        return (
+          <Link
+            key={i}
+            href={href}
+            title={part.value}
+            className="underline decoration-dotted underline-offset-2 transition-colors hover:text-fg"
+          >
+            {part.value}
+          </Link>
+        )
+      })}
+    </>
   )
 }
 

@@ -1235,37 +1235,33 @@ artifact URL is already content-derived, immutable and cache-friendly.
 Verified against the real sweeps on disk: 46 blobs across 5 run trees re-hashed
 clean, 3 legacy copies skipped.
 
-## [ ] 32. Cross-run references (`bench://` URIs + related-run snapshots)
+## [x] 32. Cross-run references (`bench://` URIs + related-run snapshots) (SHIPPED)
 
-**Problem.** Run traces exist per record but nothing links them: a reader
-on the deepseek platformer page cannot jump to the n-body page's failed
-iterations that share a failure signature (no `<canvas>`), and an agent
-session cannot cite another run's evidence.
+**Shipped.** `lib/lab/llm-benchmark/bench-ref.ts` (pure, browser-safe):
+`bench://<modelId>/<taskId>[/<iterationIndex>][?run=<runId>]` with
+`formatBenchRef` / `parseBenchRef` (never throws — typed codes for bad scheme,
+shape, ids, iteration, run id, query) / `resolveBenchRef` (typed misses:
+`unknown-model`, `unknown-task`, `no-result`, `run-mismatch`,
+`iteration-out-of-range`), plus `failureSignature` (checks failed in ANY
+iteration, unnamed ones dropped) and `relatedRuns` (dsh `listCandidates`
+ranking: same task > same model > elsewhere, then intersection size, then
+recency; target + seeded records excluded). `related-runs.tsx` renders the
+server-only "Related runs" panel on the task page (6 of 8 task pages gained
+one), linking to `#trace-<modelId>` (`traceAnchorId` / `benchRefPath` in
+`nav.ts`, anchor added to the run-trace disclosure); `run-trace.tsx` linkifies
+any `bench://` string in an event's error text via `tokenizeBenchRefs` —
+nothing in the harness emits one yet, and the code says so.
 
-**Inspiration.** dsh `packages/context/session-reference/`: bounded, read-
-only snapshots of OTHER sessions injected as sourced context — a URI scheme
-(`dsh-session:<base64url(json)>`), `@[label](uri)` mention syntax, candidate
-ranking (same-cwd first), and snapshot semantics that record what was
-omitted (capture seq, retained/omitted message counts). paperclip
-`catalog-provenance.ts` for the provenance side.
-
-**Design sketch.**
-
-- A `bench://<model>/<task>/<iteration>` URI scheme + `formatBenchReference()`
-  / `parseBenchReference()` helpers (mirroring the dsh encode/decode pair).
-- "Related runs" panel on the task page: same failure signature
-  (`failedChecks` intersection from `iterationCheckResults`), ranked like
-  `listCandidates` (same task first, then same model, then others).
-- Run-trace UI (#9) renders parsed `bench://` references as links; the
-  event log records cross-references with capture seq + omitted counts
-  (what the trace includes vs the full log) — dsh's snapshot semantics.
-- Future: the OMEGA harness agent can cite `bench://` evidence in reports.
-
-**Acceptance criteria.** `bench://` URIs round-trip; the related-runs panel
-links iterations sharing a failed check; cross-references appear in traces
-with their capture metadata.
-
-**Effort.** M-L. **Dependencies.** #1, #9.
+**Deviation from the sketch.** The URI is PLAIN TEXT, not
+`base64url(json)` like dsh's `dsh-session:`: dsh needed an envelope for
+arbitrary payload (cwd, capture seq, message window); ours is three ids that
+are already URL-safe slugs, and a citation a reader can eyeball in a log line
+beats encodable arbitrariness. For the same reason there is no capture-seq /
+omitted-count metadata: on a static export the honest snapshot statement is the
+panel's own caption ("computed from the current board (results.json) at build
+time, not a live query"), and the run-pin (`?run=`) — which `resolveBenchRef`
+refuses once a later sweep replaces the record — carries the staleness
+semantics dsh got from a sequence number.
 
 ---
 
@@ -1517,6 +1513,14 @@ without reading results.json; the server is read-only.
   means + deltas per model/task), the `stale-prompt` WARN check
   (`--strict` = release gate; unstamped records skip into one `N pre-bundle`
   summary count), and a muted stale marker on the task page.
+- Cross-run references (#32): `bench-ref.ts` — a PLAIN-TEXT
+  `bench://<model>/<task>[/<iteration>][?run=<id>]` scheme (never-throwing
+  parse with typed codes, `resolveBenchRef` with typed misses incl.
+  `run-mismatch` when a later sweep replaced the cited record),
+  `failureSignature` + `relatedRuns` (same task > same model > elsewhere,
+  intersection size, then recency; self + seeded excluded); a server-only
+  "Related runs" panel on the task page linking `#trace-<model>` anchors, and
+  `bench://` linkification in the run-trace event text (nothing emits one yet).
 - Prompt-regression probes (#24): declarative probes in
   `probes/probes.json` + `probes.ts` (five assert kinds, regexes compiled at
   load, no inline JS), the real contract appended at run time via

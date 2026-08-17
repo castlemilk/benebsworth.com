@@ -1,5 +1,5 @@
 import type { Crumb } from '@/components/site/breadcrumb'
-import { getCategory } from './registry'
+import { BENCHMARK_TASKS, getCategory, getTask } from './registry'
 import type { BenchmarkCategory, BenchmarkModel, BenchmarkTask } from './types'
 
 export const BENCHMARK_BASE_PATH = '/lab/llm-benchmark/'
@@ -75,6 +75,40 @@ export function traceSpillUrl(runId: string, spillRef: string): string {
     .split('/')
     .map(encodeURIComponent)
     .join('/')}`
+}
+
+/**
+ * DOM id of one model's trace disclosure on its task page — the landing spot
+ * for a cross-run reference (`bench://<model>/<task>`). Every trace on a page
+ * is one model's, so the model id is enough to be unique there.
+ */
+export function traceAnchorId(modelId: string): string {
+  return `trace-${modelId}`
+}
+
+/**
+ * Where a `bench://` reference points on this site: the target's task page,
+ * anchored at that model's trace disclosure (which is where its evidence is).
+ * Undefined when the task is not on the board — a reference can outlive the
+ * task it names, and a dead link is worse than plain text.
+ *
+ * Refs carry task IDs; the route is built from the task's SLUG. They coincide
+ * for every task shipped so far, and this is the seam that keeps that a
+ * coincidence rather than a contract.
+ *
+ * `anchor: false` for a target with NO published trace: the disclosure that id
+ * belongs to is not rendered on that page, and a fragment that matches nothing
+ * silently drops the reader at the top with no explanation.
+ */
+export function benchRefPath(
+  ref: { modelId: string; taskId: string },
+  options: { anchor?: boolean } = {},
+): string | undefined {
+  const task = BENCHMARK_TASKS.find((t) => t.id === ref.taskId) ?? getTask(ref.taskId)
+  if (!task) return undefined
+  return options.anchor === false
+    ? taskPath(task)
+    : `${taskPath(task)}#${traceAnchorId(ref.modelId)}`
 }
 
 const ROOT_CRUMBS: Crumb[] = [

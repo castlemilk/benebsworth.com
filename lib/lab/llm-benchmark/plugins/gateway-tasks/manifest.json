@@ -1,0 +1,17 @@
+{
+  "id": "gateway-tasks",
+  "name": "Gateway Tasks",
+  "version": "1.0.0",
+  "description": "Gateway-behaviour benchmark tasks: fail-closed, backoff and no-fabrication, graded from a provided in-page gateway call log.",
+  "capabilities": ["tasks", "checks", "demos"],
+  "tasks": [
+    {
+      "id": "gateway-console",
+      "category": "ui-building",
+      "title": "Gateway Console",
+      "scorer": "behavioral",
+      "checks": ["gateway-fail-closed", "gateway-rate-backoff", "gateway-no-fabrication"],
+      "sandboxConstraints": "task-specific (embeds the frozen gateway stub verbatim; replaces the global canvas-oriented contract — see index.ts)"
+    }
+  ]
+}

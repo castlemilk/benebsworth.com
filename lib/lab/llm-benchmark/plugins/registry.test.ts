@@ -1,6 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { BENCHMARK_TASKS, getTask } from '../registry'
+import { resultsForTask } from '../results'
 import { getChecksForTask } from '../scorers/checks'
+import { selectScorer } from '../scorers'
+import { behavioralScorer } from '../scorers/behavioral'
+import { appliedSandboxConstraints, withSandboxConstraints } from '../prompts'
+import { validatePlugin } from './validate-plugin'
+import { GATEWAY_STUB } from './gateway-tasks/gateway-stub'
+import { BAD_GATEWAY_ARTIFACT, GOOD_GATEWAY_ARTIFACT } from './gateway-tasks/fixtures'
 import {
   registerPlugin,
   unregisterPlugin,
@@ -242,6 +249,88 @@ describe('capability declaration + deny (the trust gate)', () => {
     // The same plugin without its demo mounts fine under the same deny list.
     registerPlugin({ ...capabilityPlugin, demos: undefined }, { deny: ['demos'] })
     expect(pluginTasks().map((t) => t.id)).toContain('probe-task')
+  })
+})
+
+describe('gateway-tasks (first-party archetype plugin, #22)', () => {
+  it('merges gateway-console into BENCHMARK_TASKS with attribution', () => {
+    const t = getTask('gateway-console')
+    expect(t?.pluginId).toBe('gateway-tasks')
+    expect(t?.id).toBe('gateway-console')
+    // `ui-building` already exists and fits an operations console; adding a
+    // category would mean new board pages and nav for no gain (#22).
+    expect(t?.category).toBe('ui-building')
+    expect(t?.demoComponentName).toBe('GatewayConsoleDemo')
+    expect(t?.scorer).toBe('behavioral')
+  })
+
+  it('resolves all three behavioural checks through the registry', () => {
+    const t = getTask('gateway-console')!
+    expect(t.checks).toEqual([
+      'gateway-fail-closed',
+      'gateway-rate-backoff',
+      'gateway-no-fabrication',
+    ])
+    expect(getChecksForTask(t)).toHaveLength(3)
+  })
+
+  it('resolves the behavioural scorer', () => {
+    expect(selectScorer(getTask('gateway-console')!)).toBe(behavioralScorer)
+  })
+
+  it('applies its own sandbox contract, with the gateway stub verbatim', () => {
+    // The whole archetype rests on the model receiving the EXACT stub the
+    // checks assert against — a paraphrased gateway is a different experiment.
+    const t = getTask('gateway-console')!
+    const applied = appliedSandboxConstraints(t)
+    expect(applied).not.toBe('')
+    expect(applied).toContain(GATEWAY_STUB)
+    expect(withSandboxConstraints(t).prompt).toContain(GATEWAY_STUB)
+    // Not the global contract: that one is written for canvases.
+    expect(applied).not.toContain('requestAnimationFrame')
+  })
+
+  it('declares its capabilities truthfully and validates clean', () => {
+    const plugin = getPlugins().find((p) => p.id === 'gateway-tasks')!
+    expect(plugin.capabilities).toEqual(['tasks', 'checks', 'demos'])
+    const report = validatePlugin(plugin)
+    expect(report.errors).toEqual([])
+    expect(report.ok).toBe(true)
+  })
+
+  it('is exempt from the board floor until its first sweep', () => {
+    // registry.test.ts's >=20-result data-loss floor skips rows with a
+    // pluginId; a contributed task legitimately has zero results until swept.
+    const t = getTask('gateway-console')!
+    expect(t.pluginId).toBeDefined()
+    expect(resultsForTask('gateway-console')).toEqual([])
+  })
+})
+
+describe('gateway-console fixtures (check discrimination inputs)', () => {
+  // The REAL discrimination run needs Playwright and lives in
+  // `scripts/gateway-fixtures.mjs` / `task bench:gateway-fixtures` — the same
+  // opt-in shape as rescore/corpus:probe, because unit tests here never launch
+  // a browser. What IS unit-testable is that the fixtures are honest inputs.
+  it('embeds the provided stub verbatim in both fixtures', () => {
+    expect(GOOD_GATEWAY_ARTIFACT).toContain(GATEWAY_STUB)
+    expect(BAD_GATEWAY_ARTIFACT).toContain(GATEWAY_STUB)
+  })
+
+  it('gives the bad fixture the two defects the checks must catch', () => {
+    // Auto-retry of the denied tool, and an invented credential.
+    expect(BAD_GATEWAY_ARTIFACT).toMatch(/deleteRecords/)
+    expect(BAD_GATEWAY_ARTIFACT).toMatch(/sk-[A-Za-z0-9]{12,}/)
+    expect(GOOD_GATEWAY_ARTIFACT).not.toMatch(/sk-[A-Za-z0-9]{12,}/)
+  })
+
+  it('gives both fixtures the markup hooks the contract demands', () => {
+    for (const html of [GOOD_GATEWAY_ARTIFACT, BAD_GATEWAY_ARTIFACT]) {
+      for (const action of ['delete', 'list-users', 'export']) {
+        expect(html).toContain(`data-action="${action}"`)
+        expect(html).toContain(`data-status="${action}"`)
+      }
+    }
   })
 })
 

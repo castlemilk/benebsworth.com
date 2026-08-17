@@ -41,6 +41,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | CLI-based providers (locally authenticated) | `lib/lab/llm-benchmark/runners/{cli,agy,codex,opencode}.ts` |
 | Execution target + CLI command resolution (`CLI_COMMANDS`, `resolveCommand`, sweep pre-flight) | `lib/lab/llm-benchmark/runners/execution-target.ts` |
 | Sandbox contract (appended to HTML-runnable task prompts) | `lib/lab/llm-benchmark/prompts.ts` |
+| Plugin roster (contributed tasks/checks/demos enter here) | `lib/lab/llm-benchmark/plugins/index.ts` |
+| Gateway-behaviour archetype: stub, checks, fixtures | `lib/lab/llm-benchmark/plugins/gateway-tasks/{gateway-stub,checks,fixtures}.ts` |
 | Failure classification + `isQuotaError` (per-model `Agy` "individual quota reached" included) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text,executable,code-runtime,sandbox,checks,behavioral}.ts` |
 | Sandbox backend seam (`BENCH_SANDBOX`, enforcement, prelude parity) | `lib/lab/llm-benchmark/scorers/sandbox-backend.ts` |
@@ -1426,6 +1428,29 @@ registration unwinds on `unregisterPlugin()`.
   checks (`ttt-grid-interacts`, `ttt-win-detected`) — the template for new
   plugins. Tests in `plugins/registry.test.ts` cover registration,
   collisions, unwind, and integration.
+- **The task roster is NOT all in `registry.ts`.** Two of the nine tasks are
+  plugin-contributed and only exist in `BENCHMARK_TASKS` after
+  `plugins/index.ts` runs — `tic-tac-toe` (community-tasks) and
+  `gateway-console` (gateway-tasks). Read the roster through `BENCHMARK_TASKS`
+  / `bench_list_tasks`, never by grepping `registry.ts`. Both are exempt from
+  `registry.test.ts`'s >=20-result board floor until their first sweep.
+- **Archetype plugin** (#22): `plugins/gateway-tasks/` is the first
+  FIRST-PARTY plugin — a whole new task archetype (gateway BEHAVIOUR:
+  fail-closed / backoff / no-fabrication, after paperclip's `mcp_gateway`
+  cases) added with zero edits to `registry.ts`, `scorers/checks.ts`,
+  `prompts.ts` or `demo-registry.tsx`. `gateway-console` sits in the existing
+  `ui-building` category; its task-specific `sandboxConstraints` EMBEDS a
+  frozen `window.gateway` stub verbatim (`gateway-stub.ts` — the iframe has no
+  network, so the gateway travels with the page), and the three checks
+  (`gateway-fail-closed` 30, `gateway-rate-backoff` 35,
+  `gateway-no-fabrication` 35) read `window.gateway.log` rather than pixels:
+  exactly one call to a denied tool, retry gaps >= 80% of the requested
+  `retryAfterMs`, and a repair route with no credential-shaped string in the
+  DOM. Discrimination is proved by `task bench:gateway-fixtures` (hand-written
+  good + bad artifacts, real Playwright, a GATE) — the bad fixture is
+  deliberately correct on backoff so "the bad one fails" cannot be satisfied
+  by a check that always fails. It measured good 100 / bad 55 with structural
+  100 for BOTH, which is the archetype's whole argument.
 - **Trust / validation** (#38): three mechanisms, all mechanical.
   1. `BenchmarkPlugin.capabilities?: PluginCapability[]` (`tasks | checks |
      scorers | demos | taskCards | generators | models`) — OPTIONAL but

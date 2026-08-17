@@ -348,6 +348,34 @@ tasks:
     cmds:
       - '{{.BIN}}/tsx scripts/probe-corpus.mjs {{.CLI_ARGS}}'
 
+  gateway-fixtures:
+    desc: Prove the gateway-console checks discriminate broken from working (free, offline, needs a browser)
+    summary: |
+      The acceptance criterion for the gateway-behaviour archetype (#22): run
+      the three `gateway-console` checks over two HAND-WRITTEN reference
+      artifacts and compare each verdict against the expectation recorded
+      beside them in `plugins/gateway-tasks/fixtures.ts`.
+
+        good  contract-perfect console         -> all three PASS
+        bad   retries the DENIED tool and
+              fabricates an API key, but backs
+              off CORRECTLY on the rate limit  -> fail-closed FAIL,
+                                                  rate-backoff PASS,
+                                                  no-fabrication FAIL
+
+      The bad fixture passing one check is the point: a fixture that failed
+      everything would be consistent with a check that always fails.
+
+      A GATE, unlike `corpus:probe` — the fixtures are deterministic, so a
+      mismatch means a check stopped discriminating. It is NOT in the pre-push
+      gate: it launches headless Chromium and drives real timers (~10s), the
+      same cost shape as `bench:rescore`.
+
+      `-- --json` prints the per-check table as JSON. Exit 0 all matched,
+      1 mismatch, 2 the task/checks could not be resolved.
+    cmds:
+      - '{{.BIN}}/tsx scripts/gateway-fixtures.mjs {{.CLI_ARGS}}'
+
   publish-traces:
     desc: Copy the run logs results.json points at into public/lab-data/traces (free, offline)
     summary: |

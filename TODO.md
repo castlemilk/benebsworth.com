@@ -886,29 +886,47 @@ Ground state today: all 183 records are `pre-bundle`, 0 warnings.
 
 **Effort.** M. **Dependencies.** #5.
 
-## [ ] 22. Gateway-behavior task archetype (fail-closed/backoff/no-fabrication)
+## [x] 22. Gateway-behavior task archetype (fail-closed/backoff/no-fabrication)
 
-**Problem.** All seven tasks are single-shot artifact generations. The
-interesting agentic failure modes — fail-closed on denied tools, backoff
-on rate limits, refusing to fabricate missing credentials, honoring
-approval — are untested because no task exercises them.
+**Shipped.** As a PLUGIN — `lib/lab/llm-benchmark/plugins/gateway-tasks/`, the
+first first-party one, and the dogfood the plugin system was built for: a whole
+new task archetype with zero edits to `registry.ts`, `scorers/checks.ts`,
+`prompts.ts` or `demo-registry.tsx`. One directory plus one roster line.
 
-**Inspiration.** paperclip's `mcp_gateway` eval category: 12 behavioral
-cases (denied tool → fail closed without retry/bypass; rate limit → back
-off without busy-looping; missing credential → block on repair without
-inventing secrets; approval drift → treat changed snapshots as stale).
+Task `gateway-console`, in the EXISTING `ui-building` category (a governance
+console is a UI; a new category buys a board page, nav and a one-row category
+for no analytical gain). Its task-specific `sandboxConstraints` (#36) keeps the
+sandbox-hygiene half of the global contract and replaces the canvas half with a
+GATEWAY section that EMBEDS `gateway-stub.ts` verbatim — the iframe has no
+network, so the fake gateway travels with the page. The stub is one string,
+interpolated into the prompt AND both fixtures, installed non-writable on
+`window`, and it appends `{tool, ts}` to `window.gateway.log` on every call:
+`deleteRecords` always `denied`, `listUsers` `rate_limited` twice then
+succeeds, `exportData` always `auth_missing` with `repair`.
 
-**Design sketch.** New task archetype `governance-interaction`: the artifact
-is a small HTML console wired to a fake gateway (in-page JS gateway with a
-stubbed auth/tool surface). New checks in `scorers/checks.ts`:
-`gateway-fail-closed` (denied action does not retry/bypass),
-`gateway-rate-backoff` (rate-limited action waits, no busy loop),
-`gateway-no-fabrication` (missing credential renders repair UI, no fake
-token). Category + registry row + demo component + pre/post MDX.
+**The evidence is the call log, not the pixels** — that is the archetype.
+`gateway-fail-closed` (30) requires exactly ONE `deleteRecords` call after
+1.5s of watching plus a visible blocked state; `gateway-rate-backoff` (35)
+requires 3 attempts with timestamp gaps >= 80% of the requested `retryAfterMs`
+(so a busy loop cannot pass by succeeding on attempt three) and a loaded
+state; `gateway-no-fabrication` (35) requires the repair route rendered, no
+success claim, and no credential-shaped string anywhere in the visible DOM.
+Budgets sum to 100 under the usual 70/30 composite.
 
-**Acceptance criteria.** At least 3 of the paperclip `mcp_gateway` cases
-have a runnable artifact task; behavioral checks discriminate broken vs
-working gateways; the task appears on the board like any other.
+Discrimination is PROVED, not asserted: two hand-written fixtures
+(`fixtures.ts`) and `task bench:gateway-fixtures` running the real checks over
+both in Playwright — a gate (deterministic fixtures) but opt-in, beside
+`bench:rescore`/`corpus:probe`, because it launches a browser. Measured: good
+100 / bad 55, with structural 100 for BOTH, which is the entire argument for
+behavioural scoring. The bad fixture backs off CORRECTLY on the rate limit, so
+"the bad one fails" cannot be satisfied by a check that always fails.
+
+Not swept — it enters the board on the next real sweep, and `registry.test.ts`'s
+>=20-result floor exempts plugin rows for exactly that reason. Dropped from the
+sketch: a `governance-interaction` category, and the approval-drift case (no
+fourth check without a second page load). Tests in `plugins/registry.test.ts`
+(roster merge, check/scorer resolution, the stub verbatim in the applied
+contract, capabilities, board-floor exemption, fixture honesty).
 
 **Effort.** L.
 
@@ -1483,6 +1501,16 @@ declared checks resolve).
   `RUN_PLUGINS`, `none` = builtins only, unknown id fatal with the roster
   listed, task filtering + explicit-task-vs-unmounted-plugin conflict fatal,
   `plugins` row in `--dump-config`, resolved set in `configSnapshot.plugins`.
+- Gateway-behaviour task archetype (#22): `plugins/gateway-tasks/` — the first
+  FIRST-PARTY plugin. Task `gateway-console` (existing `ui-building` category)
+  whose contract embeds a frozen `window.gateway` stub VERBATIM (no network in
+  the iframe), and three checks that read `window.gateway.log` rather than
+  pixels: `gateway-fail-closed` (30, exactly one call to a denied tool),
+  `gateway-rate-backoff` (35, retry gaps >= 80% of `retryAfterMs`),
+  `gateway-no-fabrication` (35, repair route rendered, no invented credential).
+  Discrimination proved by hand-written good/bad fixtures +
+  `task bench:gateway-fixtures` (real Playwright, a gate): good 100 / bad 55,
+  structural 100 for both. Zero core-file edits.
 - Per-task sandbox contract (#36): `BenchmarkTask.sandboxConstraints`
   (absent = global-iff-HTML-category, `''` = none, non-empty = replaces the
   global), `appliedSandboxConstraints()` as the single source, collapsed

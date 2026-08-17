@@ -14,8 +14,39 @@ That writes `lib/lab/llm-benchmark/plugins/my-plugin/` and prints the roster
 lines plus a wiring checklist. The rest of this document is what the scaffold
 leaves you to decide.
 
-Worked example: `lib/lab/llm-benchmark/plugins/community-tasks/` (tic-tac-toe
-with two DOM-based checks and a demo).
+Worked examples: `lib/lab/llm-benchmark/plugins/community-tasks/` (tic-tac-toe
+with two DOM-based checks and a demo) and
+`lib/lab/llm-benchmark/plugins/gateway-tasks/` (below).
+
+### The archetype plugin
+
+`gateway-tasks` is the first **first-party** plugin, and it exists to answer
+the question this system is really for: can a whole new *task archetype* land
+without touching a core file?
+
+Every other task on the board is a single-shot artifact generation graded on
+what it renders. `gateway-console` grades what an artifact **does** when the
+environment refuses it — a denied tool, a rate limit, a missing credential
+(#22, after paperclip's `mcp_gateway` cases). That needed a new prompt shape
+(the contract embeds a frozen `window.gateway` stub verbatim, because the
+iframe has no network), a new evidence source (the checks read the stub's call
+log, not the pixels), and a demo. All of it is one directory plus one roster
+line: `registry.ts`, `scorers/checks.ts`, `prompts.ts` and
+`demo-registry.tsx` are untouched.
+
+Two decisions worth copying:
+
+- **It reused a category.** An operations console is `ui-building`. A new
+  category means a board page, nav, and a category with one row in it — pay
+  that only when nothing fits.
+- **It ships a known-good AND a known-bad fixture**
+  (`gateway-tasks/fixtures.ts`), and a CLI that runs the real checks over both
+  (`task bench:gateway-fixtures`). A behavioural check that passes everything
+  is worse than no check. The bad fixture is deliberately *correct* on one of
+  the three checks, so "the bad one fails" cannot be satisfied by a check that
+  always fails. Browser-driving, so it is an opt-in CLI beside `bench:rescore`
+  and `bench:corpus:probe`, not a unit test — but it IS a gate (the fixtures
+  are deterministic; a mismatch is always a bug).
 
 ---
 

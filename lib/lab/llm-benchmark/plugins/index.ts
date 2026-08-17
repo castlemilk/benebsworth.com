@@ -11,7 +11,12 @@
  */
 import { registerPlugin } from './registry'
 import { communityTasks } from './community-tasks'
+import { gatewayTasks } from './gateway-tasks'
 
 registerPlugin(communityTasks)
+// The first FIRST-PARTY archetype plugin (#22): a new task archetype
+// (gateway behaviour — fail-closed / backoff / no-fabrication) added without
+// touching registry.ts, scorers/checks.ts, prompts.ts or the demo registry.
+registerPlugin(gatewayTasks)
 
 export * from './registry'

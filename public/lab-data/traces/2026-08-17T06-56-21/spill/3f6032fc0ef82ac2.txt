@@ -1,0 +1,10 @@
+- (4, 3): Validates both equations:  
+  \(4^2 + 3^2 = 16 + 9 = 25\) and \(4 \times 3 = 12\).  
+- (3, 4): Validates both equations:  
+  \(3^2 + 4^2 = 9 + 16 = 25\) and \(3 \times 4 = 12\).  
+- (-4, -3): Validates both equations:  
+  \((-4)^2 + (-3)^2 = 16 + 9 = 25\) and \((-4) \times (-3) = 12\).  
+- (-3, -4): Validates both equations:  
+  \((-3)^2 + (-4)^2 = 9 + 16 = 25\) and \((-3) \times (-4) = 12\).  
+
+\boxed{(4, 3)}, \boxed{(3, 4)}, \boxed{(-4, -3)}, \boxed{(-3, -4)}

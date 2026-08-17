@@ -1,0 +1,761 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pendulum Wave Simulation</title>
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    background: #08080c;
+    color: #ececf0;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
+  }
+  #canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    touch-action: none;
+  }
+  #ui-container {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    max-width: 320px;
+    width: calc(100% - 24px);
+    background: rgba(15, 15, 22, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  #ui-container.collapsed #ui-content {
+    display: none;
+  }
+  .ui-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  #ui-container.collapsed .ui-header {
+    margin-bottom: 0;
+  }
+  .ui-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ui-title-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 8px #00f0ff;
+  }
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    color: #8a8a9e;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .toggle-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+  }
+  .control-group {
+    margin-top: 10px;
+  }
+  .control-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #a0a0b8;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .control-value {
+    color: #00f0ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: #2a2a38;
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00f0ff;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0,240,255,0.6);
+    transition: transform 0.1s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+  .button-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .btn {
+    flex: 1;
+    padding: 7px 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    color: #ececf0;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn-primary {
+    background: rgba(0, 240, 255, 0.15);
+    border-color: rgba(0, 240, 255, 0.4);
+    color: #00f0ff;
+  }
+  .btn-primary:hover {
+    background: rgba(0, 240, 255, 0.25);
+    border-color: rgba(0, 240, 255, 0.6);
+  }
+  #hud {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+  .hud-card {
+    background: rgba(15, 15, 22, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    pointer-events: auto;
+  }
+  .hud-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #707088;
+  }
+  .hud-val {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #fff;
+    margin-top: 2px;
+  }
+  .progress-bar-bg {
+    width: 100px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00f0ff, #7000ff);
+    border-radius: 2px;
+  }
+  #error-display {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    padding: 12px;
+    background: rgba(220, 38, 38, 0.9);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 13px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  @media (max-width: 480px) {
+    #ui-container {
+      max-width: 100%;
+      top: 8px;
+      left: 8px;
+      width: calc(100% - 16px);
+      padding: 10px 12px;
+    }
+    #hud {
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="ui-container">
+  <div class="ui-header">
+    <div class="ui-title">
+      <div class="ui-title-dot"></div>
+      <span>Pendulum Wave</span>
+    </div>
+    <button class="toggle-btn" id="toggle-ui" title="Toggle Controls">▼</button>
+  </div>
+  <div id="ui-content">
+    <div class="control-group">
+      <div class="control-label">
+        <span>Pendulums (N)</span>
+        <span class="control-value" id="val-n">16</span>
+      </div>
+      <input type="range" id="slider-n" min="8" max="36" step="1" value="16">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">
+        <span>Gravity (g)</span>
+        <span class="control-value" id="val-g">9.81 m/s²</span>
+      </div>
+      <input type="range" id="slider-g" min="1.0" max="25.0" step="0.1" value="9.81">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">
+        <span>Cycle Period (T)</span>
+        <span class="control-value" id="val-t">60 s</span>
+      </div>
+      <input type="range" id="slider-t" min="15" max="120" step="5" value="60">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">
+        <span>Base Oscillations (k)</span>
+        <span class="control-value" id="val-k">24</span>
+      </div>
+      <input type="range" id="slider-k" min="10" max="50" step="1" value="24">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">
+        <span>Max Amplitude</span>
+        <span class="control-value" id="val-amp">30°</span>
+      </div>
+      <input type="range" id="slider-amp" min="10" max="60" step="1" value="30">
+    </div>
+
+    <div class="button-row">
+      <button class="btn btn-primary" id="btn-play">Pause</button>
+      <button class="btn" id="btn-reset">Restart</button>
+      <button class="btn" id="btn-view">View: 3D</button>
+    </div>
+  </div>
+</div>
+
+<div id="hud">
+  <div class="hud-card">
+    <div class="hud-title">Cycle Progress</div>
+    <div class="hud-val" id="hud-time">00.0s / 60s</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="hud-progress"></div>
+    </div>
+  </div>
+  <div class="hud-card" style="text-align: right;">
+    <div class="hud-title">Pattern Phase</div>
+    <div class="hud-val" id="hud-phase" style="color: #00f0ff;">Synchronized</div>
+  </div>
+</div>
+
+<div id="error-display" role="alert"></div>
+
+<script>
+try {
+  // --- Simulation State ---
+  const state = {
+    N: 16,
+    g: 9.81,
+    T: 60,         // Time in seconds for full realignment cycle
+    k: 24,         // Number of oscillations the longest pendulum executes in cycle T
+    maxAngleDeg: 30,
+    time: 0,
+    isPlaying: true,
+    viewMode: 0,   // 0: 3D Orbit, 1: Front, 2: Top
+    camYaw: -0.45,
+    camPitch: 0.22,
+    camDist: 1.0,
+    isDragging: false,
+    lastMouseX: 0,
+    lastMouseY: 0
+  };
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const errorDisplay = document.getElementById('error-display');
+
+  // UI Elements
+  const sliderN = document.getElementById('slider-n');
+  const sliderG = document.getElementById('slider-g');
+  const sliderT = document.getElementById('slider-t');
+  const sliderK = document.getElementById('slider-k');
+  const sliderAmp = document.getElementById('slider-amp');
+
+  const valN = document.getElementById('val-n');
+  const valG = document.getElementById('val-g');
+  const valT = document.getElementById('val-t');
+  const valK = document.getElementById('val-k');
+  const valAmp = document.getElementById('val-amp');
+
+  const btnPlay = document.getElementById('btn-play');
+  const btnReset = document.getElementById('btn-reset');
+  const btnView = document.getElementById('btn-view');
+  const btnToggle = document.getElementById('toggle-ui');
+  const uiContainer = document.getElementById('ui-container');
+
+  const hudTime = document.getElementById('hud-time');
+  const hudProgress = document.getElementById('hud-progress');
+  const hudPhase = document.getElementById('hud-phase');
+
+  // --- Resize Canvas ---
+  let dpr = window.devicePixelRatio || 1;
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // --- Event Listeners ---
+  sliderN.addEventListener('input', (e) => {
+    state.N = parseInt(e.target.value, 10);
+    valN.textContent = state.N;
+  });
+
+  sliderG.addEventListener('input', (e) => {
+    state.g = parseFloat(e.target.value);
+    valG.textContent = state.g.toFixed(2) + ' m/s²';
+  });
+
+  sliderT.addEventListener('input', (e) => {
+    state.T = parseInt(e.target.value, 10);
+    valT.textContent = state.T + ' s';
+  });
+
+  sliderK.addEventListener('input', (e) => {
+    state.k = parseInt(e.target.value, 10);
+    valK.textContent = state.k;
+  });
+
+  sliderAmp.addEventListener('input', (e) => {
+    state.maxAngleDeg = parseInt(e.target.value, 10);
+    valAmp.textContent = state.maxAngleDeg + '°';
+  });
+
+  btnPlay.addEventListener('click', () => {
+    state.isPlaying = !state.isPlaying;
+    btnPlay.textContent = state.isPlaying ? 'Pause' : 'Play';
+    btnPlay.classList.toggle('btn-primary', state.isPlaying);
+  });
+
+  btnReset.addEventListener('click', () => {
+    state.time = 0;
+  });
+
+  const viewNames = ['View: 3D Orbit', 'View: Front', 'View: Top'];
+  btnView.addEventListener('click', () => {
+    state.viewMode = (state.viewMode + 1) % 3;
+    btnView.textContent = viewNames[state.viewMode];
+  });
+
+  btnToggle.addEventListener('click', () => {
+    uiContainer.classList.toggle('collapsed');
+    btnToggle.textContent = uiContainer.classList.contains('collapsed') ? '▲' : '▼';
+  });
+
+  // Mouse & Touch Controls for Camera Orbit
+  function onPointerDown(e) {
+    if (e.target.closest('#ui-container') || e.target.closest('#hud')) return;
+    state.isDragging = true;
+    state.lastMouseX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+    state.lastMouseY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+  }
+
+  function onPointerMove(e) {
+    if (!state.isDragging) return;
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+    const dx = clientX - state.lastMouseX;
+    const dy = clientY - state.lastMouseY;
+
+    if (state.viewMode === 0) {
+      state.camYaw += dx * 0.005;
+      state.camPitch += dy * 0.005;
+      // Clamp pitch to avoid flipping
+      state.camPitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, state.camPitch));
+    }
+
+    state.lastMouseX = clientX;
+    state.lastMouseY = clientY;
+  }
+
+  function onPointerUp() {
+    state.isDragging = false;
+  }
+
+  window.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('mouseup', onPointerUp);
+
+  window.addEventListener('touchstart', onPointerDown, { passive: true });
+  window.addEventListener('touchmove', onPointerMove, { passive: true });
+  window.addEventListener('touchend', onPointerUp);
+
+  window.addEventListener('wheel', (e) => {
+    if (e.target.closest('#ui-container')) return;
+    state.camDist += e.deltaY * 0.001;
+    state.camDist = Math.max(0.4, Math.min(2.5, state.camDist));
+  }, { passive: true });
+
+  // --- Helper Math & Color ---
+  function getBobColor(i, total) {
+    const hue = 180 + (i / Math.max(1, total - 1)) * 160; // Cyan to Magenta/Purple
+    return {
+      hue,
+      rgb: `hsl(${hue}, 100%, 60%)`,
+      glow: `hsl(${hue}, 100%, 50%)`
+    };
+  }
+
+  // Determine human-readable wave phase status
+  function getPhaseStatus(t, T) {
+    const norm = (t % T) / T;
+    if (norm < 0.03 || norm > 0.97) return "Synchronized";
+    if (Math.abs(norm - 0.5) < 0.03) return "Full Antiphase";
+    if (Math.abs(norm - 0.25) < 0.03 || Math.abs(norm - 0.75) < 0.03) return "2 Traveling Waves";
+    if (Math.abs(norm - 0.333) < 0.03 || Math.abs(norm - 0.667) < 0.03) return "3 Traveling Waves";
+    if (Math.abs(norm - 0.166) < 0.03 || Math.abs(norm - 0.833) < 0.03) return "6 Traveling Waves";
+    return "Chaotic / Beat Waves";
+  }
+
+  // --- Main Calculation & Render Loop ---
+  let lastTime = performance.now();
+
+  function animate(now) {
+    const dt = Math.min((now - lastTime) / 1000, 0.1);
+    lastTime = now;
+
+    if (state.isPlaying) {
+      state.time += dt;
+    }
+
+    // Update HUD
+    const timeInCycle = state.time % state.T;
+    const cyclePercent = (timeInCycle / state.T) * 100;
+    hudTime.textContent = `${timeInCycle.toFixed(1)}s / ${state.T}s`;
+    hudProgress.style.width = `${cyclePercent}%`;
+    hudPhase.textContent = getPhaseStatus(state.time, state.T);
+
+    // Render Scene
+    render();
+
+    requestAnimationFrame(animate);
+  }
+
+  function render() {
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    const width = canvas.width / dpr;
+    const height = canvas.height / dpr;
+
+    // Clear background
+    ctx.fillStyle = '#08080c';
+    ctx.fillRect(0, 0, width, height);
+
+    // Setup Camera Projection Matrix
+    let yaw = state.camYaw;
+    let pitch = state.camPitch;
+
+    if (state.viewMode === 1) { // Front
+      yaw = 0;
+      pitch = 0;
+    } else if (state.viewMode === 2) { // Top
+      yaw = 0;
+      pitch = Math.PI / 2 - 0.01;
+    }
+
+    const cosY = Math.cos(yaw);
+    const sinY = Math.sin(yaw);
+    const cosP = Math.cos(pitch);
+    const sinP = Math.sin(pitch);
+
+    // Scale factors for scene projection
+    const sceneScale = Math.min(width, height) * 0.45 / state.camDist;
+    const cx = width / 2;
+    const cy = height * 0.42;
+
+    // 3D Point Projection Function
+    function project(x, y, z) {
+      // Rotation around Y (yaw)
+      const x1 = x * cosY - z * sinY;
+      const z1 = x * sinY + z * cosY;
+
+      // Rotation around X (pitch)
+      const y2 = y * cosP - z1 * sinP;
+      const z2 = y * sinP + z1 * cosP;
+
+      // Perspective projection
+      const distance = 3.5;
+      const fov = 1 / (1 + z2 / distance);
+
+      return {
+        px: cx + x1 * sceneScale * fov,
+        py: cy + y2 * sceneScale * fov,
+        pz: z2,
+        scale: fov
+      };
+    }
+
+    // --- Calculate Pendulum Physics Positions ---
+    const N = state.N;
+    const g = state.g;
+    const T = state.T;
+    const k = state.k;
+    const maxAngleRad = (state.maxAngleDeg * Math.PI) / 180;
+
+    // Rail dimensions along Z axis
+    const railLength = 1.4; // Normalized world units
+    const zStep = N > 1 ? railLength / (N - 1) : 0;
+    const zStart = -railLength / 2;
+
+    const bobs = [];
+    const pivots = [];
+
+    // Find physical lengths L_i for pendulums so pendulum i completes (k + i) oscillations in time T
+    // Period T_i = T / (k + i)
+    // T_i = 2 * pi * sqrt(L_i / g) => L_i = g * (T_i / (2 * pi))^2
+    for (let i = 0; i < N; i++) {
+      const oscillations = k + i;
+      const T_i = T / oscillations;
+      const L_i = g * Math.pow(T_i / (2 * Math.PI), 2);
+
+      // Current angle offset: theta(t) = maxAngle * cos(2 * pi * t / T_i)
+      const angle = maxAngleRad * Math.cos((2 * Math.PI * state.time) / T_i);
+
+      // Z position along rail
+      const z = zStart + i * zStep;
+
+      // Visual length normalization factor (keep longest pendulum length visually balanced)
+      const L_longest = g * Math.pow((T / k) / (2 * Math.PI), 2);
+      const visualL = (L_i / L_longest) * 0.85; // Scale relative to rail height
+
+      // Pivots are along top rail at x=0, y=0, z=z
+      const pivotWorld = { x: 0, y: -0.4, z: z };
+      
+      // Bob world position (swinging in X-Y plane)
+      const bobWorld = {
+        x: visualL * Math.sin(angle),
+        y: pivotWorld.y + visualL * Math.cos(angle),
+        z: z
+      };
+
+      const projPivot = project(pivotWorld.x, pivotWorld.y, pivotWorld.z);
+      const projBob = project(bobWorld.x, bobWorld.y, bobWorld.z);
+
+      bobs.push({
+        index: i,
+        projPivot,
+        projBob,
+        color: getBobColor(i, N),
+        zDepth: projBob.pz
+      });
+      pivots.push(projPivot);
+    }
+
+    // --- Render Background Grid / Ground Floor ---
+    const groundY = 0.6;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    const gridLines = 10;
+    const gridSize = 1.2;
+
+    for (let i = -gridLines; i <= gridLines; i++) {
+      const pos = (i / gridLines) * gridSize;
+      // Lines parallel to Z
+      const p1 = project(-gridSize, groundY, pos);
+      const p2 = project(gridSize, groundY, pos);
+      ctx.beginPath();
+      ctx.moveTo(p1.px, p1.py);
+      ctx.lineTo(p2.px, p2.py);
+      ctx.stroke();
+
+      // Lines parallel to X
+      const p3 = project(pos, groundY, -gridSize);
+      const p4 = project(pos, groundY, gridSize);
+      ctx.beginPath();
+      ctx.moveTo(p3.px, p3.py);
+      ctx.lineTo(p4.px, p4.py);
+      ctx.stroke();
+    }
+
+    // --- Render Top Mounting Rail ---
+    if (pivots.length > 0) {
+      const railStart = project(0, -0.4, zStart - 0.08);
+      const railEnd = project(0, -0.4, zStart + railLength + 0.08);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(railStart.px, railStart.py);
+      ctx.lineTo(railEnd.px, railEnd.py);
+      ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)';
+      ctx.lineWidth = Math.max(2, 4 * railStart.scale);
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // --- Render Connecting Wave Ribbon (Smooth Curve through all bobs) ---
+    if (bobs.length > 1) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(bobs[0].projBob.px, bobs[0].projBob.py);
+
+      for (let i = 0; i < bobs.length - 1; i++) {
+        const p0 = bobs[Math.max(0, i - 1)].projBob;
+        const p1 = bobs[i].projBob;
+        const p2 = bobs[i + 1].projBob;
+        const p3 = bobs[Math.min(bobs.length - 1, i + 2)].projBob;
+
+        // Catmull-Rom spline control points
+        const cp1x = p1.px + (p2.px - p0.px) / 6;
+        const cp1y = p1.py + (p2.py - p0.py) / 6;
+        const cp2x = p2.px - (p3.px - p1.px) / 6;
+        const cp2y = p2.py - (p3.py - p1.py) / 6;
+
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.px, p2.py);
+      }
+
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.45)';
+      ctx.lineWidth = 2.5;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#00f0ff';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Sort pendulums by depth (pz) so furthest draw first
+    const sortedIndices = Array.from({ length: N }, (_, i) => i);
+    sortedIndices.sort((a, b) => bobs[b].zDepth - bobs[a].zDepth);
+
+    // --- Render Strings & Bobs ---
+    for (const idx of sortedIndices) {
+      const bob = bobs[idx];
+      const pPivot = bob.projPivot;
+      const pBob = bob.projBob;
+
+      // Draw String
+      ctx.beginPath();
+      ctx.moveTo(pPivot.px, pPivot.py);
+      ctx.lineTo(pBob.px, pBob.py);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+      ctx.lineWidth = Math.max(1, 1.2 * pBob.scale);
+      ctx.stroke();
+
+      // Draw Top Pivot Node
+      ctx.beginPath();
+      ctx.arc(pPivot.px, pPivot.py, Math.max(1.5, 2.5 * pPivot.scale), 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.fill();
+
+      // Draw Bob Glow & Sphere
+      const radius = Math.max(4, 9 * pBob.scale);
+
+      // Glow
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(pBob.px, pBob.py, radius * 2.2, 0, Math.PI * 2);
+      const glowGrad = ctx.createRadialGradient(
+        pBob.px, pBob.py, radius * 0.2,
+        pBob.px, pBob.py, radius * 2.2
+      );
+      glowGrad.addColorStop(0, bob.color.glow);
+      glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = glowGrad;
+      ctx.globalAlpha = 0.6;
+      ctx.fill();
+      ctx.restore();
+
+      // Sphere Body
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(pBob.px, pBob.py, radius, 0, Math.PI * 2);
+      const sphereGrad = ctx.createRadialGradient(
+        pBob.px - radius * 0.3, pBob.py - radius * 0.3, radius * 0.1,
+        pBob.px, pBob.py, radius
+      );
+      sphereGrad.addColorStop(0, '#ffffff');
+      sphereGrad.addColorStop(0.4, bob.color.rgb);
+      sphereGrad.addColorStop(1, '#050510');
+      ctx.fillStyle = sphereGrad;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  // Start Animation Loop
+  requestAnimationFrame(animate);
+
+} catch (err) {
+  const errDiv = document.getElementById('error-display');
+  if (errDiv) {
+    errDiv.style.display = 'block';
+    errDiv.textContent = 'Error executing simulation: ' + err.message;
+  }
+}
+</script>
+</body>
+</html>
+```

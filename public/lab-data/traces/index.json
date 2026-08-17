@@ -40,5 +40,154 @@
       "spill/02e996a2ee8949f2.txt",
       "spill/bf29d1667217d76a.txt"
     ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-circuit-builder-teaser.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "circuit-builder-teaser",
+    "bytes": 30817,
+    "spillRefs": [
+      "spill/08644ec3bc6fb256.txt",
+      "spill/15df20d834b3dd66.txt",
+      "spill/448452d48b5d2b66.txt",
+      "spill/49d4dd4469443946.txt",
+      "spill/75027a91066c34ec.txt",
+      "spill/a58765155ed11302.txt",
+      "spill/a8f18ce0771fac48.txt",
+      "spill/b3ac7c49fec7f797.txt",
+      "spill/b7ed4daf09bb4ee9.txt",
+      "spill/c04d26c8faa41407.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-crypto-hash-race.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "crypto-hash-race",
+    "bytes": 38245,
+    "spillRefs": [
+      "spill/db3c661d1ebd4c3a.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-equation-solver.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "equation-solver",
+    "bytes": 16512,
+    "spillRefs": [
+      "spill/8ffa03f22417f6ec.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-landing-page-morph.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "landing-page-morph",
+    "bytes": 30948,
+    "spillRefs": [
+      "spill/1e4f852553b2e6d6.txt",
+      "spill/2b10d0466fccd869.txt",
+      "spill/30774cf2708f07b1.txt",
+      "spill/33c592dd816efe8c.txt",
+      "spill/40fefb920f020e39.txt",
+      "spill/50657ad9f4296266.txt",
+      "spill/5bf7bac8a6c168b0.txt",
+      "spill/85c3b3a3365d4a6f.txt",
+      "spill/96564dd0c4bae9e0.txt",
+      "spill/b0253bf64652eb33.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-mini-platformer.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "mini-platformer",
+    "bytes": 31153,
+    "spillRefs": [
+      "spill/040e3ff3378d6cc8.txt",
+      "spill/269082923a1af83e.txt",
+      "spill/3188419660ae5b78.txt",
+      "spill/44e2a7ef7f40399d.txt",
+      "spill/6abdef9bad327a1a.txt",
+      "spill/98e7aef77e303fd1.txt",
+      "spill/9c1512349f077341.txt",
+      "spill/9dff2f3e780f344e.txt",
+      "spill/b8d3402a60ed9a17.txt",
+      "spill/f36f4171bcbc1cfa.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-n-body-field.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "n-body-field",
+    "bytes": 31067,
+    "spillRefs": [
+      "spill/5aa3a392cd839eaf.txt",
+      "spill/7507b3fcd0b37f32.txt",
+      "spill/7c4c49f1319e6722.txt",
+      "spill/851fbe0313df79e2.txt",
+      "spill/a850eb6fbad0f418.txt",
+      "spill/ba90d052f3d25225.txt",
+      "spill/d41cf11a29ade88c.txt",
+      "spill/d9b1bd4d5fd39842.txt",
+      "spill/e766de93a94f5cf1.txt",
+      "spill/f07315fe2e652b99.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-physics-pendulum-wave.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "physics-pendulum-wave",
+    "bytes": 30798,
+    "spillRefs": [
+      "spill/277a8cc2214ff407.txt",
+      "spill/60094a9034cb0857.txt",
+      "spill/7221e392d35059e9.txt",
+      "spill/7e1b2d03591817ed.txt",
+      "spill/8239bf5b08fa7314.txt",
+      "spill/a6f8e4ceb3d838b0.txt",
+      "spill/aaeb9acb83dacff5.txt",
+      "spill/af69ec674ed243a9.txt",
+      "spill/b4179adc6976c488.txt",
+      "spill/b4536b6d2d1d0e7e.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-34-06",
+    "file": "gemini-3.6-flash-tic-tac-toe.jsonl",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "tic-tac-toe",
+    "bytes": 69795,
+    "spillRefs": [
+      "spill/978c9501cc443165.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-56-21",
+    "file": "nemotron-nano-12b-vl-equation-solver.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "equation-solver",
+    "bytes": 3548,
+    "spillRefs": [
+      "spill/3f6032fc0ef82ac2.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T06-59-08",
+    "file": "nemotron-nano-12b-vl-n-body-field.jsonl",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "n-body-field",
+    "bytes": 52138,
+    "spillRefs": [
+      "spill/77bde1267650a31e.txt",
+      "spill/82e0efc84eddb2cc.txt",
+      "spill/aee6240c5e675f30.txt",
+      "spill/d2a73a93f1c9b853.txt",
+      "spill/f07865d294542a1b.txt"
+    ]
   }
 ]

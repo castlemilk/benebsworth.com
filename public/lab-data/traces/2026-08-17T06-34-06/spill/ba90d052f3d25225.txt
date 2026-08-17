@@ -1,0 +1,973 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Gravitating Particles Simulation</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: #08080c;
+      color: #ececf0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    /* UI Overlay */
+    .hud-panel {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      background: rgba(15, 17, 26, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 12px 16px;
+      width: 280px;
+      max-width: calc(100vw - 24px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .hud-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 0 0 8px 0;
+      color: #70a1ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hud-subtitle {
+      font-size: 11px;
+      color: #8a8d9b;
+      margin-bottom: 10px;
+    }
+    .control-group {
+      margin-bottom: 8px;
+    }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+      color: #c4c7d4;
+    }
+    .control-label span.val {
+      color: #70a1ff;
+      font-family: monospace;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 4px;
+      background: #2a2d3d;
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #70a1ff;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    select, button {
+      width: 100%;
+      background: #1e2235;
+      color: #ececf0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    select:hover, button:hover {
+      background: #282d45;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .btn-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .btn-row button {
+      flex: 1;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 8px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+      color: #8a8d9b;
+    }
+    .stats-grid div span {
+      color: #ececf0;
+      font-family: monospace;
+    }
+    /* Colorbar Legend */
+    .legend-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #2c3e50, #00d2ff, #00e676, #ffeb3b, #ff3d00, #ffffff);
+      margin-top: 6px;
+    }
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #6c7086;
+      margin-top: 2px;
+    }
+    /* Error overlay */
+    #error-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 0, 0, 0.9);
+      color: #ff5555;
+      padding: 20px;
+      z-index: 999;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="canvas-container">
+    <canvas id="glcanvas"></canvas>
+  </div>
+
+  <div class="hud-panel">
+    <div class="hud-title">
+      <span>N-Body Gravity</span>
+      <span style="font-size:11px; opacity:0.7;">200 Bodies</span>
+    </div>
+    <div class="hud-subtitle">3D Mutual Gravitation with Softening</div>
+
+    <div class="control-group">
+      <div class="control-label">Preset Configuration</div>
+      <select id="presetSelect">
+        <option value="galaxy">Rotating Spiral Galaxy</option>
+        <option value="collision">Two Galaxy Collision</option>
+        <option value="cluster">Spherical Star Cluster</option>
+        <option value="expansion">Big Bang Expansion</option>
+        <option value="random">Random Cloud</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">Gravitational Constant (G): <span class="val" id="valG">1.5</span></div>
+      <input type="range" id="sliderG" min="0.1" max="5.0" step="0.1" value="1.5">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">Softening Factor (ε): <span class="val" id="valEps">0.8</span></div>
+      <input type="range" id="sliderEps" min="0.1" max="3.0" step="0.05" value="0.8">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">Time Step (dt): <span class="val" id="valDT">0.012</span></div>
+      <input type="range" id="sliderDT" min="0.001" max="0.03" step="0.001" value="0.012">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label">Trail Length: <span class="val" id="valTrail">15</span></div>
+      <input type="range" id="sliderTrail" min="0" max="40" step="1" value="15">
+    </div>
+
+    <div class="btn-row">
+      <button id="btnPause">Pause</button>
+      <button id="btnReset">Reset System</button>
+    </div>
+
+    <div class="legend-bar"></div>
+    <div class="legend-labels">
+      <span>Slow Velocity</span>
+      <span>High Velocity</span>
+    </div>
+
+    <div class="stats-grid">
+      <div>FPS: <span id="statFPS">60</span></div>
+      <div>Max V: <span id="statMaxV">0.00</span></div>
+      <div>E_kin: <span id="statEkin">0.00</span></div>
+      <div>E_pot: <span id="statEpot">0.00</span></div>
+    </div>
+  </div>
+
+  <div id="error-overlay" role="alert"></div>
+
+  <script>
+    try {
+      // -------------------------------------------------------------
+      // 1. Math & Matrix Helpers (4x4 Matrix for 3D Projection & Camera)
+      // -------------------------------------------------------------
+      const Mat4 = {
+        create: () => new Float32Array(16),
+        identity: (out) => {
+          out.fill(0);
+          out[0] = out[5] = out[10] = out[15] = 1;
+          return out;
+        },
+        perspective: (out, fovRad, aspect, near, far) => {
+          const f = 1.0 / Math.tan(fovRad / 2);
+          const nf = 1.0 / (near - far);
+          out.fill(0);
+          out[0] = f / aspect;
+          out[5] = f;
+          out[10] = (far + near) * nf;
+          out[11] = -1;
+          out[14] = (2 * far * near) * nf;
+          return out;
+        },
+        lookAt: (out, eye, center, up) => {
+          let x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
+          let eyex = eye[0], eyey = eye[1], eyez = eye[2];
+          let upx = up[0], upy = up[1], upz = up[2];
+          let centerx = center[0], centery = center[1], centerz = center[2];
+
+          z0 = eyex - centerx; z1 = eyey - centery; z2 = eyez - centerz;
+          len = 1 / (Math.hypot(z0, z1, z2) || 1);
+          z0 *= len; z1 *= len; z2 *= len;
+
+          x0 = upy * z2 - upz * z1;
+          x1 = upz * z0 - upx * z2;
+          x2 = upx * z1 - upy * z0;
+          len = 1 / (Math.hypot(x0, x1, x2) || 1);
+          x0 *= len; x1 *= len; x2 *= len;
+
+          y0 = z1 * x2 - z2 * x1;
+          y1 = z2 * x0 - z0 * x2;
+          y2 = z0 * x1 - z1 * x0;
+          len = 1 / (Math.hypot(y0, y1, y2) || 1);
+          y0 *= len; y1 *= len; y2 *= len;
+
+          out[0] = x0; out[1] = y0; out[2] = z0; out[3] = 0;
+          out[4] = x1; out[5] = y1; out[6] = z1; out[7] = 0;
+          out[8] = x2; out[9] = y2; out[10] = z2; out[11] = 0;
+          out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
+          out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
+          out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
+          out[15] = 1;
+          return out;
+        }
+      };
+
+      // Velocity Color Gradient Generator (Spectral/Plasma-like)
+      function getVelocityColor(normV) {
+        // normV in [0, 1]
+        const t = Math.max(0, Math.min(1, normV));
+        let r, g, b;
+        if (t < 0.2) {
+          const s = t / 0.2;
+          r = 0.15 + 0.1 * s; g = 0.2 + 0.4 * s; b = 0.5 + 0.5 * s;
+        } else if (t < 0.4) {
+          const s = (t - 0.2) / 0.2;
+          r = 0.25 - 0.25 * s; g = 0.6 + 0.3 * s; b = 1.0 - 0.2 * s;
+        } else if (t < 0.6) {
+          const s = (t - 0.4) / 0.2;
+          r = 0.0 + 0.9 * s; g = 0.9 + 0.1 * s; b = 0.8 - 0.6 * s;
+        } else if (t < 0.8) {
+          const s = (t - 0.6) / 0.2;
+          r = 0.9 + 0.1 * s; g = 1.0 - 0.6 * s; b = 0.2 - 0.2 * s;
+        } else {
+          const s = (t - 0.8) / 0.2;
+          r = 1.0; g = 0.4 + 0.6 * s; b = 0.0 + 1.0 * s;
+        }
+        return [r, g, b];
+      }
+
+      // -------------------------------------------------------------
+      // 2. WebGL Shaders & Engine Setup
+      // -------------------------------------------------------------
+      const canvas = document.getElementById('glcanvas');
+      const gl = canvas.getContext('webgl', { antialias: true, alpha: false }) ||
+                 canvas.getContext('experimental-webgl', { antialias: true, alpha: false });
+
+      if (!gl) {
+        throw new Error("WebGL is not supported in this browser.");
+      }
+
+      // Shaders for Particles (Points with glowing circular textures)
+      const pointVS = `
+        attribute vec3 aPosition;
+        attribute vec3 aColor;
+        attribute float aSize;
+
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uProjectionMatrix;
+
+        varying vec3 vColor;
+
+        void main() {
+          vColor = aColor;
+          vec4 mvPosition = uModelViewMatrix * vec4(aPosition, 1.0);
+          gl_Position = uProjectionMatrix * mvPosition;
+          
+          // Perspective size attenuation
+          float dist = max(1.0, -mvPosition.z);
+          gl_PointSize = clamp(aSize * (220.0 / dist), 2.0, 60.0);
+        }
+      `;
+
+      const pointFS = `
+        precision mediump float;
+        varying vec3 vColor;
+
+        void main() {
+          vec2 coord = gl_PointCoord - vec2(0.5);
+          float r = length(coord) * 2.0;
+          if (r > 1.0) discard;
+          
+          // Soft radial falloff for glowing star look
+          float alpha = pow(1.0 - r, 1.8);
+          float core = pow(1.0 - r, 4.0) * 0.8;
+          vec3 finalColor = mix(vColor, vec3(1.0), core);
+          
+          gl_FragColor = vec4(finalColor, alpha);
+        }
+      `;
+
+      // Shaders for Orbit Trails (Lines)
+      const lineVS = `
+        attribute vec3 aPosition;
+        attribute vec4 aColor;
+
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uProjectionMatrix;
+
+        varying vec4 vColor;
+
+        void main() {
+          vColor = aColor;
+          gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1.0);
+        }
+      `;
+
+      const lineFS = `
+        precision mediump float;
+        varying vec4 vColor;
+
+        void main() {
+          gl_FragColor = vColor;
+        }
+      `;
+
+      function createShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          const info = gl.getShaderInfoLog(shader);
+          gl.deleteShader(shader);
+          throw new Error('Shader compilation failed: ' + info);
+        }
+        return shader;
+      }
+
+      function createProgram(gl, vsSource, fsSource) {
+        const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+        const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+        const prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+          const info = gl.getProgramInfoLog(prog);
+          throw new Error('Program link failed: ' + info);
+        }
+        return prog;
+      }
+
+      const pointProgram = createProgram(gl, pointVS, pointFS);
+      const lineProgram = createProgram(gl, lineVS, lineFS);
+
+      // Attribute & Uniform locations for Points
+      const pointAttrs = {
+        position: gl.getAttribLocation(pointProgram, 'aPosition'),
+        color: gl.getAttribLocation(pointProgram, 'aColor'),
+        size: gl.getAttribLocation(pointProgram, 'aSize')
+      };
+      const pointUniforms = {
+        mVM: gl.getUniformLocation(pointProgram, 'uModelViewMatrix'),
+        pM: gl.getUniformLocation(pointProgram, 'uProjectionMatrix')
+      };
+
+      // Attribute & Uniform locations for Lines
+      const lineAttrs = {
+        position: gl.getAttribLocation(lineProgram, 'aPosition'),
+        color: gl.getAttribLocation(lineProgram, 'aColor')
+      };
+      const lineUniforms = {
+        mVM: gl.getUniformLocation(lineProgram, 'uModelViewMatrix'),
+        pM: gl.getUniformLocation(lineProgram, 'uProjectionMatrix')
+      };
+
+      // Create Buffers
+      const pointPosBuffer = gl.createBuffer();
+      const pointColBuffer = gl.createBuffer();
+      const pointSizeBuffer = gl.createBuffer();
+
+      const linePosBuffer = gl.createBuffer();
+      const lineColBuffer = gl.createBuffer();
+
+      // -------------------------------------------------------------
+      // 3. Particle System & Physics
+      // -------------------------------------------------------------
+      const NUM_PARTICLES = 200;
+      let MAX_TRAIL_LEN = 15;
+
+      // Particle arrays
+      const x = new Float32Array(NUM_PARTICLES);
+      const y = new Float32Array(NUM_PARTICLES);
+      const z = new Float32Array(NUM_PARTICLES);
+
+      const vx = new Float32Array(NUM_PARTICLES);
+      const vy = new Float32Array(NUM_PARTICLES);
+      const vz = new Float32Array(NUM_PARTICLES);
+
+      const mass = new Float32Array(NUM_PARTICLES);
+      const pSize = new Float32Array(NUM_PARTICLES);
+
+      // Render buffers
+      const posData = new Float32Array(NUM_PARTICLES * 3);
+      const colData = new Float32Array(NUM_PARTICLES * 3);
+
+      // Trail history ring buffer: [particle_id][history_index] = {x,y,z}
+      let trailHistory = Array.from({ length: NUM_PARTICLES }, () => []);
+
+      // Sim Parameters
+      let G = 1.5;
+      let softeningSq = 0.8 * 0.8;
+      let dt = 0.012;
+      let isPaused = false;
+
+      // Initialize Presets
+      function initPreset(preset) {
+        trailHistory = Array.from({ length: NUM_PARTICLES }, () => []);
+        
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          mass[i] = 1.0;
+          pSize[i] = 2.5;
+        }
+
+        if (preset === 'galaxy') {
+          // Central massive black hole
+          mass[0] = 150.0;
+          x[0] = y[0] = z[0] = 0;
+          vx[0] = vy[0] = vz[0] = 0;
+          pSize[0] = 7.0;
+
+          for (let i = 1; i < NUM_PARTICLES; i++) {
+            const radius = 3.0 + Math.random() * 22.0;
+            const angle = Math.random() * Math.PI * 2;
+            const height = (Math.random() - 0.5) * 1.2;
+
+            x[i] = Math.cos(angle) * radius;
+            z[i] = Math.sin(angle) * radius;
+            y[i] = height;
+
+            // Keplerian orbital velocity v = sqrt(G*M/r)
+            const vOrb = Math.sqrt((G * mass[0]) / radius) * (0.9 + Math.random() * 0.2);
+            vx[i] = -Math.sin(angle) * vOrb;
+            vz[i] = Math.cos(angle) * vOrb;
+            vy[i] = (Math.random() - 0.5) * 0.2;
+
+            mass[i] = 0.5 + Math.random() * 0.5;
+            pSize[i] = 2.0 + mass[i] * 1.2;
+          }
+        } else if (preset === 'collision') {
+          // Two colliding galaxies
+          const center1 = [-12, 0, -5];
+          const center2 = [12, 0, 5];
+          const vel1 = [1.2, 0.2, 0.8];
+          const vel2 = [-1.2, -0.2, -0.8];
+
+          // Center supermassive bodies
+          mass[0] = 90.0; mass[1] = 90.0;
+          x[0] = center1[0]; y[0] = center1[1]; z[0] = center1[2];
+          vx[0] = vel1[0]; vy[0] = vel1[1]; vz[0] = vel1[2];
+          pSize[0] = 6.0;
+
+          x[1] = center2[0]; y[1] = center2[1]; z[1] = center2[2];
+          vx[1] = vel2[0]; vy[1] = vel2[1]; vz[1] = vel2[2];
+          pSize[1] = 6.0;
+
+          for (let i = 2; i < NUM_PARTICLES; i++) {
+            const isFirst = i < NUM_PARTICLES / 2;
+            const c = isFirst ? center1 : center2;
+            const v = isFirst ? vel1 : vel2;
+            const centralM = 90.0;
+
+            const radius = 1.5 + Math.random() * 10.0;
+            const angle = Math.random() * Math.PI * 2;
+            const vOrb = Math.sqrt((G * centralM) / radius);
+
+            x[i] = c[0] + Math.cos(angle) * radius;
+            z[i] = c[2] + Math.sin(angle) * radius;
+            y[i] = c[1] + (Math.random() - 0.5) * 1.0;
+
+            vx[i] = v[0] - Math.sin(angle) * vOrb;
+            vz[i] = v[2] + Math.cos(angle) * vOrb;
+            vy[i] = v[1] + (Math.random() - 0.5) * 0.2;
+
+            mass[i] = 0.4 + Math.random() * 0.4;
+            pSize[i] = 2.0;
+          }
+        } else if (preset === 'cluster') {
+          // Spherical Star Cluster (Plummer-like model)
+          for (let i = 0; i < NUM_PARTICLES; i++) {
+            const u = Math.random();
+            const r = 2.5 * Math.tan(u * Math.PI * 0.45);
+            const theta = Math.acos(2 * Math.random() - 1);
+            const phi = Math.random() * Math.PI * 2;
+
+            x[i] = r * Math.sin(theta) * Math.cos(phi);
+            y[i] = r * Math.sin(theta) * Math.sin(phi);
+            z[i] = r * Math.cos(theta);
+
+            // Virialized random dispersion
+            const speed = Math.sqrt((G * NUM_PARTICLES) / (r + 4.0)) * 0.4 * Math.random();
+            const vTheta = Math.random() * Math.PI * 2;
+            vx[i] = speed * Math.cos(vTheta);
+            vy[i] = speed * Math.sin(vTheta);
+            vz[i] = (Math.random() - 0.5) * speed;
+
+            mass[i] = 0.8 + Math.random() * 0.8;
+            pSize[i] = 2.2 + mass[i];
+          }
+        } else if (preset === 'expansion') {
+          // Big Bang / Pulsar Burst Expansion
+          for (let i = 0; i < NUM_PARTICLES; i++) {
+            const r = 0.5 + Math.random() * 2.0;
+            const theta = Math.acos(2 * Math.random() - 1);
+            const phi = Math.random() * Math.PI * 2;
+
+            const dirX = Math.sin(theta) * Math.cos(phi);
+            const dirY = Math.sin(theta) * Math.sin(phi);
+            const dirZ = Math.cos(theta);
+
+            x[i] = dirX * r;
+            y[i] = dirY * r;
+            z[i] = dirZ * r;
+
+            const speed = 2.0 + Math.random() * 4.5;
+            vx[i] = dirX * speed;
+            vy[i] = dirY * speed;
+            vz[i] = dirZ * speed;
+
+            mass[i] = 0.5 + Math.random() * 1.5;
+            pSize[i] = 2.5;
+          }
+        } else {
+          // Random Cloud
+          for (let i = 0; i < NUM_PARTICLES; i++) {
+            x[i] = (Math.random() - 0.5) * 30;
+            y[i] = (Math.random() - 0.5) * 30;
+            z[i] = (Math.random() - 0.5) * 30;
+
+            vx[i] = (Math.random() - 0.5) * 0.8;
+            vy[i] = (Math.random() - 0.5) * 0.8;
+            vz[i] = (Math.random() - 0.5) * 0.8;
+
+            mass[i] = 0.5 + Math.random() * 1.5;
+            pSize[i] = 2.5;
+          }
+        }
+      }
+
+      // Physics N-Body Gravitational Physics Step
+      let maxVelocityRecorded = 1.0;
+      let totalEkin = 0, totalEpot = 0;
+
+      function updatePhysics() {
+        if (isPaused) return;
+
+        // Accelerations
+        const ax = new Float32Array(NUM_PARTICLES);
+        const ay = new Float32Array(NUM_PARTICLES);
+        const az = new Float32Array(NUM_PARTICLES);
+
+        totalEpot = 0;
+
+        // Mutual Gravitational Force Calculation O(N^2)
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          const xi = x[i], yi = y[i], zi = z[i];
+          let axi = 0, ayi = 0, azi = 0;
+
+          for (let j = i + 1; j < NUM_PARTICLES; j++) {
+            const dx = x[j] - xi;
+            const dy = y[j] - yi;
+            const dz = z[j] - zi;
+
+            const r2 = dx * dx + dy * dy + dz * dz;
+            const rSoft2 = r2 + softeningSq;
+            const invRsoft = 1.0 / Math.sqrt(rSoft2);
+            const invRsoft3 = invRsoft * invRsoft * invRsoft;
+
+            const f = G * invRsoft3;
+
+            // Acceleration components
+            const f_mj = f * mass[j];
+            axi += dx * f_mj;
+            ayi += dy * f_mj;
+            azi += dz * f_mj;
+
+            const f_mi = f * mass[i];
+            ax[j] -= dx * f_mi;
+            ay[j] -= dy * f_mi;
+            az[j] -= dz * f_mi;
+
+            // Potential energy calculation
+            totalEpot -= (G * mass[i] * mass[j]) * invRsoft;
+          }
+
+          ax[i] += axi;
+          ay[i] += ayi;
+          az[i] += azi;
+        }
+
+        // Symplectic Euler Integration & Stats update
+        let currentMaxV = 0.001;
+        totalEkin = 0;
+
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          vx[i] += ax[i] * dt;
+          vy[i] += ay[i] * dt;
+          vz[i] += az[i] * dt;
+
+          x[i] += vx[i] * dt;
+          y[i] += vy[i] * dt;
+          z[i] += vz[i] * dt;
+
+          const v2 = vx[i] * vx[i] + vy[i] * vy[i] + vz[i] * vz[i];
+          const v = Math.sqrt(v2);
+          if (v > currentMaxV) currentMaxV = v;
+
+          totalEkin += 0.5 * mass[i] * v2;
+
+          // Record trail position
+          if (MAX_TRAIL_LEN > 0) {
+            const tList = trailHistory[i];
+            tList.push(x[i], y[i], z[i]);
+            if (tList.length > MAX_TRAIL_LEN * 3) {
+              tList.splice(0, 3);
+            }
+          }
+        }
+
+        // Smooth max velocity scaling for color mapping
+        maxVelocityRecorded = maxVelocityRecorded * 0.95 + currentMaxV * 0.05;
+        if (maxVelocityRecorded < currentMaxV) maxVelocityRecorded = currentMaxV;
+      }
+
+      // -------------------------------------------------------------
+      // 4. Camera & Interactive Mouse Controls
+      // -------------------------------------------------------------
+      let cameraAngleX = 0.3;
+      let cameraAngleY = 0.5;
+      let cameraDistance = 45;
+      let isDragging = false;
+      let lastMouseX = 0, lastMouseY = 0;
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - lastMouseX;
+        const dy = e.clientY - lastMouseY;
+        cameraAngleY += dx * 0.008;
+        cameraAngleX += dy * 0.008;
+        // Clamp pitch angle
+        cameraAngleX = Math.max(-Math.PI / 2 + 0.01, Math.min(Math.PI / 2 - 0.01, cameraAngleX));
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      });
+
+      canvas.addEventListener('wheel', (e) => {
+        cameraDistance += e.deltaY * 0.03;
+        cameraDistance = Math.max(5, Math.min(180, cameraDistance));
+        e.preventDefault();
+      }, { passive: false });
+
+      // Touch controls
+      canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          lastMouseX = e.touches[0].clientX;
+          lastMouseY = e.touches[0].clientY;
+        }
+      });
+      canvas.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1) {
+          const dx = e.touches[0].clientX - lastMouseX;
+          const dy = e.touches[0].clientY - lastMouseY;
+          cameraAngleY += dx * 0.008;
+          cameraAngleX += dy * 0.008;
+          cameraAngleX = Math.max(-Math.PI / 2 + 0.01, Math.min(Math.PI / 2 - 0.01, cameraAngleX));
+          lastMouseX = e.touches[0].clientX;
+          lastMouseY = e.touches[0].clientY;
+        }
+      });
+      canvas.addEventListener('touchend', () => { isDragging = false; });
+
+      // -------------------------------------------------------------
+      // 5. Render Loop & Dynamic Buffer Updates
+      // -------------------------------------------------------------
+      const projMatrix = Mat4.create();
+      const viewMatrix = Mat4.create();
+
+      function resize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+
+        Mat4.perspective(projMatrix, Math.PI / 4, width / height, 0.1, 500.0);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      let frameCount = 0;
+      let lastFpsUpdate = performance.now();
+      let currentFPS = 60;
+
+      function render() {
+        updatePhysics();
+
+        // Clear WebGL Framebuffer
+        gl.clearColor(0.03, 0.03, 0.05, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        // Enable Additive Blending for glowing particles
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.disable(gl.DEPTH_TEST);
+
+        // Calculate Camera Position
+        const eyeX = cameraDistance * Math.cos(cameraAngleX) * Math.sin(cameraAngleY);
+        const eyeY = cameraDistance * Math.sin(cameraAngleX);
+        const eyeZ = cameraDistance * Math.cos(cameraAngleX) * Math.cos(cameraAngleY);
+        Mat4.lookAt(viewMatrix, [eyeX, eyeY, eyeZ], [0, 0, 0], [0, 1, 0]);
+
+        // ----------------- Render Particles -----------------
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          posData[i * 3]     = x[i];
+          posData[i * 3 + 1] = y[i];
+          posData[i * 3 + 2] = z[i];
+
+          const v = Math.hypot(vx[i], vy[i], vz[i]);
+          const normV = v / (maxVelocityRecorded || 1.0);
+          const [r, g, b] = getVelocityColor(normV);
+
+          colData[i * 3]     = r;
+          colData[i * 3 + 1] = g;
+          colData[i * 3 + 2] = b;
+        }
+
+        gl.useProgram(pointProgram);
+        gl.uniformMatrix4fv(pointUniforms.pM, false, projMatrix);
+        gl.uniformMatrix4fv(pointUniforms.mVM, false, viewMatrix);
+
+        // Position Attribute
+        gl.bindBuffer(gl.ARRAY_BUFFER, pointPosBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, posData, gl.DYNAMIC_DRAW);
+        gl.enableVertexAttribArray(pointAttrs.position);
+        gl.vertexAttribPointer(pointAttrs.position, 3, gl.FLOAT, false, 0, 0);
+
+        // Color Attribute
+        gl.bindBuffer(gl.ARRAY_BUFFER, pointColBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, colData, gl.DYNAMIC_DRAW);
+        gl.enableVertexAttribArray(pointAttrs.color);
+        gl.vertexAttribPointer(pointAttrs.color, 3, gl.FLOAT, false, 0, 0);
+
+        // Size Attribute
+        gl.bindBuffer(gl.ARRAY_BUFFER, pointSizeBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, pSize, gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(pointAttrs.size);
+        gl.vertexAttribPointer(pointAttrs.size, 1, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.POINTS, 0, NUM_PARTICLES);
+
+        // ----------------- Render Particle Trails -----------------
+        if (MAX_TRAIL_LEN > 0) {
+          const linePositions = [];
+          const lineColors = [];
+
+          for (let i = 0; i < NUM_PARTICLES; i++) {
+            const history = trailHistory[i];
+            const hLen = history.length / 3;
+            if (hLen < 2) continue;
+
+            const v = Math.hypot(vx[i], vy[i], vz[i]);
+            const normV = v / (maxVelocityRecorded || 1.0);
+            const [r, g, b] = getVelocityColor(normV);
+
+            for (let j = 0; j < hLen - 1; j++) {
+              linePositions.push(
+                history[j * 3], history[j * 3 + 1], history[j * 3 + 2],
+                history[(j + 1) * 3], history[(j + 1) * 3 + 1], history[(j + 1) * 3 + 2]
+              );
+
+              // Fade alpha along history length
+              const alpha1 = (j / hLen) * 0.4;
+              const alpha2 = ((j + 1) / hLen) * 0.4;
+
+              lineColors.push(
+                r, g, b, alpha1,
+                r, g, b, alpha2
+              );
+            }
+          }
+
+          if (linePositions.length > 0) {
+            gl.useProgram(lineProgram);
+            gl.uniformMatrix4fv(lineUniforms.pM, false, projMatrix);
+            gl.uniformMatrix4fv(lineUniforms.mVM, false, viewMatrix);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, linePosBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(linePositions), gl.DYNAMIC_DRAW);
+            gl.enableVertexAttribArray(lineAttrs.position);
+            gl.vertexAttribPointer(lineAttrs.position, 3, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, lineColBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(lineColors), gl.DYNAMIC_DRAW);
+            gl.enableVertexAttribArray(lineAttrs.color);
+            gl.vertexAttribPointer(lineAttrs.color, 4, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.LINES, 0, linePositions.length / 3);
+          }
+        }
+
+        // ----------------- FPS & UI Update -----------------
+        frameCount++;
+        const now = performance.now();
+        if (now - lastFpsUpdate >= 250) {
+          currentFPS = Math.round((frameCount * 1000) / (now - lastFpsUpdate));
+          frameCount = 0;
+          lastFpsUpdate = now;
+
+          document.getElementById('statFPS').textContent = currentFPS;
+          document.getElementById('statMaxV').textContent = maxVelocityRecorded.toFixed(1);
+          document.getElementById('statEkin').textContent = totalEkin.toFixed(0);
+          document.getElementById('statEpot').textContent = totalEpot.toFixed(0);
+        }
+
+        requestAnimationFrame(render);
+      }
+
+      // -------------------------------------------------------------
+      // 6. HUD Controls & Listeners Setup
+      // -------------------------------------------------------------
+      const presetSelect = document.getElementById('presetSelect');
+      const sliderG = document.getElementById('sliderG');
+      const sliderEps = document.getElementById('sliderEps');
+      const sliderDT = document.getElementById('sliderDT');
+      const sliderTrail = document.getElementById('sliderTrail');
+      const btnPause = document.getElementById('btnPause');
+      const btnReset = document.getElementById('btnReset');
+
+      sliderG.addEventListener('input', (e) => {
+        G = parseFloat(e.target.value);
+        document.getElementById('valG').textContent = G.toFixed(1);
+      });
+
+      sliderEps.addEventListener('input', (e) => {
+        const eps = parseFloat(e.target.value);
+        softeningSq = eps * eps;
+        document.getElementById('valEps').textContent = eps.toFixed(2);
+      });
+
+      sliderDT.addEventListener('input', (e) => {
+        dt = parseFloat(e.target.value);
+        document.getElementById('valDT').textContent = dt.toFixed(3);
+      });
+
+      sliderTrail.addEventListener('input', (e) => {
+        MAX_TRAIL_LEN = parseInt(e.target.value, 10);
+        document.getElementById('valTrail').textContent = MAX_TRAIL_LEN;
+        // Trim trail history
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          if (MAX_TRAIL_LEN === 0) trailHistory[i] = [];
+          else if (trailHistory[i].length > MAX_TRAIL_LEN * 3) {
+            trailHistory[i].splice(0, trailHistory[i].length - MAX_TRAIL_LEN * 3);
+          }
+        }
+      });
+
+      presetSelect.addEventListener('change', (e) => {
+        initPreset(e.target.value);
+      });
+
+      btnReset.addEventListener('click', () => {
+        initPreset(presetSelect.value);
+      });
+
+      btnPause.addEventListener('click', () => {
+        isPaused = !isPaused;
+        btnPause.textContent = isPaused ? 'Resume' : 'Pause';
+      });
+
+      // Start initial simulation state
+      initPreset('galaxy');
+      requestAnimationFrame(render);
+
+    } catch (err) {
+      const errBox = document.getElementById('error-overlay');
+      if (errBox) {
+        errBox.style.display = 'block';
+        errBox.textContent = 'Simulation Error:\n' + (err.stack || err.message || err);
+      }
+      console.error(err);
+    }
+  </script>
+</body>
+</html>
+```

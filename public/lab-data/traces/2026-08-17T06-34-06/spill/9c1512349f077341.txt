@@ -1,0 +1,755 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Neon Dash - Platformer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #080810;
+      color: #ececf0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    /* HUD Overlay */
+    .hud {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .hud-card {
+      background: rgba(18, 18, 32, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .hud-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hud-stat {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn {
+      pointer-events: auto;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6);
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    /* Touch Controls for Mobile */
+    .touch-controls {
+      position: absolute;
+      bottom: 16px;
+      left: 12px;
+      right: 12px;
+      display: none;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 10;
+      pointer-events: none;
+    }
+    @media (pointer: coarse) {
+      .touch-controls { display: flex; }
+    }
+    .d-pad, .action-pad {
+      display: flex;
+      gap: 10px;
+      pointer-events: auto;
+    }
+    .touch-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 1.4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: manipulation;
+    }
+    .touch-btn:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    /* Win/Loss Modal Overlay */
+    .modal {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8, 8, 16, 0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: rgba(20, 20, 35, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px 32px;
+      text-align: center;
+      max-width: 90%;
+      width: 340px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    .modal.active .modal-card {
+      transform: scale(1);
+    }
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .modal-title.win {
+      background: linear-gradient(135deg, #4ade80, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-title.lose {
+      background: linear-gradient(135deg, #f87171, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-desc {
+      color: #9ca3af;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    /* Error overlay */
+    #error-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #1a0505; color: #ff6b6b;
+      padding: 20px; font-family: monospace; z-index: 100;
+      white-space: pre-wrap; overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="canvas"></canvas>
+
+    <div class="hud">
+      <div class="hud-card">
+        <span class="hud-title">NEON DASH</span>
+        <div class="hud-stat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="9" fill="#fbbf24"/>
+            <circle cx="12" cy="12" r="5" fill="#f59e0b"/>
+          </svg>
+          <span id="coin-count">0 / 0</span>
+        </div>
+      </div>
+      <button class="btn" id="reset-btn">Reset</button>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div class="touch-controls">
+      <div class="d-pad">
+        <div class="touch-btn" id="btn-left">◄</div>
+        <div class="touch-btn" id="btn-right">►</div>
+      </div>
+      <div class="action-pad">
+        <div class="touch-btn" id="btn-jump" style="width:68px; height:68px; font-weight:bold;">▲</div>
+      </div>
+    </div>
+
+    <!-- Modal for Level Clear / Game Over -->
+    <div class="modal" id="game-modal">
+      <div class="modal-card">
+        <h2 class="modal-title win" id="modal-title">GOAL REACHED!</h2>
+        <p class="modal-desc" id="modal-desc">You collected all coins!</p>
+        <button class="btn" id="modal-restart-btn" style="width: 100%; padding: 10px;">Play Again</button>
+      </div>
+    </div>
+
+    <div id="error-overlay" role="alert"></div>
+  </div>
+
+  <script>
+    try {
+      // Setup canvas & contexts
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const coinCountEl = document.getElementById('coin-count');
+      const resetBtn = document.getElementById('reset-btn');
+      const modal = document.getElementById('game-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDesc = document.getElementById('modal-desc');
+      const modalRestartBtn = document.getElementById('modal-restart-btn');
+
+      // Global dimensions
+      let viewWidth = window.innerWidth;
+      let viewHeight = window.innerHeight;
+      let dpr = window.devicePixelRatio || 1;
+
+      function handleResize() {
+        viewWidth = window.innerWidth;
+        viewHeight = window.innerHeight;
+        dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(viewWidth * dpr);
+        canvas.height = Math.floor(viewHeight * dpr);
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener('resize', handleResize);
+      handleResize();
+
+      // Input State
+      const keys = { left: false, right: false, jump: false };
+
+      function setKey(code, state) {
+        if (code === 'ArrowLeft' || code === 'KeyA') keys.left = state;
+        if (code === 'ArrowRight' || code === 'KeyD') keys.right = state;
+        if (code === 'ArrowUp' || code === 'KeyW' || code === 'Space') {
+          if (state && !keys.jump) triggerJump();
+          keys.jump = state;
+        }
+      }
+
+      window.addEventListener('keydown', (e) => {
+        setKey(e.code, true);
+        if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+      });
+      window.addEventListener('keyup', (e) => setKey(e.code, false));
+
+      // Mobile touch binding
+      const bindTouch = (id, keyName) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const start = (e) => { e.preventDefault(); if (keyName === 'jump' && !keys.jump) triggerJump(); keys[keyName] = true; };
+        const end = (e) => { e.preventDefault(); keys[keyName] = false; };
+        el.addEventListener('touchstart', start, { passive: false });
+        el.addEventListener('touchend', end, { passive: false });
+        el.addEventListener('mousedown', start);
+        el.addEventListener('mouseup', end);
+      };
+      bindTouch('btn-left', 'left');
+      bindTouch('btn-right', 'right');
+      bindTouch('btn-jump', 'jump');
+
+      // Game World Config
+      const WORLD_HEIGHT = 800;
+      const GRAVITY = 0.5;
+
+      // Camera State
+      const camera = { x: 0, y: 0 };
+
+      // Game Entities
+      let player, platforms, coins, goal, particles, bgStars, bgMountains;
+      let gameState = 'playing'; // 'playing', 'won', 'dead'
+
+      // Parallax Background Data Generator
+      function initBackground() {
+        bgStars = [];
+        for (let i = 0; i < 120; i++) {
+          bgStars.push({
+            x: Math.random() * 3000,
+            y: Math.random() * WORLD_HEIGHT,
+            size: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.7 + 0.3
+          });
+        }
+
+        // Layer 1 (Far mountains)
+        bgMountains = [
+          { x: -200, y: 550, w: 600, h: 300 },
+          { x: 300, y: 500, w: 800, h: 350 },
+          { x: 900, y: 520, w: 700, h: 320 },
+          { x: 1500, y: 480, w: 900, h: 360 },
+          { x: 2300, y: 530, w: 700, h: 310 }
+        ];
+      }
+
+      // Level Generator
+      function initLevel() {
+        player = {
+          x: 100,
+          y: 450,
+          w: 26,
+          h: 36,
+          vx: 0,
+          vy: 0,
+          speed: 4.8,
+          jumpForce: -11.5,
+          grounded: false,
+          coyoteTime: 0,
+          jumpBuffer: 0,
+          facing: 'right',
+          scaleX: 1,
+          scaleY: 1
+        };
+
+        // Static & Moving Platforms
+        platforms = [
+          // Ground segments
+          { x: 0, y: 580, w: 750, h: 200 },
+          { x: 850, y: 580, w: 600, h: 200 },
+          { x: 1550, y: 580, w: 500, h: 200 },
+          { x: 2150, y: 580, w: 800, h: 200 },
+
+          // Raised Platforms
+          { x: 250, y: 460, w: 120, h: 20 },
+          { x: 430, y: 360, w: 140, h: 20 },
+          { x: 620, y: 270, w: 120, h: 20 },
+          
+          { x: 800, y: 440, w: 90, h: 20 },
+          { x: 1000, y: 340, w: 160, h: 20 },
+          { x: 1250, y: 250, w: 120, h: 20 },
+
+          // Moving platform over gap
+          { x: 1470, y: 440, w: 100, h: 20, vx: 1.5, minX: 1420, maxX: 1620 },
+
+          { x: 1750, y: 450, w: 130, h: 20 },
+          { x: 1950, y: 330, w: 130, h: 20 },
+          { x: 2200, y: 440, w: 140, h: 20 },
+          { x: 2420, y: 320, w: 160, h: 20 }
+        ];
+
+        // Collectible Coins
+        coins = [
+          { x: 280, y: 420 }, { x: 310, y: 420 },
+          { x: 480, y: 320 }, { x: 510, y: 320 },
+          { x: 670, y: 230 },
+          { x: 825, y: 400 },
+          { x: 1050, y: 300 }, { x: 1100, y: 300 },
+          { x: 1300, y: 210 },
+          { x: 1520, y: 390 },
+          { x: 1800, y: 410 },
+          { x: 2000, y: 290 }, { x: 2040, y: 290 },
+          { x: 2260, y: 400 },
+          { x: 2500, y: 270 }, { x: 2540, y: 270 }
+        ].map((c, i) => ({ ...c, r: 9, collected: false, phase: i * 0.4 }));
+
+        // Finish Line / Flag
+        goal = { x: 2800, y: 460, w: 40, h: 120 };
+
+        particles = [];
+        gameState = 'playing';
+        modal.classList.remove('active');
+        updateHUD();
+      }
+
+      function updateHUD() {
+        const collected = coins.filter(c => c.collected).length;
+        coinCountEl.textContent = `${collected} / ${coins.length}`;
+      }
+
+      function triggerJump() {
+        player.jumpBuffer = 6; // buffer frame tolerance
+      }
+
+      function spawnParticles(x, y, color, count = 8) {
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6 - 2,
+            size: Math.random() * 4 + 2,
+            color,
+            life: 1.0,
+            decay: Math.random() * 0.04 + 0.02
+          });
+        }
+      }
+
+      // Physics & Game Loop Logic
+      function update() {
+        if (gameState !== 'playing') return;
+
+        // Move Moving Platforms
+        platforms.forEach(p => {
+          if (p.vx) {
+            p.x += p.vx;
+            if (p.x < p.minX || p.x + p.w > p.maxX) p.vx *= -1;
+          }
+        });
+
+        // Horizontal Movement
+        if (keys.left) {
+          player.vx = -player.speed;
+          player.facing = 'left';
+        } else if (keys.right) {
+          player.vx = player.speed;
+          player.facing = 'right';
+        } else {
+          player.vx *= 0.7; // Friction
+        }
+
+        // Apply Velocity X & Resolve Collisions
+        player.x += player.vx;
+        platforms.forEach(p => {
+          if (checkAABB(player, p)) {
+            if (player.vx > 0) player.x = p.x - player.w;
+            else if (player.vx < 0) player.x = p.x + p.w;
+          }
+        });
+
+        // Gravity & Vertical Movement
+        player.vy += GRAVITY;
+        player.y += player.vy;
+
+        // Ground check state
+        let onGround = false;
+        platforms.forEach(p => {
+          if (checkAABB(player, p)) {
+            if (player.vy > 0) {
+              player.y = p.y - player.h;
+              player.vy = 0;
+              onGround = true;
+              // Ride moving platform
+              if (p.vx) player.x += p.vx;
+            } else if (player.vy < 0) {
+              player.y = p.y + p.h;
+              player.vy = 0;
+            }
+          }
+        });
+
+        // Coyote Time & Jump Buffering
+        if (onGround) {
+          if (!player.grounded) {
+            // Just landed squash animation
+            player.scaleX = 1.25;
+            player.scaleY = 0.75;
+            spawnParticles(player.x + player.w / 2, player.y + player.h, 'rgba(255,255,255,0.4)', 5);
+          }
+          player.grounded = true;
+          player.coyoteTime = 8;
+        } else {
+          player.grounded = false;
+          player.coyoteTime = Math.max(0, player.coyoteTime - 1);
+        }
+
+        if (player.jumpBuffer > 0) {
+          player.jumpBuffer--;
+          if (player.coyoteTime > 0) {
+            player.vy = player.jumpForce;
+            player.coyoteTime = 0;
+            player.jumpBuffer = 0;
+            player.scaleX = 0.75;
+            player.scaleY = 1.3;
+            spawnParticles(player.x + player.w / 2, player.y + player.h, '#38bdf8', 6);
+          }
+        }
+
+        // Smooth visual scale recovery
+        player.scaleX += (1 - player.scaleX) * 0.15;
+        player.scaleY += (1 - player.scaleY) * 0.15;
+
+        // Coin Collection
+        coins.forEach(c => {
+          if (!c.collected) {
+            c.phase += 0.05;
+            const coinX = c.x;
+            const coinY = c.y + Math.sin(c.phase) * 4;
+            // Dist check
+            const dx = (player.x + player.w / 2) - coinX;
+            const dy = (player.y + player.h / 2) - coinY;
+            if (Math.hypot(dx, dy) < c.r + player.w / 2) {
+              c.collected = true;
+              spawnParticles(coinX, coinY, '#fbbf24', 10);
+              updateHUD();
+            }
+          }
+        });
+
+        // Check Goal Flag
+        if (checkAABB(player, goal)) {
+          gameState = 'won';
+          const total = coins.length;
+          const collected = coins.filter(c => c.collected).length;
+          modalTitle.textContent = "LEVEL COMPLETE!";
+          modalTitle.className = "modal-title win";
+          modalDesc.textContent = `You collected ${collected} of ${total} coins!`;
+          modal.classList.add('active');
+          spawnParticles(goal.x + 20, goal.y + 20, '#38bdf8', 30);
+        }
+
+        // Death condition (Falling off map)
+        if (player.y > WORLD_HEIGHT + 100) {
+          gameState = 'dead';
+          modalTitle.textContent = "GAME OVER";
+          modalTitle.className = "modal-title lose";
+          modalDesc.textContent = "You fell into the abyss!";
+          modal.classList.add('active');
+        }
+
+        // Particles update
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= p.decay;
+          if (p.life <= 0) particles.splice(i, 1);
+        }
+
+        // Camera Tracking (Smooth Lerp)
+        const targetCamX = player.x + player.w / 2 - viewWidth / 2;
+        const targetCamY = player.y + player.h / 2 - viewHeight * 0.6;
+        camera.x += (targetCamX - camera.x) * 0.08;
+        camera.y += (targetCamY - camera.y) * 0.08;
+
+        // Clamp Camera
+        camera.x = Math.max(-100, Math.min(camera.x, 3000 - viewWidth));
+        camera.y = Math.max(-100, Math.min(camera.y, WORLD_HEIGHT - viewHeight + 100));
+      }
+
+      function checkAABB(rect1, rect2) {
+        return (
+          rect1.x < rect2.x + rect2.w &&
+          rect1.x + rect1.w > rect2.x &&
+          rect1.y < rect2.y + rect2.h &&
+          rect1.y + rect1.h > rect2.y
+        );
+      }
+
+      // Render Functions
+      function draw() {
+        ctx.clearRect(0, 0, viewWidth, viewHeight);
+
+        // --- Background Layer 0: Sky Gradient ---
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, viewHeight);
+        skyGrad.addColorStop(0, '#090814');
+        skyGrad.addColorStop(1, '#18122B');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, viewWidth, viewHeight);
+
+        // --- Background Layer 1: Parallax Stars ---
+        ctx.fillStyle = '#ffffff';
+        bgStars.forEach(s => {
+          const screenX = (s.x - camera.x * 0.1) % (viewWidth + 200) - 50;
+          const screenY = (s.y - camera.y * 0.1) % (viewHeight + 200) - 50;
+          ctx.globalAlpha = s.alpha;
+          ctx.fillRect(
+            screenX < -50 ? screenX + viewWidth + 200 : screenX,
+            screenY < -50 ? screenY + viewHeight + 200 : screenY,
+            s.size, s.size
+          );
+        });
+        ctx.globalAlpha = 1.0;
+
+        // --- Background Layer 2: Parallax Mountains ---
+        ctx.save();
+        ctx.translate(-camera.x * 0.3, -camera.y * 0.15);
+        ctx.fillStyle = '#211738';
+        bgMountains.forEach(m => {
+          ctx.beginPath();
+          ctx.moveTo(m.x, m.y + m.h);
+          ctx.lineTo(m.x + m.w / 2, m.y);
+          ctx.lineTo(m.x + m.w, m.y + m.h);
+          ctx.closePath();
+          ctx.fill();
+        });
+        ctx.restore();
+
+        // --- World Coordinate Space Start ---
+        ctx.save();
+        ctx.translate(-Math.round(camera.x), -Math.round(camera.y));
+
+        // Draw Platforms
+        platforms.forEach(p => {
+          // Main Body
+          ctx.fillStyle = '#1e1b2e';
+          ctx.beginPath();
+          ctx.roundRect(p.x, p.y, p.w, p.h, 6);
+          ctx.fill();
+
+          // Glowing Top Edge
+          ctx.fillStyle = '#38bdf8';
+          ctx.shadowColor = '#38bdf8';
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.roundRect(p.x, p.y, p.w, 4, 2);
+          ctx.fill();
+          ctx.shadowBlur = 0; // Reset shadow
+        });
+
+        // Draw Coins
+        coins.forEach(c => {
+          if (c.collected) return;
+          const coinY = c.y + Math.sin(c.phase) * 4;
+
+          ctx.save();
+          ctx.translate(c.x, coinY);
+          ctx.shadowColor = '#fbbf24';
+          ctx.shadowBlur = 10;
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Draw Goal Flag
+        ctx.save();
+        ctx.translate(goal.x, goal.y);
+        // Pole
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(4, 0, 6, goal.h);
+        // Flag
+        ctx.fillStyle = '#a855f7';
+        ctx.shadowColor = '#c084fc';
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(45, 25);
+        ctx.lineTo(10, 40);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // Draw Particles
+        particles.forEach(p => {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1.0;
+
+        // Draw Player Character
+        ctx.save();
+        // Translate to player center for scale transform
+        const px = player.x + player.w / 2;
+        const py = player.y + player.h;
+        ctx.translate(px, py);
+        ctx.scale(player.scaleX, player.scaleY);
+
+        // Glowing aura
+        ctx.shadowColor = '#a855f7';
+        ctx.shadowBlur = 12;
+
+        // Character Body Gradient
+        const pGrad = ctx.createLinearGradient(-player.w/2, -player.h, player.w/2, 0);
+        pGrad.addColorStop(0, '#a855f7');
+        pGrad.addColorStop(1, '#6366f1');
+        ctx.fillStyle = pGrad;
+        ctx.beginPath();
+        ctx.roundRect(-player.w / 2, -player.h, player.w, player.h, 6);
+        ctx.fill();
+
+        // Eyes (facing direction)
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#ffffff';
+        const eyeOffset = player.facing === 'right' ? 3 : -7;
+        ctx.fillRect(eyeOffset, -player.h + 8, 5, 8);
+        ctx.fillRect(eyeOffset + 7, -player.h + 8, 5, 8);
+
+        ctx.restore();
+
+        // --- World Coordinate Space End ---
+        ctx.restore();
+      }
+
+      // Core Loop
+      let animationFrameId;
+      function loop() {
+        update();
+        draw();
+        animationFrameId = requestAnimationFrame(loop);
+      }
+
+      // Event Listeners for Controls
+      resetBtn.addEventListener('click', () => initLevel());
+      modalRestartBtn.addEventListener('click', () => initLevel());
+
+      // Boot Game
+      initBackground();
+      initLevel();
+      loop();
+
+      // Cleanup on page unload
+      window.addEventListener('unload', () => {
+        cancelAnimationFrame(animationFrameId);
+      });
+
+    } catch (err) {
+      const errDiv = document.getElementById('error-overlay');
+      if (errDiv) {
+        errDiv.style.display = 'block';
+        errDiv.textContent = 'An error occurred while running the game:\n\n' + err.stack;
+      }
+      console.error(err);
+    }
+  </script>
+</body>
+</html>
+```

@@ -1,0 +1,907 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Series RLC Step Response Simulator</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+  }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #090a0f;
+    color: #ececf0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  #app-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
+  .hud-overlay {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    width: 320px;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+    background: rgba(15, 18, 28, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .hud-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
+  }
+  .hud-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hud-title-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+  }
+  .control-group {
+    margin-bottom: 10px;
+  }
+  .control-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  .control-value {
+    color: #38bdf8;
+    font-weight: 600;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+  }
+  input[type=range]:focus {
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #1f293d;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  input[type=range]::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #38bdf8;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -5px;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    transition: transform 0.1s ease, background-color 0.1s ease;
+  }
+  input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    background: #7dd3fc;
+  }
+  .preset-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  .btn {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+  .btn:hover {
+    background: #334155;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .btn.active {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border-color: #38bdf8;
+  }
+  .stats-panel {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+  }
+  .stat-label { color: #64748b; }
+  .stat-val { color: #e2e8f0; font-weight: 500; }
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    text-align: center;
+    width: 100%;
+  }
+  .badge-under { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); }
+  .badge-critical { background: rgba(250, 204, 21, 0.2); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.4); }
+  .badge-over { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+
+  .toggle-hud-btn {
+    display: none;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 20;
+    background: rgba(15, 18, 28, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  #error-display {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(220, 38, 38, 0.9);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 12px;
+    z-index: 100;
+  }
+
+  @media (max-width: 600px) {
+    .hud-overlay {
+      width: calc(100vw - 24px);
+      max-height: 50vh;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="app-container">
+  <canvas id="simCanvas"></canvas>
+
+  <div class="hud-overlay" id="hud">
+    <div class="hud-header">
+      <div class="hud-title">
+        <div class="hud-title-icon"></div>
+        RLC STEP RESPONSE
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="control-label-row">
+        <span>Resistance (R)</span>
+        <span class="control-value" id="valR">10.0 Ω</span>
+      </div>
+      <input type="range" id="sliderR" min="0" max="1000" step="1" value="30">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label-row">
+        <span>Inductance (L)</span>
+        <span class="control-value" id="valL">10.0 mH</span>
+      </div>
+      <input type="range" id="sliderL" min="1" max="100" step="0.5" value="10">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label-row">
+        <span>Capacitance (C)</span>
+        <span class="control-value" id="valC">10.0 µF</span>
+      </div>
+      <input type="range" id="sliderC" min="0.1" max="100" step="0.1" value="10">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label-row">
+        <span>Step Voltage (Vin)</span>
+        <span class="control-value" id="valVin">5.0 V</span>
+      </div>
+      <input type="range" id="sliderVin" min="1" max="12" step="0.5" value="5">
+    </div>
+
+    <div class="preset-row">
+      <button class="btn" id="btnUnder">Underdamped</button>
+      <button class="btn" id="btnCritical">Critical</button>
+      <button class="btn" id="btnOver">Overdamped</button>
+    </div>
+
+    <div class="stats-panel">
+      <div class="stat-row">
+        <span class="stat-label">Damping Ratio (ζ):</span>
+        <span class="stat-val" id="statZeta">0.00</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Nat. Freq (f₀):</span>
+        <span class="stat-val" id="statW0">0 Hz</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Damped Freq (f_d):</span>
+        <span class="stat-val" id="statWd">0 Hz</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Peak Overshoot:</span>
+        <span class="stat-val" id="statOvershoot">0%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Settling Time (2%):</span>
+        <span class="stat-val" id="statSettling">0 ms</span>
+      </div>
+      <div id="dampingBadge" class="badge badge-under">UNDERDAMPED</div>
+    </div>
+  </div>
+
+  <div id="error-display" role="alert"></div>
+</div>
+
+<script>
+try {
+  const canvas = document.getElementById('simCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // DOM elements
+  const sliderR = document.getElementById('sliderR');
+  const sliderL = document.getElementById('sliderL');
+  const sliderC = document.getElementById('sliderC');
+  const sliderVin = document.getElementById('sliderVin');
+
+  const valR = document.getElementById('valR');
+  const valL = document.getElementById('valL');
+  const valC = document.getElementById('valC');
+  const valVin = document.getElementById('valVin');
+
+  const statZeta = document.getElementById('statZeta');
+  const statW0 = document.getElementById('statW0');
+  const statWd = document.getElementById('statWd');
+  const statOvershoot = document.getElementById('statOvershoot');
+  const statSettling = document.getElementById('statSettling');
+  const dampingBadge = document.getElementById('dampingBadge');
+
+  const btnUnder = document.getElementById('btnUnder');
+  const btnCritical = document.getElementById('btnCritical');
+  const btnOver = document.getElementById('btnOver');
+
+  // Interactive mouse/touch cursor
+  let mousePos = { x: -1, y: -1, active: false };
+
+  // Canvas Sizing
+  let dpr = window.devicePixelRatio || 1;
+  let width = 0;
+  let height = 0;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Mouse / Touch events for plot inspection
+  canvas.addEventListener('pointermove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mousePos.x = e.clientX - rect.left;
+    mousePos.y = e.clientY - rect.top;
+    mousePos.active = true;
+  });
+  canvas.addEventListener('pointerleave', () => {
+    mousePos.active = false;
+  });
+
+  // Circuit Parameters
+  let params = {
+    R: parseFloat(sliderR.value),       // Ohms
+    L: parseFloat(sliderL.value) * 1e-3,// Henries
+    C: parseFloat(sliderC.value) * 1e-6,// Farads
+    Vin: parseFloat(sliderVin.value)    // Volts
+  };
+
+  function updateInputs() {
+    params.R = parseFloat(sliderR.value);
+    params.L = parseFloat(sliderL.value) * 1e-3;
+    params.C = parseFloat(sliderC.value) * 1e-6;
+    params.Vin = parseFloat(sliderVin.value);
+
+    valR.textContent = `${params.R.toFixed(1)} Ω`;
+    valL.textContent = `${(params.L * 1e3).toFixed(1)} mH`;
+    valC.textContent = `${(params.C * 1e6).toFixed(1)} µF`;
+    valVin.textContent = `${params.Vin.toFixed(1)} V`;
+
+    updateActivePresetButtons();
+  }
+
+  sliderR.addEventListener('input', updateInputs);
+  sliderL.addEventListener('input', updateInputs);
+  sliderC.addEventListener('input', updateInputs);
+  sliderVin.addEventListener('input', updateInputs);
+
+  // Presets
+  btnUnder.addEventListener('click', () => {
+    sliderL.value = 10;
+    sliderC.value = 10;
+    sliderR.value = 15;
+    updateInputs();
+  });
+
+  btnCritical.addEventListener('click', () => {
+    // R = 2 * sqrt(L/C) => L=10mH, C=10uF => L/C = 1000 => sqrt = 31.62 => R = 63.25
+    sliderL.value = 10;
+    sliderC.value = 10;
+    sliderR.value = (2 * Math.sqrt(10e-3 / 10e-6)).toFixed(1);
+    updateInputs();
+  });
+
+  btnOver.addEventListener('click', () => {
+    sliderL.value = 10;
+    sliderC.value = 10;
+    sliderR.value = 180;
+    updateInputs();
+  });
+
+  function updateActivePresetButtons() {
+    btnUnder.classList.remove('active');
+    btnCritical.classList.remove('active');
+    btnOver.classList.remove('active');
+
+    const alpha = params.R / (2 * params.L);
+    const w0 = 1 / Math.sqrt(params.L * params.C);
+    const zeta = alpha / w0;
+
+    if (Math.abs(zeta - 1.0) < 0.03) {
+      btnCritical.classList.add('active');
+    } else if (zeta < 1.0) {
+      btnUnder.classList.add('active');
+    } else {
+      btnOver.classList.add('active');
+    }
+  }
+
+  // Formatting helpers
+  function formatFreq(hz) {
+    if (hz >= 1e6) return (hz / 1e6).toFixed(2) + ' MHz';
+    if (hz >= 1e3) return (hz / 1e3).toFixed(2) + ' kHz';
+    return hz.toFixed(1) + ' Hz';
+  }
+
+  function formatTime(sec) {
+    if (sec < 1e-6) return (sec * 1e9).toFixed(1) + ' ns';
+    if (sec < 1e-3) return (sec * 1e6).toFixed(1) + ' µs';
+    if (sec < 1) return (sec * 1e3).toFixed(2) + ' ms';
+    return sec.toFixed(2) + ' s';
+  }
+
+  // Time animated marker
+  let animTimeOffset = 0;
+  let lastTimestamp = performance.now();
+
+  function draw() {
+    const now = performance.now();
+    const dt = (now - lastTimestamp) / 1000;
+    lastTimestamp = now;
+
+    // Clear background
+    ctx.fillStyle = '#090a0f';
+    ctx.fillRect(0, 0, width, height);
+
+    // Calculate RLC dynamics
+    const R = params.R;
+    const L = params.L;
+    const C = params.C;
+    const Vin = params.Vin;
+
+    const alpha = R / (2 * L);
+    const w0 = 1 / Math.sqrt(L * C);
+    const zeta = alpha / w0;
+    const f0 = w0 / (2 * Math.PI);
+
+    let wd = 0;
+    let fd = 0;
+    let type = 'under';
+
+    if (zeta < 0.9995) {
+      type = 'under';
+      wd = Math.sqrt(w0 * w0 - alpha * alpha);
+      fd = wd / (2 * Math.PI);
+    } else if (zeta > 1.0005) {
+      type = 'over';
+    } else {
+      type = 'critical';
+    }
+
+    // Settling time ~ 4 / alpha for under/critical, or dominant pole for overdamped
+    let settlingTime = 4 / alpha;
+    if (type === 'over') {
+      const s1 = -alpha + Math.sqrt(alpha * alpha - w0 * w0);
+      settlingTime = Math.abs(4 / s1);
+    }
+
+    // Adaptive time window (show ~2-3 settling times or at least 4 natural periods)
+    let tMax = Math.max(settlingTime * 1.8, (1 / f0) * 4);
+    if (!isFinite(tMax) || tMax <= 0) tMax = 0.01;
+
+    // Advance dynamic scan marker
+    animTimeOffset = (animTimeOffset + dt * (tMax * 0.4)) % tMax;
+
+    // Calculate maximum voltage for overshoot calculation & vertical auto-scale
+    let maxVc = Vin;
+    let peakTime = 0;
+    if (type === 'under') {
+      const tp = Math.PI / wd;
+      if (tp < tMax) {
+        maxVc = Vin * (1 + Math.exp(-alpha * tp));
+        peakTime = tp;
+      }
+    }
+    const overshootPct = (type === 'under' && maxVc > Vin) ? ((maxVc - Vin) / Vin) * 100 : 0;
+
+    // Update HUD Stats DOM
+    statZeta.textContent = zeta.toFixed(3);
+    statW0.textContent = formatFreq(f0);
+    statWd.textContent = type === 'under' ? formatFreq(fd) : 'N/A';
+    statOvershoot.textContent = overshootPct > 0 ? `${overshootPct.toFixed(1)}%` : '0%';
+    statSettling.textContent = formatTime(settlingTime);
+
+    if (type === 'under') {
+      dampingBadge.textContent = 'UNDERDAMPED (OSCILLATORY)';
+      dampingBadge.className = 'badge badge-under';
+    } else if (type === 'critical') {
+      dampingBadge.textContent = 'CRITICALLY DAMPED';
+      dampingBadge.className = 'badge badge-critical';
+    } else {
+      dampingBadge.textContent = 'OVERDAMPED';
+      dampingBadge.className = 'badge badge-over';
+    }
+
+    // Compute waveform points
+    const samples = 600;
+    const points = [];
+    let maxCurrent = 0.001;
+
+    for (let i = 0; i <= samples; i++) {
+      const t = (i / samples) * tMax;
+      let vc = 0;
+      let iCap = 0;
+
+      if (type === 'under') {
+        const cosTerm = Math.cos(wd * t);
+        const sinTerm = Math.sin(wd * t);
+        vc = Vin * (1 - Math.exp(-alpha * t) * (cosTerm + (alpha / wd) * sinTerm));
+        iCap = (Vin / (L * wd)) * Math.exp(-alpha * t) * sinTerm;
+      } else if (type === 'critical') {
+        vc = Vin * (1 - Math.exp(-alpha * t) * (1 + alpha * t));
+        iCap = (Vin / L) * t * Math.exp(-alpha * t);
+      } else {
+        const gamma = Math.sqrt(alpha * alpha - w0 * w0);
+        const s1 = -alpha + gamma;
+        const s2 = -alpha - gamma;
+        vc = Vin * (1 + (s2 * Math.exp(s1 * t) - s1 * Math.exp(s2 * t)) / (s1 - s2));
+        iCap = (Vin / (L * (s1 - s2))) * (Math.exp(s1 * t) - Math.exp(s2 * t));
+      }
+
+      if (Math.abs(iCap) > maxCurrent) maxCurrent = Math.abs(iCap);
+      points.push({ t, vc, iCap });
+    }
+
+    // Determine Plot Area layout (responsive HUD padding)
+    const isMobile = width < 650;
+    const hudWidth = isMobile ? 0 : 340;
+    const padding = {
+      left: hudWidth + (isMobile ? 40 : 60),
+      right: isMobile ? 20 : 220, // space on right for pole-zero inset plot on desktop
+      top: 50,
+      bottom: isMobile ? 60 : 70
+    };
+
+    if (width - padding.left - padding.right < 150) {
+      padding.right = 20; // fallback if screen narrow
+    }
+
+    const plotW = Math.max(100, width - padding.left - padding.right);
+    const plotH = Math.max(100, height - padding.top - padding.bottom);
+
+    // Dynamic Vertical Scales
+    const maxVScale = Math.max(Vin * 1.35, maxVc * 1.15);
+    const maxIScale = maxCurrent * 1.3;
+
+    // Helper functions for mapping to screen coords
+    const getX = (t) => padding.left + (t / tMax) * plotW;
+    const getYV = (v) => padding.top + plotH - (v / maxVScale) * plotH;
+    const getYI = (iVal) => padding.top + plotH - (iVal / maxIScale) * plotH * 0.8; // scaled current plot
+
+    // --- DRAW GRID & AXES ---
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#181e2e';
+    ctx.fillStyle = '#64748b';
+    ctx.font = '11px ui-monospace, monospace';
+
+    // Horizontal Grid Lines (Voltage)
+    const vSteps = 5;
+    for (let i = 0; i <= vSteps; i++) {
+      const vVal = (maxVScale / vSteps) * i;
+      const y = getYV(vVal);
+
+      ctx.beginPath();
+      ctx.strokeStyle = i === 0 ? '#334155' : 'rgba(255, 255, 255, 0.05)';
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(padding.left + plotW, y);
+      ctx.stroke();
+
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`${vVal.toFixed(1)}V`, padding.left - 8, y);
+    }
+
+    // Vertical Grid Lines (Time)
+    const tSteps = 6;
+    for (let i = 0; i <= tSteps; i++) {
+      const tVal = (tMax / tSteps) * i;
+      const x = getX(tVal);
+
+      ctx.beginPath();
+      ctx.strokeStyle = i === 0 ? '#334155' : 'rgba(255, 255, 255, 0.05)';
+      ctx.moveTo(x, padding.top);
+      ctx.lineTo(x, padding.top + plotH);
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(formatTime(tVal), x, padding.top + plotH + 8);
+    }
+
+    // Axes Titles
+    ctx.save();
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Time', padding.left + plotW / 2, padding.top + plotH + 32);
+
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Capacitor Voltage (V)', -(padding.top + plotH / 2), padding.left - 42);
+    ctx.restore();
+
+    // --- DRAW STEP INPUT TARGET LINE ---
+    const yVin = getYV(Vin);
+    ctx.beginPath();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.moveTo(padding.left, yVin);
+    ctx.lineTo(padding.left + plotW, yVin);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Step Target (${Vin}V)`, padding.left + 8, yVin - 8);
+
+    // --- DRAW CURRENT I(t) WAVEFORM ---
+    ctx.beginPath();
+    ctx.strokeStyle = '#f43f5e';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < points.length; i++) {
+      const x = getX(points[i].t);
+      const y = getYI(points[i].iCap);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Glow effect for Voltage Waveform
+    ctx.save();
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    for (let i = 0; i < points.length; i++) {
+      const x = getX(points[i].t);
+      const y = getYV(points[i].vc);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // Fill under Voltage Curve
+    ctx.beginPath();
+    ctx.moveTo(getX(0), getYV(0));
+    for (let i = 0; i < points.length; i++) {
+      ctx.lineTo(getX(points[i].t), getYV(points[i].vc));
+    }
+    ctx.lineTo(getX(tMax), getYV(0));
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0, padding.top, 0, padding.top + plotH);
+    grad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
+    grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // --- ANIMATED TIME MARKER ---
+    const animX = getX(animTimeOffset);
+    let animVc = 0, animI = 0;
+
+    // Interpolate animated value
+    const index = Math.floor((animTimeOffset / tMax) * samples);
+    if (points[index]) {
+      animVc = points[index].vc;
+      animI = points[index].iCap;
+    }
+
+    const animYVc = getYV(animVc);
+
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.setLineDash([2, 2]);
+    ctx.moveTo(animX, padding.top);
+    ctx.lineTo(animX, padding.top + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Glowing dot at dynamic pulse
+    ctx.beginPath();
+    ctx.arc(animX, animYVc, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 12;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // --- MOUSE INSPECTION CROSSHAIR ---
+    if (mousePos.active &&
+        mousePos.x >= padding.left && mousePos.x <= padding.left + plotW &&
+        mousePos.y >= padding.top && mousePos.y <= padding.top + plotH) {
+
+      const hoverT = ((mousePos.x - padding.left) / plotW) * tMax;
+      const hoverIndex = Math.min(samples, Math.max(0, Math.floor((hoverT / tMax) * samples)));
+      const p = points[hoverIndex];
+
+      if (p) {
+        const hX = getX(p.t);
+        const hY = getYV(p.vc);
+
+        // Vertical guide line
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.moveTo(hX, padding.top);
+        ctx.lineTo(hX, padding.top + plotH);
+        ctx.stroke();
+
+        // Highlight marker circle
+        ctx.beginPath();
+        ctx.arc(hX, hY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.fill();
+        ctx.stroke();
+
+        // Tooltip box
+        const tooltipText1 = `t: ${formatTime(p.t)}`;
+        const tooltipText2 = `Vc: ${p.vc.toFixed(2)} V`;
+        const tooltipText3 = `I: ${(p.iCap * 1000).toFixed(1)} mA`;
+
+        ctx.font = '11px ui-monospace, monospace';
+        const boxW = 110;
+        const boxH = 54;
+        let boxX = hX + 12;
+        let boxY = hY - 20;
+
+        if (boxX + boxW > padding.left + plotW) boxX = hX - boxW - 12;
+        if (boxY + boxH > padding.top + plotH) boxY = padding.top + plotH - boxH;
+
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(boxX, boxY, boxW, boxH, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.textAlign = 'left';
+        ctx.fillText(tooltipText1, boxX + 8, boxY + 16);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText(tooltipText2, boxX + 8, boxY + 32);
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillText(tooltipText3, boxX + 8, boxY + 46);
+      }
+    }
+
+    // --- LEGEND ---
+    const legendX = padding.left + 12;
+    const legendY = padding.top + 16;
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+    ctx.beginPath();
+    ctx.roundRect(legendX, legendY, 190, 42, 6);
+    ctx.fill();
+
+    // Legend line Vc
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(legendX + 10, legendY + 14);
+    ctx.lineTo(legendX + 30, legendY + 14);
+    ctx.stroke();
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Capacitor Voltage v_C(t)', legendX + 36, legendY + 17);
+
+    // Legend line Current
+    ctx.strokeStyle = '#f43f5e';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(legendX + 10, legendY + 30);
+    ctx.lineTo(legendX + 30, legendY + 30);
+    ctx.stroke();
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText(`Current i(t) [Peak: ${(maxCurrent * 1000).toFixed(1)}mA]`, legendX + 36, legendY + 33);
+
+    // --- S-PLANE / POLE PLOT INSET (On right side if space permits) ---
+    if (!isMobile && padding.right >= 180) {
+      const insetW = 160;
+      const insetH = 160;
+      const insetX = width - insetW - 20;
+      const insetY = padding.top;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(insetX, insetY, insetW, insetH, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('S-Plane (Poles)', insetX + insetW / 2, insetY + 14);
+
+      const cX = insetX + insetW * 0.7; // origin moved slightly right since real poles are negative
+      const cY = insetY + insetH / 2 + 8;
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.beginPath();
+      ctx.moveTo(insetX + 10, cY); ctx.lineTo(insetX + insetW - 10, cY); // Real axis
+      ctx.moveTo(cX, insetY + 24); ctx.lineTo(cX, insetY + insetH - 10); // Imag axis
+      ctx.stroke();
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '9px monospace';
+      ctx.fillText('Re', insetX + 20, cY - 4);
+      ctx.fillText('Im', cX + 10, insetY + 32);
+
+      // Pole calculations
+      let scaleS = (insetW * 0.35) / (w0 * 1.5);
+      if (!isFinite(scaleS) || scaleS === 0) scaleS = 1;
+
+      let pole1 = { re: 0, im: 0 };
+      let pole2 = { re: 0, im: 0 };
+
+      if (type === 'under') {
+        pole1 = { re: -alpha, im: wd };
+        pole2 = { re: -alpha, im: -wd };
+      } else if (type === 'over') {
+        const gamma = Math.sqrt(alpha * alpha - w0 * w0);
+        pole1 = { re: -alpha + gamma, im: 0 };
+        pole2 = { re: -alpha - gamma, im: 0 };
+      } else {
+        pole1 = { re: -alpha, im: 0 };
+        pole2 = { re: -alpha, im: 0 };
+      }
+
+      // Draw Poles (X marks)
+      const drawPole = (p) => {
+        const px = cX + p.re * scaleS;
+        const py = cY - p.im * scaleS;
+
+        // Clamp inside inset boundary
+        const clampedX = Math.max(insetX + 10, Math.min(insetX + insetW - 10, px));
+        const clampedY = Math.max(insetY + 24, Math.min(insetY + insetH - 10, py));
+
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        const r = 5;
+        ctx.beginPath();
+        ctx.moveTo(clampedX - r, clampedY - r); ctx.lineTo(clampedX + r, clampedY + r);
+        ctx.moveTo(clampedX + r, clampedY - r); ctx.lineTo(clampedX - r, clampedY + r);
+        ctx.stroke();
+      };
+
+      drawPole(pole1);
+      drawPole(pole2);
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  // Initial inputs sync & start animation loop
+  updateInputs();
+  requestAnimationFrame(draw);
+
+} catch (err) {
+  const errDiv = document.getElementById('error-display');
+  if (errDiv) {
+    errDiv.style.display = 'block';
+    errDiv.textContent = 'Application Error: ' + err.message;
+  }
+}
+</script>
+</body>
+</html>
+```

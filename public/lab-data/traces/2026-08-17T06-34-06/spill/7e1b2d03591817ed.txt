@@ -1,0 +1,777 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pendulum Wave Simulation</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: #090a10;
+      color: #ececf0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #canvas-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* UI Overlay */
+    .hud-panel {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      width: calc(100% - 24px);
+      max-width: 320px;
+      background: rgba(15, 17, 26, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .hud-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .hud-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-title span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6366f1;
+      box-shadow: 0 0 8px #6366f1;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: #a0a5b5;
+      cursor: pointer;
+      padding: 4px;
+      font-size: 12px;
+      line-height: 1;
+    }
+    .toggle-btn:hover { color: #fff; }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .label-val {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #a0a5b5;
+      font-weight: 500;
+    }
+
+    .label-val span.val {
+      color: #38bdf8;
+      font-family: monospace;
+      font-weight: 600;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 3px;
+      background: #26293b;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #6366f1;
+      cursor: pointer;
+      transition: transform 0.1s ease, background-color 0.1s ease;
+      box-shadow: 0 0 6px rgba(99, 102, 241, 0.6);
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      background: #818cf8;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      background: #1e2235;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .btn:hover {
+      background: #2a2f4a;
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: #4f46e5;
+      border-color: #6366f1;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #6366f1;
+    }
+
+    /* Cycle Progress Bar */
+    .progress-container {
+      margin-top: 6px;
+      height: 4px;
+      background: #1a1d2d;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #38bdf8, #ec4899);
+      transition: width 0.1s linear;
+    }
+
+    .view-presets {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .btn-sm {
+      flex: 1;
+      padding: 4px 6px;
+      font-size: 10px;
+      background: #151824;
+    }
+
+    /* Instructions overlay bottom */
+    .hint-bar {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 17, 26, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #8a8f9e;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #error-display {
+      position: absolute;
+      inset: 12px;
+      z-index: 1000;
+      background: rgba(40, 10, 10, 0.9);
+      color: #ff8888;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    @media (max-height: 500px) {
+      .hud-panel { padding: 8px 12px; }
+      .control-group { gap: 6px; }
+      .hud-title { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <div class="hud-panel" id="hud">
+    <div class="hud-header">
+      <div class="hud-title"><span></span> Pendulum Wave</div>
+      <button class="toggle-btn" id="btn-minimize" title="Toggle HUD">▼</button>
+    </div>
+
+    <div class="control-group" id="controls-body">
+      <div class="control-row">
+        <div class="label-val">
+          <label for="slider-n">Pendulums (N)</label>
+          <span class="val" id="val-n">24</span>
+        </div>
+        <input type="range" id="slider-n" min="8" max="50" value="24" step="1">
+      </div>
+
+      <div class="control-row">
+        <div class="label-val">
+          <label for="slider-g">Gravity (g)</label>
+          <span class="val" id="val-g">9.8 m/s²</span>
+        </div>
+        <input type="range" id="slider-g" min="1.0" max="25.0" value="9.8" step="0.2">
+      </div>
+
+      <div class="control-row">
+        <div class="label-val">
+          <label for="slider-t0">Cycle Duration (T₀)</label>
+          <span class="val" id="val-t0">60s</span>
+        </div>
+        <input type="range" id="slider-t0" min="15" max="120" value="60" step="5">
+      </div>
+
+      <div class="control-row">
+        <div class="label-val">
+          <label for="slider-amp">Max Swing Angle</label>
+          <span class="val" id="val-amp">30°</span>
+        </div>
+        <input type="range" id="slider-amp" min="10" max="60" value="30" step="1">
+      </div>
+
+      <div class="button-grid">
+        <button class="btn btn-primary" id="btn-play">Pause</button>
+        <button class="btn" id="btn-reset">Reset Phase</button>
+      </div>
+
+      <div class="view-presets">
+        <button class="btn btn-sm" id="view-3d">3D Perspective</button>
+        <button class="btn btn-sm" id="view-front">Front</button>
+        <button class="btn btn-sm" id="view-top">Top</button>
+        <button class="btn btn-sm" id="view-side">Side</button>
+      </div>
+
+      <div class="progress-container" title="Cycle Phase Progress">
+        <div class="progress-bar" id="phase-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint-bar">Drag to rotate • Scroll to zoom</div>
+  <div id="error-display" role="alert"></div>
+
+  <script>
+    try {
+      // --- Setup Canvas and Graphics Context ---
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const errorDisplay = document.getElementById('error-display');
+
+      // --- Simulation State ---
+      const state = {
+        N: 24,              // Number of pendulums
+        g: 9.8,             // Gravity constant
+        T0: 60,             // Main wave repetition cycle duration (seconds)
+        k: 30,              // Base oscillations of the longest pendulum in time T0
+        maxAngleDeg: 30,    // Initial amplitude angle in degrees
+        time: 0,            // Simulation time
+        speed: 1.0,         // Time scale multiplier
+        isPlaying: true,
+        showRibbon: true,
+        showTrace: true,
+
+        // Camera / 3D Orbit variables
+        camRotX: 0.35,      // Elevation angle (rad)
+        camRotY: -0.55,     // Azimuth angle (rad)
+        zoom: 1.0,
+        isDragging: false,
+        lastMouseX: 0,
+        lastMouseY: 0
+      };
+
+      // --- UI Element Handles ---
+      const sliderN = document.getElementById('slider-n');
+      const sliderG = document.getElementById('slider-g');
+      const sliderT0 = document.getElementById('slider-t0');
+      const sliderAmp = document.getElementById('slider-amp');
+
+      const valN = document.getElementById('val-n');
+      const valG = document.getElementById('val-g');
+      const valT0 = document.getElementById('val-t0');
+      const valAmp = document.getElementById('val-amp');
+
+      const btnPlay = document.getElementById('btn-play');
+      const btnReset = document.getElementById('btn-reset');
+      const phaseBar = document.getElementById('phase-bar');
+
+      const btnMinimize = document.getElementById('btn-minimize');
+      const controlsBody = document.getElementById('controls-body');
+
+      // --- Device Pixel Ratio & Resize ---
+      let dpr = window.devicePixelRatio || 1;
+      let width = 0, height = 0;
+
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // --- Math & Pendulum Mechanics ---
+      // For a pendulum wave to align after duration T0:
+      // The i-th pendulum performs (k + i) full oscillations in T0 seconds.
+      // Period T_i = T0 / (k + i)
+      // Angular frequency w_i = 2 * PI / T_i = 2 * PI * (k + i) / T0
+      // Length L_i = g / (w_i)^2
+      function getPendulumData(i, totalN, t) {
+        const ki = state.k + i;
+        const T_i = state.T0 / ki;
+        const omega_i = (2 * Math.PI) / T_i;
+        
+        // Physical pendulum length (meters)
+        const L_phys = state.g / (omega_i * omega_i);
+
+        // Current angular deflection theta(t) = theta_max * cos(omega_i * t)
+        const maxAngleRad = (state.maxAngleDeg * Math.PI) / 180;
+        const theta = maxAngleRad * Math.cos(omega_i * t);
+
+        return { L_phys, theta, omega_i, T_i, ki };
+      }
+
+      // Color generator for pendulums based on index (rainbow hue gradient)
+      function getBobColor(i, total) {
+        const hue = (i / total) * 320; // 0 to 320 (red -> purple -> pink)
+        return {
+          bg: `hsl(${hue}, 90%, 60%)`,
+          glow: `hsl(${hue}, 100%, 70%)`,
+          rgb: HSVtoRGB(hue / 360, 0.85, 0.95)
+        };
+      }
+
+      function HSVtoRGB(h, s, v) {
+        let r, g, b, i, f, p, q, t;
+        i = Math.floor(h * 6);
+        f = h * 6 - i;
+        p = v * (1 - s);
+        q = v * (1 - f * s);
+        t = v * (1 - (1 - f) * s);
+        switch (i % 6) {
+          case 0: r = v; g = t; b = p; break;
+          case 1: r = q; g = v; b = p; break;
+          case 2: r = p; g = v; b = t; break;
+          case 3: r = p; g = q; b = v; break;
+          case 4: r = t; g = p; b = v; break;
+          case 5: r = v; g = p; b = q; break;
+        }
+        return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+      }
+
+      // --- 3D Projection Helper ---
+      function project3D(x, y, z, cx, cy, scaleFactor) {
+        // Rotate around Y axis (azimuth)
+        const cosY = Math.cos(state.camRotY);
+        const sinY = Math.sin(state.camRotY);
+        const x1 = x * cosY + z * sinY;
+        const z1 = -x * sinY + z * cosY;
+
+        // Rotate around X axis (elevation)
+        const cosX = Math.cos(state.camRotX);
+        const sinX = Math.sin(state.camRotX);
+        const y2 = y * cosX - z1 * sinX;
+        const z2 = y * sinX + z1 * cosX;
+
+        // Perspective Projection
+        const fov = 700;
+        const cameraDist = 600;
+        const depth = z2 + cameraDist;
+        const perspective = fov / Math.max(10, depth);
+
+        const screenX = cx + x1 * perspective * state.zoom * scaleFactor;
+        const screenY = cy + y2 * perspective * state.zoom * scaleFactor;
+
+        return {
+          x: screenX,
+          y: screenY,
+          scale: perspective * state.zoom * scaleFactor,
+          depth: depth
+        };
+      }
+
+      // --- Animation Loop ---
+      let lastTimestamp = performance.now();
+
+      function render(timestamp) {
+        const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+        lastTimestamp = timestamp;
+
+        if (state.isPlaying) {
+          state.time += dt * state.speed;
+        }
+
+        // Update phase bar
+        const phase = (state.time % state.T0) / state.T0;
+        phaseBar.style.width = `${(phase * 100).toFixed(1)}%`;
+
+        // Clear canvas
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.fillStyle = '#090a10';
+        ctx.fillRect(0, 0, width, height);
+
+        // Draw background grid glow / ambient lighting
+        const centerGrad = ctx.createRadialGradient(width/2, height/2, 10, width/2, height/2, Math.max(width, height)*0.7);
+        centerGrad.addColorStop(0, '#14182c');
+        centerGrad.addColorStop(1, '#090a10');
+        ctx.fillStyle = centerGrad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Geometry parameters
+        const N = state.N;
+        const spacingZ = 18; // distance along depth axis between pendulums
+        const totalZLength = (N - 1) * spacingZ;
+
+        // Scale physical length to pixels
+        // Longest pendulum (i=0) visual length in screen space
+        const maxVisualLength = Math.min(width, height) * 0.42;
+        const longestData = getPendulumData(0, N, 0);
+        const visualScale = maxVisualLength / longestData.L_phys;
+
+        // Origin of the apparatus frame in 3D space
+        const originX = 0;
+        const originY = -maxVisualLength * 0.45; // suspend high up
+        const originZ = 0;
+
+        const cx = width / 2;
+        const cy = height / 2;
+
+        // Collect 3D points for all pendulums
+        const pendulums3D = [];
+
+        for (let i = 0; i < N; i++) {
+          const { L_phys, theta } = getPendulumData(i, N, state.time);
+          const L_vis = L_phys * visualScale;
+
+          // Z-coordinate along the row
+          const z_i = -totalZLength / 2 + i * spacingZ;
+
+          // Suspension anchor point on top rod
+          const anchor3D = { x: originX, y: originY, z: z_i };
+
+          // Bob position swinging in X-Y plane relative to anchor
+          const bobX = originX + L_vis * Math.sin(theta);
+          const bobY = originY + L_vis * Math.cos(theta);
+          const bobZ = z_i;
+
+          // Project to 2D Screen Space
+          const projAnchor = project3D(anchor3D.x, anchor3D.y, anchor3D.z, cx, cy, 1.0);
+          const projBob = project3D(bobX, bobY, bobZ, cx, cy, 1.0);
+          const color = getBobColor(i, N);
+
+          pendulums3D.push({
+            index: i,
+            anchor: projAnchor,
+            bob: projBob,
+            color: color,
+            depth: projBob.depth,
+            L_vis: L_vis,
+            theta: theta
+          });
+        }
+
+        // --- Render Apparatus Frame ---
+        // Top Support Bar connecting anchors
+        const firstAnchor = project3D(0, originY, -totalZLength / 2 - 20, cx, cy, 1.0);
+        const lastAnchor = project3D(0, originY, totalZLength / 2 + 20, cx, cy, 1.0);
+
+        ctx.beginPath();
+        ctx.moveTo(firstAnchor.x, firstAnchor.y);
+        ctx.lineTo(lastAnchor.x, lastAnchor.y);
+        ctx.strokeStyle = '#333850';
+        ctx.lineWidth = 6 * firstAnchor.scale;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(firstAnchor.x, firstAnchor.y);
+        ctx.lineTo(lastAnchor.x, lastAnchor.y);
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2 * firstAnchor.scale;
+        ctx.stroke();
+
+        // Sort pendulums back-to-front for proper depth ordering
+        pendulums3D.sort((a, b) => b.depth - a.depth);
+
+        // --- Render Wave Ribbon (Connecting Line between Bobs) ---
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          // Find pendulum with index i in original order
+          const p = pendulums3D.find(item => item.index === i);
+          if (i === 0) {
+            ctx.moveTo(p.bob.x, p.bob.y);
+          } else {
+            ctx.lineTo(p.bob.x, p.bob.y);
+          }
+        }
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Continuous gradient curve ribbon overlay
+        for (let i = 0; i < N - 1; i++) {
+          const p1 = pendulums3D.find(item => item.index === i);
+          const p2 = pendulums3D.find(item => item.index === i + 1);
+
+          const grad = ctx.createLinearGradient(p1.bob.x, p1.bob.y, p2.bob.x, p2.bob.y);
+          grad.addColorStop(0, p1.color.bg);
+          grad.addColorStop(1, p2.color.bg);
+
+          ctx.beginPath();
+          ctx.moveTo(p1.bob.x, p1.bob.y);
+          ctx.lineTo(p2.bob.x, p2.bob.y);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 3 * ((p1.bob.scale + p2.bob.scale) / 2);
+          ctx.globalAlpha = 0.8;
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+        }
+
+        // --- Render Strings & Glowing Bobs ---
+        for (let p of pendulums3D) {
+          const radius = Math.max(3, 8 * p.bob.scale);
+
+          // Draw Suspension String
+          ctx.beginPath();
+          ctx.moveTo(p.anchor.x, p.anchor.y);
+          ctx.lineTo(p.bob.x, p.bob.y);
+          ctx.strokeStyle = 'rgba(180, 190, 210, 0.35)';
+          ctx.lineWidth = Math.max(0.8, 1.2 * p.bob.scale);
+          ctx.stroke();
+
+          // Anchor pin dot
+          ctx.beginPath();
+          ctx.arc(p.anchor.x, p.anchor.y, Math.max(1.5, 2.5 * p.anchor.scale), 0, Math.PI * 2);
+          ctx.fillStyle = '#94a3b8';
+          ctx.fill();
+
+          // Outer Glow
+          const glowGrad = ctx.createRadialGradient(
+            p.bob.x, p.bob.y, 0,
+            p.bob.x, p.bob.y, radius * 2.8
+          );
+          glowGrad.addColorStop(0, p.color.glow);
+          glowGrad.addColorStop(0.4, p.color.bg);
+          glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+
+          ctx.beginPath();
+          ctx.arc(p.bob.x, p.bob.y, radius * 2.8, 0, Math.PI * 2);
+          ctx.fillStyle = glowGrad;
+          ctx.globalAlpha = 0.45;
+          ctx.fill();
+          ctx.globalAlpha = 1.0;
+
+          // Bob Solid Core
+          const coreGrad = ctx.createRadialGradient(
+            p.bob.x - radius * 0.3, p.bob.y - radius * 0.3, radius * 0.1,
+            p.bob.x, p.bob.y, radius
+          );
+          coreGrad.addColorStop(0, '#ffffff');
+          coreGrad.addColorStop(0.3, p.color.glow);
+          coreGrad.addColorStop(1, p.color.bg);
+
+          ctx.beginPath();
+          ctx.arc(p.bob.x, p.bob.y, radius, 0, Math.PI * 2);
+          ctx.fillStyle = coreGrad;
+          ctx.fill();
+        }
+
+        ctx.restore();
+        requestAnimationFrame(render);
+      }
+
+      // --- Interactive Controls & Drag Setup ---
+      function syncInputs() {
+        valN.textContent = state.N;
+        valG.textContent = `${parseFloat(state.g).toFixed(1)} m/s²`;
+        valT0.textContent = `${state.T0}s`;
+        valAmp.textContent = `${state.maxAngleDeg}°`;
+      }
+
+      sliderN.addEventListener('input', (e) => {
+        state.N = parseInt(e.target.value, 10);
+        syncInputs();
+      });
+
+      sliderG.addEventListener('input', (e) => {
+        state.g = parseFloat(e.target.value);
+        syncInputs();
+      });
+
+      sliderT0.addEventListener('input', (e) => {
+        state.T0 = parseInt(e.target.value, 10);
+        syncInputs();
+      });
+
+      sliderAmp.addEventListener('input', (e) => {
+        state.maxAngleDeg = parseInt(e.target.value, 10);
+        syncInputs();
+      });
+
+      btnPlay.addEventListener('click', () => {
+        state.isPlaying = !state.isPlaying;
+        btnPlay.textContent = state.isPlaying ? 'Pause' : 'Play';
+        btnPlay.classList.toggle('btn-primary', state.isPlaying);
+      });
+
+      btnReset.addEventListener('click', () => {
+        state.time = 0;
+      });
+
+      // View Preset Buttons
+      document.getElementById('view-3d').addEventListener('click', () => {
+        state.camRotX = 0.35;
+        state.camRotY = -0.55;
+        state.zoom = 1.0;
+      });
+      document.getElementById('view-front').addEventListener('click', () => {
+        state.camRotX = 0.0;
+        state.camRotY = 0.0;
+        state.zoom = 1.0;
+      });
+      document.getElementById('view-top').addEventListener('click', () => {
+        state.camRotX = Math.PI / 2 - 0.01;
+        state.camRotY = 0.0;
+        state.zoom = 1.0;
+      });
+      document.getElementById('view-side').addEventListener('click', () => {
+        state.camRotX = 0.0;
+        state.camRotY = Math.PI / 2;
+        state.zoom = 1.0;
+      });
+
+      // Minimize/Expand HUD
+      let isMinimized = false;
+      btnMinimize.addEventListener('click', () => {
+        isMinimized = !isMinimized;
+        controlsBody.style.display = isMinimized ? 'none' : 'flex';
+        btnMinimize.textContent = isMinimized ? '▲' : '▼';
+      });
+
+      // Mouse & Touch Camera Orbit Controls
+      function onPointerDown(e) {
+        if (e.target.closest('#hud')) return; // Ignore drag over UI
+        state.isDragging = true;
+        state.lastMouseX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        state.lastMouseY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+      }
+
+      function onPointerMove(e) {
+        if (!state.isDragging) return;
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+
+        const dx = clientX - state.lastMouseX;
+        const dy = clientY - state.lastMouseY;
+
+        state.camRotY += dx * 0.006;
+        state.camRotX = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, state.camRotX + dy * 0.006));
+
+        state.lastMouseX = clientX;
+        state.lastMouseY = clientY;
+      }
+
+      function onPointerUp() {
+        state.isDragging = false;
+      }
+
+      window.addEventListener('mousedown', onPointerDown);
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mouseup', onPointerUp);
+
+      window.addEventListener('touchstart', onPointerDown, { passive: true });
+      window.addEventListener('touchmove', onPointerMove, { passive: true });
+      window.addEventListener('touchend', onPointerUp);
+
+      // Mouse wheel zoom
+      window.addEventListener('wheel', (e) => {
+        if (e.target.closest('#hud')) return;
+        e.preventDefault();
+        const zoomDelta = e.deltaY < 0 ? 1.08 : 0.92;
+        state.zoom = Math.max(0.4, Math.min(2.5, state.zoom * zoomDelta));
+      }, { passive: false });
+
+      // Start animation loop
+      syncInputs();
+      requestAnimationFrame(render);
+
+    } catch (err) {
+      const errorDisplay = document.getElementById('error-display');
+      if (errorDisplay) {
+        errorDisplay.style.display = 'block';
+        errorDisplay.textContent = 'Simulation Error:\n' + err.stack || err.message;
+      }
+    }
+  </script>
+</body>
+</html>

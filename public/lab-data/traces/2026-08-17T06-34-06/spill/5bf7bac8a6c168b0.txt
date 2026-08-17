@@ -1,0 +1,1130 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nexus Cloud — Next-Gen Developer Infrastructure</title>
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --bg-nav: rgba(9, 13, 22, 0.85);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(99, 102, 241, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-primary: #6366f1;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --glow-color: rgba(99, 102, 241, 0.25);
+      --input-bg: rgba(15, 23, 42, 0.8);
+      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      --modal-overlay: rgba(0, 0, 0, 0.75);
+    }
+
+    [data-theme="light"] {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --bg-nav: rgba(248, 250, 252, 0.85);
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(79, 70, 229, 0.4);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-primary: #4f46e5;
+      --accent-secondary: #9333ea;
+      --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #9333ea 50%, #db2777 100%);
+      --glow-color: rgba(79, 70, 229, 0.15);
+      --input-bg: #ffffff;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      --modal-overlay: rgba(15, 23, 42, 0.5);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    canvas#bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .relative-z {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Layout Utilities */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .flex-wrap { flex-wrap: wrap; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .gap-8 { gap: 2rem; }
+
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    
+    @media (min-width: 768px) {
+      .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .md\:flex-row { flex-direction: row; }
+      .md\:text-left { text-align: left; }
+    }
+
+    /* Navbar */
+    header.navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background-color: var(--bg-nav);
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav-inner {
+      height: 4.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.025em;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.5rem;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 0 15px var(--glow-color);
+    }
+
+    .gradient-text {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: none;
+      gap: 2rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links { display: flex; }
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    /* Buttons & Controls */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.625rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--glow-color);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--glow-color);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    .theme-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.625rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-hover);
+      transform: rotate(15deg);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 4rem 0 3rem 0;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .hero { padding: 6rem 0 4rem 0; }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: var(--accent-primary);
+      box-shadow: 0 0 8px var(--accent-primary);
+    }
+
+    .hero-title {
+      font-size: 2.25rem;
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title { font-size: 3.75rem; }
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 42rem;
+      margin: 0 auto 2rem auto;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .hero-subtitle { font-size: 1.2rem; }
+    }
+
+    /* Dashboard Visual / Mock Component */
+    .dashboard-preview {
+      margin-top: 3.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      text-align: left;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.25rem;
+    }
+
+    .dots { display: flex; gap: 0.375rem; }
+    .dot { width: 0.75rem; height: 0.75rem; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .stat-card {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Feature Grid */
+    .features-section {
+      padding: 4rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title {
+      font-size: 1.875rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (min-width: 768px) {
+      .section-title { font-size: 2.5rem; }
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 36rem;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      background: var(--glow-color);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-text {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* Pricing Section */
+    .pricing-section {
+      padding: 4rem 0;
+    }
+
+    .toggle-container {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .toggle-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn.active {
+      background: var(--accent-primary);
+      color: white;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1.25rem;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .pricing-card.popular {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 30px var(--glow-color);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -0.75rem;
+      right: 1.5rem;
+      background: var(--accent-gradient);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+    }
+
+    .price-val {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .price-period {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex-grow: 1;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+    }
+
+    .checklist-item svg {
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    /* Calculator Widget */
+    .calc-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--glow-color);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 0;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Modal Component */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-body {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 28rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+      position: relative;
+    }
+
+    .modal-backdrop.open .modal-body {
+      transform: scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+      font-size: 0.9375rem;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-primary);
+    }
+
+    /* Toast Notification System */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 110;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--accent-primary);
+      padding: 0.85rem 1.25rem;
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideUp 0.3s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(1rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Root React/DOM App Container -->
+  <div id="app" class="relative-z"></div>
+
+  <!-- Global Toast Layer -->
+  <div id="toast-layer" class="toast-container"></div>
+
+  <script>
+    try {
+      // --------------------------------------------------
+      // Safe Local Storage Theme Helper
+      // --------------------------------------------------
+      function getInitialTheme() {
+        try {
+          const saved = localStorage.getItem('nexus_theme');
+          if (saved) return saved;
+        } catch (e) { /* ignore fallback */ }
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+
+      function saveTheme(theme) {
+        try {
+          localStorage.setItem('nexus_theme', theme);
+        } catch (e) { /* ignore fallback */ }
+      }
+
+      // --------------------------------------------------
+      // Minimal Declarative DOM Creation Helper
+      // --------------------------------------------------
+      function h(tag, props = {}, ...children) {
+        const el = document.createElement(tag);
+        for (const [key, val] of Object.entries(props || {})) {
+          if (key.startsWith('on') && typeof val === 'function') {
+            el.addEventListener(key.substring(2).toLowerCase(), val);
+          } else if (key === 'className') {
+            el.className = val;
+          } else if (key === 'style' && typeof val === 'object') {
+            Object.assign(el.style, val);
+          } else if (key === 'innerHTML') {
+            el.innerHTML = val;
+          } else if (val !== false && val !== null && val !== undefined) {
+            el.setAttribute(key, val);
+          }
+        }
+        for (const child of children.flat(Infinity)) {
+          if (child === null || child === undefined || child === false) continue;
+          if (typeof child === 'string' || typeof child === 'number') {
+            el.appendChild(document.createTextNode(String(child)));
+          } else if (child instanceof Node) {
+            el.appendChild(child);
+          }
+        }
+        return el;
+      }
+
+      // Icon Factory (Inline SVG string helpers)
+      const Icons = {
+        sun: () => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
+        moon: () => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+        check: () => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+        zap: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+        shield: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`,
+        globe: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
+        cpu: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>`,
+        layers: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
+        chart: () => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`,
+        arrowRight: () => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`,
+        close: () => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+      };
+
+      // --------------------------------------------------
+      // Application Reactive State
+      // --------------------------------------------------
+      const state = {
+        theme: getInitialTheme(),
+        billingPeriod: 'yearly', // 'monthly' | 'yearly'
+        calcGB: 500,
+        modalOpen: false,
+        modalPlan: null,
+        stats: {
+          requests: 1420900,
+          latency: 14,
+          uptime: 99.99
+        }
+      };
+
+      // Set initial document attribute
+      document.documentElement.setAttribute('data-theme', state.theme);
+
+      // --------------------------------------------------
+      // Toast System
+      // --------------------------------------------------
+      function showToast(message) {
+        const toastLayer = document.getElementById('toast-layer');
+        const toast = h('div', { className: 'toast' },
+          h('span', { innerHTML: Icons.check() }),
+          h('span', {}, message)
+        );
+        toastLayer.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transition = 'opacity 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      // --------------------------------------------------
+      // Render Engine
+      // --------------------------------------------------
+      function renderApp() {
+        const app = document.getElementById('app');
+        app.innerHTML = '';
+
+        // --- Navbar ---
+        const nav = h('header', { className: 'navbar' },
+          h('div', { className: 'container nav-inner' },
+            h('a', { className: 'logo', href: '#' },
+              h('div', { className: 'logo-icon', innerHTML: Icons.zap() }),
+              h('span', {}, 'NEXUS', h('span', { className: 'gradient-text' }, '.AI'))
+            ),
+            h('ul', { className: 'nav-links' },
+              h('li', {}, h('a', { className: 'nav-link', href: '#features' }, 'Features')),
+              h('li', {}, h('a', { className: 'nav-link', href: '#calculator' }, 'Estimator')),
+              h('li', {}, h('a', { className: 'nav-link', href: '#pricing' }, 'Pricing'))
+            ),
+            h('div', { className: 'flex items-center gap-4' },
+              h('button', {
+                className: 'theme-toggle',
+                title: 'Toggle Light/Dark Theme',
+                onClick: () => {
+                  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+                  document.documentElement.setAttribute('data-theme', state.theme);
+                  saveTheme(state.theme);
+                  renderApp();
+                  showToast(`Switched to ${state.theme} mode`);
+                },
+                innerHTML: state.theme === 'dark' ? Icons.sun() : Icons.moon()
+              }),
+              h('button', {
+                className: 'btn btn-primary',
+                onClick: () => openModal('Starter')
+              }, 'Get Started')
+            )
+          )
+        );
+
+        // --- Hero Section ---
+        const hero = h('section', { className: 'hero container' },
+          h('div', { className: 'badge' },
+            h('span', { className: 'badge-dot' }),
+            'Nexus Engine v2.4 Live • Global Sub-15ms Edge'
+          ),
+          h('h1', { className: 'hero-title' },
+            'Deploy Faster. Scale Infinitely.', h('br'),
+            h('span', { className: 'gradient-text' }, 'Spend 60% Less.')
+          ),
+          h('p', { className: 'hero-subtitle' },
+            'The high-performance edge platform designed for modern engineering teams. Zero configuration, automatic SSL, and instant global failover.'
+          ),
+          h('div', { className: 'flex justify-center gap-4 flex-wrap' },
+            h('button', {
+              className: 'btn btn-primary',
+              onClick: () => openModal('Starter')
+            }, 'Start Free Trial ', h('span', { innerHTML: Icons.arrowRight() })),
+            h('button', {
+              className: 'btn btn-secondary',
+              onClick: () => {
+                state.stats.requests += 50000;
+                renderApp();
+                showToast('Simulated 50k Edge Traffic Burst');
+              }
+            }, '⚡ Simulate Traffic Surge')
+          ),
+
+          // --- Interactive Dashboard Preview ---
+          h('div', { className: 'dashboard-preview' },
+            h('div', { className: 'preview-header' },
+              h('div', { className: 'dots' },
+                h('div', { className: 'dot dot-red' }),
+                h('div', { className: 'dot dot-yellow' }),
+                h('div', { className: 'dot dot-green' })
+              ),
+              h('div', { style: { fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'monospace' } }, 'nexus-cluster // production-us-east')
+            ),
+            h('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-4' },
+              h('div', { className: 'stat-card' },
+                h('div', { className: 'stat-label' }, 'Global Requests (24h)'),
+                h('div', { className: 'stat-value gradient-text' }, state.stats.requests.toLocaleString())
+              ),
+              h('div', { className: 'stat-card' },
+                h('div', { className: 'stat-label' }, 'Avg Global Latency'),
+                h('div', { className: 'stat-value', style: { color: '#10b981' } }, `${state.stats.latency} ms`)
+              ),
+              h('div', { className: 'stat-card' },
+                h('div', { className: 'stat-label' }, 'Uptime SLA'),
+                h('div', { className: 'stat-value' }, `${state.stats.uptime}%`)
+              )
+            )
+          )
+        );
+
+        // --- Feature Grid Section ---
+        const featureItems = [
+          { icon: Icons.globe(), title: '280+ POP Edge Locations', text: 'Deliver static and dynamic workloads from edge servers situated within 10ms of 95% of world internet users.' },
+          { icon: Icons.cpu(), title: 'Autonomous Auto-Scaling', text: 'Instantly handles traffic spikes from zero to millions of concurrent requests without warmups or manual tuning.' },
+          { icon: Icons.shield(), title: 'Zero-Trust Security Layer', text: 'Automated Layer 7 DDoS mitigation, web application firewall (WAF), and automated TLS certificate renewals.' },
+          { icon: Icons.layers(), title: 'Atomic Rollbacks', text: 'Deploy with absolute confidence. Rollback code & static assets instantly in less than 50 milliseconds.' },
+          { icon: Icons.chart(), title: 'Microsecond Telemetry', text: 'Real-time observability and distributed tracing with zero runtime performance overhead.' },
+          { icon: Icons.zap(), title: 'Universal Developer API', text: 'Declarative SDKs for TypeScript, Rust, Go, and Python. Seamless CI/CD integration.' }
+        ];
+
+        const features = h('section', { id: 'features', className: 'features-section container' },
+          h('div', { className: 'section-header' },
+            h('h2', { className: 'section-title' }, 'Engineered for Enterprise Performance'),
+            h('p', { className: 'section-desc' }, 'Everything you need to ship world-class applications without managing backend infrastructure.')
+          ),
+          h('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-6' },
+            featureItems.map(item =>
+              h('div', { className: 'feature-card' },
+                h('div', { className: 'feature-icon', innerHTML: item.icon }),
+                h('h3', { className: 'feature-title' }, item.title),
+                h('p', { className: 'feature-text' }, item.text)
+              )
+            )
+          )
+        );
+
+        // --- Calculator Section ---
+        const calcPrice = Math.round(state.calcGB * 0.08);
+        const calculator = h('section', { id: 'calculator', className: 'container' },
+          h('div', { className: 'calc-box' },
+            h('div', { className: 'section-header', style: { marginBottom: '2rem' } },
+              h('h3', { className: 'section-title' }, 'Interactive Cost Estimator'),
+              h('p', { className: 'section-desc' }, 'Slide to estimate monthly egress and compute expenditure.')
+            ),
+            h('div', { className: 'flex flex-col gap-4' },
+              h('div', { className: 'flex justify-between items-center' },
+                h('span', { style: { fontWeight: 600 } }, 'Monthly Data Bandwidth'),
+                h('span', { className: 'gradient-text', style: { fontWeight: 800, fontSize: '1.25rem' } }, `${state.calcGB} GB`)
+              ),
+              h('input', {
+                type: 'range',
+                min: '50',
+                max: '5000',
+                step: '50',
+                value: state.calcGB,
+                className: 'slider',
+                onInput: (e) => {
+                  state.calcGB = Number(e.target.value);
+                  renderApp();
+                }
+              }),
+              h('div', { className: 'flex justify-between items-center', style: { marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' } },
+                h('div', {},
+                  h('div', { style: { fontSize: '0.85rem', color: 'var(--text-muted)' } }, 'Estimated Nexus Price'),
+                  h('div', { className: 'price-val gradient-text' }, `$${calcPrice}`, h('span', { className: 'price-period' }, '/mo'))
+                ),
+                h('button', {
+                  className: 'btn btn-primary',
+                  onClick: () => openModal(`Custom (${state.calcGB}GB)`)
+                }, 'Lock In Rate')
+              )
+            )
+          )
+        );
+
+        // --- Pricing Section ---
+        const isYearly = state.billingPeriod === 'yearly';
+        const plans = [
+          {
+            name: 'Starter',
+            desc: 'Ideal for side-projects and dynamic prototype apps.',
+            price: isYearly ? '$0' : '$0',
+            popular: false,
+            features: ['10GB Monthly Bandwidth', 'Sub-15ms Edge CDN', 'Community Support', '1 Custom Domain']
+          },
+          {
+            name: 'Pro',
+            desc: 'For high-growth SaaS and scaling tech teams.',
+            price: isYearly ? '$24' : '$29',
+            popular: true,
+            features: ['500GB Monthly Bandwidth', 'Autonomous Auto-scaling', '24/7 Priority Support', 'Unlimited Domains', 'Advanced Web Security']
+          },
+          {
+            name: 'Enterprise',
+            desc: 'Custom SLAs, dedicated infrastructure & support.',
+            price: isYearly ? '$79' : '$99',
+            popular: false,
+            features: ['Unlimited Bandwidth', 'Dedicated SOC2 Compliant Edge', 'Dedicated Solution Engineer', 'Custom SLAs (99.999%)', 'SAML SSO Integration']
+          }
+        ];
+
+        const pricing = h('section', { id: 'pricing', className: 'pricing-section container' },
+          h('div', { className: 'section-header' },
+            h('h2', { className: 'section-title' }, 'Simple, Transparent Pricing'),
+            h('p', { className: 'section-desc' }, 'No hidden surcharges or bandwidth penalty spikes. Pick your plan below.'),
+            h('div', { className: 'toggle-container' },
+              h('button', {
+                className: `toggle-btn ${!isYearly ? 'active' : ''}`,
+                onClick: () => { state.billingPeriod = 'monthly'; renderApp(); }
+              }, 'Monthly Billing'),
+              h('button', {
+                className: `toggle-btn ${isYearly ? 'active' : ''}`,
+                onClick: () => { state.billingPeriod = 'yearly'; renderApp(); }
+              }, 'Yearly (20% OFF)')
+            )
+          ),
+          h('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-8 items-center' },
+            plans.map(plan =>
+              h('div', { className: `pricing-card ${plan.popular ? 'popular' : ''}` },
+                plan.popular && h('div', { className: 'popular-badge' }, 'Most Popular'),
+                h('h3', { style: { fontSize: '1.25rem', fontWeight: 700 } }, plan.name),
+                h('p', { style: { color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem' } }, plan.desc),
+                h('div', { style: { margin: '1.5rem 0' } },
+                  h('span', { className: 'price-val' }, plan.price),
+                  h('span', { className: 'price-period' }, isYearly ? ' / month (billed annually)' : ' / month')
+                ),
+                h('ul', { className: 'checklist' },
+                  plan.features.map(f =>
+                    h('li', { className: 'checklist-item' },
+                      h('span', { innerHTML: Icons.check() }),
+                      h('span', {}, f)
+                    )
+                  )
+                ),
+                h('button', {
+                  className: `btn ${plan.popular ? 'btn-primary' : 'btn-secondary'}`,
+                  style: { width: '100%', marginTop: '1rem' },
+                  onClick: () => openModal(plan.name)
+                }, `Choose ${plan.name}`)
+              )
+            )
+          )
+        );
+
+        // --- Footer ---
+        const footer = h('footer', { className: 'container' },
+          h('div', { className: 'flex flex-col md:flex-row justify-between items-center gap-4' },
+            h('div', { className: 'flex items-center gap-2' },
+              h('div', { className: 'logo-icon', style: { width: '1.5rem', height: '1.5rem' }, innerHTML: Icons.zap() }),
+              h('span', { style: { fontWeight: 700, color: 'var(--text-main)' } }, 'NEXUS CLOUD')
+            ),
+            h('div', {}, '© 2025 Nexus Cloud Inc. All rights reserved.'),
+            h('div', { className: 'flex items-center gap-2' },
+              h('span', { className: 'badge-dot', style: { background: '#10b981', boxShadow: '0 0 8px #10b981' } }),
+              h('span', { style: { fontSize: '0.85rem' } }, 'All Systems Operational')
+            )
+          )
+        );
+
+        // --- Modal Component ---
+        const modal = h('div', { className: `modal-backdrop ${state.modalOpen ? 'open' : ''}` },
+          h('div', { className: 'modal-body' },
+            h('button', {
+              className: 'modal-close',
+              onClick: closeModal,
+              innerHTML: Icons.close()
+            }),
+            h('h3', { style: { fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' } }, `Get Started with ${state.modalPlan}`),
+            h('p', { style: { color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' } }, 'Enter your work email to create an instant sandbox environment.'),
+            h('form', {
+              onSubmit: (e) => {
+                e.preventDefault();
+                closeModal();
+                showToast(`🎉 Account created for ${state.modalPlan} plan!`);
+              }
+            },
+              h('input', { type: 'email', required: true, placeholder: 'name@company.com', className: 'input-field' }),
+              h('input', { type: 'password', required: true, placeholder: 'Create strong password', className: 'input-field' }),
+              h('button', { type: 'submit', className: 'btn btn-primary', style: { width: '100%' } }, 'Create Sandbox Account')
+            )
+          )
+        );
+
+        // Append all sections to App Container
+        app.appendChild(nav);
+        app.appendChild(hero);
+        app.appendChild(features);
+        app.appendChild(calculator);
+        app.appendChild(pricing);
+        app.appendChild(footer);
+        app.appendChild(modal);
+      }
+
+      function openModal(planName) {
+        state.modalPlan = planName;
+        state.modalOpen = true;
+        renderApp();
+      }
+
+      function closeModal() {
+        state.modalOpen = false;
+        renderApp();
+      }
+
+      // Initial App Render
+      renderApp();
+
+      // --------------------------------------------------
+      // Canvas Background Visual Effects (Dynamic Canvas)
+      // --------------------------------------------------
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = 0;
+      let height = 0;
+      let particles = [];
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+        initParticles();
+      }
+
+      function initParticles() {
+        particles = [];
+        const count = Math.min(Math.floor(width / 20), 60);
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            radius: Math.random() * 2 + 1
+          });
+        }
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, width, height);
+        const isDark = state.theme === 'dark';
+        const particleColor = isDark ? 'rgba(99, 102, 241, ' : 'rgba(79, 70, 229, ';
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > width) p.vx *= -1;
+          if (p.y < 0 || p.y > height) p.vy *= -1;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = particleColor + '0.4)';
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = particleColor + (1 - dist / 120) * 0.15 + ')';
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(drawParticles);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+      requestAnimationFrame(drawParticles);
+
+    } catch (err) {
+      document.body.innerHTML = `
+        <div role="alert" style="padding: 2rem; color: #ef4444; background: #090d16; font-family: monospace; height: 100vh;">
+          <h2>Application Initialization Error</h2>
+          <pre style="margin-top: 1rem; color: #94a3b8;">${err.stack || err.message}</pre>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
+```

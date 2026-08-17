@@ -1,0 +1,774 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Series RLC Circuit Step Response Simulator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%; min-height: 100%;
+    overflow: hidden; background: #0a0c14; color: #e2e8f0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  #canvas-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+  }
+  canvas { width: 100%; height: 100%; display: block; }
+  
+  /* Overlay Controls Panel */
+  .panel {
+    position: absolute; top: 16px; left: 16px; z-index: 10;
+    width: 320px; max-width: calc(100vw - 32px); max-height: calc(100vh - 32px);
+    overflow-y: auto; background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px; backdrop-filter: blur(12px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    padding: 16px; font-size: 13px; line-height: 1.4;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  
+  .panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .panel-title { font-weight: 700; font-size: 15px; color: #f8fafc; letter-spacing: 0.5px; }
+  .badge {
+    padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .badge-under { background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
+  .badge-critical { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
+  .badge-over { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); }
+
+  .control-group { margin-bottom: 12px; }
+  .control-label { display: flex; justify-content: space-between; margin-bottom: 4px; color: #94a3b8; font-weight: 500; }
+  .control-val { color: #f1f5f9; font-family: monospace; font-weight: 600; }
+  
+  input[type=range] {
+    width: 100%; height: 6px; border-radius: 3px;
+    background: #1e293b; outline: none; -webkit-appearance: none; appearance: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: #38bdf8; cursor: pointer;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); border: 2px solid #0f172a;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: #38bdf8;
+    cursor: pointer; box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); border: 2px solid #0f172a;
+  }
+
+  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 12px 0; }
+  .btn {
+    background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1; padding: 6px 10px; border-radius: 6px; cursor: pointer;
+    font-size: 11px; font-weight: 600; text-align: center; transition: all 0.15s;
+  }
+  .btn:hover { background: rgba(51, 65, 85, 0.9); color: #fff; border-color: rgba(255,255,255,0.25); }
+  .btn:active { transform: scale(0.97); }
+
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px;
+    background: rgba(0, 0, 0, 0.25); border-radius: 8px; padding: 8px 10px; margin-top: 10px;
+    border: 1px solid rgba(255,255,255,0.05); font-size: 11px;
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-name { color: #64748b; font-size: 10px; text-transform: uppercase; }
+  .stat-value { color: #e2e8f0; font-family: monospace; font-weight: 600; }
+
+  .toggle-btn {
+    position: absolute; top: 16px; right: 16px; z-index: 11;
+    display: none; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255,255,255,0.15);
+    color: #fff; padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(8px);
+    cursor: pointer; font-weight: 600; font-size: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .toggle-btn { display: block; }
+    .panel {
+      top: 60px; left: 16px; right: 16px; width: auto; max-width: none;
+      transform: translateY(0); opacity: 1;
+    }
+    .panel.collapsed { transform: translateY(-20px); opacity: 0; pointer-events: none; }
+  }
+</style>
+</head>
+<body>
+  <div id="error-alert" role="alert" style="display:none; position:fixed; top:12px; left:12px; right:12px; z-index:9999; background:#991b1b; color:#fecaca; padding:12px 16px; border-radius:8px; font-family:sans-serif; font-size:14px; border:1px solid #f87171;"></div>
+
+  <button class="toggle-btn" id="togglePanel">Controls ⚙️</button>
+
+  <div class="panel" id="controlsPanel">
+    <div class="panel-header">
+      <div class="panel-title">RLC Step Response</div>
+      <div id="dampingBadge" class="badge badge-under">Underdamped</div>
+    </div>
+
+    <div class="control-group">
+      <div class="control-label"><span>Resistance (R)</span><span class="control-val" id="valR">20.0 Ω</span></div>
+      <input type="range" id="sliderR" min="0.5" max="250" step="0.5" value="20">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label"><span>Inductance (L)</span><span class="control-val" id="valL">10.0 mH</span></div>
+      <input type="range" id="sliderL" min="1" max="100" step="0.5" value="10">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label"><span>Capacitance (C)</span><span class="control-val" id="valC">10.0 µF</span></div>
+      <input type="range" id="sliderC" min="0.5" max="100" step="0.5" value="10">
+    </div>
+
+    <div class="control-group">
+      <div class="control-label"><span>Step Voltage (Vin)</span><span class="control-val" id="valVin">5.0 V</span></div>
+      <input type="range" id="sliderVin" min="1" max="12" step="0.5" value="5">
+    </div>
+
+    <div class="preset-grid">
+      <button class="btn" onclick="applyPreset('ringing')">🌀 Underdamped</button>
+      <button class="btn" onclick="applyPreset('critical')">⚡ Critically Damped</button>
+      <button class="btn" onclick="applyPreset('overdamped')">🐢 Overdamped</button>
+      <button class="btn" onclick="applyPreset('highQ')">🔔 High-Q Ringing</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-item"><span class="stat-name">Nat. Freq (f₀)</span><span class="stat-value" id="statF0">--</span></div>
+      <div class="stat-item"><span class="stat-name">Damping Ratio (ζ)</span><span class="stat-value" id="statZeta">--</span></div>
+      <div class="stat-item"><span class="stat-name">Quality Factor (Q)</span><span class="stat-value" id="statQ">--</span></div>
+      <div class="stat-item"><span class="stat-name">Peak Overshoot</span><span class="stat-value" id="statMp">--</span></div>
+      <div class="stat-item"><span class="stat-name">Settling Time (2%)</span><span class="stat-value" id="statTs">--</span></div>
+      <div class="stat-item"><span class="stat-name">Peak Current</span><span class="stat-value" id="statImax">--</span></div>
+    </div>
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="simCanvas"></canvas>
+  </div>
+
+<script>
+try {
+  const canvas = document.getElementById('simCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  // Circuit Parameters
+  let params = {
+    R: 20.0,    // Ohms
+    L: 0.010,   // Henries (10mH)
+    C: 0.000010,// Farads (10uF)
+    Vin: 5.0    // Volts
+  };
+
+  // Canvas interaction state
+  let width = 0, height = 0;
+  let mouseX = -1, mouseY = -1;
+  let isHoveringCanvas = false;
+  let animTime = 0;
+  let animFrameId = null;
+
+  // DOM Elements
+  const sliderR = document.getElementById('sliderR');
+  const sliderL = document.getElementById('sliderL');
+  const sliderC = document.getElementById('sliderC');
+  const sliderVin = document.getElementById('sliderVin');
+  
+  const valR = document.getElementById('valR');
+  const valL = document.getElementById('valL');
+  const valC = document.getElementById('valC');
+  const valVin = document.getElementById('valVin');
+  
+  const dampingBadge = document.getElementById('dampingBadge');
+  const statF0 = document.getElementById('statF0');
+  const statZeta = document.getElementById('statZeta');
+  const statQ = document.getElementById('statQ');
+  const statMp = document.getElementById('statMp');
+  const statTs = document.getElementById('statTs');
+  const statImax = document.getElementById('statImax');
+
+  // Toggle Panel for Mobile
+  const toggleBtn = document.getElementById('togglePanel');
+  const controlsPanel = document.getElementById('controlsPanel');
+  toggleBtn.addEventListener('click', () => {
+    controlsPanel.classList.toggle('collapsed');
+  });
+
+  // Event Listeners for Controls
+  function updateInputs() {
+    params.R = parseFloat(sliderR.value);
+    params.L = parseFloat(sliderL.value) / 1000.0;
+    params.C = parseFloat(sliderC.value) / 1000000.0;
+    params.Vin = parseFloat(sliderVin.value);
+
+    valR.textContent = params.R.toFixed(1) + ' Ω';
+    valL.textContent = (params.L * 1000).toFixed(1) + ' mH';
+    valC.textContent = (params.C * 1000000).toFixed(1) + ' µF';
+    valVin.textContent = params.Vin.toFixed(1) + ' V';
+
+    updateStats();
+  }
+
+  sliderR.addEventListener('input', updateInputs);
+  sliderL.addEventListener('input', updateInputs);
+  sliderC.addEventListener('input', updateInputs);
+  sliderVin.addEventListener('input', updateInputs);
+
+  window.applyPreset = function(type) {
+    if (type === 'ringing') {
+      sliderR.value = 15; sliderL.value = 20; sliderC.value = 10;
+    } else if (type === 'critical') {
+      // R_crit = 2 * sqrt(L/C) -> for L=20mH, C=10uF => R_crit = 2*sqrt(2000) = 89.44
+      sliderL.value = 20; sliderC.value = 10; sliderR.value = 89.4;
+    } else if (type === 'overdamped') {
+      sliderR.value = 180; sliderL.value = 20; sliderC.value = 10;
+    } else if (type === 'highQ') {
+      sliderR.value = 3; sliderL.value = 40; sliderC.value = 2;
+    }
+    updateInputs();
+  };
+
+  // High Resolution Canvas Resize
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+    isHoveringCanvas = true;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    isHoveringCanvas = false;
+  });
+
+  // Math Models for RLC Circuit
+  function getCircuitState(t, R, L, C, Vin) {
+    if (t < 0) return { vc: 0, i: 0, vr: 0, vl: 0 };
+    
+    const alpha = R / (2 * L);
+    const w0_sq = 1 / (L * C);
+    const w0 = Math.sqrt(w0_sq);
+    const disc = alpha * alpha - w0_sq;
+
+    let vc = 0, i = 0;
+
+    if (Math.abs(disc) < 1e-7) { // Critically Damped
+      const expTerm = Math.exp(-alpha * t);
+      vc = Vin * (1 - expTerm * (1 + alpha * t));
+      i = (Vin / L) * t * expTerm;
+    } else if (disc < 0) { // Underdamped
+      const wd = Math.sqrt(w0_sq - alpha * alpha);
+      const expTerm = Math.exp(-alpha * t);
+      const cosTerm = Math.cos(wd * t);
+      const sinTerm = Math.sin(wd * t);
+
+      vc = Vin * (1 - expTerm * (cosTerm + (alpha / wd) * sinTerm));
+      i = (Vin / (wd * L)) * expTerm * sinTerm;
+    } else { // Overdamped
+      const gamma = Math.sqrt(disc);
+      const s1 = -alpha + gamma;
+      const s2 = -alpha - gamma;
+      
+      vc = Vin * (1 + (s2 * Math.exp(s1 * t) - s1 * Math.exp(s2 * t)) / (s1 - s2));
+      i = (Vin / (L * (s1 - s2))) * (Math.exp(s1 * t) - Math.exp(s2 * t));
+    }
+
+    const vr = i * R;
+    const vl = Vin - vc - vr;
+
+    return { vc, i, vr, vl };
+  }
+
+  function updateStats() {
+    const { R, L, C, Vin } = params;
+    const alpha = R / (2 * L);
+    const w0 = 1 / Math.sqrt(L * C);
+    const f0 = w0 / (2 * Math.PI);
+    const zeta = alpha / w0;
+    const Q = 1 / (2 * zeta);
+
+    statF0.textContent = f0 > 1000 ? (f0 / 1000).toFixed(2) + ' kHz' : f0.toFixed(1) + ' Hz';
+    statZeta.textContent = zeta.toFixed(3);
+    statQ.textContent = Q.toFixed(2);
+
+    if (zeta < 0.999) {
+      dampingBadge.textContent = "Underdamped";
+      dampingBadge.className = "badge badge-under";
+      const Mp = Math.exp(-Math.PI * zeta / Math.sqrt(1 - zeta * zeta)) * 100;
+      statMp.textContent = Mp.toFixed(1) + ' %';
+      statTs.textContent = ((4 / alpha) * 1000).toFixed(2) + ' ms';
+    } else if (zeta <= 1.001) {
+      dampingBadge.textContent = "Critically Damped";
+      dampingBadge.className = "badge badge-critical";
+      statMp.textContent = '0.0 %';
+      statTs.textContent = ((4.75 / alpha) * 1000).toFixed(2) + ' ms';
+    } else {
+      dampingBadge.textContent = "Overdamped";
+      dampingBadge.className = "badge badge-over";
+      statMp.textContent = '0.0 %';
+      const s1 = -alpha + Math.sqrt(alpha * alpha - w0 * w0);
+      statTs.textContent = ((4 / Math.abs(s1)) * 1000).toFixed(2) + ' ms';
+    }
+
+    // Estimate Peak Current
+    let maxI = 0;
+    const dt = (5 / Math.min(alpha, w0)) / 200;
+    for (let t = 0; t < 5 / Math.min(alpha, w0); t += dt) {
+      const st = getCircuitState(t, R, L, C, Vin);
+      if (st.i > maxI) maxI = st.i;
+    }
+    statImax.textContent = maxI > 1 ? maxI.toFixed(2) + ' A' : (maxI * 1000).toFixed(1) + ' mA';
+  }
+
+  // Helper for drawing formatted text with background
+  function drawBadgeText(ctx, text, x, y, color) {
+    ctx.font = '12px system-ui, sans-serif';
+    const textWidth = ctx.measureText(text).width;
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    ctx.fillRect(x - 4, y - 12, textWidth + 8, 16);
+    ctx.fillStyle = color;
+    ctx.fillText(text, x, y);
+  }
+
+  // Rendering Loop
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    const { R, L, C, Vin } = params;
+    const alpha = R / (2 * L);
+    const w0 = 1 / Math.sqrt(L * C);
+
+    // Dynamic Time scale calculation
+    const timeScale = Math.max(5 / alpha, 6 * (2 * Math.PI / w0));
+    const tMax = Math.min(Math.max(timeScale, 0.0005), 0.1); // range 0.5ms - 100ms
+
+    // Determine Plot Layout Areas based on screen size
+    const isSmall = width < 768;
+    const padL = isSmall ? 45 : (width > 1100 ? 360 : 340);
+    const padR = isSmall ? 20 : Math.min(width * 0.28, 300);
+    const padT = 30;
+    const padB = 40;
+
+    const graphW = Math.max(width - padL - padR, 180);
+    const graphH = Math.max(height - padT - padB, 180);
+
+    // Calculate max voltage peak for scaling Y-axis
+    let maxVc = Vin * 1.05;
+    if (alpha < w0) {
+      const zeta = alpha / w0;
+      const Mp = Math.exp(-Math.PI * zeta / Math.sqrt(1 - zeta * zeta));
+      maxVc = Math.max(maxVc, Vin * (1 + Mp * 1.1));
+    }
+    const yMaxV = maxVc * 1.15;
+    const yMinV = -yMaxV * 0.1;
+
+    // --- DRAW MAIN GRAPH BACKGROUND & GRID ---
+    ctx.save();
+    ctx.translate(padL, padT);
+
+    // Graph Backdrop
+    ctx.fillStyle = '#0f1422';
+    ctx.beginPath();
+    ctx.roundRect(0, 0, graphW, graphH, 10);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Horizontal Grid Lines & Y Axis Labels
+    const ySteps = 5;
+    ctx.font = '11px monospace';
+    ctx.textAlign = 'right';
+    for (let i = 0; i <= ySteps; i++) {
+      const yVal = yMinV + (i / ySteps) * (yMaxV - yMinV);
+      const py = graphH - (i / ySteps) * graphH;
+
+      ctx.strokeStyle = Math.abs(yVal) < 0.01 ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)';
+      ctx.beginPath();
+      ctx.moveTo(0, py);
+      ctx.lineTo(graphW, py);
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(yVal.toFixed(1) + ' V', -8, py + 4);
+    }
+
+    // Vertical Grid Lines & X Axis Labels (Time)
+    const xSteps = 6;
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= xSteps; i++) {
+      const tVal = (i / xSteps) * tMax;
+      const px = (i / xSteps) * graphW;
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.beginPath();
+      ctx.moveTo(px, 0);
+      ctx.lineTo(px, graphH);
+      ctx.stroke();
+
+      const tFormatted = tMax < 0.005 ? (tVal * 1000000).toFixed(0) + ' µs' : (tVal * 1000).toFixed(2) + ' ms';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(tFormatted, px, graphH + 20);
+    }
+
+    // Transform helper: Time & Voltage to Screen Coordinates
+    const getX = (t) => (t / tMax) * graphW;
+    const getY = (v) => graphH - ((v - yMinV) / (yMaxV - yMinV)) * graphH;
+
+    // --- DRAW STEP INPUT Vin(t) ---
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(getX(0), getY(0));
+    ctx.lineTo(getX(0), getY(Vin));
+    ctx.lineTo(getX(tMax), getY(Vin));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // --- PLOT RESPONSES ---
+    const samples = Math.min(Math.floor(graphW), 800);
+    
+    // Compute peak current for scaling current plot overlay
+    let maxI = 0.001;
+    for (let i = 0; i <= samples; i++) {
+      const t = (i / samples) * tMax;
+      const st = getCircuitState(t, R, L, C, Vin);
+      if (Math.abs(st.i) > maxI) maxI = Math.abs(st.i);
+    }
+    const currentScale = (graphH * 0.35) / maxI; // Current overlay height
+
+    // 1. Draw Capacitor Voltage vC(t)
+    ctx.beginPath();
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = 'rgba(0, 240, 255, 0.4)';
+    ctx.shadowBlur = 8;
+
+    for (let i = 0; i <= samples; i++) {
+      const t = (i / samples) * tMax;
+      const st = getCircuitState(t, R, L, C, Vin);
+      const px = getX(t);
+      const py = getY(st.vc);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // 2. Draw Current i(t) (Dashed Amber line scaled)
+    ctx.beginPath();
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.8;
+    ctx.setLineDash([3, 3]);
+
+    const yZero = getY(0);
+    for (let i = 0; i <= samples; i++) {
+      const t = (i / samples) * tMax;
+      const st = getCircuitState(t, R, L, C, Vin);
+      const px = getX(t);
+      const py = yZero - st.i * currentScale;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // --- ANIMATED SCANNER WAVE LINE ---
+    animTime = (performance.now() * 0.0002) % 1.0;
+    const scanT = animTime * tMax;
+    const scanX = getX(scanT);
+    
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(scanX, 0);
+    ctx.lineTo(scanX, graphH);
+    ctx.stroke();
+
+    // --- HOVER / CURSOR CROSSHAIR INTERACTION ---
+    const relMouseX = mouseX - padL;
+    const relMouseY = mouseY - padT;
+
+    if (isHoveringCanvas && relMouseX >= 0 && relMouseX <= graphW && relMouseY >= 0 && relMouseY <= graphH) {
+      const hoverT = (relMouseX / graphW) * tMax;
+      const st = getCircuitState(hoverT, R, L, C, Vin);
+      const hoverX = relMouseX;
+      const hoverYVc = getY(st.vc);
+
+      // Vertical line
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(hoverX, 0);
+      ctx.lineTo(hoverX, graphH);
+      ctx.stroke();
+
+      // Point highlight on vC
+      ctx.fillStyle = '#00f0ff';
+      ctx.beginPath();
+      ctx.arc(hoverX, hoverYVc, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.stroke();
+
+      // Tooltip Box
+      const tStr = hoverT < 0.005 ? (hoverT * 1000000).toFixed(1) + ' µs' : (hoverT * 1000).toFixed(2) + ' ms';
+      const tooltipLines = [
+        `Time: ${tStr}`,
+        `vC: ${st.vc.toFixed(3)} V`,
+        `i: ${(st.i * 1000).toFixed(2)} mA`,
+        `vL: ${st.vl.toFixed(3)} V`
+      ];
+
+      const tooltipW = 120;
+      const tooltipH = 72;
+      let ttX = hoverX + 15;
+      let ttY = relMouseY - 10;
+      if (ttX + tooltipW > graphW) ttX = hoverX - tooltipW - 15;
+      if (ttY + tooltipH > graphH) ttY = graphH - tooltipH - 10;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.beginPath();
+      ctx.roundRect(ttX, ttY, tooltipW, tooltipH, 6);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '11px monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#cbd5e1';
+      tooltipLines.forEach((line, idx) => {
+        if (idx === 1) ctx.fillStyle = '#00f0ff';
+        else if (idx === 2) ctx.fillStyle = '#f59e0b';
+        else ctx.fillStyle = '#94a3b8';
+        ctx.fillText(line, ttX + 8, ttY + 16 + idx * 14);
+      });
+    }
+
+    // --- GRAPH LEGEND ---
+    const legX = 15;
+    const legY = 20;
+    ctx.font = '12px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    
+    // vC Legend
+    ctx.fillStyle = '#00f0ff';
+    ctx.fillRect(legX, legY - 8, 12, 3);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText('vC(t) Voltage', legX + 18, legY);
+
+    // Current Legend
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(legX + 110, legY - 8, 12, 3);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText('i(t) Current (rel)', legX + 128, legY);
+
+    // Vin Legend
+    ctx.fillStyle = 'rgba(244, 63, 94, 0.8)';
+    ctx.fillRect(legX + 240, legY - 8, 12, 2);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText('Vin Step Input', legX + 258, legY);
+
+    ctx.restore(); // Restore graph translation
+
+    // --- RIGHT SIDE PANEL: S-PLANE POLE-ZERO PLOT ---
+    if (!isSmall && padR > 180) {
+      const sz = Math.min(padR - 30, (height - 80) / 2);
+      const spX = width - padR + 10;
+      const spY = padT;
+
+      ctx.save();
+      ctx.translate(spX, spY);
+
+      // Panel backdrop
+      ctx.fillStyle = '#0f1422';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, sz, sz, 10);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.stroke();
+
+      // Title
+      ctx.font = 'bold 12px system-ui, sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'left';
+      ctx.fillText('S-Plane (Poles Location)', 10, 18);
+
+      // Axes center
+      const cx = sz * 0.75;
+      const cy = sz / 2;
+      const scaleS = (sz * 0.35) / w0;
+
+      // Draw Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      // Real axis
+      ctx.beginPath(); ctx.moveTo(10, cy); ctx.lineTo(sz - 10, cy); ctx.stroke();
+      // Imag axis
+      ctx.beginPath(); ctx.moveTo(cx, 15); ctx.lineTo(cx, sz - 15); ctx.stroke();
+
+      ctx.font = '10px monospace';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('σ', 15, cy - 6);
+      ctx.fillText('jω', cx + 6, 25);
+
+      // Natural frequency circle
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.setLineDash([2, 2]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, w0 * scaleS, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Calculate Pole Positions
+      const disc = alpha * alpha - w0 * w0;
+      let p1 = { r: 0, i: 0 }, p2 = { r: 0, i: 0 };
+
+      if (disc < 0) { // Underdamped (Complex conjugate pair)
+        const wd = Math.sqrt(-disc);
+        p1 = { r: -alpha, i: wd };
+        p2 = { r: -alpha, i: -wd };
+      } else { // Overdamped or Critical (Real poles)
+        p1 = { r: -alpha + Math.sqrt(disc), i: 0 };
+        p2 = { r: -alpha - Math.sqrt(disc), i: 0 };
+      }
+
+      // Draw Poles Markers ('X')
+      const drawPole = (p) => {
+        const px = cx + p.r * scaleS;
+        const py = cy - p.i * scaleS;
+        ctx.strokeStyle = '#f43f5e';
+        ctx.lineWidth = 2.5;
+        const r = 5;
+        ctx.beginPath();
+        ctx.moveTo(px - r, py - r); ctx.lineTo(px + r, py + r);
+        ctx.moveTo(px + r, py - r); ctx.lineTo(px - r, py + r);
+        ctx.stroke();
+      };
+
+      if (p1.r * scaleS > -cx + 10) drawPole(p1);
+      if (p2.r * scaleS > -cx + 10) drawPole(p2);
+
+      ctx.restore();
+
+      // --- SECOND RIGHT PANEL: CIRCUIT DIAGRAM SCHEMATIC ---
+      const schY = spY + sz + 15;
+      const schH = Math.min(sz, height - schY - padB);
+      if (schH > 100) {
+        ctx.save();
+        ctx.translate(spX, schY);
+
+        ctx.fillStyle = '#0f1422';
+        ctx.beginPath();
+        ctx.roundRect(0, 0, sz, schH, 10);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.stroke();
+
+        ctx.font = 'bold 12px system-ui, sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'left';
+        ctx.fillText('Circuit Topology', 10, 18);
+
+        // Simple schematic drawing
+        const midY = schH / 2 + 5;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        // Step source symbol
+        ctx.arc(30, midY, 12, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.font = '10px sans-serif';
+        ctx.fillStyle = '#38bdf8';
+        ctx.textAlign = 'center';
+        ctx.fillText('Vin', 30, midY + 3);
+
+        // Loop wire top
+        ctx.beginPath();
+        ctx.moveTo(30, midY - 12);
+        ctx.lineTo(30, midY - 25);
+        ctx.lineTo(60, midY - 25);
+        ctx.stroke();
+
+        // Resistor R
+        ctx.beginPath();
+        ctx.moveTo(60, midY - 25);
+        ctx.lineTo(65, midY - 30); ctx.lineTo(75, midY - 20);
+        ctx.lineTo(85, midY - 30); ctx.lineTo(95, midY - 20);
+        ctx.lineTo(100, midY - 25);
+        ctx.stroke();
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText('R', 80, midY - 35);
+
+        // Inductor L (coils)
+        ctx.beginPath();
+        ctx.moveTo(100, midY - 25);
+        ctx.arc(108, midY - 25, 8, Math.PI, 0, false);
+        ctx.arc(124, midY - 25, 8, Math.PI, 0, false);
+        ctx.stroke();
+        ctx.fillText('L', 116, midY - 35);
+
+        // Wire to Capacitor
+        ctx.beginPath();
+        ctx.moveTo(132, midY - 25);
+        ctx.lineTo(sz - 30, midY - 25);
+        ctx.lineTo(sz - 30, midY - 10);
+        ctx.stroke();
+
+        // Capacitor C plates
+        ctx.beginPath();
+        ctx.moveTo(sz - 42, midY - 10); ctx.lineTo(sz - 18, midY - 10);
+        ctx.moveTo(sz - 42, midY + 2);  ctx.lineTo(sz - 18, midY + 2);
+        ctx.stroke();
+        ctx.fillText('C', sz - 45, midY - 3);
+
+        // Bottom wire loop
+        ctx.beginPath();
+        ctx.moveTo(sz - 30, midY + 2);
+        ctx.lineTo(sz - 30, midY + 25);
+        ctx.lineTo(30, midY + 25);
+        ctx.lineTo(30, midY + 12);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    }
+
+    // Request Next Frame for Real-Time Smooth Sweeping Animation
+    animFrameId = requestAnimationFrame(draw);
+  }
+
+  // Initialize
+  updateInputs();
+  animFrameId = requestAnimationFrame(draw);
+
+  // Cleanup on Unload
+  window.addEventListener('unload', () => {
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+  });
+
+} catch (err) {
+  const errBox = document.getElementById('error-alert');
+  if (errBox) {
+    errBox.style.display = 'block';
+    errBox.textContent = 'Application Error: ' + err.message;
+  }
+}
+</script>
+</body>
+</html>
+```

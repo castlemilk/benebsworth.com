@@ -1,0 +1,1122 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RLC Step Response Visualizer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #090a0f;
+      color: #e0e6ed;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+    }
+
+    #app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* HUD Overlay */
+    #hud {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      width: 320px;
+      max-width: calc(100vw - 24px);
+      max-height: calc(100vh - 24px);
+      overflow-y: auto;
+      background: rgba(16, 20, 30, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    #hud.collapsed {
+      transform: translateY(-calc(100% - 44px));
+    }
+
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .hud-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-title span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00e5ff;
+      box-shadow: 0 0 8px #00e5ff;
+    }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .badge-underdamped { background: rgba(0, 229, 255, 0.2); color: #00e5ff; border: 1px solid rgba(0, 229, 255, 0.4); }
+    .badge-critical { background: rgba(0, 230, 118, 0.2); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.4); }
+    .badge-overdamped { background: rgba(255, 171, 0, 0.2); color: #ffab00; border: 1px solid rgba(255, 171, 0, 0.4); }
+
+    .control-group {
+      margin-top: 10px;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #a0aec0;
+    }
+
+    .control-label val {
+      color: #ffffff;
+      font-weight: 600;
+      font-family: monospace;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 3px;
+      background: #2d3748;
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #00e5ff;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      transition: transform 0.1s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .preset-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e0;
+      padding: 6px 4px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-active {
+      background: rgba(0, 229, 255, 0.2) !important;
+      border-color: #00e5ff !important;
+      color: #00e5ff !important;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-lbl { color: #718096; font-size: 10px; }
+    .stat-val { color: #e2e8f0; font-family: monospace; font-weight: 600; }
+
+    .toggles-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 11px;
+    }
+
+    .toggle-lbl {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      color: #a0aec0;
+    }
+
+    .toggle-lbl input { accent-color: #00e5ff; }
+
+    #error-display {
+      display: none;
+      position: absolute;
+      top: 10px; right: 10px; left: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      z-index: 9999;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    /* Scrollbar */
+    #hud::-webkit-scrollbar { width: 4px; }
+    #hud::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+    @media (max-width: 480px) {
+      #hud {
+        width: calc(100vw - 24px);
+        padding: 10px;
+      }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="error-display" role="alert"></div>
+    <canvas id="simCanvas"></canvas>
+    
+    <div id="hud">
+      <div class="hud-header" id="hud-toggle">
+        <div class="hud-title">
+          <span></span> RLC Step Response
+        </div>
+        <div id="damping-badge" class="badge badge-underdamped">Underdamped</div>
+      </div>
+
+      <div class="preset-container">
+        <button class="btn" id="btn-under">Underdamped</button>
+        <button class="btn" id="btn-critical">Critical</button>
+        <button class="btn" id="btn-over">Overdamped</button>
+      </div>
+
+      <div class="control-group">
+        <div class="control-row">
+          <div class="control-label">
+            <span>Resistance (R)</span>
+            <val id="val-R">50 Ω</val>
+          </div>
+          <input type="range" id="input-R" min="1" max="500" step="1" value="50">
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>Inductance (L)</span>
+            <val id="val-L">100 mH</val>
+          </div>
+          <input type="range" id="input-L" min="5" max="500" step="5" value="100">
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>Capacitance (C)</span>
+            <val id="val-C">10.0 µF</val>
+          </div>
+          <input type="range" id="input-C" min="0.5" max="100" step="0.5" value="10">
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>Step Voltage (Vin)</span>
+            <val id="val-V">5.0 V</val>
+          </div>
+          <input type="range" id="input-V" min="1" max="12" step="0.5" value="5">
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-lbl">Damping Ratio (ζ)</span>
+          <span class="stat-val" id="stat-zeta">0.25</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-lbl">Resonant Freq (f₀)</span>
+          <span class="stat-val" id="stat-f0">159.2 Hz</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-lbl">Peak Overshoot</span>
+          <span class="stat-val" id="stat-os">44.4%</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-lbl">Settling Time (2%)</span>
+          <span class="stat-val" id="stat-ts">16.0 ms</span>
+        </div>
+      </div>
+
+      <div class="toggles-row">
+        <label class="toggle-lbl"><input type="checkbox" id="chk-vc" checked> <span style="color:#00e5ff">v_C(t)</span></label>
+        <label class="toggle-lbl"><input type="checkbox" id="chk-i" checked> <span style="color:#ff2a85">i(t)</span></label>
+        <label class="toggle-lbl"><input type="checkbox" id="chk-vl"> <span style="color:#ffb700">v_L(t)</span></label>
+        <label class="toggle-lbl"><input type="checkbox" id="chk-env" checked> Envelope</label>
+      </div>
+      
+      <div style="margin-top:10px; display:flex; gap:6px;">
+        <button class="btn" id="btn-pulse" style="flex:1; background:rgba(0,229,255,0.15); border-color:#00e5ff; color:#00e5ff;">Re-trigger Step</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    try {
+      const canvas = document.getElementById('simCanvas');
+      const ctx = canvas.getContext('2d');
+      const errDisplay = document.getElementById('error-display');
+
+      // State variables
+      const state = {
+        R: 50,      // Ohms
+        L: 0.1,     // Henries (100mH)
+        C: 1e-5,    // Farads (10uF)
+        V: 5.0,     // Volts
+        showVc: true,
+        showI: true,
+        showVl: false,
+        showEnv: true,
+        animTime: 0,
+        isAnimating: true,
+        hoverT: null,
+        mouseX: 0,
+        mouseY: 0,
+        isHovered: false
+      };
+
+      // Particle system for current flow visualization
+      const particles = [];
+      const NUM_PARTICLES = 40;
+      for (let i = 0; i < NUM_PARTICLES; i++) {
+        particles.push({ pos: Math.random() });
+      }
+
+      // UI Elements
+      const inputR = document.getElementById('input-R');
+      const inputL = document.getElementById('input-L');
+      const inputC = document.getElementById('input-C');
+      const inputV = document.getElementById('input-V');
+
+      const valR = document.getElementById('val-R');
+      const valL = document.getElementById('val-L');
+      const valC = document.getElementById('val-C');
+      const valV = document.getElementById('val-V');
+
+      const badge = document.getElementById('damping-badge');
+      const statZeta = document.getElementById('stat-zeta');
+      const statF0 = document.getElementById('stat-f0');
+      const statOs = document.getElementById('stat-os');
+      const statTs = document.getElementById('stat-ts');
+
+      const chkVc = document.getElementById('chk-vc');
+      const chkI = document.getElementById('chk-i');
+      const chkVl = document.getElementById('chk-vl');
+      const chkEnv = document.getElementById('chk-env');
+
+      const btnUnder = document.getElementById('btn-under');
+      const btnCritical = document.getElementById('btn-critical');
+      const btnOver = document.getElementById('btn-over');
+      const btnPulse = document.getElementById('btn-pulse');
+
+      function updateInputsFromState() {
+        inputR.value = state.R;
+        inputL.value = state.L * 1000;
+        inputC.value = state.C * 1e6;
+        inputV.value = state.V;
+
+        valR.textContent = `${state.R} Ω`;
+        valL.textContent = `${Math.round(state.L * 1000)} mH`;
+        valC.textContent = `${(state.C * 1e6).toFixed(1)} µF`;
+        valV.textContent = `${state.V.toFixed(1)} V`;
+      }
+
+      // Physics calculation for any time t
+      function getResponseAt(t, R, L, C, V) {
+        const alpha = R / (2 * L);
+        const omega0 = 1 / Math.sqrt(L * C);
+        const zeta = alpha / omega0;
+
+        let vc = 0, i = 0, vl = 0, envUpper = null, envLower = null;
+
+        if (t < 0) {
+          return { vc: 0, i: 0, vl: 0, vr: 0, alpha, omega0, zeta, envUpper: 0, envLower: 0 };
+        }
+
+        if (Math.abs(zeta - 1.0) < 1e-4) {
+          // Critically Damped
+          const expA = Math.exp(-alpha * t);
+          vc = V * (1 - expA * (1 + alpha * t));
+          i = (V / L) * t * expA;
+          const vr = i * R;
+          vl = V - vc - vr;
+        } else if (zeta < 1.0) {
+          // Underdamped
+          const omegad = Math.sqrt(omega0 * omega0 - alpha * alpha);
+          const expA = Math.exp(-alpha * t);
+          const cosWd = Math.cos(omegad * t);
+          const sinWd = Math.sin(omegad * t);
+
+          vc = V * (1 - expA * (cosWd + (alpha / omegad) * sinWd));
+          i = (V / (omegad * L)) * expA * sinWd;
+          const vr = i * R;
+          vl = V - vc - vr;
+
+          // Envelope for vc
+          const amp = V * Math.sqrt(1 + (alpha / omegad) * (alpha / omegad)) * expA;
+          envUpper = V + amp;
+          envLower = V - amp;
+        } else {
+          // Overdamped
+          const beta = Math.sqrt(alpha * alpha - omega0 * omega0);
+          const expA = Math.exp(-alpha * t);
+          const coshB = Math.cosh(beta * t);
+          const sinhB = Math.sinh(beta * t);
+
+          vc = V * (1 - expA * (coshB + (alpha / beta) * sinhB));
+          i = (V / (beta * L)) * expA * sinhB;
+          const vr = i * R;
+          vl = V - vc - vr;
+        }
+
+        return { vc, i, vl, vr: i * R, alpha, omega0, zeta, envUpper, envLower };
+      }
+
+      function getSystemMetrics() {
+        const { R, L, C, V } = state;
+        const alpha = R / (2 * L);
+        const omega0 = 1 / Math.sqrt(L * C);
+        const zeta = alpha / omega0;
+        const f0 = omega0 / (2 * Math.PI);
+
+        let overshoot = 0;
+        let ts = 4 / alpha; // 2% settling time approximation
+
+        if (zeta < 1.0) {
+          const omegad = Math.sqrt(omega0 * omega0 - alpha * alpha);
+          overshoot = Math.exp(- (Math.PI * alpha) / omegad) * 100;
+        } else {
+          overshoot = 0;
+        }
+
+        // Compute dynamic maximum plot time scale (roughly 4-5 time constants or cycles)
+        let tMax;
+        if (zeta < 1.0) {
+          const T_d = (2 * Math.PI) / Math.sqrt(omega0 * omega0 - alpha * alpha);
+          tMax = Math.max(4 / alpha, 3.5 * T_d);
+        } else {
+          const beta = Math.sqrt(alpha * alpha - omega0 * omega0);
+          const s1 = alpha - beta; // dominant pole decay rate
+          tMax = 4.5 / Math.max(s1, 1e-2);
+        }
+        tMax = Math.min(Math.max(tMax, 0.0005), 2.0); // Clamp scale reasonably
+
+        return { alpha, omega0, zeta, f0, overshoot, ts, tMax };
+      }
+
+      function updateUI() {
+        const metrics = getSystemMetrics();
+        statZeta.textContent = metrics.zeta.toFixed(3);
+        statF0.textContent = metrics.f0 < 1000 ? `${metrics.f0.toFixed(1)} Hz` : `${(metrics.f0/1000).toFixed(2)} kHz`;
+        statOs.textContent = metrics.zeta < 1 ? `${metrics.overshoot.toFixed(1)}%` : '0.0%';
+        statTs.textContent = `${(metrics.ts * 1000).toFixed(1)} ms`;
+
+        badge.className = 'badge ';
+        if (metrics.zeta < 0.999) {
+          badge.textContent = 'Underdamped';
+          badge.classList.add('badge-underdamped');
+        } else if (metrics.zeta > 1.001) {
+          badge.textContent = 'Overdamped';
+          badge.classList.add('badge-overdamped');
+        } else {
+          badge.textContent = 'Critically Damped';
+          badge.classList.add('badge-critical');
+        }
+
+        btnUnder.classList.toggle('btn-active', metrics.zeta < 0.95);
+        btnCritical.classList.toggle('btn-active', Math.abs(metrics.zeta - 1.0) <= 0.05);
+        btnOver.classList.toggle('btn-active', metrics.zeta > 1.05);
+      }
+
+      // Input Event Handlers
+      inputR.addEventListener('input', (e) => {
+        state.R = parseFloat(e.target.value);
+        valR.textContent = `${state.R} Ω`;
+        updateUI();
+      });
+      inputL.addEventListener('input', (e) => {
+        state.L = parseFloat(e.target.value) / 1000;
+        valL.textContent = `${e.target.value} mH`;
+        updateUI();
+      });
+      inputC.addEventListener('input', (e) => {
+        state.C = parseFloat(e.target.value) / 1e6;
+        valC.textContent = `${parseFloat(e.target.value).toFixed(1)} µF`;
+        updateUI();
+      });
+      inputV.addEventListener('input', (e) => {
+        state.V = parseFloat(e.target.value);
+        valV.textContent = `${state.V.toFixed(1)} V`;
+        updateUI();
+      });
+
+      chkVc.addEventListener('change', (e) => state.showVc = e.target.checked);
+      chkI.addEventListener('change', (e) => state.showI = e.target.checked);
+      chkVl.addEventListener('change', (e) => state.showVl = e.target.checked);
+      chkEnv.addEventListener('change', (e) => state.showEnv = e.target.checked);
+
+      // Presets
+      btnUnder.addEventListener('click', () => {
+        state.R = 40; state.L = 0.1; state.C = 10e-6;
+        updateInputsFromState(); updateUI(); state.animTime = 0;
+      });
+      btnCritical.addEventListener('click', () => {
+        // R = 2 * sqrt(L/C). With L=0.1, C=10uF => sqrt(0.1/10e-6) = sqrt(10000) = 100 => R = 200
+        state.L = 0.1; state.C = 10e-6; state.R = 200;
+        updateInputsFromState(); updateUI(); state.animTime = 0;
+      });
+      btnOver.addEventListener('click', () => {
+        state.R = 380; state.L = 0.1; state.C = 10e-6;
+        updateInputsFromState(); updateUI(); state.animTime = 0;
+      });
+      btnPulse.addEventListener('click', () => {
+        state.animTime = 0;
+      });
+
+      // Collapse HUD toggle
+      const hud = document.getElementById('hud');
+      document.getElementById('hud-toggle').addEventListener('click', (e) => {
+        // Only toggle if clicked title bar directly
+        if (e.target.closest('#hud-toggle')) {
+          hud.classList.toggle('collapsed');
+        }
+      });
+
+      // Canvas resizing logic
+      let dpr = window.devicePixelRatio || 1;
+      let width = 0, height = 0;
+
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Canvas Mouse Interaction for Plot Tooltip
+      canvas.addEventListener('mousemove', (e) => {
+        state.mouseX = e.clientX;
+        state.mouseY = e.clientY;
+        state.isHovered = true;
+      });
+      canvas.addEventListener('mouseleave', () => {
+        state.isHovered = false;
+      });
+
+      // Helper to format time strings cleanly
+      function formatTime(tSeconds) {
+        if (tSeconds < 1e-4) return `${(tSeconds * 1e6).toFixed(1)} µs`;
+        if (tSeconds < 1) return `${(tSeconds * 1000).toFixed(2)} ms`;
+        return `${tSeconds.toFixed(3)} s`;
+      }
+
+      // Drawing Functions
+      function drawCircuitSchematic(rect, currentVal, vcVal, vlVal, vrVal) {
+        const { x, y, w, h } = rect;
+        ctx.save();
+
+        // Background card for schematic
+        ctx.fillStyle = 'rgba(15, 20, 32, 0.6)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        const padX = Math.min(60, w * 0.1);
+        const padY = Math.min(35, h * 0.2);
+        const left = x + padX;
+        const right = x + w - padX;
+        const top = y + padY;
+        const bottom = y + h - padY;
+        const midX = (left + right) / 2;
+
+        // Draw loop wires
+        ctx.strokeStyle = '#4a5568';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(left, top);
+        ctx.lineTo(right, top);
+        ctx.lineTo(right, bottom);
+        ctx.lineTo(left, bottom);
+        ctx.closePath();
+        ctx.stroke();
+
+        // 1. Voltage Source (Left branch)
+        ctx.fillStyle = '#0f1420';
+        ctx.fillRect(left - 18, (top + bottom) / 2 - 22, 36, 44);
+        ctx.beginPath();
+        ctx.arc(left, (top + bottom) / 2, 18, 0, Math.PI * 2);
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`+ Vin -`, left, (top + bottom) / 2 - 26);
+        ctx.fillText(`${state.V}V`, left, (top + bottom) / 2);
+
+        // 2. Resistor R (Top branch left)
+        const rWidth = 46;
+        const rX = left + (midX - left) * 0.5 - rWidth / 2;
+        ctx.fillStyle = '#0f1420';
+        ctx.fillRect(rX - 4, top - 12, rWidth + 8, 24);
+        
+        // Heat glow on resistor proportional to power I^2 * R
+        const power = (currentVal * currentVal * state.R);
+        const heatGlow = Math.min(1, power / 2.0);
+        if (heatGlow > 0.01) {
+          ctx.shadowColor = `rgba(255, 80, 0, ${heatGlow * 0.8})`;
+          ctx.shadowBlur = 12 * heatGlow;
+        }
+
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const zigCount = 5;
+        const dx = rWidth / zigCount;
+        ctx.moveTo(rX, top);
+        for (let i = 0; i < zigCount; i++) {
+          const zigY = top + (i % 2 === 0 ? -8 : 8);
+          ctx.lineTo(rX + (i + 0.5) * dx, zigY);
+        }
+        ctx.lineTo(rX + rWidth, top);
+        ctx.stroke();
+        ctx.shadowBlur = 0; // Reset shadow
+
+        ctx.fillStyle = '#a0aec0';
+        ctx.font = '11px sans-serif';
+        ctx.fillText(`R (${state.R}Ω)`, rX + rWidth / 2, top - 18);
+
+        // 3. Inductor L (Top branch right)
+        const lWidth = 46;
+        const lX = midX + (right - midX) * 0.5 - lWidth / 2;
+        ctx.fillStyle = '#0f1420';
+        ctx.fillRect(lX - 4, top - 12, lWidth + 8, 24);
+
+        // Magnetic Field Animation
+        const magIntensity = Math.min(1, Math.abs(currentVal) * 5);
+        if (magIntensity > 0.05) {
+          ctx.strokeStyle = `rgba(255, 183, 0, ${magIntensity * 0.5})`;
+          ctx.lineWidth = 1;
+          for (let r = 10; r <= 22; r += 6) {
+            ctx.beginPath();
+            ctx.ellipse(lX + lWidth / 2, top, lWidth / 2 + r * 0.4, r * 0.7, 0, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        }
+
+        ctx.strokeStyle = '#ffb700';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const coils = 4;
+        const cRadius = lWidth / (coils * 2);
+        for (let i = 0; i < coils; i++) {
+          const cx = lX + cRadius + i * cRadius * 2;
+          ctx.arc(cx, top, cRadius, Math.PI, 0, false);
+        }
+        ctx.stroke();
+        ctx.fillStyle = '#a0aec0';
+        ctx.fillText(`L (${Math.round(state.L * 1000)}mH)`, lX + lWidth / 2, top - 18);
+
+        // 4. Capacitor C (Right branch)
+        const cY = (top + bottom) / 2;
+        ctx.fillStyle = '#0f1420';
+        ctx.fillRect(right - 15, cY - 20, 30, 40);
+
+        // Capacitor charge visual (+ and - signs on plates)
+        const chargeRatio = Math.min(1, Math.max(-1, vcVal / state.V));
+        const plateGlow = Math.abs(chargeRatio);
+        
+        ctx.strokeStyle = '#00e5ff';
+        ctx.lineWidth = 3;
+        if (plateGlow > 0.1) {
+          ctx.shadowColor = 'rgba(0, 229, 255, 0.6)';
+          ctx.shadowBlur = 10 * plateGlow;
+        }
+
+        // Top plate
+        ctx.beginPath();
+        ctx.moveTo(right - 14, cY - 7);
+        ctx.lineTo(right + 14, cY - 7);
+        ctx.stroke();
+
+        // Bottom plate
+        ctx.beginPath();
+        ctx.moveTo(right - 14, cY + 7);
+        ctx.lineTo(right + 14, cY + 7);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#a0aec0';
+        ctx.fillText(`C (${(state.C * 1e6).toFixed(1)}µF)`, right + 38, cY);
+        ctx.fillStyle = '#00e5ff';
+        ctx.font = '10px monospace';
+        ctx.fillText(`Vc=${vcVal.toFixed(2)}V`, right + 40, cY + 14);
+
+        // 5. Animated Current Particles along loop
+        const currentSpeed = currentVal * 2.5; // Scale speed for visual
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          particles[i].pos = (particles[i].pos + currentSpeed * 0.005 + 1) % 1;
+          const p = particles[i].pos;
+
+          // Wire perimeter length calculation
+          const wLen = right - left;
+          const hLen = bottom - top;
+          const totalLen = 2 * (wLen + hLen);
+          let dist = p * totalLen;
+
+          let px = left, py = top;
+          if (dist < wLen) {
+            px = left + dist;
+            py = top;
+          } else if (dist < wLen + hLen) {
+            px = right;
+            py = top + (dist - wLen);
+          } else if (dist < 2 * wLen + hLen) {
+            px = right - (dist - (wLen + hLen));
+            py = bottom;
+          } else {
+            px = left;
+            py = bottom - (dist - (2 * wLen + hLen));
+          }
+
+          const opacity = Math.min(1, Math.abs(currentVal) * 8);
+          ctx.fillStyle = currentVal >= 0 ? `rgba(255, 42, 133, ${opacity})` : `rgba(0, 229, 255, ${opacity})`;
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      function drawPlot(rect, metrics) {
+        const { x, y, w, h } = rect;
+        const { tMax, zeta, alpha } = metrics;
+        const V = state.V;
+
+        ctx.save();
+
+        // Main Plot Background
+        ctx.fillStyle = 'rgba(12, 16, 25, 0.7)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 12);
+        ctx.fill();
+        ctx.stroke();
+
+        const margin = { top: 35, right: 55, bottom: 40, left: 55 };
+        const plotX = x + margin.left;
+        const plotY = y + margin.top;
+        const plotW = w - margin.left - margin.right;
+        const plotH = h - margin.top - margin.bottom;
+
+        // Dynamic Y-axis scale for Voltage & Current
+        const maxV = Math.max(V * 1.6, V + 1.5);
+        const minV = -V * 0.3;
+
+        // Find max current over range for dual-axis scaling
+        let maxI = 0.001;
+        const numSamples = 250;
+        for (let k = 0; k <= numSamples; k++) {
+          const tSample = (k / numSamples) * tMax;
+          const resp = getResponseAt(tSample, state.R, state.L, state.C, V);
+          if (Math.abs(resp.i) > maxI) maxI = Math.abs(resp.i);
+        }
+        maxI *= 1.25; // 25% headroom
+
+        // Coordinate transforms
+        const timeToX = (t) => plotX + (t / tMax) * plotW;
+        const voltToY = (v) => plotY + plotH - ((v - minV) / (maxV - minV)) * plotH;
+        const currToY = (iVal) => plotY + plotH - ((iVal + maxI * 0.25) / (maxI * 1.5)) * plotH;
+
+        // Draw Grid Lines & Labels
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px monospace';
+
+        // Horizontal Grid (Voltage Axis)
+        const vSteps = 5;
+        for (let i = 0; i <= vSteps; i++) {
+          const vVal = minV + (i / vSteps) * (maxV - minV);
+          const py = voltToY(vVal);
+          ctx.beginPath();
+          ctx.moveTo(plotX, py);
+          ctx.lineTo(plotX + plotW, py);
+          ctx.stroke();
+
+          // Left Y Axis Labels (Voltage)
+          ctx.textAlign = 'right';
+          ctx.fillText(`${vVal.toFixed(1)}V`, plotX - 8, py + 3);
+        }
+
+        // Horizontal Axis Line at 0V and Step Input V_in
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.beginPath();
+        ctx.moveTo(plotX, voltToY(0));
+        ctx.lineTo(plotX + plotW, voltToY(0));
+        ctx.stroke();
+
+        // Target Vin Dashed Line
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.3)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(plotX, voltToY(V));
+        ctx.lineTo(plotX + plotW, voltToY(V));
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#00e5ff';
+        ctx.fillText(`Vin (${V}V)`, plotX - 8, voltToY(V) - 4);
+
+        // Vertical Grid (Time Axis)
+        const tSteps = 6;
+        for (let j = 0; j <= tSteps; j++) {
+          const tVal = (j / tSteps) * tMax;
+          const px = timeToX(tVal);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+          ctx.beginPath();
+          ctx.moveTo(px, plotY);
+          ctx.lineTo(px, plotY + plotH);
+          ctx.stroke();
+
+          // X Axis Time Labels
+          ctx.textAlign = 'center';
+          ctx.fillText(formatTime(tVal), px, plotY + plotH + 18);
+        }
+
+        // Axis Titles
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Time (t)', plotX + plotW / 2, plotY + plotH + 34);
+
+        ctx.save();
+        ctx.translate(plotX - 38, plotY + plotH / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('Voltage (V)', 0, 0);
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(plotX + plotW + 42, plotY + plotH / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillStyle = '#ff2a85';
+        ctx.fillText('Current (A)', 0, 0);
+        ctx.restore();
+
+        // Right Y Axis Labels (Current)
+        ctx.fillStyle = '#ff2a85';
+        ctx.font = '10px monospace';
+        ctx.textAlign = 'left';
+        for (let i = 0; i <= 3; i++) {
+          const iVal = (i / 3) * maxI;
+          const py = currToY(iVal);
+          const iStr = maxI < 0.1 ? `${(iVal * 1000).toFixed(1)}mA` : `${iVal.toFixed(2)}A`;
+          ctx.fillText(iStr, plotX + plotW + 8, py + 3);
+        }
+
+        // Draw Envelope curves for Underdamped case
+        if (state.showEnv && zeta < 1.0) {
+          ctx.strokeStyle = 'rgba(0, 229, 255, 0.25)';
+          ctx.setLineDash([3, 3]);
+          ctx.lineWidth = 1.5;
+
+          // Upper envelope
+          ctx.beginPath();
+          for (let k = 0; k <= numSamples; k++) {
+            const t = (k / numSamples) * tMax;
+            const resp = getResponseAt(t, state.R, state.L, state.C, V);
+            if (resp.envUpper !== null) {
+              const px = timeToX(t);
+              const py = voltToY(resp.envUpper);
+              k === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            }
+          }
+          ctx.stroke();
+
+          // Lower envelope
+          ctx.beginPath();
+          for (let k = 0; k <= numSamples; k++) {
+            const t = (k / numSamples) * tMax;
+            const resp = getResponseAt(t, state.R, state.L, state.C, V);
+            if (resp.envLower !== null) {
+              const px = timeToX(t);
+              const py = voltToY(resp.envLower);
+              k === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+            }
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Draw v_L(t) Curve (Inductor Voltage)
+        if (state.showVl) {
+          ctx.strokeStyle = '#ffb700';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for (let k = 0; k <= numSamples; k++) {
+            const t = (k / numSamples) * tMax;
+            const resp = getResponseAt(t, state.R, state.L, state.C, V);
+            const px = timeToX(t);
+            const py = voltToY(resp.vl);
+            k === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        }
+
+        // Draw i(t) Curve (Current)
+        if (state.showI) {
+          ctx.strokeStyle = '#ff2a85';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          for (let k = 0; k <= numSamples; k++) {
+            const t = (k / numSamples) * tMax;
+            const resp = getResponseAt(t, state.R, state.L, state.C, V);
+            const px = timeToX(t);
+            const py = currToY(resp.i);
+            k === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        }
+
+        // Draw v_C(t) Curve (Capacitor Voltage)
+        if (state.showVc) {
+          ctx.strokeStyle = '#00e5ff';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = 'rgba(0, 229, 255, 0.4)';
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          for (let k = 0; k <= numSamples; k++) {
+            const t = (k / numSamples) * tMax;
+            const resp = getResponseAt(t, state.R, state.L, state.C, V);
+            const px = timeToX(t);
+            const py = voltToY(resp.vc);
+            k === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+
+        // Animated Time Cursor (when running step animation)
+        const activeT = state.animTime % tMax;
+        const animPx = timeToX(activeT);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(animPx, plotY);
+        ctx.lineTo(animPx, plotY + plotH);
+        ctx.stroke();
+
+        const activeResp = getResponseAt(activeT, state.R, state.L, state.C, V);
+        ctx.fillStyle = '#00e5ff';
+        ctx.beginPath();
+        ctx.arc(animPx, voltToY(activeResp.vc), 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Mouse Hover Tooltip Crosshair Inspection
+        if (state.isHovered && state.mouseX >= plotX && state.mouseX <= plotX + plotW &&
+            state.mouseY >= plotY && state.mouseY <= plotY + plotH) {
+          
+          const hoverT = ((state.mouseX - plotX) / plotW) * tMax;
+          const hResp = getResponseAt(hoverT, state.R, state.L, state.C, V);
+          const hx = state.mouseX;
+
+          // Vertical guideline
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+          ctx.setLineDash([2, 2]);
+          ctx.beginPath();
+          ctx.moveTo(hx, plotY);
+          ctx.lineTo(hx, plotY + plotH);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Hover dots on curves
+          if (state.showVc) {
+            ctx.fillStyle = '#00e5ff';
+            ctx.beginPath();
+            ctx.arc(hx, voltToY(hResp.vc), 5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          if (state.showI) {
+            ctx.fillStyle = '#ff2a85';
+            ctx.beginPath();
+            ctx.arc(hx, currToY(hResp.i), 5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Tooltip card box
+          const ttW = 140, ttH = 74;
+          let ttX = hx + 12;
+          let ttY = state.mouseY - 10;
+          if (ttX + ttW > plotX + plotW) ttX = hx - ttW - 12;
+          if (ttY + ttH > plotY + plotH) ttY = plotY + plotH - ttH;
+
+          ctx.fillStyle = 'rgba(10, 14, 23, 0.92)';
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.roundRect(ttX, ttY, ttW, ttH, 6);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 11px monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText(`t  : ${formatTime(hoverT)}`, ttX + 8, ttY + 16);
+          ctx.fillStyle = '#00e5ff';
+          ctx.fillText(`vc : ${hResp.vc.toFixed(3)} V`, ttX + 8, ttY + 32);
+          ctx.fillStyle = '#ff2a85';
+          const iStr = Math.abs(hResp.i) < 0.1 ? `${(hResp.i * 1000).toFixed(2)} mA` : `${hResp.i.toFixed(3)} A`;
+          ctx.fillText(`i  : ${iStr}`, ttX + 8, ttY + 48);
+          ctx.fillStyle = '#ffb700';
+          ctx.fillText(`vl : ${hResp.vl.toFixed(3)} V`, ttX + 8, ttY + 64);
+        }
+
+        ctx.restore();
+      }
+
+      // Main Render & Animation Loop
+      let lastTimestamp = performance.now();
+
+      function animate(timestamp) {
+        const dt = (timestamp - lastTimestamp) / 1000;
+        lastTimestamp = timestamp;
+
+        const metrics = getSystemMetrics();
+
+        // Increment animation time scale
+        state.animTime += dt * (metrics.tMax / 3.0); // complete sweep in 3 seconds
+
+        // Clear canvas
+        ctx.fillStyle = '#090a0f';
+        ctx.fillRect(0, 0, width, height);
+
+        // Calculate Responsive Layout Rectangles
+        const isWide = width > 768;
+        const hudWidth = isWide ? 340 : 0;
+        
+        const availableX = isWide ? hudWidth + 10 : 0;
+        const availableW = width - availableX;
+
+        // Split height between Schematic and Plot
+        const schematicH = Math.min(220, Math.max(140, height * 0.28));
+        const plotH = height - schematicH - 16;
+
+        const schematicRect = {
+          x: availableX + 12,
+          y: 12,
+          w: availableW - 24,
+          h: schematicH - 12
+        };
+
+        const plotRect = {
+          x: availableX + 12,
+          y: schematicH + 8,
+          w: availableW - 24,
+          h: plotH
+        };
+
+        // Compute current dynamic step response values for circuit animation
+        const activeT = state.animTime % metrics.tMax;
+        const currentResp = getResponseAt(activeT, state.R, state.L, state.C, state.V);
+
+        // Render sections
+        drawCircuitSchematic(schematicRect, currentResp.i, currentResp.vc, currentResp.vl, currentResp.vr);
+        drawPlot(plotRect, metrics);
+
+        requestAnimationFrame(animate);
+      }
+
+      // Initial Setup
+      updateInputsFromState();
+      updateUI();
+      requestAnimationFrame(animate);
+
+    } catch (err) {
+      const errDisplay = document.getElementById('error-display');
+      if (errDisplay) {
+        errDisplay.style.display = 'block';
+        errDisplay.textContent = 'Application Error: ' + err.message;
+      }
+      console.error(err);
+    }
+  </script>
+</body>
+</html>

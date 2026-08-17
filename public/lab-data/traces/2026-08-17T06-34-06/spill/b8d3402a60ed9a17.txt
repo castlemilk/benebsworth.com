@@ -1,0 +1,660 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Neon Dash - Parallax Platformer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: #0c0c10;
+      color: #ececf0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    #canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    .hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .hud-panel {
+      background: rgba(18, 18, 26, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .stat {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stat span {
+      color: #fbbf24;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .btn {
+      background: #3b82f6;
+      border: none;
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      pointer-events: auto;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    }
+    .btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .touch-controls {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      width: 100%;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .touch-group {
+      display: flex;
+      gap: 10px;
+      pointer-events: auto;
+    }
+    .touch-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #ffffff;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+    .touch-btn:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    #error-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px;
+      background: #ef4444;
+      color: #ffffff;
+      font-weight: bold;
+      display: none;
+      z-index: 100;
+    }
+    @media (min-width: 1024px) {
+      .touch-controls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="error-overlay" role="alert"></div>
+
+  <div class="hud">
+    <div class="hud-panel">
+      <div class="stat">COINS <span id="coin-count">0 / 0</span></div>
+    </div>
+    <div class="hud-panel">
+      <button class="btn" id="reset-btn">Reset</button>
+    </div>
+  </div>
+
+  <div class="touch-controls">
+    <div class="touch-group">
+      <div class="touch-btn" id="btn-left">◀</div>
+      <div class="touch-btn" id="btn-right">▶</div>
+    </div>
+    <div class="touch-group">
+      <div class="touch-btn" id="btn-jump" style="width: 64px; height: 64px; background: rgba(59,130,246,0.3); border-color: rgba(59,130,246,0.5);">▲</div>
+    </div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    try {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const coinCountEl = document.getElementById('coin-count');
+      const resetBtn = document.getElementById('reset-btn');
+
+      // Touch Buttons
+      const btnLeft = document.getElementById('btn-left');
+      const btnRight = document.getElementById('btn-right');
+      const btnJump = document.getElementById('btn-jump');
+
+      let viewWidth = window.innerWidth;
+      let viewHeight = window.innerHeight;
+      let dpr = Math.max(1, window.devicePixelRatio || 1);
+
+      function resizeCanvas() {
+        viewWidth = window.innerWidth;
+        viewHeight = window.innerHeight;
+        dpr = Math.max(1, window.devicePixelRatio || 1);
+        canvas.width = Math.floor(viewWidth * dpr);
+        canvas.height = Math.floor(viewHeight * dpr);
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Input State
+      const keys = { left: false, right: false, jump: false };
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+        if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') {
+          if (!keys.jump) player.jumpBuffer = 8;
+          keys.jump = true;
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+        if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') keys.jump = false;
+      });
+
+      function bindTouch(element, key) {
+        element.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; if (key === 'jump') player.jumpBuffer = 8; });
+        element.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+        element.addEventListener('touchcancel', (e) => { e.preventDefault(); keys[key] = false; });
+      }
+      bindTouch(btnLeft, 'left');
+      bindTouch(btnRight, 'right');
+      bindTouch(btnJump, 'jump');
+
+      // Level Construction
+      const WORLD_HEIGHT = 800;
+      const WORLD_WIDTH = 3200;
+
+      const level = {
+        platforms: [
+          // Ground segments
+          { x: 0, y: 700, w: 900, h: 100 },
+          { x: 1020, y: 700, w: 850, h: 100 },
+          { x: 2000, y: 700, w: 1200, h: 100 },
+
+          // Elevated structures
+          { x: 250, y: 560, w: 140, h: 20 },
+          { x: 450, y: 440, w: 160, h: 20 },
+          { x: 680, y: 340, w: 120, h: 20 },
+          { x: 920, y: 480, w: 100, h: 20 },
+          
+          // Gap jumps
+          { x: 1150, y: 580, w: 120, h: 20 },
+          { x: 1350, y: 460, w: 140, h: 20 },
+          { x: 1560, y: 350, w: 160, h: 20 },
+          { x: 1800, y: 460, w: 120, h: 20 },
+
+          // Final stretch platforms
+          { x: 2150, y: 560, w: 150, h: 20 },
+          { x: 2400, y: 440, w: 180, h: 20 },
+          { x: 2700, y: 340, w: 220, h: 20 },
+          { x: 2980, y: 520, w: 120, h: 20 }
+        ],
+        coins: [
+          { x: 280, y: 510 }, { x: 310, y: 510 },
+          { x: 510, y: 390 }, { x: 540, y: 390 },
+          { x: 720, y: 290 }, { x: 740, y: 290 },
+          { x: 950, y: 430 },
+          { x: 1200, y: 530 },
+          { x: 1400, y: 410 }, { x: 1430, y: 410 },
+          { x: 1620, y: 300 }, { x: 1650, y: 300 },
+          { x: 1840, y: 410 },
+          { x: 2200, y: 510 },
+          { x: 2470, y: 390 }, { x: 2500, y: 390 },
+          { x: 2780, y: 290 }, { x: 2810, y: 290 },
+          { x: 3020, y: 470 }
+        ],
+        flag: { x: 3080, y: 700 - 120, w: 40, h: 120 }
+      };
+
+      // Game Entities
+      let player = {
+        x: 100,
+        y: 600,
+        w: 28,
+        h: 36,
+        vx: 0,
+        vy: 0,
+        grounded: false,
+        jumpBuffer: 0,
+        coyoteTime: 0,
+        facing: 1
+      };
+
+      let coinsState = [];
+      let particles = [];
+      let camera = { x: 0, y: 0 };
+      let gameState = 'playing'; // 'playing', 'won'
+      let totalCoins = level.coins.length;
+      let collectedCoins = 0;
+
+      function initLevel() {
+        player.x = 100;
+        player.y = 600;
+        player.vx = 0;
+        player.vy = 0;
+        player.grounded = false;
+        player.jumpBuffer = 0;
+        player.coyoteTime = 0;
+        
+        coinsState = level.coins.map(c => ({ ...c, collected: false, animOffset: Math.random() * Math.PI * 2 }));
+        particles = [];
+        collectedCoins = 0;
+        gameState = 'playing';
+        updateHUD();
+      }
+
+      function updateHUD() {
+        coinCountEl.textContent = `${collectedCoins} / ${totalCoins}`;
+      }
+
+      resetBtn.addEventListener('click', () => {
+        initLevel();
+      });
+
+      // Particle Generator
+      function spawnParticles(x, y, color, count = 8, speed = 3) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const vel = (Math.random() * 0.7 + 0.3) * speed;
+          particles.push({
+            x, y,
+            vx: Math.cos(angle) * vel,
+            vy: Math.sin(angle) * vel,
+            size: Math.random() * 4 + 2,
+            color,
+            alpha: 1,
+            life: 1,
+            decay: Math.random() * 0.03 + 0.02
+          });
+        }
+      }
+
+      // Stars for Far Parallax
+      const stars = Array.from({ length: 120 }, () => ({
+        x: Math.random() * 3200,
+        y: Math.random() * 600,
+        size: Math.random() * 2 + 0.5,
+        alpha: Math.random() * 0.7 + 0.3
+      }));
+
+      // Main Loop
+      let lastTime = performance.now();
+
+      function update(dt) {
+        if (gameState === 'won') {
+          player.vx *= 0.8;
+          return;
+        }
+
+        // Horizontal Movement
+        const accel = 1.2;
+        const maxSpeed = 6.5;
+        const friction = 0.82;
+
+        if (keys.left) {
+          player.vx -= accel;
+          player.facing = -1;
+        }
+        if (keys.right) {
+          player.vx += accel;
+          player.facing = 1;
+        }
+
+        player.vx *= friction;
+        if (Math.abs(player.vx) > maxSpeed) {
+          player.vx = Math.sign(player.vx) * maxSpeed;
+        }
+
+        // Gravity & Jump Timers
+        const gravity = 0.55;
+        player.vy += gravity;
+
+        if (player.grounded) {
+          player.coyoteTime = 6;
+        } else if (player.coyoteTime > 0) {
+          player.coyoteTime--;
+        }
+
+        if (player.jumpBuffer > 0) player.jumpBuffer--;
+
+        // Execute Jump
+        if (player.jumpBuffer > 0 && player.coyoteTime > 0) {
+          player.vy = -12.5;
+          player.grounded = false;
+          player.coyoteTime = 0;
+          player.jumpBuffer = 0;
+          spawnParticles(player.x + player.w / 2, player.y + player.h, '#93c5fd', 6, 2);
+        }
+
+        // Variable Jump Height
+        if (!keys.jump && player.vy < -4) {
+          player.vy = -4;
+        }
+
+        // Move X & Resolve Collisions
+        player.x += player.vx;
+        for (const p of level.platforms) {
+          if (checkAABB(player, p)) {
+            if (player.vx > 0) player.x = p.x - player.w;
+            else if (player.vx < 0) player.x = p.x + p.w;
+            player.vx = 0;
+          }
+        }
+
+        // Move Y & Resolve Collisions
+        player.grounded = false;
+        player.y += player.vy;
+        for (const p of level.platforms) {
+          if (checkAABB(player, p)) {
+            if (player.vy > 0) {
+              player.y = p.y - player.h;
+              player.grounded = true;
+              player.vy = 0;
+            } else if (player.vy < 0) {
+              player.y = p.y + p.h;
+              player.vy = 0;
+            }
+          }
+        }
+
+        // Respawn if fall off bottom
+        if (player.y > WORLD_HEIGHT + 100) {
+          player.x = 100;
+          player.y = 600;
+          player.vx = 0;
+          player.vy = 0;
+        }
+
+        // Coin Collection
+        coinsState.forEach(c => {
+          if (!c.collected) {
+            const coinBox = { x: c.x - 12, y: c.y - 12, w: 24, h: 24 };
+            if (checkAABB(player, coinBox)) {
+              c.collected = true;
+              collectedCoins++;
+              updateHUD();
+              spawnParticles(c.x, c.y, '#fbbf24', 12, 4);
+            }
+          }
+        });
+
+        // Flag Check (Win Condition)
+        const flag = level.flag;
+        if (checkAABB(player, flag)) {
+          gameState = 'won';
+          spawnParticles(flag.x + flag.w / 2, flag.y + 20, '#34d399', 40, 7);
+        }
+
+        // Update Particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const pt = particles[i];
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          pt.alpha -= pt.decay;
+          if (pt.alpha <= 0) particles.splice(i, 1);
+        }
+
+        // Smooth Camera Follow
+        const targetCamX = player.x + player.w / 2 - viewWidth / 2;
+        const targetCamY = player.y + player.h / 2 - viewHeight / 2;
+        
+        camera.x += (targetCamX - camera.x) * 0.08;
+        camera.y += (targetCamY - camera.y) * 0.08;
+
+        // Clamp Camera
+        camera.x = Math.max(0, Math.min(WORLD_WIDTH - viewWidth, camera.x));
+        camera.y = Math.max(0, Math.min(WORLD_HEIGHT - viewHeight, camera.y));
+      }
+
+      function checkAABB(a, b) {
+        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+      }
+
+      function render(time) {
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, viewWidth, viewHeight);
+
+        // --- LAYER 0: Deep Space Sky Gradient ---
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, viewHeight);
+        skyGrad.addColorStop(0, '#09090e');
+        skyGrad.addColorStop(1, '#161624');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, viewWidth, viewHeight);
+
+        // Parallax Layer 1: Stars (Factor 0.05)
+        ctx.fillStyle = '#ffffff';
+        stars.forEach(s => {
+          const sx = (s.x - camera.x * 0.05 + WORLD_WIDTH) % WORLD_WIDTH;
+          const sy = (s.y - camera.y * 0.05 + WORLD_HEIGHT) % WORLD_HEIGHT;
+          ctx.globalAlpha = s.alpha * 0.8;
+          ctx.fillRect(sx, sy, s.size, s.size);
+        });
+        ctx.globalAlpha = 1;
+
+        // Parallax Layer 2: Distant Mountains (Factor 0.2)
+        ctx.fillStyle = '#1e1b2e';
+        ctx.beginPath();
+        ctx.moveTo(0, viewHeight);
+        const mountainStep = 180;
+        for (let x = -mountainStep; x < viewWidth + mountainStep; x += mountainStep) {
+          const worldX = x + camera.x * 0.2;
+          const h = Math.sin(worldX * 0.003) * 120 + Math.cos(worldX * 0.008) * 60 + 260;
+          ctx.lineTo(x, viewHeight - h);
+        }
+        ctx.lineTo(viewWidth, viewHeight);
+        ctx.closePath();
+        ctx.fill();
+
+        // Parallax Layer 3: Near Hills (Factor 0.4)
+        ctx.fillStyle = '#262338';
+        ctx.beginPath();
+        ctx.moveTo(0, viewHeight);
+        const hillStep = 120;
+        for (let x = -hillStep; x < viewWidth + hillStep; x += hillStep) {
+          const worldX = x + camera.x * 0.4;
+          const h = Math.sin(worldX * 0.005) * 80 + Math.sin(worldX * 0.012) * 40 + 140;
+          ctx.lineTo(x, viewHeight - h);
+        }
+        ctx.lineTo(viewWidth, viewHeight);
+        ctx.closePath();
+        ctx.fill();
+
+        // --- FOREGROUND (WORLD SPACE) ---
+        ctx.save();
+        ctx.translate(-Math.round(camera.x), -Math.round(camera.y));
+
+        // Draw Platforms
+        level.platforms.forEach(p => {
+          // Body
+          ctx.fillStyle = '#181824';
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+          
+          // Neon Top Edge
+          ctx.fillStyle = '#38bdf8';
+          ctx.fillRect(p.x, p.y, p.w, 4);
+
+          // Subtle Grid Pattern on Platforms
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+          ctx.lineWidth = 1;
+          for (let gx = p.x; gx < p.x + p.w; gx += 16) {
+            ctx.beginPath();
+            ctx.moveTo(gx, p.y + 4);
+            ctx.lineTo(gx, p.y + p.h);
+            ctx.stroke();
+          }
+        });
+
+        // Draw Coins
+        coinsState.forEach(c => {
+          if (c.collected) return;
+          const bob = Math.sin(time * 0.005 + c.animOffset) * 4;
+          const cy = c.y + bob;
+
+          // Glow
+          ctx.shadowColor = '#fbbf24';
+          ctx.shadowBlur = 10;
+          
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.arc(c.x, cy, 7, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#fef08a';
+          ctx.beginPath();
+          ctx.arc(c.x - 2, cy - 2, 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.shadowBlur = 0;
+        });
+
+        // Draw Flag
+        const flag = level.flag;
+        // Pole
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(flag.x + 4, flag.y, 6, flag.h);
+        
+        // Base
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(flag.x - 6, flag.y + flag.h - 8, 26, 8);
+
+        // Waving Flag Banner
+        const wave = Math.sin(time * 0.006) * 6;
+        ctx.fillStyle = '#10b981';
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.moveTo(flag.x + 10, flag.y + 10);
+        ctx.quadraticCurveTo(flag.x + 30 + wave / 2, flag.y + 20 + wave, flag.x + 50 + wave, flag.y + 25);
+        ctx.quadraticCurveTo(flag.x + 30 + wave / 2, flag.y + 40 + wave, flag.x + 10, flag.y + 45);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Draw Particles
+        particles.forEach(pt => {
+          ctx.globalAlpha = pt.alpha;
+          ctx.fillStyle = pt.color;
+          ctx.fillRect(pt.x - pt.size / 2, pt.y - pt.size / 2, pt.size, pt.size);
+        });
+        ctx.globalAlpha = 1;
+
+        // Draw Player
+        ctx.shadowColor = '#60a5fa';
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillRect(player.x, player.y, player.w, player.h);
+
+        // Inner Character Details (Eyes/Visor)
+        ctx.fillStyle = '#ffffff';
+        const eyeX = player.facing === 1 ? player.x + player.w - 10 : player.x + 3;
+        ctx.fillRect(eyeX, player.y + 8, 7, 6);
+
+        ctx.shadowBlur = 0;
+
+        ctx.restore(); // Exit World Space
+
+        // Victory Overlay
+        if (gameState === 'won') {
+          ctx.fillStyle = 'rgba(12, 12, 16, 0.65)';
+          ctx.fillRect(0, 0, viewWidth, viewHeight);
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          ctx.shadowColor = '#34d399';
+          ctx.shadowBlur = 20;
+          ctx.fillStyle = '#34d399';
+          ctx.font = '900 36px ui-sans-serif, system-ui';
+          ctx.fillText('STAGE CLEAR!', viewWidth / 2, viewHeight / 2 - 20);
+
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = '#cbd5e1';
+          ctx.font = '600 16px ui-sans-serif, system-ui';
+          ctx.fillText(`Collected ${collectedCoins} of ${totalCoins} coins`, viewWidth / 2, viewHeight / 2 + 20);
+        }
+
+        ctx.restore();
+      }
+
+      function loop(currentTime) {
+        const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+        lastTime = currentTime;
+
+        update(dt);
+        render(currentTime);
+
+        requestAnimationFrame(loop);
+      }
+
+      initLevel();
+      requestAnimationFrame(loop);
+
+    } catch (e) {
+      const errDiv = document.getElementById('error-overlay');
+      errDiv.style.display = 'block';
+      errDiv.textContent = 'Game Runtime Error: ' + e.message;
+    }
+  </script>
+</body>
+</html>
+```

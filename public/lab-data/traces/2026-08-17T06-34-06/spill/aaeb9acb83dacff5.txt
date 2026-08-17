@@ -1,0 +1,736 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pendulum Wave Simulation</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: #08080c;
+      color: #ececf0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
+    /* Control Panel Glassmorphism */
+    .ui-panel {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: clamp(260px, 85vw, 320px);
+      max-height: calc(100vh - 24px);
+      overflow-y: auto;
+      background: rgba(15, 15, 24, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      z-index: 10;
+      user-select: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .ui-panel.collapsed {
+      opacity: 0.85;
+    }
+    .ui-panel.collapsed .ui-content {
+      display: none;
+    }
+    .ui-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .ui-title {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #a5f3fc, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+    .toggle-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #94a3b8;
+      border-radius: 6px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+    .ui-content {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .control-val {
+      color: #38bdf8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 600;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 3px;
+      background: #1e293b;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+      transition: transform 0.1s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+    .btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+    .status-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+    }
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+    .status-row:last-child {
+      margin-bottom: 0;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: #1e293b;
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #c084fc);
+      transition: width 0.1s linear;
+    }
+    .hint {
+      font-size: 10px;
+      color: #64748b;
+      text-align: center;
+      margin-top: 2px;
+    }
+    /* Scrollbar styling for panel */
+    .ui-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+    .ui-panel::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="ui-panel" id="uiPanel">
+    <div class="ui-header" id="uiHeader">
+      <h1 class="ui-title">Pendulum Wave</h1>
+      <button class="toggle-btn" id="toggleBtn" title="Toggle Controls">▼</button>
+    </div>
+    <div class="ui-content" id="uiContent">
+      <div class="control-group">
+        <div class="control-label">
+          <span>Pendulums (N)</span>
+          <span class="control-val" id="valN">16</span>
+        </div>
+        <input type="range" id="sliderN" min="8" max="36" value="16" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span>Gravity (g)</span>
+          <span class="control-val" id="valG">9.8 m/s²</span>
+        </div>
+        <input type="range" id="sliderG" min="1.0" max="25.0" value="9.8" step="0.1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span>Simulation Speed</span>
+          <span class="control-val" id="valSpeed">1.0x</span>
+        </div>
+        <input type="range" id="sliderSpeed" min="0.1" max="3.0" value="1.0" step="0.1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span>Motion Trails</span>
+          <span class="control-val" id="valTrail">Low</span>
+        </div>
+        <input type="range" id="sliderTrail" min="0" max="0.8" value="0.25" step="0.05">
+      </div>
+
+      <div class="button-row">
+        <button class="btn" id="btnPause">Pause</button>
+        <button class="btn" id="btnReset">Reset Cycle</button>
+      </div>
+
+      <div class="button-row">
+        <button class="btn active" id="btnLine">Wave Curve</button>
+        <button class="btn active" id="btnTheme">Spectrum</button>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label" style="margin-bottom: 2px;">Camera View</div>
+        <div class="button-row" style="grid-template-columns: repeat(3, 1fr);">
+          <button class="btn" id="camPerspective">3D</button>
+          <button class="btn" id="camFront">Front</button>
+          <button class="btn" id="camTop">Top</button>
+        </div>
+      </div>
+
+      <div class="status-card">
+        <div class="status-row">
+          <span style="color:#94a3b8">Cycle Period:</span>
+          <span style="color:#f1f5f9; font-family:monospace;" id="valCycleTime">60.0s</span>
+        </div>
+        <div class="status-row">
+          <span style="color:#94a3b8">Pattern State:</span>
+          <span style="color:#a7f3d0; font-weight:600;" id="valPhaseState">In Phase</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="hint">Click & drag scene to rotate 3D camera</div>
+    </div>
+  </div>
+
+  <div id="errorLog" role="alert" style="display:none; position:fixed; bottom:12px; left:12px; right:12px; background:rgba(225,29,72,0.9); color:#fff; padding:12px; border-radius:8px; font-family:monospace; font-size:12px; z-index:9999; box-shadow:0 10px 25px rgba(0,0,0,0.5);"></div>
+
+  <script>
+    try {
+      // Configuration & State
+      const state = {
+        N: 16,
+        g: 9.8,
+        speed: 1.0,
+        trail: 0.25,
+        paused: false,
+        showLines: true,
+        colorTheme: 0, // 0: Spectrum, 1: Neon Cyan/Magenta, 2: Gold/Fire
+        t: 0,
+        T_cycle: 60.0, // Cycle time in seconds for full realignment
+        N0: 30,        // Base oscillations per cycle for the longest pendulum
+        maxAngle: Math.PI / 6, // 30 degrees initial swing angle
+        yaw: 0.45,
+        pitch: 0.22,
+        targetYaw: 0.45,
+        targetPitch: 0.22,
+        isDragging: false,
+        dragStart: { x: 0, y: 0 },
+        cameraDistance: 650
+      };
+
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // DOM Elements
+      const sliderN = document.getElementById('sliderN');
+      const sliderG = document.getElementById('sliderG');
+      const sliderSpeed = document.getElementById('sliderSpeed');
+      const sliderTrail = document.getElementById('sliderTrail');
+      const valN = document.getElementById('valN');
+      const valG = document.getElementById('valG');
+      const valSpeed = document.getElementById('valSpeed');
+      const valTrail = document.getElementById('valTrail');
+      const btnPause = document.getElementById('btnPause');
+      const btnReset = document.getElementById('btnReset');
+      const btnLine = document.getElementById('btnLine');
+      const btnTheme = document.getElementById('btnTheme');
+      const camPerspective = document.getElementById('camPerspective');
+      const camFront = document.getElementById('camFront');
+      const camTop = document.getElementById('camTop');
+      const progressFill = document.getElementById('progressFill');
+      const valPhaseState = document.getElementById('valPhaseState');
+      const valCycleTime = document.getElementById('valCycleTime');
+      const uiPanel = document.getElementById('uiPanel');
+      const uiHeader = document.getElementById('uiHeader');
+      const toggleBtn = document.getElementById('toggleBtn');
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+
+      // Handle Canvas Resizing
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // UI Panel Collapse Toggle
+      let collapsed = false;
+      uiHeader.addEventListener('click', () => {
+        collapsed = !collapsed;
+        if (collapsed) {
+          uiPanel.classList.add('collapsed');
+          toggleBtn.textContent = '▲';
+        } else {
+          uiPanel.classList.remove('collapsed');
+          toggleBtn.textContent = '▼';
+        }
+      });
+
+      // Controls Event Listeners
+      sliderN.addEventListener('input', (e) => {
+        state.N = parseInt(e.target.value, 10);
+        valN.textContent = state.N;
+      });
+
+      sliderG.addEventListener('input', (e) => {
+        state.g = parseFloat(e.target.value);
+        valG.textContent = state.g.toFixed(1) + ' m/s²';
+      });
+
+      sliderSpeed.addEventListener('input', (e) => {
+        state.speed = parseFloat(e.target.value);
+        valSpeed.textContent = state.speed.toFixed(1) + 'x';
+      });
+
+      sliderTrail.addEventListener('input', (e) => {
+        state.trail = parseFloat(e.target.value);
+        if (state.trail === 0) valTrail.textContent = 'Off';
+        else if (state.trail < 0.3) valTrail.textContent = 'Low';
+        else if (state.trail < 0.6) valTrail.textContent = 'Med';
+        else valTrail.textContent = 'High';
+      });
+
+      btnPause.addEventListener('click', () => {
+        state.paused = !state.paused;
+        btnPause.textContent = state.paused ? 'Play' : 'Pause';
+        btnPause.classList.toggle('active', state.paused);
+      });
+
+      btnReset.addEventListener('click', () => {
+        state.t = 0;
+      });
+
+      btnLine.addEventListener('click', () => {
+        state.showLines = !state.showLines;
+        btnLine.classList.toggle('active', state.showLines);
+      });
+
+      const themeNames = ['Spectrum', 'Neon Dual', 'Solar Gold'];
+      btnTheme.addEventListener('click', () => {
+        state.colorTheme = (state.colorTheme + 1) % 3;
+        btnTheme.textContent = themeNames[state.colorTheme];
+      });
+
+      // Camera Presets
+      function setCamView(yaw, pitch) {
+        state.targetYaw = yaw;
+        state.targetPitch = pitch;
+        camPerspective.classList.remove('active');
+        camFront.classList.remove('active');
+        camTop.classList.remove('active');
+      }
+
+      camPerspective.addEventListener('click', () => {
+        setCamView(0.45, 0.22);
+        camPerspective.classList.add('active');
+      });
+      camFront.addEventListener('click', () => {
+        setCamView(0, 0.01);
+        camFront.classList.add('active');
+      });
+      camTop.addEventListener('click', () => {
+        setCamView(0, Math.PI / 2 - 0.01);
+        camTop.classList.add('active');
+      });
+      camPerspective.classList.add('active');
+
+      // Mouse & Touch Interactive Camera Dragging
+      function onPointerDown(e) {
+        // Prevent drag if interacting with UI panel
+        if (e.target.closest('#uiPanel')) return;
+        state.isDragging = true;
+        state.dragStart.x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        state.dragStart.y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+      }
+
+      function onPointerMove(e) {
+        if (!state.isDragging) return;
+        const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        const y = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+        const dx = x - state.dragStart.x;
+        const dy = y - state.dragStart.y;
+        
+        state.targetYaw += dx * 0.006;
+        state.targetPitch += dy * 0.006;
+        
+        // Clamp pitch to avoid upside-down flip
+        state.targetPitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, state.targetPitch));
+
+        state.dragStart.x = x;
+        state.dragStart.y = y;
+
+        camPerspective.classList.remove('active');
+        camFront.classList.remove('active');
+        camTop.classList.remove('active');
+      }
+
+      function onPointerUp() {
+        state.isDragging = false;
+      }
+
+      window.addEventListener('mousedown', onPointerDown);
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mouseup', onPointerUp);
+
+      window.addEventListener('touchstart', onPointerDown, { passive: true });
+      window.addEventListener('touchmove', onPointerMove, { passive: true });
+      window.addEventListener('touchend', onPointerUp);
+
+      // Color Generator Helper
+      function getBobColor(index, total, alpha = 1) {
+        const ratio = index / Math.max(1, total - 1);
+        if (state.colorTheme === 0) {
+          // Spectrum Rainbow
+          const hue = ratio * 300; // red through purple
+          return `hsla(${hue}, 90%, 65%, ${alpha})`;
+        } else if (state.colorTheme === 1) {
+          // Cyberpunk Cyan / Magenta
+          const hue = 180 + ratio * 140; // Cyan to Magenta
+          return `hsla(${hue}, 95%, 60%, ${alpha})`;
+        } else {
+          // Solar Fire
+          const hue = 10 + ratio * 45; // Deep red/orange to warm gold
+          return `hsla(${hue}, 100%, 55%, ${alpha})`;
+        }
+      }
+
+      // Determine visual phase description
+      function getPhaseDescription(progress) {
+        // progress is 0 to 1
+        const p = (progress % 1 + 1) % 1;
+        if (p < 0.04 || p > 0.96) return 'In Phase (Line)';
+        if (Math.abs(p - 0.5) < 0.03) return 'Zig-Zag / Alternating';
+        if (Math.abs(p - 0.25) < 0.03 || Math.abs(p - 0.75) < 0.03) return 'Dual Serpentines';
+        if (Math.abs(p - 0.333) < 0.03 || Math.abs(p - 0.667) < 0.03) return 'Triplets';
+        if (Math.abs(p - 0.2) < 0.02 || Math.abs(p - 0.8) < 0.02) return 'Quintuplets';
+        return 'Complex Beats / Chaos';
+      }
+
+      // Animation Loop State Variables
+      let lastTime = performance.now();
+      let animationFrameId = null;
+
+      function render(now) {
+        const dt = Math.min((now - lastTime) / 1000, 0.1);
+        lastTime = now;
+
+        if (!state.paused) {
+          state.t += dt * state.speed;
+        }
+
+        // Smooth camera damping
+        state.yaw += (state.targetYaw - state.yaw) * 0.1;
+        state.pitch += (state.targetPitch - state.pitch) * 0.1;
+
+        // Draw Trail / Background Fade
+        if (state.trail > 0) {
+          ctx.fillStyle = `rgba(8, 8, 12, ${1 - state.trail * 0.9})`;
+          ctx.fillRect(0, 0, width, height);
+        } else {
+          ctx.clearRect(0, 0, width, height);
+        }
+
+        // Cycle Progress Stats
+        // Effective cycle time scales inversely with sqrt(g) physics scaling factor
+        const nominalG = 9.8;
+        const gFactor = Math.sqrt(state.g / nominalG);
+        const currentCyclePeriod = state.T_cycle / gFactor;
+        const cycleProgress = (state.t % currentCyclePeriod) / currentCyclePeriod;
+
+        // Update HUD
+        progressFill.style.width = (cycleProgress * 100).toFixed(1) + '%';
+        valCycleTime.textContent = currentCyclePeriod.toFixed(1) + 's';
+        valPhaseState.textContent = getPhaseDescription(cycleProgress);
+
+        // 3D Projection Setup
+        const cx = width / 2;
+        const cy = height / 2 + 20;
+        const cosYaw = Math.cos(state.yaw);
+        const sinYaw = Math.sin(state.yaw);
+        const cosPitch = Math.cos(state.pitch);
+        const sinPitch = Math.sin(state.pitch);
+
+        // Frame / Rack Geometry Specs
+        const totalWidth = Math.min(width * 0.65, 480);
+        const spacing = state.N > 1 ? totalWidth / (state.N - 1) : 0;
+        const baseLength = Math.min(height * 0.38, 260);
+
+        // Compute 3D Positions for each pendulum
+        // Pendulum frequencies: f_k = (N0 + k) / T_cycle
+        // Angular frequency w_k = 2 * PI * f_k * gFactor
+        const pendulums = [];
+
+        for (let i = 0; i < state.N; i++) {
+          const N_k = state.N0 + i;
+          const w_k = (2 * Math.PI * N_k / state.T_cycle) * gFactor;
+          
+          // Physical length L_k scales with g / w_k^2
+          // Normalize so max length is around baseLength
+          const maxW = (2 * Math.PI * (state.N0 + state.N - 1) / state.T_cycle) * gFactor;
+          const minW = (2 * Math.PI * state.N0 / state.T_cycle) * gFactor;
+          const lengthFactor = (minW * minW) / (w_k * w_k); 
+          const length = baseLength * lengthFactor;
+
+          const angle = state.maxAngle * Math.cos(w_k * state.t);
+
+          // World coordinates relative to rack origin
+          // Pivots spaced along X axis
+          const pivotX = (i - (state.N - 1) / 2) * spacing;
+          const pivotY = -length * 0.55; // Pivot bar above origin
+          const pivotZ = 0;
+
+          // Bob position swinging in Y-Z plane
+          const bobX = pivotX;
+          const bobY = pivotY + length * Math.cos(angle);
+          const bobZ = pivotZ + length * Math.sin(angle);
+
+          // Project Pivot 3D -> 2D
+          const px1 = pivotX * cosYaw + pivotZ * sinYaw;
+          const pz1 = -pivotX * sinYaw + pivotZ * cosYaw;
+          const py1 = pivotY * cosPitch - pz1 * sinPitch;
+          const pz2 = pivotY * sinPitch + pz1 * cosPitch;
+          const scaleP = state.cameraDistance / (state.cameraDistance + pz2 + 300);
+          const screenPivotX = cx + px1 * scaleP;
+          const screenPivotY = cy + py1 * scaleP;
+
+          // Project Bob 3D -> 2D
+          const bx1 = bobX * cosYaw + bobZ * sinYaw;
+          const bz1 = -bobX * sinYaw + bobZ * cosYaw;
+          const by1 = bobY * cosPitch - bz1 * sinPitch;
+          const bz2 = bobY * sinPitch + bz1 * cosPitch;
+          const scaleB = state.cameraDistance / (state.cameraDistance + bz2 + 300);
+          const screenBobX = cx + bx1 * scaleB;
+          const screenBobY = cy + by1 * scaleB;
+
+          // Radius scaling with perspective depth
+          const bobRadius = Math.max(3, Math.min(18, 9 * scaleB));
+
+          pendulums.push({
+            id: i,
+            pivotX: screenPivotX,
+            pivotY: screenPivotY,
+            x: screenBobX,
+            y: screenBobY,
+            zDepth: bz2, // For depth sorting
+            radius: bobRadius,
+            color: getBobColor(i, state.N),
+            alphaColor: (a) => getBobColor(i, state.N, a)
+          });
+        }
+
+        // Draw Support Rack Frame Structure
+        if (pendulums.length > 0) {
+          const pFirst = pendulums[0];
+          const pLast = pendulums[pendulums.length - 1];
+
+          ctx.save();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+          ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(pFirst.pivotX, pFirst.pivotY);
+          ctx.lineTo(pLast.pivotX, pLast.pivotY);
+          ctx.stroke();
+
+          // Render Support Frame Caps
+          ctx.fillStyle = '#64748b';
+          ctx.beginPath();
+          ctx.arc(pFirst.pivotX, pFirst.pivotY, 4, 0, Math.PI * 2);
+          ctx.arc(pLast.pivotX, pLast.pivotY, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Draw Wave Connecting Line (if enabled)
+        if (state.showLines && pendulums.length > 1) {
+          ctx.save();
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(pendulums[0].x, pendulums[0].y);
+
+          // Smooth spline across bobs
+          for (let i = 0; i < pendulums.length - 1; i++) {
+            const xc = (pendulums[i].x + pendulums[i + 1].x) / 2;
+            const yc = (pendulums[i].y + pendulums[i + 1].y) / 2;
+            ctx.quadraticCurveTo(pendulums[i].x, pendulums[i].y, xc, yc);
+          }
+          ctx.lineTo(pendulums[pendulums.length - 1].x, pendulums[pendulums.length - 1].y);
+
+          // Glowing multi-color stroke
+          const grad = ctx.createLinearGradient(pendulums[0].x, pendulums[0].y, pendulums[pendulums.length - 1].x, pendulums[pendulums.length - 1].y);
+          grad.addColorStop(0, getBobColor(0, state.N, 0.8));
+          grad.addColorStop(0.5, getBobColor(state.N / 2, state.N, 0.8));
+          grad.addColorStop(1, getBobColor(state.N - 1, state.N, 0.8));
+          
+          ctx.strokeStyle = grad;
+          ctx.shadowColor = 'rgba(56, 189, 248, 0.5)';
+          ctx.shadowBlur = 8;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Sort Pendulums by Z-depth for proper occlusion (Painter's Algorithm)
+        const sortedPendulums = [...pendulums].sort((a, b) => b.zDepth - a.zDepth);
+
+        // Render Pendulum Strings & Bobs in Depth Order
+        sortedPendulums.forEach((p) => {
+          // Strings
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(p.pivotX, p.pivotY);
+          ctx.lineTo(p.x, p.y);
+          ctx.strokeStyle = p.alphaColor(0.25);
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          // Pivot point dot
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.beginPath();
+          ctx.arc(p.pivotX, p.pivotY, 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Outer Glow
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius * 1.8, 0, Math.PI * 2);
+          ctx.fillStyle = p.alphaColor(0.15);
+          ctx.fill();
+
+          // Bob Radial Shading (3D Sphere Effect)
+          const grad = ctx.createRadialGradient(
+            p.x - p.radius * 0.3,
+            p.y - p.radius * 0.3,
+            p.radius * 0.1,
+            p.x,
+            p.y,
+            p.radius
+          );
+          grad.addColorStop(0, '#ffffff');
+          grad.addColorStop(0.3, p.color);
+          grad.addColorStop(1, p.alphaColor(0.4));
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 10;
+          ctx.fill();
+
+          ctx.restore();
+        });
+
+        animationFrameId = requestAnimationFrame(render);
+      }
+
+      // Start Simulation Loop
+      animationFrameId = requestAnimationFrame(render);
+
+      // Clean up on page unload
+      window.addEventListener('unload', () => {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      });
+
+    } catch (err) {
+      const errorLog = document.getElementById('errorLog');
+      if (errorLog) {
+        errorLog.style.display = 'block';
+        errorLog.textContent = 'Simulation Error: ' + err.message + '\n' + (err.stack || '');
+      }
+    }
+  </script>
+</body>
+</html>

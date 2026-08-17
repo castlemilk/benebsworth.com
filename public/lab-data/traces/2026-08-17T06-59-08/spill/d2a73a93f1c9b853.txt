@@ -1,0 +1,238 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Interactive Gravitational Particle Simulation</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+canvas{position:absolute;top:0;left:0;display:block;background:transparent;pointer-events:none}
+#stats{position:absolute;bottom:10px;left:10px;pointer-events:none;white-space:pre-wrap}
+#info{position:absolute;top:10px;left:10px;pointer-events:none;color:#666;opacity:0.7}
+#controls{position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.5);border-radius:4px;padding:10px;z-index:999}
+.slider{width:100px;margin:5px 0}
+input[type="number"]{width:100px}
+button{margin-left:10px}
+</style>
+</head>
+<body>
+<div id="controls">
+  <div><input type="number" id="count" value="200" min="10"><label>Particles</label></div>
+  <label>Maintaining</label><input type="number" id="maintaining" value="30" min="0" max="30">
+  <label>Softening</label><input type="number" id="soft" value="0.1" min="0" step="0.01">
+  <div><label>Speed</label><input type="range" id="speed" min="0.1" max="1" step="0.01" value="0.5"></div>
+  <button id="reset">Reset</button>
+</div>
+<div id="error" role="alert" style="color:red; padding:10px; position:absolute; top:10px; left:50%; transform:translateX(-50%); display:none;"></div>
+<div id="info" style="background:#111; padding:5px; border-radius:3px; opacity:0.8; font-size:0.8em;">Space click to toggle time, Escape to reset. Adjust sliders.</div>
+<script>
+(function init() {
+  const WIDTH = window.innerWidth, HEIGHT = window.innerHeight;
+  const canvas = document.createElement('canvas');
+  canvas.width = WIDTH, canvas.height = HEIGHT;
+  const container = document.body.appendChild(canvas);
+  
+  try {
+    const rafId = requestAnimationFrame && rafId;
+    window.addEventListener('resize', () => {
+      canvas.width = WIDTH = window.innerWidth;
+      canvas.height = HEIGHT = window.innerHeight;
+      renderer.setSize(WIDTH, HEIGHT);
+      render();
+    });
+    window.addEventListener('unload', () => cancelAnimationFrame(rafId));
+    const particles = Array.from({length:200}, (_,i) => ({
+      position: {
+        x: (Math.random()*2-1)*100,
+        y: (Math.random()*2-1)*100,
+        z: (Math.random()*2-1)*100
+      },
+      velocity: {
+        x: (Math.random()*0.4-0.2)*2,
+        y: (Math.random()*0.4-0.2)*2,
+        z: (Math.random()*0.4-0.2)*2
+      },
+      mass: 1,
+      softening: 0.1
+    }));
+    
+    const camera = new THREE.PerspectiveCamera(60, WIDTH/HEIGHT, 0.1, 1000);
+    camera.position.z = 400;
+    camera.position.y = 200;
+    camera.position.x = -100;
+    
+    const scene = new THREE.Scene();
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    
+    const amb = new THREE.AmbientLight(0x404040);
+    scene.add(amb);
+    
+    const lights = new THREE.DirectionalLight(0xffffff, 0.5);
+    lights.position.set(-400, 500, 800);
+    scene.add(lights);
+    
+    const particlesGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(200*3);
+    particles.forEach((p,i) => {
+      positions[i*3] = p.position.x;
+      positions[i*3+1] = p.position.y;
+      positions[i*3+2] = p.position.z;
+    });
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    
+    const colors = new Float32Array(200*3);
+    const velocity = new Float32Array(200*3);
+    for (let i=0; i<200; i++) {
+      colors[i*3] = 0.1;
+      colors[i*3+1] = 0.1;
+      colors[i*3+2] = 0.1;
+      velocity[i*3] = 0;
+      velocity[i*3+1] = 0;
+      velocity[i*3+2] = 0;
+    }
+    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    particlesGeometry.setAttribute('velocity', new THREE.BufferAttribute(velocity, 3));
+    
+    const material = new THREE.PointsMaterial({
+      size: 2,
+      sizeAttenuation: true,
+      color: 0xffffff,
+      alphaTest: 0.5,
+      depthTest: true,
+      transparent: true,
+      opacity: 0.9
+    });
+    
+    const particlesSystem = new THREE.Points(particlesGeometry, material);
+    scene.add(particlesSystem);
+    
+    const rafId = requestAnimationFrame(raf);
+    function raf() {
+      updateParticles(particles);
+      render();
+      rafId = requestAnimationFrame(raf);
+    }
+    
+    function updateParticles(particles) {
+      const count = particles.length;
+      const soft = softeningInput.value;
+      const maintaining = maintainInput.valueAsNumber;
+      const speed = speedInput.value;
+      
+      const accelerationsX = new Float32Array(count*3);
+      const accelerationsY = new Float32Array(count*3);
+      const accelerationsZ = new Float32Array(count*3);
+      accelerationsX.fill(0);
+      accelerationsY.fill(0);
+      accelerationsZ.fill(0);
+      
+      for (let i=0; i<count; i++) {
+        for (let j=0; j<i; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dx = p1.position.x - p2.position.x;
+          const dy = p1.position.y - p2.position.y;
+          const dz = p1.position.z - p2.position.z;
+          const distanceSq = dx*dx + dy*dy + dz*dz;
+          const distance = Math.sqrt(distanceSq + soft*soft);
+          const force = (maintaining*p1.mass*p2.mass) / (distance*distance * (1 + distanceSq));
+          
+          const accel = force / p1.mass;
+          accelerationsX[j*3 + 0] += dx * accel;
+          accelerationsY[j*3 + 0] += dy * accel;
+          accelerationsZ[j*3 + 0] += dz * accel;
+          
+          const accel2 = force / p2.mass;
+          accelerationsX[i*3 + 0] -= dx * accel2;
+          accelerationsY[i*3 + 1] -= dy * accel2;
+          accelerationsZ[i*3 + 2] -= dz * accel2;
+        }
+      }
+      
+      particles.forEach((particle, i) => {
+        particle.velocity.x += accelerationsX[i*3];
+        particle.velocity.y += accelerationsY[i*3];
+        particle.velocity.z += accelerationsZ[i*3];
+        
+        const kSpeed = speed/(HEIGHT/particle.position.z+1);
+        if (Math.sqrt(particle.velocity.x**2 + particle.velocity.y**2 + particle.velocity.z**2) > kSpeed) {
+          particle.velocity.x = (particle.velocity.x / Math.sqrt(...))*kSpeed;
+          particle.velocity.y = (particle.velocity.y / Math.sqrt(...))*kSpeed;
+          particle.velocity.z = (particle.velocity.z / Math.sqrt(...))*kSpeed;
+        }
+        
+        particle.position.x += particle.velocity.x * 0.016667;
+        particle.position.y += particle.velocity.y * 0.016667;
+        particle.position.z += particle.velocity.z * 0.016667;
+      });
+      
+      particles.forEach((p,i) => {
+        positions[i*3] = p.position.x;
+        positions[i*3+1] = p.position.y;
+        positions[i*3+2] = p.position.z;
+      });
+      particlesGeometry.attributes.position.needsUpdate = true;
+    }
+    
+    function render() {
+      if (scene) renderer.render(scene, camera);
+    }
+    
+    const maintainInput = document.getElementById('maintaining');
+    const softeningInput = document.getElementById('soft');
+    const speedInput = document.getElementById('speed');
+    const countInput = document.getElementById('count');
+    const resetBtn = document.getElementById('reset');
+    
+    maintainInput.addEventListener('input', () => updateParticles(particles));
+    softeningInput.addEventListener('input', () => updateParticles(particles));
+    speedInput.addEventListener('input', () => updateParticles(particles));
+    countInput.addEventListener('input', () => {
+      particles = Array.from({length:countInput.valueAsNumber}, (_,i) => ({
+        position: {x: particles[i].position.x, y: particles[i].position.y, z: particles[i].position.z},
+        velocity: {x: particles[i].velocity.x, y: particles[i].velocity.y, z: particles[i].velocity.z},
+        mass: 1,
+        softening: 0.1
+      }));
+      updateParticles(particles);
+    });
+    resetBtn.addEventListener('click', () => {
+      particles = Array.from({length:countInput.valueAsNumber}, (_,i) => ({
+        position: {x: (Math.random()*2-1)*100,
+                   y: (Math.random()*2-1)*100,
+                   z: (Math.random()*2-1)*100},
+        velocity: {x: (Math.random()*0.4-0.2)*2,
+                  y: (Math.random()*0.4-0.2)*2,
+                  z: (Math.random()*0.4-0.2)*2},
+        mass: 1,
+        softening: 0.1
+      }));
+      updateParticles(particles);
+    });
+    
+    window.addEventListener('mousedown', (e) => {
+      if (videoElement) {
+        if (videoElement.paused) videoElement.play();
+        else videoElement.pause();
+      }
+    });
+    
+    document.getElementById('info').style.display = '';
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+  } catch (err) {
+    document.getElementById('error').textContent = `Error: ${err.message}`;
+    document.getElementById('error').style.display = 'block';
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,172 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3D Particle Gravity Simulation</title>
+<style>html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui};#canvas{display:block;};#controls{position:absolute;bottom:10px;left:10px;z-index:10;background:#1a1a20;border-radius:4px;padding:8px;box-shadow:0 0 8px rgba(0,0,0,0.3)}</style>
+</head>
+<body>
+<div id="controls">
+  <div>G-Softening: <input id="g-force" type="range" min="0" max="2" step="0.1" value="0.5"><br></div>
+  <div>Softening: <input id="softening" type="range" min="0.001" max="0.01" step="0.001" value="0.005"><br></div>
+  <div>Time Scale: <input id="time-scale" type="range" min="0.1" max="10" step="0.1" value="1"><br></div>
+</div>
+<div id="error" role="alert"></div>
+<div id="stats"></div>
+<canvas id="canvas"></canvas>
+
+<script>
+// THREE.js implementation without external assets
+const config={width: window.innerWidth, height: window.innerHeight, ratio: window.devicePixelRatio, renderer: null, scene: null, camera: null, particles: [], clock: new THREE.Clock(), animationId: null, mouse: {x:0,y:0}}};
+
+function init() {
+try {
+  config.renderer = new THREE.WebGLRenderer({antialias: true});
+  config.renderer.setSize(config.width, config.height);
+  config.renderer.setPixelRatio(config.ratio);
+  document.body.appendChild(config.renderer.domElement);
+  
+  config.scene = new THREE.Scene();
+  config.camera = new THREE.PerspectiveCamera(75, config.ratio, 0.1, 1000);
+  config.camera.position.z = 5;
+  
+  const cameraHelper = new THREE.CameraHelper(config.camera);
+  config.scene.add(cameraHelper);
+  
+  initParticles();
+  initControls();
+  
+  animate();
+} catch (err) {
+  showError(`Initialization Error: ${err}`);
+}
+}
+
+function initParticles() {
+  for(let i=0; i<200; i++) {
+    const radius = Math.random()*3;
+    const [x,y,z] = Array.from({length:3}, () => (Math.random()-0.5)*10);
+    const mass = 1 + Math.random()*2;
+    const color = new THREE.Color(`hsl(${Math.random()*360}, 80%, 50%)`);
+    
+    config.particles.push({
+      mass,
+      position: new THREE.Vector3(x,y,z),
+      velocity: new THREE.Vector3(),
+      acceleration: new THREE.Vector3(),
+      direction: new THREE.Vector3(),
+      color
+    });
+  }
+}
+
+function updateGravity() {
+  for(let i=0; i<config.particles.length; i++) {
+    config.particles[i].acceleration.set(0,0,0);
+    for(let j=0; j<config.particles.length; j++) {
+      if(i === j) continue;
+      
+      const p = config.particles[i], q = config.particles[j];
+      const diff = p.position.clone().sub(q.position);
+      const distSq = diff.lengthSq(), dist = Math.sqrt(distSq);
+      const epsilon = config.softening;
+      
+      if(distSq < epsilon*epsilon) {
+        const softDiff = diff.clone().multiplyScalar(1/(epsilon*(dist + epsilon)));
+        const forceMag = 1;
+        diff.normalize().multiplyScalar(forceMag * q.mass);
+        p.acceleration.add(softDiff.multiplyScalar(forceMag));
+      }
+    }
+  }
+}
+
+function simulate() {
+  requestAnimationFrame(simulate);
+  const delta = config.clock.getDelta() * config.timeVal;
+  
+  updateGravity();
+  
+  config.particles.forEach(p => {
+    const windFactor = 0.5;
+    p.velocity.add(p.acceleration.multiplyScalar(delta));
+    p.velocity.add(p.direction.multiplyScalar(-windFactor * delta));
+    p.position.add(p.velocity.clone().multiplyScalar(delta));
+    
+    const dy = 0.001*delta;
+    p.position.y += Math.cos(p.position.x + p.position.y) * dy;
+  });
+  
+  render();
+}
+
+function render() {
+  config.camera.position.x = config.mouse.x * 5;
+  config.camera.position.y = 3;
+  config.camera.lookAt(0,0,0);
+  
+  config.renderer.clear();
+  config.particles.forEach(p => {
+    const shape = new THREE.RingGeometry(0.5, 1, 32);
+    const material = new THREE.MeshBasicMaterial({
+      color: p.color,
+      opacity: 0.8
+    });
+    const lamp = new THREE.Mesh(shape, material);
+    lamp.position.copy(p.position.clone().multiplyScalar(-1));
+    lamp.lookAt(0,0,0);
+    config.scene.add(lamp);
+  });
+  config.scene.traverse((obj) => obj.geometry.dispose());
+  config.scene.userData.particles = config.particles;
+}
+
+function disposeScene() {
+  config.scene.traverse((obj) => {
+    obj.geometry.dispose();
+    if(obj.material) obj.material.dispose();
+  });
+  config.scene = null;
+}
+
+function onMouseMove(event) {
+  config.mouse.x = (event.clientX / config.renderer.domElement.clientWidth) * 2 - 1;
+}
+
+function showError(msg) {
+  const errorDiv = document.getElementById('error');
+  errorDiv.textContent = 'Sim error: ' + msg;
+}
+
+window.addEventListener('mousemove', onMouseMove);
+window.addEventListener('resize', () => {
+  config.ratio = window.devicePixelRatio;
+  const canvas = config.renderer.domElement;
+  canvas.width = window.innerWidth * config.ratio;
+  canvas.height = window.innerHeight * config.ratio;
+  config.renderer.setSize(window.innerWidth, window.innerHeight);
+  config.camera.aspect = window.innerWidth/window.innerHeight;
+  config.camera.updateProjectionMatrix();
+});
+
+try {
+  init();
+} catch (e) {
+  showError(`Initial Error: ${e}`);
+}
+
+function animate() {
+  cancelAnimationFrame(config.animationId);
+  if(!config.particles.length) return;
+  config.animationId = requestAnimationFrame(animate);
+}
+
+window.addEventListener('unload', () => {
+  cancelAnimationFrame(config.animationId);
+  disposeScene();
+});
+
+init();
+</script>
+</body>
+</html>

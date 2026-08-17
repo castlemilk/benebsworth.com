@@ -1,0 +1,30 @@
+### Algebraic Derivation
+
+Given the system of equations over the reals:
+1. $x^2 + y^2 = 25$
+2. $xy = 12$
+
+**Step 1: Find $(x+y)^2$ and $(x-y)^2$**
+Using the algebraic identities for the square of a sum and a difference:
+$$(x + y)^2 = x^2 + y^2 + 2xy = 25 + 2(12) = 49$$
+$$(x - y)^2 = x^2 + y^2 - 2xy = 25 - 2(12) = 1$$
+
+Taking square roots yields:
+$$x + y = \pm 7$$
+$$x - y = \pm 1$$
+
+**Step 2: Solve the linear systems for $(x, y)$**
+
+* **Case 1:** $x + y = 7$
+  * If $x - y = 1$: Adding the equations gives $2x = 8 \implies x = 4$, so $y = 3$.
+  * If $x - y = -1$: Adding the equations gives $2x = 6 \implies x = 3$, so $y = 4$.
+
+* **Case 2:** $x + y = -7$
+  * If $x - y = 1$: Adding the equations gives $2x = -6 \implies x = -3$, so $y = -4$.
+  * If $x - y = -1$: Adding the equations gives $2x = -8 \implies x = -4$, so $y = -3$.
+
+---
+
+### Solution Pairs $(x, y)$
+
+$$(4, 3), \quad (3, 4), \quad (-3, -4), \quad (-4, -3)$$

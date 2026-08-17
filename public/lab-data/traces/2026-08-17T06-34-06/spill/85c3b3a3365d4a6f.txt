@@ -1,0 +1,752 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NexusAI — Autonomous Workflow Platform</title>
+<style>
+  :root {
+    --bg-main: #090d16;
+    --bg-surface: #111827;
+    --bg-card: #1f2937;
+    --bg-card-hover: #2d3748;
+    --border-color: rgba(255, 255, 255, 0.12);
+    --border-highlight: rgba(99, 102, 241, 0.5);
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --accent-light: rgba(99, 102, 241, 0.15);
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    --glass-bg: rgba(17, 24, 39, 0.75);
+  }
+
+  html.light {
+    --bg-main: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-highlight: rgba(79, 70, 229, 0.4);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-light: rgba(79, 70, 229, 0.08);
+    --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    min-height: 100%;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+  }
+
+  /* Core Layout Utilities */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .justify-center { justify-content: center; }
+  .grid { display: grid; }
+  .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .gap-4 { gap: 1rem; }
+  .gap-6 { gap: 1.5rem; }
+  .gap-8 { gap: 2rem; }
+  .text-center { text-align: center; }
+  .relative { position: relative; }
+  .hidden { display: none !important; }
+
+  @media (min-width: 640px) {
+    .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sm\:flex-row { flex-direction: row; }
+  }
+  @media (min-width: 1024px) {
+    .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* Navigation Bar */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.85rem 0;
+  }
+
+  .logo-badge {
+    background: var(--accent-gradient);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.125rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  /* Buttons & Controls */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.925rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    outline: none;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  }
+  .btn-primary:hover { opacity: 0.92; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45); }
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-main);
+    border-color: var(--border-color);
+  }
+  .btn-secondary:hover { background: var(--bg-card-hover); }
+
+  /* Theme Toggle Switch */
+  .theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .theme-toggle:hover { transform: rotate(15deg) scale(1.05); }
+
+  /* Hero & Canvas */
+  .hero-section {
+    padding: 3.5rem 0 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+  }
+  .gradient-text {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-muted);
+    max-width: 650px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .canvas-container {
+    width: 100%;
+    height: 220px;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Feature Grid */
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 0.875rem;
+    padding: 1.5rem;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-highlight);
+    box-shadow: var(--shadow);
+  }
+  .feature-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.625rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  /* Tabs Section */
+  .tabs-nav {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--bg-surface);
+    padding: 0.35rem;
+    border-radius: 0.625rem;
+    border: 1px solid var(--border-color);
+    width: fit-content;
+    margin: 0 auto 2rem;
+  }
+  .tab-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  /* Pricing Section */
+  .pricing-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.25s ease;
+  }
+  .pricing-card.popular {
+    border-color: var(--accent);
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.25);
+  }
+  .pricing-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--accent-gradient);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    text-transform: uppercase;
+  }
+
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--bg-card-hover);
+    transition: .3s;
+    border-radius: 34px;
+    border: 1px solid var(--border-color);
+  }
+  .slider:before {
+    position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+  }
+  input:checked + .slider { background-color: var(--accent); }
+  input:checked + .slider:before { transform: translateX(24px); }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-content {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: var(--shadow);
+  }
+
+  /* Responsive Utils */
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 2rem;
+    font-size: 0.825rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .check-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #10b981;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+try {
+  // App State
+  const state = {
+    theme: 'dark',
+    billingCycle: 'yearly', // 'monthly' | 'yearly'
+    activeTab: 0,
+    mobileMenuOpen: false,
+    modal: { open: false, title: '', message: '' }
+  };
+
+  // Safe localStorage accessor
+  function getStoredTheme() {
+    try {
+      return localStorage.getItem('nexus_theme') || 'dark';
+    } catch(e) {
+      return 'dark';
+    }
+  }
+
+  function setStoredTheme(theme) {
+    try {
+      localStorage.setItem('nexus_theme', theme);
+    } catch(e) {}
+  }
+
+  state.theme = getStoredTheme();
+  document.documentElement.className = state.theme;
+
+  function toggleTheme() {
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.className = state.theme;
+    setStoredTheme(state.theme);
+    render();
+  }
+
+  function openModal(title, message) {
+    state.modal = { open: true, title, message };
+    render();
+  }
+
+  function closeModal() {
+    state.modal.open = false;
+    render();
+  }
+
+  // Canvas Particle Animation Component
+  let animationId = null;
+  function initCanvas() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = Array.from({ length: 45 }, () => ({
+      x: Math.random() * canvas.offsetWidth,
+      y: Math.random() * canvas.offsetHeight,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      radius: Math.random() * 2 + 1.5
+    }));
+
+    function draw() {
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
+      const isDark = state.theme === 'dark';
+      
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw Connection Lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            const opacity = (1 - dist / 100) * (isDark ? 0.35 : 0.2);
+            ctx.strokeStyle = isDark ? `rgba(99, 102, 241, ${opacity})` : `rgba(79, 70, 229, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw Particles
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = isDark ? '#818cf8' : '#4f46e5';
+        ctx.fill();
+      });
+
+      animationId = requestAnimationFrame(draw);
+    }
+
+    if (animationId) cancelAnimationFrame(animationId);
+    draw();
+  }
+
+  // Icons Helper
+  function getIcon(name) {
+    const icons = {
+      sun: `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`,
+      moon: `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`,
+      bolt: `<svg class="check-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
+      check: `<svg class="check-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>`,
+      cpu: `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/></svg>`,
+      shield: `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+      zap: `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+      barChart: `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>`,
+      layers: `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+      refresh: `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>`
+    };
+    return icons[name] || '';
+  }
+
+  // Feature Items Data
+  const features = [
+    { icon: 'cpu', title: 'Autonomous Execution', desc: 'Deploy self-healing agents that monitor, scale, and optimize workflows in real time.' },
+    { icon: 'zap', title: 'Sub-10ms Latency', desc: 'Ultra-fast event routing engine built on edge infrastructure for instantaneous execution.' },
+    { icon: 'shield', title: 'Enterprise Security', desc: 'SOC2 Type II certified with zero-trust architecture, end-to-end encryption, and role isolation.' },
+    { icon: 'barChart', title: 'Real-time Telemetry', desc: 'Granular visualization of event pipelines, resource usage, and error stacktraces.' },
+    { icon: 'layers', title: 'Multi-cloud Mesh', desc: 'Seamlessly distribute workloads across AWS, GCP, Azure, or on-prem cluster nodes.' },
+    { icon: 'refresh', title: 'Automated Rollbacks', desc: 'Smart state restoration prevents downtime by rewinding broken pipeline deployments instantly.' }
+  ];
+
+  // Tabbed Showcase Data
+  const showcaseTabs = [
+    { title: 'Workflow Canvas', code: `// Autonomous Workflow Definition\nimport { Workflow, Agent } from '@nexus/ai';\n\nexport default Workflow.define({\n  name: 'Data Processing Mesh',\n  trigger: 'event.received',\n  agent: new Agent({ model: 'gpt-4o', autonomy: 'high' }),\n  actions: ['parse', 'validate', 'syncDb']\n});` },
+    { title: 'Real-Time Metrics', code: `[SYSTEM METRICS - LIVE]\n> CPU Utilization:  14.2%\n> Memory Heap:      212 MB / 1024 MB\n> Active Pipeline:  1,420 events/sec\n> Node Health:      100% (24/24 Operational)\n> Latency AVG:      4.2ms` },
+    { title: 'Security & Audit', code: `[SECURITY AUDIT LOG]\n[OK] Policy Enforcement: Strict Isolation\n[OK] TLS 1.3 Handshake: Node #09 verified\n[OK] Token Verification: Scope [admin:write]\n[OK] Zero Vulnerabilities Detected in Mesh` }
+  ];
+
+  // Pricing Data
+  const pricingPlans = [
+    {
+      name: 'Developer',
+      priceMonthly: 0,
+      priceYearly: 0,
+      desc: 'Perfect for side projects & early prototypes.',
+      features: ['Up to 10,000 tasks/mo', '1 Concurrent agent', 'Community support', '7-day telemetry logs']
+    },
+    {
+      name: 'Pro Engine',
+      priceMonthly: 49,
+      priceYearly: 39,
+      popular: true,
+      desc: 'For scaling teams building mission-critical apps.',
+      features: ['500,000 tasks/mo', '15 Concurrent agents', 'Priority SLAs & support', '90-day retention & rollback', 'Custom webhooks & integrations']
+    },
+    {
+      name: 'Enterprise',
+      priceMonthly: 199,
+      priceYearly: 159,
+      desc: 'Dedicated infrastructure with custom SLA guarantees.',
+      features: ['Unlimited tasks', 'Dedicated agent cluster', '24/7 Phone & Slack support', 'Custom VPC & On-Prem deploy', 'SOC2 Audit compliance reports']
+    }
+  ];
+
+  // Main Render Function
+  function render() {
+    const app = document.getElementById('app');
+    
+    app.innerHTML = `
+      <!-- Header -->
+      <nav class="navbar">
+        <div class="container flex items-center justify-between">
+          <div class="flex items-center gap-6">
+            <div class="logo-badge">
+              ${getIcon('bolt')}
+              <span>NexusAI</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="theme-toggle" id="theme-btn" title="Toggle Theme">
+              ${state.theme === 'dark' ? getIcon('sun') : getIcon('moon')}
+            </button>
+            <button class="btn btn-primary" id="get-started-nav">Get Started</button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="hero-section text-center">
+        <div class="container">
+          <div class="badge">
+            <span>✨ Nexus Engine v2.5 Released</span>
+          </div>
+          <h1 class="hero-title">
+            Build & Scale <br/>
+            <span class="gradient-text">Autonomous AI Workflows</span>
+          </h1>
+          <p class="hero-subtitle">
+            Orchestrate complex cloud infrastructure, data pipelines, and intelligent agents in seconds with zero configuration boilerplate.
+          </p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button class="btn btn-primary" id="hero-cta-primary">
+              Deploy Free Cluster
+            </button>
+            <button class="btn btn-secondary" id="hero-cta-secondary">
+              Explore Documentation
+            </button>
+          </div>
+
+          <div class="canvas-container">
+            <canvas id="hero-canvas"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature Grid -->
+      <section class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="text-center" style="margin-bottom: 3rem;">
+          <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Engineered for Performance</h2>
+          <p style="color: var(--text-muted);">Everything you need to run intelligent software pipelines at scale.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          ${features.map(f => `
+            <div class="feature-card">
+              <div class="feature-icon">${getIcon(f.icon)}</div>
+              <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">${f.title}</h3>
+              <p style="color: var(--text-muted); font-size: 0.925rem; line-height: 1.5;">${f.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Interactive Tab Showcase -->
+      <section style="background: var(--bg-surface); padding: 4rem 0; border-y: 1px solid var(--border-color);">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem;">Deep Platform Visibility</h2>
+            <p style="color: var(--text-muted);">Real-time control and dynamic inspection at every node.</p>
+          </div>
+
+          <div class="tabs-nav">
+            ${showcaseTabs.map((tab, idx) => `
+              <button class="tab-btn ${state.activeTab === idx ? 'active' : ''}" data-tab="${idx}">
+                ${tab.title}
+              </button>
+            `).join('')}
+          </div>
+
+          <div style="background: #0d1117; color: #38bdf8; border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 1.5rem; font-family: monospace; font-size: 0.875rem; overflow-x: auto; box-shadow: var(--shadow);">
+            <pre><code>${showcaseTabs[state.activeTab].code}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing Section -->
+      <section class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <div class="text-center" style="margin-bottom: 2rem;">
+          <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Simple, Predictable Pricing</h2>
+          <p style="color: var(--text-muted);">Start for free, scale as your computational demands grow.</p>
+        </div>
+
+        <div class="toggle-container">
+          <span style="font-weight: 600; color: ${state.billingCycle === 'monthly' ? 'var(--text-main)' : 'var(--text-muted)'};">Monthly</span>
+          <label class="switch">
+            <input type="checkbox" id="billing-toggle" ${state.billingCycle === 'yearly' ? 'checked' : ''}>
+            <span class="slider"></span>
+          </label>
+          <span style="font-weight: 600; color: ${state.billingCycle === 'yearly' ? 'var(--text-main)' : 'var(--text-muted)'};">
+            Yearly <span style="font-size: 0.75rem; background: var(--accent-light); color: var(--accent); padding: 0.15rem 0.5rem; border-radius: 1rem;">Save 20%</span>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          ${pricingPlans.map(plan => {
+            const price = state.billingCycle === 'yearly' ? plan.priceYearly : plan.priceMonthly;
+            return `
+              <div class="pricing-card ${plan.popular ? 'popular' : ''}">
+                ${plan.popular ? `<div class="pricing-badge">Most Popular</div>` : ''}
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">${plan.name}</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; min-height: 2.5rem;">${plan.desc}</p>
+                <div style="margin: 1.5rem 0;">
+                  <span style="font-size: 2.5rem; font-weight: 800;">$${price}</span>
+                  <span style="color: var(--text-muted);">/month</span>
+                </div>
+                <button class="btn ${plan.popular ? 'btn-primary' : 'btn-secondary'} plan-btn" data-plan="${plan.name}" style="width: 100%; margin-bottom: 1.5rem;">
+                  Choose ${plan.name}
+                </button>
+                <div class="flex flex-col gap-4">
+                  ${plan.features.map(f => `
+                    <div class="flex items-center gap-4" style="font-size: 0.875rem;">
+                      ${getIcon('check')}
+                      <span>${f}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer style="background: var(--bg-surface); border-top: 1px solid var(--border-color); padding: 2.5rem 0; color: var(--text-muted); font-size: 0.875rem;">
+        <div class="container flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span style="font-weight: 700; color: var(--text-main);">NexusAI Inc.</span>
+            <span>© ${new Date().getFullYear()} All rights reserved.</span>
+          </div>
+          <div class="flex gap-6">
+            <a href="#" style="color: var(--text-muted); text-decoration: none;">Privacy Policy</a>
+            <a href="#" style="color: var(--text-muted); text-decoration: none;">Terms of Service</a>
+            <a href="#" style="color: var(--text-muted); text-decoration: none;">System Status</a>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Modal Container -->
+      ${state.modal.open ? `
+        <div class="modal-overlay" id="modal-overlay">
+          <div class="modal-content">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">${state.modal.title}</h3>
+            <p style="color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">${state.modal.message}</p>
+            <button class="btn btn-primary" id="modal-close" style="width: 100%;">Got it!</button>
+          </div>
+        </div>
+      ` : ''}
+    `;
+
+    // Attach Event Handlers
+    document.getElementById('theme-btn').onclick = toggleTheme;
+
+    document.getElementById('hero-cta-primary').onclick = () => openModal('Deploy Free Cluster', 'Your sandbox environment has been provisioned. Cluster ID: #nx-88392.');
+    document.getElementById('hero-cta-secondary').onclick = () => openModal('Documentation', 'Documentation portal loaded. Check back for full API reference.');
+    document.getElementById('get-started-nav').onclick = () => openModal('Get Started', 'Welcome to NexusAI! Start by connecting your cloud provider.');
+
+    const billingToggle = document.getElementById('billing-toggle');
+    if (billingToggle) {
+      billingToggle.onchange = (e) => {
+        state.billingCycle = e.target.checked ? 'yearly' : 'monthly';
+        render();
+      };
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        state.activeTab = parseInt(btn.getAttribute('data-tab'));
+        render();
+      };
+    });
+
+    document.querySelectorAll('.plan-btn').forEach(btn => {
+      btn.onclick = () => {
+        const planName = btn.getAttribute('data-plan');
+        openModal(`Selected ${planName}`, `Thank you for selecting the ${planName} plan! Redirecting to secure checkout...`);
+      };
+    });
+
+    if (state.modal.open) {
+      document.getElementById('modal-close').onclick = closeModal;
+      document.getElementById('modal-overlay').onclick = (e) => {
+        if (e.target.id === 'modal-overlay') closeModal();
+      };
+    }
+
+    // Initialize interactive visual canvas
+    initCanvas();
+  }
+
+  // Initial Render
+  render();
+
+  // Cancel canvas loops on window unload to prevent memory leak
+  window.addEventListener('unload', () => {
+    if (animationId) cancelAnimationFrame(animationId);
+  });
+
+} catch (err) {
+  // Graceful Error Overlay
+  document.body.innerHTML = `
+    <div role="alert" style="padding: 2rem; margin: 2rem; background: #fef2f2; border: 1px solid #f87171; border-radius: 0.5rem; color: #991b1b; font-family: monospace;">
+      <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">Runtime Exception</h3>
+      <p style="white-space: pre-wrap;">${err.stack || err.message || err}</p>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

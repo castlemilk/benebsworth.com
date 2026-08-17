@@ -1,0 +1,845 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D N-Body Gravity Simulation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+  html, body {
+    width: 100%; height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    background: #06060c;
+    color: #ececf0;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  #canvas-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 1;
+  }
+  canvas {
+    width: 100%; height: 100%;
+    display: block;
+  }
+  
+  /* UI Panels */
+  .hud-panel {
+    position: absolute;
+    z-index: 10;
+    background: rgba(14, 16, 26, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+  }
+
+  #title-card {
+    top: 14px; left: 14px;
+    max-width: 280px;
+  }
+  #title-card h1 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #title-card h1 span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 8px #00f0ff;
+  }
+  .stats-row {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-mono: monospace;
+  }
+
+  /* Controls Panel */
+  #controls-card {
+    top: 14px; right: 14px;
+    width: 280px;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+  }
+  #controls-card.collapsed {
+    transform: translateX(calc(100% + 20px));
+  }
+  #toggle-controls {
+    position: absolute;
+    top: 14px; right: 14px;
+    z-index: 11;
+    background: rgba(14, 16, 26, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .control-group {
+    margin-bottom: 10px;
+  }
+  .control-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 4px;
+  }
+  .control-group label span.val {
+    color: #38bdf8;
+    font-family: monospace;
+  }
+  input[type=range] {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    appearance: none;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #38bdf8;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+  }
+  select {
+    width: 100%;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f1f5f9;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f1f5f9;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .btn:hover {
+    background: rgba(56, 189, 248, 0.25);
+    border-color: #38bdf8;
+  }
+  .btn.active {
+    background: #0284c7;
+    border-color: #38bdf8;
+  }
+
+  /* Color Scale Legend */
+  #legend-bar {
+    position: absolute;
+    bottom: 14px; left: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    color: #94a3b8;
+  }
+  .gradient-box {
+    width: 120px; height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #2563eb, #06b6d4, #10b981, #f59e0b, #ef4444, #ffffff);
+  }
+
+  /* Error Alert */
+  #error-log {
+    display: none;
+    position: fixed;
+    top: 10px; left: 10px; right: 10px;
+    padding: 12px;
+    background: #7f1d1d;
+    color: #fca5a5;
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    z-index: 9999;
+    font-family: monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+  }
+
+  @media (max-width: 600px) {
+    #title-card { max-width: 200px; padding: 8px 12px; }
+    #controls-card { width: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="error-log" role="alert"></div>
+
+<div id="canvas-container">
+  <canvas id="sim-canvas"></canvas>
+</div>
+
+<!-- Title HUD -->
+<div class="hud-panel" id="title-card">
+  <h1><span></span> 3D N-Body Gravity</h1>
+  <div class="stats-row">
+    <span>Particles: <strong id="stat-n" style="color:#fff">200</strong></span>
+    <span>FPS: <strong id="stat-fps" style="color:#38bdf8">60</strong></span>
+  </div>
+  <div class="stats-row">
+    <span>Avg Speed: <span id="stat-spd">0.0</span></span>
+    <span>Max Speed: <span id="stat-max-spd">0.0</span></span>
+  </div>
+</div>
+
+<button id="toggle-controls" title="Toggle Controls">⚙</button>
+
+<!-- Controls HUD -->
+<div class="hud-panel" id="controls-card">
+  <div class="control-group">
+    <label>Preset Initial State</label>
+    <select id="preset-select">
+      <option value="disk">Spiral Galaxy Disk</option>
+      <option value="cluster">Plummer Sphere</option>
+      <option value="binary">Binary Galaxy Collision</option>
+      <option value="ring">Rotating Torus / Ring</option>
+      <option value="chaos">Random Cloud</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <label>Particle Count (N) <span class="val" id="val-n">200</span></label>
+    <input type="range" id="slider-n" min="20" max="400" step="10" value="200">
+  </div>
+
+  <div class="control-group">
+    <label>Gravitational Constant (G) <span class="val" id="val-g">1.50</span></label>
+    <input type="range" id="slider-g" min="0.1" max="5.0" step="0.1" value="1.5">
+  </div>
+
+  <div class="control-group">
+    <label>Softening Factor (ε) <span class="val" id="val-eps">4.0</span></label>
+    <input type="range" id="slider-eps" min="0.5" max="15.0" step="0.5" value="4.0">
+  </div>
+
+  <div class="control-group">
+    <label>Time Step (dt) <span class="val" id="val-dt">0.40</span></label>
+    <input type="range" id="slider-dt" min="0.05" max="1.0" step="0.05" value="0.4">
+  </div>
+
+  <div class="control-group">
+    <label>Trail Length <span class="val" id="val-trail">0.35</span></label>
+    <input type="range" id="slider-trail" min="0.0" max="0.9" step="0.05" value="0.35">
+  </div>
+
+  <div class="btn-grid">
+    <button class="btn" id="btn-pause">Pause</button>
+    <button class="btn" id="btn-reset">Reset System</button>
+    <button class="btn" id="btn-center">Recenter</button>
+    <button class="btn active" id="btn-rotate">Auto-Rotate</button>
+  </div>
+</div>
+
+<!-- Velocity Legend -->
+<div class="hud-panel" id="legend-bar">
+  <span>Slow</span>
+  <div class="gradient-box"></div>
+  <span>Fast (Velocity-Color)</span>
+</div>
+
+<script>
+try {
+  // --- CANVAS & SETUP ---
+  const canvas = document.getElementById('sim-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let width = 0, height = 0, dpr = 1;
+
+  function handleResize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+  }
+  window.addEventListener('resize', handleResize);
+  handleResize();
+
+  // --- SIMULATION PARAMETERS & STATE ---
+  let N = 200;
+  let G = 1.5;
+  let softening = 4.0;
+  let dt = 0.4;
+  let trailAlpha = 0.35;
+  let isPaused = false;
+  let autoRotate = true;
+
+  // Particle Attributes (Typed Arrays for performance)
+  let px = new Float32Array(400);
+  let py = new Float32Array(400);
+  let pz = new Float32Array(400);
+  let vx = new Float32Array(400);
+  let vy = new Float32Array(400);
+  let vz = new Float32Array(400);
+  let mass = new Float32Array(400);
+  let speeds = new Float32Array(400);
+
+  // Center of Mass
+  let comX = 0, comY = 0, comZ = 0;
+
+  // Camera Settings
+  let camTheta = 0.4;
+  let camPhi = 1.25; // pitch angle from top
+  let camDist = 220;
+  let targetX = 0, targetY = 0, targetZ = 0;
+
+  // UI Control Elements
+  const sliderN = document.getElementById('slider-n');
+  const sliderG = document.getElementById('slider-g');
+  const sliderEps = document.getElementById('slider-eps');
+  const sliderDt = document.getElementById('slider-dt');
+  const sliderTrail = document.getElementById('slider-trail');
+  const presetSelect = document.getElementById('preset-select');
+  const btnPause = document.getElementById('btn-pause');
+  const btnReset = document.getElementById('btn-reset');
+  const btnCenter = document.getElementById('btn-center');
+  const btnRotate = document.getElementById('btn-rotate');
+
+  const statN = document.getElementById('stat-n');
+  const statFps = document.getElementById('stat-fps');
+  const statSpd = document.getElementById('stat-spd');
+  const statMaxSpd = document.getElementById('stat-max-spd');
+
+  // --- INITIALIZERS ---
+  function initParticles() {
+    N = parseInt(sliderN.value, 10);
+    statN.textContent = N;
+    const mode = presetSelect.value;
+
+    let totalM = 0;
+    comX = 0; comY = 0; comZ = 0;
+
+    for (let i = 0; i < N; i++) {
+      mass[i] = 1.0 + Math.random() * 0.5;
+    }
+
+    if (mode === 'disk') {
+      // Massive central core + orbiting accretion disk
+      mass[0] = 300.0;
+      px[0] = 0; py[0] = 0; pz[0] = 0;
+      vx[0] = 0; vy[0] = 0; vz[0] = 0;
+
+      for (let i = 1; i < N; i++) {
+        const r = 15 + Math.random() * 85;
+        const theta = Math.random() * Math.PI * 2;
+        px[i] = r * Math.cos(theta);
+        py[i] = (Math.random() - 0.5) * 6;
+        pz[i] = r * Math.sin(theta);
+
+        // Circular orbit velocity v = sqrt(G * M / r)
+        const vOrbit = Math.sqrt((G * 300.0) / r);
+        vx[i] = -vOrbit * Math.sin(theta) + (Math.random() - 0.5) * 0.2;
+        vy[i] = (Math.random() - 0.5) * 0.2;
+        vz[i] = vOrbit * Math.cos(theta) + (Math.random() - 0.5) * 0.2;
+      }
+    } else if (mode === 'cluster') {
+      // Plummer sphere distribution
+      for (let i = 0; i < N; i++) {
+        const radius = 50 * Math.pow(Math.random(), 0.6);
+        const u = Math.random() * 2 - 1;
+        const phi = Math.random() * Math.PI * 2;
+        const st = Math.sqrt(1 - u * u);
+
+        px[i] = radius * st * Math.cos(phi);
+        py[i] = radius * st * Math.sin(phi);
+        pz[i] = radius * u;
+
+        const spd = Math.sqrt(G * N / (radius + 10)) * 0.4;
+        vx[i] = (Math.random() - 0.5) * spd * 2;
+        vy[i] = (Math.random() - 0.5) * spd * 2;
+        vz[i] = (Math.random() - 0.5) * spd * 2;
+      }
+    } else if (mode === 'binary') {
+      // Two colliding clusters
+      const halfN = Math.floor(N / 2);
+      for (let i = 0; i < N; i++) {
+        const isFirst = i < halfN;
+        const cx = isFirst ? -45 : 45;
+        const cy = isFirst ? -15 : 15;
+        const cz = 0;
+        const cvx = isFirst ? 0.8 : -0.8;
+        const cvy = isFirst ? 0.4 : -0.4;
+
+        const r = 5 + Math.random() * 25;
+        const theta = Math.random() * Math.PI * 2;
+
+        px[i] = cx + r * Math.cos(theta);
+        py[i] = cy + (Math.random() - 0.5) * 10;
+        pz[i] = cz + r * Math.sin(theta);
+
+        const vSpin = Math.sqrt(G * 50 / (r + 2));
+        vx[i] = cvx - vSpin * Math.sin(theta);
+        vy[i] = cvy + (Math.random() - 0.5) * 0.2;
+        vz[i] = vSpin * Math.cos(theta);
+      }
+    } else if (mode === 'ring') {
+      // Rotating ring/torus
+      const R = 60;
+      for (let i = 0; i < N; i++) {
+        const theta = (i / N) * Math.PI * 2 + (Math.random() * 0.05);
+        const phi = Math.random() * Math.PI * 2;
+        const rSub = 6 * Math.random();
+
+        px[i] = (R + rSub * Math.cos(phi)) * Math.cos(theta);
+        py[i] = rSub * Math.sin(phi);
+        pz[i] = (R + rSub * Math.cos(phi)) * Math.sin(theta);
+
+        const vRot = Math.sqrt(G * N * 0.4);
+        vx[i] = -vRot * Math.sin(theta);
+        vy[i] = (Math.random() - 0.5) * 0.3;
+        vz[i] = vRot * Math.cos(theta);
+      }
+    } else {
+      // Random Cloud
+      for (let i = 0; i < N; i++) {
+        px[i] = (Math.random() - 0.5) * 120;
+        py[i] = (Math.random() - 0.5) * 120;
+        pz[i] = (Math.random() - 0.5) * 120;
+        vx[i] = (Math.random() - 0.5) * 0.5;
+        vy[i] = (Math.random() - 0.5) * 0.5;
+        vz[i] = (Math.random() - 0.5) * 0.5;
+      }
+    }
+
+    // Zero out total linear momentum to keep system in frame
+    let totVx = 0, totVy = 0, totVz = 0;
+    for (let i = 0; i < N; i++) {
+      totalM += mass[i];
+      totVx += vx[i] * mass[i];
+      totVy += vy[i] * mass[i];
+      totVz += vz[i] * mass[i];
+    }
+    for (let i = 0; i < N; i++) {
+      vx[i] -= totVx / totalM;
+      vy[i] -= totVy / totalM;
+      vz[i] -= totVz / totalM;
+    }
+  }
+
+  // --- PHYSICS ENGINE ($O(N^2)$ Pairwise Gravity with Softening) ---
+  function updatePhysics() {
+    const eps2 = softening * softening;
+    let sumSpd = 0;
+    let maxSpd = 0;
+
+    // Compute forces and update velocities
+    for (let i = 0; i < N; i++) {
+      let ax = 0, ay = 0, az = 0;
+      const xi = px[i], yi = py[i], zi = pz[i];
+
+      for (let j = 0; j < N; j++) {
+        if (i === j) continue;
+        const dx = px[j] - xi;
+        const dy = py[j] - yi;
+        const dz = pz[j] - zi;
+
+        const distSq = dx * dx + dy * dy + dz * dz + eps2;
+        const dist = Math.sqrt(distSq);
+        const invDist3 = (G * mass[j]) / (distSq * dist);
+
+        ax += dx * invDist3;
+        ay += dy * invDist3;
+        az += dz * invDist3;
+      }
+
+      vx[i] += ax * dt;
+      vy[i] += ay * dt;
+      vz[i] += az * dt;
+    }
+
+    // Update positions & stats
+    let mx = 0, my = 0, mz = 0, totalM = 0;
+
+    for (let i = 0; i < N; i++) {
+      px[i] += vx[i] * dt;
+      py[i] += vy[i] * dt;
+      pz[i] += vz[i] * dt;
+
+      const spd = Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i] + vz[i] * vz[i]);
+      speeds[i] = spd;
+      sumSpd += spd;
+      if (spd > maxSpd) maxSpd = spd;
+
+      mx += px[i] * mass[i];
+      my += py[i] * mass[i];
+      mz += pz[i] * mass[i];
+      totalM += mass[i];
+    }
+
+    comX = mx / totalM;
+    comY = my / totalM;
+    comZ = mz / totalM;
+
+    // Smooth camera target movement toward Center of Mass
+    targetX += (comX - targetX) * 0.05;
+    targetY += (comY - targetY) * 0.05;
+    targetZ += (comZ - targetZ) * 0.05;
+
+    statSpd.textContent = (sumSpd / N).toFixed(2);
+    statMaxSpd.textContent = maxSpd.toFixed(2);
+  }
+
+  // --- VELOCITY COLOR MAPPER ---
+  function getVelocityColor(spd, maxSpeedRef) {
+    // Color scale: Deep Cyan/Blue (slow) -> Green -> Yellow -> Red -> Bright White (fast)
+    let t = Math.min(spd / (maxSpeedRef + 1e-4), 1.0);
+    
+    let r, g, b;
+    if (t < 0.25) { // Blue -> Cyan
+      const k = t / 0.25;
+      r = Math.floor(30 * (1 - k));
+      g = Math.floor(100 + 120 * k);
+      b = 255;
+    } else if (t < 0.5) { // Cyan -> Green
+      const k = (t - 0.25) / 0.25;
+      r = 0;
+      g = 220 + Math.floor(35 * k);
+      b = Math.floor(255 * (1 - k));
+    } else if (t < 0.75) { // Green -> Yellow/Orange
+      const k = (t - 0.5) / 0.25;
+      r = Math.floor(255 * k);
+      g = Math.floor(220 - 40 * k);
+      b = 0;
+    } else { // Orange -> Red/White Glow
+      const k = (t - 0.75) / 0.25;
+      r = 255;
+      g = Math.floor(180 * (1 - k) + 255 * k);
+      b = Math.floor(255 * k);
+    }
+    return { r, g, b, str: `rgb(${r},${g},${b})` };
+  }
+
+  // --- 3D RENDERING PIPELINE ---
+  const renderList = [];
+  for (let i = 0; i < 400; i++) renderList.push({ idx: i, depth: 0 });
+
+  function render() {
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    // Fade screen for particle motion trails
+    if (trailAlpha > 0) {
+      ctx.fillStyle = `rgba(6, 6, 12, ${1.0 - trailAlpha})`;
+      ctx.fillRect(0, 0, width, height);
+    } else {
+      ctx.clearRect(0, 0, width, height);
+    }
+
+    if (autoRotate && !isPaused) {
+      camTheta += 0.003;
+    }
+
+    // Camera LookAt Vectors
+    const sinT = Math.sin(camTheta), cosT = Math.cos(camTheta);
+    const sinP = Math.sin(camPhi), cosP = Math.cos(camPhi);
+
+    const cx = targetX + camDist * sinP * sinT;
+    const cy = targetY + camDist * cosP;
+    const cz = targetZ + camDist * sinP * cosT;
+
+    // View direction vector F
+    const fx = targetX - cx, fy = targetY - cy, fz = targetZ - cz;
+    const fLen = Math.sqrt(fx * fx + fy * fy + fz * fz);
+    const fnx = fx / fLen, fny = fy / fLen, fnz = fz / fLen;
+
+    // Right vector R = F x (0,1,0)
+    let rx = fnz, ry = 0, rz = -fnx;
+    const rLen = Math.sqrt(rx * rx + rz * rz);
+    if (rLen > 1e-5) { rx /= rLen; rz /= rLen; }
+
+    // Up vector U = R x F
+    const ux = ry * fnz - rz * fny;
+    const uy = rz * fnx - rx * fnz;
+    const uz = rx * fny - ry * fnx;
+
+    const fov = 400; // Focal length
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    // Calculate depth for sorting
+    for (let i = 0; i < N; i++) {
+      const dx = px[i] - cx;
+      const dy = py[i] - cy;
+      const dz = pz[i] - cz;
+      const camZ = dx * fnx + dy * fny + dz * fnz;
+      renderList[i].idx = i;
+      renderList[i].depth = camZ;
+    }
+
+    // Depth sort particles (Back to Front)
+    renderList.length = N;
+    renderList.sort((a, b) => a.depth - b.depth);
+
+    // Determine 90th percentile velocity for stable color dynamic range
+    let sortedSpd = Array.from(speeds.subarray(0, N)).sort((a,b)=>a-b);
+    let maxRef = sortedSpd[Math.floor(N * 0.92)] || 1.0;
+
+    // Draw grid floor centered at target
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    const gridSize = 120, gridStep = 30;
+    for (let gx = -gridSize; gx <= gridSize; gx += gridStep) {
+      // Grid line along Z
+      let p1x = targetX + gx - cx, p1y = targetY - cy, p1z = targetZ - gridSize - cz;
+      let p2x = targetX + gx - cx, p2y = targetY - cy, p2z = targetZ + gridSize - cz;
+
+      let z1 = p1x * fnx + p1y * fny + p1z * fnz;
+      let z2 = p2x * fnx + p2y * fny + p2z * fnz;
+
+      if (z1 > 10 && z2 > 10) {
+        let x1 = centerX + (p1x * rx + p1y * ry + p1z * rz) * (fov / z1);
+        let y1 = centerY - (p1x * ux + p1y * uy + p1z * uz) * (fov / z1);
+        let x2 = centerX + (p2x * rx + p2y * ry + p2z * rz) * (fov / z2);
+        let y2 = centerY - (p2x * ux + p2y * uy + p2z * uz) * (fov / z2);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+    }
+
+    // Draw Particles with Additive Blending / Radial Glow
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (let i = 0; i < N; i++) {
+      const pIdx = renderList[i].idx;
+      const depth = renderList[i].depth;
+
+      if (depth < 5) continue; // Behind camera clipping
+
+      const dx = px[pIdx] - cx;
+      const dy = py[pIdx] - cy;
+      const dz = pz[pIdx] - cz;
+
+      // Camera space coordinates
+      const camX = dx * rx + dy * ry + dz * rz;
+      const camY = dx * ux + dy * uy + dz * uz;
+
+      // Perspective projection
+      const scale = fov / depth;
+      const sx = centerX + camX * scale;
+      const sy = centerY - camY * scale;
+
+      if (sx < -50 || sx > width + 50 || sy < -50 || sy > height + 50) continue;
+
+      const spd = speeds[pIdx];
+      const col = getVelocityColor(spd, maxRef);
+      const isMassive = mass[pIdx] > 50;
+
+      // Size scaled by mass and distance
+      const baseRadius = isMassive ? 7.0 : (2.2 + (mass[pIdx] - 1) * 0.8);
+      const radius = Math.max(0.8, baseRadius * (scale / 2.5));
+
+      // Glow halo
+      const glowRad = radius * (isMassive ? 3.5 : 2.5);
+      const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, Math.max(1, glowRad));
+      grad.addColorStop(0, `rgba(${col.r}, ${col.g}, ${col.b}, 1)`);
+      grad.addColorStop(0.4, `rgba(${col.r}, ${col.g}, ${col.b}, 0.5)`);
+      grad.addColorStop(1, `rgba(${col.r}, ${col.g}, ${col.b}, 0)`);
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(sx, sy, glowRad, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core particle point
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(sx, sy, Math.max(0.6, radius * 0.5), 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  // --- ANIMATION & FPS COUNTER ---
+  let lastTime = performance.now();
+  let frameCount = 0;
+
+  function loop(currentTime) {
+    if (!isPaused) {
+      updatePhysics();
+    }
+    render();
+
+    frameCount++;
+    if (currentTime - lastTime >= 500) {
+      statFps.textContent = Math.round((frameCount * 1000) / (currentTime - lastTime));
+      frameCount = 0;
+      lastTime = currentTime;
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  // --- MOUSE & TOUCH CAMERA CONTROLS ---
+  let isDragging = false;
+  let prevMouseX = 0, prevMouseY = 0;
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    prevMouseX = e.clientX;
+    prevMouseY = e.clientY;
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - prevMouseX;
+    const dy = e.clientY - prevMouseY;
+    prevMouseX = e.clientX;
+    prevMouseY = e.clientY;
+
+    camTheta -= dx * 0.005;
+    camPhi = Math.max(0.1, Math.min(Math.PI - 0.1, camPhi - dy * 0.005));
+  });
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    camDist = Math.max(40, Math.min(600, camDist + e.deltaY * 0.25));
+  }, { passive: false });
+
+  // Touch Support
+  let touchStartDist = 0;
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      prevMouseX = e.touches[0].clientX;
+      prevMouseY = e.touches[0].clientY;
+    } else if (e.touches.length === 2) {
+      touchStartDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    }
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches.length === 1) {
+      const dx = e.touches[0].clientX - prevMouseX;
+      const dy = e.touches[0].clientY - prevMouseY;
+      prevMouseX = e.touches[0].clientX;
+      prevMouseY = e.touches[0].clientY;
+      camTheta -= dx * 0.006;
+      camPhi = Math.max(0.1, Math.min(Math.PI - 0.1, camPhi - dy * 0.006));
+    } else if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const factor = touchStartDist / (dist + 1e-4);
+      camDist = Math.max(40, Math.min(600, camDist * factor));
+      touchStartDist = dist;
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('touchend', () => { isDragging = false; });
+
+  // --- UI EVENT BINDINGS ---
+  sliderN.addEventListener('input', (e) => {
+    document.getElementById('val-n').textContent = e.target.value;
+    initParticles();
+  });
+  sliderG.addEventListener('input', (e) => {
+    G = parseFloat(e.target.value);
+    document.getElementById('val-g').textContent = G.toFixed(2);
+  });
+  sliderEps.addEventListener('input', (e) => {
+    softening = parseFloat(e.target.value);
+    document.getElementById('val-eps').textContent = softening.toFixed(1);
+  });
+  sliderDt.addEventListener('input', (e) => {
+    dt = parseFloat(e.target.value);
+    document.getElementById('val-dt').textContent = dt.toFixed(2);
+  });
+  sliderTrail.addEventListener('input', (e) => {
+    trailAlpha = parseFloat(e.target.value);
+    document.getElementById('val-trail').textContent = trailAlpha.toFixed(2);
+  });
+  presetSelect.addEventListener('change', () => {
+    initParticles();
+  });
+
+  btnPause.addEventListener('click', () => {
+    isPaused = !isPaused;
+    btnPause.textContent = isPaused ? 'Resume' : 'Pause';
+    btnPause.classList.toggle('active', isPaused);
+  });
+
+  btnReset.addEventListener('click', () => {
+    initParticles();
+  });
+
+  btnCenter.addEventListener('click', () => {
+    targetX = comX; targetY = comY; targetZ = comZ;
+  });
+
+  btnRotate.addEventListener('click', () => {
+    autoRotate = !autoRotate;
+    btnRotate.classList.toggle('active', autoRotate);
+  });
+
+  const controlsCard = document.getElementById('controls-card');
+  const toggleBtn = document.getElementById('toggle-controls');
+  toggleBtn.addEventListener('click', () => {
+    controlsCard.classList.toggle('collapsed');
+  });
+
+  // START SIMULATION
+  initParticles();
+  requestAnimationFrame(loop);
+
+} catch (err) {
+  const errDiv = document.getElementById('error-log');
+  if (errDiv) {
+    errDiv.style.display = 'block';
+    errDiv.textContent = 'Simulation Error: ' + err.message + '\n' + err.stack;
+  }
+}
+</script>
+</body>
+</html>

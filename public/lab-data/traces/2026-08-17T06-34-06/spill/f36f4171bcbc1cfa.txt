@@ -1,0 +1,870 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cyber Runner - Neon Platformer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: #080810;
+      color: #ececf0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* UI Overlay */
+    #ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 16px;
+      z-index: 10;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .hud-card {
+      background: rgba(16, 18, 27, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      pointer-events: auto;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffd700;
+      box-shadow: 0 0 8px #ffd700;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+      pointer-events: auto;
+      outline: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.6);
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Win/Loss Modal */
+    #banner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(13, 15, 24, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 24px 32px;
+      border-radius: 16px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-width: 90vw;
+      width: 320px;
+    }
+
+    #banner.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #banner h2 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    #banner p {
+      margin: 0 0 16px 0;
+      font-size: 14px;
+      color: #a0a5b5;
+    }
+
+    /* On-screen Mobile Controls */
+    .touch-controls {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-bottom: 8px;
+      pointer-events: none;
+    }
+
+    .touch-group {
+      display: flex;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .touch-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .touch-btn:active, .touch-btn.active {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      transform: scale(0.95);
+    }
+
+    /* Error Overlay */
+    #error-log {
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      padding: 12px;
+      background: rgba(220, 38, 38, 0.9);
+      color: white;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 9999;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <div id="ui-layer">
+    <div class="top-bar">
+      <div class="hud-card">
+        <div class="stat"><div class="stat-icon"></div><span id="coin-count">0 / 0</span></div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button id="reset-btn" class="btn">Reset (R)</button>
+      </div>
+    </div>
+
+    <div id="banner">
+      <h2 id="banner-title">Stage Cleared!</h2>
+      <p id="banner-sub">You gathered all coins and reached the flag.</p>
+      <button id="banner-btn" class="btn" style="width: 100%; padding: 10px;">Play Again</button>
+    </div>
+
+    <div class="touch-controls">
+      <div class="touch-group">
+        <div id="btn-left" class="touch-btn">◄</div>
+        <div id="btn-right" class="touch-btn">►</div>
+      </div>
+      <div class="touch-group">
+        <div id="btn-jump" class="touch-btn">▲</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="error-log" role="alert"></div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      function showError(msg) {
+        const el = document.getElementById("error-log");
+        if (el) {
+          el.style.display = "block";
+          el.textContent = "Runtime Error:\n" + msg;
+        }
+      }
+
+      window.onerror = function(message, source, lineno, colno, error) {
+        showError(`${message} at line ${lineno}:${colno}`);
+        return false;
+      };
+
+      try {
+        // --- Game Initialization & Setup ---
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d", { alpha: false });
+
+        const coinCountEl = document.getElementById("coin-count");
+        const resetBtn = document.getElementById("reset-btn");
+        const banner = document.getElementById("banner");
+        const bannerTitle = document.getElementById("banner-title");
+        const bannerSub = document.getElementById("banner-sub");
+        const bannerBtn = document.getElementById("banner-btn");
+
+        const btnLeft = document.getElementById("btn-left");
+        const btnRight = document.getElementById("btn-right");
+        const btnJump = document.getElementById("btn-jump");
+
+        let dpr = window.devicePixelRatio || 1;
+        let viewW = window.innerWidth;
+        let viewH = window.innerHeight;
+
+        function resizeCanvas() {
+          dpr = window.devicePixelRatio || 1;
+          viewW = window.innerWidth;
+          viewH = window.innerHeight;
+          canvas.width = Math.floor(viewW * dpr);
+          canvas.height = Math.floor(viewH * dpr);
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        // --- Game Constants & World Config ---
+        const WORLD = {
+          width: 3400,
+          height: 900,
+          gravity: 0.48,
+          friction: 0.82
+        };
+
+        // --- State Management ---
+        let gameState = "playing"; // "playing", "won", "gameover"
+        let score = 0;
+        let totalCoins = 0;
+        let cameraX = 0;
+        let cameraY = 0;
+        let animFrameId = null;
+
+        // Key states
+        const keys = {
+          left: false,
+          right: false,
+          jump: false
+        };
+
+        // Input Listeners
+        function setupInputs() {
+          window.addEventListener("keydown", (e) => {
+            if (e.code === "KeyA" || e.code === "ArrowLeft") keys.left = true;
+            if (e.code === "KeyD" || e.code === "ArrowRight") keys.right = true;
+            if (e.code === "KeyW" || e.code === "Space" || e.code === "ArrowUp") keys.jump = true;
+            if (e.code === "KeyR") resetGame();
+          });
+
+          window.addEventListener("keyup", (e) => {
+            if (e.code === "KeyA" || e.code === "ArrowLeft") keys.left = false;
+            if (e.code === "KeyD" || e.code === "ArrowRight") keys.right = false;
+            if (e.code === "KeyW" || e.code === "Space" || e.code === "ArrowUp") keys.jump = false;
+          });
+
+          // Mobile Touch Controls
+          const bindTouch = (el, keyName) => {
+            const start = (e) => {
+              e.preventDefault();
+              keys[keyName] = true;
+              el.classList.add("active");
+            };
+            const end = (e) => {
+              e.preventDefault();
+              keys[keyName] = false;
+              el.classList.remove("active");
+            };
+            el.addEventListener("touchstart", start, { passive: false });
+            el.addEventListener("touchend", end, { passive: false });
+            el.addEventListener("touchcancel", end, { passive: false });
+            el.addEventListener("mousedown", start);
+            el.addEventListener("mouseup", end);
+            el.addEventListener("mouseleave", end);
+          };
+
+          bindTouch(btnLeft, "left");
+          bindTouch(btnRight, "right");
+          bindTouch(btnJump, "jump");
+
+          resetBtn.addEventListener("click", () => resetGame());
+          bannerBtn.addEventListener("click", () => resetGame());
+        }
+
+        // --- Game Entities ---
+        class Player {
+          constructor() {
+            this.reset();
+          }
+
+          reset() {
+            this.w = 30;
+            this.h = 46;
+            this.x = 100;
+            this.y = 500;
+            this.vx = 0;
+            this.vy = 0;
+            this.accel = 0.75;
+            this.maxSpeed = 6.0;
+            this.jumpStrength = -12.2;
+            this.grounded = false;
+            this.coyoteTimer = 0;
+            this.jumpBuffer = 0;
+            this.facing = "right";
+            this.squashScaleX = 1;
+            this.squashScaleY = 1;
+            this.trail = [];
+          }
+
+          update(platforms) {
+            // Horizontal Physics
+            if (keys.left) {
+              this.vx -= this.accel;
+              this.facing = "left";
+            }
+            if (keys.right) {
+              this.vx += this.accel;
+              this.facing = "right";
+            }
+
+            this.vx *= WORLD.friction;
+            if (Math.abs(this.vx) < 0.05) this.vx = 0;
+            this.vx = Math.max(-this.maxSpeed, Math.min(this.maxSpeed, this.vx));
+
+            // Move X & Collide
+            this.x += this.vx;
+            for (let p of platforms) {
+              if (checkAABB(this, p)) {
+                if (this.vx > 0) this.x = p.x - this.w;
+                else if (this.vx < 0) this.x = p.x + p.w;
+                this.vx = 0;
+              }
+            }
+
+            // Vertical Physics & Jump Mechanics
+            this.vy += WORLD.gravity;
+
+            if (this.grounded) {
+              this.coyoteTimer = 8; // Frames leeway after falling
+            } else {
+              this.coyoteTimer--;
+            }
+
+            if (keys.jump) {
+              this.jumpBuffer = 6;
+            } else {
+              this.jumpBuffer--;
+            }
+
+            if (this.jumpBuffer > 0 && this.coyoteTimer > 0) {
+              this.vy = this.jumpStrength;
+              this.grounded = false;
+              this.coyoteTimer = 0;
+              this.jumpBuffer = 0;
+              this.squashScaleX = 0.7;
+              this.squashScaleY = 1.3;
+              createSparks(this.x + this.w/2, this.y + this.h, "#00f0ff", 8);
+            }
+
+            // Jump height control (variable jump)
+            if (!keys.jump && this.vy < -3) {
+              this.vy *= 0.85;
+            }
+
+            this.grounded = false;
+            this.y += this.vy;
+
+            // Move Y & Collide
+            for (let p of platforms) {
+              if (checkAABB(this, p)) {
+                if (this.vy > 0) { // Landing
+                  this.y = p.y - this.h;
+                  if (!this.grounded && this.vy > 4) {
+                    this.squashScaleX = 1.3;
+                    this.squashScaleY = 0.7;
+                    createSparks(this.x + this.w/2, this.y + this.h, "#a0a5b5", 5);
+                  }
+                  this.vy = 0;
+                  this.grounded = true;
+                } else if (this.vy < 0) { // Ceiling hit
+                  this.y = p.y + p.h;
+                  this.vy = 0;
+                }
+              }
+            }
+
+            // Squash/Stretch recovery lerp
+            this.squashScaleX += (1 - this.squashScaleX) * 0.15;
+            this.squashScaleY += (1 - this.squashScaleY) * 0.15;
+
+            // Player trail
+            if (Math.abs(this.vx) > 3 || Math.abs(this.vy) > 3) {
+              this.trail.push({ x: this.x, y: this.y, alpha: 0.5 });
+            }
+            for (let i = this.trail.length - 1; i >= 0; i--) {
+              this.trail[i].alpha -= 0.05;
+              if (this.trail[i].alpha <= 0) this.trail.splice(i, 1);
+            }
+
+            // World Pit Death Check
+            if (this.y > WORLD.height + 100) {
+              triggerGameOver();
+            }
+          }
+
+          draw(ctx) {
+            // Draw Trail
+            for (let t of this.trail) {
+              ctx.fillStyle = `rgba(0, 240, 255, ${t.alpha * 0.3})`;
+              ctx.fillRect(t.x, t.y, this.w, this.h);
+            }
+
+            ctx.save();
+            ctx.translate(this.x + this.w / 2, this.y + this.h);
+            ctx.scale(this.squashScaleX, this.squashScaleY);
+
+            // Draw Body
+            const radius = 6;
+            ctx.fillStyle = "#00f0ff";
+            ctx.shadowColor = "#00f0ff";
+            ctx.shadowBlur = 12;
+
+            ctx.beginPath();
+            ctx.roundRect(-this.w / 2, -this.h, this.w, this.h, radius);
+            ctx.fill();
+
+            // Visor/Eye
+            ctx.fillStyle = "#080810";
+            ctx.shadowBlur = 0;
+            const eyeOffset = this.facing === "right" ? 2 : -8;
+            ctx.fillRect(-this.w/2 + 8 + eyeOffset, -this.h + 12, 12, 10);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(-this.w/2 + 12 + eyeOffset, -this.h + 14, 4, 4);
+
+            ctx.restore();
+          }
+        }
+
+        // --- Map & Level Design ---
+        let platforms = [];
+        let coins = [];
+        let flag = null;
+        let particles = [];
+        let stars = [];
+        let player = new Player();
+
+        function createLevel() {
+          platforms = [
+            // Starting Hub
+            { x: 0, y: 650, w: 550, h: 250, color: "#1a1c29" },
+            { x: 300, y: 520, w: 120, h: 20, color: "#25293c" },
+            { x: 480, y: 410, w: 140, h: 20, color: "#25293c" },
+
+            // First Gap & Mid Platforms
+            { x: 700, y: 650, w: 450, h: 250, color: "#1a1c29" },
+            { x: 750, y: 510, w: 100, h: 20, color: "#25293c" },
+            { x: 920, y: 400, w: 120, h: 20, color: "#25293c" },
+            { x: 1100, y: 300, w: 140, h: 20, color: "#25293c" },
+
+            // High Ridge Section
+            { x: 1300, y: 580, w: 350, h: 320, color: "#1a1c29" },
+            { x: 1400, y: 440, w: 100, h: 20, color: "#25293c" },
+            { x: 1550, y: 320, w: 120, h: 20, color: "#25293c" },
+
+            // Drop & Jump Staircase
+            { x: 1780, y: 650, w: 400, h: 250, color: "#1a1c29" },
+            { x: 1900, y: 510, w: 80, h: 20, color: "#25293c" },
+            { x: 2050, y: 390, w: 80, h: 20, color: "#25293c" },
+
+            // Final Push to Goal
+            { x: 2280, y: 300, w: 160, h: 20, color: "#25293c" },
+            { x: 2500, y: 220, w: 140, h: 20, color: "#25293c" },
+            { x: 2700, y: 600, w: 700, h: 300, color: "#1a1c29" }
+          ];
+
+          // Coin Positions
+          const coinPositions = [
+            { x: 350, y: 480 }, { x: 540, y: 370 },
+            { x: 780, y: 600 }, { x: 800, y: 470 }, { x: 970, y: 360 },
+            { x: 1160, y: 250 }, { x: 1350, y: 530 }, { x: 1450, y: 390 },
+            { x: 1600, y: 270 }, { x: 1850, y: 600 }, { x: 1940, y: 460 },
+            { x: 2090, y: 340 }, { x: 2340, y: 250 }, { x: 2560, y: 170 },
+            { x: 2800, y: 540 }, { x: 2900, y: 540 }, { x: 3000, y: 540 }
+          ];
+
+          coins = coinPositions.map(pos => ({
+            x: pos.x,
+            y: pos.y,
+            r: 9,
+            collected: false,
+            animOffset: Math.random() * Math.PI * 2
+          }));
+
+          totalCoins = coins.length;
+
+          // Goal Flag
+          flag = {
+            x: 3200,
+            y: 420,
+            w: 20,
+            h: 180,
+            reached: false
+          };
+
+          // Generate Parallax Stars
+          stars = [];
+          for (let i = 0; i < 150; i++) {
+            stars.push({
+              x: Math.random() * WORLD.width,
+              y: Math.random() * WORLD.height * 0.8,
+              size: Math.random() * 2 + 0.5,
+              alpha: Math.random() * 0.8 + 0.2
+            });
+          }
+        }
+
+        function checkAABB(a, b) {
+          return a.x < b.x + b.w &&
+                 a.x + a.w > b.x &&
+                 a.y < b.y + b.h &&
+                 a.y + a.h > b.y;
+        }
+
+        function createSparks(x, y, color, count = 10) {
+          for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 4 + 1;
+            particles.push({
+              x, y,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              life: 1,
+              decay: Math.random() * 0.03 + 0.02,
+              color,
+              size: Math.random() * 3 + 2
+            });
+          }
+        }
+
+        function resetGame() {
+          player.reset();
+          createLevel();
+          score = 0;
+          gameState = "playing";
+          banner.classList.remove("active");
+          updateUI();
+        }
+
+        function triggerVictory() {
+          if (gameState !== "playing") return;
+          gameState = "won";
+          bannerTitle.textContent = "Stage Cleared!";
+          bannerSub.textContent = `Excellent! Collected ${score} / ${totalCoins} coins.`;
+          banner.classList.add("active");
+          createSparks(flag.x, flag.y + 20, "#00ff88", 50);
+        }
+
+        function triggerGameOver() {
+          if (gameState !== "playing") return;
+          gameState = "gameover";
+          bannerTitle.textContent = "Fell Into the Void!";
+          bannerSub.textContent = "Be careful around edge jumps.";
+          banner.classList.add("active");
+        }
+
+        function updateUI() {
+          coinCountEl.textContent = `${score} / ${totalCoins}`;
+        }
+
+        // --- Core Game Loop ---
+        let lastTime = performance.now();
+
+        function update(time) {
+          const dt = Math.min((time - lastTime) / 1000, 0.1);
+          lastTime = time;
+
+          if (gameState === "playing") {
+            player.update(platforms);
+
+            // Coin Collection
+            for (let c of coins) {
+              if (!c.collected) {
+                const dx = (player.x + player.w / 2) - c.x;
+                const dy = (player.y + player.h / 2) - c.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < c.r + player.w / 2) {
+                  c.collected = true;
+                  score++;
+                  updateUI();
+                  createSparks(c.x, c.y, "#ffd700", 12);
+                }
+              }
+            }
+
+            // Flag Reach Check
+            if (!flag.reached && checkAABB(player, flag)) {
+              flag.reached = true;
+              triggerVictory();
+            }
+          }
+
+          // Camera Smooth Follow
+          const targetCamX = player.x - viewW / 2 + player.w / 2;
+          const targetCamY = player.y - viewH * 0.6;
+
+          cameraX += (targetCamX - cameraX) * 0.08;
+          cameraY += (targetCamY - cameraY) * 0.08;
+
+          // Camera Bounds Clamping
+          cameraX = Math.max(0, Math.min(WORLD.width - viewW, cameraX));
+          cameraY = Math.max(-100, Math.min(WORLD.height - viewH, cameraY));
+
+          // Particles update
+          for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= p.decay;
+            if (p.life <= 0) particles.splice(i, 1);
+          }
+        }
+
+        function render() {
+          // Scale Context for High-DPI Display
+          ctx.save();
+          ctx.scale(dpr, dpr);
+
+          // Clear Screen (Sky Gradient)
+          const skyGrad = ctx.createLinearGradient(0, 0, 0, viewH);
+          skyGrad.addColorStop(0, "#080814");
+          skyGrad.addColorStop(1, "#121324");
+          ctx.fillStyle = skyGrad;
+          ctx.fillRect(0, 0, viewW, viewH);
+
+          // --- Parallax Layer 0: Stars ---
+          ctx.save();
+          ctx.translate(-cameraX * 0.05, -cameraY * 0.05);
+          ctx.fillStyle = "#ffffff";
+          for (let s of stars) {
+            ctx.globalAlpha = s.alpha * (0.8 + 0.2 * Math.sin(Date.now() * 0.003 + s.x));
+            ctx.fillRect(s.x, s.y, s.size, s.size);
+          }
+          ctx.restore();
+
+          // --- Parallax Layer 1: Distant Cyber Mountains ---
+          ctx.save();
+          ctx.translate(-cameraX * 0.15, -cameraY * 0.1);
+          ctx.fillStyle = "#121425";
+          ctx.beginPath();
+          ctx.moveTo(-100, viewH);
+          ctx.lineTo(-100, 450);
+          ctx.lineTo(200, 320);
+          ctx.lineTo(500, 480);
+          ctx.lineTo(800, 280);
+          ctx.lineTo(1200, 420);
+          ctx.lineTo(1600, 250);
+          ctx.lineTo(2000, 450);
+          ctx.lineTo(2500, 280);
+          ctx.lineTo(3000, 480);
+          ctx.lineTo(3600, 300);
+          ctx.lineTo(3600, viewH + 400);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+
+          // --- Parallax Layer 2: Midground Hills ---
+          ctx.save();
+          ctx.translate(-cameraX * 0.35, -cameraY * 0.25);
+          ctx.fillStyle = "#181b30";
+          ctx.beginPath();
+          ctx.moveTo(-100, viewH + 200);
+          ctx.lineTo(-100, 520);
+          ctx.lineTo(350, 430);
+          ctx.lineTo(750, 550);
+          ctx.lineTo(1150, 390);
+          ctx.lineTo(1550, 520);
+          ctx.lineTo(2100, 410);
+          ctx.lineTo(2700, 540);
+          ctx.lineTo(3400, 380);
+          ctx.lineTo(3800, viewH + 200);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+
+          // --- Main World Layer (Camera Space) ---
+          ctx.save();
+          ctx.translate(-cameraX, -cameraY);
+
+          // Draw Platforms
+          for (let p of platforms) {
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.w, p.h);
+
+            // Glowing Edge Accent
+            ctx.fillStyle = "#00f0ff";
+            ctx.shadowColor = "#00f0ff";
+            ctx.shadowBlur = 8;
+            ctx.fillRect(p.x, p.y, p.w, 3);
+            ctx.shadowBlur = 0;
+          }
+
+          // Draw Coins
+          const time = Date.now() * 0.005;
+          for (let c of coins) {
+            if (c.collected) continue;
+            const floatOffset = Math.sin(time * 2 + c.animOffset) * 4;
+            const scaleX = Math.cos(time * 3 + c.animOffset);
+
+            ctx.save();
+            ctx.translate(c.x, c.y + floatOffset);
+            ctx.scale(scaleX, 1);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffd700";
+            ctx.shadowColor = "#ffd700";
+            ctx.shadowBlur = 10;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, c.r * 0.6, 0, Math.PI * 2);
+            ctx.fillStyle = "#fff59d";
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // Draw Goal Flag
+          if (flag) {
+            // Pole
+            ctx.fillStyle = "#a0a5b5";
+            ctx.fillRect(flag.x, flag.y, 6, flag.h);
+
+            // Flag Cloth Wave Animation
+            const wave = Math.sin(time * 4) * 6;
+            ctx.fillStyle = flag.reached ? "#00ff88" : "#ff2a5f";
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.shadowBlur = 12;
+
+            ctx.beginPath();
+            ctx.moveTo(flag.x + 6, flag.y);
+            ctx.quadraticCurveTo(flag.x + 30 + wave, flag.y + 20, flag.x + 55, flag.y + 25);
+            ctx.quadraticCurveTo(flag.x + 30 + wave, flag.y + 35, flag.x + 6, flag.y + 50);
+            ctx.closePath();
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+
+          // Draw Particles
+          for (let p of particles) {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+          }
+          ctx.globalAlpha = 1.0;
+
+          // Draw Player
+          player.draw(ctx);
+
+          ctx.restore(); // Exit World Transform
+          ctx.restore(); // Exit DPR Scale
+        }
+
+        function gameLoop(time) {
+          update(time);
+          render();
+          animFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // --- Start Game ---
+        setupInputs();
+        createLevel();
+        updateUI();
+        animFrameId = requestAnimationFrame(gameLoop);
+
+        // Cleanup on Unload
+        window.addEventListener("unload", () => {
+          if (animFrameId) cancelAnimationFrame(animFrameId);
+        });
+
+      } catch (err) {
+        showError(err.stack || err.message || err);
+      }
+    })();
+  </script>
+</body>
+</html>

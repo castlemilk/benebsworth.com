@@ -1,0 +1,220 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic-Tac-Toe</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background: #0c0c10;
+    color: #ececf0;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 340px;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .status {
+    font-size: 1.2rem;
+    font-weight: 700;
+    min-height: 1.6em;
+    text-align: center;
+    letter-spacing: 0.02em;
+    color: #ececf0;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    width: min(65vw, 240px);
+    height: min(65vw, 240px);
+  }
+
+  .cell {
+    background: #181822;
+    border: 2px solid #2a2a3a;
+    border-radius: 10px;
+    color: #ececf0;
+    font-size: min(12vw, 2.5rem);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    padding: 0;
+    margin: 0;
+    outline: none;
+  }
+
+  .cell:hover:not(:disabled) {
+    background: #222230;
+    border-color: #404058;
+  }
+
+  .cell:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  .cell.x-mark {
+    color: #38bdf8;
+  }
+
+  .cell.o-mark {
+    color: #f43f5e;
+  }
+
+  .cell.win {
+    background: #252538;
+    border-color: #6366f1;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+  }
+
+  .restart-btn {
+    background: #222230;
+    color: #ececf0;
+    border: 1px solid #3a3a50;
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .restart-btn:hover {
+    background: #2a2a3c;
+    border-color: #505070;
+  }
+
+  .restart-btn:active {
+    transform: scale(0.97);
+  }
+
+  .error-alert {
+    color: #f87171;
+    background: #2a1215;
+    border: 1px solid #7f1d1d;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="game-container">
+    <div id="status" class="status" aria-live="polite">Turn: X</div>
+    <div class="board" id="board"><button class="cell" data-index="0"></button><button class="cell" data-index="1"></button><button class="cell" data-index="2"></button><button class="cell" data-index="3"></button><button class="cell" data-index="4"></button><button class="cell" data-index="5"></button><button class="cell" data-index="6"></button><button class="cell" data-index="7"></button><button class="cell" data-index="8"></button></div>
+    <button id="restart" class="restart-btn">Restart Game</button>
+  </div>
+
+  <script>
+    try {
+      (function() {
+        const boardState = Array(9).fill("");
+        let currentPlayer = "X";
+        let gameActive = true;
+
+        const winningCombos = [
+          [0, 1, 2], [3, 4, 5], [6, 7, 8],
+          [0, 3, 6], [1, 4, 7], [2, 5, 8],
+          [0, 4, 8], [2, 4, 6]
+        ];
+
+        const statusEl = document.getElementById("status");
+        const boardEl = document.getElementById("board");
+        const restartBtn = document.getElementById("restart");
+        const cells = Array.from(boardEl.querySelectorAll(".cell"));
+
+        function checkWin() {
+          for (const combo of winningCombos) {
+            const [a, b, c] = combo;
+            if (
+              boardState[a] &&
+              boardState[a] === boardState[b] &&
+              boardState[a] === boardState[c]
+            ) {
+              return combo;
+            }
+          }
+          return null;
+        }
+
+        function handleCellClick(e) {
+          const cell = e.currentTarget;
+          const index = parseInt(cell.getAttribute("data-index"), 10);
+
+          if (!gameActive || boardState[index] !== "") {
+            return;
+          }
+
+          boardState[index] = currentPlayer;
+          cell.textContent = currentPlayer;
+          cell.classList.add(currentPlayer === "X" ? "x-mark" : "o-mark");
+
+          const winCombo = checkWin();
+
+          if (winCombo) {
+            gameActive = false;
+            statusEl.textContent = currentPlayer + " wins!";
+            winCombo.forEach(idx => cells[idx].classList.add("win"));
+          } else if (boardState.every(val => val !== "")) {
+            gameActive = false;
+            statusEl.textContent = "It's a draw!";
+          } else {
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            statusEl.textContent = "Turn: " + currentPlayer;
+          }
+        }
+
+        function resetGame() {
+          boardState.fill("");
+          currentPlayer = "X";
+          gameActive = true;
+          statusEl.textContent = "Turn: X";
+
+          cells.forEach(cell => {
+            cell.textContent = "";
+            cell.className = "cell";
+          });
+        }
+
+        cells.forEach(cell => cell.addEventListener("click", handleCellClick));
+        restartBtn.addEventListener("click", resetGame);
+      })();
+    } catch (err) {
+      const errDiv = document.createElement("div");
+      errDiv.setAttribute("role", "alert");
+      errDiv.className = "error-alert";
+      errDiv.textContent = "Error: " + (err && err.message ? err.message : err);
+      document.body.appendChild(errDiv);
+    }
+  </script>
+</body>
+</html>

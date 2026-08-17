@@ -1,0 +1,246 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gravitating Particles in 3D</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    canvas{display:block;width:100%;height:100%}
+    #controls{position:fixed;top:1rem;left:1rem;background:#1a1a20;border:1px solid #ccc;box-shadow:0 0 10px #000;z-index:100;padding:1rem;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <h2>Gravitating Particles</h2>
+    <input type="range" min="1" max="100" value="200" id="particles-count" style="width:200px; margin-right:1rem">
+    <button id="toggle-softening">Toggle Softening</button>
+    <span id="softening-text">Softening Enabled</span>
+    <div style="margin-top:1rem"></div>
+    <div id="stats" style="font-size:0.8rem"></div>
+  </div>
+  <canvas id="glcanvas"></canvas>
+  <script>
+    body.style.background = '#0c0c10';
+    body.style.color = '#ececf0';
+    body.style.overflow = 'hidden';
+    document.getElementById('softening-text').style.color = '#00ffcc';
+    
+    var THREE = {
+      Vector3: function(x, y, z) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+        this.set = function(x, y, z){ this.x=x; this.y=y; this.z=z; return this; };
+        this.clone = function(){ return new THREE.Vector3(this.x, this.y, this.z); };
+        this.subVectors = function(v, w){ return new THREE.Vector3(v.x-w.x, v.y-w.y, v.z-w.z); };
+        this.setFromSpherical = function(r, theta, phi){ 
+          const cz = Math.cos(phi), sz = Math.sin(phi);
+          this.x = r * Math.cos(theta) * cz;
+          this.y = r * Math.sin(theta);
+          this.z = r * sz; 
+        };
+      },
+      BufferGeometry: function() { this.attributes = {}; this.attributes.position = { array: [], itemSize: 3 }; },
+      BufferAttribute: function() { this.array = []; },
+      GL: { POINTS: 6144 },
+      MeshNormalMaterial: { /* empty */ },
+      Euler: function() {},
+      Camera: function() {
+        this.position = new THREE.Vector3(0, 80, 20);
+        this.lookAt = function(){}; 
+        this.updateProjectionMatrix = function(){}; 
+      },
+      OrbitControls: function(target, element){ 
+        this.update = function(){}; 
+      },
+      Vector2: function(x, y) { this.x=x; this.y=y; },
+      defaultReadableFormat: 'exponential',
+      Color: '', // dummy
+      Math: {
+        clampScalar: (num, min, max) => Math.max(min, Math.min(num, max)),
+        exponential: (x) => x * 1000,
+        sqrt: Math.sqrt,
+        exp: Math.exp,
+        sin: Math.sin,
+        cos: Math.cos,
+        tan: Math.tan,
+        PI: Math.PI,
+        random: Math.random,
+        now: Date.now,
+        lerp: (min, max, t) => min + (max - min) * t,
+        floor: Math.floor,
+        PI_2: Math.PI / 2,
+        PI_HALF: Math.PI / 2,
+      },
+    };
+    
+    THREE.Vector3.prototype.setScalar = function(s) { 
+      this.x *= s; this.y *= s; this.z *= s; return this; 
+    };
+    THREE.Vector3.prototype.normalize = function() { 
+      const len = Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+      if (len === 0) return this;
+      this.x /= len; this.y /= len; this.z /= len; return this; 
+    };
+    THREE.Vector3.prototype.multiplyScalar = function(s) { 
+      this.x *= s; this.y *= s; this.z *= s; return this; 
+    };
+    THREE.Vector3.prototype.addVectors = function(a, b) { 
+      this.x = a.x + b.x; this.y = a.y + b.y; this.z = a.z + b.z; return this; 
+    };
+    
+    THREE.Vector2.prototype.set = function(x, y) { this.x = x; this.y = y; };
+    THREE.Vector2.prototype.multiplyScalar = function(s) { this.x *= s; this.y *= s; return this; };
+    
+    THREE.Vector3.prototype.crossVectors = function(a, b) {
+      const ax=a.x, ay=a.y, az=a.z, bx=b.x, by=b.y, bz=b.z;
+      this.x = ay*bz - az*by;
+      this.y = az*bx - ax*bz;
+      this.z = ax*by - ay*bx;
+      return this;
+    };
+    
+    THREE.Vector3.prototype.setLength = function(l) {
+      const dir = this.clone().normalize();
+      return dir.multiplyScalar(l);
+    };
+    
+    THREE.Vector2.prototype.setFromWindowPercentage = function(xp, yp) {
+      const width = parseFloat(getComputedStyle(document.body).width);
+      const height = parseFloat(getComputedStyle(document.body).height);
+      this.x = width * xp;
+      this.y = height * yp;
+    };
+    
+    const canvas = document.getElementById('glcanvas');
+    const renderer = {};
+    renderer.setSize = (w, h) => {
+      canvas.width = w * devicePixelRatio;
+      canvas.height = h * devicePixelRatio;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      camera.updateProjectionMatrix();
+    };
+    renderer.render = () => { /* Placeholder */ };
+
+    const camera = new THREE.Camera();
+    const objects = [];
+    const softeningEnabled = true;
+    let stats;
+
+    try {
+      const softening = softeningEnabled ? 0.1 : 0;
+      const objectsById = {};
+
+      function createParticles(count) {
+        const geometries = [];
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+          const radius = 0.2;
+          const x = Math.random() * 100 - 50;
+          const y = Math.random() * 100 - 50;
+          const z = Math.random() * 100 - 50;
+          const velocity = new THREE.Vector3();
+          const positionObject = new THREE.Vector3(x, y, z);
+          const geometry = new THREE.BufferGeometry();
+          geometry.attributes.position = new THREE.BufferAttribute(new Float32Array(3), 3);
+          geometry.attributes.position.array.set([x, y, z]);
+          geometries.push(geometry);
+
+          var particleElement = document.createElement('div');
+          particleElement.className = 'velocity-indicator';
+          document.body.appendChild(particleElement);
+          colors.push(particleElement);
+
+          objects[i] = {
+            positionObject: positionObject,
+            velocity: velocity,
+            desiredPosition: new THREE.Vector3(),
+            geometry: geometry,
+            velocityElement: particleElement,
+          };
+          objectsById[`particle${i}`] = i;
+        }
+        return { geometries, colors };
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const now = THREE.Math.now();
+        for (let i = 0; i < objects.length; i++) {
+          const a = objects[i];
+          let forceAcc = new THREE.Vector3(0, 0, 0);
+          for (let j = 0; j < objects.length; j++) {
+            if (i === j) continue;
+            const b = objects[j];
+            const targetPosition = objectsById[j] < i ? b.positionObject : null;
+            if (!targetPosition) continue;
+            const deltaPop = a.positionObject.subVectors(b.positionObject, a.positionObject);
+            const dist = deltaPop.setLength(1).length();
+            const softeningValue = softeningEnabled ? softening : 0;
+            const soft = Math.max(softeningValue, dist);
+            const forceMag = (1 / (soft * soft)) * THREE.Math.E;
+            const force = deltaPop.clone().multiplyScalar(-forceMag);
+            forceAcc.addVectors(forceAcc, force);
+          }
+          const velocity = a.velocity;
+          velocity.addVectors(velocity, forceAcc);
+          const desiredPositions = new THREE.Vector3(0, 0, 0);
+          desiredPositions.addVectors(desiredPositions, velocity);
+          a.positionObject.addVectors(a.positionObject, desiredPositions);
+          updateGeometry(a.geometry, a.positionObject);
+          refreshVelocityIndicator(a);
+        }
+        renderer.render();
+      }
+
+      function updateGeometry(geometry) {
+        geometry.attributes.position.array.set([a.positionObject.x, a.positionObject.y, a.positionObject.z]);
+      }
+
+      function refreshVelocityIndicator(obj) {
+        const vel = obj.velocity;
+        const len = vel.setLength(1).length();
+        color = new THREE.Color(`hsl(0, 100%, ${Math.min(70, Math.max(30, parseInt(100 * (1 - len)))}%)}`);
+        obj.velocityElement.style.backgroundColor = color.getStyle() || `rgb(${Math.floor(color.r * 255)}, ${Math.floor(color.g * 255)}, ${Math.floor(color.b * 255)})`;
+      }
+
+      function init(count) {
+        camera.position = { x: 0, y: 80, z: 20 };
+        objects.length = 0;
+        objectsById = {};
+        const numParticles = count;
+        const initParticles = createParticles(numParticles);
+        objects = initParticles.colors;
+        for (let i = 0; i < numParticles; i++) {
+          objectsById[`particle${i}`] = i;
+        }
+        stats.element.firstElementChild.textContent = `Particles: ${numParticles}`;
+        window.addEventListener('resize', handleResize);
+        animate();
+      }
+
+      function handleResize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height);
+      }
+
+      document.getElementById('particles-count').onchange = function(e) {
+        init(parseInt(e.target.value));
+      };
+      document.getElementById('toggle-softening').onclick = function() {
+        softeningEnabled = !softeningEnabled;
+        document.getElementById('softening-text').textContent = softeningEnabled ? 'Softening Enabled' : 'Softening Disabled';
+        document.getElementById('softening-text').style.color = softeningEnabled ? '#00ffcc' : '#ffcc00';
+        init(objects.length);
+      };
+      renderFrame = init(200);
+    } catch (e) {
+      const errorDiv = document.createElement('div');
+      errorDiv.style = 'color:red; padding:1rem; margin:1rem;';
+      errorDiv.textContent = `Error: ${e.message}`;
+      document.body.prepend(errorDiv);
+    }
+  </script>
+</body>
+</html>

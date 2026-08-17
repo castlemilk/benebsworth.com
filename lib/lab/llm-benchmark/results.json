@@ -1503,17 +1503,152 @@
   {
     "taskId": "n-body-field",
     "modelId": "nemotron-nano-12b-vl",
-    "score": 0,
-    "runtimeMs": 0,
-    "tokensIn": 0,
-    "tokensOut": 0,
+    "score": 30,
+    "runtimeMs": 64181,
+    "tokensIn": 4320,
+    "tokensOut": 9856,
     "costUsd": 0,
+    "usage": {
+      "inputTokens": 4320,
+      "outputTokens": 9856,
+      "source": "reported"
+    },
     "iterations": 5,
-    "iterationsSucceeded": 0,
-    "status": "fail",
-    "createdAt": "2026-08-07T12:20:57.536Z",
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      30,
+      30,
+      30,
+      30,
+      30
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "canvas content score: 3% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        },
+        {
+          "name": "no-runtime-errors",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 0,
+          "detail": "page errors: Failed to execute 'write' on 'Document': Unexpected token '}'"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "no <canvas> found"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no <canvas>"
+        },
+        {
+          "name": "no-runtime-errors",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 0,
+          "detail": "page errors: Failed to execute 'write' on 'Document': Identifier 'rafId' has already been declared"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "canvas content score: 3% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        },
+        {
+          "name": "no-runtime-errors",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 0,
+          "detail": "page errors: Failed to execute 'write' on 'Document': missing ) after argument list"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "canvas content score: 3% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        },
+        {
+          "name": "no-runtime-errors",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 0,
+          "detail": "page errors: Failed to execute 'write' on 'Document': Unexpected token '}'"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "canvas content score: 3% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 1654,
+      "meanTokensPerSec": 32.3,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 1
+    },
+    "promptBundle": "1945c43e6f9b3a29",
+    "createdAt": "2026-08-17T06:59:08.298Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-59-08",
+      "file": "nemotron-nano-12b-vl-n-body-field.jsonl"
+    },
     "source": "live",
-    "output": ""
+    "output": "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>3D Particle Gravity Simulation</title>\n<style>html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui};#canvas{display:block;};#controls{position:absolute;bottom:10px;left:10px;z-index:10;background:#1a1a20;border-radius:4px;padding:8px;box-shadow:0 0 8px rgba(0,0,0,0.3)}</style>\n</head>\n<body>\n<div id=\"controls\">\n  <div>G-Softening: <input id=\"g-force\" type=\"range\" min=\"0\" max=\"2\" step=\"0.1\" value=\"0.5\"><br></div>\n  <div>Softening: <input id=\"softening\" type=\"range\" min=\"0.001\" max=\"0.01\" step=\"0.001\" value=\"0.005\"><br></div>\n  <div>Time Scale: <input id=\"time-scale\" type=\"range\" min=\"0.1\" max=\"10\" step=\"0.1\" value=\"1\"><br></div>\n</div>\n<div id=\"error\" role=\"alert\"></div>\n<div id=\"stats\"></div>\n<canvas id=\"canvas\"></canvas>\n\n<script>\n// THREE.js implementation without external assets\nconst config={width: window.innerWidth, height: window.innerHeight, ratio: window.devicePixelRatio, renderer: null, scene: null, camera: null, particles: [], clock: new THREE.Clock(), animationId: null, mouse: {x:0,y:0}}};\n\nfunction init() {\ntry {\n  config.renderer = new THREE.WebGLRenderer({antialias: true});\n  config.renderer.setSize(config.width, config.height);\n  config.renderer.setPixelRatio(config.ratio);\n  document.body.appendChild(config.renderer.domElement);\n  \n  config.scene = new THREE.Scene();\n  config.camera = new THREE.PerspectiveCamera(75, config.ratio, 0.1, 1000);\n  config.camera.position.z = 5;\n  \n  const cameraHelper = new THREE.CameraHelper(config.camera);\n  config.scene.add(cameraHelper);\n  \n  initParticles();\n  initControls();\n  \n  animate();\n} catch (err) {\n  showError(`Initialization Error: ${err}`);\n}\n}\n\nfunction initParticles() {\n  for(let i=0; i<200; i++) {\n    const radius = Math.random()*3;\n    const [x,y,z] = Array.from({length:3}, () => (Math.random()-0.5)*10);\n    const mass = 1 + Math.random()*2;\n    const color = new THREE.Color(`hsl(${Math.random()*360}, 80%, 50%)`);\n    \n    config.particles.push({\n      mass,\n      position: new THREE.Vector3(x,y,z),\n      velocity: new THREE.Vector3(),\n      acceleration: new THREE.Vector3(),\n      direction: new THREE.Vector3(),\n      color\n    });\n  }\n}\n\nfunction updateGravity() {\n  for(let i=0; i<config.particles.length; i++) {\n    config.particles[i].acceleration.set(0,0,0);\n    for(let j=0; j<config.particles.length; j++) {\n      if(i === j) continue;\n      \n      const p = config.particles[i], q = config.particles[j];\n      const diff = p.position.clone().sub(q.position);\n      const distSq = diff.lengthSq(), dist = Math.sqrt(distSq);\n      const epsilon = config.softening;\n      \n      if(distSq < epsilon*epsilon) {\n        const softDiff = diff.clone().multiplyScalar(1/(epsilon*(dist + epsilon)));\n        const forceMag = 1;\n        diff.normalize().multiplyScalar(forceMag * q.mass);\n        p.acceleration.add(softDiff.multiplyScalar(forceMag));\n      }\n    }\n  }\n}\n\nfunction simulate() {\n  requestAnimationFrame(simulate);\n  const delta = config.clock.getDelta() * config.timeVal;\n  \n  updateGravity();\n  \n  config.particles.forEach(p => {\n    const windFactor = 0.5;\n    p.velocity.add(p.acceleration.multiplyScalar(delta));\n    p.velocity.add(p.direction.multiplyScalar(-windFactor * delta));\n    p.position.add(p.velocity.clone().multiplyScalar(delta));\n    \n    const dy = 0.001*delta;\n    p.position.y += Math.cos(p.position.x + p.position.y) * dy;\n  });\n  \n  render();\n}\n\nfunction render() {\n  config.camera.position.x = config.mouse.x * 5;\n  config.camera.position.y = 3;\n  config.camera.lookAt(0,0,0);\n  \n  config.renderer.clear();\n  config.particles.forEach(p => {\n    const shape = new THREE.RingGeometry(0.5, 1, 32);\n    const material = new THREE.MeshBasicMaterial({\n      color: p.color,\n      opacity: 0.8\n    });\n    const lamp = new THREE.Mesh(shape, material);\n    lamp.position.copy(p.position.clone().multiplyScalar(-1));\n    lamp.lookAt(0,0,0);\n    config.scene.add(lamp);\n  });\n  config.scene.traverse((obj) => obj.geometry.dispose());\n  config.scene.userData.particles = config.particles;\n}\n\nfunction disposeScene() {\n  config.scene.traverse((obj) => {\n    obj.geometry.dispose();\n    if(obj.material) obj.material.dispose();\n  });\n  config.scene = null;\n}\n\nfunction onMouseMove(event) {\n  config.mouse.x = (event.clientX / config.renderer.domElement.clientWidth) * 2 - 1;\n}\n\nfunction showError(msg) {\n  const errorDiv = document.getElementById('error');\n  errorDiv.textContent = 'Sim error: ' + msg;\n}\n\nwindow.addEventListener('mousemove', onMouseMove);\nwindow.addEventListener('resize', () => {\n  config.ratio = window.devicePixelRatio;\n  const canvas = config.renderer.domElement;\n  canvas.width = window.innerWidth * config.ratio;\n  canvas.height = window.innerHeight * config.ratio;\n  config.renderer.setSize(window.innerWidth, window.innerHeight);\n  config.camera.aspect = window.innerWidth/window.innerHeight;\n  config.camera.updateProjectionMatrix();\n});\n\ntry {\n  init();\n} catch (e) {\n  showError(`Initial Error: ${e}`);\n}\n\nfunction animate() {\n  cancelAnimationFrame(config.animationId);\n  if(!config.particles.length) return;\n  config.animationId = requestAnimationFrame(animate);\n}\n\nwindow.addEventListener('unload', () => {\n  cancelAnimationFrame(config.animationId);\n  disposeScene();\n});\n\ninit();\n</script>\n</body>\n</html>"
   },
   {
     "taskId": "n-body-field",
@@ -5636,5 +5771,853 @@
     },
     "source": "live",
     "output": "<canvas id=\"scene\"></canvas>\n<div id=\"hud\">\n  <div id=\"titlecard\" class=\"panel\">\n    <h1>Series RLC &middot; Step Response</h1>\n    <p id=\"mode\">computing&hellip;</p>\n  </div>\n  <div id=\"stats\" class=\"panel\">\n    <div class=\"cell\"><div class=\"lbl\">damping &zeta;</div><div class=\"val\" id=\"sZeta\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">natural f</div><div class=\"val\" id=\"sFreq\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">damped f</div><div class=\"val\" id=\"sFd\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">overshoot</div><div class=\"val\" id=\"sOs\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">settling 2%</div><div class=\"val\" id=\"sTs\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">scope window</div><div class=\"val\" id=\"sWin\">&ndash;</div></div>\n  </div>\n</div>\n<div id=\"controls\" class=\"panel\">\n  <label class=\"ctl\"><span class=\"clbl\">R</span>\n    <span class=\"srow\"><input type=\"range\" id=\"sR\" min=\"0\" max=\"1000\" step=\"1\"><span class=\"vval\" id=\"vR\"></span></span>\n  </label>\n  <label class=\"ctl\"><span class=\"clbl\">L</span>\n    <span class=\"srow\"><input type=\"range\" id=\"sL\" min=\"0\" max=\"1000\" step=\"1\"><span class=\"vval\" id=\"vL\"></span></span>\n  </label>\n  <label class=\"ctl\"><span class=\"clbl\">C</span>\n    <span class=\"srow\"><input type=\"range\" id=\"sC\" min=\"0\" max=\"1000\" step=\"1\"><span class=\"vval\" id=\"vC\"></span></span>\n  </label>\n  <button id=\"retrigger\" type=\"button\">&crarr; Re-trigger step</button>\n</div>\n<div id=\"err\" role=\"alert\" hidden></div>\n<script>\ntry {\n(function(){\n\"use strict\";\n\nvar canvas = document.getElementById('scene');\nvar ctx = canvas.getContext('2d');\nvar hud = document.getElementById('hud');\nvar controls = document.getElementById('controls');\nvar errBox = document.getElementById('err');\n\nfunction showErr(msg){ errBox.hidden = false; errBox.textContent = msg; }\nwindow.addEventListener('error', function(e){ showErr(e.message || 'Unknown error'); });\n\nvar W = 0, H = 0, DPR = 1;\nfunction resize(){\n  DPR = Math.min(2.5, window.devicePixelRatio || 1);\n  W = window.innerWidth; H = window.innerHeight;\n  canvas.width = Math.max(1, Math.round(W * DPR));\n  canvas.height = Math.max(1, Math.round(H * DPR));\n  draw();\n}\nwindow.addEventListener('resize', resize);\nwindow.addEventListener('orientationchange', resize);\n\n/* ---------------- parameters & simulation ---------------- */\n\nvar PARAMS = { r: 20, l: 1.0, c: 1e-3 };\nvar RANGE = {\n  r: { min: 1,    max: 500,    unit: '\\u03a9' },\n  l: { min: 10e-3, max: 10,    unit: 'H' },\n  c: { min: 10e-6, max: 10e-3, unit: 'F' }\n};\n\nvar sim = { v:null, i:null, N:2, T:1, alpha:1, omega0:1, zeta:1, fd:0, os:0, ts:1, vMax:1, iMax:1e-9 };\nvar animT = 0;\n\nfunction computeSim(){\n  var L = PARAMS.l, C = PARAMS.c, R = PARAMS.r;\n  var omega0 = 1 / Math.sqrt(L * C);\n  var alpha = R / (2 * L);\n  if (!isFinite(alpha) || alpha <= 0) alpha = 1e-9;\n  var zeta = alpha / omega0;\n  var wd = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));\n  var fd = wd / (2 * Math.PI);\n\n  var T = 4.6 / alpha;\n  if (zeta < 1 && fd > 0) {\n    T = Math.min(T, 12 / fd);\n    T = Math.max(T, 2.2 / fd);\n  }\n  T = Math.min(Math.max(T, 0.01), 30);\n\n  var N = zeta < 1 ? Math.max(600, Math.round(T * fd * 40)) : 700;\n  N = Math.min(N, 4000);\n\n  var v = new Float64Array(N);\n  var i = new Float64Array(N);\n  var dt = T / (N - 1);\n  var beta = omega0 * Math.sqrt(Math.max(0, zeta * zeta - 1));\n  var vMax = 0, vMin = 0, k;\n\n  for (k = 0; k < N; k++) {\n    var t = k * dt, vc;\n    if (zeta < 1) {\n      vc = 1 - Math.exp(-alpha * t) * (Math.cos(wd * t) + (alpha / wd) * Math.sin(wd * t));\n    } else if (zeta > 1) {\n      vc = 1 - Math.exp(-alpha * t) * (Math.cosh(beta * t) + (alpha / beta) * Math.sinh(beta * t));\n    } else {\n      vc = 1 - Math.exp(-alpha * t) * (1 + alpha * t);\n    }\n    v[k] = vc;\n    if (vc > vMax) vMax = vc;\n    if (vc < vMin) vMin = vc;\n  }\n  for (k = 1; k < N - 1; k++) i[k] = C * (v[k + 1] - v[k - 1]) / (2 * dt);\n  i[0] = 0; i[N - 1] = i[N - 2];\n\n  var iMax = 1e-9;\n  for (k = 0; k < N; k++) { var a = Math.abs(i[k]); if (a > iMax) iMax = a; }\n\n  sim.v = v; sim.i = i; sim.N = N; sim.T = T; sim.alpha = alpha;\n  sim.omega0 = omega0; sim.zeta = zeta; sim.fd = fd;\n  sim.os = zeta < 1 ? 100 * Math.exp(-Math.PI * zeta / Math.sqrt(1 - zeta * zeta)) : 0;\n  sim.ts = 4 / alpha; sim.vMax = vMax; sim.vMin = vMin; sim.iMax = iMax;\n}\n\n/* ---------------- formatting helpers ---------------- */\n\nvar PRE = ['p','n','\\u00b5','m','','k','M','G'];\nfunction eng(v, unit){\n  if (v === 0) return '0 ' + unit;\n  var p = Math.max(-4, Math.min(4, Math.floor(Math.log10(Math.abs(v)) / 3)));\n  var s = v / Math.pow(10, p * 3);\n  var str = s >= 100 ? s.toFixed(0) : s >= 10 ? s.toFixed(1) : s.toFixed(2);\n  str = str.replace(/(\\.\\d*?[1-9])0+$/, '$1').replace(/\\.0+$/, '');\n  return str + ' ' + PRE[p + 4] + unit;\n}\nfunction fmtTime(v){\n  if (v <= 0) return '0';\n  if (v >= 1) return v.toFixed(2) + ' s';\n  if (v >= 1e-3) return (v * 1e3).toFixed(v < 0.01 ? 1 : 0) + ' ms';\n  if (v >= 1e-6) return (v * 1e6).toFixed(v < 1e-4 ? 1 : 0) + ' \\u00b5s';\n  return (v * 1e9).toFixed(0) + ' ns';\n}\nfunction fmtTick(v){\n  var s = v.toPrecision(2);\n  if (s.indexOf('e') >= 0) s = v.toFixed(4).replace(/0+$/, '').replace(/\\.$/, '');\n  return s;\n}\nfunction niceStep(span, maxTicks){\n  var raw = span / maxTicks;\n  var mag = Math.pow(10, Math.floor(Math.log10(raw)));\n  var norm = raw / mag;\n  var step = norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10;\n  return step * mag;\n}\nfunction timeTicks(T){\n  var step = niceStep(T, 5), out = [];\n  for (var v = 0; v <= T + 1e-9; v += step) out.push(v);\n  return out;\n}\nfunction yTicks(ymin, ymax){\n  var step = niceStep(ymax - ymin, 4), out = [];\n  var start = Math.ceil(ymin / step) * step;\n  for (var v = start; v <= ymax + 1e-9; v += step) out.push(v);\n  return out;\n}\n\n/* ---------------- drawing primitives ---------------- */\n\nfunction roundRectPath(x, y, w, h, r){\n  ctx.beginPath();\n  ctx.moveTo(x + r, y);\n  ctx.arcTo(x + w, y, x + w, y + h, r);\n  ctx.arcTo(x + w, y + h, x, y + h, r);\n  ctx.arcTo(x, y + h, x, y, r);\n  ctx.arcTo(x, y, x + w, y, r);\n  ctx.closePath();\n}\nfunction hline(y, r, color){\n  ctx.beginPath(); ctx.moveTo(r.x, y); ctx.lineTo(r.x + r.w, y); ctx.stroke();\n}\nfunction vline(x, r, color){\n  ctx.beginPath(); ctx.moveTo(x, r.y); ctx.lineTo(x, r.y + r.h); ctx.stroke();\n}\nfunction tracePath(arr, yOf, rect){\n  ctx.beginPath();\n  for (var k = 0; k < arr.length; k++) {\n    var px = rect.x + (k / (arr.length - 1)) * rect.w;\n    var py = yOf(arr[k]);\n    if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);\n  }\n}\nfunction strokeGlow(arr, yOf, rect, color){\n  tracePath(arr, yOf, rect);\n  ctx.strokeStyle = color; ctx.lineJoin = 'round'; ctx.lineCap = 'round';\n  ctx.globalAlpha = 0.15; ctx.lineWidth = 7; ctx.stroke();\n  ctx.globalAlpha = 1; ctx.lineWidth = 2.2; ctx.stroke();\n}\nfunction fillUnder(arr, yOf, rect, baseline){\n  ctx.save();\n  ctx.beginPath(); ctx.rect(rect.x, rect.y, rect.w, rect.h); ctx.clip();\n  tracePath(arr, yOf, rect);\n  ctx.lineTo(rect.x + rect.w, baseline);\n  ctx.lineTo(rect.x, baseline);\n  ctx.closePath();\n  var g = ctx.createLinearGradient(0, rect.y, 0, rect.y + rect.h);\n  g.addColorStop(0, 'rgba(78,161,255,0.26)');\n  g.addColorStop(1, 'rgba(78,161,255,0.02)');\n  ctx.fillStyle = g; ctx.fill();\n  ctx.restore();\n}\nfunction legend(rect, ty, items){\n  var x = rect.x + 10;\n  ctx.font = '10px ui-sans-serif,system-ui';\n  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';\n  for (var n = 0; n < items.length; n++) {\n    var it = items[n];\n    if (it.dash) {\n      ctx.strokeStyle = it.color; ctx.globalAlpha = 0.85; ctx.lineWidth = 1.6;\n      ctx.setLineDash([3, 3]);\n      ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x + 14, ty); ctx.stroke();\n      ctx.setLineDash([]); ctx.globalAlpha = 1;\n    } else {\n      ctx.fillStyle = it.color;\n      ctx.beginPath(); ctx.roundRect(x, ty - 3, 14, 6, 2); ctx.fill();\n    }\n    ctx.fillStyle = '#a8a8b5';\n    ctx.fillText(it.label, x + 19, ty);\n    x += 19 + ctx.measureText(it.label).width + 14;\n  }\n}\nfunction drawDot(x, y, color){\n  ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.2832); ctx.fillStyle = color; ctx.globalAlpha = 0.25; ctx.fill();\n  ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 6.2832); ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 1; ctx.fill();\n}\nfunction layoutMargins(){\n  var top = (hud.offsetHeight || 0) + 20;\n  var bot = (controls.offsetHeight || 0) + 18;\n  top = Math.max(88, Math.min(top, 200));\n  bot = Math.max(84, Math.min(bot, 190));\n  return { top: top, bot: bot };\n}\n\n/* ---------------- plots ---------------- */\n\nfunction drawV(r){\n  var yMax = Math.max(1.25, sim.vMax * 1.08);\n  var yMin = -0.16;\n  var yOf = function(v){ return r.y + r.h * (1 - (v - yMin) / (yMax - yMin)); };\n  var xOf = function(t){ return r.x + (t / sim.T) * r.w; };\n\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.fillStyle = 'rgba(18,18,26,0.45)'; ctx.fill();\n  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.stroke();\n\n  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.05)';\n  var tk = timeTicks(sim.T), i;\n  for (i = 0; i < tk.length; i++) vline(xOf(tk[i]), r);\n  var yt = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];\n  for (i = 0; i < yt.length; i++) if (yt[i] <= yMax + 0.001) hline(yOf(yt[i]), r);\n\n  ctx.setLineDash([5, 4]); ctx.strokeStyle = 'rgba(214,214,224,0.55)'; ctx.lineWidth = 1.2;\n  hline(yOf(1), r); ctx.setLineDash([]);\n\n  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';\n  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';\n  for (i = 0; i < yt.length; i++) if (yt[i] <= yMax + 0.001) ctx.fillText(fmtTick(yt[i]), r.x - 7, yOf(yt[i]));\n\n  fillUnder(sim.v, yOf, r, yOf(0));\n  strokeGlow(sim.v, yOf, r, '#4ea1ff');\n\n  legend(r, r.y + 14, [\n    { label: 'v_C(t)', color: '#4ea1ff' },\n    { label: 'step input', color: 'rgba(214,214,224,0.8)', dash: true }\n  ]);\n\n  var idx = Math.max(0, Math.min(sim.N - 1, Math.round(animT / sim.T * (sim.N - 1))));\n  var x = xOf(animT);\n  ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;\n  vline(x, r); ctx.setLineDash([]);\n  drawDot(x, yOf(sim.v[idx]), '#4ea1ff');\n\n  ctx.textAlign = 'right'; ctx.fillStyle = '#b7c1d6';\n  ctx.font = '11px ui-monospace,Menlo,monospace';\n  ctx.fillText('t = ' + fmtTime(animT), r.x + r.w - 8, r.y + 14);\n}\n\nfunction drawI(r){\n  var m = Math.max(sim.iMax * 1.15, 1e-6);\n  var yOf = function(v){ return r.y + r.h / 2 - (v / m) * (r.h / 2); };\n  var xOf = function(t){ return r.x + (t / sim.T) * r.w; };\n\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.fillStyle = 'rgba(18,18,26,0.45)'; ctx.fill();\n  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.stroke();\n\n  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.05)';\n  var tk = timeTicks(sim.T), i;\n  for (i = 0; i < tk.length; i++) vline(xOf(tk[i]), r);\n  var yt = yTicks(-m, m);\n  for (i = 0; i < yt.length; i++) hline(yOf(yt[i]), r);\n  ctx.strokeStyle = 'rgba(255,255,255,0.16)'; hline(yOf(0), r);\n\n  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';\n  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';\n  for (i = 0; i < yt.length; i++) ctx.fillText(fmtTick(yt[i]), r.x - 7, yOf(yt[i]));\n\n  strokeGlow(sim.i, yOf, r, '#ffb454');\n  legend(r, r.y + 14, [{ label: 'i(t)', color: '#ffb454' }]);\n\n  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';\n  ctx.textAlign = 'center'; ctx.textBaseline = 'top';\n  for (i = 0; i < tk.length; i++) ctx.fillText(fmtTime(tk[i]), xOf(tk[i]), r.y + r.h + 6);\n  ctx.textAlign = 'right'; ctx.fillStyle = '#565664';\n  ctx.fillText('time \\u2192', r.x + r.w, r.y + r.h + 6);\n\n  var idx = Math.max(0, Math.min(sim.N - 1, Math.round(animT / sim.T * (sim.N - 1))));\n  var x = xOf(animT);\n  ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;\n  vline(x, r); ctx.setLineDash([]);\n  drawDot(x, yOf(sim.i[idx]), '#ffb454');\n}\n\n/* ---------------- schematic ---------------- */\n\nfunction line(x1, y1, x2, y2){\n  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();\n}\nfunction drawSchematic(){\n  if (W < 620) return;\n  var w = 198, h = 142, x = W - w - 12, y = 12;\n  roundRectPath(x, y, w, h, 12);\n  ctx.fillStyle = 'rgba(20,20,30,0.66)';\n  ctx.fill();\n  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;\n  ctx.stroke();\n\n  var pad = 18;\n  var lw = x + pad, rw = x + w - pad, tw = y + pad, bw = y + h - pad;\n  var midX = x + w / 2, midY = y + h / 2;\n  var bx = lw + 36;\n\n  ctx.strokeStyle = '#9aa0b5'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';\n\n  /* wires */\n  line(lw, tw, lw, bw);                          /* left   */\n  line(lw, tw, midX - 8, tw);                    /* top->R */\n  line(midX + 8, tw, rw, tw);                    /* R->corner */\n  line(rw, tw, rw, midY - 16);                   /* right top->L */\n  line(rw, midY + 16, rw, bw);                   /* L->bottom */\n  line(lw, bw, bx - 8, bw);                      /* left->battery */\n  line(bx + 8, bw, midX - 9, bw);                /* battery->C */\n  line(midX + 9, bw, rw, bw);                    /* C->corner */\n\n  /* junction dots */\n  ctx.fillStyle = '#9aa0b5';\n  [[lw,tw],[rw,tw],[rw,bw],[lw,bw]].forEach(function(p){\n    ctx.beginPath(); ctx.arc(p[0], p[1], 2.2, 0, 6.2832); ctx.fill();\n  });\n\n  /* R */\n  ctx.strokeStyle = '#ffb454'; ctx.lineWidth = 1.6;\n  ctx.beginPath(); ctx.rect(midX - 8, tw - 5, 16, 10); ctx.stroke();\n  ctx.fillStyle = '#ffb454'; ctx.font = 'bold 10px ui-sans-serif,system-ui';\n  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';\n  ctx.fillText('R', midX, tw - 13);\n\n  /* L */\n  ctx.beginPath(); ctx.moveTo(rw, midY - 16);\n  for (var k = 0; k < 3; k++) ctx.arc(rw - 5, midY - 16 + 5 + k * 10, 5, Math.PI, 0, false);\n  ctx.stroke();\n  ctx.fillText('L', rw + 11, midY - 1);\n\n  /* C */\n  ctx.strokeStyle = '#4ea1ff';\n  line(midX - 9, bw, midX - 4, bw);\n  line(midX + 4, bw, midX + 9, bw);\n  ctx.beginPath();\n  ctx.moveTo(midX - 4, bw - 7); ctx.lineTo(midX - 4, bw + 7);\n  ctx.moveTo(midX + 4, bw - 7); ctx.lineTo(midX + 4, bw + 7);\n  ctx.stroke();\n  ctx.fillText('C', midX, bw + 13);\n\n  /* battery (step source) */\n  ctx.strokeStyle = '#f5a623';\n  ctx.lineWidth = 3; line(bx - 3, bw - 3, bx - 3, bw + 3);\n  ctx.lineWidth = 1.4; line(bx + 3, bw - 5, bx + 3, bw + 5);\n  ctx.fillStyle = '#f5a623'; ctx.font = '9px ui-sans-serif,system-ui';\n  ctx.fillText('+', bx - 9, bw);\n  ctx.fillText('\\u2212', bx + 11, bw);\n  ctx.font = 'bold 10px ui-sans-serif,system-ui';\n  ctx.fillText('V_s', bx, bw - 15);\n  ctx.font = '9px ui-sans-serif,system-ui'; ctx.fillStyle = '#9a9aa8';\n  ctx.fillText('1 V step', bx, bw + 14);\n\n  /* card header */\n  ctx.font = '9px ui-sans-serif,system-ui'; ctx.fillStyle = '#8a8a98';\n  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';\n  ctx.fillText('Series RLC circuit', x + w / 2, y + 9);\n}\n\n/* ---------------- main draw ---------------- */\n\nfunction draw(){\n  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);\n  ctx.fillStyle = '#0c0c10';\n  ctx.fillRect(0, 0, W, H);\n\n  var m = layoutMargins();\n  var mLeft = 64, mRight = 24;\n  var vw = Math.max(60, W - mLeft - mRight);\n  var vhBase = Math.max(120, H - m.top - m.bot);\n  var gap = 14;\n  var iH = Math.max(60, Math.round(vhBase * 0.36));\n  var vH = vhBase - gap - iH;\n  drawV({ x: mLeft, y: m.top, w: vw, h: vH });\n  drawI({ x: mLeft, y: m.top + vH + gap, w: vw, h: iH });\n  drawSchematic();\n}\n\n/* ---------------- stats + controls ---------------- */\n\nfunction updateStats(){\n  var z = sim.zeta;\n  var zel = document.getElementById('sZeta');\n  zel.textContent = z.toFixed(3);\n  zel.style.color = z < 0.85 ? '#7dd3fc' : z <= 1.15 ? '#4ade80' : '#fbbf24';\n  document.getElementById('sFreq').textContent = eng(sim.omega0 / (2 * Math.PI), 'Hz');\n  document.getElementById('sFd').textContent = (sim.zeta < 1 && sim.fd > 0) ? eng(sim.fd, 'Hz') : '\\u2014';\n  document.getElementById('sOs').textContent = sim.zeta < 1 ? sim.os.toFixed(1) + '%' : '0%';\n  document.getElementById('sTs').textContent = eng(sim.ts, 's');\n  document.getElementById('sWin').textContent = eng(sim.T, 's');\n  var mode = z < 0.85 ? 'underdamped' : z <= 1.15 ? 'critically damped' : 'overdamped';\n  document.getElementById('mode').innerHTML = 'response is <b>' + mode + '</b> \\u2014 drag sliders';\n}\n\nvar sliders = [['r','sR','vR'], ['l','sL','vL'], ['c','sC','vC']];\nfor (var s = 0; s < sliders.length; s++) {\n  (function(){\n    var key = sliders[s][0], sid = sliders[s][1], vid = sliders[s][2];\n    var el = document.getElementById(sid), out = document.getElementById(vid);\n    var R = RANGE[key];\n    el.value = Math.round(1000 * Math.log(PARAMS[key] / R.min) / Math.log(R.max / R.min));\n    out.textContent = eng(PARAMS[key], R.unit);\n    el.addEventListener('input', function(){\n      PARAMS[key] = R.min * Math.pow(R.max / R.min, el.value / 1000);\n      out.textContent = eng(PARAMS[key], R.unit);\n      computeSim();\n      updateStats();\n      if (animT > sim.T) animT = sim.T * 0.5;\n    });\n  })();\n}\ndocument.getElementById('retrigger').addEventListener('click', function(){ animT = 0; });\n\n/* ---------------- animation loop ---------------- */\n\nvar raf = 0, last = null;\nfunction frame(now){\n  raf = requestAnimationFrame(frame);\n  if (last == null) last = now;\n  var dt = (now - last) / 1000;\n  last = now;\n  if (dt > 0.05) dt = 0.05;\n  animT += dt * (sim.T / 3);\n  if (animT > sim.T) animT = 0;\n  draw();\n}\nwindow.addEventListener('unload', function(){ cancelAnimationFrame(raf); });\n\ncomputeSim();\nupdateStats();\nresize();\nraf = requestAnimationFrame(frame);\n\n})();\n} catch (err) {\n  var box = document.getElementById('err');\n  box.hidden = false;\n  box.textContent = 'Runtime error: ' + (err && err.message ? err.message : err);\n}\n</script>\n</body></html>"
+  },
+  {
+    "taskId": "equation-solver",
+    "modelId": "gemini-3.6-flash",
+    "score": 100,
+    "runtimeMs": 7732,
+    "tokensIn": 267,
+    "tokensOut": 5996,
+    "costUsd": 0.0000453705,
+    "usage": {
+      "inputTokens": 267,
+      "outputTokens": 5996,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "telemetry": {
+      "meanTtftMs": 4309,
+      "meanTokensPerSec": 383,
+      "rateKind": "decode",
+      "cacheHits": 1,
+      "retries": 0
+    },
+    "promptBundle": "5151d0c8b150e9f9",
+    "createdAt": "2026-08-17T06:42:07.948Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-equation-solver.jsonl"
+    },
+    "source": "live",
+    "output": "### Algebraic Derivation\n\nGiven the system of equations over the reals:\n1. $x^2 + y^2 = 25$\n2. $xy = 12$\n\n**Step 1: Find $(x+y)^2$ and $(x-y)^2$**\nUsing the algebraic identities for the square of a sum and a difference:\n$$(x + y)^2 = x^2 + y^2 + 2xy = 25 + 2(12) = 49$$\n$$(x - y)^2 = x^2 + y^2 - 2xy = 25 - 2(12) = 1$$\n\nTaking square roots yields:\n$$x + y = \\pm 7$$\n$$x - y = \\pm 1$$\n\n**Step 2: Solve the linear systems for $(x, y)$**\n\n* **Case 1:** $x + y = 7$\n  * If $x - y = 1$: Adding the equations gives $2x = 8 \\implies x = 4$, so $y = 3$.\n  * If $x - y = -1$: Adding the equations gives $2x = 6 \\implies x = 3$, so $y = 4$.\n\n* **Case 2:** $x + y = -7$\n  * If $x - y = 1$: Adding the equations gives $2x = -6 \\implies x = -3$, so $y = -4$.\n  * If $x - y = -1$: Adding the equations gives $2x = -8 \\implies x = -4$, so $y = -3$.\n\n---\n\n### Solution Pairs $(x, y)$\n\n$$(4, 3), \\quad (3, 4), \\quad (-3, -4), \\quad (-4, -3)$$"
+  },
+  {
+    "taskId": "mini-platformer",
+    "modelId": "gemini-3.6-flash",
+    "score": 100,
+    "runtimeMs": 68421,
+    "tokensIn": 4280,
+    "tokensOut": 52673,
+    "costUsd": 0.00040146750000000003,
+    "usage": {
+      "inputTokens": 4280,
+      "outputTokens": 52673,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 99.2% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.0% (threshold 2%)"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 98.9% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.0% (threshold 2%)"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 98.6% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 98.8% (threshold 2%)"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 99.1% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.1% (threshold 2%)"
+        }
+      ],
+      [
+        {
+          "name": "platformer-jump",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff after Space: 98.8% (threshold 2%)"
+        },
+        {
+          "name": "platformer-move",
+          "passed": true,
+          "points": 25,
+          "maxPoints": 25,
+          "detail": "pixel diff after ArrowRight: 99.1% (threshold 2%)"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 16118,
+      "meanTokensPerSec": 221,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "1a38ff5e6a98d15b",
+    "createdAt": "2026-08-17T06:34:06.491Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-mini-platformer.jsonl"
+    },
+    "source": "live",
+    "output": "<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\">\n  <title>Canvas Platformer</title>\n  <style>\n    * {\n      box-sizing: border-box;\n      user-select: none;\n      -webkit-user-select: none;\n      margin: 0;\n      padding: 0;\n    }\n    html, body {\n      width: 100%;\n      height: 100%;\n      min-height: 100%;\n      overflow: hidden;\n      background: #0c0c10;\n      color: #ececf0;\n      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n    }\n    #canvas {\n      display: block;\n      width: 100vw;\n      height: 100vh;\n      background: #08080c;\n    }\n    /* Compact HUD Overlay */\n    .hud {\n      position: absolute;\n      top: 12px;\n      left: 12px;\n      right: 12px;\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      pointer-events: none;\n      z-index: 10;\n    }\n    .hud-card {\n      background: rgba(18, 18, 28, 0.75);\n      backdrop-filter: blur(8px);\n      -webkit-backdrop-filter: blur(8px);\n      border: 1px solid rgba(255, 255, 255, 0.12);\n      border-radius: 8px;\n      padding: 6px 14px;\n      display: flex;\n      align-items: center;\n      gap: 12px;\n      font-size: 14px;\n      font-weight: 600;\n      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    }\n    .stat {\n      display: flex;\n      align-items: center;\n      gap: 6px;\n    }\n    .stat-icon {\n      width: 12px;\n      height: 12px;\n      border-radius: 50%;\n      background: #ffd700;\n      box-shadow: 0 0 6px #ffd700;\n    }\n    .btn {\n      pointer-events: auto;\n      background: rgba(255, 255, 255, 0.1);\n      border: 1px solid rgba(255, 255, 255, 0.2);\n      color: #fff;\n      padding: 6px 14px;\n      border-radius: 6px;\n      font-size: 13px;\n      font-weight: 600;\n      cursor: pointer;\n      transition: all 0.15s ease;\n    }\n    .btn:hover {\n      background: rgba(255, 255, 255, 0.2);\n      border-color: rgba(255, 255, 255, 0.4);\n      transform: translateY(-1px);\n    }\n    .btn:active {\n      transform: translateY(0);\n    }\n\n    /* On-Screen Mobile Controls */\n    .touch-controls {\n      position: absolute;\n      bottom: 16px;\n      left: 16px;\n      right: 16px;\n      display: flex;\n      justify-content: space-between;\n      pointer-events: none;\n      z-index: 10;\n    }\n    .touch-group {\n      display: flex;\n      gap: 10px;\n      pointer-events: auto;\n    }\n    .touch-btn {\n      width: 54px;\n      height: 54px;\n      border-radius: 50%;\n      background: rgba(255, 255, 255, 0.12);\n      border: 1px solid rgba(255, 255, 255, 0.25);\n      backdrop-filter: blur(4px);\n      -webkit-backdrop-filter: blur(4px);\n      color: white;\n      font-size: 20px;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      user-select: none;\n      touch-action: manipulation;\n    }\n    .touch-btn:active {\n      background: rgba(255, 255, 255, 0.3);\n    }\n\n    /* Win Banner Overlay */\n    #win-overlay {\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      transform: translate(-50%, -50%);\n      background: rgba(15, 15, 25, 0.9);\n      border: 1px solid rgba(255, 215, 0, 0.4);\n      border-radius: 12px;\n      padding: 24px 36px;\n      text-align: center;\n      display: none;\n      flex-direction: column;\n      align-items: center;\n      gap: 12px;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.6);\n      z-index: 20;\n      backdrop-filter: blur(10px);\n    }\n    #win-overlay h2 {\n      color: #ffd700;\n      font-size: 24px;\n      margin: 0;\n      text-transform: uppercase;\n      letter-spacing: 1px;\n    }\n    #win-overlay p {\n      color: #ccc;\n      font-size: 14px;\n      margin: 0;\n    }\n\n    /* Error Log Box */\n    #error-log {\n      display: none;\n      position: absolute;\n      top: 10px;\n      left: 10px;\n      right: 10px;\n      padding: 12px;\n      background: rgba(200, 30, 30, 0.9);\n      color: white;\n      border-radius: 6px;\n      font-family: monospace;\n      font-size: 12px;\n      z-index: 100;\n    }\n\n    @media (min-width: 768px) {\n      .touch-controls { display: none; }\n    }\n  </style>\n</head>\n<body>\n\n  <canvas id=\"canvas\"></canvas>\n\n  <div class=\"hud\">\n    <div class=\"hud-card\">\n      <div class=\"stat\"><div class=\"stat-icon\"></div> <span id=\"coin-count\">0 / 0</span></div>\n      <span style=\"opacity: 0.3\">|</span>\n      <span id=\"controls-hint\" style=\"font-size: 12px; color: #aaa;\">Arrows / WASD to move</span>\n    </div>\n    <button class=\"btn\" id=\"reset-btn\">Reset Level</button>\n  </div>\n\n  <div class=\"touch-controls\">\n    <div class=\"touch-group\">\n      <div class=\"touch-btn\" id=\"btn-left\">◀</div>\n      <div class=\"touch-btn\" id=\"btn-right\">▶</div>\n    </div>\n    <div class=\"touch-group\">\n      <div class=\"touch-btn\" id=\"btn-jump\" style=\"width: 64px; height: 64px;\">▲</div>\n    </div>\n  </div>\n\n  <div id=\"win-overlay\">\n    <h2>Stage Cleared!</h2>\n    <p id=\"win-stats\">You collected all coins!</p>\n    <button class=\"btn\" id=\"win-reset-btn\" style=\"margin-top: 8px; background: #ffd700; color: #111;\">Play Again</button>\n  </div>\n\n  <div id=\"error-log\" role=\"alert\"></div>\n\n  <script>\n    window.addEventListener('DOMContentLoaded', () => {\n      try {\n        const canvas = document.getElementById('canvas');\n        const ctx = canvas.getContext('2d');\n        const coinCountEl = document.getElementById('coin-count');\n        const resetBtn = document.getElementById('reset-btn');\n        const winResetBtn = document.getElementById('win-reset-btn');\n        const winOverlay = document.getElementById('win-overlay');\n        const winStats = document.getElementById('win-stats');\n        const errorLog = document.getElementById('error-log');\n\n        let dpr = 1;\n        let viewW = window.innerWidth;\n        let viewH = window.innerHeight;\n\n        function resize() {\n          dpr = Math.min(window.devicePixelRatio || 1, 2);\n          viewW = window.innerWidth;\n          viewH = window.innerHeight;\n          canvas.width = Math.floor(viewW * dpr);\n          canvas.height = Math.floor(viewH * dpr);\n          ctx.imageSmoothingEnabled = false;\n        }\n        window.addEventListener('resize', resize);\n        resize();\n\n        // Level World Configuration\n        const WORLD = {\n          width: 3200,\n          height: 800,\n          gravity: 0.55,\n          friction: 0.82\n        };\n\n        // Level Geometry\n        const INITIAL_PLATFORMS = [\n          // Starting ground\n          { x: 0, y: 650, w: 600, h: 150 },\n          // Floating steps\n          { x: 450, y: 530, w: 120, h: 20 },\n          { x: 650, y: 440, w: 140, h: 20 },\n          { x: 880, y: 380, w: 100, h: 20 },\n          // Middle ground island\n          { x: 1050, y: 520, w: 500, h: 280 },\n          // High platforms\n          { x: 1200, y: 360, w: 120, h: 20 },\n          { x: 1400, y: 260, w: 140, h: 20 },\n          // Gap challenge\n          { x: 1680, y: 480, w: 120, h: 20 },\n          { x: 1900, y: 420, w: 120, h: 20 },\n          { x: 2120, y: 500, w: 150, h: 20 },\n          // End zone ground\n          { x: 2400, y: 600, w: 800, h: 200 }\n        ];\n\n        const INITIAL_COINS = [\n          { x: 300, y: 600 },\n          { x: 510, y: 480 },\n          { x: 710, y: 390 },\n          { x: 920, y: 330 },\n          { x: 1100, y: 470 },\n          { x: 1250, y: 310 },\n          { x: 1460, y: 210 },\n          { x: 1730, y: 430 },\n          { x: 1950, y: 370 },\n          { x: 2180, y: 450 },\n          { x: 2550, y: 550 },\n          { x: 2650, y: 550 }\n        ];\n\n        const GOAL_FLAG = { x: 2950, y: 600, w: 40, h: 90 };\n\n        // Game State Variables\n        let player = {};\n        let coins = [];\n        let particles = [];\n        let stars = [];\n        let mountainsLayer1 = [];\n        let mountainsLayer2 = [];\n        let collectedCount = 0;\n        let cameraX = 0;\n        let cameraY = 0;\n        let gameWon = false;\n        let animFrameId = null;\n\n        // Generate Parallax Background Elements\n        function generateBackgrounds() {\n          stars = [];\n          for (let i = 0; i < 150; i++) {\n            stars.push({\n              x: Math.random() * WORLD.width,\n              y: Math.random() * 500,\n              size: Math.random() * 2 + 0.5,\n              alpha: Math.random() * 0.7 + 0.3\n            });\n          }\n\n          // Mountain shapes (Layer 1 - Distant)\n          mountainsLayer1 = [];\n          let mx = -200;\n          while (mx < WORLD.width + 400) {\n            let mw = 300 + Math.random() * 200;\n            let mh = 180 + Math.random() * 150;\n            mountainsLayer1.push({ x: mx, w: mw, h: mh });\n            mx += mw * 0.6;\n          }\n\n          // Mountain shapes (Layer 2 - Mid)\n          mountainsLayer2 = [];\n          mx = -200;\n          while (mx < WORLD.width + 400) {\n            let mw = 200 + Math.random() * 150;\n            let mh = 100 + Math.random() * 100;\n            mountainsLayer2.push({ x: mx, w: mw, h: mh });\n            mx += mw * 0.7;\n          }\n        }\n\n        function resetGame() {\n          player = {\n            x: 80,\n            y: 550,\n            w: 24,\n            h: 36,\n            vx: 0,\n            vy: 0,\n            speed: 0.8,\n            maxVx: 5.5,\n            jumpForce: -12.5,\n            grounded: false,\n            facing: 1,\n            animTime: 0\n          };\n\n          coins = INITIAL_COINS.map(c => ({\n            x: c.x,\n            y: c.y,\n            r: 10,\n            collected: false,\n            animOffset: Math.random() * Math.PI * 2\n          }));\n\n          particles = [];\n          collectedCount = 0;\n          gameWon = false;\n          winOverlay.style.display = 'none';\n          updateHUD();\n        }\n\n        function updateHUD() {\n          coinCountEl.textContent = `${collectedCount} / ${coins.length}`;\n        }\n\n        // Input Handling\n        const keys = {};\n        window.addEventListener('keydown', e => {\n          keys[e.code] = true;\n          if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {\n            e.preventDefault();\n          }\n        });\n        window.addEventListener('keyup', e => {\n          keys[e.code] = false;\n        });\n\n        // Touch Control Binding\n        function bindTouch(elementId, code) {\n          const btn = document.getElementById(elementId);\n          const setKey = (val) => { keys[code] = val; };\n          btn.addEventListener('touchstart', (e) => { e.preventDefault(); setKey(true); });\n          btn.addEventListener('touchend', (e) => { e.preventDefault(); setKey(false); });\n          btn.addEventListener('mousedown', (e) => { e.preventDefault(); setKey(true); });\n          btn.addEventListener('mouseup', (e) => { e.preventDefault(); setKey(false); });\n        }\n        bindTouch('btn-left', 'ArrowLeft');\n        bindTouch('btn-right', 'ArrowRight');\n        bindTouch('btn-jump', 'Space');\n\n        resetBtn.addEventListener('click', resetGame);\n        winResetBtn.addEventListener('click', resetGame);\n\n        // Spawn Collection Particles\n        function spawnParticles(x, y, color, count = 12) {\n          for (let i = 0; i < count; i++) {\n            const angle = Math.random() * Math.PI * 2;\n            const speed = Math.random() * 4 + 1;\n            particles.push({\n              x: x,\n              y: y,\n              vx: Math.cos(angle) * speed,\n              vy: Math.sin(angle) * speed,\n              life: 1.0,\n              decay: Math.random() * 0.03 + 0.02,\n              color: color,\n              size: Math.random() * 4 + 2\n            });\n          }\n        }\n\n        // Physics & Game Loop\n        let lastTime = performance.now();\n\n        function update(dt) {\n          if (gameWon) return;\n\n          // Horizontal movement controls\n          if (keys['ArrowRight'] || keys['KeyD']) {\n            player.vx += player.speed;\n            player.facing = 1;\n          } else if (keys['ArrowLeft'] || keys['KeyA']) {\n            player.vx -= player.speed;\n            player.facing = -1;\n          } else {\n            player.vx *= WORLD.friction;\n          }\n\n          // Cap horizontal speed\n          player.vx = Math.max(-player.maxVx, Math.min(player.maxVx, player.vx));\n\n          // Jump control\n          if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && player.grounded) {\n            player.vy = player.jumpForce;\n            player.grounded = false;\n            spawnParticles(player.x + player.w / 2, player.y + player.h, '#ffffff', 6);\n          }\n\n          // Apply Gravity\n          player.vy += WORLD.gravity;\n\n          // X Movement & Platform Collision\n          player.x += player.vx;\n          for (let p of INITIAL_PLATFORMS) {\n            if (\n              player.x < p.x + p.w &&\n              player.x + player.w > p.x &&\n              player.y < p.y + p.h &&\n              player.y + player.h > p.y\n            ) {\n              if (player.vx > 0) player.x = p.x - player.w;\n              else if (player.vx < 0) player.x = p.x + p.w;\n            }\n          }\n\n          // Y Movement & Platform Collision\n          player.y += player.vy;\n          player.grounded = false;\n          for (let p of INITIAL_PLATFORMS) {\n            if (\n              player.x < p.x + p.w &&\n              player.x + player.w > p.x &&\n              player.y < p.y + p.h &&\n              player.y + player.h > p.y\n            ) {\n              if (player.vy > 0) {\n                player.y = p.y - player.h;\n                player.vy = 0;\n                player.grounded = true;\n              } else if (player.vy < 0) {\n                player.y = p.y + p.h;\n                player.vy = 0;\n              }\n            }\n          }\n\n          // Pit Fall Check (Reset if fallen)\n          if (player.y > WORLD.height + 100) {\n            resetGame();\n            return;\n          }\n\n          // Coin Collection Check\n          coins.forEach(c => {\n            if (!c.collected) {\n              const dx = (player.x + player.w / 2) - c.x;\n              const dy = (player.y + player.h / 2) - c.y;\n              const dist = Math.sqrt(dx * dx + dy * dy);\n              if (dist < c.r + player.w / 2) {\n                c.collected = true;\n                collectedCount++;\n                updateHUD();\n                spawnParticles(c.x, c.y, '#ffd700', 14);\n              }\n            }\n          });\n\n          // Goal Flag Collision\n          if (\n            player.x < GOAL_FLAG.x + GOAL_FLAG.w &&\n            player.x + player.w > GOAL_FLAG.x &&\n            player.y < GOAL_FLAG.y &&\n            player.y + player.h > GOAL_FLAG.y - GOAL_FLAG.h\n          ) {\n            gameWon = true;\n            winStats.textContent = `You collected ${collectedCount} of ${coins.length} coins!`;\n            winOverlay.style.display = 'flex';\n            spawnParticles(GOAL_FLAG.x + 20, GOAL_FLAG.y - 60, '#22c55e', 40);\n            spawnParticles(GOAL_FLAG.x + 20, GOAL_FLAG.y - 60, '#ffd700', 40);\n          }\n\n          // Update Particles\n          for (let i = particles.length - 1; i >= 0; i--) {\n            let pt = particles[i];\n            pt.x += pt.vx;\n            pt.y += pt.vy;\n            pt.life -= pt.decay;\n            if (pt.life <= 0) particles.splice(i, 1);\n          }\n\n          // Smooth Camera Tracking\n          const targetCamX = player.x + player.w / 2 - viewW / 2;\n          const targetCamY = player.y + player.h / 2 - viewH * 0.6;\n          cameraX += (targetCamX - cameraX) * 0.08;\n          cameraY += (targetCamY - cameraY) * 0.08;\n\n          // Clamp camera to world bounds\n          cameraX = Math.max(0, Math.min(WORLD.width - viewW, cameraX));\n          cameraY = Math.max(0, Math.min(WORLD.height - viewH, cameraY));\n\n          player.animTime += dt;\n        }\n\n        // Render Loop\n        function draw(time) {\n          ctx.save();\n          ctx.scale(dpr, dpr);\n\n          // 1. Sky Gradient Background (Fixed)\n          let skyGrad = ctx.createLinearGradient(0, 0, 0, viewH);\n          skyGrad.addColorStop(0, '#0a0a16');\n          skyGrad.addColorStop(1, '#1a1a2e');\n          ctx.fillStyle = skyGrad;\n          ctx.fillRect(0, 0, viewW, viewH);\n\n          // 2. Parallax Layer 0: Stars\n          ctx.fillStyle = '#ffffff';\n          stars.forEach(s => {\n            let sx = (s.x - cameraX * 0.05) % viewW;\n            if (sx < 0) sx += viewW;\n            ctx.globalAlpha = s.alpha;\n            ctx.fillRect(sx, s.y, s.size, s.size);\n          });\n          ctx.globalAlpha = 1.0;\n\n          // 3. Parallax Layer 1: Distant Mountains (0.15 factor)\n          ctx.fillStyle = '#141428';\n          mountainsLayer1.forEach(m => {\n            let mx = m.x - cameraX * 0.15;\n            ctx.beginPath();\n            ctx.moveTo(mx, viewH);\n            ctx.lineTo(mx + m.w / 2, viewH - m.h);\n            ctx.lineTo(mx + m.w, viewH);\n            ctx.closePath();\n            ctx.fill();\n          });\n\n          // 4. Parallax Layer 2: Midground Hills (0.35 factor)\n          ctx.fillStyle = '#1e1e38';\n          mountainsLayer2.forEach(m => {\n            let mx = m.x - cameraX * 0.35;\n            ctx.beginPath();\n            ctx.moveTo(mx, viewH);\n            ctx.lineTo(mx + m.w / 2, viewH - m.h);\n            ctx.lineTo(mx + m.w, viewH);\n            ctx.closePath();\n            ctx.fill();\n          });\n\n          // Apply Main World Camera Matrix\n          ctx.save();\n          ctx.translate(-Math.floor(cameraX), -Math.floor(cameraY));\n\n          // 5. Draw Platforms\n          INITIAL_PLATFORMS.forEach(p => {\n            // Platform Body\n            ctx.fillStyle = '#2a2a40';\n            ctx.fillRect(p.x, p.y, p.w, p.h);\n\n            // Platform Top Glow / Border\n            ctx.fillStyle = '#6366f1';\n            ctx.fillRect(p.x, p.y, p.w, 4);\n\n            // Subtle inner pattern\n            ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';\n            ctx.fillRect(p.x + 4, p.y + 8, p.w - 8, p.h - 12);\n          });\n\n          // 6. Draw Goal Flag\n          const flagX = GOAL_FLAG.x;\n          const flagY = GOAL_FLAG.y;\n          // Pole\n          ctx.fillStyle = '#94a3b8';\n          ctx.fillRect(flagX + 6, flagY - GOAL_FLAG.h, 4, GOAL_FLAG.h);\n          // Flag Banner (Animated Wave)\n          let wave = Math.sin(time * 0.005) * 4;\n          ctx.fillStyle = '#22c55e';\n          ctx.beginPath();\n          ctx.moveTo(flagX + 10, flagY - GOAL_FLAG.h);\n          ctx.quadraticCurveTo(flagX + 25, flagY - GOAL_FLAG.h + wave, flagX + 38, flagY - GOAL_FLAG.h + 12);\n          ctx.quadraticCurveTo(flagX + 25, flagY - GOAL_FLAG.h + 24 + wave, flagX + 10, flagY - GOAL_FLAG.h + 30);\n          ctx.closePath();\n          ctx.fill();\n\n          // 7. Draw Coins\n          coins.forEach(c => {\n            if (!c.collected) {\n              const scale = Math.abs(Math.cos(time * 0.004 + c.animOffset));\n              const coinY = c.y + Math.sin(time * 0.005 + c.animOffset) * 3;\n\n              ctx.save();\n              ctx.translate(c.x, coinY);\n              ctx.scale(scale, 1);\n\n              // Coin Outer\n              ctx.fillStyle = '#ffd700';\n              ctx.beginPath();\n              ctx.arc(0, 0, c.r, 0, Math.PI * 2);\n              ctx.fill();\n\n              // Coin Inner Ring\n              ctx.strokeStyle = '#b8860b';\n              ctx.lineWidth = 2;\n              ctx.stroke();\n\n              ctx.restore();\n            }\n          });\n\n          // 8. Draw Player\n          ctx.save();\n          ctx.translate(player.x + player.w / 2, player.y + player.h / 2);\n\n          // Player Squash/Stretch on Jump\n          let scaleX = 1;\n          let scaleY = 1;\n          if (!player.grounded) {\n            scaleX = 0.85;\n            scaleY = 1.15;\n          }\n          ctx.scale(scaleX * player.facing, scaleY);\n\n          // Body\n          ctx.fillStyle = '#38bdf8';\n          ctx.shadowColor = '#38bdf8';\n          ctx.shadowBlur = 10;\n          ctx.fillRect(-player.w / 2, -player.h / 2, player.w, player.h);\n          ctx.shadowBlur = 0;\n\n          // Eyes (Facial direction)\n          ctx.fillStyle = '#0f172a';\n          ctx.fillRect(2, -player.h / 2 + 8, 4, 8);\n          ctx.fillRect(10, -player.h / 2 + 8, 4, 8);\n\n          ctx.restore();\n\n          // 9. Draw Particles\n          particles.forEach(pt => {\n            ctx.fillStyle = pt.color;\n            ctx.globalAlpha = pt.life;\n            ctx.fillRect(pt.x, pt.y, pt.size, pt.size);\n          });\n          ctx.globalAlpha = 1.0;\n\n          ctx.restore(); // Camera Matrix Restore\n          ctx.restore(); // Base DPR Restore\n        }\n\n        // Main Loop Driver\n        function loop(timestamp) {\n          const dt = timestamp - lastTime;\n          lastTime = timestamp;\n\n          update(dt);\n          draw(timestamp);\n\n          animFrameId = requestAnimationFrame(loop);\n        }\n\n        // Start Game\n        generateBackgrounds();\n        resetGame();\n        animFrameId = requestAnimationFrame(loop);\n\n        // Cleanup on Unload\n        window.addEventListener('unload', () => {\n          if (animFrameId) cancelAnimationFrame(animFrameId);\n        });\n\n      } catch (err) {\n        // Render detailed failure box in iframe\n        if (errorLog) {\n          errorLog.style.display = 'block';\n          errorLog.textContent = 'App Runtime Error: ' + err.message + '\\n' + err.stack;\n        }\n      }\n    });\n  </script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "crypto-hash-race",
+    "modelId": "gemini-3.6-flash",
+    "score": 92.8,
+    "runtimeMs": 13870,
+    "tokensIn": 255,
+    "tokensOut": 11507,
+    "costUsd": 0.000086685,
+    "usage": {
+      "inputTokens": 255,
+      "outputTokens": 11507,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      88,
+      88,
+      100,
+      88,
+      100
+    ],
+    "telemetry": {
+      "meanTtftMs": 7344,
+      "meanTokensPerSec": 420,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "74566edf13abde4f",
+    "createdAt": "2026-08-17T06:40:43.901Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-crypto-hash-race.jsonl"
+    },
+    "source": "live",
+    "output": "import hmac\nimport os\nimport unittest\n\n\ndef constant_time_compare(val1: str | bytes, val2: str | bytes) -> bool:\n    \"\"\"Compare two strings or byte sequences in constant time to prevent timing attacks.\"\"\"\n    if isinstance(val1, str):\n        val1 = val1.encode(\"utf-8\")\n    if isinstance(val2, str):\n        val2 = val2.encode(\"utf-8\")\n    return hmac.compare_digest(val1, val2)\n\n\ndef hash_password(\n    password: str, iterations: int = 600_000, algorithm: str = \"sha256\"\n) -> str:\n    \"\"\"Hash a password using PBKDF2 with a secure random salt.\n\n    Returns a formatted string: <algorithm>$<iterations>$<salt_hex>$<hash_hex>\n    \"\"\"\n    salt = os.urandom(16)\n    hash_bytes = hashlib.pbkdf2_hmac(\n        algorithm, password.encode(\"utf-8\"), salt, iterations\n    )\n    return f\"{algorithm}${iterations}${salt.hex()}${hash_bytes.hex()}\"\n\n\ndef verify_password(password: str, hashed_password: str) -> bool:\n    \"\"\"Verify a password against a stored PBKDF2 hash string.\"\"\"\n    try:\n        algorithm, iterations_str, salt_hex, expected_hash_hex = (\n            hashed_password.split(\"$\")\n        )\n        iterations = int(iterations_str)\n        salt = bytes.fromhex(salt_hex)\n        expected_hash = bytes.fromhex(expected_hash_hex)\n    except (ValueError, AttributeError):\n        return False\n\n    computed_hash = hashlib.pbkdf2_hmac(\n        algorithm, password.encode(\"utf-8\"), salt, iterations\n    )\n    return constant_time_compare(computed_hash, expected_hash)\n\n\nclass TestAuthUtils(unittest.TestCase):\n\n    def test_constant_time_compare(self):\n        self.assertTrue(constant_time_compare(\"secret_key\", \"secret_key\"))\n        self.assertFalse(constant_time_compare(\"secret_key\", \"wrong_key\"))\n        self.assertTrue(constant_time_compare(b\"bytes_val\", b\"bytes_val\"))\n        self.assertFalse(constant_time_compare(b\"bytes_val\", b\"other_val\"))\n\n    def test_hash_password_creates_unique_salts(self):\n        password = \"SecurePassword123!\"\n        hash1 = hash_password(password)\n        hash2 = hash_password(password)\n        self.assertNotEqual(hash1, hash2)\n\n    def test_verify_password_correct(self):\n        password = \"CorrectHorseBatteryStaple\"\n        hashed = hash_password(password)\n        self.assertTrue(verify_password(password, hashed))\n\n    def test_verify_password_incorrect(self):\n        password = \"CorrectHorseBatteryStaple\"\n        hashed = hash_password(password)\n        self.assertFalse(verify_password(\"IncorrectPassword\", hashed))\n\n    def test_verify_password_malformed_hash(self):\n        self.assertFalse(verify_password(\"password\", \"malformed$hash$string\"))\n        self.assertFalse(verify_password(\"password\", \"\"))\n\n\nif __name__ == \"__main__\":\n    unittest.main()"
+  },
+  {
+    "taskId": "n-body-field",
+    "modelId": "gemini-3.6-flash",
+    "score": 74.4,
+    "runtimeMs": 94812,
+    "tokensIn": 4284,
+    "tokensOut": 82868,
+    "costUsd": 0.000627936,
+    "usage": {
+      "inputTokens": 4284,
+      "outputTokens": 82868,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      68,
+      100,
+      68,
+      68,
+      68
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 35% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 100% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 99.1% (threshold 1%)"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 35% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 35% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        }
+      ],
+      [
+        {
+          "name": "nbody-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content score: 35% (threshold 15%)"
+        },
+        {
+          "name": "nbody-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "pixel diff over 1.2s: 0.0% (threshold 1%)"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 32227,
+      "meanTokensPerSec": 291.1,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "1945c43e6f9b3a29",
+    "createdAt": "2026-08-17T06:34:06.485Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-n-body-field.jsonl"
+    },
+    "source": "live",
+    "output": "<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>3D N-Body Gravity Simulation</title>\n<style>\n  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }\n  html, body {\n    width: 100%; height: 100%;\n    min-height: 100%;\n    overflow: hidden;\n    background: #06060c;\n    color: #ececf0;\n    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n  }\n  #canvas-container {\n    position: absolute;\n    top: 0; left: 0;\n    width: 100vw; height: 100vh;\n    z-index: 1;\n  }\n  canvas {\n    width: 100%; height: 100%;\n    display: block;\n  }\n  \n  /* UI Panels */\n  .hud-panel {\n    position: absolute;\n    z-index: 10;\n    background: rgba(14, 16, 26, 0.75);\n    backdrop-filter: blur(12px);\n    -webkit-backdrop-filter: blur(12px);\n    border: 1px solid rgba(255, 255, 255, 0.12);\n    border-radius: 10px;\n    padding: 12px 16px;\n    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);\n    pointer-events: auto;\n  }\n\n  #title-card {\n    top: 14px; left: 14px;\n    max-width: 280px;\n  }\n  #title-card h1 {\n    font-size: 1.05rem;\n    font-weight: 700;\n    letter-spacing: 0.5px;\n    color: #fff;\n    margin-bottom: 4px;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n  }\n  #title-card h1 span {\n    display: inline-block;\n    width: 8px; height: 8px;\n    border-radius: 50%;\n    background: #00f0ff;\n    box-shadow: 0 0 8px #00f0ff;\n  }\n  .stats-row {\n    font-size: 0.75rem;\n    color: #94a3b8;\n    display: flex;\n    justify-content: space-between;\n    margin-top: 4px;\n    font-mono: monospace;\n  }\n\n  /* Controls Panel */\n  #controls-card {\n    top: 14px; right: 14px;\n    width: 280px;\n    max-height: calc(100vh - 28px);\n    overflow-y: auto;\n    transition: transform 0.3s ease;\n  }\n  #controls-card.collapsed {\n    transform: translateX(calc(100% + 20px));\n  }\n  #toggle-controls {\n    position: absolute;\n    top: 14px; right: 14px;\n    z-index: 11;\n    background: rgba(14, 16, 26, 0.85);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #fff;\n    border-radius: 8px;\n    width: 36px; height: 36px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 1.1rem;\n  }\n\n  .control-group {\n    margin-bottom: 10px;\n  }\n  .control-group label {\n    display: flex;\n    justify-content: space-between;\n    font-size: 0.75rem;\n    font-weight: 600;\n    color: #cbd5e1;\n    margin-bottom: 4px;\n  }\n  .control-group label span.val {\n    color: #38bdf8;\n    font-family: monospace;\n  }\n  input[type=range] {\n    width: 100%;\n    height: 4px;\n    background: rgba(255, 255, 255, 0.15);\n    border-radius: 2px;\n    appearance: none;\n    outline: none;\n  }\n  input[type=range]::-webkit-slider-thumb {\n    appearance: none;\n    width: 14px; height: 14px;\n    border-radius: 50%;\n    background: #38bdf8;\n    cursor: pointer;\n    box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);\n  }\n  select {\n    width: 100%;\n    background: rgba(30, 41, 59, 0.8);\n    border: 1px solid rgba(255, 255, 255, 0.15);\n    color: #f1f5f9;\n    padding: 6px 8px;\n    border-radius: 6px;\n    font-size: 0.8rem;\n    outline: none;\n    cursor: pointer;\n  }\n\n  .btn-grid {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    gap: 6px;\n    margin-top: 12px;\n  }\n  .btn {\n    background: rgba(255, 255, 255, 0.08);\n    border: 1px solid rgba(255, 255, 255, 0.15);\n    color: #f1f5f9;\n    padding: 6px 10px;\n    border-radius: 6px;\n    font-size: 0.75rem;\n    font-weight: 600;\n    cursor: pointer;\n    transition: all 0.15s ease;\n    text-align: center;\n  }\n  .btn:hover {\n    background: rgba(56, 189, 248, 0.25);\n    border-color: #38bdf8;\n  }\n  .btn.active {\n    background: #0284c7;\n    border-color: #38bdf8;\n  }\n\n  /* Color Scale Legend */\n  #legend-bar {\n    position: absolute;\n    bottom: 14px; left: 14px;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-size: 0.7rem;\n    color: #94a3b8;\n  }\n  .gradient-box {\n    width: 120px; height: 8px;\n    border-radius: 4px;\n    background: linear-gradient(to right, #2563eb, #06b6d4, #10b981, #f59e0b, #ef4444, #ffffff);\n  }\n\n  /* Error Alert */\n  #error-log {\n    display: none;\n    position: fixed;\n    top: 10px; left: 10px; right: 10px;\n    padding: 12px;\n    background: #7f1d1d;\n    color: #fca5a5;\n    border: 1px solid #ef4444;\n    border-radius: 8px;\n    z-index: 9999;\n    font-family: monospace;\n    font-size: 0.8rem;\n    white-space: pre-wrap;\n  }\n\n  @media (max-width: 600px) {\n    #title-card { max-width: 200px; padding: 8px 12px; }\n    #controls-card { width: 240px; }\n  }\n</style>\n</head>\n<body>\n\n<div id=\"error-log\" role=\"alert\"></div>\n\n<div id=\"canvas-container\">\n  <canvas id=\"sim-canvas\"></canvas>\n</div>\n\n<!-- Title HUD -->\n<div class=\"hud-panel\" id=\"title-card\">\n  <h1><span></span> 3D N-Body Gravity</h1>\n  <div class=\"stats-row\">\n    <span>Particles: <strong id=\"stat-n\" style=\"color:#fff\">200</strong></span>\n    <span>FPS: <strong id=\"stat-fps\" style=\"color:#38bdf8\">60</strong></span>\n  </div>\n  <div class=\"stats-row\">\n    <span>Avg Speed: <span id=\"stat-spd\">0.0</span></span>\n    <span>Max Speed: <span id=\"stat-max-spd\">0.0</span></span>\n  </div>\n</div>\n\n<button id=\"toggle-controls\" title=\"Toggle Controls\">⚙</button>\n\n<!-- Controls HUD -->\n<div class=\"hud-panel\" id=\"controls-card\">\n  <div class=\"control-group\">\n    <label>Preset Initial State</label>\n    <select id=\"preset-select\">\n      <option value=\"disk\">Spiral Galaxy Disk</option>\n      <option value=\"cluster\">Plummer Sphere</option>\n      <option value=\"binary\">Binary Galaxy Collision</option>\n      <option value=\"ring\">Rotating Torus / Ring</option>\n      <option value=\"chaos\">Random Cloud</option>\n    </select>\n  </div>\n\n  <div class=\"control-group\">\n    <label>Particle Count (N) <span class=\"val\" id=\"val-n\">200</span></label>\n    <input type=\"range\" id=\"slider-n\" min=\"20\" max=\"400\" step=\"10\" value=\"200\">\n  </div>\n\n  <div class=\"control-group\">\n    <label>Gravitational Constant (G) <span class=\"val\" id=\"val-g\">1.50</span></label>\n    <input type=\"range\" id=\"slider-g\" min=\"0.1\" max=\"5.0\" step=\"0.1\" value=\"1.5\">\n  </div>\n\n  <div class=\"control-group\">\n    <label>Softening Factor (ε) <span class=\"val\" id=\"val-eps\">4.0</span></label>\n    <input type=\"range\" id=\"slider-eps\" min=\"0.5\" max=\"15.0\" step=\"0.5\" value=\"4.0\">\n  </div>\n\n  <div class=\"control-group\">\n    <label>Time Step (dt) <span class=\"val\" id=\"val-dt\">0.40</span></label>\n    <input type=\"range\" id=\"slider-dt\" min=\"0.05\" max=\"1.0\" step=\"0.05\" value=\"0.4\">\n  </div>\n\n  <div class=\"control-group\">\n    <label>Trail Length <span class=\"val\" id=\"val-trail\">0.35</span></label>\n    <input type=\"range\" id=\"slider-trail\" min=\"0.0\" max=\"0.9\" step=\"0.05\" value=\"0.35\">\n  </div>\n\n  <div class=\"btn-grid\">\n    <button class=\"btn\" id=\"btn-pause\">Pause</button>\n    <button class=\"btn\" id=\"btn-reset\">Reset System</button>\n    <button class=\"btn\" id=\"btn-center\">Recenter</button>\n    <button class=\"btn active\" id=\"btn-rotate\">Auto-Rotate</button>\n  </div>\n</div>\n\n<!-- Velocity Legend -->\n<div class=\"hud-panel\" id=\"legend-bar\">\n  <span>Slow</span>\n  <div class=\"gradient-box\"></div>\n  <span>Fast (Velocity-Color)</span>\n</div>\n\n<script>\ntry {\n  // --- CANVAS & SETUP ---\n  const canvas = document.getElementById('sim-canvas');\n  const ctx = canvas.getContext('2d');\n\n  let width = 0, height = 0, dpr = 1;\n\n  function handleResize() {\n    dpr = Math.min(window.devicePixelRatio || 1, 2);\n    width = window.innerWidth;\n    height = window.innerHeight;\n    canvas.width = Math.floor(width * dpr);\n    canvas.height = Math.floor(height * dpr);\n  }\n  window.addEventListener('resize', handleResize);\n  handleResize();\n\n  // --- SIMULATION PARAMETERS & STATE ---\n  let N = 200;\n  let G = 1.5;\n  let softening = 4.0;\n  let dt = 0.4;\n  let trailAlpha = 0.35;\n  let isPaused = false;\n  let autoRotate = true;\n\n  // Particle Attributes (Typed Arrays for performance)\n  let px = new Float32Array(400);\n  let py = new Float32Array(400);\n  let pz = new Float32Array(400);\n  let vx = new Float32Array(400);\n  let vy = new Float32Array(400);\n  let vz = new Float32Array(400);\n  let mass = new Float32Array(400);\n  let speeds = new Float32Array(400);\n\n  // Center of Mass\n  let comX = 0, comY = 0, comZ = 0;\n\n  // Camera Settings\n  let camTheta = 0.4;\n  let camPhi = 1.25; // pitch angle from top\n  let camDist = 220;\n  let targetX = 0, targetY = 0, targetZ = 0;\n\n  // UI Control Elements\n  const sliderN = document.getElementById('slider-n');\n  const sliderG = document.getElementById('slider-g');\n  const sliderEps = document.getElementById('slider-eps');\n  const sliderDt = document.getElementById('slider-dt');\n  const sliderTrail = document.getElementById('slider-trail');\n  const presetSelect = document.getElementById('preset-select');\n  const btnPause = document.getElementById('btn-pause');\n  const btnReset = document.getElementById('btn-reset');\n  const btnCenter = document.getElementById('btn-center');\n  const btnRotate = document.getElementById('btn-rotate');\n\n  const statN = document.getElementById('stat-n');\n  const statFps = document.getElementById('stat-fps');\n  const statSpd = document.getElementById('stat-spd');\n  const statMaxSpd = document.getElementById('stat-max-spd');\n\n  // --- INITIALIZERS ---\n  function initParticles() {\n    N = parseInt(sliderN.value, 10);\n    statN.textContent = N;\n    const mode = presetSelect.value;\n\n    let totalM = 0;\n    comX = 0; comY = 0; comZ = 0;\n\n    for (let i = 0; i < N; i++) {\n      mass[i] = 1.0 + Math.random() * 0.5;\n    }\n\n    if (mode === 'disk') {\n      // Massive central core + orbiting accretion disk\n      mass[0] = 300.0;\n      px[0] = 0; py[0] = 0; pz[0] = 0;\n      vx[0] = 0; vy[0] = 0; vz[0] = 0;\n\n      for (let i = 1; i < N; i++) {\n        const r = 15 + Math.random() * 85;\n        const theta = Math.random() * Math.PI * 2;\n        px[i] = r * Math.cos(theta);\n        py[i] = (Math.random() - 0.5) * 6;\n        pz[i] = r * Math.sin(theta);\n\n        // Circular orbit velocity v = sqrt(G * M / r)\n        const vOrbit = Math.sqrt((G * 300.0) / r);\n        vx[i] = -vOrbit * Math.sin(theta) + (Math.random() - 0.5) * 0.2;\n        vy[i] = (Math.random() - 0.5) * 0.2;\n        vz[i] = vOrbit * Math.cos(theta) + (Math.random() - 0.5) * 0.2;\n      }\n    } else if (mode === 'cluster') {\n      // Plummer sphere distribution\n      for (let i = 0; i < N; i++) {\n        const radius = 50 * Math.pow(Math.random(), 0.6);\n        const u = Math.random() * 2 - 1;\n        const phi = Math.random() * Math.PI * 2;\n        const st = Math.sqrt(1 - u * u);\n\n        px[i] = radius * st * Math.cos(phi);\n        py[i] = radius * st * Math.sin(phi);\n        pz[i] = radius * u;\n\n        const spd = Math.sqrt(G * N / (radius + 10)) * 0.4;\n        vx[i] = (Math.random() - 0.5) * spd * 2;\n        vy[i] = (Math.random() - 0.5) * spd * 2;\n        vz[i] = (Math.random() - 0.5) * spd * 2;\n      }\n    } else if (mode === 'binary') {\n      // Two colliding clusters\n      const halfN = Math.floor(N / 2);\n      for (let i = 0; i < N; i++) {\n        const isFirst = i < halfN;\n        const cx = isFirst ? -45 : 45;\n        const cy = isFirst ? -15 : 15;\n        const cz = 0;\n        const cvx = isFirst ? 0.8 : -0.8;\n        const cvy = isFirst ? 0.4 : -0.4;\n\n        const r = 5 + Math.random() * 25;\n        const theta = Math.random() * Math.PI * 2;\n\n        px[i] = cx + r * Math.cos(theta);\n        py[i] = cy + (Math.random() - 0.5) * 10;\n        pz[i] = cz + r * Math.sin(theta);\n\n        const vSpin = Math.sqrt(G * 50 / (r + 2));\n        vx[i] = cvx - vSpin * Math.sin(theta);\n        vy[i] = cvy + (Math.random() - 0.5) * 0.2;\n        vz[i] = vSpin * Math.cos(theta);\n      }\n    } else if (mode === 'ring') {\n      // Rotating ring/torus\n      const R = 60;\n      for (let i = 0; i < N; i++) {\n        const theta = (i / N) * Math.PI * 2 + (Math.random() * 0.05);\n        const phi = Math.random() * Math.PI * 2;\n        const rSub = 6 * Math.random();\n\n        px[i] = (R + rSub * Math.cos(phi)) * Math.cos(theta);\n        py[i] = rSub * Math.sin(phi);\n        pz[i] = (R + rSub * Math.cos(phi)) * Math.sin(theta);\n\n        const vRot = Math.sqrt(G * N * 0.4);\n        vx[i] = -vRot * Math.sin(theta);\n        vy[i] = (Math.random() - 0.5) * 0.3;\n        vz[i] = vRot * Math.cos(theta);\n      }\n    } else {\n      // Random Cloud\n      for (let i = 0; i < N; i++) {\n        px[i] = (Math.random() - 0.5) * 120;\n        py[i] = (Math.random() - 0.5) * 120;\n        pz[i] = (Math.random() - 0.5) * 120;\n        vx[i] = (Math.random() - 0.5) * 0.5;\n        vy[i] = (Math.random() - 0.5) * 0.5;\n        vz[i] = (Math.random() - 0.5) * 0.5;\n      }\n    }\n\n    // Zero out total linear momentum to keep system in frame\n    let totVx = 0, totVy = 0, totVz = 0;\n    for (let i = 0; i < N; i++) {\n      totalM += mass[i];\n      totVx += vx[i] * mass[i];\n      totVy += vy[i] * mass[i];\n      totVz += vz[i] * mass[i];\n    }\n    for (let i = 0; i < N; i++) {\n      vx[i] -= totVx / totalM;\n      vy[i] -= totVy / totalM;\n      vz[i] -= totVz / totalM;\n    }\n  }\n\n  // --- PHYSICS ENGINE ($O(N^2)$ Pairwise Gravity with Softening) ---\n  function updatePhysics() {\n    const eps2 = softening * softening;\n    let sumSpd = 0;\n    let maxSpd = 0;\n\n    // Compute forces and update velocities\n    for (let i = 0; i < N; i++) {\n      let ax = 0, ay = 0, az = 0;\n      const xi = px[i], yi = py[i], zi = pz[i];\n\n      for (let j = 0; j < N; j++) {\n        if (i === j) continue;\n        const dx = px[j] - xi;\n        const dy = py[j] - yi;\n        const dz = pz[j] - zi;\n\n        const distSq = dx * dx + dy * dy + dz * dz + eps2;\n        const dist = Math.sqrt(distSq);\n        const invDist3 = (G * mass[j]) / (distSq * dist);\n\n        ax += dx * invDist3;\n        ay += dy * invDist3;\n        az += dz * invDist3;\n      }\n\n      vx[i] += ax * dt;\n      vy[i] += ay * dt;\n      vz[i] += az * dt;\n    }\n\n    // Update positions & stats\n    let mx = 0, my = 0, mz = 0, totalM = 0;\n\n    for (let i = 0; i < N; i++) {\n      px[i] += vx[i] * dt;\n      py[i] += vy[i] * dt;\n      pz[i] += vz[i] * dt;\n\n      const spd = Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i] + vz[i] * vz[i]);\n      speeds[i] = spd;\n      sumSpd += spd;\n      if (spd > maxSpd) maxSpd = spd;\n\n      mx += px[i] * mass[i];\n      my += py[i] * mass[i];\n      mz += pz[i] * mass[i];\n      totalM += mass[i];\n    }\n\n    comX = mx / totalM;\n    comY = my / totalM;\n    comZ = mz / totalM;\n\n    // Smooth camera target movement toward Center of Mass\n    targetX += (comX - targetX) * 0.05;\n    targetY += (comY - targetY) * 0.05;\n    targetZ += (comZ - targetZ) * 0.05;\n\n    statSpd.textContent = (sumSpd / N).toFixed(2);\n    statMaxSpd.textContent = maxSpd.toFixed(2);\n  }\n\n  // --- VELOCITY COLOR MAPPER ---\n  function getVelocityColor(spd, maxSpeedRef) {\n    // Color scale: Deep Cyan/Blue (slow) -> Green -> Yellow -> Red -> Bright White (fast)\n    let t = Math.min(spd / (maxSpeedRef + 1e-4), 1.0);\n    \n    let r, g, b;\n    if (t < 0.25) { // Blue -> Cyan\n      const k = t / 0.25;\n      r = Math.floor(30 * (1 - k));\n      g = Math.floor(100 + 120 * k);\n      b = 255;\n    } else if (t < 0.5) { // Cyan -> Green\n      const k = (t - 0.25) / 0.25;\n      r = 0;\n      g = 220 + Math.floor(35 * k);\n      b = Math.floor(255 * (1 - k));\n    } else if (t < 0.75) { // Green -> Yellow/Orange\n      const k = (t - 0.5) / 0.25;\n      r = Math.floor(255 * k);\n      g = Math.floor(220 - 40 * k);\n      b = 0;\n    } else { // Orange -> Red/White Glow\n      const k = (t - 0.75) / 0.25;\n      r = 255;\n      g = Math.floor(180 * (1 - k) + 255 * k);\n      b = Math.floor(255 * k);\n    }\n    return { r, g, b, str: `rgb(${r},${g},${b})` };\n  }\n\n  // --- 3D RENDERING PIPELINE ---\n  const renderList = [];\n  for (let i = 0; i < 400; i++) renderList.push({ idx: i, depth: 0 });\n\n  function render() {\n    ctx.save();\n    ctx.scale(dpr, dpr);\n\n    // Fade screen for particle motion trails\n    if (trailAlpha > 0) {\n      ctx.fillStyle = `rgba(6, 6, 12, ${1.0 - trailAlpha})`;\n      ctx.fillRect(0, 0, width, height);\n    } else {\n      ctx.clearRect(0, 0, width, height);\n    }\n\n    if (autoRotate && !isPaused) {\n      camTheta += 0.003;\n    }\n\n    // Camera LookAt Vectors\n    const sinT = Math.sin(camTheta), cosT = Math.cos(camTheta);\n    const sinP = Math.sin(camPhi), cosP = Math.cos(camPhi);\n\n    const cx = targetX + camDist * sinP * sinT;\n    const cy = targetY + camDist * cosP;\n    const cz = targetZ + camDist * sinP * cosT;\n\n    // View direction vector F\n    const fx = targetX - cx, fy = targetY - cy, fz = targetZ - cz;\n    const fLen = Math.sqrt(fx * fx + fy * fy + fz * fz);\n    const fnx = fx / fLen, fny = fy / fLen, fnz = fz / fLen;\n\n    // Right vector R = F x (0,1,0)\n    let rx = fnz, ry = 0, rz = -fnx;\n    const rLen = Math.sqrt(rx * rx + rz * rz);\n    if (rLen > 1e-5) { rx /= rLen; rz /= rLen; }\n\n    // Up vector U = R x F\n    const ux = ry * fnz - rz * fny;\n    const uy = rz * fnx - rx * fnz;\n    const uz = rx * fny - ry * fnx;\n\n    const fov = 400; // Focal length\n    const centerX = width / 2;\n    const centerY = height / 2;\n\n    // Calculate depth for sorting\n    for (let i = 0; i < N; i++) {\n      const dx = px[i] - cx;\n      const dy = py[i] - cy;\n      const dz = pz[i] - cz;\n      const camZ = dx * fnx + dy * fny + dz * fnz;\n      renderList[i].idx = i;\n      renderList[i].depth = camZ;\n    }\n\n    // Depth sort particles (Back to Front)\n    renderList.length = N;\n    renderList.sort((a, b) => a.depth - b.depth);\n\n    // Determine 90th percentile velocity for stable color dynamic range\n    let sortedSpd = Array.from(speeds.subarray(0, N)).sort((a,b)=>a-b);\n    let maxRef = sortedSpd[Math.floor(N * 0.92)] || 1.0;\n\n    // Draw grid floor centered at target\n    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';\n    ctx.lineWidth = 1;\n    const gridSize = 120, gridStep = 30;\n    for (let gx = -gridSize; gx <= gridSize; gx += gridStep) {\n      // Grid line along Z\n      let p1x = targetX + gx - cx, p1y = targetY - cy, p1z = targetZ - gridSize - cz;\n      let p2x = targetX + gx - cx, p2y = targetY - cy, p2z = targetZ + gridSize - cz;\n\n      let z1 = p1x * fnx + p1y * fny + p1z * fnz;\n      let z2 = p2x * fnx + p2y * fny + p2z * fnz;\n\n      if (z1 > 10 && z2 > 10) {\n        let x1 = centerX + (p1x * rx + p1y * ry + p1z * rz) * (fov / z1);\n        let y1 = centerY - (p1x * ux + p1y * uy + p1z * uz) * (fov / z1);\n        let x2 = centerX + (p2x * rx + p2y * ry + p2z * rz) * (fov / z2);\n        let y2 = centerY - (p2x * ux + p2y * uy + p2z * uz) * (fov / z2);\n\n        ctx.beginPath();\n        ctx.moveTo(x1, y1);\n        ctx.lineTo(x2, y2);\n        ctx.stroke();\n      }\n    }\n\n    // Draw Particles with Additive Blending / Radial Glow\n    ctx.globalCompositeOperation = 'lighter';\n\n    for (let i = 0; i < N; i++) {\n      const pIdx = renderList[i].idx;\n      const depth = renderList[i].depth;\n\n      if (depth < 5) continue; // Behind camera clipping\n\n      const dx = px[pIdx] - cx;\n      const dy = py[pIdx] - cy;\n      const dz = pz[pIdx] - cz;\n\n      // Camera space coordinates\n      const camX = dx * rx + dy * ry + dz * rz;\n      const camY = dx * ux + dy * uy + dz * uz;\n\n      // Perspective projection\n      const scale = fov / depth;\n      const sx = centerX + camX * scale;\n      const sy = centerY - camY * scale;\n\n      if (sx < -50 || sx > width + 50 || sy < -50 || sy > height + 50) continue;\n\n      const spd = speeds[pIdx];\n      const col = getVelocityColor(spd, maxRef);\n      const isMassive = mass[pIdx] > 50;\n\n      // Size scaled by mass and distance\n      const baseRadius = isMassive ? 7.0 : (2.2 + (mass[pIdx] - 1) * 0.8);\n      const radius = Math.max(0.8, baseRadius * (scale / 2.5));\n\n      // Glow halo\n      const glowRad = radius * (isMassive ? 3.5 : 2.5);\n      const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, Math.max(1, glowRad));\n      grad.addColorStop(0, `rgba(${col.r}, ${col.g}, ${col.b}, 1)`);\n      grad.addColorStop(0.4, `rgba(${col.r}, ${col.g}, ${col.b}, 0.5)`);\n      grad.addColorStop(1, `rgba(${col.r}, ${col.g}, ${col.b}, 0)`);\n\n      ctx.fillStyle = grad;\n      ctx.beginPath();\n      ctx.arc(sx, sy, glowRad, 0, Math.PI * 2);\n      ctx.fill();\n\n      // Core particle point\n      ctx.fillStyle = '#ffffff';\n      ctx.beginPath();\n      ctx.arc(sx, sy, Math.max(0.6, radius * 0.5), 0, Math.PI * 2);\n      ctx.fill();\n    }\n\n    ctx.restore();\n  }\n\n  // --- ANIMATION & FPS COUNTER ---\n  let lastTime = performance.now();\n  let frameCount = 0;\n\n  function loop(currentTime) {\n    if (!isPaused) {\n      updatePhysics();\n    }\n    render();\n\n    frameCount++;\n    if (currentTime - lastTime >= 500) {\n      statFps.textContent = Math.round((frameCount * 1000) / (currentTime - lastTime));\n      frameCount = 0;\n      lastTime = currentTime;\n    }\n\n    requestAnimationFrame(loop);\n  }\n\n  // --- MOUSE & TOUCH CAMERA CONTROLS ---\n  let isDragging = false;\n  let prevMouseX = 0, prevMouseY = 0;\n\n  canvas.addEventListener('mousedown', (e) => {\n    isDragging = true;\n    prevMouseX = e.clientX;\n    prevMouseY = e.clientY;\n  });\n\n  window.addEventListener('mouseup', () => { isDragging = false; });\n\n  canvas.addEventListener('mousemove', (e) => {\n    if (!isDragging) return;\n    const dx = e.clientX - prevMouseX;\n    const dy = e.clientY - prevMouseY;\n    prevMouseX = e.clientX;\n    prevMouseY = e.clientY;\n\n    camTheta -= dx * 0.005;\n    camPhi = Math.max(0.1, Math.min(Math.PI - 0.1, camPhi - dy * 0.005));\n  });\n\n  canvas.addEventListener('wheel', (e) => {\n    e.preventDefault();\n    camDist = Math.max(40, Math.min(600, camDist + e.deltaY * 0.25));\n  }, { passive: false });\n\n  // Touch Support\n  let touchStartDist = 0;\n  canvas.addEventListener('touchstart', (e) => {\n    if (e.touches.length === 1) {\n      isDragging = true;\n      prevMouseX = e.touches[0].clientX;\n      prevMouseY = e.touches[0].clientY;\n    } else if (e.touches.length === 2) {\n      touchStartDist = Math.hypot(\n        e.touches[0].clientX - e.touches[1].clientX,\n        e.touches[0].clientY - e.touches[1].clientY\n      );\n    }\n  });\n\n  canvas.addEventListener('touchmove', (e) => {\n    if (isDragging && e.touches.length === 1) {\n      const dx = e.touches[0].clientX - prevMouseX;\n      const dy = e.touches[0].clientY - prevMouseY;\n      prevMouseX = e.touches[0].clientX;\n      prevMouseY = e.touches[0].clientY;\n      camTheta -= dx * 0.006;\n      camPhi = Math.max(0.1, Math.min(Math.PI - 0.1, camPhi - dy * 0.006));\n    } else if (e.touches.length === 2) {\n      const dist = Math.hypot(\n        e.touches[0].clientX - e.touches[1].clientX,\n        e.touches[0].clientY - e.touches[1].clientY\n      );\n      const factor = touchStartDist / (dist + 1e-4);\n      camDist = Math.max(40, Math.min(600, camDist * factor));\n      touchStartDist = dist;\n    }\n  }, { passive: true });\n\n  canvas.addEventListener('touchend', () => { isDragging = false; });\n\n  // --- UI EVENT BINDINGS ---\n  sliderN.addEventListener('input', (e) => {\n    document.getElementById('val-n').textContent = e.target.value;\n    initParticles();\n  });\n  sliderG.addEventListener('input', (e) => {\n    G = parseFloat(e.target.value);\n    document.getElementById('val-g').textContent = G.toFixed(2);\n  });\n  sliderEps.addEventListener('input', (e) => {\n    softening = parseFloat(e.target.value);\n    document.getElementById('val-eps').textContent = softening.toFixed(1);\n  });\n  sliderDt.addEventListener('input', (e) => {\n    dt = parseFloat(e.target.value);\n    document.getElementById('val-dt').textContent = dt.toFixed(2);\n  });\n  sliderTrail.addEventListener('input', (e) => {\n    trailAlpha = parseFloat(e.target.value);\n    document.getElementById('val-trail').textContent = trailAlpha.toFixed(2);\n  });\n  presetSelect.addEventListener('change', () => {\n    initParticles();\n  });\n\n  btnPause.addEventListener('click', () => {\n    isPaused = !isPaused;\n    btnPause.textContent = isPaused ? 'Resume' : 'Pause';\n    btnPause.classList.toggle('active', isPaused);\n  });\n\n  btnReset.addEventListener('click', () => {\n    initParticles();\n  });\n\n  btnCenter.addEventListener('click', () => {\n    targetX = comX; targetY = comY; targetZ = comZ;\n  });\n\n  btnRotate.addEventListener('click', () => {\n    autoRotate = !autoRotate;\n    btnRotate.classList.toggle('active', autoRotate);\n  });\n\n  const controlsCard = document.getElementById('controls-card');\n  const toggleBtn = document.getElementById('toggle-controls');\n  toggleBtn.addEventListener('click', () => {\n    controlsCard.classList.toggle('collapsed');\n  });\n\n  // START SIMULATION\n  initParticles();\n  requestAnimationFrame(loop);\n\n} catch (err) {\n  const errDiv = document.getElementById('error-log');\n  if (errDiv) {\n    errDiv.style.display = 'block';\n    errDiv.textContent = 'Simulation Error: ' + err.message + '\\n' + err.stack;\n  }\n}\n</script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "physics-pendulum-wave",
+    "modelId": "gemini-3.6-flash",
+    "score": 100,
+    "runtimeMs": 76620,
+    "tokensIn": 4265,
+    "tokensOut": 58216,
+    "costUsd": 0.00044301750000000004,
+    "usage": {
+      "inputTokens": 4265,
+      "outputTokens": 58216,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "pendulum-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content: 100%"
+        },
+        {
+          "name": "pendulum-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 0.8s: 99.1%"
+        }
+      ],
+      [
+        {
+          "name": "pendulum-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content: 100%"
+        },
+        {
+          "name": "pendulum-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 0.8s: 98.4%"
+        }
+      ],
+      [
+        {
+          "name": "pendulum-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content: 100%"
+        },
+        {
+          "name": "pendulum-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 0.8s: 99.0%"
+        }
+      ],
+      [
+        {
+          "name": "pendulum-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content: 100%"
+        },
+        {
+          "name": "pendulum-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 0.8s: 99.3%"
+        }
+      ],
+      [
+        {
+          "name": "pendulum-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content: 100%"
+        },
+        {
+          "name": "pendulum-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 0.8s: 81.1%"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 21645,
+      "meanTokensPerSec": 245.2,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "7d84947748375603",
+    "createdAt": "2026-08-17T06:42:39.779Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-physics-pendulum-wave.jsonl"
+    },
+    "source": "live",
+    "output": "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Pendulum Wave Simulation</title>\n<style>\n  *, *::before, *::after {\n    box-sizing: border-box;\n  }\n  html, body {\n    margin: 0;\n    padding: 0;\n    width: 100%;\n    height: 100%;\n    min-height: 100%;\n    overflow: hidden;\n    background: #08080c;\n    color: #ececf0;\n    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n    user-select: none;\n  }\n  #canvas {\n    display: block;\n    width: 100vw;\n    height: 100vh;\n    touch-action: none;\n  }\n  #ui-container {\n    position: absolute;\n    top: 12px;\n    left: 12px;\n    max-width: 320px;\n    width: calc(100% - 24px);\n    background: rgba(15, 15, 22, 0.82);\n    backdrop-filter: blur(12px);\n    -webkit-backdrop-filter: blur(12px);\n    border: 1px solid rgba(255, 255, 255, 0.1);\n    border-radius: 12px;\n    padding: 14px 16px;\n    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);\n    z-index: 10;\n    transition: transform 0.25s ease, opacity 0.25s ease;\n  }\n  #ui-container.collapsed #ui-content {\n    display: none;\n  }\n  .ui-header {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    margin-bottom: 8px;\n  }\n  #ui-container.collapsed .ui-header {\n    margin-bottom: 0;\n  }\n  .ui-title {\n    font-size: 15px;\n    font-weight: 700;\n    letter-spacing: 0.5px;\n    color: #ffffff;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n  }\n  .ui-title-dot {\n    width: 8px;\n    height: 8px;\n    border-radius: 50%;\n    background: #00f0ff;\n    box-shadow: 0 0 8px #00f0ff;\n  }\n  .toggle-btn {\n    background: transparent;\n    border: none;\n    color: #8a8a9e;\n    cursor: pointer;\n    font-size: 14px;\n    padding: 2px 6px;\n    border-radius: 4px;\n  }\n  .toggle-btn:hover {\n    color: #fff;\n    background: rgba(255,255,255,0.1);\n  }\n  .control-group {\n    margin-top: 10px;\n  }\n  .control-label {\n    display: flex;\n    justify-content: space-between;\n    font-size: 12px;\n    color: #a0a0b8;\n    margin-bottom: 4px;\n    font-weight: 500;\n  }\n  .control-value {\n    color: #00f0ff;\n    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;\n  }\n  input[type=range] {\n    -webkit-appearance: none;\n    appearance: none;\n    width: 100%;\n    height: 4px;\n    background: #2a2a38;\n    border-radius: 2px;\n    outline: none;\n  }\n  input[type=range]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    appearance: none;\n    width: 14px;\n    height: 14px;\n    border-radius: 50%;\n    background: #00f0ff;\n    cursor: pointer;\n    box-shadow: 0 0 6px rgba(0,240,255,0.6);\n    transition: transform 0.1s;\n  }\n  input[type=range]::-webkit-slider-thumb:hover {\n    transform: scale(1.2);\n  }\n  .button-row {\n    display: flex;\n    gap: 8px;\n    margin-top: 14px;\n  }\n  .btn {\n    flex: 1;\n    padding: 7px 10px;\n    background: rgba(255, 255, 255, 0.06);\n    border: 1px solid rgba(255, 255, 255, 0.12);\n    border-radius: 6px;\n    color: #ececf0;\n    font-size: 12px;\n    font-weight: 600;\n    cursor: pointer;\n    transition: all 0.15s ease;\n    text-align: center;\n  }\n  .btn:hover {\n    background: rgba(255, 255, 255, 0.15);\n    border-color: rgba(255, 255, 255, 0.25);\n  }\n  .btn:active {\n    transform: scale(0.97);\n  }\n  .btn-primary {\n    background: rgba(0, 240, 255, 0.15);\n    border-color: rgba(0, 240, 255, 0.4);\n    color: #00f0ff;\n  }\n  .btn-primary:hover {\n    background: rgba(0, 240, 255, 0.25);\n    border-color: rgba(0, 240, 255, 0.6);\n  }\n  #hud {\n    position: absolute;\n    bottom: 12px;\n    left: 12px;\n    right: 12px;\n    display: flex;\n    justify-content: space-between;\n    align-items: flex-end;\n    pointer-events: none;\n  }\n  .hud-card {\n    background: rgba(15, 15, 22, 0.75);\n    backdrop-filter: blur(8px);\n    -webkit-backdrop-filter: blur(8px);\n    border: 1px solid rgba(255, 255, 255, 0.08);\n    border-radius: 8px;\n    padding: 8px 12px;\n    pointer-events: auto;\n  }\n  .hud-title {\n    font-size: 10px;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #707088;\n  }\n  .hud-val {\n    font-size: 14px;\n    font-weight: 700;\n    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;\n    color: #fff;\n    margin-top: 2px;\n  }\n  .progress-bar-bg {\n    width: 100px;\n    height: 4px;\n    background: rgba(255,255,255,0.1);\n    border-radius: 2px;\n    margin-top: 6px;\n    overflow: hidden;\n  }\n  .progress-bar-fill {\n    height: 100%;\n    width: 0%;\n    background: linear-gradient(90deg, #00f0ff, #7000ff);\n    border-radius: 2px;\n  }\n  #error-display {\n    display: none;\n    position: absolute;\n    top: 10px;\n    right: 10px;\n    left: 10px;\n    padding: 12px;\n    background: rgba(220, 38, 38, 0.9);\n    color: #fff;\n    border-radius: 8px;\n    font-size: 13px;\n    z-index: 100;\n    box-shadow: 0 4px 12px rgba(0,0,0,0.5);\n  }\n  @media (max-width: 480px) {\n    #ui-container {\n      max-width: 100%;\n      top: 8px;\n      left: 8px;\n      width: calc(100% - 16px);\n      padding: 10px 12px;\n    }\n    #hud {\n      bottom: 8px;\n      left: 8px;\n      right: 8px;\n    }\n  }\n</style>\n</head>\n<body>\n\n<canvas id=\"canvas\"></canvas>\n\n<div id=\"ui-container\">\n  <div class=\"ui-header\">\n    <div class=\"ui-title\">\n      <div class=\"ui-title-dot\"></div>\n      <span>Pendulum Wave</span>\n    </div>\n    <button class=\"toggle-btn\" id=\"toggle-ui\" title=\"Toggle Controls\">▼</button>\n  </div>\n  <div id=\"ui-content\">\n    <div class=\"control-group\">\n      <div class=\"control-label\">\n        <span>Pendulums (N)</span>\n        <span class=\"control-value\" id=\"val-n\">16</span>\n      </div>\n      <input type=\"range\" id=\"slider-n\" min=\"8\" max=\"36\" step=\"1\" value=\"16\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label\">\n        <span>Gravity (g)</span>\n        <span class=\"control-value\" id=\"val-g\">9.81 m/s²</span>\n      </div>\n      <input type=\"range\" id=\"slider-g\" min=\"1.0\" max=\"25.0\" step=\"0.1\" value=\"9.81\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label\">\n        <span>Cycle Period (T)</span>\n        <span class=\"control-value\" id=\"val-t\">60 s</span>\n      </div>\n      <input type=\"range\" id=\"slider-t\" min=\"15\" max=\"120\" step=\"5\" value=\"60\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label\">\n        <span>Base Oscillations (k)</span>\n        <span class=\"control-value\" id=\"val-k\">24</span>\n      </div>\n      <input type=\"range\" id=\"slider-k\" min=\"10\" max=\"50\" step=\"1\" value=\"24\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label\">\n        <span>Max Amplitude</span>\n        <span class=\"control-value\" id=\"val-amp\">30°</span>\n      </div>\n      <input type=\"range\" id=\"slider-amp\" min=\"10\" max=\"60\" step=\"1\" value=\"30\">\n    </div>\n\n    <div class=\"button-row\">\n      <button class=\"btn btn-primary\" id=\"btn-play\">Pause</button>\n      <button class=\"btn\" id=\"btn-reset\">Restart</button>\n      <button class=\"btn\" id=\"btn-view\">View: 3D</button>\n    </div>\n  </div>\n</div>\n\n<div id=\"hud\">\n  <div class=\"hud-card\">\n    <div class=\"hud-title\">Cycle Progress</div>\n    <div class=\"hud-val\" id=\"hud-time\">00.0s / 60s</div>\n    <div class=\"progress-bar-bg\">\n      <div class=\"progress-bar-fill\" id=\"hud-progress\"></div>\n    </div>\n  </div>\n  <div class=\"hud-card\" style=\"text-align: right;\">\n    <div class=\"hud-title\">Pattern Phase</div>\n    <div class=\"hud-val\" id=\"hud-phase\" style=\"color: #00f0ff;\">Synchronized</div>\n  </div>\n</div>\n\n<div id=\"error-display\" role=\"alert\"></div>\n\n<script>\ntry {\n  // --- Simulation State ---\n  const state = {\n    N: 16,\n    g: 9.81,\n    T: 60,         // Time in seconds for full realignment cycle\n    k: 24,         // Number of oscillations the longest pendulum executes in cycle T\n    maxAngleDeg: 30,\n    time: 0,\n    isPlaying: true,\n    viewMode: 0,   // 0: 3D Orbit, 1: Front, 2: Top\n    camYaw: -0.45,\n    camPitch: 0.22,\n    camDist: 1.0,\n    isDragging: false,\n    lastMouseX: 0,\n    lastMouseY: 0\n  };\n\n  const canvas = document.getElementById('canvas');\n  const ctx = canvas.getContext('2d');\n  const errorDisplay = document.getElementById('error-display');\n\n  // UI Elements\n  const sliderN = document.getElementById('slider-n');\n  const sliderG = document.getElementById('slider-g');\n  const sliderT = document.getElementById('slider-t');\n  const sliderK = document.getElementById('slider-k');\n  const sliderAmp = document.getElementById('slider-amp');\n\n  const valN = document.getElementById('val-n');\n  const valG = document.getElementById('val-g');\n  const valT = document.getElementById('val-t');\n  const valK = document.getElementById('val-k');\n  const valAmp = document.getElementById('val-amp');\n\n  const btnPlay = document.getElementById('btn-play');\n  const btnReset = document.getElementById('btn-reset');\n  const btnView = document.getElementById('btn-view');\n  const btnToggle = document.getElementById('toggle-ui');\n  const uiContainer = document.getElementById('ui-container');\n\n  const hudTime = document.getElementById('hud-time');\n  const hudProgress = document.getElementById('hud-progress');\n  const hudPhase = document.getElementById('hud-phase');\n\n  // --- Resize Canvas ---\n  let dpr = window.devicePixelRatio || 1;\n  function resize() {\n    dpr = window.devicePixelRatio || 1;\n    canvas.width = Math.floor(window.innerWidth * dpr);\n    canvas.height = Math.floor(window.innerHeight * dpr);\n  }\n  window.addEventListener('resize', resize);\n  resize();\n\n  // --- Event Listeners ---\n  sliderN.addEventListener('input', (e) => {\n    state.N = parseInt(e.target.value, 10);\n    valN.textContent = state.N;\n  });\n\n  sliderG.addEventListener('input', (e) => {\n    state.g = parseFloat(e.target.value);\n    valG.textContent = state.g.toFixed(2) + ' m/s²';\n  });\n\n  sliderT.addEventListener('input', (e) => {\n    state.T = parseInt(e.target.value, 10);\n    valT.textContent = state.T + ' s';\n  });\n\n  sliderK.addEventListener('input', (e) => {\n    state.k = parseInt(e.target.value, 10);\n    valK.textContent = state.k;\n  });\n\n  sliderAmp.addEventListener('input', (e) => {\n    state.maxAngleDeg = parseInt(e.target.value, 10);\n    valAmp.textContent = state.maxAngleDeg + '°';\n  });\n\n  btnPlay.addEventListener('click', () => {\n    state.isPlaying = !state.isPlaying;\n    btnPlay.textContent = state.isPlaying ? 'Pause' : 'Play';\n    btnPlay.classList.toggle('btn-primary', state.isPlaying);\n  });\n\n  btnReset.addEventListener('click', () => {\n    state.time = 0;\n  });\n\n  const viewNames = ['View: 3D Orbit', 'View: Front', 'View: Top'];\n  btnView.addEventListener('click', () => {\n    state.viewMode = (state.viewMode + 1) % 3;\n    btnView.textContent = viewNames[state.viewMode];\n  });\n\n  btnToggle.addEventListener('click', () => {\n    uiContainer.classList.toggle('collapsed');\n    btnToggle.textContent = uiContainer.classList.contains('collapsed') ? '▲' : '▼';\n  });\n\n  // Mouse & Touch Controls for Camera Orbit\n  function onPointerDown(e) {\n    if (e.target.closest('#ui-container') || e.target.closest('#hud')) return;\n    state.isDragging = true;\n    state.lastMouseX = e.clientX || (e.touches && e.touches[0].clientX) || 0;\n    state.lastMouseY = e.clientY || (e.touches && e.touches[0].clientY) || 0;\n  }\n\n  function onPointerMove(e) {\n    if (!state.isDragging) return;\n    const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;\n    const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;\n    const dx = clientX - state.lastMouseX;\n    const dy = clientY - state.lastMouseY;\n\n    if (state.viewMode === 0) {\n      state.camYaw += dx * 0.005;\n      state.camPitch += dy * 0.005;\n      // Clamp pitch to avoid flipping\n      state.camPitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, state.camPitch));\n    }\n\n    state.lastMouseX = clientX;\n    state.lastMouseY = clientY;\n  }\n\n  function onPointerUp() {\n    state.isDragging = false;\n  }\n\n  window.addEventListener('mousedown', onPointerDown);\n  window.addEventListener('mousemove', onPointerMove);\n  window.addEventListener('mouseup', onPointerUp);\n\n  window.addEventListener('touchstart', onPointerDown, { passive: true });\n  window.addEventListener('touchmove', onPointerMove, { passive: true });\n  window.addEventListener('touchend', onPointerUp);\n\n  window.addEventListener('wheel', (e) => {\n    if (e.target.closest('#ui-container')) return;\n    state.camDist += e.deltaY * 0.001;\n    state.camDist = Math.max(0.4, Math.min(2.5, state.camDist));\n  }, { passive: true });\n\n  // --- Helper Math & Color ---\n  function getBobColor(i, total) {\n    const hue = 180 + (i / Math.max(1, total - 1)) * 160; // Cyan to Magenta/Purple\n    return {\n      hue,\n      rgb: `hsl(${hue}, 100%, 60%)`,\n      glow: `hsl(${hue}, 100%, 50%)`\n    };\n  }\n\n  // Determine human-readable wave phase status\n  function getPhaseStatus(t, T) {\n    const norm = (t % T) / T;\n    if (norm < 0.03 || norm > 0.97) return \"Synchronized\";\n    if (Math.abs(norm - 0.5) < 0.03) return \"Full Antiphase\";\n    if (Math.abs(norm - 0.25) < 0.03 || Math.abs(norm - 0.75) < 0.03) return \"2 Traveling Waves\";\n    if (Math.abs(norm - 0.333) < 0.03 || Math.abs(norm - 0.667) < 0.03) return \"3 Traveling Waves\";\n    if (Math.abs(norm - 0.166) < 0.03 || Math.abs(norm - 0.833) < 0.03) return \"6 Traveling Waves\";\n    return \"Chaotic / Beat Waves\";\n  }\n\n  // --- Main Calculation & Render Loop ---\n  let lastTime = performance.now();\n\n  function animate(now) {\n    const dt = Math.min((now - lastTime) / 1000, 0.1);\n    lastTime = now;\n\n    if (state.isPlaying) {\n      state.time += dt;\n    }\n\n    // Update HUD\n    const timeInCycle = state.time % state.T;\n    const cyclePercent = (timeInCycle / state.T) * 100;\n    hudTime.textContent = `${timeInCycle.toFixed(1)}s / ${state.T}s`;\n    hudProgress.style.width = `${cyclePercent}%`;\n    hudPhase.textContent = getPhaseStatus(state.time, state.T);\n\n    // Render Scene\n    render();\n\n    requestAnimationFrame(animate);\n  }\n\n  function render() {\n    ctx.save();\n    ctx.scale(dpr, dpr);\n\n    const width = canvas.width / dpr;\n    const height = canvas.height / dpr;\n\n    // Clear background\n    ctx.fillStyle = '#08080c';\n    ctx.fillRect(0, 0, width, height);\n\n    // Setup Camera Projection Matrix\n    let yaw = state.camYaw;\n    let pitch = state.camPitch;\n\n    if (state.viewMode === 1) { // Front\n      yaw = 0;\n      pitch = 0;\n    } else if (state.viewMode === 2) { // Top\n      yaw = 0;\n      pitch = Math.PI / 2 - 0.01;\n    }\n\n    const cosY = Math.cos(yaw);\n    const sinY = Math.sin(yaw);\n    const cosP = Math.cos(pitch);\n    const sinP = Math.sin(pitch);\n\n    // Scale factors for scene projection\n    const sceneScale = Math.min(width, height) * 0.45 / state.camDist;\n    const cx = width / 2;\n    const cy = height * 0.42;\n\n    // 3D Point Projection Function\n    function project(x, y, z) {\n      // Rotation around Y (yaw)\n      const x1 = x * cosY - z * sinY;\n      const z1 = x * sinY + z * cosY;\n\n      // Rotation around X (pitch)\n      const y2 = y * cosP - z1 * sinP;\n      const z2 = y * sinP + z1 * cosP;\n\n      // Perspective projection\n      const distance = 3.5;\n      const fov = 1 / (1 + z2 / distance);\n\n      return {\n        px: cx + x1 * sceneScale * fov,\n        py: cy + y2 * sceneScale * fov,\n        pz: z2,\n        scale: fov\n      };\n    }\n\n    // --- Calculate Pendulum Physics Positions ---\n    const N = state.N;\n    const g = state.g;\n    const T = state.T;\n    const k = state.k;\n    const maxAngleRad = (state.maxAngleDeg * Math.PI) / 180;\n\n    // Rail dimensions along Z axis\n    const railLength = 1.4; // Normalized world units\n    const zStep = N > 1 ? railLength / (N - 1) : 0;\n    const zStart = -railLength / 2;\n\n    const bobs = [];\n    const pivots = [];\n\n    // Find physical lengths L_i for pendulums so pendulum i completes (k + i) oscillations in time T\n    // Period T_i = T / (k + i)\n    // T_i = 2 * pi * sqrt(L_i / g) => L_i = g * (T_i / (2 * pi))^2\n    for (let i = 0; i < N; i++) {\n      const oscillations = k + i;\n      const T_i = T / oscillations;\n      const L_i = g * Math.pow(T_i / (2 * Math.PI), 2);\n\n      // Current angle offset: theta(t) = maxAngle * cos(2 * pi * t / T_i)\n      const angle = maxAngleRad * Math.cos((2 * Math.PI * state.time) / T_i);\n\n      // Z position along rail\n      const z = zStart + i * zStep;\n\n      // Visual length normalization factor (keep longest pendulum length visually balanced)\n      const L_longest = g * Math.pow((T / k) / (2 * Math.PI), 2);\n      const visualL = (L_i / L_longest) * 0.85; // Scale relative to rail height\n\n      // Pivots are along top rail at x=0, y=0, z=z\n      const pivotWorld = { x: 0, y: -0.4, z: z };\n      \n      // Bob world position (swinging in X-Y plane)\n      const bobWorld = {\n        x: visualL * Math.sin(angle),\n        y: pivotWorld.y + visualL * Math.cos(angle),\n        z: z\n      };\n\n      const projPivot = project(pivotWorld.x, pivotWorld.y, pivotWorld.z);\n      const projBob = project(bobWorld.x, bobWorld.y, bobWorld.z);\n\n      bobs.push({\n        index: i,\n        projPivot,\n        projBob,\n        color: getBobColor(i, N),\n        zDepth: projBob.pz\n      });\n      pivots.push(projPivot);\n    }\n\n    // --- Render Background Grid / Ground Floor ---\n    const groundY = 0.6;\n    ctx.lineWidth = 1;\n    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';\n    const gridLines = 10;\n    const gridSize = 1.2;\n\n    for (let i = -gridLines; i <= gridLines; i++) {\n      const pos = (i / gridLines) * gridSize;\n      // Lines parallel to Z\n      const p1 = project(-gridSize, groundY, pos);\n      const p2 = project(gridSize, groundY, pos);\n      ctx.beginPath();\n      ctx.moveTo(p1.px, p1.py);\n      ctx.lineTo(p2.px, p2.py);\n      ctx.stroke();\n\n      // Lines parallel to X\n      const p3 = project(pos, groundY, -gridSize);\n      const p4 = project(pos, groundY, gridSize);\n      ctx.beginPath();\n      ctx.moveTo(p3.px, p3.py);\n      ctx.lineTo(p4.px, p4.py);\n      ctx.stroke();\n    }\n\n    // --- Render Top Mounting Rail ---\n    if (pivots.length > 0) {\n      const railStart = project(0, -0.4, zStart - 0.08);\n      const railEnd = project(0, -0.4, zStart + railLength + 0.08);\n\n      ctx.save();\n      ctx.beginPath();\n      ctx.moveTo(railStart.px, railStart.py);\n      ctx.lineTo(railEnd.px, railEnd.py);\n      ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)';\n      ctx.lineWidth = Math.max(2, 4 * railStart.scale);\n      ctx.lineCap = 'round';\n      ctx.stroke();\n      ctx.restore();\n    }\n\n    // --- Render Connecting Wave Ribbon (Smooth Curve through all bobs) ---\n    if (bobs.length > 1) {\n      ctx.save();\n      ctx.beginPath();\n      ctx.moveTo(bobs[0].projBob.px, bobs[0].projBob.py);\n\n      for (let i = 0; i < bobs.length - 1; i++) {\n        const p0 = bobs[Math.max(0, i - 1)].projBob;\n        const p1 = bobs[i].projBob;\n        const p2 = bobs[i + 1].projBob;\n        const p3 = bobs[Math.min(bobs.length - 1, i + 2)].projBob;\n\n        // Catmull-Rom spline control points\n        const cp1x = p1.px + (p2.px - p0.px) / 6;\n        const cp1y = p1.py + (p2.py - p0.py) / 6;\n        const cp2x = p2.px - (p3.px - p1.px) / 6;\n        const cp2y = p2.py - (p3.py - p1.py) / 6;\n\n        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.px, p2.py);\n      }\n\n      ctx.strokeStyle = 'rgba(0, 240, 255, 0.45)';\n      ctx.lineWidth = 2.5;\n      ctx.shadowBlur = 10;\n      ctx.shadowColor = '#00f0ff';\n      ctx.stroke();\n      ctx.restore();\n    }\n\n    // Sort pendulums by depth (pz) so furthest draw first\n    const sortedIndices = Array.from({ length: N }, (_, i) => i);\n    sortedIndices.sort((a, b) => bobs[b].zDepth - bobs[a].zDepth);\n\n    // --- Render Strings & Bobs ---\n    for (const idx of sortedIndices) {\n      const bob = bobs[idx];\n      const pPivot = bob.projPivot;\n      const pBob = bob.projBob;\n\n      // Draw String\n      ctx.beginPath();\n      ctx.moveTo(pPivot.px, pPivot.py);\n      ctx.lineTo(pBob.px, pBob.py);\n      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';\n      ctx.lineWidth = Math.max(1, 1.2 * pBob.scale);\n      ctx.stroke();\n\n      // Draw Top Pivot Node\n      ctx.beginPath();\n      ctx.arc(pPivot.px, pPivot.py, Math.max(1.5, 2.5 * pPivot.scale), 0, Math.PI * 2);\n      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';\n      ctx.fill();\n\n      // Draw Bob Glow & Sphere\n      const radius = Math.max(4, 9 * pBob.scale);\n\n      // Glow\n      ctx.save();\n      ctx.beginPath();\n      ctx.arc(pBob.px, pBob.py, radius * 2.2, 0, Math.PI * 2);\n      const glowGrad = ctx.createRadialGradient(\n        pBob.px, pBob.py, radius * 0.2,\n        pBob.px, pBob.py, radius * 2.2\n      );\n      glowGrad.addColorStop(0, bob.color.glow);\n      glowGrad.addColorStop(1, 'rgba(0,0,0,0)');\n      ctx.fillStyle = glowGrad;\n      ctx.globalAlpha = 0.6;\n      ctx.fill();\n      ctx.restore();\n\n      // Sphere Body\n      ctx.save();\n      ctx.beginPath();\n      ctx.arc(pBob.px, pBob.py, radius, 0, Math.PI * 2);\n      const sphereGrad = ctx.createRadialGradient(\n        pBob.px - radius * 0.3, pBob.py - radius * 0.3, radius * 0.1,\n        pBob.px, pBob.py, radius\n      );\n      sphereGrad.addColorStop(0, '#ffffff');\n      sphereGrad.addColorStop(0.4, bob.color.rgb);\n      sphereGrad.addColorStop(1, '#050510');\n      ctx.fillStyle = sphereGrad;\n      ctx.fill();\n      ctx.restore();\n    }\n\n    ctx.restore();\n  }\n\n  // Start Animation Loop\n  requestAnimationFrame(animate);\n\n} catch (err) {\n  const errDiv = document.getElementById('error-display');\n  if (errDiv) {\n    errDiv.style.display = 'block';\n    errDiv.textContent = 'Error executing simulation: ' + err.message;\n  }\n}\n</script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "landing-page-morph",
+    "modelId": "gemini-3.6-flash",
+    "score": 92.4,
+    "runtimeMs": 99836,
+    "tokensIn": 4300,
+    "tokensOut": 74254,
+    "costUsd": 0.000563355,
+    "usage": {
+      "inputTokens": 4300,
+      "outputTokens": 74254,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      62,
+      100,
+      100,
+      100,
+      100
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "landing-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "headings=12 textChars=2060 canvases=1"
+        },
+        {
+          "name": "landing-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "pixel diff=0.0% bodyTextLen before=2060 after=2060"
+        }
+      ],
+      [
+        {
+          "name": "landing-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "headings=14 textChars=2432 canvases=1"
+        },
+        {
+          "name": "landing-animates",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff=99.0% bodyTextLen before=2432 after=2432"
+        }
+      ],
+      [
+        {
+          "name": "landing-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "headings=10 textChars=2174 canvases=1"
+        },
+        {
+          "name": "landing-animates",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff=98.7% bodyTextLen before=2174 after=2174"
+        }
+      ],
+      [
+        {
+          "name": "landing-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "headings=8 textChars=2231 canvases=1"
+        },
+        {
+          "name": "landing-animates",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff=99.0% bodyTextLen before=2231 after=2231"
+        }
+      ],
+      [
+        {
+          "name": "landing-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "headings=13 textChars=2237 canvases=1"
+        },
+        {
+          "name": "landing-animates",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff=99.3% bodyTextLen before=2237 after=2237"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 17768,
+      "meanTokensPerSec": 219.5,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "1de26823e28f4ea6",
+    "createdAt": "2026-08-17T06:41:53.388Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-landing-page-morph.jsonl"
+    },
+    "source": "live",
+    "output": "<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Nexus Cloud — Next-Gen Developer Infrastructure</title>\n  <style>\n    :root {\n      --bg-main: #090d16;\n      --bg-card: rgba(15, 23, 42, 0.75);\n      --bg-card-hover: rgba(30, 41, 59, 0.85);\n      --bg-nav: rgba(9, 13, 22, 0.85);\n      --border-color: rgba(255, 255, 255, 0.1);\n      --border-hover: rgba(99, 102, 241, 0.4);\n      --text-main: #f8fafc;\n      --text-muted: #94a3b8;\n      --accent-primary: #6366f1;\n      --accent-secondary: #a855f7;\n      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);\n      --glow-color: rgba(99, 102, 241, 0.25);\n      --input-bg: rgba(15, 23, 42, 0.8);\n      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);\n      --modal-overlay: rgba(0, 0, 0, 0.75);\n    }\n\n    [data-theme=\"light\"] {\n      --bg-main: #f8fafc;\n      --bg-card: #ffffff;\n      --bg-card-hover: #f1f5f9;\n      --bg-nav: rgba(248, 250, 252, 0.85);\n      --border-color: rgba(0, 0, 0, 0.08);\n      --border-hover: rgba(79, 70, 229, 0.4);\n      --text-main: #0f172a;\n      --text-muted: #64748b;\n      --accent-primary: #4f46e5;\n      --accent-secondary: #9333ea;\n      --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #9333ea 50%, #db2777 100%);\n      --glow-color: rgba(79, 70, 229, 0.15);\n      --input-bg: #ffffff;\n      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);\n      --modal-overlay: rgba(15, 23, 42, 0.5);\n    }\n\n    *, *::before, *::after {\n      box-sizing: border-box;\n      margin: 0;\n      padding: 0;\n    }\n\n    html, body {\n      width: 100%;\n      min-height: 100%;\n      background-color: var(--bg-main);\n      color: var(--text-main);\n      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n      line-height: 1.5;\n      overflow-x: hidden;\n      transition: background-color 0.3s ease, color 0.3s ease;\n    }\n\n    canvas#bg-canvas {\n      position: fixed;\n      top: 0;\n      left: 0;\n      width: 100vw;\n      height: 100vh;\n      pointer-events: none;\n      z-index: 0;\n    }\n\n    .relative-z {\n      position: relative;\n      z-index: 1;\n    }\n\n    /* Layout Utilities */\n    .container {\n      max-width: 1200px;\n      margin: 0 auto;\n      padding: 0 1.5rem;\n    }\n\n    .flex { display: flex; }\n    .flex-col { flex-direction: column; }\n    .items-center { align-items: center; }\n    .justify-center { justify-content: center; }\n    .justify-between { justify-content: space-between; }\n    .flex-wrap { flex-wrap: wrap; }\n    .gap-2 { gap: 0.5rem; }\n    .gap-4 { gap: 1rem; }\n    .gap-6 { gap: 1.5rem; }\n    .gap-8 { gap: 2rem; }\n\n    .grid { display: grid; }\n    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }\n    \n    @media (min-width: 768px) {\n      .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n      .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }\n      .md\\:flex-row { flex-direction: row; }\n      .md\\:text-left { text-align: left; }\n    }\n\n    /* Navbar */\n    header.navbar {\n      position: sticky;\n      top: 0;\n      z-index: 50;\n      backdrop-filter: blur(12px);\n      -webkit-backdrop-filter: blur(12px);\n      background-color: var(--bg-nav);\n      border-bottom: 1px solid var(--border-color);\n      transition: background-color 0.3s ease, border-color 0.3s ease;\n    }\n\n    .nav-inner {\n      height: 4.25rem;\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n    }\n\n    .logo {\n      display: flex;\n      align-items: center;\n      gap: 0.75rem;\n      font-weight: 800;\n      font-size: 1.25rem;\n      letter-spacing: -0.025em;\n      text-decoration: none;\n      color: var(--text-main);\n    }\n\n    .logo-icon {\n      width: 2.25rem;\n      height: 2.25rem;\n      border-radius: 0.5rem;\n      background: var(--accent-gradient);\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      color: white;\n      box-shadow: 0 0 15px var(--glow-color);\n    }\n\n    .gradient-text {\n      background: var(--accent-gradient);\n      -webkit-background-clip: text;\n      -webkit-text-fill-color: transparent;\n    }\n\n    .nav-links {\n      display: none;\n      gap: 2rem;\n      align-items: center;\n      list-style: none;\n    }\n\n    @media (min-width: 768px) {\n      .nav-links { display: flex; }\n    }\n\n    .nav-link {\n      color: var(--text-muted);\n      text-decoration: none;\n      font-size: 0.9375rem;\n      font-weight: 500;\n      transition: color 0.2s ease;\n      cursor: pointer;\n    }\n\n    .nav-link:hover {\n      color: var(--text-main);\n    }\n\n    /* Buttons & Controls */\n    .btn {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n      gap: 0.5rem;\n      padding: 0.625rem 1.25rem;\n      border-radius: 0.625rem;\n      font-weight: 600;\n      font-size: 0.9375rem;\n      cursor: pointer;\n      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);\n      border: 1px solid transparent;\n      text-decoration: none;\n      white-space: nowrap;\n    }\n\n    .btn-primary {\n      background: var(--accent-gradient);\n      color: #ffffff;\n      box-shadow: 0 4px 14px var(--glow-color);\n    }\n\n    .btn-primary:hover {\n      opacity: 0.92;\n      transform: translateY(-1px);\n      box-shadow: 0 6px 20px var(--glow-color);\n    }\n\n    .btn-secondary {\n      background: var(--bg-card);\n      color: var(--text-main);\n      border: 1px solid var(--border-color);\n    }\n\n    .btn-secondary:hover {\n      background: var(--bg-card-hover);\n      border-color: var(--border-hover);\n      transform: translateY(-1px);\n    }\n\n    .theme-toggle {\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      color: var(--text-main);\n      width: 2.5rem;\n      height: 2.5rem;\n      border-radius: 0.625rem;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      cursor: pointer;\n      transition: all 0.2s ease;\n    }\n\n    .theme-toggle:hover {\n      border-color: var(--border-hover);\n      transform: rotate(15deg);\n    }\n\n    /* Hero Section */\n    .hero {\n      padding: 4rem 0 3rem 0;\n      text-align: center;\n    }\n\n    @media (min-width: 768px) {\n      .hero { padding: 6rem 0 4rem 0; }\n    }\n\n    .badge {\n      display: inline-flex;\n      align-items: center;\n      gap: 0.5rem;\n      padding: 0.35rem 0.85rem;\n      border-radius: 9999px;\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      color: var(--text-muted);\n      font-size: 0.85rem;\n      font-weight: 500;\n      margin-bottom: 1.5rem;\n    }\n\n    .badge-dot {\n      width: 0.5rem;\n      height: 0.5rem;\n      border-radius: 9999px;\n      background: var(--accent-primary);\n      box-shadow: 0 0 8px var(--accent-primary);\n    }\n\n    .hero-title {\n      font-size: 2.25rem;\n      line-height: 1.15;\n      font-weight: 800;\n      letter-spacing: -0.03em;\n      margin-bottom: 1.25rem;\n    }\n\n    @media (min-width: 768px) {\n      .hero-title { font-size: 3.75rem; }\n    }\n\n    .hero-subtitle {\n      font-size: 1.05rem;\n      color: var(--text-muted);\n      max-width: 42rem;\n      margin: 0 auto 2rem auto;\n      line-height: 1.6;\n    }\n\n    @media (min-width: 768px) {\n      .hero-subtitle { font-size: 1.2rem; }\n    }\n\n    /* Dashboard Visual / Mock Component */\n    .dashboard-preview {\n      margin-top: 3.5rem;\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      border-radius: 1rem;\n      padding: 1.25rem;\n      box-shadow: var(--shadow);\n      text-align: left;\n      overflow: hidden;\n      position: relative;\n    }\n\n    .preview-header {\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding-bottom: 1rem;\n      border-bottom: 1px solid var(--border-color);\n      margin-bottom: 1.25rem;\n    }\n\n    .dots { display: flex; gap: 0.375rem; }\n    .dot { width: 0.75rem; height: 0.75rem; border-radius: 50%; }\n    .dot-red { background: #ef4444; }\n    .dot-yellow { background: #f59e0b; }\n    .dot-green { background: #10b981; }\n\n    .stat-card {\n      background: var(--bg-main);\n      border: 1px solid var(--border-color);\n      border-radius: 0.75rem;\n      padding: 1rem;\n    }\n\n    .stat-label {\n      font-size: 0.75rem;\n      text-transform: uppercase;\n      letter-spacing: 0.05em;\n      color: var(--text-muted);\n      margin-bottom: 0.25rem;\n    }\n\n    .stat-value {\n      font-size: 1.5rem;\n      font-weight: 700;\n    }\n\n    /* Feature Grid */\n    .features-section {\n      padding: 4rem 0;\n    }\n\n    .section-header {\n      text-align: center;\n      margin-bottom: 3.5rem;\n    }\n\n    .section-title {\n      font-size: 1.875rem;\n      font-weight: 800;\n      letter-spacing: -0.025em;\n      margin-bottom: 0.75rem;\n    }\n\n    @media (min-width: 768px) {\n      .section-title { font-size: 2.5rem; }\n    }\n\n    .section-desc {\n      color: var(--text-muted);\n      font-size: 1.05rem;\n      max-width: 36rem;\n      margin: 0 auto;\n    }\n\n    .feature-card {\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      border-radius: 1rem;\n      padding: 1.75rem;\n      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);\n      position: relative;\n    }\n\n    .feature-card:hover {\n      border-color: var(--border-hover);\n      transform: translateY(-4px);\n      box-shadow: var(--shadow);\n    }\n\n    .feature-icon {\n      width: 3rem;\n      height: 3rem;\n      border-radius: 0.75rem;\n      background: var(--glow-color);\n      color: var(--accent-primary);\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      margin-bottom: 1.25rem;\n    }\n\n    .feature-title {\n      font-size: 1.25rem;\n      font-weight: 700;\n      margin-bottom: 0.5rem;\n    }\n\n    .feature-text {\n      color: var(--text-muted);\n      font-size: 0.9375rem;\n      line-height: 1.6;\n    }\n\n    /* Pricing Section */\n    .pricing-section {\n      padding: 4rem 0;\n    }\n\n    .toggle-container {\n      display: inline-flex;\n      align-items: center;\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      padding: 0.25rem;\n      border-radius: 0.75rem;\n      margin-top: 1.5rem;\n    }\n\n    .toggle-btn {\n      padding: 0.5rem 1rem;\n      border-radius: 0.5rem;\n      border: none;\n      background: transparent;\n      color: var(--text-muted);\n      font-weight: 600;\n      font-size: 0.875rem;\n      cursor: pointer;\n      transition: all 0.2s ease;\n    }\n\n    .toggle-btn.active {\n      background: var(--accent-primary);\n      color: white;\n    }\n\n    .pricing-card {\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      border-radius: 1.25rem;\n      padding: 2rem;\n      display: flex;\n      flex-direction: column;\n      position: relative;\n      transition: all 0.3s ease;\n    }\n\n    .pricing-card.popular {\n      border-color: var(--accent-primary);\n      box-shadow: 0 0 30px var(--glow-color);\n    }\n\n    .popular-badge {\n      position: absolute;\n      top: -0.75rem;\n      right: 1.5rem;\n      background: var(--accent-gradient);\n      color: white;\n      font-size: 0.75rem;\n      font-weight: 700;\n      text-transform: uppercase;\n      padding: 0.25rem 0.75rem;\n      border-radius: 9999px;\n      letter-spacing: 0.05em;\n    }\n\n    .price-val {\n      font-size: 2.75rem;\n      font-weight: 800;\n      letter-spacing: -0.03em;\n    }\n\n    .price-period {\n      color: var(--text-muted);\n      font-size: 0.9375rem;\n    }\n\n    .checklist {\n      list-style: none;\n      margin: 1.5rem 0;\n      display: flex;\n      flex-direction: column;\n      gap: 0.75rem;\n      flex-grow: 1;\n    }\n\n    .checklist-item {\n      display: flex;\n      align-items: center;\n      gap: 0.75rem;\n      font-size: 0.9375rem;\n      color: var(--text-muted);\n    }\n\n    .checklist-item svg {\n      color: var(--accent-primary);\n      flex-shrink: 0;\n    }\n\n    /* Calculator Widget */\n    .calc-box {\n      background: var(--bg-card);\n      border: 1px solid var(--border-color);\n      border-radius: 1rem;\n      padding: 2rem;\n      margin-top: 3rem;\n    }\n\n    .slider {\n      width: 100%;\n      height: 6px;\n      border-radius: 3px;\n      background: var(--border-color);\n      outline: none;\n      -webkit-appearance: none;\n      appearance: none;\n      cursor: pointer;\n    }\n\n    .slider::-webkit-slider-thumb {\n      -webkit-appearance: none;\n      appearance: none;\n      width: 20px;\n      height: 20px;\n      border-radius: 50%;\n      background: var(--accent-primary);\n      cursor: pointer;\n      box-shadow: 0 0 10px var(--glow-color);\n    }\n\n    /* Footer */\n    footer {\n      border-top: 1px solid var(--border-color);\n      padding: 3rem 0;\n      margin-top: 4rem;\n      color: var(--text-muted);\n      font-size: 0.875rem;\n    }\n\n    /* Modal Component */\n    .modal-backdrop {\n      position: fixed;\n      top: 0;\n      left: 0;\n      width: 100vw;\n      height: 100vh;\n      background: var(--modal-overlay);\n      backdrop-filter: blur(4px);\n      z-index: 100;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      padding: 1rem;\n      opacity: 0;\n      pointer-events: none;\n      transition: opacity 0.25s ease;\n    }\n\n    .modal-backdrop.open {\n      opacity: 1;\n      pointer-events: auto;\n    }\n\n    .modal-body {\n      background: var(--bg-main);\n      border: 1px solid var(--border-color);\n      border-radius: 1rem;\n      width: 100%;\n      max-width: 28rem;\n      padding: 2rem;\n      box-shadow: var(--shadow);\n      transform: scale(0.95);\n      transition: transform 0.25s ease;\n      position: relative;\n    }\n\n    .modal-backdrop.open .modal-body {\n      transform: scale(1);\n    }\n\n    .modal-close {\n      position: absolute;\n      top: 1.25rem;\n      right: 1.25rem;\n      background: transparent;\n      border: none;\n      color: var(--text-muted);\n      cursor: pointer;\n    }\n\n    .input-field {\n      width: 100%;\n      padding: 0.75rem 1rem;\n      background: var(--input-bg);\n      border: 1px solid var(--border-color);\n      border-radius: 0.5rem;\n      color: var(--text-main);\n      margin-bottom: 1rem;\n      font-size: 0.9375rem;\n      outline: none;\n    }\n\n    .input-field:focus {\n      border-color: var(--accent-primary);\n    }\n\n    /* Toast Notification System */\n    .toast-container {\n      position: fixed;\n      bottom: 1.5rem;\n      right: 1.5rem;\n      z-index: 110;\n      display: flex;\n      flex-direction: column;\n      gap: 0.5rem;\n    }\n\n    .toast {\n      background: var(--bg-card);\n      color: var(--text-main);\n      border: 1px solid var(--accent-primary);\n      padding: 0.85rem 1.25rem;\n      border-radius: 0.75rem;\n      box-shadow: var(--shadow);\n      font-size: 0.875rem;\n      font-weight: 500;\n      display: flex;\n      align-items: center;\n      gap: 0.75rem;\n      animation: slideUp 0.3s ease forwards;\n    }\n\n    @keyframes slideUp {\n      from { opacity: 0; transform: translateY(1rem); }\n      to { opacity: 1; transform: translateY(0); }\n    }\n  </style>\n</head>\n<body>\n\n  <!-- Dynamic Background Canvas -->\n  <canvas id=\"bg-canvas\"></canvas>\n\n  <!-- Root React/DOM App Container -->\n  <div id=\"app\" class=\"relative-z\"></div>\n\n  <!-- Global Toast Layer -->\n  <div id=\"toast-layer\" class=\"toast-container\"></div>\n\n  <script>\n    try {\n      // --------------------------------------------------\n      // Safe Local Storage Theme Helper\n      // --------------------------------------------------\n      function getInitialTheme() {\n        try {\n          const saved = localStorage.getItem('nexus_theme');\n          if (saved) return saved;\n        } catch (e) { /* ignore fallback */ }\n        return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';\n      }\n\n      function saveTheme(theme) {\n        try {\n          localStorage.setItem('nexus_theme', theme);\n        } catch (e) { /* ignore fallback */ }\n      }\n\n      // --------------------------------------------------\n      // Minimal Declarative DOM Creation Helper\n      // --------------------------------------------------\n      function h(tag, props = {}, ...children) {\n        const el = document.createElement(tag);\n        for (const [key, val] of Object.entries(props || {})) {\n          if (key.startsWith('on') && typeof val === 'function') {\n            el.addEventListener(key.substring(2).toLowerCase(), val);\n          } else if (key === 'className') {\n            el.className = val;\n          } else if (key === 'style' && typeof val === 'object') {\n            Object.assign(el.style, val);\n          } else if (key === 'innerHTML') {\n            el.innerHTML = val;\n          } else if (val !== false && val !== null && val !== undefined) {\n            el.setAttribute(key, val);\n          }\n        }\n        for (const child of children.flat(Infinity)) {\n          if (child === null || child === undefined || child === false) continue;\n          if (typeof child === 'string' || typeof child === 'number') {\n            el.appendChild(document.createTextNode(String(child)));\n          } else if (child instanceof Node) {\n            el.appendChild(child);\n          }\n        }\n        return el;\n      }\n\n      // Icon Factory (Inline SVG string helpers)\n      const Icons = {\n        sun: () => `<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></line></svg>`,\n        moon: () => `<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>`,\n        check: () => `<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg>`,\n        zap: () => `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"></polygon></svg>`,\n        shield: () => `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"></path></svg>`,\n        globe: () => `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"2\" y1=\"12\" x2=\"22\" y2=\"12\"></line><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"></path></svg>`,\n        cpu: () => `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\" ry=\"2\"></rect><rect x=\"9\" y=\"9\" width=\"6\" height=\"6\"></rect><line x1=\"9\" y1=\"1\" x2=\"9\" y2=\"4\"></line><line x1=\"15\" y1=\"1\" x2=\"15\" y2=\"4\"></line><line x1=\"9\" y1=\"20\" x2=\"9\" y2=\"23\"></line><line x1=\"15\" y1=\"20\" x2=\"15\" y2=\"23\"></line><line x1=\"20\" y1=\"9\" x2=\"23\" y2=\"9\"></line><line x1=\"20\" y1=\"15\" x2=\"23\" y2=\"15\"></line><line x1=\"1\" y1=\"9\" x2=\"4\" y2=\"9\"></line><line x1=\"1\" y1=\"15\" x2=\"4\" y2=\"15\"></line></svg>`,\n        layers: () => `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 2 7 12 12 22 7 12 2\"></polygon><polyline points=\"2 17 12 22 22 17\"></polyline><polyline points=\"2 12 12 17 22 12\"></polyline></svg>`,\n        chart: () => `<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"18\" y1=\"20\" x2=\"18\" y2=\"10\"></line><line x1=\"12\" y1=\"20\" x2=\"12\" y2=\"4\"></line><line x1=\"6\" y1=\"20\" x2=\"6\" y2=\"14\"></line></svg>`,\n        arrowRight: () => `<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"></line><polyline points=\"12 5 19 12 12 19\"></polyline></svg>`,\n        close: () => `<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"></line><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"></line></svg>`\n      };\n\n      // --------------------------------------------------\n      // Application Reactive State\n      // --------------------------------------------------\n      const state = {\n        theme: getInitialTheme(),\n        billingPeriod: 'yearly', // 'monthly' | 'yearly'\n        calcGB: 500,\n        modalOpen: false,\n        modalPlan: null,\n        stats: {\n          requests: 1420900,\n          latency: 14,\n          uptime: 99.99\n        }\n      };\n\n      // Set initial document attribute\n      document.documentElement.setAttribute('data-theme', state.theme);\n\n      // --------------------------------------------------\n      // Toast System\n      // --------------------------------------------------\n      function showToast(message) {\n        const toastLayer = document.getElementById('toast-layer');\n        const toast = h('div', { className: 'toast' },\n          h('span', { innerHTML: Icons.check() }),\n          h('span', {}, message)\n        );\n        toastLayer.appendChild(toast);\n        setTimeout(() => {\n          toast.style.opacity = '0';\n          toast.style.transition = 'opacity 0.3s ease';\n          setTimeout(() => toast.remove(), 300);\n        }, 3000);\n      }\n\n      // --------------------------------------------------\n      // Render Engine\n      // --------------------------------------------------\n      function renderApp() {\n        const app = document.getElementById('app');\n        app.innerHTML = '';\n\n        // --- Navbar ---\n        const nav = h('header', { className: 'navbar' },\n          h('div', { className: 'container nav-inner' },\n            h('a', { className: 'logo', href: '#' },\n              h('div', { className: 'logo-icon', innerHTML: Icons.zap() }),\n              h('span', {}, 'NEXUS', h('span', { className: 'gradient-text' }, '.AI'))\n            ),\n            h('ul', { className: 'nav-links' },\n              h('li', {}, h('a', { className: 'nav-link', href: '#features' }, 'Features')),\n              h('li', {}, h('a', { className: 'nav-link', href: '#calculator' }, 'Estimator')),\n              h('li', {}, h('a', { className: 'nav-link', href: '#pricing' }, 'Pricing'))\n            ),\n            h('div', { className: 'flex items-center gap-4' },\n              h('button', {\n                className: 'theme-toggle',\n                title: 'Toggle Light/Dark Theme',\n                onClick: () => {\n                  state.theme = state.theme === 'dark' ? 'light' : 'dark';\n                  document.documentElement.setAttribute('data-theme', state.theme);\n                  saveTheme(state.theme);\n                  renderApp();\n                  showToast(`Switched to ${state.theme} mode`);\n                },\n                innerHTML: state.theme === 'dark' ? Icons.sun() : Icons.moon()\n              }),\n              h('button', {\n                className: 'btn btn-primary',\n                onClick: () => openModal('Starter')\n              }, 'Get Started')\n            )\n          )\n        );\n\n        // --- Hero Section ---\n        const hero = h('section', { className: 'hero container' },\n          h('div', { className: 'badge' },\n            h('span', { className: 'badge-dot' }),\n            'Nexus Engine v2.4 Live • Global Sub-15ms Edge'\n          ),\n          h('h1', { className: 'hero-title' },\n            'Deploy Faster. Scale Infinitely.', h('br'),\n            h('span', { className: 'gradient-text' }, 'Spend 60% Less.')\n          ),\n          h('p', { className: 'hero-subtitle' },\n            'The high-performance edge platform designed for modern engineering teams. Zero configuration, automatic SSL, and instant global failover.'\n          ),\n          h('div', { className: 'flex justify-center gap-4 flex-wrap' },\n            h('button', {\n              className: 'btn btn-primary',\n              onClick: () => openModal('Starter')\n            }, 'Start Free Trial ', h('span', { innerHTML: Icons.arrowRight() })),\n            h('button', {\n              className: 'btn btn-secondary',\n              onClick: () => {\n                state.stats.requests += 50000;\n                renderApp();\n                showToast('Simulated 50k Edge Traffic Burst');\n              }\n            }, '⚡ Simulate Traffic Surge')\n          ),\n\n          // --- Interactive Dashboard Preview ---\n          h('div', { className: 'dashboard-preview' },\n            h('div', { className: 'preview-header' },\n              h('div', { className: 'dots' },\n                h('div', { className: 'dot dot-red' }),\n                h('div', { className: 'dot dot-yellow' }),\n                h('div', { className: 'dot dot-green' })\n              ),\n              h('div', { style: { fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'monospace' } }, 'nexus-cluster // production-us-east')\n            ),\n            h('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-4' },\n              h('div', { className: 'stat-card' },\n                h('div', { className: 'stat-label' }, 'Global Requests (24h)'),\n                h('div', { className: 'stat-value gradient-text' }, state.stats.requests.toLocaleString())\n              ),\n              h('div', { className: 'stat-card' },\n                h('div', { className: 'stat-label' }, 'Avg Global Latency'),\n                h('div', { className: 'stat-value', style: { color: '#10b981' } }, `${state.stats.latency} ms`)\n              ),\n              h('div', { className: 'stat-card' },\n                h('div', { className: 'stat-label' }, 'Uptime SLA'),\n                h('div', { className: 'stat-value' }, `${state.stats.uptime}%`)\n              )\n            )\n          )\n        );\n\n        // --- Feature Grid Section ---\n        const featureItems = [\n          { icon: Icons.globe(), title: '280+ POP Edge Locations', text: 'Deliver static and dynamic workloads from edge servers situated within 10ms of 95% of world internet users.' },\n          { icon: Icons.cpu(), title: 'Autonomous Auto-Scaling', text: 'Instantly handles traffic spikes from zero to millions of concurrent requests without warmups or manual tuning.' },\n          { icon: Icons.shield(), title: 'Zero-Trust Security Layer', text: 'Automated Layer 7 DDoS mitigation, web application firewall (WAF), and automated TLS certificate renewals.' },\n          { icon: Icons.layers(), title: 'Atomic Rollbacks', text: 'Deploy with absolute confidence. Rollback code & static assets instantly in less than 50 milliseconds.' },\n          { icon: Icons.chart(), title: 'Microsecond Telemetry', text: 'Real-time observability and distributed tracing with zero runtime performance overhead.' },\n          { icon: Icons.zap(), title: 'Universal Developer API', text: 'Declarative SDKs for TypeScript, Rust, Go, and Python. Seamless CI/CD integration.' }\n        ];\n\n        const features = h('section', { id: 'features', className: 'features-section container' },\n          h('div', { className: 'section-header' },\n            h('h2', { className: 'section-title' }, 'Engineered for Enterprise Performance'),\n            h('p', { className: 'section-desc' }, 'Everything you need to ship world-class applications without managing backend infrastructure.')\n          ),\n          h('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-6' },\n            featureItems.map(item =>\n              h('div', { className: 'feature-card' },\n                h('div', { className: 'feature-icon', innerHTML: item.icon }),\n                h('h3', { className: 'feature-title' }, item.title),\n                h('p', { className: 'feature-text' }, item.text)\n              )\n            )\n          )\n        );\n\n        // --- Calculator Section ---\n        const calcPrice = Math.round(state.calcGB * 0.08);\n        const calculator = h('section', { id: 'calculator', className: 'container' },\n          h('div', { className: 'calc-box' },\n            h('div', { className: 'section-header', style: { marginBottom: '2rem' } },\n              h('h3', { className: 'section-title' }, 'Interactive Cost Estimator'),\n              h('p', { className: 'section-desc' }, 'Slide to estimate monthly egress and compute expenditure.')\n            ),\n            h('div', { className: 'flex flex-col gap-4' },\n              h('div', { className: 'flex justify-between items-center' },\n                h('span', { style: { fontWeight: 600 } }, 'Monthly Data Bandwidth'),\n                h('span', { className: 'gradient-text', style: { fontWeight: 800, fontSize: '1.25rem' } }, `${state.calcGB} GB`)\n              ),\n              h('input', {\n                type: 'range',\n                min: '50',\n                max: '5000',\n                step: '50',\n                value: state.calcGB,\n                className: 'slider',\n                onInput: (e) => {\n                  state.calcGB = Number(e.target.value);\n                  renderApp();\n                }\n              }),\n              h('div', { className: 'flex justify-between items-center', style: { marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' } },\n                h('div', {},\n                  h('div', { style: { fontSize: '0.85rem', color: 'var(--text-muted)' } }, 'Estimated Nexus Price'),\n                  h('div', { className: 'price-val gradient-text' }, `$${calcPrice}`, h('span', { className: 'price-period' }, '/mo'))\n                ),\n                h('button', {\n                  className: 'btn btn-primary',\n                  onClick: () => openModal(`Custom (${state.calcGB}GB)`)\n                }, 'Lock In Rate')\n              )\n            )\n          )\n        );\n\n        // --- Pricing Section ---\n        const isYearly = state.billingPeriod === 'yearly';\n        const plans = [\n          {\n            name: 'Starter',\n            desc: 'Ideal for side-projects and dynamic prototype apps.',\n            price: isYearly ? '$0' : '$0',\n            popular: false,\n            features: ['10GB Monthly Bandwidth', 'Sub-15ms Edge CDN', 'Community Support', '1 Custom Domain']\n          },\n          {\n            name: 'Pro',\n            desc: 'For high-growth SaaS and scaling tech teams.',\n            price: isYearly ? '$24' : '$29',\n            popular: true,\n            features: ['500GB Monthly Bandwidth', 'Autonomous Auto-scaling', '24/7 Priority Support', 'Unlimited Domains', 'Advanced Web Security']\n          },\n          {\n            name: 'Enterprise',\n            desc: 'Custom SLAs, dedicated infrastructure & support.',\n            price: isYearly ? '$79' : '$99',\n            popular: false,\n            features: ['Unlimited Bandwidth', 'Dedicated SOC2 Compliant Edge', 'Dedicated Solution Engineer', 'Custom SLAs (99.999%)', 'SAML SSO Integration']\n          }\n        ];\n\n        const pricing = h('section', { id: 'pricing', className: 'pricing-section container' },\n          h('div', { className: 'section-header' },\n            h('h2', { className: 'section-title' }, 'Simple, Transparent Pricing'),\n            h('p', { className: 'section-desc' }, 'No hidden surcharges or bandwidth penalty spikes. Pick your plan below.'),\n            h('div', { className: 'toggle-container' },\n              h('button', {\n                className: `toggle-btn ${!isYearly ? 'active' : ''}`,\n                onClick: () => { state.billingPeriod = 'monthly'; renderApp(); }\n              }, 'Monthly Billing'),\n              h('button', {\n                className: `toggle-btn ${isYearly ? 'active' : ''}`,\n                onClick: () => { state.billingPeriod = 'yearly'; renderApp(); }\n              }, 'Yearly (20% OFF)')\n            )\n          ),\n          h('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-8 items-center' },\n            plans.map(plan =>\n              h('div', { className: `pricing-card ${plan.popular ? 'popular' : ''}` },\n                plan.popular && h('div', { className: 'popular-badge' }, 'Most Popular'),\n                h('h3', { style: { fontSize: '1.25rem', fontWeight: 700 } }, plan.name),\n                h('p', { style: { color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem' } }, plan.desc),\n                h('div', { style: { margin: '1.5rem 0' } },\n                  h('span', { className: 'price-val' }, plan.price),\n                  h('span', { className: 'price-period' }, isYearly ? ' / month (billed annually)' : ' / month')\n                ),\n                h('ul', { className: 'checklist' },\n                  plan.features.map(f =>\n                    h('li', { className: 'checklist-item' },\n                      h('span', { innerHTML: Icons.check() }),\n                      h('span', {}, f)\n                    )\n                  )\n                ),\n                h('button', {\n                  className: `btn ${plan.popular ? 'btn-primary' : 'btn-secondary'}`,\n                  style: { width: '100%', marginTop: '1rem' },\n                  onClick: () => openModal(plan.name)\n                }, `Choose ${plan.name}`)\n              )\n            )\n          )\n        );\n\n        // --- Footer ---\n        const footer = h('footer', { className: 'container' },\n          h('div', { className: 'flex flex-col md:flex-row justify-between items-center gap-4' },\n            h('div', { className: 'flex items-center gap-2' },\n              h('div', { className: 'logo-icon', style: { width: '1.5rem', height: '1.5rem' }, innerHTML: Icons.zap() }),\n              h('span', { style: { fontWeight: 700, color: 'var(--text-main)' } }, 'NEXUS CLOUD')\n            ),\n            h('div', {}, '© 2025 Nexus Cloud Inc. All rights reserved.'),\n            h('div', { className: 'flex items-center gap-2' },\n              h('span', { className: 'badge-dot', style: { background: '#10b981', boxShadow: '0 0 8px #10b981' } }),\n              h('span', { style: { fontSize: '0.85rem' } }, 'All Systems Operational')\n            )\n          )\n        );\n\n        // --- Modal Component ---\n        const modal = h('div', { className: `modal-backdrop ${state.modalOpen ? 'open' : ''}` },\n          h('div', { className: 'modal-body' },\n            h('button', {\n              className: 'modal-close',\n              onClick: closeModal,\n              innerHTML: Icons.close()\n            }),\n            h('h3', { style: { fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' } }, `Get Started with ${state.modalPlan}`),\n            h('p', { style: { color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' } }, 'Enter your work email to create an instant sandbox environment.'),\n            h('form', {\n              onSubmit: (e) => {\n                e.preventDefault();\n                closeModal();\n                showToast(`🎉 Account created for ${state.modalPlan} plan!`);\n              }\n            },\n              h('input', { type: 'email', required: true, placeholder: 'name@company.com', className: 'input-field' }),\n              h('input', { type: 'password', required: true, placeholder: 'Create strong password', className: 'input-field' }),\n              h('button', { type: 'submit', className: 'btn btn-primary', style: { width: '100%' } }, 'Create Sandbox Account')\n            )\n          )\n        );\n\n        // Append all sections to App Container\n        app.appendChild(nav);\n        app.appendChild(hero);\n        app.appendChild(features);\n        app.appendChild(calculator);\n        app.appendChild(pricing);\n        app.appendChild(footer);\n        app.appendChild(modal);\n      }\n\n      function openModal(planName) {\n        state.modalPlan = planName;\n        state.modalOpen = true;\n        renderApp();\n      }\n\n      function closeModal() {\n        state.modalOpen = false;\n        renderApp();\n      }\n\n      // Initial App Render\n      renderApp();\n\n      // --------------------------------------------------\n      // Canvas Background Visual Effects (Dynamic Canvas)\n      // --------------------------------------------------\n      const canvas = document.getElementById('bg-canvas');\n      const ctx = canvas.getContext('2d');\n\n      let width = 0;\n      let height = 0;\n      let particles = [];\n\n      function resizeCanvas() {\n        width = window.innerWidth;\n        height = window.innerHeight;\n        const dpr = window.devicePixelRatio || 1;\n        canvas.width = width * dpr;\n        canvas.height = height * dpr;\n        ctx.scale(dpr, dpr);\n        initParticles();\n      }\n\n      function initParticles() {\n        particles = [];\n        const count = Math.min(Math.floor(width / 20), 60);\n        for (let i = 0; i < count; i++) {\n          particles.push({\n            x: Math.random() * width,\n            y: Math.random() * height,\n            vx: (Math.random() - 0.5) * 0.5,\n            vy: (Math.random() - 0.5) * 0.5,\n            radius: Math.random() * 2 + 1\n          });\n        }\n      }\n\n      function drawParticles() {\n        ctx.clearRect(0, 0, width, height);\n        const isDark = state.theme === 'dark';\n        const particleColor = isDark ? 'rgba(99, 102, 241, ' : 'rgba(79, 70, 229, ';\n\n        for (let i = 0; i < particles.length; i++) {\n          const p = particles[i];\n          p.x += p.vx;\n          p.y += p.vy;\n\n          if (p.x < 0 || p.x > width) p.vx *= -1;\n          if (p.y < 0 || p.y > height) p.vy *= -1;\n\n          ctx.beginPath();\n          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);\n          ctx.fillStyle = particleColor + '0.4)';\n          ctx.fill();\n\n          for (let j = i + 1; j < particles.length; j++) {\n            const p2 = particles[j];\n            const dx = p.x - p2.x;\n            const dy = p.y - p2.y;\n            const dist = Math.sqrt(dx * dx + dy * dy);\n\n            if (dist < 120) {\n              ctx.beginPath();\n              ctx.moveTo(p.x, p.y);\n              ctx.lineTo(p2.x, p2.y);\n              ctx.strokeStyle = particleColor + (1 - dist / 120) * 0.15 + ')';\n              ctx.lineWidth = 1;\n              ctx.stroke();\n            }\n          }\n        }\n        requestAnimationFrame(drawParticles);\n      }\n\n      window.addEventListener('resize', resizeCanvas);\n      resizeCanvas();\n      requestAnimationFrame(drawParticles);\n\n    } catch (err) {\n      document.body.innerHTML = `\n        <div role=\"alert\" style=\"padding: 2rem; color: #ef4444; background: #090d16; font-family: monospace; height: 100vh;\">\n          <h2>Application Initialization Error</h2>\n          <pre style=\"margin-top: 1rem; color: #94a3b8;\">${err.stack || err.message}</pre>\n        </div>\n      `;\n    }\n  </script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "tic-tac-toe",
+    "modelId": "gemini-3.6-flash",
+    "score": 68,
+    "runtimeMs": 23083,
+    "tokensIn": 3885,
+    "tokensOut": 26646,
+    "costUsd": 0.0002056725,
+    "usage": {
+      "inputTokens": 3885,
+      "outputTokens": 26646,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      68,
+      68,
+      68,
+      68,
+      68
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "ttt-grid-interacts",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "cells marked X then O (turn alternates)"
+        },
+        {
+          "name": "ttt-win-detected",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no 9-cell board found"
+        }
+      ],
+      [
+        {
+          "name": "ttt-grid-interacts",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "cells marked X then O (turn alternates)"
+        },
+        {
+          "name": "ttt-win-detected",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no 9-cell board found"
+        }
+      ],
+      [
+        {
+          "name": "ttt-grid-interacts",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "cells marked X then O (turn alternates)"
+        },
+        {
+          "name": "ttt-win-detected",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no 9-cell board found"
+        }
+      ],
+      [
+        {
+          "name": "ttt-grid-interacts",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "cells marked X then O (turn alternates)"
+        },
+        {
+          "name": "ttt-win-detected",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no 9-cell board found"
+        }
+      ],
+      [
+        {
+          "name": "ttt-grid-interacts",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "cells marked X then O (turn alternates)"
+        },
+        {
+          "name": "ttt-win-detected",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "no 9-cell board found"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 15344,
+      "meanTokensPerSec": 693.7,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "createdAt": "2026-08-17T06:50:15.542Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-tic-tac-toe.jsonl"
+    },
+    "source": "live",
+    "output": "<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Tic-Tac-Toe</title>\n<style>\n  html, body {\n    margin: 0;\n    padding: 0;\n    min-height: 100%;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    background: #0c0c10;\n    color: #ececf0;\n    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    overflow: hidden;\n  }\n\n  *, *:before, *:after {\n    box-sizing: inherit;\n  }\n\n  .game-container {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    width: 100%;\n    max-width: 340px;\n    padding: 16px;\n    gap: 16px;\n  }\n\n  .status {\n    font-size: 1.2rem;\n    font-weight: 700;\n    min-height: 1.6em;\n    text-align: center;\n    letter-spacing: 0.02em;\n    color: #ececf0;\n  }\n\n  .board {\n    display: grid;\n    grid-template-columns: repeat(3, 1fr);\n    grid-template-rows: repeat(3, 1fr);\n    gap: 10px;\n    width: min(65vw, 240px);\n    height: min(65vw, 240px);\n  }\n\n  .cell {\n    background: #181822;\n    border: 2px solid #2a2a3a;\n    border-radius: 10px;\n    color: #ececf0;\n    font-size: min(12vw, 2.5rem);\n    font-weight: 800;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    cursor: pointer;\n    user-select: none;\n    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;\n    padding: 0;\n    margin: 0;\n    outline: none;\n  }\n\n  .cell:hover:not(:disabled) {\n    background: #222230;\n    border-color: #404058;\n  }\n\n  .cell:active:not(:disabled) {\n    transform: scale(0.96);\n  }\n\n  .cell.x-mark {\n    color: #38bdf8;\n  }\n\n  .cell.o-mark {\n    color: #f43f5e;\n  }\n\n  .cell.win {\n    background: #252538;\n    border-color: #6366f1;\n    box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);\n  }\n\n  .restart-btn {\n    background: #222230;\n    color: #ececf0;\n    border: 1px solid #3a3a50;\n    padding: 10px 24px;\n    font-size: 0.95rem;\n    font-weight: 600;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;\n  }\n\n  .restart-btn:hover {\n    background: #2a2a3c;\n    border-color: #505070;\n  }\n\n  .restart-btn:active {\n    transform: scale(0.97);\n  }\n\n  .error-alert {\n    color: #f87171;\n    background: #2a1215;\n    border: 1px solid #7f1d1d;\n    padding: 10px 14px;\n    border-radius: 6px;\n    font-size: 0.85rem;\n    margin-top: 10px;\n    text-align: center;\n  }\n</style>\n</head>\n<body>\n  <div class=\"game-container\">\n    <div id=\"status\" class=\"status\" aria-live=\"polite\">Turn: X</div>\n    <div class=\"board\" id=\"board\"><button class=\"cell\" data-index=\"0\"></button><button class=\"cell\" data-index=\"1\"></button><button class=\"cell\" data-index=\"2\"></button><button class=\"cell\" data-index=\"3\"></button><button class=\"cell\" data-index=\"4\"></button><button class=\"cell\" data-index=\"5\"></button><button class=\"cell\" data-index=\"6\"></button><button class=\"cell\" data-index=\"7\"></button><button class=\"cell\" data-index=\"8\"></button></div>\n    <button id=\"restart\" class=\"restart-btn\">Restart Game</button>\n  </div>\n\n  <script>\n    try {\n      (function() {\n        const boardState = Array(9).fill(\"\");\n        let currentPlayer = \"X\";\n        let gameActive = true;\n\n        const winningCombos = [\n          [0, 1, 2], [3, 4, 5], [6, 7, 8],\n          [0, 3, 6], [1, 4, 7], [2, 5, 8],\n          [0, 4, 8], [2, 4, 6]\n        ];\n\n        const statusEl = document.getElementById(\"status\");\n        const boardEl = document.getElementById(\"board\");\n        const restartBtn = document.getElementById(\"restart\");\n        const cells = Array.from(boardEl.querySelectorAll(\".cell\"));\n\n        function checkWin() {\n          for (const combo of winningCombos) {\n            const [a, b, c] = combo;\n            if (\n              boardState[a] &&\n              boardState[a] === boardState[b] &&\n              boardState[a] === boardState[c]\n            ) {\n              return combo;\n            }\n          }\n          return null;\n        }\n\n        function handleCellClick(e) {\n          const cell = e.currentTarget;\n          const index = parseInt(cell.getAttribute(\"data-index\"), 10);\n\n          if (!gameActive || boardState[index] !== \"\") {\n            return;\n          }\n\n          boardState[index] = currentPlayer;\n          cell.textContent = currentPlayer;\n          cell.classList.add(currentPlayer === \"X\" ? \"x-mark\" : \"o-mark\");\n\n          const winCombo = checkWin();\n\n          if (winCombo) {\n            gameActive = false;\n            statusEl.textContent = currentPlayer + \" wins!\";\n            winCombo.forEach(idx => cells[idx].classList.add(\"win\"));\n          } else if (boardState.every(val => val !== \"\")) {\n            gameActive = false;\n            statusEl.textContent = \"It's a draw!\";\n          } else {\n            currentPlayer = currentPlayer === \"X\" ? \"O\" : \"X\";\n            statusEl.textContent = \"Turn: \" + currentPlayer;\n          }\n        }\n\n        function resetGame() {\n          boardState.fill(\"\");\n          currentPlayer = \"X\";\n          gameActive = true;\n          statusEl.textContent = \"Turn: X\";\n\n          cells.forEach(cell => {\n            cell.textContent = \"\";\n            cell.className = \"cell\";\n          });\n        }\n\n        cells.forEach(cell => cell.addEventListener(\"click\", handleCellClick));\n        restartBtn.addEventListener(\"click\", resetGame);\n      })();\n    } catch (err) {\n      const errDiv = document.createElement(\"div\");\n      errDiv.setAttribute(\"role\", \"alert\");\n      errDiv.className = \"error-alert\";\n      errDiv.textContent = \"Error: \" + (err && err.message ? err.message : err);\n      document.body.appendChild(errDiv);\n    }\n  </script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "circuit-builder-teaser",
+    "modelId": "gemini-3.6-flash",
+    "score": 100,
+    "runtimeMs": 80841,
+    "tokensIn": 4269,
+    "tokensOut": 73308,
+    "costUsd": 0.0005562135000000001,
+    "usage": {
+      "inputTokens": 4269,
+      "outputTokens": 73308,
+      "source": "reported"
+    },
+    "iterations": 5,
+    "iterationsSucceeded": 5,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "circuit-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "inputs=7 canvas=1 textChars=297"
+        },
+        {
+          "name": "circuit-interact",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff after input: 99.11%"
+        }
+      ],
+      [
+        {
+          "name": "circuit-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "inputs=9 canvas=1 textChars=262"
+        },
+        {
+          "name": "circuit-interact",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff after input: 99.26%"
+        }
+      ],
+      [
+        {
+          "name": "circuit-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "inputs=8 canvas=1 textChars=250"
+        },
+        {
+          "name": "circuit-interact",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff after input: 99.02%"
+        }
+      ],
+      [
+        {
+          "name": "circuit-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "inputs=12 canvas=1 textChars=296"
+        },
+        {
+          "name": "circuit-interact",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff after input: 99.14%"
+        }
+      ],
+      [
+        {
+          "name": "circuit-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "inputs=9 canvas=1 textChars=333"
+        },
+        {
+          "name": "circuit-interact",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff after input: 99.16%"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 22670,
+      "meanTokensPerSec": 269.9,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "70e17738e3850933",
+    "createdAt": "2026-08-17T06:49:05.976Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-34-06",
+      "file": "gemini-3.6-flash-circuit-builder-teaser.jsonl"
+    },
+    "source": "live",
+    "output": "<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Series RLC Step Response Simulator</title>\n<style>\n  * {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n    user-select: none;\n  }\n  html, body {\n    width: 100%;\n    height: 100%;\n    overflow: hidden;\n    background: #090a0f;\n    color: #ececf0;\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;\n  }\n  #app-container {\n    position: relative;\n    width: 100vw;\n    height: 100vh;\n    display: flex;\n    flex-direction: column;\n  }\n  canvas {\n    display: block;\n    width: 100%;\n    height: 100%;\n    touch-action: none;\n  }\n  .hud-overlay {\n    position: absolute;\n    top: 12px;\n    left: 12px;\n    z-index: 10;\n    width: 320px;\n    max-width: calc(100vw - 24px);\n    max-height: calc(100vh - 24px);\n    overflow-y: auto;\n    background: rgba(15, 18, 28, 0.85);\n    backdrop-filter: blur(12px);\n    -webkit-backdrop-filter: blur(12px);\n    border: 1px solid rgba(255, 255, 255, 0.1);\n    border-radius: 12px;\n    padding: 14px;\n    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);\n    transition: transform 0.2s ease, opacity 0.2s ease;\n  }\n  .hud-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    margin-bottom: 12px;\n    border-bottom: 1px solid rgba(255, 255, 255, 0.08);\n    padding-bottom: 8px;\n  }\n  .hud-title {\n    font-size: 15px;\n    font-weight: 700;\n    letter-spacing: 0.5px;\n    color: #f3f4f6;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n  }\n  .hud-title-icon {\n    width: 10px;\n    height: 10px;\n    border-radius: 50%;\n    background: #38bdf8;\n    box-shadow: 0 0 8px #38bdf8;\n  }\n  .control-group {\n    margin-bottom: 10px;\n  }\n  .control-label-row {\n    display: flex;\n    justify-content: space-between;\n    font-size: 12px;\n    color: #9ca3af;\n    margin-bottom: 4px;\n    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;\n  }\n  .control-value {\n    color: #38bdf8;\n    font-weight: 600;\n  }\n  input[type=range] {\n    -webkit-appearance: none;\n    width: 100%;\n    background: transparent;\n  }\n  input[type=range]:focus {\n    outline: none;\n  }\n  input[type=range]::-webkit-slider-runnable-track {\n    width: 100%;\n    height: 6px;\n    cursor: pointer;\n    background: #1f293d;\n    border-radius: 3px;\n    border: 1px solid rgba(255, 255, 255, 0.05);\n  }\n  input[type=range]::-webkit-slider-thumb {\n    height: 16px;\n    width: 16px;\n    border-radius: 50%;\n    background: #38bdf8;\n    cursor: pointer;\n    -webkit-appearance: none;\n    margin-top: -5px;\n    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);\n    transition: transform 0.1s ease, background-color 0.1s ease;\n  }\n  input[type=range]::-webkit-slider-thumb:hover {\n    transform: scale(1.15);\n    background: #7dd3fc;\n  }\n  .preset-row {\n    display: grid;\n    grid-template-columns: repeat(3, 1fr);\n    gap: 6px;\n    margin-top: 12px;\n    margin-bottom: 12px;\n  }\n  .btn {\n    background: #1e293b;\n    border: 1px solid rgba(255, 255, 255, 0.1);\n    color: #cbd5e1;\n    padding: 6px 8px;\n    font-size: 11px;\n    font-weight: 600;\n    border-radius: 6px;\n    cursor: pointer;\n    text-align: center;\n    transition: all 0.15s ease;\n  }\n  .btn:hover {\n    background: #334155;\n    color: #fff;\n    border-color: rgba(255, 255, 255, 0.2);\n  }\n  .btn.active {\n    background: rgba(56, 189, 248, 0.15);\n    color: #38bdf8;\n    border-color: #38bdf8;\n  }\n  .stats-panel {\n    background: rgba(0, 0, 0, 0.3);\n    border-radius: 8px;\n    padding: 10px;\n    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;\n    font-size: 11px;\n    line-height: 1.5;\n    border: 1px solid rgba(255, 255, 255, 0.05);\n  }\n  .stat-row {\n    display: flex;\n    justify-content: space-between;\n  }\n  .stat-label { color: #64748b; }\n  .stat-val { color: #e2e8f0; font-weight: 500; }\n  .badge {\n    display: inline-block;\n    padding: 2px 6px;\n    border-radius: 4px;\n    font-size: 10px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 0.5px;\n    margin-top: 4px;\n    text-align: center;\n    width: 100%;\n  }\n  .badge-under { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); }\n  .badge-critical { background: rgba(250, 204, 21, 0.2); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.4); }\n  .badge-over { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }\n\n  .toggle-hud-btn {\n    display: none;\n    position: absolute;\n    top: 12px;\n    right: 12px;\n    z-index: 20;\n    background: rgba(15, 18, 28, 0.85);\n    border: 1px solid rgba(255, 255, 255, 0.1);\n    color: #fff;\n    padding: 8px 12px;\n    border-radius: 8px;\n    font-size: 12px;\n    cursor: pointer;\n  }\n\n  #error-display {\n    display: none;\n    position: absolute;\n    bottom: 20px;\n    left: 20px;\n    right: 20px;\n    background: rgba(220, 38, 38, 0.9);\n    color: white;\n    padding: 12px;\n    border-radius: 8px;\n    font-family: monospace;\n    font-size: 12px;\n    z-index: 100;\n  }\n\n  @media (max-width: 600px) {\n    .hud-overlay {\n      width: calc(100vw - 24px);\n      max-height: 50vh;\n    }\n  }\n</style>\n</head>\n<body>\n\n<div id=\"app-container\">\n  <canvas id=\"simCanvas\"></canvas>\n\n  <div class=\"hud-overlay\" id=\"hud\">\n    <div class=\"hud-header\">\n      <div class=\"hud-title\">\n        <div class=\"hud-title-icon\"></div>\n        RLC STEP RESPONSE\n      </div>\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label-row\">\n        <span>Resistance (R)</span>\n        <span class=\"control-value\" id=\"valR\">10.0 Ω</span>\n      </div>\n      <input type=\"range\" id=\"sliderR\" min=\"0\" max=\"1000\" step=\"1\" value=\"30\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label-row\">\n        <span>Inductance (L)</span>\n        <span class=\"control-value\" id=\"valL\">10.0 mH</span>\n      </div>\n      <input type=\"range\" id=\"sliderL\" min=\"1\" max=\"100\" step=\"0.5\" value=\"10\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label-row\">\n        <span>Capacitance (C)</span>\n        <span class=\"control-value\" id=\"valC\">10.0 µF</span>\n      </div>\n      <input type=\"range\" id=\"sliderC\" min=\"0.1\" max=\"100\" step=\"0.1\" value=\"10\">\n    </div>\n\n    <div class=\"control-group\">\n      <div class=\"control-label-row\">\n        <span>Step Voltage (Vin)</span>\n        <span class=\"control-value\" id=\"valVin\">5.0 V</span>\n      </div>\n      <input type=\"range\" id=\"sliderVin\" min=\"1\" max=\"12\" step=\"0.5\" value=\"5\">\n    </div>\n\n    <div class=\"preset-row\">\n      <button class=\"btn\" id=\"btnUnder\">Underdamped</button>\n      <button class=\"btn\" id=\"btnCritical\">Critical</button>\n      <button class=\"btn\" id=\"btnOver\">Overdamped</button>\n    </div>\n\n    <div class=\"stats-panel\">\n      <div class=\"stat-row\">\n        <span class=\"stat-label\">Damping Ratio (ζ):</span>\n        <span class=\"stat-val\" id=\"statZeta\">0.00</span>\n      </div>\n      <div class=\"stat-row\">\n        <span class=\"stat-label\">Nat. Freq (f₀):</span>\n        <span class=\"stat-val\" id=\"statW0\">0 Hz</span>\n      </div>\n      <div class=\"stat-row\">\n        <span class=\"stat-label\">Damped Freq (f_d):</span>\n        <span class=\"stat-val\" id=\"statWd\">0 Hz</span>\n      </div>\n      <div class=\"stat-row\">\n        <span class=\"stat-label\">Peak Overshoot:</span>\n        <span class=\"stat-val\" id=\"statOvershoot\">0%</span>\n      </div>\n      <div class=\"stat-row\">\n        <span class=\"stat-label\">Settling Time (2%):</span>\n        <span class=\"stat-val\" id=\"statSettling\">0 ms</span>\n      </div>\n      <div id=\"dampingBadge\" class=\"badge badge-under\">UNDERDAMPED</div>\n    </div>\n  </div>\n\n  <div id=\"error-display\" role=\"alert\"></div>\n</div>\n\n<script>\ntry {\n  const canvas = document.getElementById('simCanvas');\n  const ctx = canvas.getContext('2d');\n\n  // DOM elements\n  const sliderR = document.getElementById('sliderR');\n  const sliderL = document.getElementById('sliderL');\n  const sliderC = document.getElementById('sliderC');\n  const sliderVin = document.getElementById('sliderVin');\n\n  const valR = document.getElementById('valR');\n  const valL = document.getElementById('valL');\n  const valC = document.getElementById('valC');\n  const valVin = document.getElementById('valVin');\n\n  const statZeta = document.getElementById('statZeta');\n  const statW0 = document.getElementById('statW0');\n  const statWd = document.getElementById('statWd');\n  const statOvershoot = document.getElementById('statOvershoot');\n  const statSettling = document.getElementById('statSettling');\n  const dampingBadge = document.getElementById('dampingBadge');\n\n  const btnUnder = document.getElementById('btnUnder');\n  const btnCritical = document.getElementById('btnCritical');\n  const btnOver = document.getElementById('btnOver');\n\n  // Interactive mouse/touch cursor\n  let mousePos = { x: -1, y: -1, active: false };\n\n  // Canvas Sizing\n  let dpr = window.devicePixelRatio || 1;\n  let width = 0;\n  let height = 0;\n\n  function resize() {\n    dpr = window.devicePixelRatio || 1;\n    width = window.innerWidth;\n    height = window.innerHeight;\n    canvas.width = width * dpr;\n    canvas.height = height * dpr;\n    ctx.scale(dpr, dpr);\n  }\n  window.addEventListener('resize', resize);\n  resize();\n\n  // Mouse / Touch events for plot inspection\n  canvas.addEventListener('pointermove', (e) => {\n    const rect = canvas.getBoundingClientRect();\n    mousePos.x = e.clientX - rect.left;\n    mousePos.y = e.clientY - rect.top;\n    mousePos.active = true;\n  });\n  canvas.addEventListener('pointerleave', () => {\n    mousePos.active = false;\n  });\n\n  // Circuit Parameters\n  let params = {\n    R: parseFloat(sliderR.value),       // Ohms\n    L: parseFloat(sliderL.value) * 1e-3,// Henries\n    C: parseFloat(sliderC.value) * 1e-6,// Farads\n    Vin: parseFloat(sliderVin.value)    // Volts\n  };\n\n  function updateInputs() {\n    params.R = parseFloat(sliderR.value);\n    params.L = parseFloat(sliderL.value) * 1e-3;\n    params.C = parseFloat(sliderC.value) * 1e-6;\n    params.Vin = parseFloat(sliderVin.value);\n\n    valR.textContent = `${params.R.toFixed(1)} Ω`;\n    valL.textContent = `${(params.L * 1e3).toFixed(1)} mH`;\n    valC.textContent = `${(params.C * 1e6).toFixed(1)} µF`;\n    valVin.textContent = `${params.Vin.toFixed(1)} V`;\n\n    updateActivePresetButtons();\n  }\n\n  sliderR.addEventListener('input', updateInputs);\n  sliderL.addEventListener('input', updateInputs);\n  sliderC.addEventListener('input', updateInputs);\n  sliderVin.addEventListener('input', updateInputs);\n\n  // Presets\n  btnUnder.addEventListener('click', () => {\n    sliderL.value = 10;\n    sliderC.value = 10;\n    sliderR.value = 15;\n    updateInputs();\n  });\n\n  btnCritical.addEventListener('click', () => {\n    // R = 2 * sqrt(L/C) => L=10mH, C=10uF => L/C = 1000 => sqrt = 31.62 => R = 63.25\n    sliderL.value = 10;\n    sliderC.value = 10;\n    sliderR.value = (2 * Math.sqrt(10e-3 / 10e-6)).toFixed(1);\n    updateInputs();\n  });\n\n  btnOver.addEventListener('click', () => {\n    sliderL.value = 10;\n    sliderC.value = 10;\n    sliderR.value = 180;\n    updateInputs();\n  });\n\n  function updateActivePresetButtons() {\n    btnUnder.classList.remove('active');\n    btnCritical.classList.remove('active');\n    btnOver.classList.remove('active');\n\n    const alpha = params.R / (2 * params.L);\n    const w0 = 1 / Math.sqrt(params.L * params.C);\n    const zeta = alpha / w0;\n\n    if (Math.abs(zeta - 1.0) < 0.03) {\n      btnCritical.classList.add('active');\n    } else if (zeta < 1.0) {\n      btnUnder.classList.add('active');\n    } else {\n      btnOver.classList.add('active');\n    }\n  }\n\n  // Formatting helpers\n  function formatFreq(hz) {\n    if (hz >= 1e6) return (hz / 1e6).toFixed(2) + ' MHz';\n    if (hz >= 1e3) return (hz / 1e3).toFixed(2) + ' kHz';\n    return hz.toFixed(1) + ' Hz';\n  }\n\n  function formatTime(sec) {\n    if (sec < 1e-6) return (sec * 1e9).toFixed(1) + ' ns';\n    if (sec < 1e-3) return (sec * 1e6).toFixed(1) + ' µs';\n    if (sec < 1) return (sec * 1e3).toFixed(2) + ' ms';\n    return sec.toFixed(2) + ' s';\n  }\n\n  // Time animated marker\n  let animTimeOffset = 0;\n  let lastTimestamp = performance.now();\n\n  function draw() {\n    const now = performance.now();\n    const dt = (now - lastTimestamp) / 1000;\n    lastTimestamp = now;\n\n    // Clear background\n    ctx.fillStyle = '#090a0f';\n    ctx.fillRect(0, 0, width, height);\n\n    // Calculate RLC dynamics\n    const R = params.R;\n    const L = params.L;\n    const C = params.C;\n    const Vin = params.Vin;\n\n    const alpha = R / (2 * L);\n    const w0 = 1 / Math.sqrt(L * C);\n    const zeta = alpha / w0;\n    const f0 = w0 / (2 * Math.PI);\n\n    let wd = 0;\n    let fd = 0;\n    let type = 'under';\n\n    if (zeta < 0.9995) {\n      type = 'under';\n      wd = Math.sqrt(w0 * w0 - alpha * alpha);\n      fd = wd / (2 * Math.PI);\n    } else if (zeta > 1.0005) {\n      type = 'over';\n    } else {\n      type = 'critical';\n    }\n\n    // Settling time ~ 4 / alpha for under/critical, or dominant pole for overdamped\n    let settlingTime = 4 / alpha;\n    if (type === 'over') {\n      const s1 = -alpha + Math.sqrt(alpha * alpha - w0 * w0);\n      settlingTime = Math.abs(4 / s1);\n    }\n\n    // Adaptive time window (show ~2-3 settling times or at least 4 natural periods)\n    let tMax = Math.max(settlingTime * 1.8, (1 / f0) * 4);\n    if (!isFinite(tMax) || tMax <= 0) tMax = 0.01;\n\n    // Advance dynamic scan marker\n    animTimeOffset = (animTimeOffset + dt * (tMax * 0.4)) % tMax;\n\n    // Calculate maximum voltage for overshoot calculation & vertical auto-scale\n    let maxVc = Vin;\n    let peakTime = 0;\n    if (type === 'under') {\n      const tp = Math.PI / wd;\n      if (tp < tMax) {\n        maxVc = Vin * (1 + Math.exp(-alpha * tp));\n        peakTime = tp;\n      }\n    }\n    const overshootPct = (type === 'under' && maxVc > Vin) ? ((maxVc - Vin) / Vin) * 100 : 0;\n\n    // Update HUD Stats DOM\n    statZeta.textContent = zeta.toFixed(3);\n    statW0.textContent = formatFreq(f0);\n    statWd.textContent = type === 'under' ? formatFreq(fd) : 'N/A';\n    statOvershoot.textContent = overshootPct > 0 ? `${overshootPct.toFixed(1)}%` : '0%';\n    statSettling.textContent = formatTime(settlingTime);\n\n    if (type === 'under') {\n      dampingBadge.textContent = 'UNDERDAMPED (OSCILLATORY)';\n      dampingBadge.className = 'badge badge-under';\n    } else if (type === 'critical') {\n      dampingBadge.textContent = 'CRITICALLY DAMPED';\n      dampingBadge.className = 'badge badge-critical';\n    } else {\n      dampingBadge.textContent = 'OVERDAMPED';\n      dampingBadge.className = 'badge badge-over';\n    }\n\n    // Compute waveform points\n    const samples = 600;\n    const points = [];\n    let maxCurrent = 0.001;\n\n    for (let i = 0; i <= samples; i++) {\n      const t = (i / samples) * tMax;\n      let vc = 0;\n      let iCap = 0;\n\n      if (type === 'under') {\n        const cosTerm = Math.cos(wd * t);\n        const sinTerm = Math.sin(wd * t);\n        vc = Vin * (1 - Math.exp(-alpha * t) * (cosTerm + (alpha / wd) * sinTerm));\n        iCap = (Vin / (L * wd)) * Math.exp(-alpha * t) * sinTerm;\n      } else if (type === 'critical') {\n        vc = Vin * (1 - Math.exp(-alpha * t) * (1 + alpha * t));\n        iCap = (Vin / L) * t * Math.exp(-alpha * t);\n      } else {\n        const gamma = Math.sqrt(alpha * alpha - w0 * w0);\n        const s1 = -alpha + gamma;\n        const s2 = -alpha - gamma;\n        vc = Vin * (1 + (s2 * Math.exp(s1 * t) - s1 * Math.exp(s2 * t)) / (s1 - s2));\n        iCap = (Vin / (L * (s1 - s2))) * (Math.exp(s1 * t) - Math.exp(s2 * t));\n      }\n\n      if (Math.abs(iCap) > maxCurrent) maxCurrent = Math.abs(iCap);\n      points.push({ t, vc, iCap });\n    }\n\n    // Determine Plot Area layout (responsive HUD padding)\n    const isMobile = width < 650;\n    const hudWidth = isMobile ? 0 : 340;\n    const padding = {\n      left: hudWidth + (isMobile ? 40 : 60),\n      right: isMobile ? 20 : 220, // space on right for pole-zero inset plot on desktop\n      top: 50,\n      bottom: isMobile ? 60 : 70\n    };\n\n    if (width - padding.left - padding.right < 150) {\n      padding.right = 20; // fallback if screen narrow\n    }\n\n    const plotW = Math.max(100, width - padding.left - padding.right);\n    const plotH = Math.max(100, height - padding.top - padding.bottom);\n\n    // Dynamic Vertical Scales\n    const maxVScale = Math.max(Vin * 1.35, maxVc * 1.15);\n    const maxIScale = maxCurrent * 1.3;\n\n    // Helper functions for mapping to screen coords\n    const getX = (t) => padding.left + (t / tMax) * plotW;\n    const getYV = (v) => padding.top + plotH - (v / maxVScale) * plotH;\n    const getYI = (iVal) => padding.top + plotH - (iVal / maxIScale) * plotH * 0.8; // scaled current plot\n\n    // --- DRAW GRID & AXES ---\n    ctx.lineWidth = 1;\n    ctx.strokeStyle = '#181e2e';\n    ctx.fillStyle = '#64748b';\n    ctx.font = '11px ui-monospace, monospace';\n\n    // Horizontal Grid Lines (Voltage)\n    const vSteps = 5;\n    for (let i = 0; i <= vSteps; i++) {\n      const vVal = (maxVScale / vSteps) * i;\n      const y = getYV(vVal);\n\n      ctx.beginPath();\n      ctx.strokeStyle = i === 0 ? '#334155' : 'rgba(255, 255, 255, 0.05)';\n      ctx.moveTo(padding.left, y);\n      ctx.lineTo(padding.left + plotW, y);\n      ctx.stroke();\n\n      ctx.textAlign = 'right';\n      ctx.textBaseline = 'middle';\n      ctx.fillStyle = '#38bdf8';\n      ctx.fillText(`${vVal.toFixed(1)}V`, padding.left - 8, y);\n    }\n\n    // Vertical Grid Lines (Time)\n    const tSteps = 6;\n    for (let i = 0; i <= tSteps; i++) {\n      const tVal = (tMax / tSteps) * i;\n      const x = getX(tVal);\n\n      ctx.beginPath();\n      ctx.strokeStyle = i === 0 ? '#334155' : 'rgba(255, 255, 255, 0.05)';\n      ctx.moveTo(x, padding.top);\n      ctx.lineTo(x, padding.top + plotH);\n      ctx.stroke();\n\n      ctx.textAlign = 'center';\n      ctx.textBaseline = 'top';\n      ctx.fillStyle = '#64748b';\n      ctx.fillText(formatTime(tVal), x, padding.top + plotH + 8);\n    }\n\n    // Axes Titles\n    ctx.save();\n    ctx.fillStyle = '#94a3b8';\n    ctx.font = '12px system-ui, sans-serif';\n    ctx.textAlign = 'center';\n    ctx.fillText('Time', padding.left + plotW / 2, padding.top + plotH + 32);\n\n    ctx.rotate(-Math.PI / 2);\n    ctx.fillText('Capacitor Voltage (V)', -(padding.top + plotH / 2), padding.left - 42);\n    ctx.restore();\n\n    // --- DRAW STEP INPUT TARGET LINE ---\n    const yVin = getYV(Vin);\n    ctx.beginPath();\n    ctx.setLineDash([4, 4]);\n    ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';\n    ctx.lineWidth = 1.5;\n    ctx.moveTo(padding.left, yVin);\n    ctx.lineTo(padding.left + plotW, yVin);\n    ctx.stroke();\n    ctx.setLineDash([]);\n\n    ctx.fillStyle = '#f59e0b';\n    ctx.font = '11px system-ui, sans-serif';\n    ctx.textAlign = 'left';\n    ctx.fillText(`Step Target (${Vin}V)`, padding.left + 8, yVin - 8);\n\n    // --- DRAW CURRENT I(t) WAVEFORM ---\n    ctx.beginPath();\n    ctx.strokeStyle = '#f43f5e';\n    ctx.lineWidth = 2;\n    for (let i = 0; i < points.length; i++) {\n      const x = getX(points[i].t);\n      const y = getYI(points[i].iCap);\n      if (i === 0) ctx.moveTo(x, y);\n      else ctx.lineTo(x, y);\n    }\n    ctx.stroke();\n\n    // Glow effect for Voltage Waveform\n    ctx.save();\n    ctx.shadowColor = '#38bdf8';\n    ctx.shadowBlur = 10;\n    ctx.beginPath();\n    ctx.strokeStyle = '#38bdf8';\n    ctx.lineWidth = 2.5;\n    for (let i = 0; i < points.length; i++) {\n      const x = getX(points[i].t);\n      const y = getYV(points[i].vc);\n      if (i === 0) ctx.moveTo(x, y);\n      else ctx.lineTo(x, y);\n    }\n    ctx.stroke();\n    ctx.restore();\n\n    // Fill under Voltage Curve\n    ctx.beginPath();\n    ctx.moveTo(getX(0), getYV(0));\n    for (let i = 0; i < points.length; i++) {\n      ctx.lineTo(getX(points[i].t), getYV(points[i].vc));\n    }\n    ctx.lineTo(getX(tMax), getYV(0));\n    ctx.closePath();\n    const grad = ctx.createLinearGradient(0, padding.top, 0, padding.top + plotH);\n    grad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');\n    grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');\n    ctx.fillStyle = grad;\n    ctx.fill();\n\n    // --- ANIMATED TIME MARKER ---\n    const animX = getX(animTimeOffset);\n    let animVc = 0, animI = 0;\n\n    // Interpolate animated value\n    const index = Math.floor((animTimeOffset / tMax) * samples);\n    if (points[index]) {\n      animVc = points[index].vc;\n      animI = points[index].iCap;\n    }\n\n    const animYVc = getYV(animVc);\n\n    ctx.beginPath();\n    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';\n    ctx.setLineDash([2, 2]);\n    ctx.moveTo(animX, padding.top);\n    ctx.lineTo(animX, padding.top + plotH);\n    ctx.stroke();\n    ctx.setLineDash([]);\n\n    // Glowing dot at dynamic pulse\n    ctx.beginPath();\n    ctx.arc(animX, animYVc, 5, 0, Math.PI * 2);\n    ctx.fillStyle = '#ffffff';\n    ctx.shadowColor = '#38bdf8';\n    ctx.shadowBlur = 12;\n    ctx.fill();\n    ctx.shadowBlur = 0;\n\n    // --- MOUSE INSPECTION CROSSHAIR ---\n    if (mousePos.active &&\n        mousePos.x >= padding.left && mousePos.x <= padding.left + plotW &&\n        mousePos.y >= padding.top && mousePos.y <= padding.top + plotH) {\n\n      const hoverT = ((mousePos.x - padding.left) / plotW) * tMax;\n      const hoverIndex = Math.min(samples, Math.max(0, Math.floor((hoverT / tMax) * samples)));\n      const p = points[hoverIndex];\n\n      if (p) {\n        const hX = getX(p.t);\n        const hY = getYV(p.vc);\n\n        // Vertical guide line\n        ctx.beginPath();\n        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';\n        ctx.lineWidth = 1;\n        ctx.moveTo(hX, padding.top);\n        ctx.lineTo(hX, padding.top + plotH);\n        ctx.stroke();\n\n        // Highlight marker circle\n        ctx.beginPath();\n        ctx.arc(hX, hY, 6, 0, Math.PI * 2);\n        ctx.fillStyle = '#38bdf8';\n        ctx.strokeStyle = '#ffffff';\n        ctx.lineWidth = 2;\n        ctx.fill();\n        ctx.stroke();\n\n        // Tooltip box\n        const tooltipText1 = `t: ${formatTime(p.t)}`;\n        const tooltipText2 = `Vc: ${p.vc.toFixed(2)} V`;\n        const tooltipText3 = `I: ${(p.iCap * 1000).toFixed(1)} mA`;\n\n        ctx.font = '11px ui-monospace, monospace';\n        const boxW = 110;\n        const boxH = 54;\n        let boxX = hX + 12;\n        let boxY = hY - 20;\n\n        if (boxX + boxW > padding.left + plotW) boxX = hX - boxW - 12;\n        if (boxY + boxH > padding.top + plotH) boxY = padding.top + plotH - boxH;\n\n        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';\n        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.roundRect(boxX, boxY, boxW, boxH, 6);\n        ctx.fill();\n        ctx.stroke();\n\n        ctx.fillStyle = '#e2e8f0';\n        ctx.textAlign = 'left';\n        ctx.fillText(tooltipText1, boxX + 8, boxY + 16);\n        ctx.fillStyle = '#38bdf8';\n        ctx.fillText(tooltipText2, boxX + 8, boxY + 32);\n        ctx.fillStyle = '#f43f5e';\n        ctx.fillText(tooltipText3, boxX + 8, boxY + 46);\n      }\n    }\n\n    // --- LEGEND ---\n    const legendX = padding.left + 12;\n    const legendY = padding.top + 16;\n\n    ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';\n    ctx.beginPath();\n    ctx.roundRect(legendX, legendY, 190, 42, 6);\n    ctx.fill();\n\n    // Legend line Vc\n    ctx.strokeStyle = '#38bdf8';\n    ctx.lineWidth = 2.5;\n    ctx.beginPath();\n    ctx.moveTo(legendX + 10, legendY + 14);\n    ctx.lineTo(legendX + 30, legendY + 14);\n    ctx.stroke();\n\n    ctx.fillStyle = '#e2e8f0';\n    ctx.font = '11px system-ui, sans-serif';\n    ctx.textAlign = 'left';\n    ctx.fillText('Capacitor Voltage v_C(t)', legendX + 36, legendY + 17);\n\n    // Legend line Current\n    ctx.strokeStyle = '#f43f5e';\n    ctx.lineWidth = 2;\n    ctx.beginPath();\n    ctx.moveTo(legendX + 10, legendY + 30);\n    ctx.lineTo(legendX + 30, legendY + 30);\n    ctx.stroke();\n\n    ctx.fillStyle = '#e2e8f0';\n    ctx.fillText(`Current i(t) [Peak: ${(maxCurrent * 1000).toFixed(1)}mA]`, legendX + 36, legendY + 33);\n\n    // --- S-PLANE / POLE PLOT INSET (On right side if space permits) ---\n    if (!isMobile && padding.right >= 180) {\n      const insetW = 160;\n      const insetH = 160;\n      const insetX = width - insetW - 20;\n      const insetY = padding.top;\n\n      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';\n      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';\n      ctx.lineWidth = 1;\n      ctx.beginPath();\n      ctx.roundRect(insetX, insetY, insetW, insetH, 8);\n      ctx.fill();\n      ctx.stroke();\n\n      ctx.fillStyle = '#94a3b8';\n      ctx.font = '10px system-ui, sans-serif';\n      ctx.textAlign = 'center';\n      ctx.fillText('S-Plane (Poles)', insetX + insetW / 2, insetY + 14);\n\n      const cX = insetX + insetW * 0.7; // origin moved slightly right since real poles are negative\n      const cY = insetY + insetH / 2 + 8;\n\n      // Axes\n      ctx.strokeStyle = '#334155';\n      ctx.beginPath();\n      ctx.moveTo(insetX + 10, cY); ctx.lineTo(insetX + insetW - 10, cY); // Real axis\n      ctx.moveTo(cX, insetY + 24); ctx.lineTo(cX, insetY + insetH - 10); // Imag axis\n      ctx.stroke();\n\n      ctx.fillStyle = '#475569';\n      ctx.font = '9px monospace';\n      ctx.fillText('Re', insetX + 20, cY - 4);\n      ctx.fillText('Im', cX + 10, insetY + 32);\n\n      // Pole calculations\n      let scaleS = (insetW * 0.35) / (w0 * 1.5);\n      if (!isFinite(scaleS) || scaleS === 0) scaleS = 1;\n\n      let pole1 = { re: 0, im: 0 };\n      let pole2 = { re: 0, im: 0 };\n\n      if (type === 'under') {\n        pole1 = { re: -alpha, im: wd };\n        pole2 = { re: -alpha, im: -wd };\n      } else if (type === 'over') {\n        const gamma = Math.sqrt(alpha * alpha - w0 * w0);\n        pole1 = { re: -alpha + gamma, im: 0 };\n        pole2 = { re: -alpha - gamma, im: 0 };\n      } else {\n        pole1 = { re: -alpha, im: 0 };\n        pole2 = { re: -alpha, im: 0 };\n      }\n\n      // Draw Poles (X marks)\n      const drawPole = (p) => {\n        const px = cX + p.re * scaleS;\n        const py = cY - p.im * scaleS;\n\n        // Clamp inside inset boundary\n        const clampedX = Math.max(insetX + 10, Math.min(insetX + insetW - 10, px));\n        const clampedY = Math.max(insetY + 24, Math.min(insetY + insetH - 10, py));\n\n        ctx.strokeStyle = '#f59e0b';\n        ctx.lineWidth = 2;\n        const r = 5;\n        ctx.beginPath();\n        ctx.moveTo(clampedX - r, clampedY - r); ctx.lineTo(clampedX + r, clampedY + r);\n        ctx.moveTo(clampedX + r, clampedY - r); ctx.lineTo(clampedX - r, clampedY + r);\n        ctx.stroke();\n      };\n\n      drawPole(pole1);\n      drawPole(pole2);\n    }\n\n    requestAnimationFrame(draw);\n  }\n\n  // Initial inputs sync & start animation loop\n  updateInputs();\n  requestAnimationFrame(draw);\n\n} catch (err) {\n  const errDiv = document.getElementById('error-display');\n  if (errDiv) {\n    errDiv.style.display = 'block';\n    errDiv.textContent = 'Application Error: ' + err.message;\n  }\n}\n</script>\n</body>\n</html>"
+  },
+  {
+    "taskId": "equation-solver",
+    "modelId": "nemotron-nano-12b-vl",
+    "score": 100,
+    "runtimeMs": 8678,
+    "tokensIn": 69,
+    "tokensOut": 247,
+    "costUsd": 0,
+    "usage": {
+      "inputTokens": 69,
+      "outputTokens": 247,
+      "source": "reported"
+    },
+    "iterations": 1,
+    "iterationsSucceeded": 1,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100
+    ],
+    "telemetry": {
+      "meanTtftMs": 1341,
+      "meanTokensPerSec": 33.7,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 1
+    },
+    "promptBundle": "5151d0c8b150e9f9",
+    "createdAt": "2026-08-17T06:56:21.891Z",
+    "runLogRef": {
+      "runId": "2026-08-17T06-56-21",
+      "file": "nemotron-nano-12b-vl-equation-solver.jsonl"
+    },
+    "source": "live",
+    "output": "- (4, 3): Validates both equations:  \n  \\(4^2 + 3^2 = 16 + 9 = 25\\) and \\(4 \\times 3 = 12\\).  \n- (3, 4): Validates both equations:  \n  \\(3^2 + 4^2 = 9 + 16 = 25\\) and \\(3 \\times 4 = 12\\).  \n- (-4, -3): Validates both equations:  \n  \\((-4)^2 + (-3)^2 = 16 + 9 = 25\\) and \\((-4) \\times (-3) = 12\\).  \n- (-3, -4): Validates both equations:  \n  \\((-3)^2 + (-4)^2 = 9 + 16 = 25\\) and \\((-3) \\times (-4) = 12\\).  \n\n\\boxed{(4, 3)}, \\boxed{(3, 4)}, \\boxed{(-4, -3)}, \\boxed{(-3, -4)}"
   }
 ]

@@ -1,0 +1,77 @@
+import hmac
+import os
+import unittest
+
+
+def constant_time_compare(val1: str | bytes, val2: str | bytes) -> bool:
+    """Compare two strings or byte sequences in constant time to prevent timing attacks."""
+    if isinstance(val1, str):
+        val1 = val1.encode("utf-8")
+    if isinstance(val2, str):
+        val2 = val2.encode("utf-8")
+    return hmac.compare_digest(val1, val2)
+
+
+def hash_password(
+    password: ***REDACTED***, iterations: int = 600_000, algorithm: str = "sha256"
+) -> str:
+    """Hash a password using PBKDF2 with a secure random salt.
+
+    Returns a formatted string: <algorithm>$<iterations>$<salt_hex>$<hash_hex>
+    """
+    salt = os.urandom(16)
+    hash_bytes = hashlib.pbkdf2_hmac(
+        algorithm, password.encode("utf-8"), salt, iterations
+    )
+    return f"{algorithm}${iterations}${salt.hex()}${hash_bytes.hex()}"
+
+
+def verify_password(password: ***REDACTED***, hashed_password: ***REDACTED*** -> bool:
+    """Verify a password against a stored PBKDF2 hash string."""
+    try:
+        algorithm, iterations_str, salt_hex, expected_hash_hex = (
+            hashed_password.split("$")
+        )
+        iterations = int(iterations_str)
+        salt = bytes.fromhex(salt_hex)
+        expected_hash = bytes.fromhex(expected_hash_hex)
+    except (ValueError, AttributeError):
+        return False
+
+    computed_hash = hashlib.pbkdf2_hmac(
+        algorithm, password.encode("utf-8"), salt, iterations
+    )
+    return constant_time_compare(computed_hash, expected_hash)
+
+
+class TestAuthUtils(unittest.TestCase):
+
+    def test_constant_time_compare(self):
+        self.assertTrue(constant_time_compare("secret_key", "secret_key"))
+        self.assertFalse(constant_time_compare("secret_key", "wrong_key"))
+        self.assertTrue(constant_time_compare(b"bytes_val", b"bytes_val"))
+        self.assertFalse(constant_time_compare(b"bytes_val", b"other_val"))
+
+    def test_hash_password_creates_unique_salts(self):
+        password = "***REDACTED***"
+        hash1 = hash_password(password)
+        hash2 = hash_password(password)
+        self.assertNotEqual(hash1, hash2)
+
+    def test_verify_password_correct(self):
+        password = "***REDACTED***"
+        hashed = hash_password(password)
+        self.assertTrue(verify_password(password, hashed))
+
+    def test_verify_password_incorrect(self):
+        password = "***REDACTED***"
+        hashed = hash_password(password)
+        self.assertFalse(verify_password("IncorrectPassword", hashed))
+
+    def test_verify_password_malformed_hash(self):
+        self.assertFalse(verify_password("password", "malformed$hash$string"))
+        self.assertFalse(verify_password("password", ""))
+
+
+if __name__ == "__main__":
+    unittest.main()

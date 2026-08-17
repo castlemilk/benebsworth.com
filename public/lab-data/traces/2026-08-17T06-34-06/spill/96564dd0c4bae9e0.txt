@@ -1,0 +1,860 @@
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PulseEngine — Next-Gen Realtime Telemetry Platform</title>
+  <style>
+    /* CSS Reset & Variables */
+    *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg-base: #07090e;
+      --bg-surface: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #1e293b;
+      --border-accent: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-primary: #6366f1;
+      --accent-secondary: #06b6d4;
+      --accent-glow: rgba(99, 102, 241, 0.2);
+      --badge-bg: rgba(99, 102, 241, 0.15);
+      --badge-text: #818cf8;
+      --shadow-color: rgba(0,0,0,0.5);
+    }
+
+    .light {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #f1f5f9;
+      --bg-card-hover: #e2e8f0;
+      --border-color: #e2e8f0;
+      --border-accent: #2563eb;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --accent-primary: #4f46e5;
+      --accent-secondary: #0284c7;
+      --accent-glow: rgba(79, 70, 229, 0.12);
+      --badge-bg: rgba(79, 70, 229, 0.1);
+      --badge-text: #4f46e5;
+      --shadow-color: rgba(0,0,0,0.06);
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      overflow-x: hidden;
+    }
+
+    /* Layout Utilities */
+    .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.25rem; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .gap-8 { gap: 2rem; }
+
+    @media (min-width: 640px) {
+      .sm\:flex-row { flex-direction: row; }
+      .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    /* Components & Elements */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      outline: none;
+      text-decoration: none;
+      user-select: none;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #ffffff;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--text-dim);
+    }
+
+    .card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 6px -1px var(--shadow-color);
+    }
+
+    .card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px var(--shadow-color);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #a5b4fc 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .light .text-gradient {
+      background: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background-color: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--accent-glow);
+    }
+
+    /* Header Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background-color: rgba(7, 9, 14, 0.75);
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.25s ease;
+    }
+    .light header {
+      background-color: rgba(248, 250, 252, 0.8);
+    }
+
+    /* Range Input Custom Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Toast Alert */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-accent);
+      color: var(--text-main);
+      padding: 0.875rem 1.25rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 30px var(--shadow-color);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(100%) scale(0.9); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .icon-svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Hero Visual Canvas */
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background-color: var(--bg-surface);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    /* Toggle Switch */
+    .toggle-pill {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      padding: 0.25rem;
+      display: inline-flex;
+    }
+    .toggle-pill button {
+      padding: 0.375rem 0.875rem;
+      border-radius: 9999px;
+      border: none;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      background: transparent;
+      transition: all 0.2s;
+    }
+    .toggle-pill button.active {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--accent-glow);
+    }
+
+    .pricing-card.popular {
+      border: 2px solid var(--accent-primary);
+      position: relative;
+    }
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      right: 1.5rem;
+      background: var(--accent-primary);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    // Global Safe State & Storage Helpers
+    const safeStorage = {
+      get: (key, fallback) => {
+        try {
+          const v = localStorage.getItem(key);
+          return v !== null ? v : fallback;
+        } catch (e) { return fallback; }
+      },
+      set: (key, val) => {
+        try { localStorage.setItem(key, val); } catch (e) {}
+      }
+    };
+
+    // State Store
+    const state = {
+      theme: safeStorage.get('pe_theme', 'dark'),
+      billingCycle: 'monthly', // 'monthly' | 'yearly'
+      trafficLoad: 50,
+      activeTab: 0,
+      toast: null,
+      toastTimer: null
+    };
+
+    // Apply initial theme class to HTML root
+    if (state.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    }
+
+    // Declarative Element Builder (Mini JSX-like helper without JSX)
+    function h(tag, props, ...children) {
+      if (typeof tag === 'function') return tag(props, children);
+      const el = document.createElement(tag);
+      
+      if (props) {
+        for (const [k, v] of Object.entries(props)) {
+          if (k.startsWith('on') && typeof v === 'function') {
+            el.addEventListener(k.substring(2).toLowerCase(), v);
+          } else if (k === 'className') {
+            el.className = v;
+          } else if (k === 'style') {
+            if (typeof v === 'string') el.style.cssText = v;
+            else Object.assign(el.style, v);
+          } else if (k === 'ref' && typeof v === 'function') {
+            v(el);
+          } else if (v !== false && v != null) {
+            el.setAttribute(k, v);
+          }
+        }
+      }
+
+      const appendChild = (child) => {
+        if (child == null || child === false) return;
+        if (Array.isArray(child)) {
+          child.forEach(appendChild);
+        } else if (child instanceof Node) {
+          el.appendChild(child);
+        } else {
+          el.appendChild(document.createTextNode(String(child)));
+        }
+      };
+
+      children.forEach(appendChild);
+      return el;
+    }
+
+    // SVG Icon Generators
+    function createIcon(pathContent, viewBox = "0 0 24 24") {
+      return function(props) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", viewBox);
+        svg.setAttribute("class", "icon-svg " + (props && props.className ? props.className : ""));
+        svg.innerHTML = pathContent;
+        return svg;
+      };
+    }
+
+    const IconSun = createIcon('<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>');
+    const IconMoon = createIcon('<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>');
+    const IconZap = createIcon('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>');
+    const IconShield = createIcon('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>');
+    const IconActivity = createIcon('<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>');
+    const IconCpu = createIcon('<rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/>');
+    const IconServer = createIcon('<rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>');
+    const IconCheck = createIcon('<polyline points="20 6 9 17 4 12"/>');
+    const IconArrowRight = createIcon('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>');
+    const IconBarChart = createIcon('<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>');
+
+    // Trigger Toast Alert Notification
+    function showToast(msg) {
+      if (state.toastTimer) clearTimeout(state.toastTimer);
+      state.toast = msg;
+      render();
+      state.toastTimer = setTimeout(() => {
+        state.toast = null;
+        render();
+      }, 3500);
+    }
+
+    // Toggle Theme
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      safeStorage.set('pe_theme', state.theme);
+      if (state.theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      } else {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+      }
+      render();
+    }
+
+    // Interactive Telemetry Canvas Component
+    let animId = null;
+    let waveOffset = 0;
+
+    function TelemetryCanvas() {
+      return h('div', { className: 'canvas-container' },
+        h('canvas', {
+          ref: (canvas) => {
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            const resize = () => {
+              const rect = canvas.getBoundingClientRect();
+              const dpr = window.devicePixelRatio || 1;
+              canvas.width = rect.width * dpr;
+              canvas.height = rect.height * dpr;
+              ctx.scale(dpr, dpr);
+            };
+
+            resize();
+            const resizeHandler = () => resize();
+            window.addEventListener('resize', resizeHandler);
+
+            if (animId) cancelAnimationFrame(animId);
+
+            const draw = () => {
+              const w = canvas.getBoundingClientRect().width;
+              const h = canvas.getBoundingClientRect().height;
+              
+              ctx.clearRect(0, 0, w, h);
+
+              // Grid lines
+              ctx.strokeStyle = state.theme === 'dark' ? '#1e293b' : '#e2e8f0';
+              ctx.lineWidth = 1;
+              const gridGap = 30;
+              for (let x = 0; x < w; x += gridGap) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+              }
+              for (let y = 0; y < h; y += gridGap) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+              }
+
+              // Animated Sine Waves representing traffic
+              waveOffset += 0.04;
+              const points = [];
+              const segments = 60;
+              const loadFactor = state.trafficLoad / 50;
+
+              for (let i = 0; i <= segments; i++) {
+                const x = (w / segments) * i;
+                const baseFreq = 0.02;
+                const y = (h / 2) + 
+                  Math.sin(i * baseFreq + waveOffset) * 25 * loadFactor +
+                  Math.cos(i * 0.05 - waveOffset * 1.5) * 12 * loadFactor;
+                points.push({ x, y });
+              }
+
+              // Fill Gradient
+              const grad = ctx.createLinearGradient(0, 0, 0, h);
+              if (state.theme === 'dark') {
+                grad.addColorStop(0, 'rgba(99, 102, 241, 0.35)');
+                grad.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+              } else {
+                grad.addColorStop(0, 'rgba(79, 70, 229, 0.25)');
+                grad.addColorStop(1, 'rgba(2, 132, 199, 0.0)');
+              }
+
+              ctx.beginPath();
+              ctx.moveTo(0, h);
+              points.forEach(p => ctx.lineTo(p.x, p.y));
+              ctx.lineTo(w, h);
+              ctx.closePath();
+              ctx.fillStyle = grad;
+              ctx.fill();
+
+              // Stroke Line
+              ctx.beginPath();
+              points.forEach((p, idx) => {
+                if (idx === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+              });
+              ctx.strokeStyle = state.theme === 'dark' ? '#38bdf8' : '#0284c7';
+              ctx.lineWidth = 2.5;
+              ctx.stroke();
+
+              // Pulse particle on curve
+              const activeIdx = Math.floor((waveOffset * 10) % points.length);
+              const p = points[activeIdx] || points[0];
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+              ctx.fillStyle = state.theme === 'dark' ? '#a5b4fc' : '#4f46e5';
+              ctx.fill();
+              ctx.shadowColor = '#6366f1';
+              ctx.shadowBlur = 10;
+
+              animId = requestAnimationFrame(draw);
+            };
+
+            draw();
+
+            // Store cleanup
+            canvas._cleanup = () => {
+              window.removeEventListener('resize', resizeHandler);
+              if (animId) cancelAnimationFrame(animId);
+            };
+          }
+        }),
+        h('div', {
+          style: {
+            position: 'absolute',
+            top: '0.75rem',
+            right: '0.75rem',
+            background: 'var(--bg-card)',
+            padding: '0.35rem 0.65rem',
+            borderRadius: '0.375rem',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            border: '1px solid var(--border-color)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }
+        },
+          h('span', {
+            style: {
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: '#10b981',
+              display: 'inline-block'
+            }
+          }),
+          `Live Ingestion: ${(state.trafficLoad * 240).toLocaleString()} req/s`
+        )
+      );
+    }
+
+    // Nav Header Component
+    function Navbar() {
+      return h('header', {},
+        h('div', { className: 'container flex items-center justify-between', style: { height: '4rem' } },
+          // Logo
+          h('div', { className: 'flex items-center gap-2', style: { cursor: 'pointer' }, onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
+            h('div', {
+              style: {
+                width: '2rem',
+                height: '2rem',
+                borderRadius: '0.5rem',
+                background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
+                display: 'flex',
+                alignItems: 'center',
+                justifyCenter: 'center',
+                color: '#fff'
+              }
+            }, h(IconActivity, { className: 'w-5 h-5', style: { margin: 'auto' } })),
+            h('span', { style: { fontWeight: '800', fontSize: '1.25rem', letterSpacing: '-0.02em' } },
+              'Pulse', h('span', { className: 'text-gradient' }, 'Engine')
+            )
+          ),
+
+          // Right Controls
+          h('div', { className: 'flex items-center gap-4' },
+            h('button', {
+              className: 'btn btn-secondary',
+              style: { padding: '0.5rem', borderRadius: '50%' },
+              onClick: toggleTheme,
+              'aria-label': 'Toggle theme'
+            }, state.theme === 'dark' ? h(IconSun) : h(IconMoon)),
+
+            h('button', {
+              className: 'btn btn-primary',
+              onClick: () => showToast('Console launcher initialized! Demo mode active.')
+            }, 'Launch Console')
+          )
+        )
+      );
+    }
+
+    // Hero Section
+    function Hero() {
+      return h('section', { style: { padding: '3.5rem 0 2.5rem' } },
+        h('div', { className: 'container grid grid-cols-1 lg:grid-cols-2 gap-8 items-center' },
+          // Text Content
+          h('div', { className: 'flex flex-col gap-4' },
+            h('div', { className: 'flex' },
+              h('span', { className: 'badge flex items-center gap-1' },
+                h(IconZap, { style: { width: '0.875rem', height: '0.875rem' } }),
+                'Pulse Engine v3.2 Released'
+              )
+            ),
+            h('h1', { style: { fontSize: '2.5rem', fontWeight: '800', lineHeight: '1.15', letterSpacing: '-0.03em' } },
+              'Realtime Telemetry at ',
+              h('span', { className: 'text-gradient' }, 'Hyperscale Speed')
+            ),
+            h('p', { style: { color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '32rem' } },
+              'Observe microsecond latency, distributed traces, and log streams instantly. Powered by zero-overhead eBPF probes and global edge aggregation.'
+            ),
+            h('div', { className: 'flex flex-col sm:flex-row gap-3', style: { marginTop: '0.5rem' } },
+              h('button', {
+                className: 'btn btn-primary',
+                onClick: () => {
+                  const el = document.getElementById('pricing');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }, 'Get Started Free', h(IconArrowRight)),
+              h('button', {
+                className: 'btn btn-secondary',
+                onClick: () => showToast('Connecting to sandbox cluster (AWS us-east-1)...')
+              }, 'View Interactive Demo')
+            )
+          ),
+
+          // Visual Simulator Widget
+          h('div', { className: 'card flex flex-col gap-4', style: { background: 'var(--bg-surface)' } },
+            h('div', { className: 'flex items-center justify-between' },
+              h('div', { className: 'flex items-center gap-2' },
+                h(IconBarChart, { style: { color: 'var(--accent-primary)' } }),
+                h('span', { style: { fontWeight: '700', fontSize: '0.95rem' } }, 'Cluster Telemetry Monitor')
+              ),
+              h('span', { style: { fontSize: '0.75rem', color: 'var(--text-dim)' } }, 'Region: us-east (eBPF)')
+            ),
+            
+            // Interactive Canvas
+            h(TelemetryCanvas),
+
+            // Controls inside card
+            h('div', { className: 'flex flex-col gap-2', style: { paddingTop: '0.25rem' } },
+              h('div', { className: 'flex justify-between items-center', style: { fontSize: '0.8125rem', color: 'var(--text-muted)' } },
+                h('span', {}, 'Simulated System Load:'),
+                h('span', { style: { fontWeight: '700', color: 'var(--accent-secondary)' } }, `${state.trafficLoad}%`)
+              ),
+              h('input', {
+                type: 'range',
+                min: '10',
+                max: '100',
+                value: state.trafficLoad,
+                onInput: (e) => {
+                  state.trafficLoad = parseInt(e.target.value, 10);
+                  render();
+                }
+              })
+            )
+          )
+        )
+      );
+    }
+
+    // Feature Grid Component
+    function FeatureGrid() {
+      const features = [
+        {
+          icon: IconCpu,
+          title: 'Zero-Overhead eBPF Probes',
+          desc: 'Kernel-level instrumentation without modifying source code or injecting bulky sidecars into your pods.'
+        },
+        {
+          icon: IconZap,
+          title: 'Sub-Millisecond Ingestion',
+          desc: 'Stream over 10M events/sec per node with ultra-low garbage collector pauses and native Rust pipeline.'
+        },
+        {
+          icon: IconShield,
+          title: 'Cryptographic Audit Trails',
+          desc: 'Immutable telemetry logs with hardware-backed encryption keys ensuring continuous SOC2 compliance.'
+        },
+        {
+          icon: IconServer,
+          title: 'Autonomous Anomaly AI',
+          desc: 'Detect traffic spikes, memory leaks, and cascading HTTP 5xx failures before user impact occurs.'
+        },
+        {
+          icon: IconActivity,
+          title: 'Distributed Tracing',
+          desc: 'Automatic context propagation across GraphQL, gRPC, and REST microservices without manual headers.'
+        },
+        {
+          icon: IconBarChart,
+          title: 'Custom PromQL & SQL Queries',
+          desc: 'Query structured logs and metrics seamlessly with complete ANSI SQL and PromQL dialect support.'
+        }
+      ];
+
+      return h('section', { style: { padding: '4rem 0', borderTop: '1px solid var(--border-color)' } },
+        h('div', { className: 'container flex flex-col gap-8' },
+          h('div', { style: { textAlign: 'center', maxWidth: '36rem', margin: '0 auto' } },
+            h('h2', { style: { fontSize: '2rem', fontWeight: '800', letterSpacing: '-0.02em' } },
+              'Built for High-Throughput Engineering'
+            ),
+            h('p', { style: { color: 'var(--text-muted)', marginTop: '0.5rem' } },
+              'Everything you need to observe, query, and debug production systems at arbitrary scale.'
+            )
+          ),
+
+          h('div', { className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' },
+            features.map(f =>
+              h('div', { className: 'card flex flex-col gap-3' },
+                h('div', {
+                  style: {
+                    width: '2.5rem',
+                    height: '2.5rem',
+                    borderRadius: '0.5rem',
+                    backgroundColor: 'var(--badge-bg)',
+                    color: 'var(--accent-primary)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyCenter: 'center'
+                  }
+                }, h(f.icon, { style: { margin: 'auto' } })),
+                h('h3', { style: { fontSize: '1.1rem', fontWeight: '700' } }, f.title),
+                h('p', { style: { color: 'var(--text-muted)', fontSize: '0.875rem', lineHeight: '1.6' } }, f.desc)
+              )
+            )
+          )
+        )
+      );
+    }
+
+    // Pricing Cards Component
+    function Pricing() {
+      const isYearly = state.billingCycle === 'yearly';
+      const mult = isYearly ? 0.8 : 1.0; // 20% discount
+
+      const tiers = [
+        {
+          name: 'Developer',
+          price: 0,
+          desc: 'Perfect for side projects and local Kubernetes clusters.',
+          features: ['Up to 5 GB / month', '3 Days Retention', 'Community Slack Support', '1 Team Member']
+        },
+        {
+          name: 'Pro Scale',
+          popular: true,
+          price: Math.round(49 * mult),
+          desc: 'For growing teams requiring continuous anomaly detection.',
+          features: ['Up to 250 GB / month', '30 Days Retention', 'Priority 24/7 Support', 'Unlimited Team Members', 'eBPF Kernel Probing']
+        },
+        {
+          name: 'Enterprise',
+          price: Math.round(199 * mult),
+          desc: 'Dedicated infrastructure with customized SLA and compliance.',
+          features: ['Unlimited Data Ingestion', '365 Days Retention', 'Dedicated TAM & SLA', 'SOC2 & HIPAA Compliant', 'Custom SSO & SAML']
+        }
+      ];
+
+      return h('section', { id: 'pricing', style: { padding: '4rem 0', borderTop: '1px solid var(--border-color)' } },
+        h('div', { className: 'container flex flex-col gap-8' },
+          h('div', { style: { textAlign: 'center', maxWidth: '36rem', margin: '0 auto' } },
+            h('h2', { style: { fontSize: '2rem', fontWeight: '800', letterSpacing: '-0.02em' } },
+              'Simple, Predictable Pricing'
+            ),
+            h('p', { style: { color: 'var(--text-muted)', marginTop: '0.5rem' } },
+              'No hidden surprise fees. Scale up or down anytime with 100% transparent usage billing.'
+            ),
+
+            // Billing Toggle
+            h('div', { style: { marginTop: '1.5rem' } },
+              h('div', { className: 'toggle-pill' },
+                h('button', {
+                  className: !isYearly ? 'active' : '',
+                  onClick: () => { state.billingCycle = 'monthly'; render(); }
+                }, 'Monthly Billing'),
+                h('button', {
+                  className: isYearly ? 'active' : '',
+                  onClick: () => { state.billingCycle = 'yearly'; render(); }
+                }, 'Annual (20% Off)')
+              )
+            )
+          ),
+
+          // Pricing Cards Grid
+          h('div', { className: 'grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch' },
+            tiers.map(t =>
+              h('div', { className: `card pricing-card flex flex-col justify-between ${t.popular ? 'popular' : ''}` },
+                t.popular ? h('span', { className: 'popular-badge' }, 'Most Popular') : null,
+                h('div', { className: 'flex flex-col gap-4' },
+                  h('h3', { style: { fontSize: '1.25rem', fontWeight: '700' } }, t.name),
+                  h('p', { style: { color: 'var(--text-muted)', fontSize: '0.85rem' } }, t.desc),
+                  h('div', { className: 'flex items-baseline gap-1' },
+                    h('span', { style: { fontSize: '2.5rem', fontWeight: '800' } }, `$${t.price}`),
+                    h('span', { style: { color: 'var(--text-muted)', fontSize: '0.875rem' } }, '/ month')
+                  ),
+                  h('hr', { style: { borderColor: 'var(--border-color)', margin: '0.5rem 0' } }),
+                  h('ul', { style: { listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem' } },
+                    t.features.map(f =>
+                      h('li', { className: 'flex items-center gap-2', style: { fontSize: '0.875rem', color: 'var(--text-muted)' } },
+                        h(IconCheck, { style: { color: 'var(--accent-secondary)', width: '1rem', height: '1rem', flexShrink: 0 } }),
+                        f
+                      )
+                    )
+                  )
+                ),
+                h('button', {
+                  className: `btn ${t.popular ? 'btn-primary' : 'btn-secondary'}`,
+                  style: { marginTop: '1.5rem', width: '100%' },
+                  onClick: () => showToast(`Selected plan: ${t.name}. Redirecting to setup...`)
+                }, t.price === 0 ? 'Start Free' : 'Upgrade Now')
+              )
+            )
+          )
+        )
+      );
+    }
+
+    // Footer Component
+    function Footer() {
+      return h('footer', { style: { borderTop: '1px solid var(--border-color)', padding: '2.5rem 0 2rem' } },
+        h('div', { className: 'container flex flex-col sm:flex-row items-center justify-between gap-4' },
+          h('div', { className: 'flex items-center gap-2' },
+            h('span', { style: { fontWeight: '700' } }, 'PulseEngine Inc.'),
+            h('span', { style: { color: 'var(--text-dim)', fontSize: '0.85rem' } }, '© 2025. All rights reserved.')
+          ),
+          h('div', { className: 'flex gap-6', style: { fontSize: '0.875rem', color: 'var(--text-muted)' } },
+            h('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' }, onClick: (e) => { e.preventDefault(); showToast('Documentation search loaded'); } }, 'Docs'),
+            h('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' }, onClick: (e) => { e.preventDefault(); showToast('Status page: 100% Operational'); } }, 'Status'),
+            h('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' }, onClick: (e) => { e.preventDefault(); showToast('Privacy Policy'); } }, 'Privacy')
+          )
+        )
+      );
+    }
+
+    // Toast Container
+    function ToastView() {
+      if (!state.toast) return null;
+      return h('div', { className: 'toast' },
+        h(IconZap, { style: { color: 'var(--accent-secondary)' } }),
+        h('span', { style: { fontSize: '0.875rem', fontWeight: '500' } }, state.toast)
+      );
+    }
+
+    // Main App Container
+    function App() {
+      return h('div', {},
+        Navbar(),
+        Hero(),
+        FeatureGrid(),
+        Pricing(),
+        Footer(),
+        ToastView()
+      );
+    }
+
+    // Render loop
+    const rootEl = document.getElementById('root');
+    function render() {
+      try {
+        // Run DOM replacement
+        rootEl.innerHTML = '';
+        rootEl.appendChild(App());
+      } catch (err) {
+        rootEl.innerHTML = `<div role="alert" style="padding: 2rem; color: #ef4444; background: #18181b; font-family: monospace;">
+          <h2>Application Execution Error</h2>
+          <pre>${err.stack || err.message}</pre>
+        </div>`;
+      }
+    }
+
+    // Initial boot
+    render();
+  </script>
+</body>
+</html>

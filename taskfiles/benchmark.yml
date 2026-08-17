@@ -301,6 +301,37 @@ tasks:
     cmds:
       - '{{.BIN}}/tsx scripts/publish-traces.mjs'
 
+  methodology-check:
+    desc: Check that published benchmark claims cite their reproduction inputs (free, offline)
+    summary: |
+      The MECHANICAL half of docs/lab/llm-benchmark/eval-methodology.md. Scans
+      content/blog/*/index.mdx, marks a post as a benchmark claim when it links
+      /lab/llm-benchmark or carries the `benchmarking` label, and requires that
+      post to declare a `benchRepro` frontmatter block:
+
+        benchRepro:
+          commit: <sha the numbers were produced at>
+          sweeps:
+            - 2026-08-16T09-30-12      # sweeps/<run-id>, from the run log
+          bundles:                     # optional promptBundleHash values
+            - 4f1c9a02b3d7e155
+
+      It never judges the claim — no scoring, no "is this comparison fair?".
+      It answers one question: could a reader re-run this?
+
+      Exit 1 only on a FAILURE: a post dated on/after the cutoff
+      (METHODOLOGY_CUTOFF in lib/lab/llm-benchmark/methodology.ts) with no
+      block, or a malformed block at ANY date (absence is "predates the
+      convention"; malformation is claimed provenance that does not parse).
+      The three shipped benchmark posts predate the convention, WARN, and exit
+      0 — they are listed by name on every run rather than silently exempted.
+
+        task bench:methodology-check
+        task bench:methodology-check -- --quiet     summary line only
+        task bench:methodology-check -- --strict    grandfathered posts fail too
+    cmds:
+      - '{{.BIN}}/tsx scripts/methodology-check.mjs {{.CLI_ARGS}}'
+
   plugin-scaffold:
     desc: 'Scaffold a new plugin — `task bench:plugin-scaffold -- <id> "<Display Name>"`'
     summary: |

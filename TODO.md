@@ -1019,39 +1019,39 @@ shows fixed-vs-still-broken counts.
 
 **Effort.** M-L. **Dependencies.** #1 (event log) + #10 (check registry).
 
-## [ ] 26. Eval methodology rigor for reports (blind judging + agreement)
+## [x] 26. Eval methodology rigor for reports (blind judging + agreement)
 
-**Problem.** The benchmark's published claims ("the behavioural scorer
-caught a model lying") rest on our own scoring. Any future claim that
-compares scoring approaches, or a model-vs-model verdict that hinges on
-judgement, should meet a documented methodology bar - otherwise it's
-anecdote.
+**Shipped.** `docs/lab/llm-benchmark/eval-methodology.md` (80 lines) is the
+standing bar for any new scoring component or published comparison, and every
+requirement names the machinery that satisfies it: (1) same sweep profile +
+`--dump-config` provenance + one `promptBundle` across compared systems, with
+`verify-results -- --strict` (`stale-prompt`) as the release gate; (2) no scorer
+is a JUDGE today (behavioural checks, deterministic probe asserts, no inline JS)
+— if one is added it must be blind, double-scored over ≥30 items by a second
+judge, and report Cohen's kappa alongside raw agreement (below κ=0.6 the rubric
+is the finding), with per-item results in the existing `iterationCheckResults`
+shape this bar formalises; (3) a `benchRepro` frontmatter block naming the
+commit + sweep run ids (+ optional bundle hashes); (4) a named guardrail per
+claim (test / `RESULT_CHECKS` invariant / postmortem). Ends in a report skeleton
+that spells the kappa sentence out.
 
-**Inspiration.** graphify `BENCHMARKS.md` methodology: every system "ran
-on the same harness with the same model and budgets", scored by "a judge
-blind-validated against a second judge (90.6% agreement, Cohen's kappa
-0.81)", with full per-system tables + reproduction commands. Paperclip's
-plan cites OpenAI eval best practices and LangSmith/Braintrust scorer
-docs for the same reason. Also dsh's postmortem discipline (#16): claims
-link their guardrails.
-
-**Design sketch.**
-
-- `docs/lab/llm-benchmark/eval-methodology.md`: a short standing doc
-  defining the bar for any NEW scoring component or comparison claim:
-  (1) same harness + same budgets across systems; (2) if a human judge or
-  LLM judge is used, blind + double-scored subset with Cohen's kappa
-  reported; (3) reproduction commands (which sweeps, which commits);
-  (4) per-claim guardrail links (test, invariant, or postmortem).
-- Add a `task bench:methodology-check` that verifies any blog/report
-  claiming a comparison cites its reproduction inputs (sweep ids from #1,
-  commit SHA) - mechanical, not judgmental.
-- The behavioral scorer's own audit trail (checks + iterationCheckResults)
-  is the existing evidence layer this doc formalizes.
-
-**Acceptance criteria.** The methodology doc exists and is linked from the
-skill; a report template mentions kappa for any judged comparison; the
-mechanical check passes on current posts.
+`task bench:methodology-check` (`scripts/methodology-check.mjs`) is the
+mechanical half: a post counts as a benchmark claim if it links
+`/lab/llm-benchmark` or carries the `benchmarking` label (deliberately NOT
+"mentions a model and a number" — that fires on the K3 architecture teardown,
+which claims nothing of its own), and must then declare a parseable
+`benchRepro`. Frontmatter, not an MDX comment: gray-matter already carries
+unknown keys end to end (`content.ts` ignores them, `gen-md-siblings` republishes
+them, prose-lint only reads title/description/takeaways) whereas MDX 3 parses
+`<!-- -->` as JSX and errors. Exit 1 only on a post dated on/after the stamped
+**2026-08-17** cutoff with no block, or a MALFORMED block at any date — absence
+is "predates the convention", malformation is claimed provenance that doesn't
+parse. The three shipped benchmark posts (agy-frontier, kimi-k3,
+openrouter-free-tier) warn and are listed by name every run rather than silently
+exempted; back-stamping them would invent sweep ids they never had. Detection,
+parse and cutoff logic are pure in `lib/lab/llm-benchmark/methodology.ts`
+(24 unit tests, incl. one that classifies the real content tree and one that
+locks the cutoff after every shipped bench post).
 
 **Effort.** S.
 
@@ -1489,6 +1489,12 @@ without reading results.json; the server is read-only.
   `task bench:probe` (`scripts/prompt-probe.mjs` → `generateForProbe`: no
   cache/retries/scoring/run log, free-tier default model, `--dry-run`,
   20-call `--yes` guard, exit 1 gates the sweep).
+- Eval methodology bar (#26): `docs/lab/llm-benchmark/eval-methodology.md`
+  (same profile + bundle, blind/double-scored/kappa if a judge is ever added,
+  `benchRepro` citation, a guardrail per claim, report skeleton) plus the
+  mechanical `task bench:methodology-check` (`methodology.ts` pure helpers,
+  `benchRepro: {commit, sweeps, bundles?}` frontmatter, 2026-08-17 grandfather
+  cutoff, malformed-fails-at-any-date).
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Task-declared scorers (#10): `BenchmarkTask.scorer` beats the category

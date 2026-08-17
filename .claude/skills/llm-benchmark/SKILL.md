@@ -155,6 +155,8 @@ Source flag: the provider runner stamps `source: 'live'` on every record it prod
 
 To regenerate results from live APIs, run the harness. To restore sample/mock outputs without calling APIs, run `node scripts/seed-mock-results.mjs`.
 
+**Publishing a comparison claim from these numbers** (a blog post, a new scorer, a model-vs-model verdict) has a standing bar: `docs/lab/llm-benchmark/eval-methodology.md` — same profile + same prompt bundle across compared systems, blind + double-scored with Cohen's kappa if a judge is ever added, a `benchRepro` frontmatter block naming the commit and sweep run ids (enforced mechanically by `task bench:methodology-check`), and a named guardrail per claim.
+
 ## Running the Harness
 
 ### Environment variables

@@ -61,6 +61,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Per-call telemetry (TTFT/decode-rate sink + `foldTelemetry`) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Usage summaries + cost inference (pure: `summarizeUsage`, `costFromUsage`) | `lib/lab/llm-benchmark/billing.ts` |
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
+| Quota-recovery planning (`recoveryPlan` verdicts, `listSweepRunDirs`, monitor lockfile) | `lib/lab/llm-benchmark/recovery.ts` |
+| Quota-recovery monitor script (`task bench:monitor`) | `scripts/sweep-recovery.mjs` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
 | Prompt-regression probes (data) | `lib/lab/llm-benchmark/probes/probes.json` |
@@ -285,6 +287,74 @@ npx tsx scripts/run-benchmark.mjs --profile slow-model --resume 2026-08-16T09-30
 - Typed failures, exit 1 with the code printed: `RESUME_TARGET_NOT_FOUND` (no
   such dir), `RESUME_NO_CHECKPOINTS` (no readable run-log header in it),
   `RESUME_SWEEP_ROOT_CONFLICT`. None of them degrade into a full re-sweep.
+
+**Quota-locked? Start the monitor and walk away** (`task bench:monitor`, #29).
+The recovery monitor is the resume you do not have to be awake for: it reads
+every `sweeps/<run-id>/` tree with the SAME machinery `--resume` uses
+(`readSweepCheckpoints` + `planResume`) and the same quota stamps the pre-flight
+aborts on (`quotaLockedModels`), and prints one verdict per run.
+
+```bash
+# What would it do? Free, spawns nothing, safe beside anything.
+task bench:monitor
+task bench:monitor -- --run 2026-08-16T09-30-12
+
+# Resume everything that is ready, now (SPENDS MONEY — it launches the sweep)
+task bench:monitor -- --go
+
+# The walk-away mode: poll every 15 min until every tree is complete
+task bench:monitor -- --watch --go
+task bench:monitor -- --watch --go --interval 30
+```
+
+- **Verdicts.** `complete` (nothing pending — pruned from the watch set),
+  `resume` (pending pairs, no pending model locked), `wait` (a pending pair's
+  model is locked; the line names the model and the LATEST `until`, and the
+  footer prints the earliest window across all runs — that is when to come
+  back).
+- **One locked model blocks the whole run.** A resume re-runs EVERY pending pair
+  in the tree; there is no "resume just these pairs". So a run with one locked
+  and one free pending model **waits** rather than partially resuming — the
+  alternative burns the locked model against a quota that is provably not back
+  and writes fresh 0-success aggregates over the evidence.
+- **A 0-success aggregate counts as pending** — same rule as the resume
+  (`planResume` reason `failed`). That is the quota-killed pair, the whole point.
+- **The child's shape.** It spawns
+  `tsx scripts/run-benchmark.mjs --resume <id> --model … --task …` with the
+  model/task ids read from the tree's run-log HEADERS, one child at a time,
+  newest first, stdio inherited, stopping at the first nonzero exit. Without
+  those flags the harness would fall back to its DEFAULT model set and sweep
+  something nobody asked for. The child re-runs its own pre-flight, so a lock the
+  monitor missed still aborts before a call.
+- **The shape is reconstructed, not recorded.** The sweep's original
+  `--model`/`--task` are not persisted anywhere, so the monitor derives them as
+  every model seen × every task seen in the headers. A deliberately RAGGED sweep
+  (model A on task 1, model B on task 2) is therefore over-reported: the cross
+  product's missing pairs show as `no-checkpoint` and a resume would run them.
+  Check the plan before `--go` on a ragged tree.
+- **LIMITATION — it cannot see a hand-started sweep.** `sweeps/.recovery.lock`
+  (pid file, stale-pid detection via `process.kill(pid, 0)`) stops two MONITORS
+  from racing, and that is all it stops. A sweep you launched yourself holds no
+  lock, and a resume into the same tree truncates its run logs on reopen. **Never
+  run the monitor while a hand-started sweep is live.** (Detecting arbitrary
+  running sweeps is deliberately out of scope.) The lock is taken only under
+  `--go`; the read-only plan never blocks.
+- **Logs.** Every decision goes to stdout AND appends to `sweeps/recovery.log`
+  with a timestamp — a `--watch` in a closed terminal must still be answerable
+  after the fact. `sweeps/` is gitignored, so neither the log nor the lock is
+  ever committed.
+- **Cron / launchd (documentation only — nothing is installed).** The one-shot
+  mode is the cron-safe one: it exits, and the lockfile makes an overlapping tick
+  a no-op refusal rather than a second sweep.
+
+  ```cron
+  # every 30 min: resume whatever the quota has released, log to the sweep root
+  */30 * * * * cd /Users/you/projects/benebsworth.com && /opt/homebrew/bin/task bench:monitor -- --go >> sweeps/recovery.cron.log 2>&1
+  ```
+
+  launchd equivalent: a `StartInterval` of 1800 with `WorkingDirectory` set to
+  the repo and the same argv. Same caveat as above — do not schedule it on a
+  machine where you also start sweeps by hand.
 
 **An unknown `--model`/`--task` id is fatal**, including when other ids in the
 same flag resolve: the script prints `Unknown model id(s): …` with a sample of

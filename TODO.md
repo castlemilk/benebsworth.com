@@ -1124,38 +1124,23 @@ reconstructable from cost events.
 
 **Effort.** M. **Dependencies.** #2 (profiles), #23 (billing shape).
 
-## [ ] 29. Quota-monitor with auto-resume (recovery service)
+## [x] 29. Quota-monitor with auto-resume (recovery service)
 
-**Problem.** Agy/opencode quota lockouts killed sweeps repeatedly this
-session; recovery was manual ("wait for reset, relaunch"). paperclip solves
-exactly this with a quota review monitor that resumes work after the wait
-elapses.
+**Shipped.** `recovery.ts` classifies every `sweeps/<run-id>/` tree as
+`complete` / `resume` / `wait` by composing the existing machinery —
+`readSweepCheckpoints` + `planResume` (#18) for what is pending,
+`quotaLockedModels` (#7) for what is locked — plus a pid lockfile with
+stale-pid detection. `scripts/sweep-recovery.mjs` / `task bench:monitor` is
+the shell: one-shot plan by default, `--go` spawns
+`run-benchmark --resume <id> --model … --task …` (shape read from the run-log
+headers, newest first, one at a time, stop on nonzero), `--watch
+[--interval]` polls until every tree is complete. Decisions log to stdout and
+`sweeps/recovery.log`.
 
-**Inspiration.** paperclip `server/src/services/heartbeat.ts`
-(7861: "The previous reviewer run reached provider quota. Resume this
-execution-review stage now that the quota wait has elapsed") +
-`PROVIDER_QUOTA_MONITOR_SERVICE_NAME`; runs persist
-`providerQuotaRetryNotBefore` (heartbeat.ts:679) and the dashboard buckets
-failures by `provider_quota`. Pairs with our #5 (quota-reset estimator) and
-#18 (sweep resume).
-
-**Design sketch.**
-
-- Persist `providerQuotaRetryNotBefore` on BenchmarkResult (from the breaker
-  path in provider.ts, reusing the #5 regex parse of "Resets in X").
-- `scripts/sweep-recovery.mjs`: a tiny monitor that reads the sweep root
-  (#3) + results.json, lists models with `quotaNextResetAt` in the future,
-  and when the clock passes the reset, relaunches the pending (model, task)
-  pairs via `--resume` (#18). Meant to run under `cron`/launchd, logging to
-  the sweep root.
-- `task bench:monitor` wrapper + skill runbook entry ("quota-locked? start
-  the monitor and walk away").
-
-**Acceptance criteria.** A simulated quota-locked sweep is auto-resumed by
-the monitor after the reset time; no duplicate runs (resume boundary rule);
-logs show monitor decisions.
-
-**Effort.** M. **Dependencies.** #3, #5, #18.
+One locked pending model makes the WHOLE run wait: a resume re-runs every
+pending pair, so a partial resume would burn the locked model. Honest
+limitation, documented in SKILL.md + the taskfile: the lockfile sees other
+MONITORS, not hand-started sweeps — never run both.
 
 ## [ ] 30. Run-trace export on the site (session-log-export)
 
@@ -1507,6 +1492,14 @@ without reading results.json; the server is read-only.
   rejections `RESUME_TARGET_NOT_FOUND` / `RESUME_NO_CHECKPOINTS` /
   `RESUME_SWEEP_ROOT_CONFLICT`, `runBenchmark({ skipPairs })` job filter, and
   log-derived recovery for the aggregate-flushed-but-unmerged crash window.
+- Quota-recovery monitor (#29): `recovery.ts` (`listSweepRunDirs`,
+  `recoveryPlan` → `complete`/`resume`/`wait` per sweep tree, composed from
+  `planResume` + `quotaLockedModels`; a pid lockfile with stale-pid detection)
+  and `scripts/sweep-recovery.mjs` / `task bench:monitor` (one-shot plan,
+  `--go` spawns `--resume` with the header-derived model/task shape one run at
+  a time, `--watch --interval`, `sweeps/recovery.log`). One locked pending
+  model makes the whole run wait; the lock sees other monitors, NOT
+  hand-started sweeps.
 - Dependency-layering guard (#17): `layering.test.ts` parses the benchmark
   import graph and enforces the DAG — zero cycles (Tarjan SCC), `types.ts` a
   leaf, no lib module importing upward into `scripts/`, no `scorers/` →

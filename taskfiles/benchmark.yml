@@ -34,6 +34,8 @@ tasks:
           task bench:cli MODELS=codex-gpt-5.5   CLI providers (forced concurrency 1)
           task bench:probe                      prompt-regression probes (free tier) — run BEFORE a sweep
           task bench:probe -- --dry-run         print the probes + asserts, zero calls
+          task bench:monitor                    quota-recovery plan for killed sweeps (free)
+          task bench:monitor -- --watch --go    auto-resume once quota returns, then walk away
           task bench:seed                       restore seeded sample data, NO API calls
           task bench:outputs                    regenerate static output artifacts
           task bench:verify                     typecheck + benchmark unit tests
@@ -300,6 +302,42 @@ tasks:
         task bench:verify-results  →  task bench:publish-traces  →  commit
     cmds:
       - '{{.BIN}}/tsx scripts/publish-traces.mjs'
+
+  monitor:
+    desc: 'Quota-recovery monitor — plan (free) or auto-resume killed sweeps with `-- --go`'
+    summary: |
+      scripts/sweep-recovery.mjs. Asks the resume machinery what is still
+      pending in each sweeps/<run-id>/ tree and the quota machinery what is
+      still locked, then prints one verdict per run:
+
+        complete  nothing pending — pruned from the watch set
+        resume    pending pairs, no pending model locked — ready to go
+        wait      a pending pair's model is quota-locked until T
+
+      A resume re-runs EVERY pending pair in the tree, so ONE locked pending
+      model makes the whole run wait — resuming would burn that model against a
+      quota that is provably not back.
+
+        task bench:monitor                          one-shot plan, spends NOTHING
+        task bench:monitor -- --run 2026-08-16T09-30-12
+        task bench:monitor -- --go                  resume everything ready, now
+        task bench:monitor -- --watch --go          poll (15 min) until all complete
+
+      COST  The plan is free. `--go` spawns the real sweep (SPENDS MONEY) —
+      `npx tsx scripts/run-benchmark.mjs --resume <id> --model … --task …`, with
+      the model/task shape read from the tree's run-log headers so the child
+      plans exactly what this plan showed. One child at a time, newest first,
+      stopping at the first nonzero exit.
+
+      LIMITATION  `sweeps/.recovery.lock` (pid file, stale-pid detection) stops
+      two MONITORS from racing. It cannot see a sweep you started by hand — that
+      sweep holds no lock, and a resume into the same tree truncates its run
+      logs. Never run the monitor while a hand-started sweep is live.
+
+      Decisions are logged to stdout AND appended to sweeps/recovery.log
+      (gitignored).
+    cmds:
+      - '{{.BIN}}/tsx scripts/sweep-recovery.mjs {{.CLI_ARGS}}'
 
   methodology-check:
     desc: Check that published benchmark claims cite their reproduction inputs (free, offline)

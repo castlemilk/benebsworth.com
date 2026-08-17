@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "runId": "2026-08-17T05-41-46",
+    "file": "deepseek-v4-flash-free-circuit-builder-teaser.jsonl",
+    "modelId": "deepseek-v4-flash-free",
+    "taskId": "circuit-builder-teaser",
+    "bytes": 8882,
+    "spillRefs": [
+      "spill/0274e42afbd072b6.txt",
+      "spill/afe20d9cedf6520c.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T05-41-46",
+    "file": "deepseek-v4-flash-free-equation-solver.jsonl",
+    "modelId": "deepseek-v4-flash-free",
+    "taskId": "equation-solver",
+    "bytes": 15433,
+    "spillRefs": [
+      "spill/287e3ad57a1623ce.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T05-41-46",
+    "file": "deepseek-v4-flash-free-landing-page-morph.jsonl",
+    "modelId": "deepseek-v4-flash-free",
+    "taskId": "landing-page-morph",
+    "bytes": 3558,
+    "spillRefs": [
+      "spill/1ef1a63c1f8913cf.txt"
+    ]
+  },
+  {
+    "runId": "2026-08-17T05-41-46",
+    "file": "deepseek-v4-flash-free-physics-pendulum-wave.jsonl",
+    "modelId": "deepseek-v4-flash-free",
+    "taskId": "physics-pendulum-wave",
+    "bytes": 8571,
+    "spillRefs": [
+      "spill/02e996a2ee8949f2.txt",
+      "spill/bf29d1667217d76a.txt"
+    ]
+  }
+]

@@ -560,15 +560,21 @@ the structural score that hands 100 to a game that ignores input.
   credits). Needs an OpenRouter top-up ($5-10) then a normal sweep
   (`gemini-3.6-flash`, all 7 tasks, 5 iters). The only model with no board
   presence.
-- **codex `-pro` variants** — never run (no `OPENAI_API_KEY`; codex CLI uses
-  ChatGPT auth for the base tiers). Requires OpenAI API key to add.
-- **deepseek-v4-flash-free retry** — landing-page-morph, equation-solver,
-  physics-pendulum-wave, circuit-builder-teaser all recorded `cli_timeout`
-  (see #6) at 10-30 min caps. The free tier's latency is unstable (40s-15min
-  observed for the same task), so a future window may land them. Retry with
-  the slow-model profile; do NOT burn > 1 iteration each until one succeeds.
-- **nemotron-nano-12b-vl** — excluded (free endpoint hangs). Re-test
-  periodically; it is the only documented exclusion with no active plan.
+- **codex `-pro` variants** — never run. `OPENAI_API_KEY` IS present in .env
+  (found 2026-08-17); adding the variants is a registry change + sweep,
+  awaiting an explicit go-ahead (paid).
+- **[x] deepseek-v4-flash-free retry** — DONE 2026-08-17, slow-model profile,
+  1 iteration each: equation-solver 100, physics-pendulum-wave 100,
+  circuit-builder-teaser 91 (all in-window at 3-5 min); landing-page-morph
+  "succeeded" at score 3 — 10.3-min TTFT, 0.6 tok/s, and the artifact is the
+  model's planning narration, never the page (run
+  2026-08-17T05-41-46, trace published; `npx tsx scripts/retrace.mjs --run
+  2026-08-17T05-41-46 --task landing-page-morph` shows the whole story).
+  First sweep to exercise bundles + run logs + published traces end to end.
+- **gemini-3.6-flash + nemotron re-test** — still blocked: the OpenRouter
+  ACCOUNT is topped up (2026-08-17) but `OPENROUTER_API_KEY` is absent from
+  .env and the shell environment. Add the key, then: smoke → fast-refresh
+  sweep (gemini) and a 1-iteration probe (nemotron).
 
 ## [ ] 12. Sandbox backend seam (longer term)
 

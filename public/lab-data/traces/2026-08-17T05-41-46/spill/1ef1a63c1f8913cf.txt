@@ -1,0 +1,2 @@
+I'll build this landing page artifact. Let me plan the structure: a hand-written mini-React renderer, a utility-first CSS layer (Tailwind-style, hand-written), a full hero with animated particle canvas, feature grid, pricing with working billing toggle, and a dark/light theme toggle with smooth morph transitions — all in one self-contained HTML file
+Now let me validate the JS syntax by extracting the script and running node --check:

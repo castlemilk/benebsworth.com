@@ -1,0 +1,300 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pendulum Wave — Canvas Simulation</title>
+<style>
+  html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  *{box-sizing:border-box}
+  body{position:fixed;inset:0}
+  #stage{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+  #hud{position:absolute;top:10px;left:10px;z-index:5;max-width:min(560px,calc(100vw - 20px));padding:10px 14px;border-radius:14px;background:rgba(14,14,20,.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  #hud h1{margin:0 0 7px;font-size:15px;font-weight:650;letter-spacing:.02em}
+  #hud h1 .accent{color:#7ee7ff}
+  .row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+  .ctl{display:flex;align-items:center;gap:7px;font-size:12px;color:#b9b9c6}
+  .ctl label{white-space:nowrap}
+  .ctl b{min-width:38px;font-variant-numeric:tabular-nums;color:#fff;font-weight:650}
+  input[type=range]{accent-color:#38c9e8;width:118px;height:18px;cursor:pointer;margin:0}
+  button{appearance:none;-webkit-appearance:none;border:1px solid rgba(126,231,255,.35);background:rgba(126,231,255,.08);color:#aef0ff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;cursor:pointer;transition:background .15s,transform .05s;font-family:inherit}
+  button:hover{background:rgba(126,231,255,.18)}
+  button:active{transform:translateY(1px)}
+  #stats{margin-top:7px;font-size:11px;color:#8f8fa0;font-variant-numeric:tabular-nums;display:flex;gap:14px;flex-wrap:wrap}
+  #stats .hint{color:#6b6b7a;font-variant-numeric:normal}
+  #err{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:9;background:#3a1116;border:1px solid #ff5a5a;color:#ffd7d7;padding:8px 14px;border-radius:10px;font-size:12px;max-width:90vw;display:none}
+  @media (max-width:640px){
+    #hud{left:8px;top:8px;padding:8px 10px;max-width:calc(100vw - 16px)}
+    input[type=range]{width:92px}
+    .ctl{gap:5px}
+  }
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="hud" role="region" aria-label="Pendulum wave controls">
+  <h1><span class="accent">Pendulum</span> Wave</h1>
+  <div class="row">
+    <div class="ctl"><label for="nSlider">N</label><input id="nSlider" type="range" min="5" max="35" step="1" value="15"><b id="nVal">15</b></div>
+    <div class="ctl"><label for="gSlider">Gravity</label><input id="gSlider" type="range" min="0.1" max="3" step="0.05" value="1"><b id="gVal">1×</b></div>
+    <button id="reset" type="button">Re-sync ↺</button>
+  </div>
+  <div id="stats"><span id="statTime">t 0.0s</span><span id="statCycle">beat 0%</span><span id="statPeriod">T 1.00s</span><span class="hint">tap canvas or press R</span></div>
+</div>
+<div id="err" role="alert"></div>
+<script>
+try {
+  (function () {
+    var canvas = document.getElementById('stage');
+    var ctx = canvas.getContext('2d');
+    var hud = document.getElementById('hud');
+    var nSlider = document.getElementById('nSlider');
+    var gSlider = document.getElementById('gSlider');
+    var nVal = document.getElementById('nVal');
+    var gVal = document.getElementById('gVal');
+    var resetBtn = document.getElementById('reset');
+    var statTime = document.getElementById('statTime');
+    var statCycle = document.getElementById('statCycle');
+    var statPeriod = document.getElementById('statPeriod');
+
+    var W = 0, H = 0, DPR = 1;
+    var PIVOT_Y = 90;
+    var bobs = [];
+    var gravityFactor = 1;
+    var THETA0 = 0.55;
+    var N_OSC = 30;
+    var simT = 0, lastFrame = 0, running = true;
+
+    function rr(x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function fmtG(v) {
+      var s = v.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+      return s + '×';
+    }
+
+    function periodLong() {
+      return 1 / Math.sqrt(gravityFactor);
+    }
+
+    function build() {
+      var N = Math.max(2, Math.min(35, Math.round(parseFloat(nSlider.value))));
+      nVal.textContent = String(N);
+      var margin = 10;
+      var spacing = (W - margin * 2) / (N - 1);
+      var avail = Math.max(120, H - PIVOT_Y - 14);
+      var denom = Math.max(1, N - 1);
+      var relP = [];
+      var relPmax = 0;
+      for (var i = 0; i < N; i++) {
+        relP[i] = 1 / (N_OSC + i / denom);
+        if (relP[i] > relPmax) relPmax = relP[i];
+      }
+      var radius = Math.min(9, Math.max(4, spacing * 0.30));
+      var rodW = Math.min(2.4, Math.max(1.1, spacing * 0.06));
+      bobs = [];
+      for (var i = 0; i < N; i++) {
+        var L = (relP[i] / relPmax) * avail;
+        var hue = 190 + (i / Math.max(1, N - 1)) * 130;
+        bobs.push({ x: margin + i * spacing, L: L, hue: hue, radius: radius, rodW: rodW, theta: THETA0, omega: 0, trail: [] });
+      }
+      simT = 0;
+      statPeriod.textContent = 'T ' + periodLong().toFixed(2) + 's';
+    }
+
+    function resize() {
+      DPR = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = Math.round(W * DPR);
+      canvas.height = Math.round(H * DPR);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      var hudRect = hud.getBoundingClientRect();
+      PIVOT_Y = Math.max(78, hudRect.bottom + 16);
+      build();
+    }
+
+    function reset() {
+      for (var i = 0; i < bobs.length; i++) {
+        bobs[i].theta = THETA0;
+        bobs[i].omega = 0;
+        bobs[i].trail.length = 0;
+      }
+      simT = 0;
+      lastFrame = 0;
+    }
+
+    function step(dt) {
+      var g = 4 * Math.PI * Math.PI * bobs[0].L * gravityFactor;
+      var sub = Math.max(1, Math.ceil(dt / (1 / 240)));
+      var h = dt / sub;
+      for (var i = 0; i < bobs.length; i++) {
+        var b = bobs[i];
+        var w2 = g / b.L;
+        for (var s = 0; s < sub; s++) {
+          var a = -w2 * Math.sin(b.theta) - 0.012 * b.omega;
+          b.omega += a * h;
+          b.theta += b.omega * h;
+        }
+        b.trail.push({ x: b.x + b.L * Math.sin(b.theta), y: PIVOT_Y + b.L * Math.cos(b.theta) });
+        if (b.trail.length > 30) b.trail.shift();
+      }
+      simT += dt;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      var bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#0e0e13');
+      bg.addColorStop(0.55, '#0c0c10');
+      bg.addColorStop(1, '#101018');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      var cx = W / 2, cy = PIVOT_Y + (H - PIVOT_Y) * 0.55;
+      var rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.55);
+      rg.addColorStop(0, 'rgba(70,120,220,0.07)');
+      rg.addColorStop(1, 'rgba(70,120,220,0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, W, H);
+
+      var gy = bobs.length ? PIVOT_Y + bobs[0].L : 0;
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 6]);
+      ctx.beginPath();
+      ctx.moveTo(6, gy);
+      ctx.lineTo(W - 6, gy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      for (var i = 0; i < bobs.length; i++) {
+        var b = bobs[i];
+        var tr = b.trail;
+        for (var t = 0; t < tr.length; t++) {
+          var f = (t + 1) / tr.length;
+          ctx.fillStyle = 'hsla(' + b.hue.toFixed(1) + ',85%,65%,' + (f * f * 0.16).toFixed(3) + ')';
+          ctx.beginPath();
+          ctx.arc(tr[t].x, tr[t].y, b.radius * (0.25 + 0.75 * f * f), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      for (var i = 0; i < bobs.length; i++) {
+        var b = bobs[i];
+        var bx = b.x + b.L * Math.sin(b.theta);
+        var by = PIVOT_Y + b.L * Math.cos(b.theta);
+        var grad = ctx.createLinearGradient(0, PIVOT_Y, 0, by);
+        grad.addColorStop(0, 'hsla(' + b.hue.toFixed(1) + ',70%,78%,0.28)');
+        grad.addColorStop(1, 'hsla(' + b.hue.toFixed(1) + ',80%,62%,0.85)');
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = b.rodW;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(b.x, PIVOT_Y);
+        ctx.lineTo(bx, by);
+        ctx.stroke();
+      }
+
+      for (var i = 0; i < bobs.length; i++) {
+        var b = bobs[i];
+        var bx = b.x + b.L * Math.sin(b.theta);
+        var by = PIVOT_Y + b.L * Math.cos(b.theta);
+        var R = b.radius;
+        ctx.fillStyle = 'hsla(' + b.hue.toFixed(1) + ',90%,60%,0.16)';
+        ctx.beginPath();
+        ctx.arc(bx, by, R * 2.3, 0, Math.PI * 2);
+        ctx.fill();
+        var bg2 = ctx.createRadialGradient(bx - R * 0.35, by - R * 0.4, R * 0.15, bx, by, R);
+        bg2.addColorStop(0, '#ffffff');
+        bg2.addColorStop(0.45, 'hsl(' + b.hue.toFixed(1) + ',85%,72%)');
+        bg2.addColorStop(1, 'hsl(' + b.hue.toFixed(1) + ',80%,44%)');
+        ctx.fillStyle = bg2;
+        ctx.beginPath();
+        ctx.arc(bx, by, R, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(bx, by, R, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      var top = PIVOT_Y - 6;
+      var bm = ctx.createLinearGradient(0, top - 6, 0, PIVOT_Y + 2);
+      bm.addColorStop(0, 'rgba(255,255,255,0.22)');
+      bm.addColorStop(1, 'rgba(255,255,255,0.04)');
+      ctx.fillStyle = bm;
+      var bx0 = 6, bx1 = W - 6;
+      ctx.beginPath();
+      rr(bx0, top - 5, bx1 - bx0, 10, 4);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(126,231,255,0.35)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      for (var i = 0; i < bobs.length; i++) {
+        var b = bobs[i];
+        ctx.strokeStyle = 'rgba(200,220,255,0.30)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(b.x, PIVOT_Y - 5);
+        ctx.lineTo(b.x, PIVOT_Y);
+        ctx.stroke();
+      }
+
+      var vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.45, W / 2, H / 2, Math.max(W, H) * 0.75);
+      vg.addColorStop(0, 'rgba(0,0,0,0)');
+      vg.addColorStop(1, 'rgba(0,0,0,0.32)');
+      ctx.fillStyle = vg;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function frame(now) {
+      if (!running) return;
+      if (lastFrame === 0) lastFrame = now;
+      var dt = Math.min(0.05, (now - lastFrame) / 1000);
+      lastFrame = now;
+      step(dt);
+      draw();
+      var cycleS = N_OSC / Math.sqrt(gravityFactor);
+      var cyc = (simT % cycleS) / cycleS;
+      statTime.textContent = 't ' + simT.toFixed(1) + 's';
+      statCycle.textContent = 'beat ' + Math.floor(cyc * 100) + '%';
+      window.requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('orientationchange', function () { setTimeout(resize, 60); });
+    window.addEventListener('unload', function () { running = false; });
+
+    nSlider.addEventListener('input', build);
+    gSlider.addEventListener('input', function () {
+      gravityFactor = parseFloat(gSlider.value);
+      gVal.textContent = fmtG(gravityFactor);
+      statPeriod.textContent = 'T ' + periodLong().toFixed(2) + 's';
+    });
+    resetBtn.addEventListener('click', reset);
+    canvas.addEventListener('pointerdown', reset);
+    window.addEventListener('keydown', function (e) { if (e.key === 'r' || e.key === 'R') reset(); });
+
+    gravityFactor = parseFloat(gSlider.value);
+    gVal.textContent = fmtG(gravityFactor);
+    resize();
+    reset();
+    window.requestAnimationFrame(frame);
+  })();
+} catch (err) {
+  var alertEl = document.getElementById('err');
+  alertEl.textContent = 'Error: ' + (err && err.message ? err.message : err);
+  alertEl.style.display = 'block';
+}
+</script>
+</body>
+</html>

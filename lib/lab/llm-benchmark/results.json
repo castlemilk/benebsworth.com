@@ -5442,65 +5442,199 @@
   {
     "taskId": "landing-page-morph",
     "modelId": "deepseek-v4-flash-free",
-    "score": 0,
-    "runtimeMs": 0,
-    "tokensIn": 0,
-    "tokensOut": 0,
+    "score": 3,
+    "runtimeMs": 808216,
+    "tokensIn": 858,
+    "tokensOut": 109,
     "costUsd": 0,
+    "usage": {
+      "inputTokens": 858,
+      "outputTokens": 109,
+      "source": "estimated"
+    },
     "iterations": 1,
-    "iterationsSucceeded": 0,
-    "status": "timeout",
-    "failureReason": "cli_timeout",
-    "createdAt": "2026-08-12T09:05:45.943Z",
+    "iterationsSucceeded": 1,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      3
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "landing-structure",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 30,
+          "detail": "headings=0 textChars=436 canvases=0"
+        },
+        {
+          "name": "landing-animates",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 35,
+          "detail": "pixel diff=0.0% bodyTextLen before=436 after=436"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 619469,
+      "meanTokensPerSec": 0.6,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "1de26823e28f4ea6",
+    "createdAt": "2026-08-17T05:41:46.753Z",
+    "runLogRef": {
+      "runId": "2026-08-17T05-41-46",
+      "file": "deepseek-v4-flash-free-landing-page-morph.jsonl"
+    },
     "source": "live",
-    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Landing Page Morph #1/1"
+    "output": "I'll build this landing page artifact. Let me plan the structure: a hand-written mini-React renderer, a utility-first CSS layer (Tailwind-style, hand-written), a full hero with animated particle canvas, feature grid, pricing with working billing toggle, and a dark/light theme toggle with smooth morph transitions — all in one self-contained HTML file\nNow let me validate the JS syntax by extracting the script and running node --check:"
   },
   {
     "taskId": "equation-solver",
     "modelId": "deepseek-v4-flash-free",
-    "score": 0,
-    "runtimeMs": 0,
-    "tokensIn": 0,
-    "tokensOut": 0,
+    "score": 100,
+    "runtimeMs": 170038,
+    "tokensIn": 30,
+    "tokensOut": 1375,
     "costUsd": 0,
+    "usage": {
+      "inputTokens": 30,
+      "outputTokens": 1375,
+      "source": "estimated"
+    },
     "iterations": 1,
-    "iterationsSucceeded": 0,
-    "status": "timeout",
-    "failureReason": "cli_timeout",
-    "createdAt": "2026-08-12T09:15:45.975Z",
+    "iterationsSucceeded": 1,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100
+    ],
+    "telemetry": {
+      "meanTtftMs": 169126,
+      "meanTokensPerSec": 1507.7,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "5151d0c8b150e9f9",
+    "createdAt": "2026-08-17T05:41:46.755Z",
+    "runLogRef": {
+      "runId": "2026-08-17T05-41-46",
+      "file": "deepseek-v4-flash-free-equation-solver.jsonl"
+    },
     "source": "live",
-    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Equation Solver #1/1"
+    "output": "<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Solve x² + y² = 25, xy = 12 over the Reals</title>\n<style>\n  :root {\n    --bg: #0f172a;\n    --card: #1e293b;\n    --ink: #e2e8f0;\n    --muted: #94a3b8;\n    --accent: #38bdf8;\n    --accent2: #a78bfa;\n    --good: #34d399;\n    --border: #334155;\n    --mono: \"SFMono-Regular\", Menlo, Consolas, \"Liberation Mono\", monospace;\n    --serif: Georgia, \"Times New Roman\", serif;\n  }\n  * { box-sizing: border-box; margin: 0; padding: 0; }\n  body {\n    background: var(--bg);\n    color: var(--ink);\n    font-family: var(--serif);\n    line-height: 1.65;\n    padding: 2.5rem 1rem;\n  }\n  .wrap { max-width: 760px; margin: 0 auto; }\n  header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }\n  h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; }\n  .sub { color: var(--muted); margin-top: .35rem; font-size: .95rem; font-family: var(--mono); }\n  .system {\n    background: var(--card);\n    border: 1px solid var(--border);\n    border-radius: 10px;\n    padding: 1.25rem 1.5rem;\n    margin: 1.5rem 0;\n    font-size: 1.15rem;\n    text-align: center;\n  }\n  h2 { font-size: 1.1rem; margin: 2rem 0 .6rem; color: var(--accent); }\n  p { margin-bottom: .9rem; }\n  .math { font-family: var(--mono); background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: .9rem 1.2rem; margin: .8rem 0; overflow-x: auto; white-space: pre; font-size: .95rem; color: var(--ink); }\n  .math .c { color: var(--muted); }\n  .answer {\n    background: linear-gradient(135deg, rgba(56,189,248,.08), rgba(167,139,250,.08));\n    border: 1px solid var(--accent);\n    border-radius: 10px;\n    padding: 1.1rem 1.4rem;\n    margin: 1.5rem 0;\n  }\n  .answer .big { font-size: 1.25rem; }\n  .sol { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; }\n  .sol span { font-family: var(--mono); background: #0b1220; border: 1px solid var(--border); border-radius: 6px; padding: .3rem .7rem; font-size: 1rem; color: var(--good); }\n  .note { font-size: .88rem; color: var(--muted); font-family: var(--mono); }\n  .check { border-left: 3px solid var(--accent2); padding-left: 1rem; margin: 1rem 0; color: var(--muted); }\n  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .82rem; font-family: var(--mono); }\n</style>\n</head>\n<body>\n<div class=\"wrap\">\n\n  <header>\n    <h1>Solve the system over the real numbers</h1>\n    <div class=\"sub\">x² + y² = 25&nbsp;&nbsp;and&nbsp;&nbsp;xy = 12</div>\n  </header>\n\n  <div class=\"system\">\n    x² + y² = 25<br>\n    x · y = 12\n  </div>\n\n  <h2>Step 1 — Eliminate one variable by substitution</h2>\n  <p>Since <em>xy</em> = 12, the product is nonzero, so neither variable is zero. Solve the second equation for <em>y</em>:</p>\n  <div class=\"math\">y = 12 / x        (x ≠ 0)</div>\n  <p>Substitute into the first equation:</p>\n  <div class=\"math\">x² + (12 / x)² = 25\nx² + 144 / x² = 25</div>\n\n  <h2>Step 2 — Clear the denominator</h2>\n  <p>Multiply through by x² (valid because x ≠ 0):</p>\n  <div class=\"math\">x⁴ + 144 = 25 x²\nx⁴ − 25 x² + 144 = 0</div>\n\n  <h2>Step 3 — Reduce with a substitution u = x²</h2>\n  <p>This quartic is quadratic in x². Let u = x², so u ≥ 0:</p>\n  <div class=\"math\">u² − 25u + 144 = 0</div>\n  <p>Apply the quadratic formula:</p>\n  <div class=\"math\">u = [25 ± √(25² − 4·1·144)] / (2·1)\n     = [25 ± √(625 − 576)] / 2\n     = [25 ± √49] / 2\n     = [25 ± 7] / 2</div>\n  <div class=\"math\">u = 32/2 = 16      or      u = 18/2 = 9</div>\n  <p>Both values are nonnegative, so both are admissible for u = x².</p>\n\n  <h2>Step 4 — Recover x, then y</h2>\n  <div class=\"math\"><span class=\"c\"># Case u = 16:</span>\nx² = 16  →  x = 4   or  x = −4\ny = 12 / x:\n    x =  4  →  y = 3\n    x = −4  →  y = −3\n\n<span class=\"c\"># Case u = 9:</span>\nx² = 9   →  x = 3   or  x = −3\ny = 12 / x:\n    x =  3  →  y = 4\n    x = −3  →  y = −4</div>\n\n  <h2>Step 5 — Verify each pair</h2>\n  <div class=\"check\">\n    (4, 3):  4² + 3² = 16 + 9 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;4·3 = 12 ✓<br>\n    (−4, −3):  (−4)² + (−3)² = 16 + 9 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;(−4)(−3) = 12 ✓<br>\n    (3, 4):  3² + 4² = 9 + 16 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;3·4 = 12 ✓<br>\n    (−3, −4):  (−3)² + (−4)² = 9 + 16 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;(−3)(−4) = 12 ✓\n  </div>\n\n  <div class=\"answer\">\n    <div class=\"big\">Solution set over ℝ:</div>\n    <div class=\"sol\">\n      <span>(4, 3)</span>\n      <span>(−4, −3)</span>\n      <span>(3, 4)</span>\n      <span>(−3, −4)</span>\n    </div>\n    <div class=\"note\">All four pairs — exactly two in each quadrant along the diagonal.</div>\n  </div>\n\n  <h2>Cross-check — a cleaner route via (x ± y)²</h2>\n  <div class=\"math\">(x + y)² = x² + 2xy + y² = 25 + 24 = 49   →   x + y = ±7\n(x − y)² = x² − 2xy + y² = 25 − 24 = 1    →   x − y = ±1</div>\n  <p>Adding and subtracting the two sign combinations recovers the same four pairs\n  (e.g. x + y = 7, x − y = 1 ⟹ x = 4, y = 3; x + y = −7, x − y = −1 ⟹ x = −4, y = −3; and the\n  swapped-sign versions yield (3, 4) and (−3, −4)). This confirms the result and shows the\n  geometry: the circle of radius 5 intersects the hyperbola xy = 12 in exactly four points,\n  symmetric about the line y = x.</p>\n\n  <footer>\n    Artifact: artifact-deepseek-v4-flash-free-equation-solver-0.html — solved by substitution (quartic → quadratic), verified by direct substitution.\n  </footer>\n\n</div>\n</body>\n</html>"
   },
   {
     "taskId": "physics-pendulum-wave",
     "modelId": "deepseek-v4-flash-free",
-    "score": 0,
-    "runtimeMs": 0,
-    "tokensIn": 0,
-    "tokensOut": 0,
+    "score": 100,
+    "runtimeMs": 323055,
+    "tokensIn": 850,
+    "tokensOut": 2947,
     "costUsd": 0,
+    "usage": {
+      "inputTokens": 850,
+      "outputTokens": 2947,
+      "source": "estimated"
+    },
     "iterations": 1,
-    "iterationsSucceeded": 0,
-    "status": "timeout",
-    "failureReason": "cli_timeout",
-    "createdAt": "2026-08-12T09:25:46.025Z",
+    "iterationsSucceeded": 1,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      100
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "pendulum-renders",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "canvas content: 100%"
+        },
+        {
+          "name": "pendulum-animates",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "pixel diff over 0.8s: 91.4%"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 322907,
+      "meanTokensPerSec": 19912.2,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "7d84947748375603",
+    "createdAt": "2026-08-17T05:44:36.933Z",
+    "runLogRef": {
+      "runId": "2026-08-17T05-41-46",
+      "file": "deepseek-v4-flash-free-physics-pendulum-wave.jsonl"
+    },
     "source": "live",
-    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Physics Pendulum Wave #1/1"
+    "output": "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Pendulum Wave — Canvas Simulation</title>\n<style>\n  html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}\n  *{box-sizing:border-box}\n  body{position:fixed;inset:0}\n  #stage{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}\n  #hud{position:absolute;top:10px;left:10px;z-index:5;max-width:min(560px,calc(100vw - 20px));padding:10px 14px;border-radius:14px;background:rgba(14,14,20,.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 30px rgba(0,0,0,.45)}\n  #hud h1{margin:0 0 7px;font-size:15px;font-weight:650;letter-spacing:.02em}\n  #hud h1 .accent{color:#7ee7ff}\n  .row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}\n  .ctl{display:flex;align-items:center;gap:7px;font-size:12px;color:#b9b9c6}\n  .ctl label{white-space:nowrap}\n  .ctl b{min-width:38px;font-variant-numeric:tabular-nums;color:#fff;font-weight:650}\n  input[type=range]{accent-color:#38c9e8;width:118px;height:18px;cursor:pointer;margin:0}\n  button{appearance:none;-webkit-appearance:none;border:1px solid rgba(126,231,255,.35);background:rgba(126,231,255,.08);color:#aef0ff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;cursor:pointer;transition:background .15s,transform .05s;font-family:inherit}\n  button:hover{background:rgba(126,231,255,.18)}\n  button:active{transform:translateY(1px)}\n  #stats{margin-top:7px;font-size:11px;color:#8f8fa0;font-variant-numeric:tabular-nums;display:flex;gap:14px;flex-wrap:wrap}\n  #stats .hint{color:#6b6b7a;font-variant-numeric:normal}\n  #err{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:9;background:#3a1116;border:1px solid #ff5a5a;color:#ffd7d7;padding:8px 14px;border-radius:10px;font-size:12px;max-width:90vw;display:none}\n  @media (max-width:640px){\n    #hud{left:8px;top:8px;padding:8px 10px;max-width:calc(100vw - 16px)}\n    input[type=range]{width:92px}\n    .ctl{gap:5px}\n  }\n</style>\n</head>\n<body>\n<canvas id=\"stage\"></canvas>\n<div id=\"hud\" role=\"region\" aria-label=\"Pendulum wave controls\">\n  <h1><span class=\"accent\">Pendulum</span> Wave</h1>\n  <div class=\"row\">\n    <div class=\"ctl\"><label for=\"nSlider\">N</label><input id=\"nSlider\" type=\"range\" min=\"5\" max=\"35\" step=\"1\" value=\"15\"><b id=\"nVal\">15</b></div>\n    <div class=\"ctl\"><label for=\"gSlider\">Gravity</label><input id=\"gSlider\" type=\"range\" min=\"0.1\" max=\"3\" step=\"0.05\" value=\"1\"><b id=\"gVal\">1×</b></div>\n    <button id=\"reset\" type=\"button\">Re-sync ↺</button>\n  </div>\n  <div id=\"stats\"><span id=\"statTime\">t 0.0s</span><span id=\"statCycle\">beat 0%</span><span id=\"statPeriod\">T 1.00s</span><span class=\"hint\">tap canvas or press R</span></div>\n</div>\n<div id=\"err\" role=\"alert\"></div>\n<script>\ntry {\n  (function () {\n    var canvas = document.getElementById('stage');\n    var ctx = canvas.getContext('2d');\n    var hud = document.getElementById('hud');\n    var nSlider = document.getElementById('nSlider');\n    var gSlider = document.getElementById('gSlider');\n    var nVal = document.getElementById('nVal');\n    var gVal = document.getElementById('gVal');\n    var resetBtn = document.getElementById('reset');\n    var statTime = document.getElementById('statTime');\n    var statCycle = document.getElementById('statCycle');\n    var statPeriod = document.getElementById('statPeriod');\n\n    var W = 0, H = 0, DPR = 1;\n    var PIVOT_Y = 90;\n    var bobs = [];\n    var gravityFactor = 1;\n    var THETA0 = 0.55;\n    var N_OSC = 30;\n    var simT = 0, lastFrame = 0, running = true;\n\n    function rr(x, y, w, h, r) {\n      r = Math.min(r, w / 2, h / 2);\n      ctx.moveTo(x + r, y);\n      ctx.arcTo(x + w, y, x + w, y + h, r);\n      ctx.arcTo(x + w, y + h, x, y + h, r);\n      ctx.arcTo(x, y + h, x, y, r);\n      ctx.arcTo(x, y, x + w, y, r);\n      ctx.closePath();\n    }\n\n    function fmtG(v) {\n      var s = v.toFixed(2).replace(/0+$/, '').replace(/\\.$/, '');\n      return s + '×';\n    }\n\n    function periodLong() {\n      return 1 / Math.sqrt(gravityFactor);\n    }\n\n    function build() {\n      var N = Math.max(2, Math.min(35, Math.round(parseFloat(nSlider.value))));\n      nVal.textContent = String(N);\n      var margin = 10;\n      var spacing = (W - margin * 2) / (N - 1);\n      var avail = Math.max(120, H - PIVOT_Y - 14);\n      var denom = Math.max(1, N - 1);\n      var relP = [];\n      var relPmax = 0;\n      for (var i = 0; i < N; i++) {\n        relP[i] = 1 / (N_OSC + i / denom);\n        if (relP[i] > relPmax) relPmax = relP[i];\n      }\n      var radius = Math.min(9, Math.max(4, spacing * 0.30));\n      var rodW = Math.min(2.4, Math.max(1.1, spacing * 0.06));\n      bobs = [];\n      for (var i = 0; i < N; i++) {\n        var L = (relP[i] / relPmax) * avail;\n        var hue = 190 + (i / Math.max(1, N - 1)) * 130;\n        bobs.push({ x: margin + i * spacing, L: L, hue: hue, radius: radius, rodW: rodW, theta: THETA0, omega: 0, trail: [] });\n      }\n      simT = 0;\n      statPeriod.textContent = 'T ' + periodLong().toFixed(2) + 's';\n    }\n\n    function resize() {\n      DPR = window.devicePixelRatio || 1;\n      W = window.innerWidth;\n      H = window.innerHeight;\n      canvas.width = Math.round(W * DPR);\n      canvas.height = Math.round(H * DPR);\n      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);\n      var hudRect = hud.getBoundingClientRect();\n      PIVOT_Y = Math.max(78, hudRect.bottom + 16);\n      build();\n    }\n\n    function reset() {\n      for (var i = 0; i < bobs.length; i++) {\n        bobs[i].theta = THETA0;\n        bobs[i].omega = 0;\n        bobs[i].trail.length = 0;\n      }\n      simT = 0;\n      lastFrame = 0;\n    }\n\n    function step(dt) {\n      var g = 4 * Math.PI * Math.PI * bobs[0].L * gravityFactor;\n      var sub = Math.max(1, Math.ceil(dt / (1 / 240)));\n      var h = dt / sub;\n      for (var i = 0; i < bobs.length; i++) {\n        var b = bobs[i];\n        var w2 = g / b.L;\n        for (var s = 0; s < sub; s++) {\n          var a = -w2 * Math.sin(b.theta) - 0.012 * b.omega;\n          b.omega += a * h;\n          b.theta += b.omega * h;\n        }\n        b.trail.push({ x: b.x + b.L * Math.sin(b.theta), y: PIVOT_Y + b.L * Math.cos(b.theta) });\n        if (b.trail.length > 30) b.trail.shift();\n      }\n      simT += dt;\n    }\n\n    function draw() {\n      ctx.clearRect(0, 0, W, H);\n      var bg = ctx.createLinearGradient(0, 0, 0, H);\n      bg.addColorStop(0, '#0e0e13');\n      bg.addColorStop(0.55, '#0c0c10');\n      bg.addColorStop(1, '#101018');\n      ctx.fillStyle = bg;\n      ctx.fillRect(0, 0, W, H);\n\n      var cx = W / 2, cy = PIVOT_Y + (H - PIVOT_Y) * 0.55;\n      var rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.55);\n      rg.addColorStop(0, 'rgba(70,120,220,0.07)');\n      rg.addColorStop(1, 'rgba(70,120,220,0)');\n      ctx.fillStyle = rg;\n      ctx.fillRect(0, 0, W, H);\n\n      var gy = bobs.length ? PIVOT_Y + bobs[0].L : 0;\n      ctx.strokeStyle = 'rgba(255,255,255,0.05)';\n      ctx.lineWidth = 1;\n      ctx.setLineDash([2, 6]);\n      ctx.beginPath();\n      ctx.moveTo(6, gy);\n      ctx.lineTo(W - 6, gy);\n      ctx.stroke();\n      ctx.setLineDash([]);\n\n      for (var i = 0; i < bobs.length; i++) {\n        var b = bobs[i];\n        var tr = b.trail;\n        for (var t = 0; t < tr.length; t++) {\n          var f = (t + 1) / tr.length;\n          ctx.fillStyle = 'hsla(' + b.hue.toFixed(1) + ',85%,65%,' + (f * f * 0.16).toFixed(3) + ')';\n          ctx.beginPath();\n          ctx.arc(tr[t].x, tr[t].y, b.radius * (0.25 + 0.75 * f * f), 0, Math.PI * 2);\n          ctx.fill();\n        }\n      }\n\n      for (var i = 0; i < bobs.length; i++) {\n        var b = bobs[i];\n        var bx = b.x + b.L * Math.sin(b.theta);\n        var by = PIVOT_Y + b.L * Math.cos(b.theta);\n        var grad = ctx.createLinearGradient(0, PIVOT_Y, 0, by);\n        grad.addColorStop(0, 'hsla(' + b.hue.toFixed(1) + ',70%,78%,0.28)');\n        grad.addColorStop(1, 'hsla(' + b.hue.toFixed(1) + ',80%,62%,0.85)');\n        ctx.strokeStyle = grad;\n        ctx.lineWidth = b.rodW;\n        ctx.lineCap = 'round';\n        ctx.beginPath();\n        ctx.moveTo(b.x, PIVOT_Y);\n        ctx.lineTo(bx, by);\n        ctx.stroke();\n      }\n\n      for (var i = 0; i < bobs.length; i++) {\n        var b = bobs[i];\n        var bx = b.x + b.L * Math.sin(b.theta);\n        var by = PIVOT_Y + b.L * Math.cos(b.theta);\n        var R = b.radius;\n        ctx.fillStyle = 'hsla(' + b.hue.toFixed(1) + ',90%,60%,0.16)';\n        ctx.beginPath();\n        ctx.arc(bx, by, R * 2.3, 0, Math.PI * 2);\n        ctx.fill();\n        var bg2 = ctx.createRadialGradient(bx - R * 0.35, by - R * 0.4, R * 0.15, bx, by, R);\n        bg2.addColorStop(0, '#ffffff');\n        bg2.addColorStop(0.45, 'hsl(' + b.hue.toFixed(1) + ',85%,72%)');\n        bg2.addColorStop(1, 'hsl(' + b.hue.toFixed(1) + ',80%,44%)');\n        ctx.fillStyle = bg2;\n        ctx.beginPath();\n        ctx.arc(bx, by, R, 0, Math.PI * 2);\n        ctx.fill();\n        ctx.strokeStyle = 'rgba(255,255,255,0.35)';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.arc(bx, by, R, 0, Math.PI * 2);\n        ctx.stroke();\n      }\n\n      var top = PIVOT_Y - 6;\n      var bm = ctx.createLinearGradient(0, top - 6, 0, PIVOT_Y + 2);\n      bm.addColorStop(0, 'rgba(255,255,255,0.22)');\n      bm.addColorStop(1, 'rgba(255,255,255,0.04)');\n      ctx.fillStyle = bm;\n      var bx0 = 6, bx1 = W - 6;\n      ctx.beginPath();\n      rr(bx0, top - 5, bx1 - bx0, 10, 4);\n      ctx.fill();\n      ctx.strokeStyle = 'rgba(126,231,255,0.35)';\n      ctx.lineWidth = 1.2;\n      ctx.stroke();\n\n      for (var i = 0; i < bobs.length; i++) {\n        var b = bobs[i];\n        ctx.strokeStyle = 'rgba(200,220,255,0.30)';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.moveTo(b.x, PIVOT_Y - 5);\n        ctx.lineTo(b.x, PIVOT_Y);\n        ctx.stroke();\n      }\n\n      var vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.45, W / 2, H / 2, Math.max(W, H) * 0.75);\n      vg.addColorStop(0, 'rgba(0,0,0,0)');\n      vg.addColorStop(1, 'rgba(0,0,0,0.32)');\n      ctx.fillStyle = vg;\n      ctx.fillRect(0, 0, W, H);\n    }\n\n    function frame(now) {\n      if (!running) return;\n      if (lastFrame === 0) lastFrame = now;\n      var dt = Math.min(0.05, (now - lastFrame) / 1000);\n      lastFrame = now;\n      step(dt);\n      draw();\n      var cycleS = N_OSC / Math.sqrt(gravityFactor);\n      var cyc = (simT % cycleS) / cycleS;\n      statTime.textContent = 't ' + simT.toFixed(1) + 's';\n      statCycle.textContent = 'beat ' + Math.floor(cyc * 100) + '%';\n      window.requestAnimationFrame(frame);\n    }\n\n    window.addEventListener('resize', resize);\n    window.addEventListener('orientationchange', function () { setTimeout(resize, 60); });\n    window.addEventListener('unload', function () { running = false; });\n\n    nSlider.addEventListener('input', build);\n    gSlider.addEventListener('input', function () {\n      gravityFactor = parseFloat(gSlider.value);\n      gVal.textContent = fmtG(gravityFactor);\n      statPeriod.textContent = 'T ' + periodLong().toFixed(2) + 's';\n    });\n    resetBtn.addEventListener('click', reset);\n    canvas.addEventListener('pointerdown', reset);\n    window.addEventListener('keydown', function (e) { if (e.key === 'r' || e.key === 'R') reset(); });\n\n    gravityFactor = parseFloat(gSlider.value);\n    gVal.textContent = fmtG(gravityFactor);\n    resize();\n    reset();\n    window.requestAnimationFrame(frame);\n  })();\n} catch (err) {\n  var alertEl = document.getElementById('err');\n  alertEl.textContent = 'Error: ' + (err && err.message ? err.message : err);\n  alertEl.style.display = 'block';\n}\n</script>\n</body>\n</html>"
   },
   {
     "taskId": "circuit-builder-teaser",
     "modelId": "deepseek-v4-flash-free",
-    "score": 0,
-    "runtimeMs": 0,
-    "tokensIn": 0,
-    "tokensOut": 0,
+    "score": 91,
+    "runtimeMs": 277586,
+    "tokensIn": 845,
+    "tokensOut": 5180,
     "costUsd": 0,
+    "usage": {
+      "inputTokens": 845,
+      "outputTokens": 5180,
+      "source": "estimated"
+    },
     "iterations": 1,
-    "iterationsSucceeded": 0,
-    "status": "timeout",
-    "failureReason": "cli_timeout",
-    "createdAt": "2026-08-12T09:35:46.079Z",
+    "iterationsSucceeded": 1,
+    "status": "success",
+    "failureReason": "none",
+    "iterationScores": [
+      91
+    ],
+    "iterationCheckResults": [
+      [
+        {
+          "name": "circuit-structure",
+          "passed": true,
+          "points": 30,
+          "maxPoints": 30,
+          "detail": "inputs=4 canvas=1 textChars=211"
+        },
+        {
+          "name": "circuit-interact",
+          "passed": true,
+          "points": 35,
+          "maxPoints": 35,
+          "detail": "pixel diff after input: 99.15%"
+        }
+      ]
+    ],
+    "telemetry": {
+      "meanTtftMs": 277455,
+      "meanTokensPerSec": 39542,
+      "rateKind": "decode",
+      "cacheHits": 0,
+      "retries": 0
+    },
+    "promptBundle": "70e17738e3850933",
+    "createdAt": "2026-08-17T05:50:13.313Z",
+    "runLogRef": {
+      "runId": "2026-08-17T05-41-46",
+      "file": "deepseek-v4-flash-free-circuit-builder-teaser.jsonl"
+    },
     "source": "live",
-    "output": "Timeout after 600000ms: DeepSeek V4 Flash Free :: Circuit Builder Teaser #1/1"
+    "output": "<canvas id=\"scene\"></canvas>\n<div id=\"hud\">\n  <div id=\"titlecard\" class=\"panel\">\n    <h1>Series RLC &middot; Step Response</h1>\n    <p id=\"mode\">computing&hellip;</p>\n  </div>\n  <div id=\"stats\" class=\"panel\">\n    <div class=\"cell\"><div class=\"lbl\">damping &zeta;</div><div class=\"val\" id=\"sZeta\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">natural f</div><div class=\"val\" id=\"sFreq\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">damped f</div><div class=\"val\" id=\"sFd\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">overshoot</div><div class=\"val\" id=\"sOs\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">settling 2%</div><div class=\"val\" id=\"sTs\">&ndash;</div></div>\n    <div class=\"cell\"><div class=\"lbl\">scope window</div><div class=\"val\" id=\"sWin\">&ndash;</div></div>\n  </div>\n</div>\n<div id=\"controls\" class=\"panel\">\n  <label class=\"ctl\"><span class=\"clbl\">R</span>\n    <span class=\"srow\"><input type=\"range\" id=\"sR\" min=\"0\" max=\"1000\" step=\"1\"><span class=\"vval\" id=\"vR\"></span></span>\n  </label>\n  <label class=\"ctl\"><span class=\"clbl\">L</span>\n    <span class=\"srow\"><input type=\"range\" id=\"sL\" min=\"0\" max=\"1000\" step=\"1\"><span class=\"vval\" id=\"vL\"></span></span>\n  </label>\n  <label class=\"ctl\"><span class=\"clbl\">C</span>\n    <span class=\"srow\"><input type=\"range\" id=\"sC\" min=\"0\" max=\"1000\" step=\"1\"><span class=\"vval\" id=\"vC\"></span></span>\n  </label>\n  <button id=\"retrigger\" type=\"button\">&crarr; Re-trigger step</button>\n</div>\n<div id=\"err\" role=\"alert\" hidden></div>\n<script>\ntry {\n(function(){\n\"use strict\";\n\nvar canvas = document.getElementById('scene');\nvar ctx = canvas.getContext('2d');\nvar hud = document.getElementById('hud');\nvar controls = document.getElementById('controls');\nvar errBox = document.getElementById('err');\n\nfunction showErr(msg){ errBox.hidden = false; errBox.textContent = msg; }\nwindow.addEventListener('error', function(e){ showErr(e.message || 'Unknown error'); });\n\nvar W = 0, H = 0, DPR = 1;\nfunction resize(){\n  DPR = Math.min(2.5, window.devicePixelRatio || 1);\n  W = window.innerWidth; H = window.innerHeight;\n  canvas.width = Math.max(1, Math.round(W * DPR));\n  canvas.height = Math.max(1, Math.round(H * DPR));\n  draw();\n}\nwindow.addEventListener('resize', resize);\nwindow.addEventListener('orientationchange', resize);\n\n/* ---------------- parameters & simulation ---------------- */\n\nvar PARAMS = { r: 20, l: 1.0, c: 1e-3 };\nvar RANGE = {\n  r: { min: 1,    max: 500,    unit: '\\u03a9' },\n  l: { min: 10e-3, max: 10,    unit: 'H' },\n  c: { min: 10e-6, max: 10e-3, unit: 'F' }\n};\n\nvar sim = { v:null, i:null, N:2, T:1, alpha:1, omega0:1, zeta:1, fd:0, os:0, ts:1, vMax:1, iMax:1e-9 };\nvar animT = 0;\n\nfunction computeSim(){\n  var L = PARAMS.l, C = PARAMS.c, R = PARAMS.r;\n  var omega0 = 1 / Math.sqrt(L * C);\n  var alpha = R / (2 * L);\n  if (!isFinite(alpha) || alpha <= 0) alpha = 1e-9;\n  var zeta = alpha / omega0;\n  var wd = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));\n  var fd = wd / (2 * Math.PI);\n\n  var T = 4.6 / alpha;\n  if (zeta < 1 && fd > 0) {\n    T = Math.min(T, 12 / fd);\n    T = Math.max(T, 2.2 / fd);\n  }\n  T = Math.min(Math.max(T, 0.01), 30);\n\n  var N = zeta < 1 ? Math.max(600, Math.round(T * fd * 40)) : 700;\n  N = Math.min(N, 4000);\n\n  var v = new Float64Array(N);\n  var i = new Float64Array(N);\n  var dt = T / (N - 1);\n  var beta = omega0 * Math.sqrt(Math.max(0, zeta * zeta - 1));\n  var vMax = 0, vMin = 0, k;\n\n  for (k = 0; k < N; k++) {\n    var t = k * dt, vc;\n    if (zeta < 1) {\n      vc = 1 - Math.exp(-alpha * t) * (Math.cos(wd * t) + (alpha / wd) * Math.sin(wd * t));\n    } else if (zeta > 1) {\n      vc = 1 - Math.exp(-alpha * t) * (Math.cosh(beta * t) + (alpha / beta) * Math.sinh(beta * t));\n    } else {\n      vc = 1 - Math.exp(-alpha * t) * (1 + alpha * t);\n    }\n    v[k] = vc;\n    if (vc > vMax) vMax = vc;\n    if (vc < vMin) vMin = vc;\n  }\n  for (k = 1; k < N - 1; k++) i[k] = C * (v[k + 1] - v[k - 1]) / (2 * dt);\n  i[0] = 0; i[N - 1] = i[N - 2];\n\n  var iMax = 1e-9;\n  for (k = 0; k < N; k++) { var a = Math.abs(i[k]); if (a > iMax) iMax = a; }\n\n  sim.v = v; sim.i = i; sim.N = N; sim.T = T; sim.alpha = alpha;\n  sim.omega0 = omega0; sim.zeta = zeta; sim.fd = fd;\n  sim.os = zeta < 1 ? 100 * Math.exp(-Math.PI * zeta / Math.sqrt(1 - zeta * zeta)) : 0;\n  sim.ts = 4 / alpha; sim.vMax = vMax; sim.vMin = vMin; sim.iMax = iMax;\n}\n\n/* ---------------- formatting helpers ---------------- */\n\nvar PRE = ['p','n','\\u00b5','m','','k','M','G'];\nfunction eng(v, unit){\n  if (v === 0) return '0 ' + unit;\n  var p = Math.max(-4, Math.min(4, Math.floor(Math.log10(Math.abs(v)) / 3)));\n  var s = v / Math.pow(10, p * 3);\n  var str = s >= 100 ? s.toFixed(0) : s >= 10 ? s.toFixed(1) : s.toFixed(2);\n  str = str.replace(/(\\.\\d*?[1-9])0+$/, '$1').replace(/\\.0+$/, '');\n  return str + ' ' + PRE[p + 4] + unit;\n}\nfunction fmtTime(v){\n  if (v <= 0) return '0';\n  if (v >= 1) return v.toFixed(2) + ' s';\n  if (v >= 1e-3) return (v * 1e3).toFixed(v < 0.01 ? 1 : 0) + ' ms';\n  if (v >= 1e-6) return (v * 1e6).toFixed(v < 1e-4 ? 1 : 0) + ' \\u00b5s';\n  return (v * 1e9).toFixed(0) + ' ns';\n}\nfunction fmtTick(v){\n  var s = v.toPrecision(2);\n  if (s.indexOf('e') >= 0) s = v.toFixed(4).replace(/0+$/, '').replace(/\\.$/, '');\n  return s;\n}\nfunction niceStep(span, maxTicks){\n  var raw = span / maxTicks;\n  var mag = Math.pow(10, Math.floor(Math.log10(raw)));\n  var norm = raw / mag;\n  var step = norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10;\n  return step * mag;\n}\nfunction timeTicks(T){\n  var step = niceStep(T, 5), out = [];\n  for (var v = 0; v <= T + 1e-9; v += step) out.push(v);\n  return out;\n}\nfunction yTicks(ymin, ymax){\n  var step = niceStep(ymax - ymin, 4), out = [];\n  var start = Math.ceil(ymin / step) * step;\n  for (var v = start; v <= ymax + 1e-9; v += step) out.push(v);\n  return out;\n}\n\n/* ---------------- drawing primitives ---------------- */\n\nfunction roundRectPath(x, y, w, h, r){\n  ctx.beginPath();\n  ctx.moveTo(x + r, y);\n  ctx.arcTo(x + w, y, x + w, y + h, r);\n  ctx.arcTo(x + w, y + h, x, y + h, r);\n  ctx.arcTo(x, y + h, x, y, r);\n  ctx.arcTo(x, y, x + w, y, r);\n  ctx.closePath();\n}\nfunction hline(y, r, color){\n  ctx.beginPath(); ctx.moveTo(r.x, y); ctx.lineTo(r.x + r.w, y); ctx.stroke();\n}\nfunction vline(x, r, color){\n  ctx.beginPath(); ctx.moveTo(x, r.y); ctx.lineTo(x, r.y + r.h); ctx.stroke();\n}\nfunction tracePath(arr, yOf, rect){\n  ctx.beginPath();\n  for (var k = 0; k < arr.length; k++) {\n    var px = rect.x + (k / (arr.length - 1)) * rect.w;\n    var py = yOf(arr[k]);\n    if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);\n  }\n}\nfunction strokeGlow(arr, yOf, rect, color){\n  tracePath(arr, yOf, rect);\n  ctx.strokeStyle = color; ctx.lineJoin = 'round'; ctx.lineCap = 'round';\n  ctx.globalAlpha = 0.15; ctx.lineWidth = 7; ctx.stroke();\n  ctx.globalAlpha = 1; ctx.lineWidth = 2.2; ctx.stroke();\n}\nfunction fillUnder(arr, yOf, rect, baseline){\n  ctx.save();\n  ctx.beginPath(); ctx.rect(rect.x, rect.y, rect.w, rect.h); ctx.clip();\n  tracePath(arr, yOf, rect);\n  ctx.lineTo(rect.x + rect.w, baseline);\n  ctx.lineTo(rect.x, baseline);\n  ctx.closePath();\n  var g = ctx.createLinearGradient(0, rect.y, 0, rect.y + rect.h);\n  g.addColorStop(0, 'rgba(78,161,255,0.26)');\n  g.addColorStop(1, 'rgba(78,161,255,0.02)');\n  ctx.fillStyle = g; ctx.fill();\n  ctx.restore();\n}\nfunction legend(rect, ty, items){\n  var x = rect.x + 10;\n  ctx.font = '10px ui-sans-serif,system-ui';\n  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';\n  for (var n = 0; n < items.length; n++) {\n    var it = items[n];\n    if (it.dash) {\n      ctx.strokeStyle = it.color; ctx.globalAlpha = 0.85; ctx.lineWidth = 1.6;\n      ctx.setLineDash([3, 3]);\n      ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x + 14, ty); ctx.stroke();\n      ctx.setLineDash([]); ctx.globalAlpha = 1;\n    } else {\n      ctx.fillStyle = it.color;\n      ctx.beginPath(); ctx.roundRect(x, ty - 3, 14, 6, 2); ctx.fill();\n    }\n    ctx.fillStyle = '#a8a8b5';\n    ctx.fillText(it.label, x + 19, ty);\n    x += 19 + ctx.measureText(it.label).width + 14;\n  }\n}\nfunction drawDot(x, y, color){\n  ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.2832); ctx.fillStyle = color; ctx.globalAlpha = 0.25; ctx.fill();\n  ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 6.2832); ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 1; ctx.fill();\n}\nfunction layoutMargins(){\n  var top = (hud.offsetHeight || 0) + 20;\n  var bot = (controls.offsetHeight || 0) + 18;\n  top = Math.max(88, Math.min(top, 200));\n  bot = Math.max(84, Math.min(bot, 190));\n  return { top: top, bot: bot };\n}\n\n/* ---------------- plots ---------------- */\n\nfunction drawV(r){\n  var yMax = Math.max(1.25, sim.vMax * 1.08);\n  var yMin = -0.16;\n  var yOf = function(v){ return r.y + r.h * (1 - (v - yMin) / (yMax - yMin)); };\n  var xOf = function(t){ return r.x + (t / sim.T) * r.w; };\n\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.fillStyle = 'rgba(18,18,26,0.45)'; ctx.fill();\n  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.stroke();\n\n  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.05)';\n  var tk = timeTicks(sim.T), i;\n  for (i = 0; i < tk.length; i++) vline(xOf(tk[i]), r);\n  var yt = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];\n  for (i = 0; i < yt.length; i++) if (yt[i] <= yMax + 0.001) hline(yOf(yt[i]), r);\n\n  ctx.setLineDash([5, 4]); ctx.strokeStyle = 'rgba(214,214,224,0.55)'; ctx.lineWidth = 1.2;\n  hline(yOf(1), r); ctx.setLineDash([]);\n\n  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';\n  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';\n  for (i = 0; i < yt.length; i++) if (yt[i] <= yMax + 0.001) ctx.fillText(fmtTick(yt[i]), r.x - 7, yOf(yt[i]));\n\n  fillUnder(sim.v, yOf, r, yOf(0));\n  strokeGlow(sim.v, yOf, r, '#4ea1ff');\n\n  legend(r, r.y + 14, [\n    { label: 'v_C(t)', color: '#4ea1ff' },\n    { label: 'step input', color: 'rgba(214,214,224,0.8)', dash: true }\n  ]);\n\n  var idx = Math.max(0, Math.min(sim.N - 1, Math.round(animT / sim.T * (sim.N - 1))));\n  var x = xOf(animT);\n  ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;\n  vline(x, r); ctx.setLineDash([]);\n  drawDot(x, yOf(sim.v[idx]), '#4ea1ff');\n\n  ctx.textAlign = 'right'; ctx.fillStyle = '#b7c1d6';\n  ctx.font = '11px ui-monospace,Menlo,monospace';\n  ctx.fillText('t = ' + fmtTime(animT), r.x + r.w - 8, r.y + 14);\n}\n\nfunction drawI(r){\n  var m = Math.max(sim.iMax * 1.15, 1e-6);\n  var yOf = function(v){ return r.y + r.h / 2 - (v / m) * (r.h / 2); };\n  var xOf = function(t){ return r.x + (t / sim.T) * r.w; };\n\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.fillStyle = 'rgba(18,18,26,0.45)'; ctx.fill();\n  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;\n  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.stroke();\n\n  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.05)';\n  var tk = timeTicks(sim.T), i;\n  for (i = 0; i < tk.length; i++) vline(xOf(tk[i]), r);\n  var yt = yTicks(-m, m);\n  for (i = 0; i < yt.length; i++) hline(yOf(yt[i]), r);\n  ctx.strokeStyle = 'rgba(255,255,255,0.16)'; hline(yOf(0), r);\n\n  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';\n  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';\n  for (i = 0; i < yt.length; i++) ctx.fillText(fmtTick(yt[i]), r.x - 7, yOf(yt[i]));\n\n  strokeGlow(sim.i, yOf, r, '#ffb454');\n  legend(r, r.y + 14, [{ label: 'i(t)', color: '#ffb454' }]);\n\n  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';\n  ctx.textAlign = 'center'; ctx.textBaseline = 'top';\n  for (i = 0; i < tk.length; i++) ctx.fillText(fmtTime(tk[i]), xOf(tk[i]), r.y + r.h + 6);\n  ctx.textAlign = 'right'; ctx.fillStyle = '#565664';\n  ctx.fillText('time \\u2192', r.x + r.w, r.y + r.h + 6);\n\n  var idx = Math.max(0, Math.min(sim.N - 1, Math.round(animT / sim.T * (sim.N - 1))));\n  var x = xOf(animT);\n  ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;\n  vline(x, r); ctx.setLineDash([]);\n  drawDot(x, yOf(sim.i[idx]), '#ffb454');\n}\n\n/* ---------------- schematic ---------------- */\n\nfunction line(x1, y1, x2, y2){\n  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();\n}\nfunction drawSchematic(){\n  if (W < 620) return;\n  var w = 198, h = 142, x = W - w - 12, y = 12;\n  roundRectPath(x, y, w, h, 12);\n  ctx.fillStyle = 'rgba(20,20,30,0.66)';\n  ctx.fill();\n  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;\n  ctx.stroke();\n\n  var pad = 18;\n  var lw = x + pad, rw = x + w - pad, tw = y + pad, bw = y + h - pad;\n  var midX = x + w / 2, midY = y + h / 2;\n  var bx = lw + 36;\n\n  ctx.strokeStyle = '#9aa0b5'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';\n\n  /* wires */\n  line(lw, tw, lw, bw);                          /* left   */\n  line(lw, tw, midX - 8, tw);                    /* top->R */\n  line(midX + 8, tw, rw, tw);                    /* R->corner */\n  line(rw, tw, rw, midY - 16);                   /* right top->L */\n  line(rw, midY + 16, rw, bw);                   /* L->bottom */\n  line(lw, bw, bx - 8, bw);                      /* left->battery */\n  line(bx + 8, bw, midX - 9, bw);                /* battery->C */\n  line(midX + 9, bw, rw, bw);                    /* C->corner */\n\n  /* junction dots */\n  ctx.fillStyle = '#9aa0b5';\n  [[lw,tw],[rw,tw],[rw,bw],[lw,bw]].forEach(function(p){\n    ctx.beginPath(); ctx.arc(p[0], p[1], 2.2, 0, 6.2832); ctx.fill();\n  });\n\n  /* R */\n  ctx.strokeStyle = '#ffb454'; ctx.lineWidth = 1.6;\n  ctx.beginPath(); ctx.rect(midX - 8, tw - 5, 16, 10); ctx.stroke();\n  ctx.fillStyle = '#ffb454'; ctx.font = 'bold 10px ui-sans-serif,system-ui';\n  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';\n  ctx.fillText('R', midX, tw - 13);\n\n  /* L */\n  ctx.beginPath(); ctx.moveTo(rw, midY - 16);\n  for (var k = 0; k < 3; k++) ctx.arc(rw - 5, midY - 16 + 5 + k * 10, 5, Math.PI, 0, false);\n  ctx.stroke();\n  ctx.fillText('L', rw + 11, midY - 1);\n\n  /* C */\n  ctx.strokeStyle = '#4ea1ff';\n  line(midX - 9, bw, midX - 4, bw);\n  line(midX + 4, bw, midX + 9, bw);\n  ctx.beginPath();\n  ctx.moveTo(midX - 4, bw - 7); ctx.lineTo(midX - 4, bw + 7);\n  ctx.moveTo(midX + 4, bw - 7); ctx.lineTo(midX + 4, bw + 7);\n  ctx.stroke();\n  ctx.fillText('C', midX, bw + 13);\n\n  /* battery (step source) */\n  ctx.strokeStyle = '#f5a623';\n  ctx.lineWidth = 3; line(bx - 3, bw - 3, bx - 3, bw + 3);\n  ctx.lineWidth = 1.4; line(bx + 3, bw - 5, bx + 3, bw + 5);\n  ctx.fillStyle = '#f5a623'; ctx.font = '9px ui-sans-serif,system-ui';\n  ctx.fillText('+', bx - 9, bw);\n  ctx.fillText('\\u2212', bx + 11, bw);\n  ctx.font = 'bold 10px ui-sans-serif,system-ui';\n  ctx.fillText('V_s', bx, bw - 15);\n  ctx.font = '9px ui-sans-serif,system-ui'; ctx.fillStyle = '#9a9aa8';\n  ctx.fillText('1 V step', bx, bw + 14);\n\n  /* card header */\n  ctx.font = '9px ui-sans-serif,system-ui'; ctx.fillStyle = '#8a8a98';\n  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';\n  ctx.fillText('Series RLC circuit', x + w / 2, y + 9);\n}\n\n/* ---------------- main draw ---------------- */\n\nfunction draw(){\n  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);\n  ctx.fillStyle = '#0c0c10';\n  ctx.fillRect(0, 0, W, H);\n\n  var m = layoutMargins();\n  var mLeft = 64, mRight = 24;\n  var vw = Math.max(60, W - mLeft - mRight);\n  var vhBase = Math.max(120, H - m.top - m.bot);\n  var gap = 14;\n  var iH = Math.max(60, Math.round(vhBase * 0.36));\n  var vH = vhBase - gap - iH;\n  drawV({ x: mLeft, y: m.top, w: vw, h: vH });\n  drawI({ x: mLeft, y: m.top + vH + gap, w: vw, h: iH });\n  drawSchematic();\n}\n\n/* ---------------- stats + controls ---------------- */\n\nfunction updateStats(){\n  var z = sim.zeta;\n  var zel = document.getElementById('sZeta');\n  zel.textContent = z.toFixed(3);\n  zel.style.color = z < 0.85 ? '#7dd3fc' : z <= 1.15 ? '#4ade80' : '#fbbf24';\n  document.getElementById('sFreq').textContent = eng(sim.omega0 / (2 * Math.PI), 'Hz');\n  document.getElementById('sFd').textContent = (sim.zeta < 1 && sim.fd > 0) ? eng(sim.fd, 'Hz') : '\\u2014';\n  document.getElementById('sOs').textContent = sim.zeta < 1 ? sim.os.toFixed(1) + '%' : '0%';\n  document.getElementById('sTs').textContent = eng(sim.ts, 's');\n  document.getElementById('sWin').textContent = eng(sim.T, 's');\n  var mode = z < 0.85 ? 'underdamped' : z <= 1.15 ? 'critically damped' : 'overdamped';\n  document.getElementById('mode').innerHTML = 'response is <b>' + mode + '</b> \\u2014 drag sliders';\n}\n\nvar sliders = [['r','sR','vR'], ['l','sL','vL'], ['c','sC','vC']];\nfor (var s = 0; s < sliders.length; s++) {\n  (function(){\n    var key = sliders[s][0], sid = sliders[s][1], vid = sliders[s][2];\n    var el = document.getElementById(sid), out = document.getElementById(vid);\n    var R = RANGE[key];\n    el.value = Math.round(1000 * Math.log(PARAMS[key] / R.min) / Math.log(R.max / R.min));\n    out.textContent = eng(PARAMS[key], R.unit);\n    el.addEventListener('input', function(){\n      PARAMS[key] = R.min * Math.pow(R.max / R.min, el.value / 1000);\n      out.textContent = eng(PARAMS[key], R.unit);\n      computeSim();\n      updateStats();\n      if (animT > sim.T) animT = sim.T * 0.5;\n    });\n  })();\n}\ndocument.getElementById('retrigger').addEventListener('click', function(){ animT = 0; });\n\n/* ---------------- animation loop ---------------- */\n\nvar raf = 0, last = null;\nfunction frame(now){\n  raf = requestAnimationFrame(frame);\n  if (last == null) last = now;\n  var dt = (now - last) / 1000;\n  last = now;\n  if (dt > 0.05) dt = 0.05;\n  animT += dt * (sim.T / 3);\n  if (animT > sim.T) animT = 0;\n  draw();\n}\nwindow.addEventListener('unload', function(){ cancelAnimationFrame(raf); });\n\ncomputeSim();\nupdateStats();\nresize();\nraf = requestAnimationFrame(frame);\n\n})();\n} catch (err) {\n  var box = document.getElementById('err');\n  box.hidden = false;\n  box.textContent = 'Runtime error: ' + (err && err.message ? err.message : err);\n}\n</script>\n</body></html>"
   }
 ]

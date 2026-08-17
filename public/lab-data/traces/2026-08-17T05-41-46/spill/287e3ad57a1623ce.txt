@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solve x² + y² = 25, xy = 12 over the Reals</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --ink: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --good: #34d399;
+    --border: #334155;
+    --mono: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.65;
+    padding: 2.5rem 1rem;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin-top: .35rem; font-size: .95rem; font-family: var(--mono); }
+  .system {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-size: 1.15rem;
+    text-align: center;
+  }
+  h2 { font-size: 1.1rem; margin: 2rem 0 .6rem; color: var(--accent); }
+  p { margin-bottom: .9rem; }
+  .math { font-family: var(--mono); background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: .9rem 1.2rem; margin: .8rem 0; overflow-x: auto; white-space: pre; font-size: .95rem; color: var(--ink); }
+  .math .c { color: var(--muted); }
+  .answer {
+    background: linear-gradient(135deg, rgba(56,189,248,.08), rgba(167,139,250,.08));
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .answer .big { font-size: 1.25rem; }
+  .sol { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .8rem; }
+  .sol span { font-family: var(--mono); background: #0b1220; border: 1px solid var(--border); border-radius: 6px; padding: .3rem .7rem; font-size: 1rem; color: var(--good); }
+  .note { font-size: .88rem; color: var(--muted); font-family: var(--mono); }
+  .check { border-left: 3px solid var(--accent2); padding-left: 1rem; margin: 1rem 0; color: var(--muted); }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .82rem; font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Solve the system over the real numbers</h1>
+    <div class="sub">x² + y² = 25&nbsp;&nbsp;and&nbsp;&nbsp;xy = 12</div>
+  </header>
+
+  <div class="system">
+    x² + y² = 25<br>
+    x · y = 12
+  </div>
+
+  <h2>Step 1 — Eliminate one variable by substitution</h2>
+  <p>Since <em>xy</em> = 12, the product is nonzero, so neither variable is zero. Solve the second equation for <em>y</em>:</p>
+  <div class="math">y = 12 / x        (x ≠ 0)</div>
+  <p>Substitute into the first equation:</p>
+  <div class="math">x² + (12 / x)² = 25
+x² + 144 / x² = 25</div>
+
+  <h2>Step 2 — Clear the denominator</h2>
+  <p>Multiply through by x² (valid because x ≠ 0):</p>
+  <div class="math">x⁴ + 144 = 25 x²
+x⁴ − 25 x² + 144 = 0</div>
+
+  <h2>Step 3 — Reduce with a substitution u = x²</h2>
+  <p>This quartic is quadratic in x². Let u = x², so u ≥ 0:</p>
+  <div class="math">u² − 25u + 144 = 0</div>
+  <p>Apply the quadratic formula:</p>
+  <div class="math">u = [25 ± √(25² − 4·1·144)] / (2·1)
+     = [25 ± √(625 − 576)] / 2
+     = [25 ± √49] / 2
+     = [25 ± 7] / 2</div>
+  <div class="math">u = 32/2 = 16      or      u = 18/2 = 9</div>
+  <p>Both values are nonnegative, so both are admissible for u = x².</p>
+
+  <h2>Step 4 — Recover x, then y</h2>
+  <div class="math"><span class="c"># Case u = 16:</span>
+x² = 16  →  x = 4   or  x = −4
+y = 12 / x:
+    x =  4  →  y = 3
+    x = −4  →  y = −3
+
+<span class="c"># Case u = 9:</span>
+x² = 9   →  x = 3   or  x = −3
+y = 12 / x:
+    x =  3  →  y = 4
+    x = −3  →  y = −4</div>
+
+  <h2>Step 5 — Verify each pair</h2>
+  <div class="check">
+    (4, 3):  4² + 3² = 16 + 9 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;4·3 = 12 ✓<br>
+    (−4, −3):  (−4)² + (−3)² = 16 + 9 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;(−4)(−3) = 12 ✓<br>
+    (3, 4):  3² + 4² = 9 + 16 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;3·4 = 12 ✓<br>
+    (−3, −4):  (−3)² + (−4)² = 9 + 16 = 25 ✓&nbsp;&nbsp;|&nbsp;&nbsp;(−3)(−4) = 12 ✓
+  </div>
+
+  <div class="answer">
+    <div class="big">Solution set over ℝ:</div>
+    <div class="sol">
+      <span>(4, 3)</span>
+      <span>(−4, −3)</span>
+      <span>(3, 4)</span>
+      <span>(−3, −4)</span>
+    </div>
+    <div class="note">All four pairs — exactly two in each quadrant along the diagonal.</div>
+  </div>
+
+  <h2>Cross-check — a cleaner route via (x ± y)²</h2>
+  <div class="math">(x + y)² = x² + 2xy + y² = 25 + 24 = 49   →   x + y = ±7
+(x − y)² = x² − 2xy + y² = 25 − 24 = 1    →   x − y = ±1</div>
+  <p>Adding and subtracting the two sign combinations recovers the same four pairs
+  (e.g. x + y = 7, x − y = 1 ⟹ x = 4, y = 3; x + y = −7, x − y = −1 ⟹ x = −4, y = −3; and the
+  swapped-sign versions yield (3, 4) and (−3, −4)). This confirms the result and shows the
+  geometry: the circle of radius 5 intersects the hyperbola xy = 12 in exactly four points,
+  symmetric about the line y = x.</p>
+
+  <footer>
+    Artifact: artifact-deepseek-v4-flash-free-equation-solver-0.html — solved by substitution (quartic → quadratic), verified by direct substitution.
+  </footer>
+
+</div>
+</body>
+</html>

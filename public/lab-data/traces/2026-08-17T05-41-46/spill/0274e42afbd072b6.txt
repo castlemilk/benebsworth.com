@@ -1,0 +1,473 @@
+<canvas id="scene"></canvas>
+<div id="hud">
+  <div id="titlecard" class="panel">
+    <h1>Series RLC &middot; Step Response</h1>
+    <p id="mode">computing&hellip;</p>
+  </div>
+  <div id="stats" class="panel">
+    <div class="cell"><div class="lbl">damping &zeta;</div><div class="val" id="sZeta">&ndash;</div></div>
+    <div class="cell"><div class="lbl">natural f</div><div class="val" id="sFreq">&ndash;</div></div>
+    <div class="cell"><div class="lbl">damped f</div><div class="val" id="sFd">&ndash;</div></div>
+    <div class="cell"><div class="lbl">overshoot</div><div class="val" id="sOs">&ndash;</div></div>
+    <div class="cell"><div class="lbl">settling 2%</div><div class="val" id="sTs">&ndash;</div></div>
+    <div class="cell"><div class="lbl">scope window</div><div class="val" id="sWin">&ndash;</div></div>
+  </div>
+</div>
+<div id="controls" class="panel">
+  <label class="ctl"><span class="clbl">R</span>
+    <span class="srow"><input type="range" id="sR" min="0" max="1000" step="1"><span class="vval" id="vR"></span></span>
+  </label>
+  <label class="ctl"><span class="clbl">L</span>
+    <span class="srow"><input type="range" id="sL" min="0" max="1000" step="1"><span class="vval" id="vL"></span></span>
+  </label>
+  <label class="ctl"><span class="clbl">C</span>
+    <span class="srow"><input type="range" id="sC" min="0" max="1000" step="1"><span class="vval" id="vC"></span></span>
+  </label>
+  <button id="retrigger" type="button">&crarr; Re-trigger step</button>
+</div>
+<div id="err" role="alert" hidden></div>
+<script>
+try {
+(function(){
+"use strict";
+
+var canvas = document.getElementById('scene');
+var ctx = canvas.getContext('2d');
+var hud = document.getElementById('hud');
+var controls = document.getElementById('controls');
+var errBox = document.getElementById('err');
+
+function showErr(msg){ errBox.hidden = false; errBox.textContent = msg; }
+window.addEventListener('error', function(e){ showErr(e.message || 'Unknown error'); });
+
+var W = 0, H = 0, DPR = 1;
+function resize(){
+  DPR = Math.min(2.5, window.devicePixelRatio || 1);
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = Math.max(1, Math.round(W * DPR));
+  canvas.height = Math.max(1, Math.round(H * DPR));
+  draw();
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', resize);
+
+/* ---------------- parameters & simulation ---------------- */
+
+var PARAMS = { r: 20, l: 1.0, c: 1e-3 };
+var RANGE = {
+  r: { min: 1,    max: 500,    unit: '\u03a9' },
+  l: { min: 10e-3, max: 10,    unit: 'H' },
+  c: { min: 10e-6, max: 10e-3, unit: 'F' }
+};
+
+var sim = { v:null, i:null, N:2, T:1, alpha:1, omega0:1, zeta:1, fd:0, os:0, ts:1, vMax:1, iMax:1e-9 };
+var animT = 0;
+
+function computeSim(){
+  var L = PARAMS.l, C = PARAMS.c, R = PARAMS.r;
+  var omega0 = 1 / Math.sqrt(L * C);
+  var alpha = R / (2 * L);
+  if (!isFinite(alpha) || alpha <= 0) alpha = 1e-9;
+  var zeta = alpha / omega0;
+  var wd = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));
+  var fd = wd / (2 * Math.PI);
+
+  var T = 4.6 / alpha;
+  if (zeta < 1 && fd > 0) {
+    T = Math.min(T, 12 / fd);
+    T = Math.max(T, 2.2 / fd);
+  }
+  T = Math.min(Math.max(T, 0.01), 30);
+
+  var N = zeta < 1 ? Math.max(600, Math.round(T * fd * 40)) : 700;
+  N = Math.min(N, 4000);
+
+  var v = new Float64Array(N);
+  var i = new Float64Array(N);
+  var dt = T / (N - 1);
+  var beta = omega0 * Math.sqrt(Math.max(0, zeta * zeta - 1));
+  var vMax = 0, vMin = 0, k;
+
+  for (k = 0; k < N; k++) {
+    var t = k * dt, vc;
+    if (zeta < 1) {
+      vc = 1 - Math.exp(-alpha * t) * (Math.cos(wd * t) + (alpha / wd) * Math.sin(wd * t));
+    } else if (zeta > 1) {
+      vc = 1 - Math.exp(-alpha * t) * (Math.cosh(beta * t) + (alpha / beta) * Math.sinh(beta * t));
+    } else {
+      vc = 1 - Math.exp(-alpha * t) * (1 + alpha * t);
+    }
+    v[k] = vc;
+    if (vc > vMax) vMax = vc;
+    if (vc < vMin) vMin = vc;
+  }
+  for (k = 1; k < N - 1; k++) i[k] = C * (v[k + 1] - v[k - 1]) / (2 * dt);
+  i[0] = 0; i[N - 1] = i[N - 2];
+
+  var iMax = 1e-9;
+  for (k = 0; k < N; k++) { var a = Math.abs(i[k]); if (a > iMax) iMax = a; }
+
+  sim.v = v; sim.i = i; sim.N = N; sim.T = T; sim.alpha = alpha;
+  sim.omega0 = omega0; sim.zeta = zeta; sim.fd = fd;
+  sim.os = zeta < 1 ? 100 * Math.exp(-Math.PI * zeta / Math.sqrt(1 - zeta * zeta)) : 0;
+  sim.ts = 4 / alpha; sim.vMax = vMax; sim.vMin = vMin; sim.iMax = iMax;
+}
+
+/* ---------------- formatting helpers ---------------- */
+
+var PRE = ['p','n','\u00b5','m','','k','M','G'];
+function eng(v, unit){
+  if (v === 0) return '0 ' + unit;
+  var p = Math.max(-4, Math.min(4, Math.floor(Math.log10(Math.abs(v)) / 3)));
+  var s = v / Math.pow(10, p * 3);
+  var str = s >= 100 ? s.toFixed(0) : s >= 10 ? s.toFixed(1) : s.toFixed(2);
+  str = str.replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '');
+  return str + ' ' + PRE[p + 4] + unit;
+}
+function fmtTime(v){
+  if (v <= 0) return '0';
+  if (v >= 1) return v.toFixed(2) + ' s';
+  if (v >= 1e-3) return (v * 1e3).toFixed(v < 0.01 ? 1 : 0) + ' ms';
+  if (v >= 1e-6) return (v * 1e6).toFixed(v < 1e-4 ? 1 : 0) + ' \u00b5s';
+  return (v * 1e9).toFixed(0) + ' ns';
+}
+function fmtTick(v){
+  var s = v.toPrecision(2);
+  if (s.indexOf('e') >= 0) s = v.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+  return s;
+}
+function niceStep(span, maxTicks){
+  var raw = span / maxTicks;
+  var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  var norm = raw / mag;
+  var step = norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10;
+  return step * mag;
+}
+function timeTicks(T){
+  var step = niceStep(T, 5), out = [];
+  for (var v = 0; v <= T + 1e-9; v += step) out.push(v);
+  return out;
+}
+function yTicks(ymin, ymax){
+  var step = niceStep(ymax - ymin, 4), out = [];
+  var start = Math.ceil(ymin / step) * step;
+  for (var v = start; v <= ymax + 1e-9; v += step) out.push(v);
+  return out;
+}
+
+/* ---------------- drawing primitives ---------------- */
+
+function roundRectPath(x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function hline(y, r, color){
+  ctx.beginPath(); ctx.moveTo(r.x, y); ctx.lineTo(r.x + r.w, y); ctx.stroke();
+}
+function vline(x, r, color){
+  ctx.beginPath(); ctx.moveTo(x, r.y); ctx.lineTo(x, r.y + r.h); ctx.stroke();
+}
+function tracePath(arr, yOf, rect){
+  ctx.beginPath();
+  for (var k = 0; k < arr.length; k++) {
+    var px = rect.x + (k / (arr.length - 1)) * rect.w;
+    var py = yOf(arr[k]);
+    if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+}
+function strokeGlow(arr, yOf, rect, color){
+  tracePath(arr, yOf, rect);
+  ctx.strokeStyle = color; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.globalAlpha = 0.15; ctx.lineWidth = 7; ctx.stroke();
+  ctx.globalAlpha = 1; ctx.lineWidth = 2.2; ctx.stroke();
+}
+function fillUnder(arr, yOf, rect, baseline){
+  ctx.save();
+  ctx.beginPath(); ctx.rect(rect.x, rect.y, rect.w, rect.h); ctx.clip();
+  tracePath(arr, yOf, rect);
+  ctx.lineTo(rect.x + rect.w, baseline);
+  ctx.lineTo(rect.x, baseline);
+  ctx.closePath();
+  var g = ctx.createLinearGradient(0, rect.y, 0, rect.y + rect.h);
+  g.addColorStop(0, 'rgba(78,161,255,0.26)');
+  g.addColorStop(1, 'rgba(78,161,255,0.02)');
+  ctx.fillStyle = g; ctx.fill();
+  ctx.restore();
+}
+function legend(rect, ty, items){
+  var x = rect.x + 10;
+  ctx.font = '10px ui-sans-serif,system-ui';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  for (var n = 0; n < items.length; n++) {
+    var it = items[n];
+    if (it.dash) {
+      ctx.strokeStyle = it.color; ctx.globalAlpha = 0.85; ctx.lineWidth = 1.6;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x + 14, ty); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    } else {
+      ctx.fillStyle = it.color;
+      ctx.beginPath(); ctx.roundRect(x, ty - 3, 14, 6, 2); ctx.fill();
+    }
+    ctx.fillStyle = '#a8a8b5';
+    ctx.fillText(it.label, x + 19, ty);
+    x += 19 + ctx.measureText(it.label).width + 14;
+  }
+}
+function drawDot(x, y, color){
+  ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.2832); ctx.fillStyle = color; ctx.globalAlpha = 0.25; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 6.2832); ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 1; ctx.fill();
+}
+function layoutMargins(){
+  var top = (hud.offsetHeight || 0) + 20;
+  var bot = (controls.offsetHeight || 0) + 18;
+  top = Math.max(88, Math.min(top, 200));
+  bot = Math.max(84, Math.min(bot, 190));
+  return { top: top, bot: bot };
+}
+
+/* ---------------- plots ---------------- */
+
+function drawV(r){
+  var yMax = Math.max(1.25, sim.vMax * 1.08);
+  var yMin = -0.16;
+  var yOf = function(v){ return r.y + r.h * (1 - (v - yMin) / (yMax - yMin)); };
+  var xOf = function(t){ return r.x + (t / sim.T) * r.w; };
+
+  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.fillStyle = 'rgba(18,18,26,0.45)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.stroke();
+
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  var tk = timeTicks(sim.T), i;
+  for (i = 0; i < tk.length; i++) vline(xOf(tk[i]), r);
+  var yt = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+  for (i = 0; i < yt.length; i++) if (yt[i] <= yMax + 0.001) hline(yOf(yt[i]), r);
+
+  ctx.setLineDash([5, 4]); ctx.strokeStyle = 'rgba(214,214,224,0.55)'; ctx.lineWidth = 1.2;
+  hline(yOf(1), r); ctx.setLineDash([]);
+
+  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (i = 0; i < yt.length; i++) if (yt[i] <= yMax + 0.001) ctx.fillText(fmtTick(yt[i]), r.x - 7, yOf(yt[i]));
+
+  fillUnder(sim.v, yOf, r, yOf(0));
+  strokeGlow(sim.v, yOf, r, '#4ea1ff');
+
+  legend(r, r.y + 14, [
+    { label: 'v_C(t)', color: '#4ea1ff' },
+    { label: 'step input', color: 'rgba(214,214,224,0.8)', dash: true }
+  ]);
+
+  var idx = Math.max(0, Math.min(sim.N - 1, Math.round(animT / sim.T * (sim.N - 1))));
+  var x = xOf(animT);
+  ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
+  vline(x, r); ctx.setLineDash([]);
+  drawDot(x, yOf(sim.v[idx]), '#4ea1ff');
+
+  ctx.textAlign = 'right'; ctx.fillStyle = '#b7c1d6';
+  ctx.font = '11px ui-monospace,Menlo,monospace';
+  ctx.fillText('t = ' + fmtTime(animT), r.x + r.w - 8, r.y + 14);
+}
+
+function drawI(r){
+  var m = Math.max(sim.iMax * 1.15, 1e-6);
+  var yOf = function(v){ return r.y + r.h / 2 - (v / m) * (r.h / 2); };
+  var xOf = function(t){ return r.x + (t / sim.T) * r.w; };
+
+  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.fillStyle = 'rgba(18,18,26,0.45)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.stroke();
+
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  var tk = timeTicks(sim.T), i;
+  for (i = 0; i < tk.length; i++) vline(xOf(tk[i]), r);
+  var yt = yTicks(-m, m);
+  for (i = 0; i < yt.length; i++) hline(yOf(yt[i]), r);
+  ctx.strokeStyle = 'rgba(255,255,255,0.16)'; hline(yOf(0), r);
+
+  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (i = 0; i < yt.length; i++) ctx.fillText(fmtTick(yt[i]), r.x - 7, yOf(yt[i]));
+
+  strokeGlow(sim.i, yOf, r, '#ffb454');
+  legend(r, r.y + 14, [{ label: 'i(t)', color: '#ffb454' }]);
+
+  ctx.font = '10px ui-sans-serif,system-ui'; ctx.fillStyle = '#6f6f80';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (i = 0; i < tk.length; i++) ctx.fillText(fmtTime(tk[i]), xOf(tk[i]), r.y + r.h + 6);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#565664';
+  ctx.fillText('time \u2192', r.x + r.w, r.y + r.h + 6);
+
+  var idx = Math.max(0, Math.min(sim.N - 1, Math.round(animT / sim.T * (sim.N - 1))));
+  var x = xOf(animT);
+  ctx.setLineDash([3, 4]); ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+  vline(x, r); ctx.setLineDash([]);
+  drawDot(x, yOf(sim.i[idx]), '#ffb454');
+}
+
+/* ---------------- schematic ---------------- */
+
+function line(x1, y1, x2, y2){
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+}
+function drawSchematic(){
+  if (W < 620) return;
+  var w = 198, h = 142, x = W - w - 12, y = 12;
+  roundRectPath(x, y, w, h, 12);
+  ctx.fillStyle = 'rgba(20,20,30,0.66)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+  ctx.stroke();
+
+  var pad = 18;
+  var lw = x + pad, rw = x + w - pad, tw = y + pad, bw = y + h - pad;
+  var midX = x + w / 2, midY = y + h / 2;
+  var bx = lw + 36;
+
+  ctx.strokeStyle = '#9aa0b5'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+
+  /* wires */
+  line(lw, tw, lw, bw);                          /* left   */
+  line(lw, tw, midX - 8, tw);                    /* top->R */
+  line(midX + 8, tw, rw, tw);                    /* R->corner */
+  line(rw, tw, rw, midY - 16);                   /* right top->L */
+  line(rw, midY + 16, rw, bw);                   /* L->bottom */
+  line(lw, bw, bx - 8, bw);                      /* left->battery */
+  line(bx + 8, bw, midX - 9, bw);                /* battery->C */
+  line(midX + 9, bw, rw, bw);                    /* C->corner */
+
+  /* junction dots */
+  ctx.fillStyle = '#9aa0b5';
+  [[lw,tw],[rw,tw],[rw,bw],[lw,bw]].forEach(function(p){
+    ctx.beginPath(); ctx.arc(p[0], p[1], 2.2, 0, 6.2832); ctx.fill();
+  });
+
+  /* R */
+  ctx.strokeStyle = '#ffb454'; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.rect(midX - 8, tw - 5, 16, 10); ctx.stroke();
+  ctx.fillStyle = '#ffb454'; ctx.font = 'bold 10px ui-sans-serif,system-ui';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('R', midX, tw - 13);
+
+  /* L */
+  ctx.beginPath(); ctx.moveTo(rw, midY - 16);
+  for (var k = 0; k < 3; k++) ctx.arc(rw - 5, midY - 16 + 5 + k * 10, 5, Math.PI, 0, false);
+  ctx.stroke();
+  ctx.fillText('L', rw + 11, midY - 1);
+
+  /* C */
+  ctx.strokeStyle = '#4ea1ff';
+  line(midX - 9, bw, midX - 4, bw);
+  line(midX + 4, bw, midX + 9, bw);
+  ctx.beginPath();
+  ctx.moveTo(midX - 4, bw - 7); ctx.lineTo(midX - 4, bw + 7);
+  ctx.moveTo(midX + 4, bw - 7); ctx.lineTo(midX + 4, bw + 7);
+  ctx.stroke();
+  ctx.fillText('C', midX, bw + 13);
+
+  /* battery (step source) */
+  ctx.strokeStyle = '#f5a623';
+  ctx.lineWidth = 3; line(bx - 3, bw - 3, bx - 3, bw + 3);
+  ctx.lineWidth = 1.4; line(bx + 3, bw - 5, bx + 3, bw + 5);
+  ctx.fillStyle = '#f5a623'; ctx.font = '9px ui-sans-serif,system-ui';
+  ctx.fillText('+', bx - 9, bw);
+  ctx.fillText('\u2212', bx + 11, bw);
+  ctx.font = 'bold 10px ui-sans-serif,system-ui';
+  ctx.fillText('V_s', bx, bw - 15);
+  ctx.font = '9px ui-sans-serif,system-ui'; ctx.fillStyle = '#9a9aa8';
+  ctx.fillText('1 V step', bx, bw + 14);
+
+  /* card header */
+  ctx.font = '9px ui-sans-serif,system-ui'; ctx.fillStyle = '#8a8a98';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('Series RLC circuit', x + w / 2, y + 9);
+}
+
+/* ---------------- main draw ---------------- */
+
+function draw(){
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.fillStyle = '#0c0c10';
+  ctx.fillRect(0, 0, W, H);
+
+  var m = layoutMargins();
+  var mLeft = 64, mRight = 24;
+  var vw = Math.max(60, W - mLeft - mRight);
+  var vhBase = Math.max(120, H - m.top - m.bot);
+  var gap = 14;
+  var iH = Math.max(60, Math.round(vhBase * 0.36));
+  var vH = vhBase - gap - iH;
+  drawV({ x: mLeft, y: m.top, w: vw, h: vH });
+  drawI({ x: mLeft, y: m.top + vH + gap, w: vw, h: iH });
+  drawSchematic();
+}
+
+/* ---------------- stats + controls ---------------- */
+
+function updateStats(){
+  var z = sim.zeta;
+  var zel = document.getElementById('sZeta');
+  zel.textContent = z.toFixed(3);
+  zel.style.color = z < 0.85 ? '#7dd3fc' : z <= 1.15 ? '#4ade80' : '#fbbf24';
+  document.getElementById('sFreq').textContent = eng(sim.omega0 / (2 * Math.PI), 'Hz');
+  document.getElementById('sFd').textContent = (sim.zeta < 1 && sim.fd > 0) ? eng(sim.fd, 'Hz') : '\u2014';
+  document.getElementById('sOs').textContent = sim.zeta < 1 ? sim.os.toFixed(1) + '%' : '0%';
+  document.getElementById('sTs').textContent = eng(sim.ts, 's');
+  document.getElementById('sWin').textContent = eng(sim.T, 's');
+  var mode = z < 0.85 ? 'underdamped' : z <= 1.15 ? 'critically damped' : 'overdamped';
+  document.getElementById('mode').innerHTML = 'response is <b>' + mode + '</b> \u2014 drag sliders';
+}
+
+var sliders = [['r','sR','vR'], ['l','sL','vL'], ['c','sC','vC']];
+for (var s = 0; s < sliders.length; s++) {
+  (function(){
+    var key = sliders[s][0], sid = sliders[s][1], vid = sliders[s][2];
+    var el = document.getElementById(sid), out = document.getElementById(vid);
+    var R = RANGE[key];
+    el.value = Math.round(1000 * Math.log(PARAMS[key] / R.min) / Math.log(R.max / R.min));
+    out.textContent = eng(PARAMS[key], R.unit);
+    el.addEventListener('input', function(){
+      PARAMS[key] = R.min * Math.pow(R.max / R.min, el.value / 1000);
+      out.textContent = eng(PARAMS[key], R.unit);
+      computeSim();
+      updateStats();
+      if (animT > sim.T) animT = sim.T * 0.5;
+    });
+  })();
+}
+document.getElementById('retrigger').addEventListener('click', function(){ animT = 0; });
+
+/* ---------------- animation loop ---------------- */
+
+var raf = 0, last = null;
+function frame(now){
+  raf = requestAnimationFrame(frame);
+  if (last == null) last = now;
+  var dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.05) dt = 0.05;
+  animT += dt * (sim.T / 3);
+  if (animT > sim.T) animT = 0;
+  draw();
+}
+window.addEventListener('unload', function(){ cancelAnimationFrame(raf); });
+
+computeSim();
+updateStats();
+resize();
+raf = requestAnimationFrame(frame);
+
+})();
+} catch (err) {
+  var box = document.getElementById('err');
+  box.hidden = false;
+  box.textContent = 'Runtime error: ' + (err && err.message ? err.message : err);
+}
+</script>
+</body></html>

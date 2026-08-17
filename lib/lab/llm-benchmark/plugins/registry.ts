@@ -27,7 +27,8 @@ import { BUILTIN_PROVIDERS, isBuiltinProvider } from '../providers'
  * Client-bundle rule: anything imported (directly or transitively) by
  * `registry.ts` / `demo-registry.tsx` reaches the client bundle, so plugin
  * check files MUST use `import type { CheckFn }` — never a runtime import
- * of `scorers/sandbox.ts` (which pulls Playwright in). Demo components may
+ * of `scorers/sandbox.ts` (whose backend seam reaches Playwright, and whose
+ * whole module graph is node-side scoring code). Demo components may
  * import React freely. The same rule is why `generators` holds lazy
  * `() => import(...)` factories rather than functions: a generator spawns
  * CLIs and holds keys, and must not be resolved until `runners/provider.ts`

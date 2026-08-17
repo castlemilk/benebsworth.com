@@ -31,10 +31,14 @@
  *     behavioural scorer loads the RAW artifact (`scorers/behavioral.ts` →
  *     `runChecks` → `scorers/sandbox.ts` `page.setContent(html)`); it never
  *     calls `withPrelude`. So a prelude edit changes what a READER sees, not
- *     what a check sees. Aligning the two is a real (and deliberately deferred)
- *     change — TODO #12 — because injecting the prelude into scoring would
- *     silently shift every stored behavioural score and destroy the history
- *     this hash exists to protect.
+ *     what a check sees. Aligning the two is a real change, so it is an OPTION
+ *     rather than a default (#12): `BENCH_PRELUDE_PARITY=1` makes `runChecks`
+ *     load `withPrelude(html)`, and the run log's `sandboxPolicy` event records
+ *     which mode scored a record. The default stays OFF because injecting the
+ *     prelude into scoring would silently shift every stored behavioural score
+ *     and destroy the history this hash exists to protect — measured effect on
+ *     the failure corpus (zero delta, 39 cases) in
+ *     `docs/lab/llm-benchmark/prelude-parity-measurement.md`.
  *
  * The rule, in one line: **anything that changes what the model SEES, or the
  * environment its artifact is DISPLAYED/PUBLISHED in, belongs in the hash;

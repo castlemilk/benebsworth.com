@@ -88,6 +88,7 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
 
   const groups = state.phase === 'ready' ? groupByIteration(state.events) : []
   const aggregates = state.phase === 'ready' ? state.events.filter(isAggregate) : []
+  const policies = state.phase === 'ready' ? state.events.filter(isSandboxPolicy) : []
 
   return (
     <details
@@ -127,6 +128,18 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
                 iteration.
               </p>
             )}
+            {/* Run-level context, above the iterations it applies to: which
+                sandbox scored this job, and how much of the sandbox promise it
+                actually kept (#12). */}
+            {policies.map((event, i) => (
+              <div key={`policy-${i}`} className="mb-3">
+                <Row label="sandbox" tone={event.enforcement === 'partial' ? 'warn' : undefined}>
+                  backend {event.backend} · enforcement {event.enforcement}
+                  {event.enforcement === 'partial' && ' (checks ran with partial enforcement)'} ·
+                  prelude parity {event.preludeParity ? 'on' : 'off'}
+                </Row>
+              </div>
+            ))}
             {groups.map(([index, events]) => (
               <section key={index} className="mb-4 last:mb-0">
                 <h4 className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted">
@@ -290,15 +303,21 @@ function isAggregate(event: RunLogEvent): event is Extract<RunLogEvent, { type: 
   return event.type === 'aggregate'
 }
 
+function isSandboxPolicy(
+  event: RunLogEvent
+): event is Extract<RunLogEvent, { type: 'sandboxPolicy' }> {
+  return event.type === 'sandboxPolicy'
+}
+
 /**
- * Events bucketed by iteration, in iteration order. `aggregate` is the one
- * event with no iteration and is rendered separately, at the end, exactly as
- * the transcript does.
+ * Events bucketed by iteration, in iteration order. `aggregate` and
+ * `sandboxPolicy` are the run-level events with no iteration; both are
+ * rendered separately, exactly as the transcript does.
  */
 function groupByIteration(events: RunLogEvent[]): Array<[number, RunLogEvent[]]> {
   const groups = new Map<number, RunLogEvent[]>()
   for (const event of events) {
-    if (event.type === 'aggregate') continue
+    if (event.type === 'aggregate' || event.type === 'sandboxPolicy') continue
     const index = event.iterationIndex ?? -1
     const bucket = groups.get(index)
     if (bucket) bucket.push(event)
@@ -427,8 +446,10 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
       )
 
     // `check` events are aggregated into one pill row per iteration below, so
-    // they never render as individual lines.
+    // they never render as individual lines; `sandboxPolicy` is run-level and
+    // renders above the iterations, not inside one.
     case 'check':
+    case 'sandboxPolicy':
       return null
 
     default:

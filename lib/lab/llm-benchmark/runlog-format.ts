@@ -17,7 +17,12 @@
  * The on-disk contract itself (append-only, batched writes, rollback-and-drop,
  * redaction, spill) is documented in `runlog.ts`.
  */
-import type { BenchmarkFailureReason, IterationCheckResult } from './types'
+import type {
+  BenchmarkFailureReason,
+  IterationCheckResult,
+  SandboxBackendName,
+  SandboxEnforcement,
+} from './types'
 
 /** How much of a spilled string stays inline as a preview. */
 export const SPILL_PREVIEW_CHARS = 2048
@@ -197,6 +202,28 @@ export type RunLogEventInput =
       spentUsd: number
       /** The cap it crossed. */
       capUsd: number
+    }
+  | {
+      /**
+       * The sandbox policy the scorer ran under (#12) — appended ONCE per
+       * (model, task) log, by `aggregateRuns`, at the moment scoring happens.
+       *
+       * Scoring-time, not open-time: the runner does not know it earlier, and
+       * the fact being recorded is "which sandbox produced these numbers?".
+       * Run-level, so it carries no `iterationIndex` — every iteration of a
+       * job is scored under the same resolved policy.
+       *
+       * `enforcement: 'partial'` is a REPORTED FACT, not a warning: this
+       * harness launches Chromium with `--no-sandbox` so it runs in
+       * containers, and a log that claimed `full` would be lying.
+       * `preludeParity` says whether the scorer loaded the artifact the way
+       * the DISPLAY path does (`withPrelude`) — off by default, so a record's
+       * behavioural score is comparable with every score before it.
+       */
+      type: 'sandboxPolicy'
+      backend: SandboxBackendName
+      enforcement: SandboxEnforcement
+      preludeParity: boolean
     }
   | {
       /** The aggregated BenchmarkResult, with `output` always spilled. */

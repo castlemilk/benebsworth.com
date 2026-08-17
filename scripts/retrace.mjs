@@ -145,9 +145,22 @@ function transcribe(runDir, file, options) {
   )
   console.log(`  ${events.length} event(s)`)
 
+  // Run-level, not per-iteration: the sandbox policy (#12) has no
+  // iterationIndex, so it is pulled out here rather than falling into the
+  // "index -1" bucket the iteration grouping would invent for it.
+  for (const event of events) {
+    if (event.type !== 'sandboxPolicy') continue
+    console.log(
+      `  sandbox: backend=${event.backend} enforcement=${event.enforcement}` +
+        ` preludeParity=${event.preludeParity}` +
+        (event.enforcement === 'partial' ? '  (checks ran with partial enforcement)' : '')
+    )
+  }
+
   const iterations = new Map()
   const aggregates = []
   for (const event of events) {
+    if (event.type === 'sandboxPolicy') continue
     if (event.type === 'aggregate') {
       aggregates.push(event)
       continue

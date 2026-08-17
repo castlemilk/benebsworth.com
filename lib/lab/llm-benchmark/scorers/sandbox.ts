@@ -1,61 +1,48 @@
-import { chromium, type Browser, type Page } from 'playwright'
+import type { Page } from 'playwright'
+
+import { withPrelude } from '../frame-prelude'
+import { closeSandboxBackend, getSandboxBackend, resolveSandboxPolicy } from './sandbox-backend'
 
 /**
- * Playwright-backed behavioral scoring sandbox.
+ * Behavioral scoring sandbox: load an artifact, drive it, report what it did.
  *
- * Loads artifact HTML into a real Chromium page (sandboxed, no same-origin
+ * Loads artifact HTML into a real browser page (sandboxed, no same-origin
  * access to the benchmark host) and runs a set of check functions that
  * interact with the page — dispatching keys, reading pixels, and asserting
  * that the page responds. This catches the class of failure that a
  * structural HTML scorer misses: a page that parses cleanly but whose
  * JavaScript is broken (e.g. mini-platformer where Space doesn't jump).
  *
- * The browser instance is shared across all checks within a single process
- * for speed (cold start is ~1s; subsequent page loads are ~50ms). Callers
- * MUST call `closeSandbox()` when done (typically from a top-level CLI
+ * WHICH browser (or none at all) is the backend's business, not this module's
+ * — see `sandbox-backend.ts` for the seam, the `BENCH_SANDBOX` vocabulary and
+ * the enforcement report. The browser is shared across all checks within a
+ * single process for speed (cold start ~1s; subsequent page loads ~50ms), so
+ * callers MUST call `closeSandbox()` when done (typically from a top-level CLI
  * script or after the rescore batch finishes).
  *
- * Why Playwright (and not jsdom): real canvas rendering, real keyboard
+ * Why a real browser (and not jsdom): real canvas rendering, real keyboard
  * events that hit the game's listeners, real RAF, and pixel diffs that
- * actually reflect what a user sees. Launched with `--no-sandbox` so it
- * works inside containerised / CI environments where the setuid sandbox
- * can't be created.
+ * actually reflect what a user sees. When no browser is available, the honest
+ * answer is "the behavioural checks did not run" (the structural backend +
+ * `behaviouralFallback`), not a DOM emulation whose verdicts nobody should
+ * trust.
  */
 
-let browserPromise: Promise<Browser> | undefined
-
-export async function getBrowser(): Promise<Browser> {
-  if (!browserPromise) {
-    browserPromise = chromium.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--disable-web-security',
-      ],
-    })
-  }
-  return browserPromise
-}
-
+/** Close whatever browser the backend launched. Idempotent. */
 export async function closeSandbox(): Promise<void> {
-  if (!browserPromise) return
-  try {
-    const b = await browserPromise
-    await b.close()
-  } catch {
-    // Best-effort cleanup; ignore close errors (e.g. browser already gone).
-  } finally {
-    browserPromise = undefined
-  }
+  await closeSandboxBackend()
 }
 
 export interface CheckContext {
   /** The loaded page. */
   page: Page
-  /** The artifact HTML, in case checks need to re-inject or inspect it. */
+  /**
+   * The artifact HTML, in case checks need to re-inject or inspect it. Always
+   * the RAW model output — under `BENCH_PRELUDE_PARITY=1` the page is loaded
+   * with the display prelude wrapped around it, but a check that greps this
+   * field is asking about what the MODEL wrote, and would otherwise start
+   * matching the harness's own injected `<style>`/`<script>`.
+   */
   html: string
   /** Helper to capture canvas pixels as a binary buffer + dimensions. */
   captureCanvas(canvasSelector?: string): Promise<{ width: number; height: number; data: Buffer } | undefined>
@@ -97,8 +84,8 @@ export async function runChecks(
   options: RunChecksOptions = {}
 ): Promise<CheckResult[]> {
   const { settleMs = 800, perCheckTimeoutMs = 8000, totalTimeoutMs = 30_000 } = options
-  const browser = await getBrowser()
-  const context = await browser.newContext({
+  const session = await getSandboxBackend().launch()
+  const context = await session.newContext({
     // Match the site's iframe sandbox so the check sees the same environment
     // a user does: no same-origin access, scripts allowed, no top-level nav.
     bypassCSP: false,
@@ -109,8 +96,18 @@ export async function runChecks(
   const consoleErrors: string[] = []
   page.on('pageerror', (e) => consoleErrors.push(e.message))
 
+  // Scorer/display parity, OFF by default (#12). The live frame and the
+  // published .html load `withPrelude(html)`; the scorer historically loaded
+  // the RAW artifact, so checks ran in a different environment from the one
+  // readers see. `BENCH_PRELUDE_PARITY=1` closes that gap — deliberately opt-in,
+  // because flipping it silently would shift every stored behavioural score.
+  // Which mode scored a record is recorded in its run log's `sandboxPolicy`
+  // event; the measured per-case effect is in
+  // docs/lab/llm-benchmark/prelude-parity-measurement.md.
+  const loaded = resolveSandboxPolicy().preludeParity ? withPrelude(html) : html
+
   try {
-    await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 10_000 })
+    await page.setContent(loaded, { waitUntil: 'domcontentloaded', timeout: 10_000 })
     // Give the page a beat to run init / first RAF tick.
     await page.waitForTimeout(settleMs)
   } catch (e) {

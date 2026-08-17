@@ -44,6 +44,7 @@ import { BENCHMARK_RESULTS, mergeResults } from '../lib/lab/llm-benchmark/result
 import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.ts'
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
+import { resolveSandboxPolicy } from '../lib/lab/llm-benchmark/scorers/sandbox-backend.ts'
 import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
 import { resolveCliCommands } from '../lib/lab/llm-benchmark/runners/execution-target.ts'
 import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
@@ -244,6 +245,16 @@ function dumpConfig({ models, tasks, locks, outPath, resumePlan, cliStatus }) {
   )
   row('maxRetries', config.maxRetries.value ?? 'runner default (2)', config.maxRetries.source)
   row('bustCache', config.bustCache.value, config.bustCache.source)
+  // Resolved HERE so a typo'd BENCH_SANDBOX kills the sweep before it spends
+  // anything, and so the operator sees the enforcement level the run logs will
+  // report (#12).
+  const sandbox = resolveSandboxPolicy()
+  row(
+    'sandbox',
+    `${sandbox.backend} (enforcement ${sandbox.enforcement}` +
+      `, prelude parity ${sandbox.preludeParity ? 'ON' : 'off'})`,
+    process.env.BENCH_SANDBOX ? 'env' : 'default'
+  )
   // Only when a cap is set: "budget none (default)" on every dump would be
   // noise, and the row exists to make a real cap impossible to miss.
   if (config.budgetMaxUsd.value !== undefined) {

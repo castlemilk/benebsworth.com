@@ -43,6 +43,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Sandbox contract (appended to HTML-runnable task prompts) | `lib/lab/llm-benchmark/prompts.ts` |
 | Failure classification + `isQuotaError` (per-model `Agy` "individual quota reached" included) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Automated scorers | `lib/lab/llm-benchmark/scorers/{html,text,sandbox,checks,behavioral}.ts` |
+| Sandbox backend seam (`BENCH_SANDBOX`, enforcement, prelude parity) | `lib/lab/llm-benchmark/scorers/sandbox-backend.ts` |
 | Scorer registry (`selectScorer`, `behavioralTaskIds`) | `lib/lab/llm-benchmark/scorers/index.ts` |
 | Dependency sandbox | `lib/lab/llm-benchmark/sandbox/inline-dependencies.ts` |
 | Shared frame prelude (DOCTYPE, CSS reset, storage shim, in-iframe error overlay) | `lib/lab/llm-benchmark/frame-prelude.ts` |
@@ -690,6 +691,7 @@ sweeps/<run-id>/
   | `check` | one per check per iteration, from `scoreWithBreakdown` | `iterationIndex` (the TRUE index, not a position among successes), `check` |
   | `quota` | at a quota trip whose error stated a reset window | `quotaNextResetAt` (ISO) — same estimate as the aggregate's field, logged separately because a 0-success record can be dropped by `mergeResults` |
   | `budget` | at a per-model spend-cap trip (#28) | `modelId`, `spentUsd` (the model's cumulative sweep spend), `capUsd`, `iterationIndex` (the last iteration that ran) — the incident record; logged separately for the same reason as `quota` |
+  | `sandboxPolicy` | once per (model, task) log, by `aggregateRuns` at scoring time (only when something was actually scored) | `backend`, `enforcement` (`full`/`partial`), `preludeParity` — the sandbox that produced these numbers; run-level, so no `iterationIndex` |
   | `aggregate` | once, at the end | `result` — the BenchmarkResult with the artifact always spilled |
 
 - **Spill.** Any string over 8 KB is written to `spill/<first-16-hex-of-sha256>.txt`
@@ -815,6 +817,55 @@ gets a new URL and there is no cache-buster) and parses it with `parseRunLog`.
   index, gets no disclosure; the section states the count of untraced runs in
   one muted line, and renders nothing at all when the task has no traces —
   which is the state of every task until the next sweep is published.
+
+## Sandbox backends (`BENCH_SANDBOX`, #12)
+
+The behavioural scorer runs artifacts through a SEAM, not a hardcoded browser:
+`scorers/sandbox-backend.ts` owns backend selection, the enforcement report and
+the prelude-parity switch; `scorers/sandbox.ts` just drives whatever it gets.
+
+```bash
+# default — local headless Chromium, exactly the pre-seam behaviour
+npx tsx scripts/probe-corpus.mjs
+
+# no browser at all: behavioural checks fall back to the structural score.
+# This is the CI/container path — no code change, no Playwright deps needed.
+BENCH_SANDBOX=structural npx tsx scripts/probe-corpus.mjs --limit 3
+
+# a Playwright server elsewhere (UNTESTED against a real remote here)
+BENCH_SANDBOX=remote PLAYWRIGHT_WS_ENDPOINT=ws://browser:3000/ task bench:run
+```
+
+- **Closed vocabulary**: `chromium` (default) | `structural` | `remote`. An
+  unknown value is FATAL and lists the three — a typo must never silently score
+  with a browser. `remote` without `PLAYWRIGHT_WS_ENDPOINT` is fatal too.
+- **Resolved once per process**, printed as the `sandbox` row in
+  `--dump-config` (so a bad value dies before any spend) and appended to each
+  run log as a `sandboxPolicy` event by `aggregateRuns`. `retrace.mjs` prints it
+  as a run-level `sandbox:` line; the run-trace panel renders it above the
+  iterations, amber when enforcement is `partial`.
+- **Enforcement is derived, not declared**: `classifyEnforcement` reads the
+  actual launch args. This harness passes `--no-sandbox` (so it runs in
+  containers), so it honestly reports `partial` — never `full`. `remote` is
+  `partial` because the far side's flags are unknowable.
+- **`structural` is a NO-BROWSER backend, not a jsdom one.** jsdom is not a
+  dependency and was deliberately not added: a faked DOM would emit behavioural
+  verdicts nobody should trust. `launch()` refuses, and `scoreBehavioral`'s
+  existing `behaviouralFallback` catch path turns the refusal into a
+  structural-only score with a stated reason. One fallback shape, not two.
+  **Corpus verdicts under `structural` are not behavioural verdicts** —
+  `probe-corpus` prints a `! behavioural scorer fell back:` line per case, and
+  everything will look "now-passing" because no check ran.
+- **Playwright is only ever `await import`ed** (plus erased `import type`), so
+  `BENCH_SANDBOX=structural` never loads it. `sandbox-backend.test.ts` asserts
+  this against the source text — keep it true.
+- **Prelude parity** (`BENCH_PRELUDE_PARITY=1`) makes the scorer load
+  `withPrelude(html)` — the bytes the live frame and published `.html` render —
+  instead of the raw artifact. **Default OFF**, because flipping it would shift
+  every stored behavioural score; the `sandboxPolicy` event records which mode
+  scored a record. Measured over all 39 corpus cases, both modes, 2026-08-17:
+  ZERO delta (see `docs/lab/llm-benchmark/prelude-parity-measurement.md`). The
+  decision to flip it is deliberately left open — re-measure before taking it.
 
 ## Citing benchmark evidence (`bench://` cross-run references, #32)
 

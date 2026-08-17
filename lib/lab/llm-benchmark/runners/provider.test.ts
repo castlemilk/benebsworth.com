@@ -27,7 +27,8 @@ import { BUILTIN_PROVIDERS } from '../providers'
 import { generateMoonshot } from './moonshot'
 import { generateOpencode } from './opencode'
 import type { IterationRun } from './provider'
-import { readRunLog, runLogFileName, setRunLogDir, spillPreview } from '../runlog'
+import { openRunLog, readRunLog, runLogFileName, setRunLogDir, spillPreview } from '../runlog'
+import { resolveSandboxPolicy } from '../scorers/sandbox-backend'
 import { promptBundleHash } from '../prompt-bundle'
 
 const generateMock = vi.mocked(generateMoonshot)
@@ -370,6 +371,9 @@ describe('run log integration', () => {
       'retry',
       'response',
       'clean',
+      // The sandbox policy the scorer ran under (#12), appended at scoring
+      // time — after the artifact exists, before the aggregate it describes.
+      'sandboxPolicy',
       'aggregate',
     ])
     events.forEach((event, i) => expect(event.seq).toBe(i + 1))
@@ -398,7 +402,11 @@ describe('run log integration', () => {
     if (clean.type !== 'clean') throw new Error('expected a clean event')
     expect(spillPreview(clean.output)).toBe(OK.output)
 
-    const aggregate = events[4]
+    const policy = events[4]
+    if (policy.type !== 'sandboxPolicy') throw new Error('expected a sandboxPolicy event')
+    expect(policy.backend).toBe('chromium')
+
+    const aggregate = events[5]
     if (aggregate.type !== 'aggregate') throw new Error('expected an aggregate event')
     const logged = aggregate.result as Record<string, unknown>
     expect(logged.score).toBe(55)
@@ -702,6 +710,59 @@ describe('aggregateRuns', () => {
       { score: () => 50 }
     )
     expect(amended.promptBundle).not.toBe(result.promptBundle)
+  })
+
+  it('records the sandbox policy that scored the record, once', async () => {
+    // #12: "which sandbox produced this number?" has to be answerable from the
+    // trace alone — including the parity mode, since a prelude-wrapped scoring
+    // run is not comparable with the stored history.
+    const dir = mkdtempSync(join(tmpdir(), 'provider-sandbox-runlog-'))
+    setRunLogDir(dir)
+    const log = openRunLog({
+      modelId: MODEL.id,
+      taskId: TASK.id,
+      configSnapshot: { iterations: 2, timeoutMs: 1000, maxRetries: 0, bustCache: true },
+    })!
+    await aggregateRuns(runs(2), 2, MODEL, TASK, { score: () => 50 }, undefined, log)
+    await log.close()
+
+    const { events } = readRunLog(join(dir, runLogFileName(MODEL.id, TASK.id)))
+    const policies = events.filter((e) => e.type === 'sandboxPolicy')
+    expect(policies).toHaveLength(1)
+    const policy = policies[0]
+    if (policy.type !== 'sandboxPolicy') throw new Error('expected a sandboxPolicy event')
+    expect(policy).toMatchObject(resolveSandboxPolicy())
+    expect(policy.backend).toBe('chromium')
+    // The default is the pre-seam behaviour: real browser, raw artifact.
+    expect(policy.preludeParity).toBe(false)
+    // …and Chromium runs with --no-sandbox here, so the log says `partial`.
+    expect(policy.enforcement).toBe('partial')
+    // It lands BEFORE the checks and the aggregate it describes.
+    expect(events.indexOf(policy)).toBeLessThan(events.findIndex((e) => e.type === 'aggregate'))
+
+    setRunLogDir(undefined)
+    rmSync(dir, { recursive: true, force: true })
+  })
+
+  it('records no sandbox policy when nothing was scored', async () => {
+    // No successful iteration means no scoring happened, so there is no policy
+    // fact to report — an event here would claim a sandbox that never ran.
+    const dir = mkdtempSync(join(tmpdir(), 'provider-sandbox-runlog-'))
+    setRunLogDir(dir)
+    const log = openRunLog({
+      modelId: MODEL.id,
+      taskId: TASK.id,
+      configSnapshot: { iterations: 1, timeoutMs: 1000, maxRetries: 0, bustCache: true },
+    })!
+    const failed: IterationRun[] = [{ ...OK, status: 'fail', output: '' }]
+    await aggregateRuns(failed, 1, MODEL, TASK, { score: () => 50 }, undefined, log)
+    await log.close()
+
+    const { events } = readRunLog(join(dir, runLogFileName(MODEL.id, TASK.id)))
+    expect(events.filter((e) => e.type === 'sandboxPolicy')).toEqual([])
+
+    setRunLogDir(undefined)
+    rmSync(dir, { recursive: true, force: true })
   })
 
   it('persists no iterationCheckResults when the scorer has no breakdown', async () => {

@@ -580,53 +580,31 @@ the structural score that hands 100 to a game that ignores input.
   completed pair, zero waste); 38/40 iterations, 2 empty-body blips
   recovered, $0. Scores 26-100 — a real (weak-but-present) board.
 
-## [ ] 12. Sandbox backend seam (longer term)
+## [x] 12. Sandbox backend seam
 
-**Problem.** Playwright is the only sandbox backend; `getBrowser()`
-(`lib/lab/llm-benchmark/scorers/sandbox.ts`) hardcodes Chromium args, and the
-scorer has no way to run against a remote browser or a fallback (jsdom)
-without code changes. Also the sandbox policy actually applied per run is
-never logged.
+**Shipped.** `scorers/sandbox-backend.ts` — one `SandboxBackend` interface
+(`launch() → { newContext() }`, `close()`, `enforcement`), three backends in a
+closed `BENCH_SANDBOX` vocabulary: `chromium` (today's args, unchanged),
+`structural` (no browser at all — `launch()` refuses and the existing
+`behaviouralFallback` path scores structurally, so a CI/container with no
+Playwright deps needs no code change; jsdom deliberately NOT added, since a
+faked DOM would emit behavioural verdicts nobody should trust), and `remote`
+(`PLAYWRIGHT_WS_ENDPOINT` → `chromium.connect`; untested against a real remote
+server). Playwright is reached only through `await import`, so the structural
+backend never loads it. Enforcement is DERIVED from the launch args, not
+declared: `--no-sandbox` is in them, so this harness honestly reports
+`partial`. The policy resolves once per process, prints in `--dump-config`
+(a typo'd `BENCH_SANDBOX` is fatal before any spend), and `aggregateRuns`
+appends it to the run log as a `sandboxPolicy` event at scoring time — rendered
+by `retrace.mjs` and the run-trace panel.
 
-**Scorer/display parity (deferred here on purpose).** The behavioural scorer
-loads the RAW artifact (`page.setContent(html)`), while the live frame and the
-published `.html` load `withPrelude(html)` — so checks run in a different
-environment from the one readers see, and `promptBundle` names the DISPLAY
-environment, not the scoring one. Injecting the prelude into scoring would
-silently shift every stored behavioural score and destroy history
-comparability, so the divergence is documented (prompt-bundle.ts, types.ts) and
-the decision belongs to this item.
-
-**Inspiration.** dsh `ctx.sandbox` seam (docs/subsystems/sandbox.md):
-- One interface, swappable backends; consumers wrap argv before spawning.
-- **Modes are a small closed vocabulary**: `read-only | workspace-write |
-  danger-full-access` — file effects only; network/process visibility is
-  outside the vocabulary.
-- **Enforcement is a reported fact**: `full | partial` — a consumer that
-  requires the absolute promise must reject or surface `partial` (older
-  Landlock ABIs, `--no-sandbox` Chromium).
-- **Per-call policy resolution**: the complete policy (mode + workspaceRoot
-  + session identity) is resolved once per call and logged.
-
-**Design sketch.**
-
-- `SandboxBackend` interface: `launch() → { newContext() }`, `close()`.
-  Implementations: `localChromium` (today's), `remotePlaywright` (via
-  `PLAYWRIGHT_WS_ENDPOINT`), `jsdomFallback` (structural checks only, tagged
-  `behaviouralFallback` — the `scoreBehavioral` catch path already has this
-  concept).
-- The artifact sandbox reports its **enforcement level** (`full`/`partial` —
-  `--no-sandbox` Chromium = partial) into the run log (#1) as a
-  `sandboxPolicy` event; `partial` is surfaced wherever a behavioral score
-  is shown (e.g. a footnote "checks ran with partial enforcement").
-- `run-benchmark.mjs`/runner log the active backend + policy into the event
-  log (#1) as a `sandboxPolicy` event.
-
-**Acceptance criteria.** A CI/container run can use the fallback without code
-changes; the applied sandbox policy + enforcement level are in the run log;
-existing behavior unchanged by default.
-
-**Effort.** M. **Dependencies.** #1 (for the policy log).
+**Prelude parity: measured, decision left open.** `BENCH_PRELUDE_PARITY=1`
+makes the scorer load `withPrelude(html)` — the same bytes the live frame and
+the published `.html` render — and the `sandboxPolicy` event records which mode
+scored a record. **Default stays OFF**; flipping it would shift stored
+behavioural scores. Measured over the 39-case failure corpus, both modes:
+`docs/lab/llm-benchmark/prelude-parity-measurement.md` (date, method, per-case
+table). No recommendation is made there — the numbers are for the maintainer.
 
 ## [x] 13. Per-call telemetry (TTFT, tokens/s, cache, retries)
 
@@ -1617,6 +1595,15 @@ without reading results.json; the server is read-only.
   still-broken / now-passing / changed (report by default, `--strict` fails on
   `changed`). `corpus-provenance` verify check. Seeded with 39 real cases from
   the 2026-08-17 sweeps.
+- Sandbox backend seam (#12): `scorers/sandbox-backend.ts` — one
+  `SandboxBackend` interface, closed `BENCH_SANDBOX` vocabulary
+  (`chromium` | `structural` | `remote`), enforcement DERIVED from the launch
+  args (`--no-sandbox` ⇒ honest `partial`), policy resolved once per process,
+  printed in `--dump-config` and appended to the run log as a `sandboxPolicy`
+  event by `aggregateRuns`; Playwright is `await import`-only so the
+  no-browser path never loads it; `BENCH_PRELUDE_PARITY=1` scores through the
+  display prelude (default OFF, measured zero-delta over the 39-case corpus —
+  `docs/lab/llm-benchmark/prelude-parity-measurement.md`; decision left open).
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

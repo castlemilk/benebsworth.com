@@ -238,6 +238,39 @@ export interface BenchmarkCategory {
  */
 export type BenchmarkScorerName = 'behavioral' | 'html' | 'text' | (string & {})
 
+/**
+ * Which sandbox backend the behavioural scorer runs artifacts in (#12).
+ *
+ * A SMALL CLOSED VOCABULARY, deliberately — unlike scorer names there is no
+ * `(string & {})` widening, because a backend is a property of the machine the
+ * harness runs on (is there a browser? a remote one?), not something a plugin
+ * contributes. Selected once per process from `BENCH_SANDBOX`:
+ *
+ *   chromium    local headless Chromium via Playwright (the default)
+ *   structural  no browser at all — behavioural checks cannot run, so the
+ *               composite falls back to the structural score (the existing
+ *               `behaviouralFallback` path). For CI/containers with no
+ *               Playwright browser deps.
+ *   remote      connect to a Playwright server at `PLAYWRIGHT_WS_ENDPOINT`
+ *
+ * Lives in types.ts rather than `scorers/sandbox-backend.ts` so the run log's
+ * record shapes (`runlog-format.ts`, which must stay browser-safe) can name the
+ * same vocabulary without importing the scorer layer.
+ */
+export type SandboxBackendName = 'chromium' | 'structural' | 'remote'
+
+/**
+ * How much of the sandbox promise the backend actually keeps — a REPORTED
+ * FACT, never an assumption (the dsh `full | partial` rule).
+ *
+ * `full` means the process-level sandbox is intact. `partial` means it is
+ * knowingly weakened or unknowable: Chromium launched with `--no-sandbox`
+ * (which is what this harness does, so it can run in containers), or a remote
+ * browser whose launch flags this side cannot see. Consumers surface `partial`
+ * rather than silently treating it as `full`.
+ */
+export type SandboxEnforcement = 'full' | 'partial'
+
 export interface BenchmarkTask {
   id: string
   category: string
@@ -471,10 +504,11 @@ export interface BenchmarkResult {
    * fingerprint. In one line: everything that changes what the model SAW, or
    * the environment its artifact is DISPLAYED/PUBLISHED in.
    *
-   * NOT the scoring environment: the behavioural scorer loads the raw artifact,
-   * never `withPrelude` (see prompt-bundle.ts's header and TODO #12). A prelude
-   * change stales history because the published rendering changed, not because
-   * a check would flip.
+   * NOT the scoring environment: the behavioural scorer loads the raw artifact
+   * by default, never `withPrelude` (see prompt-bundle.ts's header; the opt-in
+   * `BENCH_PRELUDE_PARITY=1` changes that, and the record's run log says which
+   * mode scored it). A prelude change stales history because the published
+   * rendering changed, not because a check would flip.
    *
    * WHY it is on the record and not derived at read time: it is only derivable
    * for the CURRENT prompt. A stored score's bundle is history, and history is

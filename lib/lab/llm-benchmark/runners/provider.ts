@@ -26,6 +26,7 @@ import { CLI_PROVIDERS } from './execution-target'
 import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
 import { forceSpill, hashPrompt, openRunLog, type RunLog } from '../runlog'
 import { selectScorer } from '../scorers'
+import { resolveSandboxPolicy } from '../scorers/sandbox-backend'
 import { withSandboxConstraints } from '../prompts'
 import { promptBundleHash } from '../prompt-bundle'
 import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
@@ -829,6 +830,14 @@ export async function aggregateRuns(
   let iterationScores: number[] = []
   let iterationCheckResults: IterationCheckResult[][] = []
   if (successRuns.length > 0) {
+    // The sandbox policy is a SCORING-time fact (#12) — this is the first
+    // moment in the run it is known, and the last at which it still describes
+    // the numbers about to be published. One event per (model, task) log:
+    // every iteration is scored under the same process-wide resolved policy.
+    // Logged for every scored record, not only behavioural ones: it reports
+    // the policy in force, and "this text-scored record needed no browser" is
+    // read off the task's scorer, not off a missing event.
+    log?.append({ type: 'sandboxPolicy', ...resolveSandboxPolicy() })
     if (scorer.scoreWithBreakdown) {
       const breakdowns = await Promise.all(
         successRuns.map((r) => scorer.scoreWithBreakdown!(r.output, task))

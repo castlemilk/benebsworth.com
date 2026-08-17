@@ -109,18 +109,18 @@ describe('llm-benchmark registry', () => {
     // have a result. Exclusions are derived two ways so the assertion stays
     // stable while models join/leave the board:
     //   - documentedExcluded: models with a known reason not to sweep
-    //     (nemotron-nano-12b-vl: free endpoint hangs; gemini-3.6-flash:
-    //     OpenRouter 402 — no credits).
+    //     (historical examples: nemotron's hanging free endpoint, gemini's
+    //     OpenRouter 402 — both resolved and swept 2026-08-17).
     //   - unswept: models with NO results anywhere yet (registered ahead of
     //     their first sweep — e.g. a freshly added provider). Auto-excluding
     //     them means adding a model mid-sweep never breaks this test.
     // We assert >= (never ===) so the test tolerates future exclusions
     // without a code change here, while still catching a drop in coverage
     // below the current floor.
-    const documentedExcluded = new Set([
-      'nemotron-nano-12b-vl',     // free endpoint hangs
-      'gemini-3.6-flash',         // OpenRouter 402 (no credits)
-    ])
+    // Empty since 2026-08-17: nemotron (endpoint recovered) and gemini
+    // (OpenRouter topped up) were both swept to full boards — see TODO #11.
+    // The mechanism stays for the next exclusion.
+    const documentedExcluded = new Set<string>([])
     const hasAnyResult = new Set(resultsForModelCoverage())
     const expected =
       BENCHMARK_MODELS.length -

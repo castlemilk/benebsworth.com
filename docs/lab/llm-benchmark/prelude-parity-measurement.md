@@ -125,3 +125,13 @@ diff <(sed 's/^ *\[[0-9]*\///' /tmp/parity-off.txt) <(sed 's/^ *\[[0-9]*\///' /t
 
 Re-run after any change to the checks, the prelude, or the corpus — a delta
 that appears later is the finding this page exists to make visible.
+
+## Decision (2026-08-17)
+
+**Parity stays OFF by default.** The measured delta is zero across every
+corpus case with exposure confirmed (32/39 cases lack a DOCTYPE, 6/39 a
+viewport meta, 2/39 touch storage — none moved). Turning parity on would
+change what the prompt-bundle hash means for future records without any
+observed scoring effect. The flag remains available; re-measure per the
+recipe above if the prelude or the checks change materially, and revisit if
+a delta ever appears.

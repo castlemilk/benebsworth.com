@@ -102,11 +102,65 @@ export interface BenchmarkModel {
  * anything from `runners/` (which would invert the layering and close a
  * cycle; see `layering.test.ts`).
  */
+/**
+ * Where ONE call's token counts came from.
+ *
+ *  - `'reported'`  — the provider stated them (an API `usage` block).
+ *  - `'estimated'` — we derived them (the ~4-chars-per-token heuristic in
+ *                    `runners/cli.ts`), or the provider said nothing and the
+ *                    counts are a zero-valued fallback.
+ *
+ * A call is never `'mixed'`: that value only exists on an AGGREGATE of calls
+ * (`UsageSummary.source`). Declared here rather than in `billing.ts` because
+ * `types.ts` is the bottom layer and may import nothing in-tree
+ * (`layering.test.ts`); `billing.ts` re-exports both names and owns the math.
+ */
+export type UsageProvenance = 'reported' | 'estimated'
+
+/** `UsageProvenance` widened for an aggregate, where both kinds can co-occur. */
+export type UsageSource = UsageProvenance | 'mixed'
+
+/**
+ * Token accounting for one aggregated record — the single shape every provider
+ * funnels into, whatever it could observe.
+ *
+ * `source` is the HONESTY field: it says whether the numbers beside it are the
+ * provider's own or our heuristic's, so a cost figure can never quietly imply a
+ * precision it does not have. Build one with `summarizeUsage()` and price it
+ * with `costFromUsage()` (`billing.ts`) — never by hand.
+ *
+ * `cachedReadTokens` / `cachedWriteTokens` are ADDITIVE to `inputTokens`
+ * (Anthropic-style disjoint counters), absent when zero, and produced by
+ * nothing today — see `costFromUsage` for how they are billed.
+ */
+export interface UsageSummary {
+  inputTokens: number
+  outputTokens: number
+  cachedReadTokens?: number
+  cachedWriteTokens?: number
+  source: UsageSource
+}
+
 export interface GenerationResponse {
   output: string
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /**
+   * Where `tokensIn`/`tokensOut` came from — see `UsageProvenance`.
+   *
+   * Absent means the producer predates the field; consumers treat that as
+   * `'estimated'` (unknown provenance must never be presented as a provider
+   * statement). Who sets what:
+   *  - **API providers** (`moonshot`, `openrouter`, `openai`, `anthropic`,
+   *    `google`): `'reported'` when the response carried a usage block,
+   *    `'estimated'` when it did not (the counts are then a zero fallback).
+   *  - **CLI providers** (`agy`, `opencode`, `codex`): always `'estimated'`.
+   *    Codex is the interesting case — it prints a real TOTAL, but the 25/75
+   *    input/output SPLIT is our heuristic, and a split we invented does not
+   *    earn `'reported'` for either half.
+   */
+  usageSource?: UsageProvenance
   /**
    * Time-to-first-observable-output, in ms from the same call start
    * `runtimeMs` is measured from. **Optional because it is genuinely not
@@ -277,6 +331,21 @@ export interface BenchmarkResult {
   tokensIn: number
   tokensOut: number
   costUsd: number
+  /**
+   * The same token accounting as `tokensIn`/`tokensOut`, plus the PROVENANCE of
+   * those numbers and any cached-token counters — the richer view, and the one
+   * `costUsd` is computed from (`costFromUsage` in `billing.ts`).
+   *
+   * `tokensIn`/`tokensOut` stay for backward compatibility: every stored record
+   * and every consumer (analytics, the stat strips, verify-results) reads them,
+   * and `usage.inputTokens`/`usage.outputTokens` are always equal to them. Read
+   * `usage.source` when the question is "how much do I trust this cost" — a
+   * `'estimated'` record's spend came from a ~4-chars-per-token guess.
+   *
+   * Absent on records written before this shipped; absence means "unknown
+   * provenance", not "estimated zero".
+   */
+  usage?: UsageSummary
   iterations: number
   /** How many of the iterations succeeded (absent on older records = all succeeded). */
   iterationsSucceeded?: number

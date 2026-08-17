@@ -1,4 +1,4 @@
-import type { BenchmarkModel, BenchmarkTask } from '../types'
+import type { BenchmarkModel, BenchmarkTask, UsageProvenance } from '../types'
 
 export interface OpenAIConfig {
   apiKey: string
@@ -10,6 +10,8 @@ export interface GenerationResponse {
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /** See the canonical contract on `GenerationResponse` in ../types. */
+  usageSource?: UsageProvenance
 }
 
 export async function generateOpenAI(
@@ -46,7 +48,11 @@ export async function generateOpenAI(
   const data = await res.json()
   const choice = data.choices?.[0]
   const output = choice?.message?.content ?? ''
+  // Provenance before counts: `data.usage` present means the numbers below are
+  // the provider's own. Absent, the `?? 0` fallbacks are OURS, and a zero we
+  // invented must never be published as a provider statement.
+  const usageSource: UsageProvenance = data.usage ? 'reported' : 'estimated'
   const tokensIn = data.usage?.prompt_tokens ?? 0
   const tokensOut = data.usage?.completion_tokens ?? 0
-  return { output, tokensIn, tokensOut, runtimeMs: Date.now() - start }
+  return { output, tokensIn, tokensOut, usageSource, runtimeMs: Date.now() - start }
 }

@@ -10,8 +10,9 @@ import type {
   PluginGenerate,
   PluginGeneratorFactory,
   Scorer,
+  UsageProvenance,
 } from '../types'
-import { estimateCost } from '../harness'
+import { costFromUsage, summarizeUsage } from '../billing'
 import { formatQuotaWindow, parseQuotaResetMs } from '../quota'
 import { generateOpenAI, type OpenAIConfig } from './openai'
 import { generateAnthropic, type AnthropicConfig } from './anthropic'
@@ -626,6 +627,13 @@ export interface IterationRun {
   output: string
   tokensIn: number
   tokensOut: number
+  /**
+   * Where this iteration's token counts came from — passed straight through
+   * from the generation call (`GenerationResponse.usageSource`). Absent on a
+   * failed iteration that never got counts, and on runs produced before the
+   * field existed; `summarizeUsage` reads absence as 'estimated'.
+   */
+  usageSource?: UsageProvenance
   runtimeMs: number
   status: 'success' | 'fail'
   /** Set on failed iterations whose failure was a timeout. */
@@ -726,8 +734,13 @@ export async function aggregateRuns(
     .filter(({ run }) => run.status === 'success' && run.output.trim().length >= 40)
   const successRuns = successEntries.map((entry) => entry.run)
 
-  const totalTokensIn = runs.reduce((sum, r) => sum + r.tokensIn, 0)
-  const totalTokensOut = runs.reduce((sum, r) => sum + r.tokensOut, 0)
+  // One shape for token accounting, provenance included: `usage.source` says
+  // whether these totals are the providers' own numbers or our char-count
+  // estimate. tokensIn/tokensOut below are the same totals, kept for the
+  // consumers (and stored records) that read the flat fields.
+  const usage = summarizeUsage(runs)
+  const totalTokensIn = usage.inputTokens
+  const totalTokensOut = usage.outputTokens
 
   // Score EVERY successful iteration's output and publish the mean. When the
   // scorer exposes a per-iteration breakdown (behavioural scorers), capture
@@ -804,7 +817,11 @@ export async function aggregateRuns(
     runtimeMs,
     tokensIn: totalTokensIn,
     tokensOut: totalTokensOut,
-    costUsd: estimateCost(totalTokensIn, totalTokensOut, model),
+    // Same flat per-1k math as before (a summary with no cached tokens IS the
+    // old formula — locked by billing.test.ts), now computed in the one place
+    // that knows about cached-token counters.
+    costUsd: costFromUsage(usage, model),
+    usage,
     iterations,
     iterationsSucceeded: successRuns.length,
     status,
@@ -951,7 +968,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             )
             await new Promise((resolve) => setTimeout(resolve, delayMs))
           }
-          const { output, tokensIn, tokensOut, runtimeMs } = response
+          const { output, tokensIn, tokensOut, runtimeMs, usageSource } = response
           let cleaned = cleanOutput(output)
           if (/<html[\s>]|<!doctype|<head>|<body>|<script\b|<link\b|<style\b|<canvas\b|<svg\b/i.test(cleaned)) {
             try {
@@ -992,6 +1009,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
               output: `empty body (${tokensIn}/${tokensOut} tokens)`,
               tokensIn,
               tokensOut,
+              ...(usageSource ? { usageSource } : {}),
               runtimeMs,
               status: 'fail',
               timedOut: false,
@@ -1020,6 +1038,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             output: cleaned,
             tokensIn,
             tokensOut,
+            ...(usageSource ? { usageSource } : {}),
             runtimeMs,
             status: 'success',
             failureReason: 'none',

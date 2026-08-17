@@ -901,26 +901,44 @@ working gateways; the task appears on the board like any other.
 
 **Effort.** L.
 
-## [ ] 23. Billing inference per provider
+## [x] 23. Billing inference per provider
 
-**Problem.** `estimateCost` (harness.ts) multiplies raw token counts by
-flat per-1k rates; CLI providers estimate tokens from char counts, so
-costs drift from reality (codex reports totals; opencode reports nothing).
+**Shipped.** `lib/lab/llm-benchmark/billing.ts` (pure, types-only imports) is
+the one place token counts become dollars. `summarizeUsage(runs)` folds a
+record's iterations into a `UsageSummary`
+(`{ inputTokens, outputTokens, cachedReadTokens?, cachedWriteTokens?, source }`)
+and `costFromUsage(usage, model)` prices it. `source` is the honesty field:
+`'reported'` = the provider stated the counts, `'estimated'` = our heuristic (or
+a zero fallback we invented), `'mixed'` = both in one record. Unstamped
+contributions read as `'estimated'` (unknown provenance is never a provider
+statement), and only token-bearing contributions vote, so a failed 0/0 iteration
+can't drag a reported record to `'mixed'`.
 
-**Inspiration.** paperclip `adapter-utils/src/billing.ts`
-(`inferOpenAiCompatibleBiller`): per-adapter usage + cost inference with a
-shared `UsageSummary` shape.
+Producers stamp `GenerationResponse.usageSource`: moonshot/openrouter
+`'reported'` iff the SSE stream carried a `usage` block; openai/anthropic/google
+`'reported'` iff `usage`/`usageMetadata` was present; `cli.ts` always
+`'estimated'` — INCLUDING the codex `parseTokens` path, because codex reports a
+real TOTAL but the 25/75 input/output split is ours, and a split we invented
+must not borrow the provider's authority.
 
-**Design sketch.** `CliRunnerConfig.parseTokens` already exists per
-provider — standardize its output into a `UsageSummary`-like shape
-(`{ inputTokens, outputTokens, cachedRead?, cachedWrite? }`) and let each
-provider carry a `biller` fn (codex: parse totals + heuristic split, as
-today; opencode/agy: char estimate, as today; api providers: pass through).
-`aggregateRuns` stores the summary; cost math stays in one place.
+`aggregateRuns` totals through `summarizeUsage`, stores `BenchmarkResult.usage`
+(tokensIn/tokensOut stay for back-compat and are the same totals) and computes
+`costUsd` via `costFromUsage`. Numbers are unchanged on every existing path —
+locked by fixture tests comparing `costFromUsage` to the old flat math and a
+hard-coded pre-change cost in `aggregateRuns`. `estimateCost` survives as a
+deprecated thin wrapper. Cached tokens are additive to `inputTokens` and bill at
+the NORMAL input rate (no cached-rate fields on `BenchmarkModel` yet) —
+deliberately the over-stating direction; nothing produces them today.
 
-**Acceptance criteria.** Token accounting is single-shape across all
-providers; a provider with real usage data (codex) reports closer to
-reality; tests for the summary normalization.
+Also a `usage-sanity` verify check (11 now): `usage` totals must equal the flat
+fields beside them and `source` must be in the vocabulary; the 183 stored
+records skip as legacy. UI untouched — the stat strips already read `costUsd`.
+
+Tests: `billing.test.ts` (roll-up, mixed/unstamped/zero rules, cached billing,
+old-vs-new cost lock), `runners/usage-provenance.test.ts` (all five API
+providers, reported vs fallback), `cli.test.ts` (char fallback + the codex
+parseTokens path stays estimated), `harness.test.ts` (usage on the record,
+source roll-up, cost lock), `verify-results.test.ts`.
 
 **Effort.** S–M.
 
@@ -1460,7 +1478,7 @@ without reading results.json; the server is read-only.
   log/quota breaker/scoring. Shadowing a built-in provider or another
   plugin's generator is rejected at registration; `plugins/echo-provider/` is
   the unrostered worked example.
-- Results invariant verification (#5): `verify-results.ts` (ten checks, each
+- Results invariant verification (#5): `verify-results.ts` (eleven checks, each
   with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
   run first in the pre-push gate.
 - Prompt-bundle provenance (#21): `prompt-bundle.ts` (`promptBundleHash` over
@@ -1536,6 +1554,16 @@ without reading results.json; the server is read-only.
   for the runners, `isCliProvider` and the sweep; `run-benchmark.mjs` aborts
   before the sweep starts listing EVERY missing CLI, and `--dump-config` shows
   the `cli` row.
+- Billing inference per provider (#23): `billing.ts` — `summarizeUsage()` folds
+  iterations into one `UsageSummary` carrying PROVENANCE (`source`:
+  reported/estimated/mixed; unstamped = estimated; zero-token runs don't vote),
+  `costFromUsage()` is the only pricing math (cached tokens additive, billed at
+  the input rate until cached-rate fields exist). Producers stamp
+  `GenerationResponse.usageSource` — API providers reported-iff-usage-block,
+  CLI always estimated including codex (real total, invented 25/75 split).
+  `BenchmarkResult.usage` + `costUsd` from the summary, numbers unchanged
+  (locked by fixtures); `estimateCost` deprecated wrapper; `usage-sanity`
+  verify check.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

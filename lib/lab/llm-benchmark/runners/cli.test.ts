@@ -528,3 +528,43 @@ describe('runCli error-message redaction', () => {
     )
   }, 30_000)
 })
+
+describe('generateFromCli usage provenance', () => {
+  it("stamps 'estimated' for the char-count fallback (no parseTokens)", async () => {
+    const html = `<h1>${'x'.repeat(200)}</h1>`
+    const response = await generateFromCli(
+      {
+        command: process.execPath,
+        buildArgs: () => ['-e', `console.log(${JSON.stringify(html)})`],
+      },
+      TEST_MODEL,
+      TEST_TASK
+    )
+
+    expect(response.usageSource).toBe('estimated')
+    // …and the counts really are the ~4-chars-per-token heuristic, so the
+    // stamp is describing the numbers it ships with.
+    expect(response.tokensOut).toBe(Math.round(response.output.length / 4))
+    expect(response.tokensIn).toBeGreaterThan(0)
+  }, 30_000)
+
+  it("keeps 'estimated' on the codex parseTokens path — a reported TOTAL with an invented split is not reported", async () => {
+    // Exactly codex's shape: a real "tokens used" total, split 25/75 by us.
+    const html = `<h1>${'x'.repeat(200)}</h1>`
+    const response = await generateFromCli(
+      {
+        command: process.execPath,
+        buildArgs: () => ['-e', `console.log(${JSON.stringify(html)})`],
+        parseTokens: () => ({ tokensIn: 4000, tokensOut: 12_000 }),
+      },
+      TEST_MODEL,
+      TEST_TASK
+    )
+
+    expect(response.tokensIn).toBe(4000)
+    expect(response.tokensOut).toBe(12_000)
+    // The counts came from the provider's line, but the per-direction split did
+    // not — so the honest stamp is still 'estimated'.
+    expect(response.usageSource).toBe('estimated')
+  }, 30_000)
+})

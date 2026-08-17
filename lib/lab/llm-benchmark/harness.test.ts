@@ -222,6 +222,59 @@ describe('aggregateRuns', () => {
     expect(result.createdAt).toBe('2026-01-01T00:00:00.000Z')
   })
 
+  it('carries a usage summary whose totals and provenance match the iterations', async () => {
+    const runs: IterationRun[] = [
+      { ...success('a'.repeat(80), 1000), usageSource: 'reported' },
+      { ...success('b'.repeat(90), 3000), usageSource: 'reported' },
+    ]
+    const result = await aggregateRuns(runs, 2, model, task, scorer)
+
+    expect(result.usage).toEqual({ inputTokens: 200, outputTokens: 400, source: 'reported' })
+    // The flat fields are the same totals — they are derived from the summary.
+    expect(result.tokensIn).toBe(result.usage!.inputTokens)
+    expect(result.tokensOut).toBe(result.usage!.outputTokens)
+  })
+
+  it("rolls a reported + estimated pair up to 'mixed', and unstamped runs to 'estimated'", async () => {
+    const mixed = await aggregateRuns(
+      [
+        { ...success('a'.repeat(80), 1000), usageSource: 'reported' },
+        { ...success('b'.repeat(90), 3000), usageSource: 'estimated' },
+      ],
+      2,
+      model,
+      task,
+      scorer
+    )
+    expect(mixed.usage!.source).toBe('mixed')
+
+    // A pre-usageSource producer (or a plugin generator that never sets it):
+    // unknown provenance reads as estimated, never as a provider statement.
+    const unstamped = await aggregateRuns([success('a'.repeat(80), 1000)], 1, model, task, scorer)
+    expect(unstamped.usage!.source).toBe('estimated')
+
+    // A failed 0-token iteration does not drag a reported record to 'mixed'.
+    const withFailure = await aggregateRuns(
+      [{ ...success('a'.repeat(80), 1000), usageSource: 'reported' }, failure()],
+      2,
+      model,
+      task,
+      scorer
+    )
+    expect(withFailure.usage!.source).toBe('reported')
+  })
+
+  it('LOCK: costUsd is byte-identical to the pre-billing flat math', async () => {
+    const runs = [success('a'.repeat(80), 1000, 1234, 5678), success('b'.repeat(90), 3000, 1, 2)]
+    const result = await aggregateRuns(runs, 2, model, task, scorer)
+
+    // Hard-coded from the OLD formula (tokens/1000 * rate) so this test would
+    // still fail if both the implementation and estimateCost drifted together:
+    // 1235/1000*0.01 + 5680/1000*0.03 = 0.012350 + 0.170400.
+    expect(result.costUsd).toBeCloseTo(0.01235 + 0.1704, 10)
+    expect(result.costUsd).toBeCloseTo(estimateCost(1235, 5680, model), 10)
+  })
+
   it('some iterations fail: status partial, stats over successful runs only', async () => {
     const runs = [success('a'.repeat(60), 1500), failure(), success('b'.repeat(70), 2500)]
     const result = await aggregateRuns(runs, 3, model, task, scorer)

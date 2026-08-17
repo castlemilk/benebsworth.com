@@ -1,4 +1,4 @@
-import type { BenchmarkModel, BenchmarkTask } from '../types'
+import type { BenchmarkModel, BenchmarkTask, UsageProvenance } from '../types'
 import { redactArgs, redactText } from '../redact'
 import { resolveExecutionTarget, type CliRunnerConfig } from './execution-target'
 import { spawn } from 'node:child_process'
@@ -17,6 +17,8 @@ export interface GenerationResponse {
   tokensIn: number
   tokensOut: number
   runtimeMs: number
+  /** See the canonical contract on `GenerationResponse` in ../types. */
+  usageSource?: UsageProvenance
   /** See the canonical contract on `GenerationResponse` in ../types. */
   ttftMs?: number
 }
@@ -383,6 +385,14 @@ export async function generateFromCli(
       output,
       tokensIn,
       tokensOut,
+      // ALWAYS 'estimated' on this path — including when `parseTokens` fired.
+      // Codex is the case that tempts otherwise: it prints a real "tokens used"
+      // TOTAL, so the sum is genuinely reported — but the 25/75 input/output
+      // SPLIT applied to it is a heuristic we invented, and neither half is a
+      // number Codex ever stated. Stamping 'reported' would let a made-up split
+      // borrow the provider's authority, so the whole contribution stays
+      // 'estimated' until a provider reports the two counts separately.
+      usageSource: 'estimated',
       runtimeMs: Date.now() - start,
       // Passed through as measured by runCli (from spawn), while runtimeMs is
       // measured from `start` (before the scratch-dir mkdir). The scratch setup

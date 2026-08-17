@@ -101,6 +101,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "A score only means something under the prompt that produced it: the task prompt, the sandbox contract appended to it, and the frame prelude the artifact runs inside. tic-tac-toe's stored results were scored under the OLD global contract, and when its task-specific contract landed (#36) nothing marked them stale — the board kept presenting them as current. This check is the release gate for that: WARN, never fail, because a stale result is still an honest result (it is just old) and failing would make an intentional prompt edit break the build before the re-run could possibly exist. `--strict` promotes warnings to failures — THAT is the release-gate switch: run it when you are about to publish and a stale number would be a lie. Records with no promptBundle at all are legacy, not stale, and skip.",
   },
   {
+    id: 'usage-sanity',
+    title: 'usage agrees with the flat token fields it duplicates',
+    why:
+      "BenchmarkResult carries token counts TWICE — the legacy flat tokensIn/tokensOut every consumer reads, and the richer `usage` summary that costUsd is actually computed from. aggregateRuns derives both from one summarizeUsage() call, so they cannot disagree unless a record was written by something else (a backfill, a hand edit, a future producer that sets one and forgets the other) — and a disagreement means the published cost was priced off numbers that are not the ones displayed beside it. Also pins `usage.source` to the vocabulary: a stray string there would make the honesty field unreadable. Records with no `usage` are legacy and skip.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -308,6 +314,26 @@ function checkTelemetry(r: BenchmarkResult): Verdict {
   return verdict('telemetry-sanity', 'pass', key)
 }
 
+const USAGE_SOURCES = new Set(['reported', 'estimated', 'mixed'])
+
+function checkUsage(r: BenchmarkResult): Verdict {
+  const key = recordKey(r)
+  const u = r.usage
+  if (!u) return verdict('usage-sanity', 'skip', key, 'no usage summary (record predates the field)')
+  if (!USAGE_SOURCES.has(u.source)) {
+    return verdict('usage-sanity', 'fail', key, `usage.source '${u.source}' is not reported/estimated/mixed`)
+  }
+  if (u.inputTokens !== r.tokensIn || u.outputTokens !== r.tokensOut) {
+    return verdict(
+      'usage-sanity',
+      'fail',
+      key,
+      `usage ${u.inputTokens}/${u.outputTokens} vs tokensIn/tokensOut ${r.tokensIn}/${r.tokensOut}`
+    )
+  }
+  return verdict('usage-sanity', 'pass', key)
+}
+
 function checkStalePrompt(
   r: BenchmarkResult,
   currentBundle: (taskId: string) => string | undefined
@@ -393,6 +419,7 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
     verdicts.push(checkRegistry(r, tasks, models))
     verdicts.push(checkFailureReason(r))
     verdicts.push(checkTelemetry(r))
+    verdicts.push(checkUsage(r))
     verdicts.push(checkStalePrompt(r, currentPromptBundle))
   }
 

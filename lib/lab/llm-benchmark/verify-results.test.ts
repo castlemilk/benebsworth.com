@@ -262,6 +262,31 @@ describe('telemetry sanity', () => {
   })
 })
 
+describe('usage sanity', () => {
+  it('skips a record written before the usage summary existed', () => {
+    expect(of(verifyResults([goodRecord()]), 'usage-sanity')[0].level).toBe('skip')
+  })
+
+  it('passes a summary that agrees with the flat token fields', () => {
+    const record = goodRecord({ usage: { inputTokens: 10, outputTokens: 20, source: 'mixed' } })
+    expect(of(verifyResults([record]), 'usage-sanity')[0].level).toBe('pass')
+  })
+
+  it('fails a summary that disagrees with the tokens displayed beside it', () => {
+    const record = goodRecord({ usage: { inputTokens: 10, outputTokens: 999, source: 'reported' } })
+    const verdict = of(verifyResults([record]), 'usage-sanity')[0]
+    expect(verdict.level).toBe('fail')
+    expect(verdict.detail).toContain('10/999')
+  })
+
+  it('fails a source outside the vocabulary (the honesty field must stay readable)', () => {
+    const record = goodRecord({
+      usage: { inputTokens: 10, outputTokens: 20, source: 'guessed' as never },
+    })
+    expect(of(verifyResults([record]), 'usage-sanity')[0].level).toBe('fail')
+  })
+})
+
 // ---------------------------------------------------------------------------
 // Filesystem-dependent checks, driven entirely through injected inputs.
 // ---------------------------------------------------------------------------

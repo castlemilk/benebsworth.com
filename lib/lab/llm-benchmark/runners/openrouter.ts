@@ -1,4 +1,4 @@
-import type { BenchmarkModel, BenchmarkTask } from '../types'
+import type { BenchmarkModel, BenchmarkTask, UsageProvenance } from '../types'
 
 export interface OpenRouterConfig {
   apiKey: string
@@ -15,6 +15,8 @@ export interface GenerationResponse {
   tokensOut: number
   runtimeMs: number
   /** See the canonical contract on `GenerationResponse` in ../types. */
+  usageSource?: UsageProvenance
+  /** See the canonical contract on `GenerationResponse` in ../types. */
   ttftMs?: number
 }
 
@@ -27,13 +29,23 @@ export interface GenerationResponse {
 async function readChatStream(
   body: ReadableStream<Uint8Array>,
   onProgress?: (bytes: number) => void
-): Promise<{ content: string; tokensIn: number; tokensOut: number; firstTokenAt?: number }> {
+): Promise<{
+  content: string
+  tokensIn: number
+  tokensOut: number
+  /** True iff the stream carried a `usage` block — i.e. the counts are the provider's own. */
+  sawUsage: boolean
+  firstTokenAt?: number
+}> {
   const reader = body.getReader()
   const decoder = new TextDecoder()
   let buffer = ''
   let content = ''
   let tokensIn = 0
   let tokensOut = 0
+  // Provenance, not a count: distinguishes "the provider said 0" from "the
+  // provider said nothing and these zeros are ours".
+  let sawUsage = false
   let received = 0
   let finishReason: string | undefined
   // Wall-clock of the first NON-EMPTY content delta — a true first-token
@@ -65,6 +77,7 @@ async function readChatStream(
         }
         if (typeof choice?.finish_reason === 'string') finishReason = choice.finish_reason
         if (json.usage) {
+          sawUsage = true
           tokensIn = json.usage.prompt_tokens ?? tokensIn
           tokensOut = json.usage.completion_tokens ?? tokensOut
         }
@@ -81,7 +94,7 @@ async function readChatStream(
     )
   }
 
-  return { content, tokensIn, tokensOut, firstTokenAt }
+  return { content, tokensIn, tokensOut, sawUsage, firstTokenAt }
 }
 
 export async function generateOpenRouter(
@@ -128,7 +141,7 @@ export async function generateOpenRouter(
   if (!res.body) throw new Error('OpenRouter response had no body')
 
   let lastLog = 0
-  const { content, tokensIn, tokensOut, firstTokenAt } = await readChatStream(res.body, (bytes) => {
+  const { content, tokensIn, tokensOut, sawUsage, firstTokenAt } = await readChatStream(res.body, (bytes) => {
     if (bytes - lastLog >= 64 * 1024) {
       lastLog = bytes
       console.log(`[harness]   … ${model.name} streaming, ${Math.round(bytes / 1024)}KB so far`)
@@ -140,6 +153,10 @@ export async function generateOpenRouter(
     tokensIn,
     tokensOut,
     runtimeMs: Date.now() - start,
+    // 'reported' only when the stream actually carried a usage block. Without
+    // one there is no fallback estimate here — tokensIn/tokensOut stay 0 —
+    // and a zero we invented is emphatically not a provider statement.
+    usageSource: sawUsage ? 'reported' : 'estimated',
     // Measured from the SAME `start` as runtimeMs (i.e. before the fetch), so
     // TTFT includes connect + queue + prefill — which is the point: that is the
     // half of the latency that is not decoding.

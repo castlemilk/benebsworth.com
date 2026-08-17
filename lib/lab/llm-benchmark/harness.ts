@@ -1,9 +1,20 @@
+import { costFromUsage } from './billing'
 import type { BenchmarkModel, BenchmarkResult, BenchmarkRunner, BenchmarkTask } from './types'
 
 export type { BenchmarkRunner }
 
+/**
+ * @deprecated Use `costFromUsage(summarizeUsage(runs), model)` from
+ * `./billing` — it carries the provenance of the tokens it prices
+ * (`UsageSummary.source`) and knows about cached-token counters, neither of
+ * which a bare pair of numbers can express.
+ *
+ * Kept as a thin wrapper (identical results by construction: a summary with no
+ * cached tokens IS the flat math) so existing callers and their tests stay
+ * valid. `billing.test.ts` locks the two against each other across fixtures.
+ */
 export function estimateCost(tokensIn: number, tokensOut: number, model: BenchmarkModel): number {
-  return (tokensIn / 1000) * model.costPer1kInputUsd + (tokensOut / 1000) * model.costPer1kOutputUsd
+  return costFromUsage({ inputTokens: tokensIn, outputTokens: tokensOut, source: 'estimated' }, model)
 }
 
 export interface AggregateStats {

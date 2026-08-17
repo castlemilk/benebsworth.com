@@ -59,6 +59,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Trace publication script (`task bench:publish-traces`) | `scripts/publish-traces.mjs` |
 | Run-trace UI (the transcript, in the browser) | `components/lab/llm-benchmark/run-trace.tsx` |
 | Per-call telemetry (TTFT/decode-rate sink + `foldTelemetry`) | `lib/lab/llm-benchmark/runners/provider.ts` |
+| Usage summaries + cost inference (pure: `summarizeUsage`, `costFromUsage`) | `lib/lab/llm-benchmark/billing.ts` |
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
@@ -415,7 +416,11 @@ export async function generateMyProvider(
 ```
 
 3. Wire it into `configForModel()` and `generateWithProvider()` in `lib/lab/llm-benchmark/runners/provider.ts`.
-4. Never commit API keys. Read them from `process.env` at runtime.
+4. Stamp `usageSource` on the response: `'reported'` only when the provider's
+   own usage block was present, `'estimated'` otherwise (including a `?? 0`
+   fallback). See "Billing + usage provenance" below — an unstamped response is
+   read as estimated, which is safe but loses a real measurement.
+5. Never commit API keys. Read them from `process.env` at runtime.
 
 ## Operational Gotchas
 
@@ -706,6 +711,44 @@ the generation half.
 - **No UI.** The model-page surface is deferred to backlog #9's trace UI;
   today the numbers are readable through `retrace.mjs` and results.json.
 
+## Billing + usage provenance (`billing.ts`)
+
+Token counts arrive from providers that know wildly different amounts, so the
+harness records WHERE each number came from and prices everything in one place.
+
+- **Shape.** `UsageSummary = { inputTokens, outputTokens, cachedReadTokens?,
+  cachedWriteTokens?, source }` (declared in `types.ts` because
+  `BenchmarkResult.usage` persists it and types.ts must stay a leaf; `billing.ts`
+  re-exports it and owns the algebra). Build with `summarizeUsage(runs)`, price
+  with `costFromUsage(usage, model)` — never multiply rates by hand.
+- **`source` is the honesty field.** `'reported'` = the provider stated the
+  counts; `'estimated'` = our ~4-chars-per-token heuristic, or a zero fallback
+  we invented when the provider said nothing; `'mixed'` = one record folded over
+  both. Roll-up rules: an UNSTAMPED contribution reads as `'estimated'` (unknown
+  provenance is never a provider statement); only token-bearing contributions
+  vote, so a failed 0/0 iteration can't drag a reported record to `'mixed'`; two
+  kinds among the voters give `'mixed'`, never a majority winner.
+- **Who stamps what** (`GenerationResponse.usageSource`): moonshot/openrouter
+  `'reported'` iff the SSE stream carried a `usage` block; openai/anthropic/
+  google `'reported'` iff `usage`/`usageMetadata` was present; `cli.ts` always
+  `'estimated'`.
+- **The codex carve-out — read this before "fixing" it.** Codex prints a real
+  `tokens used` TOTAL, and `parseCodexTokens` splits it 25/75 into in/out. The
+  TOTAL is reported; the SPLIT is ours. Neither half is a number codex ever
+  stated, so the contribution stays `'estimated'` — stamping `'reported'` would
+  let an invented split borrow the provider's authority. It earns `'reported'`
+  only when a provider reports the two directions separately.
+- **Cached tokens.** `cachedReadTokens`/`cachedWriteTokens` are ADDITIVE to
+  `inputTokens` (Anthropic-style disjoint counters) and bill at the NORMAL INPUT
+  RATE, because `BenchmarkModel` has no cached-rate fields yet. That over-states
+  spend rather than under-stating it — the right direction for a benchmark that
+  publishes costs. Nothing produces them today, so no existing number moves.
+- **Back-compat.** `BenchmarkResult.tokensIn`/`tokensOut` stay and always equal
+  `usage.inputTokens`/`usage.outputTokens`; `usage` is the richer view and
+  `costUsd` is computed from it. `estimateCost()` in `harness.ts` is a
+  deprecated thin wrapper over `costFromUsage`. The `usage-sanity` verify check
+  fails any record where the two views disagree or `source` is off-vocabulary.
+
 ## Verifying the results themselves (`task bench:verify-results`)
 
 `task bench:verify` checks the CODE. This checks the DATA — results.json and
@@ -721,7 +764,7 @@ npx tsx scripts/verify-results.mjs        # same thing without task
 - **When to run.** After any sweep, backfill, merge, or hand edit of
   results.json; before a deploy. The pre-push hook runs it first (cheapest
   gate), so a corrupted results.json cannot leave the machine.
-- **What it catches.** Ten invariants, each carrying the WHY it exists (the
+- **What it catches.** Eleven invariants, each carrying the WHY it exists (the
   report prints that WHY on failure): `score` drifted from the `aggregateRuns`
   aggregation of `iterationScores`; `iterationCheckResults` misaligned with
   `iterationScores` (the UI pairs them by index — a misalignment attributes one
@@ -732,8 +775,10 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   a `failureReason` outside the taxonomy or on a `success`; a run log on disk
   whose record carries no `runLogRef` ("no record without a trace") or a ref
   whose log names a different model/task or never recorded an `aggregate`;
-  run-log `seq` integrity; and a record scored under a superseded prompt bundle
-  (`stale-prompt`, below).
+  run-log `seq` integrity; a `usage` summary that disagrees with the flat
+  `tokensIn`/`tokensOut` beside it or carries an off-vocabulary `source`
+  (`usage-sanity` — the published `costUsd` is priced off that summary); and a
+  record scored under a superseded prompt bundle (`stale-prompt`, below).
 - **The ref-less carve-out.** A run log whose record has no `runLogRef` only
   FAILS when the record's `createdAt` is at or after the log header's. A record
   that PREDATES the log beside it is the merge-protection shape: that run
@@ -755,7 +800,8 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   single-entry `iterationCheckResults` that
   `scripts/backfill-iteration-checks.mjs` writes (one breakdown for the one
   published artifact) is a documented shape, not a misalignment. Current
-  baseline: 183 records → 0 failures, 0 warnings, 878 skipped, 183 pre-bundle.
+  baseline: 183 records → 0 failures, 0 warnings, 1061 skipped, 183 pre-bundle
+  (every stored record predates `usage`, so all 183 skip `usage-sanity`).
 - **Adding a check.** Put it in `RESULT_CHECKS` with a `why` naming the bug it
   would have caught, keep it pure (filesystem inputs are injected as
   `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check

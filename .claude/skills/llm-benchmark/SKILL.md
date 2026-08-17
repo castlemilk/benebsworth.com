@@ -1065,8 +1065,9 @@ harness records WHERE each number came from and prices everything in one place.
 
 ## Sweep budget caps (`budgetMaxUsd`, #28)
 
-A paid sweep has no natural stopping point: 7 tasks x 5 iterations on a
-frontier model spends whatever it spends. The cap is the guard.
+A paid sweep has no natural stopping point: a full board (9 tasks with the
+plugin tasks, x 5 iterations) on a frontier model spends whatever it
+spends. The cap is the guard.
 
 ```bash
 # Per-model cap for this sweep — see the row before spending anything

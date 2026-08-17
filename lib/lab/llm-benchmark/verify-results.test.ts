@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { openRunLog, readRunLog, setRunLogDir } from './runlog'
+import type { ProvenanceEntry } from './failure-corpus'
 import type { BenchmarkResult } from './types'
 import {
   RESULT_CHECKS,
@@ -725,5 +726,71 @@ describe('summarizeVerdicts', () => {
     )
     expect(summary.preBundleRecords).toBe(0)
     expect(summary.line).toMatch(/0 pre-bundle/)
+  })
+})
+
+describe('corpus-provenance (failure regression corpus, #25)', () => {
+  function entry(over: Partial<ProvenanceEntry> = {}): ProvenanceEntry {
+    return {
+      artifact: 'ba7816bf8f01cfea',
+      modelId: 'kimi-k2.7',
+      taskId: 'n-body-field',
+      iterationIndex: 0,
+      score: 30,
+      failedChecks: ['canvas-advance'],
+      sweepRunId: '2026-08-17T06-59-08',
+      ingestedAt: '2026-08-17T09:00:00.000Z',
+      ...over,
+    }
+  }
+
+  it('passes a case whose ids resolve and whose artifact is an address', () => {
+    const seen = of(verifyResults([goodRecord()], { corpusProvenance: [entry()] }), 'corpus-provenance')
+    expect(seen).toHaveLength(1)
+    expect(seen[0].level).toBe('pass')
+    expect(seen[0].recordKey).toBe('ba7816bf8f01cfea|kimi-k2.7|n-body-field#0')
+  })
+
+  it('fails a case whose model was renamed out of the registry', () => {
+    const [v] = of(
+      verifyResults([goodRecord()], { corpusProvenance: [entry({ modelId: 'kimi-k2.6-retired' })] }),
+      'corpus-provenance'
+    )
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/unknown modelId "kimi-k2.6-retired"/)
+  })
+
+  it('fails a case whose task no longer exists', () => {
+    const [v] = of(
+      verifyResults([goodRecord()], { corpusProvenance: [entry({ taskId: 'deleted-task' })] }),
+      'corpus-provenance'
+    )
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/unknown taskId "deleted-task"/)
+  })
+
+  it('fails an artifact that is a filename rather than a bare content address', () => {
+    // The corpus stores `<addr>` and appends `.html` itself; a row carrying the
+    // filename would name `cases/ba7816bf8f01cfea.html.html`.
+    const [v] = of(
+      verifyResults([goodRecord()], { corpusProvenance: [entry({ artifact: 'ba7816bf8f01cfea.html' })] }),
+      'corpus-provenance'
+    )
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/is not a content address/)
+  })
+
+  it('reports every problem on one row at once', () => {
+    const [v] = of(
+      verifyResults([goodRecord()], {
+        corpusProvenance: [entry({ artifact: 'zzz', modelId: 'nope', taskId: 'nope' })],
+      }),
+      'corpus-provenance'
+    )
+    expect(v.detail).toMatch(/content address.*unknown modelId.*unknown taskId/)
+  })
+
+  it('is silently absent when no corpus has been ingested', () => {
+    expect(of(verifyResults([goodRecord()], {}), 'corpus-provenance')).toEqual([])
   })
 })

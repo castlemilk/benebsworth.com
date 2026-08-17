@@ -256,7 +256,7 @@ tasks:
       typechecks and unit-tests the harness, this one interrogates what the
       harness produced.
 
-      Thirteen checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
+      Fourteen checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
       WHY it exists — printed on failure): score is exactly the `aggregateRuns`
       aggregation of `iterationScores`; `iterationCheckResults` is index-aligned
       with them; succeeded <= ran with one score per success; `status` agrees
@@ -268,7 +268,10 @@ tasks:
       duplicate or decrease is a failure); and every content-addressed blob on
       disk (`spill/<hash>.txt`, `artifacts/<hash>.html`) still hashes to the
       name it is stored under (#31 — a tampered or truncated artifact fails; an
-      absent one skips, and legacy run-scoped names skip).
+      absent one skips, and legacy run-scoped names skip); and every
+      failure-corpus case (#25) names a model/task that still resolves and an
+      `artifact` that is a real content address (skips entirely when no corpus
+      has been ingested).
 
       Records that predate a field skip the checks that need it. Seeded records
       are exempt from the run-log checks only. The log checks skip entirely
@@ -299,6 +302,51 @@ tasks:
       do not match their own content address (fix that first).
     cmds:
       - '{{.BIN}}/tsx scripts/rescore-artifact.mjs {{.CLI_ARGS}}'
+
+  corpus:ingest:
+    desc: File this machine's failing sweep iterations into the failure regression corpus (free, offline)
+    summary: |
+      Production-case ingestion (#25). `sweeps/` is gitignored and pruned, so
+      every broken artifact a sweep found — the platformer that never jumps, the
+      free-tier model that narrated its plan instead of emitting a document —
+      dies with the tree unless it is filed. Those are the regression cases.
+
+      Selects the FAILING iterations from every local run log: score < 40, OR
+      any NAMED behavioural check tripped (which is why a 100-scoring artifact
+      that trips the zero-point `no-runtime-errors` check is still ingested).
+      Writes the bytes to `failure-corpus/cases/<content-address>.html`
+      (GITIGNORED — model HTML that executes in a browser, re-derivable from the
+      sweep) and the story to `failure-corpus/provenance.json` (COMMITTED —
+      model, task, iteration, score, failed checks, prompt bundle, sweep id).
+
+      Idempotent: the key is artifact+model+task+iteration and the original
+      `ingestedAt` is preserved, so re-running over the same trees leaves
+      provenance.json byte-identical. `-- --run <id>` limits it to one sweep,
+      `-- --dry-run` reports without writing. Commit provenance.json after.
+    cmds:
+      - '{{.BIN}}/tsx scripts/ingest-failures.mjs {{.CLI_ARGS}}'
+
+  corpus:probe:
+    desc: Re-run the failure corpus through the CURRENT scorer — the post-prompt-edit report
+    summary: |
+      The payoff of #25, and the workflow is: ingest → edit a prompt or a scorer
+      → probe. Each case is graded against its recorded provenance:
+
+        still-broken  reproduces. The EXPECTED steady state, not a failure.
+        now-passing   clears the floor AND nothing that used to fail still does.
+        changed       a DIFFERENT failure set — a partial fix, or breakage the
+                      provenance does not describe (grow the check registry).
+
+      A REPORT, not a gate: exit is 0 whatever the verdicts, because a gate that
+      failed on still-broken would be red forever. `-- --strict` exits 1 on any
+      `changed` case — that is the release-gate use, after an edit.
+
+      COST: behavioural cases launch headless Chromium (seconds to ~30s each).
+      Bound a run with `-- --task <id> --model <id> --limit <n>`. Cases whose
+      bytes are absent (a fresh clone — they are gitignored) are reported and
+      skipped; re-ingest from a sweep tree to probe them.
+    cmds:
+      - '{{.BIN}}/tsx scripts/probe-corpus.mjs {{.CLI_ARGS}}'
 
   publish-traces:
     desc: Copy the run logs results.json points at into public/lab-data/traces (free, offline)

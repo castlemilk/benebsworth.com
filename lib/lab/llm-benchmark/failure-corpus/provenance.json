@@ -1,0 +1,542 @@
+[
+  {
+    "artifact": "071dd09171e7f238",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "mini-platformer",
+    "iterationIndex": 3,
+    "score": 30,
+    "failedChecks": [
+      "platformer-jump",
+      "platformer-move",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1a38ff5e6a98d15b",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "0bc460a747a538d2",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 3,
+    "score": 62,
+    "failedChecks": [
+      "landing-animates"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "16dd734583ae087f",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "circuit-builder-teaser",
+    "iterationIndex": 1,
+    "score": 62,
+    "failedChecks": [
+      "circuit-interact",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "70e17738e3850933",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "1ef1a63c1f8913cf",
+    "modelId": "deepseek-v4-flash-free",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 0,
+    "score": 3,
+    "failedChecks": [
+      "landing-structure",
+      "landing-animates"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T05-41-46",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "21065228e2fdaaa0",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "mini-platformer",
+    "iterationIndex": 0,
+    "score": 30,
+    "failedChecks": [
+      "platformer-jump",
+      "platformer-move",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1a38ff5e6a98d15b",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "2a741c6715c9f4a5",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 2,
+    "score": 30,
+    "failedChecks": [
+      "landing-structure",
+      "landing-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "30469385d0712553",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "physics-pendulum-wave",
+    "iterationIndex": 1,
+    "score": 68,
+    "failedChecks": [
+      "pendulum-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "7d84947748375603",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "3686bdc36ba28e3e",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "n-body-field",
+    "iterationIndex": 3,
+    "score": 30,
+    "failedChecks": [
+      "nbody-renders",
+      "nbody-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "372e815603a83380",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 2,
+    "score": 100,
+    "failedChecks": [
+      "no-runtime-errors"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "381cf728cc1b9587",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 1,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "42b0469ba3d21b66",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "physics-pendulum-wave",
+    "iterationIndex": 2,
+    "score": 30,
+    "failedChecks": [
+      "pendulum-renders",
+      "pendulum-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "7d84947748375603",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "5095ec38474d851d",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "circuit-builder-teaser",
+    "iterationIndex": 0,
+    "score": 62,
+    "failedChecks": [
+      "circuit-interact",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "70e17738e3850933",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "582781b009cd52cf",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 3,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "5aa3a392cd839eaf",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "n-body-field",
+    "iterationIndex": 3,
+    "score": 68,
+    "failedChecks": [
+      "nbody-animates"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "7153093ef5cbe0dc",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "circuit-builder-teaser",
+    "iterationIndex": 2,
+    "score": 30,
+    "failedChecks": [
+      "circuit-structure",
+      "circuit-interact",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "70e17738e3850933",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "7507b3fcd0b37f32",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "n-body-field",
+    "iterationIndex": 4,
+    "score": 68,
+    "failedChecks": [
+      "nbody-animates"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "77bde1267650a31e",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "n-body-field",
+    "iterationIndex": 0,
+    "score": 30,
+    "failedChecks": [
+      "nbody-renders",
+      "nbody-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "7a227620b9861c63",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 4,
+    "score": 62,
+    "failedChecks": [
+      "landing-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "7d1b66987d29792e",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 1,
+    "score": 29,
+    "failedChecks": [
+      "landing-structure",
+      "landing-animates"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "7e027dbe930fa9cd",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "n-body-field",
+    "iterationIndex": 4,
+    "score": 30,
+    "failedChecks": [
+      "nbody-renders",
+      "nbody-animates"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "82e0efc84eddb2cc",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "n-body-field",
+    "iterationIndex": 2,
+    "score": 30,
+    "failedChecks": [
+      "nbody-renders",
+      "nbody-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "91b9b524da4c0660",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 1,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "93b7603011fbdfef",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "physics-pendulum-wave",
+    "iterationIndex": 0,
+    "score": 30,
+    "failedChecks": [],
+    "promptBundle": "7d84947748375603",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "96564dd0c4bae9e0",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 0,
+    "score": 62,
+    "failedChecks": [
+      "landing-animates"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "978c9501cc443165",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 0,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "9e44179d9e0778d3",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 4,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "a850eb6fbad0f418",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "n-body-field",
+    "iterationIndex": 2,
+    "score": 68,
+    "failedChecks": [
+      "nbody-animates"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "aee6240c5e675f30",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "n-body-field",
+    "iterationIndex": 1,
+    "score": 30,
+    "failedChecks": [
+      "nbody-renders",
+      "nbody-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "bbfb308c4e4fc93f",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "physics-pendulum-wave",
+    "iterationIndex": 4,
+    "score": 30,
+    "failedChecks": [
+      "pendulum-renders",
+      "pendulum-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "7d84947748375603",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "bdd242f8e7432f2e",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 2,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "c60e09dcad0c5e2b",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 3,
+    "score": 68,
+    "failedChecks": [
+      "ttt-win-detected"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "c6853d62ef4160fc",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "landing-page-morph",
+    "iterationIndex": 0,
+    "score": 62,
+    "failedChecks": [
+      "landing-animates",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "1de26823e28f4ea6",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "c8c3ab5abac9e68f",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "mini-platformer",
+    "iterationIndex": 4,
+    "score": 30,
+    "failedChecks": [
+      "platformer-jump",
+      "platformer-move"
+    ],
+    "promptBundle": "1a38ff5e6a98d15b",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "d43ffbe5153632ef",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "mini-platformer",
+    "iterationIndex": 2,
+    "score": 11,
+    "failedChecks": [
+      "platformer-jump",
+      "platformer-move"
+    ],
+    "promptBundle": "1a38ff5e6a98d15b",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "e58e5b0f3021ee12",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "mini-platformer",
+    "iterationIndex": 1,
+    "score": 30,
+    "failedChecks": [
+      "platformer-jump",
+      "platformer-move"
+    ],
+    "promptBundle": "1a38ff5e6a98d15b",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "e9d08cb5fff94722",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 4,
+    "score": 30,
+    "failedChecks": [
+      "ttt-grid-interacts",
+      "ttt-win-detected",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "ed6c7b32b630cc3d",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "tic-tac-toe",
+    "iterationIndex": 0,
+    "score": 30,
+    "failedChecks": [
+      "ttt-grid-interacts",
+      "ttt-win-detected",
+      "no-runtime-errors"
+    ],
+    "promptBundle": "b8a8ea31ae7a61a0",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "f07315fe2e652b99",
+    "modelId": "gemini-3.6-flash",
+    "taskId": "n-body-field",
+    "iterationIndex": 0,
+    "score": 68,
+    "failedChecks": [
+      "nbody-animates"
+    ],
+    "promptBundle": "1945c43e6f9b3a29",
+    "sweepRunId": "2026-08-17T06-34-06",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  },
+  {
+    "artifact": "fab479522bdc44a7",
+    "modelId": "nemotron-nano-12b-vl",
+    "taskId": "circuit-builder-teaser",
+    "iterationIndex": 3,
+    "score": 43,
+    "failedChecks": [
+      "circuit-interact"
+    ],
+    "promptBundle": "70e17738e3850933",
+    "sweepRunId": "2026-08-17T06-59-08",
+    "ingestedAt": "2026-08-17T11:27:46.189Z"
+  }
+]

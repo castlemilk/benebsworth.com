@@ -52,6 +52,22 @@ export function contentAddressedName(content: string | Buffer, ext: string): str
 
 const ADDRESSED_NAME = new RegExp(`^([0-9a-f]{${CONTENT_ADDRESS_CHARS}})\\.[a-z0-9]+$`)
 
+const BARE_ADDRESS = new RegExp(`^[0-9a-f]{${CONTENT_ADDRESS_CHARS}}$`)
+
+/**
+ * Is this string a BARE address (no extension, no directory)?
+ *
+ * The failure corpus (#25) stores the address itself as a field —
+ * `provenance.json`'s `artifact` — rather than a filename, because the
+ * extension is the corpus's choice (`cases/<addr>.html`) and not part of the
+ * identity. Validating that field needs the same 16-hex-chars definition as
+ * every filename check, so it lives here rather than as a second regex in
+ * `verify-results.ts` that would drift the day `CONTENT_ADDRESS_CHARS` moves.
+ */
+export function isContentAddress(value: string): boolean {
+  return BARE_ADDRESS.test(value)
+}
+
 /**
  * The address a path CLAIMS, or `undefined` when the name is not one of ours.
  *

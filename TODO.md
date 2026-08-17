@@ -1001,40 +1001,45 @@ against the 60s default — `--timeout-ms 120000` for slow CLI models).
 **Effort.** M. **Dependencies.** none (uses existing runners; feeds #21's
 bundle tracking).
 
-## [ ] 25. Failure regression corpus (production-case ingestion)
+## [x] 25. Failure regression corpus (production-case ingestion)
 
-**Problem.** Every broken artifact the benchmark discovers - the platformer
-iterations with no `<canvas>`, the n-body that never animates, the
-prompt-echoing free-tier outputs - is discarded after the sweep. They are
-exactly the regression cases a prompt/scorer change should re-test, and
-paperclip's Phase 4 is precisely "production-case ingestion".
+**Shipped 2026-08-17.** Broken artifacts now outlive their sweep.
+`lib/lab/llm-benchmark/failure-corpus.ts` is the pure half:
+`selectFailureCases` pulls the FAILING iterations out of a parsed run log
+(score < `CORPUS_FAIL_SCORE` 40 **or** any named tripped check), `mergeProvenance`
+folds them into the committed metadata, `compareCase` grades a re-probe
+(`still-broken` / `now-passing` / `changed`). Two shells: `ingest-failures.mjs`
+(`task bench:corpus:ingest`) writes `failure-corpus/cases/<addr>.html`
+(gitignored, content-addressed → dedupe and re-ingest are free) +
+`provenance.json` (committed: artifact, model, task, iteration, score,
+failedChecks, promptBundle, sweepRunId, ingestedAt), and `probe-corpus.mjs`
+(`task bench:corpus:probe`) re-runs the CURRENT scorer — real Playwright for
+behavioural tasks — and reports fixed-vs-still-broken. It is a REPORT: exit 0
+whatever the verdicts, because still-broken is a corpus's steady state;
+`--strict` exits 1 only on `changed`, the "broke in a way its provenance does
+not describe" case. New verify check `corpus-provenance` (14 now) is the cheap
+half: every row's ids resolve in the registry and its `artifact` is a bare
+content address (`isContentAddress`).
 
-**Inspiration.** paperclip `doc/plans/2026-03-13-agent-evals-framework.md`
-Phase 4 ("Production-case ingestion" - grow the suite from real usage);
-their `mcp-gateway-gap-memo.md` / `mcp-gateway-run-summary.md` pattern
-(evals write gap memos from real failures). Graphify's
-`# NOTE:`-as-node idea (rationale comments become queryable first-class
-nodes) also applies: each corpus case should carry its provenance.
+Three alignment traps the real data exposed, all locked by tests:
+`iterationScores` is aligned with the `clean` EVENTS, not with `iterationIndex`
+(the nemotron pendulum run skipped iteration 3, so `iterationScores[3]` is
+iteration FOUR); a count mismatch skips the log as `unalignable` rather than
+half-guessing; and UNNAMED failed checks are dropped — the same pendulum run
+recorded two `{name:'', maxPoints:0, detail:'threw: Attempt to access memory
+outside buffer bounds'}` rows, which is a scorer crash, not a regression a
+future probe could match on. Zero-point checks are kept, and earn their keep:
+nemotron tic-tac-toe iteration 2 scored **100** while tripping
+`no-runtime-errors` (`board.children.forEach is not a function`) — a case a
+score-only filter would have thrown away.
 
-**Design sketch.**
-
-- `scripts/ingest-failures.mjs`: after a sweep (or from the event log,
-  #1), collect every failed iteration (score < 40 OR a tripped check OR
-  `no <canvas>`-class findings) and write
-  `lib/lab/llm-benchmark/failure-corpus/<model>-<task>-<n>.html` +
-  `provenance.json` (`{ modelId, taskId, score, failedChecks, promptBundleHash, sweepRunId }`).
-- `scripts/probe-corpus.mjs`: re-run the corpus through the CURRENT
-  scorer/prompt and report "still broken" vs "now fixed" - the release-gate
-  for prompt/scorer changes ("did the deepseek platformer iteration that
-  emitted no canvas start emitting one?").
-- Corpus is gitignored for artifacts, committed for provenance metadata;
-  `verify-results.mjs` (#5) fails if a corpus case that used to be broken
-  is broken in a NEW way not covered by existing checks (drives #10's
-  check registry to grow).
-
-**Acceptance criteria.** After the next sweep, corpus contains the broken
-iterations with provenance; a prompt change re-probes them; the report
-shows fixed-vs-still-broken counts.
+Real ingestion (the demo): 39 cases from 22 logs across today's five sweep
+trees — deepseek landing-page-morph @3, nemotron mini-platformer ×5 (11-30),
+n-body ×5 @30, tic-tac-toe ×5, pendulum ×4, circuit-builder ×4,
+landing-page-morph ×5, plus gemini tic-tac-toe ×5 @68 (`ttt-win-detected`) and
+n-body ×4 @68. Re-ingest reports `0 new, 0 updated, 39 unchanged`. No text-task
+case exists: every equation-solver / crypto-hash-race iteration scored above the
+floor and text scorers trip no checks.
 
 **Effort.** M-L. **Dependencies.** #1 (event log) + #10 (check registry).
 
@@ -1602,6 +1607,16 @@ without reading results.json; the server is read-only.
   through `mergeResults`' protection path; per-response `costUsd` on the
   run-log `response` event; `budget` row in `--dump-config`; `budget-sanity`
   verify check.
+- Failure regression corpus (#25): `failure-corpus.ts` (pure
+  `selectFailureCases` / `mergeProvenance` / `compareCase`) +
+  `scripts/ingest-failures.mjs` and `scripts/probe-corpus.mjs`
+  (`task bench:corpus:ingest` / `:probe`). Failing iterations (score < 40 or a
+  named tripped check) are filed as content-addressed
+  `failure-corpus/cases/<addr>.html` (gitignored) plus a committed
+  `provenance.json`; probing re-runs the CURRENT scorer and grades each case
+  still-broken / now-passing / changed (report by default, `--strict` fails on
+  `changed`). `corpus-provenance` verify check. Seeded with 39 real cases from
+  the 2026-08-17 sweeps.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

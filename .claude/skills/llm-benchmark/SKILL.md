@@ -70,6 +70,9 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Quota-recovery monitor script (`task bench:monitor`) | `scripts/sweep-recovery.mjs` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
+| Failure corpus: case selection, provenance merge, verdict comparison (pure) | `lib/lab/llm-benchmark/failure-corpus.ts` |
+| Failure-corpus ingestion / re-probe scripts (`task bench:corpus:ingest` / `:probe`) | `scripts/ingest-failures.mjs`, `scripts/probe-corpus.mjs` |
+| Failure-corpus data (bytes gitignored, provenance committed) | `lib/lab/llm-benchmark/failure-corpus/{cases/,provenance.json}` |
 | Prompt-regression probes (data) | `lib/lab/llm-benchmark/probes/probes.json` |
 | Probe loader + pure `evaluateProbe` / `probePrompt` | `lib/lab/llm-benchmark/probes.ts` |
 | Probe runner (`task bench:probe`) | `scripts/prompt-probe.mjs` |
@@ -1113,6 +1116,73 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   would have caught, keep it pure (filesystem inputs are injected as
   `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check
   that can't state its bug is synthetic — it will be muted, not fixed.
+
+## Failure regression corpus (`task bench:corpus:*`, #25)
+
+Every sweep discovers broken artifacts, and `sweeps/` is gitignored and pruned
+— so without ingestion they die with the tree. They are exactly the cases a
+prompt or scorer edit must be re-tested against (paperclip's "production-case
+ingestion": the suite GROWS from real usage).
+
+**The workflow, in order:**
+
+```bash
+task bench:corpus:ingest                       # after a sweep — file its failures
+task bench:corpus:ingest -- --dry-run          # see what would be filed
+git add lib/lab/llm-benchmark/failure-corpus/provenance.json && git commit
+# … now edit a prompt (prompts.ts) or a scorer (scorers/checks.ts) …
+task bench:corpus:probe -- --task mini-platformer --limit 5   # what did that fix?
+task bench:corpus:probe -- --strict            # release gate: fail on `changed`
+```
+
+- **Git policy (the point of the split).** `failure-corpus/cases/<addr>.html`
+  is **gitignored**: model-generated HTML that executes in a browser, large, and
+  re-derivable from a sweep tree. `failure-corpus/provenance.json` is
+  **committed**: it is the only durable record that a case EXISTS — model, task,
+  iteration, score, failed checks, prompt bundle, sweep id, first-ingested-at.
+  A fresh clone therefore has provenance and no bytes; `probe-corpus` reports
+  those as "provenance but no local artifact" and skips them. Re-ingest from a
+  sweep tree to probe them.
+- **What is a failure.** Score < 40 (`CORPUS_FAIL_SCORE`) **or** any NAMED
+  behavioural check tripped. The second half matters: nemotron tic-tac-toe
+  iteration 2 scored **100** while failing the zero-point `no-runtime-errors`
+  check (`board.children.forEach is not a function`) — a score-only filter
+  throws that away. UNNAMED failed checks are dropped on purpose: the real
+  pendulum run recorded two `{name:'', maxPoints:0, detail:'threw: Attempt to
+  access memory outside buffer bounds'}` rows, which is the SCORER crashing, and
+  a nameless failure can never be matched against a future probe.
+- **Alignment trap.** `iterationScores` is index-aligned with the `clean`
+  EVENTS, not with `iterationIndex` — the nemotron pendulum run skipped
+  iteration 3, so `iterationScores[3]` is iteration FOUR's score. A count
+  mismatch makes the log `unalignable` and it is skipped whole rather than
+  half-guessed; a case filed under the wrong score is worse than a missing one.
+- **Idempotent by construction.** Key = artifact + model + task + iteration
+  (NOT the sweep run — re-running a sweep must not double the corpus; NOT the
+  artifact alone — two models can emit byte-identical garbage). `ingestedAt`
+  comes from the EXISTING row, and entries sort by key, so a re-ingest is a
+  zero-line diff and a real one shows only the new cases.
+- **Probe verdicts.** `still-broken` (reproduces — the expected steady state),
+  `now-passing` (clears the floor AND nothing that used to fail still fails),
+  `changed` (a different failure set: partial fix, or new breakage the
+  provenance does not describe). Exit is **0 whatever the verdicts** — this is a
+  REPORT; a gate on still-broken would be red forever. `--strict` exits 1 only
+  on `changed`, which is the release-gate use after an edit and the pressure to
+  grow the check registry.
+- **Cost.** Behavioural cases are real Playwright (seconds to ~30s each);
+  text-scored cases are milliseconds. Nothing runs this automatically — bound
+  it with `--task` / `--model` / `--limit`.
+- **Cheap half.** `bench:verify-results`' `corpus-provenance` check confirms
+  every row's ids still resolve in the registry and its `artifact` is a bare
+  16-hex content address. It never reads an artifact; whether a case still
+  reproduces is `corpus:probe`'s expensive question.
+- **Where the logic lives.** Pure: `lib/lab/llm-benchmark/failure-corpus.ts`
+  (`selectFailureCases`, `mergeProvenance`, `compareCase`), unit-tested with no
+  browser and no sweeps/ tree. The scripts are shells.
+- **Baseline (2026-08-17).** 39 cases from 22 logs: deepseek
+  landing-page-morph @3, nemotron mini-platformer/n-body/tic-tac-toe/pendulum/
+  circuit-builder/landing-page-morph, gemini tic-tac-toe @68
+  (`ttt-win-detected`) and n-body @68. No text-task case exists — every
+  equation-solver / crypto-hash-race iteration scored above the floor.
 
 ## Prompt-regression probes (`task bench:probe`) — the pre-sweep gate
 

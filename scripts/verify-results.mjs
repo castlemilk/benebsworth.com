@@ -112,13 +112,31 @@ function readContent(runId, relPath) {
   }
 }
 
+/**
+ * The failure corpus's committed provenance (#25), or `undefined` when no
+ * corpus has been ingested — which SKIPS the check rather than reporting an
+ * absence as a finding.
+ */
+function readCorpusProvenance() {
+  const path = resolve(root, process.env.CORPUS_DIR ?? 'lib/lab/llm-benchmark/failure-corpus', 'provenance.json')
+  if (!existsSync(path)) return undefined
+  const parsed = JSON.parse(readFileSync(path, 'utf8'))
+  if (!Array.isArray(parsed)) {
+    console.error(`[verify-results] ${relative(root, path)} is not an array of corpus cases`)
+    process.exit(1)
+  }
+  return parsed
+}
+
 const runLogs = findRunLogs(sweepsDir)
 const artifactFiles = findArtifacts(sweepsDir)
+const corpusProvenance = readCorpusProvenance()
 const verdicts = verifyResults(results, {
   runLogs,
   readLog: readRunLog,
   artifactFiles,
   readContent,
+  corpusProvenance,
 })
 const summary = summarizeVerdicts(verdicts, results.length)
 
@@ -150,6 +168,9 @@ if (!options.quiet) {
   console.log(`[verify-results] ${relative(root, resultsPath)} — ${results.length} record(s)`)
   console.log(
     `[verify-results] run logs: ${runLogs.length} file(s)${runLogs.length === 0 ? ` — nothing under ${relative(root, sweepsDir)}/, log checks skip` : ` under ${relative(root, sweepsDir)}/`}`
+  )
+  console.log(
+    `[verify-results] failure corpus: ${corpusProvenance === undefined ? 'none ingested, corpus check skips' : `${corpusProvenance.length} case(s)`}`
   )
 }
 

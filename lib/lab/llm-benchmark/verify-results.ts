@@ -19,7 +19,8 @@
  * real `sweeps/` tree; `scripts/verify-results.mjs` is the shell that scans the
  * disk and prints the report.
  */
-import { parseContentAddress, verifyContentAddress } from './content-address'
+import { isContentAddress, parseContentAddress, verifyContentAddress } from './content-address'
+import type { ProvenanceEntry } from './failure-corpus'
 import { promptBundleHash } from './prompt-bundle'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from './registry'
 import type { RunLogEvent, RunLogHeader, SpilledString } from './runlog'
@@ -120,6 +121,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "The artifact a score was computed from is stored BY ITS CONTENT HASH — `spill/<sha256[:16]>.txt` for the run log's `clean`/`aggregate` artifact (which is also the file `publish-traces.mjs` serves to the site) and `artifacts/<sha256[:16]>.html` for the retained CLI copy. That naming is only worth anything if someone checks it: a truncated write, a partially-synced copy, a hand-edit of a published artifact, or a script that rewrote a spill file in place would all leave a blob whose bytes no longer match its own name, and the trace UI would keep presenting it as the thing that was scored. Re-hashing is cheap and exact — no second manifest to drift — so it runs on every verify. A blob that is simply ABSENT is not a failure (sweeps/ is gitignored and pruned); a blob that is PRESENT and wrong is.",
   },
   {
+    id: 'corpus-provenance',
+    title: 'every failure-corpus case names a live model/task and a real content address',
+    why:
+      "provenance.json (#25) is the COMMITTED half of the failure corpus — the artifact bytes beside it are gitignored, so this file is the only durable record that a case exists at all. A row whose modelId or taskId no longer resolves is a regression case that `probe-corpus` will silently skip forever (the same orphaning `registry-resolution` catches on the board, one rename away), and an `artifact` that is not a 16-hex content address cannot name a file in cases/ — it is a hand-edit or a producer that wrote a filename where an address belongs. Deliberately CHEAP: it does not read a single artifact and never launches a browser. Whether a case still reproduces is probe-corpus's expensive question, not this gate's.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -188,6 +195,12 @@ export interface VerifyOptions {
    * module stays pure and unit-testable without a real sweeps/ tree.
    */
   readContent?: (runId: string, relPath: string) => Buffer | string | undefined
+  /**
+   * The failure corpus's committed provenance rows (#25). Omit to skip the
+   * `corpus-provenance` check — a clone with no corpus yet, which is a valid
+   * state and not a finding.
+   */
+  corpusProvenance?: ProvenanceEntry[]
 }
 
 /** A retained artifact copy found on disk (`sweeps/<runId>/artifacts/<file>`). */
@@ -539,6 +552,30 @@ function checkContentAddress(
   )
 }
 
+/**
+ * One failure-corpus row: do its ids still resolve, and is its artifact an
+ * address?
+ *
+ * Both halves fail rather than warn. Unlike a stale prompt bundle (an honest
+ * old number), an unresolvable corpus row is not old evidence — it is evidence
+ * that cannot be re-run, and the corpus's whole value is being re-runnable.
+ */
+function checkCorpusEntry(
+  entry: ProvenanceEntry,
+  tasks: Set<string>,
+  models: Set<string>
+): Verdict {
+  const key = `${entry.artifact}|${entry.modelId}|${entry.taskId}#${entry.iterationIndex}`
+  const problems: string[] = []
+  if (!isContentAddress(entry.artifact)) {
+    problems.push(`artifact "${entry.artifact}" is not a content address`)
+  }
+  if (!models.has(entry.modelId)) problems.push(`unknown modelId "${entry.modelId}"`)
+  if (!tasks.has(entry.taskId)) problems.push(`unknown taskId "${entry.taskId}"`)
+  if (problems.length === 0) return verdict('corpus-provenance', 'pass', key)
+  return verdict('corpus-provenance', 'fail', key, problems.join('; '))
+}
+
 export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = {}): Verdict[] {
   const tasks = new Set(opts.knownTaskIds ?? BENCHMARK_TASKS.map((t) => t.id))
   const models = new Set(opts.knownModelIds ?? BENCHMARK_MODELS.map((m) => m.id))
@@ -726,6 +763,10 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
       seen.add(key)
       verdicts.push(checkContentAddress(artifact.runId, relPath, readContent))
     }
+  }
+
+  for (const entry of opts.corpusProvenance ?? []) {
+    verdicts.push(checkCorpusEntry(entry, tasks, models))
   }
 
   return verdicts

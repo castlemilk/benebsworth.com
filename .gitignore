@@ -115,6 +115,12 @@ lib/lab/llm-benchmark/results-*-html.json
 # failure; prune with `npx tsx scripts/sweep-clean.mjs`.
 sweeps/
 
+# Failure regression corpus (#25): the ARTIFACT BYTES are ignored, the
+# PROVENANCE is committed. The bytes are model-generated HTML that executes in a
+# browser and are re-derivable from the sweep tree (`scripts/ingest-failures.mjs`);
+# provenance.json is the only durable record that a case exists at all.
+lib/lab/llm-benchmark/failure-corpus/cases/
+
 # Temporary working directories for scripts and manual review
 tmp/
 

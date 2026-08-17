@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import {
   contentAddress,
   contentAddressedName,
+  isContentAddress,
   parseContentAddress,
   sha256Hex,
   verifyContentAddress,
@@ -71,5 +72,20 @@ describe('verifyContentAddress', () => {
 
   it('returns undefined for a name that carries no address to check', () => {
     expect(verifyContentAddress('artifact-test-t-0.html', 'anything')).toBeUndefined()
+  })
+})
+
+describe('isContentAddress', () => {
+  it('accepts a bare 16-hex address (the failure corpus `artifact` field)', () => {
+    expect(isContentAddress(contentAddress('abc'))).toBe(true)
+  })
+
+  it('rejects a FILENAME — the extension is the store’s choice, not the identity', () => {
+    expect(isContentAddress(`${contentAddress('abc')}.html`)).toBe(false)
+  })
+
+  it('rejects the wrong length and non-hex characters', () => {
+    expect(isContentAddress('ba7816bf')).toBe(false)
+    expect(isContentAddress('ZA7816BF8F01CFEA')).toBe(false)
   })
 })

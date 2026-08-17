@@ -63,6 +63,10 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
+| Prompt-regression probes (data) | `lib/lab/llm-benchmark/probes/probes.json` |
+| Probe loader + pure `evaluateProbe` / `probePrompt` | `lib/lab/llm-benchmark/probes.ts` |
+| Probe runner (`task bench:probe`) | `scripts/prompt-probe.mjs` |
+| Probe-only generation seam (no cache/scoring/run log) | `generateForProbe` in `lib/lab/llm-benchmark/runners/provider.ts` |
 | Prompt-bundle hash + grouping/delta helpers (pure, node-only) | `lib/lab/llm-benchmark/prompt-bundle.ts` |
 | Prompt-bundle audit script (per-bundle means + deltas) | `scripts/prompt-bundle-audit.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
@@ -450,6 +454,7 @@ export async function generateMyProvider(
 
 ## Sweep operations (hard-won runbook)
 
+- **Probe before you sweep**: if this change touched a task prompt or the sandbox contract (`prompts.ts`), run `task bench:probe` FIRST. It is minutes and (on the default free model) free, and a probe failure means the sweep would have measured a broken contract. See "Prompt-regression probes" below.
 - **Profiles first** (`lib/lab/llm-benchmark/sweep-profiles.json`): the five stored recipes are `smoke` (1 iter, conc 1, 10-min cap), `fast-refresh` (5 iters, conc 2, 10-min cap), `slow-model` (conc 2, maxRetries 0, 25-min cap, bustCache), `agy-quota` (conc 1, 5 iters, default timeouts) and `builtins-only` (`plugins: []` — no plugin bundles mounted, core task set only). Run one with `task bench:profile -- <name> --model <id>`; add `--dump-config` to print the effective config and exit without spending. Profiles deliberately do NOT pin model ids (they would rot) — pass `--model`/`--task`. Precedence is **flag > env > profile > default** and the pre-run dump names the source of every value, so "why did it retry?" is answerable from the log rather than from memory. Adding a knob means adding it in `sweep-profiles.ts` (validated allowlist — an unknown key in the JSON throws at import) AND in the script's flag table.
 - **Duration estimate**: the dump's `est. duration` is ROUGH — sum over (model, task) of the historical mean `runtimeMs` in results.json × iterations ÷ concurrency. It ignores retries, cache hits, scoring time and imperfect packing, and pairs with no history count as 0 (reported as such). Treat it as a lower bound, never as a budget.
 - **Env knobs** (`scripts/run-benchmark.mjs`): `RUN_MODELS`, `RUN_TASKS`, `RUN_ITERATIONS`, `RUN_CONCURRENCY` (CLI file-handoff providers are now parallel-safe — each iteration writes a unique `artifact-<model>-<task>-<n>.html`, so concurrency 2-3 cuts slow CLI sweeps ~3×), `RUN_BUST_CACHE=1`, `RUN_TIMEOUT_MS` (per-CALL cap; also forwarded into the agy/codex/opencode CLI configs, which otherwise default to `cli.ts`'s 600s — see postmortem 0002; text-only runners still use the 600s default), `RUN_MAX_RETRIES` (default 2; set `0` for slow-but-working models so a deterministic 25-min generation isn't retried 3×).
@@ -807,6 +812,61 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check
   that can't state its bug is synthetic — it will be muted, not fixed.
 
+## Prompt-regression probes (`task bench:probe`) — the pre-sweep gate
+
+**RUNBOOK RULE: prompt or contract changed → `task bench:probe` → sweep.**
+A probe failure GATES the sweep (exit 1). Never spend hours re-sweeping on a
+contract edit that has not passed the probes; `task bench:verify` tests the
+prompt TEXT, the probes test what a model DOES when it reads it.
+
+- **Where.** Probe definitions are inert DATA in
+  `lib/lab/llm-benchmark/probes/probes.json` (like `sweep-profiles.json`);
+  `probes.ts` is the validated loader plus the pure evaluator; the runner is
+  `scripts/prompt-probe.mjs`.
+- **Shape.** `{ id, description, prompt, appendGlobalContract, asserts }` with
+  `Assert = { kind, value, flags? }` over five kinds: `starts-with`,
+  `contains`, `not-contains`, `matches`, `not-matches` (the last two compile
+  `value` as a regex at LOAD time — a typo'd pattern fails before any call).
+  **No inline JS**, deliberately: this repo publishes its harness, so a probe
+  file must be auditable at a glance and must never execute. (Deviation from
+  the paperclip promptfoo inspiration, which allows inline-JS asserts.)
+- **The contract is never copied into the data.** A probe that tests the global
+  contract sets `appendGlobalContract: true` and `probePrompt()` appends the
+  REAL `SANDBOX_CONSTRAINTS` from `prompts.ts` at run time. A copy would drift
+  silently, and a probe testing a stale contract is worse than no probe. A unit
+  test locks the derivation (it asserts a distinctive contract line survives
+  into the composed prompt).
+- **The six probes.** `doctype-first` (DOCTYPE opens the reply — tolerates a
+  leading code fence, NOT a prose preamble), `no-cdn` (no `<script … src=`, no
+  `@import`), `css-sized-canvas` (no `width`/`height` attribute ON the
+  `<canvas>` tag — setting `canvas.width` from JS is required by the contract
+  and deliberately still passes), `try-catch-alert` (`role="alert"` present, no
+  `window.alert|confirm|prompt(` — a bare `alert(` is out of scope),
+  `fills-viewport` (`margin:\s*0`), `scoped-context` (three inline facts + "use
+  ONLY these" → no `fetch(` / `XMLHttpRequest` / `import(`; the paperclip
+  wake-payload lesson: the model must not reach for external data). Half the
+  asserts are NEGATIVE on purpose — a contract regression is usually the model
+  doing something the contract bans.
+- **Asserts run on the RAW reply.** No `cleanOutput`, no fence stripping: a
+  probe that ran on cleaned text could not see "the model narrated before the
+  DOCTYPE". Tolerances are stated in the probe's own pattern.
+- **Cost.** One generation per (probe × model), through `generateForProbe` —
+  the real provider seam, with no cache, no retries, no scoring, no run log,
+  and no write to `results.json`. Default model is the cheapest registered FREE
+  model (`deepseek-v4-flash-free`, local `opencode` CLI), so the default run is
+  free. Past 20 calls the script demands `--yes`.
+- **Timeout.** Default 60s per call. Measured 2026-08-17: `doctype-first` on
+  `deepseek-v4-flash-free` takes ~47s (free CLI tier, ~10-20 tok/s), so the
+  headroom is thin — pass `--timeout-ms 120000` when probing slow CLI models,
+  and read a timeout as "this model is slow", not "the contract regressed".
+
+```bash
+task bench:probe                              # all probes, default free model
+task bench:probe -- --dry-run                 # probes + asserts, ZERO calls
+task bench:probe -- --probe doctype-first
+task bench:probe -- --model kimi-k2.7,deepseek-v4-flash-free --yes
+```
+
 ## Prompt bundles (`promptBundle`, `prompt-bundle-audit`, `stale-prompt`)
 
 The board's axis is the MODEL. The other axis — usually the bigger lever — is
@@ -930,4 +990,5 @@ registration unwinds on `unregisterPlugin()`.
 - [ ] New demo is exported and mapped
 - [ ] Results reference valid task and model IDs
 - [ ] Registry coverage test: `registry.test.ts` auto-excludes unswept models and enforces a per-task board floor (≥20 records) — a new model needs no test edit, but a bad merge wiping records will fail
+- [ ] After a prompt/contract change, `task bench:probe` passes BEFORE any sweep
 - [ ] After harness changes, a live smoke test succeeds (`task bench:smoke`)

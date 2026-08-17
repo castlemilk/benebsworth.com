@@ -32,6 +32,8 @@ tasks:
           task bench:run MODELS=a,b             run specific models, all tasks
           task bench:run MODELS=a TASKS=t ITER=1
           task bench:cli MODELS=codex-gpt-5.5   CLI providers (forced concurrency 1)
+          task bench:probe                      prompt-regression probes (free tier) — run BEFORE a sweep
+          task bench:probe -- --dry-run         print the probes + asserts, zero calls
           task bench:seed                       restore seeded sample data, NO API calls
           task bench:outputs                    regenerate static output artifacts
           task bench:verify                     typecheck + benchmark unit tests
@@ -200,6 +202,38 @@ tasks:
       `task build` runs it automatically.
     cmds:
       - task: ":build:gen:outputs"
+
+  probe:
+    desc: 'Prompt-regression probes — the cheap gate to run BEFORE a sweep (free tier by default)'
+    summary: |
+      Six narrow behaviour evals with deterministic asserts on the RAW reply
+      (no LLM judge), defined as inert data in
+      lib/lab/llm-benchmark/probes/probes.json and interpreted by probes.ts.
+
+      WHY  `task bench:verify` tests the prompt TEXT; this tests what a model
+      DOES when it reads it. A sandbox-contract edit (prompts.ts) otherwise has
+      no behavioural gate between the edit and an hours-long sweep.
+
+      RUNBOOK  prompt/contract changed → `task bench:probe` → sweep. A probe
+      failure gates the sweep (exit 1).
+
+      COST  One generation per (probe × model), no retries, no cache. The
+      default model is the cheapest registered FREE model
+      (deepseek-v4-flash-free, via the locally-authenticated opencode CLI), so
+      the default run spends nothing. Past 20 calls the script requires `--yes`.
+
+      Writes NOTHING — not results.json, not the response cache, not sweeps/.
+
+        task bench:probe                                    all probes, default model
+        task bench:probe -- --dry-run                       print probes + asserts, zero calls
+        task bench:probe -- --probe doctype-first
+        task bench:probe -- --model kimi-k2.7 --timeout-ms 90000
+
+      Probes that test the global contract carry `appendGlobalContract: true`
+      and get the REAL `SANDBOX_CONSTRAINTS` appended at run time — contract
+      text is never copied into the JSON, so a probe cannot drift from prompts.ts.
+    cmds:
+      - '{{.BIN}}/tsx scripts/prompt-probe.mjs {{.CLI_ARGS}}'
 
   verify:
     desc: Typecheck + run the benchmark unit tests

@@ -446,6 +446,43 @@ async function generateWithProvider(
 }
 
 /**
+ * ONE generation, through the real provider seam, with NOTHING around it.
+ * **Probe-only** (`scripts/prompt-probe.mjs`, #24) — never used by a sweep.
+ *
+ * A prompt-regression probe needs exactly the generation call and exactly the
+ * timeout: it must exercise the same `configForModel` dispatch and the same
+ * per-provider client a sweep uses (a probe that mocked the provider would
+ * prove nothing about the provider), but it must NOT touch the machinery a
+ * measurement needs and a gate does not:
+ *
+ *  - **no cache** — a cached reply is a reply to yesterday's contract, which is
+ *    precisely the regression the probe is looking for.
+ *  - **no retries** — a probe is a gate, not a measurement; a transient failure
+ *    should be visible as a failure, not smoothed over.
+ *  - **no scoring / no aggregation / no run log / no results.json** — a probe
+ *    produces a pass/fail, never a published data point. Nothing it does may
+ *    reach the leaderboard.
+ *  - **no `withSandboxConstraints`** — the probe composes its OWN full prompt
+ *    (`probePrompt()` appends the real contract when the probe asks for it), so
+ *    appending here would double it.
+ *
+ * The caller passes a task-shaped object carrying that prompt; only `prompt`
+ * (and `id`/`title` in log lines) is read by the providers.
+ */
+export function generateForProbe(
+  cfg: ProviderRunnerConfig,
+  model: BenchmarkModel,
+  taskLike: BenchmarkTask,
+  timeoutMs: number
+): Promise<GenerationResponse> {
+  return withTimeout(
+    generateWithProvider(cfg, model, taskLike, 0),
+    timeoutMs,
+    `probe ${model.id} :: ${taskLike.id}`
+  )
+}
+
+/**
  * Per-iteration measurement sink, OWNED by the `runTask` loop and MUTATED by
  * `generateOne`.
  *

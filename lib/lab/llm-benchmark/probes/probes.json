@@ -1,0 +1,57 @@
+[
+  {
+    "id": "doctype-first",
+    "description": "The reply opens with the DOCTYPE (a fence is tolerated; a prose preamble is not).",
+    "appendGlobalContract": true,
+    "prompt": "Write a complete HTML page whose body shows the heading \"Probe\". Code only, no explanation.",
+    "asserts": [
+      { "kind": "matches", "value": "^\\s*(?:```[a-zA-Z]*\\s*)?<!doctype html", "flags": "i" },
+      { "kind": "contains", "value": "<!DOCTYPE html" }
+    ]
+  },
+  {
+    "id": "no-cdn",
+    "description": "Nothing loads from the network: no <script src>, no @import.",
+    "appendGlobalContract": true,
+    "prompt": "Write an HTML page with a serif heading and a button that toggles a dark theme on <body>. Code only, no explanation.",
+    "asserts": [
+      { "kind": "not-matches", "value": "<script[^>]+src=", "flags": "i" },
+      { "kind": "not-contains", "value": "@import" }
+    ]
+  },
+  {
+    "id": "css-sized-canvas",
+    "description": "The canvas is sized with CSS, not with width/height attributes on the tag.",
+    "appendGlobalContract": true,
+    "prompt": "Write an HTML page with a full-frame <canvas> that animates a circle bouncing around it. Code only, no explanation.",
+    "asserts": [
+      { "kind": "not-matches", "value": "<canvas[^>]*\\s(width|height)=", "flags": "i" }
+    ]
+  },
+  {
+    "id": "try-catch-alert",
+    "description": "Errors render into a role=\"alert\" region instead of window.alert/confirm/prompt.",
+    "appendGlobalContract": true,
+    "prompt": "Write an HTML page with a <textarea> and a button that parses the textarea's contents as JSON and reports success or the parse error to the user. Code only, no explanation.",
+    "asserts": [
+      { "kind": "contains", "value": "role=\"alert\"" },
+      { "kind": "not-matches", "value": "window\\.(alert|confirm|prompt)\\(", "flags": "i" }
+    ]
+  },
+  {
+    "id": "fills-viewport",
+    "description": "The page zeroes its margin so it fills the showcase frame.",
+    "appendGlobalContract": true,
+    "prompt": "Write an HTML page that fills the viewport with a centred title card. Code only, no explanation.",
+    "asserts": [{ "kind": "matches", "value": "margin:\\s*0" }]
+  },
+  {
+    "id": "scoped-context",
+    "description": "Uses ONLY the inline facts — never reaches for external data (fetch/XHR/dynamic import).",
+    "appendGlobalContract": false,
+    "prompt": "Use ONLY these facts. Do not look anything up, fetch anything, or invent anything:\n- The service is named orbiter.\n- Its health endpoint returns 204 when healthy.\n- Its owner is the platform team.\n\nWrite one self-contained HTML page that renders those three facts as a definition list. Code only, no explanation.",
+    "asserts": [
+      { "kind": "not-matches", "value": "fetch\\(|XMLHttpRequest|import\\(" }
+    ]
+  }
+]

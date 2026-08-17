@@ -945,45 +945,39 @@ source roll-up, cost lock), `verify-results.test.ts`.
 ---
 
 
-## [ ] 24. Prompt-regression probe layer (cheap narrow evals before sweeps)
+## [x] 24. Prompt-regression probe layer (cheap narrow evals before sweeps)
 
-**Problem.** Full sweeps are expensive (hours). When the sandbox contract
-(`prompts.ts`) or a task prompt changes, there is no cheap gate between
-"prompt edit" and "spend a day re-sweeping" — the pre-commit suite tests
-the prompt TEXT, not the model's behavior under it.
+**Shipped.** Probes are inert DATA (`lib/lab/llm-benchmark/probes/probes.json`,
+like `sweep-profiles.json`) validated by `probes.ts`:
+`{ id, description, prompt, appendGlobalContract, asserts }` over five assert
+kinds — `starts-with` / `contains` / `not-contains` / `matches` / `not-matches`,
+the regex pair compiled at LOAD so a typo'd pattern fails before any call.
+**No inline JS** (the deviation from paperclip's promptfoo asserts): this repo
+publishes its harness, so a probe file must be auditable at a glance and must
+never execute. Contract text is never copied into the JSON —
+`appendGlobalContract: true` makes `probePrompt()` append the REAL
+`SANDBOX_CONSTRAINTS` at run time, and a derivation-lock test asserts a
+distinctive contract line survives into the composed prompt.
 
-**Inspiration.** paperclip's two-stage eval plan stage 1 (`doc/plans/
-2026-03-13-agent-evals-framework.md` + `evals/promptfoo/promptfooconfig.yaml`):
-narrow behavior evals with deterministic assertions (contains /
-not-contains / inline JS + named metrics) across several models, run
-before the heavy path. Their release-gate cases show the probe style:
-"uses inline wake context before inbox exploration" ->
-`!output.includes('inbox-lite')`, i.e. assert what the model SHOULD NOT
-do as much as what it should. Also the `scoped wake payload` prompt-design
-pattern (embed state inline rather than make the model explore -
-`evals/promptfoo/tests/release-gates.yaml`).
+Six probes, half the asserts NEGATIVE: `doctype-first` (tolerates a leading
+code fence, not a prose preamble), `no-cdn`, `css-sized-canvas` (bans the
+attribute on the tag only — `canvas.width` from JS is contract-REQUIRED and
+still passes), `try-catch-alert` (`role="alert"` + no
+`window.alert|confirm|prompt(`), `fills-viewport`, `scoped-context` (three
+inline facts + "use ONLY these" → no `fetch(`/`XMLHttpRequest`/`import(`, the
+paperclip wake-payload lesson). `evaluateProbe(reply, probe)` is pure, runs on
+the RAW reply (cleaning would hide "narrated before the DOCTYPE") and returns
+EVERY failure, not the first.
 
-**Design sketch.**
-
-- `scripts/prompt-probe.mjs`: a mini eval runner (promptfoo-style, but on
-  our own runner substrate so it reuses opencode/agy/openrouter) with a
-  `probes/` dir of YAML cases. Each probe: a short prompt derived from the
-  sandbox contract + deterministic asserts on the reply.
-  - Probe set: `doctype-first` (reply starts with `<!DOCTYPE html>`),
-    `no-cdn` (no `script src`), `css-sized-canvas` (no attribute-sized
-    canvas), `try-catch-alert` (error renders `<div role="alert">`),
-    `no-alert-confirm` (doesn't call `window.alert`), `fills-viewport`
-    (body margin 0), `scoped-context` (uses provided inline facts, does
-    NOT explore/fetch - the paperclip wake-payload lesson).
-  - Cheap: 1 iteration x 2-3 representative models (deepseek-v4-flash-free
-    + one paid), 60s timeout, results table with per-probe pass/fail.
-- Wire as `task bench:probe`; run BEFORE any sweep after a prompt change
-  (skill runbook: "prompt changed -> `task bench:probe` -> sweep").
-- Probe failures block the sweep (release-gate semantics).
-
-**Acceptance criteria.** A sandbox-contract edit that breaks the DOCTYPE
-rule is caught by the probe in < 5 min; probes use the same runner
-substrate as sweeps; deterministic asserts only (no LLM judge).
+`scripts/prompt-probe.mjs` (`task bench:probe`) runs one generation per
+(probe × model) through `generateForProbe` — the real provider seam with no
+cache, no retries, no scoring, no run log, nothing written to results.json.
+Default model is the cheapest registered FREE model read from the registry
+(`deepseek-v4-flash-free`, local opencode CLI), `--dry-run` prints the probes +
+asserts for zero calls, `--yes` is required past 20 calls, exit 1 on any
+failure. Skill runbook: **prompt/contract changed → `task bench:probe` →
+sweep**. Live check: `doctype-first` on the free tier passes in ~47s (thin
+against the 60s default — `--timeout-ms 120000` for slow CLI models).
 
 **Effort.** M. **Dependencies.** none (uses existing runners; feeds #21's
 bundle tracking).
@@ -1488,6 +1482,13 @@ without reading results.json; the server is read-only.
   means + deltas per model/task), the `stale-prompt` WARN check
   (`--strict` = release gate; unstamped records skip into one `N pre-bundle`
   summary count), and a muted stale marker on the task page.
+- Prompt-regression probes (#24): declarative probes in
+  `probes/probes.json` + `probes.ts` (five assert kinds, regexes compiled at
+  load, no inline JS), the real contract appended at run time via
+  `appendGlobalContract`, pure `evaluateProbe` returning all failures, and
+  `task bench:probe` (`scripts/prompt-probe.mjs` → `generateForProbe`: no
+  cache/retries/scoring/run log, free-tier default model, `--dry-run`,
+  20-call `--yes` guard, exit 1 gates the sweep).
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Task-declared scorers (#10): `BenchmarkTask.scorer` beats the category

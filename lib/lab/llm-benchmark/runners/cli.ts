@@ -1,45 +1,16 @@
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { redactArgs, redactText } from '../redact'
+import { resolveExecutionTarget, type CliRunnerConfig } from './execution-target'
 import { spawn } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-export interface CliRunnerConfig {
-  /** Base CLI command (e.g. 'agy', 'codex'). */
-  command: string
-  /**
-   * Build CLI arguments for a prompt.
-   * Receives the prompt with the artifact-delivery suffix already appended,
-   * plus the registry model.
-   */
-  buildArgs: (prompt: string, model: BenchmarkModel) => string[]
-  /** Parse token usage from stdout/stderr. Return undefined to estimate from output length. */
-  parseTokens?: (stdout: string, stderr: string) => { tokensIn: number; tokensOut: number } | undefined
-  /** Optional working directory for the CLI. Ignored when artifactViaFile is set. */
-  cwd?: string
-  /** Optional environment variables. */
-  env?: Record<string, string | undefined>
-  /** Timeout in milliseconds. Defaults to 10 minutes. */
-  timeoutMs?: number
-  /**
-   * When true, the CLI is run inside a scratch temp dir and asked to write the
-   * artifact to a file instead of printing it (print-mode stdout is often
-   * truncated). Falls back to stdout extraction if no file is produced.
-   */
-  artifactViaFile?: boolean
-  /**
-   * Per-iteration artifact filename. MUST return a unique name per iteration
-   * so concurrent runs (concurrency > 1) never collide: CLI agents resolve
-   * relative paths against their own session dir (opencode: /private/tmp;
-   * agy: its scratch) rather than the scratch dir, so a shared name means
-   * parallel runs overwrite each other's artifact. The name is embedded in
-   * the prompt and the printed absolute path is read back via the
-   * stdout-path fallback regardless of where the agent actually wrote it.
-   * Defaults to a constant 'artifact.html' (concurrency 1 only).
-   */
-  artifactName?: (iterationIndex: number) => string
-}
+// The runner config is DEFINED in execution-target.ts (it is the input to
+// `resolveExecutionTarget`) and re-exported here so every provider keeps
+// importing it from './cli' — and so the two modules have exactly one import
+// edge, cli → execution-target, with no cycle.
+export type { CliRunnerConfig } from './execution-target'
 
 export interface GenerationResponse {
   output: string
@@ -50,14 +21,9 @@ export interface GenerationResponse {
   ttftMs?: number
 }
 
-const INLINE_PRINT_SUFFIX =
-  '\n\nIMPORTANT: Do not create any files. Print the complete artifact source code inline as your only response.'
-
-function fileArtifactSuffix(name: string): string {
-  return `\n\nIMPORTANT: Save the complete artifact as a single self-contained file at ./${name} in the current working directory. Do not print the artifact to stdout — after writing the file, print the absolute path of the file you wrote, then DONE.`
-}
-
-const DEFAULT_ARTIFACT_FILENAME = 'artifact.html'
+// The prompt suffixes, the artifact-filename default and the timeout default
+// now live in `execution-target.ts` — `resolveExecutionTarget` is the one place
+// that decides them (and the one place tests assert them).
 
 /**
  * Sweep root for forensic retention, e.g. `<repo>/sweeps/2026-08-16T09-30-12`.
@@ -314,33 +280,31 @@ export async function generateFromCli(
   iterationIndex = 0
 ): Promise<GenerationResponse> {
   const start = Date.now()
-  const timeoutMs = config.timeoutMs ?? 10 * 60 * 1000
-  const artifactName = config.artifactName?.(iterationIndex) ?? DEFAULT_ARTIFACT_FILENAME
   // Snapshot the sweep root for the whole call: a concurrent setSweepRoot must
   // not make the create and the cleanup disagree about which regime we are in.
   const root = sweepRoot
+  // Everything about WHAT to run — command, argv (prompt suffix included),
+  // env, cwd, timeout, artifact name, session label — resolved in one pure
+  // call. This function only performs the target.
+  const target = resolveExecutionTarget(config, model, task, iterationIndex, { sweepRoot: root })
+  const artifactName = target.artifactName
 
   let scratchDir: string | undefined
   try {
-    if (config.artifactViaFile) {
-      if (root) {
-        // Deterministic, per-iteration, and RETAINED (see the finally below).
-        // Reused as-is when it already exists, so a retry of the same iteration
-        // lands in the same place instead of failing on EEXIST.
-        scratchDir = join(root, 'scratch', `${model.id}-${task.id}-${iterationIndex}`)
-        await mkdir(scratchDir, { recursive: true })
-      } else {
-        scratchDir = await mkdtemp(join(tmpdir(), 'llm-bench-'))
-      }
+    if (target.scratchDir) {
+      // Deterministic, per-iteration, and RETAINED (see the finally below).
+      // Reused as-is when it already exists, so a retry of the same iteration
+      // lands in the same place instead of failing on EEXIST.
+      scratchDir = target.scratchDir
+      await mkdir(scratchDir, { recursive: true })
+    } else if (target.needsEphemeralScratch) {
+      scratchDir = await mkdtemp(join(tmpdir(), 'llm-bench-'))
     }
 
-    const suffix = config.artifactViaFile ? fileArtifactSuffix(artifactName) : INLINE_PRINT_SUFFIX
-    const args = config.buildArgs(task.prompt + suffix, model)
-
-    const { stdout, stderr, ttftMs } = await runCli(config.command, args, {
-      cwd: scratchDir ?? config.cwd,
-      env: config.env,
-      timeoutMs,
+    const { stdout, stderr, ttftMs } = await runCli(target.command, target.args, {
+      cwd: scratchDir ?? target.cwd,
+      env: target.env,
+      timeoutMs: target.timeoutMs,
     })
 
     let output: string | undefined
@@ -404,7 +368,7 @@ export async function generateFromCli(
     // absolute path) lands here with `output` set; stdout extraction below does
     // not. Copy exactly the bytes we handed off, from whichever path won.
     if (output !== undefined && root) {
-      await retainArtifact(root, `artifact-${model.id}-${task.id}-${iterationIndex}.html`, output)
+      await retainArtifact(root, `artifact-${target.label}.html`, output)
     }
     if (output === undefined) {
       output = extractLikelyCode(stdout)

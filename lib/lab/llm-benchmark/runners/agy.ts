@@ -1,5 +1,6 @@
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { generateFromCli, type CliRunnerConfig, type GenerationResponse } from './cli'
+import { CLI_COMMANDS } from './execution-target'
 
 export interface AgyConfig {
   /** Agy model name, e.g. "Gemini 3.5 Flash (High)". Defaults to the model's apiModelId or name. */
@@ -16,7 +17,8 @@ export async function generateAgy(
 ): Promise<GenerationResponse> {
   const agyModel = config.model ?? model.apiModelId ?? model.name
   const runner: CliRunnerConfig = {
-    command: 'agy',
+    // Single-sourced with the sweep pre-flight (see execution-target.ts).
+    command: CLI_COMMANDS.Agy,
     // agy print mode ("-p") truncates stdout around 10k chars, so the artifact
     // is written to a scratch-dir file instead of being printed inline.
     artifactViaFile: true,

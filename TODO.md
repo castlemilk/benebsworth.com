@@ -787,37 +787,40 @@ plus the knob's precedence in `sweep-profiles.test.ts` and the job filter in
 
 # P2 — Adapter and eval hardening (paperclip study additions)
 
-## [ ] 19. Execution-target abstraction for CLI providers
+## [x] 19. Execution-target abstraction for CLI providers
 
-**Problem.** Each CLI provider in `runners/` hand-rolls spawn, timeout, and
-artifact handoff; there is no shared notion of "the execution target" —
-local process vs remote host vs sandbox — and no pre-flight verification
-that the CLI is installed (a missing `opencode` binary surfaces as a cryptic
-`ENOENT` in the middle of a sweep).
+**Shipped.** `lib/lab/llm-benchmark/runners/execution-target.ts` makes the seam
+that already half-existed (`CliRunnerConfig`) explicit, without a parallel
+abstraction. `resolveExecutionTarget(config, model, task, i, { sweepRoot })` is
+PURE and assembles everything `generateFromCli` used to derive inline: argv
+(prompt + the inline-print vs write-to-file suffix), env, cwd, the
+`config.timeoutMs ?? DEFAULT_CLI_TIMEOUT_MS` resolution (now single-source), the
+per-iteration `artifactName`, the retained-vs-ephemeral scratch decision, and
+the session label `<model.id>-<task.id>-<n>` (which the retained artifact copy
+is now named from too). `generateFromCli` performs the target; behaviour is
+byte-identical and `cli.test.ts` passed untouched.
 
-**Inspiration.** paperclip `packages/adapter-utils/src/execution-target.ts`
-(+ `command-managed-runtime.ts`, `sandbox-managed-runtime.ts`): one shared
-substrate that resolves the command, verifies it exists, resolves the
-timeout from policy, carries session identity + managed home dir, and
-selects local/remote/sandbox execution — with per-mode tests.
+`resolveCommand()` answers `command -v` in-process (PATH scan + `stat().isFile()`
++ `access(X_OK)`, no shell — a fork per check would inherit the operator's shell
+semantics and answer a different question from the one `spawn`/execvp asks; the
+isFile check stops a directory named `opencode/` on PATH resolving as the
+binary), returning `{ path }` or `{ missing, hint }` with a per-command install
+route. `CLI_COMMANDS` (provider → binary) is the single source: the three runner
+files set `command:` from it, `provider.ts` derives `CLI_PROVIDERS`/`isCliProvider`
+from its keys, and the sweep pre-flight reads the same entries.
 
-**Design sketch.**
+`scripts/run-benchmark.mjs` resolves every targeted CLI provider's binary after
+model resolution + plugin gating and FAILS FAST before the sweep root, run-log
+dir or runner exist — every missing command at once
+(`[harness] opencode CLI not found on PATH — needed by deepseek-v4-flash-free.
+Install: …`), exit 1, no override (unlike a quota lock, "not on PATH" is a local
+fact). `--dump-config` gains a `cli` row when CLI models are targeted:
+`agy ✓ /path · opencode ✗ not found`.
 
-- `runners/execution-target.ts`: `resolveExecutionTarget(cfg, model, task)`
-  returning `{ command, args, env, cwd, timeoutMs, sandbox? }` after
-  pre-flight checks:
-  - command resolvable (`command -v` or `which`) with a clear error naming
-    the provider + install hint;
-  - timeout resolved from the provider config with a documented default;
-  - session identity (model/task/iteration) attached for logging.
-- Refactor `generateFromCli` to consume the target (behavior unchanged).
-- Pre-flight sweep check in `run-benchmark.mjs`: verify every targeted
-  CLI provider's command exists BEFORE the sweep starts (fail fast, not
-  mid-sweep).
-
-**Acceptance criteria.** Missing CLI errors at sweep start with an install
-hint; timeout resolution is single-source; existing sweeps behave
-identically; tests for command resolution + error paths.
+18 tests in `execution-target.test.ts` (real + synthetic PATH, directory
+shadowing, non-executable file, path-bearing command, label/timeout/suffix
+assembly, `CLI_COMMANDS` locked against `isCliProvider`, `missingCliCommands`
+with a fake resolver).
 
 **Effort.** M.
 
@@ -1525,6 +1528,14 @@ without reading results.json; the server is read-only.
   founding write-ups (sweep hang, timeout-config miswire, bearer blip,
   results.json race). CLAUDE.md carries the ship-a-postmortem rule; the skill's
   sweep-operations runbook links the directory.
+- Execution target + CLI pre-flight (#19): `runners/execution-target.ts` —
+  pure `resolveExecutionTarget()` (argv, env, cwd, single-source timeout
+  default, artifact name/suffix, scratch decision, `<model>-<task>-<n>` label)
+  consumed by `generateFromCli`; `resolveCommand()` PATH resolution with
+  per-command install hints; `CLI_COMMANDS` single-sources provider → binary
+  for the runners, `isCliProvider` and the sweep; `run-benchmark.mjs` aborts
+  before the sweep starts listing EVERY missing CLI, and `--dump-config` shows
+  the `cli` row.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

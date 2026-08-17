@@ -1,5 +1,6 @@
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { generateFromCli, type CliRunnerConfig, type GenerationResponse } from './cli'
+import { CLI_COMMANDS } from './execution-target'
 
 export interface CodexConfig {
   /** Codex model, e.g. "gpt-5.5" or "o3". Defaults to the model's apiModelId. */
@@ -35,7 +36,8 @@ export async function generateCodex(
   baseArgs.push('--')
 
   const runner: CliRunnerConfig = {
-    command: 'codex',
+    // Single-sourced with the sweep pre-flight (see execution-target.ts).
+    command: CLI_COMMANDS.Codex,
     // Printing inline risks the extractor slicing the artifact; write it to a
     // scratch-dir file and read it back instead. Codex honors the spawn cwd,
     // so each call's fresh mkdtemp scratch dir already isolates artifacts;

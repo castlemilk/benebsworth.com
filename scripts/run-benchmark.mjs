@@ -41,6 +41,7 @@ import { createProviderRunner } from '../lib/lab/llm-benchmark/runners/provider.
 import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
+import { resolveCliCommands } from '../lib/lab/llm-benchmark/runners/execution-target.ts'
 import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
 import { redactText } from '../lib/lab/llm-benchmark/redact.ts'
 import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
@@ -194,7 +195,7 @@ function row(label, value, source) {
  * The dsh `--dump-config` idea: print the booted config, with the provenance of
  * every value, before anything is spent.
  */
-function dumpConfig({ models, tasks, locks, outPath, resumePlan }) {
+function dumpConfig({ models, tasks, locks, outPath, resumePlan, cliStatus }) {
   console.log(
     redactText(
       `\n[harness] effective config${config.profile ? ` — profile "${config.profile}": ${SWEEP_PROFILES[config.profile].description}` : ''}`
@@ -254,6 +255,17 @@ function dumpConfig({ models, tasks, locks, outPath, resumePlan }) {
     RESUME_RUN_ID ? 'resume' : process.env.SWEEP_ROOT ? 'env' : 'default'
   )
   row('results', relative(process.cwd(), outPath), process.env.RESULTS_OUT_PATH ? 'env' : 'default')
+  // Only when a CLI provider is actually targeted — an all-API sweep has no
+  // binaries to resolve and an empty row would be noise.
+  if (cliStatus && cliStatus.length > 0) {
+    row(
+      'cli',
+      cliStatus
+        .map((s) => `${s.command} ${'missing' in s.resolution ? '✗ not found' : `✓ ${s.resolution.path}`}`)
+        .join(' · '),
+      'PATH'
+    )
+  }
   row(
     'quota lock',
     locks.length === 0
@@ -508,7 +520,14 @@ async function main() {
   const results = readResults()
   const locks = quotaLockedModels(results, models.map((m) => m.id))
 
-  dumpConfig({ models, tasks, locks, outPath, resumePlan })
+  // CLI pre-flight: resolve every targeted CLI provider's binary on PATH. A
+  // missing one used to surface as an ENOENT mid-sweep, AFTER the earlier calls
+  // (and their spend) had already happened. Resolution is fs-only and spends
+  // nothing, so it runs even under --dump-config — the `cli` row is exactly the
+  // rehearsal that catches an uninstalled CLI before committing.
+  const cliStatus = await resolveCliCommands(models)
+
+  dumpConfig({ models, tasks, locks, outPath, resumePlan, cliStatus })
   dumpEstimate({ models, tasks, results, resumePlan })
   console.log('')
 
@@ -518,6 +537,20 @@ async function main() {
     // operator does before committing to a resumed sweep.
     if (resumePlan) reportResumePlan(resumePlan)
     return
+  }
+
+  // Every missing CLI is reported, not just the first: one pre-flight run has
+  // to tell the operator the whole install list. Fatal and un-overridable —
+  // unlike a quota lock (a provider ESTIMATE that can be stale), "the binary is
+  // not on PATH" is a local fact, and proceeding buys nothing but ENOENTs.
+  const missingCli = cliStatus.filter((s) => 'missing' in s.resolution)
+  if (missingCli.length > 0) {
+    for (const { command, modelIds, resolution } of missingCli) {
+      console.error(
+        `[harness] ${command} CLI not found on PATH — needed by ${modelIds.join(', ')}. Install: ${resolution.hint}`
+      )
+    }
+    process.exit(1)
   }
 
   setSweepRoot(SWEEP_ROOT)

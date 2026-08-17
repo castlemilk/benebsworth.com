@@ -1,5 +1,6 @@
 import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { generateFromCli, type CliRunnerConfig, type GenerationResponse } from './cli'
+import { CLI_COMMANDS } from './execution-target'
 
 export interface OpencodeConfig {
   /** opencode model id, e.g. "opencode/deepseek-v4-flash-free". Defaults to the model's apiModelId. */
@@ -31,7 +32,8 @@ export async function generateOpencode(
 ): Promise<GenerationResponse> {
   const opencodeModel = config.model ?? model.apiModelId
   const runner: CliRunnerConfig = {
-    command: 'opencode',
+    // Single-sourced with the sweep pre-flight (see execution-target.ts).
+    command: CLI_COMMANDS.OpenCode,
     artifactViaFile: true,
     // Unique artifact per iteration (model + task + index): opencode resolves
     // relative paths against ITS OWN session dir (verified: /private/tmp),

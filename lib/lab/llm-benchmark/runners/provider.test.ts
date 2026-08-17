@@ -414,7 +414,9 @@ describe('run log integration', () => {
     warn.mockRestore()
   })
 
-  it('logs one check event per check per iteration, naming the true iteration index', async () => {
+  // Same fsync-bound flake family as the quota run-log test above: real
+  // write+fsync round-trips blow the 5s default under full-suite contention.
+  it('logs one check event per check per iteration, naming the true iteration index', { timeout: 20_000 }, async () => {
     setRunLogDir(dir)
     const checks = [
       { name: 'space-jump-dispatch', passed: true, points: 40, maxPoints: 40 },

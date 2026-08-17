@@ -210,7 +210,8 @@ task bench:profile -- builtins-only --model kimi-k2.7
 
 # Overrides are flags (repeatable or comma lists); env vars still win over a profile:
 npx tsx scripts/run-benchmark.mjs --profile slow-model --model a --model b --task t1,t2 \
-  --iterations 1 --concurrency 1 --timeout-ms 600000 --max-retries 0 --bust-cache
+  --iterations 1 --concurrency 1 --timeout-ms 600000 --max-retries 0 --bust-cache \
+  --budget-max-usd 0.50   # PER-MODEL spend cap; see Sweep budget caps below
 ```
 
 **Plugin bundles** (`plugins` knob, #37). A sweep selects which plugins mount,
@@ -643,12 +644,13 @@ sweeps/<run-id>/
   | Event | Emitted | Payload |
   | --- | --- | --- |
   | `request` | once per iteration, before the first provider call (and before the cache lookup, so cache hits still record their prompt) | `promptHash` (sha256 of the post-`withSandboxConstraints` prompt), `promptLength` |
-  | `response` | every response that came back, **including cache replays** | `rawOutput`, `tokensIn`, `tokensOut`, `runtimeMs`, `cacheHit`, and (when measured) `ttftMs`, `tokensPerSec`, `rateKind` — see Per-call telemetry |
+  | `response` | every response that came back, **including cache replays** | `rawOutput`, `tokensIn`, `tokensOut`, `runtimeMs`, `cacheHit`, `costUsd` (this response's price — the per-iteration cost event), and (when measured) `ttftMs`, `tokensPerSec`, `rateKind` — see Per-call telemetry |
   | `retry` | transient retries inside `generateOne`; empty-body retries in the `runTask` loop | `attempt`, `error`, `delayMs`, `kind: 'transient' \| 'empty_body'` |
   | `clean` | after `cleanOutput` + dependency inlining | `output` — exactly the bytes the scorer sees |
   | `failure` | a failed iteration (terminal; retries are their own events) | `error`, `failureReason`, `timedOut` |
   | `check` | one per check per iteration, from `scoreWithBreakdown` | `iterationIndex` (the TRUE index, not a position among successes), `check` |
   | `quota` | at a quota trip whose error stated a reset window | `quotaNextResetAt` (ISO) — same estimate as the aggregate's field, logged separately because a 0-success record can be dropped by `mergeResults` |
+  | `budget` | at a per-model spend-cap trip (#28) | `modelId`, `spentUsd` (the model's cumulative sweep spend), `capUsd`, `iterationIndex` (the last iteration that ran) — the incident record; logged separately for the same reason as `quota` |
   | `aggregate` | once, at the end | `result` — the BenchmarkResult with the artifact always spilled |
 
 - **Spill.** Any string over 8 KB is written to `spill/<first-16-hex-of-sha256>.txt`
@@ -852,6 +854,60 @@ harness records WHERE each number came from and prices everything in one place.
   deprecated thin wrapper over `costFromUsage`. The `usage-sanity` verify check
   fails any record where the two views disagree or `source` is off-vocabulary.
 
+## Sweep budget caps (`budgetMaxUsd`, #28)
+
+A paid sweep has no natural stopping point: 7 tasks x 5 iterations on a
+frontier model spends whatever it spends. The cap is the guard.
+
+```bash
+# Per-model cap for this sweep — see the row before spending anything
+npx tsx scripts/run-benchmark.mjs --dump-config --budget-max-usd 0.05
+task bench:run -- --model kimi-k2.7 --budget-max-usd 0.50
+RUN_BUDGET_MAX_USD=0.50 npx tsx scripts/run-benchmark.mjs
+```
+
+- **The knob.** `budgetMaxUsd`, resolved by `resolveSweepConfig` like every
+  other: `--budget-max-usd` > `RUN_BUDGET_MAX_USD` > profile key > default
+  (ABSENT = no cap, the pre-feature behaviour). It must be a finite number of
+  USD greater than 0 — `0`, a negative, or an unparsable env value is FATAL at
+  whichever layer set it, because a cap of 0 reads like "off" and behaves like
+  "stop before the first call".
+- **SCOPE: per MODEL, for the whole sweep.** Not per task, and not a
+  sweep-wide total. That is the circuit breaker's scoping (spend, like quota,
+  is a per-model condition), and it means a cheap model is never stopped by an
+  expensive one's spending. **A 3-model sweep with `--budget-max-usd 0.05` can
+  spend ~$0.15.** The `budget` row in `--dump-config` says `per model` for
+  exactly this reason.
+- **What trips it.** Every response's cost (`costFromUsage` over its own
+  tokens) accrues into a per-`model.id` total, INCLUDING responses an
+  empty-body retry threw away (the provider billed for them) and cache replays
+  (priced identically so the log's sum equals the published `costUsd`; a spend
+  cap should over-count, never under). The check runs at the ITERATION
+  BOUNDARY — a cap never kills an in-flight provider call, because that would
+  throw away money already spent and record a failure the model did not cause.
+- **What happens then.** A `budget` event is appended to the run log
+  (the incident), a `budgetTrippedModels` breaker trips — a SEPARATE set from
+  the quota breaker's `trippedModels`, so the reason stays distinguishable —
+  the task's remaining iterations are skipped, and every later task for that
+  model throws a "budget cap" skip with no record written (same as quota).
+- **What gets stamped.** The in-flight record aggregates honestly from what
+  completed: `iterationsSucceeded` below `iterations`, `status: 'partial'`,
+  and `budgetExceeded: { spentUsd, capUsd }`. `mergeResults` carries that stamp
+  across its never-clobber-good-data protection, exactly like
+  `quotaNextResetAt` — it is operator metadata about the RUN, not a measurement
+  of the model.
+- **A budget stop is NOT a failure reason.** It is deliberately absent from the
+  `BenchmarkFailureReason` union: the model did not fail, the operator said
+  stop. Never report it as quota exhaustion.
+- **Auditing spend from a trace.** Every `response` event carries `costUsd`, so
+  `retrace.mjs` shows what each call cost and the per-response costs of a run
+  sum to the record's `costUsd` — no external math, no second event stream
+  (this is paperclip's `cost_events` folded into the event that already
+  exists). `retrace.mjs` prints the incident as a `BUDGET` line.
+- **Known gaps.** `resume.ts` re-attaches a killed run's `quota` event to the
+  recovered record but not its `budget` event; there is no model-page
+  spend-vs-cap UI.
+
 ## Verifying the results themselves (`task bench:verify-results`)
 
 `task bench:verify` checks the CODE. This checks the DATA — results.json and
@@ -867,7 +923,7 @@ npx tsx scripts/verify-results.mjs        # same thing without task
 - **When to run.** After any sweep, backfill, merge, or hand edit of
   results.json; before a deploy. The pre-push hook runs it first (cheapest
   gate), so a corrupted results.json cannot leave the machine.
-- **What it catches.** Eleven invariants, each carrying the WHY it exists (the
+- **What it catches.** Twelve invariants, each carrying the WHY it exists (the
   report prints that WHY on failure): `score` drifted from the `aggregateRuns`
   aggregation of `iterationScores`; `iterationCheckResults` misaligned with
   `iterationScores` (the UI pairs them by index — a misalignment attributes one
@@ -881,7 +937,10 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   run-log `seq` integrity; a `usage` summary that disagrees with the flat
   `tokensIn`/`tokensOut` beside it or carries an off-vocabulary `source`
   (`usage-sanity` — the published `costUsd` is priced off that summary); and a
-  record scored under a superseded prompt bundle (`stale-prompt`, below).
+  record scored under a superseded prompt bundle (`stale-prompt`, below); and an
+  incoherent `budgetExceeded` stamp (`budget-sanity` — spend below its own cap, a
+  non-positive cap, a $0 record claiming a trip, or a record costing more than the
+  sweep total it was measured against).
 - **The ref-less carve-out.** A run log whose record has no `runLogRef` only
   FAILS when the record's `createdAt` is at or after the log header's. A record
   that PREDATES the log beside it is the merge-protection shape: that run

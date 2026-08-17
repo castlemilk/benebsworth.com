@@ -818,3 +818,168 @@ describe('aggregateRuns', () => {
     expect(result.iterationCheckResults).toBeUndefined()
   })
 })
+
+describe('createProviderRunner budget caps (#28)', () => {
+  // Priced so ONE iteration costs exactly $0.006: the cap is crossed on the
+  // SECOND response (0.012 >= 0.01) and never mid-call.
+  const PRICEY: BenchmarkModel = {
+    ...MODEL,
+    id: 'test-pricey',
+    name: 'Test Pricey',
+    costPer1kInputUsd: 0.003,
+    costPer1kOutputUsd: 0.003,
+  }
+  const BIG = { output: 'y'.repeat(80), tokensIn: 1000, tokensOut: 1000, runtimeMs: 100 }
+  const ITERATION_USD = 0.006
+
+  beforeEach(() => {
+    generateMock.mockReset()
+  })
+
+  it('is off when no cap is configured — the pre-feature behaviour', async () => {
+    generateMock.mockResolvedValue(BIG)
+    const runner = createProviderRunner({ moonshot: { apiKey: 'k' }, bustCache: true, maxRetries: 0 })
+
+    const [result] = await runner.runTask(PRICEY, TASK, 5)
+    expect(generateMock).toHaveBeenCalledTimes(5)
+    expect(result.budgetExceeded).toBeUndefined()
+  })
+
+  it('trips at the iteration boundary that crosses the cap, and the partial record is honest', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    generateMock.mockResolvedValue(BIG)
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      budgetMaxUsd: 0.01,
+    })
+
+    const [result] = await runner.runTask(PRICEY, TASK, 5)
+
+    // Iteration 1 spent $0.006 (under), iteration 2 took it to $0.012 (over).
+    // The in-flight call is never killed: the check runs BETWEEN iterations.
+    expect(generateMock).toHaveBeenCalledTimes(2)
+    expect(result.iterations).toBe(5)
+    expect(result.iterationsSucceeded).toBe(2)
+    expect(result.status).toBe('partial')
+    expect(result.budgetExceeded).toEqual({ spentUsd: 2 * ITERATION_USD, capUsd: 0.01 })
+    expect(result.costUsd).toBeCloseTo(2 * ITERATION_USD, 10)
+
+    // The operator line names the model, the spend and the cap.
+    const line = consoleErrorSpy.mock.calls
+      .map((args) => String(args[0]))
+      .find((l) => l.includes('budget cap'))
+    expect(line).toMatch(/Test Pricey/)
+    expect(line).toMatch(/0\.01/)
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('skips every later task for that model with a BUDGET message, never a quota one', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    generateMock.mockResolvedValue(BIG)
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      budgetMaxUsd: 0.01,
+    })
+
+    await runner.runTask(PRICEY, TASK, 5)
+    expect(generateMock).toHaveBeenCalledTimes(2)
+
+    // A budget stop is an OPERATOR POLICY, not a provider failure — the skip
+    // must not read as quota exhaustion.
+    await expect(runner.runTask(PRICEY, TASK, 5)).rejects.toThrow(/budget cap/i)
+    await expect(runner.runTask(PRICEY, TASK, 5)).rejects.not.toThrow(/quota/i)
+    expect(generateMock).toHaveBeenCalledTimes(2)
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('caps PER MODEL — a second model keeps its own budget', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    generateMock.mockResolvedValue(BIG)
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      budgetMaxUsd: 0.01,
+    })
+
+    await runner.runTask(PRICEY, TASK, 5)
+    expect(generateMock).toHaveBeenCalledTimes(2)
+
+    // Same provider, its own spend counter — it must still run.
+    const [other] = await runner.runTask({ ...PRICEY, id: 'test-pricey-2', name: 'Other' }, TASK, 1)
+    expect(other.status).toBe('success')
+    expect(other.budgetExceeded).toBeUndefined()
+    expect(generateMock).toHaveBeenCalledTimes(3)
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('accrues ACROSS tasks, so the cap is per (model, sweep) not per (model, task)', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    generateMock.mockResolvedValue(BIG)
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      budgetMaxUsd: 0.014,
+    })
+
+    const [first] = await runner.runTask(PRICEY, TASK, 1)
+    expect(first.budgetExceeded).toBeUndefined()
+    expect(generateMock).toHaveBeenCalledTimes(1)
+
+    const [second] = await runner.runTask(PRICEY, { ...TASK, id: 'task-y' }, 5)
+    // $0.006 carried in, so the cap falls on this task's SECOND iteration.
+    expect(generateMock).toHaveBeenCalledTimes(3)
+    expect(second.budgetExceeded).toEqual({ spentUsd: 3 * ITERATION_USD, capUsd: 0.014 })
+    consoleErrorSpy.mockRestore()
+  })
+
+  // Real write+fsync round-trips (same flake family as the quota run-log test).
+  it('records the incident as a budget event and prices every response in the log', { timeout: 20_000 }, async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const dir = mkdtempSync(join(tmpdir(), 'provider-budget-runlog-'))
+    setRunLogDir(dir)
+    generateMock.mockResolvedValue(BIG)
+    const runner = createProviderRunner({
+      moonshot: { apiKey: 'k' },
+      bustCache: true,
+      maxRetries: 0,
+      budgetMaxUsd: 0.01,
+    })
+
+    const [result] = await runner.runTask(PRICEY, TASK, 5)
+
+    const { events } = readRunLog(join(dir, runLogFileName(PRICEY.id, TASK.id)))
+
+    // Cost events: every response carries its own priced cost, so spend is
+    // auditable from the log alone and sums to the record's costUsd.
+    const responses = events.filter((e) => e.type === 'response')
+    expect(responses).toHaveLength(2)
+    for (const response of responses) {
+      if (response.type !== 'response') throw new Error('expected a response event')
+      expect(response.costUsd).toBeCloseTo(ITERATION_USD, 10)
+    }
+    const summed = responses.reduce(
+      (total, e) => total + (e.type === 'response' ? (e.costUsd ?? 0) : 0),
+      0
+    )
+    expect(summed).toBeCloseTo(result.costUsd, 10)
+
+    const budget = events.find((e) => e.type === 'budget')
+    if (budget?.type !== 'budget') throw new Error('expected a budget event')
+    expect(budget.modelId).toBe(PRICEY.id)
+    expect(budget.capUsd).toBe(0.01)
+    expect(budget.spentUsd).toBeCloseTo(2 * ITERATION_USD, 10)
+    expect(budget.iterationIndex).toBe(1)
+    // …and it lands BEFORE the aggregate: at the trip, not after the fold.
+    expect(events.indexOf(budget)).toBeLessThan(events.findIndex((e) => e.type === 'aggregate'))
+
+    setRunLogDir(undefined)
+    rmSync(dir, { recursive: true, force: true })
+    consoleErrorSpy.mockRestore()
+  })
+})

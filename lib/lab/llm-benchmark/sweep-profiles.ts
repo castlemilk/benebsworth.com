@@ -43,10 +43,15 @@ export interface SweepProfile {
   timeoutMs?: number
   maxRetries?: number
   bustCache?: boolean
+  /**
+   * Spend cap in USD, PER MODEL for the whole sweep (see
+   * `ResolvedSweepConfig.budgetMaxUsd`). Absent = no cap.
+   */
+  budgetMaxUsd?: number
 }
 
 const STRING_ARRAY_KEYS = ['models', 'tasks', 'plugins'] as const
-const NUMBER_KEYS = ['iterations', 'concurrency', 'timeoutMs', 'maxRetries'] as const
+const NUMBER_KEYS = ['iterations', 'concurrency', 'timeoutMs', 'maxRetries', 'budgetMaxUsd'] as const
 const BOOLEAN_KEYS = ['bustCache'] as const
 const PROFILE_KEYS = new Set<string>(['description', ...STRING_ARRAY_KEYS, ...NUMBER_KEYS, ...BOOLEAN_KEYS])
 
@@ -94,6 +99,12 @@ export function parseSweepProfiles(raw: unknown): Record<string, SweepProfile> {
       }
       profile[key] = field
     }
+    // A cap must be a positive number of dollars WHEREVER it is written. 0 is
+    // rejected at every layer for the same reason: it reads like "off" and
+    // behaves like "stop before the first call".
+    if (entry.budgetMaxUsd !== undefined) {
+      assertPositiveBudget(entry.budgetMaxUsd as number, `sweep profile "${name}": budgetMaxUsd`)
+    }
     for (const key of BOOLEAN_KEYS) {
       const field = entry[key]
       if (field === undefined) continue
@@ -105,6 +116,22 @@ export function parseSweepProfiles(raw: unknown): Record<string, SweepProfile> {
     out[name] = profile
   }
   return out
+}
+
+/**
+ * A budget cap is only meaningful as a POSITIVE number of dollars.
+ *
+ * Rejected loudly rather than coerced: `--budget-max-usd 0` (or a typo'd
+ * `RUN_BUDGET_MAX_USD=lots` reading as NaN) would otherwise either stop the
+ * sweep before its first call while reading as "no cap", or silently disable
+ * the guard the operator asked for. Both are the expensive direction.
+ */
+function assertPositiveBudget(value: number, where: string): void {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
+    throw new Error(
+      `${where}: budget cap must be a finite number of USD greater than 0 (got ${JSON.stringify(value)}); omit it entirely for no cap`
+    )
+  }
 }
 
 /** The shipped recipes. Validated at import — a malformed file fails loudly. */
@@ -130,6 +157,8 @@ export interface SweepFlags {
   maxRetries?: number
   /** Presence-only: there is no --no-bust-cache, so `false` means "not passed". */
   bustCache?: boolean
+  /** `--budget-max-usd 0.05`: per-model spend cap for this sweep. */
+  budgetMaxUsd?: number
   /** `--resume <run-id>`: skip pairs already checkpointed in that sweep. */
   resume?: string
 }
@@ -151,6 +180,20 @@ export interface ResolvedSweepConfig {
   /** undefined = the runner's own default of 2. */
   maxRetries: Resolved<number | undefined>
   bustCache: Resolved<boolean>
+  /**
+   * Spend cap in USD. undefined = NO CAP (the behaviour before this knob
+   * existed, and still the default).
+   *
+   * SCOPE: the cap is **per model, for the whole sweep** — not per task, and
+   * not across all models together. That matches the circuit breaker it reuses
+   * (`trippedModels` is keyed by `model.id`, because quota and billing are
+   * per-model conditions), and it means a cheap model is never stopped by an
+   * expensive one's spending. A sweep over 3 models with `--budget-max-usd
+   * 0.05` may therefore spend up to ~$0.15 in total: the cap answers "how much
+   * am I willing to spend measuring THIS model", which is the question an
+   * operator actually has when one frontier model is the risk.
+   */
+  budgetMaxUsd: Resolved<number | undefined>
   /**
    * Sweep run id to resume from (`sweeps/<run-id>/`), or undefined for a fresh
    * sweep. FLAG > ENV only — there is deliberately no profile layer: a profile
@@ -270,6 +313,17 @@ export function resolveSweepConfig({ flags, env, profile: profileName }: Resolve
   )
   if (plugins.value !== undefined) assertKnownPlugins(plugins.value, plugins.source)
 
+  // Validated on the layer that WON, so the error names the thing to fix.
+  const budgetMaxUsd = pick<number | undefined>(
+    flags.budgetMaxUsd,
+    envNumber(env.RUN_BUDGET_MAX_USD),
+    profile?.budgetMaxUsd,
+    undefined
+  )
+  if (budgetMaxUsd.value !== undefined) {
+    assertPositiveBudget(budgetMaxUsd.value, `budgetMaxUsd [from ${budgetMaxUsd.source}]`)
+  }
+
   return {
     models: pick(flags.models, envList(env.RUN_MODELS), profile?.models, DEFAULT_MODELS),
     tasks: pick<string[] | undefined>(flags.tasks, envList(env.RUN_TASKS), profile?.tasks, undefined),
@@ -289,6 +343,7 @@ export function resolveSweepConfig({ flags, env, profile: profileName }: Resolve
     timeoutMs: pick<number | undefined>(flags.timeoutMs, envNumber(env.RUN_TIMEOUT_MS), profile?.timeoutMs, undefined),
     maxRetries: pick<number | undefined>(flags.maxRetries, envMaxRetries, profile?.maxRetries, undefined),
     bustCache: pick(flags.bustCache || undefined, envBustCache, profile?.bustCache || undefined, false),
+    budgetMaxUsd,
     // No profile layer by design (see ResolvedSweepConfig.resume). An empty
     // RUN_RESUME reads as unset, like every other env knob here.
     resume: pick<string | undefined>(flags.resume, env.RUN_RESUME || undefined, undefined, undefined),
@@ -308,6 +363,7 @@ const NUMERIC_FLAGS: Record<string, keyof SweepFlags> = {
   '--concurrency': 'concurrency',
   '--timeout-ms': 'timeoutMs',
   '--max-retries': 'maxRetries',
+  '--budget-max-usd': 'budgetMaxUsd',
 }
 
 /**

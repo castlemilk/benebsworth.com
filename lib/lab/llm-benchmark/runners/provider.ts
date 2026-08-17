@@ -58,6 +58,17 @@ export interface ProviderRunnerConfig {
    * set into every run log's header snapshot so a trace records its own scope.
    */
   plugins?: string[]
+  /**
+   * Spend cap in USD, **per model, for the lifetime of this runner** (#28).
+   * Absent = no cap, which is the pre-feature behaviour.
+   *
+   * Per-MODEL rather than per-sweep-total or per-task, matching the quota
+   * breaker it reuses: a cheap model must never be stopped by an expensive
+   * one's spending, and "how much am I willing to spend measuring THIS model"
+   * is the question an operator actually has. A 3-model sweep with a $0.05 cap
+   * may therefore spend up to ~$0.15.
+   */
+  budgetMaxUsd?: number
 }
 
 // `GenerationResponse` — every runner's return shape, and the contract a
@@ -508,6 +519,14 @@ interface CallTelemetry {
    * boundary, so this is written once and never overwritten.
    */
   ttftMs?: number
+  /**
+   * USD priced for every response this iteration received — including the ones
+   * an empty-body retry threw away, because the provider billed for them all
+   * the same. The runner's budget accounting reads this at the iteration
+   * boundary; it rides the sink for the same reason `retries` does (the number
+   * has to survive a throw).
+   */
+  costUsd: number
 }
 
 /**
@@ -520,6 +539,18 @@ function telemetryFields(tel: CallTelemetry): Pick<IterationRun, 'ttftMs' | 'cac
     ...(tel.cacheHit ? { cacheHit: true } : {}),
     ...(tel.retries > 0 ? { retries: tel.retries } : {}),
   }
+}
+
+/**
+ * What ONE response costs, in USD — the same pricing path the aggregate uses
+ * (`summarizeUsage` → `costFromUsage`), applied to a single call.
+ *
+ * Computed at the response's log-append site, so a `cost_event` is recorded
+ * exactly where the tokens are, and the per-response costs of a run sum to the
+ * record's `costUsd`.
+ */
+function responseCostUsd(response: GenerationResponse, model: BenchmarkModel): number {
+  return costFromUsage(summarizeUsage([response]), model)
 }
 
 /** Output tokens per second, with the label saying WHICH rate it is. */
@@ -579,6 +610,11 @@ async function generateOne(
     if (cached) {
       console.log(`[harness] cache hit ${model.name} :: ${task.title} #${iterationIndex + 1}`)
       if (tel) tel.cacheHit = true
+      // Priced even though a replay spends nothing: the aggregate counts these
+      // tokens, so pricing them keeps the log's per-response sum equal to the
+      // published costUsd — and a spend cap should over-count, never under.
+      const cachedCostUsd = responseCostUsd(cached, model)
+      if (tel) tel.costUsd += cachedCostUsd
       // No ttftMs / tokensPerSec on a replay: nothing was generated, and
       // republishing the original call's timings as if they were measured now
       // would put a fabricated latency in this run's telemetry.
@@ -590,6 +626,7 @@ async function generateOne(
         tokensOut: cached.tokensOut,
         runtimeMs: cached.runtimeMs,
         cacheHit: true,
+        costUsd: cachedCostUsd,
       })
       return cached
     }
@@ -611,6 +648,10 @@ async function generateOne(
         tel.ttftMs = response.ttftMs
       }
       const rate = computeRate(response.tokensOut, response.runtimeMs, response.ttftMs)
+      // Accrued BEFORE anything can reject this response (an empty body is
+      // still billed), so the budget sees every dollar the provider charged.
+      const costUsd = responseCostUsd(response, model)
+      if (tel) tel.costUsd += costUsd
       log?.append({
         type: 'response',
         iterationIndex,
@@ -619,6 +660,7 @@ async function generateOne(
         tokensOut: response.tokensOut,
         runtimeMs: response.runtimeMs,
         cacheHit: false,
+        costUsd,
         // Conditional spread, not `?? null`: an absent key is the documented
         // "not measured" signal and null would read as a measured zero.
         ...(response.ttftMs !== undefined ? { ttftMs: response.ttftMs } : {}),
@@ -815,8 +857,16 @@ export async function aggregateRuns(
       : 0
 
   const lastFailed = [...runs].reverse().find((r) => r.status === 'fail')
+  // 'success' means EVERY REQUESTED iteration produced an artifact — compared
+  // against `iterations`, not `runs.length`, because the loop can stop early
+  // with nothing failed at all: a budget cap (#28) breaks after N clean
+  // iterations, and calling that "success" while the record says 2 of 5 would
+  // publish a status its own counts contradict (and trip verify-results'
+  // status-consistency check, which derives the same rule). `runs.length` is
+  // the fallback for direct callers that pass a 0/short `iterations`.
+  const expected = Math.max(iterations, runs.length)
   const status: BenchmarkStatus =
-    runs.length > 0 && successRuns.length === runs.length
+    runs.length > 0 && successRuns.length === expected
       ? 'success'
       : successRuns.length > 0
         ? 'partial'
@@ -932,11 +982,29 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
   // failing call, so nothing is lost by keeping the breaker model-scoped.
   const trippedModels = new Set<string>()
 
+  // Budget breaker (#28): the SAME skip mechanics as `trippedModels`, in a
+  // SEPARATE set so the reason stays distinguishable. A quota trip is
+  // something the provider did to us; a budget trip is a policy WE set, and
+  // the two must never be reported as each other — which is also why a budget
+  // stop is deliberately absent from the `BenchmarkFailureReason` union: the
+  // model did not fail, the operator said stop. Skipped tasks write no record
+  // at all (again like quota), so existing good rows are left untouched.
+  const budgetTrippedModels = new Set<string>()
+  /** Cumulative USD per model.id over this runner's lifetime (= the sweep). */
+  const spentByModel = new Map<string, number>()
+
   return {
     runTask: async (model: BenchmarkModel, task: BenchmarkTask, iterations: number): Promise<BenchmarkResult[]> => {
       if (trippedModels.has(model.id)) {
         throw new Error(
           `${model.name} disabled for the rest of this run after a quota/billing error — skipping ${model.name} :: ${task.title}`
+        )
+      }
+      if (budgetTrippedModels.has(model.id)) {
+        throw new Error(
+          `${model.name} stopped for the rest of this run by its budget cap ` +
+            `($${(spentByModel.get(model.id) ?? 0).toFixed(4)} spent of a $${cfg.budgetMaxUsd?.toFixed(4)} per-model cap) — ` +
+            `skipping ${model.name} :: ${task.title}`
         )
       }
 
@@ -947,6 +1015,14 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
       // 57h27m"). Stamped onto the aggregate below so a sweep killed by quota
       // leaves behind the answer to "when can I run this again?".
       let quotaNextResetAt: string | undefined
+      // Set when THIS task's iterations crossed the model's cap — post-stamped
+      // onto the aggregate below, exactly like quotaNextResetAt.
+      let budgetExceeded: { spentUsd: number; capUsd: number } | undefined
+      // Ends the iteration loop from the boundary check. A plain `break` is not
+      // available there: the check runs in the `finally` (the one place every
+      // path — success, `continue`, throw — passes through), and breaking out
+      // of a finally is exactly the unsafe control flow lint forbids.
+      let budgetStop = false
 
       // One append-only log per (model, task) for this sweep. Undefined — and
       // therefore a complete no-op at every call site — when no run-log dir is
@@ -964,12 +1040,12 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
         },
       })
 
-      for (let i = 0; i < iterations; i++) {
+      for (let i = 0; i < iterations && !budgetStop; i++) {
         const label = `${model.name} :: ${task.title} #${i + 1}/${iterations}`
         console.log(`[harness] starting ${label}`)
         const callStart = Date.now()
         // Fresh per iteration; generateOne mutates it (see CallTelemetry).
-        const tel: CallTelemetry = { retries: 0, cacheHit: false }
+        const tel: CallTelemetry = { retries: 0, cacheHit: false, costUsd: 0 }
         try {
           // Empty-body retry (Loop 2): a 200 response with zero assistant
           // deltas is a distinct failure mode from network/429 errors — the
@@ -1137,6 +1213,35 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
             break
           }
         } finally {
+          // Budget accounting at the ITERATION BOUNDARY. Here, in the finally,
+          // because it is the only point every path reaches — a success, the
+          // empty-body `continue`, and a thrown iteration all bill the same —
+          // and because it must never run mid-call: a cap may stop the NEXT
+          // call, it may not kill one already in flight (that would throw away
+          // money already spent and record a failure the model did not cause).
+          const spent = (spentByModel.get(model.id) ?? 0) + tel.costUsd
+          spentByModel.set(model.id, spent)
+          const cap = cfg.budgetMaxUsd
+          if (cap !== undefined && spent >= cap && !budgetTrippedModels.has(model.id)) {
+            budgetTrippedModels.add(model.id)
+            budgetExceeded = { spentUsd: spent, capUsd: cap }
+            budgetStop = true
+            // Its own event: this run's record may never reach results.json
+            // (mergeResults drops a 0-success record), and the log has to be
+            // able to say on its own that an operator policy — not the model —
+            // ended the run. paperclip's `budget_incidents`, as a log line.
+            log?.append({
+              type: 'budget',
+              iterationIndex: i,
+              modelId: model.id,
+              spentUsd: spent,
+              capUsd: cap,
+            })
+            console.error(
+              `[harness] budget cap reached for ${model.name}: $${spent.toFixed(4)} spent of a $${cap.toFixed(4)} per-model cap — ` +
+                `skipping the remaining iterations and all further ${model.name} tasks this run`
+            )
+          }
           // Checkpoint discipline (dsh `session-checkpoint-policy`): make the
           // iteration durable at its boundary, so a killed sweep loses at most
           // the in-flight iteration rather than the whole task's evidence.
@@ -1152,7 +1257,13 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
         // window is a property of THIS RUN's failure, not of the aggregation,
         // and the signature has grown enough already.
         const result = await aggregateRuns(runs, iterations, model, task, scorer, now, log)
-        return [quotaNextResetAt ? { ...result, quotaNextResetAt } : result]
+        return [
+          {
+            ...result,
+            ...(quotaNextResetAt ? { quotaNextResetAt } : {}),
+            ...(budgetExceeded ? { budgetExceeded } : {}),
+          },
+        ]
       } finally {
         await log?.close()
       }

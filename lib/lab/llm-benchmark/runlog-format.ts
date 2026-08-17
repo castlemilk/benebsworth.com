@@ -112,6 +112,22 @@ export type RunLogEventInput =
       tokensPerSec?: number
       /** Which rate `tokensPerSec` is. Present iff `tokensPerSec` is. */
       rateKind?: 'decode' | 'wall-clock'
+      /**
+       * What THIS response's tokens cost, in USD — `costFromUsage` over the
+       * response's own token counts at the model's published rates (the
+       * paperclip `cost_events` idea, folded into the event that already
+       * exists rather than a second stream).
+       *
+       * The per-response costs of a run sum to the record's `costUsd`, so
+       * spend is auditable from the log alone with no external math. Cache
+       * replays are priced identically even though they spend nothing: the
+       * aggregate counts their tokens too, so pricing them keeps the log's sum
+       * equal to the published cost — and for a SPEND CAP, over-counting is
+       * the safe direction.
+       *
+       * Absent on logs written before this shipped.
+       */
+      costUsd?: number
     }
   | {
       /**
@@ -159,6 +175,28 @@ export type RunLogEventInput =
       iterationIndex: number
       /** ISO timestamp of the estimated next window. */
       quotaNextResetAt: string
+    }
+  | {
+      /**
+       * The sweep's per-model spend cap tripped this model's breaker (#28) —
+       * paperclip's `budget_incidents` row, as an event.
+       *
+       * Same reasoning as the `quota` event: the aggregate is post-stamped
+       * with `budgetExceeded`, but that record can be dropped by mergeResults,
+       * so without this event the only evidence that an OPERATOR POLICY (not
+       * the model, not the provider) ended the run would live outside the log.
+       *
+       * `iterationIndex` is the LAST iteration that ran — the check happens at
+       * an iteration boundary, never mid-call — and it is present so the
+       * replay tools can file the event under the iteration it followed.
+       */
+      type: 'budget'
+      iterationIndex: number
+      modelId: string
+      /** Cumulative USD spent by this model across the sweep, at the trip. */
+      spentUsd: number
+      /** The cap it crossed. */
+      capUsd: number
     }
   | {
       /** The aggregated BenchmarkResult, with `output` always spilled. */

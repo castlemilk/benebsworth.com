@@ -287,6 +287,48 @@ describe('usage sanity', () => {
   })
 })
 
+describe('budget sanity', () => {
+  it('skips every record that never hit a budget cap (i.e. almost all of them)', () => {
+    expect(of(verifyResults([goodRecord()]), 'budget-sanity')[0].level).toBe('skip')
+  })
+
+  it('passes a stamp whose spend crossed its own cap', () => {
+    const record = goodRecord({ costUsd: 0.006, budgetExceeded: { spentUsd: 0.012, capUsd: 0.01 } })
+    expect(of(verifyResults([record]), 'budget-sanity')[0].level).toBe('pass')
+  })
+
+  it('fails a stamp that never reached its cap — that trip cannot have happened', () => {
+    const record = goodRecord({ costUsd: 0.004, budgetExceeded: { spentUsd: 0.004, capUsd: 0.01 } })
+    const verdict = of(verifyResults([record]), 'budget-sanity')[0]
+    expect(verdict.level).toBe('fail')
+    expect(verdict.detail).toContain('0.01')
+  })
+
+  it('fails a cap that is not a positive number of dollars', () => {
+    expect(
+      of(verifyResults([goodRecord({ budgetExceeded: { spentUsd: 1, capUsd: 0 } })]), 'budget-sanity')[0].level
+    ).toBe('fail')
+    expect(
+      of(
+        verifyResults([goodRecord({ budgetExceeded: { spentUsd: 1, capUsd: Number.NaN } })]),
+        'budget-sanity'
+      )[0].level
+    ).toBe('fail')
+  })
+
+  it('fails a record that claims a budget trip while reporting no spend of its own', () => {
+    // The tripping record IS the one that spent: later tasks are skipped
+    // without a record at all, so a $0 record carrying the stamp is incoherent.
+    const record = goodRecord({ costUsd: 0, budgetExceeded: { spentUsd: 0.012, capUsd: 0.01 } })
+    expect(of(verifyResults([record]), 'budget-sanity')[0].level).toBe('fail')
+  })
+
+  it('fails a record whose own cost exceeds the sweep total it was measured against', () => {
+    const record = goodRecord({ costUsd: 0.5, budgetExceeded: { spentUsd: 0.012, capUsd: 0.01 } })
+    expect(of(verifyResults([record]), 'budget-sanity')[0].level).toBe('fail')
+  })
+})
+
 // ---------------------------------------------------------------------------
 // Filesystem-dependent checks, driven entirely through injected inputs.
 // ---------------------------------------------------------------------------

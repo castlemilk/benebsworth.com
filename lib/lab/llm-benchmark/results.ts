@@ -62,8 +62,9 @@ function succeededIterations(r: BenchmarkResult): number {
  * auth failure) never replaces a baseline record that did produce artifacts.
  * A quota outage says nothing about the model; clobbering good data with it
  * would corrupt the comparison. Such drops are logged by the caller-visible
- * `onProtect` hook. The one thing a dropped record does contribute is its
- * `quotaNextResetAt` estimate — see the carry-over comment below.
+ * `onProtect` hook. The only things a dropped record contributes are its
+ * `quotaNextResetAt` estimate and its `budgetExceeded` stamp — see the
+ * carry-over comment below.
  */
 export function mergeResults(
   baseline: BenchmarkResult[],
@@ -84,7 +85,15 @@ export function mergeResults(
       // Without this the stamp would only ever survive for (model, task) pairs
       // that had no prior success, and the pre-flight — which is the whole
       // point of recording it — would be blind for well-covered models.
-      byKey.set(key, f.quotaNextResetAt ? { ...prev, quotaNextResetAt: f.quotaNextResetAt } : prev)
+      // `budgetExceeded` (#28) rides along for exactly the same reason: it is
+      // operator metadata about the SWEEP (this model hit its cap), not a
+      // measurement of the model, and it is the only surviving explanation of
+      // why later tasks for that model have no fresh rows at all.
+      byKey.set(key, {
+        ...prev,
+        ...(f.quotaNextResetAt ? { quotaNextResetAt: f.quotaNextResetAt } : {}),
+        ...(f.budgetExceeded ? { budgetExceeded: f.budgetExceeded } : {}),
+      })
       continue
     }
     byKey.set(key, f)

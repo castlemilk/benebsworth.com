@@ -508,3 +508,56 @@ describe('estimateSweepDuration', () => {
     expect(estimate.totalMs).toBe(10_000)
   })
 })
+
+describe('budgetMaxUsd (per-model sweep budget cap, #28)', () => {
+  it('is off by default — absence is the pre-feature behaviour, not a cap of 0', () => {
+    const config = resolveSweepConfig({ flags: {}, env: {} })
+    expect(config.budgetMaxUsd).toEqual({ value: undefined, source: 'default' })
+  })
+
+  it('resolves flag > env > default like every other knob', () => {
+    const fromEnv = resolveSweepConfig({ flags: {}, env: { RUN_BUDGET_MAX_USD: '0.25' } })
+    expect(fromEnv.budgetMaxUsd).toEqual({ value: 0.25, source: 'env' })
+
+    const fromFlag = resolveSweepConfig({
+      flags: { budgetMaxUsd: 0.05 },
+      env: { RUN_BUDGET_MAX_USD: '0.25' },
+    })
+    expect(fromFlag.budgetMaxUsd).toEqual({ value: 0.05, source: 'flag' })
+  })
+
+  it('reads the knob from a profile', () => {
+    const profiles = parseSweepProfiles({ capped: { description: 'x', budgetMaxUsd: 0.5 } })
+    expect(profiles.capped.budgetMaxUsd).toBe(0.5)
+  })
+
+  it('treats an empty env var as unset, like every other knob', () => {
+    expect(resolveSweepConfig({ flags: {}, env: { RUN_BUDGET_MAX_USD: '' } }).budgetMaxUsd).toEqual({
+      value: undefined,
+      source: 'default',
+    })
+  })
+
+  it('rejects 0, negatives and NaN LOUDLY, naming the layer that set them', () => {
+    // A cap of 0 would stop the sweep before its first call while reading like
+    // "no cap" — the single most expensive way for this knob to be wrong.
+    expect(() => resolveSweepConfig({ flags: { budgetMaxUsd: 0 }, env: {} })).toThrow(/budget.*flag/i)
+    expect(() => resolveSweepConfig({ flags: { budgetMaxUsd: -1 }, env: {} })).toThrow(/budget/i)
+    expect(() => resolveSweepConfig({ flags: {}, env: { RUN_BUDGET_MAX_USD: 'lots' } })).toThrow(
+      /budget.*env/i
+    )
+    expect(() => resolveSweepConfig({ flags: {}, env: { RUN_BUDGET_MAX_USD: '-2' } })).toThrow(/budget/i)
+    expect(() => parseSweepProfiles({ a: { description: 'x', budgetMaxUsd: 0 } })).toThrow(
+      /a.*budgetMaxUsd/i
+    )
+    expect(() => parseSweepProfiles({ a: { description: 'x', budgetMaxUsd: '1' } })).toThrow(
+      /a.*budgetMaxUsd.*number/i
+    )
+  })
+
+  it('parses --budget-max-usd in both spellings', () => {
+    expect(parseSweepArgs(['--budget-max-usd', '0.05']).flags.budgetMaxUsd).toBe(0.05)
+    expect(parseSweepArgs(['--budget-max-usd=0.05']).flags.budgetMaxUsd).toBe(0.05)
+    expect(() => parseSweepArgs(['--budget-max-usd', 'cheap'])).toThrow(/--budget-max-usd.*number/i)
+  })
+})

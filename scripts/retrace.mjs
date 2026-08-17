@@ -171,6 +171,11 @@ function transcribe(runDir, file, options) {
         case 'quota':
           console.log(`  [${ts}] quota    next window ~${event.quotaNextResetAt}`)
           break
+        case 'budget':
+          console.log(
+            `  [${ts}] BUDGET   cap reached for ${event.modelId}: $${Number(event.spentUsd).toFixed(4)} of $${Number(event.capUsd).toFixed(4)} per-model — run stopped by operator policy`
+          )
+          break
         case 'failure':
           console.log(
             `  [${ts}] FAILURE  ${event.failureReason}${event.timedOut ? ' (timed out)' : ''}: ${event.error}`

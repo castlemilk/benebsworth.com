@@ -1110,38 +1110,33 @@ rebuilds on change; CLAUDE.md documents query-first.
 
 ---
 
-## [ ] 28. Sweep budget governance (policies, incidents, cost events)
+## [x] 28. Sweep budget governance (policies, incidents, cost events)
 
-**Problem.** Paid sweeps (codex, agy frontier models, OpenRouter top-up) can
-spend real money; today the only guard is manual "did it blow the budget?"
-review after the fact. A sweeps run of 7 tasks x 5 iterations on a paid
-model has no cap.
+**Shipped.** `budgetMaxUsd` joins `resolveSweepConfig` (profile key /
+`RUN_BUDGET_MAX_USD` / `--budget-max-usd`, flag > env > profile > default;
+0/negative/NaN rejected loudly at whichever layer set them). The cap is **per
+model for the whole sweep** — the breaker's scoping, so a cheap model is never
+stopped by an expensive one. `createProviderRunner` accrues each response's
+`costFromUsage` price into a per-`model.id` total and checks it at the
+ITERATION BOUNDARY (never mid-call): crossing it appends a `budget` run-log
+event (`modelId`/`spentUsd`/`capUsd` — paperclip's `budget_incidents`), trips a
+`budgetTrippedModels` set separate from `trippedModels`, ends the remaining
+iterations, and makes every later task for that model throw a "budget cap" skip
+(no record written). The in-flight record aggregates honestly from what
+completed and carries `BenchmarkResult.budgetExceeded`, which `mergeResults`
+carries through its protection path like `quotaNextResetAt`. Cost events are
+folded into the existing `response` event as `costUsd` (paperclip's
+`cost_events`, no second stream) so spend is auditable from a trace alone;
+cache replays are priced identically to keep the log's sum equal to the
+published `costUsd`. `--dump-config` prints a `budget` row when set;
+verify-results gains a `budget-sanity` check.
 
-**Inspiration.** paperclip's budget + cost governance: `server/src/services/
-budgets.ts` + `costs.ts`, schema `budget_policies.ts` / `budget_incidents.ts`
-/ `cost_events.ts` — per-agent/company budget policies, cost event rows per
-run, incidents raised when a policy is exceeded; and heartbeat's
-`providerQuotaRetryNotBefore` persistence. dsh's guard family
-(`packages/guard/timeout-policy/`: per-call deadlines as deployment policy)
-for the policy-shape.
+A budget stop is deliberately NOT a `BenchmarkFailureReason`: the model did not
+fail, the operator said stop. `aggregateRuns` now derives `success` against the
+REQUESTED iterations, since a cap can stop a run with nothing failed at all.
 
-**Design sketch.**
-
-- `sweep-budget` section in run-benchmark env/profile (#2): `BUDGET_MAX_USD`
-  per (model, sweep) with a default off; cost accrues from `estimateCost`
-  per iteration (already computed; #23 sharpens it).
-- When the budget trips: stop the model's remaining iterations (reuse the
-  circuit-breaker skip path, `trippedModels`), log a `budget_incident`
-  event (model, task, spent, cap), persist on the affected records.
-- Event log (#1) records `cost_event` rows per iteration so spend is
-  auditable after the fact.
-- UI: model page shows total spend vs cap when a budget was set.
-
-**Acceptance criteria.** A `BUDGET_MAX_USD=$0.01` smoke run on any provider
-stops mid-sweep with an incident logged and no further calls; spent totals
-reconstructable from cost events.
-
-**Effort.** M. **Dependencies.** #2 (profiles), #23 (billing shape).
+Not done: `resume.ts` re-attaches a killed run's `quota` event but not its
+`budget` event, and the model page shows no spend-vs-cap panel.
 
 ## [x] 29. Quota-monitor with auto-resume (recovery service)
 
@@ -1582,6 +1577,15 @@ without reading results.json; the server is read-only.
   CLI always estimated including codex (real total, invented 25/75 split).
   `BenchmarkResult.usage` + `costUsd` from the summary, numbers unchanged
   (locked by fixtures); `estimateCost` deprecated wrapper; `usage-sanity`
+  verify check.
+- Sweep budget governance (#28): `budgetMaxUsd` knob (profile /
+  `RUN_BUDGET_MAX_USD` / `--budget-max-usd`, positive-USD-or-fatal) capping
+  spend PER MODEL for a sweep; `createProviderRunner` accrues `costFromUsage`
+  per response, checks at the iteration boundary, appends a `budget` incident
+  event and trips `budgetTrippedModels` (separate from the quota breaker, and
+  NOT a `BenchmarkFailureReason`); `BenchmarkResult.budgetExceeded` carried
+  through `mergeResults`' protection path; per-response `costUsd` on the
+  run-log `response` event; `budget` row in `--dump-config`; `budget-sanity`
   verify check.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 

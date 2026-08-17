@@ -64,7 +64,46 @@ describe('mergeResults', () => {
     expect(baseline[0].quotaNextResetAt).toBeUndefined()
   })
 
-  it('leaves the kept record alone when the dropped one has no quota window', () => {
+  it('carries the dropped record’s budget stamp onto the record it kept', () => {
+    // Same argument as quotaNextResetAt: `budgetExceeded` is OPERATOR metadata
+    // (this model hit its cap for this sweep), not measurement data about the
+    // model — so it survives the protection path while every scored field
+    // stays exactly as the good run left it.
+    const baseline = [makeResult()]
+    const fresh = [
+      makeResult({
+        score: 0,
+        status: 'fail',
+        iterationsSucceeded: 0,
+        output: 'budget cap reached',
+        budgetExceeded: { spentUsd: 0.012, capUsd: 0.01 },
+      }),
+    ]
+    const merged = mergeResults(baseline, fresh)
+    expect(merged[0].status).toBe('success')
+    expect(merged[0].score).toBe(80)
+    expect(merged[0].budgetExceeded).toEqual({ spentUsd: 0.012, capUsd: 0.01 })
+    expect(baseline[0].budgetExceeded).toBeUndefined()
+  })
+
+  it('carries BOTH stamps when a dropped record has a quota window and a budget stamp', () => {
+    const baseline = [makeResult()]
+    const fresh = [
+      makeResult({
+        score: 0,
+        status: 'fail',
+        iterationsSucceeded: 0,
+        quotaNextResetAt: '2026-01-03T09:27:00.000Z',
+        budgetExceeded: { spentUsd: 0.012, capUsd: 0.01 },
+      }),
+    ]
+    const merged = mergeResults(baseline, fresh)
+    expect(merged[0].quotaNextResetAt).toBe('2026-01-03T09:27:00.000Z')
+    expect(merged[0].budgetExceeded).toEqual({ spentUsd: 0.012, capUsd: 0.01 })
+    expect(merged[0].output).toBe('real artifact')
+  })
+
+  it('leaves the kept record alone when the dropped one has no quota window or budget stamp', () => {
     const baseline = [makeResult({ quotaNextResetAt: '2026-01-03T09:27:00.000Z' })]
     const fresh = [makeResult({ score: 0, status: 'fail', iterationsSucceeded: 0 })]
     const merged = mergeResults(baseline, fresh)

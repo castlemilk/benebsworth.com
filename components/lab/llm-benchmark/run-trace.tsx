@@ -305,6 +305,16 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
         </Row>
       )
 
+    // An operator policy, not a provider failure — worded so nobody reads it
+    // as the model or the endpoint giving up.
+    case 'budget':
+      return (
+        <Row label="budget" tone="warn">
+          per-model spend cap reached — ${event.spentUsd.toFixed(4)} of $
+          {event.capUsd.toFixed(4)}; the sweep stopped this model here
+        </Row>
+      )
+
     // `check` events are aggregated into one pill row per iteration below, so
     // they never render as individual lines.
     case 'check':

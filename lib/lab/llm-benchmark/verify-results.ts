@@ -107,6 +107,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "BenchmarkResult carries token counts TWICE — the legacy flat tokensIn/tokensOut every consumer reads, and the richer `usage` summary that costUsd is actually computed from. aggregateRuns derives both from one summarizeUsage() call, so they cannot disagree unless a record was written by something else (a backfill, a hand edit, a future producer that sets one and forgets the other) — and a disagreement means the published cost was priced off numbers that are not the ones displayed beside it. Also pins `usage.source` to the vocabulary: a stray string there would make the honesty field unreadable. Records with no `usage` are legacy and skip.",
   },
   {
+    id: 'budget-sanity',
+    title: 'a budgetExceeded stamp describes a trip that could have happened',
+    why:
+      "`budgetExceeded` (#28) is the record's explanation for an otherwise alarming shape: iterations stopped early with NO failed iteration to blame. If the stamp itself is incoherent — spend below its own cap, a cap of 0 or NaN, a record claiming a budget trip while reporting $0 of its own spend, or a record whose cost exceeds the sweep total it was measured against — then the explanation is worse than none, because a reader will conclude the harness silently dropped iterations. It is a cheap consistency check by design: the ONLY authority on real spend is the run log's per-response costs, and this check does not re-price them.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -334,6 +340,45 @@ function checkUsage(r: BenchmarkResult): Verdict {
   return verdict('usage-sanity', 'pass', key)
 }
 
+/**
+ * Cheap coherence for the budget stamp. Deliberately NOT a re-pricing: spend
+ * is authoritative in the run log's per-response `costUsd` events, and a
+ * verifier that re-derived dollars here would just be a second, drifting
+ * implementation of `costFromUsage`.
+ */
+function checkBudget(r: BenchmarkResult): Verdict {
+  const key = recordKey(r)
+  const budget = r.budgetExceeded
+  if (!budget) return verdict('budget-sanity', 'skip', key, 'no budget cap was reached on this record')
+  const { spentUsd, capUsd } = budget
+  if (!Number.isFinite(capUsd) || capUsd <= 0) {
+    return verdict('budget-sanity', 'fail', key, `capUsd ${capUsd} is not a positive number of dollars`)
+  }
+  if (!Number.isFinite(spentUsd) || spentUsd < capUsd) {
+    return verdict(
+      'budget-sanity',
+      'fail',
+      key,
+      `spentUsd ${spentUsd} never reached capUsd ${capUsd} — this trip cannot have happened`
+    )
+  }
+  // The record that carries the stamp is the one that was in flight when the
+  // cap tripped, so it spent something; and its own cost is one contribution
+  // to the model's sweep total, so it cannot exceed it.
+  if (!(r.costUsd > 0)) {
+    return verdict('budget-sanity', 'fail', key, `costUsd ${r.costUsd} — a budget trip on a record that spent nothing`)
+  }
+  if (r.costUsd > spentUsd + 1e-9) {
+    return verdict(
+      'budget-sanity',
+      'fail',
+      key,
+      `costUsd ${r.costUsd} exceeds the model's sweep spend ${spentUsd} it was measured against`
+    )
+  }
+  return verdict('budget-sanity', 'pass', key)
+}
+
 function checkStalePrompt(
   r: BenchmarkResult,
   currentBundle: (taskId: string) => string | undefined
@@ -420,6 +465,7 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
     verdicts.push(checkFailureReason(r))
     verdicts.push(checkTelemetry(r))
     verdicts.push(checkUsage(r))
+    verdicts.push(checkBudget(r))
     verdicts.push(checkStalePrompt(r, currentPromptBundle))
   }
 

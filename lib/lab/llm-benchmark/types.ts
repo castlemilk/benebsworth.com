@@ -401,6 +401,26 @@ export interface BenchmarkResult {
    */
   quotaNextResetAt?: string
   /**
+   * The sweep's per-model spend cap stopped this model, and this is the record
+   * that was in flight when it did — `spentUsd` is the model's CUMULATIVE spend
+   * across the sweep at the moment of the trip (so it can exceed this record's
+   * own `costUsd`), and `capUsd` is the cap it crossed.
+   *
+   * The analogue of `quotaNextResetAt`: operational metadata about the RUN, not
+   * a measurement of the model, which is why `mergeResults` carries it across
+   * its never-clobber-good-data protection. It also explains an otherwise
+   * puzzling record — `iterationsSucceeded` below `iterations` with no failed
+   * iteration to blame — so it must not be read as a model defect.
+   *
+   * A budget stop is an OPERATOR POLICY, not a provider failure: it is
+   * deliberately NOT a `BenchmarkFailureReason`, and the tasks skipped after
+   * the trip produce no records at all (same as the quota breaker).
+   *
+   * Absent on every record from a sweep that ran without a cap, or under a cap
+   * it never reached — i.e. almost all of them.
+   */
+  budgetExceeded?: { spentUsd: number; capUsd: number }
+  /**
    * Per-call timing/efficiency rolled up over this record's iterations.
    *
    * WHY: `runtimeMs` is wall-clock only, and wall-clock cannot tell "the model

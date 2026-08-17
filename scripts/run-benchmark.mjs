@@ -12,6 +12,9 @@
 //   --timeout-ms <n>     per-call cap (default: the runner's 10 minutes)
 //   --max-retries <n>    transient-error retries (default: 2; use 0 on slow models)
 //   --bust-cache         ignore the response cache and force fresh paid calls
+//   --budget-max-usd <n> spend cap in USD PER MODEL for this sweep (default: none).
+//                        A model that crosses it is stopped for the rest of the
+//                        run — remaining iterations and every later task.
 //   --resume <run-id>    land in sweeps/<run-id>/ and skip (model, task) pairs
 //                        that already have an `aggregate` event there
 //   --list-profiles      print the named recipes and exit
@@ -21,7 +24,8 @@
 // (`resume` is flag > env ONLY — see ResolvedSweepConfig.resume.)
 //
 // The env vars (RUN_MODELS, RUN_TASKS, RUN_PLUGINS, RUN_ITERATIONS,
-// RUN_CONCURRENCY, RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE, RUN_RESUME)
+// RUN_CONCURRENCY, RUN_TIMEOUT_MS, RUN_MAX_RETRIES, RUN_BUST_CACHE,
+// RUN_BUDGET_MAX_USD, RUN_RESUME)
 // work as they always have — the Taskfile wrappers and the skill runbook depend
 // on it. They are now the middle override layer rather than the only interface.
 //
@@ -240,6 +244,11 @@ function dumpConfig({ models, tasks, locks, outPath, resumePlan, cliStatus }) {
   )
   row('maxRetries', config.maxRetries.value ?? 'runner default (2)', config.maxRetries.source)
   row('bustCache', config.bustCache.value, config.bustCache.source)
+  // Only when a cap is set: "budget none (default)" on every dump would be
+  // noise, and the row exists to make a real cap impossible to miss.
+  if (config.budgetMaxUsd.value !== undefined) {
+    row('budget', `$${config.budgetMaxUsd.value.toFixed(2)} per model`, config.budgetMaxUsd.source)
+  }
   if (resumePlan) {
     row(
       'resume',
@@ -622,6 +631,9 @@ async function main() {
     bustCache: config.bustCache.value,
     timeoutMs: TIMEOUT_MS,
     maxRetries: config.maxRetries.value,
+    // Per-MODEL spend cap: crossing it trips a breaker that skips the model's
+    // remaining iterations and every later task (see ProviderRunnerConfig).
+    budgetMaxUsd: config.budgetMaxUsd.value,
     // Audit only: stamped into every run log's header snapshot so a trace
     // records the bundle scope it ran under.
     plugins: ACTIVE_PLUGINS,

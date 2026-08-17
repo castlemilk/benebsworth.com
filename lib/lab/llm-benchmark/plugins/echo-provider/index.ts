@@ -40,6 +40,9 @@ export const echoProvider: BenchmarkPlugin = {
   name: 'Echo Provider',
   version: '1.0.0',
   description: 'Example plugin that ships a provider (generator) and the model that uses it.',
+  // No 'demos' and no 'tasks': this plugin touches the provider seam only.
+  // Registration rejects it if it ever ships more than these two.
+  capabilities: ['generators', 'models'],
   models: [echoModel],
   generators: {
     Echo: () => import('./generate').then((m) => m.echoGenerate),

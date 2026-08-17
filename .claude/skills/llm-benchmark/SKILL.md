@@ -98,6 +98,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Plugin-provided provider (generator + model) | `lib/lab/llm-benchmark/plugins/echo-provider/`, built-in names in `lib/lab/llm-benchmark/providers.ts` |
 | Plugin authoring guide | `docs/lab/llm-benchmark/plugins-authoring.md` |
 | Plugin scaffold (`task bench:plugin-scaffold`) | `scripts/plugin-scaffold.mjs` + `scripts/templates/plugin/*.tmpl`, pure helpers in `lib/lab/llm-benchmark/plugins/scaffold.ts` |
+| Plugin validation (`task bench:plugin-validate`) | `scripts/validate-plugin.mjs`, rules in `lib/lab/llm-benchmark/plugins/{registry,validate-plugin}.ts` |
+| Third-party plugin fetch (review-only) | `scripts/plugin-fetch.mjs` + `lib/lab/llm-benchmark/plugins/fetch-plugin.ts`, clones into `plugins/third-party/` |
 | Skill | `.claude/skills/llm-benchmark/SKILL.md` |
 
 ## Adding a Model
@@ -1418,6 +1420,32 @@ registration unwinds on `unregisterPlugin()`.
   checks (`ttt-grid-interacts`, `ttt-win-detected`) — the template for new
   plugins. Tests in `plugins/registry.test.ts` cover registration,
   collisions, unwind, and integration.
+- **Trust / validation** (#38): three mechanisms, all mechanical.
+  1. `BenchmarkPlugin.capabilities?: PluginCapability[]` (`tasks | checks |
+     scorers | demos | taskCards | generators | models`) — OPTIONAL but
+     VERIFIED. Shipping MORE than declared is REJECTED at registration
+     (`undeclared-capability`); declaring more than shipped only over-warns and
+     is legal (a validate warning). Absent = capabilities DERIVED from the
+     contributions. Both worked examples declare theirs.
+  2. `task bench:plugin-validate -- <dir-or-roster-id>` — collects EVERY
+     problem at once plus the capability table (declared beside contributed).
+     A DIRECTORY argument is imported for review and NOT registered; a roster
+     id reads the registered object. Exit 1 on errors. Registration and
+     validation share ONE rule generator
+     (`registry.ts:registrationViolations`) — `registerPlugin` throws its
+     first violation, `validatePlugin` drains it, and a parity matrix over
+     `PLUGIN_RULES` in `plugins/validate-plugin.test.ts` fails if a rule ever
+     lands on only one path. Validation adds manifest rules registration does
+     NOT enforce (kebab-case id, semver-ish version, description present) — a
+     review gate may be stricter than the loader.
+  3. `registerPlugin(plugin, { deny: ['demos'] })` — the ROSTER call site
+     refuses a capability outright. One parameter at the one place plugins
+     enter; no config file, no policy engine.
+  `scripts/plugin-fetch.mjs <git-url>` shallow-clones into
+  `plugins/third-party/<repo-name>/`, drops the nested `.git`, prints the
+  commit + a review checklist, and STOPS — it never registers anything and
+  refuses an existing target. `third-party/` is deliberately NOT gitignored:
+  the site builds from reviewed plugin code, so it must be committed.
 - **Authoring**: `docs/lab/llm-benchmark/plugins-authoring.md` — every
   extension point with its code reference, the client-bundle rule, the
   manifest fields, the point-budget/rationale convention for checks, roster

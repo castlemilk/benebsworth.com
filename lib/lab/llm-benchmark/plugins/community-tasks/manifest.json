@@ -3,6 +3,7 @@
   "name": "Community Tasks",
   "version": "1.0.0",
   "description": "Community-contributed benchmark tasks with their own behavioral checks and demos.",
+  "capabilities": ["tasks", "checks", "demos"],
   "tasks": [
     {
       "id": "tic-tac-toe",

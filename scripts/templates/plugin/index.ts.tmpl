@@ -47,6 +47,12 @@ export const __PLUGIN_EXPORT__: BenchmarkPlugin = {
   name: '__PLUGIN_NAME__',
   version: '0.1.0',
   description: 'TODO: one line describing what this plugin contributes.',
+  // What this plugin touches, declared for a reviewer. OPTIONAL but VERIFIED:
+  // registration REJECTS a plugin that contributes a capability it does not
+  // declare (declaring less than you ship is the lie that matters). Add
+  // 'scorers' / 'taskCards' / 'generators' / 'models' here if you add them
+  // below. `task bench:plugin-validate -- __PLUGIN_ID__` prints the table.
+  capabilities: ['tasks', 'checks', 'demos'],
   tasks: [__PLUGIN_EXPORT__Task],
   checks: {
     '__CHECK_RENDERS__': __PLUGIN_EXPORT__Renders,

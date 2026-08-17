@@ -132,6 +132,16 @@ describe('templates render into the shape the registry expects', () => {
     for (const check of manifest.tasks[0].checks) expect(index).toContain(`'${check}'`)
   })
 
+  it('declares the capabilities it actually scaffolds, in both files', () => {
+    // The scaffold models the practice: a declaration registration verifies.
+    // If it ever declared less than the generated index.ts ships,
+    // `registerPlugin` would reject the scaffold the moment it was rostered.
+    const manifest = JSON.parse(renderTemplate(template('manifest.json.tmpl'), vars))
+    expect(manifest.capabilities).toEqual(['tasks', 'checks', 'demos'])
+    const index = renderTemplate(template('index.ts.tmpl'), vars)
+    expect(index).toContain("capabilities: ['tasks', 'checks', 'demos']")
+  })
+
   it('keeps the client-bundle rule: checks import types only', () => {
     const checks = renderTemplate(template('checks.ts.tmpl'), vars)
     expect(checks).toContain('import type { CheckContext, CheckFn }')

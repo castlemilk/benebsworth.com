@@ -205,6 +205,46 @@ describe('plugin generators + models (registration rules)', () => {
   })
 })
 
+describe('capability declaration + deny (the trust gate)', () => {
+  const ids = ['probe-capability-plugin']
+  beforeEach(() => ids.forEach(unregisterPlugin))
+  afterEach(() => ids.forEach(unregisterPlugin))
+
+  const capabilityPlugin: BenchmarkPlugin = {
+    ...probePlugin,
+    id: 'probe-capability-plugin',
+    taskCards: undefined,
+  }
+
+  it('accepts a truthful declaration', () => {
+    registerPlugin({ ...capabilityPlugin, capabilities: ['tasks', 'checks', 'demos'] })
+    expect(getPlugins().map((p) => p.id)).toContain('probe-capability-plugin')
+  })
+
+  it('rejects a plugin that ships more than it declares', () => {
+    // Declaring less than you ship is the lie that matters: the declaration is
+    // what a reviewer reads instead of the diff.
+    expect(() => registerPlugin({ ...capabilityPlugin, capabilities: ['tasks', 'checks'] })).toThrow(
+      /contributes 'demos' but does not declare it/
+    )
+  })
+
+  it('accepts a plugin that declares more than it ships (it only over-warns)', () => {
+    registerPlugin({ ...capabilityPlugin, capabilities: ['tasks', 'checks', 'demos', 'scorers', 'models'] })
+    expect(getPlugins().map((p) => p.id)).toContain('probe-capability-plugin')
+  })
+
+  it('lets the roster call site deny a capability outright', () => {
+    // The one place plugins enter is the one place a trust decision can be made.
+    expect(() => registerPlugin(capabilityPlugin, { deny: ['demos'] })).toThrow(
+      /contributes 'demos', which this registration denies/
+    )
+    // The same plugin without its demo mounts fine under the same deny list.
+    registerPlugin({ ...capabilityPlugin, demos: undefined }, { deny: ['demos'] })
+    expect(pluginTasks().map((t) => t.id)).toContain('probe-task')
+  })
+})
+
 describe('shipped plugin integration (load-time roster)', () => {
   it('merges the community-tasks plugin into BENCHMARK_TASKS with attribution', () => {
     const t = getTask('tic-tac-toe')

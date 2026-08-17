@@ -1,0 +1,6 @@
+# Fetched third-party plugins land here (`npx tsx scripts/plugin-fetch.mjs <git-url>`).
+#
+# NOT gitignored, on purpose: once a plugin is reviewed and added to the roster
+# the site BUILDS from it, so its code must be in the repo. Hiding it would mean
+# shipping code that is not committed. Review first
+# (`task bench:plugin-validate -- <dir>`), then commit, then roster.

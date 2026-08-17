@@ -37,7 +37,8 @@ lib/lab/llm-benchmark/plugins/<id>/
 | `id` | yes | Stable, unique across all plugins. Kebab-case. Stamped onto contributed tasks. |
 | `name` | yes | Display name (attribution chip, sweep diagnostics). |
 | `version` | yes | Semver-ish string, shown for attribution. |
-| `description` | no | One line. |
+| `description` | no | One line. Required by `validatePlugin` — a reviewer reads it before the code. |
+| `capabilities` | no | What this plugin touches, declared for a reviewer. Optional but **verified** — see [Trust](#trust-validating-a-plugin-you-did-not-write). |
 | `tasks` | no | `BenchmarkTask[]` merged into `BENCHMARK_TASKS`. |
 | `checks` | no | `Record<name, CheckFn>` merged into the named check registry. |
 | `scorers` | no | `Record<name, Scorer>` — the names a task row's `scorer` may use. |
@@ -317,6 +318,119 @@ generated page at `/lab/llm-benchmark/<category>/<slug>/`, and renders a
 
 ---
 
+## Trust: validating a plugin you did not write
+
+A plugin can register a task whose **demo runs arbitrary JS in every visitor's
+browser**, and its checks run in the scoring harness. Reviewing that by reading
+the diff does not scale, so three things make the review mechanical.
+
+### 1. Declare what you touch — `capabilities`
+
+```ts
+export const communityTasks: BenchmarkPlugin = {
+  id: 'community-tasks',
+  // …
+  capabilities: ['tasks', 'checks', 'demos'],
+}
+```
+
+Optional, but **verified when present**:
+
+| Situation | Registration | Validation |
+| --- | --- | --- |
+| declares exactly what it ships | mounts | ok |
+| ships MORE than it declares | **rejected** (`undeclared-capability`) | error |
+| declares MORE than it ships | mounts | warning (`overdeclared-capability`) |
+| declares nothing | mounts | capabilities **derived** from the contributions |
+| declares a name that is not a capability | **rejected** (`unknown-capability`) | error |
+
+The asymmetry is the point. Declaring less than you ship is the lie that
+matters — the declaration is what a reviewer reads *instead of* the diff, so a
+plugin that quietly adds a demo after review must not load. Declaring more than
+you ship only over-warns the reviewer, so it loads and merely warns.
+
+An undeclared plugin is still reviewable: validation derives the set from the
+contributions and prints it either way. Declaring is better because it is a
+claim the loader will hold you to. Both worked examples declare
+(`community-tasks` → `tasks, checks, demos`; `echo-provider` →
+`generators, models`), and the scaffold's templates ship the field.
+
+The vocabulary is `PLUGIN_CAPABILITIES` in `plugins/registry.ts` — the seven
+extension points: `tasks`, `checks`, `scorers`, `demos`, `taskCards`,
+`generators`, `models`.
+
+### 2. Validate before rostering — `task bench:plugin-validate`
+
+```
+task bench:plugin-validate -- community-tasks                              # roster id
+task bench:plugin-validate -- lib/lab/llm-benchmark/plugins/echo-provider  # directory
+```
+
+A path that exists on disk is **imported for review and deliberately not
+registered** — looking at a plugin must not mount it. Anything else is read out
+of the roster. The report is the capability table (declared beside contributed,
+all seven rows — "contributes no demos" is the answer to the reviewer's actual
+question) followed by every warning and every error with its rule name. Exit 1
+on errors; warnings never fail.
+
+`registerPlugin()` throws on the **first** violation, which is right for a
+loader and useless for a review — fixing a stranger's plugin one thrown error
+per run teaches you nothing about its shape. `validatePlugin()` collects them
+all.
+
+**The two modes cannot drift.** Every rule registration enforces lives in one
+lazy generator, `registry.ts:registrationViolations()`. `registerPlugin` takes
+its first violation and throws (the stream is lazy, so later rules are never
+evaluated — same message, same first failure as before this existed);
+`validatePlugin` drains it. A rule added there is enforced by registration AND
+reported by validation, and `plugins/validate-plugin.test.ts` holds a parity
+matrix — one fixture per rule in `PLUGIN_RULES`, asserting both paths fire with
+the identical message, and failing when a rule has no fixture at all.
+
+Validation additionally applies **manifest rules the loader does not**:
+kebab-case `id`, semver-ish `version`, a display name without quotes, and a
+present `description`. A review gate is allowed to be stricter than the loader —
+failing registration on a cosmetic id would break plugins that run fine. It also
+warns when a task names a check or demo the plugin does not ship (legal — it may
+resolve as a built-in — but worth a look).
+
+### 3. Deny a capability at the roster — `registerPlugin(plugin, { deny })`
+
+```ts
+// plugins/index.ts — the one place plugins enter the build.
+registerPlugin(sketchyPlugin, { deny: ['demos'] })
+```
+
+Registration fails if the plugin ships a denied capability. Its tasks and checks
+mount; the contribution that would run its JS in a visitor's browser does not.
+
+That is the whole policy mechanism: one parameter, at the one place a plugin
+enters, controlled by the reviewer. No config file and no policy engine —
+either of which would put the trust decision somewhere other than the diff you
+are reviewing.
+
+### 4. Fetching a third-party plugin
+
+```
+npx tsx scripts/plugin-fetch.mjs <git-url>
+```
+
+Shallow-clones into `plugins/third-party/<repo-name>/`, drops the nested `.git`
+(a repo inside a repo commits as a broken gitlink), prints the cloned commit for
+your commit message, and **stops** with the review checklist: validate it, read
+the demo and the checks, compare the capability table against the diff, add the
+roster line by hand, commit.
+
+It refuses an existing target directory — re-cloning over a reviewed plugin
+would silently swap approved code for whatever the remote holds today.
+
+`third-party/` is **not** gitignored, and that is deliberate. Once a plugin is
+reviewed and rostered the site builds from it, so its code has to be in the
+repo; hiding it would mean shipping code that is not committed, which is a worse
+failure than a large diff.
+
+---
+
 ## Sweeps: plugin bundle selection
 
 A sweep chooses which plugins mount, and therefore which contributed tasks
@@ -365,13 +479,16 @@ The stored profile `builtins-only` (`sweep-profiles.json`) is `"plugins": []`
    `sandboxConstraints` (and say why in a comment).
 4. Replace the placeholder demo (keep the export name).
 5. Add the roster lines to `plugins/index.ts`.
-6. Add coverage to `plugins/registry.test.ts`: the task merges into
+6. `task bench:plugin-validate -- <id>` — every rule at once, plus the
+   capability table. Keep `capabilities` truthful: registration rejects a
+   plugin that ships more than it declares.
+7. Add coverage to `plugins/registry.test.ts`: the task merges into
    `BENCHMARK_TASKS` with your `pluginId`, and its declared checks resolve
    through `getChecksForTask()`. Shipping a provider? Mirror
    `runners/provider.test.ts`'s "plugin-provided generators" block — register
    the pair, run `runTask`, assert the aggregate.
-7. `task verify` — lint, typecheck, prose, unit tests.
-8. `task build` — confirms the task page statically generates and the demo
+8. `task verify` — lint, typecheck, prose, unit tests.
+9. `task build` — confirms the task page statically generates and the demo
    resolves.
-9. Sweep it when you want real numbers: `task bench:run TASKS=<task-id>
-   MODELS=<model-id> ITER=1` (real spend).
+10. Sweep it when you want real numbers: `task bench:run TASKS=<task-id>
+    MODELS=<model-id> ITER=1` (real spend).

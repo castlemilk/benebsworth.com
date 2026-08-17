@@ -35,6 +35,23 @@ import { BUILTIN_PROVIDERS, isBuiltinProvider } from '../providers'
  * (node-only) asks for it.
  */
 
+/**
+ * The extension points a plugin may contribute to — the vocabulary of
+ * `BenchmarkPlugin.capabilities`, of the `deny` option, and of the capability
+ * table `scripts/validate-plugin.mjs` prints. Order is the display order.
+ */
+export const PLUGIN_CAPABILITIES = [
+  'tasks',
+  'checks',
+  'scorers',
+  'demos',
+  'taskCards',
+  'generators',
+  'models',
+] as const
+
+export type PluginCapability = (typeof PLUGIN_CAPABILITIES)[number]
+
 /** One plugin's contribution set. All fields optional; an empty plugin is legal (metadata only). */
 export interface BenchmarkPlugin {
   /** Stable id, unique across all plugins (e.g. 'community-tasks'). */
@@ -45,6 +62,21 @@ export interface BenchmarkPlugin {
   version: string
   /** One-line description. */
   description?: string
+  /**
+   * What this plugin touches, declared for a reviewer.
+   *
+   * OPTIONAL but VERIFIED. When present, registration REJECTS a plugin whose
+   * actual contributions exceed the declaration — declaring less than you ship
+   * is the lie that matters, because the declaration is what a reviewer reads
+   * instead of the diff. Declaring MORE than you ship is legal at registration
+   * (it only over-warns the reviewer) and merely a warning in
+   * `validatePlugin()`.
+   *
+   * When absent, capabilities are DERIVED from the contributions
+   * (`derivedCapabilities()`); validate reports them either way, so the
+   * at-a-glance view exists for undeclared plugins too.
+   */
+  capabilities?: PluginCapability[]
   /** Tasks contributed. `pluginId` is stamped automatically from `id`. */
   tasks?: BenchmarkTask[]
   /** Named behavioral checks, keyed by stable check name. */
@@ -85,16 +117,166 @@ function fail(message: string): never {
   throw new Error(`[plugins] ${message}`)
 }
 
-/** Register a plugin, rejecting id/contribution collisions loudly. */
-export function registerPlugin(plugin: BenchmarkPlugin): void {
-  if (!plugin.id || !plugin.name || !plugin.version) {
-    fail(`${plugin.id ?? '<missing id>'}: id, name and version are required`)
+/** How many of a capability a plugin actually contributes (0 = does not touch it). */
+export function capabilityCount(plugin: BenchmarkPlugin, capability: PluginCapability): number {
+  switch (capability) {
+    case 'tasks':
+      return (plugin.tasks ?? []).length
+    case 'models':
+      return (plugin.models ?? []).length
+    case 'checks':
+      return Object.keys(plugin.checks ?? {}).length
+    case 'scorers':
+      return Object.keys(plugin.scorers ?? {}).length
+    case 'demos':
+      return Object.keys(plugin.demos ?? {}).length
+    case 'taskCards':
+      return Object.keys(plugin.taskCards ?? {}).length
+    case 'generators':
+      return Object.keys(plugin.generators ?? {}).length
   }
-  if (plugins.has(plugin.id)) fail(`duplicate plugin id '${plugin.id}'`)
+}
+
+/**
+ * The capabilities a plugin ACTUALLY contributes, in `PLUGIN_CAPABILITIES`
+ * order. This is the ground truth every capability rule compares against — a
+ * declaration is checked against it, never trusted in place of it.
+ */
+export function derivedCapabilities(plugin: BenchmarkPlugin): PluginCapability[] {
+  return PLUGIN_CAPABILITIES.filter((c) => capabilityCount(plugin, c) > 0)
+}
+
+/**
+ * Every rule name `registrationViolations()` can emit. Stable identifiers —
+ * `validatePlugin()` reports them, tests match on them, and the rule-parity
+ * matrix in `validate-plugin.test.ts` asserts each one fires identically on
+ * both paths (and that no rule here lacks a fixture).
+ */
+export const PLUGIN_RULES = [
+  'identity-required',
+  'duplicate-plugin-id',
+  'unknown-capability',
+  'denied-capability',
+  'undeclared-capability',
+  'task-sets-plugin-id',
+  'duplicate-task-id',
+  'generator-shadows-builtin',
+  'generator-already-provided',
+  'model-sets-plugin-id',
+  'duplicate-model-id',
+  'model-id-taken',
+  'model-provider-unrunnable',
+] as const
+
+export type PluginRule = (typeof PLUGIN_RULES)[number]
+
+export interface PluginViolation {
+  rule: PluginRule
+  message: string
+}
+
+export interface RegistrationContext {
+  /**
+   * Plugins to check collisions against. `registerPlugin` passes the live
+   * registry; `validatePlugin` passes the roster minus the candidate itself.
+   */
+  existing: readonly BenchmarkPlugin[]
+  /**
+   * Capabilities the CALL SITE refuses from this plugin, regardless of what the
+   * plugin says about itself. The roster is the one place plugins enter, so it
+   * is the one place a trust decision can be made: `registerPlugin(thirdParty,
+   * { deny: ['demos'] })`.
+   */
+  deny?: readonly PluginCapability[]
+}
+
+/** Which of `existing` owns a generator for this provider, if any. */
+function generatorOwnerIn(existing: readonly BenchmarkPlugin[], provider: string): string | undefined {
+  for (const p of existing) {
+    if (Object.hasOwn(p.generators ?? {}, provider)) return p.id
+  }
+  return undefined
+}
+
+/**
+ * THE registration rule set, as a lazy stream of violations.
+ *
+ * This generator is the single source of truth shared by the two modes:
+ *
+ *   - `registerPlugin()` takes the FIRST violation and throws it. Because the
+ *     stream is lazy, later rules are never even evaluated — byte-identical
+ *     behaviour (same message, same first failure) to the hand-rolled
+ *     if/fail chain this replaced.
+ *   - `validatePlugin()` (validate-plugin.ts) drains it and reports ALL of
+ *     them, so a reviewer sees every problem in one pass.
+ *
+ * Single-sourcing them is the point: a rule added here is enforced by
+ * registration AND reported by validation, and the two can never drift.
+ * `validate-plugin.test.ts` asserts that parity fixture by fixture, and fails
+ * when a rule in `PLUGIN_RULES` has no fixture at all.
+ *
+ * Rule ORDER is load-bearing (it decides which message `registerPlugin`
+ * throws): identity, then the trust gate (capabilities), then contributions in
+ * the order they would be mounted.
+ */
+export function* registrationViolations(
+  plugin: BenchmarkPlugin,
+  ctx: RegistrationContext
+): Generator<PluginViolation> {
+  if (!plugin.id || !plugin.name || !plugin.version) {
+    yield {
+      rule: 'identity-required',
+      message: `${plugin.id ?? '<missing id>'}: id, name and version are required`,
+    }
+  }
+  if (ctx.existing.some((p) => p.id === plugin.id)) {
+    yield { rule: 'duplicate-plugin-id', message: `duplicate plugin id '${plugin.id}'` }
+  }
+
+  // Capability gate. A declaration is a claim about what a reviewer will find;
+  // shipping MORE than declared makes the claim a lie, so it is rejected. The
+  // reverse (declaring more than shipped) only over-warns and is legal here —
+  // validate downgrades it to a warning.
+  const contributed = derivedCapabilities(plugin)
+  const declared = plugin.capabilities
+  for (const c of declared ?? []) {
+    if (!(PLUGIN_CAPABILITIES as readonly string[]).includes(c)) {
+      yield {
+        rule: 'unknown-capability',
+        message: `plugin '${plugin.id}' declares unknown capability '${c}' (valid: ${PLUGIN_CAPABILITIES.join(', ')})`,
+      }
+    }
+  }
+  for (const c of contributed) {
+    if ((ctx.deny ?? []).includes(c)) {
+      yield {
+        rule: 'denied-capability',
+        message: `plugin '${plugin.id}' contributes '${c}', which this registration denies (deny: ${(ctx.deny ?? []).join(', ')})`,
+      }
+    }
+  }
+  if (declared) {
+    for (const c of contributed) {
+      if (!declared.includes(c)) {
+        yield {
+          rule: 'undeclared-capability',
+          message: `plugin '${plugin.id}' contributes '${c}' but does not declare it (capabilities: ${declared.length > 0 ? declared.join(', ') : '<empty>'})`,
+        }
+      }
+    }
+  }
+
   for (const task of plugin.tasks ?? []) {
-    if (task.pluginId) fail(`plugin '${plugin.id}' task '${task.id}' sets pluginId itself (stamped automatically)`)
+    if (task.pluginId) {
+      yield {
+        rule: 'task-sets-plugin-id',
+        message: `plugin '${plugin.id}' task '${task.id}' sets pluginId itself (stamped automatically)`,
+      }
+    }
     for (const other of plugin.tasks ?? []) {
-      if (other !== task && other.id === task.id) fail(`plugin '${plugin.id}' declares task '${task.id}' twice`)
+      if (other !== task && other.id === task.id) {
+        yield { rule: 'duplicate-task-id', message: `plugin '${plugin.id}' declares task '${task.id}' twice` }
+      }
     }
   }
   // Generators: reject BEFORE anything is mounted. A provider name is a
@@ -102,21 +284,37 @@ export function registerPlugin(plugin: BenchmarkPlugin): void {
   // it silently reroutes an existing model's traffic.
   for (const provider of Object.keys(plugin.generators ?? {})) {
     if (isBuiltinProvider(provider)) {
-      fail(
-        `plugin '${plugin.id}' generator '${provider}' collides with a built-in provider (${BUILTIN_PROVIDERS.join(', ')})`
-      )
+      yield {
+        rule: 'generator-shadows-builtin',
+        message: `plugin '${plugin.id}' generator '${provider}' collides with a built-in provider (${BUILTIN_PROVIDERS.join(', ')})`,
+      }
     }
-    const owner = generatorOwner(provider)
-    if (owner) fail(`plugin '${plugin.id}' generator '${provider}' is already provided by plugin '${owner}'`)
+    const owner = generatorOwnerIn(ctx.existing, provider)
+    if (owner) {
+      yield {
+        rule: 'generator-already-provided',
+        message: `plugin '${plugin.id}' generator '${provider}' is already provided by plugin '${owner}'`,
+      }
+    }
   }
   for (const model of plugin.models ?? []) {
-    if (model.pluginId) fail(`plugin '${plugin.id}' model '${model.id}' sets pluginId itself (stamped automatically)`)
-    for (const other of plugin.models ?? []) {
-      if (other !== model && other.id === model.id) fail(`plugin '${plugin.id}' declares model '${model.id}' twice`)
+    if (model.pluginId) {
+      yield {
+        rule: 'model-sets-plugin-id',
+        message: `plugin '${plugin.id}' model '${model.id}' sets pluginId itself (stamped automatically)`,
+      }
     }
-    for (const p of plugins.values()) {
+    for (const other of plugin.models ?? []) {
+      if (other !== model && other.id === model.id) {
+        yield { rule: 'duplicate-model-id', message: `plugin '${plugin.id}' declares model '${model.id}' twice` }
+      }
+    }
+    for (const p of ctx.existing) {
       if ((p.models ?? []).some((m) => m.id === model.id)) {
-        fail(`plugin '${plugin.id}' model '${model.id}' duplicates a model from plugin '${p.id}'`)
+        yield {
+          rule: 'model-id-taken',
+          message: `plugin '${plugin.id}' model '${model.id}' duplicates a model from plugin '${p.id}'`,
+        }
       }
     }
     // A model whose provider nothing can generate is dead on arrival — it
@@ -124,22 +322,43 @@ export function registerPlugin(plugin: BenchmarkPlugin): void {
     const runnable =
       isBuiltinProvider(model.provider) ||
       Object.hasOwn(plugin.generators ?? {}, model.provider) ||
-      generatorOwner(model.provider) !== undefined
+      generatorOwnerIn(ctx.existing, model.provider) !== undefined
     if (!runnable) {
-      fail(
-        `plugin '${plugin.id}' model '${model.id}' declares provider '${model.provider}', which is neither built-in nor provided by a plugin generator`
-      )
+      yield {
+        rule: 'model-provider-unrunnable',
+        message: `plugin '${plugin.id}' model '${model.id}' declares provider '${model.provider}', which is neither built-in nor provided by a plugin generator`,
+      }
     }
   }
-  plugins.set(plugin.id, plugin)
 }
 
-/** Which registered plugin owns a generator for this provider, if any. */
-function generatorOwner(provider: string): string | undefined {
-  for (const p of plugins.values()) {
-    if (Object.hasOwn(p.generators ?? {}, provider)) return p.id
+/** Options the ROSTER call site controls — the trust decision, made where plugins enter. */
+export interface RegisterOptions {
+  /**
+   * Capabilities this registration refuses. A plugin that ships any of them is
+   * rejected outright: `registerPlugin(thirdPartyPlugin, { deny: ['demos'] })`
+   * mounts its tasks and checks while refusing the one contribution that runs
+   * arbitrary JS in a visitor's browser. No config file, no policy engine —
+   * one parameter, at the one place plugins enter.
+   */
+  deny?: readonly PluginCapability[]
+}
+
+/**
+ * Register a plugin, rejecting id/contribution collisions loudly.
+ *
+ * Throws on the FIRST violation (see `registrationViolations`); use
+ * `validatePlugin()` to collect every problem at once before rostering
+ * something you did not write.
+ */
+export function registerPlugin(plugin: BenchmarkPlugin, options: RegisterOptions = {}): void {
+  for (const violation of registrationViolations(plugin, {
+    existing: [...plugins.values()],
+    deny: options.deny,
+  })) {
+    fail(violation.message)
   }
-  return undefined
+  plugins.set(plugin.id, plugin)
 }
 
 /** Unregister a plugin, unwinding its contributions (tests / hot reload). */

@@ -1333,35 +1333,34 @@ bundle set excluded. Audit trail: the resolved set rides
 `ProviderRunnerConfig.plugins` (documented audit-only, no behavioural effect)
 into every run log's `configSnapshot.plugins`.
 
-## [ ] 38. Community plugin hosting + validation
+## [x] 38. Community plugin hosting + validation
 
-**Problem.** Third-party plugins need a trust story: manifest validation,
-capability whitelisting (a plugin could register a task whose demo runs
-arbitrary JS in the browser), and a place to publish.
+**Shipped.** Trust story for a plugin nobody here wrote, in three mechanical
+parts. (1) `BenchmarkPlugin.capabilities?: PluginCapability[]` — OPTIONAL but
+VERIFIED: shipping MORE than declared is rejected at registration
+(`undeclared-capability`), declaring more than shipped only over-warns and is
+legal, absent = derived from the contributions. Both worked examples declare
+theirs; the scaffold templates ship the field. (2)
+`task bench:plugin-validate -- <dir-or-roster-id>` (`scripts/validate-plugin.mjs`
++ `plugins/validate-plugin.ts`) collects EVERY problem at once with the
+capability table; a DIRECTORY argument is imported for review and deliberately
+NOT registered. (3) `registerPlugin(plugin, { deny: ['demos'] })` — the roster
+call site refuses a capability outright; one parameter, no policy engine.
 
-**Inspiration.** dsh bundles (out-of-tree plugins installed into a profile,
-patchable) + paperclip's plugin platform (schema `plugin_*`: per-plugin DB,
-webhooks, managed resources).
+The heart of it is the anti-drift refactor: every rule `registerPlugin` enforced
+moved into ONE lazy generator, `registry.ts:registrationViolations()`. Register
+takes the first violation and throws (lazy, so behaviour is byte-identical —
+same message, same first failure); validate drains it. A parity matrix over
+`PLUGIN_RULES` asserts both paths fire identically per rule, and fails when a
+rule has no fixture. Validation adds manifest rules registration does not
+(kebab-case id, semver-ish version, description present) — a review gate may be
+stricter than the loader.
 
-**Design sketch.**
-
-- `plugins/validate-plugin.ts`: manifest schema checks (id/name/version
-  required, task ids unique, check names resolve at load — the registry
-  already throws; a `validate` mode collects ALL errors instead of the
-  first).
-- Capability declaration: `BenchmarkPlugin.capabilities?: ('tasks' |
-  'checks' | 'scorers' | 'demos' | 'runners' | 'prompts')[]` — a reviewer
-  can see at a glance what a plugin can touch; a `.graphifyignore`-style
-  policy can deny demo registration for untrusted plugins.
-- `scripts/plugin-fetch.mjs <git-url>`: clone a plugin repo into
-  `plugins/third-party/<id>/` + registry in `plugins/index.ts` (manual
-  review step required — never auto-register).
-
-**Acceptance criteria.** `validate` reports all manifest problems at once;
-a plugin declaring no demos cannot be reviewed as one that can; the fetch
-script leaves a clear review checklist.
-
-**Effort.** M-L.
+`scripts/plugin-fetch.mjs <git-url>` shallow-clones into
+`plugins/third-party/<repo-name>/`, drops the nested `.git`, prints the commit
+plus a review checklist, and STOPS. Never registers; refuses an existing target
+(re-cloning would swap reviewed code). `third-party/` is NOT gitignored — the
+site builds from reviewed plugin code, so it has to be committed.
 
 ## [ ] 39. Benchmark data as an MCP server (plugin)
 
@@ -1438,6 +1437,15 @@ without reading results.json; the server is read-only.
   `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
   (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough
   duration estimate from historical `runtimeMs`, `task bench:profile`.
+- Community plugin trust (#38): `BenchmarkPlugin.capabilities` (optional but
+  VERIFIED — under-declaration rejected at registration, over-declaration a
+  validate warning, absent = derived), `validatePlugin()` collecting ALL
+  problems where `registerPlugin` throws the first, both paths sharing ONE rule
+  generator (`registrationViolations`, parity matrix over `PLUGIN_RULES`),
+  manifest rules validate-only, `task bench:plugin-validate -- <dir-or-id>`,
+  `registerPlugin(p, { deny: ['demos'] })` at the roster, and
+  `scripts/plugin-fetch.mjs` (clone into `third-party/`, review checklist, never
+  auto-register, not gitignored).
 - Plugin bundle selection (#37): profile `plugins: []` / `--plugins a,b` /
   `RUN_PLUGINS`, `none` = builtins only, unknown id fatal with the roster
   listed, task filtering + explicit-task-vs-unmounted-plugin conflict fatal,

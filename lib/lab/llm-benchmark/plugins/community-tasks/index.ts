@@ -68,6 +68,11 @@ export const communityTasks: BenchmarkPlugin = {
   version: '1.0.0',
   description:
     'Community-contributed benchmark tasks with their own behavioral checks and demos.',
+  // Declared, not derived: the declaration is what a reviewer reads instead of
+  // the diff, and registration rejects a plugin that ships more than this list
+  // (`registrationViolations` → 'undeclared-capability'). Note 'demos' — this
+  // plugin renders a React component of its own in the browser.
+  capabilities: ['tasks', 'checks', 'demos'],
   tasks: [ticTacToeTask],
   checks: {
     'ttt-grid-interacts': tttGridInteracts,

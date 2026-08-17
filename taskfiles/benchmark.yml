@@ -466,6 +466,37 @@ tasks:
     cmds:
       - '{{.BIN}}/tsx scripts/plugin-scaffold.mjs {{.CLI_ARGS}}'
 
+  plugin-validate:
+    desc: 'Review a plugin — `task bench:plugin-validate -- <dir-or-roster-id>`'
+    summary: |
+      Reports EVERY problem with a plugin at once, plus the capability table a
+      reviewer actually wants: what it declares beside what it contributes.
+
+        task bench:plugin-validate -- community-tasks
+        task bench:plugin-validate -- lib/lab/llm-benchmark/plugins/echo-provider
+
+      Two argument forms. A path that exists on disk is IMPORTED for review and
+      deliberately not registered — that is the third-party path, and looking at
+      a plugin must not mount it. Anything else is read out of the roster
+      ("is what we ship still clean?").
+
+      `registerPlugin()` throws on the FIRST violation, which is right for a
+      loader and useless for a review. The rules are shared: one generator in
+      plugins/registry.ts feeds registration and validation, so this tool cannot
+      drift from what registration will do (a parity matrix in
+      plugins/validate-plugin.test.ts asserts it rule by rule). Validation also
+      applies manifest rules registration does not (kebab-case id, semver-ish
+      version, description present) — a review gate is allowed to be stricter
+      than the loader.
+
+      Free and offline. Exit 1 on errors; warnings are printed and never fail.
+
+      Guide: docs/lab/llm-benchmark/plugins-authoring.md
+    requires:
+      vars: [CLI_ARGS]
+    cmds:
+      - '{{.BIN}}/tsx scripts/validate-plugin.mjs {{.CLI_ARGS}}'
+
   cache:clear:
     desc: Delete the cached provider responses (next run pays for fresh calls)
     summary: |

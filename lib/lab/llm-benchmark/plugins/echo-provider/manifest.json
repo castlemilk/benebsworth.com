@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Example plugin that ships a provider (generator) and the model that uses it.",
   "rostered": false,
+  "capabilities": ["generators", "models"],
   "generators": {
     "Echo": "lazy import of ./generate#echoGenerate (node-only)"
   },

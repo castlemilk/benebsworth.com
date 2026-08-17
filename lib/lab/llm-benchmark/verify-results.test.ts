@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -542,6 +542,111 @@ describe('round trip against a real run log', () => {
     expect(verdicts.filter((v) => v.level === 'warn')).toEqual([])
     expect(of(verdicts, 'runlog-ref').some((v) => v.level === 'pass')).toBe(true)
     expect(of(verdicts, 'runlog-seq')[0].level).toBe('pass')
+  })
+})
+
+describe('artifact-integrity (content addressing, #31)', () => {
+  const ref = { runId: '2026-08-16T09-30-12', file: 'kimi-k2.7-n-body-field.jsonl' }
+  // 'abc' → sha256 ba7816bf8f01cfea…, so this is the honest name for those bytes.
+  const SPILL = 'spill/ba7816bf8f01cfea.txt'
+
+  function logWithArtifact(): ReturnType<typeof readRunLog> {
+    return fakeLog('kimi-k2.7', 'n-body-field', [
+      { type: 'clean', seq: 1, output: { spillRef: SPILL, preview: 'abc', bytes: 3 } },
+      { type: 'aggregate', seq: 2, result: { output: { spillRef: SPILL, preview: 'abc', bytes: 3 } } },
+    ] as never)
+  }
+
+  it('passes when the spill file still hashes to its own name', () => {
+    const verdicts = verifyResults([goodRecord({ runLogRef: ref })], {
+      runLogs: [log()],
+      readLog: logWithArtifact,
+      readContent: () => 'abc',
+    })
+    const seen = of(verdicts, 'artifact-integrity')
+    // The clean event and the aggregate reference the SAME blob — that is the
+    // dedupe working, and it is verified once.
+    expect(seen).toHaveLength(1)
+    expect(seen[0].level).toBe('pass')
+    expect(seen[0].recordKey).toBe(`${ref.runId}/${SPILL}`)
+  })
+
+  it('fails, naming the file, when a byte is flipped in the stored artifact', () => {
+    const verdicts = verifyResults([goodRecord({ runLogRef: ref })], {
+      runLogs: [log()],
+      readLog: logWithArtifact,
+      readContent: () => 'abd', // one bit-flip away from what was scored
+    })
+    const [v] = of(verdicts, 'artifact-integrity')
+    expect(v.level).toBe('fail')
+    expect(v.recordKey).toBe(`${ref.runId}/${SPILL}`)
+    expect(v.detail).toMatch(/ba7816bf8f01cfea/)
+    expect(v.detail).toMatch(/not what was scored/)
+    expect(v.why).toMatch(/content hash/i)
+  })
+
+  it('skips a blob that is not present locally (pruned sweep)', () => {
+    const verdicts = verifyResults([goodRecord({ runLogRef: ref })], {
+      runLogs: [log()],
+      readLog: logWithArtifact,
+      readContent: () => undefined,
+    })
+    const [v] = of(verdicts, 'artifact-integrity')
+    expect(v.level).toBe('skip')
+    expect(v.detail).toMatch(/not present locally/)
+  })
+
+  it('is silently absent with no sweeps tree at all (no reader, no artifacts)', () => {
+    const verdicts = verifyResults([goodRecord()], {})
+    expect(of(verdicts, 'artifact-integrity')).toEqual([])
+  })
+
+  it('verifies retained artifact copies, and skips legacy run-scoped names', () => {
+    const verdicts = verifyResults([goodRecord()], {
+      artifactFiles: [
+        { runId: 'r', file: 'ba7816bf8f01cfea.html' },
+        { runId: 'r', file: 'artifact-kimi-k2.7-n-body-field-0.html' },
+        { runId: 'r', file: 'index.json' },
+      ],
+      readContent: () => 'abc',
+    })
+    const seen = of(verdicts, 'artifact-integrity')
+    expect(seen.map((v) => v.level)).toEqual(['pass', 'skip', 'skip'])
+    expect(seen[1].detail).toMatch(/not a content-addressed name/)
+  })
+
+  it('fails a tampered artifact copy', () => {
+    const verdicts = verifyResults([goodRecord()], {
+      artifactFiles: [{ runId: 'r', file: 'ba7816bf8f01cfea.html' }],
+      readContent: () => '<h1>hand-edited</h1>',
+    })
+    const [v] = of(verdicts, 'artifact-integrity')
+    expect(v.level).toBe('fail')
+    expect(v.recordKey).toBe('r/artifacts/ba7816bf8f01cfea.html')
+  })
+
+  it('round-trips against a real spill file written by the run log', async () => {
+    const dir = tempDir()
+    setRunLogDir(dir)
+    const runLog = openRunLog({
+      modelId: 'kimi-k2.7',
+      taskId: 'n-body-field',
+      configSnapshot: { iterations: 2, timeoutMs: 1000, maxRetries: 1, bustCache: false },
+    })!
+    // Over SPILL_THRESHOLD_BYTES, so the writer content-addresses it for real.
+    runLog.append({ type: 'clean', iterationIndex: 0, output: '<h1>x</h1>'.repeat(2000) })
+    runLog.append({ type: 'aggregate', result: { score: 90 } })
+    await runLog.close()
+
+    const found = { runId: runLog.runId, file: runLog.file, path: runLog.path }
+    const readContent = (_runId: string, relPath: string) => readFileSync(join(dir, relPath))
+    const verdicts = verifyResults(
+      [goodRecord({ runLogRef: { runId: runLog.runId, file: runLog.file } })],
+      { runLogs: [found], readLog: readRunLog, readContent }
+    )
+    const [v] = of(verdicts, 'artifact-integrity')
+    expect(v.level).toBe('pass')
+    expect(failures(verdicts)).toEqual([])
   })
 })
 

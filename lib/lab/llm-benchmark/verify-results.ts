@@ -19,9 +19,10 @@
  * real `sweeps/` tree; `scripts/verify-results.mjs` is the shell that scans the
  * disk and prints the report.
  */
+import { parseContentAddress, verifyContentAddress } from './content-address'
 import { promptBundleHash } from './prompt-bundle'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from './registry'
-import type { RunLogEvent, RunLogHeader } from './runlog'
+import type { RunLogEvent, RunLogHeader, SpilledString } from './runlog'
 import type { BenchmarkFailureReason, BenchmarkResult } from './types'
 
 export type VerdictLevel = 'pass' | 'warn' | 'fail' | 'skip'
@@ -113,6 +114,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "`budgetExceeded` (#28) is the record's explanation for an otherwise alarming shape: iterations stopped early with NO failed iteration to blame. If the stamp itself is incoherent — spend below its own cap, a cap of 0 or NaN, a record claiming a budget trip while reporting $0 of its own spend, or a record whose cost exceeds the sweep total it was measured against — then the explanation is worse than none, because a reader will conclude the harness silently dropped iterations. It is a cheap consistency check by design: the ONLY authority on real spend is the run log's per-response costs, and this check does not re-price them.",
   },
   {
+    id: 'artifact-integrity',
+    title: 'every content-addressed blob still hashes to the name it is stored under',
+    why:
+      "The artifact a score was computed from is stored BY ITS CONTENT HASH — `spill/<sha256[:16]>.txt` for the run log's `clean`/`aggregate` artifact (which is also the file `publish-traces.mjs` serves to the site) and `artifacts/<sha256[:16]>.html` for the retained CLI copy. That naming is only worth anything if someone checks it: a truncated write, a partially-synced copy, a hand-edit of a published artifact, or a script that rewrote a spill file in place would all leave a blob whose bytes no longer match its own name, and the trace UI would keep presenting it as the thing that was scored. Re-hashing is cheap and exact — no second manifest to drift — so it runs on every verify. A blob that is simply ABSENT is not a failure (sweeps/ is gitignored and pruned); a blob that is PRESENT and wrong is.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -162,6 +169,32 @@ export interface VerifyOptions {
    * stale-prompt cases don't have to forge a real prompt edit.
    */
   currentPromptBundle?: (taskId: string) => string | undefined
+  /**
+   * Retained artifact copies found on disk (`sweeps/<runId>/artifacts/*`).
+   * Omit to skip the artifact half of `artifact-integrity` — a checkout with no
+   * sweeps tree, which is the normal state of a fresh clone.
+   */
+  artifactFiles?: FoundArtifact[]
+  /**
+   * Reads a content-addressed blob inside a run's tree — a spill ref
+   * (`spill/<hash>.txt`) or a retained artifact (`artifacts/<hash>.html`),
+   * always relative to `sweeps/<runId>/`.
+   *
+   * `undefined` means "not present locally", which SKIPS rather than fails: a
+   * pruned sweep is the normal case, and a verifier that demanded every
+   * historical blob be on disk would fail on every clone.
+   *
+   * Injected (rather than read here) for the same reason the run logs are: this
+   * module stays pure and unit-testable without a real sweeps/ tree.
+   */
+  readContent?: (runId: string, relPath: string) => Buffer | string | undefined
+}
+
+/** A retained artifact copy found on disk (`sweeps/<runId>/artifacts/<file>`). */
+export interface FoundArtifact {
+  runId: string
+  /** Basename inside the run's `artifacts/` dir. */
+  file: string
 }
 
 export function recordKey(r: Pick<BenchmarkResult, 'modelId' | 'taskId'>): string {
@@ -438,6 +471,74 @@ function checkSeq(log: FoundRunLog, parsed: ParsedLog): Verdict {
   return verdict('runlog-seq', 'pass', key)
 }
 
+function spillRefOf(value: unknown): string | undefined {
+  if (value && typeof value === 'object' && typeof (value as SpilledString).spillRef === 'string') {
+    return (value as SpilledString).spillRef
+  }
+  return undefined
+}
+
+/**
+ * The spill refs that hold THE SCORED ARTIFACT for a log: the `clean` events
+ * (the post-cleanOutput bytes the scorer saw) and the `aggregate` event's
+ * `output` (the published best iteration, force-spilled to the same store).
+ *
+ * Deliberately NOT every spilled string in the log: a `response` event's raw
+ * output and a check's detail are addressed the same way, but they are
+ * evidence, not the thing a published number was computed from, and widening
+ * the check would turn one sharp signal into a bulk file scan.
+ */
+function scoredArtifactRefs(parsed: ParsedLog): string[] {
+  const refs: string[] = []
+  for (const event of parsed.events) {
+    const ref =
+      event.type === 'clean'
+        ? spillRefOf(event.output)
+        : event.type === 'aggregate'
+          ? spillRefOf((event.result as Record<string, unknown>).output)
+          : undefined
+    if (ref !== undefined) refs.push(ref)
+  }
+  return refs
+}
+
+/** Re-hash one stored blob against the name it lives under. */
+function checkContentAddress(
+  runId: string,
+  relPath: string,
+  readContent: NonNullable<VerifyOptions['readContent']>
+): Verdict {
+  const key = `${runId}/${relPath}`
+  if (parseContentAddress(relPath) === undefined) {
+    // A pre-#31 run-scoped copy (`artifact-<model>-<task>-<n>.html`) or the
+    // store's own `index.json`. Those names never promised anything about
+    // their bytes, so there is nothing to verify.
+    return verdict('artifact-integrity', 'skip', key, 'not a content-addressed name')
+  }
+  let bytes: Buffer | string | undefined
+  try {
+    bytes = readContent(runId, relPath)
+  } catch (err) {
+    return verdict(
+      'artifact-integrity',
+      'warn',
+      key,
+      `could not read the blob: ${err instanceof Error ? err.message : String(err)}`
+    )
+  }
+  if (bytes === undefined) {
+    return verdict('artifact-integrity', 'skip', key, 'not present locally (pruned sweep)')
+  }
+  const result = verifyContentAddress(relPath, bytes)
+  if (!result || result.ok) return verdict('artifact-integrity', 'pass', key)
+  return verdict(
+    'artifact-integrity',
+    'fail',
+    key,
+    `stored as ${result.expected} but its bytes hash to ${result.actual} — the file is not what was scored`
+  )
+}
+
 export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = {}): Verdict[] {
   const tasks = new Set(opts.knownTaskIds ?? BENCHMARK_TASKS.map((t) => t.id))
   const models = new Set(opts.knownModelIds ?? BENCHMARK_MODELS.map((m) => m.id))
@@ -597,6 +698,34 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
   for (const log of runLogs) {
     const entry = parsed.get(`${log.runId}/${log.file}`)
     if (entry) verdicts.push(checkSeq(log, entry))
+  }
+
+  // artifact-integrity: the spill blobs the logs point at, plus whatever
+  // content-addressed artifact copies are on disk. Both halves need the
+  // injected reader; without it there is nothing to hash and the check is
+  // silently absent (the fresh-clone case).
+  const readContent = opts.readContent
+  if (readContent) {
+    const seen = new Set<string>()
+    for (const log of runLogs) {
+      const entry = parsed.get(`${log.runId}/${log.file}`)
+      if (!entry) continue
+      for (const ref of scoredArtifactRefs(entry)) {
+        // One blob can be referenced by a `clean` AND the `aggregate` (that is
+        // the dedupe working); verify it once.
+        const key = `${log.runId}/${ref}`
+        if (seen.has(key)) continue
+        seen.add(key)
+        verdicts.push(checkContentAddress(log.runId, ref, readContent))
+      }
+    }
+    for (const artifact of opts.artifactFiles ?? []) {
+      const relPath = `artifacts/${artifact.file}`
+      const key = `${artifact.runId}/${relPath}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      verdicts.push(checkContentAddress(artifact.runId, relPath, readContent))
+    }
   }
 
   return verdicts

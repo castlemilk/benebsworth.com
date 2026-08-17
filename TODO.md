@@ -1185,36 +1185,46 @@ score from it; fidelity check fails if the export diverges from results.json.
 
 **Effort.** M. **Dependencies.** #1 (event log), #9 (trace UI).
 
-## [ ] 31. Content-addressed artifact store
+## [x] 31. Content-addressed artifact store
 
-**Problem.** Artifacts are stored by run-scoped names
-(`artifact-<model>-<task>-<n>.html`); identical outputs across iterations or
-models (deepseek's repeated "no canvas" pages) duplicate storage, and
-nothing verifies an artifact matches what was scored.
+**Shipped.** `content-address.ts` is now the ONE definition of "what is this
+blob called?" (`contentAddress` = sha256[:16], `parseContentAddress`,
+`verifyContentAddress`), shared by both stores so a re-hash is a valid check of
+a filename. The run log's `spill/<hash>.txt` already used that naming; the
+retained CLI copies now do too — `retainArtifact` writes
+`sweeps/<run>/artifacts/<hash>.html` (`wx`, 0600, EEXIST = the dedupe hit, not a
+collision) plus `artifacts/index.json` mapping `artifact-<model>-<task>-<n>` →
+that file, written tmp-then-rename through a promise chain so concurrent jobs
+cannot lose an entry. Identical artifacts across iterations now cost one file
+and two index entries; a retry that produced different bytes stores a second
+blob and repoints the index, keeping the superseded evidence.
 
-**Inspiration.** dsh `packages/attachment/` + `attachment-local`: content-
-addressed private storage, immutable references, image limits; "bytes enter
-durable storage only when a user prompt is submitted" (write-once
-discipline). Also their `domain` storage family (storage-domain: validated
-records over swappable json/sqlite backends).
+Verification came in two halves, deliberately split by cost. CHEAP and always
+on: the `artifact-integrity` check in `verify-results.ts` re-hashes every
+locally-present blob a run log's `clean`/`aggregate` events point at, plus every
+`artifacts/<hash>.html` on disk, and fails the one whose bytes no longer match
+its own name. Absent blobs skip (`sweeps/` is pruned) and legacy run-scoped
+names skip (they never promised anything). EXPENSIVE and opt-in:
+`scripts/rescore-artifact.mjs --run --model --task` (`task bench:rescore`) loads
+the published artifact, runs TODAY's scorer and prints recorded-vs-current, so a
+drifted scorer or a hand-edited artifact reads as DRIFT. It is never wired into
+pre-push: text tasks are milliseconds, but behavioural ones launch headless
+Chromium per artifact. `locateScoredArtifact` ties the published artifact back
+to the iteration that produced it BY CONTENT ADDRESS (the payoff — same bytes,
+same file, no index to drift), so the baseline is that iteration's own score
+rather than the aggregate mean.
 
-**Design sketch.**
+Two deviations from the sketch above, both deliberate. **No `artifactRef` field
+on `BenchmarkResult`**: the record already carries `runLogRef`, whose log's
+`clean`/`aggregate` events carry the content address — adding a third copy of
+the same fact would be one more thing that can disagree, for no new capability.
+**Nothing was built for "serve by hash"**: it is already true — the trace
+publication (#9) copies the referenced `spill/<hash>.txt` files into
+`public/lab-data/traces/` and the site serves them raw, so the published
+artifact URL is already content-derived, immutable and cache-friendly.
 
-- `sweeps/<run-id>/artifacts/<sha256-prefix>.html`: write once, dedupe by
-  hash; the event log (#1) references artifacts by their content hash, not
-  by model/task name.
-- `BenchmarkResult.output` keeps the current inline behavior, but
-  `runLogRef`/trace records carry `artifactRef: sha256`.
-- `verify-results.mjs` (#5) gains a check: the artifact at the recorded hash
-  re-scores to the recorded iteration score (content-addressing makes this
-  a cheap exact-match check).
-- Site serves deduped artifacts via the hash (cache-friendly, stable URLs).
-
-**Acceptance criteria.** Identical artifacts across iterations store once;
-a tampered/regenerated artifact fails the hash check; the demo fetch path
-still works (URL now hash-derived).
-
-**Effort.** M. **Dependencies.** #1, #3.
+Verified against the real sweeps on disk: 46 blobs across 5 run trees re-hashed
+clean, 3 legacy copies skipped.
 
 ## [ ] 32. Cross-run references (`bench://` URIs + related-run snapshots)
 
@@ -1471,9 +1481,16 @@ without reading results.json; the server is read-only.
   log/quota breaker/scoring. Shadowing a built-in provider or another
   plugin's generator is rejected at registration; `plugins/echo-provider/` is
   the unrostered worked example.
-- Results invariant verification (#5): `verify-results.ts` (eleven checks, each
+- Results invariant verification (#5): `verify-results.ts` (thirteen checks, each
   with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
   run first in the pre-push gate.
+- Content-addressed artifact store (#31): `content-address.ts` single-sources
+  the sha256[:16] naming for BOTH stores; `retainArtifact` writes
+  `artifacts/<hash>.html` + `index.json` (dedupe, `wx`, 0600); the always-on
+  `artifact-integrity` check re-hashes every stored blob; opt-in
+  `task bench:rescore` re-scores one artifact with today's scorer. No
+  `artifactRef` field (the `runLogRef` chain already carries the address) and no
+  new serving path (publish-traces already serves by hash).
 - Prompt-bundle provenance (#21): `prompt-bundle.ts` (`promptBundleHash` over
   the amended prompt + `framePreludeFingerprint()`; task id excluded by
   design), `BenchmarkResult.promptBundle` + `configSnapshot.promptBundle`

@@ -79,8 +79,47 @@ function findRunLogs(dir) {
   return found
 }
 
+/**
+ * Every retained artifact copy under `sweeps/<run-id>/artifacts/`.
+ *
+ * Content-addressed copies (`<sha256[:16]>.html`, #31) get re-hashed by the
+ * `artifact-integrity` check; legacy run-scoped names and the store's own
+ * `index.json` come back as skips, which is why they are listed rather than
+ * filtered here — a silent filter would hide the day a name stops parsing.
+ */
+function findArtifacts(dir) {
+  if (!existsSync(dir)) return []
+  const found = []
+  for (const runId of readdirSync(dir).sort()) {
+    const artifactsDir = join(dir, runId, 'artifacts')
+    try {
+      if (!statSync(artifactsDir).isDirectory()) continue
+      for (const file of readdirSync(artifactsDir).sort()) found.push({ runId, file })
+    } catch {
+      continue
+    }
+  }
+  return found
+}
+
+/** Reads `sweeps/<runId>/<relPath>`; undefined when it is not on disk. */
+function readContent(runId, relPath) {
+  try {
+    return readFileSync(join(sweepsDir, runId, relPath))
+  } catch (err) {
+    if (err.code === 'ENOENT') return undefined
+    throw err
+  }
+}
+
 const runLogs = findRunLogs(sweepsDir)
-const verdicts = verifyResults(results, { runLogs, readLog: readRunLog })
+const artifactFiles = findArtifacts(sweepsDir)
+const verdicts = verifyResults(results, {
+  runLogs,
+  readLog: readRunLog,
+  artifactFiles,
+  readContent,
+})
 const summary = summarizeVerdicts(verdicts, results.length)
 
 const CHECK_TITLES = new Map(RESULT_CHECKS.map((c) => [c.id, c.title]))

@@ -40,6 +40,8 @@ tasks:
           task bench:outputs                    regenerate static output artifacts
           task bench:verify                     typecheck + benchmark unit tests
           task bench:verify-results             results.json + run-log invariants (free)
+          task bench:rescore -- --run <id> --model <m> --task <t>
+                                                re-score one stored artifact with today's scorer
 
         Knobs (all optional):
           MODELS=   comma-separated registry ids   (default: kimi-k2.7)
@@ -254,7 +256,7 @@ tasks:
       typechecks and unit-tests the harness, this one interrogates what the
       harness produced.
 
-      Eight checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
+      Thirteen checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
       WHY it exists — printed on failure): score is exactly the `aggregateRuns`
       aggregation of `iterationScores`; `iterationCheckResults` is index-aligned
       with them; succeeded <= ran with one score per success; `status` agrees
@@ -263,7 +265,10 @@ tasks:
       log on disk is named by its record's `runLogRef` and every ref's log
       matches the record and holds an `aggregate` event; run-log `seq` is
       strictly increasing (a GAP is dropped-batch evidence — a warning; a
-      duplicate or decrease is a failure).
+      duplicate or decrease is a failure); and every content-addressed blob on
+      disk (`spill/<hash>.txt`, `artifacts/<hash>.html`) still hashes to the
+      name it is stored under (#31 — a tampered or truncated artifact fails; an
+      absent one skips, and legacy run-scoped names skip).
 
       Records that predate a field skip the checks that need it. Seeded records
       are exempt from the run-log checks only. The log checks skip entirely
@@ -274,6 +279,26 @@ tasks:
       (the pre-push hook runs it) and before deploy.
     cmds:
       - '{{.BIN}}/tsx scripts/verify-results.mjs {{.CLI_ARGS}}'
+
+  rescore:
+    desc: 'Re-score ONE stored artifact with the current scorer — `task bench:rescore -- --run <id> --model <m> --task <t>`'
+    summary: |
+      The expensive half of artifact verification (#31). `bench:verify-results`
+      re-hashes every stored blob on every run (cheap, exact: are these the
+      bytes that were scored?). This asks the other question: does the scorer we
+      ship TODAY still produce the number the run log recorded? A scorer whose
+      checks were tightened, and a hand-edited artifact, both surface as DRIFT.
+
+      COST — and why nothing runs this automatically: a text-scored task
+      (equation-solver, crypto-hash-race) is milliseconds of string matching,
+      but a behaviourally-scored one launches headless Chromium and drives real
+      input events (seconds to ~30s per artifact). It is never wired into
+      pre-push.
+
+      Exit 0 match, 1 drift, 2 the artifact could not be located or its bytes
+      do not match their own content address (fix that first).
+    cmds:
+      - '{{.BIN}}/tsx scripts/rescore-artifact.mjs {{.CLI_ARGS}}'
 
   publish-traces:
     desc: Copy the run logs results.json points at into public/lab-data/traces (free, offline)

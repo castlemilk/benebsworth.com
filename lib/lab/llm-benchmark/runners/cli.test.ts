@@ -1,10 +1,26 @@
 import { describe, it, expect } from 'vitest'
-import { extractLikelyCode, generateFromCli, runCli, scrubEnv, setSweepRoot } from './cli'
+import {
+  ARTIFACT_INDEX_FILE,
+  extractLikelyCode,
+  generateFromCli,
+  runCli,
+  scrubEnv,
+  setSweepRoot,
+  type ArtifactIndex,
+} from './cli'
+import { contentAddressedName } from '../content-address'
 import { spawn } from 'node:child_process'
-import { mkdtemp, writeFile, rm, readFile, stat } from 'node:fs/promises'
+import { mkdtemp, writeFile, rm, readdir, readFile, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+
+/** `artifacts/index.json` — the name→content-address map (#31). */
+async function readArtifactIndex(sweepRoot: string): Promise<ArtifactIndex> {
+  return JSON.parse(
+    await readFile(join(sweepRoot, 'artifacts', ARTIFACT_INDEX_FILE), 'utf8')
+  ) as ArtifactIndex
+}
 
 const TEST_MODEL = {
   id: 'test',
@@ -278,7 +294,7 @@ describe('generateFromCli first-output telemetry', () => {
 })
 
 describe('generateFromCli sweep retention', () => {
-  it('keeps the scratch dir under the sweep root and copies the artifact to artifacts/ (0600)', async () => {
+  it('keeps the scratch dir under the sweep root and copies the artifact to artifacts/<hash>.html (0600)', async () => {
     const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
     const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
     const script = join(scriptDir, 'cli.mjs')
@@ -309,9 +325,14 @@ describe('generateFromCli sweep retention', () => {
       expect(existsSync(scratch)).toBe(true)
       expect(await readFile(join(scratch, 'artifact.html'), 'utf8')).toContain('SWEEP_KEEP')
 
-      // And the artifact is copied into the sweep root's artifacts/ dir.
-      const copy = join(sweepRoot, 'artifacts', 'artifact-test-t-0.html')
-      expect(await readFile(copy, 'utf8')).toContain('SWEEP_KEEP')
+      // And the artifact is copied into the sweep root's artifacts/ dir, named
+      // by its content address, with the iteration name recoverable from the
+      // index (#31).
+      const index = await readArtifactIndex(sweepRoot)
+      const fileName = index.artifacts['artifact-test-t-0']
+      expect(fileName).toBe(contentAddressedName(response.output, '.html'))
+      const copy = join(sweepRoot, 'artifacts', fileName)
+      expect(await readFile(copy, 'utf8')).toBe(response.output)
       const info = await stat(copy)
       expect(info.mode & 0o777).toBe(0o600)
     } finally {
@@ -321,7 +342,7 @@ describe('generateFromCli sweep retention', () => {
     }
   }, 20_000)
 
-  it('overwrites the artifact copy on a retry of the same iteration', async () => {
+  it('repoints the index at the new bytes on a retry of the same iteration, keeping both blobs', async () => {
     const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
     const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
     const script = join(scriptDir, 'cli.mjs')
@@ -337,16 +358,62 @@ describe('generateFromCli sweep retention', () => {
     try {
       setSweepRoot(sweepRoot)
       const config = { command: process.execPath, artifactViaFile: true, buildArgs: () => [script] }
-      await generateFromCli(config, TEST_MODEL, TEST_TASK, 0)
-      await generateFromCli(
+      const first = await generateFromCli(config, TEST_MODEL, TEST_TASK, 0)
+      const second = await generateFromCli(
         { ...config, env: { BENCH_MARKER: 'second' } },
         TEST_MODEL,
         TEST_TASK,
         0
       )
 
-      const copy = join(sweepRoot, 'artifacts', 'artifact-test-t-0.html')
-      expect(await readFile(copy, 'utf8')).toContain('<h1>second</h1>')
+      // The iteration name now resolves to the RETRY's content...
+      const index = await readArtifactIndex(sweepRoot)
+      expect(index.artifacts['artifact-test-t-0']).toBe(contentAddressedName(second.output, '.html'))
+      expect(
+        await readFile(join(sweepRoot, 'artifacts', index.artifacts['artifact-test-t-0']), 'utf8')
+      ).toContain('<h1>second</h1>')
+
+      // ...and the superseded blob survives: the store is write-once, so the
+      // first attempt's evidence is not destroyed by the retry that replaced it.
+      const superseded = join(sweepRoot, 'artifacts', contentAddressedName(first.output, '.html'))
+      expect(await readFile(superseded, 'utf8')).toContain('<h1>first</h1>')
+    } finally {
+      setSweepRoot(undefined)
+      await rm(sweepRoot, { recursive: true, force: true })
+      await rm(scriptDir, { recursive: true, force: true })
+    }
+  }, 30_000)
+
+  it('stores identical artifacts from different iterations ONCE, with an index entry each', async () => {
+    // The dedupe this store exists for: a degenerate model emits byte-identical
+    // output every iteration, which used to cost one file per iteration.
+    const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
+    const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))
+    const script = join(scriptDir, 'cli.mjs')
+    await writeFile(
+      script,
+      [
+        "import { writeFileSync } from 'node:fs'",
+        "writeFileSync('artifact.html', '<h1>SAME_EVERY_TIME</h1>')",
+        "console.log('DONE')",
+      ].join('\n')
+    )
+
+    try {
+      setSweepRoot(sweepRoot)
+      const config = { command: process.execPath, artifactViaFile: true, buildArgs: () => [script] }
+      const first = await generateFromCli(config, TEST_MODEL, TEST_TASK, 0)
+      await generateFromCli(config, TEST_MODEL, TEST_TASK, 1)
+
+      const expected = contentAddressedName(first.output, '.html')
+      const stored = (await readdir(join(sweepRoot, 'artifacts'))).filter((f) => f.endsWith('.html'))
+      expect(stored).toEqual([expected])
+
+      const index = await readArtifactIndex(sweepRoot)
+      expect(index.artifacts).toEqual({
+        'artifact-test-t-0': expected,
+        'artifact-test-t-1': expected,
+      })
     } finally {
       setSweepRoot(undefined)
       await rm(sweepRoot, { recursive: true, force: true })

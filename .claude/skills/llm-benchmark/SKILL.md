@@ -577,7 +577,8 @@ or repo-relative). `sweeps/` is gitignored.
 ```
 sweeps/<run-id>/
   scratch/<model-id>-<task-id>-<n>/          the CLI's actual working directory
-  artifacts/artifact-<model-id>-<task-id>-<n>.html   copy of the handed-off artifact
+  artifacts/<sha256[:16]>.html               content-addressed copy of the handed-off artifact
+  artifacts/index.json                       artifact-<model>-<task>-<n> → <hash>.html
 ```
 
 - **Plumbing**: `setSweepRoot(dir)` exported from `runners/cli.ts` — module-level
@@ -589,17 +590,47 @@ sweeps/<run-id>/
   not on success, and deliberately not on failure. Forensic value peaks exactly
   when an iteration failed: the half-written file, the wrongly-named file, or
   the nothing-at-all is the evidence for why. Pruning is the cleanup path.
-- **Artifact copy**: whenever ANY of the three file-handoff paths in
-  `generateFromCli` wins (direct name, largest-HTML scan, printed absolute
-  path), the same bytes are copied into `artifacts/`. This is what makes an
-  iteration's output recoverable when the model wrote it into its OWN session
-  dir (opencode `/private/tmp`, agy's scratch) instead of the scratch. Written
-  `{ flag: 'wx', mode: 0o600 }` — exclusive create, owner-only. A retry of the
-  same iteration reuses the filename and hits `EEXIST`; that case unlinks and
-  re-creates exclusively rather than opening with `'w'`, so the
-  never-silently-clobber-another-writer guarantee survives. The copy is
-  best-effort: a failure logs `[harness] could not retain artifact …` and never
-  fails a run whose generation succeeded.
+- **Artifact copy, content-addressed (#31)**: whenever ANY of the three
+  file-handoff paths in `generateFromCli` wins (direct name, largest-HTML scan,
+  printed absolute path), the same bytes are copied into
+  `artifacts/<sha256[:16]>.html`. This is what makes an iteration's output
+  recoverable when the model wrote it into its OWN session dir (opencode
+  `/private/tmp`, agy's scratch) instead of the scratch. Written
+  `{ flag: 'wx', mode: 0o600 }` — exclusive create, owner-only — and with a
+  content address `EEXIST` is no longer a collision but the DEDUPE hit: those
+  bytes are already stored, so only the index entry is rewritten. A degenerate
+  model emitting the same page five times costs ONE file. The human-readable
+  name lives in `artifacts/index.json` (`artifact-<model>-<task>-<n>` →
+  `<hash>.html`), the store's one mutable file, written tmp-then-`rename` behind
+  a promise chain so concurrent jobs can't lose an entry. A retry that produced
+  DIFFERENT bytes stores a second blob and repoints the index; the superseded
+  blob stays (write-once). The naming comes from
+  `lib/lab/llm-benchmark/content-address.ts`, the SAME helper the run log's
+  `spill/` store uses — one definition, which is what makes a re-hash a valid
+  check of a filename. The copy is best-effort: a failure logs `[harness] could
+  not retain artifact …` and never fails a run whose generation succeeded.
+- **Verifying an artifact** — two halves, split by cost:
+  - CHEAP, always on: the `artifact-integrity` check inside
+    `task bench:verify-results` re-hashes every locally-present blob the run
+    logs' `clean`/`aggregate` events point at, plus every `artifacts/<hash>.html`
+    on disk, and fails one whose bytes no longer match its own name. Absent
+    blobs skip (pruned sweeps are normal); pre-#31 `artifact-<...>.html` names
+    skip (they never promised anything about their bytes).
+  - EXPENSIVE, opt-in: `task bench:rescore -- --run <id> --model <m> --task <t>`
+    (`scripts/rescore-artifact.mjs`) loads the published artifact and runs
+    TODAY's scorer against it, printing `MATCH`/`DRIFT` vs the score the log
+    recorded. It ties the artifact back to its iteration BY CONTENT ADDRESS
+    (`locateScoredArtifact` in `rescore.ts`), so the baseline is that
+    iteration's score, not the aggregate mean. Text tasks are milliseconds;
+    behavioural ones launch headless Chromium per artifact — which is why it is
+    NEVER in the pre-push gate. Exit 0 match, 1 drift, 2 unlocatable/tampered.
+  - Serving by hash is already true and needs nothing new: `publish-traces`
+    copies the referenced `spill/<hash>.txt` files into
+    `public/lab-data/traces/` and the site serves them raw, so a published
+    artifact's URL is already content-derived and immutable. There is
+    deliberately NO `artifactRef` field on `BenchmarkResult` — `runLogRef` →
+    the log's `clean`/`aggregate` events already carry the address, and a third
+    copy of that fact could only ever disagree.
 - **Pruning**:
   ```bash
   npx tsx scripts/sweep-clean.mjs --dry-run              # show what would go

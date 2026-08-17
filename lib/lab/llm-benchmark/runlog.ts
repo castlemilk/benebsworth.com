@@ -32,11 +32,11 @@
  *
  * Read one back with `npx tsx scripts/retrace.mjs --run <run-id>`.
  */
-import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { open, type FileHandle } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 
+import { contentAddressedName, sha256Hex } from './content-address'
 import { redactText, redactValue } from './redact'
 import { parseRunLog, SPILL_PREVIEW_CHARS } from './runlog-format'
 import type {
@@ -116,13 +116,9 @@ export function runLogFileName(modelId: string, taskId: string): string {
   return `${modelId}-${taskId}.jsonl`
 }
 
-function sha256(value: string): string {
-  return createHash('sha256').update(value).digest('hex')
-}
-
 /** SHA-256 hex of a prompt, for the `request` event. */
 export function hashPrompt(prompt: string): string {
-  return sha256(prompt)
+  return sha256Hex(prompt)
 }
 
 /**
@@ -130,9 +126,13 @@ export function hashPrompt(prompt: string): string {
  * locator. Content-addressed, so the same artifact referenced by a `response`,
  * a `clean` and an `aggregate` event costs one file. `wx` never clobbers: an
  * EEXIST means those exact bytes are already stored.
+ *
+ * The NAME comes from `content-address.ts`, shared with the retained-artifact
+ * store in `runners/cli.ts` and with the `artifact-integrity` verifier — one
+ * definition, so a re-hash of these bytes is a valid check of this filename.
  */
 function writeSpill(dir: string, content: string): SpilledString {
-  const ref = `spill/${sha256(content).slice(0, 16)}.txt`
+  const ref = `spill/${contentAddressedName(content, '.txt')}`
   const target = join(dir, ref)
   try {
     mkdirSync(join(dir, 'spill'), { recursive: true })

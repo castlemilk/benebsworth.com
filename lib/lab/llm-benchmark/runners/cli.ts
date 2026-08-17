@@ -1,8 +1,9 @@
 import type { BenchmarkModel, BenchmarkTask, UsageProvenance } from '../types'
 import { redactArgs, redactText } from '../redact'
 import { resolveExecutionTarget, type CliRunnerConfig } from './execution-target'
+import { contentAddressedName } from '../content-address'
 import { spawn } from 'node:child_process'
-import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -48,40 +49,97 @@ export function getSweepRoot(): string | undefined {
   return sweepRoot
 }
 
+/** Basename of the name→content-address map inside `artifacts/`. */
+export const ARTIFACT_INDEX_FILE = 'index.json'
+
+/** On-disk shape of `artifacts/index.json`. */
+export interface ArtifactIndex {
+  version: 1
+  /** `artifact-<model>-<task>-<n>` → `<content-address>.html`. */
+  artifacts: Record<string, string>
+}
+
 /**
- * Copy a successfully handed-off artifact into `<sweep-root>/artifacts/`.
+ * Serializes index updates. Jobs run concurrently (`RUN_CONCURRENCY`) inside
+ * ONE process, and a read-modify-write with an `await` in the middle
+ * interleaves: two artifacts finishing together would each write the index
+ * they read, and one entry would vanish. A promise chain is enough precisely
+ * because the interleaving is cooperative, not parallel.
+ */
+let artifactIndexChain: Promise<void> = Promise.resolve()
+
+async function updateArtifactIndex(dir: string, name: string, fileName: string): Promise<void> {
+  const run = artifactIndexChain.then(async () => {
+    const indexPath = join(dir, ARTIFACT_INDEX_FILE)
+    let index: ArtifactIndex = { version: 1, artifacts: {} }
+    try {
+      const parsed = JSON.parse(await readFile(indexPath, 'utf8')) as ArtifactIndex
+      if (parsed && typeof parsed === 'object' && parsed.artifacts) index = parsed
+    } catch {
+      // Absent (first artifact of the run) or unreadable — start fresh rather
+      // than losing the artifact we are about to record.
+    }
+    index.artifacts[name] = fileName
+    // Write-then-rename: a crash mid-write must never leave a truncated index,
+    // because the index is the ONLY thing that maps a hash back to the
+    // iteration that produced it.
+    const tmp = `${indexPath}.${process.pid}.tmp`
+    await writeFile(tmp, JSON.stringify(index, null, 2) + '\n', { mode: 0o600 })
+    await rename(tmp, indexPath)
+  })
+  artifactIndexChain = run.catch(() => {})
+  return run
+}
+
+/**
+ * Copy a successfully handed-off artifact into `<sweep-root>/artifacts/`,
+ * CONTENT-ADDRESSED: `artifacts/<sha256[:16]>.html`, plus an `index.json`
+ * mapping `artifact-<model>-<task>-<n>` → that file.
  *
  * WHY a copy: the three handoff paths in `generateFromCli` read from wherever
  * the agent actually wrote (scratch dir, or its OWN session dir — opencode
  * `/private/tmp`, agy's scratch). Only the copy is guaranteed to be under the
- * run's tree, named for the iteration that produced it, and therefore
- * recoverable and linkable after the fact.
+ * run's tree and therefore recoverable and linkable after the fact.
  *
- * `{ flag: 'wx', mode: 0o600 }` — exclusive create, owner-only — is the
- * defensive default: never silently clobber, never widen permissions on
- * model-authored HTML. The one legitimate clobber is a RETRY of the same
- * iteration, which reuses the same filename; that case unlinks first and
- * re-creates exclusively rather than opening with 'w', so the exclusive-create
- * guarantee still holds against any OTHER writer racing us for the name.
+ * WHY by hash rather than by iteration name (#31): identical outputs are the
+ * NORMAL case, not the exception — a degenerate free-tier model emits the same
+ * "no canvas" page for all five iterations, and two models often converge on
+ * the same boilerplate. Run-scoped names stored those bytes once per iteration.
+ * More importantly, a name derived from the bytes makes "is this still what was
+ * scored?" a re-hash instead of an act of faith (`artifact-integrity` in
+ * `verify-results.ts`), and it lines the store up with the run log's spill
+ * store, which already addresses the SAME artifact the same way.
+ *
+ * The human-readable name is not lost — it moves into `index.json`, which is
+ * the only mutable file in the store.
+ *
+ * `{ flag: 'wx', mode: 0o600 }` — exclusive create, owner-only — is unchanged:
+ * never silently clobber, never widen permissions on model-authored HTML. With
+ * content addressing, EEXIST is no longer a collision to resolve but the DEDUPE
+ * path: the bytes under that name are these bytes, so the write is skipped and
+ * only the index entry is (re)written. A retry of the same iteration that
+ * produced DIFFERENT bytes stores a second blob and repoints the index at it;
+ * the superseded blob stays, which is the write-once discipline the store is
+ * for.
  *
  * Never throws: retention is best-effort bookkeeping and must not fail a run
  * whose generation already succeeded.
  */
-async function retainArtifact(root: string, fileName: string, contents: string): Promise<void> {
+async function retainArtifact(root: string, name: string, contents: string): Promise<void> {
   try {
     const dir = join(root, 'artifacts')
     await mkdir(dir, { recursive: true })
-    const dest = join(dir, fileName)
+    const fileName = contentAddressedName(contents, '.html')
     try {
-      await writeFile(dest, contents, { flag: 'wx', mode: 0o600 })
+      await writeFile(join(dir, fileName), contents, { flag: 'wx', mode: 0o600 })
     } catch (err) {
+      // EEXIST means these exact bytes are already stored — the dedupe hit.
       if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err
-      await rm(dest, { force: true })
-      await writeFile(dest, contents, { flag: 'wx', mode: 0o600 })
     }
+    await updateArtifactIndex(dir, name, fileName)
   } catch (err) {
     console.warn(
-      `[harness] could not retain artifact ${fileName}: ${err instanceof Error ? err.message : String(err)}`
+      `[harness] could not retain artifact ${name}: ${err instanceof Error ? err.message : String(err)}`
     )
   }
 }
@@ -370,7 +428,7 @@ export async function generateFromCli(
     // absolute path) lands here with `output` set; stdout extraction below does
     // not. Copy exactly the bytes we handed off, from whichever path won.
     if (output !== undefined && root) {
-      await retainArtifact(root, `artifact-${target.label}.html`, output)
+      await retainArtifact(root, `artifact-${target.label}`, output)
     }
     if (output === undefined) {
       output = extractLikelyCode(stdout)

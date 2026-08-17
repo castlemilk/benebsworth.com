@@ -19,6 +19,7 @@
  * real `sweeps/` tree; `scripts/verify-results.mjs` is the shell that scans the
  * disk and prints the report.
  */
+import { promptBundleHash } from './prompt-bundle'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from './registry'
 import type { RunLogEvent, RunLogHeader } from './runlog'
 import type { BenchmarkFailureReason, BenchmarkResult } from './types'
@@ -94,6 +95,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "telemetry's contract is that a MEASUREMENT is absent when unmeasured while a COUNTER is 0 — because a 0ms TTFT is physically impossible and a 0 tok/s decode rate is an infinitely slow model. A producer that 'helpfully' defaults meanTtftMs to 0 (the natural mistake when copying dsh's counter rule onto a latency) would publish an impossible number that reads as the FASTEST model on the board. Likewise a meanTokensPerSec with no rateKind is unreadable: decode rates and wall-clock fallbacks differ by the whole queue time and must never be compared silently.",
   },
   {
+    id: 'stale-prompt',
+    title: 'the record was scored under the CURRENT prompt bundle',
+    why:
+      "A score only means something under the prompt that produced it: the task prompt, the sandbox contract appended to it, and the frame prelude the artifact runs inside. tic-tac-toe's stored results were scored under the OLD global contract, and when its task-specific contract landed (#36) nothing marked them stale — the board kept presenting them as current. This check is the release gate for that: WARN, never fail, because a stale result is still an honest result (it is just old) and failing would make an intentional prompt edit break the build before the re-run could possibly exist. `--strict` promotes warnings to failures — THAT is the release-gate switch: run it when you are about to publish and a stale number would be a lie. Records with no promptBundle at all are legacy, not stale, and skip.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -137,6 +144,12 @@ export interface VerifyOptions {
   /** Registry override (tests); defaults to BENCHMARK_TASKS/BENCHMARK_MODELS. */
   knownTaskIds?: Iterable<string>
   knownModelIds?: Iterable<string>
+  /**
+   * The CURRENT prompt bundle for a task id — `undefined` for an unknown task.
+   * Defaults to `promptBundleHash` over the registry; injected in tests so the
+   * stale-prompt cases don't have to forge a real prompt edit.
+   */
+  currentPromptBundle?: (taskId: string) => string | undefined
 }
 
 export function recordKey(r: Pick<BenchmarkResult, 'modelId' | 'taskId'>): string {
@@ -295,6 +308,32 @@ function checkTelemetry(r: BenchmarkResult): Verdict {
   return verdict('telemetry-sanity', 'pass', key)
 }
 
+function checkStalePrompt(
+  r: BenchmarkResult,
+  currentBundle: (taskId: string) => string | undefined
+): Verdict {
+  const key = recordKey(r)
+  if (r.promptBundle === undefined) {
+    // Legacy, not stale. 183 identical warnings would train the reader to
+    // ignore the whole report; the summary line carries the one honest count.
+    return verdict('stale-prompt', 'skip', key, 'pre-bundle (record predates promptBundle)')
+  }
+  const current = currentBundle(r.taskId)
+  if (current === undefined) {
+    // No task to compare against — registry-resolution already fails this record.
+    return verdict('stale-prompt', 'skip', key, `task '${r.taskId}' is not in the registry`)
+  }
+  if (current !== r.promptBundle) {
+    return verdict(
+      'stale-prompt',
+      'warn',
+      key,
+      `scored under bundle ${r.promptBundle} (current ${current})`
+    )
+  }
+  return verdict('stale-prompt', 'pass', key)
+}
+
 type ParsedLog = { header: RunLogHeader; events: RunLogEvent[] }
 
 function checkSeq(log: FoundRunLog, parsed: ParsedLog): Verdict {
@@ -333,6 +372,19 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
   const models = new Set(opts.knownModelIds ?? BENCHMARK_MODELS.map((m) => m.id))
   const verdicts: Verdict[] = []
 
+  // Hash each task's current bundle at most once — the same task repeats across
+  // every model's record.
+  const bundleCache = new Map<string, string | undefined>()
+  const currentPromptBundle =
+    opts.currentPromptBundle ??
+    ((taskId: string): string | undefined => {
+      if (!bundleCache.has(taskId)) {
+        const task = BENCHMARK_TASKS.find((t) => t.id === taskId)
+        bundleCache.set(taskId, task ? promptBundleHash(task) : undefined)
+      }
+      return bundleCache.get(taskId)
+    })
+
   for (const r of results) {
     verdicts.push(checkScoreMean(r))
     verdicts.push(checkIndexAlignment(r))
@@ -341,6 +393,7 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
     verdicts.push(checkRegistry(r, tasks, models))
     verdicts.push(checkFailureReason(r))
     verdicts.push(checkTelemetry(r))
+    verdicts.push(checkStalePrompt(r, currentPromptBundle))
   }
 
   const runLogs = opts.runLogs ?? []
@@ -483,6 +536,12 @@ export interface VerificationSummary {
   failures: number
   warnings: number
   skipped: number
+  /**
+   * Records with no `promptBundle` at all. Reported as ONE number rather than
+   * one warning per record: today that is every record in results.json, and a
+   * report that is 183 copies of the same legacy fact is a report nobody reads.
+   */
+  preBundleRecords: number
   line: string
 }
 
@@ -499,6 +558,9 @@ export function summarizeVerdicts(verdicts: Verdict[], records: number): Verific
     failures: count('fail'),
     warnings: count('warn'),
     skipped: count('skip'),
+    preBundleRecords: verdicts.filter(
+      (v) => v.check === 'stale-prompt' && v.level === 'skip' && v.detail?.startsWith('pre-bundle')
+    ).length,
   }
   return {
     ...summary,
@@ -508,6 +570,10 @@ export function summarizeVerdicts(verdicts: Verdict[], records: number): Verific
       plural(summary.failures, 'failure'),
       plural(summary.warnings, 'warning'),
       `${summary.skipped} skipped`,
+      // Always printed, 0 included: "how much of the board predates prompt-bundle
+      // provenance" is a fact the reader should see trend to zero, and a line
+      // that only appears sometimes is a line nobody notices going away.
+      `${summary.preBundleRecords} pre-bundle`,
     ].join(', '),
   }
 }

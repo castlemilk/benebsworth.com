@@ -848,35 +848,27 @@ field, spill file, benign-markup/`promptHash` passthrough).
 
 **Effort.** S–M.
 
-## [ ] 21. Bundle comparison + release-gate evals
+## [x] 21. Bundle comparison + release-gate evals
 
-**Problem.** The benchmark compares models, but the biggest real-world
-lever is the prompt bundle (task prompt + sandbox constraints + system
-persona). The deepseek/platformer swings showed prompt changes matter; we
-have no way to track "results under prompt-bundle vN" or gate on prompt
-regressions.
-
-**Inspiration.** paperclip's "compare bundles, not just models" and the
-`release_gates` eval category — prompt-level policy regressions gate
-releases.
-
-**Design sketch.**
-
-- `BenchmarkResult` gains `promptBundle?: string` (a hash of the task
-  prompt + sandbox constraints + prelude version, recorded at sweep time —
-  `withSandboxConstraints` output is already hashed for the cache key).
-- `scripts/prompt-bundle-audit.mjs`: for a given model/task, compare
-  records under different `promptBundle` hashes and report score deltas —
-  the "did the prompt change help" question, per model.
-- `scripts/verify-results.mjs` (#5) gains a release-gate mode: records
-  whose prompt bundle differs from the current default are flagged
-  (`stale-prompt`) rather than silently displayed as current.
-- UI: the model/task page shows the bundle hash with a tooltip when it
-  differs from current.
-
-**Acceptance criteria.** Sweeps stamp `promptBundle`; the audit script
-reports per-bundle deltas; stale-prompt records are visibly flagged; tests
-cover the hashing + flagging.
+**Shipped.** `lib/lab/llm-benchmark/prompt-bundle.ts` (pure, node-only):
+`promptBundleHash(task)` = 16-hex sha256 over the AMENDED prompt
+(`withSandboxConstraints(task).prompt`) + a separator + `framePreludeFingerprint()`
+(a digest of the `FRAME_PRELUDE` source constant, not a hand-bumped version).
+The rule: anything that changes what the model SEES or the environment its
+artifact is SCORED IN. The task id deliberately does NOT participate — the hash
+answers "same conditions?", so a rename cannot invalidate history and two
+identical prompts really are one bundle (locked by a test). `aggregateRuns`
+stamps `BenchmarkResult.promptBundle` (the only moment it is computable) and the
+run-log header carries `configSnapshot.promptBundle` so a trace reads alone.
+`scripts/prompt-bundle-audit.mjs [--model x] [--task y] [--all]` groups records
+per (model, task) by bundle and prints per-bundle mean + delta;
+`compareBundles`/`summarizePromptBundles` hold the arithmetic, the script is a
+shell. Tenth verify-results check `stale-prompt`: WARN (never fail — a stale
+result is an honest old result), `--strict` promotes it, which IS the release
+gate; unstamped records SKIP and surface as one `N pre-bundle` count on the
+summary line rather than 183 warnings. Task page shows a muted
+`· bundle <hash8> (stale)` marker beside the model name for stale records only.
+Ground state today: all 183 records are `pre-bundle`, 0 warnings.
 
 **Effort.** M. **Dependencies.** #5.
 
@@ -1465,9 +1457,16 @@ without reading results.json; the server is read-only.
   log/quota breaker/scoring. Shadowing a built-in provider or another
   plugin's generator is rejected at registration; `plugins/echo-provider/` is
   the unrostered worked example.
-- Results invariant verification (#5): `verify-results.ts` (eight checks, each
+- Results invariant verification (#5): `verify-results.ts` (ten checks, each
   with a stated WHY), `scripts/verify-results.mjs` / `task bench:verify-results`,
   run first in the pre-push gate.
+- Prompt-bundle provenance (#21): `prompt-bundle.ts` (`promptBundleHash` over
+  the amended prompt + `framePreludeFingerprint()`; task id excluded by
+  design), `BenchmarkResult.promptBundle` + `configSnapshot.promptBundle`
+  stamped by `aggregateRuns`, `scripts/prompt-bundle-audit.mjs` (per-bundle
+  means + deltas per model/task), the `stale-prompt` WARN check
+  (`--strict` = release gate; unstamped records skip into one `N pre-bundle`
+  summary count), and a muted stale marker on the task page.
 - Registry coverage test (auto-excludes unswept models, per-task board
   floor ≥ 20) + process hygiene (gitignored strays, closeSandbox).
 - Task-declared scorers (#10): `BenchmarkTask.scorer` beats the category

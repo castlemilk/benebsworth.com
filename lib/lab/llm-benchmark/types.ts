@@ -375,6 +375,24 @@ export interface BenchmarkResult {
     /** Retries across all iterations — transient AND empty-body, failures included. */
     retries: number
   }
+  /**
+   * The prompt bundle this record was scored under — `promptBundleHash(task)`
+   * at sweep time (`prompt-bundle.ts`): a short sha256 over the AMENDED prompt
+   * (task prompt + the applied sandbox contract) plus the frame-prelude
+   * fingerprint. In one line: everything that changes what the model saw, or
+   * the environment its artifact was scored in.
+   *
+   * WHY it is on the record and not derived at read time: it is only derivable
+   * for the CURRENT prompt. A stored score's bundle is history, and history is
+   * exactly what a prompt edit destroys — tic-tac-toe's results were scored
+   * under the old global contract and nothing marked them stale when its own
+   * contract landed (#36).
+   *
+   * Absent on every record written before this shipped; those group as
+   * `pre-bundle` in `scripts/prompt-bundle-audit.mjs` and SKIP (never warn) in
+   * verify-results' `stale-prompt` check — legacy, not broken.
+   */
+  promptBundle?: string
   /** 'live' (real harness run) or 'seeded' (hand-authored sample data). */
   source?: BenchmarkSource
   /** Raw generated output from the model (code, derivation, etc.) for side-by-side comparison. */

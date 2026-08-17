@@ -36,6 +36,15 @@ export interface RunLogConfigSnapshot {
    * before the knob existed.
    */
   plugins?: string[]
+  /**
+   * The prompt bundle this job ran under (`promptBundleHash(task)`), matching
+   * the `promptBundle` stamped on the record it produced. Audit-only, and
+   * deliberately redundant with the record: a trace has to be readable on its
+   * own, and "which prompt bundle was this?" is the first question asked of a
+   * trace whose numbers no longer match the current board. Absent on library
+   * use and on logs written before the field existed.
+   */
+  promptBundle?: string
 }
 
 /** Immutable first line of every run log. */

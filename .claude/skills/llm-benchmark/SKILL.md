@@ -61,6 +61,8 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
 | Results/run-log invariant checksuite (pure) | `lib/lab/llm-benchmark/verify-results.ts` |
 | Invariant verification script | `scripts/verify-results.mjs` |
+| Prompt-bundle hash + grouping/delta helpers (pure, node-only) | `lib/lab/llm-benchmark/prompt-bundle.ts` |
+| Prompt-bundle audit script (per-bundle means + deltas) | `scripts/prompt-bundle-audit.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
 | Dependency-layering guard (enforces `types.ts` → `scorers/` → `runners/` → `scripts/`: zero import cycles, `types.ts` a leaf, nothing imports upward into `scripts/`, `scorers/` never imports `runners/`) | `lib/lab/llm-benchmark/layering.test.ts` |
@@ -716,7 +718,7 @@ npx tsx scripts/verify-results.mjs        # same thing without task
 - **When to run.** After any sweep, backfill, merge, or hand edit of
   results.json; before a deploy. The pre-push hook runs it first (cheapest
   gate), so a corrupted results.json cannot leave the machine.
-- **What it catches.** Eight invariants, each carrying the WHY it exists (the
+- **What it catches.** Ten invariants, each carrying the WHY it exists (the
   report prints that WHY on failure): `score` drifted from the `aggregateRuns`
   aggregation of `iterationScores`; `iterationCheckResults` misaligned with
   `iterationScores` (the UI pairs them by index — a misalignment attributes one
@@ -726,8 +728,9 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   longer resolve in the registry (renaming a model silently empties the board);
   a `failureReason` outside the taxonomy or on a `success`; a run log on disk
   whose record carries no `runLogRef` ("no record without a trace") or a ref
-  whose log names a different model/task or never recorded an `aggregate`; and
-  run-log `seq` integrity.
+  whose log names a different model/task or never recorded an `aggregate`;
+  run-log `seq` integrity; and a record scored under a superseded prompt bundle
+  (`stale-prompt`, below).
 - **The ref-less carve-out.** A run log whose record has no `runLogRef` only
   FAILS when the record's `createdAt` is at or after the log header's. A record
   that PREDATES the log beside it is the merge-protection shape: that run
@@ -741,7 +744,7 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   contract was violated and the log can't be trusted as a replay.
 - **Exit semantics.** 0 clean, 1 on any failure; `--strict` also exits 1 on
   warnings. The summary is one line: `N checks, N records, N failures, N
-  warnings, N skipped`.
+  warnings, N skipped, N pre-bundle`.
 - **Skips are expected and are not weakening.** Records that predate a field
   (`iterationScores`, `iterationsSucceeded`) skip the checks needing it; seeded
   records are exempt from the run-log checks only (they never had a run); a
@@ -749,11 +752,77 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   single-entry `iterationCheckResults` that
   `scripts/backfill-iteration-checks.mjs` writes (one breakdown for the one
   published artifact) is a documented shape, not a misalignment. Current
-  baseline: 183 records → 0 failures, 0 warnings, 512 skipped.
+  baseline: 183 records → 0 failures, 0 warnings, 878 skipped, 183 pre-bundle.
 - **Adding a check.** Put it in `RESULT_CHECKS` with a `why` naming the bug it
   would have caught, keep it pure (filesystem inputs are injected as
   `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check
   that can't state its bug is synthetic — it will be muted, not fixed.
+
+## Prompt bundles (`promptBundle`, `prompt-bundle-audit`, `stale-prompt`)
+
+The board's axis is the MODEL. The other axis — usually the bigger lever — is
+the **prompt bundle**: the task prompt, the sandbox contract appended to it, and
+the frame prelude the artifact executes inside. `lib/lab/llm-benchmark/prompt-bundle.ts`
+makes that axis nameable.
+
+- **What is hashed.** `promptBundleHash(task)` = 16-hex sha256 over
+  `withSandboxConstraints(task).prompt` (the exact bytes the model received —
+  task prompt PLUS whatever `appliedSandboxConstraints` resolved: global,
+  task-specific, or none) + a separator + `framePreludeFingerprint()` (a digest
+  of the `FRAME_PRELUDE` **source constant**, not a hand-bumped version number —
+  the one time someone forgets to bump is the time it matters). The rule:
+  **anything that changes what the model SEES or the environment its artifact is
+  SCORED IN**.
+- **What is NOT hashed, on purpose.** The task id/slug/title — the hash answers
+  "same conditions?", and a rename changes no condition, so a rename must not
+  invalidate history; two different tasks with identical prompts + environment
+  therefore share a bundle hash, which is honest (a test locks this). Also out:
+  the model/provider/temperature (that is the axis the board already compares,
+  and it lives in the record) and the scorer/checks (a scoring change is real
+  staleness of a different kind, and folding it in would churn every bundle on a
+  check tweak).
+- **Where it is stamped.** `aggregateRuns` writes `BenchmarkResult.promptBundle`
+  — the only moment it is computable, since tomorrow's prompt edit erases the
+  past forever. The run-log header also carries `configSnapshot.promptBundle`
+  (deliberately redundant: a trace must be readable on its own).
+- **The ground case.** tic-tac-toe's stored results were scored under the OLD
+  global contract; when its task-specific contract landed (#36) nothing marked
+  them stale and the board kept presenting them as current. That silent mismatch
+  is the entire reason this field exists.
+
+```bash
+npx tsx scripts/prompt-bundle-audit.mjs                     # whole corpus
+npx tsx scripts/prompt-bundle-audit.mjs --model kimi-k2.7   # repeatable filters
+npx tsx scripts/prompt-bundle-audit.mjs --task mini-platformer --all
+```
+
+The audit groups records per (model, task) by bundle, prints each group's mean
+score oldest-first, and the delta between consecutive bundles — "did the prompt
+change help, for this model?". Grouping/delta arithmetic is pure
+(`compareBundles`, `summarizePromptBundles`, unit-tested); the script is a
+shell. Records with no field group as `pre-bundle`, which sorts first (legacy by
+definition, whatever timestamp it carries).
+
+**Ground state today: every record predates the field**, so the audit reports one
+`pre-bundle` group everywhere and no deltas, and exits 0. That is the correct
+answer, not an error — deltas start appearing after the first sweep run under
+this code.
+
+**Release gate.** verify-results' `stale-prompt` check warns on a record whose
+`promptBundle` differs from the current `promptBundleHash(task)`
+(`scored under bundle <old> (current <new>)`). It is a WARN and never a FAIL: a
+stale result is still an honest result, just old, and failing would break the
+build the moment you intentionally edit a prompt — before the re-run could
+possibly exist. `--strict` promotes warnings to failures, and THAT is the
+release gate: run `task bench:verify-results -- --strict` when publishing, where
+a stale number would be a lie. Records with no `promptBundle` skip and are
+reported as a single `N pre-bundle` count on the summary line — 183 identical
+legacy warnings would train the reader to ignore the whole report.
+
+**UI.** The task page renders a muted `· bundle <hash8> (stale)` marker beside
+the model name for stale records ONLY (with the full old/current hashes in the
+title). A current-bundle record shows nothing: the default reading is "these
+numbers describe the prompt above this table".
 
 ## Plugin system (dsh-inspired)
 

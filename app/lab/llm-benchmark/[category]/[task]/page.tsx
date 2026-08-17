@@ -29,6 +29,7 @@ import { loadTraceIndex } from '@/lib/lab/llm-benchmark/traces-server'
 import { findTraceEntry } from '@/lib/lab/llm-benchmark/traces'
 import { formatScore, formatRuntime, formatCost, formatTokens } from '@/components/lab/llm-benchmark/format'
 import { modelPath } from '@/lib/lab/llm-benchmark/nav'
+import { promptBundleHash } from '@/lib/lab/llm-benchmark/prompt-bundle'
 
 export function generateStaticParams() {
   return BENCHMARK_TASKS.map((task) => ({
@@ -97,6 +98,12 @@ export default async function BenchmarkTaskPage({
   // build time), never probed for at runtime: this is a static export, so a
   // record whose sweep logs were never published — every record written before
   // the run log existed — must resolve to "no trace" without a 404.
+  // The prompt bundle these results WOULD run under today (prompt + applied
+  // sandbox contract + frame prelude). A record stamped with a different one
+  // was scored under conditions this page no longer describes, and says so
+  // beside the model name. Computed at build time — server component.
+  const currentBundle = promptBundleHash(t)
+
   const traceIndex = loadTraceIndex()
   const traces = results
     .map((result) => ({
@@ -307,6 +314,18 @@ export default async function BenchmarkTaskPage({
                             )}
                             {result.source === 'seeded' && (
                               <span className="relative z-10 ml-1.5 font-mono text-[0.6rem] text-muted">· sample</span>
+                            )}
+                            {/* Stale-bundle marker: shown ONLY when this record
+                                names a bundle and it is not the current one. A
+                                current-bundle record says nothing — the default
+                                is "these numbers describe the prompt above". */}
+                            {result.promptBundle && result.promptBundle !== currentBundle && (
+                              <span
+                                title={`Scored under prompt bundle ${result.promptBundle}; current is ${currentBundle}. The prompt, its sandbox contract, or the frame prelude has changed since this run.`}
+                                className="relative z-10 ml-1.5 font-mono text-[0.6rem] text-muted"
+                              >
+                                · bundle {result.promptBundle.slice(0, 8)} (stale)
+                              </span>
                             )}
                           </td>
                           <td className="px-5 py-3">

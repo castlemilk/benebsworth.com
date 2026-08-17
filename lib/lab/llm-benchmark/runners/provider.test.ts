@@ -28,6 +28,7 @@ import { generateMoonshot } from './moonshot'
 import { generateOpencode } from './opencode'
 import type { IterationRun } from './provider'
 import { readRunLog, runLogFileName, setRunLogDir, spillPreview } from '../runlog'
+import { promptBundleHash } from '../prompt-bundle'
 
 const generateMock = vi.mocked(generateMoonshot)
 const generateOpencodeMock = vi.mocked(generateOpencode)
@@ -360,6 +361,8 @@ describe('run log integration', () => {
       timeoutMs: 5000,
       maxRetries: 1,
       bustCache: true,
+      // The trace names its own prompt bundle: a log has to be readable alone.
+      promptBundle: promptBundleHash(TASK),
     })
 
     expect(events.map((e) => e.type)).toEqual([
@@ -681,6 +684,23 @@ describe('built-in provider list', () => {
 describe('aggregateRuns', () => {
   const runs = (n: number): IterationRun[] =>
     Array.from({ length: n }, () => ({ ...OK, status: 'success' }))
+
+  it('stamps the prompt bundle the score was produced under', async () => {
+    const result = await aggregateRuns(runs(1), 1, MODEL, TASK, { score: () => 50 })
+    // The record must carry the bundle for THIS task's amended prompt — the
+    // only moment it is computable (a later prompt edit erases it forever).
+    expect(result.promptBundle).toBe(promptBundleHash(TASK))
+    expect(result.promptBundle).toMatch(/^[0-9a-f]{16}$/)
+    // …and a task whose contract differs stamps a different bundle.
+    const amended = await aggregateRuns(
+      runs(1),
+      1,
+      MODEL,
+      { ...TASK, sandboxConstraints: 'Return one HTML file.' },
+      { score: () => 50 }
+    )
+    expect(amended.promptBundle).not.toBe(result.promptBundle)
+  })
 
   it('persists no iterationCheckResults when the scorer has no breakdown', async () => {
     const scorer = {

@@ -25,6 +25,7 @@ import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '.
 import { forceSpill, hashPrompt, openRunLog, type RunLog } from '../runlog'
 import { selectScorer } from '../scorers'
 import { withSandboxConstraints } from '../prompts'
+import { promptBundleHash } from '../prompt-bundle'
 import { inlineDependenciesAsync } from '../sandbox/inline-dependencies'
 import { BUILTIN_PROVIDERS } from '../providers'
 // The roster (not `../plugins/registry`) so a consumer that only imports the
@@ -818,6 +819,11 @@ export async function aggregateRuns(
     // retries" is a fact, not a gap), and the measurement fields inside carry
     // their own absence.
     telemetry: foldTelemetry(runs),
+    // Which prompt bundle this score was produced under. Computed HERE because
+    // this is the one place that holds the task at the moment the number is
+    // minted — and it is only ever computable then: a prompt edit tomorrow
+    // makes it underivable forever (#21).
+    promptBundle: promptBundleHash(task),
     createdAt,
     // Every record produced under an active run log points back at its trace —
     // the acceptance criterion for #1: nothing reaches results.json unexplained.
@@ -898,6 +904,7 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           maxRetries: cfg.maxRetries ?? 2,
           bustCache,
           plugins: cfg.plugins,
+          promptBundle: promptBundleHash(task),
         },
       })
 

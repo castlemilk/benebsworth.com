@@ -478,6 +478,55 @@ describe('round trip against a real run log', () => {
   })
 })
 
+describe('stale-prompt (release gate)', () => {
+  // The current bundle, faked so the cases don't have to forge a prompt edit.
+  const current = () => 'currentbundle0000'
+
+  it('warns — never fails — on a record scored under an older bundle', () => {
+    const verdicts = verifyResults([goodRecord({ promptBundle: 'oldbundle00000000' })], {
+      currentPromptBundle: current,
+    })
+    const [v] = of(verdicts, 'stale-prompt')
+    expect(v.level).toBe('warn')
+    expect(v.detail).toBe('scored under bundle oldbundle00000000 (current currentbundle0000)')
+    // A stale result is still an honest result — only --strict turns this into
+    // a release-blocking failure.
+    expect(failures(verdicts)).toEqual([])
+    expect(v.why).toMatch(/tic-tac-toe|strict/i)
+  })
+
+  it('passes a record scored under the current bundle', () => {
+    const verdicts = verifyResults([goodRecord({ promptBundle: 'currentbundle0000' })], {
+      currentPromptBundle: current,
+    })
+    expect(of(verdicts, 'stale-prompt')[0].level).toBe('pass')
+  })
+
+  it('skips a record with no promptBundle (legacy, not stale)', () => {
+    const verdicts = verifyResults([goodRecord()], { currentPromptBundle: current })
+    const [v] = of(verdicts, 'stale-prompt')
+    expect(v.level).toBe('skip')
+    expect(v.detail).toMatch(/^pre-bundle/)
+  })
+
+  it('skips rather than warns when the task is not in the registry', () => {
+    const verdicts = verifyResults([goodRecord({ promptBundle: 'x'.repeat(16) })], {
+      currentPromptBundle: () => undefined,
+    })
+    expect(of(verdicts, 'stale-prompt')[0].level).toBe('skip')
+    expect(verdicts.filter((v) => v.level === 'warn')).toEqual([])
+  })
+
+  it('hashes the real registry by default — a stamped record either matches or warns', () => {
+    // No injection: exercises the default path (promptBundleHash over
+    // BENCHMARK_TASKS) so a broken default can't hide behind the fake.
+    const verdicts = verifyResults([goodRecord({ promptBundle: 'definitely-not-it' })])
+    const [v] = of(verdicts, 'stale-prompt')
+    expect(v.level).toBe('warn')
+    expect(v.detail).toMatch(/^scored under bundle definitely-not-it \(current [0-9a-f]{16}\)$/)
+  })
+})
+
 describe('summarizeVerdicts', () => {
   it('counts checks, records, failures, warnings and skips', () => {
     const verdicts = verifyResults([goodRecord({ score: 97 }), goodRecord()])
@@ -486,5 +535,23 @@ describe('summarizeVerdicts', () => {
     expect(summary.checks).toBe(RESULT_CHECKS.length)
     expect(summary.failures).toBe(1)
     expect(summary.line).toMatch(/1 failure/)
+  })
+
+  it('reports pre-bundle records as ONE count, not one warning each', () => {
+    const verdicts = verifyResults([goodRecord(), goodRecord(), goodRecord()])
+    const summary = summarizeVerdicts(verdicts, 3)
+    expect(summary.preBundleRecords).toBe(3)
+    expect(summary.warnings).toBe(0)
+    expect(summary.line).toMatch(/3 pre-bundle/)
+  })
+
+  it('counts 0 pre-bundle once every record is stamped', () => {
+    const stamped = goodRecord({ promptBundle: 'currentbundle0000' })
+    const summary = summarizeVerdicts(
+      verifyResults([stamped], { currentPromptBundle: () => 'currentbundle0000' }),
+      1
+    )
+    expect(summary.preBundleRecords).toBe(0)
+    expect(summary.line).toMatch(/0 pre-bundle/)
   })
 })

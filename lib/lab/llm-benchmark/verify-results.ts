@@ -19,12 +19,20 @@
  * real `sweeps/` tree; `scripts/verify-results.mjs` is the shell that scans the
  * disk and prints the report.
  */
+import type { BenchBoard } from './bench-ref'
+import { resolveBenchRef } from './bench-ref'
 import { isContentAddress, parseContentAddress, verifyContentAddress } from './content-address'
 import type { ProvenanceEntry } from './failure-corpus'
+import { validateFeedbackEntry } from './feedback'
 import { promptBundleHash } from './prompt-bundle'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from './registry'
 import type { RunLogEvent, RunLogHeader, SpilledString } from './runlog'
-import type { BenchmarkFailureReason, BenchmarkResult } from './types'
+import type {
+  BenchmarkFailureReason,
+  BenchmarkModel,
+  BenchmarkResult,
+  BenchmarkTask,
+} from './types'
 
 export type VerdictLevel = 'pass' | 'warn' | 'fail' | 'skip'
 
@@ -127,6 +135,12 @@ export const RESULT_CHECKS: CheckDef[] = [
       "provenance.json (#25) is the COMMITTED half of the failure corpus — the artifact bytes beside it are gitignored, so this file is the only durable record that a case exists at all. A row whose modelId or taskId no longer resolves is a regression case that `probe-corpus` will silently skip forever (the same orphaning `registry-resolution` catches on the board, one rename away), and an `artifact` that is not a 16-hex content address cannot name a file in cases/ — it is a hand-edit or a producer that wrote a filename where an address belongs. Deliberately CHEAP: it does not read a single artifact and never launches a browser. Whether a case still reproduces is probe-corpus's expensive question, not this gate's.",
   },
   {
+    id: 'curator-feedback',
+    title: 'every curator rating names a record that still exists, and is shaped like a rating',
+    why:
+      "feedback.json (#14) is HAND-WRITTEN judgment about published records, and it is the one file here nothing derives: no sweep rewrites it, so nothing corrects it either. A rating keyed at a `bench://` ref that no longer resolves — a renamed model, a task pulled from the board, an iteration index that outlived the run that had five iterations — renders NOWHERE and rots silently, which is the same orphaning `registry-resolution` catches for records and `corpus-provenance` catches for corpus cases. The shape half is the other failure mode: this file is edited by hand as well as by `bench-feedback.mjs`, and a typo'd rating, a note pasted in at essay length, or a createdAt later than its updatedAt would either be dropped by the loader at build time or published as a judgment nobody made.",
+  },
+  {
     id: 'runlog-seq',
     title: 'run-log seq is strictly increasing (gaps are evidence, not corruption)',
     why:
@@ -201,6 +215,15 @@ export interface VerifyOptions {
    * state and not a finding.
    */
   corpusProvenance?: ProvenanceEntry[]
+  /**
+   * The curator-feedback sidecar (#14) as parsed JSON — deliberately `unknown`,
+   * because validating its SHAPE is half of what the check does and a typed
+   * parameter would let the caller's parser decide that instead.
+   *
+   * Omit (or pass an empty array) to skip: a clone with no sidecar, and a
+   * sidecar with nothing in it, are both valid states rather than findings.
+   */
+  feedback?: unknown
 }
 
 /** A retained artifact copy found on disk (`sweeps/<runId>/artifacts/<file>`). */
@@ -576,6 +599,70 @@ function checkCorpusEntry(
   return verdict('corpus-provenance', 'fail', key, problems.join('; '))
 }
 
+/**
+ * Curator feedback (#14): the whole sidecar, one verdict per entry.
+ *
+ * Two questions per entry, in order: is it SHAPED like a rating
+ * (`validateFeedbackEntry` — the same rules the loader and the CLI use, so
+ * this can never disagree with them), and does its ref still RESOLVE against
+ * the board (`resolveBenchRef` — the same resolution the site links through).
+ * Neither is re-implemented here; a second copy of either rule would drift.
+ */
+function checkFeedback(feedback: unknown, board: BenchBoard): Verdict[] {
+  if (feedback === undefined) return []
+  if (!Array.isArray(feedback)) {
+    return [verdict('curator-feedback', 'fail', 'feedback.json', 'the sidecar is not an array of entries')]
+  }
+  if (feedback.length === 0) {
+    return [verdict('curator-feedback', 'skip', 'feedback.json', 'no curator feedback recorded')]
+  }
+
+  const verdicts: Verdict[] = []
+  const seen = new Set<string>()
+  for (const [index, raw] of feedback.entries()) {
+    const named =
+      typeof raw === 'object' && raw !== null && typeof (raw as { ref?: unknown }).ref === 'string'
+        ? (raw as { ref: string }).ref
+        : `feedback[${index}]`
+    const validated = validateFeedbackEntry(raw)
+    if (!validated.ok) {
+      verdicts.push(verdict('curator-feedback', 'fail', named, `${validated.code}: ${validated.message}`))
+      continue
+    }
+    const entry = validated.value
+    if (seen.has(entry.ref)) {
+      verdicts.push(verdict('curator-feedback', 'fail', named, 'two entries rate the same ref'))
+      continue
+    }
+    seen.add(entry.ref)
+    const resolved = resolveBenchRef(entry.ref, board)
+    if (!resolved.ok) {
+      verdicts.push(
+        verdict('curator-feedback', 'fail', entry.ref, `does not resolve (${resolved.code}): ${resolved.message}`)
+      )
+      continue
+    }
+    verdicts.push(verdict('curator-feedback', 'pass', entry.ref))
+  }
+  return verdicts
+}
+
+/**
+ * A `BenchBoard` for ref resolution built from what this module already has.
+ *
+ * `resolveBenchRef` reads nothing but `.id` off a model/task, so an id the
+ * caller injected via `knownModelIds` (a test registry) is represented by a
+ * stub rather than dropped — the alternative would make every injected-registry
+ * test fail resolution for reasons that have nothing to do with feedback.
+ */
+function boardFor(results: BenchmarkResult[], tasks: Set<string>, models: Set<string>): BenchBoard {
+  return {
+    models: [...models].map((id) => BENCHMARK_MODELS.find((m) => m.id === id) ?? ({ id } as BenchmarkModel)),
+    tasks: [...tasks].map((id) => BENCHMARK_TASKS.find((t) => t.id === id) ?? ({ id } as BenchmarkTask)),
+    results,
+  }
+}
+
 export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = {}): Verdict[] {
   const tasks = new Set(opts.knownTaskIds ?? BENCHMARK_TASKS.map((t) => t.id))
   const models = new Set(opts.knownModelIds ?? BENCHMARK_MODELS.map((m) => m.id))
@@ -768,6 +855,8 @@ export function verifyResults(results: BenchmarkResult[], opts: VerifyOptions = 
   for (const entry of opts.corpusProvenance ?? []) {
     verdicts.push(checkCorpusEntry(entry, tasks, models))
   }
+
+  verdicts.push(...checkFeedback(opts.feedback, boardFor(results, tasks, models)))
 
   return verdicts
 }

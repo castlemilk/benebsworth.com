@@ -636,34 +636,48 @@ No UI — the model-page surface stays deferred to #9's trace UI.
 
 # P2 — Site features (dsh study additions)
 
-## [ ] 14. Reader feedback on artifacts (ratings + notes)
+## [x] 14. Curator feedback on artifacts (ratings + notes)
 
-**Problem.** The behavioral scorer answers "does Space jump?" but not "is
-this artifact actually good?" — human judgment is the one signal the board
-lacks, and it's exactly what dsh's `feedback/` family formalizes.
+**Shipped, scoped to the CURATOR.** The behavioural scorer answers "does Space
+jump?" but not "is this artifact any good?", and that judgment is now recorded
+as a committed sidecar the site DISPLAYS: `lib/lab/llm-benchmark/feedback.json`,
+one entry per `bench://` ref (#32 — the board's existing name for a record and
+for one iteration of it, rather than a second key shape), written by
+`task bench:feedback` and rendered as a disclosed "curator note".
 
-**Inspiration.** dsh `packages/feedback/`:
-- `message-feedback`: per-message `rating: 'positive' | 'negative'` +
-  optional note, versioned sidecar, immutable timestamps, list/put/delete
-  Remote contract; feedback NEVER enters model context.
-- `command-feedback`: log-only `feedback/record` remark for telemetry.
+**Scope ruling — visitor ratings are DEFERRED, not forgotten.** The TODO's dsh
+inspiration (`message-feedback`) is a LOCAL-app rating store. This site is a
+STATIC EXPORT: a reader-writable rating needs a Cloudflare Worker + KV +
+rate-limiting + abuse handling, which is real infrastructure and must not ride
+in under a display feature. So the maintainer rates artifacts during review, the
+sidecar is committed, and every surface says whose opinion it is — no count, no
+average, nothing that could read as a crowd. **The future shape, when it is
+wanted: a Worker fronting a KV namespace, per-IP rate limits, and a moderation
+path — a backlog item of its own, not an extension of this one.**
 
-**Design sketch.**
+dsh's contracts carried over exactly: `rating: 'positive' | 'negative'` + an
+optional note (<= 500 chars); `createdAt` immutable, `updatedAt` monotonic
+(a backwards clock cannot make an entry younger), `version` +1 per write and
+equality-only; a write REPLACES rather than accumulates (re-rating without
+`--note` clears the note, and the CLI says so out loud). A ref must RESOLVE
+against results.json before anything is written — no rating of a record that
+does not exist.
 
-- On each model's artifact (task page side-by-side view), a compact
-  up/down + optional note control.
-- `BenchmarkResult`/sidecar storage: `lib/lab/llm-benchmark/feedback.json`
-  keyed `(modelId, taskId, iterationIndex?)` with
-  `{ rating, note?, createdAt, updatedAt, version }` — same shape as dsh's
-  `MessageFeedbackItem` (rating, optional note ≤ N bytes, opaque equality-only
-  version, monotonic timestamps).
-- Aggregate per model/task on the page: `positive: N, negative: M` strip.
-- Feedback is never written into results.json and never reaches the model;
-  keep it a strict sidecar (dsh's two-contract separation).
+**Isolation is enforced, not promised** (dsh's two-contract separation):
+`layering.test.ts` walks the real import graph and fails if any feedback module
+is reachable from `prompts.ts`, `prompt-bundle.ts`, `scorers/**` or
+`runners/**`, and greps `runners/provider.ts` / `results.ts` / `types.ts` for
+the word at all. `verify-results` gains a 15th check (`curator-feedback`):
+every entry is shaped like a rating and its ref still resolves; skips when the
+sidecar is absent or empty.
 
-**Acceptance criteria.** Rated artifacts persist across deploys; ratings
-aggregate per model; version bumps replace rather than accumulate; no
-feedback data in results.json or the run log.
+**Seeded with three real judgments**, not placeholders: deepseek-v4-flash-free
+on landing-page-morph (negative — planning narration, no HTML, and the
+published trace ends there), gemini-3.6-flash n-body-field iteration 1
+(positive — the one of five iterations that actually animates, 99.1% vs 0.0%
+pixel diff), nemotron-nano-12b-vl tic-tac-toe iteration 2 (negative — a clean
+100 while the page throws `board.children.forEach is not a function`, because
+`no-runtime-errors` is a 0-point advisory check).
 
 **Effort.** M.
 
@@ -1673,6 +1687,16 @@ declared checks resolve).
   no-browser path never loads it; `BENCH_PRELUDE_PARITY=1` scores through the
   display prelude (default OFF, measured zero-delta over the 39-case corpus —
   `docs/lab/llm-benchmark/prelude-parity-measurement.md`; decision left open).
+- Curator feedback (#14): `feedback.json` — a COMMITTED sidecar keyed by
+  `bench://` ref — plus pure `feedback.ts` (dsh `message-feedback` contracts:
+  immutable `createdAt`, monotonic `updatedAt`, equality-only `version`,
+  replace-not-accumulate, 500-char note cap), `feedback-cli.ts` +
+  `task bench:feedback` (add/list/rm, and a ref must RESOLVE against
+  results.json before a write), a `curator-feedback` verify check, and three
+  display surfaces that all disclose the rating as ONE PERSON's judgment.
+  Reader/visitor ratings are DEFERRED (they need a Worker + KV + abuse
+  handling, not a display feature). Isolation from the model-facing path is
+  enforced structurally in `layering.test.ts`.
 - Blog posts: free-tier sweep, agy frontier (behavioral scorer headline).
 
 ## Skill sync

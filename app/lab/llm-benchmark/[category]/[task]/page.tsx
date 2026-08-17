@@ -16,6 +16,8 @@ import { resultsForTask, stripOutput } from '@/lib/lab/llm-benchmark/results'
 import { getPlugin, pluginTaskCard } from '@/lib/lab/llm-benchmark/plugins'
 import { aggregateResults } from '@/lib/lab/llm-benchmark/harness'
 import { loadTaskMdx, loadTaskPostMdx } from '@/lib/lab/llm-benchmark/content'
+import { feedbackForTask } from '@/lib/lab/llm-benchmark/feedback'
+import { CURATOR_FEEDBACK } from '@/lib/lab/llm-benchmark/feedback-data'
 import { Gauge, Clock, DollarSign, Hash, Terminal, Activity } from 'lucide-react'
 import Link from 'next/link'
 import { BenchmarkDemo } from '@/components/lab/llm-benchmark/demos/demo-registry'
@@ -26,6 +28,7 @@ import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
 import { SandboxContract } from '@/components/lab/llm-benchmark/sandbox-contract'
 import { RunTraceList } from '@/components/lab/llm-benchmark/run-trace'
 import { RelatedRunsPanel } from '@/components/lab/llm-benchmark/related-runs'
+import { CuratorNotesPanel } from '@/components/lab/llm-benchmark/curator-note'
 import { loadTraceIndex } from '@/lib/lab/llm-benchmark/traces-server'
 import { findTraceEntry } from '@/lib/lab/llm-benchmark/traces'
 import { formatScore, formatRuntime, formatCost, formatTokens } from '@/components/lab/llm-benchmark/format'
@@ -104,6 +107,10 @@ export default async function BenchmarkTaskPage({
   // was scored under conditions this page no longer describes, and says so
   // beside the model name. Computed at build time — server component.
   const currentBundle = promptBundleHash(t)
+
+  // Curator ratings for this task (#14) — committed sidecar data, read here
+  // (the page is the loader) and handed to the comparison panes as a prop.
+  const curatorFeedback = feedbackForTask(CURATOR_FEEDBACK, t.id)
 
   const traceIndex = loadTraceIndex()
   const traces = results
@@ -379,6 +386,15 @@ export default async function BenchmarkTaskPage({
             <RelatedRunsPanel results={results} />
           </Reveal>
 
+          {/* Curator judgment (#14): what the checks cannot score, disclosed as
+              one person's opinion. Renders nothing on an unrated task. */}
+          <Reveal delay={230}>
+            <CuratorNotesPanel
+              entries={curatorFeedback}
+              modelName={(modelId) => getModel(modelId)?.name ?? modelId}
+            />
+          </Reveal>
+
           <Reveal delay={240}>
             <div className="mt-8 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
               <h3 className="type-h3 mb-2">Method notes</h3>
@@ -389,7 +405,12 @@ export default async function BenchmarkTaskPage({
           <Reveal delay={280}>
             <div className="mt-16">
               <h2 className="type-h2 mb-6">Generated outputs</h2>
-              <ModelOutputComparison taskId={t.id} results={results.map(stripOutput)} taskTitle={t.title} />
+              <ModelOutputComparison
+                taskId={t.id}
+                results={results.map(stripOutput)}
+                taskTitle={t.title}
+                feedback={curatorFeedback}
+              />
             </div>
           </Reveal>
 

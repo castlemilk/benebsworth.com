@@ -67,6 +67,10 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Run-trace UI (the transcript, in the browser) | `components/lab/llm-benchmark/run-trace.tsx` |
 | Cross-run refs: `bench://` format/parse/resolve, failure signatures, related-run ranking (pure, browser-safe) | `lib/lab/llm-benchmark/bench-ref.ts` |
 | "Related runs" panel (server-only — reads the whole board) | `components/lab/llm-benchmark/related-runs.tsx` |
+| Curator feedback: shape, versioning, upsert/aggregate (pure, browser-safe) | `lib/lab/llm-benchmark/feedback.ts` |
+| Curator feedback data (COMMITTED sidecar) + validated loader | `lib/lab/llm-benchmark/feedback.json`, `feedback-data.ts` |
+| Curator-feedback CLI: args, resolve gate, `--list` rendering (pure) + shell | `lib/lab/llm-benchmark/feedback-cli.ts`, `scripts/bench-feedback.mjs` |
+| Curator-note strip / task panel / per-model tally | `components/lab/llm-benchmark/curator-note.tsx` |
 | Trace export assembly (browser-safe: JSONL + spill + generated README → ZIP) | `lib/lab/llm-benchmark/trace-export.ts` |
 | STORE-only ZIP writer (browser-safe, dependency-free, CRC-32 inline) | `lib/lab/llm-benchmark/zip.ts` |
 | Export-fidelity gate (published tree vs results.json, pure) | `lib/lab/llm-benchmark/export-fidelity.ts` |
@@ -88,7 +92,7 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Prompt-bundle audit script (per-bundle means + deltas) | `scripts/prompt-bundle-audit.mjs` |
 | Seed data for sample/mock outputs | `scripts/sample-outputs.json` |
 | Seed script for mock results | `scripts/seed-mock-results.mjs` |
-| Dependency-layering guard (enforces `types.ts` → `scorers/` → `runners/` → `scripts/`: zero import cycles, `types.ts` a leaf, nothing imports upward into `scripts/`, `scorers/` never imports `runners/`) | `lib/lab/llm-benchmark/layering.test.ts` |
+| Dependency-layering guard (enforces `types.ts` → `scorers/` → `runners/` → `scripts/`: zero import cycles, `types.ts` a leaf, nothing imports upward into `scripts/`, `scorers/` never imports `runners/`, curator feedback unreachable from the model-facing path) | `lib/lab/llm-benchmark/layering.test.ts` |
 | Route/path helpers | `lib/lab/llm-benchmark/nav.ts` |
 | MDX loader | `lib/lab/llm-benchmark/content.ts` |
 | Category & task UI | `components/lab/llm-benchmark/*` |
@@ -1133,7 +1137,7 @@ npx tsx scripts/verify-results.mjs        # same thing without task
 - **When to run.** After any sweep, backfill, merge, or hand edit of
   results.json; before a deploy. The pre-push hook runs it first (cheapest
   gate), so a corrupted results.json cannot leave the machine.
-- **What it catches.** Twelve invariants, each carrying the WHY it exists (the
+- **What it catches.** Fifteen invariants, each carrying the WHY it exists (the
   report prints that WHY on failure): `score` drifted from the `aggregateRuns`
   aggregation of `iterationScores`; `iterationCheckResults` misaligned with
   `iterationScores` (the UI pairs them by index — a misalignment attributes one
@@ -1150,7 +1154,9 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   record scored under a superseded prompt bundle (`stale-prompt`, below); and an
   incoherent `budgetExceeded` stamp (`budget-sanity` — spend below its own cap, a
   non-positive cap, a $0 record claiming a trip, or a record costing more than the
-  sweep total it was measured against).
+  sweep total it was measured against); and a curator-feedback entry
+  (`curator-feedback`, #14) whose `bench://` ref no longer resolves against the
+  board or whose shape is not a rating (skips when the sidecar is absent/empty).
 - **The ref-less carve-out.** A run log whose record has no `runLogRef` only
   FAILS when the record's `createdAt` is at or after the log header's. A record
   that PREDATES the log beside it is the merge-protection shape: that run
@@ -1178,6 +1184,62 @@ npx tsx scripts/verify-results.mjs        # same thing without task
   would have caught, keep it pure (filesystem inputs are injected as
   `runLogs` + `readLog`), and unit-test it in `verify-results.test.ts`. A check
   that can't state its bug is synthetic — it will be muted, not fixed.
+
+## Curator feedback (`task bench:feedback`, #14)
+
+The behavioural scorer answers "does Space jump?". It cannot answer "is this
+artifact any good?" — and that judgment is the one signal the board lacks. This
+is that signal, as a committed sidecar the site DISPLAYS.
+
+```bash
+task bench:feedback -- --ref bench://gemini-3.6-flash/n-body-field/1 \
+                       --rating positive --note "the one iteration that moves"
+task bench:feedback -- --list [--model gemini-3.6-flash]
+task bench:feedback -- --rm --ref bench://deepseek-v4-flash-free/landing-page-morph
+git add lib/lab/llm-benchmark/feedback.json && git commit
+```
+
+- **SCOPE: curator, not reader. Read this before adding a rating button.** The
+  site is a STATIC EXPORT. A visitor-writable rating needs a Cloudflare Worker,
+  a KV namespace, rate limiting and abuse handling — real infrastructure that
+  must not arrive as a side effect of a display feature, so it is DEFERRED
+  (TODO #14). Every entry is the maintainer's, every surface says
+  "curator note" / "curator:", and nothing on the site may imply a crowd.
+- **The key is a `bench://` ref** (#32), not a second id scheme: record-level
+  (`bench://<model>/<task>`) or iteration-level (`…/<n>`) — and an iteration
+  note renders with an `iteration N` prefix so it never reads as a verdict on
+  the whole record.
+- **dsh `message-feedback` contracts, carried over.** `rating: 'positive' |
+  'negative'` plus an optional note (<= 500 chars — longer belongs in the task
+  MDX or a forensics doc); `createdAt` immutable, `updatedAt` monotonic (a
+  backwards clock cannot make an entry younger), `version` +1 per write and
+  EQUALITY-ONLY; a write REPLACES the entry rather than accumulating history —
+  re-rating without `--note` CLEARS the note, and the CLI says so.
+- **The resolve gate.** A ref must resolve against results.json before anything
+  is written (`resolveBenchRef` — unknown model/task, no record for the pair, an
+  iteration index beyond the ones that ran). A rating of a record that does not
+  exist renders nowhere and rots.
+- **Isolation is enforced, not promised** (dsh's two-contract separation):
+  `layering.test.ts` walks the import graph and fails if `feedback*.ts` is
+  reachable from `prompts.ts`, `prompt-bundle.ts`, `scorers/**` or `runners/**`,
+  and greps `runners/provider.ts` / `results.ts` / `types.ts` for the word at
+  all. Feedback never enters model context, results.json, or a run log.
+- **Where it renders.** The task page's "Curator notes" panel (always visible,
+  grouped by model, beside related-runs), the same note inside each side-by-side
+  comparison pane, and a `curator: N positive · M negative` tally under the
+  model-page stat strip — a SIBLING of `StatStrip`, never a segment inside it,
+  because every segment in that strip is measured and an opinion must not
+  borrow that voice.
+- **The founding entries are real.** deepseek-v4-flash-free on
+  landing-page-morph (negative: planning narration, no HTML — the published
+  trace ends there), gemini-3.6-flash n-body-field iteration 1 (positive: the
+  one of five that actually animates, 99.1% vs 0.0% pixel diff), and
+  nemotron-nano-12b-vl tic-tac-toe iteration 2 (negative: a clean 100 while the
+  page throws `board.children.forEach is not a function`, because
+  `no-runtime-errors` is a 0-point advisory check).
+- **Editing by hand is fine** — the file is plain JSON sorted by ref — but
+  `task bench:verify-results` is the gate: shape, note cap, timestamp order,
+  duplicate refs, and resolution are all re-checked there.
 
 ## Failure regression corpus (`task bench:corpus:*`, #25)
 

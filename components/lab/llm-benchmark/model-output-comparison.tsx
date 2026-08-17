@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { BENCHMARK_MODELS, getModel } from '@/lib/lab/llm-benchmark/registry'
 import type { BenchmarkResultMeta } from '@/lib/lab/llm-benchmark/results'
 import { modelPath, outputUrl } from '@/lib/lab/llm-benchmark/nav'
+import { feedbackForRecord } from '@/lib/lab/llm-benchmark/feedback'
+import type { CuratorFeedback } from '@/lib/lab/llm-benchmark/feedback'
+import { CuratorNotes } from './curator-note'
 import { ScoreBar } from './score-bar'
 import { cn } from '@/lib/utils'
 import { Code2, FileText, CheckCircle2, XCircle, Trophy, Loader2, ArrowRight } from 'lucide-react'
@@ -13,9 +16,20 @@ interface ModelOutputComparisonProps {
   taskId: string
   results: BenchmarkResultMeta[]
   taskTitle: string
+  /**
+   * Curator ratings for THIS task, across models (#14). Passed down rather
+   * than imported here so the page stays the one loader of committed data —
+   * the same rule the results themselves follow.
+   */
+  feedback?: CuratorFeedback[]
 }
 
-export function ModelOutputComparison({ taskId, results, taskTitle }: ModelOutputComparisonProps) {
+export function ModelOutputComparison({
+  taskId,
+  results,
+  taskTitle,
+  feedback = [],
+}: ModelOutputComparisonProps) {
   const byModel = useMemo(() => new Map(results.map((r) => [r.modelId, r])), [results])
 
   const [leftModelId, setLeftModelId] = useState<string>(BENCHMARK_MODELS[0]?.id ?? '')
@@ -55,6 +69,7 @@ export function ModelOutputComparison({ taskId, results, taskTitle }: ModelOutpu
           onSelect={setLeftModelId}
           result={leftResult}
           opposingResult={rightResult}
+          feedback={feedback}
         />
         <OutputPane
           position="right"
@@ -64,6 +79,7 @@ export function ModelOutputComparison({ taskId, results, taskTitle }: ModelOutpu
           onSelect={setRightModelId}
           result={rightResult}
           opposingResult={leftResult}
+          feedback={feedback}
         />
       </div>
     </div>
@@ -78,6 +94,7 @@ interface OutputPaneProps {
   onSelect: (modelId: string) => void
   result?: BenchmarkResultMeta
   opposingResult?: BenchmarkResultMeta
+  feedback: CuratorFeedback[]
 }
 
 type OutputState =
@@ -94,8 +111,13 @@ function OutputPane({
   onSelect,
   result,
   opposingResult,
+  feedback,
 }: OutputPaneProps) {
   const model = getModel(selectedModelId)
+  const notes = useMemo(
+    () => feedbackForRecord(feedback, selectedModelId, taskId),
+    [feedback, selectedModelId, taskId],
+  )
   const [state, setState] = useState<OutputState>({ phase: 'idle' })
   const seq = useRef(0)
 
@@ -173,6 +195,9 @@ function OutputPane({
               {isWinner && <Trophy className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-hidden />}
               <ScoreBar score={result.score} className="flex-1" />
             </div>
+            {/* Curator judgment, in the same slot as the numbers it qualifies
+                — and only when this record has been rated. */}
+            <CuratorNotes entries={notes} className="mt-3" />
           </>
         )}
       </div>

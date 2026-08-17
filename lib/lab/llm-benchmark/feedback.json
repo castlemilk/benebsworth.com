@@ -1,0 +1,26 @@
+[
+  {
+    "ref": "bench://deepseek-v4-flash-free/landing-page-morph",
+    "rating": "negative",
+    "note": "Planning narration, never a page: the whole artifact is two sentences of intent — \"let me plan the structure\", \"now let me validate the JS syntax\" — and not one line of HTML. Both behavioural checks failed and the published trace ends there, on the single iteration. The 3/100 is right; the interesting part is that the model described the page it was going to build in the voice of having built it.",
+    "createdAt": "2026-08-17T08:10:00.000Z",
+    "updatedAt": "2026-08-17T08:10:00.000Z",
+    "version": 1
+  },
+  {
+    "ref": "bench://gemini-3.6-flash/n-body-field/1",
+    "rating": "positive",
+    "note": "The one iteration of five that actually moves: 99.1% pixel diff over 1.2s where the other four render the field and then sit perfectly still (0.0%). Worth pointing at, because the record's 74.4 average reads as \"mediocre simulation\" when what it really records is one good artifact and four static ones.",
+    "createdAt": "2026-08-17T08:14:00.000Z",
+    "updatedAt": "2026-08-17T08:14:00.000Z",
+    "version": 1
+  },
+  {
+    "ref": "bench://nemotron-nano-12b-vl/tic-tac-toe/2",
+    "rating": "negative",
+    "note": "Scores a clean 100 while the page throws \"board.children.forEach is not a function\". It is not a scoring bug — no-runtime-errors is a 0-point advisory check by design — but a board that plays and detects a win with an uncaught TypeError behind it is not a 100 in any sense a reader means. Judgment: the artifact is broken; the number is the ceiling of what the checks can see.",
+    "createdAt": "2026-08-17T08:18:00.000Z",
+    "updatedAt": "2026-08-17T08:18:00.000Z",
+    "version": 1
+  }
+]

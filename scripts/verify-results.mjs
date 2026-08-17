@@ -128,15 +128,34 @@ function readCorpusProvenance() {
   return parsed
 }
 
+/**
+ * The curator-feedback sidecar (#14), or `undefined` when the file does not
+ * exist — which SKIPS the check. Parsed but NOT validated here: validating the
+ * shape is the check's job, so a hand-edited entry is reported as a finding
+ * with its ref rather than as a crash in the loader.
+ */
+function readFeedback() {
+  const path = resolve(root, process.env.FEEDBACK_PATH ?? 'lib/lab/llm-benchmark/feedback.json')
+  if (!existsSync(path)) return undefined
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'))
+  } catch (err) {
+    console.error(`[verify-results] ${relative(root, path)} is not valid JSON: ${err.message}`)
+    process.exit(1)
+  }
+}
+
 const runLogs = findRunLogs(sweepsDir)
 const artifactFiles = findArtifacts(sweepsDir)
 const corpusProvenance = readCorpusProvenance()
+const feedback = readFeedback()
 const verdicts = verifyResults(results, {
   runLogs,
   readLog: readRunLog,
   artifactFiles,
   readContent,
   corpusProvenance,
+  feedback,
 })
 const summary = summarizeVerdicts(verdicts, results.length)
 
@@ -171,6 +190,9 @@ if (!options.quiet) {
   )
   console.log(
     `[verify-results] failure corpus: ${corpusProvenance === undefined ? 'none ingested, corpus check skips' : `${corpusProvenance.length} case(s)`}`
+  )
+  console.log(
+    `[verify-results] curator feedback: ${feedback === undefined ? 'no sidecar, feedback check skips' : `${Array.isArray(feedback) ? feedback.length : '?'} entr${Array.isArray(feedback) && feedback.length === 1 ? 'y' : 'ies'}`}`
   )
 }
 

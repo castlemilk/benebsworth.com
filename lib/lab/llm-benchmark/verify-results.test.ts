@@ -794,3 +794,87 @@ describe('corpus-provenance (failure regression corpus, #25)', () => {
     expect(of(verifyResults([goodRecord()], {}), 'corpus-provenance')).toEqual([])
   })
 })
+
+describe('curator-feedback (the rating sidecar, #14)', () => {
+  function rating(over: Record<string, unknown> = {}): Record<string, unknown> {
+    return {
+      ref: 'bench://kimi-k2.7/n-body-field',
+      rating: 'positive',
+      note: 'the one artifact on this task that actually moves',
+      createdAt: '2026-08-17T09:00:00.000Z',
+      updatedAt: '2026-08-17T09:00:00.000Z',
+      version: 1,
+      ...over,
+    }
+  }
+
+  const seen = (feedback: unknown): Verdict[] =>
+    of(verifyResults([goodRecord()], { feedback }), 'curator-feedback')
+
+  it('passes a rating that resolves against the board', () => {
+    const verdicts = seen([rating()])
+    expect(verdicts).toHaveLength(1)
+    expect(verdicts[0].level).toBe('pass')
+    expect(verdicts[0].recordKey).toBe('bench://kimi-k2.7/n-body-field')
+  })
+
+  it('passes an ITERATION-scoped rating inside the range that ran', () => {
+    expect(seen([rating({ ref: 'bench://kimi-k2.7/n-body-field/1' })])[0].level).toBe('pass')
+  })
+
+  it('fails a rating of an iteration that never ran', () => {
+    const [v] = seen([rating({ ref: 'bench://kimi-k2.7/n-body-field/7' })])
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/iteration-out-of-range/)
+  })
+
+  it('fails a rating whose model was renamed out of the registry', () => {
+    const [v] = seen([rating({ ref: 'bench://kimi-k2.6-retired/n-body-field' })])
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/unknown-model/)
+  })
+
+  it('fails a rating of a (model, task) pair with no record on the board', () => {
+    const [v] = seen([rating({ ref: 'bench://kimi-k2.7/tic-tac-toe' })])
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/no-result/)
+  })
+
+  it('fails a rating outside the vocabulary', () => {
+    const [v] = seen([rating({ rating: 'meh' })])
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/bad-rating/)
+  })
+
+  it('fails a note past the length cap', () => {
+    const [v] = seen([rating({ note: 'x'.repeat(501) })])
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/note-too-long/)
+  })
+
+  it('fails createdAt after updatedAt', () => {
+    const [v] = seen([
+      rating({ createdAt: '2026-08-18T00:00:00.000Z', updatedAt: '2026-08-17T00:00:00.000Z' }),
+    ])
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/time-travel/)
+  })
+
+  it('fails two entries rating the same ref', () => {
+    const verdicts = seen([rating(), rating({ rating: 'negative' })])
+    expect(verdicts[0].level).toBe('pass')
+    expect(verdicts[1].level).toBe('fail')
+    expect(verdicts[1].detail).toMatch(/same ref/)
+  })
+
+  it('fails a sidecar that is not an array at all', () => {
+    const [v] = seen({ ref: 'bench://kimi-k2.7/n-body-field' })
+    expect(v.level).toBe('fail')
+    expect(v.detail).toMatch(/not an array/)
+  })
+
+  it('skips an empty sidecar and is absent entirely when there is none', () => {
+    expect(seen([])[0].level).toBe('skip')
+    expect(of(verifyResults([goodRecord()], {}), 'curator-feedback')).toEqual([])
+  })
+})

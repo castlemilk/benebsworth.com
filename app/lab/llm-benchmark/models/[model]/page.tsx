@@ -16,6 +16,9 @@ import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
 import { ScoreBar } from '@/components/lab/llm-benchmark/score-bar'
 import { StatStrip } from '@/components/lab/llm-benchmark/stat-strip'
 import { modelCompletion } from '@/lib/lab/llm-benchmark/analytics'
+import { aggregateFeedback } from '@/lib/lab/llm-benchmark/feedback'
+import { CURATOR_FEEDBACK } from '@/lib/lab/llm-benchmark/feedback-data'
+import { CuratorTally } from '@/components/lab/llm-benchmark/curator-note'
 import { IterationChecks } from '@/components/lab/llm-benchmark/iteration-checks'
 import {
   formatRuntime,
@@ -165,6 +168,11 @@ export default async function ModelDetailPage({
           </Reveal>
           <Reveal delay={200}>
             <StatStrip stats={modelCompletion(results)} className="mt-4 text-xs" />
+            {/* Curator ratings for this model (#14) — a sibling of the stat
+                strip rather than a segment inside it: StatStrip's segments are
+                all MEASURED (`ModelCompletion`), and an opinion must not sit
+                inside that sentence unlabelled. */}
+            <CuratorTally tally={aggregateFeedback(CURATOR_FEEDBACK, model.id)} className="mt-1.5" />
           </Reveal>
           <Reveal delay={240}>
             <div className="mt-6 flex flex-wrap gap-3 font-mono text-xs text-muted">

@@ -324,6 +324,81 @@ describe('llm-benchmark dependency layering', () => {
     ).toEqual([])
   })
 
+  it('keeps curator feedback out of the model-facing path (#14)', () => {
+    // dsh's two-contract separation: feedback is a judgment ABOUT a run and
+    // must never become an input TO one. If a prompt, a scorer or a runner
+    // could read it, the harness would be scoring artifacts against the
+    // maintainer's opinion of earlier artifacts — and the published numbers
+    // would quietly stop being a measurement of the model.
+    const FEEDBACK = [
+      `${LIB_DIR}/feedback.ts`,
+      `${LIB_DIR}/feedback-cli.ts`,
+      `${LIB_DIR}/feedback-data.ts`,
+    ]
+    for (const id of FEEDBACK) expect(LIB_MODULES, `${id} is missing`).toContain(id)
+
+    // Every module the model-facing path can reach, transitively.
+    const out = new Map<NodeId, NodeId[]>()
+    for (const e of EDGES) out.set(e.from, [...(out.get(e.from) ?? []), e.to])
+    const modelFacing = LIB_MODULES.filter(
+      (id) =>
+        id.startsWith(`${LIB_DIR}/runners/`) ||
+        id.startsWith(`${LIB_DIR}/scorers/`) ||
+        id === `${LIB_DIR}/prompts.ts` ||
+        id === `${LIB_DIR}/prompt-bundle.ts`,
+    )
+    expect(modelFacing.length).toBeGreaterThan(5)
+
+    const reached: string[] = []
+    for (const entry of modelFacing) {
+      const seen = new Set<NodeId>()
+      const stack = [entry]
+      const trail = new Map<NodeId, NodeId>()
+      while (stack.length > 0) {
+        const node = stack.pop()!
+        for (const next of out.get(node) ?? []) {
+          if (seen.has(next)) continue
+          seen.add(next)
+          trail.set(next, node)
+          stack.push(next)
+        }
+      }
+      for (const id of FEEDBACK) {
+        if (!seen.has(id)) continue
+        const path_: NodeId[] = [id]
+        let cursor: NodeId | undefined = trail.get(id)
+        while (cursor) {
+          path_.unshift(cursor)
+          cursor = cursor === entry ? undefined : trail.get(cursor)
+        }
+        reached.push(path_.join(' → '))
+      }
+    }
+    expect(
+      reached,
+      `feedback must be unreachable from prompts/scorers/runners:\n  ${reached.join('\n  ')}`,
+    ).toEqual([])
+  })
+
+  it('never writes feedback into the results the board publishes (#14)', () => {
+    // The grep half of the same contract, because an edge is not the only way
+    // in: `aggregateRuns` could read the sidecar's bytes directly, and results
+    // .json must stay exactly what the harness measured. The producer of every
+    // record and the module that loads them are both named here.
+    const producers = [
+      `${LIB_DIR}/runners/provider.ts`,
+      `${LIB_DIR}/results.ts`,
+      `${LIB_DIR}/types.ts`,
+    ]
+    const mentions = producers.filter((id) =>
+      /feedback/i.test(readFileSync(path.join(REPO_ROOT, id), 'utf8')),
+    )
+    expect(
+      mentions,
+      `these produce or type the published records and must not know feedback exists:\n  ${mentions.join('\n  ')}`,
+    ).toEqual([])
+  })
+
   it('keeps the scorers → runners direction one-way', () => {
     // runners/provider.ts imports ../scorers (selectScorer); the reverse edge
     // would invert the layering and, via that import, close a cycle.

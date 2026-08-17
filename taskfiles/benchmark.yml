@@ -40,6 +40,7 @@ tasks:
           task bench:outputs                    regenerate static output artifacts
           task bench:verify                     typecheck + benchmark unit tests
           task bench:verify-results             results.json + run-log invariants (free)
+          task bench:feedback -- --list         curator ratings of artifacts (free)
           task bench:rescore -- --run <id> --model <m> --task <t>
                                                 re-score one stored artifact with today's scorer
 
@@ -256,7 +257,7 @@ tasks:
       typechecks and unit-tests the harness, this one interrogates what the
       harness produced.
 
-      Fourteen checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
+      Fifteen checks (lib/lab/llm-benchmark/verify-results.ts, each carrying the
       WHY it exists — printed on failure): score is exactly the `aggregateRuns`
       aggregation of `iterationScores`; `iterationCheckResults` is index-aligned
       with them; succeeded <= ran with one score per success; `status` agrees
@@ -271,7 +272,9 @@ tasks:
       absent one skips, and legacy run-scoped names skip); and every
       failure-corpus case (#25) names a model/task that still resolves and an
       `artifact` that is a real content address (skips entirely when no corpus
-      has been ingested).
+      has been ingested); and every curator-feedback entry (#14) is shaped like
+      a rating and names a `bench://` ref that still resolves against the board
+      (skips when the sidecar is absent or empty).
 
       Records that predate a field skip the checks that need it. Seeded records
       are exempt from the run-log checks only. The log checks skip entirely
@@ -302,6 +305,36 @@ tasks:
       do not match their own content address (fix that first).
     cmds:
       - '{{.BIN}}/tsx scripts/rescore-artifact.mjs {{.CLI_ARGS}}'
+
+  feedback:
+    desc: 'Record the CURATOR''s judgment of an artifact — `task bench:feedback -- --ref bench://<model>/<task> --rating positive|negative [--note "…"]`'
+    summary: |
+      The behavioural scorer answers "does Space jump?". It cannot answer "is
+      this artifact any good?", and that judgment is the one signal the board
+      lacks (#14, dsh's `message-feedback` contracts).
+
+        task bench:feedback -- --ref bench://gemini-3.6-flash/n-body-field/1 \
+                               --rating positive --note "the one iteration that moves"
+        task bench:feedback -- --list [--model gemini-3.6-flash]
+        task bench:feedback -- --rm --ref bench://deepseek-v4-flash-free/landing-page-morph
+
+      NOT reader feedback. The site is a static export, so a visitor-writable
+      rating would need a Worker + KV + abuse handling; that is deliberately
+      deferred. Every entry here is the MAINTAINER's, the site labels it
+      "curator note", and the UI never implies a crowd.
+
+      Writes `lib/lab/llm-benchmark/feedback.json` — COMMITTED, and a strict
+      sidecar: feedback never enters results.json, a prompt, a scorer or a
+      run log (`layering.test.ts` enforces both directions structurally).
+
+      Contracts: one entry per `bench://` ref; `createdAt` immutable,
+      `updatedAt` monotonic, `version` +1 per write; a write REPLACES the entry
+      (re-rating without `--note` clears the note, and says so). The ref must
+      RESOLVE against results.json before anything is written — no rating of a
+      record that does not exist. `task bench:verify-results` re-checks all of
+      that on the committed file.
+    cmds:
+      - '{{.BIN}}/tsx scripts/bench-feedback.mjs {{.CLI_ARGS}}'
 
   corpus:ingest:
     desc: File this machine's failing sweep iterations into the failure regression corpus (free, offline)

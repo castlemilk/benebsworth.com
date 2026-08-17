@@ -47,6 +47,7 @@ import { basename, join } from 'node:path'
 import { quotaLockedModels, type QuotaLock } from './quota'
 import {
   ResumeError,
+  deriveBudgetScope,
   planResume,
   readSweepCheckpoints,
   type ResumeErrorCode,
@@ -207,6 +208,15 @@ export interface RecoveryCandidate {
   plugins?: string[]
   /** True when the tree's headers disagree about the scope (union taken). */
   pluginsMixed: boolean
+  /**
+   * The per-model spend cap the tree's headers recorded, if any — replayed to
+   * the child as `--budget-max-usd`. A budget-stopped sweep's skipped pairs
+   * have no run log, so they come back as `no-checkpoint` and the child would
+   * otherwise re-run them with the operator's cap gone. See `deriveBudgetScope`.
+   */
+  budgetMaxUsd?: number
+  /** True when the tree's headers disagree about the cap (MINIMUM taken). */
+  budgetMixed: boolean
   /** Pairs a resume would run, straight from `planResume().rerun`. */
   pending: ResumeRerun[]
   /** Pairs already at their durable boundary with a success recorded. */
@@ -290,6 +300,7 @@ export function recoveryPlan({
     const taskIds = [...new Set(checkpoints.map((c) => c.taskId).filter((id): id is string => !!id))].sort()
     const unreadableLogs = checkpoints.filter((c) => c.headerError !== undefined).length
     const pluginScope = derivePluginScope(checkpoints)
+    const budgetScope = deriveBudgetScope(checkpoints)
 
     const plan = planResume({ checkpoints, modelIds, taskIds, recorded: results, runId })
     const pendingModels = [...new Set(plan.rerun.map((entry) => entry.modelId))]
@@ -308,6 +319,8 @@ export function recoveryPlan({
       taskIds,
       plugins: pluginScope.plugins,
       pluginsMixed: pluginScope.mixed,
+      budgetMaxUsd: budgetScope.budgetMaxUsd,
+      budgetMixed: budgetScope.mixed,
       pending: plan.rerun,
       completed: plan.skipped.length,
       locks,

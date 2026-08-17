@@ -50,6 +50,19 @@ export interface RunLogConfigSnapshot {
    * use and on logs written before the field existed.
    */
   promptBundle?: string
+  /**
+   * The sweep's per-model spend cap in USD (`--budget-max-usd`), when one was
+   * set. Absent = the sweep ran UNCAPPED.
+   *
+   * NOT audit-only, unlike the two above — this one is load-bearing for RESUME.
+   * A budget-stopped sweep leaves its skipped pairs with no run log at all, so
+   * `planResume` classifies them `no-checkpoint` and a resume re-runs them. If
+   * the cap is not recorded here, the recovery monitor (and a hand-run
+   * `--resume`) respawns that sweep UNCAPPED — the operator's spend limit
+   * evaporates at exactly the moment it is doing its job. `recovery.ts` reads
+   * it back off the headers and replays it as `--budget-max-usd`.
+   */
+  budgetMaxUsd?: number
 }
 
 /** Immutable first line of every run log. */

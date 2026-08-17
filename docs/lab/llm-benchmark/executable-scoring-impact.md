@@ -7,6 +7,11 @@ structural). This page measures what that does to the numbers already on the
 board.
 
 **THE BOARD IS UNCHANGED.** Nothing here was written back to `results.json`.
+Every published row for both tasks was scored STRUCTURALLY, in the text era,
+and none was rescored; the executable scorer applies from the NEXT sweep
+onward. Both tasks' `methodNotes` in `registry.ts` say exactly that and point
+here, so a reader of a task page cannot mistake a text-era score for an
+executed one.
 Re-scoring published records is a maintainer decision with its own cost (the
 stored `output` is ONE iteration; the published score is the mean of five), and
 this measurement exists so that decision can be made from numbers rather than
@@ -16,8 +21,11 @@ from a hunch.
 `scripts/verify-results.mjs`' `stale-prompt` check covers a PROMPT change and
 has no equivalent for a SCORER change; scorer versioning was explicitly out of
 scope for #15. `scripts/probe-corpus.mjs` only knows the failure corpus, whose
-39 cases are all behaviourally-scored HTML tasks — zero text-task cases, so it
-has nothing to say here. `scripts/rescore-artifact.mjs` does exactly the right
+39 cases are all behaviourally-scored HTML tasks — zero executable-task cases,
+so it has nothing to say here. (It CAN now probe one if a sweep ever files one:
+it branches on `scorer.scoreWithBreakdown` rather than on scorer identity, so
+an executable case reports its real failed checks instead of an empty list and
+a false `now-passing`.) `scripts/rescore-artifact.mjs` does exactly the right
 thing but needs a sweep run log, and only the most recent models have one (it
 was run as a smoke: `nemotron-nano-12b-vl / crypto-hash-race` reports
 `DRIFT: recorded 100 (iteration) vs current 58`, which agrees with the table

@@ -1046,6 +1046,11 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           bustCache,
           plugins: cfg.plugins,
           promptBundle: promptBundleHash(task),
+          // The spend cap travels with the log so a resume of this tree can
+          // replay it (see RunLogConfigSnapshot.budgetMaxUsd) — a budget-stopped
+          // sweep whose skipped pairs have no logs would otherwise be respawned
+          // with no cap at all.
+          budgetMaxUsd: cfg.budgetMaxUsd,
         },
       })
 

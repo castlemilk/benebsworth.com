@@ -1,5 +1,6 @@
 import { parseRunLog } from './runlog-format'
 import type { RunLogEvent, RunLogHeader, Spillable } from './runlog-format'
+import { isFallbackCheck } from './types'
 
 /**
  * A run log, rendered as the human transcript `scripts/retrace.mjs` prints.
@@ -211,8 +212,13 @@ export function renderTranscript(
         case 'check': {
           const check = event.check ?? ({} as (typeof event)['check'])
           const detail = check.detail ? ` — ${check.detail}` : ''
+          // A FALLBACK row is not a verdict on the model, so it must not read
+          // as one: `FAIL code-fallback 0/0` in a transcript is exactly the
+          // misreading this row exists to prevent. `n/a` says what happened —
+          // the harness could not judge — and the reason follows in the detail.
+          const verdict = isFallbackCheck(check) ? 'n/a ' : check.passed ? 'PASS' : 'FAIL'
           emit(
-            `  [${ts}] check    ${check.passed ? 'PASS' : 'FAIL'} ${check.name} ${check.points}/${check.maxPoints}${detail}`,
+            `  [${ts}] check    ${verdict} ${check.name} ${check.points}/${check.maxPoints}${detail}`,
           )
           break
         }

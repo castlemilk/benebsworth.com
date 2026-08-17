@@ -28,8 +28,8 @@
 // lock, CLI presence, config dump), so a lock this monitor missed still aborts
 // before a call.
 //
-// THE CHILD'S SHAPE. The resume is launched with `--model`/`--task` (and
-// `--plugins`, when the headers recorded a scope) derived from the tree's
+// THE CHILD'S SHAPE. The resume is launched with `--model`/`--task` (plus
+// `--plugins` and `--budget-max-usd`, when the headers recorded them) from the tree's
 // run-log headers, NOT bare `--resume`: the harness would otherwise fall back
 // to its default model set and its full plugin roster and sweep something the
 // operator never asked for. Same ids in, same `planResume` cross product out —
@@ -204,6 +204,23 @@ function runResume(candidate) {
     if (candidate.pluginsMixed) {
       log(
         `WARNING ${candidate.runId}: run-log headers disagree about the plugin scope — resuming under their UNION (${candidate.plugins.join(', ') || 'none'}). Check the tree before trusting this shape.`
+      )
+    }
+  }
+  // THE SPEND CAP IS PART OF THE SHAPE TOO, and it is the part that costs money
+  // to get wrong. A sweep stopped by `--budget-max-usd` leaves its skipped pairs
+  // with NO run log, so `planResume` calls them `no-checkpoint` and this monitor
+  // — whose whole job is respawning — would re-run every one of them with no cap
+  // at all. Headers that recorded a cap are replayed; headers that recorded
+  // nothing (uncapped, or older than the field) get no flag, exactly as before.
+  if (candidate.budgetMaxUsd !== undefined) {
+    args.push('--budget-max-usd', String(candidate.budgetMaxUsd))
+    if (candidate.budgetMixed) {
+      // MINIMUM, not union: for a task set the superset cannot lose work, but
+      // for money the floor is the only direction that cannot overspend what
+      // some part of this tree was authorised for. Same honesty as pluginsMixed.
+      log(
+        `WARNING ${candidate.runId}: run-log headers disagree about the spend cap — resuming under their MINIMUM ($${candidate.budgetMaxUsd}). Check the tree before trusting this shape.`
       )
     }
   }

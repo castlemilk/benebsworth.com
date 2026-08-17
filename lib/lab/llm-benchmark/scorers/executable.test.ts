@@ -6,6 +6,7 @@ import { selectScorer } from './index'
 import { executableScorer, parseSolutionPairs, scoreExecutable } from './executable'
 import { textScorer } from './text'
 import { interpreterAvailable } from './code-runtime'
+import { CODE_FALLBACK_CHECK, isFallbackCheck } from '../types'
 
 const cryptoTask = BENCHMARK_TASKS.find((t) => t.id === 'crypto-hash-race')!
 const equationTask = BENCHMARK_TASKS.find((t) => t.id === 'equation-solver')!
@@ -123,6 +124,20 @@ const pairs = [[2, 5], [5, 2], [-2, -5], [-5, -2]]
 for (const [x, y] of pairs) console.log(\`(\${x}, \${y})\`)
 \`\`\``
 
+// All four correct pairs PLUS the derivation's own intermediates printed as
+// parenthesised pairs — (s, p) and the quadratic's coefficients. None of the
+// extras satisfies the system, and none of them is wrong: they are working.
+const INTERMEDIATES_EQUATION = `\`\`\`javascript
+console.log('let s = x + y, p = x*y -> (s, p) = (7, 12) or (-7, 12)')
+console.log('roots of t^2 - 7t + 12: coefficients (1, -7)')
+for (const [x, y] of [[3, 4], [4, 3], [-3, -4], [-4, -3]]) console.log(\`(\${x}, \${y})\`)
+\`\`\``
+
+// Three of the four real pairs. An incomplete answer is still wrong.
+const INCOMPLETE_EQUATION = `\`\`\`javascript
+for (const [x, y] of [[3, 4], [4, 3], [-3, -4]]) console.log(\`(\${x}, \${y})\`)
+\`\`\``
+
 describe('executable scorer registration', () => {
   it('is what both text tasks now resolve to', () => {
     expect(selectScorer(cryptoTask)).toBe(executableScorer)
@@ -213,6 +228,54 @@ describe('equation-solver executable scoring', () => {
     const result = await scoreExecutable(PROSE_ONLY_EQUATION, equationTask)
     expect(result.fallbackKind).toBe('extraction-failed')
     expect(result.score).toBe(Math.round(result.structural))
+  })
+
+  // M4: a correct program that SHOWS ITS WORKING must not be marked wrong.
+  it('passes solutions-correct when all four pairs print beside intermediates', async () => {
+    const result = await scoreExecutable(INTERMEDIATES_EQUATION, equationTask)
+    const byName = Object.fromEntries(result.checks.map((c) => [c.name, c]))
+    expect(byName['solutions-correct'].passed).toBe(true)
+    expect(byName['solutions-correct'].points).toBe(70)
+    // Ignored for the verdict, but LISTED — the reader still sees them.
+    expect(byName['solutions-correct'].detail).toMatch(/ignored \d+ non-verifying pair/)
+    expect(byName['solutions-correct'].detail).toMatch(/\(7, 12\)/)
+  }, 30_000)
+
+  it('fails solutions-correct when a required pair is missing', async () => {
+    const result = await scoreExecutable(INCOMPLETE_EQUATION, equationTask)
+    const byName = Object.fromEntries(result.checks.map((c) => [c.name, c]))
+    expect(byName['solutions-correct'].passed).toBe(false)
+    expect(byName['solutions-correct'].detail).toMatch(/^wrong-output: missing/)
+    expect(byName['solutions-correct'].detail).toMatch(/\(-4, -3\)/)
+  }, 30_000)
+
+  it('fails solutions-correct when the pairs printed are simply wrong', async () => {
+    // WRONG_EQUATION prints four pairs, none of which satisfies the system —
+    // so all four required pairs are missing. Ignoring extraneous pairs must
+    // not soften this.
+    const result = await scoreExecutable(WRONG_EQUATION, equationTask)
+    const byName = Object.fromEntries(result.checks.map((c) => [c.name, c]))
+    expect(byName['solutions-correct'].passed).toBe(false)
+    expect(byName['solutions-correct'].points).toBe(0)
+  }, 30_000)
+})
+
+describe('the code-fallback row is harness information, not a model failure (I1)', () => {
+  it('is named and kinded so every consumer can exclude it', async () => {
+    const result = await scoreExecutable(PROSE_ONLY_EQUATION, equationTask)
+    expect(result.checks).toHaveLength(1)
+    const [row] = result.checks
+    expect(row.name).toBe(CODE_FALLBACK_CHECK)
+    expect(row.kind).toBe('fallback')
+    expect(isFallbackCheck(row)).toBe(true)
+    // 0 of 0: it can never move a score, in either direction.
+    expect(row.points).toBe(0)
+    expect(row.maxPoints).toBe(0)
+  })
+
+  it('recognises a legacy row that predates `kind`, by name alone', () => {
+    expect(isFallbackCheck({ name: CODE_FALLBACK_CHECK })).toBe(true)
+    expect(isFallbackCheck({ name: 'platformer-jump' })).toBe(false)
   })
 })
 

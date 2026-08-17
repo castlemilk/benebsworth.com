@@ -415,6 +415,55 @@ describe('recoveryPlan plugin scope', () => {
   })
 })
 
+describe('recoveryPlan budget scope (I3)', () => {
+  it('carries the tree headers cap onto the candidate, so the monitor can replay it', async () => {
+    // The bug: a budget-STOPPED sweep leaves its skipped pairs with no run log
+    // at all, so they come back as `no-checkpoint` and the monitor respawns
+    // them UNCAPPED — the operator's spend limit evaporating at exactly the
+    // moment it was working.
+    const { sweepsDir, runDirs } = tempSweeps('2026-08-16T09-30-12')
+    setRunLogDir(runDirs[0])
+    const capped = openRunLog({
+      modelId: 'kimi-k2.7',
+      taskId: 'landing-page',
+      configSnapshot: { ...SNAPSHOT, budgetMaxUsd: 2.5 },
+    })!
+    await capped.close()
+
+    const plan = recoveryPlan({ sweepDirs: listSweepRunDirs(sweepsDir), results: [], now: NOW })
+    expect(plan.candidates[0].budgetMaxUsd).toBe(2.5)
+    expect(plan.candidates[0].budgetMixed).toBe(false)
+  })
+
+  it('takes the MINIMUM and flags a tree whose headers disagree about the cap', async () => {
+    const { sweepsDir, runDirs } = tempSweeps('2026-08-16T09-30-12')
+    setRunLogDir(runDirs[0])
+    for (const [taskId, budgetMaxUsd] of [
+      ['landing-page', 5],
+      ['equation-solver', 2],
+    ] as const) {
+      const log = openRunLog({
+        modelId: 'kimi-k2.7',
+        taskId,
+        configSnapshot: { ...SNAPSHOT, budgetMaxUsd },
+      })!
+      await log.close()
+    }
+
+    const plan = recoveryPlan({ sweepDirs: listSweepRunDirs(sweepsDir), results: [], now: NOW })
+    expect(plan.candidates[0].budgetMaxUsd).toBe(2)
+    expect(plan.candidates[0].budgetMixed).toBe(true)
+  })
+
+  it('leaves the cap absent for an uncapped (or legacy) tree', async () => {
+    const { sweepsDir, runDirs } = tempSweeps('2026-08-16T09-30-12')
+    await writeIncompleteLog(runDirs[0], 'kimi-k2.7', 'landing-page')
+    const plan = recoveryPlan({ sweepDirs: listSweepRunDirs(sweepsDir), results: [], now: NOW })
+    expect(plan.candidates[0].budgetMaxUsd).toBeUndefined()
+    expect(plan.candidates[0].budgetMixed).toBe(false)
+  })
+})
+
 describe('shouldRespawn', () => {
   it('always allows the first attempt', () => {
     expect(shouldRespawn({ attempts: 0 })).toEqual({ respawn: true, reason: 'first-attempt' })

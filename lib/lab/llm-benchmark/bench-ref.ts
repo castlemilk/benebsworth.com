@@ -1,3 +1,4 @@
+import { isFallbackCheck } from './types'
 import type {
   BenchmarkModel,
   BenchmarkResult,
@@ -293,12 +294,18 @@ export function resolveBenchRef(uri: string, board: BenchBoard): ResolvedBenchRe
  *
  * Unnamed checks are dropped: a scorer that crashed records `name: ''`, and an
  * empty name would match every other crash as if it were a shared behaviour.
+ *
+ * FALLBACK ROWS ARE DROPPED TOO (`isFallbackCheck`). `code-fallback` records
+ * that the harness could not judge the artifact — every un-runnable answer in
+ * the board carries the same row, so counting it would "relate" a prose
+ * equation-solver answer to a prose crypto answer as though they shared a
+ * defect. A signature must only contain statements about the MODEL.
  */
 export function failureSignature(result: BenchmarkResult): string[] {
   const failed = new Set<string>()
   for (const iteration of result.iterationCheckResults ?? []) {
     for (const check of iteration) {
-      if (!check.passed && check.name) failed.add(check.name)
+      if (!check.passed && check.name && !isFallbackCheck(check)) failed.add(check.name)
     }
   }
   return [...failed].sort()

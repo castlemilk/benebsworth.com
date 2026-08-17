@@ -63,6 +63,8 @@ import {
 } from '../lib/lab/llm-benchmark/sweep-profiles.ts'
 import {
   ResumeError,
+  budgetResumeWarning,
+  deriveBudgetScope,
   modelsWithPendingPairs,
   pairKey,
   planResume,
@@ -460,10 +462,21 @@ async function main() {
   // absent target must never degrade into "run the whole sweep again", which is
   // the exact spend this flag exists to avoid.
   let resumePlan
+  let resumeBudgetWarning
   if (RESUME_RUN_ID) {
     try {
+      const checkpoints = readSweepCheckpoints(SWEEP_ROOT)
+      // A cap the target tree ran under, which THIS invocation does not carry,
+      // is never silently dropped. It is not forced either — raising the cap on
+      // a resume is a legitimate operator decision — so this is a loud warning
+      // and nothing more. See `budgetResumeWarning`.
+      resumeBudgetWarning = budgetResumeWarning({
+        runId: RESUME_RUN_ID,
+        recorded: deriveBudgetScope(checkpoints),
+        invocation: config.budgetMaxUsd.value,
+      })
       resumePlan = planResume({
-        checkpoints: readSweepCheckpoints(SWEEP_ROOT),
+        checkpoints,
         modelIds: models.map((m) => m.id),
         taskIds: tasks.map((t) => t.id),
         recorded: readResults(),
@@ -522,12 +535,15 @@ async function main() {
         SWEEP_ROOT,
         entry.aggregate,
         (warning) => console.warn(`[harness] resume: ${entry.modelId} :: ${entry.taskId} — ${warning}`),
-        { quotaNextResetAt: entry.quotaNextResetAt }
+        { quotaNextResetAt: entry.quotaNextResetAt, budgetExceeded: entry.budgetExceeded }
       )
       console.log(
         `[harness] resume: recovered ${entry.modelId} :: ${entry.taskId} from its run log` +
           (entry.reason === 'stale' ? ' (results.json held an older run)' : '') +
-          (entry.quotaNextResetAt ? ` — quota window ${entry.quotaNextResetAt}` : '')
+          (entry.quotaNextResetAt ? ` — quota window ${entry.quotaNextResetAt}` : '') +
+          (entry.budgetExceeded
+            ? ` — budget stop $${entry.budgetExceeded.spentUsd.toFixed(4)} of $${entry.budgetExceeded.capUsd.toFixed(4)}`
+            : '')
       )
       return result
     })
@@ -567,6 +583,10 @@ async function main() {
   dumpConfig({ models, tasks, locks, outPath, resumePlan, cliStatus })
   dumpEstimate({ models, tasks, results, resumePlan })
   console.log('')
+
+  // Printed on BOTH paths, including --dump-config: the rehearsal is exactly
+  // where an operator should discover that their resume has lost its cap.
+  if (resumeBudgetWarning) console.warn(resumeBudgetWarning)
 
   if (args.dumpConfig) {
     // --dump-config: show the shape, spend nothing. The resume decisions are

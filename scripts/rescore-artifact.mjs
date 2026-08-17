@@ -10,13 +10,17 @@
 // tampered artifact both show up here as a DRIFT line.
 //
 // COST, and why this is opt-in and never in the pre-push gate:
-//   - a text-scored task (equation-solver, crypto-hash-race) is pure string
-//     matching — milliseconds, no browser;
+//   - a text-scored task is pure string matching — milliseconds, no subprocess;
+//   - an EXECUTABLE task (equation-solver, crypto-hash-race) extracts the
+//     model's program and RUNS IT in a subprocess under the code-runtime
+//     budget — up to 30s per artifact, and it needs the interpreter installed.
+//     (These two were text-scored when this script was written; #15 made them
+//     executable, so they are no longer the cheap case.)
 //   - a behaviourally-scored task launches headless Chromium via Playwright and
 //     drives real key/scroll/click events — seconds to ~30s per artifact, and
 //     it needs the browser binary installed.
-// Re-scoring a whole sweep is therefore minutes of browser time, which is why
-// nothing runs this automatically.
+// Re-scoring a whole sweep is therefore minutes of browser and subprocess time,
+// which is why nothing runs this automatically.
 //
 // Run: npx tsx scripts/rescore-artifact.mjs --run <run-id> --model <id> --task <id>
 //
@@ -123,8 +127,9 @@ let current
 try {
   current = await scorer.score(bytes, task)
 } finally {
-  // Behavioural scoring leaves a browser open; a text task never opened one and
-  // this is a no-op.
+  // Behavioural scoring leaves a browser open; a text or EXECUTABLE task never
+  // opened one (the executable scorer's subprocesses are reaped by the code
+  // runtime, not here) and this is a no-op.
   await closeSandbox()
 }
 

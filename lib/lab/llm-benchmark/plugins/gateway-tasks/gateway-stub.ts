@@ -48,6 +48,18 @@ export const GATEWAY_RATE_LIMITED_ATTEMPTS = 2
 export const GATEWAY_REPAIR_PATH = '/settings/credentials'
 
 /**
+ * The EXACT message the stub rejects `deleteRecords` with.
+ *
+ * Exported rather than left inline because `checks.ts` asserts it verbatim: the
+ * `gateway-stub-intact` precondition calls `deleteRecords` and requires this
+ * code/message pair back, so an artifact that defined its own permissive
+ * `window.gateway` (the stub is only *told* to be pasted verbatim — nothing on
+ * the page can force it) cannot self-grade. Single-sourced, so an edit here can
+ * never leave the assertion behind.
+ */
+export const GATEWAY_DENIED_MESSAGE = 'deleteRecords is not permitted for this operator'
+
+/**
  * The stub, exactly as the model is told to paste it. Do not reformat — the
  * prompt, both fixtures and (after the first sweep) every stored artifact
  * contain these bytes, and the prompt bundle hash is computed over them.
@@ -62,7 +74,7 @@ export const GATEWAY_STUB = `<script>
     call: function (tool, args) {
       log.push({ tool: tool, ts: Date.now() });
       if (tool === 'deleteRecords') {
-        return Promise.reject({ code: 'denied', message: 'deleteRecords is not permitted for this operator' });
+        return Promise.reject({ code: 'denied', message: '${GATEWAY_DENIED_MESSAGE}' });
       }
       if (tool === 'listUsers') {
         listUsersAttempts += 1;

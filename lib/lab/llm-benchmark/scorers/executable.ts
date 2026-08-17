@@ -1,3 +1,4 @@
+import { CODE_FALLBACK_CHECK } from '../types'
 import type { BenchmarkTask, IterationCheckResult, Scorer } from '../types'
 import { textScorer } from './text'
 import { CRYPTO_HASH_RACE_DRIVER } from './crypto-hash-race-driver'
@@ -268,18 +269,29 @@ const equationSolverProbe: Probe = {
       ([x, y]) => !valid.some(([px, py]) => Math.abs(px - x) < EQUATION_TOLERANCE && Math.abs(py - y) < EQUATION_TOLERANCE)
     )
 
-    const complete = missing.length === 0 && invalid.length === 0
+    // PASS = all four required pairs printed AND each verified by substitution.
+    // An extraneous parenthesised pair that does NOT satisfy the system is
+    // reported but does NOT fail the check: the parser reads stdout, and stdout
+    // legitimately contains derivation intermediates — `(s, p) = (7, 12)`, a
+    // quadratic's coefficients, a coordinate in prose. Zeroing 70 points
+    // because a correct program showed its working was the harness marking a
+    // right answer wrong. The four required pairs are the claim; everything
+    // else is listed for the reader and judged by nothing.
+    const complete = missing.length === 0
     let detail: string
+    const extraneous =
+      invalid.length > 0
+        ? ` (ignored ${invalid.length} non-verifying pair(s) as derivation intermediates: ${invalid
+            .map(([x, y]) => `(${x}, ${y})`)
+            .join(' ')})`
+        : ''
     if (printed.length === 0) {
       detail = 'wrong-output: the program printed no solution pair'
     } else if (complete) {
-      detail = `all four real pairs printed and verified against x²+y²=25, xy=12`
+      detail = `all four real pairs printed and verified against x²+y²=25, xy=12${extraneous}`
     } else {
-      const parts: string[] = []
-      if (missing.length > 0) parts.push(`missing ${missing.map(([x, y]) => `(${x}, ${y})`).join(' ')}`)
-      if (invalid.length > 0)
-        parts.push(`extraneous ${invalid.map(([x, y]) => `(${x}, ${y})`).join(' ')}`)
-      detail = `wrong-output: ${parts.join('; ')}`
+      detail =
+        `wrong-output: missing ${missing.map(([x, y]) => `(${x}, ${y})`).join(' ')}` + extraneous
     }
     checks.push({
       name: 'solutions-correct',
@@ -319,8 +331,22 @@ function fallback(
     // ONE breakdown row, maxPoints 0 so it cannot skew any max sum, carrying
     // the reason — the behavioural scorer returns [] here, which loses the
     // "why" the moment the record is read back out of results.json.
+    //
+    // `kind: 'fallback'` is what stops that row from being read as a MODEL
+    // failure. `passed: false` is honest (nothing was judged), but three
+    // consumers treat a named failing check as evidence about the model — the
+    // failure corpus would ingest a prose answer as a broken artifact, and
+    // `failureSignature` would "relate" every un-runnable artifact in the board
+    // to every other one. See `isFallbackCheck` in types.ts.
     checks: [
-      { name: 'code-fallback', passed: false, points: 0, maxPoints: 0, detail: `${kind}: ${detail}` },
+      {
+        name: CODE_FALLBACK_CHECK,
+        passed: false,
+        points: 0,
+        maxPoints: 0,
+        kind: 'fallback',
+        detail: `${kind}: ${detail}`,
+      },
     ],
     fallbackReason: `${kind}: ${detail}`,
     fallbackKind: kind,

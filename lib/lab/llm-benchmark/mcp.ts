@@ -10,6 +10,7 @@ import { getChecksForTask } from './scorers/checks'
 import { renderTranscript } from './transcript'
 import { parseRunLog } from './runlog-format'
 import { isSafePathSegment, type TraceIndexEntry, type TraceRef } from './traces'
+import { isFallbackCheck } from './types'
 import type { BenchmarkModel, BenchmarkResult, BenchmarkTask, IterationCheckResult } from './types'
 
 /**
@@ -254,7 +255,7 @@ const TOOLS: McpToolDefinition[] = [
   {
     name: 'bench_checks_used',
     description:
-      'The behavioural checks a task is graded by, with each check\'s point budget and the total. Point budgets are read from recorded check results (a check is an opaque function at rest), so a task that has never been run reports its check count with an empty budget list.',
+      "The checks a task is graded by, from TWO independent sources, reported separately because for some tasks they disagree. `browserCheckCount` is how many browser CheckFns the registry resolves for the task — 0 for a task scored by a non-browser scorer, e.g. the EXECUTABLE scorer, whose checks are node-side probes that are not registered there. `recordedChecks` (with `totalPoints`) are the names and point budgets observed in recorded results, which is the only place a check's budget exists at rest. `scorer` says which evaluator produced them. A count of 0 beside a full recorded list is therefore correct, not a bug; a task that has never been run reports its count with an empty recorded list.",
     inputSchema: {
       type: 'object',
       properties: { task: TASK_ARG },
@@ -343,6 +344,11 @@ function clampBytes(text: string, maxBytes: number): { text: string; truncated: 
  * "At least one iteration" is the same rule `failureSignature` uses, but the
  * count is kept: 1-of-5 (flaky) and 5-of-5 (broken) are different findings and
  * a summary that collapsed them would mislead the reader it exists to inform.
+ *
+ * Fallback rows are excluded, for the same reason and by the same predicate:
+ * `code-fallback` is the HARNESS reporting that it could not judge, and an
+ * agent reading this summary would otherwise report "the model failed the
+ * code-fallback check" — a defect that does not exist.
  */
 interface FailedCheckSummary {
   name: string
@@ -357,7 +363,7 @@ function failedChecks(result: BenchmarkResult): FailedCheckSummary[] {
   const byName = new Map<string, FailedCheckSummary>()
   for (const iteration of iterations) {
     for (const check of iteration) {
-      if (!check.name) continue
+      if (!check.name || isFallbackCheck(check)) continue
       const row =
         byName.get(check.name) ??
         ({ name: check.name, failedIterations: 0, iterations: 0, maxPoints: check.maxPoints } as FailedCheckSummary)
@@ -581,9 +587,18 @@ function checksUsed(deps: BenchMcpDeps, args: Record<string, unknown>): CallTool
   // `iterationCheckResults` — observed facts, in first-seen order. A task that
   // has never been run reports its count with an empty budget list rather than
   // inventing one.
-  let checkCount: number
+  //
+  // THE TWO SOURCES ARE REPORTED SEPARATELY, and the field names say which is
+  // which. `getChecksForTask` only knows about BROWSER checks, so an
+  // executable-scored task (crypto-hash-race, equation-solver) resolves ZERO —
+  // its checks are node-side probes in `scorers/executable.ts`, never
+  // registered in CHECKS_BY_TASK. A bare `checkCount: 0` printed beside five
+  // recorded named checks read as a contradiction; naming the source turns it
+  // into a fact ("no browser checks; these five came from the executable
+  // scorer"), which is what an agent needs to reason about the number.
+  let browserCheckCount: number
   try {
-    checkCount = (deps.checksForTask ?? getChecksForTask)(task).length
+    browserCheckCount = (deps.checksForTask ?? getChecksForTask)(task).length
   } catch (err) {
     return toolError('unresolvable-checks', (err as Error).message)
   }
@@ -601,16 +616,19 @@ function checksUsed(deps: BenchMcpDeps, args: Record<string, unknown>): CallTool
       }
     }
   }
-  const checks = [...budgets.entries()].map(([name, maxPoints]) => ({ name, maxPoints }))
+  const recordedChecks = [...budgets.entries()].map(([name, maxPoints]) => ({ name, maxPoints }))
 
   return json({
     taskId,
     scorer: task.scorer ?? null,
     declaredChecks: task.checks ?? null,
-    checkCount,
-    checks,
-    totalPoints: checks.reduce((sum, c) => sum + c.maxPoints, 0),
-    budgetsFrom: 'recorded iteration check results',
+    /** Browser CheckFns the registry resolves. 0 for a non-browser scorer. */
+    browserCheckCount,
+    browserChecksFrom: 'getChecksForTask (browser check registry)',
+    /** Names + budgets OBSERVED in recorded results, whatever produced them. */
+    recordedChecks,
+    totalPoints: recordedChecks.reduce((sum, c) => sum + c.maxPoints, 0),
+    recordedChecksFrom: 'recorded iteration check results',
   })
 }
 

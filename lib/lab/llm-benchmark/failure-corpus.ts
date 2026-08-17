@@ -29,6 +29,7 @@
  */
 import { contentAddress, parseContentAddress } from './content-address'
 import type { RunLogEvent, RunLogHeader, SpilledString } from './runlog-format'
+import { isFallbackCheck } from './types'
 import type { IterationCheckResult } from './types'
 
 /**
@@ -251,11 +252,22 @@ function failedCheckNames(
   position: number,
   iterationIndex: number
 ): string[] {
+  // FALLBACK ROWS ARE NOT FAILURES. `code-fallback` (executable.ts) says the
+  // HARNESS could not judge — no probe, no extractable program, no interpreter.
+  // Counting it here would file every prose equation-solver answer as a broken
+  // artifact with a named tripped check, which is the corpus asserting a model
+  // defect it has no evidence for.
   const row = checkRows?.[position]
   const failed = row
-    ? row.filter((c) => !c.passed).map((c) => c.name)
+    ? row.filter((c) => !c.passed && !isFallbackCheck(c)).map((c) => c.name)
     : events
-        .filter((e) => e.type === 'check' && e.iterationIndex === iterationIndex && !e.check.passed)
+        .filter(
+          (e) =>
+            e.type === 'check' &&
+            e.iterationIndex === iterationIndex &&
+            !e.check.passed &&
+            !isFallbackCheck(e.check)
+        )
         .map((e) => (e.type === 'check' ? e.check.name : ''))
   return failed.filter((name) => typeof name === 'string' && name.length > 0)
 }

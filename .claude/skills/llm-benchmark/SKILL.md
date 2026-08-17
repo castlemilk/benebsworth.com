@@ -479,7 +479,7 @@ export interface Scorer {
 - `lib/lab/llm-benchmark/scorers/html.ts` — basic HTML validity heuristics (doctype, tag balance, closed scripts).
 - `lib/lab/llm-benchmark/scorers/text.ts` — generic text/math heuristics plus task-specific keyword checks.
 - `lib/lab/llm-benchmark/scorers/behavioral.ts` — Playwright-driven behavioural scorer (headless Chromium with `--no-sandbox`). Runs each artifact as it would render in the demo iframe, drives the actual key events the task requires (Space for platformer jump, ArrowRight for movement, scroll for landing page morph, click for circuit builder), and pixel-diffs the canvas against the pre-event baseline. Composite is 70% behavioural + 30% structural. The big catch: a model that emits structurally complete HTML that doesn't actually react to input scores 30, not 100 — visible in the gemini platformer run from the agy frontier sweep.
-- `lib/lab/llm-benchmark/scorers/executable.ts` — composite EXECUTABLE scorer for the two code/text tasks (`crypto-hash-race`, `equation-solver`), 70% executed + 30% structural (`textScorer`). `scorers/code-runtime.ts` extracts the model's program (fenced block / `<script>` incl. `type="text/plain"` / `<pre><code>` with highlight tags stripped and entities decoded / bare artifact) and runs it in a SUBPROCESS: hard timeout (5s default, 30s for crypto because correct PBKDF2 is slow) enforced by process-group SIGTERM→SIGKILL, output cap, throwaway `mkdtemp` cwd, and an ALLOWLIST env (`MINIMAL_ENV_KEYS`, run through `env-scrub.ts`'s `scrubEnv`). JavaScript runs under node 22 `--experimental-permission` (real fs/child/worker denial); **Python has no equivalent and the module doc says so** — this is a budget and a blast-radius reduction, not a security sandbox, which is acceptable only because behavioural scoring already runs the same artifacts in local Chromium. crypto-hash-race's checks are asserted by a stdlib-only Python driver (`crypto-hash-race-driver.ts`) that DISCOVERS the module's API by introspection — the prompt names no functions, so neither does the driver, and it invents no test vectors. `codeFallback` is narrow: `no-probe` / `extraction-failed` / `runtime-unavailable` only. A crash, hang or wrong answer is the MODEL's result (`runtime-error` / `timeout` / `wrong-output` in the check detail), not a fallback. Impact on the pre-existing records was MEASURED, not applied: `npx tsx scripts/measure-executable-impact.mjs`, written up in `docs/lab/llm-benchmark/executable-scoring-impact.md`.
+- `lib/lab/llm-benchmark/scorers/executable.ts` — composite EXECUTABLE scorer for the two code/text tasks (`crypto-hash-race`, `equation-solver`), 70% executed + 30% structural (`textScorer`). `scorers/code-runtime.ts` extracts the model's program (fenced block / `<script>` incl. `type="text/plain"` / `<pre><code>` with highlight tags stripped and entities decoded / bare artifact) and runs it in a SUBPROCESS: hard timeout (5s default, 30s for crypto because correct PBKDF2 is slow) enforced by process-group SIGTERM→SIGKILL, output cap, throwaway `mkdtemp` cwd, and an ALLOWLIST env (`MINIMAL_ENV_KEYS`, run through `env-scrub.ts`'s `scrubEnv`). JavaScript runs under node 22 `--experimental-permission` (real fs/child/worker denial); **Python has no equivalent and the module doc says so** — this is a budget and a blast-radius reduction, not a security sandbox, which is acceptable only because behavioural scoring already runs the same artifacts in local Chromium. crypto-hash-race's checks are asserted by a stdlib-only Python driver (`crypto-hash-race-driver.ts`) that DISCOVERS the module's API by introspection — the prompt names no functions, so neither does the driver, and it invents no test vectors. `codeFallback` is narrow: `no-probe` / `extraction-failed` / `runtime-unavailable` only. A crash, hang or wrong answer is the MODEL's result (`runtime-error` / `timeout` / `wrong-output` in the check detail), not a fallback. **The fallback breakdown row is `{name: 'code-fallback', kind: 'fallback', 0/0}`, and `kind` is load-bearing**: `isFallbackCheck` (types.ts, name OR kind, so a legacy row is safe) is how the failure corpus, `failureSignature`/`relatedRuns` and the MCP `failedChecks` summary exclude it — it is information about the HARNESS's inability to judge, never a model failure. Trace renderers show it as `n/a` and a MUTED pill, never red. `equation-solver`'s `solutions-correct` passes iff all four required pairs print AND verify by substitution; extraneous non-verifying pairs are LISTED but ignored (a correct program that shows its working — `(s, p) = (7, 12)` — must not be marked wrong). Impact on the pre-existing records was MEASURED, not applied: `npx tsx scripts/measure-executable-impact.mjs`, written up in `docs/lab/llm-benchmark/executable-scoring-impact.md`. **Every published row for both tasks predates this scorer and was scored structurally (text-era); nothing was rescored, and both `methodNotes` say so.**
 
 
 **Each task declares its own scorer.** `BenchmarkTask.scorer` (`'behavioral' | 'executable' | 'html' | 'text'`) is read first by `selectScorer()`; the old "is the category one of the five HTML-runnable ones?" heuristic (`ui-building`, `3d-physics-animation`, `advanced-game-building`, `advanced-physics`, `advanced-electronics`) is only the FALLBACK for an unstamped row. All seven shipped tasks declare theirs explicitly, so the registry is the one place you read to know how a task is evaluated. Two of them (`crypto-hash-race`, `equation-solver`) declare `executable`, which is the ONE place the declaration diverges from what the category heuristic would pick — `scorers.test.ts` enumerates those exceptions so an *un*declared move is still a regression. Scripts never keep their own task-id set: `behavioralTaskIds(BENCHMARK_TASKS)` from `scorers/index.ts` derives it (`scripts/rescore-behavioral.mjs`, `scripts/backfill-iteration-checks.mjs`). Scores are shown as a 0-100 badge in the side-by-side output comparison UI.
@@ -1118,9 +1118,24 @@ RUN_BUDGET_MAX_USD=0.50 npx tsx scripts/run-benchmark.mjs
   sum to the record's `costUsd` — no external math, no second event stream
   (this is paperclip's `cost_events` folded into the event that already
   exists). `retrace.mjs` prints the incident as a `BUDGET` line.
-- **Known gaps.** `resume.ts` re-attaches a killed run's `quota` event to the
-  recovered record but not its `budget` event; there is no model-page
-  spend-vs-cap UI.
+- **The cap survives a resume.** `configSnapshot.budgetMaxUsd` is stamped into
+  every run-log header, `readSweepCheckpoints` surfaces it, and
+  `deriveBudgetScope` (resume.ts) folds a tree's headers into the cap a resume
+  must run under — the MINIMUM when they disagree, with `mixed: true` so the
+  caller warns (the mirror of `derivePluginScope`'s union: a superset is safe
+  for a task set, a floor is safe for money). The recovery monitor replays it as
+  `--budget-max-usd`; a hand-run `--resume` that omits the flag gets a loud
+  `budgetResumeWarning` and runs anyway (raising a cap on a resume is a
+  legitimate operator choice — dropping it silently is not). WHY IT MATTERS: a
+  budget-stopped sweep's skipped pairs have NO run log, so they resume as
+  `no-checkpoint` — without this the respawn is UNCAPPED, exactly when the cap
+  is doing its job.
+- **The budget stamp survives a crash.** `readSweepCheckpoints` extracts the
+  last `budget` event and `recoverResultFromAggregate` restamps
+  `budgetExceeded` — symmetric with the `quota` treatment beside it. The
+  aggregate is written BEFORE the runner post-stamps the field, so without this
+  a recovered budget-stopped record reads as an ordinary failure.
+- **Known gaps.** There is no model-page spend-vs-cap UI.
 
 ## Verifying the results themselves (`task bench:verify-results`)
 
@@ -1509,7 +1524,16 @@ registration unwinds on `unregisterPlugin()`.
   `gateway-no-fabrication` 35) read `window.gateway.log` rather than pixels:
   exactly one call to a denied tool, retry gaps >= 80% of the requested
   `retryAfterMs`, and a repair route with no credential-shaped string in the
-  DOM. Discrimination is proved by `task bench:gateway-fixtures` (hand-written
+  DOM. Each check FIRST runs the `gateway-stub-intact` precondition: the
+  property descriptor must be non-writable/non-configurable AND
+  `gateway.call('deleteRecords')` must reject with the exact frozen
+  `{code:'denied', message: GATEWAY_DENIED_MESSAGE}` (the constant is imported
+  from `gateway-stub.ts`, single-sourced). The artifact writes its own page, so
+  nothing stops it shipping a permissive gateway instead of pasting the stub —
+  a shape check on `gateway.log` let such a page self-grade. The precondition is
+  folded into the three checks rather than added as a fourth, so the budget
+  still sums to exactly 100, and `deleteRecords` is the probe because it is
+  inert (always rejects, consumes no rate-limit budget). Discrimination is proved by `task bench:gateway-fixtures` (hand-written
   good + bad artifacts, real Playwright, a GATE) — the bad fixture is
   deliberately correct on backoff so "the bad one fails" cannot be satisfied
   by a check that always fails. It measured good 100 / bad 55 with structural
@@ -1575,7 +1599,7 @@ file for writing.
 | `bench_get_trace` | the retrace transcript for that record — local `sweeps/` tree first, else the published `public/lab-data/traces/` copy, else a typed `no-trace` |
 | `bench_related_runs` | the #32 ranking: who else failed the same checks, as `bench://` refs |
 | `bench_resolve_ref` | resolve a `bench://` URI against the board (typed miss, never a crash) |
-| `bench_checks_used` | a task's checks + point budgets (budgets read from RECORDED check results — a `CheckFn` is opaque until it runs) |
+| `bench_checks_used` | a task's checks from TWO named sources: `browserCheckCount` (what `getChecksForTask` resolves — 0 for a non-browser scorer, e.g. `executable`, whose probes are node-side) and `recordedChecks` + `totalPoints` (names/budgets OBSERVED in recorded results — a `CheckFn` is opaque until it runs). A 0 count beside a full recorded list is correct, not a bug |
 
 Two error shapes, per the spec's split: protocol failures (unknown method/tool,
 missing or ill-typed arguments) come back as JSON-RPC `error` objects; data

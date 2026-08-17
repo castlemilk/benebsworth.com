@@ -91,6 +91,22 @@ export interface RunLogCheckpoint {
    * again?" — and with it the next sweep's quota pre-flight.
    */
   quotaNextResetAt?: string
+  /**
+   * The last `budget` event's stamp, if the sweep's spend cap tripped on this
+   * pair. Extracted for exactly the reason the quota stamp is: the aggregate is
+   * written BEFORE the runner post-stamps `budgetExceeded` onto the result, so
+   * a recovered record would otherwise lose the only evidence that an OPERATOR
+   * POLICY — not the model, not the provider — ended the run.
+   */
+  budgetExceeded?: { spentUsd: number; capUsd: number }
+  /**
+   * The header's `configSnapshot.budgetMaxUsd` — the per-model spend cap the
+   * sweep ran under. Absent = uncapped, or a log written before the field
+   * existed. Surfaced because a RESUME must be launched under the same cap: the
+   * pairs a budget stop skipped have NO run log, so they resume as
+   * `no-checkpoint`, and a child spawned without the flag would spend freely.
+   */
+  budgetMaxUsd?: number
   /** Why the header could not be read. Present = this log describes nothing. */
   headerError?: string
 }
@@ -161,6 +177,17 @@ export function readSweepCheckpoints(runDir: string): RunLogCheckpoint[] {
             event.type === 'quota' &&
             typeof (event as { quotaNextResetAt?: unknown }).quotaNextResetAt === 'string'
         ) as { quotaNextResetAt: string } | undefined
+      // ...and the last `budget` event, for the same reason: the newest trip is
+      // the live one, and the aggregate never carries the stamp itself.
+      const budget = [...events]
+        .reverse()
+        .find(
+          (event) =>
+            event.type === 'budget' &&
+            typeof (event as { spentUsd?: unknown }).spentUsd === 'number' &&
+            typeof (event as { capUsd?: unknown }).capUsd === 'number'
+        ) as { spentUsd: number; capUsd: number } | undefined
+      const cap = header.configSnapshot?.budgetMaxUsd
       return {
         file,
         modelId: header.modelId,
@@ -174,6 +201,8 @@ export function readSweepCheckpoints(runDir: string): RunLogCheckpoint[] {
           ? header.configSnapshot.plugins.filter((id): id is string => typeof id === 'string')
           : undefined,
         quotaNextResetAt: quota?.quotaNextResetAt,
+        budgetExceeded: budget ? { spentUsd: budget.spentUsd, capUsd: budget.capUsd } : undefined,
+        budgetMaxUsd: typeof cap === 'number' && Number.isFinite(cap) ? cap : undefined,
       }
     } catch (err) {
       return {
@@ -249,6 +278,8 @@ export interface ResumeRecovery extends ResumeSkip {
   aggregate: Record<string, unknown>
   /** The log's quota estimate, if it stated one — restamped on the record. */
   quotaNextResetAt?: string
+  /** The log's budget trip, if the cap fired — restamped on the record. */
+  budgetExceeded?: { spentUsd: number; capUsd: number }
   /** Why this record is being re-derived, for the transcript. */
   reason: RecoveryReason
 }
@@ -411,6 +442,7 @@ export function planResume({
         file: checkpoint.file,
         aggregate,
         quotaNextResetAt: checkpoint.quotaNextResetAt,
+        budgetExceeded: checkpoint.budgetExceeded,
         reason,
       })
 
@@ -471,6 +503,77 @@ export function modelsWithPendingPairs(
   return modelIds.filter((modelId) => taskIds.some((taskId) => !skipKeys.has(pairKey(modelId, taskId))))
 }
 
+/** What a tree's run-log headers say about the spend cap it ran under. */
+export interface BudgetScope {
+  /**
+   * The cap to relaunch under, in USD per model. `undefined` means the headers
+   * recorded NO cap — either the sweep was uncapped or its logs predate the
+   * field — and the caller must then pass no `--budget-max-usd` at all rather
+   * than invent one.
+   */
+  budgetMaxUsd?: number
+  /**
+   * The headers disagreed. `budgetMaxUsd` is then their MINIMUM — the only
+   * choice that cannot spend more than some part of the tree was authorised to
+   * — and the caller warns, mirroring `derivePluginScope`'s mixed handling. The
+   * union is the safe direction for a task set; the floor is the safe direction
+   * for money.
+   */
+  mixed: boolean
+}
+
+/**
+ * Derive the spend cap to resume a tree under from its run-log headers.
+ *
+ * Pure. Headers that stated nothing contribute nothing — a legacy log cannot
+ * vote a cap into existence, and it must not vote one away either: a tree with
+ * one capped header and one legacy header resumes CAPPED, because the recorded
+ * cap is real evidence and the silence is not.
+ */
+export function deriveBudgetScope(
+  checkpoints: readonly { budgetMaxUsd?: number }[]
+): BudgetScope {
+  const stated = checkpoints
+    .map((c) => c.budgetMaxUsd)
+    .filter((v): v is number => typeof v === 'number' && Number.isFinite(v))
+  if (stated.length === 0) return { mixed: false }
+  const min = Math.min(...stated)
+  return { budgetMaxUsd: min, mixed: new Set(stated).size > 1 }
+}
+
+/**
+ * The warning a HAND-RUN `--resume` prints when the target tree's headers
+ * record a cap that this invocation does not carry.
+ *
+ * NOT an error and NOT a silent injection, deliberately. Raising a cap on a
+ * resume is a legitimate operator decision ("finish it, I'll pay"), so forcing
+ * the recorded value would override a choice the operator may have made on
+ * purpose. Dropping it silently is the failure this exists to prevent: the
+ * pairs a budget stop skipped have no run log, they resume as `no-checkpoint`,
+ * and an uncapped child spends without the limit that stopped the parent.
+ *
+ * Returns `undefined` when there is nothing to say — no recorded cap, or an
+ * invocation that already carries one (whatever its value).
+ */
+export function budgetResumeWarning({
+  runId,
+  recorded,
+  invocation,
+}: {
+  runId?: string
+  recorded: BudgetScope
+  invocation?: number
+}): string | undefined {
+  if (recorded.budgetMaxUsd === undefined) return undefined
+  if (invocation !== undefined) return undefined
+  return (
+    `[harness] resume: the run logs in ${runId ?? 'the resume target'} record a per-model spend cap of ` +
+    `$${recorded.budgetMaxUsd.toFixed(2)}${recorded.mixed ? ' (the MINIMUM — headers disagree)' : ''}, ` +
+    `but this invocation has no --budget-max-usd. This resume will run UNCAPPED. ` +
+    `Add --budget-max-usd ${recorded.budgetMaxUsd} to keep the original limit.`
+  )
+}
+
 function isSpilled(value: unknown): value is SpilledString {
   return (
     typeof value === 'object' &&
@@ -498,12 +601,17 @@ function isSpilled(value: unknown): value is SpilledString {
  * aggregate event has already been written, so the aggregate alone never
  * carries it — and a recovered quota failure without it is a record the next
  * sweep's quota pre-flight cannot see.
+ *
+ * `options.budgetExceeded` is the exact twin of that, for the `budget` event.
+ * It is post-stamped the same way and lost the same way, and a recovered
+ * budget-stopped record without it reads as an ordinary failure — erasing the
+ * fact that an OPERATOR POLICY stopped the run.
  */
 export function recoverResultFromAggregate(
   runDir: string,
   aggregate: Record<string, unknown>,
   onWarn: (message: string) => void = () => {},
-  options: { quotaNextResetAt?: string } = {}
+  options: { quotaNextResetAt?: string; budgetExceeded?: { spentUsd: number; capUsd: number } } = {}
 ): BenchmarkResult & { output: string } {
   const { output, ...rest } = aggregate
   let text = ''
@@ -524,6 +632,11 @@ export function recoverResultFromAggregate(
   // quota event is the only surviving statement of the window.
   if (options.quotaNextResetAt && !recovered.quotaNextResetAt) {
     recovered.quotaNextResetAt = options.quotaNextResetAt
+  }
+  // Same rule for the budget stamp: the aggregate wins if it somehow carries
+  // one, otherwise the log's `budget` event is the only surviving statement.
+  if (options.budgetExceeded && !recovered.budgetExceeded) {
+    recovered.budgetExceeded = options.budgetExceeded
   }
   return recovered
 }

@@ -206,6 +206,52 @@ describe('failureSignature', () => {
     ).toEqual([])
   })
 
+  it('drops the code-fallback row — it is not a defect to relate runs by (I1)', () => {
+    // Every artifact the executable scorer could not run carries this same row.
+    // Counting it would give a prose equation-solver answer and a prose crypto
+    // answer an identical "shared failure", and `relatedRuns` would offer each
+    // as evidence about the other. A signature must only hold statements about
+    // the MODEL.
+    expect(
+      failureSignature(
+        record({
+          modelId: 'gpt-oss-20b',
+          taskId: 'equation-solver',
+          iterationCheckResults: [
+            [{ name: 'code-fallback', passed: false, points: 0, maxPoints: 0, kind: 'fallback' }],
+          ],
+        }),
+      ),
+    ).toEqual([])
+    // ...by NAME alone too, for any row written before `kind` existed.
+    expect(
+      failureSignature(
+        record({
+          modelId: 'gpt-oss-20b',
+          taskId: 'equation-solver',
+          iterationCheckResults: [[{ name: 'code-fallback', passed: false, points: 0, maxPoints: 0 }]],
+        }),
+      ),
+    ).toEqual([])
+  })
+
+  it('keeps a real failing check that shares an iteration with a fallback row', () => {
+    expect(
+      failureSignature(
+        record({
+          modelId: 'gpt-oss-20b',
+          taskId: 'equation-solver',
+          iterationCheckResults: [
+            [
+              { name: 'code-fallback', passed: false, points: 0, maxPoints: 0, kind: 'fallback' },
+              check('solutions-correct', false),
+            ],
+          ],
+        }),
+      ),
+    ).toEqual(['solutions-correct'])
+  })
+
   it('drops unnamed checks (a scorer crash records one with an empty name)', () => {
     expect(
       failureSignature(

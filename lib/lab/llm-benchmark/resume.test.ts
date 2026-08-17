@@ -6,6 +6,8 @@ import { join } from 'node:path'
 import { forceSpill, openRunLog, runLogFileName, setRunLogDir } from './runlog'
 import {
   ResumeError,
+  budgetResumeWarning,
+  deriveBudgetScope,
   modelsWithPendingPairs,
   pairKey,
   planResume,
@@ -96,6 +98,34 @@ async function writeQuotaKilledLog(
   log.append({
     type: 'aggregate',
     result: { ...rest, score: 0, status: 'fail', failureReason: 'quota_exhausted', iterationsSucceeded: 0 },
+  })
+  await log.close()
+  return log
+}
+
+/**
+ * A BUDGET-STOPPED pair: the same structurally-complete-but-empty aggregate the
+ * quota path writes, plus the `budget` event stating the trip. The header also
+ * carries the cap, because that is how a resume learns what it must replay.
+ */
+async function writeBudgetStoppedLog(
+  dir: string,
+  modelId: string,
+  taskId: string,
+  { spentUsd = 1.5, capUsd = 1.5 } = {}
+) {
+  setRunLogDir(dir)
+  const log = openRunLog({
+    modelId,
+    taskId,
+    configSnapshot: { ...SNAPSHOT, budgetMaxUsd: capUsd },
+  })!
+  log.append({ type: 'request', iterationIndex: 0, promptHash: 'abc', promptLength: 12 })
+  log.append({ type: 'budget', iterationIndex: 0, modelId, spentUsd, capUsd })
+  const { output: _artifact, ...rest } = sampleResult(modelId, taskId, '')
+  log.append({
+    type: 'aggregate',
+    result: { ...rest, score: 0, status: 'fail', iterationsSucceeded: 0 },
   })
   await log.close()
   return log
@@ -567,5 +597,123 @@ describe('readSweepCheckpoints plugin scope', () => {
     const checkpoints = readSweepCheckpoints(dir)
     expect(checkpoints.find((c) => c.modelId === 'kimi-k2.7')!.plugins).toEqual(['community-tasks'])
     expect(checkpoints.find((c) => c.modelId === 'claude-opus-5')!.plugins).toBeUndefined()
+  })
+})
+
+describe('readSweepCheckpoints budget scope (I3)', () => {
+  it('surfaces the header configSnapshot.budgetMaxUsd, and leaves it absent when uncapped', async () => {
+    const dir = tempDir()
+    await writeBudgetStoppedLog(dir, 'kimi-k2.7', 'landing-page', { capUsd: 2.5, spentUsd: 2.6 })
+    await writeCompleteLog(dir, 'claude-opus-5', 'landing-page')
+
+    const checkpoints = readSweepCheckpoints(dir)
+    expect(checkpoints.find((c) => c.modelId === 'kimi-k2.7')!.budgetMaxUsd).toBe(2.5)
+    // An uncapped sweep records nothing — absence must never be read as 0,
+    // which is a cap that stops everything.
+    expect(checkpoints.find((c) => c.modelId === 'claude-opus-5')!.budgetMaxUsd).toBeUndefined()
+  })
+})
+
+describe('deriveBudgetScope (I3)', () => {
+  it('says nothing when no header recorded a cap', () => {
+    expect(deriveBudgetScope([{}, {}])).toEqual({ mixed: false })
+  })
+
+  it('replays a single agreed cap', () => {
+    expect(deriveBudgetScope([{ budgetMaxUsd: 5 }, { budgetMaxUsd: 5 }])).toEqual({
+      budgetMaxUsd: 5,
+      mixed: false,
+    })
+  })
+
+  it('takes the MINIMUM when headers disagree, and says so', () => {
+    // The mirror of derivePluginScope's union — but for MONEY the floor is the
+    // only direction that cannot overspend what part of the tree was authorised
+    // for. `mixed` is what makes the monitor warn.
+    expect(deriveBudgetScope([{ budgetMaxUsd: 5 }, { budgetMaxUsd: 2 }, { budgetMaxUsd: 9 }])).toEqual({
+      budgetMaxUsd: 2,
+      mixed: true,
+    })
+  })
+
+  it('ignores headers that stated nothing rather than letting them vote the cap away', () => {
+    // A legacy log is silence, not permission to spend.
+    expect(deriveBudgetScope([{ budgetMaxUsd: 3 }, {}])).toEqual({ budgetMaxUsd: 3, mixed: false })
+  })
+})
+
+describe('budgetResumeWarning (I3)', () => {
+  it('warns loudly when the tree was capped and this invocation is not', () => {
+    const message = budgetResumeWarning({
+      runId: '2026-08-17T06-34-06',
+      recorded: { budgetMaxUsd: 2.5, mixed: false },
+      invocation: undefined,
+    })
+    expect(message).toContain('2026-08-17T06-34-06')
+    expect(message).toContain('$2.50')
+    expect(message).toContain('UNCAPPED')
+    expect(message).toContain('--budget-max-usd 2.5')
+  })
+
+  it('says nothing when the invocation carries a cap — even a DIFFERENT one', () => {
+    // Raising the cap on a resume is a legitimate operator decision; forcing
+    // the recorded value would override a deliberate choice.
+    expect(
+      budgetResumeWarning({ recorded: { budgetMaxUsd: 2.5, mixed: false }, invocation: 10 })
+    ).toBeUndefined()
+  })
+
+  it('says nothing when the tree recorded no cap', () => {
+    expect(budgetResumeWarning({ recorded: { mixed: false }, invocation: undefined })).toBeUndefined()
+  })
+
+  it('flags a mixed derivation so the operator knows the number is a floor', () => {
+    expect(budgetResumeWarning({ recorded: { budgetMaxUsd: 2, mixed: true } })).toContain('MINIMUM')
+  })
+})
+
+describe('budget stamp recovery (I4)', () => {
+  it("restamps the log's budget trip onto the recovered record, as the quota path does", async () => {
+    // Exactly the quota asymmetry, in the other direction: the runner
+    // post-stamps `budgetExceeded` AFTER the aggregate is written, so a
+    // recovered record without it reads as an ordinary failure — erasing the
+    // fact that an OPERATOR POLICY stopped the run.
+    const dir = tempDir()
+    await writeBudgetStoppedLog(dir, 'kimi-k2.7', 'equation-solver', { spentUsd: 1.75, capUsd: 1.5 })
+    const [checkpoint] = readSweepCheckpoints(dir)
+    expect(checkpoint.budgetExceeded).toEqual({ spentUsd: 1.75, capUsd: 1.5 })
+    expect(checkpoint.aggregate!.budgetExceeded).toBeUndefined()
+
+    const recovered = recoverResultFromAggregate(dir, checkpoint.aggregate!, () => {}, {
+      budgetExceeded: checkpoint.budgetExceeded,
+    })
+    expect(recovered.budgetExceeded).toEqual({ spentUsd: 1.75, capUsd: 1.5 })
+  })
+
+  it('leaves the stamp absent for a log with no budget event', async () => {
+    const dir = tempDir()
+    await writeCompleteLog(dir, 'kimi-k2.7', 'landing-page')
+    const [checkpoint] = readSweepCheckpoints(dir)
+    expect(checkpoint.budgetExceeded).toBeUndefined()
+    expect(
+      recoverResultFromAggregate(dir, checkpoint.aggregate!, () => {}, {
+        budgetExceeded: checkpoint.budgetExceeded,
+      }).budgetExceeded
+    ).toBeUndefined()
+  })
+
+  it('carries the stamp through planResume onto the recovery entry', async () => {
+    const dir = tempDir()
+    await writeBudgetStoppedLog(dir, 'kimi-k2.7', 'equation-solver', { spentUsd: 2, capUsd: 1.5 })
+    const plan = planResume({
+      checkpoints: readSweepCheckpoints(dir),
+      modelIds: ['kimi-k2.7'],
+      taskIds: ['equation-solver'],
+      recorded: [],
+    })
+    // A 0-success aggregate is re-run AND recovered (a fail record beats a hole).
+    expect(plan.rerun.map((r) => r.reason)).toEqual(['failed'])
+    expect(plan.recover).toHaveLength(1)
+    expect(plan.recover[0].budgetExceeded).toEqual({ spentUsd: 2, capUsd: 1.5 })
   })
 })

@@ -30,8 +30,10 @@
  * for. Fixed-vs-still-broken is read off the summary, not the exit code.
  *
  * COST: behaviourally-scored tasks launch headless Chromium and drive real
- * input events — seconds to ~30s per case. Nothing runs this automatically; use
- * `--task` / `--model` / `--limit` to bound a run.
+ * input events — seconds to ~30s per case. EXECUTABLE tasks (crypto-hash-race,
+ * equation-solver) are not free either: they run the MODEL'S OWN CODE in a
+ * subprocess under the code-runtime budget, up to 30s per case. Nothing runs
+ * this automatically; use `--task` / `--model` / `--limit` to bound a run.
  *
  * CORPUS_DIR overrides the corpus root. Exit 2 = the corpus is unreadable.
  */
@@ -44,6 +46,7 @@ import { selectScorer, behavioralScorer } from '../lib/lab/llm-benchmark/scorers
 import { scoreWithBreakdown } from '../lib/lab/llm-benchmark/scorers/behavioral.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { compareCase, summarizeVerdictCounts } from '../lib/lab/llm-benchmark/failure-corpus.ts'
+import { isFallbackCheck } from '../lib/lab/llm-benchmark/types.ts'
 
 const USAGE =
   'Usage: npx tsx scripts/probe-corpus.mjs [--task <id>] [--model <id>] [--limit <n>] [--strict] [--quiet]'
@@ -129,16 +132,32 @@ for (const [i, item] of bounded.entries()) {
   const html = readFileSync(item.casePath, 'utf8')
   const scorer = selectScorer(item.task)
   let current
-  if (scorer === behavioralScorer) {
-    const breakdown = await scoreWithBreakdown(html, item.task, { perCheckTimeoutMs: 8000 })
+  // BRANCH ON THE CAPABILITY, NOT THE IDENTITY. This used to test
+  // `scorer === behavioralScorer`, which silently mis-handled the EXECUTABLE
+  // scorer: it has `scoreWithBreakdown` too, but fell into the no-breakdown
+  // arm, so every executable case probed with an EMPTY failedChecks list and
+  // any case above the floor was declared `now-passing` — a false green, and a
+  // wrong `--strict` verdict.
+  if (typeof scorer.scoreWithBreakdown === 'function') {
+    // The behavioural scorer takes options (the per-check browser timeout) that
+    // the `Scorer` interface does not carry, so it is called through its own
+    // module export; every other breakdown scorer goes through the interface.
+    const breakdown =
+      scorer === behavioralScorer
+        ? await scoreWithBreakdown(html, item.task, { perCheckTimeoutMs: 8000 })
+        : await scorer.scoreWithBreakdown(html, item.task)
     current = {
       score: breakdown.score,
-      failedChecks: breakdown.checks.filter((c) => !c.passed).map((c) => c.name),
-      fallbackReason: breakdown.fallbackReason,
+      // A fallback row is the harness reporting it could not judge, never a
+      // check the model failed — including it would make every un-runnable
+      // artifact look like it tripped a named check.
+      failedChecks: breakdown.checks.filter((c) => !c.passed && !isFallbackCheck(c)).map((c) => c.name),
+      fallbackReason:
+        breakdown.fallbackReason ?? breakdown.checks.find((c) => isFallbackCheck(c))?.detail,
     }
   } else {
-    // Text-scored tasks have no per-check breakdown: the verdict rests on the
-    // score alone, which is why a text case only ever enters the corpus by
+    // Text/HTML-scored tasks have no per-check breakdown: the verdict rests on
+    // the score alone, which is why such a case only ever enters the corpus by
     // scoring below the floor.
     current = { score: await scorer.score(html, item.task), failedChecks: [] }
   }
@@ -153,9 +172,10 @@ for (const [i, item] of bounded.entries()) {
         `(${item.entry.artifact}) — ${comparison.line}`
     )
     if (current.fallbackReason) {
-      // A structural-only fallback score is NOT a behavioural verdict; saying so
-      // is the difference between "the checks pass now" and "the checks did not run".
-      console.log(`      ! behavioural scorer fell back: ${current.fallbackReason}`)
+      // A structural-only fallback score is NOT a behavioural (or executed)
+      // verdict; saying so is the difference between "the checks pass now" and
+      // "the checks did not run".
+      console.log(`      ! scorer fell back to structural: ${current.fallbackReason}`)
     }
   }
 }

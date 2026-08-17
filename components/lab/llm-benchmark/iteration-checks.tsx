@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { isFallbackCheck } from '@/lib/lab/llm-benchmark/types'
 import type { IterationCheckResult } from '@/lib/lab/llm-benchmark/types'
 
 /**
@@ -37,17 +38,19 @@ export function IterationChecks({
     let firstFailDetail: string | undefined
     let points = 0
     let maxPoints = 0
+    let fallback = false
     for (const it of results) {
       for (const c of it) {
         if (c.name !== name) continue
         total++
+        if (isFallbackCheck(c)) fallback = true
         if (c.passed) passed++
         else if (!firstFailDetail) firstFailDetail = c.detail
         points += c.points
         maxPoints += c.maxPoints
       }
     }
-    return { name, passed, total, firstFailDetail, points, maxPoints }
+    return { name, passed, total, firstFailDetail, points, maxPoints, fallback }
   })
 
   return (
@@ -55,7 +58,13 @@ export function IterationChecks({
       {rows.map((row) => {
         const all = row.passed === row.total
         const none = row.passed === 0
-        const tooltip = `${row.name}: ${row.passed}/${row.total} iterations passed (${row.points}/${row.maxPoints} pts)${row.firstFailDetail ? ` — first failure: ${row.firstFailDetail}` : ''}`
+        // A FALLBACK row is the harness saying it could not judge this
+        // artifact — not a check the model failed. Rose would read as a model
+        // defect, so it renders MUTED, and the tooltip says so in words rather
+        // than leaving the colour to carry the meaning.
+        const tooltip = row.fallback
+          ? `${row.name}: the harness could not score this artifact (0 of 0 pts — not a model failure)${row.firstFailDetail ? ` — ${row.firstFailDetail}` : ''}`
+          : `${row.name}: ${row.passed}/${row.total} iterations passed (${row.points}/${row.maxPoints} pts)${row.firstFailDetail ? ` — first failure: ${row.firstFailDetail}` : ''}`
         return (
           <span
             key={row.name}
@@ -63,18 +72,20 @@ export function IterationChecks({
             aria-label={tooltip}
             className={cn(
               'inline-flex items-center gap-1 rounded-full border px-1.5 py-px font-mono text-[10px] leading-4',
-              all
-                ? 'border-emerald-600/40 bg-emerald-600/10 text-emerald-600 dark:text-emerald-400'
-                : none
-                  ? 'border-rose-600/40 bg-rose-600/10 text-rose-600 dark:text-rose-400'
-                  : 'border-amber-600/40 bg-amber-600/10 text-amber-600 dark:text-amber-400',
+              row.fallback
+                ? 'border-muted-foreground/30 bg-muted/40 text-muted-foreground'
+                : all
+                  ? 'border-emerald-600/40 bg-emerald-600/10 text-emerald-600 dark:text-emerald-400'
+                  : none
+                    ? 'border-rose-600/40 bg-rose-600/10 text-rose-600 dark:text-rose-400'
+                    : 'border-amber-600/40 bg-amber-600/10 text-amber-600 dark:text-amber-400',
             )}
           >
             <span className="max-w-[10rem] truncate" title={row.name}>
               {row.name}
             </span>
             <span className="tabular-nums opacity-70">
-              {row.passed}/{row.total}
+              {row.fallback ? 'n/a' : `${row.passed}/${row.total}`}
             </span>
           </span>
         )

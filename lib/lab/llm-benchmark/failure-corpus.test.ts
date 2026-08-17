@@ -338,6 +338,92 @@ describe('selectFailureCases', () => {
     )
     expect(found.cases[0].promptBundle).toBe('1a38ff5e6a98d15b')
   })
+
+  it('ignores a code-fallback row: the harness could not judge, so there is no case (I1)', () => {
+    // A passing-score iteration whose ONLY failing row is `code-fallback` must
+    // not enter the corpus. That row says the harness could not extract a
+    // program — every prose equation-solver answer on the board carries it —
+    // and ingesting it would file a fine artifact as a broken one, with a
+    // named tripped check it never tripped.
+    const fallbackRow = {
+      name: 'code-fallback',
+      passed: false,
+      points: 0,
+      maxPoints: 0,
+      kind: 'fallback' as const,
+      detail: 'extraction-failed: no fenced program in the artifact',
+    }
+    const found = selectFailureCases(
+      parsed([
+        { type: 'clean', seq: 1, iterationIndex: 0, output: spill('spill/eeeeeeeeeeeeeeee.txt') },
+        {
+          type: 'aggregate',
+          seq: 2,
+          result: {
+            score: 72,
+            iterationScores: [72],
+            iterationCheckResults: [[fallbackRow]],
+            output: spill('spill/eeeeeeeeeeeeeeee.txt'),
+          },
+        },
+      ])
+    )
+    expect(found.cases).toEqual([])
+    expect(found.skipped).toEqual([])
+  })
+
+  it('still ingests a real failing check that rides alongside a fallback row', () => {
+    // Belt and braces the other way: excluding the fallback row must not
+    // exclude the iteration when something REAL also failed.
+    const found = selectFailureCases(
+      parsed([
+        { type: 'clean', seq: 1, iterationIndex: 0, output: spill('spill/ffffffffffffffff.txt') },
+        {
+          type: 'aggregate',
+          seq: 2,
+          result: {
+            score: 72,
+            iterationScores: [72],
+            iterationCheckResults: [
+              [
+                { name: 'code-fallback', passed: false, points: 0, maxPoints: 0, kind: 'fallback' },
+                check('win-detection', false),
+              ],
+            ],
+            output: spill('spill/ffffffffffffffff.txt'),
+          },
+        },
+      ])
+    )
+    expect(found.cases).toHaveLength(1)
+    expect(found.cases[0].failedChecks).toEqual(['win-detection'])
+  })
+
+  it('ignores a fallback CHECK EVENT too, on the no-checkRows path', () => {
+    // The other half of `failedCheckNames`: when the aggregate carries no
+    // `iterationCheckResults`, the names come from `check` events instead.
+    const found = selectFailureCases(
+      parsed([
+        { type: 'clean', seq: 1, iterationIndex: 0, output: spill('spill/aaaabbbbccccdddd.txt') },
+        {
+          type: 'check',
+          seq: 2,
+          iterationIndex: 0,
+          check: { name: 'code-fallback', passed: false, points: 0, maxPoints: 0, kind: 'fallback' },
+        },
+        {
+          type: 'aggregate',
+          seq: 3,
+          result: {
+            score: 72,
+            iterationScores: [72],
+            output: spill('spill/aaaabbbbccccdddd.txt'),
+          },
+        },
+      ])
+    )
+    expect(found.cases).toEqual([])
+  })
 })
 
 const CASE_A = {

@@ -343,6 +343,41 @@ export interface IterationCheckResult {
   maxPoints: number
   /** Free-text detail for the report. */
   detail?: string
+  /**
+   * What KIND of row this is. Absent (the default) means a real check: a
+   * statement about the MODEL's artifact, whose `passed: false` is a model
+   * failure.
+   *
+   * `'fallback'` means the opposite — it is information about the HARNESS's
+   * inability to judge (no probe for the task, no program to extract, no
+   * interpreter on the machine), carried as a row so the reason survives into
+   * results.json instead of being lost. It is NEVER a model failure, always
+   * scores 0 of 0 points, and every consumer that reads "named failing checks"
+   * as evidence about a model — the failure corpus, `failureSignature` /
+   * `relatedRuns`, the MCP failed-check summary — must exclude it.
+   */
+  kind?: 'fallback'
+}
+
+/**
+ * The one fallback row the executable scorer emits (`scorers/executable.ts`).
+ *
+ * Exported from types.ts rather than from the scorer so a consumer can exclude
+ * it BY NAME without importing the scorer layer (which drags `node:child_process`
+ * into anything that touches a record). Belt and braces beside `kind`: a row
+ * recorded before `kind` existed carries only the name.
+ */
+export const CODE_FALLBACK_CHECK = 'code-fallback'
+
+/**
+ * Is this row the harness saying "I could not judge", rather than a check the
+ * model failed?
+ *
+ * Two tests OR'd on purpose: `kind` is the contract going forward, the name is
+ * the safety net for any row written before it existed.
+ */
+export function isFallbackCheck(check: Pick<IterationCheckResult, 'name' | 'kind'>): boolean {
+  return check.kind === 'fallback' || check.name === CODE_FALLBACK_CHECK
 }
 
 /**

@@ -293,6 +293,46 @@ describe('mcp: bench_get_result', () => {
     expect(out.artifactBytes).toBe(Buffer.byteLength(ARTIFACT))
   })
 
+  it('excludes the code-fallback row from failedChecks (I1)', () => {
+    // An agent reading this summary would otherwise report "the model failed
+    // the code-fallback check" — a defect that does not exist. The row says
+    // the HARNESS could not judge the artifact.
+    const fellBack: BenchmarkResult = {
+      taskId: 'equation-solver',
+      modelId: 'kimi-k3',
+      score: 61,
+      runtimeMs: 5_000,
+      tokensIn: 100,
+      tokensOut: 400,
+      costUsd: 0,
+      iterations: 1,
+      iterationsSucceeded: 1,
+      iterationScores: [61],
+      iterationCheckResults: [
+        [
+          {
+            name: 'code-fallback',
+            passed: false,
+            points: 0,
+            maxPoints: 0,
+            kind: 'fallback',
+            detail: 'extraction-failed: no program in the artifact',
+          },
+          { name: 'solutions-correct', passed: false, points: 0, maxPoints: 70, detail: 'missing (3, 4)' },
+        ],
+      ],
+      status: 'success',
+      createdAt: '2026-08-17T07:00:00.000Z',
+      source: 'live',
+    }
+    const out = payload(
+      'bench_get_result',
+      { model: 'kimi-k3', task: 'equation-solver' },
+      deps({ results: [fellBack] }),
+    )
+    expect(out.failedChecks.map((c: any) => c.name)).toEqual(['solutions-correct'])
+  })
+
   it('carries the quota and budget stamps when present', () => {
     const out = payload('bench_get_result', { model: 'gemini-3.6-flash', task: 'landing-page-morph' })
     expect(out.budgetExceeded).toEqual({ spentUsd: 1.5, capUsd: 1.5 })
@@ -420,19 +460,27 @@ describe('mcp: bench_checks_used', () => {
   it('lists the checks and point budgets for a behavioural task', () => {
     const out = payload('bench_checks_used', { task: 'mini-platformer' })
     expect(out.taskId).toBe('mini-platformer')
-    expect(out.checkCount).toBe(2)
-    expect(out.checks).toEqual([
+    expect(out.browserCheckCount).toBe(2)
+    expect(out.recordedChecks).toEqual([
       { name: 'platformer-jump', maxPoints: 30 },
       { name: 'platformer-move', maxPoints: 25 },
     ])
     expect(out.totalPoints).toBe(55)
   })
 
-  it('reports zero checks for a text-only task without erroring', () => {
+  it('reports the two check sources separately for an executable task (M1)', () => {
+    // The incoherence this replaced: `checkCount: 0` printed beside a list of
+    // recorded named checks, with nothing to say the count was BROWSER-only.
+    // An executable task has no browser CheckFns by construction — its probes
+    // live in scorers/executable.ts — so 0 is the right number, and the field
+    // name is what makes it readable rather than contradictory.
     const out = payload('bench_checks_used', { task: 'equation-solver' })
     expect(out.__isError).toBe(false)
-    expect(out.checkCount).toBe(0)
-    expect(out.checks).toEqual([])
+    expect(out.scorer).toBe('executable')
+    expect(out.browserCheckCount).toBe(0)
+    expect(out.browserChecksFrom).toContain('getChecksForTask')
+    expect(out.recordedChecksFrom).toContain('recorded')
+    expect(Array.isArray(out.recordedChecks)).toBe(true)
   })
 
   it('errors on missing args and an unknown task', () => {
@@ -564,10 +612,10 @@ describe('scripts/bench-mcp.mjs over stdio', () => {
       expect(responses[1].result.tools.length).toBe(toolDefinitions().length)
       const checks = JSON.parse(responses[2].result.content[0].text)
       expect(checks.taskId).toBe('mini-platformer')
-      expect(checks.checkCount).toBe(2)
+      expect(checks.browserCheckCount).toBe(2)
       // Against the REAL board, so assert containment: the scorer's synthetic
       // `no-runtime-errors` entry rides along whenever some run's page threw.
-      expect(checks.checks.map((c: any) => c.name)).toEqual(
+      expect(checks.recordedChecks.map((c: any) => c.name)).toEqual(
         expect.arrayContaining(['platformer-jump', 'platformer-move']),
       )
       expect(checks.totalPoints).toBe(55)

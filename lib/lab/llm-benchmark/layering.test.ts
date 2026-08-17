@@ -340,10 +340,15 @@ describe('llm-benchmark dependency layering', () => {
     // Every module the model-facing path can reach, transitively.
     const out = new Map<NodeId, NodeId[]>()
     for (const e of EDGES) out.set(e.from, [...(out.get(e.from) ?? []), e.to])
+    // `harness.ts` is a root too: it is the orchestrator every sweep enters
+    // through (runBenchmark → runner.runTask), so a feedback import THERE would
+    // be as model-facing as one in a runner, and omitting it left the guard
+    // with a hole shaped exactly like the entry point.
     const modelFacing = LIB_MODULES.filter(
       (id) =>
         id.startsWith(`${LIB_DIR}/runners/`) ||
         id.startsWith(`${LIB_DIR}/scorers/`) ||
+        id === `${LIB_DIR}/harness.ts` ||
         id === `${LIB_DIR}/prompts.ts` ||
         id === `${LIB_DIR}/prompt-bundle.ts`,
     )
@@ -385,10 +390,17 @@ describe('llm-benchmark dependency layering', () => {
     // in: `aggregateRuns` could read the sidecar's bytes directly, and results
     // .json must stay exactly what the harness measured. The producer of every
     // record and the module that loads them are both named here.
+    // The two scripts are here because they are the modules that actually WRITE
+    // results.json — `provider.ts` produces the records, but `run-benchmark`
+    // merges and serialises them and `merge-benchmark-results` does the same for
+    // a hand merge. A `feedback` read in either would put a curator's opinion
+    // into the published file without any lib-layer edge to see it.
     const producers = [
       `${LIB_DIR}/runners/provider.ts`,
       `${LIB_DIR}/results.ts`,
       `${LIB_DIR}/types.ts`,
+      `${SCRIPTS_DIR}/run-benchmark.mjs`,
+      `${SCRIPTS_DIR}/merge-benchmark-results.mjs`,
     ]
     const mentions = producers.filter((id) =>
       /feedback/i.test(readFileSync(path.join(REPO_ROOT, id), 'utf8')),

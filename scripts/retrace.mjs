@@ -6,16 +6,24 @@
 // retry, the response, the artifact that was actually scored, each check's
 // verdict, and the aggregate that landed in results.json.
 //
-// Run: npx tsx scripts/retrace.mjs --run <run-id> [--model <id>] [--task <id>]
+// Run: npx tsx scripts/retrace.mjs (--run <run-id> | --dir <path>)
+//                                  [--model <id>] [--task <id>]
 //                                  [--iteration <n>] [--full]
 //
-//   --run <run-id>    sweep directory under sweeps/ (required)
+//   --run <run-id>    sweep directory under sweeps/
+//   --dir <path>      ANY directory shaped like a run: `<model>-<task>.jsonl`
+//                     files plus a `spill/` store beside them. That is exactly
+//                     the shape of an extracted trace export ZIP from the site
+//                     (lib/lab/llm-benchmark/trace-export.ts), so a reader who
+//                     downloads a trace can replay it here without a sweeps/
+//                     tree, without a run id, and without the network. Exactly
+//                     one of --run / --dir is required.
 //   --model <id>      only logs for this model id
 //   --task <id>       only logs for this task id
 //   --iteration <n>   only this iteration index (0-based)
 //   --full            inline full spilled content instead of the preview
 //
-// SWEEPS_DIR overrides the directory scanned (default <repo>/sweeps).
+// SWEEPS_DIR overrides the directory --run resolves in (default <repo>/sweeps).
 import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,16 +31,25 @@ import { fileURLToPath } from 'node:url'
 import { readRunLog } from '../lib/lab/llm-benchmark/runlog.ts'
 
 const USAGE =
-  'Usage: npx tsx scripts/retrace.mjs --run <run-id> [--model <id>] [--task <id>] [--iteration <n>] [--full]'
+  'Usage: npx tsx scripts/retrace.mjs (--run <run-id> | --dir <path>) [--model <id>] [--task <id>] [--iteration <n>] [--full]'
 
 function parseArgs(argv) {
-  const options = { run: undefined, model: undefined, task: undefined, iteration: undefined, full: false }
+  const options = {
+    run: undefined,
+    dir: undefined,
+    model: undefined,
+    task: undefined,
+    iteration: undefined,
+    full: false,
+  }
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     if (arg === '--full') {
       options.full = true
     } else if (arg === '--run') {
       options.run = argv[++i]
+    } else if (arg === '--dir') {
+      options.dir = argv[++i]
     } else if (arg === '--model') {
       options.model = argv[++i]
     } else if (arg === '--task') {
@@ -45,8 +62,15 @@ function parseArgs(argv) {
       process.exit(1)
     }
   }
-  if (!options.run) {
-    console.error('--run <run-id> is required')
+  // Exactly one source: taking both would silently ignore one, and the whole
+  // point of --dir is replaying a tree that has no run id to disagree with.
+  if (options.run && options.dir) {
+    console.error('--run and --dir are mutually exclusive')
+    console.error(USAGE)
+    process.exit(1)
+  }
+  if (!options.run && !options.dir) {
+    console.error('one of --run <run-id> or --dir <path> is required')
     console.error(USAGE)
     process.exit(1)
   }
@@ -218,7 +242,11 @@ function transcribe(runDir, file, options) {
 
 const options = parseArgs(process.argv.slice(2))
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const runDir = resolve(root, process.env.SWEEPS_DIR ?? 'sweeps', options.run)
+// --dir resolves against the CWD (it names a place on the reader's machine —
+// an extracted export, a copied run tree); --run against the sweeps root.
+const runDir = options.dir
+  ? resolve(process.cwd(), options.dir)
+  : resolve(root, process.env.SWEEPS_DIR ?? 'sweeps', options.run)
 
 let files
 try {

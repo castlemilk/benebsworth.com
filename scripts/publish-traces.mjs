@@ -40,6 +40,7 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync,
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { verifyPublishedTraces } from '../lib/lab/llm-benchmark/export-fidelity.ts'
 import { readRunLog } from '../lib/lab/llm-benchmark/runlog.ts'
 import {
   TRACE_PUBLISH_SOFT_BUDGET_BYTES,
@@ -230,3 +231,43 @@ if (total > TRACE_PUBLISH_SOFT_BUDGET_BYTES) {
       ` These files get COMMITTED and SERVED — review the spill sizes before committing, and consider publishing fewer runs.`
   )
 }
+
+// ---- export fidelity (the gate) -------------------------------------------
+// Publication is a COPY, and a copy is where divergence gets introduced. This
+// re-reads what was just written — not the sources — and refuses to leave a
+// published trace that disagrees with the results.json row it backs, references
+// a spill file that is not there, or serves a blob whose bytes no longer match
+// its own content address. Downstream (#30) a reader can DOWNLOAD this tree as
+// a ZIP and re-verify it offline, so a divergence here is not a cosmetic
+// mismatch: it is evidence that contradicts itself, in someone else's hands.
+const fidelity = verifyPublishedTraces({
+  index,
+  results,
+  readPublished: (runId, relPath) => {
+    try {
+      return readFileSync(join(outDir, runId, relPath), 'utf8')
+    } catch {
+      return undefined
+    }
+  },
+})
+
+if (fidelity.problems.length > 0) {
+  console.error(
+    `\n[publish-traces] EXPORT FIDELITY FAILED — ${fidelity.problems.length} problem(s) across ${fidelity.traces} published trace(s):`
+  )
+  for (const problem of fidelity.problems) {
+    console.error(`  ${problem.trace}${problem.field ? ` [${problem.field}]` : ''}: ${problem.detail}`)
+  }
+  console.error(
+    '\nThe published tree is NOT consistent with lib/lab/llm-benchmark/results.json.' +
+      ' Do not commit it: find out which side moved (a hand-edited record, a rewritten' +
+      ' spill file, a stale carried-through index entry) before republishing.'
+  )
+  process.exit(1)
+}
+
+console.log(
+  `[publish-traces] export fidelity OK — ${fidelity.traces} trace(s) re-parsed, aggregates match results.json` +
+    ` on score/status/iterationsSucceeded/costUsd, ${fidelity.spillChecked} spill file(s) present and hashing to their own names.`
+)

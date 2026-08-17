@@ -1156,34 +1156,43 @@ pending pair, so a partial resume would burn the locked model. Honest
 limitation, documented in SKILL.md + the taskfile: the lockfile sees other
 MONITORS, not hand-started sweeps — never run both.
 
-## [ ] 30. Run-trace export on the site (session-log-export)
+## [x] 30. Run-trace export on the site (session-log-export)
 
-**Problem.** The event log (#1) makes traces available locally; readers of
-the site have no way to download or re-verify a published score. dsh ships
-a Web `/export` command producing a ZIP of the session log; paperclip has
-`export-fidelity.ts` (fidelity checks for exports).
+**Shipped.** A published trace is now DOWNLOADABLE and re-verifiable offline,
+and publication refuses to ship one that disagrees with the row it backs.
 
-**Inspiration.** dsh `packages/session/session-log-export/` (Web /export ->
-ZIP via Host endpoint, shared browser download state, result modal) +
-`docs/subsystems/session-query.md` (bounded reads, traces, filters, result
-pages). paperclip `server/src/services/export-fidelity.ts` (exports must
-round-trip the source data).
+`lib/lab/llm-benchmark/zip.ts` — a STORE-only ZIP writer (~200 lines, inline
+CRC-32 table, local headers + central directory + EOCD, no zip64, no
+dependency), browser-safe like `runlog-format.ts`. STORE because the payload
+already crossed a compressed HTTP response, and because it makes the archive
+byte-reproducible; names are checked for zip-slip. `trace-export.ts` assembles
+one: the JSONL verbatim, every spill file the LOG references (`collectSpillRefs`
+∪ the index's list — the log is the authority), and a generated `README.txt`
+carrying the aggregate READ FROM THE LOG'S OWN BYTES plus the two offline
+re-verification recipes. IO is injected, so the same function drives the UI's
+`fetch` and a node demo. A spill file that 404s does not abort the export; it is
+named as INCOMPLETE in the README and in the UI.
 
-**Design sketch.**
+`run-trace.tsx` grows an "Export trace (ZIP)" button inside the disclosure, with
+one line of disclosure that the ZIP holds the check-level evidence. Assembly is
+100% client-side — a static export has no route that could zip anything.
 
-- On the model/task pages, an "Export run trace" button per record with a
-  `runLogRef` (#1): serves `sweeps/<run-id>/<model>-<task>.jsonl` (+ the
-  artifact HTML) as a ZIP download via a route or static copy in
-  `public/lab-data/`.
-- `scripts/verify-results.mjs` (#5) gains an export-fidelity check: the
-  published export (public/lab-data or the ZIP) must reproduce the record's
-  score when re-projected (the "export round-trips" invariant).
-- UI disclosure: exports include the check-level data behind the score.
+`retrace.mjs --dir <path>` replays ANY run-shaped directory, which is exactly
+the shape of an extracted export: no run id, no `sweeps/` tree, no network.
+`--run` and `--dir` are mutually exclusive.
 
-**Acceptance criteria.** A reader can download a trace ZIP and re-verify the
-score from it; fidelity check fails if the export diverges from results.json.
+**Export fidelity is a PUBLISH-TIME GATE**, not a verify-results check, because
+publication is the copy and a copy is where divergence enters. `export-fidelity.ts`
+re-reads the tree `publish-traces.mjs` just wrote and fails the publish (exit 1)
+when a published JSONL does not parse, its aggregate disagrees with the
+results.json record on score/status/iterationsSucceeded/costUsd (float slack on
+cost only), a referenced spill file is missing, or a published blob no longer
+hashes to its own content address. `iterations` is deliberately not compared — a
+budget/quota stop legitimately leaves requested ≠ completed (#28).
 
-**Effort.** M. **Dependencies.** #1 (event log), #9 (trace UI).
+Verified against the real tree: 20 published traces, 75 spill files, zero
+divergence. End-to-end demo (served `out/` → browser-safe assembly → `unzip -t`
+→ `retrace --dir` → `shasum` re-check) round-trips.
 
 ## [x] 31. Content-addressed artifact store
 
@@ -1461,6 +1470,16 @@ without reading results.json; the server is read-only.
   records + `parseRunLog` browser-safe, and `run-trace.tsx` renders
   retrace.mjs's transcript in a lazy disclosure. Committed index is empty until
   a real sweep is published — no back-stamped `runLogRef`s.
+- Downloadable trace exports + publish-time fidelity gate (#30): `zip.ts` (a
+  browser-safe, dependency-free STORE-only ZIP writer) + `trace-export.ts`
+  assemble a published trace CLIENT-SIDE into `<model>-<task>.jsonl` +
+  `spill/<hash>.txt` + a generated `README.txt` (the aggregate read from the
+  log's own bytes, and the offline re-verification recipes); an "Export trace
+  (ZIP)" button in the run-trace disclosure; `retrace.mjs --dir <path>` replays
+  an extracted export; `export-fidelity.ts` re-reads the just-published tree and
+  FAILS `publish-traces.mjs` (exit 1) on an unparsable log, an aggregate that
+  disagrees with its results.json row, a missing spill file, or a blob that no
+  longer hashes to its own content address.
 - Sweep profiles + effective-config dump (#2): recipes as data in
   `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
   (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough

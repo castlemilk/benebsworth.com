@@ -58,6 +58,9 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Trace publication decisions (pure) + build-time index read | `lib/lab/llm-benchmark/traces.ts`, `traces-server.ts` |
 | Trace publication script (`task bench:publish-traces`) | `scripts/publish-traces.mjs` |
 | Run-trace UI (the transcript, in the browser) | `components/lab/llm-benchmark/run-trace.tsx` |
+| Trace export assembly (browser-safe: JSONL + spill + generated README → ZIP) | `lib/lab/llm-benchmark/trace-export.ts` |
+| STORE-only ZIP writer (browser-safe, dependency-free, CRC-32 inline) | `lib/lab/llm-benchmark/zip.ts` |
+| Export-fidelity gate (published tree vs results.json, pure) | `lib/lab/llm-benchmark/export-fidelity.ts` |
 | Per-call telemetry (TTFT/decode-rate sink + `foldTelemetry`) | `lib/lab/llm-benchmark/runners/provider.ts` |
 | Usage summaries + cost inference (pure: `summarizeUsage`, `costFromUsage`) | `lib/lab/llm-benchmark/billing.ts` |
 | Sweep resume: checkpoint reader, pure `planResume`, log-derived recovery, typed `ResumeError` codes | `lib/lab/llm-benchmark/resume.ts` |
@@ -719,6 +722,7 @@ npx tsx scripts/retrace.mjs --run 2026-08-16T09-30-12                 # every lo
 npx tsx scripts/retrace.mjs --run <id> --model kimi-k2.7 --task nbody # one pair
 npx tsx scripts/retrace.mjs --run <id> --iteration 2                  # one iteration (0-based)
 npx tsx scripts/retrace.mjs --run <id> --full                         # inline full spill content
+npx tsx scripts/retrace.mjs --dir ~/Downloads/trace-…                 # an EXTRACTED trace export
 ```
 
 Prints a per-iteration transcript: prompt hash/length, each attempt (cache hit,
@@ -727,7 +731,12 @@ retries with their delays), response size/tokens/runtime, the cleaned artifact
 points and detail, and the aggregate line (score, status, failureReason,
 `runLogRef`). Model/task filtering reads the HEADER, not the filename — both
 ids contain hyphens, so the name can't be split reliably. `SWEEPS_DIR`
-overrides the directory scanned.
+overrides the directory `--run` resolves in.
+
+`--dir <path>` replays ANY run-shaped directory (`<model>-<task>.jsonl` files
+plus a `spill/` store) — which is exactly the shape of an extracted trace export
+ZIP from the site, so a reader can replay a downloaded trace with no run id, no
+`sweeps/` tree and no network. Exactly one of `--run` / `--dir`.
 
 ### Publishing a trace to the site (`task bench:publish-traces`)
 
@@ -771,6 +780,10 @@ git add lib/lab/llm-benchmark/results.json public/lab-data/traces && git commit
   prints the totals and WARNS past a 2 MB soft budget; the operator decides
   whether to commit that much (pruning `sweeps/` first with
   `npx tsx scripts/sweep-clean.mjs` publishes fewer runs).
+- **The publish is GATED on export fidelity.** After writing the tree, the
+  script re-reads it and exits 1 on divergence — see below. A failing publish
+  means the bytes on disk are inconsistent with results.json; find out which
+  side moved before committing anything.
 - Nothing in `prebuild` regenerates this: CI has no `sweeps/`, so publication
   is a deliberate local step, exactly like a results.json commit.
 
@@ -797,6 +810,74 @@ gets a new URL and there is no cache-buster) and parses it with `parseRunLog`.
   index, gets no disclosure; the section states the count of untraced runs in
   one muted line, and renders nothing at all when the task has no traces —
   which is the state of every task until the next sweep is published.
+
+## Trace export + export fidelity (#30)
+
+### Downloading a trace (client-side ZIP)
+
+The run-trace disclosure carries an **Export trace (ZIP)** button. There is no
+route behind it and there cannot be one — the site is a static export — so the
+archive is assembled IN THE BROWSER from the already-published files:
+
+```
+trace-<model>-<task>-<run>.zip
+  <model>-<task>.jsonl     the run log, verbatim
+  spill/<hash>.txt …       every oversized string the LOG references
+  README.txt               generated: what this is, the score it backs, and
+                           the offline re-verification commands
+```
+
+- `lib/lab/llm-benchmark/zip.ts` is a **STORE-only ZIP writer** — no dependency
+  was added and none should be. STORE (no compression) because the payload
+  already crossed a gzip/brotli HTTP response, because it removes the only hard
+  part (a compressor), and because it makes the archive byte-reproducible.
+  No zip64, no encryption, no data descriptors: >4 GB or >65535 entries THROWS
+  rather than emitting a subtly-wrong archive. Member names are checked for
+  zip-slip (`..`, absolute, backslashes, control chars).
+- `lib/lab/llm-benchmark/trace-export.ts` does the assembly. **The log is the
+  authority on what goes in**, not the index entry: it walks the events with
+  `collectSpillRefs` and unions that with `entry.spillRefs`, so an unlisted ref
+  still lands in the ZIP. IO is INJECTED (`readFile`), so the same function
+  drives the UI's `fetch` and any node script.
+- **Browser-safe by the same rule as `runlog-format.ts`**: `zip.ts` and
+  `trace-export.ts` import nothing node-only, ever. A `node:crypto` import in
+  either would drag node into the client bundle.
+- The README states the aggregate **read from the log's own bytes**, never a
+  number passed in from the page — an archive has to describe itself.
+- A spill file that 404s does NOT abort the export: the ZIP is still produced,
+  and the missing names are listed as `*** INCOMPLETE EXPORT ***` in the README
+  and beside the button. A reader who does not know what is missing cannot
+  reason about what is present.
+- Replaying a download needs no site and no sweeps tree:
+  `npx tsx scripts/retrace.mjs --dir <extracted-dir> --full`, and the
+  content-address recheck in the README needs nothing but `shasum`.
+
+### The fidelity gate (`publish-traces` exits 1)
+
+`lib/lab/llm-benchmark/export-fidelity.ts` runs at the END of
+`task bench:publish-traces`, over the tree that was just written:
+
+1. every published JSONL still parses as a run log;
+2. its aggregate event equals the results.json record it backs on **score,
+   status, iterationsSucceeded, costUsd** (exact, except a 1e-9 float slack on
+   cost);
+3. every spill ref it mentions is published AND still hashes to the content
+   address in its own name (`verifyContentAddress`);
+4. some results.json record actually claims it.
+
+Any failure prints the trace, the field and both values, and **exits 1** — do
+not commit that tree.
+
+- **Why publish-time and not `verify-results`:** publication is a COPY, and a
+  copy is where divergence is introduced (a hand-edited record, a carried-through
+  index entry whose source is gone, a rewritten spill file). `verify-results`
+  reads `sweeps/`, which is pruned, so most of its checks SKIP on a fresh clone;
+  this reads the committed, served tree, which is always there.
+- `iterations` is deliberately NOT compared: a budget or quota stop legitimately
+  leaves the requested count and the completed count describing different things
+  (#28), and folding that in would make the gate cry wolf.
+- Real-tree result at ship time: 20 published traces, 75 spill files, zero
+  divergence.
 
 ## Per-call telemetry (TTFT, decode rate, cache, retries)
 

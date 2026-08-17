@@ -1,14 +1,16 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ChevronRight, ExternalLink } from 'lucide-react'
+import { ChevronRight, Download, ExternalLink } from 'lucide-react'
 
 import { parseRunLog } from '@/lib/lab/llm-benchmark/runlog-format'
 import type { RunLogEvent, Spillable } from '@/lib/lab/llm-benchmark/runlog-format'
 import { traceSpillUrl, traceUrl } from '@/lib/lab/llm-benchmark/nav'
 import { formatTraceBytes } from '@/lib/lab/llm-benchmark/traces'
 import type { TraceIndexEntry } from '@/lib/lab/llm-benchmark/traces'
+import { buildTraceExport } from '@/lib/lab/llm-benchmark/trace-export'
 import type { IterationCheckResult } from '@/lib/lab/llm-benchmark/types'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { IterationChecks } from './iteration-checks'
 
@@ -105,6 +107,7 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
       </summary>
 
       <div className="border-t border-[var(--color-border)] px-4 py-3">
+        <TraceExportControl entry={entry} />
         {state.phase === 'loading' && <p className="font-mono text-xs text-muted">Loading trace…</p>}
         {state.phase === 'error' && (
           <p className="font-mono text-xs text-rose-600 dark:text-rose-400">
@@ -140,6 +143,105 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
         )}
       </div>
     </details>
+  )
+}
+
+type ExportState =
+  | { phase: 'idle' }
+  | { phase: 'working' }
+  | { phase: 'done'; filename: string; bytes: number; missing: number }
+  | { phase: 'error'; message: string }
+
+/**
+ * "Export trace (ZIP)" — the whole evidence chain, downloadable.
+ *
+ * Assembled ENTIRELY in the browser (`buildTraceExport`), because this site is
+ * a static export: there is no route that could zip anything, and the files are
+ * already published and served. The click fetches the same JSONL the panel
+ * above reads plus every spill file it references, builds a STORE-only archive
+ * (`lib/lab/llm-benchmark/zip.ts` — no dependency added) and hands it to the
+ * browser as a blob.
+ *
+ * Deliberately states what is inside BEFORE the click: a reader deciding
+ * whether to download something wants to know it is the check-level evidence,
+ * not a screenshot of the table row they are already looking at. And it reports
+ * an INCOMPLETE export rather than silently shipping a hole — the README says
+ * the same thing inside the archive.
+ */
+function TraceExportControl({ entry }: { entry: TraceIndexEntry }) {
+  const [state, setState] = useState<ExportState>({ phase: 'idle' })
+
+  async function onExport() {
+    setState({ phase: 'working' })
+    try {
+      const result = await buildTraceExport({
+        entry,
+        readFile: async (relPath) => {
+          const url =
+            relPath === entry.file
+              ? traceUrl(entry.runId, entry.file)
+              : traceSpillUrl(entry.runId, relPath)
+          const res = await fetch(url, { cache: 'force-cache' })
+          if (!res.ok) throw new Error(`HTTP ${res.status} for ${relPath}`)
+          return res.text()
+        },
+      })
+
+      // `new Blob([bytes])` copies, so the ArrayBuffer view is safe to release.
+      const url = URL.createObjectURL(new Blob([result.bytes], { type: 'application/zip' }))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = result.filename
+      document.body.append(link)
+      link.click()
+      link.remove()
+      // Revoking immediately can race the download in some browsers; a tick is
+      // enough and the object is otherwise leaked for the life of the document.
+      setTimeout(() => URL.revokeObjectURL(url), 10_000)
+
+      setState({
+        phase: 'done',
+        filename: result.filename,
+        bytes: result.bytes.length,
+        missing: result.missingSpill.length,
+      })
+    } catch (err) {
+      setState({
+        phase: 'error',
+        message: err instanceof Error ? err.message : 'could not build the export',
+      })
+    }
+  }
+
+  return (
+    <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--color-border)] pb-3">
+      <Button
+        size="xs"
+        variant="outline"
+        onClick={onExport}
+        disabled={state.phase === 'working'}
+        className="font-mono"
+      >
+        <Download aria-hidden />
+        {state.phase === 'working' ? 'Building…' : 'Export trace (ZIP)'}
+      </Button>
+      <span className="font-mono text-[0.65rem] leading-snug text-muted">
+        the full run log, every artifact it references, and a README with the score it backs and
+        the offline re-verification commands — the check-level evidence behind this row.
+      </span>
+      {state.phase === 'done' && (
+        <span className="w-full font-mono text-[0.65rem] text-muted">
+          Downloaded {state.filename} ({formatTraceBytes(state.bytes)})
+          {state.missing > 0 &&
+            ` — INCOMPLETE: ${state.missing} referenced artifact${state.missing === 1 ? '' : 's'} could not be fetched (noted in the README).`}
+        </span>
+      )}
+      {state.phase === 'error' && (
+        <span className="w-full font-mono text-[0.65rem] text-rose-600 dark:text-rose-400">
+          Couldn’t build the export ({state.message}).
+        </span>
+      )}
+    </div>
   )
 }
 

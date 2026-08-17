@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "bench": {
+      "command": "npx",
+      "args": ["tsx", "scripts/bench-mcp.mjs"],
+      "env": {}
+    }
+  }
+}

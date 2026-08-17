@@ -56,6 +56,10 @@ The site has a benchmark section at `/lab/llm-benchmark/` that compares frontier
 | Per-iteration run log (JSONL writer, spill store) | `lib/lab/llm-benchmark/runlog.ts` |
 | Run-log record shapes + `parseRunLog` (browser-safe — the ONLY run-log module the UI may import) | `lib/lab/llm-benchmark/runlog-format.ts` |
 | Run-log replay ("transcript") script | `scripts/retrace.mjs` |
+| Transcript formatting, shared by retrace + the MCP server (pure) | `lib/lab/llm-benchmark/transcript.ts` |
+| Read-only MCP server: tool schemas, routing, handlers (pure) | `lib/lab/llm-benchmark/mcp.ts` |
+| MCP disk lookups (local sweep tree → published traces) | `lib/lab/llm-benchmark/mcp-fs.ts` |
+| MCP stdio entry point (registered as `bench` in `.mcp.json`) | `scripts/bench-mcp.mjs` |
 | Trace publication decisions (pure) + build-time index read | `lib/lab/llm-benchmark/traces.ts`, `traces-server.ts` |
 | Trace publication script (`task bench:publish-traces`) | `scripts/publish-traces.mjs` |
 | Run-trace UI (the transcript, in the browser) | `components/lab/llm-benchmark/run-trace.tsx` |
@@ -1456,6 +1460,42 @@ registration unwinds on `unregisterPlugin()`.
   helpers in `plugins/scaffold.ts`). The scaffold does NOT edit the roster —
   an unrostered plugin is dead code and `task verify` stays green on it.
   `manifest.json` is descriptive metadata only; nothing loads it.
+
+## Querying the benchmark over MCP (`bench` server, #39)
+
+**Query the benchmark via MCP when the answer lives in results** — do not open
+`results.json` (5 MB) or grep the sweep tree for a question the tools answer.
+The server is REGISTERED for this repo in `.mcp.json` as `bench`
+(`npx tsx scripts/bench-mcp.mjs`); an agent session in another repo can spawn it
+the same way. It is READ-ONLY: no tool writes anything, and the server opens no
+file for writing.
+
+- Transport: MCP stdio — newline-delimited JSON-RPC 2.0 (one message per line,
+  no framing headers). Protocol version **2024-11-05**; later versions from
+  `SUPPORTED_PROTOCOL_VERSIONS` are echoed back because the tools-only surface
+  is unchanged across them. Batches are refused (`-32600`).
+- Code: `lib/lab/llm-benchmark/mcp.ts` (pure — tool schemas, routing, handlers),
+  `mcp-fs.ts` (disk lookups), `scripts/bench-mcp.mjs` (framing only).
+
+| Tool | Answers |
+| --- | --- |
+| `bench_list_models` | the model roster + per-model `modelCompletion` stats (tasks done, mean score, spend, cost/point) |
+| `bench_list_tasks` | the task roster (id, category, title, scorer, pluginId) |
+| `bench_get_result` | one (model, task) record: score, status, `iterationScores`, WHICH checks failed and how often, `promptBundle`, `runLogRef`, quota/budget stamps. Artifact excluded unless `include_artifact: true` (capped at 32 KB) |
+| `bench_get_trace` | the retrace transcript for that record — local `sweeps/` tree first, else the published `public/lab-data/traces/` copy, else a typed `no-trace` |
+| `bench_related_runs` | the #32 ranking: who else failed the same checks, as `bench://` refs |
+| `bench_resolve_ref` | resolve a `bench://` URI against the board (typed miss, never a crash) |
+| `bench_checks_used` | a task's checks + point budgets (budgets read from RECORDED check results — a `CheckFn` is opaque until it runs) |
+
+Two error shapes, per the spec's split: protocol failures (unknown method/tool,
+missing or ill-typed arguments) come back as JSON-RPC `error` objects; data
+failures (`unknown-model`, `no-result`, `no-trace`, a dangling ref) come back as
+a normal result with `isError: true` and a `{"error":{"code","message"}}` body —
+read those and correct the call.
+
+Transcript formatting is shared with `scripts/retrace.mjs` via
+`lib/lab/llm-benchmark/transcript.ts` — change the transcript there, once, and
+both the CLI and `bench_get_trace` follow.
 
 ## Verification Checklist
 

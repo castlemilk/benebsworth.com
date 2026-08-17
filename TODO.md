@@ -1362,32 +1362,36 @@ plus a review checklist, and STOPS. Never registers; refuses an existing target
 (re-cloning would swap reviewed code). `third-party/` is NOT gitignored — the
 site builds from reviewed plugin code, so it has to be committed.
 
-## [ ] 39. Benchmark data as an MCP server (plugin)
+## [x] 39. Benchmark data as an MCP server
 
-**Problem.** Agents (opencode sessions, the OMEGA harness) can't query the
-benchmark programmatically; a `bench://` URI (#32) is the reference syntax,
-but the read side needs a transport.
+**Shipped.** A read-only MCP stdio server over the board:
+`scripts/bench-mcp.mjs` (framing only) + `lib/lab/llm-benchmark/mcp.ts` (pure —
+tool schemas, JSON-RPC routing, handlers, unit-tested with no stdio) +
+`mcp-fs.ts` (disk lookups). Seven tools: `bench_list_models`,
+`bench_list_tasks`, `bench_get_result`, `bench_get_trace`,
+`bench_related_runs`, `bench_resolve_ref`, `bench_checks_used`. Registered for
+this repo in `.mcp.json` as `bench`; documented in the skill ("query the
+benchmark via MCP when the answer lives in results").
 
-**Inspiration.** graphify's MCP server (`python -m graphify.serve
-graphify-out/graph.json` exposing query_graph/get_node/get_neighbors/
-shortest_path) — a read-only MCP stdio server over static data.
+Transport is MCP stdio: newline-delimited JSON-RPC 2.0, no framing headers,
+protocol version 2024-11-05 (later versions echoed — the tools-only surface is
+identical); batches refused. Two error shapes, per the spec's own split:
+protocol errors (unknown method/tool, bad arguments) are JSON-RPC `error`
+objects, data errors (`unknown-model`, `no-result`, `no-trace`, a dangling
+ref) are results with `isError: true` so the model can self-correct.
+`bench_get_result` excludes the artifact unless asked, capped at 32 KB.
+`bench_get_trace` reads the local `sweeps/` tree first, then the published
+trace, and shares retrace's formatting through the extracted
+`transcript.ts` — one transcript renderer, two readers.
 
-**Design sketch.**
-
-- `plugins/bench-mcp/` (a plugin with no tasks — a server contribution):
-  `tools/bench-mcp.ts` implements an MCP stdio server over results.json +
-  the run-log store: `bench.list_models`, `bench.get_result`, `bench.get_trace`,
-  `bench.related_runs` (the #32 ranking), `bench.checks_used`.
-- Registered via a `server` contribution on BenchmarkPlugin; the MCP server
-  loads the same registries (read-only).
-- Wire into the skill's agent instructions ("query the benchmark via MCP
-  when the answer lives in results").
-
-**Acceptance criteria.** An agent session can answer "what did deepseek
-score on the platformer and which check tripped?" through the MCP server
-without reading results.json; the server is read-only.
-
-**Effort.** M. **Dependencies.** #32 (related-runs ranking), #30 (traces).
+**DEVIATIONS.** (1) NOT a plugin `server` contribution: a server is a process,
+not a load-time registration, nothing else would consume the field, and adding
+one would have meant a `BenchmarkPlugin` shape whose only implementation starts
+a subprocess. (2) `bench_checks_used` reads point budgets from RECORDED
+`iterationCheckResults`, not from `getChecksForTask` — a `CheckFn` is an opaque
+async function until it runs in a browser, so names/`maxPoints` only exist in
+the results it produced; `getChecksForTask` supplies the count (and proves the
+declared checks resolve).
 
 ---
 
@@ -1433,6 +1437,15 @@ without reading results.json; the server is read-only.
   FAILS `publish-traces.mjs` (exit 1) on an unparsable log, an aggregate that
   disagrees with its results.json row, a missing spill file, or a blob that no
   longer hashes to its own content address.
+- Read-only MCP server over the board (#39): `scripts/bench-mcp.mjs` (stdio
+  framing only) + pure `mcp.ts` (seven `bench_*` tools, JSON-RPC routing,
+  protocol 2024-11-05 newline-delimited, batches refused, protocol-vs-tool
+  error split) + `mcp-fs.ts` (local `sweeps/` tree, then published traces);
+  registered as `bench` in `.mcp.json`. Transcript formatting extracted to
+  `transcript.ts` so `retrace.mjs` and `bench_get_trace` share one renderer.
+  NOT a plugin `server` contribution (a server is a process, not a
+  registration) and `bench_checks_used` reads budgets from recorded check
+  results (a `CheckFn` is opaque at rest).
 - Sweep profiles + effective-config dump (#2): recipes as data in
   `sweep-profiles.json`, pure `resolveSweepConfig()` with per-knob provenance
   (flag > env > profile > default), `--dump-config` / `--list-profiles`, rough

@@ -14,5 +14,13 @@ command -v graphify >/dev/null 2>&1 || exit 0
 # Only rebuild when the commit touched code the graph indexes.
 if git diff-tree --no-commit-id --name-only -r HEAD | grep -qE '\.(ts|tsx|mjs|py)$'; then
   graphify update . >/dev/null 2>&1 || echo "[post-commit] graphify update failed (non-blocking)"
+  # graphify stamps a `seen` epoch into manifest.json on every run, even when
+  # the graph itself is unchanged — which would leave the tree perpetually
+  # dirty. When the manifest is the ONLY change under graphify-out/, discard
+  # the timestamp churn; a real graph change keeps everything.
+  changed=$(git diff --name-only -- graphify-out/)
+  if [ "$changed" = "graphify-out/manifest.json" ]; then
+    git checkout -q -- graphify-out/manifest.json
+  fi
 fi
 exit 0

@@ -1,0 +1,110 @@
+{
+  "id": "distributed-systems",
+  "category": "Distributed Systems & Cloud",
+  "label": "Distributed Systems & Cloud Architecture",
+  "brief": "Create five clean, futuristic distributed systems vectors: Raft consensus quorum, event stream pipeline, mesh gossip network, circuit breaker, and load balancer fanout.",
+  "sessionId": "flow_session_d6f8dca879aa",
+  "runId": "a1d919329254a2bb26c523528fa2bab0",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_d6f8dca879aa",
+  "galleryUrl": "https://brandbrain.dev/crm/canvas/flow_session_d6f8dca879aa/gallery",
+  "completedAt": "2026-08-20T06:29:06.468Z",
+  "trace": {},
+  "items": [
+    {
+      "id": "raft-consensus",
+      "name": "Raft Consensus Quorum",
+      "filename_stem": "raft-consensus",
+      "semantic_role": "distributed-consensus",
+      "description": "Consensus cluster with central elected leader synchronizing follower nodes.",
+      "generation_prompt": "Draw a distributed consensus cluster with a glowing leader node broadcasting heartbeat synchronization pulses to four surrounding replica nodes; no text.",
+      "grid_index": 0,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/distributed-systems/raft-consensus.svg",
+      "pngPath": "/vectors/distributed-systems/raft-consensus.png"
+    },
+    {
+      "id": "event-stream",
+      "name": "Event Stream Pipeline",
+      "filename_stem": "event-stream",
+      "semantic_role": "streaming-pipeline",
+      "description": "Partitioned message stream pipeline with sequenced event packets.",
+      "generation_prompt": "Draw a linear segmented event pipeline with sequenced glowing data packets streaming into partitioned consumer lanes; no text.",
+      "grid_index": 1,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/distributed-systems/event-stream.svg",
+      "pngPath": "/vectors/distributed-systems/event-stream.png"
+    },
+    {
+      "id": "mesh-gossip",
+      "name": "Gossip Mesh Network",
+      "filename_stem": "mesh-gossip",
+      "semantic_role": "peer-to-peer-mesh",
+      "description": "Decentralized peer-to-peer mesh network propagating gossip protocols.",
+      "generation_prompt": "Draw a decentralized geometric mesh network graph with interconnected peer nodes and subtle radiating propagation rings; no text.",
+      "grid_index": 2,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/distributed-systems/mesh-gossip.svg",
+      "pngPath": "/vectors/distributed-systems/mesh-gossip.png"
+    },
+    {
+      "id": "circuit-breaker",
+      "name": "Circuit Breaker Pattern",
+      "filename_stem": "circuit-breaker",
+      "semantic_role": "resilience-pattern",
+      "description": "Electrical switch circuit breaker illustrating fault-tolerant isolating mechanism.",
+      "generation_prompt": "Draw an elegant geometric circuit breaker switch mechanism with protective status nodes and clean contact terminals; no text.",
+      "grid_index": 3,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/distributed-systems/circuit-breaker.svg",
+      "pngPath": "/vectors/distributed-systems/circuit-breaker.png"
+    },
+    {
+      "id": "load-balancer",
+      "name": "Load Balancer Fanout",
+      "filename_stem": "load-balancer",
+      "semantic_role": "traffic-distribution",
+      "description": "Ingress gateway node distributing incoming traffic streams across replica pools.",
+      "generation_prompt": "Draw a central ingress router node branching and load-balancing a single incoming flux stream evenly into three parallel worker nodes; no text.",
+      "grid_index": 4,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/distributed-systems/load-balancer.svg",
+      "pngPath": "/vectors/distributed-systems/load-balancer.png"
+    }
+  ],
+  "exportedFiles": []
+}

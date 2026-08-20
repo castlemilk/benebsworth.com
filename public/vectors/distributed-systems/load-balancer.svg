@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Ingress Gateway -->
+  <rect x="70" y="216" width="80" height="80" rx="16" fill="#00b4d8" stroke="#ffffff" stroke-width="3"/>
+  <path d="M 94 256 L 126 256 M 116 244 L 128 256 L 116 268" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Fanout Streams -->
+  <path d="M 150 256 Q 260 256 290 120 L 390 120" stroke="#00e0b8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 150 256 Q 260 256 290 188 L 390 188" stroke="#00e0b8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 150 256 L 390 256" stroke="#00e0b8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 150 256 Q 260 256 290 324 L 390 324" stroke="#00e0b8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 150 256 Q 260 256 290 392 L 390 392" stroke="#00e0b8" stroke-width="4" stroke-linecap="round"/>
+  <!-- Backend Service Nodes -->
+  <rect x="390" y="102" width="60" height="36" rx="8" fill="#0c0e14" stroke="#00e0b8" stroke-width="3"/>
+  <rect x="390" y="170" width="60" height="36" rx="8" fill="#0c0e14" stroke="#00e0b8" stroke-width="3"/>
+  <rect x="390" y="238" width="60" height="36" rx="8" fill="#0c0e14" stroke="#00e0b8" stroke-width="3"/>
+  <rect x="390" y="306" width="60" height="36" rx="8" fill="#0c0e14" stroke="#00e0b8" stroke-width="3"/>
+  <rect x="390" y="374" width="60" height="36" rx="8" fill="#0c0e14" stroke="#00e0b8" stroke-width="3"/>
+</svg>

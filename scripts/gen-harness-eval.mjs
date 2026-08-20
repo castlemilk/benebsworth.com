@@ -255,7 +255,7 @@ function writePatchFiles(summaries) {
       if (!task.hasPatch || !task.patch) continue;
       const taskDir = path.join(patchDir, task.task.suite, task.task.id);
       fs.mkdirSync(taskDir, { recursive: true });
-      const file = path.join(taskDir, `${summary.model.id.replace('/', '-')}.json`);
+      const file = path.join(taskDir, `${summary.model.id.replace(/[\/:]/g, '-')}.json`);
       fs.writeFileSync(file, JSON.stringify({ taskId: task.task.id, modelId: summary.model.id, patch: task.patch }));
     }
   }
@@ -269,7 +269,7 @@ function writeFailureFiles(summaries) {
       if (!task.failure) continue;
       const taskDir = path.join(failDir, task.task.suite, task.task.id);
       fs.mkdirSync(taskDir, { recursive: true });
-      const file = path.join(taskDir, `${summary.model.id.replace('/', '-')}.json`);
+      const file = path.join(taskDir, `${summary.model.id.replace(/[\/:]/g, '-')}.json`);
       fs.writeFileSync(file, JSON.stringify({ taskId: task.task.id, modelId: summary.model.id, failure: task.failure }));
     }
   }

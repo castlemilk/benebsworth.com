@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Pipeline Channels -->
+  <path d="M 64 256 L 220 256 Q 280 256 310 160 L 448 160" stroke="#00b4d8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 64 256 L 220 256 L 448 256" stroke="#00e0b8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 64 256 L 220 256 Q 280 256 310 352 L 448 352" stroke="#7c5cff" stroke-width="4" stroke-linecap="round"/>
+  <!-- Event Tokens -->
+  <circle cx="110" cy="256" r="10" fill="#00e0b8"/>
+  <circle cx="170" cy="256" r="10" fill="#00b4d8"/>
+  <circle cx="360" cy="160" r="10" fill="#00b4d8"/>
+  <circle cx="360" cy="256" r="10" fill="#00e0b8"/>
+  <circle cx="360" cy="352" r="10" fill="#7c5cff"/>
+  <circle cx="430" cy="160" r="14" fill="#0c0e14" stroke="#00b4d8" stroke-width="3"/>
+  <circle cx="430" cy="256" r="14" fill="#0c0e14" stroke="#00e0b8" stroke-width="3"/>
+  <circle cx="430" cy="352" r="14" fill="#0c0e14" stroke="#7c5cff" stroke-width="3"/>
+</svg>

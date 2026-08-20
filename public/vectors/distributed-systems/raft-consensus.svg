@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Replication Sync Rays -->
+  <line x1="256" y1="120" x2="130" y2="270" stroke="#00b4d8" stroke-width="4" stroke-dasharray="10 6"/>
+  <line x1="256" y1="120" x2="382" y2="270" stroke="#00b4d8" stroke-width="4" stroke-dasharray="10 6"/>
+  <line x1="256" y1="120" x2="180" y2="410" stroke="#00b4d8" stroke-width="4" stroke-dasharray="10 6"/>
+  <line x1="256" y1="120" x2="332" y2="410" stroke="#00b4d8" stroke-width="4" stroke-dasharray="10 6"/>
+  <!-- Quorum Interconnect -->
+  <polygon points="130,270 382,270 332,410 180,410" stroke="#7c5cff" stroke-width="2.5" stroke-opacity="0.4" fill="#7c5cff" fill-opacity="0.05"/>
+  <!-- Leader Node -->
+  <circle cx="256" cy="120" r="28" fill="#00b4d8" stroke="#ffffff" stroke-width="3.5"/>
+  <polygon points="256,104 262,118 276,118 265,127 269,141 256,132 243,141 247,127 236,118 250,118" fill="#ffffff"/>
+  <!-- Follower Nodes -->
+  <circle cx="130" cy="270" r="22" fill="#0c0e14" stroke="#00b4d8" stroke-width="4"/>
+  <circle cx="382" cy="270" r="22" fill="#0c0e14" stroke="#00b4d8" stroke-width="4"/>
+  <circle cx="180" cy="410" r="22" fill="#0c0e14" stroke="#00b4d8" stroke-width="4"/>
+  <circle cx="332" cy="410" r="22" fill="#0c0e14" stroke="#00b4d8" stroke-width="4"/>
+</svg>

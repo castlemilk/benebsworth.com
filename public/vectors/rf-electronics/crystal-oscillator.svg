@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Connecting Terminals -->
+  <line x1="64" y1="256" x2="190" y2="256" stroke="#eab308" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="322" y1="256" x2="448" y2="256" stroke="#eab308" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Left & Right Metallic Electrodes -->
+  <line x1="190" y1="160" x2="190" y2="352" stroke="#00e0b8" stroke-width="6" stroke-linecap="round"/>
+  <line x1="322" y1="160" x2="322" y2="352" stroke="#00e0b8" stroke-width="6" stroke-linecap="round"/>
+  <!-- Central Quartz Crystal Plate -->
+  <rect x="220" y="130" width="72" height="252" rx="10" fill="#7c5cff" fill-opacity="0.15" stroke="#7c5cff" stroke-width="4"/>
+  <!-- Clock Frequency Oscillation Waveform -->
+  <path d="M 120 420 L 160 420 L 160 380 L 200 380 L 200 420 L 240 420 L 240 380 L 280 380 L 280 420 L 320 420 L 320 380 L 360 380 L 360 420 L 400 420" stroke="#00e0b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

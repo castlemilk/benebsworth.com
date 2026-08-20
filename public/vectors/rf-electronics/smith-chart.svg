@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Outer Unity Circle -->
+  <circle cx="256" cy="256" r="180" stroke="#eab308" stroke-width="4" fill="none"/>
+  <line x1="76" y1="256" x2="436" y2="256" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.4"/>
+  <!-- Constant Resistance Circles -->
+  <circle cx="346" cy="256" r="90" stroke="#eab308" stroke-width="2.5" stroke-opacity="0.8" fill="none"/>
+  <circle cx="391" cy="256" r="45" stroke="#eab308" stroke-width="2" stroke-opacity="0.7" fill="none"/>
+  <circle cx="298" cy="256" r="138" stroke="#eab308" stroke-width="2" stroke-opacity="0.5" fill="none"/>
+  <!-- Constant Reactance Arcs -->
+  <path d="M 436 256 A 180 180 0 0 0 256 76" stroke="#00e0b8" stroke-width="2.5" stroke-opacity="0.8" fill="none"/>
+  <path d="M 436 256 A 180 180 0 0 1 256 436" stroke="#00e0b8" stroke-width="2.5" stroke-opacity="0.8" fill="none"/>
+  <path d="M 436 256 A 90 90 0 0 0 346 166" stroke="#00e0b8" stroke-width="2" stroke-opacity="0.6" fill="none"/>
+  <path d="M 436 256 A 90 90 0 0 1 346 346" stroke="#00e0b8" stroke-width="2" stroke-opacity="0.6" fill="none"/>
+  <!-- Impedance Match Point -->
+  <circle cx="256" cy="256" r="8" fill="#ff7a59" stroke="#ffffff" stroke-width="2"/>
+</svg>

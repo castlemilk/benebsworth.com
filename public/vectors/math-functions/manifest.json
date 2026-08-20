@@ -1,0 +1,209 @@
+{
+  "id": "math-functions",
+  "category": "Mathematics & Analysis",
+  "label": "Mathematical Functions & Analysis",
+  "brief": "Create five clean, futuristic mathematical icon vectors: a sine wave, Cartesian parabola, vector field, integral curve, and Fourier harmonics.",
+  "sessionId": "flow_session_3bd538b38e9d",
+  "runId": "fce05c7dc94df21e3d1a2b0a791e467a",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_3bd538b38e9d",
+  "galleryUrl": "https://brandbrain.dev/crm/canvas/flow_session_3bd538b38e9d/gallery",
+  "completedAt": "2026-08-20T05:15:18.904Z",
+  "trace": {},
+  "items": [
+    {
+      "id": "sine-wave",
+      "name": "Sine Wave",
+      "filename_stem": "sine-wave",
+      "semantic_role": "periodic-function",
+      "description": "Smooth luminous harmonic sinusoid wave crossing a minimal horizontal baseline.",
+      "generation_prompt": "Draw one elegant glowing sine wave with two balanced sinusoidal cycles, a subtle origin point, and a clean horizontal axis line; strictly no text, labels, or numbers.",
+      "grid_index": 0,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/math-functions/sine-wave.svg",
+      "pngPath": "/vectors/math-functions/sine-wave.png"
+    },
+    {
+      "id": "cartesian-parabola",
+      "name": "Cartesian Parabola",
+      "filename_stem": "cartesian-parabola",
+      "semantic_role": "quadratic-function",
+      "description": "Symmetric upward parabolic curve with highlighted vertex and orthogonal axes.",
+      "generation_prompt": "Draw one clean upward quadratic parabola with orthogonal coordinate axes, a highlighted vertex node, and no surrounding text or numbers.",
+      "grid_index": 1,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/math-functions/cartesian-parabola.svg",
+      "pngPath": "/vectors/math-functions/cartesian-parabola.png"
+    },
+    {
+      "id": "vector-field",
+      "name": "Vector Field",
+      "filename_stem": "vector-field",
+      "semantic_role": "direction-field",
+      "description": "Swirling directional arrow field rotating smoothly around a central attractor.",
+      "generation_prompt": "Draw a sparse rotational vector field with cleanly weighted directional arrows orbiting a subtle central attractor node; no text.",
+      "grid_index": 2,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/math-functions/vector-field.svg",
+      "pngPath": "/vectors/math-functions/vector-field.png"
+    },
+    {
+      "id": "integral-trajectory",
+      "name": "Integral Trajectory",
+      "filename_stem": "integral-trajectory",
+      "semantic_role": "calculus-trajectory",
+      "description": "Smooth calculus integral trajectory curve threading through minimal tangent vectors.",
+      "generation_prompt": "Draw one luminous continuous integral curve threading through four minimal direction arrows; no integral symbol, letters, or numbers.",
+      "grid_index": 3,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/math-functions/integral-trajectory.svg",
+      "pngPath": "/vectors/math-functions/integral-trajectory.png"
+    },
+    {
+      "id": "fourier-harmonics",
+      "name": "Fourier Harmonics",
+      "filename_stem": "fourier-harmonics",
+      "semantic_role": "harmonic-superposition",
+      "description": "Multi-frequency harmonic wave superposition showing spectral synthesis.",
+      "generation_prompt": "Draw three harmonically superimposed wave frequencies combining into a composite waveform with clean geometric lines and no text.",
+      "grid_index": 4,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/math-functions/fourier-harmonics.svg",
+      "pngPath": "/vectors/math-functions/fourier-harmonics.png"
+    }
+  ],
+  "exportedFiles": [
+    {
+      "nodeId": "generate-sheet",
+      "fileName": "generate-sheet-1.png",
+      "mimeType": "image/png",
+      "byteSize": 807,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/generate-sheet-1.png",
+      "url": "/vectors/math-functions/generate-sheet-1.png"
+    },
+    {
+      "itemId": "sine-wave",
+      "nodeId": "vectorize",
+      "fileName": "sine-wave.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 2698,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/sine-wave.svg",
+      "url": "/vectors/math-functions/sine-wave.svg"
+    },
+    {
+      "itemId": "cartesian-parabola",
+      "nodeId": "vectorize",
+      "fileName": "cartesian-parabola.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 6096,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/cartesian-parabola.svg",
+      "url": "/vectors/math-functions/cartesian-parabola.svg"
+    },
+    {
+      "itemId": "vector-field",
+      "nodeId": "vectorize",
+      "fileName": "vector-field.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 5817,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/vector-field.svg",
+      "url": "/vectors/math-functions/vector-field.svg"
+    },
+    {
+      "itemId": "integral-trajectory",
+      "nodeId": "vectorize",
+      "fileName": "integral-trajectory.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 611,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/integral-trajectory.svg",
+      "url": "/vectors/math-functions/integral-trajectory.svg"
+    },
+    {
+      "itemId": "fourier-harmonics",
+      "nodeId": "vectorize",
+      "fileName": "fourier-harmonics.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 2698,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/fourier-harmonics.svg",
+      "url": "/vectors/math-functions/fourier-harmonics.svg"
+    },
+    {
+      "itemId": "sine-wave",
+      "nodeId": "review",
+      "fileName": "sine-wave.png",
+      "mimeType": "image/png",
+      "byteSize": 5228,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/sine-wave.png",
+      "url": "/vectors/math-functions/sine-wave.png"
+    },
+    {
+      "itemId": "cartesian-parabola",
+      "nodeId": "review",
+      "fileName": "cartesian-parabola.png",
+      "mimeType": "image/png",
+      "byteSize": 5366,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/cartesian-parabola.png",
+      "url": "/vectors/math-functions/cartesian-parabola.png"
+    },
+    {
+      "itemId": "vector-field",
+      "nodeId": "review",
+      "fileName": "vector-field.png",
+      "mimeType": "image/png",
+      "byteSize": 10188,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/vector-field.png",
+      "url": "/vectors/math-functions/vector-field.png"
+    },
+    {
+      "itemId": "integral-trajectory",
+      "nodeId": "review",
+      "fileName": "integral-trajectory.png",
+      "mimeType": "image/png",
+      "byteSize": 2436,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/integral-trajectory.png",
+      "url": "/vectors/math-functions/integral-trajectory.png"
+    },
+    {
+      "itemId": "fourier-harmonics",
+      "nodeId": "review",
+      "fileName": "fourier-harmonics.png",
+      "mimeType": "image/png",
+      "byteSize": 5228,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/math-functions/fourier-harmonics.png",
+      "url": "/vectors/math-functions/fourier-harmonics.png"
+    }
+  ]
+}

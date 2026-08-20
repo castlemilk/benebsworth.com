@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Ingress / Egress Baseline -->
+  <line x1="64" y1="256" x2="180" y2="256" stroke="#00b4d8" stroke-width="5" stroke-linecap="round"/>
+  <line x1="332" y1="256" x2="448" y2="256" stroke="#7c5cff" stroke-width="5" stroke-linecap="round"/>
+  <!-- Contact Terminals -->
+  <circle cx="180" cy="256" r="14" fill="#00b4d8" stroke="#ffffff" stroke-width="3"/>
+  <circle cx="332" cy="256" r="14" fill="#7c5cff" stroke="#ffffff" stroke-width="3"/>
+  <!-- Tripped Switch Blade -->
+  <line x1="180" y1="256" x2="280" y2="150" stroke="#ff7a59" stroke-width="5.5" stroke-linecap="round"/>
+  <!-- Arc / Trip Indicator -->
+  <path d="M 270 170 Q 295 190 320 240" stroke="#eab308" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
+  <!-- Housing Shield -->
+  <rect x="130" y="100" width="252" height="312" rx="20" stroke="#00b4d8" stroke-width="3" stroke-dasharray="12 8" fill="none"/>
+</svg>

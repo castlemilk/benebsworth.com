@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Center Feedline -->
+  <line x1="256" y1="440" x2="256" y2="266" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 6"/>
+  <!-- Dipole Rods -->
+  <line x1="120" y1="256" x2="246" y2="256" stroke="#eab308" stroke-width="6" stroke-linecap="round"/>
+  <line x1="266" y1="256" x2="392" y2="256" stroke="#eab308" stroke-width="6" stroke-linecap="round"/>
+  <!-- Center Feed Gap -->
+  <circle cx="256" cy="256" r="8" fill="#ff7a59"/>
+  <!-- Radiated Wavefronts -->
+  <path d="M 256 160 C 180 160 140 200 140 256 C 140 312 180 352 256 352" stroke="#00e0b8" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M 256 160 C 332 160 372 200 372 256 C 372 312 332 352 256 352" stroke="#00e0b8" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M 256 90 C 140 90 80 160 80 256 C 80 352 140 422 256 422" stroke="#7c5cff" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M 256 90 C 372 90 432 160 432 256 C 432 352 372 422 256 422" stroke="#7c5cff" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

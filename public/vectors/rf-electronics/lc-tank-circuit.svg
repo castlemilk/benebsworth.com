@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Top and Bottom Wire Rails -->
+  <line x1="100" y1="120" x2="412" y2="120" stroke="#eab308" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="100" y1="392" x2="412" y2="392" stroke="#eab308" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Left Leg: Inductor Coil -->
+  <line x1="160" y1="120" x2="160" y2="180" stroke="#eab308" stroke-width="4"/>
+  <path d="M 160 180 C 120 180 120 220 160 220
+           C 120 220 120 260 160 260
+           C 120 260 120 300 160 300
+           C 120 300 120 340 160 340" stroke="#00e0b8" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <line x1="160" y1="340" x2="160" y2="392" stroke="#eab308" stroke-width="4"/>
+  <!-- Right Leg: Capacitor Plates -->
+  <line x1="352" y1="120" x2="352" y2="236" stroke="#eab308" stroke-width="4"/>
+  <line x1="312" y1="236" x2="392" y2="236" stroke="#ff7a59" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="312" y1="276" x2="392" y2="276" stroke="#ff7a59" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="352" y1="276" x2="352" y2="392" stroke="#eab308" stroke-width="4"/>
+  <!-- Resonant EM Waves -->
+  <path d="M 230 220 Q 256 256 230 292" stroke="#7c5cff" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M 270 200 Q 306 256 270 312" stroke="#7c5cff" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

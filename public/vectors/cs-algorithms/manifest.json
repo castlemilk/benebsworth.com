@@ -1,0 +1,209 @@
+{
+  "id": "cs-algorithms",
+  "category": "Computer Science & AI",
+  "label": "Algorithms & Data Structures",
+  "brief": "Create five clean, futuristic computer science vectors: binary search tree, consistent hash ring, DAG, self-attention matrix, and state machine graph.",
+  "sessionId": "flow_session_95efe7ac81b3",
+  "runId": "3ad37ff75f4805a8afc78aae8a8565c0",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_95efe7ac81b3",
+  "galleryUrl": "https://brandbrain.dev/crm/canvas/flow_session_95efe7ac81b3/gallery",
+  "completedAt": "2026-08-20T06:07:34.884Z",
+  "trace": {},
+  "items": [
+    {
+      "id": "binary-search-tree",
+      "name": "Binary Search Tree",
+      "filename_stem": "binary-search-tree",
+      "semantic_role": "hierarchical-tree",
+      "description": "Balanced binary tree graph with highlighted traversal path.",
+      "generation_prompt": "Draw a balanced binary tree hierarchy with connected circular nodes and one highlighted traversal branch; no text or numbers inside nodes.",
+      "grid_index": 0,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/cs-algorithms/binary-search-tree.svg",
+      "pngPath": "/vectors/cs-algorithms/binary-search-tree.png"
+    },
+    {
+      "id": "consistent-hash-ring",
+      "name": "Consistent Hash Ring",
+      "filename_stem": "consistent-hash-ring",
+      "semantic_role": "distributed-hashing",
+      "description": "Circular hash ring with partitioned virtual nodes and keys.",
+      "generation_prompt": "Draw a circular ring with evenly spaced perimeter node markers and connecting partition chords; no text or numbers.",
+      "grid_index": 1,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/cs-algorithms/consistent-hash-ring.svg",
+      "pngPath": "/vectors/cs-algorithms/consistent-hash-ring.png"
+    },
+    {
+      "id": "directed-acyclic-graph",
+      "name": "Directed Acyclic Graph",
+      "filename_stem": "directed-acyclic-graph",
+      "semantic_role": "causal-dag",
+      "description": "Topological DAG showing dependency workflow with directional edges.",
+      "generation_prompt": "Draw a crisp directed acyclic graph (DAG) with interconnected circular nodes and clean arrowed dependency edges; no text.",
+      "grid_index": 2,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/cs-algorithms/directed-acyclic-graph.svg",
+      "pngPath": "/vectors/cs-algorithms/directed-acyclic-graph.png"
+    },
+    {
+      "id": "transformer-attention",
+      "name": "Self-Attention Graph",
+      "filename_stem": "transformer-attention",
+      "semantic_role": "neural-attention",
+      "description": "Bipartite multi-head attention interconnect showing weighted neural links.",
+      "generation_prompt": "Draw a bipartite neural network attention layer with parallel query-key nodes connected by weighted glowing link rays; no text.",
+      "grid_index": 3,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/cs-algorithms/transformer-attention.svg",
+      "pngPath": "/vectors/cs-algorithms/transformer-attention.png"
+    },
+    {
+      "id": "state-machine",
+      "name": "Finite State Machine",
+      "filename_stem": "state-machine",
+      "semantic_role": "automata-theory",
+      "description": "Finite state automaton with transition arcs and accept state rings.",
+      "generation_prompt": "Draw a finite state machine graph with circular state nodes, transition loop arcs, and a double-ring accept state; no text inside nodes.",
+      "grid_index": 4,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/cs-algorithms/state-machine.svg",
+      "pngPath": "/vectors/cs-algorithms/state-machine.png"
+    }
+  ],
+  "exportedFiles": [
+    {
+      "nodeId": "generate-sheet",
+      "fileName": "generate-sheet-1.png",
+      "mimeType": "image/png",
+      "byteSize": 806,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/generate-sheet-1.png",
+      "url": "/vectors/cs-algorithms/generate-sheet-1.png"
+    },
+    {
+      "itemId": "binary-search-tree",
+      "nodeId": "vectorize",
+      "fileName": "binary-search-tree.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 3075,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/binary-search-tree.svg",
+      "url": "/vectors/cs-algorithms/binary-search-tree.svg"
+    },
+    {
+      "itemId": "consistent-hash-ring",
+      "nodeId": "vectorize",
+      "fileName": "consistent-hash-ring.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 6096,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/consistent-hash-ring.svg",
+      "url": "/vectors/cs-algorithms/consistent-hash-ring.svg"
+    },
+    {
+      "itemId": "directed-acyclic-graph",
+      "nodeId": "vectorize",
+      "fileName": "directed-acyclic-graph.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 5623,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/directed-acyclic-graph.svg",
+      "url": "/vectors/cs-algorithms/directed-acyclic-graph.svg"
+    },
+    {
+      "itemId": "transformer-attention",
+      "nodeId": "vectorize",
+      "fileName": "transformer-attention.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 611,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/transformer-attention.svg",
+      "url": "/vectors/cs-algorithms/transformer-attention.svg"
+    },
+    {
+      "itemId": "state-machine",
+      "nodeId": "vectorize",
+      "fileName": "state-machine.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 3075,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/state-machine.svg",
+      "url": "/vectors/cs-algorithms/state-machine.svg"
+    },
+    {
+      "itemId": "binary-search-tree",
+      "nodeId": "review",
+      "fileName": "binary-search-tree.png",
+      "mimeType": "image/png",
+      "byteSize": 7883,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/binary-search-tree.png",
+      "url": "/vectors/cs-algorithms/binary-search-tree.png"
+    },
+    {
+      "itemId": "consistent-hash-ring",
+      "nodeId": "review",
+      "fileName": "consistent-hash-ring.png",
+      "mimeType": "image/png",
+      "byteSize": 5222,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/consistent-hash-ring.png",
+      "url": "/vectors/cs-algorithms/consistent-hash-ring.png"
+    },
+    {
+      "itemId": "directed-acyclic-graph",
+      "nodeId": "review",
+      "fileName": "directed-acyclic-graph.png",
+      "mimeType": "image/png",
+      "byteSize": 12145,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/directed-acyclic-graph.png",
+      "url": "/vectors/cs-algorithms/directed-acyclic-graph.png"
+    },
+    {
+      "itemId": "transformer-attention",
+      "nodeId": "review",
+      "fileName": "transformer-attention.png",
+      "mimeType": "image/png",
+      "byteSize": 2436,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/transformer-attention.png",
+      "url": "/vectors/cs-algorithms/transformer-attention.png"
+    },
+    {
+      "itemId": "state-machine",
+      "nodeId": "review",
+      "fileName": "state-machine.png",
+      "mimeType": "image/png",
+      "byteSize": 7883,
+      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/state-machine.png",
+      "url": "/vectors/cs-algorithms/state-machine.png"
+    }
+  ]
+}

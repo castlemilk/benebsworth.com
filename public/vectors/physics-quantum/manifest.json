@@ -3,12 +3,10 @@
   "category": "Physics & Quantum",
   "label": "Physics & Quantum Phenomena",
   "brief": "Create five clean, futuristic physics vectors: a black hole geodesic, phase-space orbit, quantum wavepacket, magnetic dipole, and optical prism dispersion.",
-  "sessionId": "flow_session_30d6eb0f24aa",
-  "runId": "8bf5380950b95cd2fbac411a813b0f00",
-  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_30d6eb0f24aa",
-  "galleryUrl": "https://brandbrain.dev/crm/canvas/flow_session_30d6eb0f24aa/gallery",
-  "completedAt": "2026-08-20T05:41:29.719Z",
-  "trace": {},
+  "sessionId": "flow_session_e3574b88d41d",
+  "runId": "a5ec48ead03fac0f09d9fc7d7da080ab",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_e3574b88d41d",
+  "completedAt": "2026-08-21T10:02:15.470Z",
   "items": [
     {
       "id": "black-hole-geodesic",
@@ -104,106 +102,6 @@
       "required": true,
       "svgPath": "/vectors/physics-quantum/prism-dispersion.svg",
       "pngPath": "/vectors/physics-quantum/prism-dispersion.png"
-    }
-  ],
-  "exportedFiles": [
-    {
-      "nodeId": "generate-sheet",
-      "fileName": "generate-sheet-1.png",
-      "mimeType": "image/png",
-      "byteSize": 819,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/generate-sheet-1.png",
-      "url": "/vectors/physics-quantum/generate-sheet-1.png"
-    },
-    {
-      "itemId": "black-hole-geodesic",
-      "nodeId": "vectorize",
-      "fileName": "black-hole-geodesic.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 2698,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/black-hole-geodesic.svg",
-      "url": "/vectors/physics-quantum/black-hole-geodesic.svg"
-    },
-    {
-      "itemId": "phase-space-orbit",
-      "nodeId": "vectorize",
-      "fileName": "phase-space-orbit.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 6096,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/phase-space-orbit.svg",
-      "url": "/vectors/physics-quantum/phase-space-orbit.svg"
-    },
-    {
-      "itemId": "wavepacket-quantum",
-      "nodeId": "vectorize",
-      "fileName": "wavepacket-quantum.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 5817,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/wavepacket-quantum.svg",
-      "url": "/vectors/physics-quantum/wavepacket-quantum.svg"
-    },
-    {
-      "itemId": "magnetic-dipole",
-      "nodeId": "vectorize",
-      "fileName": "magnetic-dipole.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 611,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/magnetic-dipole.svg",
-      "url": "/vectors/physics-quantum/magnetic-dipole.svg"
-    },
-    {
-      "itemId": "prism-dispersion",
-      "nodeId": "vectorize",
-      "fileName": "prism-dispersion.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 2698,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/prism-dispersion.svg",
-      "url": "/vectors/physics-quantum/prism-dispersion.svg"
-    },
-    {
-      "itemId": "black-hole-geodesic",
-      "nodeId": "review",
-      "fileName": "black-hole-geodesic.png",
-      "mimeType": "image/png",
-      "byteSize": 5277,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/black-hole-geodesic.png",
-      "url": "/vectors/physics-quantum/black-hole-geodesic.png"
-    },
-    {
-      "itemId": "phase-space-orbit",
-      "nodeId": "review",
-      "fileName": "phase-space-orbit.png",
-      "mimeType": "image/png",
-      "byteSize": 5256,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/phase-space-orbit.png",
-      "url": "/vectors/physics-quantum/phase-space-orbit.png"
-    },
-    {
-      "itemId": "wavepacket-quantum",
-      "nodeId": "review",
-      "fileName": "wavepacket-quantum.png",
-      "mimeType": "image/png",
-      "byteSize": 10328,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/wavepacket-quantum.png",
-      "url": "/vectors/physics-quantum/wavepacket-quantum.png"
-    },
-    {
-      "itemId": "magnetic-dipole",
-      "nodeId": "review",
-      "fileName": "magnetic-dipole.png",
-      "mimeType": "image/png",
-      "byteSize": 2427,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/magnetic-dipole.png",
-      "url": "/vectors/physics-quantum/magnetic-dipole.png"
-    },
-    {
-      "itemId": "prism-dispersion",
-      "nodeId": "review",
-      "fileName": "prism-dispersion.png",
-      "mimeType": "image/png",
-      "byteSize": 5277,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/physics-quantum/prism-dispersion.png",
-      "url": "/vectors/physics-quantum/prism-dispersion.png"
     }
   ]
 }

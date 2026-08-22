@@ -3,12 +3,10 @@
   "category": "Computer Science & AI",
   "label": "Algorithms & Data Structures",
   "brief": "Create five clean, futuristic computer science vectors: binary search tree, consistent hash ring, DAG, self-attention matrix, and state machine graph.",
-  "sessionId": "flow_session_95efe7ac81b3",
-  "runId": "3ad37ff75f4805a8afc78aae8a8565c0",
-  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_95efe7ac81b3",
-  "galleryUrl": "https://brandbrain.dev/crm/canvas/flow_session_95efe7ac81b3/gallery",
-  "completedAt": "2026-08-20T06:07:34.884Z",
-  "trace": {},
+  "sessionId": "flow_session_3551885aa0d5",
+  "runId": "c3c275857bdfaa8354515536d30f0fcc",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_3551885aa0d5",
+  "completedAt": "2026-08-21T10:13:20.069Z",
   "items": [
     {
       "id": "binary-search-tree",
@@ -104,106 +102,6 @@
       "required": true,
       "svgPath": "/vectors/cs-algorithms/state-machine.svg",
       "pngPath": "/vectors/cs-algorithms/state-machine.png"
-    }
-  ],
-  "exportedFiles": [
-    {
-      "nodeId": "generate-sheet",
-      "fileName": "generate-sheet-1.png",
-      "mimeType": "image/png",
-      "byteSize": 806,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/generate-sheet-1.png",
-      "url": "/vectors/cs-algorithms/generate-sheet-1.png"
-    },
-    {
-      "itemId": "binary-search-tree",
-      "nodeId": "vectorize",
-      "fileName": "binary-search-tree.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 3075,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/binary-search-tree.svg",
-      "url": "/vectors/cs-algorithms/binary-search-tree.svg"
-    },
-    {
-      "itemId": "consistent-hash-ring",
-      "nodeId": "vectorize",
-      "fileName": "consistent-hash-ring.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 6096,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/consistent-hash-ring.svg",
-      "url": "/vectors/cs-algorithms/consistent-hash-ring.svg"
-    },
-    {
-      "itemId": "directed-acyclic-graph",
-      "nodeId": "vectorize",
-      "fileName": "directed-acyclic-graph.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 5623,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/directed-acyclic-graph.svg",
-      "url": "/vectors/cs-algorithms/directed-acyclic-graph.svg"
-    },
-    {
-      "itemId": "transformer-attention",
-      "nodeId": "vectorize",
-      "fileName": "transformer-attention.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 611,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/transformer-attention.svg",
-      "url": "/vectors/cs-algorithms/transformer-attention.svg"
-    },
-    {
-      "itemId": "state-machine",
-      "nodeId": "vectorize",
-      "fileName": "state-machine.svg",
-      "mimeType": "image/svg+xml",
-      "byteSize": 3075,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/state-machine.svg",
-      "url": "/vectors/cs-algorithms/state-machine.svg"
-    },
-    {
-      "itemId": "binary-search-tree",
-      "nodeId": "review",
-      "fileName": "binary-search-tree.png",
-      "mimeType": "image/png",
-      "byteSize": 7883,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/binary-search-tree.png",
-      "url": "/vectors/cs-algorithms/binary-search-tree.png"
-    },
-    {
-      "itemId": "consistent-hash-ring",
-      "nodeId": "review",
-      "fileName": "consistent-hash-ring.png",
-      "mimeType": "image/png",
-      "byteSize": 5222,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/consistent-hash-ring.png",
-      "url": "/vectors/cs-algorithms/consistent-hash-ring.png"
-    },
-    {
-      "itemId": "directed-acyclic-graph",
-      "nodeId": "review",
-      "fileName": "directed-acyclic-graph.png",
-      "mimeType": "image/png",
-      "byteSize": 12145,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/directed-acyclic-graph.png",
-      "url": "/vectors/cs-algorithms/directed-acyclic-graph.png"
-    },
-    {
-      "itemId": "transformer-attention",
-      "nodeId": "review",
-      "fileName": "transformer-attention.png",
-      "mimeType": "image/png",
-      "byteSize": 2436,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/transformer-attention.png",
-      "url": "/vectors/cs-algorithms/transformer-attention.png"
-    },
-    {
-      "itemId": "state-machine",
-      "nodeId": "review",
-      "fileName": "state-machine.png",
-      "mimeType": "image/png",
-      "byteSize": 7883,
-      "path": "/Users/benebsworth/projects/benebsworth.com/public/vectors/cs-algorithms/state-machine.png",
-      "url": "/vectors/cs-algorithms/state-machine.png"
     }
   ]
 }

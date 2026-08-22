@@ -3,12 +3,10 @@
   "category": "Distributed Systems & Cloud",
   "label": "Distributed Systems & Cloud Architecture",
   "brief": "Create five clean, futuristic distributed systems vectors: Raft consensus quorum, event stream pipeline, mesh gossip network, circuit breaker, and load balancer fanout.",
-  "sessionId": "flow_session_d6f8dca879aa",
-  "runId": "a1d919329254a2bb26c523528fa2bab0",
-  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_d6f8dca879aa",
-  "galleryUrl": "https://brandbrain.dev/crm/canvas/flow_session_d6f8dca879aa/gallery",
-  "completedAt": "2026-08-20T06:29:06.468Z",
-  "trace": {},
+  "sessionId": "flow_session_3ff213f99a93",
+  "runId": "f11d950fde9bc71b15bf8b67d67f652b",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_3ff213f99a93",
+  "completedAt": "2026-08-22T03:01:36.612Z",
   "items": [
     {
       "id": "raft-consensus",
@@ -105,6 +103,5 @@
       "svgPath": "/vectors/distributed-systems/load-balancer.svg",
       "pngPath": "/vectors/distributed-systems/load-balancer.png"
     }
-  ],
-  "exportedFiles": []
+  ]
 }

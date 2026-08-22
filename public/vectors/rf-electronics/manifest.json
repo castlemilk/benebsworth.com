@@ -1,0 +1,107 @@
+{
+  "id": "rf-electronics",
+  "category": "Hardware & RF Signals",
+  "label": "Radio Frequency & Electronics",
+  "brief": "Create five clean, futuristic hardware vectors: QAM constellation grid, antenna dipole radiation, logic gate array, RLC resonance filter, and clock signal eye diagram.",
+  "sessionId": "flow_session_f0a0ec5bd9e6",
+  "runId": "125ffe293ea6a5acef3c21769151a371",
+  "canvasUrl": "https://brandbrain.dev/crm/canvas/flow_session_f0a0ec5bd9e6",
+  "completedAt": "2026-08-22T03:00:04.251Z",
+  "items": [
+    {
+      "id": "qam-constellation",
+      "name": "QAM Constellation",
+      "filename_stem": "qam-constellation",
+      "semantic_role": "quadrature-modulation",
+      "description": "16-point quadrature amplitude modulation constellation grid in I/Q phase space.",
+      "generation_prompt": "Draw a symmetric 4x4 grid of luminous constellation points plotted on orthogonal I/Q coordinate axes; no numbers or text.",
+      "grid_index": 0,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/rf-electronics/qam-constellation.svg",
+      "pngPath": "/vectors/rf-electronics/qam-constellation.png"
+    },
+    {
+      "id": "antenna-radiation",
+      "name": "Antenna Radiation Pattern",
+      "filename_stem": "antenna-radiation",
+      "semantic_role": "rf-electromagnetics",
+      "description": "Toroidal dipole antenna radiating electromagnetic wave lobes.",
+      "generation_prompt": "Draw a vertical central dipole antenna element radiating symmetric figure-8 electromagnetic toroidal power lobes; no text.",
+      "grid_index": 1,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/rf-electronics/antenna-radiation.svg",
+      "pngPath": "/vectors/rf-electronics/antenna-radiation.png"
+    },
+    {
+      "id": "logic-lattice",
+      "name": "Logic Gate Array",
+      "filename_stem": "logic-lattice",
+      "semantic_role": "digital-circuit",
+      "description": "Interconnected digital logic gate circuit with clean schematic routing traces.",
+      "generation_prompt": "Draw a stylized geometric digital logic gate network with interconnected orthogonal circuit traces and node junctions; no text.",
+      "grid_index": 2,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/rf-electronics/logic-lattice.svg",
+      "pngPath": "/vectors/rf-electronics/logic-lattice.png"
+    },
+    {
+      "id": "rlc-resonance",
+      "name": "RLC Resonance Tank",
+      "filename_stem": "rlc-resonance",
+      "semantic_role": "resonant-filter",
+      "description": "Tuned LC resonant frequency response curve with sharp quality-factor peak.",
+      "generation_prompt": "Draw a sharp resonant frequency response curve with a narrow bandpass peak and minimal baseline axis; no text or numbers.",
+      "grid_index": 3,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/rf-electronics/rlc-resonance.svg",
+      "pngPath": "/vectors/rf-electronics/rlc-resonance.png"
+    },
+    {
+      "id": "clock-eye-diagram",
+      "name": "Clock Jitter Eye Diagram",
+      "filename_stem": "clock-eye-diagram",
+      "semantic_role": "signal-integrity",
+      "description": "Superimposed high-speed digital transitions forming an open eye diagram.",
+      "generation_prompt": "Draw a clean geometric high-speed digital signal eye diagram with intersecting rising and falling clock edge transitions forming an open central diamond; no text.",
+      "grid_index": 4,
+      "desired_formats": [
+        "png",
+        "svg"
+      ],
+      "required_formats": [
+        "png"
+      ],
+      "required": true,
+      "svgPath": "/vectors/rf-electronics/clock-eye-diagram.svg",
+      "pngPath": "/vectors/rf-electronics/clock-eye-diagram.png"
+    }
+  ]
+}

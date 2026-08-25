@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BarChart3 } from 'lucide-react'
+import { BarChart3, Leaf } from 'lucide-react'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
@@ -119,6 +119,20 @@ export default function LabPage() {
                 <p className="type-label text-fg">Cost &amp; Model Dashboard</p>
                 <p className="mt-0.5 type-body text-sm text-fg/60">
                   Per-model token, cost, and duration across all benchmark suites — with budget alerts.
+                </p>
+              </div>
+            </Link>
+            <Link
+              href="/lab/carbon/"
+              className="mt-4 inline-flex items-center gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-muted)]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-surface-2)] text-[var(--color-fg)]">
+                <Leaf className="h-5 w-5" aria-hidden />
+              </span>
+              <div>
+                <p className="type-label text-fg">Carbon Capture Research</p>
+                <p className="mt-0.5 type-body text-sm text-fg/60">
+                  The carbon-capture pathway landscape compared on cited cost, energy, and TRL ranges.
                 </p>
               </div>
             </Link>

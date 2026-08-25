@@ -31,10 +31,10 @@ export function CarbonEmbed() {
   }, [])
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+    <div className="relative">
       {!loaded && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-          <span className="type-label animate-pulse text-[var(--color-fg)]/40">loading research platform…</span>
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-start justify-center pt-24" aria-hidden>
+          <span className="type-label animate-pulse text-[var(--color-fg)]/30">loading research platform…</span>
         </div>
       )}
       <iframe
@@ -43,7 +43,7 @@ export function CarbonEmbed() {
         title="Carbon Capture Research platform"
         onLoad={() => setLoaded(true)}
         style={{ height }}
-        className="w-full bg-transparent transition-[height] duration-300 ease-out"
+        className={`w-full bg-transparent transition-[height,opacity] duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'}`}
         allow="fullscreen"
       />
       <noscript>

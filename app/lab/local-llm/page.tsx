@@ -44,6 +44,7 @@ const MODEL_META: Record<string, { params: string; size: string; quant: string; 
   'qwen3:14b': { params: '14B', size: '9.0GB', quant: 'Q4_K_M', context: '41K', blurb: 'Qwen3 14B — mid-size dense, strong code/reasoning.', family: 'Qwen3', accent: '#10b981' },
   'qwen3:32b': { params: '32B', size: '19GB', quant: 'Q4_K_M', context: '41K', blurb: 'Qwen3 32B — largest dense Qwen3, needs 128GB headroom.', family: 'Qwen3', accent: '#ef4444' },
   'qwen3.8:27b-mlx': { params: '27.8B', size: '18GB', quant: 'nvfp4 · MLX', context: '256K', blurb: 'Qwen3.8 27B MLX — native MLX on M5 Max, 94.7 avg with thinking (31 tok/s), 69.1 without — 256K ctx, multimodal, best local quality.', family: 'Qwen3.8', accent: '#06b6d4' },
+  'ornith-1.5:35b': { params: '35B', size: '23GB', quant: 'Q4_K_M', context: '256K', blurb: 'Ornith 1.5 35B — 112 tok/s on M5 Max, 70.3 avg, self-improving, Text+Vision, end-to-end RL.', family: 'Ornith 1.5', accent: '#f43f5e' },
 }
 
 const OG_IMAGE = { url: '/lab/local-llm/opengraph-image.png', width: 1200, height: 630 }

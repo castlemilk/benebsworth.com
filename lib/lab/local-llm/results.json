@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T07:31:17.354299+00:00",
+  "generatedAt": "2026-08-26T04:22:50.835847+00:00",
   "hardware": {
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
     "machine": "arm64",
@@ -14,7 +14,7 @@
     "chip": "Apple M5 Max",
     "cores_detail": "18 (6 Super and 12 Performance)",
     "memory_str": "128 GB",
-    "ollama_version": "ollama version is 0.32.15"
+    "ollama_version": "ollama version is 0.33.0"
   },
   "models": [
     {
@@ -49,6 +49,41 @@
         "gen_tps_max": 132.2,
         "ttft_ms_mean": 28.7,
         "prompt_tps_mean": 1001.4,
+        "samples": 1
+      }
+    },
+    {
+      "id": "ornith-1.5:35b",
+      "displayName": "ornith 1.5 35b",
+      "entries": [
+        {
+          "file": "bench-ornith-1.5_35b-general-512tok-1787717356.json",
+          "prompt_set": "general",
+          "tokens": 512,
+          "aggregate": {
+            "ttft_ms_mean": 29.4,
+            "ttft_ms_p50": 27.3,
+            "prompt_tps_mean": 1150.2,
+            "prompt_tps_median": 1123.3,
+            "gen_tps_mean": 111.6,
+            "gen_tps_median": 113.2,
+            "gen_tps_min": 105.6,
+            "gen_tps_max": 113.9,
+            "wall_tps_mean": 110.7,
+            "total_wall_s_mean": 3.87,
+            "eval_count_mean": 428.7
+          },
+          "runs": 3,
+          "warmup": 1,
+          "timestamp": "2026-08-26T04:10:06.580564+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 111.6,
+        "gen_tps_min": 111.6,
+        "gen_tps_max": 111.6,
+        "ttft_ms_mean": 29.4,
+        "prompt_tps_mean": 1150.2,
         "samples": 1
       }
     },
@@ -295,6 +330,7 @@
     "bench-gemma3_12b-general-512tok-1787632492.json",
     "bench-gemma3_27b-general-256tok-1787634763.json",
     "bench-gemma3_4b-general-512tok-1787631756.json",
+    "bench-ornith-1.5_35b-general-512tok-1787717356.json",
     "bench-qwen3.8_27b-mlx-general-512tok-1787641235.json",
     "bench-qwen3_14b-general-256tok-1787635682.json",
     "bench-qwen3_8b-code-512tok-1787630509.json",

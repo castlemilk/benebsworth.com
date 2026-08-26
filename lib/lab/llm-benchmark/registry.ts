@@ -153,6 +153,25 @@ const BUILTIN_MODELS: BenchmarkModel[] = [
     tags: ['local', 'ollama', 'm5-max', 'mlx', 'nvfp4', 'thinking'],
     blurb: 'Qwen3.8 27B MLX — native MLX on M5 Max, 94.7 avg with thinking (24 tok/s), 69.1 without — 256K ctx, multimodal, best local quality.',
   },
+  {
+    id: 'ornith-1.5-35b-ollama',
+    name: 'Ornith 1.5 35B (local)',
+    provider: 'Ollama',
+    apiModelId: 'ornith-1.5:35b',
+    costPer1kInputUsd: 0,
+    costPer1kOutputUsd: 0,
+    contextWindow: 262144,
+    capabilities: 'Local Ornith 1.5 35B via Ollama Metal on M5 Max — 112 tok/s, 256K ctx, Text+Vision, end-to-end self-improvement (35B dense)',
+    modelCardUrl: 'https://ollama.com/library/ornith-1.5:35b',
+    vendorUrl: 'https://ornith.ai/',
+    company: 'ChirpChirp',
+    family: 'Ornith 1.5',
+    released: '2026-08',
+    license: 'Ornith License',
+    params: '35B',
+    tags: ['local', 'ollama', 'm5-max', 'vision'],
+    blurb: 'Ornith 1.5 35B — 112 tok/s on M5 Max, 256K ctx, self-improving foundation model, Text+Vision.',
+  },
 
   // ── OpenRouter free tier (cost $0, served by community providers) ──────
   {

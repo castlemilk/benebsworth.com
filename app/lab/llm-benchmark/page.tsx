@@ -3,6 +3,8 @@ import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd, datasetLd } from '@/components/seo/json-ld'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/motion/reveal'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { CategoryGrid } from '@/components/lab/llm-benchmark/category-grid'
@@ -129,6 +131,30 @@ export default function LlmBenchmarkPage() {
         <section className="pb-24">
           <SectionLabel index="03">Models</SectionLabel>
           <ModelList />
+        </section>
+
+        {/* ── Local LLM callout ──────────────────────────────────── */}
+        <section className="pb-16">
+          <Reveal>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-wider text-muted">Also — on-device</p>
+                  <h2 className="mt-1 type-h3">Local LLM throughput on M5 Max 128GB</h2>
+                  <p className="mt-2 max-w-xl type-body text-fg/70">
+                    Same harness, same prompts, but local: Qwen3 8B at <strong className="text-fg">81 tok/s</strong>, Gemma 3 4B at{' '}
+                    <strong className="text-fg">132 tok/s</strong>, 12B at 55 tok/s — TTFT, prompt prefill, and generation via Ollama Metal, not an API.
+                  </p>
+                </div>
+                <Link
+                  href="/lab/local-llm/"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-fg px-5 py-3 font-mono text-xs uppercase tracking-wider text-bg transition-colors hover:bg-fg/90"
+                >
+                  View local benchmark <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+          </Reveal>
         </section>
 
         {/* ── All results ────────────────────────────────────────── */}

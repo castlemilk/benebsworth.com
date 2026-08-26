@@ -568,3 +568,71 @@ tasks:
     cmds:
       - rm -f {{.CACHE}}
       - echo "removed {{.CACHE}}"
+
+  local:
+    desc: Show local LLM benchmark (M5 Max) — hardware, tok/s, dataset
+    summary: |
+      Local on-device benchmark via ~/projects/ollama-bench (Ollama Metal on M5 Max 128GB).
+
+        task bench:local              print current local dataset summary
+        task bench:local:sync         copy ~/projects/ollama-bench/results/local-results.json -> lib + public
+        task bench:local:bench MODEL=gemma3:27b   run ollama-bench then sync
+
+      The dataset is lib/lab/local-llm/results.json (COMMITTED) and public/lab-data/local-llm/results.json.
+      The page is /lab/local-llm/ — a speed leaderboard (gen tok/s, TTFT, prompt eval) distinct from the
+      cloud correctness benchmark. After a new local run: bench -> sync -> build.
+    cmds:
+      - |
+        python3 << 'PY'
+        import json
+        d=json.load(open('lib/lab/local-llm/results.json'))
+        hw=d['hardware']
+        print(f"Hardware: {hw['chip']} {hw['cores_detail']} {hw['mem_gb']}GB {hw['macos']} {hw['ollama_version']}")
+        for m in d['models']:
+          s=m['summary']
+          print(f"  {m['id']:14s} {s['gen_tps_mean']:6.1f} tok/s  TTFT {s['ttft_ms_mean']:5.1f}ms  prompt {s['prompt_tps_mean']:6.0f} tok/s  ({s['samples']} cfgs)")
+        PY
+
+  local:sync:
+    desc: Sync local LLM dataset from ollama-bench into this repo (free, offline)
+    summary: |
+      Copies ~/projects/ollama-bench/results/local-results.json into both
+
+        lib/lab/local-llm/results.json
+        public/lab-data/local-llm/results.json
+
+      Then run `task build:gen:outputs` or `task build` — the local page is static and needs the public copy.
+
+      Source path can be overridden: LOCAL_SRC=../ollama-bench/results/local-results.json task bench:local:sync
+    vars:
+      LOCAL_SRC: '{{.LOCAL_SRC | default "../ollama-bench/results/local-results.json"}}'
+    cmds:
+      - mkdir -p lib/lab/local-llm public/lab-data/local-llm
+      - cp {{.LOCAL_SRC}} lib/lab/local-llm/results.json
+      - cp {{.LOCAL_SRC}} public/lab-data/local-llm/results.json
+      - echo "synced {{.LOCAL_SRC}} -> lib/lab/local-llm/results.json + public/lab-data/local-llm/results.json"
+      - |
+        python3 << 'PY'
+        import json
+        d=json.load(open('lib/lab/local-llm/results.json'))
+        print(f"{len(d['models'])} models, {len(d['rawFiles'])} runs, hardware {d['hardware']['chip']} {d['hardware']['mem_gb']}GB")
+        PY
+
+  local:bench:
+    desc: Run ollama-bench for a local model then sync (SPENDS TIME, writes dataset)
+    summary: |
+      Wrapper: runs the ollama-bench harness for one model, rebuilds its local-results.json, and syncs it here.
+
+        task bench:local:bench -- MODEL=gemma3:12b TOKENS=512 RUNS=2
+        task bench:local:bench -- MODEL=qwen3:14b
+
+      Passes through to ~/projects/ollama-bench: `task bench MODEL=...`.
+      Requires ollama-bench .venv to exist — run `task setup` there if missing.
+    vars:
+      MODEL: '{{.MODEL | default "qwen3:8b"}}'
+      TOKENS: '{{.TOKENS | default "512"}}'
+      RUNS: '{{.RUNS | default "2"}}'
+    cmds:
+      - bash -c 'cd ../ollama-bench && source .venv/bin/activate && task bench MODEL={{.MODEL}} TOKENS={{.TOKENS}} RUNS={{.RUNS}}'
+      - bash -c 'cd ../ollama-bench && source .venv/bin/activate && task bench:report'
+      - task: local:sync

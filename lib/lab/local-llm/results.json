@@ -1,0 +1,305 @@
+{
+  "generatedAt": "2026-08-25T07:31:17.354299+00:00",
+  "hardware": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.7",
+    "cpu_brand": "Apple M5 Max",
+    "hw.ncpu": "18",
+    "hw.memsize": "137438953472",
+    "hw.physicalcpu": "18",
+    "hw.logicalcpu": "18",
+    "mem_gb": 128.0,
+    "macos": "26.5.1",
+    "chip": "Apple M5 Max",
+    "cores_detail": "18 (6 Super and 12 Performance)",
+    "memory_str": "128 GB",
+    "ollama_version": "ollama version is 0.32.15"
+  },
+  "models": [
+    {
+      "id": "gemma3:4b",
+      "displayName": "gemma3 4b",
+      "entries": [
+        {
+          "file": "bench-gemma3_4b-general-512tok-1787631756.json",
+          "prompt_set": "general",
+          "tokens": 512,
+          "aggregate": {
+            "ttft_ms_mean": 28.7,
+            "ttft_ms_p50": 28.1,
+            "prompt_tps_mean": 1001.4,
+            "prompt_tps_median": 1004.5,
+            "gen_tps_mean": 132.2,
+            "gen_tps_median": 131.0,
+            "gen_tps_min": 127.8,
+            "gen_tps_max": 137.7,
+            "wall_tps_mean": 131.2,
+            "total_wall_s_mean": 3.91,
+            "eval_count_mean": 512
+          },
+          "runs": 2,
+          "warmup": 1,
+          "timestamp": "2026-08-25T04:23:12.826906+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 132.2,
+        "gen_tps_min": 132.2,
+        "gen_tps_max": 132.2,
+        "ttft_ms_mean": 28.7,
+        "prompt_tps_mean": 1001.4,
+        "samples": 1
+      }
+    },
+    {
+      "id": "qwen3:8b",
+      "displayName": "qwen3 8b",
+      "entries": [
+        {
+          "file": "bench-qwen3_8b-code-512tok-1787630509.json",
+          "prompt_set": "code",
+          "tokens": 512,
+          "aggregate": {
+            "ttft_ms_mean": 28.0,
+            "ttft_ms_p50": 27.1,
+            "prompt_tps_mean": 2862.5,
+            "prompt_tps_median": 2281.9,
+            "gen_tps_mean": 81.3,
+            "gen_tps_median": 81.1,
+            "gen_tps_min": 80.9,
+            "gen_tps_max": 82.0,
+            "wall_tps_mean": 80.5,
+            "total_wall_s_mean": 4.73,
+            "eval_count_mean": 381
+          },
+          "runs": 2,
+          "warmup": 1,
+          "timestamp": "2026-08-25T04:02:31.883040+00:00"
+        },
+        {
+          "file": "bench-qwen3_8b-general-512tok-1787630442.json",
+          "prompt_set": "general",
+          "tokens": 512,
+          "aggregate": {
+            "ttft_ms_mean": 26.5,
+            "ttft_ms_p50": 25.3,
+            "prompt_tps_mean": 1939.7,
+            "prompt_tps_median": 1951.7,
+            "gen_tps_mean": 81.0,
+            "gen_tps_median": 80.4,
+            "gen_tps_min": 78.8,
+            "gen_tps_max": 83.9,
+            "wall_tps_mean": 80.5,
+            "total_wall_s_mean": 5.04,
+            "eval_count_mean": 407
+          },
+          "runs": 3,
+          "warmup": 1,
+          "timestamp": "2026-08-25T04:01:43.154936+00:00"
+        },
+        {
+          "file": "bench-qwen3_8b-long-context-256tok-1787630561.json",
+          "prompt_set": "long-context",
+          "tokens": 256,
+          "aggregate": {
+            "ttft_ms_mean": 29.8,
+            "ttft_ms_p50": 29.8,
+            "prompt_tps_mean": 122400.3,
+            "prompt_tps_median": 122400.3,
+            "gen_tps_mean": 79.6,
+            "gen_tps_median": 79.6,
+            "gen_tps_min": 79.4,
+            "gen_tps_max": 79.8,
+            "wall_tps_mean": 78.8,
+            "total_wall_s_mean": 3.25,
+            "eval_count_mean": 256
+          },
+          "runs": 1,
+          "warmup": 1,
+          "timestamp": "2026-08-25T04:02:56.266499+00:00"
+        },
+        {
+          "file": "bench-qwen3_8b-short-128tok-1787630556.json",
+          "prompt_set": "short",
+          "tokens": 128,
+          "aggregate": {
+            "ttft_ms_mean": 23.2,
+            "ttft_ms_p50": 22.8,
+            "prompt_tps_mean": 1876.2,
+            "prompt_tps_median": 1898.3,
+            "gen_tps_mean": 89.1,
+            "gen_tps_median": 89.1,
+            "gen_tps_min": 84.8,
+            "gen_tps_max": 93.5,
+            "wall_tps_mean": 79.4,
+            "total_wall_s_mean": 0.52,
+            "eval_count_mean": 42.5
+          },
+          "runs": 3,
+          "warmup": 1,
+          "timestamp": "2026-08-25T04:02:41.367983+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 82.8,
+        "gen_tps_min": 79.6,
+        "gen_tps_max": 89.1,
+        "ttft_ms_mean": 26.9,
+        "prompt_tps_mean": 2226.1,
+        "samples": 4
+      }
+    },
+    {
+      "id": "gemma3:12b",
+      "displayName": "gemma3 12b",
+      "entries": [
+        {
+          "file": "bench-gemma3_12b-general-512tok-1787632492.json",
+          "prompt_set": "general",
+          "tokens": 512,
+          "aggregate": {
+            "ttft_ms_mean": 65.0,
+            "ttft_ms_p50": 64.2,
+            "prompt_tps_mean": 396.7,
+            "prompt_tps_median": 393.1,
+            "gen_tps_mean": 55.4,
+            "gen_tps_median": 55.0,
+            "gen_tps_min": 53.3,
+            "gen_tps_max": 57.7,
+            "wall_tps_mean": 55.0,
+            "total_wall_s_mean": 9.32,
+            "eval_count_mean": 512
+          },
+          "runs": 2,
+          "warmup": 1,
+          "timestamp": "2026-08-25T04:36:18.520528+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 55.4,
+        "gen_tps_min": 55.4,
+        "gen_tps_max": 55.4,
+        "ttft_ms_mean": 65.0,
+        "prompt_tps_mean": 396.7,
+        "samples": 1
+      }
+    },
+    {
+      "id": "qwen3:14b",
+      "displayName": "qwen3 14b",
+      "entries": [
+        {
+          "file": "bench-qwen3_14b-general-256tok-1787635682.json",
+          "prompt_set": "general",
+          "tokens": 256,
+          "aggregate": {
+            "ttft_ms_mean": 31.0,
+            "ttft_ms_p50": 30.9,
+            "prompt_tps_mean": 1163.7,
+            "prompt_tps_median": 1183.1,
+            "gen_tps_mean": 46.0,
+            "gen_tps_median": 46.3,
+            "gen_tps_min": 44.0,
+            "gen_tps_max": 47.8,
+            "wall_tps_mean": 45.7,
+            "total_wall_s_mean": 5.52,
+            "eval_count_mean": 252
+          },
+          "runs": 2,
+          "warmup": 1,
+          "timestamp": "2026-08-25T05:28:54.251751+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 46.0,
+        "gen_tps_min": 46.0,
+        "gen_tps_max": 46.0,
+        "ttft_ms_mean": 31.0,
+        "prompt_tps_mean": 1163.7,
+        "samples": 1
+      }
+    },
+    {
+      "id": "gemma3:27b",
+      "displayName": "gemma3 27b",
+      "entries": [
+        {
+          "file": "bench-gemma3_27b-general-256tok-1787634763.json",
+          "prompt_set": "general",
+          "tokens": 256,
+          "aggregate": {
+            "ttft_ms_mean": 130.2,
+            "ttft_ms_p50": 130.8,
+            "prompt_tps_mean": 167.8,
+            "prompt_tps_median": 169.3,
+            "gen_tps_mean": 24.2,
+            "gen_tps_median": 23.8,
+            "gen_tps_min": 23.5,
+            "gen_tps_max": 25.3,
+            "wall_tps_mean": 23.9,
+            "total_wall_s_mean": 10.72,
+            "eval_count_mean": 256
+          },
+          "runs": 2,
+          "warmup": 1,
+          "timestamp": "2026-08-25T05:14:24.371160+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 24.2,
+        "gen_tps_min": 24.2,
+        "gen_tps_max": 24.2,
+        "ttft_ms_mean": 130.2,
+        "prompt_tps_mean": 167.8,
+        "samples": 1
+      }
+    },
+    {
+      "id": "qwen3.8:27b-mlx",
+      "displayName": "qwen3.8 27b mlx",
+      "entries": [
+        {
+          "file": "bench-qwen3.8_27b-mlx-general-512tok-1787641235.json",
+          "prompt_set": "general",
+          "tokens": 512,
+          "aggregate": {
+            "ttft_ms_mean": 157.4,
+            "ttft_ms_p50": 161.1,
+            "prompt_tps_mean": 613618.2,
+            "prompt_tps_median": 465251.2,
+            "gen_tps_mean": 23.5,
+            "gen_tps_median": 24.0,
+            "gen_tps_min": 19.2,
+            "gen_tps_max": 27.3,
+            "wall_tps_mean": 23.4,
+            "total_wall_s_mean": 22.13,
+            "eval_count_mean": 512
+          },
+          "runs": 2,
+          "warmup": 1,
+          "timestamp": "2026-08-25T07:04:01.071098+00:00"
+        }
+      ],
+      "summary": {
+        "gen_tps_mean": 23.5,
+        "gen_tps_min": 23.5,
+        "gen_tps_max": 23.5,
+        "ttft_ms_mean": 157.4,
+        "prompt_tps_mean": null,
+        "samples": 1
+      }
+    }
+  ],
+  "rawFiles": [
+    "bench-gemma3_12b-general-512tok-1787632492.json",
+    "bench-gemma3_27b-general-256tok-1787634763.json",
+    "bench-gemma3_4b-general-512tok-1787631756.json",
+    "bench-qwen3.8_27b-mlx-general-512tok-1787641235.json",
+    "bench-qwen3_14b-general-256tok-1787635682.json",
+    "bench-qwen3_8b-code-512tok-1787630509.json",
+    "bench-qwen3_8b-general-512tok-1787630442.json",
+    "bench-qwen3_8b-long-context-256tok-1787630561.json",
+    "bench-qwen3_8b-short-128tok-1787630556.json"
+  ]
+}

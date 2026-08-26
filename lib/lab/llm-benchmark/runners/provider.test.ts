@@ -678,14 +678,21 @@ describe('built-in provider list', () => {
     // Keeps `providers.ts:BUILTIN_PROVIDERS` — which plugins/registry.ts uses
     // to reject a shadowing generator — honest about the switch it mirrors: a
     // routable provider fails with "config missing", never "Unsupported".
+    // Ollama is the exception: it has no required config (host defaults to
+    // localhost), so it fails with "model not found" instead.
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const runner = createProviderRunner({ bustCache: true, maxRetries: 0, scorer: { score: () => 50 } })
     for (const provider of BUILTIN_PROVIDERS) {
       consoleErrorSpy.mockClear()
       await runner.runTask({ ...MODEL, id: `probe-${provider}`, provider }, TASK, 1)
       const logged = consoleErrorSpy.mock.calls.map((c) => String(c[0])).join('\n')
-      expect(logged, provider).toMatch(/config missing/)
-      expect(logged, provider).not.toMatch(/Unsupported provider/)
+      if (provider === 'Ollama') {
+        expect(logged, provider).toMatch(/model not found|Ollama/)
+        expect(logged, provider).not.toMatch(/Unsupported provider/)
+      } else {
+        expect(logged, provider).toMatch(/config missing/)
+        expect(logged, provider).not.toMatch(/Unsupported provider/)
+      }
     }
     consoleErrorSpy.mockRestore()
   })

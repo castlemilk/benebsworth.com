@@ -23,6 +23,7 @@ export const BUILTIN_PROVIDERS: readonly string[] = [
   'Agy',
   'Codex',
   'OpenCode',
+  'Ollama',
 ]
 
 /** True when the harness has a built-in generator for this provider name. */

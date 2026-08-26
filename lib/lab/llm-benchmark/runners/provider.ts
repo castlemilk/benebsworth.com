@@ -22,6 +22,7 @@ import { generateOpenRouter, type OpenRouterConfig } from './openrouter'
 import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
 import { generateOpencode, type OpencodeConfig } from './opencode'
+import { generateOllama, type OllamaConfig } from './ollama'
 import { CLI_PROVIDERS } from './execution-target'
 import { getCachedResponse, setCachedResponse, setBustCache, saveQueue } from '../cache'
 import { forceSpill, hashPrompt, openRunLog, type RunLog } from '../runlog'
@@ -44,6 +45,7 @@ export interface ProviderRunnerConfig {
   agy?: AgyConfig
   codex?: CodexConfig
   opencode?: OpencodeConfig
+  ollama?: OllamaConfig
   /** Per-call timeout in milliseconds. Defaults to 10 minutes. */
   timeoutMs?: number
   /** Maximum retries for transient failures. Defaults to 2. */
@@ -409,6 +411,11 @@ function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
     case 'OpenCode':
       if (!cfg.opencode) throw new Error(`OpenCode config missing for ${model.id}`)
       return { provider: 'opencode' as const, config: cfg.opencode }
+    case 'Ollama':
+      // Ollama is local — no API key needed, host defaults to localhost:11434.
+      // An explicit config is optional; we provide a default so `task bench:run MODELS=ollama-*`
+      // works without any env.
+      return { provider: 'ollama' as const, config: cfg.ollama ?? {} }
     default: {
       // Unknown to the switch — ask the plugins before giving up. This is the
       // whole extension seam: a contributed provider needs no case here.
@@ -447,6 +454,8 @@ async function generateWithProvider(
       return generateCodex(config, model, task, iterationIndex)
     case 'opencode':
       return generateOpencode(config, model, task, iterationIndex)
+    case 'ollama':
+      return generateOllama(config, model, task)
     case 'plugin': {
       // Everything around this call — retries, cache, empty-body recovery,
       // run log, quota breaker, scoring — is unchanged, which is the point:

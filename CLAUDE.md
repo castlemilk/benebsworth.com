@@ -87,6 +87,8 @@ incrementally and merge-protected, so a killed or quota-blocked run cannot
 destroy good baseline data. Seeded sample records carry `source: 'seeded'` and
 must stay disclosed in the UI.
 
+**Local Ollama (`Ollama` provider, `runners/ollama.ts`) is free but not free of pitfalls.** Early locals scored `100 EMPTY` via structural fallback (no Chromium `sandboxPolicy` → no behavioral checks); the honest sweep is `BUST=1` under `chromium partial` (`task bench:run BUST=1`). `qwen3.8:27b-mlx` is the MLX outlier: `Ollama` native MLX engine (`100% GPU`, `qwen3_5` arch, `nvfp4`, 262K) on M5 Max — **94.7 avg with `think:true, reasoning_effort:medium, num_predict:24000` vs 69.1 without** (31 tok/s vs 50, +25.6 pts; see `lib/lab/llm-benchmark/runners/ollama.ts:144`). For best quality, keep `qwen3.8-27b-mlx-ollama` on thinking; others stay `no-think`. Speed data lives separately in `lib/lab/local-llm/results.json` (ollama-bench `23.5 tok/s` for 3.8 without think, 132 for gemma3:4b).
+
 **A subtle + systemic + costly fix ships with a postmortem** — a write-up in
 `docs/postmortem/` naming the guardrails it motivated (criteria + template there).
 

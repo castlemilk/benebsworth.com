@@ -9,8 +9,9 @@ import { Cpu, MemoryStick, Layers, Zap, Clock3, Gauge, HardDrive, ArrowRight, Ex
 import dataset from '@/lib/lab/local-llm/results.json'
 import type { LocalDataset } from '@/lib/lab/local-llm/types'
 import { BENCHMARK_RESULTS } from '@/lib/lab/llm-benchmark/results'
-import { BENCHMARK_MODELS, getTask } from '@/lib/lab/llm-benchmark/registry'
+import { BENCHMARK_MODELS, getModel, getTask } from '@/lib/lab/llm-benchmark/registry'
 import { modelPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
+import { ModelLogoBadge } from '@/components/lab/llm-benchmark/model-logo'
 
 const DATA = dataset as unknown as LocalDataset
 
@@ -199,22 +200,27 @@ export default function LocalLlmPage() {
               const meta = MODEL_META[m.id] ?? { accent: '#7c5cff', family: 'Local', size: '—', params: '—', quant: 'Q4_K_M', context: '—', blurb: '' }
               const pct = ((m.summary.gen_tps_mean ?? 0) / maxGen) * 100
               const isTop = i === 0
+              const benchModel = getModel(toScoredId(m.id)) ?? BENCHMARK_MODELS.find((x) => x.apiModelId === m.id) ?? null
               return (
                 <Reveal key={m.id} delay={i * 60}>
                   <div id={m.id} className="group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-colors hover:bg-[var(--color-surface-2)] sm:p-5">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div className="flex min-w-0 flex-1 items-center gap-4">
                         <span className="hidden w-7 shrink-0 text-right font-mono text-sm tabular-nums text-muted sm:block">{String(i + 1).padStart(2, '0')}</span>
-                        <span
-                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border font-mono text-sm"
-                          style={{
-                            color: meta.accent,
-                            borderColor: `color-mix(in srgb, ${meta.accent} 35%, transparent)`,
-                            backgroundColor: `color-mix(in srgb, ${meta.accent} 10%, transparent)`,
-                          }}
-                        >
-                          {isTop ? <Zap className="h-4 w-4" /> : i + 1}
-                        </span>
+                        {benchModel ? (
+                          <ModelLogoBadge model={benchModel} size={44} />
+                        ) : (
+                          <span
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border font-mono text-sm"
+                            style={{
+                              color: meta.accent,
+                              borderColor: `color-mix(in srgb, ${meta.accent} 35%, transparent)`,
+                              backgroundColor: `color-mix(in srgb, ${meta.accent} 10%, transparent)`,
+                            }}
+                          >
+                            {isTop ? <Zap className="h-4 w-4" /> : i + 1}
+                          </span>
+                        )}
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <h3 className="type-h3">{m.id}</h3>
@@ -298,7 +304,10 @@ export default function LocalLlmPage() {
                         <tr key={m.id} className="border-b border-[var(--color-border)]/60 last:border-0">
                           <td className="py-3 pl-5">
                             <div className="flex items-center gap-2">
-                              <span className="h-2 w-2 rounded-full" style={{ background: meta.accent }} />
+                              {(() => {
+                                const mm = scoredModelMeta(m.id)
+                                return mm ? <ModelLogoBadge model={mm} size={28} /> : <span className="h-2 w-2 rounded-full" style={{ background: meta.accent }} />
+                              })()}
                               {(() => {
                                 const mm = scoredModelMeta(m.id)
                                 return mm ? (
@@ -311,7 +320,7 @@ export default function LocalLlmPage() {
                               })()}
                               <span className="font-mono text-xs text-muted">{meta.size}</span>
                             </div>
-                            <div className="font-mono text-xs text-muted">{meta.params} · scored {rows.length}/7</div>
+                            <div className="ml-9 font-mono text-xs text-muted">{meta.params} · scored {rows.length}/7</div>
                           </td>
                           <td className="py-3 text-right">
                             <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-1 font-mono text-sm font-medium tabular-nums">
@@ -374,15 +383,20 @@ export default function LocalLlmPage() {
               <tbody>
                 {DATA.models.map(m => {
                   const meta = MODEL_META[m.id] ?? { accent: '#7c5cff', size: '—', params: '—' }
+                  const benchModel = getModel(toScoredId(m.id)) ?? BENCHMARK_MODELS.find((x) => x.apiModelId === m.id) ?? null
                   return (
                     <tr key={m.id} className="border-b border-[var(--color-border)]/60 last:border-0">
                       <td className="py-3 pl-5">
                         <div className="flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full" style={{ background: meta.accent }} />
+                          {benchModel ? (
+                            <ModelLogoBadge model={benchModel} size={26} />
+                          ) : (
+                            <span className="h-2 w-2 rounded-full" style={{ background: meta.accent }} />
+                          )}
                           <span className="font-medium">{m.id}</span>
                           <span className="font-mono text-xs text-muted">{meta.size}</span>
                         </div>
-                        <div className="font-mono text-xs text-muted">{meta.params} · {meta.family ?? 'Local'}</div>
+                        <div className="ml-8 font-mono text-xs text-muted">{meta.params} · {meta.family ?? 'Local'}</div>
                       </td>
                       <td className="py-3 text-right font-mono tabular-nums font-medium">{m.summary.gen_tps_mean?.toFixed(1)}</td>
                       <td className="py-3 text-right font-mono tabular-nums text-muted">{m.summary.prompt_tps_mean?.toFixed(0)}</td>

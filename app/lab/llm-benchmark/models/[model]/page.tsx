@@ -28,7 +28,6 @@ import {
   isFreeModel,
 } from '@/components/lab/llm-benchmark/format'
 import {
-  Cpu,
   ArrowRight,
   ExternalLink,
   CalendarDays,
@@ -39,6 +38,7 @@ import {
   Layers,
 } from 'lucide-react'
 import Link from 'next/link'
+import { ModelLogoBadge } from '@/components/lab/llm-benchmark/model-logo'
 
 export function generateStaticParams() {
   return BENCHMARK_MODELS.map((m) => ({ model: m.id }))
@@ -151,13 +151,19 @@ export default async function ModelDetailPage({
 
         <section className="pb-10">
           <Reveal>
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-surface-2)] text-[var(--color-fg)]">
-                <Cpu className="h-5 w-5" aria-hidden />
-              </span>
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-                {model.provider}
-              </span>
+            <div className="flex items-center gap-4">
+              <ModelLogoBadge model={model} size={52} />
+              <div>
+                <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+                  {model.company ? `${model.company} · ${model.provider}` : model.provider}
+                  {model.family ? ` · ${model.family}` : ''}
+                </span>
+                {model.params && (
+                  <p className="mt-1 font-mono text-xs text-muted">
+                    {model.params} · {model.license ?? ''} {isFreeModel(model) ? '· Free tier' : ''} · {model.contextWindow.toLocaleString()} ctx
+                  </p>
+                )}
+              </div>
             </div>
           </Reveal>
           <Reveal delay={80}>

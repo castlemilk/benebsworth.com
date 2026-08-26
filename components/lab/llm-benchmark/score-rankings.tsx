@@ -8,6 +8,7 @@ import { formatRuntime, formatCost, formatTokens } from './format'
 import { medalColor } from './bench-theme'
 import { Reveal } from '@/components/motion/reveal'
 import { cn } from '@/lib/utils'
+import { ModelLogoBadge } from './model-logo'
 
 /**
  * Model leaderboard. Rankings are computed server-side (analytics.rankModels)
@@ -48,6 +49,7 @@ export function ScoreRankings({ rankings }: { rankings: ModelRanking[] }) {
                   >
                     {isPodium ? <Trophy className="h-4 w-4" aria-hidden /> : <span>{i + 1}</span>}
                   </span>
+                  <ModelLogoBadge model={model} size={42} />
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <h3 className="type-h3 truncate">{model.name}</h3>
@@ -61,7 +63,7 @@ export function ScoreRankings({ rankings }: { rankings: ModelRanking[] }) {
                       )}
                     </div>
                     <p className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
-                      {model.provider} · {stats.count} result{stats.count !== 1 ? 's' : ''}
+                      {model.company ?? model.provider} · {model.family ?? model.provider} · {stats.count} run{stats.count !== 1 ? 's' : ''}
                     </p>
                   </div>
                 </div>

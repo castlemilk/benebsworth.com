@@ -9,9 +9,9 @@ import { Cpu, MemoryStick, Layers, Zap, Clock3, Gauge, HardDrive, ArrowRight, Ex
 import dataset from '@/lib/lab/local-llm/results.json'
 import type { LocalDataset } from '@/lib/lab/local-llm/types'
 import { BENCHMARK_RESULTS } from '@/lib/lab/llm-benchmark/results'
-import { BENCHMARK_MODELS, getModel, getTask } from '@/lib/lab/llm-benchmark/registry'
-import { modelPath, taskPath } from '@/lib/lab/llm-benchmark/nav'
+import { BENCHMARK_MODELS, getModel } from '@/lib/lab/llm-benchmark/registry'
 import { ModelLogoBadge } from '@/components/lab/llm-benchmark/model-logo'
+import { ModelTable } from '@/components/lab/llm-benchmark/model-table'
 
 const DATA = dataset as unknown as LocalDataset
 
@@ -21,19 +21,6 @@ const SCORED_LOCAL = BENCHMARK_RESULTS.filter(r => r.modelId.endsWith('-ollama')
 function toScoredId(speedId: string): string {
   // speed dataset uses 'qwen3:8b' / 'gemma3:4b' (colon), scored uses 'qwen3-8b-ollama' (dash + suffix)
   return speedId.replace(/:/g, '-') + '-ollama'
-}
-function scoredForModel(speedId: string) {
-  const sid = toScoredId(speedId)
-  return SCORED_LOCAL.filter(r => r.modelId === sid)
-}
-function avgScore(speedId: string) {
-  const rs = scoredForModel(speedId)
-  if (rs.length === 0) return null
-  return rs.reduce((s, r) => s + r.score, 0) / rs.length
-}
-function scoredModelMeta(speedId: string) {
-  const sid = toScoredId(speedId)
-  return BENCHMARK_MODELS.find(m => m.id === sid)
 }
 
 // Model enrichment — static, keep in sync with ollama list
@@ -270,144 +257,31 @@ export default function LocalLlmPage() {
           </div>
         </section>
 
-        {/* Scored on tasks — same harness as cloud */}
+        {/* Combined benchmark table */}
         <section className="pb-12">
           <div className="flex items-baseline justify-between">
-            <h2 className="type-h2">Scored on tasks — same harness as cloud</h2>
+            <h2 className="type-h2">Benchmark results</h2>
             <Link href="/lab/llm-benchmark/" className="hidden items-center gap-1 font-mono text-xs text-muted hover:text-fg sm:inline-flex">
               View cloud leaderboard <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
           <p className="mt-2 max-w-prose font-mono text-xs text-muted">
-            Same 7 tasks (crypto, equation, n-body, platformer, landing, pendulum, circuit) · 1 iter · executable/behavioral scorers · local Ollama via <code className="rounded bg-[var(--color-surface)] px-1">runners/ollama.ts</code> · cost $0.
+            Speed + scored tasks combined. Sort by any column, filter by family or search. Expand rows for per-prompt-set and per-task breakdowns.
             {SCORED_LOCAL.length === 0 && ' (no scored runs yet — run task bench:run MODELS=... )'}
           </p>
-          {SCORED_LOCAL.length > 0 && (
-            <div className="mt-6 overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <table className="w-full min-w-[820px] border-collapse text-sm">
-                <thead>
-                  <tr className="border-b border-[var(--color-border)] font-mono text-[0.65rem] uppercase tracking-wider text-muted">
-                    <th className="py-3 pl-5 text-left">Model</th>
-                    <th className="py-3 text-right">Avg score</th>
-                    <th className="py-3 pr-5 text-left">Per-task scores (click task for artifact)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...DATA.models]
-                    .sort((a, b) => (avgScore(b.id) ?? 0) - (avgScore(a.id) ?? 0))
-                    .map(m => {
-                      const meta = MODEL_META[m.id] ?? { accent: '#7c5cff', size: '—', params: '—' }
-                      const avg = avgScore(m.id)
-                      const sid = toScoredId(m.id)
-                      const rows = scoredForModel(m.id)
-                      return (
-                        <tr key={m.id} className="border-b border-[var(--color-border)]/60 last:border-0">
-                          <td className="py-3 pl-5">
-                            <div className="flex items-center gap-2">
-                              {(() => {
-                                const mm = scoredModelMeta(m.id)
-                                return mm ? <ModelLogoBadge model={mm} size={28} /> : <span className="h-2 w-2 rounded-full" style={{ background: meta.accent }} />
-                              })()}
-                              {(() => {
-                                const mm = scoredModelMeta(m.id)
-                                return mm ? (
-                                  <Link href={modelPath(mm)} className="font-medium hover:text-[var(--color-project)]">
-                                    {mm.name}
-                                  </Link>
-                                ) : (
-                                  <span className="font-medium">{m.id}</span>
-                                )
-                              })()}
-                              <span className="font-mono text-xs text-muted">{meta.size}</span>
-                            </div>
-                            <div className="ml-9 font-mono text-xs text-muted">{meta.params} · scored {rows.length}/7</div>
-                          </td>
-                          <td className="py-3 text-right">
-                            <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-1 font-mono text-sm font-medium tabular-nums">
-                              {avg !== null ? avg.toFixed(1) : '—'}
-                            </span>
-                          </td>
-                          <td className="py-3 pr-5">
-                            <div className="flex flex-wrap gap-1.5">
-                              {rows
-                                .sort((a, b) => a.taskId.localeCompare(b.taskId))
-                                .map(r => {
-                                  const t = getTask(r.taskId)
-                                  const href = t ? `${taskPath(t)}?model=${encodeURIComponent(sid)}#run` : `/lab/llm-benchmark/models/${sid}/`
-                                  return (
-                                    <Link
-                                      key={r.taskId}
-                                      href={href}
-                                      className="inline-flex items-center gap-1 rounded-full border px-2 py-1 font-mono text-xs hover:bg-[var(--color-surface-2)]"
-                                      style={{
-                                        borderColor: r.score >= 90 ? '#10b981' : r.score >= 60 ? '#f59e0b' : '#ef4444',
-                                        color: r.score >= 90 ? '#10b981' : r.score >= 60 ? '#a16207' : '#dc2626',
-                                      }}
-                                    >
-                                      {r.taskId.replace('circuit-builder-teaser', 'circuit').replace('physics-pendulum-wave', 'pendulum').replace('landing-page-morph', 'landing')} {r.score.toFixed(0)}
-                                    </Link>
-                                  )
-                                })}
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <div className="mt-6">
+            <ModelTable
+              models={DATA.models}
+              scoredResults={SCORED_LOCAL}
+              maxGenTps={maxGen}
+            />
+          </div>
           {SCORED_LOCAL.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2 font-mono text-xs text-muted">
               <span>Tasks: crypto 26–90 · equation 100 · n-body 3–100 · platformer 3–100 · landing 50–100 · pendulum 11–100 · circuit 21–100</span>
               <span>· Qwen3.8 94.7 (thinking) leads; Qwen3 66.7 trails; Gemma 4B 30.3 — honest chromium, BUST=1, no fallback.</span>
             </div>
           )}
-        </section>
-
-        {/* Table — Speed */}
-        <section className="pb-12">
-          <h2 className="type-h2">Table — Speed</h2>
-          <p className="mt-2 max-w-prose font-mono text-xs text-muted">Sorted by generation tok/s descending · TTFT warm (cold first load 70–900ms) · prompt eval excludes cached-KV outlier (qwen long-context).</p>
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-            <table className="w-full min-w-[720px] border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-[var(--color-border)] font-mono text-[0.65rem] uppercase tracking-wider text-muted">
-                  <th className="py-3 pl-5 text-left">Model</th>
-                  <th className="py-3 text-right">Gen tok/s</th>
-                  <th className="py-3 text-right">Prompt tok/s</th>
-                  <th className="py-3 text-right">TTFT</th>
-                  <th className="py-3 pr-5 text-right">Total / sample</th>
-                </tr>
-              </thead>
-              <tbody>
-                {DATA.models.map(m => {
-                  const meta = MODEL_META[m.id] ?? { accent: '#7c5cff', size: '—', params: '—' }
-                  const benchModel = getModel(toScoredId(m.id)) ?? BENCHMARK_MODELS.find((x) => x.apiModelId === m.id) ?? null
-                  return (
-                    <tr key={m.id} className="border-b border-[var(--color-border)]/60 last:border-0">
-                      <td className="py-3 pl-5">
-                        <div className="flex items-center gap-2">
-                          {benchModel ? (
-                            <ModelLogoBadge model={benchModel} size={26} />
-                          ) : (
-                            <span className="h-2 w-2 rounded-full" style={{ background: meta.accent }} />
-                          )}
-                          <span className="font-medium">{m.id}</span>
-                          <span className="font-mono text-xs text-muted">{meta.size}</span>
-                        </div>
-                        <div className="ml-8 font-mono text-xs text-muted">{meta.params} · {meta.family ?? 'Local'}</div>
-                      </td>
-                      <td className="py-3 text-right font-mono tabular-nums font-medium">{m.summary.gen_tps_mean?.toFixed(1)}</td>
-                      <td className="py-3 text-right font-mono tabular-nums text-muted">{m.summary.prompt_tps_mean?.toFixed(0)}</td>
-                      <td className="py-3 text-right font-mono tabular-nums text-muted">{m.summary.ttft_ms_mean?.toFixed(1)} ms</td>
-                      <td className="py-3 pr-5 text-right font-mono text-xs tabular-nums text-muted">{m.entries[0]?.aggregate.total_wall_s_mean.toFixed(2)}s · {m.summary.samples} cfg{m.summary.samples !== 1 ? 's' : ''}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
         </section>
 
         {/* Methodology */}

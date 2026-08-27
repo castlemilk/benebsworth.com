@@ -1,5 +1,12 @@
 // SERVER-SIDE ONLY — importing results.json ships the full dataset to the client.
-import type { HarnessEvalReport, HarnessTaskResult, HarnessModelSummary, HarnessTask } from './types.js';
+//
+// results.json is ACCUMULATED eval history, not a derived artifact: every
+// record cost real API spend. scripts/gen-harness-eval.mjs MERGES fresh
+// reports into it (lib/lab/harness-eval/merge.mjs) and refuses to shrink it;
+// deliberate resets require BENCH_RESET_HARNESS=1. Never regenerate it
+// wholesale, and never commit a hand-emptied version — the 1.3MB of model
+// summaries here represent the only copy of runs dating back to 2026-07.
+import type { HarnessEvalReport, HarnessTaskResult, HarnessModelSummary } from './types.js';
 
 import resultsData from './results.json';
 

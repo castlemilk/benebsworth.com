@@ -1,12 +1,22 @@
 #!/usr/bin/env node
 // scripts/gen-harness-eval.mjs
 // Reads harness report JSONs from ~/.omega/reports/ and generates:
-// 1. lib/lab/harness-eval/results.json  — structured eval data
+// 1. lib/lab/harness-eval/results.json  — ACCUMULATED eval data (merged, never replaced — see below)
 // 2. lib/lab/harness-eval/registry.ts   — populated with actual models/tasks
 // 3. public/lab-data/harness-eval/patches/  — per-task per-model patches
 // 4. public/lab-data/harness-eval/failures/ — per-task per-model failure details
+//
+// results.json is MERGE-PROTECTED accumulated history, not a derived
+// artifact: every record in it cost real API spend, and this script runs in
+// prebuild on EVERY machine that builds the site. A machine with an empty
+// ~/.omega/reports must leave the committed file untouched. Fresh reports
+// update same-key task results and append novel ones; models missing from
+// the fresh reports are kept. To deliberately discard history, re-run with
+// BENCH_RESET_HARNESS=1. Merge logic + guard: lib/lab/harness-eval/merge.mjs
+// and docs/postmortem/0005-harness-eval-clobber.md.
 import fs from 'node:fs';
 import path from 'node:path';
+import { computeSummary, mergeModelSummaries, assertNoShrink } from '../lib/lab/harness-eval/merge.mjs';
 
 const HOME = process.env.HOME || '/Users/' + process.env.USER;
 const REPORTS_DIR = path.join(HOME, '.omega', 'reports');
@@ -198,53 +208,12 @@ function buildModelSummaries(modelEvalReports, benchmarkReports) {
     modelMap.get(key).results.push(...extractTaskResults(report, key.split('/')[0], key.split('/').slice(1).join('/')));
   }
 
-  const summaries = [];
-  for (const [, entry] of modelMap) {
-    const tasks = entry.results;
-    const passed = tasks.filter(t => t.passed).length;
-    const failed = tasks.filter(t => !t.passed && t.status !== 'timeout').length;
-    const timeouts = tasks.filter(t => t.status === 'timeout').length;
-    const totalTokens = tasks.reduce((a, t) => a + (t.tokens ?? 0), 0);
-    const totalCost = tasks.reduce((a, t) => a + (t.costUsd ?? 0), 0);
-    const hasCost = tasks.some(t => typeof t.costUsd === 'number' && t.costUsd > 0);
-    const totalTurns = tasks.reduce((a, t) => a + (t.turns ?? 0), 0);
-    const hasTurns = tasks.some(t => typeof t.turns === 'number' && t.turns > 0);
-
-    const toolBreakdown = {};
-    let totalToolCalls = 0;
-    for (const task of tasks) {
-      if (!task.toolCalls || typeof task.toolCalls !== 'object') continue;
-      for (const [name, count] of Object.entries(task.toolCalls)) {
-        if (typeof count === 'number' && count > 0) {
-          totalToolCalls += count;
-          toolBreakdown[name] = (toolBreakdown[name] ?? 0) + count;
-        }
-      }
-    }
-    const hasTools = totalToolCalls > 0;
-
-    const totalDuration = tasks.reduce((a, t) => a + t.durationMs, 0);
-
-    summaries.push({
-      model: entry.model,
-      totalTasks: tasks.length,
-      passed,
-      failed,
-      timeouts,
-      passRate: tasks.length > 0 ? Math.round((passed / tasks.length) * 100) : 0,
-      totalDurationMs: totalDuration,
-      totalTokens,
-      totalCostUsd: hasCost ? Number(totalCost.toFixed(4)) : null,
-      totalTurns: hasTurns ? totalTurns : null,
-      averageTurns: hasTurns && tasks.length > 0 ? Number((totalTurns / tasks.length).toFixed(1)) : null,
-      totalToolCalls: hasTools ? totalToolCalls : null,
-      toolBreakdown,
-      avgDurationMs: tasks.length > 0 ? Math.round(totalDuration / tasks.length) : 0,
-      tasks,
-    });
-  }
-
-  return summaries.sort((a, b) => b.passRate - a.passRate || a.totalTokens - b.totalTokens);
+  // Aggregates live in computeSummary (merge.mjs) — one implementation
+  // shared with the merge path, so a fresh-only model and a merged model
+  // summarise identically.
+  return [...modelMap.values()]
+    .map(({ model, results }) => computeSummary(model, results))
+    .sort((a, b) => b.passRate - a.passRate || a.totalTokens - b.totalTokens);
 }
 
 function writePatchFiles(summaries) {
@@ -255,7 +224,7 @@ function writePatchFiles(summaries) {
       if (!task.hasPatch || !task.patch) continue;
       const taskDir = path.join(patchDir, task.task.suite, task.task.id);
       fs.mkdirSync(taskDir, { recursive: true });
-      const file = path.join(taskDir, `${summary.model.id.replace(/[\/:]/g, '-')}.json`);
+      const file = path.join(taskDir, `${summary.model.id.replace(/\//g, '-').replace(/:/g, '-')}.json`);
       fs.writeFileSync(file, JSON.stringify({ taskId: task.task.id, modelId: summary.model.id, patch: task.patch }));
     }
   }
@@ -269,7 +238,7 @@ function writeFailureFiles(summaries) {
       if (!task.failure) continue;
       const taskDir = path.join(failDir, task.task.suite, task.task.id);
       fs.mkdirSync(taskDir, { recursive: true });
-      const file = path.join(taskDir, `${summary.model.id.replace(/[\/:]/g, '-')}.json`);
+      const file = path.join(taskDir, `${summary.model.id.replace(/\//g, '-').replace(/:/g, '-')}.json`);
       fs.writeFileSync(file, JSON.stringify({ taskId: task.task.id, modelId: summary.model.id, failure: task.failure }));
     }
   }
@@ -335,16 +304,47 @@ const modelEvalReports = loadJsonFiles('model-eval-');
 const benchmarkReports = loadJsonFiles('benchmark-');
 console.log(`Found ${String(modelEvalReports.length)} model-eval + ${String(benchmarkReports.length)} benchmark reports`);
 
-const summaries = buildModelSummaries(modelEvalReports, benchmarkReports);
-const allTasks = [...new Map(summaries.flatMap(s => s.tasks.map(t => [t.task.id, t.task]))).values()];
-console.log(`Extracted ${String(summaries.length)} model summaries, ${String(allTasks.length)} unique tasks`);
+const fresh = buildModelSummaries(modelEvalReports, benchmarkReports);
 
 fs.mkdirSync(LIB_OUT, { recursive: true });
 fs.mkdirSync(PUBLIC_DATA, { recursive: true });
 
-// results.json
-const resultsData = { timestamp: new Date().toISOString(), models: summaries };
-fs.writeFileSync(path.join(LIB_OUT, 'results.json'), JSON.stringify(resultsData, null, 2));
+// ── Merge into the accumulated baseline (see file header) ──
+const resultsPath = path.join(LIB_OUT, 'results.json');
+let existing = [];
+if (fs.existsSync(resultsPath)) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(resultsPath, 'utf-8'));
+    if (Array.isArray(raw?.models)) existing = raw.models;
+  } catch (err) {
+    console.warn('[gen-harness-eval] existing results.json unreadable — treating as empty baseline:', err.message);
+  }
+}
+
+const reset = Boolean(process.env.BENCH_RESET_HARNESS);
+const summaries = reset ? fresh : mergeModelSummaries(existing, fresh);
+
+// Shrink guard (assertNoShrink in merge.mjs, unit-tested there): merge
+// semantics make the output a superset of the baseline by construction, so
+// a smaller result is a bug in the merge — refuse the write rather than
+// persist the loss. BENCH_RESET_HARNESS=1 skips both the merge and this
+// guard: it is the one deliberate path to discarding history.
+if (!reset) assertNoShrink(existing, summaries);
+
+// Write results.json ONLY when the model data changed. This script runs in
+// prebuild on every machine that builds the site; a no-reports machine must
+// leave both the committed file and the working tree untouched (a timestamp-
+// only rewrite dirtied the tree on every build, which is how the empty-file
+// clobber went unnoticed for as long as it did).
+if (!fs.existsSync(resultsPath) || JSON.stringify(summaries) !== JSON.stringify(existing)) {
+  fs.writeFileSync(resultsPath, JSON.stringify({ timestamp: new Date().toISOString(), models: summaries }, null, 2));
+  console.log(`Wrote results.json: ${String(summaries.length)} models (was ${String(existing.length)})`);
+} else {
+  console.log(`results.json unchanged (${String(summaries.length)} models) — not rewritten`);
+}
+
+const allTasks = [...new Map(summaries.flatMap(s => s.tasks.map(t => [t.task.id, t.task]))).values()];
+console.log(`Merged ${String(summaries.length)} model summaries, ${String(allTasks.length)} unique tasks`);
 
 // registry.ts
 fs.writeFileSync(path.join(LIB_OUT, 'registry.ts'), generateRegistry(summaries, allTasks));

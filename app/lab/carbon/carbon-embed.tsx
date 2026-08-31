@@ -23,20 +23,30 @@ const CARBON_ORIGIN = normalizeCarbonOrigin(
 )
 const EMBED_URL = `${CARBON_ORIGIN}/?embed=1`
 
+export function createCarbonMessageHandler(
+  getFrameWindow: () => Window | null | undefined,
+  setHeight: (height: number) => void,
+): (event: MessageEvent) => void {
+  return (event) => {
+    if (event.origin !== CARBON_ORIGIN) return
+    if (event.source !== getFrameWindow()) return
+    const data = event.data as { type?: string; height?: number }
+    if (data?.type === 'carbon:height' && isValidCarbonHeight(data.height)) {
+      setHeight(data.height)
+    }
+  }
+}
+
 export function CarbonEmbed() {
   const frameRef = useRef<HTMLIFrameElement>(null)
   const [height, setHeight] = useState(720)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      if (e.origin !== CARBON_ORIGIN) return
-      if (e.source !== frameRef.current?.contentWindow) return
-      const data = e.data as { type?: string; height?: number }
-      if (data?.type === 'carbon:height' && isValidCarbonHeight(data.height)) {
-        setHeight(data.height)
-      }
-    }
+    const onMessage = createCarbonMessageHandler(
+      () => frameRef.current?.contentWindow,
+      setHeight,
+    )
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [])

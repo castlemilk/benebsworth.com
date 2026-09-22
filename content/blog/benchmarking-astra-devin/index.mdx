@@ -1,0 +1,66 @@
+---
+title: "Astra extra high and SWE-2: lighthouses, racing cars and nine more tests"
+date: "2026-09-22T00:00:00.000Z"
+description: "GPT-6 Astra at extra-high reasoning and Devin SWE-2 High run the same eleven tasks, including a rotating voxel lighthouse and a car racing game."
+labels: software,machine-learning,llm,benchmarking
+release: false
+benchRepro:
+  commit: 2c3919956d10994da99a2d36928005b1713d58b1
+  sweeps:
+    - 2026-09-22T08-50-23
+    - 2026-09-22T09-53-42
+---
+
+We added two visual tasks to the [benchmark](/lab/llm-benchmark/): a detailed voxel lighthouse with an orbit camera, and a playable car racer. This run compares GPT-6 Astra at extra-high reasoning with SWE-2 High through the Devin CLI, across all eleven tasks.
+
+The extra-high setting is explicit. The Codex wrapper passes `model_reasoning_effort="xhigh"` alongside `gpt-6-astra`. Devin gets the exact `swe-2-high` model identifier from its authenticated catalog. Neither relies on whichever model happened to be selected in the terminal last.
+
+## Results
+
+The sweep is still running. This draft is excluded from the published site until the table and artifact review are complete.
+
+## A lighthouse you can look behind
+
+The [lighthouse task](/lab/llm-benchmark/3d-physics-animation/voxel-lighthouse/) asks for actual 3D geometry in a Minecraft / Roblox inspired style. Its brief includes a striped tower, lantern room, balcony, keeper’s cottage, rocky island, dock, boat, foliage, waves, birds and clouds. Automatic rotation reveals each side; pointer dragging lets the reader inspect a particular view.
+
+The automated checks cover rotation and pause, manual orbit from a frozen scene, and a camera reset that returns to the same view. They cannot tell us whether the lighthouse looks good, or whether the author used genuine 3D geometry. Those questions need the rendered artifact and source.
+
+## A racer that responds to the controls
+
+The [car racer task](/lab/llm-benchmark/advanced-game-building/car-racer/) asks for acceleration, braking, steering, rival cars, collisions, off-road slowdown and laps with ordered checkpoints. It also asks for keyboard and touch controls.
+
+The scorer drives the car with real keyboard events. Acceleration and steering must change the canvas and the vehicle telemetry requested in the prompt. Braking must reduce speed. Restart must clear speed and distance and restore heading.
+
+That is a useful subset, but it is still a subset. Rival AI, collision realism, checkpoint ordering and touch controls are outside the automated checks. The telemetry also comes from the artifact itself. A passing score is evidence about the tested interactions, not proof that every part of the game works.
+
+The check guardrail is [`checks.test.ts`](https://github.com/castlemilk/benebsworth.com/blob/5be874d4ba5ceb3abbfe3d75f7be0e2ba5b7f5de/lib/lab/llm-benchmark/plugins/visual-games/checks.test.ts): working fixtures pass, static fixtures fail, and missing controls keep their point budgets. An omitted button therefore cannot improve the score by shrinking its denominator.
+
+## Methodology and reproduction
+
+Both agents receive the same task prompts and offline execution contracts. The `astra-devin` profile uses three fresh attempts per task, four concurrent task/model jobs per sweep, a 25-minute cap per generation and zero transient retries. The shared runner retains its existing recovery for empty replies. Browser tasks use Chromium, with the harness’s existing 70% behavioural / 30% structural weighting. The browser runs with the recorded `partial` sandbox policy and prelude parity off. The corrected Devin sweep overlapped the first sweep on the same machine; runtime is a record of those conditions, not an isolated speed comparison.
+
+These are agent-system results. Codex and Devin bring different tools, system prompts and local rules, so the comparison does not isolate the underlying model. Both use a fresh scratch workspace under the repository's sweep directory. Three attempts can expose inconsistency but cannot establish a broad ranking of coding ability. Older rows on the benchmark used different prompts, scorers or sample counts; this table compares only the matched September runs.
+
+Some older task rubrics are narrow. Landing Page Morph looks for spontaneous canvas or text changes; it does not operate the theme toggle or recognise a CSS-only transition. Equation Solver can fall back to structural scoring for a prose answer. Crypto Hash Race executes functional comparison checks but does not prove constant-time behavior. Those limits are visible in the task notes and matter when interpreting a high or low score.
+
+The published demo is each task's highest-scoring successful attempt. Its score in the table remains the mean across successful attempts. The iteration trace exposes the other attempts, including failures.
+
+The first Devin sweep exposed a wrapper error: Accept Edits mode allowed file creation but stopped at command approval. Its commentary could then pass through the old stdout fallback. I excluded that sweep from the comparison. The corrected wrapper uses sandboxed Autonomous mode and asks for artifact creation through `exec`; Devin's direct file tools still prompt in that mode. A new preflight verifies both a command-created file and the final HTML, and a missing artifact now fails instead of receiving a score for commentary.
+
+Artifact review also found three harness errors. Python import shims interfered with standard-library imports and split test blocks. HTML cleanup could discard the start of an already complete document. Canvas capture could read a cleared WebGL drawing buffer while the screen visibly animated. Each correction has a regression fixture. All Astra artifacts are rescored with the corrected harness, using the original retained files without editing their source; the fresh Devin run uses that same harness. The new traces identify their source run and scorer commit. They retain original generation timestamps, runtimes and token estimates. Public traces are redacted, so credential-like strings in a Python example may differ from the retained file used for execution.
+
+CLI token counts are estimates. Astra ran through a Codex subscription; the Devin catalog listed SWE-2 High as free on the run date. Zero recorded API cost is not a subscription-cost or billing measurement. See the [Devin CLI documentation](https://devin.ai/cli) for the product route used here.
+
+Astra began at commit `5be874d4ba5ceb3abbfe3d75f7be0e2ba5b7f5de`, with Codex 0.153.4, in sweep `2026-09-22T08-50-23`. The accepted Devin sweep is `2026-09-22T09-53-42`, using Devin 3000.11.1 and harness commit `2c3919956d10994da99a2d36928005b1713d58b1`. Task prompts are unchanged; the harness corrections above apply to both published sets. Task pages expose the generated output and iteration trace.
+
+```sh
+npm ci
+npx playwright install chromium
+task bench:devin-preflight
+npx tsx scripts/run-benchmark.mjs --profile astra-devin \
+  --model codex-gpt-6-astra-xhigh,devin-swe-2-high --dump-config
+npx tsx scripts/run-benchmark.mjs --profile astra-devin \
+  --model codex-gpt-6-astra-xhigh,devin-swe-2-high
+```
+
+The source prompts, model settings and per-check results matter more than a single average. They let us come back to a failure, reproduce it, and decide whether it belongs to the artifact or the scorer.

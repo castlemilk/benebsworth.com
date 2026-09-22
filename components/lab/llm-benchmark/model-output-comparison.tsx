@@ -32,9 +32,14 @@ export function ModelOutputComparison({
 }: ModelOutputComparisonProps) {
   const byModel = useMemo(() => new Map(results.map((r) => [r.modelId, r])), [results])
 
-  const [leftModelId, setLeftModelId] = useState<string>(BENCHMARK_MODELS[0]?.id ?? '')
-  const [rightModelId, setRightModelId] = useState<string>(
-    BENCHMARK_MODELS[1]?.id ?? BENCHMARK_MODELS[0]?.id ?? '',
+  const availableModels = useMemo(() => BENCHMARK_MODELS.filter((m) => {
+    const result = byModel.get(m.id)
+    return result?.hasOutput && (result.status === 'success' || result.status === 'partial')
+  }), [byModel])
+  const defaults = availableModels.length ? availableModels : BENCHMARK_MODELS
+  const [leftModelId, setLeftModelId] = useState<string>(() => defaults[0]?.id ?? '')
+  const [rightModelId, setRightModelId] = useState<string>(() =>
+    defaults[1]?.id ?? BENCHMARK_MODELS.find((m) => m.id !== defaults[0]?.id)?.id ?? '',
   )
 
   // Preselect the left pane from a `?model=` deep link (a results-table row).
@@ -42,8 +47,9 @@ export function ModelOutputComparison({
     const wanted = new URLSearchParams(window.location.search).get('model')
     if (!wanted || !BENCHMARK_MODELS.some((m) => m.id === wanted)) return
     setLeftModelId(wanted)
-    setRightModelId((r) => (r === wanted ? BENCHMARK_MODELS.find((m) => m.id !== wanted)?.id ?? r : r))
-  }, [])
+    setRightModelId((r) => (r === wanted ?
+      availableModels.find((m) => m.id !== wanted)?.id ?? BENCHMARK_MODELS.find((m) => m.id !== wanted)?.id ?? r : r))
+  }, [availableModels])
 
   const leftResult = byModel.get(leftModelId)
   const rightResult = byModel.get(rightModelId)

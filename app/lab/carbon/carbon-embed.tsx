@@ -10,8 +10,32 @@ import { useEffect, useRef, useState } from 'react'
  * ever scrolls — the page scrolls natively instead. The child renders
  * chrome-less when loaded with `?embed=1` (cookie-persisted via middleware).
  */
-const CARBON_ORIGIN = process.env.NEXT_PUBLIC_CARBON_URL ?? 'https://carbon.benebsworth.com'
+export function normalizeCarbonOrigin(value: string): string {
+  return new URL(value).origin
+}
+
+export function isValidCarbonHeight(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && Number.isInteger(value) && value >= 200 && value <= 20_000
+}
+
+const CARBON_ORIGIN = normalizeCarbonOrigin(
+  process.env.NEXT_PUBLIC_CARBON_URL ?? 'https://carbon.benebsworth.com',
+)
 const EMBED_URL = `${CARBON_ORIGIN}/?embed=1`
+
+export function createCarbonMessageHandler(
+  getFrameWindow: () => Window | null | undefined,
+  setHeight: (height: number) => void,
+): (event: MessageEvent) => void {
+  return (event) => {
+    if (event.origin !== CARBON_ORIGIN) return
+    if (event.source !== getFrameWindow()) return
+    const data = event.data as { type?: string; height?: number }
+    if (data?.type === 'carbon:height' && isValidCarbonHeight(data.height)) {
+      setHeight(data.height)
+    }
+  }
+}
 
 export function CarbonEmbed() {
   const frameRef = useRef<HTMLIFrameElement>(null)
@@ -19,13 +43,10 @@ export function CarbonEmbed() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      if (e.origin !== CARBON_ORIGIN) return
-      const data = e.data as { type?: string; height?: number }
-      if (data?.type === 'carbon:height' && typeof data.height === 'number' && data.height > 200) {
-        setHeight(data.height)
-      }
-    }
+    const onMessage = createCarbonMessageHandler(
+      () => frameRef.current?.contentWindow,
+      setHeight,
+    )
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [])
@@ -43,8 +64,10 @@ export function CarbonEmbed() {
         title="Carbon Capture Research platform"
         onLoad={() => setLoaded(true)}
         style={{ height }}
-        className={`w-full bg-transparent transition-[height,opacity] duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`block w-full border-0 bg-transparent transition-[height,opacity] duration-300 ease-out ${loaded ? 'opacity-100' : 'opacity-0'}`}
         allow="fullscreen"
+        frameBorder="0"
+        scrolling="no"
       />
       <noscript>
         <p className="p-4 type-body text-sm text-[var(--color-fg)]/60">

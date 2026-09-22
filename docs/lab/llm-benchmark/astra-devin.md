@@ -76,3 +76,8 @@ WebGL frame capture corrections are documented in
 `docs/postmortem/0007-html-webgl-observation.md`; apply the same current
 scorers to every retained Astra pair before comparing it with the fresh Devin
 run. These corrections do not modify generated source.
+
+To stage corrections while generation continues, set `RESULTS_OUT_PATH` to
+a separate JSON file containing the source records. Merge those corrected
+records into the board only after its generating sweep stops. Never let two
+writers share the same results file during rescoring.

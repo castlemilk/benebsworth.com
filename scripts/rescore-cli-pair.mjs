@@ -1,7 +1,8 @@
 // Offline re-score of a completed CLI pair. Preserves original generation
 // evidence; --write creates a separate trace and updates only that board row.
-// Run only after the generating sweep stops, so its writer cannot restore an
-// older aggregate. No provider calls, caches or generated artifacts are changed.
+// When writing the board directly, wait until the generating sweep stops.
+// RESULTS_OUT_PATH can instead select a separate results file for staging.
+// No provider calls, caches or generated artifacts are changed.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, renameSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { join, resolve } from 'node:path'
@@ -57,7 +58,7 @@ try {
   if (args.includes('--write')) {
     execFileSync('git', ['diff', '--quiet', 'HEAD', '--', 'lib/lab/llm-benchmark/scorers', 'lib/lab/llm-benchmark/runners/provider.ts', 'scripts/rescore-cli-pair.mjs'])
     const scorerCommit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
-    const resultsPath = resolve('lib/lab/llm-benchmark/results.json')
+    const resultsPath = resolve(process.env.RESULTS_OUT_PATH ?? 'lib/lab/llm-benchmark/results.json')
     const baseline = JSON.parse(readFileSync(resultsPath, 'utf8'))
     const position = baseline.findIndex((r) => r.modelId === model.id && r.taskId === task.id)
     if (position < 0 || baseline[position].runLogRef?.runId !== runId) throw new Error('The board no longer points at the source run')

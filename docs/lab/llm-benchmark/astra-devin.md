@@ -7,12 +7,14 @@ iteration counts, timeout, retries, browser environment and scoring are shared.
 ## Reproduce
 
 Install and authenticate `codex` and `devin`, then install this repository's
-Chromium version with `pnpm exec playwright install chromium`.
+Chromium version with `npx playwright install chromium`.
+Run `task bench:devin-preflight` before a Devin sweep. It makes one live call,
+verifies a command-created marker plus the HTML handoff, and never writes scores.
 
 ```sh
-pnpm exec tsx scripts/run-benchmark.mjs --profile astra-devin \
+npx tsx scripts/run-benchmark.mjs --profile astra-devin \
   --model codex-gpt-6-astra-xhigh,devin-swe-2-high --dump-config
-pnpm exec tsx scripts/run-benchmark.mjs --profile astra-devin \
+npx tsx scripts/run-benchmark.mjs --profile astra-devin \
   --model codex-gpt-6-astra-xhigh,devin-swe-2-high
 ```
 
@@ -25,8 +27,10 @@ per-iteration checks and generation artifacts.
 Astra's model id is `gpt-6-astra`; the wrapper explicitly passes
 `model_reasoning_effort="xhigh"`. Devin's model id is `swe-2-high`, verified
 with `devin models list` on 22 September 2026. The Devin wrapper uses print
-mode, permits workspace edits, skips the interactive workspace trust prompt,
-and writes a unique artifact inside each iteration's scratch directory.
+mode with `--sandbox --permission-mode autonomous`, skips the interactive
+workspace trust prompt, and writes a unique artifact inside each iteration's
+scratch directory. Its delivery suffix asks for sandboxed `exec` file creation:
+Devin 3000.11.1's direct write/edit tools still require approval in sandbox mode.
 It inherits the shared process timeout, credential scrubbing and trace storage.
 
 CLI versions at preflight: Codex 0.153.4 and Devin 3000.11.1. The Devin catalog
@@ -42,8 +46,9 @@ existing 70/30 weighting. The lighthouse checks rotation/pause, manual orbit,
 and reset. The racer checks acceleration, steering, braking and restart, using
 both rendered output and the prompt's vehicle telemetry.
 
-`plugins/visual-games/checks.test.ts` runs hand-written working and broken
-fixtures in Chromium. Missing controls retain their point budgets and score
+`task bench:visual-games-fixtures` runs hand-written working and broken
+fixtures from `plugins/visual-games/checks.test.ts` in Chromium. Ordinary unit
+tests skip these browser integration cases. Missing controls retain their point budgets and score
 zero. The fixtures only demonstrate interaction-check discrimination: genuine
 3D geometry, visual richness, collision realism and lap integrity are outside
 the automated score and must be inspected in the artifacts.

@@ -17,6 +17,13 @@ vars:
   CACHE: .cache/llm-benchmark-responses.json
 
 tasks:
+  visual-games-fixtures:
+    desc: Prove lighthouse and racer checks distinguish working, static, and missing controls
+    env:
+      BENCH_BROWSER_TESTS: '1'
+    cmds:
+      - '{{.BIN}}/vitest run lib/lab/llm-benchmark/plugins/visual-games/checks.test.ts'
+
   default:
     desc: Show benchmark harness usage and the knobs that control a run
     silent: true
@@ -85,6 +92,11 @@ tasks:
       vars: [CLI_ARGS]
     cmds:
       - '{{.BIN}}/tsx scripts/run-benchmark.mjs --profile {{.CLI_ARGS}}'
+
+  devin-preflight:
+    desc: One live SWE-2 call verifying sandboxed command execution and HTML file delivery
+    cmds:
+      - '{{.BIN}}/tsx scripts/probe-devin.mjs'
 
   run:
     desc: Run the harness against live provider APIs (SPENDS MONEY — writes results.json)

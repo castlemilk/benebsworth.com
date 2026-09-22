@@ -69,3 +69,4 @@ The mechanism. Why the code was wrong in a way that reading it did not reveal.
 | [0002](0002-timeout-config-miswire.md) | A 25-minute cap silently ran at 10 | Two timers, one name; per-provider opt-in with a silent default |
 | [0003](0003-bearer-blip-misclassification.md) | A transient pool blip read as a revoked key | Classification keyed on a message's wording, not its distribution |
 | [0004](0004-results-json-race.md) | A long sweep's startup snapshot clobbered newer writes | Whole-file write from a stale in-memory baseline |
+| [0005](0005-cli-permission-handoff.md) | CLI permission prompts became benchmark artifacts | Successful process exit did not prove file delivery |

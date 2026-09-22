@@ -2,6 +2,8 @@ import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { generateFromCli, type GenerationResponse } from './cli'
 import { CLI_COMMANDS } from './execution-target'
 
+export const DEVIN_FILE_DELIVERY = '\nUse the sandboxed exec tool to create the artifact file; direct write/edit tools require interactive approval in this sandbox mode. Keep all generated files within the current workspace.'
+
 export interface DevinConfig {
   model?: string
   timeoutMs?: number
@@ -19,12 +21,13 @@ export async function generateDevin(
   return generateFromCli({
     command: CLI_COMMANDS.Devin,
     artifactViaFile: true,
+    requireArtifactFile: true,
     artifactName: (i) => `artifact-${model.id}-${task.id}-${i}.html`,
     buildArgs: (prompt) => [
       '--model', modelId,
-      '--permission-mode', 'accept-edits',
+      '--sandbox', '--permission-mode', 'autonomous',
       '--respect-workspace-trust', 'false',
-      '--print', prompt,
+      '--print', prompt + DEVIN_FILE_DELIVERY,
     ],
     timeoutMs: config.timeoutMs,
   }, model, task, iterationIndex)

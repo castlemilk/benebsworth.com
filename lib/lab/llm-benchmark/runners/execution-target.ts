@@ -26,6 +26,8 @@ export interface CliRunnerConfig {
    * truncated). Falls back to stdout extraction if no file is produced.
    */
   artifactViaFile?: boolean
+  /** Reject commentary-only stdout when the provider promises file delivery. */
+  requireArtifactFile?: boolean
   /**
    * Per-iteration artifact filename. MUST return a unique name per iteration
    * so concurrent runs (concurrency > 1) never collide: CLI agents resolve

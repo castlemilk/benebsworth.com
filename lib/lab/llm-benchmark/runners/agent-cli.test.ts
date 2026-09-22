@@ -3,7 +3,7 @@ import type { BenchmarkModel, BenchmarkTask } from '../types'
 vi.mock('./cli', () => ({ generateFromCli: vi.fn() }))
 import { generateFromCli } from './cli'
 import { generateCodex } from './codex'
-import { generateDevin } from './devin'
+import { DEVIN_FILE_DELIVERY, generateDevin } from './devin'
 
 const model: BenchmarkModel = {
   id: 'astra-xhigh', name: 'Astra', provider: 'Codex', apiModelId: 'gpt-6-astra',
@@ -31,14 +31,16 @@ describe('agent CLI model and artifact contracts', () => {
     const prompt = 'quotes " and $() stay literal\nnext line'
     expect(config.command).toBe('devin')
     expect(config.buildArgs(prompt, swe)).toEqual([
-      '--model', 'swe-2-high', '--permission-mode', 'accept-edits',
-      '--respect-workspace-trust', 'false', '--print', prompt,
+      '--model', 'swe-2-high', '--sandbox', '--permission-mode', 'autonomous',
+      '--respect-workspace-trust', 'false', '--print', prompt + DEVIN_FILE_DELIVERY,
     ])
     expect(config.artifactViaFile).toBe(true)
+    expect(config.requireArtifactFile).toBe(true)
     expect(config.artifactName?.(1)).not.toBe(config.artifactName?.(2))
     expect(config.timeoutMs).toBe(5678)
     expect(generate.mock.calls[0].slice(1)).toEqual([swe, task, 1])
   })
+
 
   it('refuses an unspecified Devin model instead of silently using the account default', async () => {
     await expect(generateDevin({}, { ...model, apiModelId: undefined }, task)).rejects.toThrow('model id missing')

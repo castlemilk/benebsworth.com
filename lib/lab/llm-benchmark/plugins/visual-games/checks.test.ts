@@ -26,7 +26,9 @@ const lighthouseChecks = [lighthouseRotation, lighthouseOrbit, lighthouseReset]
 const racerChecks = [racerAcceleration, racerSteering, racerBraking, racerRestart]
 afterAll(closeSandbox)
 
-describe('visual game check discrimination', () => {
+// Browser integration is explicit, like the existing gateway fixture gate.
+// Ordinary unit tests must still work on machines without Chromium installed.
+describe.runIf(process.env.BENCH_BROWSER_TESTS === '1')('visual game check discrimination', () => {
   it('awards full behavior points to working controls', async () => {
     for (const [html, checks] of [[lighthouse, lighthouseChecks], [racer, racerChecks]] as const) {
       const results = await runChecks(html, [...checks])

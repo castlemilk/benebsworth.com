@@ -93,7 +93,18 @@ for (let iterationIndex = 0; iterationIndex < original.iterations; iterationInde
 globalThis.fetch = originalFetch
 
 try {
-  const rescored = await aggregateRuns(runs, original.iterations, model, task, selectScorer(task), original.createdAt)
+  // Grade one artifact at a time so simultaneous WebGL scenes do not compete
+  // for this machine's renderer. Preserve the shared aggregate calculation.
+  const scorer = selectScorer(task)
+  let queue = Promise.resolve()
+  const serial = (fn) => (...args) => {
+    const result = queue.then(() => fn(...args))
+    queue = result.then(() => {}, () => {})
+    return result
+  }
+  const serialScorer = { score: serial(scorer.score.bind(scorer)),
+    ...(scorer.scoreWithBreakdown ? { scoreWithBreakdown: serial(scorer.scoreWithBreakdown.bind(scorer)) } : {}) }
+  const rescored = await aggregateRuns(runs, original.iterations, model, task, serialScorer, original.createdAt)
   for (const key of ['runtimeMs', 'tokensIn', 'tokensOut', 'costUsd', 'promptBundle', 'iterationsSucceeded', 'status', 'failureReason']) {
     if (rescored[key] !== original[key]) throw new Error(`Generation metadata changed: ${key}`)
   }
@@ -126,7 +137,7 @@ try {
     }
     keptEvents.filter((event) => event.type !== 'clean').forEach(copySpills)
     const correctedHeader = { ...header, runId: correctedId, configSnapshot: { ...header.configSnapshot,
-      rescoreOf: { runId, file, scorerCommit, artifactSource: 'retained-cli-file' } } }
+      rescoreOf: { runId, file, scorerCommit, artifactSource: 'retained-cli-file', artifactConcurrency: 1 } } }
     const successIndices = runs.map((run, index) => ({ run, index })).filter(({ run }) => run.status === 'success').map(({ index }) => index)
     const checks = result.iterationCheckResults.flatMap((checks, successIndex) =>
       checks.map((check) => ({ type: 'check', iterationIndex: successIndices[successIndex], check, ts: now })))

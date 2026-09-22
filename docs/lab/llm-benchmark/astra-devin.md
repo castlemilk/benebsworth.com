@@ -75,8 +75,12 @@ corrected pairs in one new run directory. Complete HTML normalization and
 WebGL frame capture corrections are documented in
 `docs/postmortem/0007-html-webgl-observation.md`; apply the same current
 scorers to every retained pair from both models after generation finishes.
-These corrections do not modify generated source. Browser capture allows
-five seconds per screenshot, 20 seconds per check and 90 seconds per batch.
+These corrections do not modify generated source. Final rescoring runs one
+artifact at a time. Browser capture and the new tasks' control actions allow
+five seconds, with 20 seconds per check and 90 seconds per batch.
+The browser fixtures also exercise the actual tsx CLI loader, which exposed
+a callback serialization bug that Vitest alone missed; see
+`docs/postmortem/0008-browser-callback-loader.md`.
 Partial pairs keep their original failed iterations, completion count and
 failure reason. Only successful retained artifacts receive a new score; the
 script checks that generation usage, runtime and status remain unchanged.

@@ -1,4 +1,7 @@
 import { afterAll, describe, expect, it } from 'vitest'
+import { execFile } from 'node:child_process'
+import { resolve } from 'node:path'
+import { promisify } from 'node:util'
 import { closeSandbox, runChecks } from '../../scorers/sandbox'
 import { lighthouseRotation, lighthouseOrbit, lighthouseReset, racerAcceleration, racerSteering, racerBraking, racerRestart } from './checks'
 
@@ -29,6 +32,18 @@ afterAll(closeSandbox)
 // Browser integration is explicit, like the existing gateway fixture gate.
 // Ordinary unit tests must still work on machines without Chromium installed.
 describe.runIf(process.env.BENCH_BROWSER_TESTS === '1')('visual game check discrimination', () => {
+  it('runs racer checks through the same tsx loader as the sweep CLI', async () => {
+    // Vitest and tsx transform functions differently. A named local function
+    // in page.evaluate can capture tsx's __name helper, absent in the browser.
+    const script = `import {runChecks,closeSandbox} from ${JSON.stringify(new URL('../../scorers/sandbox.ts', import.meta.url).href)};
+      import {racerAcceleration,racerSteering,racerBraking,racerRestart} from ${JSON.stringify(new URL('./checks.ts', import.meta.url).href)};
+      (async()=>{try{console.log(JSON.stringify(await runChecks(${JSON.stringify(racer)},[racerAcceleration,racerSteering,racerBraking,racerRestart])))}finally{await closeSandbox()}})();`
+    const { stdout } = await promisify(execFile)(resolve('node_modules/.bin/tsx'), ['--eval', script], { timeout: 40_000 })
+    const results = JSON.parse(stdout.trim())
+    expect(results.every((r: { passed: boolean }) => r.passed), stdout).toBe(true)
+    expect(results.reduce((sum: number, r: { points: number }) => sum + r.points, 0)).toBe(100)
+  }, 45_000)
+
   it('awards full behavior points to working controls', async () => {
     for (const [html, checks] of [[lighthouse, lighthouseChecks], [racer, racerChecks]] as const) {
       const results = await runChecks(html, [...checks])
@@ -50,5 +65,5 @@ describe.runIf(process.env.BENCH_BROWSER_TESTS === '1')('visual game check discr
     const results = await runChecks('<p>No game here</p>', [...lighthouseChecks, ...racerChecks])
     expect(results.reduce((sum, r) => sum + r.points, 0)).toBe(0)
     expect(results.reduce((sum, r) => sum + r.maxPoints, 0)).toBe(200)
-  }, 15000)
+  }, 45000)
 })

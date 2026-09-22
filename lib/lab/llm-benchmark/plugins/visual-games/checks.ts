@@ -21,7 +21,7 @@ async function frame(ctx: CheckContext) {
 }
 
 async function resetView(ctx: CheckContext) {
-  await ctx.page.locator('#reset-view').click({ timeout: 700 })
+  await ctx.page.locator('#reset-view').click({ timeout: 5000 })
   await ctx.page.waitForTimeout(180)
 }
 
@@ -37,11 +37,11 @@ async function drag(ctx: CheckContext) {
 
 export const lighthouseRotation = check('lighthouse-rotation', 35, async (ctx) => {
   const toggle = ctx.page.locator('#toggle-rotation')
-  if (await toggle.getAttribute('aria-pressed', { timeout: 700 }) !== 'true') return false
+  if (await toggle.getAttribute('aria-pressed', { timeout: 5000 }) !== 'true') return false
   const before = await frame(ctx)
   await ctx.page.waitForTimeout(350)
   const moving = await frame(ctx)
-  await toggle.click({ timeout: 700 })
+  await toggle.click({ timeout: 5000 })
   await ctx.page.waitForTimeout(180)
   const stopped = await frame(ctx)
   await ctx.page.waitForTimeout(300)
@@ -69,16 +69,21 @@ export const lighthouseReset = check('lighthouse-reset', 30, async (ctx) => {
 
 async function car(ctx: CheckContext) {
   return ctx.page.locator('canvas#scene').evaluate((el) => {
-    const number = (name: string) => {
-      const value = el.getAttribute(name)
-      return value === null || value.trim() === '' ? NaN : Number(value)
+    // Keep this browser callback self-contained. tsx wraps named nested
+    // functions with __name, which Playwright cannot serialize into the page.
+    const speed = el.getAttribute('data-speed')
+    const heading = el.getAttribute('data-heading')
+    const distance = el.getAttribute('data-distance')
+    return {
+      speed: speed === null || speed.trim() === '' ? NaN : Number(speed),
+      heading: heading === null || heading.trim() === '' ? NaN : Number(heading),
+      distance: distance === null || distance.trim() === '' ? NaN : Number(distance),
     }
-    return { speed: number('data-speed'), heading: number('data-heading'), distance: number('data-distance') }
-  }, undefined, { timeout: 700 })
+  }, undefined, { timeout: 5000 })
 }
 
 async function restart(ctx: CheckContext) {
-  await ctx.page.locator('#restart').click({ timeout: 700 })
+  await ctx.page.locator('#restart').click({ timeout: 5000 })
   await ctx.page.waitForTimeout(100)
 }
 

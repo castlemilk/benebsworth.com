@@ -72,3 +72,4 @@ The mechanism. Why the code was wrong in a way that reading it did not reveal.
 | [0005](0005-cli-permission-handoff.md) | CLI permission prompts became benchmark artifacts | Successful process exit did not prove file delivery |
 | [0006](0006-python-probe-imports.md) | Python probe shims rejected working modules | Import and network shims changed standard-library behavior |
 | [0007](0007-html-webgl-observation.md) | Complete documents and visible animation disappeared | Cleanup and capture observed a different artifact from the browser |
+| [0008](0008-browser-callback-loader.md) | Working racers failed every telemetry check | The CLI transform captured a helper absent from the browser |

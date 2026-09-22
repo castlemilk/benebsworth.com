@@ -95,7 +95,7 @@ function extractFirstCodeBlock(output: string): string | undefined {
 function removePreamble(output: string): string {
   // If the output is prose followed by a <!DOCTYPE or <html, trim the prose.
   const doctypeMatch = output.match(/(?:^|\n)\s*(<!DOCTYPE\s+html|<html[\s>])/i)
-  if (doctypeMatch && doctypeMatch.index !== undefined && doctypeMatch.index > 0) {
+  if (doctypeMatch && doctypeMatch.index !== undefined) {
     return output.slice(doctypeMatch.index).trim()
   }
 
@@ -111,6 +111,9 @@ function removePreamble(output: string): string {
 }
 
 export function cleanOutput(output: string): string {
+  // A file-delivered HTML document is already the artifact. Searching inside
+  // it for fences or the next code-looking line can discard its entire head.
+  if (/^\s*(?:<!doctype\s+html|<html[\s>])/i.test(output)) return output.trim()
   const extracted = extractFirstCodeBlock(output)
   const noFences = stripCodeFences(extracted ?? output)
   const trimmed = removePreamble(noFences).trim()

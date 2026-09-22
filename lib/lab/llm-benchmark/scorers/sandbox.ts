@@ -123,14 +123,12 @@ export async function runChecks(
   }
 
   const captureCanvas: CheckContext['captureCanvas'] = async (selector = 'canvas') => {
-    const dataUrl = await page.evaluate((sel) => {
-      const c = document.querySelector(sel) as HTMLCanvasElement | null
-      if (!c) return null
-      // toDataURL gives us a PNG; the harness converts it to a buffer.
-      return c.toDataURL('image/png')
-    }, selector)
-    if (!dataUrl) return undefined
-    const buf = Buffer.from(dataUrl.split(',', 2)[1] ?? '', 'base64')
+    const canvas = page.locator(selector).first()
+    if (await canvas.count() === 0) return undefined
+    // Read the displayed frame. WebGL commonly clears its drawing buffer
+    // after presentation, making toDataURL() return a blank PNG even while
+    // the user sees continuous animation (preserveDrawingBuffer defaults off).
+    const buf = await canvas.screenshot({ timeout: 1500 })
     // Decode PNG header for width/height rather than pulling in a full parser:
     // the harness only needs width/height for diff reporting; pixel data is
     // already in the buffer for downstream consumers.

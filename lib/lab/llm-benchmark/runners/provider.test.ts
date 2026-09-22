@@ -17,6 +17,7 @@ vi.mock('../cache', () => ({
 
 import {
   aggregateRuns,
+  cleanOutput,
   classifyFailureReason,
   clearPluginGeneratorCache,
   createProviderRunner,
@@ -35,6 +36,13 @@ import { promptBundleHash } from '../prompt-bundle'
 
 const generateMock = vi.mocked(generateMoonshot)
 const generateOpencodeMock = vi.mocked(generateOpencode)
+
+describe('complete HTML artifact normalization', () => {
+  it('preserves a document whose doctype and html element share a line', () => {
+    const html = '<!doctype html><html><head><style>canvas { width: 100vw }</style></head><body>\n<canvas></canvas><script>const note = "```js\\nexample\\n```";</script></body></html>'
+    expect(cleanOutput(html)).toBe(html)
+  })
+})
 
 const MODEL: BenchmarkModel = {
   id: 'test-kimi',

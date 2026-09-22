@@ -70,4 +70,9 @@ npx tsx scripts/rescore-cli-pair.mjs --run 2026-09-22T08-50-23 \
 Add `--write` only after committing the scorer changes. It preserves the source
 trace and generation metrics, writes a new trace with `rescoreOf` provenance,
 and updates only that result. A changed artifact hash or mismatch against the
-original cleaned output aborts the operation.
+original response aborts the operation. `--output-run ID` groups multiple
+corrected pairs in one new run directory. Complete HTML normalization and
+WebGL frame capture corrections are documented in
+`docs/postmortem/0007-html-webgl-observation.md`; apply the same current
+scorers to every retained Astra pair before comparing it with the fresh Devin
+run. These corrections do not modify generated source.

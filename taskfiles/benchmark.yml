@@ -22,7 +22,7 @@ tasks:
     env:
       BENCH_BROWSER_TESTS: '1'
     cmds:
-      - '{{.BIN}}/vitest run lib/lab/llm-benchmark/plugins/visual-games/checks.test.ts'
+      - '{{.BIN}}/vitest run lib/lab/llm-benchmark/plugins/visual-games/checks.test.ts lib/lab/llm-benchmark/scorers/canvas-capture.test.ts'
 
   default:
     desc: Show benchmark harness usage and the knobs that control a run

@@ -110,7 +110,7 @@ function removePreamble(output: string): string {
   return output
 }
 
-function cleanOutput(output: string): string {
+export function cleanOutput(output: string): string {
   const extracted = extractFirstCodeBlock(output)
   const noFences = stripCodeFences(extracted ?? output)
   const trimmed = removePreamble(noFences).trim()

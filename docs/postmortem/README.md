@@ -70,3 +70,4 @@ The mechanism. Why the code was wrong in a way that reading it did not reveal.
 | [0003](0003-bearer-blip-misclassification.md) | A transient pool blip read as a revoked key | Classification keyed on a message's wording, not its distribution |
 | [0004](0004-results-json-race.md) | A long sweep's startup snapshot clobbered newer writes | Whole-file write from a stale in-memory baseline |
 | [0005](0005-cli-permission-handoff.md) | CLI permission prompts became benchmark artifacts | Successful process exit did not prove file delivery |
+| [0006](0006-python-probe-imports.md) | Python probe shims rejected working modules | Import and network shims changed standard-library behavior |

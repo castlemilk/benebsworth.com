@@ -35,6 +35,8 @@ export interface RunLogConfigSnapshot {
   bustCache: boolean
   apiModelId?: string
   reasoningEffort?: string
+  /** Offline correction: generation events retain their original timestamps. */
+  rescoreOf?: { runId: string; file: string; scorerCommit: string }
   /**
    * The plugin bundles mounted for this sweep (`[]` = builtins only), when the
    * caller supplies them. Audit-only: it records the scope a run was resolved

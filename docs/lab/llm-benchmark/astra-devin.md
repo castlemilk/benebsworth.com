@@ -57,3 +57,17 @@ Preflight also checks the executable scorer on Node 24: the stable permission
 flag and canonical macOS temporary paths preserve the existing filesystem
 boundary. `scorers/code-runtime.test.ts` covers successful execution, crashes,
 timeouts, output limits, environment isolation and denied filesystem writes.
+
+The sweep also exposed Python scorer import/packaging issues documented in
+`docs/postmortem/0006-python-probe-imports.md`. After the generating sweep has
+stopped, re-score its complete CLI pair without provider calls:
+
+```sh
+npx tsx scripts/rescore-cli-pair.mjs --run 2026-09-22T08-50-23 \
+  --model codex-gpt-6-astra-xhigh --task crypto-hash-race
+```
+
+Add `--write` only after committing the scorer changes. It preserves the source
+trace and generation metrics, writes a new trace with `rescoreOf` provenance,
+and updates only that result. A changed artifact hash or mismatch against the
+original cleaned output aborts the operation.

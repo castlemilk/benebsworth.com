@@ -40,6 +40,11 @@ animated. Canvas checks now capture the displayed element with Playwright.
 - `scorers/sandbox.test.ts` — `clears completed check deadlines so offline
   rescoring can exit promptly` prevents finished checks from retaining their
   deadline timers.
+- Concurrent iterations also raced across the asynchronous Playwright import,
+  opening extra browsers and overwriting the one handle available for cleanup.
+  Local and remote backends now own the pending browser promise before yielding.
+  `scorers/sandbox-backend.test.ts` checks that simultaneous launches share one
+  browser, close it once, and can launch again after closing.
 - `task bench:visual-games-fixtures` runs that regression alongside the new
   lighthouse and racer interaction fixtures.
 - `scripts/rescore-cli-pair.mjs` verifies retained file hashes and compares

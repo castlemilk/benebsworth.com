@@ -6,6 +6,8 @@ import type { BenchmarkModel, BenchmarkTask, PluginGenerate } from '../types'
 // Mock the wire + cache layers so the runner logic is exercised in isolation.
 vi.mock('./moonshot', () => ({ generateMoonshot: vi.fn() }))
 vi.mock('./opencode', () => ({ generateOpencode: vi.fn() }))
+// Provider routing is a unit test: it must not depend on a local Ollama daemon.
+vi.mock('./ollama', () => ({ generateOllama: vi.fn(async () => { throw new Error('Ollama model not found') }) }))
 vi.mock('../cache', () => ({
   getCachedResponse: vi.fn(() => undefined),
   setCachedResponse: vi.fn(),

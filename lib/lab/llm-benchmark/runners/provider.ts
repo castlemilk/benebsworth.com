@@ -21,6 +21,7 @@ import { generateMoonshot, type MoonshotConfig } from './moonshot'
 import { generateOpenRouter, type OpenRouterConfig } from './openrouter'
 import { generateAgy, type AgyConfig } from './agy'
 import { generateCodex, type CodexConfig } from './codex'
+import { generateDevin, type DevinConfig } from './devin'
 import { generateOpencode, type OpencodeConfig } from './opencode'
 import { generateOllama, type OllamaConfig } from './ollama'
 import { CLI_PROVIDERS } from './execution-target'
@@ -44,6 +45,7 @@ export interface ProviderRunnerConfig {
   openrouter?: OpenRouterConfig
   agy?: AgyConfig
   codex?: CodexConfig
+  devin?: DevinConfig
   opencode?: OpencodeConfig
   ollama?: OllamaConfig
   /** Per-call timeout in milliseconds. Defaults to 10 minutes. */
@@ -411,6 +413,9 @@ function configForModel(model: BenchmarkModel, cfg: ProviderRunnerConfig) {
     case 'OpenCode':
       if (!cfg.opencode) throw new Error(`OpenCode config missing for ${model.id}`)
       return { provider: 'opencode' as const, config: cfg.opencode }
+    case 'Devin':
+      if (!cfg.devin) throw new Error(`Devin config missing for ${model.id}`)
+      return { provider: 'devin' as const, config: cfg.devin }
     case 'Ollama':
       // Ollama is local — no API key needed, host defaults to localhost:11434.
       // An explicit config is optional; we provide a default so `task bench:run MODELS=ollama-*`
@@ -454,6 +459,8 @@ async function generateWithProvider(
       return generateCodex(config, model, task, iterationIndex)
     case 'opencode':
       return generateOpencode(config, model, task, iterationIndex)
+    case 'devin':
+      return generateDevin(config, model, task, iterationIndex)
     case 'ollama':
       return generateOllama(config, model, task)
     case 'plugin': {
@@ -1055,6 +1062,8 @@ export function createProviderRunner(cfg: ProviderRunnerConfig): BenchmarkRunner
           bustCache,
           plugins: cfg.plugins,
           promptBundle: promptBundleHash(task),
+          apiModelId: model.apiModelId,
+          reasoningEffort: model.reasoningEffort,
           // The spend cap travels with the log so a resume of this tree can
           // replay it (see RunLogConfigSnapshot.budgetMaxUsd) — a budget-stopped
           // sweep whose skipped pairs have no logs would otherwise be respawned

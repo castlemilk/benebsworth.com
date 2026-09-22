@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process'
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, realpathSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -370,7 +370,9 @@ function defaultInterpreter(language: CodeLanguage, scratchDir: string): Interpr
   return {
     command: process.execPath,
     args: [
-      '--experimental-permission',
+      // Node 24 removed the experimental spelling; keep the permission
+      // boundary enabled on both older Node 22 and current runtimes.
+      process.allowedNodeEnvironmentFlags.has('--permission') ? '--permission' : '--experimental-permission',
       `--allow-fs-read=${scratchDir}`,
       '--no-warnings',
     ],
@@ -416,7 +418,9 @@ export async function runProgram(
   const timeoutMs = options.timeoutMs ?? 5000
   const maxOutputBytes = options.maxOutputBytes ?? 256 * 1024
 
-  const scratchDir = mkdtempSync(join(tmpdir(), 'bench-code-runtime-'))
+  // macOS /var is a symlink to /private/var. Grant and execute the same
+  // canonical path so Node's permission model need not traverse that alias.
+  const scratchDir = realpathSync(mkdtempSync(join(tmpdir(), 'bench-code-runtime-')))
   const scriptPath = join(scratchDir, SCRIPT_NAME[program.language])
   writeFileSync(scriptPath, program.source, 'utf8')
   for (const [name, contents] of Object.entries(options.files ?? {})) {

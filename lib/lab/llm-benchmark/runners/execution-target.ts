@@ -65,6 +65,7 @@ export const CLI_COMMANDS = {
   Agy: 'agy',
   Codex: 'codex',
   OpenCode: 'opencode',
+  Devin: 'devin',
 } as const satisfies Record<string, string>
 
 /** Providers driven by a locally-spawned agent CLI rather than an HTTP API. */
@@ -78,6 +79,7 @@ export const CLI_PROVIDERS: ReadonlySet<string> = new Set(Object.keys(CLI_COMMAN
  * so each hint names the command it is about and says where it comes from.
  */
 const INSTALL_HINTS: Record<string, string> = {
+  devin: 'devin is the Cognition CLI — see https://devin.ai/cli, then `devin auth login`',
   agy: 'agy ships with Antigravity (Google) — install the app and put its bin dir (e.g. ~/.local/bin) on PATH',
   codex: 'codex is the OpenAI Codex CLI — `npm i -g @openai/codex`, then `codex login`',
   opencode: 'opencode is the opencode CLI — see https://opencode.ai (install script or `npm i -g opencode-ai`), then `opencode auth login`',

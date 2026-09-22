@@ -1,0 +1,11 @@
+{
+  "id": "visual-games",
+  "name": "Visual Games",
+  "version": "1.0.0",
+  "description": "Rotating voxel lighthouse and car racer interaction benchmarks.",
+  "capabilities": [
+    "tasks",
+    "checks",
+    "demos"
+  ]
+}

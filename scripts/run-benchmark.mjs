@@ -658,6 +658,7 @@ async function main() {
     // child-process kill (the slow-model profile promised 25 and delivered 10).
     agy: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
     codex: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
+    devin: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
     opencode: TIMEOUT_MS ? { timeoutMs: TIMEOUT_MS } : {},
     bustCache: config.bustCache.value,
     timeoutMs: TIMEOUT_MS,

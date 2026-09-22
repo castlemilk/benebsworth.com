@@ -33,6 +33,8 @@ export interface RunLogConfigSnapshot {
   timeoutMs: number
   maxRetries: number
   bustCache: boolean
+  apiModelId?: string
+  reasoningEffort?: string
   /**
    * The plugin bundles mounted for this sweep (`[]` = builtins only), when the
    * caller supplies them. Audit-only: it records the scope a run was resolved

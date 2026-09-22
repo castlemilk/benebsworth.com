@@ -1,5 +1,5 @@
 ---
-title: 'Astra extra high and SWE-2: lighthouses, racing cars and nine more tests'
+title: 'Astra extra high vs SWE-2: lighthouses and racing cars'
 date: '2026-09-22T00:00:00.000Z'
 description: >-
   GPT-6 Astra at extra-high reasoning and Devin SWE-2 High run the same eleven
@@ -19,6 +19,8 @@ canonical_url: 'https://benebsworth.com/blog/benchmarking-astra-devin/'
 I added two visual tasks to the [benchmark](/lab/llm-benchmark/): a detailed voxel lighthouse with an orbit camera, and a playable car racer. This run compares GPT-6 Astra at extra-high reasoning with SWE-2 High through the Devin CLI, across all eleven tasks.
 
 The extra-high setting is explicit. The Codex wrapper passes `model_reasoning_effort="xhigh"` alongside `gpt-6-astra`. Devin gets the exact `swe-2-high` model identifier from its authenticated catalog. Neither relies on whichever model happened to be selected in the terminal last.
+
+![Astra's first lighthouse attempt: a striped masonry tower, glowing lantern, cottage, dock and rowboat on a rocky voxel island.](/blog/benchmarking-astra-devin/blog/benchmarking-astra-devin/hero.webp)
 
 ## Results
 

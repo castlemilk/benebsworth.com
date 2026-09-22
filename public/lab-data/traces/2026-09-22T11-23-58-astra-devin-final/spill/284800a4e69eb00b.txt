@@ -1,0 +1,392 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>N-Body Field — 200 mutually gravitating particles</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui;overflow:hidden}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#c:active{cursor:grabbing}
+#hud{position:fixed;top:10px;left:10px;width:min(248px,74vw);background:rgba(10,13,22,.72);border:1px solid rgba(140,160,255,.14);border-radius:10px;padding:9px 11px;font-size:11.5px;line-height:1.35;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);user-select:none;-webkit-user-select:none}
+#hud .top{display:flex;justify-content:space-between;align-items:center}
+#hud h1{font-size:11px;letter-spacing:.16em;margin:0;font-weight:650;color:#a9bcff}
+#collapse{background:none;border:none;color:#8a93ad;font-size:14px;cursor:pointer;padding:0 2px;line-height:1}
+.stats{display:flex;gap:9px;color:#7f8aa5;font-size:10.5px;margin:7px 0 3px;font-variant-numeric:tabular-nums}
+label{display:flex;align-items:center;gap:7px;margin:5px 0;color:#a7b0c6}
+label .k{flex:0 0 74px}
+label .v{flex:0 0 30px;text-align:right;color:#7f8aa5;font-size:10.5px}
+input[type=range]{flex:1;min-width:0;accent-color:#6f8cff;height:12px;margin:0}
+.row{display:flex;gap:7px;margin-top:7px;align-items:center}
+button{background:#1a2133;border:1px solid rgba(160,175,255,.18);color:#dde3f2;border-radius:6px;padding:4px 11px;font-size:11px;cursor:pointer}
+button:hover{background:#242c44}
+.chk{display:flex;align-items:center;gap:6px;color:#a7b0c6;font-size:11px;margin-left:auto;cursor:pointer}
+.legend{display:flex;align-items:center;gap:7px;margin-top:8px}
+.legend i{flex:1;height:5px;border-radius:3px;background:linear-gradient(90deg,#1a4dff,#0dd9ff,#ffb326,#fff7e6)}
+.legend span{color:#5f6880;font-size:9.5px}
+.hint{color:#565f76;font-size:9.5px;margin-top:7px}
+#err{display:none;position:fixed;left:10px;right:10px;bottom:10px;background:#3a1016;border:1px solid #a33;color:#ffd9d9;padding:10px 12px;border-radius:8px;font:12px/1.4 ui-monospace,monospace;white-space:pre-wrap;z-index:9}
+@media (max-width:480px){#hud{width:min(205px,70vw);padding:8px 9px}label .k{flex-basis:62px}}
+</style></head><body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div class="top"><h1>N-BODY FIELD</h1><button id="collapse" title="collapse">&ndash;</button></div>
+  <div id="hudbody">
+    <div class="stats"><span id="fps">&ndash; fps</span><span id="vm">v &ndash;</span><span id="en">E &ndash;</span></div>
+    <label><span class="k">gravity G</span><input id="g" type="range" min="0.2" max="3" step="0.05" value="1.2"><span class="v" id="gv">1.20</span></label>
+    <label><span class="k">softening &epsilon;</span><input id="eps" type="range" min="0.05" max="1.5" step="0.05" value="0.45"><span class="v" id="epsv">0.45</span></label>
+    <label><span class="k">time step</span><input id="ts" type="range" min="0.25" max="3" step="0.05" value="1"><span class="v" id="tsv">1.00</span></label>
+    <div class="row"><button id="pause">Pause</button><button id="reset">Reset</button><span class="chk"><input type="checkbox" id="tr" checked>trails</span></div>
+    <div class="legend"><span>slow</span><i></i><span>fast</span></div>
+    <div class="hint">200 bodies &middot; O(n&sup2;) Plummer-softened gravity &middot; drag to orbit &middot; scroll to zoom</div>
+  </div>
+</div>
+<div id="err" role="alert"></div>
+<script>
+try{
+(function(){
+'use strict';
+var N=200,H=16,NS=320;
+var canvas=document.getElementById('c');
+var gl=canvas.getContext('webgl',{antialias:true,alpha:false,powerPreference:'high-performance'});
+if(!gl)throw new Error('WebGL is not available in this browser.');
+
+/* ---------------- shaders (hand-written WebGL pipeline) ---------------- */
+var VSH=[
+'attribute vec3 aPos;',
+'attribute float aSpeed;',
+'attribute float aFade;',
+'uniform mat4 uProj;',
+'uniform mat4 uView;',
+'uniform float uVref;',
+'uniform float uPointScale;',
+'uniform float uDim;',
+'uniform float uIsPoint;',
+'uniform float uTintMix;',
+'uniform vec3 uTint;',
+'varying vec4 vColor;',
+'void main(){',
+' vec4 mv=uView*vec4(aPos,1.0);',
+' gl_Position=uProj*mv;',
+' float t=clamp(aSpeed/max(uVref,0.0001),0.0,1.0);',
+' vec3 c1=vec3(0.10,0.30,1.00);',
+' vec3 c2=vec3(0.05,0.85,1.00);',
+' vec3 c3=vec3(1.00,0.70,0.15);',
+' vec3 c4=vec3(1.00,0.97,0.90);',
+' vec3 col=t<0.34?mix(c1,c2,t/0.34):(t<0.67?mix(c2,c3,(t-0.34)/0.33):mix(c3,c4,(t-0.67)/0.33));',
+' col=mix(col,uTint,uTintMix);',
+' if(uIsPoint>0.5){',
+'  gl_PointSize=clamp(uPointScale/max(2.0,-mv.z),1.5,64.0);',
+'  vColor=vec4(col*uDim,uDim);',
+' }else{',
+'  gl_PointSize=1.0;',
+'  vColor=vec4(col*uDim*aFade,uDim*aFade*0.45);',
+' }',
+'}'].join('\n');
+var FPSH=[
+'precision mediump float;',
+'varying vec4 vColor;',
+'void main(){',
+' vec2 d=gl_PointCoord-vec2(0.5);',
+' float a=exp(-dot(d,d)*10.0)-0.045;',
+' if(a<=0.0)discard;',
+' gl_FragColor=vec4(vColor.rgb*a,vColor.a*a);',
+'}'].join('\n');
+var FLSH=[
+'precision mediump float;',
+'varying vec4 vColor;',
+'void main(){gl_FragColor=vColor;}'
+].join('\n');
+
+function sh(type,src){
+ var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+ if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error('shader: '+gl.getShaderInfoLog(s));
+ return s;
+}
+function prog(vs,fs){
+ var p=gl.createProgram();
+ gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));
+ gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));
+ gl.linkProgram(p);
+ if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error('link: '+gl.getProgramInfoLog(p));
+ return p;
+}
+function locs(p){
+ var o={};
+ ['aPos','aSpeed','aFade'].forEach(function(n){o[n]=gl.getAttribLocation(p,n);});
+ ['uProj','uView','uVref','uPointScale','uDim','uIsPoint','uTint','uTintMix'].forEach(function(n){o[n]=gl.getUniformLocation(p,n);});
+ return o;
+}
+var pPoint=prog(VSH,FPSH),pLine=prog(VSH,FLSH);
+var LP=locs(pPoint),LL=locs(pLine);
+
+/* ---------------- matrices ---------------- */
+function perspective(fov,asp,n,f){
+ var t=1/Math.tan(fov/2),d=1/(n-f);
+ return new Float32Array([t/asp,0,0,0, 0,t,0,0, 0,0,(f+n)*d,-1, 0,0,2*f*n*d,0]);
+}
+function lookAt(e,c,u){
+ var zx=e[0]-c[0],zy=e[1]-c[1],zz=e[2]-c[2];
+ var l=Math.sqrt(zx*zx+zy*zy+zz*zz);zx/=l;zy/=l;zz/=l;
+ var xx=u[1]*zz-u[2]*zy,xy=u[2]*zx-u[0]*zz,xz=u[0]*zy-u[1]*zx;
+ l=Math.sqrt(xx*xx+xy*xy+xz*xz);xx/=l;xy/=l;xz/=l;
+ var yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;
+ return new Float32Array([xx,yx,zx,0, xy,yy,zy,0, xz,yz,zz,0,
+  -(xx*e[0]+xy*e[1]+xz*e[2]),-(yx*e[0]+yy*e[1]+yz*e[2]),-(zx*e[0]+zy*e[1]+zz*e[2]),1]);
+}
+
+/* ---------------- physics: 200 bodies, Plummer-softened O(n^2), KDK leapfrog ---------------- */
+var pos=new Float32Array(N*3),vel=new Float32Array(N*3),acc=new Float32Array(N*3);
+var spd=new Float32Array(N);
+var hist=new Float32Array(H*N*3),hHead=0;
+var G=1.2,eps=0.45,dtScale=1,trailsOn=true,paused=false;
+var PE=0,KE=0,vref=1;
+var camYaw=0.7,camPitch=0.42,camDist=85;
+
+function rnd(){return Math.random();}
+function gauss(){return rnd()+rnd()+rnd()-1.5;}
+
+function computeAcc(){
+ acc.fill(0);
+ var e2=eps*eps,pe=0,i,j;
+ for(i=0;i<N;i++){
+  var ix=i*3,ax=pos[ix],ay=pos[ix+1],az=pos[ix+2];
+  for(j=i+1;j<N;j++){
+   var jx=j*3;
+   var dx=pos[jx]-ax,dy=pos[jx+1]-ay,dz=pos[jx+2]-az;
+   var r2=dx*dx+dy*dy+dz*dz+e2;
+   var rq=Math.sqrt(r2);
+   var f=G/(r2*rq);
+   acc[ix]+=dx*f;acc[ix+1]+=dy*f;acc[ix+2]+=dz*f;
+   acc[jx]-=dx*f;acc[jx+1]-=dy*f;acc[jx+2]-=dz*f;
+   pe-=G/rq;
+  }
+ }
+ PE=pe;
+}
+function step(dt){
+ var h=0.5*dt,i;
+ for(i=0;i<N*3;i++){vel[i]+=acc[i]*h;pos[i]+=vel[i]*dt;}
+ computeAcc();
+ for(i=0;i<N*3;i++)vel[i]+=acc[i]*h;
+}
+function init(){
+ var i,cx=0,cy=0,cz=0;
+ for(i=0;i<N;i++){
+  var r=6+22*Math.pow(rnd(),0.6),th=rnd()*Math.PI*2;
+  pos[i*3]=r*Math.cos(th);pos[i*3+1]=gauss()*2.2;pos[i*3+2]=r*Math.sin(th);
+  cx+=pos[i*3];cy+=pos[i*3+1];cz+=pos[i*3+2];
+ }
+ cx/=N;cy/=N;cz/=N;
+ var vx=0,vy=0,vz=0;
+ for(i=0;i<N;i++){
+  pos[i*3]-=cx;pos[i*3+1]-=cy;pos[i*3+2]-=cz;
+  var px=pos[i*3],py=pos[i*3+1],pz=pos[i*3+2];
+  var rr=Math.sqrt(px*px+pz*pz)+0.001;
+  var rad=Math.sqrt(px*px+py*py+pz*pz);
+  var q=rad/28;if(q>1)q=1;
+  var vc=Math.sqrt(G*N*q*q/Math.max(rad,1));
+  var s=vc*(0.7+0.3*rnd());
+  vel[i*3]=(-pz/rr)*s+gauss()*0.3;
+  vel[i*3+1]=gauss()*0.25;
+  vel[i*3+2]=(px/rr)*s+gauss()*0.3;
+  vx+=vel[i*3];vy+=vel[i*3+1];vz+=vel[i*3+2];
+ }
+ vx/=N;vy/=N;vz/=N;
+ for(i=0;i<N;i++){vel[i*3]-=vx;vel[i*3+1]-=vy;vel[i*3+2]-=vz;}
+ computeAcc();
+ for(var h=0;h<H;h++)hist.set(pos,h*N*3);
+ hHead=0;vref=1;
+}
+
+/* ---------------- buffers ---------------- */
+function mkBuf(data,usage){
+ var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+ gl.bufferData(gl.ARRAY_BUFFER,data,usage);return b;
+}
+var pData=new Float32Array(N*5);
+var tData=new Float32Array(N*(H-1)*2*5);
+var starData=new Float32Array(NS*5);
+for(var i=0;i<NS;i++){
+ var x,y,z,l2;
+ do{x=rnd()*2-1;y=rnd()*2-1;z=rnd()*2-1;l2=x*x+y*y+z*z;}while(l2>1||l2<0.01);
+ l2=Math.sqrt(l2);
+ var rr=170+rnd()*230;
+ starData[i*5]=x/l2*rr;starData[i*5+1]=y/l2*rr;starData[i*5+2]=z/l2*rr;
+ starData[i*5+3]=0;starData[i*5+4]=1;
+}
+var pBuf=mkBuf(pData,gl.DYNAMIC_DRAW);
+var tBuf=mkBuf(tData,gl.DYNAMIC_DRAW);
+var sBuf=mkBuf(starData,gl.STATIC_DRAW);
+
+function bindBuf(L,buf){
+ gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+ gl.enableVertexAttribArray(L.aPos);
+ gl.vertexAttribPointer(L.aPos,3,gl.FLOAT,false,20,0);
+ gl.enableVertexAttribArray(L.aSpeed);
+ gl.vertexAttribPointer(L.aSpeed,1,gl.FLOAT,false,20,12);
+ gl.enableVertexAttribArray(L.aFade);
+ gl.vertexAttribPointer(L.aFade,1,gl.FLOAT,false,20,16);
+}
+function syncParticles(){
+ for(var i=0;i<N;i++){
+  pData[i*5]=pos[i*3];pData[i*5+1]=pos[i*3+1];pData[i*5+2]=pos[i*3+2];
+  pData[i*5+3]=spd[i];pData[i*5+4]=1;
+ }
+ gl.bindBuffer(gl.ARRAY_BUFFER,pBuf);
+ gl.bufferSubData(gl.ARRAY_BUFFER,0,pData);
+}
+function syncTrails(){
+ var o=0,i,k;
+ for(i=0;i<N;i++){
+  for(k=0;k<H-1;k++){
+   var h0=((hHead+k)%H)*N*3+i*3;
+   var h1=((hHead+k+1)%H)*N*3+i*3;
+   var f0=k/(H-1),f1=(k+1)/(H-1);
+   tData[o++]=hist[h0];tData[o++]=hist[h0+1];tData[o++]=hist[h0+2];tData[o++]=spd[i];tData[o++]=f0*f0;
+   tData[o++]=hist[h1];tData[o++]=hist[h1+1];tData[o++]=hist[h1+2];tData[o++]=spd[i];tData[o++]=f1*f1;
+  }
+ }
+ gl.bindBuffer(gl.ARRAY_BUFFER,tBuf);
+ gl.bufferSubData(gl.ARRAY_BUFFER,0,tData);
+}
+
+/* ---------------- render ---------------- */
+function setCommon(L,proj,view,pscale){
+ gl.uniformMatrix4fv(L.uProj,false,proj);
+ gl.uniformMatrix4fv(L.uView,false,view);
+ gl.uniform1f(L.uVref,vref);
+ gl.uniform1f(L.uPointScale,pscale);
+}
+function render(){
+ gl.viewport(0,0,canvas.width,canvas.height);
+ gl.clearColor(0.012,0.016,0.034,1);
+ gl.clear(gl.COLOR_BUFFER_BIT);
+ gl.disable(gl.DEPTH_TEST);
+ gl.enable(gl.BLEND);
+ gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+ var asp=canvas.width/Math.max(1,canvas.height);
+ var proj=perspective(0.96,asp,1,3000);
+ var cp=Math.cos(camPitch),sp=Math.sin(camPitch);
+ var eye=[camDist*cp*Math.sin(camYaw),camDist*sp,camDist*cp*Math.cos(camYaw)];
+ var view=lookAt(eye,[0,0,0],[0,1,0]);
+ var pscale=canvas.height*0.55;
+
+ gl.useProgram(pPoint);
+ setCommon(LP,proj,view,pscale);
+ gl.uniform1f(LP.uIsPoint,1);
+ gl.uniform3f(LP.uTint,0.62,0.68,0.85);
+ gl.uniform1f(LP.uTintMix,0.9);
+ gl.uniform1f(LP.uDim,0.4);
+ bindBuf(LP,sBuf);
+ gl.drawArrays(gl.POINTS,0,NS);
+
+ if(trailsOn){
+  gl.useProgram(pLine);
+  setCommon(LL,proj,view,pscale);
+  gl.uniform1f(LL.uIsPoint,0);
+  gl.uniform1f(LL.uTintMix,0);
+  gl.uniform1f(LL.uDim,0.85);
+  bindBuf(LL,tBuf);
+  gl.drawArrays(gl.LINES,0,N*(H-1)*2);
+ }
+
+ gl.useProgram(pPoint);
+ gl.uniform1f(LP.uTintMix,0);
+ gl.uniform1f(LP.uDim,1);
+ bindBuf(LP,pBuf);
+ gl.drawArrays(gl.POINTS,0,N);
+}
+
+/* ---------------- resize ---------------- */
+function resize(){
+ var dpr=Math.min(window.devicePixelRatio||1,2);
+ var w=Math.max(1,Math.round(canvas.clientWidth*dpr));
+ var h=Math.max(1,Math.round(canvas.clientHeight*dpr));
+ if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+}
+window.addEventListener('resize',resize);
+
+/* ---------------- input: orbit + zoom ---------------- */
+var ptrs=new Map(),pinchD=0,dragging=false;
+canvas.addEventListener('pointerdown',function(ev){
+ try{canvas.setPointerCapture(ev.pointerId);}catch(e){}
+ ptrs.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+ dragging=true;
+});
+canvas.addEventListener('pointermove',function(ev){
+ var p=ptrs.get(ev.pointerId);if(!p)return;
+ if(ptrs.size===1){
+  camYaw-=(ev.clientX-p.x)*0.0052;
+  camPitch+=(ev.clientY-p.y)*0.0052;
+  if(camPitch>1.5)camPitch=1.5;if(camPitch<-1.5)camPitch=-1.5;
+  p.x=ev.clientX;p.y=ev.clientY;
+ }else{
+  p.x=ev.clientX;p.y=ev.clientY;
+  var a=[];ptrs.forEach(function(v){a.push(v);});
+  if(a.length>=2){
+   var d=Math.sqrt((a[0].x-a[1].x)*(a[0].x-a[1].x)+(a[0].y-a[1].y)*(a[0].y-a[1].y));
+   if(pinchD>0&&d>0){camDist*=pinchD/d;if(camDist<15)camDist=15;if(camDist>500)camDist=500;}
+   pinchD=d;
+  }
+ }
+});
+function drop(ev){ptrs.delete(ev.pointerId);if(ptrs.size<2)pinchD=0;dragging=ptrs.size>0;}
+canvas.addEventListener('pointerup',drop);
+canvas.addEventListener('pointercancel',drop);
+canvas.addEventListener('wheel',function(ev){
+ ev.preventDefault();
+ camDist*=Math.exp(ev.deltaY*0.0011);
+ if(camDist<15)camDist=15;if(camDist>500)camDist=500;
+},{passive:false});
+
+/* ---------------- HUD ---------------- */
+function $(id){return document.getElementById(id);}
+var fpsEl=$('fps'),vmEl=$('vm'),enEl=$('en');
+$('g').addEventListener('input',function(){G=+this.value;$('gv').textContent=G.toFixed(2);});
+$('eps').addEventListener('input',function(){eps=+this.value;$('epsv').textContent=eps.toFixed(2);});
+$('ts').addEventListener('input',function(){dtScale=+this.value;$('tsv').textContent=dtScale.toFixed(2);});
+$('tr').addEventListener('change',function(){trailsOn=this.checked;});
+$('pause').addEventListener('click',function(){paused=!paused;this.textContent=paused?'Resume':'Pause';});
+$('reset').addEventListener('click',function(){init();});
+$('collapse').addEventListener('click',function(){
+ var b=$('hudbody'),hid=b.style.display==='none';
+ b.style.display=hid?'':'none';
+ this.innerHTML=hid?'&ndash;':'+';
+});
+
+/* ---------------- main loop ---------------- */
+var last=performance.now(),fps=60,frame=0,raf=0;
+function tick(now){
+ raf=requestAnimationFrame(tick);
+ var dtms=Math.min(60,now-last);last=now;
+ fps+=(1000/Math.max(dtms,1)-fps)*0.05;
+ frame++;
+ resize();
+ if(!paused){
+  var dt=0.011*dtScale,i;
+  step(dt);step(dt);
+  KE=0;var vm=0;
+  for(i=0;i<N;i++){
+   var s2=vel[i*3]*vel[i*3]+vel[i*3+1]*vel[i*3+1]+vel[i*3+2]*vel[i*3+2];
+   spd[i]=Math.sqrt(s2);KE+=0.5*s2;
+   if(spd[i]>vm)vm=spd[i];
+  }
+  vref=Math.max(vm,vref*0.985,0.001);
+  if(frame%2===0){hist.set(pos,hHead*N*3);hHead=(hHead+1)%H;}
+  syncParticles();syncTrails();
+ }
+ if(!dragging)camYaw+=dtms*0.000045;
+ render();
+ if(frame%15===0){
+  fpsEl.textContent=fps.toFixed(0)+' fps';
+  vmEl.textContent='v '+vref.toFixed(2);
+  enEl.textContent='E '+(KE+PE).toFixed(1);
+ }
+}
+window.addEventListener('unload',function(){cancelAnimationFrame(raf);});
+init();
+resize();
+raf=requestAnimationFrame(tick);
+})();
+}catch(e){
+ var d=document.getElementById('err');
+ if(d){d.textContent=String(e&&e.stack||e);d.style.display='block';}
+}
+</script>
+</body></html>

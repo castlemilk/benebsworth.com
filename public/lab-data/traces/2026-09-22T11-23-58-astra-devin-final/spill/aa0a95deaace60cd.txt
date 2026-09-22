@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Python password utilities — module and tests</title>
+<style>
+:root{color-scheme:light;--bg:#f4f6fa;--paper:#fff;--ink:#152538;--muted:#506175;--line:#dbe3ed;--accent:#175dc1;--code:#101b2b;--code-ink:#e0eaf7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:auto;padding:48px 24px 64px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.14;letter-spacing:-.035em;margin:12px 0 20px}h2{font-size:21px;margin:0 0 12px}p{margin:12px 0}.intro{max-width:780px;font-size:18px;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}.pill{border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600}
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:24px 0 32px}button{font:inherit;font-size:14px;font-weight:650;cursor:pointer;border:1px solid var(--accent);border-radius:6px;padding:10px 16px;background:var(--accent);color:#fff}button.secondary{color:var(--accent);background:var(--paper)}button:hover{filter:brightness(.92)}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #de8b16;outline-offset:3px}#status{font-size:14px;color:var(--muted)}
+section{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px;margin:20px 0}code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}p code,li code{font-size:.9em;background:var(--bg);padding:2px 5px;border-radius:4px}
+pre{background:var(--code);color:var(--code-ink);font-size:13px;line-height:1.65;overflow:auto;padding:20px;border-radius:7px;tab-size:4;margin:14px 0 0}pre code{font-size:inherit}details{margin:18px 0}summary{cursor:pointer;font-weight:650;padding:8px 0}a{color:var(--accent);text-underline-offset:3px}.note{color:var(--muted);font-size:14px}.pass{color:#12653b;font-weight:650}ul{padding-left:22px}li{margin:7px 0}footer{font-size:13px;color:var(--muted);padding-top:8px}
+@media(max-width:640px){main{padding:28px 14px}section{padding:17px}pre{padding:14px;font-size:12px}.actions button{flex:1}}
+@media(prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#101721;--paper:#172331;--ink:#e5edf6;--muted:#b2c1d2;--line:#304153;--accent:#8bbcff;--code:#0b121c;--code-ink:#e0eaf7}button{color:#10213b}.pass{color:#7fd7a5}}
+@media print{.actions{display:none}body{background:#fff;color:#000}main{max-width:none;padding:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f2f2;color:#000}}
+</style></head>
+<body><main><header>
+<div class="eyebrow">Python · Standard library · Module + unit tests</div>
+<h1>Python password utilities</h1>
+<p class="intro">Constant-time byte comparison, salted PBKDF2 password hashing, and verification in one downloadable Python file.</p>
+<div class="facts"><span class="pill">PBKDF2-HMAC-SHA256</span><span class="pill">600,000 iterations</span><span class="pill">128-bit random salt</span><span class="pill">256-bit derived key</span></div>
+<div class="actions"><button id="download" type="button">Download password_utils.py</button><button id="copy" class="secondary" type="button">Copy Python source</button><span id="status" role="status" aria-live="polite"></span></div>
+<noscript><p>The complete source is below. Select and save it as <code>password_utils.py</code>; JavaScript is only used for copy and download buttons.</p></noscript>
+</header>
+<section aria-labelledby="usage-title"><h2 id="usage-title">Use it</h2>
+<p>Save the source as <code>password_utils.py</code>. It requires Python 3.10+ with OpenSSL-backed <code>hashlib.pbkdf2_hmac</code>; no packages to install.</p>
+<pre><code>from password_utils import constant_time_compare, hash_password, verify_password
+
+stored = hash_password("correct horse battery staple")
+assert verify_password("correct horse battery staple", stored)
+assert not verify_password("wrong password", stored)
+assert constant_time_compare("hello", "hello")
+
+# Store the entire `stored` string, including its salt and iteration count.</code></pre>
+<p>Run the included tests:</p><pre><code>python3 password_utils.py -v</code></pre></section>
+<section aria-labelledby="contract-title"><h2 id="contract-title">Behavior and storage format</h2>
+<ul>
+<li><code>constant_time_compare(a, b)</code> compares text or bytes using <code>hmac.compare_digest</code>. Text is UTF-8 encoded, so matching text and bytes compare equal.</li>
+<li><code>hash_password(password, iterations=600_000)</code> generates a fresh salt with <code>secrets.token_bytes(16)</code> and returns the record below. Iterations are keyword-only and must be an integer between 600,000 and 2,000,000.</li>
+<li><code>verify_password(password, stored_hash)</code> uses the stored salt and work factor, then compares the 32-byte keys. Wrong passwords and malformed records return <code>False</code>. Invalid password types raise <code>TypeError</code>.</li>
+<li>Unicode is preserved without normalization. Empty passwords and embedded NUL bytes are supported. Text with unpaired surrogates raises <code>UnicodeEncodeError</code>.</li>
+</ul>
+<pre><code>pbkdf2_sha256$iterations$salt_hex$key_hex
+                         32 hex   64 hex</code></pre>
+<p class="note">This is a module-specific, strictly parsed format. Records outside the supported work-factor range are rejected before PBKDF2 runs. The upper bound limits the cost of a single record; it is an implementation policy, not a PBKDF2 limit.</p>
+<p class="note"><strong>Timing scope:</strong> the comparison avoids content-dependent early exits. Input lengths, UTF-8 encoding, malformed-record rejection, and different work factors can affect overall timing. The complete verification flow is not constant-time. <a href="https://docs.python.org/3/library/hmac.html#hmac.compare_digest">Python documents the comparison's timing guarantees.</a></p></section>
+<section aria-labelledby="source-title"><h2 id="source-title">Complete Python source</h2>
+<p class="note">Library functions and all 20 unit tests are included. Importing this file does not run the tests.</p>
+<pre tabindex="0" aria-label="Complete Python module and unit tests"><code id="python-source">&quot;&quot;&quot;Password hashing and timing-resistant comparison (Python 3.10+).
+
+Standard library only; hashlib must provide PBKDF2 (OpenSSL).
+Run unit tests: python password_utils.py -v
+
+Record: pbkdf2_sha256$iterations$32-char-salt-hex$64-char-key-hex
+Store the whole record. Salts are public and generated afresh for every hash.
+Strings use UTF-8 without normalization; bytes are used unchanged.
+Empty passwords are supported: enforce password policy in the calling app.
+
+Timing scope: compare_digest avoids content-based early exits. Encoding,
+lengths, validation and PBKDF2 work factors can affect total running time.
+This module does not make an entire authentication flow constant-time.
+&quot;&quot;&quot;
+
+import hashlib
+import hmac
+import re
+import secrets
+
+__all__ = [&quot;constant_time_compare&quot;, &quot;hash_password&quot;, &quot;verify_password&quot;]
+
+DEFAULT_ITERATIONS = 600_000
+MIN_ITERATIONS = 600_000
+MAX_ITERATIONS = 2_000_000
+SALT_BYTES = 16
+KEY_BYTES = 32
+_RECORD = re.compile(
+    r&quot;pbkdf2_sha256\$([1-9][0-9]{0,6})\$([0-9a-f]{32})\$([0-9a-f]{64})&quot;
+)
+
+
+def _to_bytes(value: str | bytes) -&gt; bytes:
+    if isinstance(value, str):
+        return value.encode(&quot;utf-8&quot;)
+    if isinstance(value, bytes):
+        return value
+    raise TypeError(&quot;expected str or bytes&quot;)
+
+
+def constant_time_compare(left: str | bytes, right: str | bytes) -&gt; bool:
+    &quot;&quot;&quot;Compare text or bytes without content-based early exits.
+
+    Mixed str/bytes inputs compare their byte representations. Unsupported
+    types raise TypeError; unpaired surrogates raise UnicodeEncodeError.
+    Lengths and UTF-8 encoding time are not hidden by this function.
+    &quot;&quot;&quot;
+    return hmac.compare_digest(_to_bytes(left), _to_bytes(right))
+
+
+def hash_password(
+    password: ***REDACTED*** | bytes, *, iterations: int = DEFAULT_ITERATIONS
+) -&gt; str:
+    &quot;&quot;&quot;Return a salted PBKDF2-HMAC-SHA256 record suitable for storage.
+
+    iterations must be an integer (not bool) between 600,000 and 2,000,000.
+    Tune within this range for your hardware; review the policy over time.
+    Invalid types raise TypeError; out-of-range work factors raise ValueError.
+    &quot;&quot;&quot;
+    password_bytes = _to_bytes(password)
+    if type(iterations) is not int:
+        raise TypeError(&quot;iterations must be an integer&quot;)
+    if not MIN_ITERATIONS &lt;= iterations &lt;= MAX_ITERATIONS:
+        raise ValueError(
+            f&quot;iterations must be between {MIN_ITERATIONS} and {MAX_ITERATIONS}&quot;
+        )
+    salt = secrets.token_bytes(SALT_BYTES)
+    key = hashlib.pbkdf2_hmac(
+        &quot;sha256&quot;, password_bytes, salt, iterations, dklen=KEY_BYTES
+    )
+    return f&quot;pbkdf2_sha256${iterations}${salt.hex()}${key.hex()}&quot;
+
+
+def verify_password(password: ***REDACTED*** | bytes, stored_hash: str) -&gt; bool:
+    &quot;&quot;&quot;Check a password against a record created by hash_password.
+
+    Wrong passwords and malformed/unsupported records return False, including
+    non-str records. Invalid password types raise TypeError. Unicode text
+    must be UTF-8 encodable. Record checks precede expensive derivation.
+    The final comparison compares two 32-byte keys with compare_digest.
+    &quot;&quot;&quot;
+    password_bytes = _to_bytes(password)
+    if not isinstance(stored_hash, str) or len(stored_hash) &gt; 128:
+        return False
+    match = _RECORD.fullmatch(stored_hash)
+    if match is None:
+        return False
+    iterations_text, salt_hex, key_hex = match.groups()
+    iterations = int(iterations_text)
+    if not MIN_ITERATIONS &lt;= iterations &lt;= MAX_ITERATIONS:
+        return False
+    salt = bytes.fromhex(salt_hex)
+    expected = bytes.fromhex(key_hex)
+    actual = hashlib.pbkdf2_hmac(
+        &quot;sha256&quot;, password_bytes, salt, iterations, dklen=KEY_BYTES
+    )
+    return constant_time_compare(actual, expected)
+
+
+# Tests are included so this file can be downloaded and run alone.
+import unittest
+from unittest.mock import patch
+
+
+class ConstantTimeCompareTests(unittest.TestCase):
+    def test_equal_and_empty(self):
+        for value in (&quot;&quot;, &quot;secret&quot;, b&quot;&quot;, b&quot;secret&quot;, b&quot;\x00\xff&quot;):
+            with self.subTest(value=value):
+                self.assertTrue(constant_time_compare(value, value))
+
+    def test_mismatch_at_each_position(self):
+        for value in (&quot;xbc&quot;, &quot;axc&quot;, &quot;abx&quot;):
+            with self.subTest(value=value):
+                self.assertFalse(constant_time_compare(&quot;abc&quot;, value))
+
+    def test_different_lengths(self):
+        for left, right in ((&quot;&quot;, &quot;x&quot;), (&quot;x&quot;, &quot;&quot;), (&quot;abc&quot;, &quot;abcd&quot;)):
+            with self.subTest(left=left, right=right):
+                self.assertFalse(constant_time_compare(left, right))
+
+    def test_unicode_and_mixed_inputs(self):
+        value = &quot;p\u00e4ss\U0001f512\u5bc6\u78bc&quot;
+        self.assertTrue(constant_time_compare(value, value.encode(&quot;utf-8&quot;)))
+        self.assertFalse(constant_time_compare(&quot;\u00e9&quot;, &quot;e\u0301&quot;))
+
+    def test_invalid_types(self):
+        for value in (None, 123, [], bytearray(b&quot;abc&quot;)):
+            with self.subTest(value=value):
+                with self.assertRaises(TypeError):
+                    constant_time_compare(value, &quot;abc&quot;)
+                with self.assertRaises(TypeError):
+                    constant_time_compare(&quot;abc&quot;, value)
+
+    def test_uses_standard_comparison(self):
+        with patch.object(hmac, &quot;compare_digest&quot;, return_value=True) as compare:
+            self.assertTrue(constant_time_compare(&quot;\u00e9&quot;, &quot;\u00e9&quot;))
+        compare.assert_called_once_with(b&quot;\xc3\xa9&quot;, b&quot;\xc3\xa9&quot;)
+
+
+class PasswordHashTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.password = ***REDACTED***;correct horse battery staple&quot;
+        cls.record = hash_password(cls.password)
+
+    def test_correct_password(self):
+        self.assertTrue(verify_password(self.password, self.record))
+
+    def test_wrong_password(self):
+        self.assertFalse(verify_password(&quot;incorrect&quot;, self.record))
+
+    def test_record_format_and_default_work_factor(self):
+        scheme, iterations, salt, key = self.record.split(&quot;$&quot;)
+        self.assertEqual(scheme, &quot;pbkdf2_sha256&quot;)
+        self.assertEqual(iterations, &quot;600000&quot;)
+        self.assertEqual(len(bytes.fromhex(salt)), 16)
+        self.assertEqual(len(bytes.fromhex(key)), 32)
+
+    def test_fresh_random_salt(self):
+        second = hash_password(self.password)
+        self.assertNotEqual(self.record.split(&quot;$&quot;)[2], second.split(&quot;$&quot;)[2])
+        self.assertNotEqual(self.record, second)
+        self.assertTrue(verify_password(self.password, second))
+
+    def test_deterministic_salt_and_pbkdf2_parameters(self):
+        salt = bytes(range(16))
+        with patch.object(secrets, &quot;token_bytes&quot;, return_value=salt) as random:
+            record = hash_password(b&quot;password&quot;)
+        random.assert_called_once_with(16)
+        expected = hashlib.pbkdf2_hmac(
+            &quot;sha256&quot;, b&quot;password&quot;, salt, 600_000, dklen=32
+        )
+        self.assertEqual(
+            record, f&quot;pbkdf2_sha256$600000${salt.hex()}${expected.hex()}&quot;
+        )
+
+    def test_stored_work_factor_is_used(self):
+        record = hash_password(self.password, iterations=600_001)
+        self.assertEqual(record.split(&quot;$&quot;)[1], &quot;600001&quot;)
+        self.assertTrue(verify_password(self.password, record))
+
+    def test_unicode_empty_and_binary_passwords(self):
+        for password in (&quot;&quot;, &quot;p\u00e4ss\U0001f512\u5bc6\u78bc&quot;, b&quot;a\x00b\xff&quot;):
+            with self.subTest(password=***REDACTED***
+                record = hash_password(password)
+                self.assertTrue(verify_password(password, record))
+                self.assertFalse(verify_password(_to_bytes(password) + b&quot;!&quot;, record))
+
+    def test_no_unicode_normalization(self):
+        record = hash_password(&quot;\u00e9&quot;)
+        self.assertTrue(verify_password(b&quot;\xc3\xa9&quot;, record))
+        self.assertFalse(verify_password(&quot;e\u0301&quot;, record))
+
+    def test_tampered_salt_and_key(self):
+        for index in (2, 3):
+            with self.subTest(field=index):
+                fields = self.record.split(&quot;$&quot;)
+                first = &quot;1&quot; if fields[index][0] == &quot;0&quot; else &quot;0&quot;
+                fields[index] = first + fields[index][1:]
+                self.assertFalse(verify_password(self.password, &quot;$&quot;.join(fields)))
+
+    def test_malformed_records_are_rejected_before_derivation(self):
+        scheme, rounds, salt, key = self.record.split(&quot;$&quot;)
+        records = [
+            None, b&quot;not a string&quot;, 123, &quot;&quot;, &quot;junk&quot;, &quot;x&quot; * 10_000,
+            self.record + &quot;$extra&quot;, self.record + &quot;\n&quot;,
+            f&quot;sha256${rounds}${salt}${key}&quot;,
+            f&quot;{scheme}${rounds}${salt[:-2]}${key}&quot;,
+            f&quot;{scheme}${rounds}${salt}${key[:-2]}&quot;,
+            f&quot;{scheme}${rounds}${&#x27;g&#x27; * 32}${key}&quot;,
+            f&quot;{scheme}${rounds}${salt}${&#x27;A&#x27; * 64}&quot;,
+            f&quot;{scheme}${rounds}${salt}${&#x27; &#x27; * 64}&quot;,
+        ]
+        for invalid_rounds in (
+            &quot;0&quot;, &quot;-1&quot;, &quot;1&quot;, &quot;599999&quot;, &quot;2000001&quot;, &quot;999999999999999&quot;,
+            &quot;+600000&quot;, &quot;0600000&quot;, &quot;600000.0&quot;, &quot; 600000&quot;,
+            &quot;\u0666\u0660\u0660\u0660\u0660\u0660&quot;,
+        ):
+            records.append(f&quot;{scheme}${invalid_rounds}${salt}${key}&quot;)
+        with patch.object(hashlib, &quot;pbkdf2_hmac&quot;) as derive:
+            for record in records:
+                with self.subTest(record=repr(record)[:100]):
+                    self.assertFalse(verify_password(self.password, record))
+        derive.assert_not_called()
+
+    def test_invalid_password_types(self):
+        for password in (None, 42, [], bytearray(b&quot;password&quot;)):
+            with self.subTest(password=***REDACTED***
+                with self.assertRaises(TypeError):
+                    hash_password(password)
+                with self.assertRaises(TypeError):
+                    verify_password(password, self.record)
+
+    def test_invalid_work_factors(self):
+        for iterations in (True, False, 600_000.0, &quot;600000&quot;, None):
+            with self.subTest(iterations=iterations):
+                with self.assertRaises(TypeError):
+                    hash_password(&quot;password&quot;, iterations=iterations)
+        for iterations in (-1, 0, 599_999, 2_000_001):
+            with self.subTest(iterations=iterations):
+                with self.assertRaises(ValueError):
+                    hash_password(&quot;password&quot;, iterations=iterations)
+
+    def test_unpaired_surrogates_are_rejected(self):
+        with self.assertRaises(UnicodeEncodeError):
+            hash_password(&quot;\ud800&quot;)
+        with self.assertRaises(UnicodeEncodeError):
+            verify_password(&quot;\ud800&quot;, self.record)
+        with self.assertRaises(UnicodeEncodeError):
+            constant_time_compare(&quot;\ud800&quot;, &quot;\ud800&quot;)
+
+    def test_verification_compares_fixed_length_keys(self):
+        real_compare = hmac.compare_digest
+        with patch.object(hmac, &quot;compare_digest&quot;, wraps=real_compare) as compare:
+            self.assertTrue(verify_password(self.password, self.record))
+        compare.assert_called_once()
+        actual, expected = compare.call_args.args
+        self.assertIsInstance(actual, bytes)
+        self.assertIsInstance(expected, bytes)
+        self.assertEqual(len(actual), 32)
+        self.assertEqual(len(expected), 32)
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre></section>
+<section aria-labelledby="tests-title"><h2 id="tests-title">Test results</h2>
+<p class="pass">20 tests passed · Python 3.14.7</p>
+<p>Coverage includes matching and mismatched strings, UTF-8 and binary inputs, random salts, PBKDF2 parameters, stored work factors, tampering, malformed records, and rejected input types. Tests exercise the actual default work factor. Timing guarantees come from the standard comparison primitive; wall-clock unit tests cannot prove constant-time execution.</p>
+<details><summary>View the recorded test run</summary><pre><code>test_different_lengths (__main__.ConstantTimeCompareTests.test_different_lengths) ... ok
+test_equal_and_empty (__main__.ConstantTimeCompareTests.test_equal_and_empty) ... ok
+test_invalid_types (__main__.ConstantTimeCompareTests.test_invalid_types) ... ok
+test_mismatch_at_each_position (__main__.ConstantTimeCompareTests.test_mismatch_at_each_position) ... ok
+test_unicode_and_mixed_inputs (__main__.ConstantTimeCompareTests.test_unicode_and_mixed_inputs) ... ok
+test_uses_standard_comparison (__main__.ConstantTimeCompareTests.test_uses_standard_comparison) ... ok
+test_correct_password (__main__.PasswordHashTests.test_correct_password) ... ok
+test_deterministic_salt_and_pbkdf2_parameters (__main__.PasswordHashTests.test_deterministic_salt_and_pbkdf2_parameters) ... ok
+test_fresh_random_salt (__main__.PasswordHashTests.test_fresh_random_salt) ... ok
+test_invalid_password_types (__main__.PasswordHashTests.test_invalid_password_types) ... ok
+test_invalid_work_factors (__main__.PasswordHashTests.test_invalid_work_factors) ... ok
+test_malformed_records_are_rejected_before_derivation (__main__.PasswordHashTests.test_malformed_records_are_rejected_before_derivation) ... ok
+test_no_unicode_normalization (__main__.PasswordHashTests.test_no_unicode_normalization) ... ok
+test_record_format_and_default_work_factor (__main__.PasswordHashTests.test_record_format_and_default_work_factor) ... ok
+test_stored_work_factor_is_used (__main__.PasswordHashTests.test_stored_work_factor_is_used) ... ok
+test_tampered_salt_and_key (__main__.PasswordHashTests.test_tampered_salt_and_key) ... ok
+test_unicode_empty_and_binary_passwords (__main__.PasswordHashTests.test_unicode_empty_and_binary_passwords) ... ok
+test_unpaired_surrogates_are_rejected (__main__.PasswordHashTests.test_unpaired_surrogates_are_rejected) ... ok
+test_verification_compares_fixed_length_keys (__main__.PasswordHashTests.test_verification_compares_fixed_length_keys) ... ok
+test_wrong_password (__main__.PasswordHashTests.test_wrong_password) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 1.147s
+
+OK
+</code></pre></details></section>
+<footer>
+<p>The 600,000-iteration default follows <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2">OWASP's PBKDF2-HMAC-SHA256 guidance</a>. Benchmark the work factor on your deployment hardware.</p>
+<p>Implementation references: <a href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac">Python PBKDF2</a> · <a href="https://docs.python.org/3/library/secrets.html#secrets.token_bytes">Python secure random bytes</a>. This HTML works offline; only reference links access external sites.</p></footer>
+</main>
+<script>
+const source = document.getElementById('python-source');
+const status = document.getElementById('status');
+document.getElementById('download').addEventListener('click', () => {
+  const blob = new Blob([source.textContent], {type: 'text/x-python;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'password_utils.py';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  status.textContent = 'Python source download requested.';
+});
+document.getElementById('copy').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(source.textContent);
+    status.textContent = 'Python source copied.';
+  } catch (_) {
+    const range = document.createRange();
+    range.selectNodeContents(source);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    source.scrollIntoView({block: 'start'});
+    status.textContent = 'Source selected. Press Ctrl+C or Command+C to copy.';
+  }
+});
+</script></body></html>

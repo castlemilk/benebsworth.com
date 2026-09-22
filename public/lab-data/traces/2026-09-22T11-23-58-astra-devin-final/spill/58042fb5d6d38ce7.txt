@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving x&sup2; + y&sup2; = 25, xy = 12 over &#8477;</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171b26;
+    --ink: #e8eaf0;
+    --muted: #9aa3b5;
+    --accent: #7cc7ff;
+    --accent2: #ffd479;
+    --ok: #7ce8a8;
+    --rule: #262c3d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  h2 {
+    font-size: 1.15rem;
+    margin: 40px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--accent);
+  }
+  .sub { color: var(--muted); margin: 0 0 8px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 16px 0;
+  }
+  .eq {
+    font-family: "STIX Two Math", "Cambria Math", Georgia, serif;
+    font-size: 1.08rem;
+    text-align: center;
+    padding: 10px 0;
+    color: var(--ink);
+  }
+  .eq .hl { color: var(--accent2); }
+  .eq .res { color: var(--ok); font-weight: 600; }
+  .step-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+  }
+  p { margin: 8px 0; }
+  code, .m {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.95em;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 8px 12px;
+    text-align: center;
+  }
+  th { background: #1d2330; color: var(--accent); font-weight: 600; }
+  .final {
+    border-color: var(--ok);
+    background: #12211a;
+  }
+  .final .eq { color: var(--ok); }
+  ul { margin: 8px 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .note { color: var(--muted); font-size: 0.92rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>System: x&sup2; + y&sup2; = 25 &nbsp;and&nbsp; x&middot;y = 12</h1>
+  <p class="sub">All real solution pairs, with full algebraic justification.</p>
+
+  <h2>Setup</h2>
+  <div class="card">
+    <div class="eq">(1)&nbsp;&nbsp;x&sup2; + y&sup2; = 25</div>
+    <div class="eq">(2)&nbsp;&nbsp;x&middot;y = 12</div>
+    <p>Since <span class="m">xy = 12 &ne; 0</span>, neither variable is zero, and
+    <span class="m">x</span> and <span class="m">y</span> must have the <em>same sign</em>
+    (their product is positive). Geometrically: equation (1) is the circle of radius 5 centered
+    at the origin; equation (2) is a rectangular hyperbola in quadrants I and III. Intersections
+    can only occur in those two quadrants.</p>
+  </div>
+
+  <h2>Step 1 &mdash; Recover the sum x + y</h2>
+  <div class="card">
+    <span class="step-label">Identity</span>
+    <p>Use the square-of-a-sum identity and substitute (1) and (2):</p>
+    <div class="eq">(x + y)&sup2; = x&sup2; + 2xy + y&sup2; = (x&sup2; + y&sup2;) + 2(xy) = <span class="hl">25 + 2&middot;12 = 49</span></div>
+    <p>Taking square roots over the reals:</p>
+    <div class="eq res">x + y = &plusmn;7</div>
+    <p class="note">The sign alternatives are consistent with Step 0: the product is positive,
+    so x and y share a sign &mdash; both positive (sum +7) or both negative (sum &minus;7).</p>
+  </div>
+
+  <h2>Step 2 &mdash; Reduce to a quadratic via Vieta&rsquo;s formulas</h2>
+  <div class="card">
+    <span class="step-label">Vieta</span>
+    <p>If two numbers have sum <span class="m">s</span> and product <span class="m">p</span>, they are
+    exactly the roots of <span class="m">t&sup2; &minus; s&middot;t + p = 0</span>. Here
+    <span class="m">p = xy = 12</span> and <span class="m">s = x + y = &plusmn;7</span>.</p>
+
+    <p><strong>Case A: s = +7</strong></p>
+    <div class="eq">t&sup2; &minus; 7t + 12 = 0 &nbsp;&rArr;&nbsp; (t &minus; 3)(t &minus; 4) = 0 &nbsp;&rArr;&nbsp; t &isin; {3, 4}</div>
+    <p>So <span class="m">{x, y} = {3, 4}</span>, giving the ordered pairs
+    <span class="res">(3, 4)</span> and <span class="res">(4, 3)</span>.</p>
+
+    <p><strong>Case B: s = &minus;7</strong></p>
+    <div class="eq">t&sup2; + 7t + 12 = 0 &nbsp;&rArr;&nbsp; (t + 3)(t + 4) = 0 &nbsp;&rArr;&nbsp; t &isin; {&minus;3, &minus;4}</div>
+    <p>So <span class="m">{x, y} = {&minus;3, &minus;4}</span>, giving the ordered pairs
+    <span class="res">(&minus;3, &minus;4)</span> and <span class="res">(&minus;4, &minus;3)</span>.</p>
+  </div>
+
+  <h2>Step 2&prime; &mdash; Cross-check via the difference</h2>
+  <div class="card">
+    <span class="step-label">Check</span>
+    <p>The companion identity gives an independent confirmation:</p>
+    <div class="eq">(x &minus; y)&sup2; = x&sup2; &minus; 2xy + y&sup2; = 25 &minus; 24 = 1 &nbsp;&rArr;&nbsp; x &minus; y = &plusmn;1</div>
+    <p>Solving the linear system <span class="m">x + y = 7, x &minus; y = &plusmn;1</span> yields
+    <span class="m">(x, y) = (4, 3)</span> or <span class="m">(3, 4)</span>; the sum &minus;7
+    yields <span class="m">(&minus;4, &minus;3)</span> or <span class="m">(&minus;3, &minus;4)</span> —
+    the same four pairs.</p>
+  </div>
+
+  <h2>Step 3 &mdash; Verify every candidate in the original system</h2>
+  <div class="card">
+    <table>
+      <tr><th>(x, y)</th><th>x&sup2; + y&sup2;</th><th>x&middot;y</th><th>Valid?</th></tr>
+      <tr><td>(3, 4)</td><td>9 + 16 = 25</td><td>12</td><td style="color:var(--ok)">&#10003;</td></tr>
+      <tr><td>(4, 3)</td><td>16 + 9 = 25</td><td>12</td><td style="color:var(--ok)">&#10003;</td></tr>
+      <tr><td>(&minus;3, &minus;4)</td><td>9 + 16 = 25</td><td>12</td><td style="color:var(--ok)">&#10003;</td></tr>
+      <tr><td>(&minus;4, &minus;3)</td><td>16 + 9 = 25</td><td>12</td><td style="color:var(--ok)">&#10003;</td></tr>
+    </table>
+    <p class="note"><strong>Completeness:</strong> every step was reversible (identities, square
+    root over &#8477;, Vieta), so no solutions were lost or introduced: the derivation shows any
+    solution must have <span class="m">x + y = &plusmn;7</span>, and each case produces exactly
+    the pairs listed. Hence this is the complete solution set — consistent with a circle and a
+    hyperbola meeting in at most 4 points.</p>
+  </div>
+
+  <h2>Answer</h2>
+  <div class="card final">
+    <div class="eq">(x, y) &isin; { (3, 4),&nbsp; (4, 3),&nbsp; (&minus;3, &minus;4),&nbsp; (&minus;4, &minus;3) }</div>
+    <p style="text-align:center" class="note">Exactly four real solutions — the symmetric
+    pairs where |x| and |y| are 3 and 4 with matching signs.</p>
+  </div>
+</main>
+</body>
+</html>

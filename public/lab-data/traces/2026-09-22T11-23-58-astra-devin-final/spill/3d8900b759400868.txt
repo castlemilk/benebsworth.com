@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Series RLC · Step Response</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui,sans-serif}
+*{box-sizing:inherit}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#stage{position:relative;flex:1;min-height:0;overflow:hidden}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+#hud{position:absolute;top:10px;left:12px;max-width:min(460px,calc(100% - 24px));padding:10px 14px;background:rgba(13,15,22,.78);border:1px solid rgba(255,255,255,.09);border-radius:10px;pointer-events:none}
+#title{font-size:14px;font-weight:650;letter-spacing:.02em}
+#sub{font-size:11px;color:#8b95a7;margin-top:1px}
+#badge{display:inline-block;margin-top:6px;padding:2px 8px;font-size:10.5px;font-weight:600;border:1px solid;border-radius:20px;letter-spacing:.03em}
+#stats{margin-top:6px;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#aab3c2}
+#readout{margin-top:2px;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#dfe5ee}
+#legend{margin-top:5px;font-size:10.5px;color:#8b95a7}
+.sw{display:inline-block;width:18px;height:0;vertical-align:middle;margin:0 6px 0 10px;border-top:2px solid}
+.sw:first-child{margin-left:0}
+.sw.vc{border-color:#56d8e4}
+.sw.ii{border-top-style:dashed;border-color:#ffb454}
+#controls{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;padding:10px 16px;background:#11131b;border-top:1px solid rgba(255,255,255,.08)}
+.ctl{display:flex;align-items:center;gap:10px;flex:1 1 190px;min-width:170px}
+.ctl .lab{width:14px;font-weight:650;color:#9fb3c8;font-size:13px}
+.ctl input{flex:1;min-width:70px;accent-color:#56d8e4;height:18px;cursor:pointer}
+.ctl .val{min-width:76px;text-align:right;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}
+#presets{display:flex;gap:6px;align-items:center;flex:0 0 auto}
+#presets span{font-size:10.5px;color:#77839a}
+#presets button{background:#1c2030;color:#cdd5e0;border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer}
+#presets button:hover{background:#28304a}
+#err{position:fixed;left:12px;right:12px;bottom:12px;background:#4a1520;color:#ffd7dc;padding:10px 14px;border-radius:8px;font:12px ui-monospace,monospace;z-index:99}
+@media (max-width:560px){
+  #hud{padding:8px 10px;top:8px;left:8px;max-width:calc(100% - 16px)}
+  #title{font-size:12.5px}#sub{font-size:10px}
+  #stats,#readout{font-size:10px}
+  #controls{gap:6px 14px;padding:8px 10px}
+  .ctl{flex:1 1 100%;min-width:0}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div id="hud">
+      <div id="title">Series RLC · Step Response</div>
+      <div id="sub">v<sub>C</sub>(t) and i(t) after a 0 → 5 V step (log-scale sliders)</div>
+      <div><span id="badge"></span></div>
+      <div id="stats"></div>
+      <div id="readout"></div>
+      <div id="legend"><span class="sw vc"></span>v<sub>C</sub>(t)<span class="sw ii"></span>i(t) · right axis</div>
+    </div>
+  </div>
+  <div id="controls">
+    <div class="ctl"><span class="lab">R</span><input id="sR" type="range" min="0" max="1000" value="571"><span class="val" id="vR"></span></div>
+    <div class="ctl"><span class="lab">L</span><input id="sL" type="range" min="0" max="1000" value="571"><span class="val" id="vL"></span></div>
+    <div class="ctl"><span class="lab">C</span><input id="sC" type="range" min="0" max="1000" value="500"><span class="val" id="vC"></span></div>
+    <div id="presets"><span>ζ</span><button data-z="0.25">0.25</button><button data-z="1">1.0</button><button data-z="4">4.0</button></div>
+  </div>
+</div>
+<div id="err" role="alert" hidden></div>
+<script>
+try {
+'use strict';
+var stage = document.getElementById('stage');
+var cv = document.getElementById('cv');
+var ctx = cv.getContext('2d');
+var statsEl = document.getElementById('stats');
+var badgeEl = document.getElementById('badge');
+var readoutEl = document.getElementById('readout');
+var errBox = document.getElementById('err');
+
+var VS = 5;
+var P = { R: 100, L: 10e-3, C: 1e-6 };
+var CONF = {
+  R: { lo: -2, hi: 5, unit: 'Ω', input: 'sR', out: 'vR' },
+  L: { lo: -6, hi: 1, unit: 'H', input: 'sL', out: 'vL' },
+  C: { lo: -9, hi: -3, unit: 'F', input: 'sC', out: 'vC' }
+};
+var W = 0, H = 0;
+var sim = null;
+var hoverT = null;
+var t0 = performance.now();
+var rafId = 0;
+var SWEEP = 4800, HOLD = 1600;
+
+function eng(v, u) {
+  if (!isFinite(v)) return '∞';
+  var a = Math.abs(v);
+  if (a === 0) return '0 ' + u;
+  var p = Math.floor(Math.log10(a) / 3);
+  p = Math.max(-4, Math.min(3, p));
+  var pre = { '-4': 'p', '-3': 'n', '-2': 'µ', '-1': 'm', '0': '', '1': 'k', '2': 'M', '3': 'G' };
+  var s = v / Math.pow(10, p * 3);
+  var d = Math.abs(s) >= 100 ? 0 : Math.abs(s) >= 10 ? 1 : 2;
+  return s.toFixed(d) + ' ' + pre[String(p)] + u;
+}
+function niceStep(x) {
+  var p = Math.pow(10, Math.floor(Math.log10(x)));
+  var f = x / p;
+  return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p;
+}
+/* Exact series-RLC step response, zero initial conditions.
+   Returns [v_C(t), i(t)] for a 0 -> VS step. */
+function resp(t) {
+  var R = P.R, L = P.L, C = P.C;
+  var alpha = R / (2 * L), w0 = 1 / Math.sqrt(L * C);
+  var disc = alpha * alpha - w0 * w0;
+  var tol = 1e-6 * Math.max(alpha * alpha, w0 * w0);
+  var e = Math.exp(-alpha * t);
+  if (disc > tol) {
+    var b = Math.sqrt(disc), s1 = -alpha + b, s2 = -alpha - b;
+    var e1 = Math.exp(s1 * t), e2 = Math.exp(s2 * t);
+    return [VS * (1 + (s2 * e1 - s1 * e2) / (s1 - s2)), VS / L * (e1 - e2) / (s1 - s2)];
+  }
+  if (disc < -tol) {
+    var wd = Math.sqrt(-disc);
+    return [VS * (1 - e * (Math.cos(wd * t) + (alpha / wd) * Math.sin(wd * t))),
+            VS / (L * wd) * e * Math.sin(wd * t)];
+  }
+  var t2 = t * t, d2 = disc * disc;
+  var ch = 1 + disc * t2 / 2 + d2 * t2 * t2 / 24;
+  var shc = t * (1 + disc * t2 / 6 + d2 * t2 * t2 / 120);
+  return [VS * (1 - e * (ch + alpha * shc)), VS / L * e * shc];
+}
+function recompute() {
+  var R = P.R, L = P.L, C = P.C;
+  var alpha = R / (2 * L), w0 = 1 / Math.sqrt(L * C), zeta = alpha / w0;
+  var T, tauS = Infinity;
+  if (zeta < 1) {
+    var wd = w0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));
+    var Td = 2 * Math.PI / Math.max(wd, 1e-18);
+    var tau = alpha > 1e-15 ? 1 / alpha : Infinity;
+    T = Math.min(6.5 * tau, 14 * Td);
+    if (!isFinite(T) || T <= 0) T = 14 * 2 * Math.PI / w0;
+  } else {
+    var b = Math.sqrt(Math.max(0, alpha * alpha - w0 * w0));
+    tauS = 1 / Math.max(alpha - b, 1e-30);
+    T = 6.5 * tauS;
+  }
+  T *= 1.06;
+  var N = Math.max(240, Math.min(1800, Math.floor(W * 1.6) || 600));
+  var vc = new Float64Array(N), ii = new Float64Array(N);
+  var iMax = 0, vMax = 0;
+  for (var k = 0; k < N; k++) {
+    var r = resp(T * k / (N - 1));
+    vc[k] = r[0]; ii[k] = r[1];
+    if (Math.abs(r[1]) > iMax) iMax = Math.abs(r[1]);
+    if (r[0] > vMax) vMax = r[0];
+  }
+  if (iMax <= 0) iMax = 1;
+  var os = zeta < 1 ? Math.exp(-Math.PI * zeta / Math.sqrt(Math.max(1e-9, 1 - zeta * zeta))) : 0;
+  var yMax = Math.max(VS * 1.10, vMax * 1.08, VS * (1 + os * 1.12));
+  var regime, color;
+  if (zeta < 0.05)      { regime = 'Undamped · ζ ≈ 0';        color = '#ff6b6b'; }
+  else if (zeta < 0.98) { regime = 'Underdamped · ζ < 1';     color = '#ffb454'; }
+  else if (zeta <= 1.02){ regime = 'Critically damped · ζ ≈ 1'; color = '#56d8e4'; }
+  else                  { regime = 'Overdamped · ζ > 1';      color = '#7ee787'; }
+  var ts = zeta < 1 ? (alpha > 1e-15 ? eng(4 / alpha, 's') : '—') : eng(4 * tauS, 's');
+  sim = { T: T, vc: vc, ii: ii, N: N, iMax: iMax, yMax: yMax, zeta: zeta, w0: w0, os: os };
+  statsEl.textContent = 'ζ = ' + zeta.toFixed(zeta < 10 ? 2 : 1) +
+    '   f₀ = ' + eng(w0 / (2 * Math.PI), 'Hz') +
+    '   overshoot = ' + (zeta < 1 ? (os * 100).toFixed(1) + '%' : '—') +
+    '   t_s(2%) ≈ ' + ts;
+  badgeEl.textContent = regime;
+  badgeEl.style.color = color;
+  badgeEl.style.borderColor = color;
+}
+function fmtSlider(k) {
+  var c = CONF[k];
+  document.getElementById(c.out).textContent = eng(P[k], c.unit);
+}
+function setSliderFromVal(k) {
+  var c = CONF[k];
+  var f = (Math.log10(P[k]) - c.lo) / (c.hi - c.lo);
+  document.getElementById(c.input).value = Math.round(f * 1000);
+}
+function bumped() { recompute(); t0 = performance.now(); hoverT = null; }
+
+Object.keys(CONF).forEach(function (k) {
+  var c = CONF[k], inp = document.getElementById(c.input);
+  inp.addEventListener('input', function () {
+    P[k] = Math.pow(10, c.lo + (inp.value / 1000) * (c.hi - c.lo));
+    fmtSlider(k); bumped();
+  });
+  setSliderFromVal(k); fmtSlider(k);
+});
+document.querySelectorAll('#presets button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var z = parseFloat(b.getAttribute('data-z'));
+    P.R = Math.min(1e5, Math.max(1e-2, 2 * z * Math.sqrt(P.L / P.C)));
+    setSliderFromVal('R'); fmtSlider('R'); bumped();
+  });
+});
+
+function plotGeom() {
+  var ml = 64, mr = W > 620 ? 74 : 20, mt = 18, mb = 34;
+  return { x: ml, y: mt, w: Math.max(40, W - ml - mr), h: Math.max(40, H - mt - mb), rax: W > 620 };
+}
+cv.addEventListener('pointermove', function (ev) {
+  if (!sim) return;
+  var r = cv.getBoundingClientRect();
+  var mx = ev.clientX - r.left, my = ev.clientY - r.top;
+  var g = plotGeom();
+  hoverT = (mx >= g.x && mx <= g.x + g.w && my >= g.y - 12 && my <= g.y + g.h + 12)
+    ? Math.min(1, Math.max(0, (mx - g.x) / g.w)) * sim.T : null;
+});
+cv.addEventListener('pointerleave', function () { hoverT = null; });
+
+function zigzag(x0, y0, x1, y1, teeth, amp) {
+  var n = teeth * 2, dx = (x1 - x0) / n;
+  ctx.moveTo(x0, y0);
+  for (var i = 1; i <= n; i++) ctx.lineTo(x0 + dx * i, y0 + (i % 2 ? -amp : i === n ? 0 : amp) * (i === n ? 0 : 1));
+}
+function drawSchematic() {
+  var w = 196, h = 122, sx = W - w - 12, sy = 12;
+  ctx.fillStyle = 'rgba(14,16,24,0.82)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(sx, sy, w, h, 10); else ctx.rect(sx, sy, w, h);
+  ctx.fill(); ctx.stroke();
+  var lx = sx + 28, rx = sx + w - 34, ty = sy + 32, by = sy + h - 22, my = (ty + by) / 2;
+  var cx = (lx + rx) / 2;
+  ctx.strokeStyle = '#9fb3c8'; ctx.lineWidth = 1.4; ctx.lineJoin = 'round';
+  // left rail + source circle
+  ctx.beginPath(); ctx.moveTo(lx, ty); ctx.lineTo(lx, my - 11); ctx.moveTo(lx, my + 11); ctx.lineTo(lx, by); ctx.stroke();
+  ctx.beginPath(); ctx.arc(lx, my, 11, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = '#cdd5e0'; ctx.font = '10px ui-sans-serif,system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('+', lx, my - 4); ctx.fillText('−', lx, my + 5);
+  // top: wire, R zigzag, wire, L bumps, wire
+  ctx.beginPath(); ctx.moveTo(lx, ty); ctx.lineTo(lx + 12, ty);
+  zigzag(lx + 12, ty, cx - 6, ty, 5, 4.5);
+  ctx.lineTo(cx + 4, ty); ctx.stroke();
+  var lr = 6, lx0 = cx + 4;
+  ctx.beginPath(); ctx.moveTo(lx0, ty);
+  for (var i2 = 0; i2 < 4; i2++) ctx.arc(lx0 + lr + i2 * 2 * lr, ty, lr, Math.PI, 0, false);
+  ctx.lineTo(rx, ty); ctx.stroke();
+  // right: C plates
+  ctx.beginPath(); ctx.moveTo(rx, ty); ctx.lineTo(rx, my - 7);
+  ctx.moveTo(rx - 9, my - 7); ctx.lineTo(rx + 9, my - 7);
+  ctx.moveTo(rx - 9, my - 2); ctx.lineTo(rx + 9, my - 2);
+  ctx.moveTo(rx, my - 2); ctx.lineTo(rx, by); ctx.stroke();
+  // bottom rail
+  ctx.beginPath(); ctx.moveTo(lx, by); ctx.lineTo(rx, by); ctx.stroke();
+  // labels
+  ctx.font = '10px ui-sans-serif,system-ui'; ctx.textAlign = 'center';
+  ctx.fillStyle = '#ececf0';
+  ctx.fillText('R', (lx + 12 + cx - 6) / 2, ty - 9);
+  ctx.fillText('L', lx0 + 4 * lr, ty - 9);
+  ctx.fillText('C', rx - 13, my - 4);
+  ctx.fillStyle = '#77839a'; ctx.font = '9px ui-monospace,monospace';
+  ctx.fillText(eng(P.R, 'Ω'), (lx + 12 + cx - 6) / 2, ty + 13);
+  ctx.fillText(eng(P.L, 'H'), lx0 + 4 * lr, ty + 13);
+  ctx.fillText(eng(P.C, 'F'), rx - 13, my + 8);
+  ctx.textAlign = 'left'; ctx.fillText('5 V', lx + 13, my + 5);
+}
+function draw(now) {
+  ctx.clearRect(0, 0, W, H);
+  if (!sim) return;
+  var g = plotGeom(), T = sim.T, yMax = sim.yMax, N = sim.N;
+  var X = function (t) { return g.x + g.w * t / T; };
+  var Y = function (v) { return g.y + g.h * (1 - v / yMax); };
+  var Yi = function (i) { return g.y + g.h * (1 - i / sim.iMax); };
+  // grid
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.fillStyle = 'rgba(236,236,240,0.5)'; ctx.font = '10px ui-monospace,monospace';
+  var tStep = niceStep(T / 6);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (var t = 0; t <= T * 1.001; t += tStep) {
+    var x = X(t);
+    ctx.beginPath(); ctx.moveTo(x, g.y); ctx.lineTo(x, g.y + g.h); ctx.stroke();
+    ctx.fillText(eng(t, 's'), x, g.y + g.h + 7);
+  }
+  var vStep = niceStep(yMax / 5);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (var v = 0; v <= yMax * 1.001; v += vStep) {
+    var y = Y(v);
+    ctx.beginPath(); ctx.moveTo(g.x, y); ctx.lineTo(g.x + g.w, y); ctx.stroke();
+    ctx.fillText(eng(v, 'V'), g.x - 7, y);
+    if (g.rax) {
+      ctx.textAlign = 'left';
+      ctx.fillText(eng(v / yMax * sim.iMax, 'A'), g.x + g.w + 7, y);
+      ctx.textAlign = 'right';
+    }
+  }
+  // zero axis + frame
+  ctx.strokeStyle = 'rgba(255,255,255,0.20)';
+  ctx.beginPath(); ctx.moveTo(g.x, Y(0)); ctx.lineTo(g.x + g.w, Y(0)); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+  ctx.strokeRect(g.x, g.y, g.w, g.h);
+  // Vs dashed reference
+  ctx.setLineDash([5, 4]); ctx.strokeStyle = 'rgba(236,236,240,0.32)';
+  ctx.beginPath(); ctx.moveTo(g.x, Y(VS)); ctx.lineTo(g.x + g.w, Y(VS)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(236,236,240,0.45)'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+  ctx.fillText('Vs = 5 V', g.x + 6, Y(VS) - 3);
+  // v_C area fill + curve
+  ctx.beginPath(); ctx.moveTo(X(0), Y(0));
+  for (var k = 0; k < N; k++) ctx.lineTo(X(T * k / (N - 1)), Y(sim.vc[k]));
+  ctx.lineTo(X(T), Y(0)); ctx.closePath();
+  ctx.fillStyle = 'rgba(86,216,228,0.07)'; ctx.fill();
+  ctx.beginPath();
+  for (var k2 = 0; k2 < N; k2++) {
+    var px = X(T * k2 / (N - 1)), py = Y(sim.vc[k2]);
+    if (k2 === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = '#56d8e4'; ctx.lineWidth = 2;
+  ctx.shadowColor = 'rgba(86,216,228,0.55)'; ctx.shadowBlur = 7;
+  ctx.stroke(); ctx.shadowBlur = 0;
+  // i(t) dashed
+  ctx.beginPath();
+  for (var k3 = 0; k3 < N; k3++) {
+    var qx = X(T * k3 / (N - 1)), qy = Yi(sim.ii[k3]);
+    if (k3 === 0) ctx.moveTo(qx, qy); else ctx.lineTo(qx, qy);
+  }
+  ctx.setLineDash([6, 5]); ctx.strokeStyle = '#ffb454'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.setLineDash([]);
+  // marker (animated sweep or hover)
+  var frac = hoverT != null ? hoverT / T
+    : Math.min(1, ((now - t0) % (SWEEP + HOLD)) / SWEEP);
+  var tm = frac * T, idx = frac * (N - 1);
+  var k0 = Math.floor(idx), k1 = Math.min(N - 1, k0 + 1), f = idx - k0;
+  var vm = sim.vc[k0] + (sim.vc[k1] - sim.vc[k0]) * f;
+  var im = sim.ii[k0] + (sim.ii[k1] - sim.ii[k0]) * f;
+  var mx = X(tm);
+  ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+  ctx.beginPath(); ctx.moveTo(mx, g.y); ctx.lineTo(mx, g.y + g.h); ctx.stroke();
+  ctx.beginPath(); ctx.arc(mx, Y(vm), 3.6, 0, Math.PI * 2); ctx.fillStyle = '#56d8e4'; ctx.fill();
+  ctx.beginPath(); ctx.arc(mx, Yi(im), 3.2, 0, Math.PI * 2); ctx.fillStyle = '#ffb454'; ctx.fill();
+  readoutEl.textContent = 't = ' + eng(tm, 's') + '   v_C = ' + eng(vm, 'V') + '   i = ' + eng(im, 'A');
+  if (W > 640 && H > 340) drawSchematic();
+}
+function resize() {
+  var r = stage.getBoundingClientRect();
+  W = Math.max(1, r.width); H = Math.max(1, r.height);
+  var dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  recompute();
+}
+window.addEventListener('resize', resize);
+if (window.ResizeObserver) new ResizeObserver(resize).observe(stage);
+function frame(now) { draw(now); rafId = requestAnimationFrame(frame); }
+resize();
+rafId = requestAnimationFrame(frame);
+window.addEventListener('unload', function () { cancelAnimationFrame(rafId); });
+} catch (e) {
+  var d = document.getElementById('err');
+  if (d) { d.hidden = false; d.textContent = 'Error: ' + (e && e.message ? e.message : e); }
+}
+</script>
+</body>
+</html>

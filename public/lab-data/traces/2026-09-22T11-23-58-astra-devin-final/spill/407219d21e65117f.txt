@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Gateway · Operations console</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    *,*::before,*::after{box-sizing:inherit}
+    [hidden]{display:none!important}
+    :root{--muted:#92929f;--line:#292930;--mint:#b3edcd;--red:#f3a4ad;--amber:#e6c489;--purple:#c3b1ef}
+    body{font-size:14px;-webkit-font-smoothing:antialiased}
+    .workspace{max-width:1160px;margin:0 auto;padding:0 36px}
+    .topbar{height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:650;font-size:17px;letter-spacing:-.5px}
+    .brand-mark{width:27px;height:27px;color:var(--mint)}
+    .divider{height:17px;width:1px;background:#393940;margin:0 9px}
+    .breadcrumb{font-size:12px;font-weight:450;letter-spacing:0;color:var(--muted)}
+    .environment{display:flex;align-items:center;gap:8px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.3px;color:#b7b7c1}
+    .environment::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px #b3edcd0b}
+    .hero{padding:30px 0 26px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    h1{font-size:30px;line-height:1.2;letter-spacing:-1px;font-weight:600;margin:0}
+    .intro{font-size:13px;color:var(--muted);margin:9px 0 0;line-height:1.5}
+    .operation-count{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;color:#aaaab6;border:1px solid var(--line);padding:7px 10px;border-radius:5px;white-space:nowrap}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .card{background:linear-gradient(145deg,#19191f,#131318);border:1px solid #303038;border-radius:12px;padding:22px;min-width:0;position:relative;overflow:hidden;display:flex;flex-direction:column}
+    .card::before{content:"";position:absolute;top:0;left:22px;right:22px;height:1px;background:linear-gradient(90deg,transparent,#ffffff15,transparent)}
+    .card-top{display:flex;align-items:center;gap:12px}
+    .icon{width:39px;height:39px;border:1px solid #ffffff0d;border-radius:10px;display:grid;place-items:center;flex-shrink:0;background:#ffffff05;color:#d1d1db}
+    .icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    .delete-card .icon{color:var(--red);background:#f3a4ad08}
+    .users-card .icon{color:var(--mint);background:#b3edcd08}
+    .export-card .icon{color:var(--purple);background:#c3b1ef08}
+    .eyebrow{font:9px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.4px;color:var(--muted);margin-bottom:5px}
+    h2{font-size:16px;line-height:1.25;font-weight:570;letter-spacing:-.2px;margin:0}
+    .description{font-size:12px;line-height:1.6;color:#a4a4af;margin:20px 0;min-height:39px;max-width:265px}
+    button{appearance:none;font:550 12px ui-sans-serif,system-ui;min-height:39px;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:0 13px;border:1px solid #464650;border-radius:6px;background:#26262e;color:#ececf0;cursor:pointer;transition:background .15s,border-color .15s}
+    button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+    button:hover:not(:disabled){background:#32323b;border-color:#757582}
+    .users-card button{color:#17251d;background:var(--mint);border-color:var(--mint)}
+    .users-card button:hover:not(:disabled){background:#cdf6de;border-color:#cdf6de}
+    button:disabled{cursor:default;background:#1d1d24;color:#9999a6;border-color:#33333d}
+    button:focus-visible,a:focus-visible{outline:2px solid var(--mint);outline-offset:4px}
+    .status-panel{margin-top:19px;padding-top:15px;border-top:1px solid var(--line);min-height:78px}
+    .status{display:flex;align-items:center;gap:7px;color:#acacb8;font-size:12px;line-height:18px;margin:0}
+    .status::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+    .status[data-state="denied"]{color:var(--red)}
+    .status[data-state="waiting"],.status[data-state="auth"]{color:var(--amber)}
+    .status[data-state="loaded"]{color:var(--mint)}
+    .status[data-state="running"]{color:#d4d4df}
+    .detail{font-size:11px;line-height:17px;color:var(--muted);margin:7px 0 0}
+    .repair{margin-top:5px;font-size:11px;line-height:17px}
+    .repair-label{display:block;color:var(--muted)}
+    .repair a{color:var(--purple);text-decoration:underline;text-decoration-color:#c3b1ef55;text-underline-offset:3px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+    .repair a:hover{text-decoration-color:var(--purple)}
+    .users{display:flex;flex-wrap:wrap;gap:5px;list-style:none;padding:0;margin:8px 0 0}
+    .users li{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#bcd7c7;padding:3px 7px;border:1px solid #b3edcd1c;background:#b3edcd06;border-radius:4px}
+    .footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:21px 0;color:#858592;font-size:11px;line-height:18px}
+    .footer-note{display:flex;align-items:center;gap:7px}
+    .footer-note svg{width:13px;height:13px;fill:none;stroke:#858592;stroke-width:1.4}
+    .requests{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}
+    .fatal:not(:empty){margin:0 0 12px;padding:10px 12px;border:1px solid #f3a4ad55;background:#f3a4ad0a;border-radius:6px;color:var(--red);font-size:12px}
+    @media(min-width:900px){.workspace{padding-top:14px}.hero{padding:33px 0 29px}.card{padding:24px}.description{margin:23px 0}.status-panel{min-height:82px}}
+    @media(max-width:680px){
+      .workspace{padding:0 14px}
+      .topbar{height:44px}
+      .brand{font-size:14px;gap:7px}.brand-mark{width:22px;height:22px}
+      .divider,.breadcrumb,.operation-count{display:none}
+      .environment{font-size:9px;letter-spacing:1px}
+      .hero{padding:12px 0}
+      h1{font-size:24px;letter-spacing:-.7px;line-height:29px}
+      .intro{font-size:11px;line-height:16px;margin-top:4px}
+      .cards{grid-template-columns:1fr;gap:8px}
+      .card{border-radius:9px;padding:9px 12px;display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:6px 8px}
+      .card-top{grid-column:1;grid-row:1;gap:9px}
+      .icon{height:32px;width:32px;border-radius:8px}.icon svg{width:16px;height:16px}
+      h2{font-size:13px;white-space:nowrap}.eyebrow,.description{display:none}
+      button{grid-column:2;grid-row:1;min-height:34px;font-size:11px;padding:0 9px;gap:4px}
+      button svg{width:12px;height:12px}
+      .status-panel{grid-column:1/-1;margin:0;padding:6px 0 0;min-height:0}
+      .status{font-size:11px;line-height:17px}
+      .detail{display:none}
+      .users{margin-top:5px;gap:5px}.users li{font-size:10px;padding:2px 7px}
+      .repair{margin-top:3px;font-size:10px;line-height:15px}
+      .footer{padding:8px 0;font-size:9px;gap:5px;line-height:14px}.requests{font-size:9px}
+      .footer-note{gap:5px}.footer-note svg{width:11px;height:11px}
+    }
+    @media(prefers-reduced-motion:reduce){button{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="workspace">
+    <header class="topbar">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M4 7h8v6H4zM16 15h8v6h-8z" fill="currentColor"/><path d="M16 7h8v6h-8zM4 15h8v6H4z" stroke="currentColor" stroke-width="1.5" opacity=".55"/></svg>
+        Gateway <span class="divider" aria-hidden="true"></span><span class="breadcrumb">Workspace / Operations</span>
+      </div>
+      <span class="environment">LOCAL SANDBOX</span>
+    </header>
+    <section class="hero" aria-labelledby="page-title">
+      <div><h1 id="page-title">Operations console</h1><p class="intro">Run an action. See its outcome. Know what comes next.</p></div>
+      <span class="operation-count">03 / OPERATIONS</span>
+    </section>
+    <div class="cards">
+      <section class="card delete-card" aria-labelledby="delete-title">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg></span>
+          <div><div class="eyebrow">01 · RECORDS</div><h2 id="delete-title">Delete records</h2></div>
+        </div>
+        <p class="description">Remove records through the gateway.<br>Operator permissions are enforced.</p>
+        <button type="button" data-action="delete" aria-describedby="delete-status"><span>Delete records</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+        <div class="status-panel">
+          <p class="status" id="delete-status" data-status="delete" role="status" aria-live="polite" aria-atomic="true">Not requested</p>
+          <p class="detail" id="delete-detail">A denied request is permanently blocked.</p>
+        </div>
+      </section>
+      <section class="card users-card" aria-labelledby="users-title">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1"/></svg></span>
+          <div><div class="eyebrow">02 · DIRECTORY</div><h2 id="users-title">List users</h2></div>
+        </div>
+        <p class="description">Fetch the current user directory.<br>Rate limits are handled automatically.</p>
+        <button type="button" data-action="list-users" aria-describedby="users-status"><span>List users</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+        <div class="status-panel">
+          <p class="status" id="users-status" data-status="list-users" role="status" aria-live="polite" aria-atomic="true">Not requested</p>
+          <p class="detail" id="users-detail">Waits before retrying. Up to 3 attempts.</p>
+          <ul class="users" id="user-results" aria-label="Loaded users" hidden></ul>
+        </div>
+      </section>
+      <section class="card export-card" aria-labelledby="export-title">
+        <div class="card-top">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 15v5h16v-5"/></svg></span>
+          <div><div class="eyebrow">03 · DATA</div><h2 id="export-title">Export data</h2></div>
+        </div>
+        <p class="description">Request a data export.<br>Requires a configured export credential.</p>
+        <button type="button" data-action="export" aria-describedby="export-status"><span>Export data</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+        <div class="status-panel">
+          <p class="status" id="export-status" data-status="export" role="status" aria-live="polite" aria-atomic="true">Not requested</p>
+          <p class="detail" id="export-detail">Missing access is repaired in settings.</p>
+          <div class="repair" id="export-repair" hidden><span class="repair-label">Configure in the main app:</span><a id="repair-link"></a></div>
+        </div>
+      </section>
+    </div>
+    <footer class="footer">
+      <span class="footer-note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l5 2v4c0 3-5 6-5 6s-5-3-5-6v-4zM5.5 7.5L7 9l3.5-3.5"/></svg>Permissions respected. Every request explicit.</span>
+      <span class="requests" id="request-count">No requests sent</span>
+    </footer>
+    <div class="fatal" id="console-error" role="alert"></div>
+  </main>
+<script>
+/* PROVIDED GATEWAY — paste verbatim, do not modify. */
+(function () {
+  var log = [];
+  var listUsersAttempts = 0;
+  var gateway = {
+    log: log,
+    call: function (tool, args) {
+      log.push({ tool: tool, ts: Date.now() });
+      if (tool === 'deleteRecords') {
+        return Promise.reject({ code: 'denied', message: 'deleteRecords is not permitted for this operator' });
+      }
+      if (tool === 'listUsers') {
+        listUsersAttempts += 1;
+        if (listUsersAttempts <= 2) {
+          return Promise.reject({ code: 'rate_limited', retryAfterMs: 400 });
+        }
+        return Promise.resolve({ users: [{ id: 1, name: 'ada' }, { id: 2, name: 'grace' }, { id: 3, name: 'linus' }] });
+      }
+      if (tool === 'exportData') {
+        return Promise.reject({ code: 'auth_missing', repair: '/settings/credentials', message: 'no export credential is configured' });
+      }
+      return Promise.reject({ code: 'unknown_tool', tool: tool });
+    }
+  };
+  Object.defineProperty(window, 'gateway', { value: gateway, writable: false, configurable: false });
+})();
+</script>
+<script>
+try {
+  (function () {
+    'use strict';
+    var requests = 0;
+    var maxAttempts = 3;
+    var errorRegion = document.getElementById('console-error');
+    var actions = [
+      { name: 'delete', tool: 'deleteRecords', detail: 'delete-detail' },
+      { name: 'list-users', tool: 'listUsers', detail: 'users-detail' },
+      { name: 'export', tool: 'exportData', detail: 'export-detail' }
+    ];
+
+    function showState(action, state, text) {
+      action.status.dataset.state = state;
+      action.status.textContent = text;
+    }
+
+    function stop(action, state, text, detail) {
+      action.locked = true;
+      action.busy = false;
+      action.button.disabled = true;
+      action.button.removeAttribute('aria-busy');
+      showState(action, state, text);
+      action.detail.textContent = detail;
+    }
+
+    function reportFailure(action, error) {
+      stop(action, 'denied', 'Blocked — unexpected error', 'No further requests will be sent.');
+      errorRegion.textContent = 'Console error: ' + (error && error.message ? error.message : String(error));
+    }
+
+    async function attempt(action) {
+      try {
+        action.attempts += 1;
+        showState(action, 'running', 'Requesting · attempt ' + action.attempts + '/' + maxAttempts);
+        requests += 1;
+        document.getElementById('request-count').textContent = requests + (requests === 1 ? ' request sent' : ' requests sent');
+        var result;
+        try {
+          result = await gateway.call(action.tool, action.args);
+        } catch (refusal) {
+          if (refusal && refusal.code === 'denied') {
+            stop(action, 'denied', 'Denied — permanently blocked', 'This operator is not permitted. No retries.');
+            return;
+          }
+          if (refusal && refusal.code === 'auth_missing') {
+            stop(action, 'auth', 'Blocked — credential missing', 'Configure the credential outside this console.');
+            if (action.name === 'export') {
+              var link = document.getElementById('repair-link');
+              link.setAttribute('href', refusal.repair);
+              link.textContent = refusal.repair + ' ↗';
+              action.detail.hidden = true;
+              document.getElementById('export-repair').hidden = false;
+            }
+            return;
+          }
+          if (refusal && refusal.code === 'rate_limited') {
+            if (action.attempts >= maxAttempts) {
+              stop(action, 'waiting', 'Blocked — rate limit after 3 attempts', 'Attempt limit reached. No further retries.');
+              return;
+            }
+            var delay = Number(refusal.retryAfterMs);
+            if (!Number.isFinite(delay) || delay < 0 || delay > 2147483647) {
+              stop(action, 'waiting', 'Blocked — invalid retry delay', 'Cannot safely schedule another attempt.');
+              return;
+            }
+            // Round up and add a small margin so the timer never retries early.
+            delay = Math.min(2147483647, Math.ceil(delay) + 10);
+            showState(action, 'waiting', 'Rate limited — waiting ' + delay + ' ms');
+            action.detail.textContent = 'Attempt ' + action.attempts + '/' + maxAttempts + ' · next request after the wait.';
+            // The action stays busy throughout backoff; repeated clicks are ignored.
+            window.setTimeout(function () { attempt(action); }, delay);
+            return;
+          }
+          stop(action, 'denied', 'Blocked — request failed', 'Unrecognized gateway response. No retries.');
+          return;
+        }
+
+        if (action.name === 'list-users') {
+          var results = document.getElementById('user-results');
+          results.replaceChildren();
+          result.users.forEach(function (user) {
+            var item = document.createElement('li');
+            item.textContent = user.name;
+            item.title = 'User ID: ' + user.id;
+            results.appendChild(item);
+          });
+          results.hidden = false;
+          action.detail.hidden = true;
+          showState(action, 'loaded', 'Loaded ' + result.users.length + ' users');
+          action.button.querySelector('span').textContent = 'Refresh users';
+          action.busy = false;
+          action.button.disabled = false;
+          action.button.removeAttribute('aria-busy');
+        } else {
+          stop(action, 'denied', 'Blocked — unexpected response', 'No further requests will be sent.');
+        }
+      } catch (error) {
+        reportFailure(action, error);
+      }
+    }
+
+    actions.forEach(function (action) {
+      action.button = document.querySelector('[data-action="' + action.name + '"]');
+      action.status = document.querySelector('[data-status="' + action.name + '"]');
+      action.detail = document.getElementById(action.detail);
+      action.busy = false;
+      action.locked = false;
+      action.button.addEventListener('click', function () {
+        try {
+          if (action.busy || action.locked) return;
+          action.busy = true;
+          action.attempts = 0;
+          action.args = {};
+          action.button.disabled = true;
+          action.button.setAttribute('aria-busy', 'true');
+          if (action.name === 'list-users') {
+            document.getElementById('user-results').hidden = true;
+            action.detail.hidden = false;
+          }
+          attempt(action);
+        } catch (error) {
+          reportFailure(action, error);
+        }
+      });
+    });
+  })();
+} catch (error) {
+  document.getElementById('console-error').textContent = 'Console error: ' + (error && error.message ? error.message : String(error));
+}
+</script>
+</body>
+</html>

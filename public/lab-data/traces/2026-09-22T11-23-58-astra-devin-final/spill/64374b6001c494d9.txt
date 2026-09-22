@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real solutions of x² + y² = 25 and xy = 12</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #182b3b; background: #f1f5f8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 44px 20px; line-height: 1.65; }
+    main { max-width: 800px; margin: auto; padding: 38px; background: #fff; border: 1px solid #dce5eb; border-radius: 18px; }
+    h1 { margin: 0 0 18px; font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.25; }
+    h2 { font-size: 1.15rem; margin-top: 28px; }
+    p { margin: 12px 0; }
+    .equation { font-family: Georgia, "Times New Roman", serif; font-size: 1.25rem; }
+    .answer { background: #eaf6f1; border-left: 4px solid #21815f; padding: 16px 20px; margin: 24px 0; border-radius: 6px; }
+    .answer p { margin: 4px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    caption { text-align: left; font-weight: 600; padding-bottom: 8px; }
+    th, td { padding: 10px 12px; text-align: center; border-bottom: 1px solid #dce5eb; }
+    th { background: #f1f5f8; }
+    @media (max-width: 520px) { body { padding: 16px 10px; } main { padding: 24px 18px; } th, td { padding: 8px 5px; } }
+    @media print { body { background: white; padding: 0; } main { border: 0; max-width: none; padding: 0; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Solve the system over the reals</h1>
+  <p class="equation">x² + y² = 25, &nbsp; xy = 12.</p>
+  <div class="answer">
+    <p><strong>Every real solution pair (x, y):</strong></p>
+    <p class="equation">{(4, 3), (3, 4), (−3, −4), (−4, −3)}.</p>
+  </div>
+  <h2>1. Find the sum and the difference</h2>
+  <p>Expand the squares and substitute the two given equations:</p>
+  <p class="equation">(x + y)² = x² + y² + 2xy = 25 + 24 = 49,</p>
+  <p class="equation">(x − y)² = x² + y² − 2xy = 25 − 24 = 1.</p>
+  <p>For a real number, a square equal to 49 has exactly the roots 7 and −7, and a square equal to 1 has exactly the roots 1 and −1. Thus</p>
+  <p class="equation">x + y ∈ {7, −7}, &nbsp; x − y ∈ {1, −1}.</p>
+  <h2>2. Recover x and y for each sign choice</h2>
+  <p>Let s = x + y and d = x − y. Adding these equations gives 2x = s + d; subtracting the second from the first gives 2y = s − d. Dividing by the nonzero constant 2 yields</p>
+  <p class="equation">x = (s + d)/2, &nbsp; y = (s − d)/2.</p>
+  <table>
+    <caption>All four choices for (s, d)</caption>
+    <thead><tr><th scope="col">s</th><th scope="col">d</th><th scope="col">x</th><th scope="col">y</th><th scope="col">(x, y)</th></tr></thead>
+    <tbody>
+      <tr><td>7</td><td>1</td><td>4</td><td>3</td><td>(4, 3)</td></tr>
+      <tr><td>7</td><td>−1</td><td>3</td><td>4</td><td>(3, 4)</td></tr>
+      <tr><td>−7</td><td>1</td><td>−3</td><td>−4</td><td>(−3, −4)</td></tr>
+      <tr><td>−7</td><td>−1</td><td>−4</td><td>−3</td><td>(−4, −3)</td></tr>
+    </tbody>
+  </table>
+  <h2>3. Verify the solutions and completeness</h2>
+  <p>For every sign choice above, s² = 49 and d² = 1. Substituting the formulas for x and y back into the original expressions gives</p>
+  <p class="equation">x² + y² = [(s + d)² + (s − d)²]/4<br>= (s² + d²)/2 = (49 + 1)/2 = 25,</p>
+  <p class="equation">xy = (s + d)(s − d)/4<br>= (s² − d²)/4 = (49 − 1)/4 = 12.</p>
+  <p>Hence all four listed pairs satisfy both equations. Every real solution must produce one of the four listed combinations of s and d, and each combination determines exactly one pair (x, y). Therefore there are no other real solutions.</p>
+</main>
+</body>
+</html>

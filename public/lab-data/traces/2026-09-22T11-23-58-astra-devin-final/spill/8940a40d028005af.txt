@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A self-contained Python module for constant-time string comparison, PBKDF2 password hashing, and verification, with executable unit tests.">
+<title>Password hashing in Python</title>
+<style>
+:root{color-scheme:light;--ink:#182b35;--muted:#50616b;--line:#d6e0e5;--accent:#056655;--paper:#fff;--bg:#f2f6f7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1080px;margin:auto;padding:56px 28px 72px}header{border-bottom:1px solid var(--line);padding-bottom:30px}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:750}h1{font-size:clamp(30px,5vw,46px);letter-spacing:-.045em;line-height:1.15;margin:12px 0 18px}h2{font-size:23px;letter-spacing:-.025em;margin:32px 0 12px}p{margin:12px 0;max-width:88ch}.muted{color:var(--muted)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.button{display:inline-block;background:var(--accent);color:white;border:1px solid var(--accent);border-radius:7px;padding:10px 16px;font:600 14px/1.5 system-ui;text-decoration:none;cursor:pointer}.button.secondary{background:transparent;color:var(--accent)}a{color:var(--accent);text-underline-offset:3px}a:focus-visible,button:focus-visible,summary:focus-visible,pre:focus-visible{outline:3px solid #bf7700;outline-offset:4px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}.stat{background:var(--paper);border:1px solid var(--line);padding:16px 20px;border-radius:8px}.stat strong{display:block;font-size:23px;letter-spacing:-.02em}.stat span{font-size:13px;color:var(--muted)}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.88em}p code,td code{background:#e5edee;border-radius:3px;padding:2px 5px;overflow-wrap:anywhere}pre{background:#13262f;color:#e5f0f4;border-radius:8px;padding:22px;overflow:auto;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}pre code{font-size:inherit}table{width:100%;border-collapse:collapse;background:var(--paper)}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:14px}th{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}.table-wrap{overflow:auto}.note{border-left:3px solid var(--accent);padding:3px 18px;margin:24px 0;background:#e9f1ee}.code-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.code-bar h2{margin-bottom:0}#copy-status{color:var(--accent);font-size:13px;min-height:1.65em}details{margin-top:20px}summary{font-weight:650;cursor:pointer}footer{margin-top:38px;border-top:1px solid var(--line);padding-top:18px;font-size:13px;color:var(--muted)}@media(max-width:620px){main{padding:28px 16px 48px}.stats{grid-template-columns:1fr;gap:8px}.stat{padding:12px 16px}th,td{padding:10px}pre{padding:16px;font-size:12px}}@media print{body{background:white}main{padding:0;max-width:none}.actions,.copy-controls{display:none}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f4f4;color:#111;font-size:9px}.stat{break-inside:avoid}h2{break-after:avoid}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">Python module · Standard library only</div>
+<h1>Password hashing in Python</h1>
+<p class="muted">Constant-time string comparison, salted PBKDF2 password hashing, and verification, with the complete unit test suite in one downloadable Python file.</p>
+<div class="actions"><a class="button" download="secure_passwords.py" href="data:text/plain;charset=utf-8;base64,IiIiU3RhbmRhcmQtbGlicmFyeSBwYXNzd29yZCBoYXNoaW5nLiBQeXRob24gMy4xMCsgd2l0aCBPcGVuU1NMIHJlcXVpcmVkLgoKUnVuIHRlc3RzOiBweXRob24zIHNlY3VyZV9wYXNzd29yZHMucHkgLXYKUmVjb3JkOiBwYmtkZjJfc2hhMjU2JDEkPGl0ZXJhdGlvbnM+JDxzYWx0IGhleD4kPGRlcml2ZWQga2V5IGhleD4KUGFzc3dvcmRzIHVzZSBzdHJpY3QgVVRGLTgsIHdpdGhvdXQgbm9ybWFsaXphdGlvbiBvciB0cnVuY2F0aW9uLiBFbXB0eQpwYXNzd29yZHMgYXJlIHN1cHBvcnRlZDsgZW5mb3JjZSBwYXNzd29yZCBwb2xpY3kgaW4gdGhlIGFwcGxpY2F0aW9uLgpPbmx5IHRoZSBjb250ZW50IGNvbXBhcmlzb24gYXZvaWRzIGVhcmx5IG1pc21hdGNoIGV4aXRzLiBFbmNvZGluZywgbGVuZ3RocywKcGFyc2luZyBhbmQgdmFyaWFibGUgd29yayBmYWN0b3JzIGNhbiBhZmZlY3QgdG90YWwgdmVyaWZpY2F0aW9uIHRpbWUuCiIiIgoKaW1wb3J0IGhhc2hsaWIKaW1wb3J0IGhtYWMKaW1wb3J0IHJlCmltcG9ydCBzZWNyZXRzCmltcG9ydCB1bml0dGVzdApmcm9tIHVuaXR0ZXN0IGltcG9ydCBtb2NrCgpfX2FsbF9fID0gWyJjb25zdGFudF90aW1lX2NvbXBhcmUiLCAiaGFzaF9wYXNzd29yZCIsICJ2ZXJpZnkiXQpNSU5fSVRFUkFUSU9OUyA9IDYwMF8wMDAKREVGQVVMVF9JVEVSQVRJT05TID0gNjAwXzAwMApNQVhfSVRFUkFUSU9OUyA9IDVfMDAwXzAwMApTQUxUX0JZVEVTID0gMTYKS0VZX0JZVEVTID0gMzIKTUFYX1BBU1NXT1JEX0JZVEVTID0gMTAyNApNQVhfUkVDT1JEX0NIQVJTID0gMTI4Cl9SRUNPUkQgPSByZS5jb21waWxlKAogICAgciJwYmtkZjJfc2hhMjU2XCQxXCQoWzEtOV1bMC05XXswLDZ9KVwkIgogICAgciIoWzAtOWEtZl17MzJ9KVwkKFswLTlhLWZdezY0fSkiCikKCgpkZWYgX3JlcXVpcmVfc3RyaW5nKHZhbHVlOiBzdHIsIG5hbWU6IHN0cikgLT4gTm9uZToKICAgIGlmIG5vdCBpc2luc3RhbmNlKHZhbHVlLCBzdHIpOgogICAgICAgIHJhaXNlIFR5cGVFcnJvcihmIntuYW1lfSBtdXN0IGJlIGEgc3RyIikKCgpkZWYgX3Bhc3N3b3JkX2J5dGVzKHBhc3N3b3JkOiBzdHIpIC0+IGJ5dGVzOgogICAgX3JlcXVpcmVfc3RyaW5nKHBhc3N3b3JkLCAicGFzc3dvcmQiKQogICAgIyBCb3VuZCBhbGxvY2F0aW9uIGJlZm9yZSBlbmNvZGluZywgdGhlbiBjaGVjayB0aGUgYWN0dWFsIGJ5dGUgbGVuZ3RoLgogICAgaWYgbGVuKHBhc3N3b3JkKSA+IE1BWF9QQVNTV09SRF9CWVRFUzoKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJwYXNzd29yZCBleGNlZWRzIDEwMjQgVVRGLTggYnl0ZXMiKQogICAgdHJ5OgogICAgICAgIGVuY29kZWQgPSBwYXNzd29yZC5lbmNvZGUoInV0Zi04IikKICAgIGV4Y2VwdCBVbmljb2RlRW5jb2RlRXJyb3I6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigicGFzc3dvcmQgbXVzdCBjb250YWluIHZhbGlkIFVURi04IHRleHQiKSBmcm9tIE5vbmUKICAgIGlmIGxlbihlbmNvZGVkKSA+IE1BWF9QQVNTV09SRF9CWVRFUzoKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJwYXNzd29yZCBleGNlZWRzIDEwMjQgVVRGLTggYnl0ZXMiKQogICAgcmV0dXJuIGVuY29kZWQKCgpkZWYgY29uc3RhbnRfdGltZV9jb21wYXJlKGxlZnQ6IHN0ciwgcmlnaHQ6IHN0cikgLT4gYm9vbDoKICAgICIiIkNvbXBhcmUgVVRGLTggc3RyaW5ncyB1c2luZyBobWFjLmNvbXBhcmVfZGlnZXN0LgoKICAgIEF2b2lkcyBjb250ZW50LWRlcGVuZGVudCBlYXJseSBleGl0czsgbGVuZ3RocyBhbmQgZW5jb2RpbmcgY29zdHMgY2FuCiAgICByZW1haW4gb2JzZXJ2YWJsZS4gTm8gVW5pY29kZSBub3JtYWxpemF0aW9uIGlzIHBlcmZvcm1lZC4gTm9uLXN0cmluZ3MKICAgIHJhaXNlIFR5cGVFcnJvcjsgdW5wYWlyZWQgc3Vycm9nYXRlcyByYWlzZSBVbmljb2RlRW5jb2RlRXJyb3IuCiAgICAiIiIKICAgIF9yZXF1aXJlX3N0cmluZyhsZWZ0LCAibGVmdCIpCiAgICBfcmVxdWlyZV9zdHJpbmcocmlnaHQsICJyaWdodCIpCiAgICByZXR1cm4gaG1hYy5jb21wYXJlX2RpZ2VzdChsZWZ0LmVuY29kZSgidXRmLTgiKSwgcmlnaHQuZW5jb2RlKCJ1dGYtOCIpKQoKCmRlZiBoYXNoX3Bhc3N3b3JkKHBhc3N3b3JkOiBzdHIsICosIGl0ZXJhdGlvbnM6IGludCA9IERFRkFVTFRfSVRFUkFUSU9OUykgLT4gc3RyOgogICAgIiIiUmV0dXJuIGEgUEJLREYyLUhNQUMtU0hBMjU2IHJlY29yZCB3aXRoIGEgZnJlc2ggcmFuZG9tIDE2LWJ5dGUgc2FsdC4KCiAgICBTdG9yZSB0aGUgZW50aXJlIHJlY29yZC4gU2FsdCBhbmQgaXRlcmF0aW9uIGNvdW50IGFyZSBwdWJsaWMuCiAgICBJdGVyYXRpb25zIG11c3QgYmUgYW4gaW50IChub3QgYm9vbCkgaW4gWzYwMF8wMDAsIDVfMDAwXzAwMF0uCiAgICBXcm9uZyB0eXBlcyByYWlzZSBUeXBlRXJyb3I7IGludmFsaWQgdmFsdWVzIHJhaXNlIFZhbHVlRXJyb3IuCiAgICAiIiIKICAgIHBhc3N3b3JkX2J5dGVzID0gX3Bhc3N3b3JkX2J5dGVzKHBhc3N3b3JkKQogICAgaWYgdHlwZShpdGVyYXRpb25zKSBpcyBub3QgaW50OgogICAgICAgIHJhaXNlIFR5cGVFcnJvcigiaXRlcmF0aW9ucyBtdXN0IGJlIGFuIGludCIpCiAgICBpZiBub3QgTUlOX0lURVJBVElPTlMgPD0gaXRlcmF0aW9ucyA8PSBNQVhfSVRFUkFUSU9OUzoKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJpdGVyYXRpb25zIG11c3QgYmUgYmV0d2VlbiA2MDAwMDAgYW5kIDUwMDAwMDAiKQogICAgc2FsdCA9IHNlY3JldHMudG9rZW5fYnl0ZXMoU0FMVF9CWVRFUykKICAgIGtleSA9IGhhc2hsaWIucGJrZGYyX2htYWMoCiAgICAgICAgInNoYTI1NiIsIHBhc3N3b3JkX2J5dGVzLCBzYWx0LCBpdGVyYXRpb25zLCBka2xlbj1LRVlfQllURVMKICAgICkKICAgIHJldHVybiBmInBia2RmMl9zaGEyNTYkMSR7aXRlcmF0aW9uc30ke3NhbHQuaGV4KCl9JHtrZXkuaGV4KCl9IgoKCmRlZiB2ZXJpZnkocGFzc3dvcmQ6IHN0ciwgZW5jb2RlZF9oYXNoOiBzdHIpIC0+IGJvb2w6CiAgICAiIiJWZXJpZnkgYSBjb21wbGV0ZSByZWNvcmQgcHJvZHVjZWQgYnkgaGFzaF9wYXNzd29yZC4KCiAgICBSZXR1cm4gRmFsc2UgZm9yIGEgbWlzbWF0Y2gsIG1hbGZvcm1lZC91bnN1cHBvcnRlZCByZWNvcmQsIG91dC1vZi1yYW5nZQogICAgd29yayBmYWN0b3IsIG9yIGludmFsaWQgcGFzc3dvcmQgdmFsdWUuIE5vbi1zdHJpbmcgYXJndW1lbnRzIHJhaXNlCiAgICBUeXBlRXJyb3IuIFVuZXhwZWN0ZWQgcnVudGltZSBlcnJvcnMgcHJvcGFnYXRlLiBWYWxpZGF0ZSByZWNvcmQgYm91bmRzCiAgICBiZWZvcmUgZGVyaXZhdGlvbjsgY29tcGFyZSB0aGUgcmVzdWx0aW5nIGZpeGVkLXNpemUga2V5cyBzZWN1cmVseS4KICAgICIiIgogICAgX3JlcXVpcmVfc3RyaW5nKHBhc3N3b3JkLCAicGFzc3dvcmQiKQogICAgX3JlcXVpcmVfc3RyaW5nKGVuY29kZWRfaGFzaCwgImVuY29kZWRfaGFzaCIpCiAgICBpZiBsZW4oZW5jb2RlZF9oYXNoKSA+IE1BWF9SRUNPUkRfQ0hBUlM6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBtYXRjaCA9IF9SRUNPUkQuZnVsbG1hdGNoKGVuY29kZWRfaGFzaCkKICAgIGlmIG1hdGNoIGlzIE5vbmU6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICByb3VuZHNfdGV4dCwgc2FsdF9oZXgsIGtleV9oZXggPSBtYXRjaC5ncm91cHMoKQogICAgaXRlcmF0aW9ucyA9IGludChyb3VuZHNfdGV4dCkKICAgIGlmIG5vdCBNSU5fSVRFUkFUSU9OUyA8PSBpdGVyYXRpb25zIDw9IE1BWF9JVEVSQVRJT05TOgogICAgICAgIHJldHVybiBGYWxzZQogICAgdHJ5OgogICAgICAgIHBhc3N3b3JkX2J5dGVzID0gX3Bhc3N3b3JkX2J5dGVzKHBhc3N3b3JkKQogICAgZXhjZXB0IFZhbHVlRXJyb3I6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBzYWx0ID0gYnl0ZXMuZnJvbWhleChzYWx0X2hleCkKICAgIGV4cGVjdGVkID0gYnl0ZXMuZnJvbWhleChrZXlfaGV4KQogICAgYWN0dWFsID0gaGFzaGxpYi5wYmtkZjJfaG1hYygKICAgICAgICAic2hhMjU2IiwgcGFzc3dvcmRfYnl0ZXMsIHNhbHQsIGl0ZXJhdGlvbnMsIGRrbGVuPUtFWV9CWVRFUwogICAgKQogICAgcmV0dXJuIGhtYWMuY29tcGFyZV9kaWdlc3QoYWN0dWFsLCBleHBlY3RlZCkKCgpjbGFzcyBDb21wYXJpc29uVGVzdHModW5pdHRlc3QuVGVzdENhc2UpOgogICAgZGVmIHRlc3RfZXF1YWxfc3RyaW5ncyhzZWxmKToKICAgICAgICBmb3IgdmFsdWUgaW4gKCIiLCAic2VjcmV0IiwgImFceDAwYiIsICLlr4bnorzwn5SQIik6CiAgICAgICAgICAgIHdpdGggc2VsZi5zdWJUZXN0KHZhbHVlPXZhbHVlKToKICAgICAgICAgICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShjb25zdGFudF90aW1lX2NvbXBhcmUodmFsdWUsIHZhbHVlKSkKCiAgICBkZWYgdGVzdF9taXNtYXRjaGVzX2FuZF9sZW5ndGhzKHNlbGYpOgogICAgICAgIGZvciBhLCBiIGluICgoInNlY3JldCIsICJ4ZWNyZXQiKSwgKCJzZWNyZXQiLCAic2VjcmV4IiksCiAgICAgICAgICAgICAgICAgICAgICgic2VjcmV0IiwgInNlY3JldHMiKSwgKCIiLCAiYSIpLCAoImEiLCAiIikpOgogICAgICAgICAgICB3aXRoIHNlbGYuc3ViVGVzdChhPWEsIGI9Yik6CiAgICAgICAgICAgICAgICBzZWxmLmFzc2VydEZhbHNlKGNvbnN0YW50X3RpbWVfY29tcGFyZShhLCBiKSkKCiAgICBkZWYgdGVzdF9ub191bmljb2RlX25vcm1hbGl6YXRpb24oc2VsZik6CiAgICAgICAgc2VsZi5hc3NlcnRGYWxzZShjb25zdGFudF90aW1lX2NvbXBhcmUoIsOpIiwgImVcdTAzMDEiKSkKCiAgICBkZWYgdGVzdF9pbnZhbGlkX3R5cGVzKHNlbGYpOgogICAgICAgIGZvciB2YWx1ZSBpbiAoTm9uZSwgNDIsIGIic2VjcmV0IiwgYnl0ZWFycmF5KGIic2VjcmV0IikpOgogICAgICAgICAgICB3aXRoIHNlbGYuc3ViVGVzdCh2YWx1ZT12YWx1ZSk6CiAgICAgICAgICAgICAgICB3aXRoIHNlbGYuYXNzZXJ0UmFpc2VzKFR5cGVFcnJvcik6CiAgICAgICAgICAgICAgICAgICAgY29uc3RhbnRfdGltZV9jb21wYXJlKHZhbHVlLCAic2VjcmV0IikKICAgICAgICAgICAgICAgIHdpdGggc2VsZi5hc3NlcnRSYWlzZXMoVHlwZUVycm9yKToKICAgICAgICAgICAgICAgICAgICBjb25zdGFudF90aW1lX2NvbXBhcmUoInNlY3JldCIsIHZhbHVlKQoKICAgIGRlZiB0ZXN0X2ludmFsaWRfdW5pY29kZShzZWxmKToKICAgICAgICB3aXRoIHNlbGYuYXNzZXJ0UmFpc2VzKFVuaWNvZGVFbmNvZGVFcnJvcik6CiAgICAgICAgICAgIGNvbnN0YW50X3RpbWVfY29tcGFyZSgiXHVkODAwIiwgIlx1ZDgwMCIpCgogICAgZGVmIHRlc3Rfc2VjdXJlX2NvbXBhcmlzb25fcHJpbWl0aXZlKHNlbGYpOgogICAgICAgICMgRnVuY3Rpb25hbCBkZWxlZ2F0aW9uIGNoZWNrLCBub3QgYSB0aW1pbmcgYmVuY2htYXJrLgogICAgICAgIHdpdGggbW9jay5wYXRjaC5vYmplY3QoaG1hYywgImNvbXBhcmVfZGlnZXN0IiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHdyYXBzPWhtYWMuY29tcGFyZV9kaWdlc3QpIGFzIGNvbXBhcmU6CiAgICAgICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZShjb25zdGFudF90aW1lX2NvbXBhcmUoIuWvhueivCIsICLlr4bnorwiKSkKICAgICAgICBjb21wYXJlLmFzc2VydF9jYWxsZWRfb25jZV93aXRoKCLlr4bnorwiLmVuY29kZSgpLCAi5a+G56K8Ii5lbmNvZGUoKSkKCgpjbGFzcyBQYXNzd29yZFRlc3RzKHVuaXR0ZXN0LlRlc3RDYXNlKToKICAgICMgQ3Jvc3MtY2hlY2tlZCB3aXRoIGFuIGluZGVwZW5kZW50IFBCS0RGMiBpbXBsZW1lbnRhdGlvbjoKICAgICMgVTEgPSBITUFDKFAsIHNhbHQgfHwgSU5UMzJfQkUoMSkpOyBVaSA9IEhNQUMoUCwgVWktMSk7IFhPUiBhbGwgVWkuCiAgICBGSVhUVVJFID0gKAogICAgICAgICJwYmtkZjJfc2hhMjU2JDEkNjAwMDAwJDAwMDEwMjAzMDQwNTA2MDcwODA5MGEwYjBjMGQwZTBmJCIKICAgICAgICAiM2JjMzcxMThlNjI1MDkzZTliNzllZDA4OTMwZWE3YWY3Mzg5NTkxMjMzZmRkOTJkZGRmMzY5MzcxZTYwZGJjMCIKICAgICkKCiAgICBkZWYgdGVzdF9rbm93bl9hbnN3ZXIoc2VsZik6CiAgICAgICAgd2l0aCBtb2NrLnBhdGNoLm9iamVjdChzZWNyZXRzLCAidG9rZW5fYnl0ZXMiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuX3ZhbHVlPWJ5dGVzKHJhbmdlKDE2KSkpOgogICAgICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGhhc2hfcGFzc3dvcmQoInBhc3N3b3JkIiksIHNlbGYuRklYVFVSRSkKICAgICAgICBzZWxmLmFzc2VydFRydWUodmVyaWZ5KCJwYXNzd29yZCIsIHNlbGYuRklYVFVSRSkpCgogICAgZGVmIHRlc3Rfcm91bmRfdHJpcF9hbmRfd3JvbmdfcGFzc3dvcmQoc2VsZik6CiAgICAgICAgcmVjb3JkID0gaGFzaF9wYXNzd29yZCgiY29ycmVjdCBob3JzZSBiYXR0ZXJ5IHN0YXBsZSIpCiAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHZlcmlmeSgiY29ycmVjdCBob3JzZSBiYXR0ZXJ5IHN0YXBsZSIsIHJlY29yZCkpCiAgICAgICAgc2VsZi5hc3NlcnRGYWxzZSh2ZXJpZnkoImluY29ycmVjdCBob3JzZSBiYXR0ZXJ5IHN0YXBsZSIsIHJlY29yZCkpCgogICAgZGVmIHRlc3RfZm9ybWF0KHNlbGYpOgogICAgICAgIGFsZ29yaXRobSwgdmVyc2lvbiwgcm91bmRzLCBzYWx0LCBrZXkgPSBoYXNoX3Bhc3N3b3JkKCJwIikuc3BsaXQoIiQiKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwoKGFsZ29yaXRobSwgdmVyc2lvbiwgcm91bmRzKSwKICAgICAgICAgICAgICAgICAgICAgICAgICgicGJrZGYyX3NoYTI1NiIsICIxIiwgIjYwMDAwMCIpKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwobGVuKGJ5dGVzLmZyb21oZXgoc2FsdCkpLCAxNikKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKGxlbihieXRlcy5mcm9taGV4KGtleSkpLCAzMikKCiAgICBkZWYgdGVzdF9yYW5kb21fc2FsdHMoc2VsZik6CiAgICAgICAgZmlyc3QsIHNlY29uZCA9IGhhc2hfcGFzc3dvcmQoInNhbWUiKSwgaGFzaF9wYXNzd29yZCgic2FtZSIpCiAgICAgICAgc2VsZi5hc3NlcnROb3RFcXVhbChmaXJzdC5zcGxpdCgiJCIpWzNdLCBzZWNvbmQuc3BsaXQoIiQiKVszXSkKICAgICAgICBzZWxmLmFzc2VydE5vdEVxdWFsKGZpcnN0LCBzZWNvbmQpCiAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHZlcmlmeSgic2FtZSIsIGZpcnN0KSkKICAgICAgICBzZWxmLmFzc2VydFRydWUodmVyaWZ5KCJzYW1lIiwgc2Vjb25kKSkKCiAgICBkZWYgdGVzdF9mcmVzaF9zZWN1cmVfcmFuZG9tbmVzc19wZXJfY2FsbChzZWxmKToKICAgICAgICB3aXRoIG1vY2sucGF0Y2gub2JqZWN0KHNlY3JldHMsICJ0b2tlbl9ieXRlcyIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaWRlX2VmZmVjdD1bYiJhIiAqIDE2LCBiImIiICogMTZdKSBhcyBybmc6CiAgICAgICAgICAgIGZpcnN0LCBzZWNvbmQgPSBoYXNoX3Bhc3N3b3JkKCJzYW1lIiksIGhhc2hfcGFzc3dvcmQoInNhbWUiKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocm5nLmNhbGxfYXJnc19saXN0LCBbbW9jay5jYWxsKDE2KSwgbW9jay5jYWxsKDE2KV0pCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbChmaXJzdC5zcGxpdCgiJCIpWzNdLCAoYiJhIiAqIDE2KS5oZXgoKSkKICAgICAgICBzZWxmLmFzc2VydEVxdWFsKHNlY29uZC5zcGxpdCgiJCIpWzNdLCAoYiJiIiAqIDE2KS5oZXgoKSkKCiAgICBkZWYgdGVzdF9lbXB0eV9wYXNzd29yZChzZWxmKToKICAgICAgICByZWNvcmQgPSBoYXNoX3Bhc3N3b3JkKCIiKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh2ZXJpZnkoIiIsIHJlY29yZCkpCiAgICAgICAgc2VsZi5hc3NlcnRGYWxzZSh2ZXJpZnkoIm5vbmVtcHR5IiwgcmVjb3JkKSkKCiAgICBkZWYgdGVzdF91bmljb2RlX3Bhc3N3b3JkKHNlbGYpOgogICAgICAgIHJlY29yZCA9IGhhc2hfcGFzc3dvcmQoImNhZsOpIOWvhueivPCflJAiKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh2ZXJpZnkoImNhZsOpIOWvhueivPCflJAiLCByZWNvcmQpKQogICAgICAgIHNlbGYuYXNzZXJ0RmFsc2UodmVyaWZ5KCJjYWZlXHUwMzAxIOWvhueivPCflJAiLCByZWNvcmQpKQoKICAgIGRlZiB0ZXN0X2VtYmVkZGVkX251bChzZWxmKToKICAgICAgICByZWNvcmQgPSBoYXNoX3Bhc3N3b3JkKCJwYXNzXHgwMHdvcmQiKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh2ZXJpZnkoInBhc3NceDAwd29yZCIsIHJlY29yZCkpCiAgICAgICAgc2VsZi5hc3NlcnRGYWxzZSh2ZXJpZnkoInBhc3MiLCByZWNvcmQpKQogICAgICAgIHNlbGYuYXNzZXJ0RmFsc2UodmVyaWZ5KCJwYXNzd29yZCIsIHJlY29yZCkpCgogICAgZGVmIHRlc3RfbWF4aW11bV9wYXNzd29yZF9sZW5ndGgoc2VsZik6CiAgICAgICAgZm9yIHBhc3N3b3JkIGluICgiYSIgKiAxMDI0LCAi8J+UkCIgKiAyNTYpOgogICAgICAgICAgICB3aXRoIHNlbGYuc3ViVGVzdChjaGFyYWN0ZXJzPWxlbihwYXNzd29yZCkpOgogICAgICAgICAgICAgICAgcmVjb3JkID0gaGFzaF9wYXNzd29yZChwYXNzd29yZCkKICAgICAgICAgICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh2ZXJpZnkocGFzc3dvcmQsIHJlY29yZCkpCiAgICAgICAgICAgICAgICBzZWxmLmFzc2VydEZhbHNlKHZlcmlmeShwYXNzd29yZFs6LTFdLCByZWNvcmQpKQoKICAgIGRlZiB0ZXN0X2ludmFsaWRfcGFzc3dvcmRfdmFsdWVzX3NraXBfZGVyaXZhdGlvbihzZWxmKToKICAgICAgICBmb3IgcGFzc3dvcmQgaW4gKCJhIiAqIDEwMjUsICLwn5SQIiAqIDI1NywgIlx1ZDgwMCIpOgogICAgICAgICAgICB3aXRoIHNlbGYuc3ViVGVzdChjaGFyYWN0ZXJzPWxlbihwYXNzd29yZCkpOgogICAgICAgICAgICAgICAgd2l0aCBtb2NrLnBhdGNoLm9iamVjdChoYXNobGliLCAicGJrZGYyX2htYWMiKSBhcyBkZXJpdmU6CiAgICAgICAgICAgICAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhWYWx1ZUVycm9yKToKICAgICAgICAgICAgICAgICAgICAgICAgaGFzaF9wYXNzd29yZChwYXNzd29yZCkKICAgICAgICAgICAgICAgICAgICBzZWxmLmFzc2VydEZhbHNlKHZlcmlmeShwYXNzd29yZCwgc2VsZi5GSVhUVVJFKSkKICAgICAgICAgICAgICAgICAgICBkZXJpdmUuYXNzZXJ0X25vdF9jYWxsZWQoKQoKICAgIGRlZiB0ZXN0X2ludmFsaWRfYXJndW1lbnRfdHlwZXMoc2VsZik6CiAgICAgICAgZm9yIHZhbHVlIGluIChOb25lLCAxMjMsIGIicGFzc3dvcmQiLCBGYWxzZSk6CiAgICAgICAgICAgIHdpdGggc2VsZi5zdWJUZXN0KHZhbHVlPXZhbHVlKToKICAgICAgICAgICAgICAgIHdpdGggc2VsZi5hc3NlcnRSYWlzZXMoVHlwZUVycm9yKToKICAgICAgICAgICAgICAgICAgICBoYXNoX3Bhc3N3b3JkKHZhbHVlKQogICAgICAgICAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhUeXBlRXJyb3IpOgogICAgICAgICAgICAgICAgICAgIHZlcmlmeSh2YWx1ZSwgc2VsZi5GSVhUVVJFKQogICAgICAgICAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhUeXBlRXJyb3IpOgogICAgICAgICAgICAgICAgICAgIHZlcmlmeSgicGFzc3dvcmQiLCB2YWx1ZSkKCiAgICBkZWYgdGVzdF9pbnZhbGlkX2l0ZXJhdGlvbnMoc2VsZik6CiAgICAgICAgZm9yIHJvdW5kcyBpbiAoMCwgLTEsIDU5OV85OTksIDVfMDAwXzAwMSk6CiAgICAgICAgICAgIHdpdGggc2VsZi5zdWJUZXN0KHJvdW5kcz1yb3VuZHMpOgogICAgICAgICAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhWYWx1ZUVycm9yKToKICAgICAgICAgICAgICAgICAgICBoYXNoX3Bhc3N3b3JkKCJwIiwgaXRlcmF0aW9ucz1yb3VuZHMpCiAgICAgICAgZm9yIHJvdW5kcyBpbiAoVHJ1ZSwgRmFsc2UsIDYwMF8wMDAuMCwgIjYwMDAwMCIsIE5vbmUpOgogICAgICAgICAgICB3aXRoIHNlbGYuc3ViVGVzdChyb3VuZHM9cm91bmRzKToKICAgICAgICAgICAgICAgIHdpdGggc2VsZi5hc3NlcnRSYWlzZXMoVHlwZUVycm9yKToKICAgICAgICAgICAgICAgICAgICBoYXNoX3Bhc3N3b3JkKCJwIiwgaXRlcmF0aW9ucz1yb3VuZHMpCgogICAgZGVmIHRlc3Rfc3RvcmVkX3dvcmtfZmFjdG9yKHNlbGYpOgogICAgICAgIHJlY29yZCA9IGhhc2hfcGFzc3dvcmQoInBhc3N3b3JkIiwgaXRlcmF0aW9ucz02MDBfMDAxKQogICAgICAgIHNlbGYuYXNzZXJ0RXF1YWwocmVjb3JkLnNwbGl0KCIkIilbMl0sICI2MDAwMDEiKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh2ZXJpZnkoInBhc3N3b3JkIiwgcmVjb3JkKSkKICAgICAgICBzZWxmLmFzc2VydEZhbHNlKHZlcmlmeSgicGFzc3dvcmQiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVjb3JkLnJlcGxhY2UoIiQ2MDAwMDEkIiwgIiQ2MDAwMDAkIikpKQoKICAgIGRlZiB0ZXN0X21heGltdW1fd29ya19mYWN0b3Ioc2VsZik6CiAgICAgICAgcmVjb3JkID0gaGFzaF9wYXNzd29yZCgicGFzc3dvcmQiLCBpdGVyYXRpb25zPU1BWF9JVEVSQVRJT05TKQogICAgICAgIHNlbGYuYXNzZXJ0VHJ1ZSh2ZXJpZnkoInBhc3N3b3JkIiwgcmVjb3JkKSkKCiAgICBkZWYgdGVzdF9tYWxmb3JtZWRfcmVjb3Jkc19za2lwX2Rlcml2YXRpb24oc2VsZik6CiAgICAgICAgbWFsZm9ybWVkID0gWwogICAgICAgICAgICAiIiwgImdhcmJhZ2UiLCBzZWxmLkZJWFRVUkUgKyAiJGV4dHJhIiwgc2VsZi5GSVhUVVJFICsgIlxuIiwKICAgICAgICAgICAgIiAiICsgc2VsZi5GSVhUVVJFLCBzZWxmLkZJWFRVUkVbOi0xXSwgc2VsZi5GSVhUVVJFLnVwcGVyKCksCiAgICAgICAgICAgIHNlbGYuRklYVFVSRS5yZXBsYWNlKCJzaGEyNTYiLCAic2hhMSIpLAogICAgICAgICAgICBzZWxmLkZJWFRVUkUucmVwbGFjZSgiJDEkIiwgIiQyJCIsIDEpLAogICAgICAgICAgICBzZWxmLkZJWFRVUkUucmVwbGFjZSgiMDAwMTAyMDMiLCAiZ2cwMTAyMDMiLCAxKSwKICAgICAgICAgICAgc2VsZi5GSVhUVVJFLnJlcGxhY2UoIjAwMDEwMjAzIiwgIjAwMDEgMjAzIiwgMSksCiAgICAgICAgICAgIHNlbGYuRklYVFVSRS5yZXBsYWNlKCIwMDAxMDIwMyIsICIwMDAxMDIiLCAxKSwKICAgICAgICAgICAgc2VsZi5GSVhUVVJFWzotMV0gKyAiZyIsIHNlbGYuRklYVFVSRVs6LTFdICsgIlx1ZDgwMCIsCiAgICAgICAgICAgIHNlbGYuRklYVFVSRS5zcGxpdCgiJCIpWy0xXSwgIngiICogMTAwXzAwMCwKICAgICAgICBdCiAgICAgICAgbWFsZm9ybWVkLmV4dGVuZCgKICAgICAgICAgICAgc2VsZi5GSVhUVVJFLnJlcGxhY2UoIiQ2MDAwMDAkIiwgZiIke3JvdW5kc30kIikKICAgICAgICAgICAgZm9yIHJvdW5kcyBpbiAoIjAiLCAiLTEiLCAiKzYwMDAwMCIsICIwNjAwMDAwIiwgIjU5OTk5OSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICI1MDAwMDAxIiwgIjk5OTk5OTk5OTk5OTk5OTk5OTk5IiwgIjYwMDAwMC4wIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIu+8lu+8kO+8kO+8kO+8kO+8kCIsICIiLCAiNjAwIDAwMCIpCiAgICAgICAgKQogICAgICAgIHdpdGggbW9jay5wYXRjaC5vYmplY3QoaGFzaGxpYiwgInBia2RmMl9obWFjIikgYXMgZGVyaXZlOgogICAgICAgICAgICBmb3IgcmVjb3JkIGluIG1hbGZvcm1lZDoKICAgICAgICAgICAgICAgIHdpdGggc2VsZi5zdWJUZXN0KHJlY29yZD1yZWNvcmRbOjE0MF0pOgogICAgICAgICAgICAgICAgICAgIHNlbGYuYXNzZXJ0RmFsc2UodmVyaWZ5KCJwYXNzd29yZCIsIHJlY29yZCkpCiAgICAgICAgICAgIGRlcml2ZS5hc3NlcnRfbm90X2NhbGxlZCgpCgogICAgZGVmIHRlc3RfbW9kaWZpZWRfc2FsdF9vcl9rZXkoc2VsZik6CiAgICAgICAgcGFydHMgPSBzZWxmLkZJWFRVUkUuc3BsaXQoIiQiKQogICAgICAgIGZvciBpbmRleCBpbiAoMywgNCk6CiAgICAgICAgICAgIGFsdGVyZWQgPSBwYXJ0cy5jb3B5KCkKICAgICAgICAgICAgZmlyc3QgPSAiMCIgaWYgcGFydHNbaW5kZXhdWzBdICE9ICIwIiBlbHNlICIxIgogICAgICAgICAgICBhbHRlcmVkW2luZGV4XSA9IGZpcnN0ICsgcGFydHNbaW5kZXhdWzE6XQogICAgICAgICAgICB3aXRoIHNlbGYuc3ViVGVzdChmaWVsZD1pbmRleCk6CiAgICAgICAgICAgICAgICBzZWxmLmFzc2VydEZhbHNlKHZlcmlmeSgicGFzc3dvcmQiLCAiJCIuam9pbihhbHRlcmVkKSkpCgogICAgZGVmIHRlc3RfdmVyaWZpY2F0aW9uX2NvbXBhcmVzX2ZpeGVkX3NpemVfYnl0ZXMoc2VsZik6CiAgICAgICAgd2l0aCBtb2NrLnBhdGNoLm9iamVjdChobWFjLCAiY29tcGFyZV9kaWdlc3QiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd3JhcHM9aG1hYy5jb21wYXJlX2RpZ2VzdCkgYXMgY29tcGFyZToKICAgICAgICAgICAgc2VsZi5hc3NlcnRUcnVlKHZlcmlmeSgicGFzc3dvcmQiLCBzZWxmLkZJWFRVUkUpKQogICAgICAgIGNvbXBhcmUuYXNzZXJ0X2NhbGxlZF9vbmNlKCkKICAgICAgICBhY3R1YWwsIGV4cGVjdGVkID0gY29tcGFyZS5jYWxsX2FyZ3MuYXJncwogICAgICAgIHNlbGYuYXNzZXJ0SXNJbnN0YW5jZShhY3R1YWwsIGJ5dGVzKQogICAgICAgIHNlbGYuYXNzZXJ0SXNJbnN0YW5jZShleHBlY3RlZCwgYnl0ZXMpCiAgICAgICAgc2VsZi5hc3NlcnRFcXVhbCgobGVuKGFjdHVhbCksIGxlbihleHBlY3RlZCkpLCAoMzIsIDMyKSkKCiAgICBkZWYgdGVzdF9ydW50aW1lX2ZhaWx1cmVzX3Byb3BhZ2F0ZShzZWxmKToKICAgICAgICB3aXRoIG1vY2sucGF0Y2gub2JqZWN0KHNlY3JldHMsICJ0b2tlbl9ieXRlcyIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaWRlX2VmZmVjdD1PU0Vycm9yKCJSTkcgZmFpbGVkIikpOgogICAgICAgICAgICB3aXRoIHNlbGYuYXNzZXJ0UmFpc2VzKE9TRXJyb3IpOgogICAgICAgICAgICAgICAgaGFzaF9wYXNzd29yZCgicGFzc3dvcmQiKQogICAgICAgIHdpdGggbW9jay5wYXRjaC5vYmplY3QoaGFzaGxpYiwgInBia2RmMl9obWFjIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpZGVfZWZmZWN0PVJ1bnRpbWVFcnJvcigiS0RGIGZhaWxlZCIpKToKICAgICAgICAgICAgd2l0aCBzZWxmLmFzc2VydFJhaXNlcyhSdW50aW1lRXJyb3IpOgogICAgICAgICAgICAgICAgdmVyaWZ5KCJwYXNzd29yZCIsIHNlbGYuRklYVFVSRSkKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgdW5pdHRlc3QubWFpbigpCg==">Download secure_passwords.py</a><a class="button secondary" href="#implementation">View source &amp; tests</a></div>
+</header>
+<div class="stats" aria-label="Hashing parameters">
+<div class="stat"><strong>600,000</strong><span>Default PBKDF2-HMAC-SHA256 iterations</span></div>
+<div class="stat"><strong>16 bytes</strong><span>Fresh cryptographically random salt</span></div>
+<div class="stat"><strong>32 bytes</strong><span>Derived key, compared with compare_digest</span></div>
+</div>
+<section aria-labelledby="usage-title">
+<h2 id="usage-title">Use the module</h2>
+<p>Download the Python file, or copy the complete source below into <code>secure_passwords.py</code>. Requires Python 3.10 or later with OpenSSL support. No packages to install. The HTML and download work offline.</p>
+<pre tabindex="0" aria-label="Python usage example"><code>from secure_passwords import constant_time_compare, hash_password, verify
+
+assert constant_time_compare("same", "same")
+assert not constant_time_compare("same", "different")
+
+stored = hash_password("correct horse battery staple")
+assert verify("correct horse battery staple", stored)
+assert not verify("wrong password", stored)
+
+# Save the entire 'stored' string; it contains the salt and work factor.</code></pre>
+<p>Execute all included unit tests:</p>
+<pre tabindex="0" aria-label="Test command"><code>python3 secure_passwords.py -v</code></pre>
+</section>
+<section aria-labelledby="contract-title">
+<h2 id="contract-title">API and record format</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Function</th><th scope="col">Behavior</th></tr></thead><tbody>
+<tr><td><code>constant_time_compare(left, right)</code></td><td>Accepts two strings, encodes them as UTF-8 and compares the bytes using <code>hmac.compare_digest</code>. Returns a Boolean.</td></tr>
+<tr><td><code>hash_password(password, *, iterations=600_000)</code></td><td>Generates a new random salt with <code>secrets.token_bytes</code> on every call. Returns a versioned record. Accepts integer work factors from 600,000 through 5,000,000; Boolean values are rejected.</td></tr>
+<tr><td><code>verify(password, encoded_hash)</code></td><td>Returns <code>True</code> only for a matching password and supported record. Malformed records, unsupported versions, invalid password values, and work factors outside the accepted range return <code>False</code> before derivation. Wrong argument types raise <code>TypeError</code>.</td></tr>
+</tbody></table></div>
+<pre tabindex="0" aria-label="Stored record format"><code>pbkdf2_sha256$1$iterations$salt_hex$derived_key_hex
+             ↑            ↑        ↑
+          version     32 hex    64 hex
+                     characters characters</code></pre>
+<p>Passwords are strings of at most 1,024 UTF-8 bytes. They are never truncated or normalized. Empty strings and embedded NUL characters are supported. Hashing invalid values raises <code>ValueError</code>; non-string inputs raise <code>TypeError</code>. The comparison helper rejects unpaired Unicode surrogates with <code>UnicodeEncodeError</code>. Unexpected random-source or hashing failures propagate.</p>
+</section>
+<aside class="note" aria-label="Timing guarantees">
+<p><strong>What constant time means here.</strong> The comparison primitive avoids early exits based on matching content. String encoding and input lengths may still affect runtime. Verification compares two fixed-size derived keys, but parsing errors and different work factors take different amounts of time. Unit tests check behavior and use of the primitive; they do not prove timing guarantees. See <a href="https://docs.python.org/3/library/hmac.html#hmac.compare_digest">Python’s compare_digest documentation</a>.</p>
+</aside>
+<p class="muted">The default follows <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2">OWASP’s PBKDF2-HMAC-SHA256 guidance</a>. The module uses <a href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac">Python’s PBKDF2 implementation</a>. Benchmark the work factor for your service; this module accepts only the documented record version and iteration range.</p>
+<section id="implementation" aria-labelledby="source-title">
+<div class="code-bar"><h2 id="source-title">Complete source &amp; unit tests</h2><div class="copy-controls"><button class="button secondary" id="copy" type="button">Copy Python source</button></div></div>
+<div id="copy-status" role="status" aria-live="polite"></div>
+<pre tabindex="0" aria-label="Complete Python module"><code id="python-source">&quot;&quot;&quot;Standard-library password hashing. Python 3.10+ with OpenSSL required.
+
+Run tests: python3 secure_passwords.py -v
+Record: pbkdf2_sha256$1$&lt;iterations&gt;$&lt;salt hex&gt;$&lt;derived key hex&gt;
+Passwords use strict UTF-8, without normalization or truncation. Empty
+passwords are supported; enforce password policy in the application.
+Only the content comparison avoids early mismatch exits. Encoding, lengths,
+parsing and variable work factors can affect total verification time.
+&quot;&quot;&quot;
+
+import hashlib
+import hmac
+import re
+import secrets
+import unittest
+from unittest import mock
+
+__all__ = [&quot;constant_time_compare&quot;, &quot;hash_password&quot;, &quot;verify&quot;]
+MIN_ITERATIONS = 600_000
+DEFAULT_ITERATIONS = 600_000
+MAX_ITERATIONS = 5_000_000
+SALT_BYTES = 16
+KEY_BYTES = 32
+MAX_PASSWORD_BYTES = 1024
+MAX_RECORD_CHARS = 128
+_RECORD = re.compile(
+    r&quot;pbkdf2_sha256\$1\$([1-9][0-9]{0,6})\$&quot;
+    r&quot;([0-9a-f]{32})\$([0-9a-f]{64})&quot;
+)
+
+
+def _require_string(value: str, name: str) -&gt; None:
+    if not isinstance(value, str):
+        raise TypeError(f&quot;{name} must be a str&quot;)
+
+
+def _password_bytes(password: ***REDACTED*** -&gt; bytes:
+    _require_string(password, &quot;password&quot;)
+    # Bound allocation before encoding, then check the actual byte length.
+    if len(password) &gt; MAX_PASSWORD_BYTES:
+        raise ValueError(&quot;password exceeds 1024 UTF-8 bytes&quot;)
+    try:
+        encoded = password.encode(&quot;utf-8&quot;)
+    except UnicodeEncodeError:
+        raise ValueError(&quot;password must contain valid UTF-8 text&quot;) from None
+    if len(encoded) &gt; MAX_PASSWORD_BYTES:
+        raise ValueError(&quot;password exceeds 1024 UTF-8 bytes&quot;)
+    return encoded
+
+
+def constant_time_compare(left: str, right: str) -&gt; bool:
+    &quot;&quot;&quot;Compare UTF-8 strings using hmac.compare_digest.
+
+    Avoids content-dependent early exits; lengths and encoding costs can
+    remain observable. No Unicode normalization is performed. Non-strings
+    raise TypeError; unpaired surrogates raise UnicodeEncodeError.
+    &quot;&quot;&quot;
+    _require_string(left, &quot;left&quot;)
+    _require_string(right, &quot;right&quot;)
+    return hmac.compare_digest(left.encode(&quot;utf-8&quot;), right.encode(&quot;utf-8&quot;))
+
+
+def hash_password(password: ***REDACTED***, *, iterations: int = DEFAULT_ITERATIONS) -&gt; str:
+    &quot;&quot;&quot;Return a PBKDF2-HMAC-SHA256 record with a fresh random 16-byte salt.
+
+    Store the entire record. Salt and iteration count are public.
+    Iterations must be an int (not bool) in [600_000, 5_000_000].
+    Wrong types raise TypeError; invalid values raise ValueError.
+    &quot;&quot;&quot;
+    password_bytes = _password_bytes(password)
+    if type(iterations) is not int:
+        raise TypeError(&quot;iterations must be an int&quot;)
+    if not MIN_ITERATIONS &lt;= iterations &lt;= MAX_ITERATIONS:
+        raise ValueError(&quot;iterations must be between 600000 and 5000000&quot;)
+    salt = secrets.token_bytes(SALT_BYTES)
+    key = hashlib.pbkdf2_hmac(
+        &quot;sha256&quot;, password_bytes, salt, iterations, dklen=KEY_BYTES
+    )
+    return f&quot;pbkdf2_sha256$1${iterations}${salt.hex()}${key.hex()}&quot;
+
+
+def verify(password: ***REDACTED***, encoded_hash: str) -&gt; bool:
+    &quot;&quot;&quot;Verify a complete record produced by hash_password.
+
+    Return False for a mismatch, malformed/unsupported record, out-of-range
+    work factor, or invalid password value. Non-string arguments raise
+    TypeError. Unexpected runtime errors propagate. Validate record bounds
+    before derivation; compare the resulting fixed-size keys securely.
+    &quot;&quot;&quot;
+    _require_string(password, &quot;password&quot;)
+    _require_string(encoded_hash, &quot;encoded_hash&quot;)
+    if len(encoded_hash) &gt; MAX_RECORD_CHARS:
+        return False
+    match = _RECORD.fullmatch(encoded_hash)
+    if match is None:
+        return False
+    rounds_text, salt_hex, key_hex = match.groups()
+    iterations = int(rounds_text)
+    if not MIN_ITERATIONS &lt;= iterations &lt;= MAX_ITERATIONS:
+        return False
+    try:
+        password_bytes = _password_bytes(password)
+    except ValueError:
+        return False
+    salt = bytes.fromhex(salt_hex)
+    expected = bytes.fromhex(key_hex)
+    actual = hashlib.pbkdf2_hmac(
+        &quot;sha256&quot;, password_bytes, salt, iterations, dklen=KEY_BYTES
+    )
+    return hmac.compare_digest(actual, expected)
+
+
+class ComparisonTests(unittest.TestCase):
+    def test_equal_strings(self):
+        for value in (&quot;&quot;, &quot;secret&quot;, &quot;a\x00b&quot;, &quot;密碼🔐&quot;):
+            with self.subTest(value=value):
+                self.assertTrue(constant_time_compare(value, value))
+
+    def test_mismatches_and_lengths(self):
+        for a, b in ((&quot;secret&quot;, &quot;xecret&quot;), (&quot;secret&quot;, &quot;secrex&quot;),
+                     (&quot;secret&quot;, &quot;secrets&quot;), (&quot;&quot;, &quot;a&quot;), (&quot;a&quot;, &quot;&quot;)):
+            with self.subTest(a=a, b=b):
+                self.assertFalse(constant_time_compare(a, b))
+
+    def test_no_unicode_normalization(self):
+        self.assertFalse(constant_time_compare(&quot;é&quot;, &quot;e\u0301&quot;))
+
+    def test_invalid_types(self):
+        for value in (None, 42, b&quot;secret&quot;, bytearray(b&quot;secret&quot;)):
+            with self.subTest(value=value):
+                with self.assertRaises(TypeError):
+                    constant_time_compare(value, &quot;secret&quot;)
+                with self.assertRaises(TypeError):
+                    constant_time_compare(&quot;secret&quot;, value)
+
+    def test_invalid_unicode(self):
+        with self.assertRaises(UnicodeEncodeError):
+            constant_time_compare(&quot;\ud800&quot;, &quot;\ud800&quot;)
+
+    def test_secure_comparison_primitive(self):
+        # Functional delegation check, not a timing benchmark.
+        with mock.patch.object(hmac, &quot;compare_digest&quot;,
+                               wraps=hmac.compare_digest) as compare:
+            self.assertTrue(constant_time_compare(&quot;密碼&quot;, &quot;密碼&quot;))
+        compare.assert_called_once_with(&quot;密碼&quot;.encode(), &quot;密碼&quot;.encode())
+
+
+class PasswordTests(unittest.TestCase):
+    # Cross-checked with an independent PBKDF2 implementation:
+    # U1 = HMAC(P, salt || INT32_BE(1)); Ui = HMAC(P, Ui-1); XOR all Ui.
+    FIXTURE = (
+        &quot;pbkdf2_sha256$1$600000$000102030405060708090a0b0c0d0e0f$&quot;
+        &quot;3bc37118e625093e9b79ed08930ea7af7389591233fdd92dddf369371e60dbc0&quot;
+    )
+
+    def test_known_answer(self):
+        with mock.patch.object(secrets, &quot;token_bytes&quot;,
+                               return_value=bytes(range(16))):
+            self.assertEqual(hash_password(&quot;password&quot;), self.FIXTURE)
+        self.assertTrue(verify(&quot;password&quot;, self.FIXTURE))
+
+    def test_round_trip_and_wrong_password(self):
+        record = hash_password(&quot;correct horse battery staple&quot;)
+        self.assertTrue(verify(&quot;correct horse battery staple&quot;, record))
+        self.assertFalse(verify(&quot;incorrect horse battery staple&quot;, record))
+
+    def test_format(self):
+        algorithm, version, rounds, salt, key = hash_password(&quot;p&quot;).split(&quot;$&quot;)
+        self.assertEqual((algorithm, version, rounds),
+                         (&quot;pbkdf2_sha256&quot;, &quot;1&quot;, &quot;600000&quot;))
+        self.assertEqual(len(bytes.fromhex(salt)), 16)
+        self.assertEqual(len(bytes.fromhex(key)), 32)
+
+    def test_random_salts(self):
+        first, second = hash_password(&quot;same&quot;), hash_password(&quot;same&quot;)
+        self.assertNotEqual(first.split(&quot;$&quot;)[3], second.split(&quot;$&quot;)[3])
+        self.assertNotEqual(first, second)
+        self.assertTrue(verify(&quot;same&quot;, first))
+        self.assertTrue(verify(&quot;same&quot;, second))
+
+    def test_fresh_secure_randomness_per_call(self):
+        with mock.patch.object(secrets, &quot;token_bytes&quot;,
+                               side_effect=[b&quot;a&quot; * 16, b&quot;b&quot; * 16]) as rng:
+            first, second = hash_password(&quot;same&quot;), hash_password(&quot;same&quot;)
+        self.assertEqual(rng.call_args_list, [mock.call(16), mock.call(16)])
+        self.assertEqual(first.split(&quot;$&quot;)[3], (b&quot;a&quot; * 16).hex())
+        self.assertEqual(second.split(&quot;$&quot;)[3], (b&quot;b&quot; * 16).hex())
+
+    def test_empty_password(self):
+        record = hash_password(&quot;&quot;)
+        self.assertTrue(verify(&quot;&quot;, record))
+        self.assertFalse(verify(&quot;nonempty&quot;, record))
+
+    def test_unicode_password(self):
+        record = hash_password(&quot;café 密碼🔐&quot;)
+        self.assertTrue(verify(&quot;café 密碼🔐&quot;, record))
+        self.assertFalse(verify(&quot;cafe\u0301 密碼🔐&quot;, record))
+
+    def test_embedded_nul(self):
+        record = hash_password(&quot;pass\x00word&quot;)
+        self.assertTrue(verify(&quot;pass\x00word&quot;, record))
+        self.assertFalse(verify(&quot;pass&quot;, record))
+        self.assertFalse(verify(&quot;password&quot;, record))
+
+    def test_maximum_password_length(self):
+        for password in (&quot;a&quot; * 1024, &quot;🔐&quot; * 256):
+            with self.subTest(characters=len(password)):
+                record = hash_password(password)
+                self.assertTrue(verify(password, record))
+                self.assertFalse(verify(password[:-1], record))
+
+    def test_invalid_password_values_skip_derivation(self):
+        for password in (&quot;a&quot; * 1025, &quot;🔐&quot; * 257, &quot;\ud800&quot;):
+            with self.subTest(characters=len(password)):
+                with mock.patch.object(hashlib, &quot;pbkdf2_hmac&quot;) as derive:
+                    with self.assertRaises(ValueError):
+                        hash_password(password)
+                    self.assertFalse(verify(password, self.FIXTURE))
+                    derive.assert_not_called()
+
+    def test_invalid_argument_types(self):
+        for value in (None, 123, b&quot;password&quot;, False):
+            with self.subTest(value=value):
+                with self.assertRaises(TypeError):
+                    hash_password(value)
+                with self.assertRaises(TypeError):
+                    verify(value, self.FIXTURE)
+                with self.assertRaises(TypeError):
+                    verify(&quot;password&quot;, value)
+
+    def test_invalid_iterations(self):
+        for rounds in (0, -1, 599_999, 5_000_001):
+            with self.subTest(rounds=rounds):
+                with self.assertRaises(ValueError):
+                    hash_password(&quot;p&quot;, iterations=rounds)
+        for rounds in (True, False, 600_000.0, &quot;600000&quot;, None):
+            with self.subTest(rounds=rounds):
+                with self.assertRaises(TypeError):
+                    hash_password(&quot;p&quot;, iterations=rounds)
+
+    def test_stored_work_factor(self):
+        record = hash_password(&quot;password&quot;, iterations=600_001)
+        self.assertEqual(record.split(&quot;$&quot;)[2], &quot;600001&quot;)
+        self.assertTrue(verify(&quot;password&quot;, record))
+        self.assertFalse(verify(&quot;password&quot;,
+                               record.replace(&quot;$600001$&quot;, &quot;$600000$&quot;)))
+
+    def test_maximum_work_factor(self):
+        record = hash_password(&quot;password&quot;, iterations=MAX_ITERATIONS)
+        self.assertTrue(verify(&quot;password&quot;, record))
+
+    def test_malformed_records_skip_derivation(self):
+        malformed = [
+            &quot;&quot;, &quot;garbage&quot;, self.FIXTURE + &quot;$extra&quot;, self.FIXTURE + &quot;\n&quot;,
+            &quot; &quot; + self.FIXTURE, self.FIXTURE[:-1], self.FIXTURE.upper(),
+            self.FIXTURE.replace(&quot;sha256&quot;, &quot;sha1&quot;),
+            self.FIXTURE.replace(&quot;$1$&quot;, &quot;$2$&quot;, 1),
+            self.FIXTURE.replace(&quot;00010203&quot;, &quot;gg010203&quot;, 1),
+            self.FIXTURE.replace(&quot;00010203&quot;, &quot;0001 203&quot;, 1),
+            self.FIXTURE.replace(&quot;00010203&quot;, &quot;000102&quot;, 1),
+            self.FIXTURE[:-1] + &quot;g&quot;, self.FIXTURE[:-1] + &quot;\ud800&quot;,
+            self.FIXTURE.split(&quot;$&quot;)[-1], &quot;x&quot; * 100_000,
+        ]
+        malformed.extend(
+            self.FIXTURE.replace(&quot;$600000$&quot;, f&quot;${rounds}$&quot;)
+            for rounds in (&quot;0&quot;, &quot;-1&quot;, &quot;+600000&quot;, &quot;0600000&quot;, &quot;599999&quot;,
+                           &quot;5000001&quot;, &quot;99999999999999999999&quot;, &quot;600000.0&quot;,
+                           &quot;６０００００&quot;, &quot;&quot;, &quot;600 000&quot;)
+        )
+        with mock.patch.object(hashlib, &quot;pbkdf2_hmac&quot;) as derive:
+            for record in malformed:
+                with self.subTest(record=record[:140]):
+                    self.assertFalse(verify(&quot;password&quot;, record))
+            derive.assert_not_called()
+
+    def test_modified_salt_or_key(self):
+        parts = self.FIXTURE.split(&quot;$&quot;)
+        for index in (3, 4):
+            altered = parts.copy()
+            first = &quot;0&quot; if parts[index][0] != &quot;0&quot; else &quot;1&quot;
+            altered[index] = first + parts[index][1:]
+            with self.subTest(field=index):
+                self.assertFalse(verify(&quot;password&quot;, &quot;$&quot;.join(altered)))
+
+    def test_verification_compares_fixed_size_bytes(self):
+        with mock.patch.object(hmac, &quot;compare_digest&quot;,
+                               wraps=hmac.compare_digest) as compare:
+            self.assertTrue(verify(&quot;password&quot;, self.FIXTURE))
+        compare.assert_called_once()
+        actual, expected = compare.call_args.args
+        self.assertIsInstance(actual, bytes)
+        self.assertIsInstance(expected, bytes)
+        self.assertEqual((len(actual), len(expected)), (32, 32))
+
+    def test_runtime_failures_propagate(self):
+        with mock.patch.object(secrets, &quot;token_bytes&quot;,
+                               side_effect=OSError(&quot;RNG failed&quot;)):
+            with self.assertRaises(OSError):
+                hash_password(&quot;password&quot;)
+        with mock.patch.object(hashlib, &quot;pbkdf2_hmac&quot;,
+                               side_effect=RuntimeError(&quot;KDF failed&quot;)):
+            with self.assertRaises(RuntimeError):
+                verify(&quot;password&quot;, self.FIXTURE)
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre>
+</section>
+<section aria-labelledby="validation-title">
+<h2 id="validation-title">Validation</h2>
+<p><strong>24 tests passed.</strong> Executed the exact Python source extracted from this HTML on Python 3.14.7; completed in 2.373 seconds.</p>
+<p class="muted">Coverage includes the independently cross-checked PBKDF2 fixture, fresh salts, correct and incorrect passwords, Unicode, embedded NULs, empty inputs, byte limits, work factors, tampering, malformed records, and error propagation.</p>
+<details><summary>View captured test output</summary><pre tabindex="0" id="test-output">test_equal_strings (__main__.ComparisonTests.test_equal_strings) ... ok
+test_invalid_types (__main__.ComparisonTests.test_invalid_types) ... ok
+test_invalid_unicode (__main__.ComparisonTests.test_invalid_unicode) ... ok
+test_mismatches_and_lengths (__main__.ComparisonTests.test_mismatches_and_lengths) ... ok
+test_no_unicode_normalization (__main__.ComparisonTests.test_no_unicode_normalization) ... ok
+test_secure_comparison_primitive (__main__.ComparisonTests.test_secure_comparison_primitive) ... ok
+test_embedded_nul (__main__.PasswordTests.test_embedded_nul) ... ok
+test_empty_password (__main__.PasswordTests.test_empty_password) ... ok
+test_format (__main__.PasswordTests.test_format) ... ok
+test_fresh_secure_randomness_per_call (__main__.PasswordTests.test_fresh_secure_randomness_per_call) ... ok
+test_invalid_argument_types (__main__.PasswordTests.test_invalid_argument_types) ... ok
+test_invalid_iterations (__main__.PasswordTests.test_invalid_iterations) ... ok
+test_invalid_password_values_skip_derivation (__main__.PasswordTests.test_invalid_password_values_skip_derivation) ... ok
+test_known_answer (__main__.PasswordTests.test_known_answer) ... ok
+test_malformed_records_skip_derivation (__main__.PasswordTests.test_malformed_records_skip_derivation) ... ok
+test_maximum_password_length (__main__.PasswordTests.test_maximum_password_length) ... ok
+test_maximum_work_factor (__main__.PasswordTests.test_maximum_work_factor) ... ok
+test_modified_salt_or_key (__main__.PasswordTests.test_modified_salt_or_key) ... ok
+test_random_salts (__main__.PasswordTests.test_random_salts) ... ok
+test_round_trip_and_wrong_password (__main__.PasswordTests.test_round_trip_and_wrong_password) ... ok
+test_runtime_failures_propagate (__main__.PasswordTests.test_runtime_failures_propagate) ... ok
+test_stored_work_factor (__main__.PasswordTests.test_stored_work_factor) ... ok
+test_unicode_password (__main__.PasswordTests.test_unicode_password) ... ok
+test_verification_compares_fixed_size_bytes (__main__.PasswordTests.test_verification_compares_fixed_size_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 2.373s
+
+OK
+</pre></details>
+</section>
+<footer>This file contains the full source, tests, styling, and download. Reference links are optional; no external assets or runtime dependencies are loaded.</footer>
+</main>
+<script>
+const copyButton = document.getElementById('copy');
+copyButton.addEventListener('click', async () => {
+  const source = document.getElementById('python-source');
+  const status = document.getElementById('copy-status');
+  try {
+    await navigator.clipboard.writeText(source.textContent);
+    status.textContent = 'Python source and tests copied.';
+  } catch (error) {
+    const range = document.createRange();
+    range.selectNodeContents(source);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    status.textContent = 'Source selected. Press Ctrl+C or Command+C to copy.';
+  }
+});
+</script>
+</body>
+</html>

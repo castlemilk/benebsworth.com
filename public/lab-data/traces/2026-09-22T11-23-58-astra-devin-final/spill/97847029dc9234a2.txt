@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pendulum Wave</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui;overflow:hidden}
+canvas{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+#hud{position:fixed;top:12px;left:12px;z-index:2;max-width:248px;padding:12px 14px;background:rgba(16,16,24,.72);border:1px solid rgba(255,255,255,.09);border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:12px;line-height:1.35}
+#hud h1{margin:0 0 2px;font-size:14px;font-weight:650;letter-spacing:.02em}
+#hud .cap{margin:0 0 10px;font-size:10.5px;color:#9a9aa6}
+.row{margin:8px 0}
+.row label{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;color:#c9c9d2;margin-bottom:3px}
+.row label span{color:#7dd3fc;font-variant-numeric:tabular-nums;white-space:nowrap;margin-left:8px}
+input[type=range]{width:100%;margin:0;accent-color:#7dd3fc;cursor:pointer}
+.btns{display:flex;gap:8px;align-items:center;margin-top:10px}
+button{background:rgba(125,211,252,.12);color:#bde6fd;border:1px solid rgba(125,211,252,.35);border-radius:7px;padding:4px 10px;font-size:11.5px;font-family:inherit;cursor:pointer}
+button:hover{background:rgba(125,211,252,.22)}
+.chk{display:flex;align-items:center;gap:4px;font-size:11.5px;color:#c9c9d2;cursor:pointer;margin-left:auto}
+.chk input{accent-color:#7dd3fc;cursor:pointer}
+#sync{margin-top:10px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+#syncbar{height:100%;width:0%;background:linear-gradient(90deg,#38bdf8,#e879f9);border-radius:2px}
+#syncTxt{margin-top:4px;font-size:10.5px;color:#9a9aa6;font-variant-numeric:tabular-nums}
+#err{position:fixed;top:12px;right:12px;z-index:3;max-width:60vw;padding:10px 14px;background:#3b1113;border:1px solid #e05656;border-radius:8px;color:#ffd7d7;font-size:12px;white-space:pre-wrap}
+@media (max-width:520px){#hud{max-width:200px;padding:10px 12px;font-size:11px}#hud h1{font-size:13px}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <h1>Pendulum Wave</h1>
+  <p class="cap">Each pendulum completes one extra swing per 30&nbsp;s cycle than its longer neighbor.</p>
+  <div class="row">
+    <label>Pendulums <span id="nVal">24</span></label>
+    <input id="n" type="range" min="5" max="60" step="1" value="24">
+  </div>
+  <div class="row">
+    <label>Gravity <span id="gVal">9.81 m/s² · Earth</span></label>
+    <input id="g" type="range" min="1.6" max="25" step="0.01" value="9.81">
+  </div>
+  <div class="btns">
+    <button id="pause">Pause</button>
+    <button id="reset">Reset</button>
+    <label class="chk"><input id="trails" type="checkbox" checked> trails</label>
+  </div>
+  <div id="sync"><div id="syncbar"></div></div>
+  <div id="syncTxt">resync in 30.0 s</div>
+</div>
+<div role="alert" id="err" hidden></div>
+<script>
+try{
+const TAU=Math.PI*2, G0=9.81, T=30, K=27, AMP=0.36;
+const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);
+let W=0,H=0,dpr=1,pivotY=0,lenMax=0,mx=36;
+let N=24,g=G0,tEff=0,paused=false,trails=true,rafId=0,last=-1;
+let om=[],px=[],dl=[],hue=[],spacing=40;
+
+function build(){
+  om=[];hue=[];
+  for(let i=0;i<N;i++){
+    om.push(TAU*(K+i)/T);           // pendulum i does K+i swings per cycle T at 1 g
+    hue.push(190+150*(N>1?i/(N-1):0));
+  }
+  layout();
+}
+function layout(){
+  pivotY=Math.max(54,H*0.10);
+  lenMax=Math.max(80,H-pivotY-Math.max(30,H*0.08));
+  mx=Math.max(36,W*0.07);
+  spacing=N>1?(W-2*mx)/(N-1):W;
+  px=[];dl=[];
+  const L=om.map(w=>G0/(w*w));      // true length in metres: L = g/w^2
+  const lmin=Math.min.apply(null,L),lmax=Math.max.apply(null,L);
+  for(let i=0;i<N;i++){
+    px.push(N>1?mx+i*spacing:W/2);
+    const u=lmax>lmin?(L[i]-lmin)/(lmax-lmin):1;
+    dl.push(lenMax*(0.80+0.20*u));  // compressed length fan for display
+  }
+}
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth;H=window.innerHeight;
+  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  layout();
+  render();
+}
+function render(){
+  ctx.fillStyle=trails?'rgba(11,11,16,0.16)':'#0b0b10';
+  ctx.fillRect(0,0,W,H);
+  // support bar
+  ctx.strokeStyle='rgba(236,236,240,0.16)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(px[0]-22,pivotY);ctx.lineTo(px[N-1]+22,pivotY);ctx.stroke();
+  // bob positions
+  const pts=new Array(N);
+  for(let i=0;i<N;i++){
+    const th=AMP*Math.cos(om[i]*tEff);
+    pts[i]=[px[i]+dl[i]*Math.sin(th),pivotY+dl[i]*Math.cos(th)];
+  }
+  // strings
+  ctx.strokeStyle='rgba(236,236,240,0.18)';ctx.lineWidth=1;
+  ctx.beginPath();
+  for(let i=0;i<N;i++){ctx.moveTo(px[i],pivotY);ctx.lineTo(pts[i][0],pts[i][1]);}
+  ctx.stroke();
+  // emergent wave polyline through bob centres
+  ctx.strokeStyle='rgba(255,255,255,0.35)';ctx.lineWidth=1.4;
+  ctx.beginPath();
+  for(let i=0;i<N;i++){i?ctx.lineTo(pts[i][0],pts[i][1]):ctx.moveTo(pts[i][0],pts[i][1]);}
+  ctx.stroke();
+  // pivots
+  ctx.fillStyle='rgba(236,236,240,0.45)';
+  ctx.beginPath();
+  for(let i=0;i<N;i++){ctx.moveTo(px[i]+2,pivotY);ctx.arc(px[i],pivotY,2,0,TAU);}
+  ctx.fill();
+  // bobs (glow + core)
+  const r=Math.max(3,Math.min(11,spacing*0.34));
+  for(let i=0;i<N;i++){
+    const x=pts[i][0],y=pts[i][1],h=hue[i];
+    ctx.fillStyle='hsla('+h+',90%,65%,0.22)';
+    ctx.beginPath();ctx.arc(x,y,r*2.3,0,TAU);ctx.fill();
+    ctx.fillStyle='hsl('+h+',90%,68%)';
+    ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();
+  }
+}
+function frame(ts){
+  rafId=requestAnimationFrame(frame);
+  if(last<0)last=ts;
+  const dt=Math.min(0.05,(ts-last)/1000);last=ts;
+  const s=Math.sqrt(g/G0);          // w_i scales by sqrt(g): same rig, different planet
+  if(!paused)tEff+=s*dt;
+  render();
+  const p=(tEff%T)/T;
+  $('syncbar').style.width=(p*100).toFixed(1)+'%';
+  $('syncTxt').textContent='resync in '+(((1-p)*T)/s).toFixed(1)+' s';
+}
+function planet(v){
+  if(v<2)return'Moon';if(v<4.5)return'Mars';if(v<11)return'Earth';
+  if(v<17)return'Super-Earth';return'Jupiter';
+}
+$('n').addEventListener('input',e=>{N=+e.target.value;$('nVal').textContent=N;build();render();});
+$('g').addEventListener('input',e=>{g=+e.target.value;$('gVal').textContent=g.toFixed(2)+' m/s² · '+planet(g);});
+$('pause').addEventListener('click',e=>{paused=!paused;e.target.textContent=paused?'Resume':'Pause';});
+$('reset').addEventListener('click',()=>{tEff=0;});
+$('trails').addEventListener('change',e=>{trails=e.target.checked;});
+window.addEventListener('resize',resize);
+window.addEventListener('unload',()=>cancelAnimationFrame(rafId));
+build();
+resize();
+rafId=requestAnimationFrame(frame);
+}catch(e){
+  const d=document.getElementById('err');
+  d.hidden=false;
+  d.textContent='Error: '+(e&&e.message?e.message:e);
+}
+</script>
+</body>
+</html>

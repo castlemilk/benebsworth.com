@@ -1,0 +1,489 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Voxel Lighthouse</title><style>
+html,body{margin:0;padding:0;min-height:100%;height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui;overflow:hidden}
+#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#scene.dragging{cursor:grabbing}
+#hud{position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 12px;pointer-events:none}
+#title h1{font-size:15px;margin:0;letter-spacing:.4px;font-weight:650;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+#title p{margin:2px 0 0;font-size:11px;opacity:.65;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+#controls{display:flex;gap:8px;pointer-events:auto;flex-shrink:0}
+button{background:rgba(18,24,38,.72);color:#ececf0;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:7px 14px;font-size:12px;font-family:inherit;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+button:hover{background:rgba(42,54,82,.85)}
+button:focus-visible{outline:2px solid #ffd97a;outline-offset:2px}
+#err{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);background:#3a1420;border:1px solid #a33;color:#ffd7d7;padding:14px 18px;border-radius:8px;font-size:13px;max-width:82%;display:none;z-index:10;white-space:pre-wrap}
+@media (max-width:480px){#title p{display:none}button{padding:6px 11px;font-size:11px}}
+</style></head><body>
+<canvas id="scene"></canvas>
+<div id="hud">
+  <div id="title"><h1>Voxel Lighthouse</h1><p>drag to orbit &middot; scroll / pinch to zoom</p></div>
+  <div id="controls">
+    <button id="toggle-rotation" aria-pressed="true">Pause</button>
+    <button id="reset-view">Reset view</button>
+  </div>
+</div>
+<div id="err" role="alert"></div>
+<script>
+try{(function(){
+'use strict';
+var canvas=document.getElementById('scene');
+var ctx=canvas.getContext('2d');
+var W=0,H=0,DPR=1,FOCAL=600;
+function resize(){
+  W=window.innerWidth;H=window.innerHeight;
+  DPR=Math.min(2,window.devicePixelRatio||1);
+  canvas.width=Math.max(1,Math.round(W*DPR));
+  canvas.height=Math.max(1,Math.round(H*DPR));
+  FOCAL=Math.min(W,H)*1.12;
+}
+window.addEventListener('resize',resize);resize();
+
+function rnd(i){i=Math.imul(i|0,0x9E3779B1);i^=i>>>15;i=Math.imul(i,0x85EBCA6B);i^=i>>>13;i=Math.imul(i,0xC2B2AE35);i^=i>>>16;return(i>>>0)/4294967296;}
+function norm3(x,y,z){var l=Math.hypot(x,y,z)||1;return[x/l,y/l,z/l];}
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+
+// unit cube: 8 verts, 6 faces (4 vert idx each), outward normals
+var CV=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+var CF=[[1,5,6,2],[4,0,3,7],[3,2,6,7],[4,5,1,0],[5,4,7,6],[0,1,2,3]];
+var CN=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+
+// ---------- scene ----------
+var S=[]; // static boxes {x,y,z,sx,sy,sz,c,ct,cb,a,e,ry}
+function B(x,y,z,sx,sy,sz,c,o){o=o||{};S.push({x:x,y:y,z:z,sx:sx,sy:sy,sz:sz,c:c,ct:o.ct,cb:o.cb,a:o.a==null?1:o.a,e:o.e||0,ry:o.ry||0});}
+
+var IR=7.3;
+// rocky island with dirt/grass caps
+for(var gx=-9;gx<=9;gx++)for(var gz=-9;gz<=9;gz++){
+  var rr=Math.sqrt(gx*gx+gz*gz)+(rnd(gx*57+gz*911+3)-0.5)*0.9;
+  if(rr<IR){
+    var hh=rr<4.2?3:rr<6.1?2:1;
+    for(var gy=0;gy<hh;gy++){
+      var j1=rnd(gx*31+gz*17+gy*7),j2=rnd(gx*13+gz*71+gy*3+9),j3=rnd(gx*7+gz*5+gy*11+4);
+      var col=[88+j1*38,80+j2*32,72+j3*28];
+      if(gy===hh-1){
+        var g4=rnd(gx*3+gz*5+21),g5=rnd(gx*11+gz*3+8),g6=rnd(gx*13+gz*7+15);
+        B(gx,gy+0.5,gz,1,1,1,[110+g4*20,82+g5*16,54+g6*12],{ct:[88+g4*34,168+g5*30,66+g6*24]});
+      }else{
+        B(gx,gy+0.5,gz,1,1,1,col);
+      }
+    }
+  }
+}
+// half-submerged shoreline rocks
+for(var ri=0;ri<16;ri++){
+  var ra=ri/16*Math.PI*2+rnd(ri*7)*0.4, rd=8.0+rnd(ri*13)*1.1;
+  var rx=Math.cos(ra)*rd, rz=Math.sin(ra)*rd;
+  var rs=0.5+rnd(ri*29)*0.9;
+  B(rx,0.15+rnd(ri*3)*0.3,rz,rs,rs*0.9,rs,[82+rnd(ri)*30,74+rnd(ri*5)*26,68+rnd(ri*9)*22]);
+}
+// small rock islet
+B(11.5,0.4,-4.5,2.6,1.6,2.2,[86,78,72]);
+B(11.5,1.4,-4.5,1.7,0.9,1.5,[110,84,56],{ct:[96,166,70]});
+B(10.6,0.9,-3.6,0.9,0.8,0.8,[92,84,76]);
+
+// ---------- lighthouse ----------
+var LX=-1.8,LZ=-1.0,TY=3;
+var RED=[198,50,44],WHITE=[234,230,222],DARK=[42,46,56];
+B(LX,TY+0.35,LZ,4.7,0.7,4.7,[118,114,108]);
+B(LX,TY+0.82,LZ,4.0,0.28,4.0,[100,96,90]);
+var LV=11;
+for(var i=0;i<LV;i++){
+  var sz=3.15-i*0.105;
+  var band=(Math.floor(i/2)%2)?RED:WHITE;
+  var tj=rnd(i*37)*14-7;
+  B(LX,TY+1.1+i+0.5,LZ,sz,1,sz,[band[0]+tj,band[1]+tj*0.7,band[2]+tj*0.7]);
+}
+// door + step on +z face
+B(LX,TY+1.85,LZ+1.56,1.15,1.9,0.16,[96,60,38]);
+B(LX,TY+1.85,LZ+1.65,0.9,1.55,0.1,[70,44,28]);
+B(LX,TY+0.98,LZ+1.9,1.5,0.18,0.9,[128,124,118]);
+// lit windows on tower
+var winLv=[[3,1],[6,3],[9,1]];
+for(var wi=0;wi<winLv.length;wi++){
+  var li=winLv[wi][0],face=winLv[wi][1];
+  var wsz=3.15-li*0.105;
+  var wy=TY+1.1+li+0.6;
+  if(face===1)B(LX+wsz/2+0.03,wy,LZ,0.14,0.62,0.5,[255,214,120],{e:0.9});
+  else B(LX,wy,LZ-wsz/2-0.03,0.5,0.62,0.14,[255,214,120],{e:0.9});
+}
+// balcony platform ring
+var BY=TY+1.1+LV+0.14; // ~14.9
+B(LX,BY,LZ+1.62,4.1,0.28,0.85,DARK);
+B(LX,BY,LZ-1.62,4.1,0.28,0.85,DARK);
+B(LX+1.62,BY,LZ,0.85,0.28,2.4,DARK);
+B(LX-1.62,BY,LZ,0.85,0.28,2.4,DARK);
+// railing posts + rails
+var posts=[[-1.95,-1.95],[0,-1.95],[1.95,-1.95],[-1.95,1.95],[0,1.95],[1.95,1.95],[-1.95,0],[1.95,0]];
+for(var pi=0;pi<posts.length;pi++)B(LX+posts[pi][0],BY+0.55,LZ+posts[pi][1],0.13,0.85,0.13,[60,64,74]);
+B(LX,BY+0.95,LZ+1.95,4.0,0.1,0.1,[60,64,74]);
+B(LX,BY+0.95,LZ-1.95,4.0,0.1,0.1,[60,64,74]);
+B(LX+1.95,BY+0.95,LZ,0.1,0.1,4.0,[60,64,74]);
+B(LX-1.95,BY+0.95,LZ,0.1,0.1,4.0,[60,64,74]);
+B(LX,BY+0.5,LZ+1.95,4.0,0.08,0.08,[60,64,74]);
+B(LX,BY+0.5,LZ-1.95,4.0,0.08,0.08,[60,64,74]);
+B(LX+1.95,BY+0.5,LZ,0.08,0.08,4.0,[60,64,74]);
+B(LX-1.95,BY+0.5,LZ,0.08,0.08,4.0,[60,64,74]);
+// lantern room
+var GY=BY+0.14; // floor top ~15.04
+B(LX,GY+0.1,LZ,2.6,0.22,2.6,DARK);
+var LCY=GY+0.95; // glass/lamp center ~16.0
+B(LX,LCY,LZ,1.8,1.5,1.8,[255,206,110],{a:0.45,e:0.55});
+var cp2=[[-0.98,-0.98],[0.98,-0.98],[-0.98,0.98],[0.98,0.98]];
+for(var ci=0;ci<4;ci++)B(LX+cp2[ci][0],LCY,LZ+cp2[ci][1],0.2,1.7,0.2,DARK);
+B(LX,LCY,LZ,0.55,0.55,0.55,[255,244,180],{e:1.5,a:0.95});
+// roof
+var ROOF=[158,44,38];
+B(LX,LCY+0.9,LZ,2.5,0.22,2.5,ROOF);
+B(LX,LCY+1.14,LZ,1.7,0.28,1.7,ROOF);
+B(LX,LCY+1.4,LZ,1.0,0.28,1.0,ROOF);
+B(LX,LCY+1.72,LZ,0.22,0.5,0.22,DARK);
+B(LX+0.45,LCY+1.85,LZ,0.7,0.3,0.06,[220,60,50]); // pennant
+
+// ---------- keeper's cottage ----------
+var CX=3.4,CZ=2.2;
+B(CX,3.95,CZ,3.6,1.9,3.0,[224,216,200]);
+B(CX,5.12,CZ,4.4,0.45,4.0,[140,58,48]);
+B(CX,5.55,CZ,4.4,0.45,2.8,[150,62,50]);
+B(CX,5.97,CZ,4.4,0.42,1.5,[160,66,54]);
+B(CX+1.2,5.9,CZ-0.9,0.55,1.7,0.55,[104,96,90]);
+B(CX+1.2,6.82,CZ-0.9,0.78,0.18,0.78,[86,80,74]);
+B(CX-1.81,3.62,CZ+0.6,0.14,1.35,0.8,[96,60,38]); // door -x face
+B(CX-1.81,3.95,CZ-0.6,0.14,0.6,0.6,[255,214,120],{e:0.85});
+B(CX-0.9,3.95,CZ+1.52,0.6,0.6,0.14,[255,214,120],{e:0.85});
+B(CX+0.7,3.95,CZ+1.52,0.6,0.6,0.14,[255,214,120],{e:0.85});
+B(CX+1.81,3.95,CZ,0.14,0.6,0.6,[40,44,52]); // dark shuttered window +x
+
+// path + steps
+var path=[[-1.8,1.8],[-1.6,2.8],[-0.8,3.2],[0.4,3.1],[1.2,2.7],[1.55,2.2]];
+for(var qi=0;qi<path.length;qi++)B(path[qi][0],3.06,path[qi][1],0.9,0.1,0.9,[150,146,138]);
+B(2.3,2.76,3.4,1,0.5,1,[140,136,128]);
+B(2.3,2.26,4.4,1,0.5,1,[140,136,128]);
+B(2.3,1.76,5.6,1,0.5,1,[140,136,128]);
+B(2.3,1.06,6.3,0.9,0.12,0.9,[150,146,138]);
+
+// ---------- dock ----------
+var DK=2.3;
+for(var dz=6.5;dz<=10.5;dz+=1){
+  B(DK-0.55,1.15,dz,1.05,0.18,0.95,[140+rnd(dz*3)*24,102+rnd(dz*7)*18,64+rnd(dz*11)*14]);
+  B(DK+0.55,1.15,dz,1.05,0.18,0.95,[136+rnd(dz*5)*24,98+rnd(dz*9)*18,62+rnd(dz*13)*14]);
+}
+var dps=[[DK-0.95,6.6],[DK+0.95,6.6],[DK-0.95,10.4],[DK+0.95,10.4],[DK+0.95,8.5]];
+for(var di=0;di<dps.length;di++)B(dps[di][0],0.5,dps[di][1],0.28,2.3,0.28,[104,76,48]);
+// dock lamp
+B(DK-0.95,2.1,10.4,0.14,1.6,0.14,[60,54,48]);
+B(DK-0.95,3.0,10.4,0.3,0.3,0.3,[255,214,120],{e:1.0});
+B(DK-0.95,3.22,10.4,0.42,0.12,0.42,[60,54,48]);
+// crates + barrel
+B(0.4,3.42,1.8,0.82,0.82,0.82,[160,120,70]);
+B(0.4,3.42+0.82,1.8,0.6,0.6,0.6,[172,132,78]);
+B(1.35,3.36,1.15,0.7,0.7,0.7,[150,112,66]);
+B(DK+0.55,1.6,10.2,0.7,0.7,0.7,[160,120,70]);
+B(DK-0.5,1.56,9.0,0.62,0.62,0.62,[120,84,50]);
+
+// ---------- trees ----------
+function tree(x,z,groundY,s){
+  B(x,groundY+1.0*s,z,0.5*s,2.0*s,0.5*s,[108,76,48]);
+  B(x,groundY+2.3*s,z,2.3*s,1.4*s,2.3*s,[56+rnd(x*3)*20,138+rnd(z*5)*26,62]);
+  B(x,groundY+3.2*s,z,1.6*s,1.0*s,1.6*s,[66+rnd(x*7)*20,152+rnd(z*3)*26,70]);
+  B(x,groundY+3.9*s,z,0.9*s,0.7*s,0.9*s,[80,168,78]);
+}
+tree(-4.6,2.6,2,1.0);
+tree(3.0,-4.3,2,0.85);
+tree(-3.0,4.8,2,0.7);
+tree(11.5,-4.5,1.85,0.5); // tiny islet sapling
+
+// flowers + grass tufts on green tops
+for(var fi=0;fi<70;fi++){
+  var fx=(rnd(fi*17+5)-0.5)*15, fz=(rnd(fi*23+11)-0.5)*15;
+  var fr=Math.sqrt(fx*fx+fz*fz);
+  if(fr>6.0||fr<4.4)continue;
+  var fh=2.0;
+  if(rnd(fi*31)<0.25)continue;
+  var fc=[[226,80,90],[244,206,66],[236,236,240],[196,120,220]][fi%4];
+  B(fx,fh+0.14,fz,0.08,0.28,0.08,[60,140,60]);
+  B(fx,fh+0.34,fz,0.22,0.14,0.22,fc);
+}
+for(var ti2=0;ti2<40;ti2++){
+  var tx=(rnd(ti2*41+7)-0.5)*15,tz=(rnd(ti2*43+13)-0.5)*15;
+  var tr=Math.sqrt(tx*tx+tz*tz);
+  if(tr>6.0||tr<4.3)continue;
+  B(tx,2.14,tz,0.16,0.28,0.16,[70+rnd(ti2)*30,150+rnd(ti2*3)*30,64]);
+}
+// plateau grass tufts
+for(var ti3=0;ti3<18;ti3++){
+  var px2=(rnd(ti3*47+3)-0.5)*7,pz2=(rnd(ti3*53+19)-0.5)*7;
+  if(Math.hypot(px2,pz2)>3.9||Math.hypot(px2-LX,pz2-LZ)<2.4||Math.hypot(px2-CX,pz2-CZ)<2.4)continue;
+  B(px2,3.14,pz2,0.16,0.26,0.16,[76,156,68]);
+}
+
+// ocean floor plane (horizon water)
+B(0,-0.62,0,700,0.5,700,[14,34,60]);
+
+// ---------- dynamic templates ----------
+var tiles=[];
+for(var wx=-10;wx<=10;wx++)for(var wz=-10;wz<=10;wz++){
+  var tx2=wx*1.85,tz2=wz*1.85,trr=Math.hypot(tx2,tz2);
+  if(trr<6.9||trr>19.6)continue;
+  tiles.push({x:tx2,z:tz2,ph:rnd(wx*91+wz*37)});
+}
+var foamRing=[];
+for(var fo=0;fo<26;fo++){
+  var fa=fo/26*Math.PI*2;
+  if(Math.abs(((fa-1.32+Math.PI)%(Math.PI*2))-Math.PI)<0.3)continue; // gap at dock
+  foamRing.push({x:Math.cos(fa)*8.35,z:Math.sin(fa)*8.35,ph:fo*0.7});
+}
+var clouds=[];
+for(var cl=0;cl<5;cl++){
+  var bx=(rnd(cl*61)-0.5)*44,by=19+rnd(cl*67)*5,bz=(rnd(cl*71)-0.5)*36;
+  var parts=[];
+  var np=4+Math.floor(rnd(cl*79)*4);
+  for(var cp3=0;cp3<np;cp3++)
+    parts.push([ (rnd(cl*100+cp3*3)-0.5)*5, (rnd(cl*110+cp3*7)-0.5)*1.4, (rnd(cl*120+cp3*11)-0.5)*3,
+                 1.4+rnd(cl*130+cp3)*2.2, 0.9+rnd(cl*140+cp3)*0.7, 1.2+rnd(cl*150+cp3)*1.6 ]);
+  clouds.push({x:bx,y:by,z:bz,sp:0.5+rnd(cl*17)*0.5,parts:parts});
+}
+var stars=[];
+for(var st=0;st<110;st++)stars.push([rnd(st*3+1),rnd(st*5+2)*0.62,0.35+0.55*rnd(st*7+3)]);
+
+// ---------- camera / interaction ----------
+var INIT={yaw:-0.55,pitch:0.40,dist:40};
+var yaw=INIT.yaw,pitch=INIT.pitch,dist=INIT.dist;
+var TX=0,TYC=6.6,TZ=0;
+var running=true,T=0;
+var toggleBtn=document.getElementById('toggle-rotation');
+function setRunning(v){running=v;toggleBtn.setAttribute('aria-pressed',v?'true':'false');toggleBtn.textContent=v?'Pause':'Resume';}
+toggleBtn.addEventListener('click',function(){setRunning(!running);});
+document.getElementById('reset-view').addEventListener('click',function(){
+  yaw=INIT.yaw;pitch=INIT.pitch;dist=INIT.dist;T=0;setRunning(false);
+});
+document.addEventListener('keydown',function(e){
+  if(e.code==='Space'&&e.target===document.body){e.preventDefault();setRunning(!running);}
+});
+var pointers=new Map(),lastPinch=0;
+canvas.addEventListener('pointerdown',function(e){
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId,[e.clientX,e.clientY]);
+  canvas.classList.add('dragging');
+});
+canvas.addEventListener('pointermove',function(e){
+  if(!pointers.has(e.pointerId))return;
+  var prev=pointers.get(e.pointerId);
+  pointers.set(e.pointerId,[e.clientX,e.clientY]);
+  if(pointers.size===1){
+    yaw-=(e.clientX-prev[0])*0.006;
+    pitch=clamp(pitch+(e.clientY-prev[1])*0.006,0.06,1.35);
+  }else if(pointers.size===2){
+    var it=pointers.values();var a=it.next().value,b=it.next().value;
+    var d=Math.hypot(a[0]-b[0],a[1]-b[1]);
+    if(lastPinch>0)dist=clamp(dist*lastPinch/d,16,85);
+    lastPinch=d;
+  }
+});
+function ptrUp(e){pointers.delete(e.pointerId);lastPinch=0;if(!pointers.size)canvas.classList.remove('dragging');}
+canvas.addEventListener('pointerup',ptrUp);
+canvas.addEventListener('pointercancel',ptrUp);
+canvas.addEventListener('wheel',function(e){e.preventDefault();dist=clamp(dist*Math.exp(e.deltaY*0.0011),16,85);},{passive:false});
+canvas.addEventListener('contextmenu',function(e){e.preventDefault();});
+
+// ---------- render ----------
+var L=norm3(-0.55,0.62,0.4);       // key light dir
+var SUNV=norm3(-0.62,0.16,0.45);   // visual sun position dir
+var AMB=0.40,DIF=0.78;
+var faces=[];
+var wvx=new Float64Array(8),wvy=new Float64Array(8),wvz=new Float64Array(8);
+var cvx=new Float64Array(8),cvy=new Float64Array(8),cvz=new Float64Array(8);
+var CAM=[0,0,0],RT=[1,0,0],UP=[0,1,0],FW=[0,0,1];
+
+function emitBox(b){
+  var hx=b.sx*0.5,hy=b.sy*0.5,hz=b.sz*0.5;
+  var ca=1,sa=0;
+  if(b.ry){ca=Math.cos(b.ry);sa=Math.sin(b.ry);}
+  for(var i=0;i<8;i++){
+    var v=CV[i];
+    var lx=v[0]*hx,ly=v[1]*hy,lz=v[2]*hz;
+    var wx2=b.x+lx*ca+lz*sa,wy2=b.y+ly,wz2=b.z-lx*sa+lz*ca;
+    wvx[i]=wx2;wvy[i]=wy2;wvz[i]=wz2;
+    var rx2=wx2-CAM[0],ry2=wy2-CAM[1],rz2=wz2-CAM[2];
+    cvx[i]=rx2*RT[0]+ry2*RT[1]+rz2*RT[2];
+    cvy[i]=rx2*UP[0]+ry2*UP[1]+rz2*UP[2];
+    cvz[i]=rx2*FW[0]+ry2*FW[1]+rz2*FW[2];
+  }
+  for(var f=0;f<6;f++){
+    var n=CN[f];
+    var nx=n[0]*ca+n[2]*sa,ny=n[1],nz=-n[0]*sa+n[2]*ca;
+    var f0=CF[f][0];
+    if(nx*(CAM[0]-wvx[f0])+ny*(CAM[1]-wvy[f0])+nz*(CAM[2]-wvz[f0])<=0)continue;
+    var pts=[],depth=0,ok=true;
+    for(var k=0;k<4;k++){
+      var vi=CF[f][k];
+      if(cvz[vi]<0.35){ok=false;break;}
+      depth+=cvz[vi];
+      pts.push(W*0.5+FOCAL*cvx[vi]/cvz[vi],H*0.5-FOCAL*cvy[vi]/cvz[vi]);
+    }
+    if(!ok)continue;
+    var col=f===2?(b.ct||b.c):f===3?(b.cb||b.c):b.c;
+    var inten=AMB+DIF*Math.max(0,nx*L[0]+ny*L[1]+nz*L[2])+b.e;
+    if(inten>1.35)inten=1.35;
+    faces.push({d:depth*0.25,p:pts,r:col[0]*inten,g:col[1]*inten,b:col[2]*inten,a:b.a});
+  }
+}
+
+function projectDir(dx,dy,dz){
+  // project a point far along dir from camera (for sun/flare)
+  var px=CAM[0]+dx*400,py=CAM[1]+dy*400,pz=CAM[2]+dz*400;
+  var rx2=px-CAM[0],ry2=py-CAM[1],rz2=pz-CAM[2];
+  var cx2=rx2*RT[0]+ry2*RT[1]+rz2*RT[2];
+  var cy2=rx2*UP[0]+ry2*UP[1]+rz2*UP[2];
+  var cz2=rx2*FW[0]+ry2*FW[1]+rz2*FW[2];
+  if(cz2<1)return null;
+  return[W*0.5+FOCAL*cx2/cz2,H*0.5-FOCAL*cy2/cz2];
+}
+
+function render(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  // sky
+  var g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#070b1c');g.addColorStop(0.45,'#132341');g.addColorStop(0.72,'#2b4a68');g.addColorStop(1,'#0e2438');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // camera basis
+  var cp=Math.cos(pitch);
+  CAM=[TX+dist*cp*Math.sin(yaw),TYC+dist*Math.sin(pitch),TZ+dist*cp*Math.cos(yaw)];
+  FW=norm3(TX-CAM[0],TYC-CAM[1],TZ-CAM[2]);
+  var rl=Math.hypot(FW[2],FW[0])||1;
+  RT=[-FW[2]/rl,0,FW[0]/rl];
+  UP=[RT[1]*FW[2]-RT[2]*FW[1],RT[2]*FW[0]-RT[0]*FW[2],RT[0]*FW[1]-RT[1]*FW[0]];
+  // stars
+  ctx.fillStyle='#fff';
+  for(var si=0;si<stars.length;si++){
+    var s=stars[si];
+    ctx.globalAlpha=s[2]*(0.55+0.45*Math.sin(T*1.7+si));
+    ctx.fillRect(s[0]*W,s[1]*H,1.6,1.6);
+  }
+  ctx.globalAlpha=1;
+  // sun glow
+  var sp=projectDir(SUNV[0],SUNV[1],SUNV[2]);
+  if(sp){
+    var sg=ctx.createRadialGradient(sp[0],sp[1],0,sp[0],sp[1],H*0.5);
+    sg.addColorStop(0,'rgba(255,176,110,0.55)');sg.addColorStop(0.25,'rgba(255,150,90,0.22)');sg.addColorStop(1,'rgba(255,140,80,0)');
+    ctx.fillStyle=sg;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,214,160,0.9)';
+    ctx.beginPath();ctx.arc(sp[0],sp[1],Math.min(W,H)*0.035,0,7);ctx.fill();
+  }
+  // ---- dynamic boxes ----
+  var D=[];
+  // waves
+  for(var wi2=0;wi2<tiles.length;wi2++){
+    var t=tiles[wi2];
+    var wv=Math.sin(T*1.7+t.x*0.55+t.z*0.75+t.ph*3);
+    var li2=0.5+0.5*wv;
+    D.push({x:t.x,y:-0.05+wv*0.09,z:t.z,sx:1.95,sy:0.3,sz:1.95,
+      c:[20+li2*34+t.ph*10,58+li2*48,95+li2*55],a:0.9,e:0,ry:0});
+  }
+  // foam ring + islet foam
+  for(var fi2=0;fi2<foamRing.length;fi2++){
+    var fo2=foamRing[fi2];
+    D.push({x:fo2.x,y:0.32+Math.sin(T*2.2+fo2.ph)*0.06,z:fo2.z,sx:0.55,sy:0.12,sz:0.55,c:[232,242,246],a:0.72,e:0.15,ry:0});
+  }
+  for(var fi3=0;fi3<6;fi3++){
+    var fa3=fi3/6*Math.PI*2;
+    D.push({x:11.5+Math.cos(fa3)*2.1,y:0.3+Math.sin(T*2+fi3)*0.06,z:-4.5+Math.sin(fa3)*1.9,sx:0.5,sy:0.1,sz:0.5,c:[232,242,246],a:0.65,e:0.15,ry:0});
+  }
+  // boat
+  var bob=Math.sin(T*1.3)*0.08,bry=0.6+Math.sin(T*0.9)*0.04;
+  var BX=4.6,BZv=9.4,BYY=0.5+bob;
+  D.push({x:BX,y:BYY,z:BZv,sx:1.3,sy:0.3,sz:2.7,c:[146,92,52],a:1,e:0,ry:bry});
+  D.push({x:BX,y:BYY+0.32,z:BZv,sx:1.34,sy:0.4,sz:0.24,c:[120,74,42],a:1,e:0,ry:bry});
+  D.push({x:BX-0.56,y:BYY+0.32,z:BZv,sx:0.2,sy:0.4,sz:2.5,c:[126,80,46],a:1,e:0,ry:bry});
+  D.push({x:BX+0.56,y:BYY+0.32,z:BZv,sx:0.2,sy:0.4,sz:2.5,c:[126,80,46],a:1,e:0,ry:bry});
+  D.push({x:BX,y:BYY+0.32,z:BZv-1.2,sx:1.1,sy:0.42,sz:0.22,c:[132,84,48],a:1,e:0,ry:bry});
+  D.push({x:BX,y:BYY+0.32,z:BZv+1.2,sx:1.1,sy:0.42,sz:0.22,c:[132,84,48],a:1,e:0,ry:bry});
+  D.push({x:BX,y:BYY+0.42,z:BZv+0.2,sx:1.0,sy:0.1,sz:0.34,c:[160,110,66],a:1,e:0,ry:bry});
+  D.push({x:BX+0.2,y:BYY+0.5,z:BZv-0.4,sx:0.08,sy:0.08,sz:1.7,c:[170,130,84],a:1,e:0,ry:bry+0.5});
+  // buoy
+  var bb=Math.sin(T*1.5+2)*0.09;
+  D.push({x:-5.6,y:0.45+bb,z:7.6,sx:0.55,sy:0.5,sz:0.55,c:[200,60,50],a:1,e:0,ry:0});
+  D.push({x:-5.6,y:0.95+bb,z:7.6,sx:0.4,sy:0.35,sz:0.4,c:[236,232,226],a:1,e:0,ry:0});
+  D.push({x:-5.6,y:1.3+bb,z:7.6,sx:0.16,sy:0.3,sz:0.16,c:[255,214,120],a:1,e:0.9,ry:0});
+  // revolving light beam
+  var beamA=T*0.9;
+  D.push({x:LX,y:LCY,z:LZ,sx:16,sy:0.85,sz:1.5,c:[255,226,140],a:0.15,e:0.9,ry:beamA});
+  D.push({x:LX,y:LCY,z:LZ,sx:13,sy:0.42,sz:0.7,c:[255,240,175],a:0.3,e:1.0,ry:beamA});
+  D.push({x:LX,y:LCY,z:LZ,sx:0.8,sy:0.8,sz:0.8,c:[255,246,190],a:0.85,e:1.6,ry:beamA});
+  // chimney smoke
+  for(var sm=0;sm<3;sm++){
+    var sy2=((T*0.45+sm*0.37)%1);
+    D.push({x:CX+1.2+sy2*0.6,y:7.0+sy2*2.2,z:CZ-0.9,sx:0.4+sy2*0.5,sy:0.35+sy2*0.4,sz:0.4+sy2*0.5,c:[200,204,212],a:0.4*(1-sy2),e:0.1,ry:0});
+  }
+  // birds
+  for(var bi=0;bi<4;bi++){
+    var ba=T*0.32+bi*1.9,brd=10.5+bi*1.1,balt=12.5+bi*1.3;
+    var bx2=Math.cos(ba)*brd,bz2=Math.sin(ba)*brd;
+    var flap=Math.sin(T*8+bi*2);
+    D.push({x:bx2,y:balt,z:bz2,sx:0.32,sy:0.26,sz:0.62,c:[238,238,240],a:1,e:0.15,ry:-ba});
+    var hdx=-Math.sin(ba),hdz=Math.cos(ba); // heading dir
+    D.push({x:bx2+hdx*0.4,y:balt+0.08,z:bz2+hdz*0.4,sx:0.2,sy:0.2,sz:0.24,c:[70,74,82],a:1,e:0.1,ry:-ba});
+    var latx=Math.cos(ba),latz=Math.sin(ba); // lateral dir
+    var wsp=0.9+0.25*Math.cos(T*8+bi*2),woff=0.62;
+    D.push({x:bx2+latx*woff,y:balt+0.08+flap*0.26,z:bz2+latz*woff,sx:wsp,sy:0.07,sz:0.36,c:[200,204,210],a:1,e:0.1,ry:-ba});
+    D.push({x:bx2-latx*woff,y:balt+0.08+flap*0.26,z:bz2-latz*woff,sx:wsp,sy:0.07,sz:0.36,c:[200,204,210],a:1,e:0.1,ry:-ba});
+  }
+  // clouds
+  for(var cl2=0;cl2<clouds.length;cl2++){
+    var cl3=clouds[cl2];
+    var cxx=((cl3.x+T*cl3.sp+26)%52+52)%52-26;
+    for(var pp=0;pp<cl3.parts.length;pp++){
+      var pt=cl3.parts[pp];
+      D.push({x:cxx+pt[0],y:cl3.y+pt[1]+Math.sin(T*0.5+cl2)*0.2,z:cl3.z+pt[2],sx:pt[3],sy:pt[4],sz:pt[5],c:[232,237,245],a:0.82,e:0.25,ry:0});
+    }
+  }
+  // ---- emit + sort + draw ----
+  faces.length=0;
+  for(var ei=0;ei<S.length;ei++)emitBox(S[ei]);
+  for(var ei2=0;ei2<D.length;ei2++)emitBox(D[ei2]);
+  faces.sort(function(a,b){return b.d-a.d;});
+  ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(0,0,0,0.16)';
+  for(var fi4=0;fi4<faces.length;fi4++){
+    var fc2=faces[fi4],p=fc2.p;
+    ctx.globalAlpha=fc2.a;
+    ctx.fillStyle='rgb('+(fc2.r|0)+','+(fc2.g|0)+','+(fc2.b|0)+')';
+    ctx.beginPath();
+    ctx.moveTo(p[0],p[1]);ctx.lineTo(p[2],p[3]);ctx.lineTo(p[4],p[5]);ctx.lineTo(p[6],p[7]);
+    ctx.closePath();ctx.fill();
+    if(fc2.a>=0.99)ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+  // beam flare toward camera
+  var bdir=[Math.cos(beamA),0,-Math.sin(beamA)];
+  var al=Math.abs(bdir[0]*FW[0]+bdir[1]*FW[1]+bdir[2]*FW[2]);
+  var fl=Math.pow(al,8)*0.6;
+  var lrx=LX-CAM[0],lry=LCY-CAM[1],lrz=LZ-CAM[2];
+  var lcz=lrx*FW[0]+lry*FW[1]+lrz*FW[2];
+  if(lcz>1){
+    var lsx=W*0.5+FOCAL*(lrx*RT[0]+lry*RT[1]+lrz*RT[2])/lcz;
+    var lsy=H*0.5-FOCAL*(lrx*UP[0]+lry*UP[1]+lrz*UP[2])/lcz;
+    var gr=Math.min(W,H)*(0.06+fl*0.22);
+    var lg=ctx.createRadialGradient(lsx,lsy,0,lsx,lsy,gr);
+    lg.addColorStop(0,'rgba(255,240,180,'+(0.35+fl*0.5)+')');
+    lg.addColorStop(1,'rgba(255,220,140,0)');
+    ctx.fillStyle=lg;ctx.fillRect(lsx-gr,lsy-gr,gr*2,gr*2);
+  }
+  // vignette
+  var vg=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.45,W/2,H/2,Math.max(W,H)*0.75);
+  vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,0.32)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+}
+
+var last=performance.now(),raf=0;
+function frame(now){
+  raf=requestAnimationFrame(frame);
+  var dt=Math.min(0.05,(now-last)/1000);last=now;
+  if(running){T+=dt;yaw+=dt*0.22;}
+  render();
+}
+raf=requestAnimationFrame(frame);
+window.addEventListener('unload',function(){cancelAnimationFrame(raf);});
+})();}catch(err){
+  var el=document.getElementById('err');
+  el.textContent='Error: '+(err&&err.message?err.message:err);
+  el.style.display='block';
+}
+</script></body></html>

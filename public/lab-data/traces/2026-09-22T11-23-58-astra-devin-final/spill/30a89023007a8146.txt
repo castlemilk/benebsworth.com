@@ -1,0 +1,375 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Series RLC — Step Response</title><style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui;overflow:hidden}
+#cv{position:fixed;inset:0;width:100%;height:100%;display:block}
+#panel{position:fixed;top:10px;left:10px;width:268px;max-width:calc(100vw - 20px);background:rgba(17,18,25,.86);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:9px 12px 10px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:12px;z-index:2;box-shadow:0 6px 24px rgba(0,0,0,.45)}
+.phead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ttl{font-size:11px;letter-spacing:.14em;font-weight:700;color:#aeb4c6}
+#col{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#cfd3e0;border-radius:6px;width:20px;height:20px;line-height:1;cursor:pointer;font-size:13px;padding:0}
+#col:hover{background:rgba(255,255,255,.14)}
+#sch{display:block;width:100%;height:66px;margin:0 0 4px}
+.ctl{margin:5px 0}
+.lab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1px}
+.lab span:first-child{color:#8b91a5;font-weight:600}
+.val{color:#ececf0;font-variant-numeric:tabular-nums;font-weight:600}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#3b4257,#565f7d)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#5eead4;margin-top:-4.5px;border:2px solid #0c0c10;box-shadow:0 0 6px rgba(94,234,212,.55)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:#3b4257}
+input[type=range]::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:#5eead4;border:2px solid #0c0c10}
+.prow{display:flex;align-items:center;gap:5px;margin:8px 0 4px}
+.plab{color:#8b91a5;font-weight:600;margin-right:2px}
+.pz{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);color:#cfd3e0;border-radius:7px;font-size:11px;padding:3px 4px;cursor:pointer}
+.pz:hover{background:rgba(94,234,212,.14);border-color:rgba(94,234,212,.4);color:#5eead4}
+.trow{display:flex;gap:14px;margin:6px 0 4px}
+.tr{display:flex;align-items:center;gap:5px;cursor:pointer;color:#cfd3e0;user-select:none}
+.tr input{position:absolute;opacity:0;width:0;height:0}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);box-shadow:0 0 6px var(--c)}
+.tr input:not(:checked)+.sw{background:transparent;box-shadow:none;outline:1px solid rgba(255,255,255,.3);outline-offset:-1px}
+.tr input:not(:checked)~span{opacity:.45}
+#stats{margin-top:6px;padding-top:7px;border-top:1px solid rgba(255,255,255,.08);color:#9aa0b5;line-height:1.55;font-variant-numeric:tabular-nums}
+#stats b{color:#ececf0;font-weight:600}
+.reg{font-weight:700;padding:0 5px;border-radius:5px}
+.reg-u{color:#5eead4;background:rgba(94,234,212,.12)}
+.reg-c{color:#fbbf24;background:rgba(251,191,36,.12)}
+.reg-o{color:#a78bfa;background:rgba(167,139,250,.12)}
+#err{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9;background:#3a1520;border:1px solid #e05;border-radius:8px;color:#ffd7de;padding:8px 14px;font-size:13px;max-width:90vw}
+</style></head><body>
+<canvas id="cv"></canvas>
+<div id="panel">
+  <div class="phead"><span class="ttl">SERIES RLC &middot; STEP RESPONSE</span><button id="col" title="collapse panel">&ndash;</button></div>
+  <div id="pbody">
+    <canvas id="sch"></canvas>
+    <div class="ctl"><div class="lab"><span>R</span><span id="rv" class="val"></span></div><input id="r" type="range" min="0" max="1000"></div>
+    <div class="ctl"><div class="lab"><span>L</span><span id="lv" class="val"></span></div><input id="l" type="range" min="0" max="1000"></div>
+    <div class="ctl"><div class="lab"><span>C</span><span id="cvv" class="val"></span></div><input id="c" type="range" min="0" max="1000"></div>
+    <div class="ctl"><div class="lab"><span>V<sub>step</sub></span><span id="vv" class="val"></span></div><input id="v" type="range" min="0" max="1000"></div>
+    <div class="prow"><span class="plab">&zeta;</span><button class="pz" data-z="0.3">0.3</button><button class="pz" data-z="0.7">0.7</button><button class="pz" data-z="1">1.0 crit</button><button class="pz" data-z="3">3.0</button></div>
+    <div class="trow">
+      <label class="tr"><input type="checkbox" id="tv" checked><i class="sw" style="--c:#5eead4"></i><span>v<sub>C</sub>(t)</span></label>
+      <label class="tr"><input type="checkbox" id="ti" checked><i class="sw" style="--c:#fbbf24"></i><span>i(t)</span></label>
+    </div>
+    <div id="stats"></div>
+  </div>
+</div>
+<div role="alert" id="err" style="display:none"></div>
+<script>
+try{
+'use strict';
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+var sch=document.getElementById('sch'),sctx=sch.getContext('2d');
+var panel=document.getElementById('panel'),pbody=document.getElementById('pbody');
+var stats=document.getElementById('stats');
+var W=0,H=0,DPR=1;
+var plot={x:56,y:30,w:300,h:200};
+var S={R:100,L:10e-3,C:1e-6,V:5};
+var N=720;
+var vArr=new Float64Array(N),iArr=new Float64Array(N);
+var tmax=1,vmax=1,imax=1,fns=null,reveal=0,sweepT0=performance.now(),lastT=sweepT0;
+var raf=0;
+
+var PF={'-12':'p','-9':'n','-6':'µ','-3':'m','0':'','3':'k','6':'M'};
+function eng(x,u){
+  if(!isFinite(x))return '—';
+  var a=Math.abs(x);
+  if(a<1e-15)return '0 '+u;
+  var p=Math.floor(Math.log10(a)/3)*3;
+  p=Math.max(-12,Math.min(6,p));
+  var m=x/Math.pow(10,p);
+  return (m>=100?m.toFixed(0):m>=10?m.toFixed(1):m.toFixed(2))+' '+PF[p]+u;
+}
+function niceNum(x){
+  var p=Math.pow(10,Math.floor(Math.log10(x))),f=x/p;
+  return (f<1.5?1:f<3?2:f<7?5:10)*p;
+}
+
+/* ---- physics: series RLC, step input, output = capacitor voltage ----
+   alpha=R/2L, w0=1/sqrt(LC), zeta=alpha/w0 */
+function makeFns(){
+  var R=S.R,L=S.L,C=S.C,V=S.V;
+  var a=R/(2*L),w0=1/Math.sqrt(L*C),d=a*a-w0*w0,vc,ic;
+  if(Math.abs(d)<a*a*1e-10){            /* critically damped */
+    vc=function(t){return V*(1-Math.exp(-a*t)*(1+a*t));};
+    ic=function(t){return (V/L)*t*Math.exp(-a*t);};
+  }else if(d>0){                        /* overdamped */
+    var b=Math.sqrt(d),s1=-a+b,s2=-a-b;
+    vc=function(t){return V*(1-(s2*Math.exp(s1*t)-s1*Math.exp(s2*t))/(s2-s1));};
+    ic=function(t){return (V/L)*(Math.exp(s1*t)-Math.exp(s2*t))/(s1-s2);};
+  }else{                                /* underdamped */
+    var wd=Math.sqrt(-d);
+    vc=function(t){return V*(1-Math.exp(-a*t)*(Math.cos(wd*t)+(a/wd)*Math.sin(wd*t)));};
+    ic=function(t){return (V/(wd*L))*Math.exp(-a*t)*Math.sin(wd*t);};
+  }
+  return {vc:vc,ic:ic,a:a,w0:w0,d:d,z:a/w0};
+}
+
+function resample(){
+  var f=makeFns();fns=f;
+  var a=f.a,d=f.d;
+  if(d>0){
+    tmax=5/(-( -a+Math.sqrt(d)));       /* 5 tau of the slow pole */
+  }else{
+    var wd=Math.sqrt(-d),Td=wd>0?2*Math.PI/wd:0;
+    tmax=Td>0?Math.min(4.6/a,6*Td):6/a; /* settle time, capped at ~6 periods */
+  }
+  if(!isFinite(tmax)||tmax<=0)tmax=1e-3;
+  vmax=S.V*1.02;imax=0;
+  for(var k=0;k<N;k++){
+    var t=tmax*k/(N-1),v=f.vc(t),i=f.ic(t);
+    vArr[k]=v;iArr[k]=i;
+    if(v>vmax)vmax=v;
+    if(Math.abs(i)>imax)imax=Math.abs(i);
+  }
+  vmax*=1.07;
+  if(imax<=0)imax=1e-9;
+  reveal=0;sweepT0=performance.now();
+  updateStats();
+}
+
+function updateStats(){
+  var z=fns.z,reg,cls;
+  if(z<0.999){reg='underdamped';cls='reg-u';}
+  else if(z<1.001){reg='critically damped';cls='reg-c';}
+  else{reg='overdamped';cls='reg-o';}
+  var os='';
+  if(z<1){os=' · overshoot <b>'+(Math.exp(-Math.PI*z/Math.sqrt(1-z*z))*100).toFixed(1)+'%</b>';}
+  stats.innerHTML='&zeta; <b>'+z.toFixed(3)+'</b> <span class="reg '+cls+'">'+reg+'</span>'+os+'<br>'+
+    '&omega;&#8320; <b>'+eng(fns.w0,'rad/s')+'</b> · f&#8320; <b>'+eng(fns.w0/(2*Math.PI),'Hz')+'</b><br>'+
+    '&alpha; <b>'+eng(fns.a,'Np/s')+'</b> · window <b>'+eng(tmax,'s')+'</b>';
+}
+
+/* ---- controls ---- */
+var ctrls=[
+  {el:'r',out:'rv',key:'R',min:0.1,max:1e4,log:true,u:'Ω'},
+  {el:'l',out:'lv',key:'L',min:1e-5,max:1,log:true,u:'H'},
+  {el:'c',out:'cvv',key:'C',min:1e-9,max:1e-3,log:true,u:'F'},
+  {el:'v',out:'vv',key:'V',min:1,max:24,log:false,u:'V'}
+];
+ctrls.forEach(function(c){
+  c.input=document.getElementById(c.el);
+  c.outEl=document.getElementById(c.out);
+  c.toVal=function(u){return c.log?c.min*Math.pow(c.max/c.min,u):c.min+(c.max-c.min)*u;};
+  c.toU=function(v){return c.log?Math.log(v/c.min)/Math.log(c.max/c.min):(v-c.min)/(c.max-c.min);};
+  c.input.value=Math.round(c.toU(S[c.key])*1000);
+  c.outEl.textContent=eng(S[c.key],c.u);
+  c.input.addEventListener('input',function(){
+    var v=c.toVal(c.input.value/1000);
+    S[c.key]=v;c.outEl.textContent=eng(v,c.u);
+    resample();drawSch();
+  });
+});
+function syncR(){ /* after preset buttons change R */
+  var c=ctrls[0];
+  c.input.value=Math.round(c.toU(S.R)*1000);
+  c.outEl.textContent=eng(S.R,c.u);
+}
+Array.prototype.forEach.call(document.querySelectorAll('.pz'),function(b){
+  b.addEventListener('click',function(){
+    var z=parseFloat(b.getAttribute('data-z'));
+    S.R=2*z*Math.sqrt(S.L/S.C);        /* choose R for target zeta */
+    syncR();resample();drawSch();
+  });
+});
+var showV=true,showI=true;
+document.getElementById('tv').addEventListener('change',function(e){showV=e.target.checked;});
+document.getElementById('ti').addEventListener('change',function(e){showI=e.target.checked;});
+document.getElementById('col').addEventListener('click',function(){
+  var h=pbody.style.display==='none';
+  pbody.style.display=h?'':'none';
+  this.textContent=h?'–':'+';
+  requestAnimationFrame(resize);
+});
+if(window.innerWidth<430){pbody.style.display='none';document.getElementById('col').textContent='+';}
+
+/* ---- layout ---- */
+function resize(){
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  var pr=panel.getBoundingClientRect();
+  var ml=56,mr=52,mt=28,mb=38;
+  if(pr.width<W*0.45&&pr.height<H*0.6){ml=Math.max(ml,pr.right+14);}
+  else{mt=Math.max(mt,pr.bottom+10);}
+  plot.x=ml;plot.y=mt;
+  plot.w=Math.max(80,W-ml-mr);
+  plot.h=Math.max(60,H-mt-mb);
+  drawSch();
+}
+
+/* ---- mini schematic ---- */
+function drawSch(){
+  var w=sch.clientWidth||240,h=66,d=Math.min(window.devicePixelRatio||1,2);
+  sch.width=Math.round(w*d);sch.height=Math.round(h*d);
+  sctx.setTransform(d,0,0,d,0,0);
+  sctx.clearRect(0,0,w,h);
+  var x0=16,x1=w-16,yt=13,yb=46;
+  sctx.strokeStyle='#7d8499';sctx.lineWidth=1.2;sctx.lineCap='round';
+  sctx.beginPath();
+  /* top rail: wire, R zigzag, wire, L arcs, wire */
+  var rx0=x0+22,rx1=rx0+52,lx0=x1-76,lx1=x1-22;
+  sctx.moveTo(x0,yt);sctx.lineTo(rx0,yt);
+  var zz=6,nz=6,zw=(rx1-rx0)/nz;
+  for(var i=0;i<nz;i++){
+    sctx.lineTo(rx0+zw*(i+0.5),yt+(i%2===0?-zz:zz));
+  }
+  sctx.lineTo(rx1,yt);sctx.lineTo(lx0,yt);
+  var nc=4,cw=(lx1-lx0)/nc;
+  for(var j=0;j<nc;j++){
+    sctx.arc(lx0+cw*(j+0.5),yt,cw/2,Math.PI,0,false);
+  }
+  sctx.moveTo(lx1,yt);sctx.lineTo(x1,yt);
+  /* right rail: down to C plates */
+  sctx.moveTo(x1,yt);sctx.lineTo(x1,yt+11);
+  sctx.moveTo(x1-8,yt+11);sctx.lineTo(x1+8,yt+11);
+  sctx.moveTo(x1-8,yt+19);sctx.lineTo(x1+8,yt+19);
+  sctx.moveTo(x1,yt+19);sctx.lineTo(x1,yb);
+  /* left rail: step source */
+  var cy=(yt+yb)/2;
+  sctx.moveTo(x0,yt);sctx.lineTo(x0,cy-9);
+  sctx.moveTo(x0,cy+9);sctx.lineTo(x0,yb);
+  /* bottom rail + ground */
+  sctx.moveTo(x0,yb);sctx.lineTo(x1,yb);
+  var gx=(x0+x1)/2;
+  sctx.moveTo(gx,yb);sctx.lineTo(gx,yb+6);
+  sctx.moveTo(gx-7,yb+6);sctx.lineTo(gx+7,yb+6);
+  sctx.moveTo(gx-4.5,yb+9);sctx.lineTo(gx+4.5,yb+9);
+  sctx.moveTo(gx-2,yb+12);sctx.lineTo(gx+2,yb+12);
+  sctx.stroke();
+  /* source circle +/+− */
+  sctx.beginPath();sctx.arc(x0,cy,9,0,7);sctx.stroke();
+  sctx.font='7px ui-sans-serif,system-ui';sctx.fillStyle='#9aa0b5';sctx.textAlign='center';
+  sctx.fillText('+',x0,cy-3);sctx.fillText('−',x0,cy+6);
+  /* labels */
+  sctx.font='9px ui-sans-serif,system-ui';
+  sctx.fillText('R '+eng(S.R,'Ω'),(rx0+rx1)/2,yt-11);
+  sctx.fillText('L '+eng(S.L,'H'),(lx0+lx1)/2,yt-11);
+  sctx.fillText('C '+eng(S.C,'F'),x1-24,cy+3);
+  sctx.textAlign='left';
+  sctx.fillText(eng(S.V,'V')+' step',x0+13,cy+16);
+  /* vC probe dot */
+  sctx.fillStyle='#5eead4';
+  sctx.beginPath();sctx.arc(x1,yt+4,2.5,0,7);sctx.fill();
+  sctx.fillText('vC',x1-24,yt+7);
+}
+
+/* ---- main render ---- */
+function render(now){
+  var dt=Math.min(0.05,(now-lastT)/1000);lastT=now;
+  reveal=Math.min(1,reveal+dt*2.2);
+  ctx.fillStyle='#0c0c10';ctx.fillRect(0,0,W,H);
+  var P=plot;
+  var xT=function(t){return P.x+t/tmax*P.w;};
+  var yV=function(v){return P.y+P.h-v/vmax*P.h;};
+  var yI=function(i){return P.y+P.h-i/imax*P.h;};
+
+  /* frame */
+  ctx.strokeStyle='rgba(255,255,255,.09)';ctx.lineWidth=1;
+  ctx.strokeRect(P.x,P.y,P.w,P.h);
+
+  /* grid: time */
+  ctx.font='10px ui-sans-serif,system-ui';ctx.textAlign='center';
+  var ts=niceNum(tmax/5);
+  ctx.fillStyle='#6b7186';ctx.strokeStyle='rgba(255,255,255,.05)';
+  ctx.beginPath();
+  for(var t=0;t<=tmax*1.001;t+=ts){
+    var x=xT(t);
+    ctx.moveTo(x,P.y);ctx.lineTo(x,P.y+P.h);
+    ctx.fillText(eng(t,'s'),x,P.y+P.h+14);
+  }
+  ctx.stroke();
+  /* grid: volts (left) */
+  var vs=niceNum(vmax/4);
+  ctx.textAlign='right';
+  ctx.beginPath();
+  for(var v=0;v<=vmax*1.001;v+=vs){
+    var y=yV(v);
+    ctx.moveTo(P.x,y);ctx.lineTo(P.x+P.w,y);
+    ctx.fillText(eng(v,'V'),P.x-6,y+3);
+  }
+  ctx.stroke();
+  /* grid: current (right) */
+  if(showI){
+    var is=niceNum(imax/4);
+    ctx.textAlign='left';ctx.fillStyle='#8a7434';
+    ctx.beginPath();ctx.strokeStyle='rgba(251,191,36,.05)';
+    for(var i0=0;i0<=imax*1.001;i0+=is){
+      var yi=yI(i0);
+      ctx.moveTo(P.x,yi);ctx.lineTo(P.x+P.w,yi);
+      ctx.fillText(eng(i0,'A'),P.x+P.w+6,yi+3);
+    }
+    ctx.stroke();
+  }
+  /* zero axis */
+  ctx.strokeStyle='rgba(255,255,255,.22)';
+  ctx.beginPath();ctx.moveTo(P.x,yV(0));ctx.lineTo(P.x+P.w,yV(0));ctx.stroke();
+  /* target step level */
+  ctx.strokeStyle='rgba(160,166,188,.5)';ctx.setLineDash([5,5]);
+  ctx.beginPath();ctx.moveTo(P.x,yV(S.V));ctx.lineTo(P.x+P.w,yV(S.V));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#8b91a5';ctx.textAlign='left';
+  ctx.fillText('Vs = '+eng(S.V,'V'),P.x+6,yV(S.V)-5);
+
+  /* traces */
+  var lim=Math.max(2,Math.floor(reveal*N));
+  ctx.lineJoin='round';
+  if(showI){
+    ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.6;ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    for(var k=0;k<lim;k++){var x=xT(tmax*k/(N-1)),y=yI(iArr[k]);k===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.stroke();ctx.setLineDash([]);
+  }
+  if(showV){
+    ctx.strokeStyle='#5eead4';ctx.lineWidth=2.2;
+    ctx.shadowColor='rgba(94,234,212,.55)';ctx.shadowBlur=9;
+    ctx.beginPath();
+    for(var k2=0;k2<lim;k2++){var x2=xT(tmax*k2/(N-1)),y2=yV(vArr[k2]);k2===0?ctx.moveTo(x2,y2):ctx.lineTo(x2,y2);}
+    ctx.stroke();ctx.shadowBlur=0;
+  }
+
+  /* legend */
+  ctx.textAlign='left';ctx.font='11px ui-sans-serif,system-ui';
+  var lx=P.x+P.w-118,ly=P.y+14;
+  if(showV){ctx.fillStyle='#5eead4';ctx.fillRect(lx,ly-8,14,3);ctx.fillStyle='#cfd3e0';ctx.fillText('vC(t)',lx+20,ly-3);}
+  if(showI){ctx.fillStyle='#fbbf24';ctx.fillRect(lx+62,ly-8,14,3);ctx.fillStyle='#cfd3e0';ctx.fillText('i(t)',lx+82,ly-3);}
+  /* axis captions */
+  ctx.fillStyle='#6b7186';ctx.textAlign='center';
+  ctx.fillText('time',P.x+P.w/2,P.y+P.h+30);
+
+  /* sweeping marker */
+  var ph=((now-sweepT0)/7000)%1,tm=ph*tmax;
+  if(tm<=tmax*reveal+1e-12){
+    var mv=fns.vc(tm),mi=fns.ic(tm),mx=xT(tm);
+    if(showI){ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(mx,yI(mi),3.5,0,7);ctx.fill();}
+    if(showV){
+      var my=yV(mv);
+      ctx.strokeStyle='rgba(94,234,212,.3)';
+      ctx.beginPath();ctx.moveTo(mx,P.y);ctx.lineTo(mx,P.y+P.h);ctx.stroke();
+      ctx.fillStyle='#5eead4';ctx.shadowColor='#5eead4';ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(mx,my,4.5,0,7);ctx.fill();ctx.shadowBlur=0;
+      var tag='t='+eng(tm,'s')+'  vC='+eng(mv,'V');
+      ctx.font='11px ui-sans-serif,system-ui';
+      var tw=ctx.measureText(tag).width+12;
+      var tx=Math.min(Math.max(mx+10,P.x+4),P.x+P.w-tw-4);
+      var ty=my-30<P.y+4?my+12:my-30;
+      ctx.fillStyle='rgba(12,12,16,.85)';
+      ctx.strokeStyle='rgba(94,234,212,.35)';
+      ctx.beginPath();ctx.rect(tx,ty,tw,18);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#b9fff2';ctx.textAlign='left';
+      ctx.fillText(tag,tx+6,ty+13);
+    }
+  }
+  raf=requestAnimationFrame(render);
+}
+
+resample();
+resize();
+window.addEventListener('resize',resize);
+window.addEventListener('unload',function(){cancelAnimationFrame(raf);});
+raf=requestAnimationFrame(render);
+}catch(e){
+  var el=document.getElementById('err');
+  el.style.display='block';
+  el.textContent='Error: '+(e&&e.message?e.message:e);
+}
+</script>
+</body></html>

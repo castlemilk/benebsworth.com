@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solving x² + y² = 25, xy = 12</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --ink: #e8e9ec;
+    --muted: #9aa0ab;
+    --accent: #6ea8fe;
+    --accent2: #7ee0a3;
+    --line: #2a2e38;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.65;
+    padding: 2rem 1rem;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin-bottom: .25rem; }
+  h2 { font-size: 1.15rem; margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .35rem; }
+  .sub { color: var(--muted); margin-top: 0; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .math { font-family: "STIX Two Math", "Cambria Math", Georgia, serif; }
+  .eq {
+    display: block;
+    text-align: center;
+    font-size: 1.15rem;
+    padding: .6rem 0;
+    color: var(--accent);
+  }
+  .step { margin: .75rem 0; }
+  .step .label {
+    display: inline-block;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: .15rem;
+  }
+  table { border-collapse: collapse; margin: .75rem auto; }
+  th, td { border: 1px solid var(--line); padding: .45rem 1.1rem; text-align: center; }
+  th { background: #1d212b; color: var(--muted); font-weight: 600; }
+  td { font-family: "STIX Two Math", "Cambria Math", Georgia, serif; }
+  .sol { color: var(--accent2); font-weight: 600; }
+  .note { color: var(--muted); font-size: .92rem; }
+  code { background: #1d212b; padding: .1rem .35rem; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Solving the system <span class="math">x² + y² = 25</span>, <span class="math">xy = 12</span></h1>
+  <p class="sub">All real solution pairs, with each algebraic step justified.</p>
+
+  <h2>1. Set up sum and difference identities</h2>
+  <div class="card">
+    <p>Instead of substituting <span class="math">y = 12/x</span> (which works but leads to a quartic), use the two standard identities that connect <span class="math">x² + y²</span> and <span class="math">xy</span> to <span class="math">x + y</span> and <span class="math">x − y</span>:</p>
+    <span class="eq math">(x + y)² = x² + 2xy + y² = (x² + y²) + 2xy</span>
+    <span class="eq math">(x − y)² = x² − 2xy + y² = (x² + y²) − 2xy</span>
+  </div>
+
+  <h2>2. Compute x + y and x − y</h2>
+  <div class="card">
+    <div class="step">
+      <span class="label">Step 2a — sum</span>
+      <p>Substitute the given values into the first identity:</p>
+      <span class="eq math">(x + y)² = 25 + 2(12) = 49 &nbsp;⟹&nbsp; x + y = ±7</span>
+      <p class="note">Justification: real square roots come in ± pairs.</p>
+    </div>
+    <div class="step">
+      <span class="label">Step 2b — difference</span>
+      <span class="eq math">(x − y)² = 25 − 2(12) = 1 &nbsp;⟹&nbsp; x − y = ±1</span>
+    </div>
+  </div>
+
+  <h2>3. Pair the signs correctly</h2>
+  <div class="card">
+    <p>Since <span class="math">xy = 12 &gt; 0</span>, <span class="math">x</span> and <span class="math">y</span> have the <em>same</em> sign, so the sign of <span class="math">x + y</span> fixes both. The sign of <span class="math">x − y</span> only decides which variable is larger. All four sign combinations are consistent and give a 2×2 linear system each:</p>
+    <table>
+      <tr><th>x + y</th><th>x − y</th><th>x = ((x+y)+(x−y))/2</th><th>y = ((x+y)−(x−y))/2</th></tr>
+      <tr><td class="math">+7</td><td class="math">+1</td><td class="math sol">4</td><td class="math sol">3</td></tr>
+      <tr><td class="math">+7</td><td class="math">−1</td><td class="math sol">3</td><td class="math sol">4</td></tr>
+      <tr><td class="math">−7</td><td class="math">+1</td><td class="math sol">−3</td><td class="math sol">−4</td></tr>
+      <tr><td class="math">−7</td><td class="math">−1</td><td class="math sol">−4</td><td class="math sol">−3</td></tr>
+    </table>
+    <p class="note">Justification: adding and subtracting the two linear equations isolates <span class="math">x</span> and <span class="math">y</span> — pure linear elimination.</p>
+  </div>
+
+  <h2>4. Verification</h2>
+  <div class="card">
+    <p>Each pair satisfies both original equations. Check <span class="math">(4, 3)</span>: <span class="math">16 + 9 = 25 ✓</span>, <span class="math">4 · 3 = 12 ✓</span>. By symmetry of the equations under <span class="math">(x, y) ↦ (y, x)</span> and <span class="math">(x, y) ↦ (−x, −y)</span>, the other three pairs check identically.</p>
+    <p class="note">Completeness: steps 2a/2b are biconditionals — every real solution must satisfy <span class="math">x+y = ±7</span> and <span class="math">x−y = ±1</span>, and the table enumerates all four cases, so no solutions are missed.</p>
+  </div>
+
+  <h2>Answer</h2>
+  <div class="card">
+    <span class="eq math sol">(x, y) ∈ { (4, 3), (3, 4), (−3, −4), (−4, −3) }</span>
+    <p class="note" style="text-align:center; margin-bottom:0;">Four real solutions — geometrically, the circle of radius 5 meets the hyperbola xy = 12 in four points.</p>
+  </div>
+
+  <h2>Alternative method (for completeness)</h2>
+  <div class="card">
+    <p>Substitution: <span class="math">y = 12/x</span> gives <span class="math">x² + 144/x² = 25</span>, i.e. <span class="math">x⁴ − 25x² + 144 = 0</span>. With <span class="math">u = x²</span>: <span class="math">u² − 25u + 144 = 0</span> factors as <span class="math">(u − 9)(u − 16) = 0</span>, so <span class="math">x = ±3, ±4</span>, and <span class="math">y = 12/x</span> recovers the same four pairs.</p>
+  </div>
+</main>
+</body>
+</html>

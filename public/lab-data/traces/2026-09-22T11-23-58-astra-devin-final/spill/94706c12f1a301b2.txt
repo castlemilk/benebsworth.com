@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solving x² + y² = 25 and xy = 12 over the reals</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; color: #192b36; background: #f3f6f8; }
+    body { margin: 0; padding: 48px 20px; }
+    main { max-width: 760px; margin: auto; padding: 40px; background: #fff; border: 1px solid #dce5eb; border-radius: 16px; }
+    h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); line-height: 1.2; margin: 0 0 24px; }
+    h2 { margin-top: 28px; font-size: 1.2rem; }
+    p { line-height: 1.7; }
+    .math { font-family: Georgia, serif; font-size: 1.25rem; line-height: 1.8; }
+    .answer { padding: 18px 22px; border-left: 4px solid #117568; background: #ecf7f4; border-radius: 4px; }
+    .answer p { margin: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; text-align: center; }
+    th, td { padding: 12px; border-bottom: 1px solid #dce5eb; }
+    th { background: #f3f6f8; }
+    @media (max-width: 540px) { body { padding: 16px 12px; } main { padding: 24px 18px; } th, td { padding: 10px 6px; } }
+    @media print { body { padding: 0; background: white; } main { border: 0; padding: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Solve the system over the reals</h1>
+    <p class="math">x² + y² = 25, &nbsp; xy = 12.</p>
+    <div class="answer">
+      <p><strong>All real solution pairs (x, y):</strong></p>
+      <p class="math">(4, 3), (3, 4), (−3, −4), (−4, −3).</p>
+    </div>
+
+    <h2>1. Find the sum and difference</h2>
+    <p>Expanding the square of the sum and substituting the two given equations gives</p>
+    <p class="math">(x + y)² = x² + y² + 2xy = 25 + 24 = 49.</p>
+    <p>Since x + y is real, its square is 49 exactly when <strong>x + y = 7 or −7</strong>. Similarly,</p>
+    <p class="math">(x − y)² = x² + y² − 2xy = 25 − 24 = 1,</p>
+    <p>so <strong>x − y = 1 or −1</strong>. Both signs must be retained in each equation.</p>
+
+    <h2>2. Recover x and y for every sign combination</h2>
+    <p>Let s = x + y and d = x − y. Adding and subtracting these identities yields 2x = s + d and 2y = s − d. Dividing by the nonzero number 2 gives</p>
+    <p class="math">x = (s + d)/2, &nbsp; y = (s − d)/2.</p>
+    <table>
+      <caption>Every possible sum and difference</caption>
+      <thead><tr><th scope="col">s</th><th scope="col">d</th><th scope="col">x</th><th scope="col">y</th><th scope="col">(x, y)</th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td>1</td><td>4</td><td>3</td><td>(4, 3)</td></tr>
+        <tr><td>7</td><td>−1</td><td>3</td><td>4</td><td>(3, 4)</td></tr>
+        <tr><td>−7</td><td>1</td><td>−3</td><td>−4</td><td>(−3, −4)</td></tr>
+        <tr><td>−7</td><td>−1</td><td>−4</td><td>−3</td><td>(−4, −3)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3. Verify the solutions and completeness</h2>
+    <p>Each listed pair has squared coordinates 16 and 9, so x² + y² = 25. Its coordinates have the same sign and magnitudes 3 and 4, so xy = 12.</p>
+    <p>Every real solution must have s ∈ {7, −7} and d ∈ {1, −1}. The table exhausts these four combinations, and each determines a unique pair through the formulas above. Thus all four listed pairs are solutions, and there are no others.</p>
+  </main>
+</body>
+</html>

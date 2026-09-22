@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tic-Tac-Toe</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    box-sizing: border-box;
+    background: #0c0c10;
+    color: #ececf0;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 3vmin, 18px);
+    padding: 16px;
+    width: 100%;
+    max-width: 480px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(20px, 6vmin, 30px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  #status {
+    margin: 0;
+    min-height: 1.5em;
+    font-size: clamp(15px, 4.5vmin, 20px);
+    font-weight: 600;
+    text-align: center;
+  }
+  #status .x { color: #6ea8fe; }
+  #status .o { color: #f2a65a; }
+  #status .win { color: #7ee787; }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: clamp(6px, 2vmin, 10px);
+    width: min(78vw, 52vh, 340px);
+    aspect-ratio: 1;
+  }
+  .cell {
+    appearance: none;
+    border: 2px solid #2a2a36;
+    border-radius: 12px;
+    background: #17171f;
+    color: #ececf0;
+    font-family: inherit;
+    font-size: clamp(28px, 12vmin, 56px);
+    font-weight: 800;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background 120ms ease, border-color 120ms ease, transform 80ms ease;
+  }
+  .cell:hover:not(:disabled) { background: #1f1f2a; border-color: #3d3d50; }
+  .cell:active:not(:disabled) { transform: scale(0.96); }
+  .cell:disabled { cursor: default; }
+  .cell.mark-x { color: #6ea8fe; }
+  .cell.mark-o { color: #f2a65a; }
+  .cell.win-line {
+    background: #1d2b1f;
+    border-color: #7ee787;
+  }
+  #restart {
+    appearance: none;
+    border: 2px solid #2a2a36;
+    border-radius: 10px;
+    background: #1f1f2a;
+    color: #ececf0;
+    font-family: inherit;
+    font-size: clamp(14px, 4vmin, 17px);
+    font-weight: 600;
+    padding: 10px 28px;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+  #restart:hover { background: #272736; border-color: #3d3d50; }
+  #restart:active { transform: scale(0.97); }
+  [role="alert"] {
+    color: #ff7b72;
+    font-size: 14px;
+    text-align: center;
+    max-width: 90%;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tic-Tac-Toe</h1>
+  <p id="status" aria-live="polite"></p>
+  <div id="board" role="grid" aria-label="Tic-tac-toe board"></div>
+  <button id="restart" type="button">Restart</button>
+</main>
+<script>
+try {
+  var board = document.getElementById('board');
+  var statusEl = document.getElementById('status');
+  var restartBtn = document.getElementById('restart');
+
+  var LINES = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ];
+
+  var cells = [];
+  var state = [];
+  var current = 'X';
+  var over = false;
+
+  for (var i = 0; i < 9; i++) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cell';
+    btn.setAttribute('role', 'gridcell');
+    btn.setAttribute('aria-label', 'Cell ' + (i + 1));
+    (function (idx) {
+      btn.addEventListener('click', function () { onMove(idx); });
+    })(i);
+    board.appendChild(btn);
+    cells.push(btn);
+  }
+
+  function setStatus(html) {
+    statusEl.innerHTML = html;
+  }
+
+  function markSpan(p) {
+    return '<span class="' + p.toLowerCase() + '">' + p + '</span>';
+  }
+
+  function findWin(p) {
+    for (var k = 0; k < LINES.length; k++) {
+      var line = LINES[k];
+      if (state[line[0]] === p && state[line[1]] === p && state[line[2]] === p) {
+        return line;
+      }
+    }
+    return null;
+  }
+
+  function onMove(idx) {
+    if (over || state[idx]) return;
+    state[idx] = current;
+    var cell = cells[idx];
+    cell.textContent = current;
+    cell.classList.add(current === 'X' ? 'mark-x' : 'mark-o');
+    cell.disabled = true;
+
+    var winLine = findWin(current);
+    if (winLine) {
+      over = true;
+      for (var k = 0; k < winLine.length; k++) {
+        cells[winLine[k]].classList.add('win-line');
+      }
+      for (var j = 0; j < cells.length; j++) cells[j].disabled = true;
+      setStatus(markSpan(current) + ' <span class="win">wins!</span>');
+      return;
+    }
+    if (state.every(function (s) { return s; })) {
+      over = true;
+      for (var j2 = 0; j2 < cells.length; j2++) cells[j2].disabled = true;
+      setStatus('It\u2019s a draw!');
+      return;
+    }
+    current = current === 'X' ? 'O' : 'X';
+    setStatus(markSpan(current) + '\u2019s turn');
+  }
+
+  function restart() {
+    state = [];
+    current = 'X';
+    over = false;
+    for (var j = 0; j < cells.length; j++) {
+      cells[j].textContent = '';
+      cells[j].disabled = false;
+      cells[j].classList.remove('mark-x', 'mark-o', 'win-line');
+    }
+    setStatus(markSpan('X') + '\u2019s turn');
+  }
+
+  restartBtn.addEventListener('click', restart);
+  restart();
+} catch (err) {
+  var alert = document.createElement('div');
+  alert.setAttribute('role', 'alert');
+  alert.textContent = 'Failed to start the game: ' + (err && err.message ? err.message : String(err));
+  document.body.appendChild(alert);
+}
+</script>
+</body>
+</html>

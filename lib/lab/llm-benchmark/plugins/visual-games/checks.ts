@@ -15,7 +15,9 @@ function check(name: string, maxPoints: number, run: (ctx: CheckContext) => Prom
 }
 
 async function frame(ctx: CheckContext) {
-  return ctx.page.locator('canvas#scene').screenshot({ timeout: 900 })
+  const capture = await ctx.captureCanvas('canvas#scene')
+  if (!capture) throw new Error('Missing scene canvas')
+  return capture.data
 }
 
 async function resetView(ctx: CheckContext) {

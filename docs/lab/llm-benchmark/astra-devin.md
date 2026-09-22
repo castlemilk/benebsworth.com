@@ -74,8 +74,11 @@ original response aborts the operation. `--output-run ID` groups multiple
 corrected pairs in one new run directory. Complete HTML normalization and
 WebGL frame capture corrections are documented in
 `docs/postmortem/0007-html-webgl-observation.md`; apply the same current
-scorers to every retained Astra pair before comparing it with the fresh Devin
-run. These corrections do not modify generated source.
+scorers to every retained pair from both models after generation finishes.
+These corrections do not modify generated source. Browser capture allows
+five seconds per screenshot, 20 seconds per check and 90 seconds per batch.
+Dependency normalization may fetch a vendor library, but rejects it unless
+its bytes already occur in the original redacted trace. No model calls occur.
 
 To stage corrections while generation continues, set `RESULTS_OUT_PATH` to
 a separate JSON file containing the source records. Merge those corrected

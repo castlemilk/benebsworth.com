@@ -33,11 +33,22 @@ animated. Canvas checks now capture the displayed element with Playwright.
   element share a line` covers normalization of a complete file.
 - `scorers/canvas-capture.test.ts` — `observes WebGL animation without
   requiring preserveDrawingBuffer` exercises a real Chromium WebGL context.
+- Canvas capture allows five seconds, with a 20-second check budget and
+  90-second batch budget. A staged pass under concurrent generation load hit
+  the original 1.5-second screenshot limit; that pass is excluded. Both final
+  cohorts are graded after generation finishes using the same limits.
+- `scorers/sandbox.test.ts` — `clears completed check deadlines so offline
+  rescoring can exit promptly` prevents finished checks from retaining their
+  deadline timers.
 - `task bench:visual-games-fixtures` runs that regression alongside the new
   lighthouse and racer interaction fixtures.
 - `scripts/rescore-cli-pair.mjs` verifies retained file hashes and compares
   their redacted bytes to the original response before applying current
   normalization. Corrected traces preserve generation evidence and identify
   the source run and scorer commit.
+- Dependency normalization follows the generation pipeline. Any vendor
+  dependency fetched during rescoring must match bytes already embedded in
+  the original redacted trace, so a changed CDN response cannot silently
+  change the program being scored.
 - Known limit: a changing screenshot proves visible motion, not correct
   physics or genuine three-dimensional geometry.

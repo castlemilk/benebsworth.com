@@ -30,7 +30,9 @@ if (requestedOutputRun && (!isSafePathSegment(requestedOutputRun) || requestedOu
 const file = runLogFileName(model.id, task.id)
 const { header, events } = readRunLog(join(sourceDir, file))
 const original = events.findLast((event) => event.type === 'aggregate')?.result
-if (!original || original.status !== 'success') throw new Error('A fully completed successful pair is required')
+if (!original || !['success', 'partial'].includes(original.status) || !original.iterationsSucceeded) {
+  throw new Error('A completed pair with at least one successful artifact is required')
+}
 const index = JSON.parse(readFileSync(join(sourceDir, 'artifacts/index.json'), 'utf8')).artifacts
 const resolveSpill = (value) => typeof value === 'string' ? value : readFileSync(join(sourceDir, value.spillRef), 'utf8')
 // Replay the normal dependency pipeline without accepting newer vendor code.
@@ -47,6 +49,22 @@ const runs = []
 for (let iterationIndex = 0; iterationIndex < original.iterations; iterationIndex++) {
   const response = events.findLast((event) => event.type === 'response' && event.iterationIndex === iterationIndex)
   const clean = events.findLast((event) => event.type === 'clean' && event.iterationIndex === iterationIndex)
+  const failure = events.findLast((event) => event.type === 'failure' && event.iterationIndex === iterationIndex)
+  if (failure) {
+    // Reconstruct the runner's failed entry, retaining its place. A thrown
+    // generation has zero recorded usage; an exhausted empty reply retains
+    // the last response's usage. Neither receives a new score or artifact.
+    const empty = failure.failureReason === 'empty_body'
+    runs.push({ output: failure.error, status: 'fail', timedOut: failure.timedOut,
+      failureReason: failure.failureReason, tokensIn: empty ? response?.tokensIn ?? 0 : 0,
+      tokensOut: empty ? response?.tokensOut ?? 0 : 0, runtimeMs: empty ? response?.runtimeMs ?? 0 : 0,
+      usageSource: original.usage?.source ?? 'estimated', retries: 0 })
+    continue
+  }
+  if (!response && !clean) {
+    if (events.some((event) => event.iterationIndex > iterationIndex)) throw new Error('Missing iteration before later evidence')
+    break // The original runner may have stopped before all requested calls.
+  }
   const artifactName = index[`artifact-${model.id}-${task.id}-${iterationIndex}`]
   if (!response || !clean || !artifactName || !/^[a-f0-9]{16}\.html$/.test(artifactName)) {
     throw new Error(`Missing retained iteration ${iterationIndex}`)
@@ -76,7 +94,7 @@ globalThis.fetch = originalFetch
 
 try {
   const rescored = await aggregateRuns(runs, original.iterations, model, task, selectScorer(task), original.createdAt)
-  for (const key of ['runtimeMs', 'tokensIn', 'tokensOut', 'costUsd', 'promptBundle']) {
+  for (const key of ['runtimeMs', 'tokensIn', 'tokensOut', 'costUsd', 'promptBundle', 'iterationsSucceeded', 'status', 'failureReason']) {
     if (rescored[key] !== original[key]) throw new Error(`Generation metadata changed: ${key}`)
   }
   console.log(JSON.stringify({ model: model.id, task: task.id, before: original.iterationScores, after: rescored.iterationScores }))
@@ -109,8 +127,9 @@ try {
     keptEvents.filter((event) => event.type !== 'clean').forEach(copySpills)
     const correctedHeader = { ...header, runId: correctedId, configSnapshot: { ...header.configSnapshot,
       rescoreOf: { runId, file, scorerCommit, artifactSource: 'retained-cli-file' } } }
-    const checks = result.iterationCheckResults.flatMap((checks, iterationIndex) =>
-      checks.map((check) => ({ type: 'check', iterationIndex, check, ts: now })))
+    const successIndices = runs.map((run, index) => ({ run, index })).filter(({ run }) => run.status === 'success').map(({ index }) => index)
+    const checks = result.iterationCheckResults.flatMap((checks, successIndex) =>
+      checks.map((check) => ({ type: 'check', iterationIndex: successIndices[successIndex], check, ts: now })))
     const aggregate = { type: 'aggregate', ts: now, result: { ...result, output: forceSpill(correctedDir, result.output) } }
     const lines = [correctedHeader, ...keptEvents, ...checks, aggregate].map((event, seq) => JSON.stringify(redactValue({ ...event, seq })))
     writeFileSync(join(correctedDir, file), lines.join('\n') + '\n', { flag: 'wx', mode: 0o600 })

@@ -77,6 +77,9 @@ WebGL frame capture corrections are documented in
 scorers to every retained pair from both models after generation finishes.
 These corrections do not modify generated source. Browser capture allows
 five seconds per screenshot, 20 seconds per check and 90 seconds per batch.
+Partial pairs keep their original failed iterations, completion count and
+failure reason. Only successful retained artifacts receive a new score; the
+script checks that generation usage, runtime and status remain unchanged.
 Dependency normalization may fetch a vendor library, but rejects it unless
 its bytes already occur in the original redacted trace. No model calls occur.
 

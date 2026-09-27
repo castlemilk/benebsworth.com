@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tic-Tac-Toe</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    box-sizing: border-box;
+    background: #0c0c10;
+    color: #ececf0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 16px;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 2.5vmin, 18px);
+    width: 100%;
+    max-width: 340px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.25rem, 5vmin, 1.75rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ececf0;
+  }
+
+  .status {
+    min-height: 1.5em;
+    font-size: clamp(1rem, 4vmin, 1.2rem);
+    font-weight: 600;
+    color: #9a9ab0;
+    text-align: center;
+    transition: color 0.2s ease;
+  }
+  .status.win  { color: #7dd3a8; }
+  .status.draw { color: #f2c46d; }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: clamp(6px, 1.8vmin, 10px);
+    width: min(78vw, 42vh, 300px);
+    aspect-ratio: 1 / 1;
+  }
+
+  .cell {
+    appearance: none;
+    border: 1px solid #2a2a38;
+    border-radius: clamp(8px, 2vmin, 12px);
+    background: #16161f;
+    color: #ececf0;
+    font-family: inherit;
+    font-size: clamp(2rem, 12vmin, 3.5rem);
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cell:hover:not(:disabled) {
+    background: #1d1d2b;
+    border-color: #3d3d55;
+  }
+  .cell:active:not(:disabled) { transform: scale(0.96); }
+  .cell:focus-visible {
+    outline: 2px solid #7dd3a8;
+    outline-offset: 2px;
+  }
+  .cell.mark-x { color: #7dd3a8; }
+  .cell.mark-o { color: #8aa8f2; }
+  .cell.winner {
+    background: #1e2b24;
+    border-color: #7dd3a8;
+  }
+  .cell:disabled { cursor: default; }
+
+  .restart {
+    appearance: none;
+    border: 1px solid #3d3d55;
+    border-radius: 10px;
+    background: #1d1d2b;
+    color: #ececf0;
+    font-family: inherit;
+    font-size: clamp(0.9rem, 3.4vmin, 1rem);
+    font-weight: 600;
+    padding: 0.6em 1.6em;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .restart:hover { background: #26263a; border-color: #55557a; }
+  .restart:active { transform: scale(0.97); }
+  .restart:focus-visible {
+    outline: 2px solid #7dd3a8;
+    outline-offset: 2px;
+  }
+
+  .error {
+    border: 1px solid #a8484f;
+    background: #2a1517;
+    color: #f2a8ad;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    max-width: 340px;
+  }
+</style>
+</head>
+<body>
+  <main class="app">
+    <h1>Tic-Tac-Toe</h1>
+    <div id="status" class="status" role="status" aria-live="polite">X&#8217;s turn</div>
+    <div class="board" id="board" role="grid" aria-label="Tic-tac-toe board">
+      <button type="button" class="cell" role="gridcell" aria-label="Row 1 column 1"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 1 column 2"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 1 column 3"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 2 column 1"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 2 column 2"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 2 column 3"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 3 column 1"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 3 column 2"></button>
+      <button type="button" class="cell" role="gridcell" aria-label="Row 3 column 3"></button>
+    </div>
+    <button type="button" id="restart" class="restart">Restart</button>
+  </main>
+  <div id="fatal" class="error" role="alert" hidden></div>
+
+  <script>
+  (function () {
+    "use strict";
+    try {
+      var statusEl = document.getElementById("status");
+      var restartBtn = document.getElementById("restart");
+      var cells = Array.prototype.slice.call(
+        document.querySelectorAll("#board .cell")
+      );
+
+      var WIN_LINES = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+
+      var board = ["", "", "", "", "", "", "", "", ""];
+      var currentPlayer = "X";
+      var gameOver = false;
+
+      function setStatus(text, cls) {
+        statusEl.textContent = text;
+        statusEl.className = "status" + (cls ? " " + cls : "");
+      }
+
+      function findWin() {
+        for (var i = 0; i < WIN_LINES.length; i++) {
+          var a = WIN_LINES[i][0], b = WIN_LINES[i][1], c = WIN_LINES[i][2];
+          if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return WIN_LINES[i];
+          }
+        }
+        return null;
+      }
+
+      function onCellClick(index) {
+        if (gameOver || board[index] !== "") return;
+
+        board[index] = currentPlayer;
+        var cell = cells[index];
+        cell.textContent = currentPlayer;
+        cell.classList.add(currentPlayer === "X" ? "mark-x" : "mark-o");
+        cell.disabled = true;
+
+        var line = findWin();
+        if (line) {
+          gameOver = true;
+          for (var i = 0; i < line.length; i++) {
+            cells[line[i]].classList.add("winner");
+          }
+          for (var j = 0; j < cells.length; j++) {
+            cells[j].disabled = true;
+          }
+          setStatus(currentPlayer + " wins", "win");
+          return;
+        }
+
+        if (board.indexOf("") === -1) {
+          gameOver = true;
+          setStatus("It’s a draw", "draw");
+          return;
+        }
+
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        setStatus(currentPlayer + "’s turn", "");
+      }
+
+      function restart() {
+        board = ["", "", "", "", "", "", "", "", ""];
+        currentPlayer = "X";
+        gameOver = false;
+        for (var i = 0; i < cells.length; i++) {
+          cells[i].textContent = "";
+          cells[i].classList.remove("mark-x", "mark-o", "winner");
+          cells[i].disabled = false;
+        }
+        setStatus("X’s turn", "");
+      }
+
+      cells.forEach(function (cell, index) {
+        cell.addEventListener("click", function () {
+          onCellClick(index);
+        });
+      });
+      restartBtn.addEventListener("click", restart);
+    } catch (err) {
+      var fatal = document.getElementById("fatal");
+      if (fatal) {
+        fatal.hidden = false;
+        fatal.textContent = "Something went wrong: " + (err && err.message ? err.message : String(err));
+      }
+    }
+  })();
+  </script>
+</body>
+</html>

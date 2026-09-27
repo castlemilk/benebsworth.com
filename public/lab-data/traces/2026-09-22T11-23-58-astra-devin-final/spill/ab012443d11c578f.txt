@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pendulum Wave</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui;overflow:hidden}
+canvas{display:block;width:100vw;height:100vh}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.45) 100%)}
+#hud{position:fixed;top:10px;left:10px;z-index:2;padding:10px 12px;max-width:min(330px,74vw);background:rgba(14,14,20,.72);border:1px solid rgba(255,255,255,.09);border-radius:10px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:12px;line-height:1.45}
+#hud h1{margin:0 0 6px;font-size:13px;font-weight:600;letter-spacing:.05em;color:#fff}
+.row{display:flex;align-items:center;gap:8px;margin:4px 0}
+.row label{flex:none;width:52px;color:#a9a9b8}
+.row input[type=range]{flex:1;min-width:70px;accent-color:#6cc7ff}
+.val{flex:none;width:70px;text-align:right;font-variant-numeric:tabular-nums}
+#stats{margin-top:6px;color:#8b8b9c;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#ececf0;border-radius:6px;padding:3px 11px;font-size:12px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.16)}
+#planet{margin-left:auto;color:#8b8b9c}
+#err{display:none;position:fixed;left:10px;right:10px;bottom:10px;z-index:9;background:#3a0d12;border:1px solid #b3394a;color:#ffd7dd;padding:10px 12px;border-radius:8px;font:13px/1.4 ui-monospace,monospace}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="vig"></div>
+<div id="hud">
+  <h1>Pendulum wave</h1>
+  <div class="row"><label for="n">Count</label><input id="n" type="range" min="8" max="64" step="1" value="24"><span class="val" id="nv">24</span></div>
+  <div class="row"><label for="g">Gravity</label><input id="g" type="range" min="1" max="25" step="0.1" value="9.81"><span class="val" id="gv">9.81 m/s&#178;</span></div>
+  <div class="row"><label for="tr">Trails</label><input id="tr" type="range" min="0" max="100" step="1" value="72"><span class="val" id="tv">72%</span></div>
+  <div class="row" style="margin-top:6px"><button id="pause">Pause</button><button id="reset">Reset</button><span id="planet"></span></div>
+  <div id="stats"></div>
+</div>
+<div id="err" role="alert"></div>
+<script>
+try{
+(function(){
+'use strict';
+var canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+function $(id){return document.getElementById(id);}
+var errBox=$('err');
+function fail(e){errBox.style.display='block';errBox.textContent='Error: '+(e&&e.message?e.message:String(e));}
+window.addEventListener('error',function(ev){fail(ev.error||ev.message);});
+
+var G_REF=9.81,T_CYCLE=50,K_BASE=30,THETA0=0.32,TAU=Math.PI*2;
+var state={N:24,g:9.81,fade:0.184,paused:false,t:0};
+var W=0,H=0,DPR=1,raf=0,last=0,fps=60,statAcc=9,pend=[];
+
+function seedPhases(){
+  for(var i=0;i<pend.length;i++)pend[i].phase=Math.sqrt(state.g/pend[i].L)*state.t;
+}
+function layout(){
+  if(!pend.length)return;
+  var top=Math.max(64,H*0.13),bottom=Math.max(26,H*0.06);
+  var maxLen=Math.max(40,H-top-bottom-8);
+  var maxL=pend[0].L;
+  var margin=Math.min(64,Math.max(18,W*0.05))+maxLen*Math.sin(THETA0)*0.25;
+  var x0=margin,x1=Math.max(x0+10,W-margin);
+  var spacing=pend.length>1?(x1-x0)/(pend.length-1):0;
+  for(var i=0;i<pend.length;i++){
+    var p=pend[i];
+    p.ld=maxLen*Math.pow(p.L/maxL,0.7);
+    p.px=pend.length===1?W/2:x0+spacing*i;
+    p.py=top;
+    p.r=Math.max(3.5,Math.min(10,spacing*0.3,p.ld*0.08));
+  }
+}
+function build(){
+  pend=[];
+  for(var i=0;i<state.N;i++){
+    var w0=TAU*(K_BASE+i)/T_CYCLE;      // angular freq at g_ref: pendulum i does K+i osc/cycle
+    pend.push({L:G_REF/(w0*w0),hue:172+150*i/Math.max(1,state.N-1),phase:0});
+  }
+  layout();
+  seedPhases();
+}
+function clearAll(){ctx.fillStyle='#0c0c10';ctx.fillRect(0,0,W,H);}
+
+function draw(dt){
+  var ph=state.paused?0:dt,i,p,th,bx,by;
+  ctx.fillStyle='rgba(12,12,16,'+state.fade+')';
+  ctx.fillRect(0,0,W,H);
+  if(!pend.length)return;
+  var top=pend[0].py;
+  ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pend[0].px-18,top-7);ctx.lineTo(pend[pend.length-1].px+18,top-7);ctx.stroke();
+  var sg=Math.sqrt(state.g);
+  for(i=0;i<pend.length;i++){
+    p=pend[i];
+    p.phase+=sg/Math.sqrt(p.L)*ph;
+    th=THETA0*Math.cos(p.phase);
+    bx=p.px+p.ld*Math.sin(th);by=p.py+p.ld*Math.cos(th);
+    ctx.strokeStyle='rgba(255,255,255,.13)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(bx,by);ctx.stroke();
+    ctx.fillStyle='hsla('+p.hue+',85%,70%,.15)';
+    ctx.beginPath();ctx.arc(bx,by,p.r*2.6,0,TAU);ctx.fill();
+    ctx.fillStyle='hsla('+p.hue+',85%,68%,.32)';
+    ctx.beginPath();ctx.arc(bx,by,p.r*1.55,0,TAU);ctx.fill();
+    ctx.fillStyle='hsl('+p.hue+',80%,64%)';
+    ctx.beginPath();ctx.arc(bx,by,p.r,0,TAU);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.5)';
+    ctx.beginPath();ctx.arc(p.px,p.py,1.6,0,TAU);ctx.fill();
+  }
+}
+
+var PLANETS=[[1.62,'Moon'],[3.71,'Mars'],[8.87,'Uranus'],[9.81,'Earth'],[10.44,'Saturn'],[11.15,'Neptune'],[24.79,'Jupiter']];
+function updateG(){
+  $('gv').innerHTML=state.g.toFixed(2)+' m/s&#178;';
+  var name='';
+  for(var i=0;i<PLANETS.length;i++)if(Math.abs(state.g-PLANETS[i][0])<0.3)name=PLANETS[i][1];
+  $('planet').textContent=name;
+}
+function updateStats(){
+  var tc=T_CYCLE*Math.sqrt(G_REF/state.g),into=state.t%tc;
+  $('stats').textContent='t '+state.t.toFixed(1)+'s \u00b7 cycle '+tc.toFixed(1)+'s \u00b7 sync in '+(tc-into).toFixed(1)+'s \u00b7 '+Math.round(fps)+' fps';
+}
+
+function frame(now){
+  raf=requestAnimationFrame(frame);
+  var dt=Math.min(0.05,Math.max(0,(now-last)/1000));
+  last=now;
+  if(dt===0)dt=0.016;
+  fps=fps*0.92+(1/dt)*0.08;
+  if(!state.paused)state.t+=dt;
+  statAcc+=dt;
+  if(statAcc>0.25){statAcc=0;updateStats();}
+  try{draw(dt);}catch(e){cancelAnimationFrame(raf);fail(e);}
+}
+
+function resize(){
+  DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  layout();clearAll();draw(0);
+}
+
+$('n').addEventListener('input',function(){state.N=+this.value;$('nv').textContent=this.value;build();clearAll();});
+$('g').addEventListener('input',function(){state.g=+this.value;updateG();});
+$('tr').addEventListener('input',function(){var v=+this.value;state.fade=0.55*(1-v/100)+0.03;$('tv').textContent=v+'%';});
+$('pause').addEventListener('click',function(){state.paused=!state.paused;this.textContent=state.paused?'Resume':'Pause';});
+$('reset').addEventListener('click',function(){state.t=0;seedPhases();clearAll();});
+window.addEventListener('resize',resize);
+window.addEventListener('unload',function(){cancelAnimationFrame(raf);});
+
+build();resize();updateG();updateStats();
+raf=requestAnimationFrame(function(now){last=now;frame(now);});
+})();
+}catch(e){var d=document.getElementById('err');d.style.display='block';d.textContent='Error: '+(e&&e.message?e.message:String(e));}
+</script>
+</body></html>

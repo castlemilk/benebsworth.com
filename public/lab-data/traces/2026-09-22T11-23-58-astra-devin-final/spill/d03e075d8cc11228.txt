@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Gateway / Operations console</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    *,*::before,*::after{box-sizing:inherit}
+    body{min-height:100vh}
+    button,a{-webkit-tap-highlight-color:transparent}
+    button{font:inherit}
+    button:focus-visible,a:focus-visible{outline:2px solid #d1f798;outline-offset:4px}
+    .shell{max-width:1168px;margin:0 auto;padding:28px 32px 24px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:23px;border-bottom:1px solid #27272f}
+    .brand{display:flex;align-items:center;gap:11px;font-size:14px;font-weight:650;letter-spacing:-.3px}
+    .brandmark{display:grid;grid-template-columns:repeat(2,7px);gap:3px;transform:rotate(-9deg)}
+    .brandmark i{width:7px;height:7px;background:#d1f798;border-radius:1px}
+    .brandmark i:last-child{opacity:.4}
+    .brand span:last-child{color:#72727f;font-weight:450;margin-left:3px}
+    .environment{display:flex;align-items:center;gap:7px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.2px;color:#a5a5b1}
+    .environment::before{content:"";width:5px;height:5px;border-radius:50%;background:#d1f798}
+    .intro{display:flex;justify-content:space-between;align-items:flex-end;margin:32px 0 27px}
+    .eyebrow{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.7px;color:#a4a4b0;margin:0 0 10px}
+    h1{font-size:34px;line-height:1.15;letter-spacing:-1.4px;font-weight:550;margin:0}
+    .subtitle{color:#92929f;font-size:13px;line-height:1.5;margin:11px 0 0}
+    .action-count{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#777784;letter-spacing:1px;padding-bottom:3px;white-space:nowrap}
+    .action-count strong{font-size:24px;font-weight:400;color:#b0b0bb;margin-right:9px;letter-spacing:-1px}
+    .actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .card{min-width:0;background:linear-gradient(145deg,#17171e,#111116);border:1px solid #2b2b35;border-radius:12px;padding:21px;position:relative;overflow:hidden}
+    .card::before{content:"";position:absolute;top:0;left:22px;right:22px;height:1px;background:linear-gradient(90deg,transparent,#50505f,transparent);opacity:.4}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:23px}
+    .icon{width:38px;height:38px;display:grid;place-items:center;border:1px solid #383842;background:#202029;border-radius:10px;color:#c6c6d1}
+    .icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .policy{font:9px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1px;color:#a1a1ad;border:1px solid #33333e;padding:5px 7px;border-radius:4px}
+    h2{font-size:19px;line-height:1.2;font-weight:550;letter-spacing:-.5px;margin:0 0 8px}
+    .description{color:#9494a2;font-size:12px;line-height:1.6;margin:0;min-height:39px;max-width:245px}
+    .tool-name{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#6f6f7d;margin:16px 0 19px;display:block}
+    .tool-name::before{content:"↳ ";color:#575764}
+    .action-button{width:100%;min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:6px;border:1px solid #44444f;border-radius:6px;background:#262630;color:#eeeeF3;font-size:12px;font-weight:550;padding:10px 12px;cursor:pointer;transition:background .15s,border-color .15s}
+    .action-button:hover:enabled{background:#32323e;border-color:#696976}
+    .action-button .arrow{font-size:17px;line-height:14px;font-weight:400}
+    .card[data-action-card="list-users"] .action-button:enabled{background:#d1f798;border-color:#d1f798;color:#202c15}
+    .card[data-action-card="list-users"] .action-button:hover:enabled{background:#e0ffb1}
+    .action-button:disabled{cursor:default;color:#7c7c8b;background:#1b1b23;border-color:#30303a}
+    .status{font-size:11px;line-height:1.5;color:#9898a7;display:flex;align-items:center;gap:7px;margin-top:12px;min-height:17px}
+    .status::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+    .card[data-state="blocked"] .status{color:#efa39e}
+    .card[data-state="waiting"] .status,.card[data-state="auth"] .status{color:#e8c68b}
+    .card[data-state="loaded"] .status{color:#d1f798}
+    .details{height:25px;margin-top:6px;font-size:10px;line-height:1.5;color:#858592;display:flex;align-items:center;gap:6px;min-width:0}
+    .details a{color:#e8c68b;text-underline-offset:3px;overflow-wrap:anywhere}
+    .users{display:flex;gap:7px;list-style:none;padding:0;margin:0}
+    .users li{display:flex;align-items:center;gap:4px;color:#aaaab6}
+    .users li::before{content:"";width:3px;height:3px;border-radius:50%;background:#666673}
+    .footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;color:#686876;font:10px ui-monospace,SFMono-Regular,Consolas,monospace}
+    .footer-note{display:flex;align-items:center;gap:7px}
+    .footer-note svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.4}
+    .footer-id{letter-spacing:.7px}
+    #page-error{background:#321c22;color:#ffc0bd;border:1px solid #754044;border-radius:6px;padding:12px;margin-top:12px;font-size:12px}
+    [hidden]{display:none!important}
+    @media(max-width:650px){
+      .shell{padding:12px 14px 10px}
+      .topbar{padding-bottom:10px}
+      .brand{font-size:12px;gap:9px}
+      .brand span:last-child{display:none}
+      .environment{font-size:8px;letter-spacing:1px}
+      .intro{margin:14px 0 12px}
+      .eyebrow{font-size:8px;letter-spacing:1.3px;margin-bottom:5px}
+      h1{font-size:25px;letter-spacing:-1px}
+      .subtitle{font-size:11px;margin-top:5px}
+      .action-count{display:none}
+      .actions{grid-template-columns:1fr;gap:9px}
+      .card{padding:10px 12px 8px;border-radius:9px;display:grid;grid-template-columns:minmax(0,1fr) 132px;column-gap:10px;align-items:center;min-height:86px}
+      .card-head{display:none}
+      h2{font-size:15px;margin:0 0 5px;letter-spacing:-.3px}
+      .description{display:none}
+      .tool-name{font-size:9px;margin:0;grid-column:1;grid-row:2}
+      .action-button{grid-column:2;grid-row:1 / 3;min-height:36px;font-size:10px;padding:8px 9px;align-self:start}
+      .status{grid-column:1 / -1;margin-top:7px;font-size:10px;min-height:15px;gap:6px}
+      .details{grid-column:1 / -1;height:15px;margin-top:3px;font-size:10px}
+      .details:empty{display:none}
+      .footer{margin-top:12px;font-size:8px}
+      .footer-id{display:none}
+    }
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brandmark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>gateway<span>/ control plane</span></div>
+      <div class="environment">LOCAL SANDBOX</div>
+    </header>
+    <div class="intro">
+      <div><p class="eyebrow">OPERATOR WORKSPACE</p><h1>Operations console.</h1><p class="subtitle">Three actions. Every request respects the gateway.</p></div>
+      <div class="action-count"><strong>03</strong> GATEWAY ACTIONS</div>
+    </div>
+    <section class="actions" aria-label="Gateway actions">
+      <article class="card" data-action-card="delete" data-state="idle" aria-labelledby="delete-title">
+        <div class="card-head"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5m4-5v5"/></svg></div><span class="policy">FAIL CLOSED</span></div>
+        <h2 id="delete-title">Delete records</h2>
+        <p class="description">Request record deletion. A permission denial is final.</p>
+        <code class="tool-name">deleteRecords</code>
+        <button type="button" class="action-button" data-action="delete" aria-describedby="delete-status"><span class="button-label">Delete records</span><span class="arrow" aria-hidden="true">↗</span></button>
+        <div class="status" id="delete-status" data-status="delete" role="status" aria-live="polite" aria-atomic="true">Not run</div>
+        <div class="details" id="delete-details"></div>
+      </article>
+      <article class="card" data-action-card="list-users" data-state="idle" aria-labelledby="users-title">
+        <div class="card-head"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/></svg></div><span class="policy">WAIT &amp; RETRY</span></div>
+        <h2 id="users-title">List users</h2>
+        <p class="description">Fetch the user directory. Rate limits pause before retrying.</p>
+        <code class="tool-name">listUsers</code>
+        <button type="button" class="action-button" data-action="list-users" aria-describedby="users-status"><span class="button-label">List users</span><span class="arrow" aria-hidden="true">↗</span></button>
+        <div class="status" id="users-status" data-status="list-users" role="status" aria-live="polite" aria-atomic="true">Not run</div>
+        <div class="details" id="users-details"></div>
+      </article>
+      <article class="card" data-action-card="export" data-state="idle" aria-labelledby="export-title">
+        <div class="card-head"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M5 14v6h14v-6"/></svg></div><span class="policy">REPAIR ELSEWHERE</span></div>
+        <h2 id="export-title">Export data</h2>
+        <p class="description">Request a data export. Missing credentials need external repair.</p>
+        <code class="tool-name">exportData</code>
+        <button type="button" class="action-button" data-action="export" aria-describedby="export-status"><span class="button-label">Export data</span><span class="arrow" aria-hidden="true">↗</span></button>
+        <div class="status" id="export-status" data-status="export" role="status" aria-live="polite" aria-atomic="true">Not run</div>
+        <div class="details" id="export-details"></div>
+      </article>
+    </section>
+    <footer class="footer"><span class="footer-note"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m8 1 5 2v4c0 4-5 7-5 7S3 11 3 7V3Z"/><path d="m5.5 7.5 1.5 1.5 3-3"/></svg>Calls run only on request.</span><span class="footer-id">IN-MEMORY SESSION / 01</span></footer>
+    <div id="page-error" role="alert" hidden></div>
+  </main>
+<script>
+/* PROVIDED GATEWAY — paste verbatim, do not modify. */
+(function () {
+  var log = [];
+  var listUsersAttempts = 0;
+  var gateway = {
+    log: log,
+    call: function (tool, args) {
+      log.push({ tool: tool, ts: Date.now() });
+      if (tool === 'deleteRecords') {
+        return Promise.reject({ code: 'denied', message: 'deleteRecords is not permitted for this operator' });
+      }
+      if (tool === 'listUsers') {
+        listUsersAttempts += 1;
+        if (listUsersAttempts <= 2) {
+          return Promise.reject({ code: 'rate_limited', retryAfterMs: 400 });
+        }
+        return Promise.resolve({ users: [{ id: 1, name: 'ada' }, { id: 2, name: 'grace' }, { id: 3, name: 'linus' }] });
+      }
+      if (tool === 'exportData') {
+        return Promise.reject({ code: 'auth_missing', repair: '/settings/credentials', message: 'no export credential is configured' });
+      }
+      return Promise.reject({ code: 'unknown_tool', tool: tool });
+    }
+  };
+  Object.defineProperty(window, 'gateway', { value: gateway, writable: false, configurable: false });
+})();
+</script>
+<script>
+try {
+  (function () {
+    'use strict';
+    var configurations = [
+      { action: 'delete', tool: 'deleteRecords', details: 'delete-details' },
+      { action: 'list-users', tool: 'listUsers', details: 'users-details' },
+      { action: 'export', tool: 'exportData', details: 'export-details' }
+    ];
+
+    configurations.forEach(function (config) {
+      var button = document.querySelector('[data-action="' + config.action + '"]');
+      var status = document.querySelector('[data-status="' + config.action + '"]');
+      var card = document.querySelector('[data-action-card="' + config.action + '"]');
+      var label = button.querySelector('.button-label');
+      var details = document.getElementById(config.details);
+      var originalLabel = label.textContent;
+      var busy = false;
+      var finalBlock = false;
+
+      function setState(state, text) {
+        card.setAttribute('data-state', state);
+        status.textContent = text;
+      }
+
+      function block(state, text, buttonText) {
+        finalBlock = true;
+        busy = false;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'false');
+        label.textContent = buttonText;
+        setState(state, text);
+      }
+
+      function unexpected(error) {
+        block('blocked', 'Blocked · unexpected error', 'Action blocked');
+        var errorBox = document.getElementById('page-error');
+        errorBox.textContent = 'Console error: ' + (error && error.message ? error.message : String(error && error.code || error));
+        errorBox.hidden = false;
+      }
+
+      function attempt(number) {
+        setState('loading', 'Requesting · attempt ' + number + ' of 3');
+        label.textContent = 'Requesting…';
+        try {
+          gateway.call(config.tool, {}).then(function (result) {
+            if (config.action === 'list-users') {
+              var users = document.createElement('ul');
+              users.className = 'users';
+              users.setAttribute('aria-label', 'Loaded users');
+              result.users.forEach(function (user) {
+                var item = document.createElement('li');
+                item.textContent = user.name;
+                users.appendChild(item);
+              });
+              details.replaceChildren(users);
+              setState('loaded', 'Loaded · ' + result.users.length + ' users');
+            } else {
+              setState('loaded', 'Request accepted');
+            }
+            busy = false;
+            button.disabled = false;
+            button.setAttribute('aria-busy', 'false');
+            label.textContent = originalLabel;
+          }, function (error) {
+            if (error && error.code === 'denied') {
+              block('blocked', 'Blocked · permission denied', 'Access denied');
+              details.textContent = 'Permanent denial. No retries.';
+              return;
+            }
+            if (error && error.code === 'rate_limited') {
+              if (number >= 3) {
+                block('waiting', 'Rate limited · 3-attempt limit reached', 'Attempt limit reached');
+                details.textContent = 'Stopped after 3 attempts.';
+                return;
+              }
+              var delay = error.retryAfterMs;
+              if (typeof delay !== 'number' || !Number.isFinite(delay) || delay < 0 || delay > 2147483647) {
+                block('blocked', 'Blocked · invalid retry delay', 'Action blocked');
+                return;
+              }
+              delay = Math.ceil(delay);
+              setState('waiting', 'Rate limited · waiting ' + delay + ' ms');
+              label.textContent = 'Waiting to retry…';
+              details.textContent = 'Next: attempt ' + (number + 1) + ' of 3';
+              setTimeout(function () {
+                try { attempt(number + 1); } catch (error) { unexpected(error); }
+              }, delay);
+              return;
+            }
+            if (error && error.code === 'auth_missing') {
+              block('auth', 'Blocked · missing credential', 'Credential required');
+              var repair = document.createElement('a');
+              repair.setAttribute('href', error.repair);
+              repair.textContent = error.repair + ' ↗';
+              repair.setAttribute('aria-label', 'Repair credentials elsewhere: ' + error.repair);
+              details.replaceChildren(document.createTextNode('Repair: '), repair);
+              return;
+            }
+            unexpected(error);
+          }).catch(unexpected);
+        } catch (error) {
+          unexpected(error);
+        }
+      }
+
+      button.addEventListener('click', function () {
+        try {
+          if (busy || finalBlock) return;
+          busy = true;
+          button.disabled = true;
+          button.setAttribute('aria-busy', 'true');
+          details.replaceChildren();
+          attempt(1);
+        } catch (error) {
+          unexpected(error);
+        }
+      });
+    });
+  })();
+} catch (error) {
+  var fatalError = document.getElementById('page-error');
+  fatalError.textContent = 'Console error: ' + (error && error.message ? error.message : String(error));
+  fatalError.hidden = false;
+}
+</script>
+</body>
+</html>

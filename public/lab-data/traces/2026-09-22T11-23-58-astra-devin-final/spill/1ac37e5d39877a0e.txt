@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Tic. Tac. Toe.</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    *,*::before,*::after{box-sizing:inherit}
+    body{min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:12px}
+    main{--board-size:min(80vw,52vh,19.5rem);--board-size:min(80vw,52svh,19.5rem);width:var(--board-size);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+    header{width:100%}
+    .eyebrow{display:flex;justify-content:center;align-items:center;gap:7px;margin:0 0 5px;color:#94949f;font-size:10px;font-weight:650;letter-spacing:2px;text-transform:uppercase}
+    .eyebrow::before{content:"";width:5px;height:5px;border-radius:50%;background:#c7f286;box-shadow:0 0 10px #c7f23335}
+    h1{margin:0;font-size:clamp(26px,6vw,34px);font-weight:700;letter-spacing:-1.5px;line-height:1.15}
+    h1 span{color:#c7f286}
+    .players{display:flex;justify-content:space-between;gap:10px;width:100%;font-size:12px}
+    .player{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-height:32px;border:1px solid transparent;border-radius:8px;color:#797984;transition:background .15s,color .15s,border-color .15s}
+    .player strong{font-size:15px;font-weight:750}
+    .player.active[data-player="X"]{color:#c7f286;background:#c7f2860b;border-color:#c7f28628}
+    .player.active[data-player="O"]{color:#bba8f5;background:#bba8f50b;border-color:#bba8f528}
+    .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));width:100%;aspect-ratio:1;gap:8px;padding:9px;border:1px solid #29292f;border-radius:20px;background:#111116;box-shadow:0 18px 55px #00000038}
+    button{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+    .cell{display:grid;place-items:center;min-width:0;min-height:0;margin:0;padding:0;border:1px solid #2a2a32;border-radius:11px;background:linear-gradient(145deg,#1e1e26,#19191f);color:#ececf0;font-size:clamp(30px,9vw,54px);font-weight:500;line-height:1;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+    .cell[data-mark="X"]{color:#c7f286}
+    .cell[data-mark="O"]{color:#bba8f5}
+    .cell[aria-disabled="true"]{cursor:default}
+    .cell.winning{background:#c7f28612;border-color:#c7f28688;box-shadow:inset 0 0 22px #c7f28608}
+    .cell.winning[data-mark="O"]{background:#bba8f515;border-color:#bba8f588}
+    .cell:focus-visible,.restart:focus-visible{outline:2px solid #ececf0;outline-offset:3px}
+    .cell:not([aria-disabled="true"]):active{transform:scale(.96)}
+    @media(hover:hover){.cell:not([aria-disabled="true"]):hover{border-color:#686874;background:#25252f}.restart:hover{background:#303039;border-color:#656570}}
+    .status{min-height:22px;margin:0;font-size:13px;line-height:22px;color:#a7a7b3}
+    .status.result{color:#ececf0;font-weight:650}
+    .restart{display:flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 20px;border:1px solid #393941;border-radius:9px;background:#202027;color:#ececf0;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s}
+    .restart svg{width:14px;height:14px}
+    #error{max-width:90vw;padding:10px;color:#ffc0c0;font-size:13px}
+    #error:empty{display:none}
+    @media(max-height:510px){main{gap:9px}body{padding:10px}h1{font-size:28px}.eyebrow{font-size:9px;line-height:12px}.board{gap:7px;padding:8px;border-radius:17px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main aria-labelledby="title">
+    <header>
+      <p class="eyebrow">Two players · One board</p>
+      <h1 id="title">Tic<span>.</span> Tac<span>.</span> Toe<span>.</span></h1>
+    </header>
+    <div class="players" aria-label="Players">
+      <div class="player active" data-player="X"><strong>X</strong><span>Player one</span></div>
+      <div class="player" data-player="O"><strong>O</strong><span>Player two</span></div>
+    </div>
+    <div class="board" id="board" role="group" aria-label="Tic-tac-toe board">
+      <button class="cell" type="button" aria-label="Row 1, column 1, empty"></button>
+      <button class="cell" type="button" aria-label="Row 1, column 2, empty"></button>
+      <button class="cell" type="button" aria-label="Row 1, column 3, empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 1, empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 2, empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 3, empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 1, empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 2, empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 3, empty"></button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite" aria-atomic="true">X's turn — choose a square.</p>
+    <button class="restart" id="restart" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg>Restart game</button>
+  </main>
+  <div id="error" role="alert"></div>
+  <script>
+    try {
+      const cells = Array.from(document.querySelectorAll('.cell'));
+      const players = Array.from(document.querySelectorAll('.player'));
+      const status = document.getElementById('status');
+      const winningLines = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      let board = Array(9).fill('');
+      let currentPlayer = 'X';
+      let gameOver = false;
+
+      function reportError(error) {
+        document.getElementById('error').textContent = 'Unable to continue: ' + (error instanceof Error ? error.message : String(error));
+      }
+
+      function updatePlayers() {
+        players.forEach(player => {
+          player.classList.toggle('active', !gameOver && player.dataset.player === currentPlayer);
+        });
+      }
+
+      function play(index) {
+        if (gameOver || board[index] !== '') return;
+        board[index] = currentPlayer;
+        cells[index].textContent = currentPlayer;
+        cells[index].dataset.mark = currentPlayer;
+        cells[index].setAttribute('aria-label', 'Row ' + (Math.floor(index / 3) + 1) + ', column ' + (index % 3 + 1) + ', ' + currentPlayer);
+        cells[index].setAttribute('aria-disabled', 'true');
+
+        const winningLine = winningLines.find(line => line.every(position => board[position] === currentPlayer));
+        if (winningLine) {
+          gameOver = true;
+          winningLine.forEach(position => cells[position].classList.add('winning'));
+          status.textContent = currentPlayer + ' wins! Three in a row.';
+        } else if (board.every(mark => mark !== '')) {
+          gameOver = true;
+          status.textContent = "It's a draw! Play another round.";
+        } else {
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          status.textContent = currentPlayer + "'s turn — choose a square.";
+        }
+        if (gameOver) {
+          cells.forEach(cell => cell.setAttribute('aria-disabled', 'true'));
+          status.classList.add('result');
+        }
+        updatePlayers();
+      }
+
+      cells.forEach((cell, index) => {
+        cell.addEventListener('click', () => {
+          try { play(index); } catch (error) { reportError(error); }
+        });
+      });
+
+      document.getElementById('restart').addEventListener('click', () => {
+        try {
+          board = Array(9).fill('');
+          currentPlayer = 'X';
+          gameOver = false;
+          cells.forEach((cell, index) => {
+            cell.textContent = '';
+            cell.removeAttribute('data-mark');
+            cell.removeAttribute('aria-disabled');
+            cell.classList.remove('winning');
+            cell.setAttribute('aria-label', 'Row ' + (Math.floor(index / 3) + 1) + ', column ' + (index % 3 + 1) + ', empty');
+          });
+          status.textContent = "X's turn — choose a square.";
+          status.classList.remove('result');
+          document.getElementById('error').textContent = '';
+          updatePlayers();
+        } catch (error) { reportError(error); }
+      });
+    } catch (error) {
+      document.getElementById('error').textContent = 'Unable to start the game: ' + (error instanceof Error ? error.message : String(error));
+    }
+  </script>
+</body>
+</html>

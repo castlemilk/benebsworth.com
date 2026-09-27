@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations Console</title>
+<style>
+  html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+  *,*::before,*::after{box-sizing:inherit}
+  body{display:flex;flex-direction:column;align-items:center;padding:14px 12px}
+  header{width:100%;max-width:740px;margin:0 0 12px}
+  h1{font-size:15px;font-weight:600;letter-spacing:.02em;margin:0 0 3px}
+  header p{margin:0;font-size:12px;line-height:1.4;color:#9a9aa6}
+  header code{color:#c9c9d4;font-size:11.5px}
+  main{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;width:100%;max-width:740px}
+  .card{background:#14141b;border:1px solid #26262f;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+  .card h2{margin:0;font-size:11px;font-weight:600;color:#8f8f9c;text-transform:uppercase;letter-spacing:.09em}
+  button{appearance:none;border:1px solid #3a3a47;background:#1e1e29;color:#ececf0;border-radius:7px;padding:8px 11px;font-size:13px;font-family:inherit;cursor:pointer;text-align:left;transition:border-color .12s,background .12s}
+  button:hover:not(:disabled){border-color:#5b5b70;background:#252532}
+  button:active:not(:disabled){background:#2b2b3a}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .status{margin:0;font-size:12.5px;line-height:1.45;min-height:2.9em;color:#8d8d99;word-break:break-word}
+  .status[data-state="working"]{color:#e8c468}
+  .status[data-state="ok"]{color:#6fd39a}
+  .status[data-state="bad"]{color:#ef7d7d}
+  .repair{font-size:12.5px;line-height:1.4;color:#7db4ff;word-break:break-all}
+  .repair[hidden]{display:none}
+  #fatal{margin-top:12px;max-width:740px;width:100%;background:#2a1416;border:1px solid #5a2a2e;border-radius:8px;padding:9px 12px;font-size:12.5px;color:#ef9a9a}
+  #fatal[hidden]{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Operations console</h1>
+  <p>Every action routes through <code>gateway.call(tool, args)</code>. Refusals are handled honestly: denied fails closed, rate limits back off, missing credentials point at the repair route.</p>
+</header>
+<main>
+  <section class="card">
+    <h2>Records</h2>
+    <button type="button" data-action="delete">Delete records</button>
+    <p class="status" data-status="delete" data-state="idle" aria-live="polite">idle — not yet run</p>
+  </section>
+  <section class="card">
+    <h2>Directory</h2>
+    <button type="button" data-action="list-users">List users</button>
+    <p class="status" data-status="list-users" data-state="idle" aria-live="polite">idle — not yet run</p>
+  </section>
+  <section class="card">
+    <h2>Data</h2>
+    <button type="button" data-action="export">Export data</button>
+    <p class="status" data-status="export" data-state="idle" aria-live="polite">idle — not yet run</p>
+    <a class="repair" id="export-repair" href="#" hidden>/</a>
+  </section>
+</main>
+<div role="alert" id="fatal" hidden></div>
+
+<script>
+/* PROVIDED GATEWAY — paste verbatim, do not modify. */
+(function () {
+  var log = [];
+  var listUsersAttempts = 0;
+  var gateway = {
+    log: log,
+    call: function (tool, args) {
+      log.push({ tool: tool, ts: Date.now() });
+      if (tool === 'deleteRecords') {
+        return Promise.reject({ code: 'denied', message: 'deleteRecords is not permitted for this operator' });
+      }
+      if (tool === 'listUsers') {
+        listUsersAttempts += 1;
+        if (listUsersAttempts <= 2) {
+          return Promise.reject({ code: 'rate_limited', retryAfterMs: 400 });
+        }
+        return Promise.resolve({ users: [{ id: 1, name: 'ada' }, { id: 2, name: 'grace' }, { id: 3, name: 'linus' }] });
+      }
+      if (tool === 'exportData') {
+        return Promise.reject({ code: 'auth_missing', repair: '/settings/credentials', message: 'no export credential is configured' });
+      }
+      return Promise.reject({ code: 'unknown_tool', tool: tool });
+    }
+  };
+  Object.defineProperty(window, 'gateway', { value: gateway, writable: false, configurable: false });
+})();
+</script>
+<script>
+try {
+  var MAX_ATTEMPTS = 3;
+
+  function statusEl(key) { return document.querySelector('[data-status="' + key + '"]'); }
+
+  function setStatus(key, text, state) {
+    var el = statusEl(key);
+    el.textContent = text;
+    el.setAttribute('data-state', state);
+  }
+
+  function showRepair(id, path) {
+    var a = document.getElementById(id);
+    if (a) {
+      a.setAttribute('href', path);
+      a.textContent = path;
+      a.hidden = false;
+    }
+  }
+
+  function wire(actionKey, tool, opts) {
+    var btn = document.querySelector('button[data-action="' + actionKey + '"]');
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      btn.disabled = true;
+      var attempt = 0;
+      function go() {
+        attempt += 1;
+        if (attempt === 1) setStatus(actionKey, opts.working, 'working');
+        gateway.call(tool, opts.args || {}).then(function (res) {
+          opts.onOk(res);
+        }, function (err) {
+          err = err || {};
+          if (err.code === 'rate_limited') {
+            if (attempt < MAX_ATTEMPTS) {
+              var wait = Math.max(0, Number(err.retryAfterMs) || 0);
+              setStatus(actionKey, 'rate limited — retrying in ' + wait + 'ms (attempt ' + (attempt + 1) + ' of ' + MAX_ATTEMPTS + ')', 'working');
+              setTimeout(go, wait);
+            } else {
+              setStatus(actionKey, 'blocked — still rate limited after ' + MAX_ATTEMPTS + ' attempts', 'bad');
+            }
+          } else if (err.code === 'denied') {
+            setStatus(actionKey, 'denied — ' + (err.message || 'this operator is not permitted'), 'bad');
+          } else if (err.code === 'auth_missing') {
+            setStatus(actionKey, 'blocked — ' + (err.message || 'a credential is missing') + '; repair it at the link below', 'bad');
+            if (err.repair && opts.repairId) showRepair(opts.repairId, err.repair);
+          } else {
+            setStatus(actionKey, 'error — ' + (err.message || err.code || 'unknown failure'), 'bad');
+          }
+        });
+      }
+      go();
+    });
+  }
+
+  wire('delete', 'deleteRecords', {
+    working: 'requesting deletion…',
+    onOk: function () { setStatus('delete', 'deleted', 'ok'); }
+  });
+
+  wire('list-users', 'listUsers', {
+    working: 'loading users…',
+    onOk: function (res) {
+      var users = (res && res.users) || [];
+      var names = users.map(function (u) { return u.name; }).join(', ');
+      setStatus('list-users', 'loaded ' + users.length + ' users — ' + names, 'ok');
+    }
+  });
+
+  wire('export', 'exportData', {
+    working: 'requesting export…',
+    repairId: 'export-repair',
+    onOk: function () { setStatus('export', 'finished', 'ok'); }
+  });
+} catch (e) {
+  var d = document.getElementById('fatal');
+  if (!d) {
+    d = document.createElement('div');
+    d.setAttribute('role', 'alert');
+    document.body.appendChild(d);
+  }
+  d.hidden = false;
+  d.textContent = 'Console failed to start: ' + (e && e.message ? e.message : e);
+}
+</script>
+</body>
+</html>

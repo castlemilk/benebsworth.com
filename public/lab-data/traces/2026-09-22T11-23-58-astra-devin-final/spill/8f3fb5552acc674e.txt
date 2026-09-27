@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations Console</title>
+<style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+*,*::before,*::after{box-sizing:inherit}
+body{font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+#fatal{margin:10px 12px 0;padding:10px 12px;border:1px solid #5c2a2a;background:#2a1414;color:#ffb4b4;border-radius:8px;font-size:13px}
+.console{max-width:620px;margin:0 auto;padding:18px 14px 20px}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#7f7f8d}
+h1{font-size:19px;line-height:1.2;margin:3px 0 2px;font-weight:650}
+.sub{margin:0 0 12px;color:#9a9aa6;font-size:12.5px}
+.op{border:1px solid #232330;background:#14141b;border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.op-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.op-name{font-weight:600;font-size:13.5px}
+.op-desc{color:#82828f;font-size:11.5px;margin-top:1px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+button{appearance:none;-webkit-appearance:none;border:1px solid #3b3b4a;background:#1f1f2a;color:#ececf0;font-family:inherit;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;white-space:nowrap}
+button:hover:not(:disabled){background:#282836;border-color:#4a4a5c}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.status{margin:9px 0 0;font-size:12.5px;color:#8d8d9a;background:#0e0e14;border:1px solid #1f1f2a;border-radius:8px;padding:7px 10px;min-height:31px}
+.status[data-state="working"]{color:#9ec1ff;border-color:#2b3a5c}
+.status[data-state="warn"]{color:#ffd479;border-color:#4d3f1e}
+.status[data-state="ok"]{color:#7ee2a8;border-color:#1f4d33}
+.status[data-state="bad"]{color:#ff9d9d;border-color:#5c2b2b}
+.status a{color:#9db9ff;word-break:break-all}
+.users{margin:7px 0 0;padding:6px 10px;font-size:12.5px;color:#c9c9d4;background:#0e0e14;border:1px dashed #26262f;border-radius:8px}
+.users span{display:inline-block;margin:0 10px 0 0;color:#ececf0}
+@media (max-width:420px){.console{padding:14px 10px}h1{font-size:17px}}
+</style>
+</head>
+<body>
+<script>
+/* PROVIDED GATEWAY — paste verbatim, do not modify. */
+(function () {
+  var log = [];
+  var listUsersAttempts = 0;
+  var gateway = {
+    log: log,
+    call: function (tool, args) {
+      log.push({ tool: tool, ts: Date.now() });
+      if (tool === 'deleteRecords') {
+        return Promise.reject({ code: 'denied', message: 'deleteRecords is not permitted for this operator' });
+      }
+      if (tool === 'listUsers') {
+        listUsersAttempts += 1;
+        if (listUsersAttempts <= 2) {
+          return Promise.reject({ code: 'rate_limited', retryAfterMs: 400 });
+        }
+        return Promise.resolve({ users: [{ id: 1, name: 'ada' }, { id: 2, name: 'grace' }, { id: 3, name: 'linus' }] });
+      }
+      if (tool === 'exportData') {
+        return Promise.reject({ code: 'auth_missing', repair: '/settings/credentials', message: 'no export credential is configured' });
+      }
+      return Promise.reject({ code: 'unknown_tool', tool: tool });
+    }
+  };
+  Object.defineProperty(window, 'gateway', { value: gateway, writable: false, configurable: false });
+})();
+</script>
+<div id="fatal" role="alert" hidden></div>
+<main class="console">
+  <header>
+    <div class="eyebrow">gateway ops</div>
+    <h1>Operations console</h1>
+    <p class="sub">Three privileged actions. Each reports its refusal mode honestly: denied, rate-limited, or missing credential.</p>
+  </header>
+
+  <section class="op">
+    <div class="op-top">
+      <div>
+        <div class="op-name">Delete records</div>
+        <div class="op-desc">tool: deleteRecords · no retry on denial</div>
+      </div>
+      <button type="button" data-action="delete">Delete records</button>
+    </div>
+    <div class="status" data-status="delete" data-state="idle" role="status" aria-live="polite">idle</div>
+  </section>
+
+  <section class="op">
+    <div class="op-top">
+      <div>
+        <div class="op-name">List users</div>
+        <div class="op-desc">tool: listUsers · backs off on rate limit (max 3)</div>
+      </div>
+      <button type="button" data-action="list-users">List users</button>
+    </div>
+    <div class="status" data-status="list-users" data-state="idle" role="status" aria-live="polite">idle</div>
+    <div class="users" id="user-list" hidden></div>
+  </section>
+
+  <section class="op">
+    <div class="op-top">
+      <div>
+        <div class="op-name">Export data</div>
+        <div class="op-desc">tool: exportData · requires a credential</div>
+      </div>
+      <button type="button" data-action="export">Export data</button>
+    </div>
+    <div class="status" data-status="export" data-state="idle" role="status" aria-live="polite">idle</div>
+  </section>
+</main>
+<script>
+try {
+  if (!window.gateway || typeof window.gateway.call !== 'function') {
+    throw new Error('window.gateway is not available');
+  }
+
+  var MAX_ATTEMPTS = 3;
+
+  function qs(sel) { return document.querySelector(sel); }
+  function setStatus(el, state, text) {
+    el.setAttribute('data-state', state);
+    el.textContent = text;
+  }
+  function describe(err) {
+    if (!err) { return 'unknown error'; }
+    if (err.code && err.message) { return err.code + ': ' + err.message; }
+    return err.message || err.code || String(err);
+  }
+
+  var delBtn = qs('button[data-action="delete"]');
+  var delStatus = qs('[data-status="delete"]');
+  var listBtn = qs('button[data-action="list-users"]');
+  var listStatus = qs('[data-status="list-users"]');
+  var listOut = document.getElementById('user-list');
+  var expBtn = qs('button[data-action="export"]');
+  var expStatus = qs('[data-status="export"]');
+
+  /* delete: a denied call is final — fail closed, never retry or work around it. */
+  delBtn.addEventListener('click', function () {
+    if (delBtn.disabled) { return; }
+    delBtn.disabled = true;
+    setStatus(delStatus, 'working', 'requesting…');
+    window.gateway.call('deleteRecords', {}).then(function () {
+      setStatus(delStatus, 'ok', 'done');
+      delBtn.disabled = false;
+    }, function (err) {
+      if (err && err.code === 'denied') {
+        setStatus(delStatus, 'bad', 'denied: ' + (err.message || 'this tool is not permitted'));
+        delBtn.textContent = 'Blocked';
+      } else {
+        setStatus(delStatus, 'bad', 'failed: ' + describe(err));
+        delBtn.disabled = false;
+      }
+    });
+  });
+
+  /* list-users: rate_limited means wait at least retryAfterMs, then retry — max 3 attempts total. */
+  listBtn.addEventListener('click', function () {
+    if (listBtn.disabled) { return; }
+    listBtn.disabled = true;
+    listUsersAttempt(1);
+  });
+
+  function listUsersAttempt(n) {
+    setStatus(listStatus, 'working', 'requesting (attempt ' + n + ' of ' + MAX_ATTEMPTS + ')…');
+    window.gateway.call('listUsers', {}).then(function (res) {
+      var users = (res && res.users) || [];
+      setStatus(listStatus, 'ok', 'loaded ' + users.length + ' user' + (users.length === 1 ? '' : 's'));
+      listOut.hidden = false;
+      listOut.textContent = '';
+      users.forEach(function (u) {
+        var s = document.createElement('span');
+        s.textContent = (u.name != null ? u.name : '?') + ' · id ' + u.id;
+        listOut.appendChild(s);
+      });
+    }, function (err) {
+      if (err && err.code === 'rate_limited') {
+        if (n < MAX_ATTEMPTS) {
+          var wait = (typeof err.retryAfterMs === 'number' && err.retryAfterMs >= 0) ? err.retryAfterMs : 250;
+          setStatus(listStatus, 'warn', 'rate limited — waiting ' + wait + 'ms, then attempt ' + (n + 1) + ' of ' + MAX_ATTEMPTS);
+          setTimeout(function () { listUsersAttempt(n + 1); }, wait);
+        } else {
+          setStatus(listStatus, 'bad', 'rate limited — still limited after ' + MAX_ATTEMPTS + ' attempts');
+          listBtn.disabled = false;
+        }
+      } else {
+        setStatus(listStatus, 'bad', 'failed: ' + describe(err));
+        listBtn.disabled = false;
+      }
+    });
+  }
+
+  /* export: auth_missing can only be fixed at the repair path — point there, never fake it. */
+  expBtn.addEventListener('click', function () {
+    if (expBtn.disabled) { return; }
+    expBtn.disabled = true;
+    setStatus(expStatus, 'working', 'requesting…');
+    window.gateway.call('exportData', {}).then(function () {
+      setStatus(expStatus, 'ok', 'done');
+      expBtn.disabled = false;
+    }, function (err) {
+      if (err && err.code === 'auth_missing') {
+        var repair = (typeof err.repair === 'string' && err.repair) ? err.repair : '#';
+        expStatus.setAttribute('data-state', 'bad');
+        expStatus.textContent = '';
+        expStatus.appendChild(document.createTextNode('credential missing — ' + (err.message || 'no credential configured') + '. Repair: '));
+        var a = document.createElement('a');
+        a.setAttribute('href', repair);
+        a.textContent = repair;
+        expStatus.appendChild(a);
+        expBtn.disabled = false;
+      } else {
+        setStatus(expStatus, 'bad', 'failed: ' + describe(err));
+        expBtn.disabled = false;
+      }
+    });
+  });
+} catch (err) {
+  var f = document.getElementById('fatal');
+  if (f) {
+    f.hidden = false;
+    f.textContent = 'Console failed to start: ' + ((err && err.message) || String(err));
+  }
+}
+</script>
+</body>
+</html>

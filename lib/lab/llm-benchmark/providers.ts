@@ -23,6 +23,7 @@ export const BUILTIN_PROVIDERS: readonly string[] = [
   'Agy',
   'Codex',
   'OpenCode',
+  'Devin',
   'Ollama',
 ]
 

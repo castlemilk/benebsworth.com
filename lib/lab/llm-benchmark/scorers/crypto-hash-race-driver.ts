@@ -35,6 +35,7 @@
  * bug.
  */
 export const CRYPTO_HASH_RACE_DRIVER = String.raw`
+import ast
 import contextlib
 import glob
 import importlib.abc
@@ -78,7 +79,13 @@ def deny_network():
         def denied(*args, **kwargs):
             raise OSError("network access is denied by the benchmark code-runtime")
 
-        socket.socket = denied
+        # ssl subclasses socket.socket at import time. Keep it a type while
+        # denying construction, so unittest.mock -> asyncio -> ssl can load.
+        class DeniedSocket(socket.socket):
+            def __new__(cls, *args, **kwargs):
+                return denied(*args, **kwargs)
+
+        socket.socket = DeniedSocket
         socket.create_connection = denied
         socket.getaddrinfo = denied
     except Exception:
@@ -174,9 +181,11 @@ deny_network()
 # module, so the driver decides by EXECUTING each and keeping the one that
 # actually provides the functions the prompt asked for.
 #
-# A LAST-RESORT meta_path finder resolves any otherwise-unresolvable top-level
-# import to the module currently being executed. Appended, never prepended, so
-# the standard library always wins. This is what makes a single block containing
+# A LAST-RESORT meta_path finder resolves an otherwise-unresolvable top-level
+# import explicitly named by the subject to the module being executed. Never
+# alias standard-library names: optional platform imports must still fail
+# normally (e.g. subprocess probes msvcrt to decide whether it is on Windows).
+# This is what makes a single block containing
 # both the module and its 'import secure_utils' test file work — the import
 # lands on the partially-built module itself, which is exactly what the model
 # meant. The names it caught are reported in the module-executes detail rather
@@ -184,6 +193,19 @@ deny_network()
 
 ALIASED = []
 ALIAS_TARGET = [None]
+SUBJECT_IMPORTS = [set()]
+STDLIB_NAMES = getattr(sys, "stdlib_module_names", set())
+
+
+def import_names(source, path):
+    tree = ast.parse(source, filename=path)
+    return {
+        alias.name for node in ast.walk(tree) if isinstance(node, ast.Import)
+        for alias in node.names
+    } | {
+        node.module for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.level == 0 and node.module
+    }
 
 
 class SubjectLoader(importlib.abc.Loader):
@@ -197,6 +219,8 @@ class SubjectLoader(importlib.abc.Loader):
 class SubjectFinder(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
         if path is not None or "." in fullname or ALIAS_TARGET[0] is None:
+            return None
+        if fullname not in SUBJECT_IMPORTS[0] or fullname in STDLIB_NAMES:
             return None
         ALIASED.append(fullname)
         return importlib.machinery.ModuleSpec(fullname, SubjectLoader())
@@ -215,11 +239,13 @@ def load_block(path):
     module.__file__ = path
     before = len(ALIASED)
     previous = ALIAS_TARGET[0]
+    previous_imports = SUBJECT_IMPORTS[0]
     ALIAS_TARGET[0] = module
     sys.modules[name] = module
     try:
         with open(path, "r", encoding="utf-8") as handle:
             source = handle.read()
+        SUBJECT_IMPORTS[0] = import_names(source, path)
         with contextlib.redirect_stdout(quiet), contextlib.redirect_stderr(quiet):
             exec(compile(source, path, "exec"), module.__dict__)
         return module, None, ALIASED[before:]
@@ -232,6 +258,7 @@ def load_block(path):
         return None, detail, ALIASED[before:]
     finally:
         ALIAS_TARGET[0] = previous
+        SUBJECT_IMPORTS[0] = previous_imports
 
 
 def provision(module):
@@ -297,14 +324,22 @@ CANDIDATES = callables_in(namespace)
 # a separate test file binds to the module under test rather than to itself.
 EXTRA_NAMESPACES = []
 ALIAS_TARGET[0] = SUBJECT_MODULE
+for name in ALIASED:
+    sys.modules[name] = SUBJECT_MODULE
 for path, module, err, _aliased in LOADED:
     if path == SUBJECT_PATH:
         continue
     extra = types.ModuleType(path[:-3])
+    # Some HTML answers split ONE file across display blocks. Its test block
+    # legitimately relies on the implementation's imports and functions.
+    extra.__dict__.update(namespace)
+    extra.__name__ = path[:-3]
     extra.__file__ = path
+    sys.modules[extra.__name__] = extra
     try:
         with open(path, "r", encoding="utf-8") as handle:
             source = handle.read()
+        SUBJECT_IMPORTS[0] = import_names(source, path)
         with contextlib.redirect_stdout(quiet), contextlib.redirect_stderr(quiet):
             exec(compile(source, path, "exec"), extra.__dict__)
         EXTRA_NAMESPACES.append(vars(extra))
@@ -313,6 +348,7 @@ for path, module, err, _aliased in LOADED:
         # simply contributes nothing.
         pass
 ALIAS_TARGET[0] = None
+SUBJECT_IMPORTS[0] = set()
 
 # --- constant-time comparison ------------------------------------------------
 

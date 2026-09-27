@@ -26,5 +26,13 @@
   "builtins-only": {
     "description": "Core task set only: mounts no plugins ([] = builtins only). Compose with --iterations etc.",
     "plugins": []
+  },
+  "astra-devin": {
+    "description": "Astra extra high vs SWE-2 High: 3 fresh iterations, concurrency 4, 25-min cap, no retries.",
+    "iterations": 3,
+    "concurrency": 4,
+    "timeoutMs": 1500000,
+    "maxRetries": 0,
+    "bustCache": true
   }
 }

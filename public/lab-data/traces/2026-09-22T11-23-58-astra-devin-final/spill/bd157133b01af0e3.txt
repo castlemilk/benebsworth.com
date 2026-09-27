@@ -1,0 +1,234 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pendulum Wave — A Study in Rhythm</title><style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+*{box-sizing:border-box}body{overflow:hidden;height:100vh;height:100dvh}button,input{font:inherit}button{color:inherit}button:focus-visible,input:focus-visible{outline:2px solid #b9f4cf;outline-offset:5px}button{cursor:pointer;-webkit-tap-highlight-color:transparent}canvas{position:fixed;inset:0;display:block;width:100vw;height:100vh;height:100dvh}header{position:absolute;top:26px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}.eyebrow{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:2.1px;font-weight:650;color:#a4b3b0}.brand-mark{width:15px;height:15px;border:1px solid #a4d6b8;border-radius:50%;position:relative}.brand-mark:after{content:"";position:absolute;inset:4px;background:#b9f4cf;border-radius:50%}h1{font-size:clamp(25px,3.2vw,37px);line-height:1.15;font-weight:480;letter-spacing:-1.5px;margin:10px 0 8px}.subtitle{margin:0;color:#8d909b;font-size:12px;letter-spacing:.1px}.top-right{display:flex;align-items:flex-end;flex-direction:column;gap:15px;padding-top:2px}.status{display:flex;align-items:center;gap:7px;color:#b8c7c0;font-size:10px;letter-spacing:1.6px}.status-dot{width:5px;height:5px;border-radius:50%;background:#b9f4cf;box-shadow:0 0 9px #b9f4cf66}.status.paused .status-dot{background:#969aa7;box-shadow:none}.formula{text-align:right;color:#6c727e;font-size:10px;line-height:1.8}.formula strong{display:block;color:#a6abb8;font-family:ui-serif,Georgia,serif;font-size:19px;font-weight:400;letter-spacing:1px}.scene-caption{position:absolute;top:127px;left:33px;color:#5f6570;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;letter-spacing:1px;pointer-events:none}.footer{position:absolute;bottom:22px;left:32px;right:32px}.cycle{display:flex;align-items:center;gap:14px;margin:0 2px 13px}.cycle-label{font-size:9px;letter-spacing:1.5px;color:#888f9a;white-space:nowrap}.cycle-track{height:2px;flex:1;background:#272b30;position:relative;border-radius:4px}.cycle-fill{height:100%;width:16%;background:linear-gradient(90deg,#a3dfb7,#8aadd6);border-radius:4px}.cycle-fill:after{content:"";display:block;float:right;width:5px;height:5px;border-radius:50%;background:#c6e3d3;transform:translate(2px,-1.5px)}.cycle-time{font-size:10px;color:#979da8;font-variant-numeric:tabular-nums;min-width:120px;text-align:right}.cycle-time b{font-weight:500;color:#d6dce5}.panel{background:linear-gradient(115deg,rgba(24,28,29,.95),rgba(20,21,28,.96));border:1px solid #2a3033;border-radius:14px;box-shadow:0 12px 50px #0004;display:grid;grid-template-columns:minmax(130px,1fr) minmax(150px,1fr) auto;align-items:center;padding:18px 22px;gap:30px;backdrop-filter:blur(12px)}.control{min-width:0}.control-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}label{font-size:12px;color:#b0b5be}output{font-size:16px;color:#edf1ed;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.4px}output small{font-size:10px;color:#7e8791;letter-spacing:0;margin-left:3px}.range-row{display:flex;gap:10px;align-items:center}.bound{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#636d78;font-size:9px}.range{--fill:46.15%;appearance:none;-webkit-appearance:none;min-width:0;width:100%;height:20px;margin:0;cursor:pointer;background:transparent;touch-action:pan-y}.range::-webkit-slider-runnable-track{height:3px;border-radius:5px;background:linear-gradient(to right,#b9e8c8 0%,#b9e8c8 var(--fill),#373c42 var(--fill),#373c42 100%)}.range::-moz-range-track{height:3px;border-radius:5px;background:#373c42}.range::-moz-range-progress{height:3px;background:#b9e8c8}.range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#d5f2df;margin-top:-4.5px;border:2px solid #b9e8c8;box-shadow:0 0 0 4px #b9e8c80b}.range::-moz-range-thumb{width:9px;height:9px;border:2px solid #b9e8c8;border-radius:50%;background:#d5f2df}.actions{display:flex;align-items:center;gap:8px;border-left:1px solid #30353a;padding-left:26px}.button{border:1px solid #353d40;border-radius:8px;background:#202728;height:38px;display:inline-flex;justify-content:center;align-items:center;gap:7px;padding:0 12px;font-size:11px;transition:background .15s,border-color .15s}.button:hover{background:#303b37;border-color:#526559}.button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.primary{background:#c3ebcf;border-color:#c3ebcf;color:#1c3024;min-width:84px}.primary:hover{background:#ddf8e5;border-color:#ddf8e5}.icon-button{width:38px;padding:0}.trail-button{background:transparent;color:#9daaa7;margin-right:7px;border-color:transparent;gap:6px;padding:0 6px}.trail-button:hover{background:#ffffff08;border-color:transparent}.trail-light{width:6px;height:6px;border-radius:50%;background:#adc6b7}.trail-button[aria-pressed="false"] .trail-light{background:#4b535c}.trail-button[aria-pressed="false"]{color:#68717c}.bottom-note{display:flex;justify-content:space-between;align-items:center;font-size:9px;color:#616773;margin:11px 2px 0;letter-spacing:.2px}.key{padding:1px 4px;border:1px solid #343841;border-radius:3px;color:#818792;margin:0 3px}.mobile-note{display:none}#error{display:none;position:absolute;left:20px;right:20px;top:145px;padding:15px;background:#492830;border:1px solid #bf7181;color:#fff;border-radius:8px;z-index:5;font-size:13px}
+@media(min-width:1400px){.footer{left:8%;right:8%}header{left:4%;right:4%}.scene-caption{left:4%}}
+@media(max-width:680px){header{top:20px;left:20px;right:20px}h1{font-size:29px;margin-top:9px}.eyebrow{font-size:8px;letter-spacing:1.6px}.brand-mark{height:12px;width:12px}.brand-mark:after{inset:3px}.subtitle{font-size:10px}.top-right{padding-top:1px}.status{font-size:8px;letter-spacing:1px}.formula{display:none}.scene-caption{display:none}.footer{left:16px;right:16px;bottom:15px}.cycle{gap:9px;margin-bottom:11px}.cycle-label{font-size:8px;letter-spacing:1px}.cycle-time{font-size:9px;min-width:100px}.panel{grid-template-columns:1fr 1fr;gap:12px 25px;padding:14px 16px 11px;border-radius:12px}.control-heading{margin-bottom:5px}label{font-size:11px}output{font-size:15px}.actions{grid-column:1/-1;border-left:0;border-top:1px solid #2d3437;padding:10px 0 0;justify-content:flex-end}.button{height:30px;font-size:10px;border-radius:6px}.icon-button{width:30px}.primary{min-width:76px}.trail-button{margin-right:auto;padding:0}.bottom-note{margin-top:8px;font-size:8px}.keyboard-note{display:none}.mobile-note{display:inline}.range-row{gap:7px}}
+@media(max-height:460px) and (min-width:681px){header{top:17px}h1{font-size:26px;margin:7px 0}.subtitle,.formula,.scene-caption{display:none}.footer{bottom:12px}.panel{padding:11px 18px}.cycle{margin-bottom:9px}.bottom-note{margin-top:7px}}
+@media(max-height:430px) and (max-width:680px){header{top:12px;left:16px;right:16px}h1{font-size:24px;margin:6px 0}.subtitle{display:none}.footer{bottom:10px}.panel{padding:10px 13px 9px;gap:7px 22px}.cycle{margin-bottom:8px}.bottom-note{display:none}.actions{padding-top:7px}}
+</style></head><body>
+<canvas id="scene" aria-label="Animated perspective view of a pendulum wave. Different string lengths create different swing periods, forming a wave that returns to synchrony.">Your browser needs Canvas support to show this simulation.</canvas>
+<header id="header"><div><div class="eyebrow"><span class="brand-mark" aria-hidden="true"></span>MOTION STUDIES <span style="color:#48515a">/</span> 001</div><h1>Pendulum wave<span style="color:#a7d8b9">.</span></h1><p class="subtitle">A little difference. A beautiful rhythm.</p></div><div class="top-right"><div class="status" id="status"><span class="status-dot"></span><span id="statusText">IN MOTION</span></div><div class="formula"><strong>T = 2π √(L / g)</strong>Different lengths. Different periods.</div></div></header>
+<div class="scene-caption">18 OSCILLATORS · ONE SHARED CYCLE</div>
+<div id="error" role="alert"></div>
+<section class="footer" id="footer" aria-label="Simulation controls">
+<div class="cycle"><span class="cycle-label" id="cycleLabel">PATTERN CYCLE</span><div class="cycle-track" role="progressbar" aria-labelledby="cycleLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="16" id="cycleProgress"><div class="cycle-fill" id="cycleFill"></div></div><span class="cycle-time" title="Cycle position and repeat time at the current gravity"><b id="cycleNow">10.2</b> / <span id="cycleTotal">64.0</span> s</span></div>
+<div class="panel"><div class="control"><div class="control-heading"><label for="count">Pendulums <span style="color:#606e77">N</span></label><output id="countValue" for="count">18</output></div><div class="range-row"><span class="bound">6</span><input class="range" id="count" type="range" min="6" max="32" step="1" value="18" aria-label="Number of pendulums"><span class="bound">32</span></div></div>
+<div class="control"><div class="control-heading"><label for="gravity">Gravity <span style="color:#606e77">g</span></label><output id="gravityValue" for="gravity">9.8<small>m/s²</small></output></div><div class="range-row"><span class="bound">1</span><input class="range" id="gravity" type="range" min="1" max="20" step="0.1" value="9.8" aria-label="Gravity in meters per second squared"><span class="bound">20</span></div></div>
+<div class="actions"><button class="button trail-button" id="trails" aria-pressed="true" title="Show or hide motion trails"><span class="trail-light"></span>Trails</button><button class="button primary" id="play" aria-label="Pause simulation"><svg id="playIcon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10"/></svg><span id="playText">Pause</span></button><button class="button icon-button" id="reset" aria-label="Restart from synchronized release" title="Restart from synchronized release (R)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6a5.4 5.4 0 1 1-.2 4M3 2v4h4"/></svg></button></div></div>
+<div class="bottom-note"><span>Small-angle model <span style="padding:0 5px;color:#424951">/</span> No damping</span><span class="keyboard-note"><span class="key">space</span> pause <span class="key">R</span> release together</span><span class="mobile-note">Reset to release together ↺</span></div>
+</section>
+<script>
+try {
+  'use strict';
+  const canvas = document.getElementById('scene');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D is not available in this browser.');
+  const byId = id => document.getElementById(id);
+  const countInput = byId('count'), gravityInput = byId('gravity');
+  const TAU = Math.PI * 2, BASE_G = 9.8, CYCLE = 64, FIRST = 32, AMPLITUDE = 0.29;
+  let width = 1, height = 1, ratio = 1, scale = 1, centerX = 0, centerY = 0, tilt = -0.13, spread = 1.25;
+  let pendulums = [], count = 18, gravity = BASE_G, phaseTime = 10.2, playing = true, trails = true;
+  let raf = 0, previous = null, lastUI = -1, stopped = false, sceneTop = 110, sceneBottom = 450;
+  const length0 = BASE_G * Math.pow(CYCLE / (TAU * FIRST), 2);
+  const colors = i => 148 + (i / Math.max(1, count - 1)) * 117;
+  const hsl = (h, s, l, a = 1) => 'hsla(' + h + ',' + s + '%,' + l + '%,' + a + ')';
+
+  // Every oscillator completes an integer number of swings in the shared cycle.
+  // theta = A cos(sqrt(g/L)t), using the ideal small-angle approximation.
+  // Integrating phase time makes gravity changes continuous in position.
+  function rebuild() {
+    pendulums = Array.from({length:count}, (_, i) => {
+      const cycles = FIRST + i;
+      const length = BASE_G * Math.pow(CYCLE / (TAU * cycles), 2);
+      return {i, x:-7.2 + i * 14.4 / (count - 1), length, visualLength:length / length0 * 4.05, omega:TAU * cycles / CYCLE, hue:colors(i)};
+    });
+    byId('countValue').value = count;
+    document.querySelector('.scene-caption').textContent = count + ' OSCILLATORS · ONE SHARED CYCLE';
+    canvas.setAttribute('aria-label', count + ' pendulums with different lengths swinging at gravity ' + gravity.toFixed(1) + ' meters per second squared.');
+  }
+  function project(x,y,z) { return {x:centerX + scale * (x * spread + z * .55), y:centerY + scale * (x * tilt - y * .92 + z * .54)}; }
+  function position(p, time) {
+    const theta = AMPLITUDE * Math.cos(p.omega * time);
+    return {x:p.x, y:4.55 - p.visualLength * Math.cos(theta), z:p.visualLength * Math.sin(theta)};
+  }
+  function line(a,b,color,lineWidth=1) {
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle=color; ctx.lineWidth=lineWidth; ctx.stroke();
+  }
+  function worldLine(a,b,color,lineWidth=1) {line(project(...a),project(...b),color,lineWidth);}
+  function circle(x,y,r,fill) {ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=fill;ctx.fill();}
+  function fillQuad(points,color) {ctx.beginPath();points.forEach((p,i)=>i ? ctx.lineTo(p.x,p.y) : ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();}
+  function beam(a,b,size=4) {
+    const pa=project(...a), pb=project(...b);
+    line(pa,pb,'#0a0d11',size+3);
+    const grad=ctx.createLinearGradient(pa.x,pa.y-4,pb.x,pb.y+4);
+    grad.addColorStop(0,'#57676a');grad.addColorStop(.3,'#2b353a');grad.addColorStop(1,'#3d464f');
+    line(pa,pb,grad,size);
+    line({x:pa.x,y:pa.y-size*.34},{x:pb.x,y:pb.y-size*.34},'#7d91942e',.8);
+  }
+  function drawFloor() {
+    const middle=project(0,0,0);
+    ctx.save();
+    const wash=ctx.createRadialGradient(middle.x,middle.y,0,middle.x,middle.y,scale*9);
+    wash.addColorStop(0,'#33484219');wash.addColorStop(.6,'#20393609');wash.addColorStop(1,'#0c0c1000');
+    ctx.fillStyle=wash;ctx.fillRect(0,sceneTop,width,sceneBottom-sceneTop);
+    for(let x=-8;x<=8;x+=1) worldLine([x,0,-2.4],[x,0,2.4],x===0?'#55726822':'#4f636912',.7);
+    for(let z=-2;z<=2;z+=.5) worldLine([-8.4,0,z],[8.4,0,z],z===0?'#6b8a8425':'#4f636912',.7);
+    // Contact shadows keep the suspended bobs visually grounded.
+    for(const p of pendulums) {
+      const pos=position(p,phaseTime), shadow=project(pos.x,0,pos.z);
+      ctx.save();ctx.translate(shadow.x,shadow.y);ctx.scale(1,.3);
+      const radius=scale*(.20+pos.y*.08), shade=ctx.createRadialGradient(0,0,0,0,0,radius*2);
+      shade.addColorStop(0,hsl(p.hue,45,50,.09));shade.addColorStop(1,hsl(p.hue,45,30,0));
+      circle(0,0,radius*2,shade);ctx.restore();
+    }
+    ctx.restore();
+  }
+  function drawFrame() {
+    const s=Math.max(2,scale*.085);
+    for(const x of [-7.85,7.85]) {
+      beam([x,0,-.65],[x,4.72,0],s);
+      beam([x,0,.8],[x,4.72,0],s);
+      beam([x,0,-.85],[x,0,1],s+1);
+      const cap=project(x,4.72,0);circle(cap.x,cap.y,s*.75,'#495257');circle(cap.x-.5,cap.y-.5,s*.29,'#8c9a9b');
+    }
+    beam([-7.95,4.72,0],[7.95,4.72,0],s*1.6);
+    worldLine([-7.65,4.78,0],[7.65,4.78,0],'#9db4b538',.8);
+  }
+  function drawPendulum(p) {
+    const pos=position(p,phaseTime), bob=project(pos.x,pos.y,pos.z), pivot=project(p.x,4.55,0), mount=project(p.x,4.72,0);
+    const r=Math.max(3.5,Math.min(11,scale*.22));
+    // A dim arc describes the possible path; the short bright ribbon shows motion.
+    if(trails) {
+      ctx.beginPath();
+      for(let j=0;j<=30;j++) {
+        const angle=-AMPLITUDE+j/30*2*AMPLITUDE;
+        const point=project(p.x,4.55-p.visualLength*Math.cos(angle),p.visualLength*Math.sin(angle));
+        if(j===0)ctx.moveTo(point.x,point.y);else ctx.lineTo(point.x,point.y);
+      }
+      ctx.strokeStyle=hsl(p.hue,45,65,.11);ctx.lineWidth=.7;ctx.stroke();
+      for(let j=0;j<15;j++) {
+        const lag=.32*Math.sqrt(gravity/BASE_G);
+        const a=position(p,phaseTime-lag*(1-j/15)), b=position(p,phaseTime-lag*(1-(j+1)/15));
+        line(project(a.x,a.y,a.z),project(b.x,b.y,b.z),hsl(p.hue,70,70,.035+j*.013),r*.7);
+      }
+    }
+    line(mount,pivot,'#899c9d',Math.max(1,scale*.025));
+    circle(pivot.x,pivot.y,Math.max(1.8,scale*.034),'#b4c2be');
+    const thread=ctx.createLinearGradient(pivot.x,pivot.y,bob.x,bob.y);
+    thread.addColorStop(0,'#8794968c');thread.addColorStop(.75,hsl(p.hue,27,70,.55));thread.addColorStop(1,hsl(p.hue,55,75,.8));
+    line(pivot,bob,thread,Math.max(.7,scale*.015));
+    // Soft bloom and a shaded sphere, both drawn entirely in Canvas.
+    const halo=ctx.createRadialGradient(bob.x,bob.y,r*.25,bob.x,bob.y,r*3.4);
+    halo.addColorStop(0,hsl(p.hue,75,68,.20));halo.addColorStop(.5,hsl(p.hue,75,55,.045));halo.addColorStop(1,hsl(p.hue,75,40,0));
+    circle(bob.x,bob.y,r*3.4,halo);
+    const sphere=ctx.createRadialGradient(bob.x-r*.34,bob.y-r*.38,r*.06,bob.x+r*.13,bob.y+r*.18,r*1.2);
+    sphere.addColorStop(0,hsl(p.hue,43,92));sphere.addColorStop(.22,hsl(p.hue,48,75));sphere.addColorStop(.53,hsl(p.hue,43,55));sphere.addColorStop(.85,hsl(p.hue,42,28));sphere.addColorStop(1,hsl(p.hue,34,17));
+    circle(bob.x,bob.y,r,sphere);
+    ctx.beginPath();ctx.arc(bob.x,bob.y,r,.95*Math.PI,1.85*Math.PI);ctx.strokeStyle=hsl(p.hue,50,86,.55);ctx.lineWidth=.7;ctx.stroke();
+    circle(bob.x-r*.30,bob.y-r*.39,r*.14,hsl(p.hue,30,96,.85));
+    // Indices are fixed to the rail, so dense waves remain legible.
+    if(width>580 && (count<=20 || p.i%2===0)) {
+      ctx.fillStyle='#6f7b82';ctx.font='8px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(String(p.i+1).padStart(2,'0'),mount.x,mount.y-11);
+    }
+  }
+  function drawPhaseMap() {
+    if(width<850 || height<500)return;
+    const x=width-203,y=115,w=170,h=42;
+    ctx.font='8px ui-monospace,monospace';ctx.textAlign='left';ctx.fillStyle='#727a85';ctx.fillText('RELATIVE PHASE',x,y);
+    line({x,y:y+28},{x:x+w,y:y+28},'#66737c28',.7);
+    const origin=pendulums[0].omega*phaseTime;
+    ctx.beginPath();
+    pendulums.forEach((p,i)=>{
+      const px=x+i/(count-1)*w,py=y+28-Math.cos(p.omega*phaseTime-origin)*13;
+      if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+    });ctx.strokeStyle='#9badb14a';ctx.lineWidth=1;ctx.stroke();
+    pendulums.forEach((p,i)=>circle(x+i/(count-1)*w,y+28-Math.cos(p.omega*phaseTime-origin)*13,1.7,hsl(p.hue,40,70)));
+  }
+  function drawAnnotations() {
+    if(width<600 || sceneBottom-sceneTop<220)return;
+    const left=project(-7.1,0,1.5),right=project(6.9,0,1.5);
+    ctx.font='8px ui-monospace,monospace';ctx.textAlign='left';ctx.fillStyle='#7d9d8b';
+    ctx.fillText('LONGER / SLOWER',left.x,left.y+18);
+    ctx.fillStyle='#938ea7';ctx.textAlign='right';ctx.fillText('SHORTER / FASTER',right.x,right.y+18);
+  }
+  function draw() {
+    ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,width,height);ctx.fillStyle='#0c0c10';ctx.fillRect(0,0,width,height);
+    const glow=ctx.createRadialGradient(width*.47,height*.48,0,width*.47,height*.48,width*.58);
+    glow.addColorStop(0,'#19252455');glow.addColorStop(.6,'#111b2225');glow.addColorStop(1,'#0c0c1000');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,width,height);
+    ctx.save();ctx.beginPath();ctx.rect(0,sceneTop-10,width,Math.max(1,sceneBottom-sceneTop+17));ctx.clip();
+    drawFloor();drawFrame();
+    // Back-to-front order makes foreground bobs occlude those behind them.
+    pendulums.slice().sort((a,b)=>{
+      const pa=position(a,phaseTime),pb=position(b,phaseTime);
+      return (pa.z*.94-pa.x*.36)-(pb.z*.94-pb.x*.36);
+    }).forEach(drawPendulum);
+    drawAnnotations();ctx.restore();drawPhaseMap();
+  }
+  function updateUI(force=false) {
+    const tenth=Math.floor(phaseTime*10);
+    if(!force && tenth===lastUI)return;
+    lastUI=tenth;
+    const speed=Math.sqrt(gravity/BASE_G), fraction=(phaseTime%CYCLE)/CYCLE;
+    byId('cycleNow').textContent=((phaseTime%CYCLE)/speed).toFixed(1);
+    byId('cycleTotal').textContent=(CYCLE/speed).toFixed(1);
+    byId('cycleFill').style.width=(fraction*100)+'%';
+    byId('cycleProgress').setAttribute('aria-valuenow',Math.round(fraction*100));
+    byId('cycleProgress').setAttribute('aria-valuetext',((CYCLE-phaseTime%CYCLE)/speed).toFixed(1)+' seconds until the pattern repeats at the current gravity');
+  }
+  function resize() {
+    width=window.innerWidth;height=window.innerHeight;ratio=Math.max(1,window.devicePixelRatio||1);
+    canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);
+    const header=byId('header').getBoundingClientRect(),footer=byId('footer').getBoundingClientRect();
+    sceneTop=header.bottom+(width<681?13:18);sceneBottom=footer.top-15;
+    tilt=width<600?-.30:-.13;spread=width<600?.94:1.25;
+    // Fit the complete rig to the actual open space between the two overlays.
+    const bounds=[];
+    for(const x of [-8.5,8.5])for(const y of [-.45,5.0])for(const z of [-1.35,1.5])bounds.push({x:x*spread+z*.55,y:x*tilt-y*.92+z*.54});
+    const minX=Math.min(...bounds.map(p=>p.x)),maxX=Math.max(...bounds.map(p=>p.x));
+    const minY=Math.min(...bounds.map(p=>p.y)),maxY=Math.max(...bounds.map(p=>p.y));
+    scale=Math.max(.5,Math.min((width-(width<681?25:80))/(maxX-minX),Math.max(20,sceneBottom-sceneTop)/(maxY-minY)));
+    centerX=width/2-(minX+maxX)/2*scale;
+    centerY=(sceneTop+sceneBottom)/2-(minY+maxY)/2*scale;
+    draw();
+  }
+  function failure(error) {
+    stopped=true;cancelAnimationFrame(raf);
+    const box=byId('error');box.style.display='block';box.textContent='The simulation could not continue: '+(error.message||String(error));
+  }
+  function animate(now) {
+    if(stopped)return;
+    try {
+      if(previous!==null && playing && !document.hidden)phaseTime=(phaseTime+Math.min((now-previous)/1000,.06)*Math.sqrt(gravity/BASE_G))%CYCLE;
+      previous=now;draw();updateUI();raf=requestAnimationFrame(animate);
+    } catch(error) {failure(error);}
+  }
+  function setPlaying(value) {
+    playing=value;previous=null;
+    byId('playText').textContent=playing?'Pause':'Play';
+    byId('play').setAttribute('aria-label',playing?'Pause simulation':'Play simulation');
+    byId('playIcon').innerHTML=playing?'<path d="M5 3v10M11 3v10"/>':'<path d="m5 3 8 5-8 5Z"/>';
+    byId('statusText').textContent=playing?'IN MOTION':'PAUSED';byId('status').classList.toggle('paused',!playing);
+  }
+  function reset() {phaseTime=0;previous=null;updateUI(true);draw();}
+  function styleRange(input) {input.style.setProperty('--fill',((Number(input.value)-Number(input.min))/(Number(input.max)-Number(input.min))*100)+'%');}
+  function guard(fn) {return function(...args){try{fn(...args);}catch(error){failure(error);}};}
+  countInput.addEventListener('input',guard(()=>{count=Number(countInput.value);styleRange(countInput);rebuild();reset();}));
+  gravityInput.addEventListener('input',guard(()=>{gravity=Number(gravityInput.value);styleRange(gravityInput);byId('gravityValue').innerHTML=gravity.toFixed(1)+'<small>m/s²</small>';gravityInput.setAttribute('aria-valuetext',gravity.toFixed(1)+' meters per second squared');canvas.setAttribute('aria-label',count+' pendulums with different lengths swinging at gravity '+gravity.toFixed(1)+' meters per second squared.');updateUI(true);draw();}));
+  byId('play').addEventListener('click',guard(()=>setPlaying(!playing)));
+  byId('reset').addEventListener('click',guard(reset));
+  byId('trails').addEventListener('click',guard(()=>{trails=!trails;byId('trails').setAttribute('aria-pressed',String(trails));draw();}));
+  window.addEventListener('keydown',guard(event=>{
+    if(event.target instanceof Element && event.target.closest('input,button,textarea,select,[contenteditable]'))return;
+    if(event.code==='Space'){event.preventDefault();setPlaying(!playing);}else if(event.key.toLowerCase()==='r')reset();
+  }));
+  window.addEventListener('resize',guard(resize));
+  document.addEventListener('visibilitychange',()=>{previous=null;});
+  window.addEventListener('unload',()=>{stopped=true;cancelAnimationFrame(raf);});
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);previous=null;});
+  window.addEventListener('pageshow',event=>{if(event.persisted&&!stopped){previous=null;raf=requestAnimationFrame(animate);}});
+  styleRange(countInput);styleRange(gravityInput);rebuild();resize();updateUI(true);raf=requestAnimationFrame(animate);
+} catch(error) {
+  const box=document.getElementById('error');box.style.display='block';box.textContent='Unable to start the simulation: '+(error.message||String(error));
+}
+</script></body></html>

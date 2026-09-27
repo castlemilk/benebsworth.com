@@ -1,0 +1,150 @@
+---
+title: "Beating Splash on an M5 Max: where the tokens per second actually were"
+date: "2026-09-28T00:00:00.000Z"
+description: "A Rust and candle inference engine went from 0.56x to 1.2x Splash's decode speed on a 27B model. The kernels were never the problem. The GPU sat waiting for the CPU."
+labels: software,machine-learning,llm,metal,performance
+release: true
+heroImage: /blog/beating-splash-on-an-m5-max/hero.webp
+takeaways:
+  - "On a bandwidth-bound decode loop, a 4x throughput gap can hide almost no kernel gap: th-engine's Q4 matmuls were already faster than Splash's while the engine ran at half its speed."
+  - "Every blocking host sync costs more than the wait itself, because candle purges its buffer pool on sync and the next step pays cold allocations. 28 syncs per round became one."
+  - "Measure with ratio of sums on a quiet, thermally settled GPU, with explicit sampling parameters and the same text. Three of the four 'speedups' reported early on turned out to be measurement artifacts."
+  - "Adversarial review by a second model found nine real bugs in a day's worth of fast-moving kernel commits, including a silent state corruption that made speculative decoding accept nothing."
+---
+
+Token Horizon ships two local inference engines side by side on Apple Silicon. One is [Splash](https://github.com/incoai/splash), a C++ and Metal runtime tuned for exactly one job. The other is th-engine, a Rust sidecar built on [candle](https://github.com/huggingface/candle) with hand-written Metal kernels, which exists so the app can trace, meter and supervise inference the same way it does for every cloud provider.
+
+Ten days ago th-engine decoded Qwen3.8-27B at about 40 tokens per second on my M5 Max. Splash did 72 on the same weights. This post is about how that gap closed and then inverted, and about the parts of the process that mattered more than any single kernel.
+
+<StatGroup>
+  <Stat label="Decode, greedy" value="40.7 → 93.3 tok/s" context="th-engine, same 27B 4-bit model, same machine" />
+  <Stat label="vs Splash 1.0" value="0.56x → 1.20x" context="ratio of sums, one quiet gpu-lock hold" />
+  <Stat label="8k-context round" value="109 → 43 ms" context="Splash: 50 ms" />
+  <Stat label="Exact-repeat TTFT" value="2.5 s → 22 ms" context="Splash: 220 ms" />
+</StatGroup>
+
+## The setup
+
+The model is a hybrid: 48 GatedDeltaNet layers and 16 full-attention layers, 4-bit weights, 14.4 GB read per token pass. Both engines run the same DFlash speculative decoder, which drafts seven tokens with a small five-layer model and verifies them in one eight-row forward pass through the target. A "round" is one draft plus one verify. Throughput is tokens accepted per round divided by round time.
+
+That framing matters because it splits the problem into two independent numbers. The bandwidth floor for the verify pass is easy: 14.4 GB at the measured 565 GB/s is 25.5 ms. Add the draft, the state reads and the commits and the whole round cannot beat about 30 ms. At 3.7 tokens per round that is a ceiling near 125 tokens per second. Splash sat at 1.7x that floor. th-engine sat at 2.9x.
+
+## Measure before you optimise, then measure the measurement
+
+The first thing the readers found was that the engine's own numbers lied in three different ways.
+
+The `decode_tps` field in the API response was a mean of per-request ratios, dominated by the short prompt where every engine looks fast. Splash reported 88 by that metric and 72 by ratio of sums. Later, a batched-decode refactor moved the timer so it stopped at command-buffer enqueue instead of after the GPU finished, and the live server started reporting 85 to 108 tokens per second while actually doing 40.
+
+The benchmark script sent no `top_p`, so th-engine sampled at its default of 0.8 and Splash at 0.95. Sharper sampling buys about 4 percent more accepted draft tokens for free, which flattered th-engine in every comparison.
+
+And the per-round log line that said host encoding took 37 to 200 ms measured from the start of the round. It included the draft. Real encode time was 14 ms.
+
+<Callout type="warning">
+None of these were subtle once someone looked. They survived because each number was plausible on its own. The fix was a protocol, not a patch: ratio of sums over the whole run, explicit temperature 0.6, top_p 0.95 and top_k 20 or pure greedy, the same three prompts, ABBA interleaving inside one exclusive GPU lock, a fresh server per arm, and the 1-minute load average and thermal level recorded next to every figure.
+</Callout>
+
+The thermal part bit twice. In one session Splash slowed 15 percent between the first and last arm because the GPU had throttled. Splash is fully GPU-bound, so it loses more to throttling than th-engine does, and the ratio swung 8 percent in th-engine's favour for no real reason. Every later A/B waited for thermal pressure to drop to zero before each arm.
+
+## The kernels were not the gap
+
+I expected the Q4 matmul kernels to be the story. Splash's decode kernels use Apple's cooperative-tensor Metal Performance Primitives, and th-engine's were a port of them. The reader who timed both with GPU timestamps on the real projection shapes found th-engine's kernels were already faster: 38.1 ms of GPU time for one eight-row verify pass versus 43.3 ms for the installed Splash. The port was a verbatim copy of the tile code, and th-engine's split-K choice for the narrow 5120-wide projections beat Splash's untuned policy by 1.8x on those shapes.
+
+So where did 36 ms per round go? Into the GPU doing nothing.
+
+<StatGroup>
+  <Stat label="Blocking host syncs per round" value="28" context="Splash: 1" />
+  <Stat label="Command buffers per round" value="86" context="Splash: 1" />
+  <Stat label="GPU idle per round" value="25 ms" context="of an 87 ms round" />
+  <Stat label="Cold 4 MiB allocations per round" value="48" context="7 ms, before the first command buffer even commits" />
+</StatGroup>
+
+The biggest single item was a side effect of candle's Metal backend. Every time the host reads a value back from the GPU, candle drains its buffer pool. The next thing th-engine did after each readback was snapshot the GatedDeltaNet recurrent state for all 48 layers so it could roll back rejected draft tokens, and every one of those 4 MiB buffers came from a cold allocation at about 150 microseconds each instead of 3 from the pool. Seven milliseconds a round, every round, and the GPU sat idle for all of it.
+
+The rest of the idle was the shape of the loop. The draft proposal ended in five separate readbacks to select tokens against host-side codebooks. The verify read back the full 8-by-248k logit tensor, 4 MB, so the CPU could run the acceptance rule. Attention was eager candle ops: a KV cache re-concatenated per layer, a six-way GQA expansion, a transposed copy and a five-op softmax, which cost 2 ms per layer at short context and 36 ms per layer at 8k.
+
+<PullQuote>
+Splash's round was one command buffer and one sync. th-engine's was eighty-six command buffers and twenty-eight syncs, and the GPU did roughly the same amount of work in both.
+</PullQuote>
+
+## What actually moved the needle
+
+The roadmap ranked about forty items by expected milliseconds saved per unit of effort. These are the ones that paid, roughly in order of impact.
+
+**Always verify all seven draft tokens.** The engine had an adaptive rule that shortened the verify to the recent acceptance average plus one. It saved nothing, because an eight-row verify costs the same GPU time as a three-row one when you are bandwidth bound, and it capped acceptance in 21 percent of rounds. Removing it added 12 to 24 percent more tokens per round for zero cost. This was a two-line change and the single largest win of the project.
+
+**Double-buffered GatedDeltaNet state.** Instead of copying 48 layers of recurrent state before each verify, the fused GDN step writes out of place from parity buffer A to parity buffer B. Accepting a round flips the parity. Rejecting part of a round re-scans only the committed rows from the still-intact previous parity. This is Splash's scheme, adapted to per-slot candle buffers, and it took verify encode from 8.0 ms to 2.7 ms and removed the cold allocations entirely. A state-bitwise rollback test guards it: for every possible number of kept tokens, the recurrent state and conv window must match a reference scan exactly.
+
+**Host-resident draft codebooks.** The two 254 MB selector tables moved from Metal buffers to host memory, so token selection after the draft is a lookup instead of five GPU readbacks. Propose went from 5 syncs to 1.
+
+**GPU-side acceptance.** One kernel over the verify logits now applies top-k and top-p, samples, runs the acceptance rule and writes a small result block. The 4 MB logit readback and the CPU sampling loop are gone. An acceptance study across 15 prompts and 5 seeds showed th-engine's rule already matched Splash's. The cost was purely where it ran.
+
+**Split-key attention for decode and draft.** Long context was the ugliest gap. The attention decode kernel had no split along keys, so at 8k tokens 16 layers took 47 ms. A split across threadgroups with a fixed-order reduction brought that to under 3 ms, and the same treatment on the draft's attention took propose from 24 ms to 13 at 2k context. The round now grows 3 ms from short context to 8k. It used to grow 61.
+
+**Tile policy and input sums.** The kernel-level wins were real but small: a per-shape tile table, skipping a pad dispatch at eight rows, and having the RMSNorm producers emit the per-group input sums the Q4 tiles need so the tiles skip a pass. Together about 7 ms off the eight-row forward, from 47 to 40.
+
+<Figure src="/blog/beating-splash-on-an-m5-max/dflash.webp" caption="Draft and verify. A small model guesses seven tokens ahead; the target checks them all in one pass. Accepted tokens hold, the first rejection sinks the rest. Always checking all seven turned out to be the cheapest win in the project." placement="full" />
+
+## Time to first token
+
+Decode parity left prefill, where Splash still won by a lot. Three things closed most of it.
+
+A prefix cache keyed by token prefix stores per-slot checkpoints of KV rows, GatedDeltaNet state and, at the end of the prompt, the last logits. A repeated 1.4k-token prefix went from 2.5 s to 22 ms. A follow-up question after the same document went from 2.5 s to 235 ms, where Splash usually misses its own cache and re-prefills.
+
+A fused causal flash-attention kernel for prefill chunks replaced the eager path. It runs 7.5 to 12x faster per layer, is chunk-invariant bit for bit, and cut the 8k prefill's peak memory transient by more than half, because the eager path uploaded a fresh causal mask per layer per chunk and candle frees nothing until a sync. At 32k that mask traffic alone was 32 GB.
+
+A vectorised-epilogue prefill GEMM tile lifted the in-situ rate from 36.6 to 43.9 TFLOPS with bitwise-identical output.
+
+Cold 1.45k prefill is now at parity with Splash. Cold 8k is still 16 percent slower. The sequential GatedDeltaNet scan costs 750 ms there and wants a chunked parallel form.
+
+## Where it landed
+
+Same machine, same weights, one GPU lock, ratio of sums, thermal level zero at the start of every arm.
+
+| Mode | th-engine | Splash 1.0 | Ratio |
+| --- | ---: | ---: | ---: |
+| Decode, greedy | 93.3 tok/s (40.5 ms/round) | 77.6 (48.5) | 1.20x |
+| Decode, sampled 0.6 / 0.95 / 20 | 89.5 | 80.3 | 1.11x |
+| Decode, 1.5k context | 90.2 | 76.5 | 1.18x |
+| Decode, 8k context | 85.3 | 83.1 | 1.03x |
+| Cold TTFT, 1.45k tokens | 1659 ms | 1647 ms | parity |
+| Cold TTFT, 7.9k tokens | 11.8 s | 10.2 s | 0.86x |
+| Exact repeat, 1.4k / 7.9k | 24 / 22 ms | 220 / 354 ms | 9x / 16x faster |
+| Peak memory, 8k prefill | 27.9 GB | | was 47.2 GB |
+
+The round is now 40 ms against a kernel floor of about 36. GPU idle is 1.3 ms. What remains above the floor is mostly the draft side and a handful of small dispatches that a per-command-buffer profiler, added along the way, can now attribute.
+
+## The bugs a second reviewer found
+
+The most valuable part of the process was not the optimisation. It was that every branch, and every batch of someone else's commits, went through an adversarial review by a different model whose only instruction was to refute.
+
+That review found a custom Metal op that wrapped an existing buffer in a fresh reference candle's pool did not know about. The pool recycled the live buffer, the rollback path read garbage, and speculative decoding silently accepted zero tokens per round. No error, no crash, just a server that got slow. It found a draft attention output whose shape made the following projection read 2 MiB from a 64 KiB tensor, five times per proposal. It found a batch scheduler that died permanently on the first error while the health endpoint stayed green, a per-request setting that flipped a shared quantisation mode under other live requests, and an argmax that broke ties on the GPU differently from the CPU, so greedy outputs depended on which path ran.
+
+<Callout type="info">
+Nine confirmed bugs in about 2,100 lines of fast-moving kernel and scheduler code, found by a reviewer that was told to assume the code was wrong. Every one shipped with a repro and a fix. Three of them were in code I had already measured as "faster".
+</Callout>
+
+## How the work ran
+
+This was not one long session. It was five phases, each a fan-out of agents with a fixed shape: parallel readers over the two codebases and the live profiler, a synthesis, an adversarial critique of the synthesis, a revision, then implementers in isolated git worktrees with one branch per work package, a reviewer per branch, a fix pass, an integration branch, and a final same-session A/B against Splash.
+
+Some mechanics that turned out to be load-bearing:
+
+- **One GPU, many agents.** Every timed run went through an exclusive file lock. Without it two agents benchmarking at once produced numbers that looked fine and meant nothing.
+- **Worktrees with a cloned build cache.** Each branch got its own checkout and an APFS clone of the compiled dependencies, so a fresh worktree built incrementally in a minute instead of rebuilding candle for ten.
+- **A concurrent human-driven developer in the same tree.** A Codex session was implementing the same roadmap on `main` while this ran. The rule that held everything together was simple: never edit, build in or reset the main working tree; deliver branches and let integration be a separate, reviewed step.
+- **Sessions die.** A reboot, two auth expiries and a usage cap each killed a workflow mid-flight. Because every agent committed to its own branch as it went, each restart resumed from the journal and found its worktree with the work in it. The cost of a dead session was validation time, not lost code.
+- **Every number carries its build.** Reports name the commit sha, the binary sha256, the load average and the thermal level. When two sessions disagreed, that was enough to find out why. Usually the answer was heat.
+
+Across the five phases roughly 55 million tokens of agent output went into the work, most of it reading kernels, running benchmarks and arguing about measurement. The code that landed is about 9,000 lines across 18 files, 53 commits from Phase D alone, and every one of them is behind a state-bitwise rollback test, a mixed-batch smoke test and a sampling equivalence check.
+
+## What I would tell someone starting the same job
+
+Find the floor first. Bandwidth divided by bytes per pass is a number you can compute in a minute, and it tells you whether you are 10 percent or 3x away before you touch a kernel.
+
+Count the syncs. On Apple Silicon the GPU and CPU share memory, so it is easy to read a value back "just to check" and never notice that the read is a full pipeline drain. Splash's entire architecture is organised around doing that once per round.
+
+Distrust your own metric until it agrees with a second one computed a different way. Ratio of sums, over the whole run, on identical text.
+
+And when the speedup you shipped this morning is the one that reads 2 MiB from a 64 KiB tensor, be glad someone was paid to assume you were wrong.
+
+<GithubLink url="https://github.com/castlemilk/token-horizon" />

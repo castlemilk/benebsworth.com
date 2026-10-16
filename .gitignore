@@ -133,3 +133,4 @@ graphify-out/graph.html
 graphify-out/.graphify_*
 graphify-out/*/
 !graphify-out/manifest.json
+.taste-skill/

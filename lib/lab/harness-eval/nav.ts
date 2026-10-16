@@ -28,3 +28,19 @@ export function harnessModelPath(modelId: string): string {
 export function harnessModelIndexPath(): string {
   return `${HARNESS_EVAL_BASE_PATH}models/`
 }
+
+/**
+ * Side-by-side comparison URL.
+ *
+ * The site is a static export, so a comparison has to be a path rather than a
+ * query string: `?a=&b=` would need a runtime server to read. Two slugs can
+ * never collide with a `vs` segment between them, and the result is a link you
+ * can paste into a commit message or a thread and have it mean the same thing.
+ */
+export function harnessComparePath(leftModelId: string, rightModelId: string): string {
+  const left = harnessModelSlug(leftModelId);
+  const right = harnessModelSlug(rightModelId);
+  // Canonical order so the same pair is one URL, not two.
+  const [first, second] = left <= right ? [left, right] : [right, left];
+  return `${HARNESS_EVAL_BASE_PATH}compare/${first}/vs/${second}/`
+}

@@ -7,7 +7,14 @@ import { Breadcrumb } from '@/components/site/breadcrumb';
 import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld';
 import { Reveal } from '@/components/motion/reveal';
 import { ALL_SUMMARIES, resultsForModel } from '@/lib/lab/harness-eval/results';
-import { harnessModelIdFromSlug, harnessModelPath, harnessModelSlug } from '@/lib/lab/harness-eval/nav';
+import { compareCandidates } from '@/lib/lab/harness-eval/compare';
+import { formatModelLabel } from '@/lib/lab/harness-eval/labels';
+import {
+  harnessComparePath,
+  harnessModelIdFromSlug,
+  harnessModelPath,
+  harnessModelSlug,
+} from '@/lib/lab/harness-eval/nav';
 import { ArrowRight, Cpu } from 'lucide-react';
 
 export function generateStaticParams() {
@@ -67,13 +74,14 @@ export default async function ModelDetailPage({
   if (!summary) notFound();
 
   const tasks = resultsForModel(modelId);
+  const candidates = compareCandidates(summary, ALL_SUMMARIES);
 
   const breadcrumb = breadcrumbLd([
     { name: 'Home', url: `${SITE_URL}/` },
     { name: 'Lab', url: `${SITE_URL}/lab/` },
     { name: 'Harness Eval', url: `${SITE_URL}/lab/harness-eval/` },
     { name: 'Models', url: `${SITE_URL}/lab/harness-eval/models/` },
-    { name: summary.model.displayName, url: `${SITE_URL}${harnessModelPath(modelId)}` },
+    { name: formatModelLabel(modelId), url: `${SITE_URL}${harnessModelPath(modelId)}` },
   ]);
 
   return (
@@ -88,7 +96,7 @@ export default async function ModelDetailPage({
             { label: 'Lab', href: '/lab/' },
             { label: 'Harness Eval', href: '/lab/harness-eval/' },
             { label: 'Models', href: '/lab/harness-eval/models/' },
-            { label: summary.model.displayName },
+            { label: formatModelLabel(modelId) },
           ]}
         />
 
@@ -235,6 +243,37 @@ export default async function ModelDetailPage({
                   </div>
                 ))}
               </div>
+            </section>
+          </Reveal>
+        )}
+
+        {/* Compare — the affordance that opens a side-by-side. Candidates are
+            ranked by how much the comparison would teach (see
+            compareCandidates), so the first link is never a dead end. */}
+        {candidates.length > 0 && (
+          <Reveal delay={180}>
+            <section className="mt-16">
+              <h2 className="type-h3 mb-2">Compare side by side</h2>
+              <p className="mb-5 max-w-[70ch] text-[16px] text-muted">
+                The same tasks, run by both models: where they disagree, which one was faster, and what it cost.
+              </p>
+              <ul className="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
+                {candidates.map((candidate) => (
+                  <li key={candidate.model.id}>
+                    <Link
+                      href={harnessComparePath(summary!.model.id, candidate.model.id)}
+                      className="group flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3.5"
+                    >
+                      <span className="text-[16px] font-medium text-fg group-hover:underline">
+                        vs {formatModelLabel(candidate.model.id)}
+                      </span>
+                      <span className="font-mono text-[16px] text-muted">
+                        {String(candidate.passRate)}% · {String(candidate.totalTasks)} tasks
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </section>
           </Reveal>
         )}

@@ -383,7 +383,7 @@ export default function HarnessEvalPage() {
                   <li key={f.category} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3.5">
                     <span className="font-mono text-[16px] text-red-400">{f.category}</span>
                     <span className="text-[16px] text-fg">
-                      {String(f.count)} failure{f.count !== 1 ? 's' : ''}
+                      {`${String(f.count)} failure${f.count === 1 ? '' : 's'}`}
                     </span>
                     {f.examples.length > 0 && (
                       <span className="min-w-0 flex-1 truncate text-[16px] text-muted" title={f.examples.join(', ')}>

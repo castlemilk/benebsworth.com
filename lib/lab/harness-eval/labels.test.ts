@@ -48,6 +48,18 @@ describe('formatModelLabel', () => {
     )
   })
 
+  it('names the vendor once when the model segment repeats it', () => {
+    // `deepseek/deepseek-v4-pro` should not read "DeepSeek / DeepSeek V4 Pro".
+    expect(formatModelLabel('deepseek/deepseek-v4-pro')).toBe('DeepSeek V4 Pro')
+    // A genuine two-part id keeps both parts, and so does a route: the whole
+    // point of comparing `opencode/…` against `deepseek/…` is that they are
+    // the same weights on different routes, so the route stays in the label.
+    expect(formatModelLabel('nvidia/nemotron-3-ultra')).toBe('NVIDIA / Nemotron 3 Ultra')
+    expect(formatModelLabel('opencode/deepseek-v4.1-flash-free')).toBe(
+      'OpenCode / DeepSeek V4.1 Flash Free',
+    )
+  })
+
   it('leaves an empty id alone rather than inventing a label', () => {
     expect(formatModelLabel('   ')).toBe('')
   })

@@ -7,6 +7,8 @@ import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/s
 import { Reveal } from '@/components/motion/reveal';
 import { ALL_SUMMARIES } from '@/lib/lab/harness-eval/results';
 import { rankModels } from '@/lib/lab/harness-eval/analytics';
+import { formatModelLabel } from '@/lib/lab/harness-eval/labels';
+import { ComparePicker } from '@/components/lab/harness-eval/compare-picker';
 import { harnessModelPath } from '@/lib/lab/harness-eval/nav';
 import { ArrowRight, Cpu } from 'lucide-react';
 
@@ -90,6 +92,18 @@ export default function ModelsIndexPage() {
           </Reveal>
         </section>
 
+        <ComparePicker
+          models={rankings.map((r) => ({
+            id: r.model.id,
+            label: formatModelLabel(r.model.id),
+            passRate: r.passRate,
+            totalTasks: r.totalTasks,
+            // Task keys, so the picker can say how many tasks a pair shares
+            // before anyone opens a comparison with nothing in common.
+            taskKeys: r.tasks.map((t) => `${t.task.suite}|${t.task.id}`),
+          }))}
+        />
+
         <section className="grid gap-4">
           {rankings.map((r, i) => (
             <Reveal key={r.model.id} delay={i * 60}>
@@ -102,7 +116,7 @@ export default function ModelsIndexPage() {
                     <Cpu className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className="type-h3">{r.model.displayName}</p>
+                    <p className="type-h3">{formatModelLabel(r.model.id)}</p>
                     <p className="font-mono text-xs text-fg/50">{r.model.provider}</p>
                   </div>
                 </div>

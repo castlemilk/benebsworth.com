@@ -4,6 +4,8 @@ export interface ModelRanking {
   model: HarnessModelSummary['model'];
   passRate: number;
   totalTasks: number;
+  /** The task results behind the aggregates, so a ranking row can be paired with another model's. */
+  tasks: HarnessModelSummary['tasks'];
   totalTokens: number;
   totalCostUsd: number | null;
   averageTurns: number | null;
@@ -24,6 +26,7 @@ export function rankModels(summaries: HarnessModelSummary[]): ModelRanking[] {
       model: s.model,
       passRate: s.passRate,
       totalTasks: s.totalTasks,
+      tasks: s.tasks,
       totalTokens: s.totalTokens,
       totalCostUsd: s.totalCostUsd ?? null,
       averageTurns: s.averageTurns ?? null,

@@ -82,16 +82,42 @@ export function formatModelLabel(modelId: string): string {
   // `:free` is a pricing fact, already shown in its own column — but on the
   // free route it is the whole point, so keep it as a word.
   const [clean, variant] = body.split(/:(.+)$/);
-  const labelled = clean
+  const segments = clean.split('/');
+
+  // `deepseek/deepseek-v4-pro` names the same vendor twice. Keep the vendor
+  // segment and strip the repeated leading word from the model, so the label
+  // reads "DeepSeek V4 Pro" rather than "DeepSeek / DeepSeek V4 Pro". When the
+  // vendor was absorbed, the two segments are one phrase, not a vendor and a
+  // model, so they join with a space rather than the routed-id separator.
+  let absorbed = false;
+  const deduped = segments.map((segment, i) => {
+    if (i === 0 || segments.length < 2) return segment;
+    const vendor = segments[0]!.toLowerCase();
+    const lower = segment.toLowerCase();
+    if (lower === vendor) {
+      absorbed = true;
+      return null;
+    }
+    if (lower.startsWith(`${vendor}-`)) {
+      absorbed = true;
+      return segment.slice(vendor.length + 1);
+    }
+    return segment;
+  });
+
+  const labelled = deduped
+    .filter((segment): segment is string => segment !== null)
     // A consensus id (`deepseek-v4-pro+qwen3.8-max-preview`) lists its members
     // with `+`; that is a separator to a reader, not part of a word.
+    .join('/')
     .split('+')
-    .map((member) =>
-      member
+    .map((member) => {
+      const words = member
         .split('/')
         .map((segment) => titleSegment(segment))
-        .join(' / ')
-    )
+        .join(absorbed ? ' ' : ' / ');
+      return words;
+    })
     .join(' + ');
 
   return variant ? `${labelled} ${titleSegment(variant)}` : labelled;

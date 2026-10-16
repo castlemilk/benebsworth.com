@@ -48,6 +48,16 @@ probe  →  register  →  validate  →  sweep  →  analyze  →  publish
    every record with non-empty output (133 JSON + 90 HTML artifacts after a
    full free-tier sweep).
 
+## Agent CLI preflight
+
+For a new CLI wrapper, verify a command **and** file delivery before a sweep.
+A generated equation/page alone does not exercise command permissions.
+For Devin use `task bench:devin-preflight`: one live call, no leaderboard writes.
+Devin 3000.11.1 requires sandboxed Autonomous mode plus `exec` file delivery;
+direct write/edit tools still prompt in that mode. Keep permission failures
+out of capability comparisons and preserve the excluded run's provenance.
+See `docs/postmortem/0005-cli-permission-handoff.md`.
+
 ## Deploy target: Cloudflare Pages, NOT Vercel
 
 **Production is Cloudflare Pages** (`benebsworth.pages.dev`), even though

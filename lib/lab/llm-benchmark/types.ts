@@ -60,6 +60,8 @@ export interface BenchmarkModel {
   provider: string
   /** API model identifier, if it differs from the registry id (e.g. 'kimi-k2-7'). */
   apiModelId?: string
+  /** Explicit Codex reasoning setting; include it in the registry id when comparing efforts. */
+  reasoningEffort?: 'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'ultra'
   costPer1kInputUsd: number
   costPer1kOutputUsd: number
   contextWindow: number

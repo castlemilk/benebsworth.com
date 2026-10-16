@@ -406,6 +406,9 @@ export async function generateFromCli(
       await retainArtifact(root, `artifact-${target.label}`, output)
     }
     if (output === undefined) {
+      if (config.requireArtifactFile) {
+        throw new Error(`CLI artifact missing: ${target.command} exited without delivering ${artifactName}`)
+      }
       output = extractLikelyCode(stdout)
     }
 

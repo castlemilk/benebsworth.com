@@ -168,8 +168,11 @@ function localChromiumBackend(enforcement: SandboxEnforcement): SandboxBackend {
     enforcement,
     async launch() {
       if (!browser) {
-        const { chromium } = await import('playwright')
-        browser = chromium.launch({ headless: true, args: [...CHROMIUM_LAUNCH_ARGS] })
+        // Own the promise before yielding: simultaneous iterations otherwise
+        // launch extra browsers and overwrite the only handle close() retains.
+        browser = import('playwright').then(({ chromium }) =>
+          chromium.launch({ headless: true, args: [...CHROMIUM_LAUNCH_ARGS] })
+        )
       }
       const b = await browser
       return { newContext: (options) => b.newContext(options) }
@@ -226,8 +229,7 @@ function remoteBackend(enforcement: SandboxEnforcement): SandboxBackend {
       if (!browser) {
         const endpoint = process.env.PLAYWRIGHT_WS_ENDPOINT
         if (!endpoint) throw new Error('sandbox backend "remote": PLAYWRIGHT_WS_ENDPOINT is unset')
-        const { chromium } = await import('playwright')
-        browser = chromium.connect(endpoint)
+        browser = import('playwright').then(({ chromium }) => chromium.connect(endpoint))
       }
       const b = await browser
       return { newContext: (options) => b.newContext(options) }

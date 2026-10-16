@@ -98,6 +98,7 @@ tasks:
         }
         check CLOUDFLARE_API_TOKEN   "deploy:staging, deploy:prod"
         check CLOUDFLARE_ACCOUNT_ID  "deploy:staging, deploy:prod"
+        check NEXT_PUBLIC_GA_MEASUREMENT_ID "deploy:prod (GA4)"
         check OPENROUTER_API_KEY     "bench:run for openrouter models"
         check MOONSHOT_API_KEY       "bench:run for kimi models"
         check OPENAI_API_KEY         "bench:run for openai models"
@@ -111,10 +112,9 @@ tasks:
         else echo "  core.hooksPath = ${hp:-<unset>}  -> run: task git:hooks:install"; fi
         echo "== note"
         echo "  'set' above means PRESENT, not VALID. To prove the Cloudflare token"
-        echo "  actually works:  task deploy:auth"
-        echo "  Do NOT test it at /client/v4/user/tokens/verify — this is an"
-        echo "  account-owned (cfat_) token and that endpoint returns a misleading"
-        echo "  '1000 Invalid API Token' for a perfectly good one."
+        echo "  actually works for Pages:  task deploy:auth"
+        echo "  The /tokens/verify endpoints are not reliable for every Wrangler"
+        echo "  credential type; deploy:auth tests the Pages API directly."
 
   verify:
     desc: Full local verification — lint, typecheck, prose, unit tests (no build)

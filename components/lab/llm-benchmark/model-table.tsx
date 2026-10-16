@@ -13,7 +13,6 @@ import {
   type SortingState,
   type FilterFn,
   type ColumnFiltersState,
-  type VisibilityState,
 } from '@tanstack/react-table'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import Link from 'next/link'
@@ -84,8 +83,11 @@ interface RowData {
   meta: ModelMeta
   benchModel: BenchmarkModel | undefined
   genTps: number
+  genMinTps: number
+  genMaxTps: number
   promptTps: number
   ttftMs: number
+  samples: number
   avgScore: number | null
   scoredCount: number
   scoredRows: BenchmarkResult[]
@@ -252,7 +254,6 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
   const [sorting, setSorting] = useState<SortingState>([{ id: 'genTps', desc: true }])
   const [globalFilter, setGlobalFilter] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   const data = useMemo<RowData[]>(() =>
@@ -268,8 +269,11 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
         meta,
         benchModel,
         genTps: m.summary.gen_tps_mean ?? 0,
+        genMinTps: m.summary.gen_tps_min ?? 0,
+        genMaxTps: m.summary.gen_tps_max ?? 0,
         promptTps: m.summary.prompt_tps_mean ?? 0,
         ttftMs: m.summary.ttft_ms_mean ?? 0,
+        samples: m.summary.samples,
         avgScore: avg,
         scoredCount: rows.length,
         scoredRows: rows,
@@ -283,12 +287,11 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
   )
 
   const columns = useMemo(() => [
-    col.accessor('rank', {
+    col.display({
       id: 'rank',
       header: '#',
-      enableSorting: true,
       cell: info => (
-        <span className="font-mono text-sm tabular-nums text-muted">{String(info.getValue()).padStart(2, '0')}</span>
+        <span className="font-mono text-sm tabular-nums text-muted">{String(info.row.index + 1).padStart(2, '0')}</span>
       ),
       size: 40,
     }),
@@ -311,7 +314,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
                   backgroundColor: `color-mix(in srgb, ${row.meta.accent} 10%, transparent)`,
                 }}
               >
-                {row.rank}
+                {info.row.index + 1}
               </span>
             )}
             <div className="min-w-0">
@@ -354,6 +357,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
         const val = info.getValue()
         const pct = maxGenTps > 0 ? (val / maxGenTps) * 100 : 0
         const accent = info.row.original.meta.accent
+        const row = info.row.original
         return (
           <div className="flex items-center gap-2.5">
             <div className="relative h-1.5 w-20 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
@@ -362,7 +366,12 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
                 style={{ width: `${pct}%`, backgroundColor: accent }}
               />
             </div>
-            <span className="font-mono text-sm font-medium tabular-nums">{val > 0 ? val.toFixed(1) : '—'}</span>
+            <span className="font-mono text-sm font-medium tabular-nums">
+              {val > 0 ? val.toFixed(1) : '—'}
+              <span className="ml-1 text-[0.6rem] text-muted">
+                {row.genMinTps > 0 && row.genMaxTps > 0 ? `${row.genMinTps.toFixed(0)}–${row.genMaxTps.toFixed(0)}` : ''}
+              </span>
+            </span>
           </div>
         )
       },
@@ -388,6 +397,13 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
           {info.getValue() > 0 ? `${info.getValue().toFixed(1)}ms` : '—'}
         </span>
       ),
+      size: 80,
+    }),
+    col.accessor('samples', {
+      id: 'samples',
+      header: 'Samples',
+      enableSorting: true,
+      cell: info => <span className="font-mono text-xs tabular-nums text-muted">{info.getValue()}</span>,
       size: 80,
     }),
     col.accessor('avgScore', {
@@ -425,11 +441,10 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
   const table = useReactTable({
     data,
     columns,
-    state: { sorting, globalFilter, columnFilters, columnVisibility },
+    state: { sorting, globalFilter, columnFilters },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -493,13 +508,6 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
             })
           }}
         />
-
-        <button
-          onClick={() => setColumnVisibility({})}
-          className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-fg/20 hover:text-fg"
-        >
-          Reset
-        </button>
 
         {(globalFilter || selectedFamilies.size > 0) && (
           <div className="flex items-center gap-1.5">
@@ -592,10 +600,13 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
                       </td>
                     ))}
                     <td className="px-2 py-3">
-                      <button
-                        onClick={() => toggleRow(row.original.id)}
-                        className="rounded p-1 text-muted transition-colors hover:bg-[var(--color-surface)] hover:text-fg"
-                      >
+                       <button
+                         type="button"
+                         onClick={() => toggleRow(row.original.id)}
+                         aria-expanded={isExpanded}
+                         aria-label={`${isExpanded ? 'Hide' : 'Show'} details for ${row.original.model.displayName || row.original.id}`}
+                         className="rounded p-1 text-muted transition-colors hover:bg-[var(--color-surface)] hover:text-fg"
+                       >
                         {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                       </button>
                     </td>

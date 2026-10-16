@@ -3,6 +3,7 @@ import { JetBrains_Mono, Space_Grotesk, Hanken_Grotesk } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { Analytics } from '@/components/analytics/analytics'
+import { SITE_URL } from '@/components/seo/json-ld'
 
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
 const display = Space_Grotesk({
@@ -17,14 +18,14 @@ const sans = Hanken_Grotesk({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://benebsworth.com'),
+  metadataBase: new URL(SITE_URL),
   title: { default: 'Ben Ebsworth — Software, Platform & Hardware Engineer', template: '%s · Ben Ebsworth' },
   description:
     'Ben Ebsworth — software, platform & hardware engineer in Melbourne. Building across the stack from electrical/embedded hardware to distributed platforms, AI-native. Writing on Kubernetes, service mesh, CI/CD and cloud.',
   keywords: ['Ben Ebsworth', 'software engineer', 'platform engineering', 'Kubernetes', 'Istio', 'SRE', 'cloud', 'GCP', 'AWS', 'embedded', 'AI-native', 'Melbourne'],
-  authors: [{ name: 'Ben Ebsworth', url: 'https://benebsworth.com' }],
+  authors: [{ name: 'Ben Ebsworth', url: SITE_URL }],
   creator: 'Ben Ebsworth',
-  openGraph: { type: 'website', siteName: 'Ben Ebsworth', url: 'https://benebsworth.com', locale: 'en_AU' },
+  openGraph: { type: 'website', siteName: 'Ben Ebsworth', url: SITE_URL, locale: 'en_AU' },
   twitter: { card: 'summary_large_image', creator: '@benebsworth' },
   alternates: {
     types: {

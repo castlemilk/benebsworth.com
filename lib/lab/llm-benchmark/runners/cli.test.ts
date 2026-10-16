@@ -294,6 +294,15 @@ describe('generateFromCli first-output telemetry', () => {
 })
 
 describe('generateFromCli sweep retention', () => {
+  it('rejects commentary-only stdout when file delivery is required', async () => {
+    await expect(generateFromCli({
+      command: process.execPath,
+      artifactViaFile: true,
+      requireArtifactFile: true,
+      buildArgs: () => ['-e', 'console.log("I will create the complete HTML artifact after running its tests.")'],
+    }, TEST_MODEL, TEST_TASK)).rejects.toThrow('CLI artifact missing')
+  })
+
   it('keeps the scratch dir under the sweep root and copies the artifact to artifacts/<hash>.html (0600)', async () => {
     const sweepRoot = await mkdtemp(join(tmpdir(), 'llm-bench-sweep-'))
     const scriptDir = await mkdtemp(join(tmpdir(), 'llm-bench-script-'))

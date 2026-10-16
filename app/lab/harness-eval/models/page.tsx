@@ -7,6 +7,7 @@ import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/s
 import { Reveal } from '@/components/motion/reveal';
 import { ALL_SUMMARIES } from '@/lib/lab/harness-eval/results';
 import { rankModels } from '@/lib/lab/harness-eval/analytics';
+import { harnessModelPath } from '@/lib/lab/harness-eval/nav';
 import { ArrowRight, Cpu } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -58,7 +59,7 @@ export default function ModelsIndexPage() {
             url: `${SITE_URL}/lab/harness-eval/models/`,
             items: rankings.map((r) => ({
               name: r.model.displayName,
-              url: `${SITE_URL}/lab/harness-eval/models/${encodeURIComponent(r.model.id)}/`,
+              url: `${SITE_URL}${harnessModelPath(r.model.id)}`,
             })),
           }),
         ]}
@@ -93,7 +94,7 @@ export default function ModelsIndexPage() {
           {rankings.map((r, i) => (
             <Reveal key={r.model.id} delay={i * 60}>
               <Link
-                href={`/lab/harness-eval/models/${encodeURIComponent(r.model.id)}/`}
+                href={harnessModelPath(r.model.id)}
                 className="group flex items-center justify-between rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition hover:border-[var(--color-muted)]"
               >
                 <div className="flex items-center gap-4">

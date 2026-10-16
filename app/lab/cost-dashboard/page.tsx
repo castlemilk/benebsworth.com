@@ -7,6 +7,7 @@ import { Breadcrumb } from '@/components/site/breadcrumb';
 import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld';
 import { Reveal } from '@/components/motion/reveal';
 import { ALL_SUMMARIES } from '@/lib/lab/harness-eval/results';
+import { harnessModelPath } from '@/lib/lab/harness-eval/nav';
 import {
   buildCostDashboard,
   formatCost,
@@ -237,7 +238,7 @@ function AlertRow({ alert }: { alert: BudgetAlert }) {
           {alert.severity}
         </span>
         <Link
-          href={`/lab/harness-eval/models/${encodeURIComponent(alert.modelId)}/`}
+          href={harnessModelPath(alert.modelId)}
           className="font-medium text-fg underline-offset-2 hover:underline"
         >
           {alert.displayName}
@@ -281,7 +282,7 @@ function PerModelTable({ rows }: { rows: PerModelRow[] }) {
               <tr key={r.modelId} className="hover:bg-[var(--color-surface)]">
                 <Td>
                   <Link
-                    href={`/lab/harness-eval/models/${encodeURIComponent(r.modelId)}/`}
+                    href={harnessModelPath(r.modelId)}
                     className="font-medium text-fg underline-offset-2 hover:underline"
                   >
                     {r.displayName}
@@ -434,7 +435,7 @@ function ExpensiveTasksTable({ rows }: { rows: ExpensiveTask[] }) {
               </Td>
               <Td>
                 <Link
-                  href={`/lab/harness-eval/models/${encodeURIComponent(r.modelId)}/`}
+                  href={harnessModelPath(r.modelId)}
                   className="text-fg underline-offset-2 hover:underline"
                 >
                   {r.modelName}

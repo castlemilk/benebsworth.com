@@ -198,6 +198,11 @@ describe('summarize', () => {
 
 describe('the real content tree', () => {
   const BLOG_DIR = path.join(process.cwd(), 'content/blog')
+  const historicalReports = [
+    'benchmarking-agy-frontier',
+    'benchmarking-kimi-k3',
+    'benchmarking-openrouter-free-tier',
+  ]
 
   const realPosts = (): PostInput[] =>
     fs
@@ -208,24 +213,21 @@ describe('the real content tree', () => {
         return { slug, frontmatter: parsed.data as Record<string, unknown>, body: parsed.content }
       })
 
-  it('classifies every shipped benchmark post as grandfathered, and nothing as failed', () => {
+  it('grandfathers historical reports and requires provenance for new benchmark posts', () => {
     const verdicts = realPosts().map((p) => classifyPost(p))
     const flagged = verdicts.filter((v) => v.status !== 'skipped')
     // The three published benchmark reports all predate the convention.
-    expect(flagged.map((v) => v.slug).sort()).toEqual([
-      'benchmarking-agy-frontier',
-      'benchmarking-kimi-k3',
-      'benchmarking-openrouter-free-tier',
-    ])
-    expect(flagged.every((v) => v.status === 'grandfathered')).toBe(true)
+    expect(flagged.filter((v) => v.status === 'grandfathered').map((v) => v.slug).sort()).toEqual(historicalReports)
+    expect(flagged.find((v) => v.slug === 'benchmarking-astra-devin')?.status).toBe('ok')
+    expect(flagged.every((v) => v.status === 'grandfathered' || v.status === 'ok')).toBe(true)
     expect(summarize(verdicts).exitCode).toBe(0)
   })
 
-  it('keeps the cutoff after every existing benchmark post', () => {
+  it('keeps the cutoff after every grandfathered benchmark post', () => {
     // A cutoff moved earlier than a shipped post would fail the build on
     // history that cannot be honestly back-stamped.
     const days = realPosts()
-      .filter((p) => benchmarkSignals(p).length > 0)
+      .filter((p) => historicalReports.includes(p.slug))
       .map((p) => postDay(p.frontmatter))
     expect(days.every((d) => d < METHODOLOGY_CUTOFF)).toBe(true)
   })

@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import type { BrowserContext, Page } from 'playwright'
 
 import { FRAME_PRELUDE } from '../frame-prelude'
@@ -40,6 +40,14 @@ function recordingBackend(): { backend: SandboxBackend; contents: string[] } {
 
 afterEach(() => {
   resetSandboxRuntime()
+  vi.useRealTimers()
+})
+
+it('clears completed check deadlines so offline rescoring can exit promptly', async () => {
+  vi.useFakeTimers()
+  setSandboxBackend(recordingBackend().backend)
+  await runChecks(ARTIFACT, [async () => ({ name: 'done', passed: true, points: 1, maxPoints: 1 })])
+  expect(vi.getTimerCount()).toBe(0)
 })
 
 describe('prelude parity', () => {

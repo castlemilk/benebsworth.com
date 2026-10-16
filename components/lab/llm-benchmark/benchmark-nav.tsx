@@ -47,34 +47,38 @@ export function BenchmarkNav() {
           <span>Overview</span>
         </Link>
 
-        <span className="h-4 w-px shrink-0 bg-[var(--color-border)]" />
+        {!isOverview && (
+          <>
+            <span className="h-4 w-px shrink-0 bg-[var(--color-border)]" />
 
-        <span className="flex shrink-0 items-center gap-1 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
-          <Layers className="h-3 w-3" aria-hidden />
-          Categories
-        </span>
+            <span className="flex shrink-0 items-center gap-1 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+              <Layers className="h-3 w-3" aria-hidden />
+              Categories
+            </span>
 
-        {BENCHMARK_CATEGORIES.map((cat) => {
-          const href = categoryPath(cat)
-          const active = pathname === href || pathname.startsWith(`${href}`)
-          return (
-            <Link
-              key={cat.slug}
-              href={href}
-              className={cn(
-                navLink,
-                active
-                  ? 'accent-ink border-current'
-                  : 'border-[var(--color-border)] text-muted hover:border-[var(--color-muted)]',
-              )}
-              style={active ? ({ '--ink': cat.accent } as React.CSSProperties) : undefined}
-              title={cat.blurb}
-            >
-              <span className="text-[0.85em]">{cat.glyph}</span>
-              <span>{cat.label}</span>
-            </Link>
-          )
-        })}
+            {BENCHMARK_CATEGORIES.map((cat) => {
+              const href = categoryPath(cat)
+              const active = pathname === href || pathname.startsWith(`${href}`)
+              return (
+                <Link
+                  key={cat.slug}
+                  href={href}
+                  className={cn(
+                    navLink,
+                    active
+                      ? 'accent-ink border-current'
+                      : 'border-[var(--color-border)] text-muted hover:border-[var(--color-muted)]',
+                  )}
+                  style={active ? ({ '--ink': cat.accent } as React.CSSProperties) : undefined}
+                  title={cat.blurb}
+                >
+                  <span className="text-[0.85em]">{cat.glyph}</span>
+                  <span>{cat.label}</span>
+                </Link>
+              )
+            })}
+          </>
+        )}
 
         <span className="h-4 w-px shrink-0 bg-[var(--color-border)]" />
 

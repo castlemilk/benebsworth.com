@@ -156,6 +156,31 @@ describe('parseSolutionPairs', () => {
 })
 
 describe.runIf(hasPython)('crypto-hash-race executable scoring', () => {
+  it('executes test snippets that continue the main module in a sibling code block', async () => {
+    const split = GOOD_CRYPTO.indexOf('class TestHashing')
+    const artifact = `<html><script type="text/plain">${GOOD_CRYPTO.slice(0, split)}</script><script type="text/plain">${GOOD_CRYPTO.slice(split)}</script></html>`
+    const result = await scoreExecutable(artifact, cryptoTask)
+    expect(result.executed).toBe(result.executedMax)
+  }, 60_000)
+
+  it('binds a separate test module import to the selected implementation', async () => {
+    const split = GOOD_CRYPTO.indexOf('class TestHashing')
+    const artifact = `<html><script type="text/plain">${GOOD_CRYPTO.slice(0, split)}</script><script type="text/plain">import unittest\nfrom secure_passwords import hash_password, verify_password\n${GOOD_CRYPTO.slice(split)}</script></html>`
+    const result = await scoreExecutable(artifact, cryptoTask)
+    expect(result.executed).toBe(result.executedMax)
+  }, 60_000)
+
+  it('leaves optional standard-library imports alone when loading unittest.mock', async () => {
+    const result = await scoreExecutable('from unittest.mock import patch\nimport subprocess\nimport socket\n' + GOOD_CRYPTO + `
+class TestNetworkBoundary(unittest.TestCase):
+    def test_socket_construction_is_denied(self):
+        with self.assertRaisesRegex(OSError, 'network access is denied'):
+            socket.socket()
+`, cryptoTask)
+    expect(result.executed).toBe(result.executedMax)
+    expect(result.checks.find((c) => c.name === 'module-executes')?.detail).not.toMatch(/self-import/)
+  }, 60_000)
+
   it('scores a genuinely working module high', async () => {
     const result = await scoreExecutable(GOOD_CRYPTO, cryptoTask)
     expect(result.fallbackReason).toBeUndefined()

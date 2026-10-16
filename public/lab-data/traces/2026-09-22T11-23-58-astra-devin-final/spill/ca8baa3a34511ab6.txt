@@ -1,0 +1,213 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pendulum wave · Kinetic studies</title><style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}*{box-sizing:border-box}body{height:100vh;height:100dvh;overflow:hidden}button,input{font:inherit}button{color:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #a8efd5;outline-offset:5px}canvas{position:fixed;inset:0;width:100%;height:100%;display:block}header{position:absolute;top:27px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}.eyebrow{display:flex;align-items:center;gap:9px;font-size:10px;font-weight:600;letter-spacing:2.1px;color:#91aaa5}.mark{display:flex;align-items:center;gap:3px;height:14px}.mark i{width:2px;background:#a7e8cd;border-radius:2px;height:7px}.mark i:nth-child(2){height:13px}.mark i:nth-child(3){height:10px}.mark i:nth-child(4){height:5px}h1{font-size:clamp(26px,3.2vw,40px);letter-spacing:-1.5px;line-height:1.08;font-weight:500;margin:13px 0 8px}.subtitle{margin:0;color:#8b929c;font-size:12px;line-height:1.5}.head-right{text-align:right;padding-top:1px}.status{display:flex;align-items:center;justify-content:flex-end;gap:7px;color:#acb5bb;font-size:9px;letter-spacing:1.8px}.status-dot{width:5px;height:5px;border-radius:50%;background:#a3ebcf;box-shadow:0 0 9px #a3ebcf70}.status.paused .status-dot{background:#adb4c1;box-shadow:none}.return-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#828b95;margin-top:20px}.return-value{font-size:25px;letter-spacing:-1px;font-variant-numeric:tabular-nums;font-weight:400;margin-top:3px}.return-value span{font-size:12px;color:#7f8991;margin-left:3px;letter-spacing:0}.scene-tools{position:absolute;left:33px;bottom:177px;display:flex;align-items:center;gap:12px}.trace-button{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #32383d;border-radius:6px;background:#111519c9;color:#a6b2bb;font-size:10px;min-height:32px}.trace-button[aria-pressed="true"]{color:#a8e5d0;border-color:#3d6257;background:#12251f99}.trace-button svg{width:14px;height:14px}.scene-note{color:#737e87;font-size:10px;letter-spacing:.2px}.controls{position:absolute;bottom:42px;left:32px;right:32px;background:linear-gradient(135deg,#171b20ee,#11151aee);border:1px solid #2a3037;border-radius:12px;box-shadow:0 15px 50px #0003;backdrop-filter:blur(14px);padding:18px 22px 11px}.control-row{display:grid;grid-template-columns:112px 1fr 1fr 160px;gap:28px;align-items:center}.transport{display:flex;gap:8px;align-items:center}.icon-button{display:grid;place-items:center;width:43px;height:43px;background:#242b30;border:1px solid #394248;border-radius:8px;transition:background .15s}.icon-button:hover{background:#35433e}.icon-button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.play-button{background:#b8ecd9;color:#182b24;border-color:#b8ecd9}.play-button:hover{background:#d0f8e7}.reset-button{background:transparent;color:#a4afb8;border-color:#303840}.field-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:5px}.field-head label{font-size:11px;color:#a1aab3}.field-head output{font-size:17px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}.field-head .unit{font-size:10px;color:#849099;letter-spacing:0;margin-left:4px}.range{display:block;width:100%;margin:0;height:21px;padding:0;background:transparent;appearance:none;-webkit-appearance:none;cursor:pointer;touch-action:pan-y}.range::-webkit-slider-runnable-track{height:3px;border-radius:8px;background:linear-gradient(to right,#a5dfcc 0 var(--fill,50%),#353e45 var(--fill,50%) 100%)}.range::-moz-range-track{height:3px;border-radius:8px;background:#353e45}.range::-moz-range-progress{height:3px;background:#a5dfcc}.range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;margin-top:-4px;background:#c4f0df;border-radius:50%;box-shadow:0 0 0 3px #151c20}.range::-moz-range-thumb{width:11px;height:11px;border:0;background:#c4f0df;border-radius:50%}.tuning{border-left:1px solid #30363d;padding-left:24px}.tuning .label{font-size:9px;letter-spacing:1.2px;color:#86909b;text-transform:uppercase}.tuning .value{font-variant-numeric:tabular-nums;margin-top:5px;font-size:12px;color:#bdc7d0}.tuning .value span{color:#6f7f89;margin:0 4px}.timeline{display:grid;grid-template-columns:80px 1fr 112px;gap:15px;align-items:center;margin-top:11px;border-top:1px solid #292f35;padding-top:9px}.timeline label{font-size:9px;letter-spacing:1.1px;color:#838f99;text-transform:uppercase}.timeline .range{height:20px}.timeline .range::-webkit-slider-runnable-track{height:2px;background:linear-gradient(to right,#82b9a9 0 var(--fill,10%),#2c343b var(--fill,10%) 100%)}.timeline .range::-webkit-slider-thumb{width:7px;height:7px;margin-top:-2.5px;background:#aedaca;box-shadow:none}.time-readout{font-size:10px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:#788790}.time-readout strong{color:#c1ced3;font-weight:400}.footer{position:absolute;left:34px;right:34px;bottom:15px;display:flex;justify-content:space-between;gap:12px;color:#67747d;font-size:9px;letter-spacing:.2px}.footer .equation{color:#81908e}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}#error{position:fixed;left:20px;right:20px;top:20px;z-index:10;background:#44242b;color:#ffdae0;border:1px solid #9b5966;border-radius:8px;padding:15px;font-size:13px}#error:empty{display:none}
+@media(min-width:1500px){header{left:5%;right:5%}.controls{left:5%;right:5%}.scene-tools{left:5%}.footer{left:5%;right:5%}}
+@media(max-width:760px){header{top:20px;left:22px;right:22px}.control-row{grid-template-columns:88px 1fr 1fr;gap:20px}.controls{left:20px;right:20px;padding:14px 16px 8px;bottom:37px}.tuning{display:none}.scene-tools{left:22px;bottom:158px}.footer{left:23px;right:23px;bottom:12px}.footer .explanation{display:none}.return-label{margin-top:17px}.return-value{font-size:21px}.scene-note{font-size:9px}.icon-button{width:39px;height:39px}.timeline{margin-top:9px;padding-top:7px}}
+@media(max-width:500px){header{top:18px;left:19px;right:19px}.eyebrow{font-size:8px;letter-spacing:1.8px}h1{font-size:28px;letter-spacing:-1px;margin-top:11px;margin-bottom:5px}.subtitle{font-size:10px;max-width:235px}.head-right .status{font-size:8px;letter-spacing:1px}.return-label{font-size:8px;margin-top:16px;letter-spacing:.6px}.return-value{font-size:19px}.return-value span{font-size:10px}.controls{left:14px;right:14px;bottom:31px;padding:11px 12px 7px;border-radius:10px}.control-row{grid-template-columns:68px 1fr 1fr;gap:14px}.transport{gap:5px}.icon-button{width:33px;height:38px;border-radius:6px}.icon-button svg{width:15px;height:15px}.field-head{gap:3px;margin-bottom:3px}.field-head label{font-size:9px}.field-head output{font-size:14px}.field-head .unit{font-size:8px;margin-left:2px}.range{height:24px}.timeline{grid-template-columns:57px 1fr 83px;gap:9px;padding-top:5px;margin-top:7px}.timeline label{font-size:8px;letter-spacing:.4px}.time-readout{font-size:9px}.scene-tools{left:19px;bottom:148px;gap:9px}.trace-button{padding:5px 8px;min-height:29px;font-size:9px}.scene-note{font-size:8px}.footer{left:19px;right:19px;bottom:10px;font-size:8px}.footer .hint{display:none}}
+@media(max-height:420px){header{top:13px}h1{font-size:25px;margin:8px 0 4px}.subtitle{display:none}.controls{bottom:25px;padding-top:9px}.scene-tools{bottom:137px}.footer{bottom:8px}.return-label{margin-top:9px}}
+</style></head><body>
+<canvas id="scene" role="img" aria-label="An animated pendulum wave: colored pendulums of decreasing length gradually move out of phase, form waves, and return to alignment.">Your browser needs Canvas support to display this simulation.</canvas>
+<header><div><div class="eyebrow"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>KINETIC STUDIES <span style="color:#4e6064">/</span> 001</div><h1>Pendulum wave</h1><p class="subtitle">A little difference. A whole new rhythm.</p></div><div class="head-right"><div class="status" id="status"><i class="status-dot"></i><span id="status-text">RUNNING</span></div><div class="return-label">Alignment in</div><div class="return-value"><output id="return-time">64.8</output><span>s</span></div></div></header>
+<div class="scene-tools"><button type="button" class="trace-button" id="wave-toggle" aria-pressed="true" aria-label="Show wave guide"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M1 11C4 1 6 1 10 10s6 9 9-1"/></svg>Wave guide</button><span class="scene-note">Independent pendulums. One evolving pattern.</span></div>
+<section class="controls" aria-label="Simulation controls"><div class="control-row"><div class="transport"><button type="button" id="play" class="icon-button play-button" aria-label="Pause simulation" title="Pause or play (Space)"><svg id="play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" stroke-width="2.5"/></svg></button><button type="button" id="reset" class="icon-button reset-button" aria-label="Restart aligned" title="Restart aligned (R)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7a6.5 6.5 0 1 1-.2 6M4 3v4h4"/></svg></button></div><div class="field"><div class="field-head"><label for="count">Pendulums</label><output for="count" id="count-value">24</output></div><input class="range" type="range" id="count" min="6" max="40" step="1" value="24" aria-label="Number of pendulums" style="--fill:52.94%"></div><div class="field"><div class="field-head"><label for="gravity">Gravity</label><div><output for="gravity" id="gravity-value">9.81</output><span class="unit">m/s²</span></div></div><input class="range" type="range" id="gravity" min="1" max="20" step="0.01" value="9.81" aria-label="Gravity in meters per second squared" style="--fill:46.37%"></div><div class="tuning"><div class="label">Length range</div><div class="value" id="length-range">0.50 <span>—</span> 1.64 m</div></div></div><div class="timeline"><label for="time">Cycle position</label><input class="range" type="range" id="time" min="0" max="1000" step="1" value="100" aria-label="Position within the repeating wave cycle" style="--fill:10%"><div class="time-readout"><strong id="cycle-time">07.2</strong><span> / </span><span id="cycle-length">72.0 s</span></div></div></section>
+<div class="footer"><span class="explanation">Shorter pendulums swing faster. Every cycle, they meet again.</span><span class="equation">T = 2π√(L/g) <span style="color:#53646a">·</span> ideal small-angle model</span><span class="hint">SPACE to pause</span></div><div id="error" role="alert"></div>
+<script>
+try {
+  'use strict';
+  const canvas = document.getElementById('scene');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D is not supported in this browser.');
+  const $ = id => document.getElementById(id);
+  const ui = {count:$('count'),gravity:$('gravity'),time:$('time'),countValue:$('count-value'),gravityValue:$('gravity-value'),returnTime:$('return-time'),cycleTime:$('cycle-time'),cycleLength:$('cycle-length'),lengthRange:$('length-range'),play:$('play'),playIcon:$('play-icon'),status:$('status'),statusText:$('status-text'),wave:$('wave-toggle')};
+  const TAU = Math.PI * 2, G0 = 9.81, CYCLE = 72, BASE = 28, AMPLITUDE = 0.32;
+  const longest = G0 * Math.pow(CYCLE / (TAU * BASE), 2);
+  let n = 24, gravity = G0, phaseTime = 7.2, running = true, showWave = true;
+  let width = 0, height = 0, dpr = 1, raf = 0, lastTime = null, lastUI = 0, stopped = false;
+  let projection, pendulums = [], rendered = [], selected = -1, pointer = null;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) running = false;
+  function fail(error) {
+    stopped = true;
+    cancelAnimationFrame(raf);
+    $('error').textContent = 'The simulation could not continue: ' + (error && error.message ? error.message : String(error));
+  }
+  function guarded(fn) { return function(event) { try { fn(event); } catch(error) { fail(error); } }; }
+  function paintRange(input) { input.style.setProperty('--fill', 100 * (Number(input.value)-Number(input.min))/(Number(input.max)-Number(input.min)) + '%'); }
+  function rebuild() {
+    pendulums = Array.from({length:n}, (_,i) => {
+      const length = G0 * Math.pow(CYCLE / (TAU * (BASE+i)), 2);
+      const t = i / (n-1);
+      return {i,length,visualLength:length/longest*3.05,hue:153+t*106,color:'hsl('+(153+t*106)+', 64%, 70%)'};
+    });
+    ui.lengthRange.innerHTML = pendulums[n-1].length.toFixed(2) + ' <span>—</span> ' + longest.toFixed(2) + ' m';
+    selected = -1;
+  }
+  function project(x,y,z) {
+    return {x:projection.cx + projection.scale*(x*projection.xx + z*projection.zx), y:projection.cy + projection.scale*(x*projection.xy-y*projection.yy+z*projection.zy)};
+  }
+  function at(p,t) {
+    const angle = AMPLITUDE * Math.cos(TAU*(BASE+p.i)*t/CYCLE);
+    const x = -projection.span/2 + p.i/(n-1)*projection.span;
+    return {x, y:3.45-p.visualLength*Math.cos(angle), z:p.visualLength*Math.sin(angle),angle};
+  }
+  function line(a,b,color,lineWidth) {
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.stroke();
+  }
+  function worldLine(x1,y1,z1,x2,y2,z2,color,lw) { line(project(x1,y1,z1),project(x2,y2,z2),color,lw); }
+  function sphere(x,y,r,hue,alpha) {
+    ctx.save();ctx.globalAlpha=alpha;
+    const halo=ctx.createRadialGradient(x,y,0,x,y,r*3.7);
+    halo.addColorStop(0,'hsla('+hue+',75%,65%,.19)');halo.addColorStop(1,'hsla('+hue+',75%,60%,0)');
+    ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,r*3.7,0,TAU);ctx.fill();
+    const gradient=ctx.createRadialGradient(x-r*.34,y-r*.42,r*.06,x+r*.16,y+r*.20,r*1.15);
+    gradient.addColorStop(0,'hsl('+hue+',60%,92%)');gradient.addColorStop(.25,'hsl('+hue+',57%,73%)');gradient.addColorStop(.62,'hsl('+hue+',47%,49%)');gradient.addColorStop(1,'hsl('+hue+',53%,17%)');
+    ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();
+    ctx.strokeStyle='hsla('+hue+',70%,84%,.38)';ctx.lineWidth=.6;ctx.stroke();
+    ctx.fillStyle='#f0fff7aa';ctx.beginPath();ctx.ellipse(x-r*.28,y-r*.37,r*.21,r*.1,-.5,0,TAU);ctx.fill();ctx.restore();
+  }
+  function layout() {
+    width=window.innerWidth;height=window.innerHeight;dpr=Math.max(1,window.devicePixelRatio||1);
+    canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+    const narrow=width<600;
+    const stageTop=height<420?78:(narrow?112:136);
+    const stageBottom=$('wave-toggle').getBoundingClientRect().top-7;
+    const stageHeight=Math.max(70,stageBottom-stageTop);
+    projection={span:narrow?5.9:14.0,xx:.94,xy:narrow?-.31:-.055,zx:.32,yy:.58,zy:.82,scale:1,cx:width/2,cy:0};
+    const worldWidth=projection.span*.94+2.3;
+    const worldHeight=3.45*.58+projection.span*Math.abs(projection.xy)+1.9;
+    projection.scale=Math.min((width-(narrow?36:100))/worldWidth,stageHeight/worldHeight*1.20);
+    projection.cy=stageTop+stageHeight*.48+projection.scale*.70;
+    draw();
+  }
+  function drawFloor() {
+    const s=projection.span/2+.65;
+    const glow=ctx.createRadialGradient(width*.47,projection.cy,0,width*.47,projection.cy,Math.max(width*.5,240));
+    glow.addColorStop(0,'#15352d38');glow.addColorStop(.50,'#15273018');glow.addColorStop(1,'#0c0c1000');ctx.fillStyle=glow;ctx.fillRect(0,0,width,height);
+    for(let x=-s;x<=s+.01;x+=.55) worldLine(x,0,-1.6,x,0,1.8,'#849d9c0d',.7);
+    for(let z=-1.6;z<=1.81;z+=.4) worldLine(-s,0,z,s,0,z,'#849d9c0d',.7);
+    worldLine(-s,0,1.8,s,0,1.8,'#72898725',.8);
+    worldLine(-s,0,-1.6,-s,0,1.8,'#7289871a',.8);
+    worldLine(s,0,-1.6,s,0,1.8,'#7289871a',.8);
+    for(const p of pendulums) {
+      const b=at(p,phaseTime), point=project(b.x,0,b.z);
+      const r=Math.max(3,projection.scale*.12);
+      ctx.save();ctx.translate(point.x,point.y);ctx.scale(1,.34);
+      const shadow=ctx.createRadialGradient(0,0,0,0,0,r*2.6);shadow.addColorStop(0,'hsla('+p.hue+',70%,60%,.15)');shadow.addColorStop(1,'hsla('+p.hue+',70%,50%,0)');ctx.fillStyle=shadow;ctx.beginPath();ctx.arc(0,0,r*2.6,0,TAU);ctx.fill();ctx.restore();
+    }
+  }
+  function drawRail() {
+    const end=projection.span/2+.24;
+    const a=project(-end,3.45,0), b=project(end,3.45,0);
+    line({x:a.x,y:a.y+3},{x:b.x,y:b.y+3},'#070a0d',8);
+    line(a,b,'#2d393d',7);
+    line({x:a.x,y:a.y-1.8},{x:b.x,y:b.y-1.8},'#899a9b65',1);
+    for (const x of [-end,end]) {
+      const cap=project(x,3.45,0);ctx.fillStyle='#445453';ctx.beginPath();ctx.arc(cap.x,cap.y,3.2,0,TAU);ctx.fill();
+    }
+  }
+  function draw() {
+    if(!projection) return;
+    ctx.clearRect(0,0,width,height);ctx.fillStyle='#0c0c10';ctx.fillRect(0,0,width,height);
+    drawFloor();drawRail();
+    rendered=pendulums.map(p => {
+      const b=at(p,phaseTime), point=project(b.x,b.y,b.z), pivot=project(b.x,3.45,0);
+      return {p,b,point,pivot};
+    });
+    // Individual swing arcs show that adjacent bobs are independent, not connected by a string.
+    for(const item of rendered) {
+      const {p,b,pivot,point}=item;
+      ctx.beginPath();
+      for(let j=0;j<=24;j++) {
+        const angle=-AMPLITUDE+j/24*AMPLITUDE*2;
+        const arc=project(b.x,3.45-p.visualLength*Math.cos(angle),p.visualLength*Math.sin(angle));
+        if(j===0)ctx.moveTo(arc.x,arc.y);else ctx.lineTo(arc.x,arc.y);
+      }
+      ctx.strokeStyle='hsla('+p.hue+',40%,70%,.07)';ctx.lineWidth=.8;ctx.stroke();
+      const thread=ctx.createLinearGradient(pivot.x,pivot.y,point.x,point.y);
+      thread.addColorStop(0,'#8fa2a766');thread.addColorStop(1,'hsla('+p.hue+',40%,75%,.65)');
+      line(pivot,point,thread,selected===p.i?1.8:1);
+      ctx.fillStyle='#8fa6a6';ctx.beginPath();ctx.arc(pivot.x,pivot.y,1.5,0,TAU);ctx.fill();
+    }
+    if(showWave && rendered.length>1) {
+      const first=rendered[0].point, last=rendered[rendered.length-1].point;
+      const gradient=ctx.createLinearGradient(first.x,first.y,last.x,last.y);
+      gradient.addColorStop(0,'#8fe9b665');gradient.addColorStop(.45,'#71d5e865');gradient.addColorStop(1,'#b49ce465');
+      ctx.beginPath();ctx.moveTo(first.x,first.y);
+      // Catmull-Rom interpolation passes through every bob without moving the physics.
+      for(let i=0;i<rendered.length-1;i++) {
+        const p0=rendered[Math.max(0,i-1)].point,p1=rendered[i].point,p2=rendered[i+1].point,p3=rendered[Math.min(rendered.length-1,i+2)].point;
+        ctx.bezierCurveTo(p1.x+(p2.x-p0.x)/6,p1.y+(p2.y-p0.y)/6,p2.x-(p3.x-p1.x)/6,p2.y-(p3.y-p1.y)/6,p2.x,p2.y);
+      }
+      ctx.strokeStyle=gradient;ctx.lineWidth=1.4;ctx.stroke();
+    }
+    const radius=Math.max(3.5,Math.min(10.2,projection.scale*.125,projection.scale*projection.span/(n-1)*.38));
+    // Render far bobs first for consistent occlusion during crossings.
+    const ordered=rendered.slice().sort((a,b)=>a.point.y-b.point.y);
+    for(const {p,point} of ordered) {
+      sphere(point.x,point.y,radius,p.hue,1);
+      if(selected===p.i){ctx.beginPath();ctx.arc(point.x,point.y,radius+4,0,TAU);ctx.strokeStyle=p.color;ctx.lineWidth=.8;ctx.stroke();}
+    }
+    ctx.font='9px ui-monospace, SFMono-Regular, monospace';ctx.textAlign='center';
+    const labels=[0,Math.floor((n-1)/2),n-1];
+    for(const index of labels) {
+      const p=pendulums[index], b=at(p,phaseTime), label=project(b.x,0,1.98);
+      ctx.fillStyle='#6a7e827f';ctx.fillText(String(index+1).padStart(2,'0'),label.x,label.y+6);
+    }
+    if(selected>=0 && pointer) drawTooltip(rendered[selected]);
+  }
+  function drawTooltip(item) {
+    if(!item)return;
+    const text='#'+String(item.p.i+1).padStart(2,'0')+'   '+item.p.length.toFixed(2)+' m   ·   T '+(TAU*Math.sqrt(item.p.length/gravity)).toFixed(2)+' s';
+    ctx.font='10px ui-monospace, SFMono-Regular, monospace';const w=ctx.measureText(text).width+22;
+    const x=Math.max(9,Math.min(width-w-9,item.point.x-w/2)),y=Math.max(110,item.point.y-35);
+    ctx.fillStyle='#1d292cf5';ctx.fillRect(x,y,w,24);ctx.strokeStyle='#5e8c7c70';ctx.lineWidth=.7;ctx.strokeRect(x,y,w,24);ctx.textAlign='left';ctx.fillStyle='#d0e6df';ctx.fillText(text,x+11,y+15);
+  }
+  function updateUI() {
+    const factor=Math.sqrt(gravity/G0), period=CYCLE/factor;
+    const phase=phaseTime;
+    ui.returnTime.textContent=((CYCLE-phase)/factor).toFixed(1);
+    ui.cycleTime.textContent=(phase/factor).toFixed(1).padStart(4,'0');
+    ui.cycleLength.textContent=period.toFixed(1)+' s';
+    ui.time.value=phase/CYCLE*1000;paintRange(ui.time);
+    ui.time.setAttribute('aria-valuetext',(phase/factor).toFixed(1)+' seconds of '+period.toFixed(1)+' seconds');
+  }
+  function updatePlaying() {
+    ui.play.setAttribute('aria-label',running?'Pause simulation':'Play simulation');
+    ui.playIcon.innerHTML=running?'<path d="M7 4v12M13 4v12" stroke-width="2.5"/>':'<path d="M6 3.5 16 10 6 16.5Z" fill="currentColor" stroke="none"/>';
+    ui.statusText.textContent=running?'RUNNING':'PAUSED';ui.status.classList.toggle('paused',!running);lastTime=null;
+  }
+  function tick(now) {
+    if(stopped)return;
+    try {
+      if(lastTime!==null && running && !document.hidden) phaseTime=(phaseTime+Math.min((now-lastTime)/1000,.1)*Math.sqrt(gravity/G0))%CYCLE;
+      lastTime=now;
+      if(running)draw();
+      if(now-lastUI>60){updateUI();lastUI=now;}
+      raf=requestAnimationFrame(tick);
+    } catch(error){fail(error);}
+  }
+  ui.count.addEventListener('input',guarded(()=>{n=Number(ui.count.value);ui.countValue.value=n;paintRange(ui.count);rebuild();draw();updateUI();}));
+  ui.gravity.addEventListener('input',guarded(()=>{gravity=Number(ui.gravity.value);ui.gravityValue.value=gravity.toFixed(2);paintRange(ui.gravity);updateUI();draw();}));
+  ui.time.addEventListener('input',guarded(()=>{phaseTime=Number(ui.time.value)/1000*CYCLE;running=false;updatePlaying();paintRange(ui.time);draw();updateUI();}));
+  ui.play.addEventListener('click',guarded(()=>{running=!running;updatePlaying();}));
+  $('reset').addEventListener('click',guarded(()=>{phaseTime=0;lastTime=null;updateUI();draw();}));
+  ui.wave.addEventListener('click',guarded(()=>{showWave=!showWave;ui.wave.setAttribute('aria-pressed',String(showWave));draw();}));
+  canvas.addEventListener('pointermove',guarded(event=>{
+    pointer={x:event.clientX,y:event.clientY};let closest=-1,distance=23;
+    for(const item of rendered){const d=Math.hypot(item.point.x-pointer.x,item.point.y-pointer.y);if(d<distance){distance=d;closest=item.p.i;}}
+    if(closest!==selected){selected=closest;canvas.style.cursor=selected<0?'default':'crosshair';draw();}
+  }));
+  canvas.addEventListener('pointerleave',guarded(()=>{selected=-1;pointer=null;draw();}));
+  window.addEventListener('keydown',guarded(event=>{
+    if(event.target instanceof HTMLInputElement || event.target instanceof HTMLButtonElement || event.ctrlKey || event.metaKey || event.altKey)return;
+    if(event.code==='Space'){event.preventDefault();running=!running;updatePlaying();}
+    if(event.key.toLowerCase()==='r'){phaseTime=0;lastTime=null;draw();updateUI();}
+  }));
+  window.addEventListener('resize',guarded(layout));
+  document.addEventListener('visibilitychange',()=>{lastTime=null;});
+  window.addEventListener('unload',()=>{stopped=true;cancelAnimationFrame(raf);});
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);lastTime=null;});
+  window.addEventListener('pageshow',event=>{if(event.persisted&&!stopped){lastTime=null;raf=requestAnimationFrame(tick);}});
+  rebuild();updatePlaying();updateUI();layout();raf=requestAnimationFrame(tick);
+} catch(error) {
+  document.getElementById('error').textContent='Unable to start the simulation: '+(error && error.message ? error.message : String(error));
+}
+</script></body></html>

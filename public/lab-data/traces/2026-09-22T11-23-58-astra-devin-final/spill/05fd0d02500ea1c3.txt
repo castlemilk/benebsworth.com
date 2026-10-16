@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Tic, tac, toe — two-player game</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    *,*::before,*::after{box-sizing:inherit}
+    body{min-height:100vh;min-height:100svh;display:grid;place-items:center;background-image:radial-gradient(ellipse at 50% 15%,#a798e609,transparent 65%)}
+    button{font:inherit;-webkit-tap-highlight-color:transparent}
+    .game{--accent:#c4b5fd;width:min(100% - 2rem,24rem);padding:1rem 0;display:flex;flex-direction:column;align-items:center;gap:1rem;text-align:center}
+    .game[data-turn="O"]{--accent:#8edbcc}
+    .eyebrow{margin:0 0 .4rem;color:#9997a6;font-size:.65rem;font-weight:600;letter-spacing:.17em;text-transform:uppercase}
+    .eyebrow::before{content:"";display:inline-block;width:.35rem;height:.35rem;margin-right:.5rem;border-radius:50%;background:#8edbcc;vertical-align:middle}
+    h1{margin:0;font-size:clamp(1.9rem,5vw,2.3rem);font-weight:650;line-height:1.15;letter-spacing:-.055em}
+    h1 span{color:#777280}
+    .feedback{min-height:2.8rem}
+    .status{margin:0;color:var(--accent);font-size:1rem;font-weight:650;line-height:1.5}
+    .hint{margin:.15rem 0 0;color:#8b8998;font-size:.75rem;line-height:1.4}
+    .board{width:min(78vw,50vh,20rem);width:min(78vw,50svh,20rem);aspect-ratio:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:.45rem;padding:.5rem;border:1px solid #2c2935;border-radius:1.25rem;background:#121116;box-shadow:0 1.25rem 4rem #0004}
+    .cell{display:grid;place-items:center;min-width:0;min-height:0;margin:0;padding:0;border:1px solid #2d2938;border-radius:.75rem;background:#1b1822;color:#ececf0;cursor:pointer;font-size:clamp(2rem,8vmin,3.4rem);font-weight:550;line-height:1;transition:background .15s,border-color .15s;touch-action:manipulation}
+    .cell[data-mark="X"]{color:#c4b5fd}
+    .cell[data-mark="O"]{color:#8edbcc}
+    .cell[aria-disabled="true"]{cursor:default}
+    .cell.winning{background:#292237;border-color:#766194;box-shadow:inset 0 0 1rem #c4b5fd08}
+    .game[data-turn="O"] .cell.winning{background:#18312d;border-color:#49776d}
+    .restart{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.5rem;padding:.55rem 1.1rem;border:1px solid #38333f;border-radius:100vmax;background:#19161f;color:#d9d6e0;font-size:.8rem;font-weight:550;cursor:pointer;transition:background .15s,border-color .15s;touch-action:manipulation}
+    .restart svg{width:1rem;height:1rem;flex:none}
+    button:focus-visible{outline:2px solid #ececf0;outline-offset:3px}
+    @media(hover:hover){.cell:not([aria-disabled="true"]):hover{background:#292332;border-color:#655676}.restart:hover{background:#27212f;border-color:#665772}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+    .error{max-width:22rem;margin:0;padding:.75rem;border:1px solid #c47080;border-radius:.5rem;color:#ffb3c2;font-size:.8rem;overflow-wrap:anywhere}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body>
+  <main class="game" data-turn="X">
+    <header>
+      <p class="eyebrow">Two players · One screen</p>
+      <h1>Tic<span>,</span> tac<span>,</span> toe<span>.</span></h1>
+    </header>
+    <div class="feedback" role="status" aria-live="polite" aria-atomic="true">
+      <p class="status" id="status">X’s turn</p>
+      <p class="hint" id="hint">Choose an empty square.</p>
+    </div>
+    <div class="board" id="board" role="group" aria-label="Tic-tac-toe board">
+      <button class="cell" type="button" aria-label="Row 1, column 1: empty"></button>
+      <button class="cell" type="button" aria-label="Row 1, column 2: empty"></button>
+      <button class="cell" type="button" aria-label="Row 1, column 3: empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 1: empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 2: empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 3: empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 1: empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 2: empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 3: empty"></button>
+    </div>
+    <button class="restart" id="restart" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1.6 7.2M4 4v6h6"/></svg>
+      Restart game
+    </button>
+    <div class="error" id="error" role="alert" hidden></div>
+  </main>
+  <script>
+    try {
+      const game = document.querySelector('.game');
+      const cells = Array.from(document.querySelectorAll('#board .cell'));
+      const status = document.getElementById('status');
+      const hint = document.getElementById('hint');
+      const lines = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+      let board = Array(9).fill('');
+      let player = 'X';
+      let finished = false;
+
+      function label(index, mark) {
+        return 'Row ' + (Math.floor(index / 3) + 1) + ', column ' + (index % 3 + 1) + ': ' + (mark || 'empty');
+      }
+
+      function move(index) {
+        if (finished || board[index] !== '') return;
+        board[index] = player;
+        cells[index].textContent = player;
+        cells[index].dataset.mark = player;
+        cells[index].setAttribute('aria-label', label(index, player));
+        cells[index].setAttribute('aria-disabled', 'true');
+
+        const winningLines = lines.filter(line => line.every(position => board[position] === player));
+        if (winningLines.length) {
+          finished = true;
+          status.textContent = player + ' wins!';
+          hint.textContent = 'Three in a row. Nicely played.';
+          winningLines.forEach(line => line.forEach(position => cells[position].classList.add('winning')));
+        } else if (board.every(Boolean)) {
+          finished = true;
+          status.textContent = 'It’s a draw!';
+          hint.textContent = 'An even match. Try another round.';
+        } else {
+          player = player === 'X' ? 'O' : 'X';
+          game.dataset.turn = player;
+          status.textContent = player + '’s turn';
+        }
+
+        if (finished) cells.forEach(cell => cell.setAttribute('aria-disabled', 'true'));
+      }
+
+      cells.forEach((cell, index) => cell.addEventListener('click', () => move(index)));
+      document.getElementById('restart').addEventListener('click', () => {
+        board = Array(9).fill('');
+        player = 'X';
+        finished = false;
+        game.dataset.turn = player;
+        cells.forEach((cell, index) => {
+          cell.textContent = '';
+          cell.removeAttribute('data-mark');
+          cell.removeAttribute('aria-disabled');
+          cell.classList.remove('winning');
+          cell.setAttribute('aria-label', label(index, ''));
+        });
+        status.textContent = 'X’s turn';
+        hint.textContent = 'Choose an empty square.';
+      });
+    } catch (error) {
+      const errorBox = document.getElementById('error');
+      errorBox.textContent = 'The game could not start: ' + (error && error.message ? error.message : String(error));
+      errorBox.hidden = false;
+    }
+  </script>
+</body>
+</html>

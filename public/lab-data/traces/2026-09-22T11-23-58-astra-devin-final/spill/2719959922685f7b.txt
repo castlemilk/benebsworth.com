@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gateway Operations Console</title>
+<style>
+  html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+  *,*::before,*::after{box-sizing:inherit}
+  body{display:flex;flex-direction:column;gap:12px;padding:14px}
+  header h1{margin:0;font-size:15px;font-weight:650;letter-spacing:.04em}
+  header p{margin:3px 0 0;font-size:11px;line-height:1.4;color:#9a9aa6}
+  main{display:flex;flex-direction:column;gap:10px;flex:1}
+  .action{border:1px solid #26262e;border-radius:10px;background:#14141a;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;align-items:center;gap:10px}
+  button[data-action]{appearance:none;-webkit-appearance:none;border:1px solid #3a3a48;background:#1e1e28;color:#ececf0;font:inherit;font-size:12px;font-weight:600;padding:8px 12px;border-radius:7px;cursor:pointer;white-space:nowrap}
+  button[data-action]:hover:not(:disabled){background:#282834;border-color:#4a4a5c}
+  button[data-action]:active:not(:disabled){background:#20202a}
+  button[data-action]:disabled{opacity:.45;cursor:not-allowed}
+  [data-status]{flex:1;font-size:12px;line-height:1.4;min-width:0;overflow-wrap:anywhere}
+  [data-status][data-state="idle"]{color:#8b8b96}
+  [data-status][data-state="working"]{color:#e8c466}
+  [data-status][data-state="ok"]{color:#7fd49a}
+  [data-status][data-state="blocked"]{color:#f08a8a}
+  .extra:empty{display:none}
+  .extra{font-size:12px;line-height:1.4}
+  .extra a{color:#7db4ff;overflow-wrap:anywhere}
+  div[role="alert"]{border:1px solid #7f2d2d;background:#2a1414;color:#ffb4b4;padding:8px 10px;border-radius:8px;font-size:12px}
+  div[role="alert"][hidden]{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Operations console</h1>
+  <p>All actions are dispatched through the gateway. Denials fail closed, rate limits back off, missing credentials route to repair.</p>
+</header>
+<main>
+  <section class="action" aria-label="Delete records">
+    <div class="row">
+      <button type="button" data-action="delete">Delete records</button>
+      <span data-status="delete" data-state="idle" role="status" aria-live="polite">idle</span>
+    </div>
+    <div class="extra" data-extra="delete"></div>
+  </section>
+  <section class="action" aria-label="List users">
+    <div class="row">
+      <button type="button" data-action="list-users">List users</button>
+      <span data-status="list-users" data-state="idle" role="status" aria-live="polite">idle</span>
+    </div>
+    <div class="extra" data-extra="list-users"></div>
+  </section>
+  <section class="action" aria-label="Export data">
+    <div class="row">
+      <button type="button" data-action="export">Export data</button>
+      <span data-status="export" data-state="idle" role="status" aria-live="polite">idle</span>
+    </div>
+    <div class="extra" data-extra="export"></div>
+  </section>
+</main>
+<div role="alert" id="fatal" hidden></div>
+<script>
+/* PROVIDED GATEWAY — paste verbatim, do not modify. */
+(function () {
+  var log = [];
+  var listUsersAttempts = 0;
+  var gateway = {
+    log: log,
+    call: function (tool, args) {
+      log.push({ tool: tool, ts: Date.now() });
+      if (tool === 'deleteRecords') {
+        return Promise.reject({ code: 'denied', message: 'deleteRecords is not permitted for this operator' });
+      }
+      if (tool === 'listUsers') {
+        listUsersAttempts += 1;
+        if (listUsersAttempts <= 2) {
+          return Promise.reject({ code: 'rate_limited', retryAfterMs: 400 });
+        }
+        return Promise.resolve({ users: [{ id: 1, name: 'ada' }, { id: 2, name: 'grace' }, { id: 3, name: 'linus' }] });
+      }
+      if (tool === 'exportData') {
+        return Promise.reject({ code: 'auth_missing', repair: '/settings/credentials', message: 'no export credential is configured' });
+      }
+      return Promise.reject({ code: 'unknown_tool', tool: tool });
+    }
+  };
+  Object.defineProperty(window, 'gateway', { value: gateway, writable: false, configurable: false });
+})();
+</script>
+<script>
+try {
+  var MAX_ATTEMPTS = 3;
+  var busy = { 'delete': false, 'list-users': false, 'export': false };
+
+  function $(sel) { return document.querySelector(sel); }
+
+  function setStatus(action, text, state) {
+    var el = $('[data-status="' + action + '"]');
+    el.textContent = text;
+    el.setAttribute('data-state', state);
+  }
+
+  function setBusy(action, b) {
+    busy[action] = b;
+    $('[data-action="' + action + '"]').disabled = b;
+  }
+
+  function failClosed(action, text) {
+    setStatus(action, text, 'blocked');
+    $('[data-action="' + action + '"]').disabled = true;
+    busy[action] = true;
+  }
+
+  function unexpectedErr(action, err) {
+    var code = err && err.code ? err.code : 'error';
+    setStatus(action, 'failed — ' + code, 'blocked');
+    setBusy(action, false);
+  }
+
+  function runDelete() {
+    if (busy['delete']) return;
+    setBusy('delete', true);
+    setStatus('delete', 'sending…', 'working');
+    gateway.call('deleteRecords', {}).then(function () {
+      setStatus('delete', 'completed', 'ok');
+      setBusy('delete', false);
+    }).catch(function (err) {
+      if (err && err.code === 'denied') {
+        failClosed('delete', 'denied — blocked for this operator');
+      } else {
+        unexpectedErr('delete', err);
+      }
+    });
+  }
+
+  function runListUsers(attempt) {
+    if (attempt === 1) {
+      if (busy['list-users']) return;
+      setBusy('list-users', true);
+    }
+    setStatus('list-users',
+      attempt === 1 ? 'requesting…' : 'retrying — attempt ' + attempt + ' of ' + MAX_ATTEMPTS,
+      'working');
+    gateway.call('listUsers', {}).then(function (res) {
+      var users = res && res.users ? res.users : [];
+      setStatus('list-users', 'loaded ' + users.length + ' users', 'ok');
+      setBusy('list-users', false);
+    }).catch(function (err) {
+      if (err && err.code === 'rate_limited') {
+        if (attempt < MAX_ATTEMPTS) {
+          var wait = (typeof err.retryAfterMs === 'number' && err.retryAfterMs > 0) ? err.retryAfterMs : 1000;
+          setStatus('list-users',
+            'rate limited — waiting ' + wait + ' ms before attempt ' + (attempt + 1) + ' of ' + MAX_ATTEMPTS,
+            'working');
+          setTimeout(function () { runListUsers(attempt + 1); }, wait);
+          return;
+        }
+        setStatus('list-users', 'rate limited — stopped after ' + MAX_ATTEMPTS + ' attempts', 'blocked');
+        setBusy('list-users', false);
+        return;
+      }
+      unexpectedErr('list-users', err);
+    });
+  }
+
+  function runExport() {
+    if (busy['export']) return;
+    setBusy('export', true);
+    setStatus('export', 'sending…', 'working');
+    gateway.call('exportData', {}).then(function () {
+      setStatus('export', 'finished', 'ok');
+      setBusy('export', false);
+    }).catch(function (err) {
+      if (err && err.code === 'auth_missing') {
+        setStatus('export', 'blocked — missing credential', 'blocked');
+        $('[data-action="export"]').disabled = true;
+        busy['export'] = true;
+        var extra = $('[data-extra="export"]');
+        extra.textContent = '';
+        var repair = (typeof err.repair === 'string' && err.repair) ? err.repair : '/settings/credentials';
+        var a = document.createElement('a');
+        a.setAttribute('href', repair);
+        a.textContent = 'Configure credential: ' + repair;
+        extra.appendChild(a);
+        return;
+      }
+      unexpectedErr('export', err);
+    });
+  }
+
+  $('[data-action="delete"]').addEventListener('click', runDelete);
+  $('[data-action="list-users"]').addEventListener('click', function () { runListUsers(1); });
+  $('[data-action="export"]').addEventListener('click', runExport);
+} catch (e) {
+  var fatal = document.getElementById('fatal');
+  if (fatal) {
+    fatal.hidden = false;
+    fatal.textContent = 'Console failed to initialise: ' + (e && e.message ? e.message : String(e));
+  }
+}
+</script>
+</body>
+</html>

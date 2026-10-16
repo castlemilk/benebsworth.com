@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -15,8 +15,32 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 
+const browserMock = vi.hoisted(() => {
+  const browser = { newContext: vi.fn(), close: vi.fn().mockResolvedValue(undefined) }
+  return { browser, launch: vi.fn().mockResolvedValue(browser), connect: vi.fn().mockResolvedValue(browser) }
+})
+vi.mock('playwright', () => ({ chromium: { launch: browserMock.launch, connect: browserMock.connect } }))
+
 afterEach(() => {
   resetSandboxRuntime()
+  vi.clearAllMocks()
+  vi.unstubAllEnvs()
+})
+
+describe('concurrent browser ownership', () => {
+  it.each(['chromium', 'remote'] as const)('owns and closes one %s browser for simultaneous iterations', async (name) => {
+    vi.stubEnv('PLAYWRIGHT_WS_ENDPOINT', 'ws://browser:3000/')
+    const backend = createBackend({ backend: name, enforcement: 'partial', preludeParity: false })
+    const open = name === 'chromium' ? browserMock.launch : browserMock.connect
+    await Promise.all([backend.launch(), backend.launch(), backend.launch()])
+    expect(open).toHaveBeenCalledTimes(1)
+    await backend.close()
+    expect(browserMock.browser.close).toHaveBeenCalledTimes(1)
+    await backend.launch()
+    expect(open).toHaveBeenCalledTimes(2)
+    await backend.close()
+    expect(browserMock.browser.close).toHaveBeenCalledTimes(2)
+  })
 })
 
 describe('sandbox backend selection', () => {

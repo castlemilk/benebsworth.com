@@ -7,10 +7,11 @@ import { Breadcrumb } from '@/components/site/breadcrumb';
 import { JsonLd, SITE_URL, breadcrumbLd } from '@/components/seo/json-ld';
 import { Reveal } from '@/components/motion/reveal';
 import { ALL_SUMMARIES, resultsForModel } from '@/lib/lab/harness-eval/results';
+import { harnessModelIdFromSlug, harnessModelPath, harnessModelSlug } from '@/lib/lab/harness-eval/nav';
 import { ArrowRight, Cpu } from 'lucide-react';
 
 export function generateStaticParams() {
-  return ALL_SUMMARIES.map((s) => ({ model: s.model.id }));
+  return ALL_SUMMARIES.map((s) => ({ model: harnessModelSlug(s.model.id) }));
 }
 
 export async function generateMetadata({
@@ -18,10 +19,10 @@ export async function generateMetadata({
 }: {
   params: Promise<{ model: string }>;
 }): Promise<Metadata> {
-  const { model: modelId } = await params;
-  const decoded = decodeURIComponent(modelId);
-  const summary = ALL_SUMMARIES.find((s) => s.model.id === decoded);
-  const url = `/lab/harness-eval/models/${encodeURIComponent(decoded)}/`;
+  const { model: modelSlug } = await params;
+  const modelId = harnessModelIdFromSlug(modelSlug);
+  const summary = ALL_SUMMARIES.find((s) => s.model.id === modelId);
+  const url = harnessModelPath(modelId);
   return {
     title: summary ? `${summary.model.displayName} · Harness Eval` : 'Harness Eval',
     description: summary
@@ -60,19 +61,19 @@ export default async function ModelDetailPage({
 }: {
   params: Promise<{ model: string }>;
 }) {
-  const { model: modelId } = await params;
-  const decoded = decodeURIComponent(modelId);
-  const summary = ALL_SUMMARIES.find((s) => s.model.id === decoded);
+  const { model: modelSlug } = await params;
+  const modelId = harnessModelIdFromSlug(modelSlug);
+  const summary = ALL_SUMMARIES.find((s) => s.model.id === modelId);
   if (!summary) notFound();
 
-  const tasks = resultsForModel(decoded);
+  const tasks = resultsForModel(modelId);
 
   const breadcrumb = breadcrumbLd([
     { name: 'Home', url: `${SITE_URL}/` },
     { name: 'Lab', url: `${SITE_URL}/lab/` },
     { name: 'Harness Eval', url: `${SITE_URL}/lab/harness-eval/` },
     { name: 'Models', url: `${SITE_URL}/lab/harness-eval/models/` },
-    { name: summary.model.displayName, url: `${SITE_URL}/lab/harness-eval/models/${encodeURIComponent(decoded)}/` },
+    { name: summary.model.displayName, url: `${SITE_URL}${harnessModelPath(modelId)}` },
   ]);
 
   return (

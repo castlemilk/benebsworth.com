@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving x² + y² = 25, xy = 12 over ℝ</title>
+<style>
+  :root {
+    --ink: #1c1f2a;
+    --muted: #5b6172;
+    --accent: #2456c9;
+    --accent-soft: #eef3ff;
+    --ok: #177a3d;
+    --rule: #d9dde6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--ink);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+    line-height: 1.65;
+  }
+  h1 { font-size: 1.7rem; margin-bottom: 0.2rem; }
+  h2 {
+    font-size: 1.15rem;
+    margin-top: 2.2rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--rule);
+  }
+  .sub { color: var(--muted); font-style: italic; margin-top: 0; }
+  .system {
+    display: inline-block;
+    background: var(--accent-soft);
+    border: 1px solid #c8d6f5;
+    border-radius: 8px;
+    padding: 0.7rem 1.2rem;
+    font-size: 1.15rem;
+    margin: 0.6rem 0;
+  }
+  .step {
+    background: #fafbfc;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0;
+  }
+  .step h3 { margin: 0 0 0.4rem; font-size: 1rem; color: var(--accent); }
+  .math { font-size: 1.08rem; }
+  .math blockquote {
+    margin: 0.5rem 0 0.5rem 1rem;
+    padding-left: 0.8rem;
+    border-left: 2px solid var(--rule);
+  }
+  table {
+    border-collapse: collapse;
+    margin: 1rem auto;
+    min-width: 480px;
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 0.45rem 0.9rem;
+    text-align: center;
+  }
+  th { background: var(--accent-soft); }
+  td.check { color: var(--ok); font-weight: bold; }
+  .answer {
+    background: #eafaf0;
+    border: 1px solid #b7e4c7;
+    border-left: 5px solid var(--ok);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: 1.12rem;
+    margin-top: 1.4rem;
+  }
+  .why { color: var(--muted); font-size: 0.95rem; }
+  figure { text-align: center; margin: 1.6rem 0; }
+  figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+  svg { max-width: 100%; height: auto; }
+  code { font-family: 'SF Mono', Menlo, monospace; font-size: 0.92em; }
+  var { font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>Solving a Symmetric System over the Reals</h1>
+<p class="sub">x² + y² = 25 &nbsp;and&nbsp; x·y = 12 &nbsp;— every real solution, with justification.</p>
+
+<h2>1. The problem</h2>
+<p>Find all <var>(x, y) ∈ ℝ²</var> satisfying</p>
+<p class="system math">x² + y² = 25 &nbsp;&nbsp;①&nbsp;&nbsp;&nbsp;&nbsp; x·y = 12 &nbsp;&nbsp;②</p>
+<p>Geometrically, ① is the circle of radius 5 centered at the origin, and ② is a rectangular
+hyperbola lying in quadrants I and III (since <var>xy = 12 &gt; 0</var>, the two coordinates must have
+the <em>same sign</em>). We expect intersection points symmetric about the origin.</p>
+
+<h2>2. Solution via the sum–difference identities</h2>
+
+<div class="step math">
+  <h3>Step 1 — Compute (x + y)² and (x − y)²</h3>
+  <p>The system is symmetric in <var>x</var> and <var>y</var>, so combine the equations into the two
+  elementary symmetric combinations <var>s = x + y</var> and <var>d = x − y</var>. Using
+  <var>(x + y)² = x² + y² + 2xy</var> and <var>(x − y)² = x² + y² − 2xy</var>:</p>
+  <blockquote>
+    (x + y)² = 25 + 2·12 = <strong>49</strong><br>
+    (x − y)² = 25 − 2·12 = <strong>1</strong>
+  </blockquote>
+  <p class="why">Justification: these are identities — they hold for every real pair, so any
+  solution of ①② must satisfy them. Adding/subtracting equations preserves the solution set
+  (each step is reversible).</p>
+</div>
+
+<div class="step math">
+  <h3>Step 2 — Take square roots</h3>
+  <p>A real number <var>t</var> satisfies <var>t² = c</var> (for <var>c ≥ 0</var>) iff <var>t = ±√c</var>. Hence</p>
+  <blockquote>
+    x + y = ±7 &nbsp;&nbsp;&nbsp;&nbsp; x − y = ±1
+  </blockquote>
+  <p class="why">Both right-hand sides are positive, so real square roots exist. Each of the two
+  signs is independent, giving at most 2 × 2 = 4 candidate pairs — this is also the <em>upper
+  bound</em>: no other solutions can exist, because any solution must land in one of these four
+  cases.</p>
+</div>
+
+<div class="step math">
+  <h3>Step 3 — Solve each 2×2 linear system</h3>
+  <p>For each sign choice, <var>x = (s + d)/2</var> and <var>y = (s − d)/2</var>:</p>
+  <table>
+    <tr><th>x + y</th><th>x − y</th><th>x = (s+d)/2</th><th>y = (s−d)/2</th><th>Solution</th></tr>
+    <tr><td>+7</td><td>+1</td><td>4</td><td>3</td><td><strong>(4, 3)</strong></td></tr>
+    <tr><td>+7</td><td>−1</td><td>3</td><td>4</td><td><strong>(3, 4)</strong></td></tr>
+    <tr><td>−7</td><td>+1</td><td>−3</td><td>−4</td><td><strong>(−3, −4)</strong></td></tr>
+    <tr><td>−7</td><td>−1</td><td>−4</td><td>−3</td><td><strong>(−4, −3)</strong></td></tr>
+  </table>
+  <p class="why">Justification: the linear map <var>(x, y) ↦ (x + y, x − y)</var> is a bijection of
+  ℝ² (its matrix has determinant −2 ≠ 0), so solving the transformed system is equivalent to
+  solving the original constraints on <var>(s, d)</var>. Each of the four cases yields exactly one
+  pair.</p>
+</div>
+
+<div class="step math">
+  <h3>Step 4 — Verify (sufficiency)</h3>
+  <p>Steps 1–3 show every solution must be among the four candidates (necessity). To confirm each
+  is actually a solution, substitute back:</p>
+  <table>
+    <tr><th>(x, y)</th><th>x² + y²</th><th>x·y</th><th>Both hold?</th></tr>
+    <tr><td>(4, 3)</td><td>16 + 9 = 25</td><td>12</td><td class="check">✓</td></tr>
+    <tr><td>(3, 4)</td><td>9 + 16 = 25</td><td>12</td><td class="check">✓</td></tr>
+    <tr><td>(−3, −4)</td><td>9 + 16 = 25</td><td>12</td><td class="check">✓</td></tr>
+    <tr><td>(−4, −3)</td><td>16 + 9 = 25</td><td>12</td><td class="check">✓</td></tr>
+  </table>
+  <p class="why">All four satisfy both equations, so the candidate list is the complete solution
+  set — nothing missing (by necessity) and nothing extra (by sufficiency).</p>
+</div>
+
+<h2>3. Cross-check by substitution</h2>
+<div class="step math">
+  <p>Since <var>xy = 12 ≠ 0</var>, neither variable is zero, so ② legitimately gives
+  <var>y = 12/x</var>. Substituting into ①:</p>
+  <blockquote>
+    x² + 144/x² = 25 &nbsp;⟹&nbsp; x⁴ − 25x² + 144 = 0
+  </blockquote>
+  <p>Let <var>u = x²</var> (valid since <var>x² ≥ 0</var>): <var>u² − 25u + 144 = 0</var>, with discriminant
+  <var>Δ = 625 − 576 = 49</var>:</p>
+  <blockquote>
+    u = (25 ± 7)/2 = 16 &nbsp;or&nbsp; 9 &nbsp;⟹&nbsp; x = ±4 &nbsp;or&nbsp; x = ±3
+  </blockquote>
+  <p>Pairing each <var>x</var> with <var>y = 12/x</var> (which automatically forces the same sign) gives
+  <var>(4,3), (−4,−3), (3,4), (−3,−4)</var> — exactly the same set. Note the sign pairing is not free:
+  <var>(4, −3)</var> would give <var>xy = −12 ≠ 12</var>, which is why there are 4 solutions rather than 8.</p>
+</div>
+
+<h2>4. Geometric picture</h2>
+<figure>
+  <svg id="plot" width="440" height="440" viewBox="0 0 440 440" role="img"
+       aria-label="Circle x squared plus y squared equals 25 intersecting the hyperbola x y equals 12 at four points">
+    <!-- axes and grid -->
+    <g stroke="#e3e6ee" stroke-width="1">
+      <line x1="20" y1="220" x2="420" y2="220"/>
+      <line x1="220" y1="20" x2="220" y2="420"/>
+    </g>
+    <g id="ticks" stroke="#c9cede" stroke-width="1"></g>
+    <g id="ticklabels" font-family="Georgia" font-size="11" fill="#7a8095"></g>
+    <!-- circle x^2+y^2=25 -->
+    <circle cx="220" cy="220" r="150" fill="none" stroke="#2456c9" stroke-width="2"/>
+    <!-- hyperbola xy=12, both branches -->
+    <path id="hyp1" fill="none" stroke="#c9402e" stroke-width="2"/>
+    <path id="hyp2" fill="none" stroke="#c9402e" stroke-width="2"/>
+    <g id="pts"></g>
+    <g id="ptlabels" font-family="Georgia" font-size="13" fill="#1c1f2a"></g>
+  </svg>
+  <figcaption>The circle x² + y² = 25 (blue) meets the hyperbola xy = 12 (red) in
+  exactly the four computed points — two in quadrant I and two in quadrant III.</figcaption>
+</figure>
+<script>
+(function () {
+  var S = 30, C = 220;                 // 30 px per unit, origin at (220,220)
+  function X(x) { return C + S * x; }
+  function Y(y) { return C - S * y; }
+
+  var ticks = document.getElementById('ticks');
+  var labels = document.getElementById('ticklabels');
+  for (var i = -6; i <= 6; i++) {
+    if (i === 0) continue;
+    ticks.innerHTML +=
+      '<line x1="' + X(i) + '" y1="216" x2="' + X(i) + '" y2="224"/>' +
+      '<line x1="216" y1="' + Y(i) + '" x2="224" y2="' + Y(i) + '"/>';
+    if (i % 2 === 0) {
+      labels.innerHTML +=
+        '<text x="' + (X(i) - 4) + '" y="236">' + i + '</text>' +
+        '<text x="196" y="' + (Y(i) + 4) + '">' + i + '</text>';
+    }
+  }
+
+  function branch(a, b, el) {
+    var d = '';
+    for (var x = a; x <= b + 1e-9; x += 0.02) {
+      d += (d ? ' L' : 'M') + X(x).toFixed(1) + ' ' + Y(12 / x).toFixed(1);
+    }
+    document.getElementById(el).setAttribute('d', d);
+  }
+  branch(12 / 6.6, 6.6, 'hyp1');   // first-quadrant branch
+  branch(-6.6, -12 / 6.6, 'hyp2'); // third-quadrant branch
+
+  var pts = document.getElementById('pts');
+  var pl = document.getElementById('ptlabels');
+  var sols = [[4, 3, '4,12'], [3, 4, '4,12'], [-3, -4, '-34,-6'], [-4, -3, '-34,-6']];
+  sols.forEach(function (s) {
+    pts.innerHTML += '<circle cx="' + X(s[0]) + '" cy="' + Y(s[1]) +
+      '" r="5" fill="#177a3d" stroke="#fff" stroke-width="1.5"/>';
+  });
+  pl.innerHTML =
+    '<text x="' + (X(4) + 9) + '" y="' + (Y(3) + 4) + '">(4, 3)</text>' +
+    '<text x="' + (X(3) - 8) + '" y="' + (Y(4) - 9) + '">(3, 4)</text>' +
+    '<text x="' + (X(-3) + 10) + '" y="' + (Y(-4) + 16) + '">(−3, −4)</text>' +
+    '<text x="' + (X(-4) - 62) + '" y="' + (Y(-3) + 4) + '">(−4, −3)</text>';
+})();
+</script>
+
+<h2>5. Answer</h2>
+<div class="answer math">
+  The system has exactly <strong>four</strong> real solutions:<br><br>
+  <strong>(x, y) ∈ { (4, 3), (3, 4), (−3, −4), (−4, −3) }</strong>
+</div>
+<p class="why">Summary of the logic: the sum–difference identities transform ①② into
+<var>(x+y)² = 49</var> and <var>(x−y)² = 1</var>, which bound the candidates to four linear cases
+(necessity); each case produces one pair via <var>x = (s+d)/2, y = (s−d)/2</var>; direct
+substitution confirms all four satisfy both original equations (sufficiency). The substitution
+cross-check <var>x⁴ − 25x² + 144 = 0</var> factors as <var>(x²−9)(x²−16) = 0</var> and agrees.</p>
+
+</body>
+</html>

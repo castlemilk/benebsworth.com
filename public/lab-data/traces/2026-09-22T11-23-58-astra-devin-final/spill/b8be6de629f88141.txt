@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="A self-contained Python password hashing module with constant-time comparison, salted PBKDF2, verification, and 16 unit tests.">
+<title>Password hashing · Python module &amp; tests</title>
+<style>
+:root{--ink:#172822;--muted:#596860;--paper:#f7f8f3;--line:#dbe0d7;--green:#29654b;--code:#182520;--mono:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;line-height:1.6}a{color:var(--green);text-underline-offset:4px}button,.button{font:inherit;font-weight:600;font-size:13px;cursor:pointer;border:1px solid var(--line);border-radius:7px;padding:10px 16px;background:white;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}button:hover,.button:hover{background:#edf2e9}button:focus-visible,a:focus-visible,summary:focus-visible,pre:focus-visible{outline:3px solid #58a47b;outline-offset:4px}.primary{background:var(--ink);color:white;border-color:var(--ink)}.primary:hover{background:var(--green);color:white}header{border-bottom:1px solid var(--line)}.bar{max-width:1120px;margin:auto;padding:21px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:13px;letter-spacing:.11em;font-weight:750;display:flex;align-items:center;gap:10px}.mark{background:var(--green);color:white;width:27px;height:27px;display:grid;place-items:center;border-radius:6px;font-family:var(--mono);font-size:14px;letter-spacing:-2px}.nav{display:flex;gap:22px}.nav a{font-size:13px;text-decoration:none;color:var(--muted)}main{max-width:1120px;padding:55px 32px 45px;margin:auto}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin:0 0 16px}.hero{display:grid;grid-template-columns:1fr 230px;gap:45px;align-items:center}h1{font-size:clamp(36px,5vw,57px);line-height:1.08;font-weight:650;letter-spacing:-.055em;margin:0 0 22px}h1 span{color:var(--green)}.lede{color:var(--muted);max-width:620px;margin:0 0 25px;font-size:17px;line-height:1.7}.actions{display:flex;gap:10px;flex-wrap:wrap}.note{font-size:12px;color:var(--muted);margin:12px 0 0}.stamp{border-left:1px solid var(--line);padding:10px 0 10px 32px}.stamp strong{font-weight:550;font-size:60px;letter-spacing:-.05em;line-height:1.1;display:block}.stamp p{margin:5px 0;font-size:13px;color:var(--muted)}.pass{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#39805b;margin-right:7px}.features{display:grid;grid-template-columns:repeat(3,1fr);margin:40px 0 38px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}.feature{padding:22px}.feature+.feature{border-left:1px solid var(--line)}.feature .index{font:11px var(--mono);color:#5f7768;margin:0 0 12px}.feature h2{font-family:var(--mono);font-size:13px;font-weight:650;margin:0 0 8px}.feature p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin:0 0 14px}.section-head h2{font-size:22px;font-weight:600;letter-spacing:-.025em;margin:0}.section-head span{font:12px var(--mono);color:var(--muted)}.quick{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;margin:0 0 36px}.example{margin:0;background:#eaf0e7;padding:20px;border-radius:9px;color:#234434;overflow:auto;font:12px/1.9 var(--mono)}.quick p{font-size:13px;color:var(--muted);margin:0 0 12px}.command{display:block;padding:11px 13px;background:white;border:1px solid var(--line);border-radius:6px;white-space:nowrap;overflow:auto;font:12px var(--mono)}.code-shell{border:1px solid #31443a;border-radius:10px;overflow:hidden;background:var(--code)}.code-toolbar{background:#213329;color:#dce7df;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:13px 19px;border-bottom:1px solid #36473d;font:12px var(--mono)}.code-toolbar small{font:10px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:#acbdae}.source-code{font:12px/1.9 var(--mono);color:#e0e9e2;padding:22px 24px;margin:0;tab-size:4;overflow:auto;max-height:650px}.source-code code{font:inherit}.keyword{color:#b1cfef}.string{color:#d4dea6}.number{color:#f0c997}.comment{color:#9db2a4}.source-caption{font-size:12px;color:var(--muted);margin:12px 0 27px}.tests{border:1px solid var(--line);border-radius:9px;background:white;margin-bottom:28px;overflow:hidden}.tests summary{list-style:none;cursor:pointer;padding:19px 21px;display:flex;align-items:center;justify-content:space-between;gap:14px}.tests summary::-webkit-details-marker{display:none}.tests summary strong{font-size:15px;font-weight:600}.tests summary span{font-size:12px;color:var(--green)}.tests summary .arrow{display:inline-block;margin-left:12px;transition:transform .2s}.tests[open] summary .arrow{transform:rotate(90deg)}.test-notes{margin:0;padding:0 21px 18px;color:var(--muted);font-size:13px}.tests .source-code{background:var(--code);border-top:1px solid var(--line);max-height:600px}.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;border-top:1px solid var(--line);padding-top:25px}.details-grid h3{font-size:14px;font-weight:650;margin:0 0 10px}.details-grid p{font-size:13px;color:var(--muted);margin:0 0 12px}.record{font:11px/1.8 var(--mono);background:#eaf0e7;padding:12px;border-radius:6px;display:block;overflow:auto;white-space:nowrap;margin-bottom:13px}code{font-family:var(--mono);font-size:.9em}footer{border-top:1px solid var(--line);max-width:1056px;margin:auto;padding:20px 0 30px;display:flex;justify-content:space-between;gap:15px;font-size:11px;color:var(--muted)}footer p{margin:0}.status{font-size:12px;color:var(--green);min-height:20px;margin-top:8px}
+@media(max-width:700px){.bar{padding:17px 20px}.nav{gap:14px}.nav a{font-size:12px}main{padding:35px 20px}.hero{grid-template-columns:1fr;gap:24px}.stamp{border-left:0;border-top:1px solid var(--line);padding:15px 0 0;display:flex;align-items:center;gap:18px}.stamp strong{font-size:38px}.stamp p{margin:0}.features{grid-template-columns:1fr;margin:26px 0}.feature{padding:18px}.feature+.feature{border-left:0;border-top:1px solid var(--line)}.feature .index{float:right}.quick,.details-grid{grid-template-columns:1fr;gap:18px}.section-head span{font-size:10px}.source-code{padding:18px;font-size:11px}.code-toolbar small{display:none}.tests summary{padding:17px}.tests summary span{font-size:11px}footer{margin:0 20px;flex-direction:column;gap:5px}h1{letter-spacing:-.045em}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media print{body{background:white}.actions,.nav,.status{display:none}main{padding:20px}pre.source-code{max-height:none;white-space:pre-wrap;overflow-wrap:anywhere;color:black;background:white}.keyword,.string,.number,.comment{color:inherit}.hero{grid-template-columns:1fr}.stamp{display:none}.code-shell{border:1px solid #ccc}.code-toolbar{background:#eee;color:#111}.features{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="brand"><span class="mark" aria-hidden="true">{ }</span> PYTHON / ESSENTIALS</div><nav class="nav" aria-label="Page"><a href="#source">Module</a><a href="#tests">Tests</a><a href="#notes">Notes</a></nav></div></header>
+<main>
+<div class="hero">
+<div><p class="eyebrow">Standard library · Python 3.10+</p><h1>Password hashing.<br><span>Three small functions.</span></h1><p class="lede">Compare strings, create salted PBKDF2 hashes, and verify passwords. A complete Python module with its unit tests, ready to save and run.</p><div class="actions"><button class="primary" id="download" type="button">Download Python file <span aria-hidden="true">↓</span></button><button id="copy" type="button">Copy complete code</button></div><p class="note">password_hashing.py · Module + tests · Requires Python with OpenSSL</p><div class="status" id="status" role="status" aria-live="polite"></div></div>
+<aside class="stamp" aria-label="Test results"><strong>16 / 16</strong><div><p>Unit tests passed</p><span class="pass"><span class="dot"></span>Verified on Python 3.14.7</span><p>Includes an OpenSSL fixture</p></div></aside>
+</div>
+<div class="features">
+<article class="feature"><p class="index">01 / COMPARE</p><h2>constant_time_compare()</h2><p>UTF-8 strings, compared with <code>hmac.compare_digest</code>. No content-based early exit.</p></article>
+<article class="feature"><p class="index">02 / HASH</p><h2>hash_password()</h2><p>PBKDF2-HMAC-SHA256, 600,000 iterations, and a fresh 16-byte random salt.</p></article>
+<article class="feature"><p class="index">03 / VERIFY</p><h2>verify_password()</h2><p>Reuses the stored parameters. Compares 32-byte digests and rejects malformed records.</p></article>
+</div>
+<section aria-labelledby="usage-title"><div class="section-head"><h2 id="usage-title">Use it in three lines</h2><span>No pip install needed</span></div><div class="quick"><pre class="example"><code>from password_hashing import hash_password, verify_password
+
+stored = hash_password("a long, unique passphrase")
+verify_password("a long, unique passphrase", stored)  # True
+verify_password("incorrect", stored)                 # False</code></pre><div><p>Save the downloaded file beside your application. Store the complete returned hash record. Run the included tests with:</p><code class="command">python3 password_hashing.py -v</code><p style="margin-top:10px">The test suite also supports <code>python3 -m unittest password_hashing -v</code>.</p></div></div></section>
+<section id="source" aria-labelledby="source-title"><div class="section-head"><h2 id="source-title">The module</h2><span>password_hashing.py</span></div><div class="code-shell"><div class="code-toolbar"><span>Python / implementation</span><small>UTF-8 · standard library</small></div><pre class="source-code" tabindex="0" aria-label="Python module source"><code id="module-code"><span class="string">&quot;&quot;&quot;Salted PBKDF2 password hashing; Python 3.10+ with OpenSSL, stdlib only.
+
+Usage:
+    stored = hash_password(&quot;a long, unique passphrase&quot;)
+    assert verify_password(&quot;a long, unique passphrase&quot;, stored)
+
+Store the entire returned record; the salt is public. Run the bundled tests:
+    python3 password_hashing.py -v
+
+UTF-8 is used without normalization or trimming. Empty passwords are supported;
+password-strength policy belongs to the application. Passwords are limited to
+1024 encoded bytes. The default and minimum work factor is 600,000 iterations;
+the 2,000,000 upper limit bounds work when parsing stored records.
+
+Only the final digest comparison avoids content-dependent short circuiting.
+Encoding, lengths, record parsing, and the whole login flow are not guaranteed
+constant-time. No timing benchmark can establish that guarantee in a unit test.
+&quot;&quot;&quot;</span>
+
+<span class="keyword">import</span> hashlib
+<span class="keyword">import</span> hmac
+<span class="keyword">import</span> re
+<span class="keyword">import</span> secrets
+<span class="keyword">import</span> unittest
+<span class="keyword">from</span> unittest <span class="keyword">import</span> mock
+
+__all__ = [<span class="string">&quot;constant_time_compare&quot;</span>, <span class="string">&quot;hash_password&quot;</span>, <span class="string">&quot;verify_password&quot;</span>]
+
+DEFAULT_ITERATIONS = <span class="number">600_000</span>
+MIN_ITERATIONS = <span class="number">600_000</span>
+MAX_ITERATIONS = <span class="number">2_000_000</span>
+SALT_BYTES = <span class="number">16</span>
+KEY_BYTES = <span class="number">32</span>
+MAX_PASSWORD_BYTES = <span class="number">1024</span>
+_RECORD = re.compile(
+    <span class="string">r&quot;pbkdf2_sha256\$([1-9][0-9]{0,6})\$([0-9a-f]{32})\$([0-9a-f]{64})&quot;</span>
+)
+
+
+<span class="keyword">def</span> constant_time_compare(left: str, right: str) -&gt; bool:
+    <span class="string">&quot;&quot;&quot;Compare UTF-8 strings using hmac.compare_digest.
+
+    No early exit based on matching content; lengths can still affect timing.
+    Non-string inputs raise TypeError; invalid Unicode raises UnicodeEncodeError.
+    &quot;&quot;&quot;</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> isinstance(left, str) <span class="keyword">or</span> <span class="keyword">not</span> isinstance(right, str):
+        <span class="keyword">raise</span> TypeError(<span class="string">&quot;both values must be strings&quot;</span>)
+    <span class="keyword">return</span> hmac.compare_digest(left.encode(<span class="string">&quot;utf-8&quot;</span>), right.encode(<span class="string">&quot;utf-8&quot;</span>))
+
+
+<span class="keyword">def</span> _password_bytes(password: ***REDACTED*** -&gt; bytes:
+    <span class="keyword">if</span> <span class="keyword">not</span> isinstance(password, str):
+        <span class="keyword">raise</span> TypeError(<span class="string">&quot;password must be a string&quot;</span>)
+    <span class="comment"># Check character count first to avoid encoding an unbounded input.</span>
+    <span class="keyword">if</span> len(password) &gt; MAX_PASSWORD_BYTES:
+        <span class="keyword">raise</span> ValueError(<span class="string">&quot;password exceeds 1024 UTF-8 bytes&quot;</span>)
+    encoded = password.encode(<span class="string">&quot;utf-8&quot;</span>)
+    <span class="keyword">if</span> len(encoded) &gt; MAX_PASSWORD_BYTES:
+        <span class="keyword">raise</span> ValueError(<span class="string">&quot;password exceeds 1024 UTF-8 bytes&quot;</span>)
+    <span class="keyword">return</span> encoded
+
+
+<span class="keyword">def</span> hash_password(password: ***REDACTED***, *, iterations: int = DEFAULT_ITERATIONS) -&gt; str:
+    <span class="string">&quot;&quot;&quot;Create a fresh random salt and return algorithm$iterations$salt$hash.
+
+    Salt and hash are lowercase hex. Invalid types raise TypeError; out-of-range
+    iterations or passwords raise ValueError. Lone Unicode surrogates are invalid.
+    &quot;&quot;&quot;</span>
+    raw = _password_bytes(password)
+    <span class="keyword">if</span> type(iterations) <span class="keyword">is</span> <span class="keyword">not</span> int:  <span class="comment"># bool must not count as an integer here.</span>
+        <span class="keyword">raise</span> TypeError(<span class="string">&quot;iterations must be an integer&quot;</span>)
+    <span class="keyword">if</span> <span class="keyword">not</span> MIN_ITERATIONS &lt;= iterations &lt;= MAX_ITERATIONS:
+        <span class="keyword">raise</span> ValueError(<span class="string">&quot;iterations must be between 600000 and 2000000&quot;</span>)
+    salt = secrets.token_bytes(SALT_BYTES)
+    digest = hashlib.pbkdf2_hmac(<span class="string">&quot;sha256&quot;</span>, raw, salt, iterations, dklen=KEY_BYTES)
+    <span class="keyword">return</span> f&quot;pbkdf2_sha256${iterations}${salt.hex()}${digest.hex()}&quot;
+
+
+<span class="keyword">def</span> verify_password(password: ***REDACTED***, stored: str) -&gt; bool:
+    <span class="string">&quot;&quot;&quot;Verify against a stored record using its salt and iteration count.
+
+    Return False for a mismatch, invalid input, or malformed/unsupported record.
+    Unexpected runtime failures propagate. Record validation happens before the
+    expensive derivation; malformed records are not processed in constant time.
+    &quot;&quot;&quot;</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> isinstance(stored, str) <span class="keyword">or</span> len(stored) &gt; <span class="number">128</span>:
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    match = _RECORD.fullmatch(stored)
+    <span class="keyword">if</span> match <span class="keyword">is</span> <span class="keyword">None</span>:
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    rounds, salt_hex, digest_hex = match.groups()
+    iterations = int(rounds)
+    <span class="keyword">if</span> <span class="keyword">not</span> MIN_ITERATIONS &lt;= iterations &lt;= MAX_ITERATIONS:
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    <span class="keyword">try</span>:
+        raw = _password_bytes(password)
+    <span class="keyword">except</span> (TypeError, ValueError):
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    actual = hashlib.pbkdf2_hmac(
+        <span class="string">&quot;sha256&quot;</span>, raw, bytes.fromhex(salt_hex), iterations, dklen=KEY_BYTES
+    )
+    <span class="keyword">return</span> hmac.compare_digest(actual, bytes.fromhex(digest_hex))
+
+
+</code></pre></div><p class="source-caption">The download and copy buttons include both the module above and the test suite below.</p></section>
+<details class="tests" id="tests"><summary><strong>Unit test suite</strong><span>16 passed <span class="arrow" aria-hidden="true">›</span></span></summary><p class="test-notes">Covers correct and incorrect passwords, fresh salts, an independently checked PBKDF2 fixture, Unicode, empty strings, NUL bytes, stored iteration counts, tampering, malformed records, and input limits. Primitive-delegation tests check that digest comparisons use <code>hmac.compare_digest</code>; they do not attempt to prove timing behavior.</p><pre class="source-code" tabindex="0" aria-label="Python unit test source"><code id="tests-code"><span class="comment"># Unit tests are included in the same file and run only when requested.</span>
+<span class="keyword">class</span> PasswordHashingTests(unittest.TestCase):
+    <span class="comment"># Independently generated using OpenSSL 3.6.4:</span>
+    <span class="comment"># openssl kdf -keylen 32 -kdfopt digest:SHA256 -kdfopt pass:password \</span>
+    <span class="comment">#   -kdfopt hexsalt:00112233445566778899aabbccddeeff \</span>
+    <span class="comment">#   -kdfopt iter:600000 PBKDF2</span>
+    FIXTURE_SALT = <span class="string">&quot;00112233445566778899aabbccddeeff&quot;</span>
+    FIXTURE_DIGEST = <span class="string">&quot;8cb706e2cabf91c72c10ab9524294fa38f247d34f3f93842bcb05b8aaa66d334&quot;</span>
+    FIXTURE = f&quot;pbkdf2_sha256$600000${FIXTURE_SALT}${FIXTURE_DIGEST}&quot;
+
+    <span class="keyword">def</span> test_comparison_equal_and_unequal(self):
+        <span class="keyword">for</span> left, right, expected <span class="keyword">in</span> [
+            (<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="keyword">True</span>), (<span class="string">&quot;secret&quot;</span>, <span class="string">&quot;secret&quot;</span>, <span class="keyword">True</span>),
+            (<span class="string">&quot;secret&quot;</span>, <span class="string">&quot;Secret&quot;</span>, <span class="keyword">False</span>), (<span class="string">&quot;secret&quot;</span>, <span class="string">&quot;secreT&quot;</span>, <span class="keyword">False</span>),
+            (<span class="string">&quot;secret&quot;</span>, <span class="string">&quot;secret!&quot;</span>, <span class="keyword">False</span>), (<span class="string">&quot;&quot;</span>, <span class="string">&quot;x&quot;</span>, <span class="keyword">False</span>),
+            (<span class="string">&quot;café 🔑&quot;</span>, <span class="string">&quot;café 🔑&quot;</span>, <span class="keyword">True</span>), (<span class="string">&quot;é&quot;</span>, <span class="string">&quot;e\u0301&quot;</span>, <span class="keyword">False</span>),
+            (<span class="string">&quot;a\x00b&quot;</span>, <span class="string">&quot;a\x00b&quot;</span>, <span class="keyword">True</span>), (<span class="string">&quot;a\x00b&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="keyword">False</span>),
+        ]:
+            <span class="keyword">with</span> self.subTest(left=left, right=right):
+                self.assertIs(constant_time_compare(left, right), expected)
+
+    <span class="keyword">def</span> test_comparison_rejects_non_strings(self):
+        <span class="keyword">for</span> bad <span class="keyword">in</span> (<span class="keyword">None</span>, <span class="number">42</span>, <span class="string">b&quot;secret&quot;</span>, bytearray(<span class="string">b&quot;secret&quot;</span>)):
+            <span class="keyword">with</span> self.subTest(value=bad):
+                <span class="keyword">with</span> self.assertRaises(TypeError):
+                    constant_time_compare(bad, <span class="string">&quot;secret&quot;</span>)
+                <span class="keyword">with</span> self.assertRaises(TypeError):
+                    constant_time_compare(<span class="string">&quot;secret&quot;</span>, bad)
+
+    <span class="keyword">def</span> test_comparison_uses_standard_primitive(self):
+        <span class="keyword">with</span> mock.patch.object(hmac, <span class="string">&quot;compare_digest&quot;</span>, wraps=hmac.compare_digest) <span class="keyword">as</span> spy:
+            self.assertTrue(constant_time_compare(<span class="string">&quot;é&quot;</span>, <span class="string">&quot;é&quot;</span>))
+        spy.assert_called_once_with(<span class="string">b&quot;\xc3\xa9&quot;</span>, <span class="string">b&quot;\xc3\xa9&quot;</span>)
+
+    <span class="keyword">def</span> test_hash_matches_independent_fixture(self):
+        <span class="keyword">with</span> mock.patch.object(secrets, <span class="string">&quot;token_bytes&quot;</span>, return_value=bytes.fromhex(self.FIXTURE_SALT)):
+            self.assertEqual(hash_password(<span class="string">&quot;password&quot;</span>), self.FIXTURE)
+
+    <span class="keyword">def</span> test_verify_independent_fixture(self):
+        self.assertTrue(verify_password(<span class="string">&quot;password&quot;</span>, self.FIXTURE))
+        self.assertFalse(verify_password(<span class="string">&quot;wrong password&quot;</span>, self.FIXTURE))
+
+    <span class="keyword">def</span> test_fresh_salts_and_round_trips(self):
+        first = hash_password(<span class="string">&quot;same password&quot;</span>)
+        second = hash_password(<span class="string">&quot;same password&quot;</span>)
+        self.assertNotEqual(first.split(<span class="string">&quot;$&quot;</span>)[<span class="number">2</span>], second.split(<span class="string">&quot;$&quot;</span>)[<span class="number">2</span>])
+        <span class="keyword">for</span> record <span class="keyword">in</span> (first, second):
+            self.assertTrue(verify_password(<span class="string">&quot;same password&quot;</span>, record))
+            algorithm, rounds, salt, digest = record.split(<span class="string">&quot;$&quot;</span>)
+            self.assertEqual(algorithm, <span class="string">&quot;pbkdf2_sha256&quot;</span>)
+            self.assertEqual(int(rounds), DEFAULT_ITERATIONS)
+            self.assertEqual(len(bytes.fromhex(salt)), SALT_BYTES)
+            self.assertEqual(len(bytes.fromhex(digest)), KEY_BYTES)
+
+    <span class="keyword">def</span> test_unicode_empty_nul_and_whitespace(self):
+        <span class="keyword">for</span> password <span class="keyword">in</span> (<span class="string">&quot;&quot;</span>, <span class="string">&quot;pässwörd 🔑 密码&quot;</span>, <span class="string">&quot;a\x00b&quot;</span>, <span class="string">&quot; password &quot;</span>):
+            <span class="keyword">with</span> self.subTest(password=***REDACTED***
+                record = hash_password(password)
+                self.assertTrue(verify_password(password, record))
+                self.assertFalse(verify_password(password + <span class="string">&quot;x&quot;</span>, record))
+
+    <span class="keyword">def</span> test_no_unicode_normalization(self):
+        record = hash_password(<span class="string">&quot;é&quot;</span>)
+        self.assertFalse(verify_password(<span class="string">&quot;e\u0301&quot;</span>, record))
+
+    <span class="keyword">def</span> test_custom_iterations_are_used_for_verification(self):
+        record = hash_password(<span class="string">&quot;custom&quot;</span>, iterations=<span class="number">600_001</span>)
+        self.assertEqual(record.split(<span class="string">&quot;$&quot;</span>)[<span class="number">1</span>], <span class="string">&quot;600001&quot;</span>)
+        self.assertTrue(verify_password(<span class="string">&quot;custom&quot;</span>, record))
+        self.assertFalse(verify_password(<span class="string">&quot;custom&quot;</span>, record.replace(<span class="string">&quot;$600001$&quot;</span>, <span class="string">&quot;$600000$&quot;</span>)))
+
+    <span class="keyword">def</span> test_tampered_salt_and_digest(self):
+        algorithm, rounds, salt, digest = self.FIXTURE.split(<span class="string">&quot;$&quot;</span>)
+        <span class="keyword">for</span> changed <span class="keyword">in</span> (
+            f&quot;{algorithm}${rounds}$f{salt[<span class="number">1</span>:]}${digest}&quot;,
+            f&quot;{algorithm}${rounds}${salt}$0{digest[<span class="number">1</span>:]}&quot;,
+        ):
+            self.assertFalse(verify_password(<span class="string">&quot;password&quot;</span>, changed))
+
+    <span class="keyword">def</span> test_malformed_records_do_not_run_pbkdf2(self):
+        a, n, s, d = self.FIXTURE.split(<span class="string">&quot;$&quot;</span>)
+        malformed = [<span class="keyword">None</span>, <span class="number">17</span>, self.FIXTURE.encode(), <span class="string">&quot;&quot;</span>, <span class="string">&quot;garbage&quot;</span>, <span class="string">&quot;x&quot;</span> * <span class="number">129</span>,
+                     self.FIXTURE + <span class="string">&quot;\n&quot;</span>, self.FIXTURE + <span class="string">&quot;$extra&quot;</span>, <span class="string">&quot;$&quot;</span>.join((a, n, s)),
+                     f&quot;unknown${n}${s}${d}&quot;, f&quot;{a}${n}$${d}&quot;,
+                     f&quot;{a}${n}${s[:-<span class="number">1</span>]}${d}&quot;, f&quot;{a}${n}${s}${d[:-<span class="number">2</span>]}&quot;,
+                     f&quot;{a}${n}$g{s[<span class="number">1</span>:]}${d}&quot;, f&quot;{a}${n}${s}$g{d[<span class="number">1</span>:]}&quot;,
+                     f&quot;{a}${n}${s.upper()}${d}&quot;]
+        <span class="keyword">for</span> invalid_rounds <span class="keyword">in</span> (<span class="string">&quot;0&quot;</span>, <span class="string">&quot;1&quot;</span>, <span class="string">&quot;599999&quot;</span>, <span class="string">&quot;2000001&quot;</span>, <span class="string">&quot;99999999999&quot;</span>,
+                               <span class="string">&quot;-600000&quot;</span>, <span class="string">&quot;+600000&quot;</span>, <span class="string">&quot;0600000&quot;</span>, <span class="string">&quot;600000.0&quot;</span>, <span class="string">&quot;６０００００&quot;</span>):
+            malformed.append(f&quot;{a}${invalid_rounds}${s}${d}&quot;)
+        <span class="keyword">with</span> mock.patch.object(hashlib, <span class="string">&quot;pbkdf2_hmac&quot;</span>) <span class="keyword">as</span> derive:
+            <span class="keyword">for</span> record <span class="keyword">in</span> malformed:
+                <span class="keyword">with</span> self.subTest(record=record):
+                    self.assertFalse(verify_password(<span class="string">&quot;password&quot;</span>, record))
+            derive.assert_not_called()
+
+    <span class="keyword">def</span> test_hash_rejects_invalid_iterations(self):
+        <span class="keyword">for</span> rounds <span class="keyword">in</span> (<span class="keyword">None</span>, <span class="keyword">True</span>, <span class="number">600_000.0</span>, <span class="string">&quot;600000&quot;</span>):
+            <span class="keyword">with</span> self.subTest(rounds=rounds), self.assertRaises(TypeError):
+                hash_password(<span class="string">&quot;password&quot;</span>, iterations=rounds)
+        <span class="keyword">for</span> rounds <span class="keyword">in</span> (-<span class="number">1</span>, <span class="number">0</span>, MIN_ITERATIONS - <span class="number">1</span>, MAX_ITERATIONS + <span class="number">1</span>):
+            <span class="keyword">with</span> self.subTest(rounds=rounds), self.assertRaises(ValueError):
+                hash_password(<span class="string">&quot;password&quot;</span>, iterations=rounds)
+
+    <span class="keyword">def</span> test_invalid_password_types(self):
+        <span class="keyword">for</span> password <span class="keyword">in</span> (<span class="keyword">None</span>, <span class="number">123</span>, <span class="string">b&quot;password&quot;</span>, [<span class="string">&quot;password&quot;</span>]):
+            <span class="keyword">with</span> self.subTest(password=***REDACTED***
+                <span class="keyword">with</span> self.assertRaises(TypeError):
+                    hash_password(password)
+                self.assertFalse(verify_password(password, self.FIXTURE))
+
+    <span class="keyword">def</span> test_password_byte_limit(self):
+        <span class="keyword">for</span> password <span class="keyword">in</span> (<span class="string">&quot;a&quot;</span> * <span class="number">1024</span>, <span class="string">&quot;é&quot;</span> * <span class="number">512</span>):
+            <span class="keyword">with</span> self.subTest(length=len(password)):
+                record = hash_password(password)
+                self.assertTrue(verify_password(password, record))
+        <span class="keyword">for</span> password <span class="keyword">in</span> (<span class="string">&quot;a&quot;</span> * <span class="number">1025</span>, <span class="string">&quot;é&quot;</span> * <span class="number">513</span>):
+            <span class="keyword">with</span> self.subTest(length=len(password)):
+                <span class="keyword">with</span> self.assertRaises(ValueError):
+                    hash_password(password)
+                self.assertFalse(verify_password(password, self.FIXTURE))
+
+    <span class="keyword">def</span> test_invalid_unicode(self):
+        <span class="keyword">with</span> self.assertRaises(UnicodeEncodeError):
+            constant_time_compare(<span class="string">&quot;\ud800&quot;</span>, <span class="string">&quot;\ud800&quot;</span>)
+        <span class="keyword">with</span> self.assertRaises(UnicodeEncodeError):
+            hash_password(<span class="string">&quot;\ud800&quot;</span>)
+        self.assertFalse(verify_password(<span class="string">&quot;\ud800&quot;</span>, self.FIXTURE))
+
+    <span class="keyword">def</span> test_verification_compares_fixed_size_digests(self):
+        <span class="keyword">with</span> mock.patch.object(hmac, <span class="string">&quot;compare_digest&quot;</span>, wraps=hmac.compare_digest) <span class="keyword">as</span> spy:
+            self.assertTrue(verify_password(<span class="string">&quot;password&quot;</span>, self.FIXTURE))
+        expected = bytes.fromhex(self.FIXTURE_DIGEST)
+        spy.assert_called_once_with(expected, expected)
+
+
+<span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:
+    unittest.main()
+</code></pre></details>
+<section class="details-grid" id="notes" aria-label="Implementation notes">
+<div><h3>A record that carries its parameters</h3><code class="record">pbkdf2_sha256$600000$&lt;32 hex salt chars&gt;$&lt;64 hex hash chars&gt;</code><p>The salt comes from <code>secrets.token_bytes(16)</code> and is stored with the digest. Verification reads that salt and iteration count; it never generates a replacement salt. This is the module’s own format.</p><p>The 600,000-round default follows the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2">OWASP PBKDF2-HMAC-SHA256 work factor</a>. This module accepts 600,000–2,000,000 rounds; the upper bound is a local resource limit. Benchmark on your deployment hardware before tuning it.</p></div>
+<div><h3>Precise input and timing behavior</h3><p>Strings are encoded as UTF-8 without normalization or trimming. Empty passwords are supported; strength rules belong to your application. Hashing rejects invalid inputs and passwords over 1,024 encoded bytes. Verification returns <code>False</code> for invalid inputs and unsupported records.</p><p><a href="https://docs.python.org/3/library/hmac.html#hmac.compare_digest">Python’s comparison primitive</a> avoids content-based short circuiting. Length, encoding, parsing, and invalid-input paths can still affect runtime. The complete verification or login flow is not guaranteed to take constant time.</p><p>Derivation uses <a href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac">hashlib.pbkdf2_hmac</a> with a fixed 32-byte output. No third-party Python packages are required.</p></div>
+</section>
+<noscript><p>JavaScript is disabled. Copy the module and unit test code blocks, in that order, into <code>password_hashing.py</code>.</p></noscript>
+</main>
+<footer><p>One Python file. Three public functions. Sixteen tests.</p><p>Self-contained document · Works offline</p></footer>
+<script>
+'use strict';
+const fullSource = () => document.getElementById('module-code').textContent + document.getElementById('tests-code').textContent;
+const status = document.getElementById('status');
+document.getElementById('download').addEventListener('click', () => {
+  const url = URL.createObjectURL(new Blob([fullSource()], {type: 'text/x-python;charset=utf-8'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'password_hashing.py';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  status.textContent = 'Python download prepared. Module and all 16 tests included.';
+});
+document.getElementById('copy').addEventListener('click', async () => {
+  try {
+    if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(fullSource());
+    status.textContent = 'Copied the complete Python file, including all tests.';
+  } catch (_) {
+    const field = document.createElement('textarea');
+    field.value = fullSource();
+    field.style.cssText = 'position:fixed;left:-10000px;top:0';
+    document.body.appendChild(field);
+    field.select();
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch (_) {}
+    field.remove();
+    document.getElementById('copy').focus();
+    status.textContent = copied ? 'Copied the complete Python file, including all tests.' : 'Clipboard access is unavailable. Use Download Python file or select the two code blocks.';
+  }
+});
+document.querySelector('a[href="#tests"]').addEventListener('click', () => {
+  document.getElementById('tests').open = true;
+});
+</script>
+</body>
+</html>

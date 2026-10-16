@@ -1,39 +1,17 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd, datasetLd } from '@/components/seo/json-ld'
-import { Reveal } from '@/components/motion/reveal'
-import { Cpu, MemoryStick, Layers, Zap, Clock3, Gauge, HardDrive, ArrowRight, ExternalLink, Activity, Code2 } from 'lucide-react'
 import dataset from '@/lib/lab/local-llm/results.json'
 import type { LocalDataset } from '@/lib/lab/local-llm/types'
 import { BENCHMARK_RESULTS } from '@/lib/lab/llm-benchmark/results'
-import { BENCHMARK_MODELS, getModel } from '@/lib/lab/llm-benchmark/registry'
-import { ModelLogoBadge } from '@/components/lab/llm-benchmark/model-logo'
 import { ModelTable } from '@/components/lab/llm-benchmark/model-table'
 
 const DATA = dataset as unknown as LocalDataset
 
 // Scored results for local ollama models — same harness, same tasks as cloud
 const SCORED_LOCAL = BENCHMARK_RESULTS.filter(r => r.modelId.endsWith('-ollama'))
-
-function toScoredId(speedId: string): string {
-  // speed dataset uses 'qwen3:8b' / 'gemma3:4b' (colon), scored uses 'qwen3-8b-ollama' (dash + suffix)
-  return speedId.replace(/:/g, '-') + '-ollama'
-}
-
-// Model enrichment — static, keep in sync with ollama list
-const MODEL_META: Record<string, { params: string; size: string; quant: string; context: string; blurb: string; family: string; accent: string }> = {
-  'gemma3:4b': { params: '4B', size: '3.3GB', quant: 'Q4_K_M', context: '128K', blurb: 'Gemma 3 4B — multimodal, 4B dense, fastest single-GPU model in this bake-off.', family: 'Gemma 3', accent: '#4285f4' },
-  'qwen3:8b': { params: '8.2B', size: '5.2GB', quant: 'Q4_K_M', context: '41K', blurb: 'Qwen3 8B — Alibaba 8B dense, 36 layers, thinking-capable, balanced quality/speed.', family: 'Qwen3', accent: '#8b5cf6' },
-  'gemma3:12b': { params: '12B', size: '8.1GB', quant: 'Q4_K_M', context: '128K', blurb: 'Gemma 3 12B — 12B dense multimodal, sweet spot for reasoning vs latency.', family: 'Gemma 3', accent: '#0ea5e9' },
-  'gemma3:27b': { params: '27B', size: '17GB', quant: 'Q4_K_M', context: '128K', blurb: 'Gemma 3 27B — flagship 27B dense, most capable single-GPU Gemma.', family: 'Gemma 3', accent: '#f59e0b' },
-  'qwen3:14b': { params: '14B', size: '9.0GB', quant: 'Q4_K_M', context: '41K', blurb: 'Qwen3 14B — mid-size dense, strong code/reasoning.', family: 'Qwen3', accent: '#10b981' },
-  'qwen3:32b': { params: '32B', size: '19GB', quant: 'Q4_K_M', context: '41K', blurb: 'Qwen3 32B — largest dense Qwen3, needs 128GB headroom.', family: 'Qwen3', accent: '#ef4444' },
-  'qwen3.8:27b-mlx': { params: '27.8B', size: '18GB', quant: 'nvfp4 · MLX', context: '256K', blurb: 'Qwen3.8 27B MLX — native MLX on M5 Max, 94.7 avg with thinking (31 tok/s), 69.1 without — 256K ctx, multimodal, best local quality.', family: 'Qwen3.8', accent: '#06b6d4' },
-  'ornith-1.5:35b': { params: '35B', size: '23GB', quant: 'Q4_K_M', context: '256K', blurb: 'Ornith 1.5 35B — 112 tok/s on M5 Max, 70.3 avg, self-improving, Text+Vision, end-to-end RL.', family: 'Ornith 1.5', accent: '#f43f5e' },
-}
 
 const OG_IMAGE = { url: '/lab/local-llm/opengraph-image.png', width: 1200, height: 630 }
 
@@ -51,11 +29,6 @@ export const metadata: Metadata = {
     images: [OG_IMAGE],
   },
   twitter: { card: 'summary_large_image', title: 'Local LLM Benchmark · M5 Max', creator: '@benebsworth', site: '@benebsworth', images: [OG_IMAGE.url] },
-}
-
-function formatTps(n: number | null | undefined) {
-  if (n == null) return '—'
-  return `${n.toFixed(1)} tok/s`
 }
 
 export default function LocalLlmPage() {
@@ -91,238 +64,32 @@ export default function LocalLlmPage() {
       <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-20 pt-16 sm:px-8">
         <Breadcrumb className="mb-10" items={[{ label: 'Home', href: '/' }, { label: 'Lab', href: '/lab/' }, { label: 'Local LLM' }]} />
 
-        {/* Hero */}
-        <section className="pb-10">
-          <Reveal>
-            <p className="type-label text-muted">01 · local llm · on-device</p>
-          </Reveal>
-          <Reveal delay={80}>
-            <h1 className="mt-3 type-h1">Local LLM throughput</h1>
-          </Reveal>
-          <Reveal delay={160}>
-            <p className="mt-4 max-w-3xl type-body text-fg/70">
-              Measured on-device on <strong className="text-fg">{hw.chip}</strong> with {hw.cores_detail}, {hw.mem_gb}GB unified, macOS {hw.macos}, Ollama{' '}
-              {hw.ollama_version.replace('ollama version is ', '')}. All models Q4_K_M via Ollama Metal — the Apple Silicon path that keeps weights in unified memory.
-              TTFT, prompt prefill, and generation tok/s are streaming-measured; JSON + CSV logs live in <code className="rounded bg-[var(--color-surface)] px-1 py-0.5 font-mono text-xs">results/</code>.
-            </p>
-          </Reveal>
-          <Reveal delay={220}>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <a
-                href="https://github.com/anomalyco/opencode"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 font-mono text-xs hover:bg-[var(--color-surface-2)]"
-              >
-                <Code2 className="h-3.5 w-3.5" /> ollama-bench
-              </a>
-              <Link
-                href="/lab/llm-benchmark/"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 font-mono text-xs hover:bg-[var(--color-surface-2)]"
-              >
-                Cloud benchmark <ArrowRight className="h-3 w-3" />
-              </Link>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 font-mono text-xs text-muted">
-                Generated {generated} · {DATA.models.length} models · {DATA.rawFiles.length} runs
-              </span>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* Hardware */}
         <section className="pb-12">
-          <Reveal>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted">
-                <Cpu className="h-4 w-4" /> Hardware · {hw.chip}
-              </div>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] p-4">
-                  <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted">
-                    <Layers className="h-3.5 w-3.5" /> SoC
-                  </div>
-                  <div className="mt-1 font-medium">{hw.chip}</div>
-                  <div className="font-mono text-xs text-muted">{hw.cores_detail}</div>
-                  <div className="font-mono text-xs text-muted">{hw.cpu_brand}</div>
-                </div>
-                <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] p-4">
-                  <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted">
-                    <MemoryStick className="h-3.5 w-3.5" /> Memory
-                  </div>
-                  <div className="mt-1 font-medium">{hw.memory_str} unified</div>
-                  <div className="font-mono text-xs text-muted">M5 Max · 512-bit bus · ~400 GB/s</div>
-                  <div className="font-mono text-xs text-muted">Enough for 32B Q4 + 128K ctx</div>
-                </div>
-                <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] p-4">
-                  <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted">
-                    <HardDrive className="h-3.5 w-3.5" /> Stack
-                  </div>
-                  <div className="mt-1 font-mono text-sm">{hw.ollama_version.replace('ollama version is ', 'Ollama ')}</div>
-                  <div className="font-mono text-xs text-muted">Metal (llama.cpp) · Q4_K_M</div>
-                  <div className="font-mono text-xs text-muted">.venv Python {hw.python}</div>
-                </div>
-                <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] p-4">
-                  <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted">
-                    <Activity className="h-3.5 w-3.5" /> Raft
-                  </div>
-                  <div className="mt-1 font-medium">{DATA.models.length} models · {DATA.rawFiles.length} bench files</div>
-                  <div className="font-mono text-xs text-muted">Temp 0.0 · qwen3.8 with thinking (medium, 24K) · 1 warmup</div>
-                  <div className="font-mono text-xs text-muted">Streaming + eval_count stats · thinking 31 tok/s vs 50 no-think</div>
-                </div>
-              </div>
-              <p className="mt-4 font-mono text-xs text-muted">
-                Note: Ollama Metal already uses Apple Metal; raw MLX via <code className="rounded bg-[var(--color-surface)] px-1">mlx-lm</code> (4-bit) is +5-10% faster and available as{' '}
-                <code className="font-mono text-xs">bench --backend mlx --model mlx-community/Qwen3-8B-4bit</code>. With 128GB you can run fp16/BF16 or Q8 for accuracy at ~15% cost.
-              </p>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* Leaderboard bars */}
-        <section className="pb-12">
-          <div className="flex items-baseline justify-between">
-            <h2 className="type-h2">Leaderboard — generation tok/s</h2>
-            <span className="hidden font-mono text-xs text-muted sm:block">Higher is faster · wall tok/s = with TTFT</span>
-          </div>
-          <div className="mt-6 grid gap-3">
-            {DATA.models.map((m, i) => {
-              const meta = MODEL_META[m.id] ?? { accent: '#7c5cff', family: 'Local', size: '—', params: '—', quant: 'Q4_K_M', context: '—', blurb: '' }
-              const pct = ((m.summary.gen_tps_mean ?? 0) / maxGen) * 100
-              const isTop = i === 0
-              const benchModel = getModel(toScoredId(m.id)) ?? BENCHMARK_MODELS.find((x) => x.apiModelId === m.id) ?? null
-              return (
-                <Reveal key={m.id} delay={i * 60}>
-                  <div id={m.id} className="group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-colors hover:bg-[var(--color-surface-2)] sm:p-5">
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                      <div className="flex min-w-0 flex-1 items-center gap-4">
-                        <span className="hidden w-7 shrink-0 text-right font-mono text-sm tabular-nums text-muted sm:block">{String(i + 1).padStart(2, '0')}</span>
-                        {benchModel ? (
-                          <ModelLogoBadge model={benchModel} size={44} />
-                        ) : (
-                          <span
-                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border font-mono text-sm"
-                            style={{
-                              color: meta.accent,
-                              borderColor: `color-mix(in srgb, ${meta.accent} 35%, transparent)`,
-                              backgroundColor: `color-mix(in srgb, ${meta.accent} 10%, transparent)`,
-                            }}
-                          >
-                            {isTop ? <Zap className="h-4 w-4" /> : i + 1}
-                          </span>
-                        )}
-                        <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="type-h3">{m.id}</h3>
-                            <span className="rounded-full border border-[var(--color-border)] px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted">{meta.params} · {meta.size} · {meta.quant}</span>
-                            <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-muted">{meta.context} ctx</span>
-                          </div>
-                          <p className="mt-1 max-w-xl type-body text-fg/65">{meta.blurb}</p>
-                          <div className="mt-2 flex flex-wrap gap-3 font-mono text-xs text-muted">
-                            <span className="inline-flex items-center gap-1"><Clock3 className="h-3 w-3" /> TTFT {m.summary.ttft_ms_mean?.toFixed(1)} ms</span>
-                            <span className="inline-flex items-center gap-1"><Gauge className="h-3 w-3" /> prompt {formatTps(m.summary.prompt_tps_mean)}</span>
-                            <span className="inline-flex items-center gap-1">samples {m.summary.samples}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-full lg:w-[420px] lg:shrink-0">
-                        <div className="flex items-baseline justify-between font-mono text-xs">
-                          <span className="uppercase tracking-wider text-muted">Gen tok/s</span>
-                          <span className="font-medium tabular-nums">{m.summary.gen_tps_mean?.toFixed(1)} <span className="text-muted">({m.summary.gen_tps_min?.toFixed(1)}–{m.summary.gen_tps_max?.toFixed(1)})</span></span>
-                        </div>
-                        <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: meta.accent }} />
-                        </div>
-                        <div className="mt-1 flex justify-between font-mono text-[0.6rem] uppercase tracking-wider text-muted">
-                          <span>0</span>
-                          <span>{maxGen.toFixed(0)} tok/s</span>
-                        </div>
-                      </div>
-                    </div>
-                    {/* per-prompt breakdown */}
-                    <div className="mt-4 grid gap-2 border-t border-[var(--color-border)] pt-4 sm:grid-cols-3">
-                      {m.entries.map(e => (
-                        <div key={e.file} className="rounded-xl bg-[var(--color-surface-2)] px-3 py-2">
-                          <div className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">{e.prompt_set} · {e.tokens} tok</div>
-                          <div className="mt-1 flex items-baseline gap-2">
-                            <span className="font-mono text-sm font-medium tabular-nums">{e.aggregate.gen_tps_mean.toFixed(1)}</span>
-                            <span className="font-mono text-xs text-muted">tok/s</span>
-                            <span className="ml-auto font-mono text-xs text-muted">{e.aggregate.ttft_ms_mean.toFixed(0)}ms TTFT</span>
-                          </div>
-                          <div className="font-mono text-xs text-muted">prompt {e.aggregate.prompt_tps_mean.toFixed(0)} tok/s · wall {e.aggregate.wall_tps_mean.toFixed(1)}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Reveal>
-              )
-            })}
+          <p className="type-label text-muted">01 · local llm · on-device</p>
+          <h1 className="mt-3 type-h1">Local LLM throughput</h1>
+          <p className="mt-4 max-w-3xl type-body text-fg/70">
+            Measured on <strong className="text-fg">{hw.chip}</strong> with Ollama Metal. Generation speed, prompt prefill, TTFT, and scored task results are shown together; expand a model for its prompt-set and task-level breakdown.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted">
+            <span>{DATA.models.length} models</span>
+            <span>{DATA.rawFiles.length} benchmark files</span>
+            <span>{hw.memory_str} unified memory</span>
+            <span>generated {generated}</span>
           </div>
         </section>
 
-        {/* Combined benchmark table */}
-        <section className="pb-12">
-          <div className="flex items-baseline justify-between">
+        <section>
+          <div className="flex items-baseline justify-between gap-4">
             <h2 className="type-h2">Benchmark results</h2>
-            <Link href="/lab/llm-benchmark/" className="hidden items-center gap-1 font-mono text-xs text-muted hover:text-fg sm:inline-flex">
-              View cloud leaderboard <ArrowRight className="h-3 w-3" />
-            </Link>
+            <span className="hidden font-mono text-xs text-muted sm:block">Click the arrow for details</span>
           </div>
           <p className="mt-2 max-w-prose font-mono text-xs text-muted">
-            Speed + scored tasks combined. Sort by any column, filter by family or search. Expand rows for per-prompt-set and per-task breakdowns.
-            {SCORED_LOCAL.length === 0 && ' (no scored runs yet — run task bench:run MODELS=... )'}
+            Sort any column, search models, or filter by family. {SCORED_LOCAL.length > 0 ? 'Score is the average across completed browser tasks.' : 'No scored runs yet.'}
           </p>
           <div className="mt-6">
-            <ModelTable
-              models={DATA.models}
-              scoredResults={SCORED_LOCAL}
-              maxGenTps={maxGen}
-            />
-          </div>
-          {SCORED_LOCAL.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2 font-mono text-xs text-muted">
-              <span>Tasks: crypto 26–90 · equation 100 · n-body 3–100 · platformer 3–100 · landing 50–100 · pendulum 11–100 · circuit 21–100</span>
-              <span>· Qwen3.8 94.7 (thinking) leads; Qwen3 66.7 trails; Gemma 4B 30.3 — honest chromium, BUST=1, no fallback.</span>
-            </div>
-          )}
-        </section>
-
-        {/* Methodology */}
-        <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-          <h2 className="type-h3">Methodology & how to reproduce</h2>
-          <div className="prose prose-sm mt-3 max-w-none prose-zinc dark:prose-invert">
-            <p className="font-mono text-xs leading-relaxed text-fg/70">
-              Each model is run with <code>temperature 0.0</code> (qwen3.8 with <code>think:true, reasoning_effort:medium, num_predict:24000</code> for best quality — 94.7 avg at ~31 tok/s vs 69.1 at ~50 without; others <code>no_think</code>), 1 warmup (not counted) + 1–3 measured runs per prompt set (<code>general</code>, <code>code</code>, <code>short</code>, <code>long-context</code>). The harness streams <code>/api/chat</code> (MLX) or <code>/api/generate</code> and records TTFT (first <code>response</code> delta),
-              wall time, and the ground-truth <code>eval_count/eval_duration</code> and <code>prompt_eval_count/prompt_eval_duration</code> from Ollama final stats (ns). Wall tok/s
-              cross-checks. 512 tok is the default <code>num_predict</code> (24000 for thinking).
-            </p>
-            <pre className="mt-4 overflow-x-auto rounded-xl bg-[var(--color-surface-2)] p-4 font-mono text-xs">
-              <code>{`cd ~/projects/ollama-bench
-source .venv/bin/activate
-task info                          # hardware + ollama
-task bench MODEL=gemma3:27b        # quick 512tok general
-task bench:all-sets MODEL=qwen3:8b # full profile
-task bench:report                  # -> results/local-results.json + summary.md
-task bench:sync                    # -> benebsworth.com/public/lab-data/local-llm/results.json`}</code>
-            </pre>
-            <p className="mt-3 font-mono text-xs text-muted">
-              See <code>ollama-bench/BENCHMARK_REPORT.md</code> for the streamed-vs-reported rate discussion and MLX notes. Raw JSON/CSV per run stay in{' '}
-              <code>results/bench-*.json</code> and are gitignored; <code>local-results.json</code> is the committed, site-consumed rollup.
-            </p>
-          </div>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <a href="/lab-data/local-llm/results.json" className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1 font-mono text-xs hover:bg-[var(--color-surface)]">
-              Raw JSON <ExternalLink className="h-3 w-3" />
-            </a>
-            <Link href="/lab/llm-benchmark/" className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1 font-mono text-xs hover:bg-[var(--color-surface)]">
-              Cloud benchmark <ArrowRight className="h-3 w-3" />
-            </Link>
+            <ModelTable models={DATA.models} scoredResults={SCORED_LOCAL} maxGenTps={maxGen} />
           </div>
         </section>
-
-        <p className="mt-8 text-center font-mono text-xs text-muted">
-          M5 Max 128GB · ollama {hw.ollama_version.replace('ollama version is ', '')} · generated {new Date(DATA.generatedAt).toISOString()} ·{' '}
-          <Link href="/lab/llm-benchmark/" className="underline hover:text-fg">
-            compare to cloud
-          </Link>
-        </p>
       </main>
       <SiteFooter />
     </>

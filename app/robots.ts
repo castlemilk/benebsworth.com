@@ -1,4 +1,6 @@
 import type { MetadataRoute } from 'next'
+import { SITE_URL } from '@/components/seo/json-ld'
+
 export const dynamic = 'force-static'
 export default function robots(): MetadataRoute.Robots {
   // No path is disallowed. /admin is deliberately crawlable so crawlers can
@@ -7,5 +9,5 @@ export default function robots(): MetadataRoute.Robots {
   // robots.txt `disallow: /admin` would block the crawl and thus hide the
   // noindex, which is self-defeating (a disallowed URL can still be indexed
   // from external links, just without its own directives).
-  return { rules: { userAgent: '*', allow: '/' }, sitemap: 'https://benebsworth.com/sitemap.xml' }
+  return { rules: { userAgent: '*', allow: '/' }, sitemap: `${SITE_URL}/sitemap.xml` }
 }

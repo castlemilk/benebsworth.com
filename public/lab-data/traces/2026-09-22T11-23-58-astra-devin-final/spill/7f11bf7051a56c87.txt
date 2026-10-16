@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crypto_hash.py — constant-time compare &amp; PBKDF2 password hashing</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--panel:#161b22;--border:#30363d;--fg:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:56px 24px 80px}
+.eyebrow{color:var(--green);font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px;font-weight:600}
+h1{font-size:34px;margin:0 0 12px;letter-spacing:-.01em}
+.lede{color:var(--muted);font-size:18px;max-width:62ch;margin:0 0 36px}
+h2{font-size:20px;margin:0 0 14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-bottom:36px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14.5px;color:var(--accent);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.format{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:36px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;overflow-x:auto;white-space:nowrap}
+.format b{color:var(--accent);font-weight:600}
+.format i{color:var(--muted);font-style:normal}
+.codeblock{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:36px}
+.codebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border-bottom:1px solid var(--border);padding:8px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--muted)}
+.codebar button{background:#21262d;color:var(--fg);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:12.5px;cursor:pointer;font-family:inherit}
+.codebar button:hover{border-color:var(--accent);color:var(--accent)}
+pre{margin:0;padding:18px 20px;overflow-x:auto;background:#0a0d12}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.55}
+.notes ul{margin:0;padding-left:20px;color:var(--muted)}
+.notes li{margin-bottom:6px}
+.notes code{color:var(--accent);font-size:12.5px}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<p class="eyebrow">Python · stdlib only · unittest suite included</p>
+<h1>crypto_hash.py</h1>
+<p class="lede">Constant-time string comparison and PBKDF2-HMAC-SHA256 password hashing with a random per-password ***REDACTED*** — plus a 21-test unittest suite. No third-party dependencies.</p>
+</header>
+<div class="cards">
+<div class="card"><h3>constant_time_compare(a, b)</h3><p>Timing-safe equality for str/bytes via <code>hmac.compare_digest</code>. UTF-8 encodes str inputs; unsupported types return False instead of raising.</p></div>
+<div class="card"><h3>hash_password(password)</h3><p>PBKDF2-HMAC-SHA256, 600,000 iterations (OWASP baseline), 16-byte salt from <code>secrets.token_bytes</code>. Returns a self-describing storage string.</p></div>
+<div class="card"><h3>verify_password(password, stored)</h3><p>Parses the stored string, re-derives the key with its salt and iteration count, and compares in constant time. Malformed input returns False — never an exception.</p></div>
+</div>
+<h2>Storage format</h2>
+<div class="format">pbkdf2<b>$</b>sha256<b>$</b>&lt;iterations&gt;<b>$</b>&lt;base64url&nbsp;salt&gt;<b>$</b>&lt;base64url&nbsp;key&gt; <i>&nbsp;# e.g. pbkdf2$sha256$600000$k9...$vQ...</i></div>
+<h2>Source</h2>
+<div class="codeblock">
+<div class="codebar"><span>crypto_hash.py</span><button id="copy" type="button">Copy</button></div>
+<pre><code id="src">&quot;&quot;&quot;crypto_hash -- constant-time comparison and PBKDF2 password hashing.
+
+Public API:
+    constant_time_compare(a, b)           -- timing-safe equality for str / bytes
+    hash_password(password, ...)          -- PBKDF2-HMAC-SHA256 with a random salt
+    verify_password(password, stored)     -- re-derive and compare, constant-time
+
+Storage format (self-describing, base64url fields):
+    pbkdf2$sha256$&lt;iterations&gt;$&lt;salt&gt;$&lt;key&gt;
+
+Stdlib only. Run the test suite with:
+    python crypto_hash.py        # or: python -m unittest crypto_hash
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+import base64
+import hashlib
+import hmac
+import secrets
+import unittest
+
+__all__ = [&quot;constant_time_compare&quot;, &quot;hash_password&quot;, &quot;verify_password&quot;]
+
+ALGORITHM = &quot;sha256&quot;
+_FORMAT = &quot;pbkdf2&quot;
+DEFAULT_ITERATIONS = 600_000   # OWASP baseline for PBKDF2-HMAC-SHA256
+MAX_ITERATIONS = 10_000_000    # cap so a crafted stored string can&#x27;t DoS verify
+SALT_BYTES = 16
+KEY_BYTES = 32
+
+
+def constant_time_compare(a, b):
+    &quot;&quot;&quot;Return True iff ``a == b``, without leaking length/content via timing.
+
+    ``str`` inputs are UTF-8 encoded first; ``bytes``/``bytearray`` are used
+    as-is. Mixed str/bytes pairs compare by content. Unsupported types return
+    False rather than raising, so callers can pass untrusted input directly.
+    &quot;&quot;&quot;
+    if isinstance(a, str):
+        a = a.encode(&quot;utf-8&quot;)
+    if isinstance(b, str):
+        b = b.encode(&quot;utf-8&quot;)
+    if not isinstance(a, (bytes, bytearray)) or not isinstance(b, (bytes, bytearray)):
+        return False
+    return hmac.compare_digest(bytes(a), bytes(b))
+
+
+def _b64e(raw: bytes) -&gt; str:
+    &quot;&quot;&quot;base64url-encode without padding.&quot;&quot;&quot;
+    return base64.urlsafe_b64encode(raw).decode(&quot;ascii&quot;).rstrip(&quot;=&quot;)
+
+
+def _b64d(text: str) -&gt; bytes:
+    &quot;&quot;&quot;base64url-decode, tolerating the missing padding _b64e strips.&quot;&quot;&quot;
+    pad = &quot;=&quot; * (-len(text) % 4)
+    return base64.urlsafe_b64decode(text + pad)
+
+
+def hash_password(password: ***REDACTED***, *, iterations: int = DEFAULT_ITERATIONS,
+                  salt: bytes | None = None) -&gt; str:
+    &quot;&quot;&quot;Hash ``password`` with PBKDF2-HMAC-SHA256 and a random salt.
+
+    Returns ``pbkdf2$sha256$&lt;iterations&gt;$&lt;salt&gt;$&lt;key&gt;`` — everything
+    :func:`verify_password` needs is embedded, so iteration counts can be
+    raised later without invalidating old hashes.
+
+    Raises TypeError for a non-str password, ValueError for iterations &lt; 1.
+    ``salt`` is injectable for tests; callers should normally leave it None.
+    &quot;&quot;&quot;
+    if not isinstance(password, str):
+        raise TypeError(&quot;password must be a str&quot;)
+    if iterations &lt; 1:
+        raise ValueError(&quot;iterations must be &gt;= 1&quot;)
+    if salt is None:
+        salt = secrets.token_bytes(SALT_BYTES)
+    key = hashlib.pbkdf2_hmac(
+        ALGORITHM, password.encode(&quot;utf-8&quot;), salt, iterations, dklen=KEY_BYTES
+    )
+    return f&quot;{_FORMAT}${ALGORITHM}${iterations}${_b64e(salt)}${_b64e(key)}&quot;
+
+
+def verify_password(password: ***REDACTED***, stored: str) -&gt; bool:
+    &quot;&quot;&quot;Return True iff ``password`` matches the ``stored`` pbkdf2 string.
+
+    The iteration count and salt are taken from ``stored`` itself, then the
+    derived key is compared with :func:`hmac.compare_digest` — constant-time.
+    Malformed or hostile input (bad fields, wrong scheme, absurd iteration
+    counts) returns False instead of raising.
+    &quot;&quot;&quot;
+    if not isinstance(password, str) or not isinstance(stored, str):
+        return False
+    try:
+        fmt, algo, iter_s, salt_s, key_s = stored.split(&quot;$&quot;)
+        if fmt != _FORMAT:
+            return False
+        iterations = int(iter_s)
+        if iterations &lt; 1 or iterations &gt; MAX_ITERATIONS:
+            return False
+        salt = _b64d(salt_s)
+        expected = _b64d(key_s)
+        candidate = hashlib.pbkdf2_hmac(
+            algo, password.encode(&quot;utf-8&quot;), salt, iterations, dklen=len(expected)
+        )
+    except (TypeError, ValueError):
+        return False
+    return hmac.compare_digest(candidate, expected)
+
+
+class ConstantTimeCompareTests(unittest.TestCase):
+    def test_equal_strings(self):
+        self.assertTrue(constant_time_compare(&quot;hunter2&quot;, &quot;hunter2&quot;))
+
+    def test_unequal_strings(self):
+        self.assertFalse(constant_time_compare(&quot;hunter2&quot;, &quot;hunter3&quot;))
+
+    def test_different_lengths(self):
+        self.assertFalse(constant_time_compare(&quot;short&quot;, &quot;a much longer string&quot;))
+
+    def test_bytes(self):
+        self.assertTrue(constant_time_compare(b&quot;abc&quot;, b&quot;abc&quot;))
+        self.assertFalse(constant_time_compare(b&quot;abc&quot;, b&quot;abd&quot;))
+
+    def test_mixed_str_and_bytes(self):
+        self.assertTrue(constant_time_compare(&quot;abc&quot;, b&quot;abc&quot;))
+
+    def test_empty_strings(self):
+        self.assertTrue(constant_time_compare(&quot;&quot;, &quot;&quot;))
+        self.assertFalse(constant_time_compare(&quot;&quot;, &quot;x&quot;))
+
+    def test_unsupported_types_return_false(self):
+        self.assertFalse(constant_time_compare(None, &quot;x&quot;))
+        self.assertFalse(constant_time_compare(123, 123))
+        self.assertFalse(constant_time_compare(&quot;x&quot;, None))
+
+
+class HashPasswordTests(unittest.TestCase):
+    PW = &quot;correct horse battery staple&quot;
+
+    def test_format_is_self_describing(self):
+        stored = hash_password(self.PW, iterations=1000)
+        fmt, algo, iters, salt, key = stored.split(&quot;$&quot;)
+        self.assertEqual(fmt, &quot;pbkdf2&quot;)
+        self.assertEqual(algo, &quot;sha256&quot;)
+        self.assertEqual(int(iters), 1000)
+        self.assertEqual(len(_b64d(salt)), SALT_BYTES)
+        self.assertEqual(len(_b64d(key)), KEY_BYTES)
+
+    def test_random_salt_gives_unique_hashes(self):
+        self.assertNotEqual(
+            hash_password(self.PW, iterations=1000),
+            hash_password(self.PW, iterations=1000),
+        )
+
+    def test_fixed_salt_is_deterministic(self):
+        salt = b&quot;\x00&quot; * SALT_BYTES
+        self.assertEqual(
+            hash_password(self.PW, iterations=1000, salt=salt),
+            hash_password(self.PW, iterations=1000, salt=salt),
+        )
+
+    def test_matches_stdlib_pbkdf2(self):
+        salt = b&quot;unit-test-salt!!&quot;  # 16 bytes
+        stored = hash_password(self.PW, iterations=5000, salt=salt)
+        expected = hashlib.pbkdf2_hmac(
+            &quot;sha256&quot;, self.PW.encode(&quot;utf-8&quot;), salt, 5000, dklen=KEY_BYTES
+        )
+        self.assertEqual(stored.split(&quot;$&quot;)[4], _b64e(expected))
+
+    def test_rejects_non_str_password(self):
+        with self.assertRaises(TypeError):
+            hash_password(b&quot;bytes-not-str&quot;)
+
+    def test_rejects_zero_iterations(self):
+        with self.assertRaises(ValueError):
+            hash_password(self.PW, iterations=0)
+
+
+class VerifyPasswordTests(unittest.TestCase):
+    def test_roundtrip(self):
+        stored = hash_password(&quot;s3cret!&quot;, iterations=2000)
+        self.assertTrue(verify_password(&quot;s3cret!&quot;, stored))
+        self.assertFalse(verify_password(&quot;s3cret?&quot;, stored))
+
+    def test_unicode_password(self):
+        pw = &quot;pâsswörd-密码-🔐&quot;
+        stored = hash_password(pw, iterations=1000)
+        self.assertTrue(verify_password(pw, stored))
+        self.assertFalse(verify_password(&quot;password&quot;, stored))
+
+    def test_iteration_count_roundtrips(self):
+        for iters in (1, 500, 50_000):
+            stored = hash_password(&quot;pw&quot;, iterations=iters)
+            self.assertTrue(verify_password(&quot;pw&quot;, stored))
+
+    def test_malformed_stored_returns_false_not_exception(self):
+        bad_values = (
+            &quot;&quot;,
+            &quot;garbage&quot;,
+            &quot;pbkdf2$sha256$1000$only-four-fields&quot;,
+            &quot;pbkdf2$sha256$abc$x$y&quot;,                       # non-numeric iterations
+            &quot;pbkdf2$sha256$-5$AAAA$BBBB&quot;,                  # negative iterations
+            &quot;pbkdf2$sha256$0$AAAA$BBBB&quot;,                   # zero iterations
+            &quot;pbkdf2$sha256$1000$!!!$@@@&quot;,                  # junk base64
+            &quot;bcrypt$2b$12$somehash&quot;,                       # wrong scheme
+            &quot;pbkdf2$sha256$1000$AAAA$BBBB$extra&quot;,          # too many fields
+        )
+        for bad in bad_values:
+            self.assertFalse(verify_password(&quot;pw&quot;, bad), msg=bad)
+
+    def test_iteration_cap_blocks_crafted_dos(self):
+        salt = _b64e(b&quot;x&quot; * SALT_BYTES)
+        key = _b64e(b&quot;y&quot; * KEY_BYTES)
+        stored = f&quot;pbkdf2$sha256${MAX_ITERATIONS + 1}${salt}${key}&quot;
+        self.assertFalse(verify_password(&quot;pw&quot;, stored))
+
+    def test_tampered_key_fails(self):
+        stored = hash_password(&quot;pw&quot;, iterations=1000)
+        parts = stored.split(&quot;$&quot;)
+        key = bytearray(_b64d(parts[4]))
+        key[0] ^= 0x01
+        parts[4] = _b64e(bytes(key))
+        self.assertFalse(verify_password(&quot;pw&quot;, &quot;$&quot;.join(parts)))
+
+    def test_tampered_salt_fails(self):
+        stored = hash_password(&quot;pw&quot;, iterations=1000)
+        parts = stored.split(&quot;$&quot;)
+        salt = bytearray(_b64d(parts[3]))
+        salt[0] ^= 0x01
+        parts[3] = _b64e(bytes(salt))
+        self.assertFalse(verify_password(&quot;pw&quot;, &quot;$&quot;.join(parts)))
+
+    def test_non_str_inputs_return_false(self):
+        self.assertFalse(verify_password(b&quot;bytes&quot;, &quot;x&quot;))
+        self.assertFalse(verify_password(&quot;pw&quot;, None))
+        self.assertFalse(verify_password(None, None))
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main(verbosity=2)
+</code></pre>
+</div>
+<div class="notes">
+<h2>Notes</h2>
+<ul>
+<li>Run the tests: <code>python crypto_hash.py</code> (or <code>python -m unittest crypto_hash</code>) — 21 tests, all passing.</li>
+<li>Iterations are embedded in the stored string, so the default can be raised later and old hashes still verify.</li>
+<li>A <code>MAX_ITERATIONS</code> cap in <code>verify_password</code> prevents a crafted stored string from triggering a huge derivation.</li>
+<li><code>salt</code> is injectable in <code>hash_password</code> for deterministic tests; production callers should leave it as <code>None</code>.</li>
+<li>PBKDF2 is a solid stdlib choice; for new systems also consider Argon2id via <code>argon2-cffi</code>.</li>
+</ul>
+</div>
+<footer>Self-contained artifact · crypto_hash.py · constant-time compare + PBKDF2 + verify + tests</footer>
+</div>
+<script>
+document.getElementById('copy').addEventListener('click',function(){
+var b=this;
+var done=function(t){b.textContent=t;setTimeout(function(){b.textContent='Copy';},1600);};
+if(navigator.clipboard&&navigator.clipboard.writeText){
+navigator.clipboard.writeText(document.getElementById('src').innerText).then(function(){done('Copied');},function(){done('Select &amp; copy');});
+}else{
+var r=document.createRange();r.selectNodeContents(document.getElementById('src'));
+var s=window.getSelection();s.removeAllRanges();s.addRange(r);done('Select &amp; copy');
+}
+});
+</script>
+</body>
+</html>

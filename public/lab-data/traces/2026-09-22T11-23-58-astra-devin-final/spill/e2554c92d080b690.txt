@@ -1,0 +1,180 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Transient — Series RLC Lab</title><style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+*{box-sizing:border-box} :root{color-scheme:dark;--mint:#9befc3;--muted:#868991;--line:#292b31;--amber:#edba79;--blue:#a5b9fa;--panel:#131419}button,input,select{font:inherit}button,select{cursor:pointer}button{color:inherit}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:2px solid var(--mint);outline-offset:4px}button{transition:background .15s,border-color .15s}button:hover{background:#282b30!important;border-color:#676e72!important}button:active{transform:translateY(1px)}
+.app{height:100vh;height:100svh;min-height:420px;padding:20px 28px 12px;display:grid;grid-template-rows:54px minmax(0,1fr) 20px;gap:16px;max-width:1800px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px}.brandmark{height:37px;width:37px;display:grid;place-items:center;border:1px solid #3c5147;border-radius:11px;background:#15221d;color:var(--mint)}.brandmark svg{width:25px;height:25px}.brandname{font-size:20px;letter-spacing:-.8px;font-weight:650;line-height:1.2}.brandname span{color:#8b8e98;font-weight:400}.subtitle{color:var(--muted);font-size:11px;margin-top:5px;letter-spacing:.2px}.topright{display:flex;gap:17px;align-items:center}.live{font-size:10px;color:#adb5af;letter-spacing:1.1px;display:flex;align-items:center;gap:7px}.live i{width:5px;height:5px;background:var(--mint);border-radius:100%;box-shadow:0 0 10px #9befc34a}.reset{background:transparent;border:1px solid var(--line);border-radius:7px;padding:8px 11px;display:flex;align-items:center;gap:7px;font-size:11px;color:#b8bbc2}.reset svg{width:13px;height:13px}.workspace{display:grid;grid-template-columns:270px minmax(0,1fr);gap:18px;min-height:0}.panel{border:1px solid var(--line);background:var(--panel);border-radius:13px}.controls{padding:19px 20px 13px;display:flex;flex-direction:column;min-height:0}.eyebrow{font-size:9px;font-weight:600;letter-spacing:1.8px;color:#8b8e99}.control-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.control-heading span:last-child{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px;color:#5d626d}.component{--accent:var(--amber);padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid #24262c;min-width:0}.component.inductor{--accent:var(--blue)}.component.capacitor{--accent:var(--mint);margin-bottom:0}.component-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.component-name{display:flex;align-items:center;gap:9px;font-size:11px;color:#bec0c7}.letter{display:grid;place-items:center;width:25px;height:25px;background:color-mix(in srgb,var(--accent) 8%,transparent);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:6px;color:var(--accent);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}.value-box{display:flex;gap:4px;align-items:baseline;border:1px solid #30323a;background:#191a20;border-radius:5px;padding:4px 7px}.value-box input{width:51px;min-width:0;padding:0;border:0;outline:none;background:transparent;color:#f0f0f3;font-size:13px;text-align:right;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;appearance:textfield;-moz-appearance:textfield}.value-box input::-webkit-inner-spin-button,.value-box input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.value-box:focus-within{border-color:var(--accent)}.value-box input[aria-invalid=true]{color:#ff9696}.unit{font-size:10px;color:#8e909a;min-width:16px;text-align:right}.slider{display:block;width:100%;height:15px;margin:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:ew-resize;touch-action:pan-y}.slider::-webkit-slider-runnable-track{height:3px;border-radius:3px;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--fill),#34353d var(--fill),#34353d 100%)}.slider::-moz-range-track{height:3px;border-radius:3px;background:#34353d}.slider::-moz-range-progress{height:3px;background:var(--accent)}.slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;background:var(--accent);border:2px solid #17191c;border-radius:50%;margin-top:-4px;box-shadow:0 0 0 1px var(--accent)}.slider::-moz-range-thumb{width:8px;height:8px;background:var(--accent);border:2px solid #17191c;border-radius:50%;box-shadow:0 0 0 1px var(--accent)}.range-limits{display:flex;justify-content:space-between;color:#686c77;font-size:9px;margin-top:3px;font-variant-numeric:tabular-nums}.presets{margin-top:13px}.preset-heading{display:flex;justify-content:space-between;margin-bottom:8px;align-items:center}.preset-heading .eyebrow{letter-spacing:1.3px;font-size:8px}.preset-heading span:last-child{font-size:9px;color:#676b74}.preset-buttons{display:flex;gap:5px}.preset{flex:1;min-width:0;border:1px solid #30323a;background:#1b1d23;padding:7px 2px;border-radius:5px;font-size:10px;color:#9499a4}.preset[aria-pressed=true]{color:var(--mint);background:#1c2c25;border-color:#3d5b49}.circuit{margin-top:auto;padding-top:13px}.circuit-header{display:flex;justify-content:space-between;align-items:center;font-size:8px;color:#727885;letter-spacing:1px}.circuit-header span:last-child{color:#a0a4af;letter-spacing:0}.circuit svg{display:block;width:100%;height:80px;overflow:visible}.circuit-note{font-size:9px;line-height:1.5;color:#7b808d;margin:0}.circuit-note b{font-weight:450;color:#b2b7c0}.scope{display:grid;grid-template-rows:67px minmax(0,1fr) 76px;overflow:hidden;min-width:0;position:relative;background:radial-gradient(ellipse at 55% 15%,#17221d55,transparent 68%),#101216}.scope-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px 10px}.scope-title{font-size:15px;letter-spacing:-.35px;font-weight:550;margin:0 0 5px}.legend{display:flex;align-items:center;gap:15px;color:#9299a2;font-size:10px}.legend span{display:flex;align-items:center;gap:6px}.legend i{height:2px;width:14px;background:var(--mint);display:block}.legend i.input{height:0;border-top:1px dashed #ceba8d;background:none}.scope-actions{display:flex;align-items:center;gap:7px}.time-select{appearance:none;border:1px solid #32383a;background:#151a19;border-radius:6px;color:#98a89e;padding:8px 11px;font-size:10px}.replay{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #394c41;border-radius:6px;padding:7px 10px;background:#1c2c23;color:#bcebcf;font-size:10px;min-height:30px}.replay svg{width:12px;height:12px}.plot-wrap{position:relative;min-width:0;min-height:0;margin:0 9px 0 4px}.plot-wrap canvas{display:block;width:100%;height:100%;touch-action:pan-y;cursor:crosshair;outline-offset:-3px}.probe{position:absolute;z-index:2;pointer-events:none;display:none;top:0;left:0;min-width:119px;padding:9px 11px;border:1px solid #476355;background:#141f1cf2;box-shadow:0 4px 20px #0006;border-radius:6px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#9baaa2;line-height:1.8}.probe strong{font-weight:500;font-size:12px;color:var(--mint)}.stats{border-top:1px solid var(--line);display:grid;grid-template-columns:1.28fr 1fr 1fr 1fr;padding:16px 22px;background:#14171a}.stat{padding-left:19px;border-left:1px solid #2b3033;min-width:0}.stat:first-child{padding-left:0;border-left:0}.stat-label{font-size:9px;color:#828a94;letter-spacing:.4px;margin-bottom:6px;white-space:nowrap}.stat-value{font:17px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:-.5px;color:#dce4df;white-space:nowrap}.stat-value small{font-family:ui-sans-serif,system-ui;color:#818c86;font-size:10px;letter-spacing:0}.stat:first-child .stat-value{color:var(--mint);font-size:14px;letter-spacing:-.3px}.stat:first-child .stat-value::before{content:"";display:inline-block;background:var(--mint);width:5px;height:5px;border-radius:100%;vertical-align:middle;margin-right:7px}.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:10px;color:#727784;white-space:nowrap}.footer .tip{display:flex;align-items:center;gap:7px;overflow:hidden;text-overflow:ellipsis}.tip-icon{color:var(--mint);font-size:12px}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#747e79;font-size:10px}.error{position:fixed;z-index:100;bottom:12px;left:12px;right:12px;padding:12px;background:#3c1720;color:#ffd8df;border:1px solid #bd697b;border-radius:7px;font-size:12px}.error:empty{display:none}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(min-width:1350px){.workspace{grid-template-columns:290px 1fr}.controls{padding:20px}.circuit svg{height:85px}.scope{grid-template-rows:77px minmax(0,1fr) 85px}}
+@media(max-height:570px) and (min-width:641px){.app{padding-top:12px;gap:10px;grid-template-rows:44px minmax(0,1fr) 16px}.controls{padding:13px 17px}.control-heading{margin-bottom:9px}.component{padding-bottom:7px;margin-bottom:7px}.range-limits{display:none}.presets{margin-top:9px}.circuit{padding-top:9px}.circuit svg{height:77px}.circuit-note{display:none}.scope{grid-template-rows:60px minmax(0,1fr) 67px}.stats{padding-top:12px;padding-bottom:12px}}
+@media(max-width:850px) and (min-width:641px){.app{padding-left:16px;padding-right:16px}.workspace{grid-template-columns:230px minmax(0,1fr);gap:12px}.controls{padding-left:15px;padding-right:15px}.scope-header{padding-left:16px;padding-right:16px}.scope-title{font-size:14px}.time-select{max-width:74px;padding:8px 5px}.replay span{display:none}.stats{padding-left:16px;padding-right:16px;grid-template-columns:1.25fr 1fr 1fr}.stat{padding-left:12px}.stat.frequency{display:none}.stat-value{font-size:15px}.stat-label{font-size:8px}.formula{display:none}}
+@media(max-width:640px){.app{padding:10px 12px 8px;min-height:420px;gap:9px;grid-template-rows:39px minmax(0,1fr) 13px}.brand{gap:8px}.brandmark{width:31px;height:31px;border-radius:9px}.brandmark svg{width:22px}.brandname{font-size:17px}.subtitle{font-size:9px;margin-top:2px}.topright{gap:8px}.live{font-size:8px;letter-spacing:.5px}.reset{padding:7px}.reset span{display:none}.workspace{display:flex;flex-direction:column-reverse;gap:10px}.scope{flex:1;min-height:200px;grid-template-rows:52px minmax(0,1fr) 51px;border-radius:10px}.scope-header{padding:11px 12px 7px;gap:4px}.scope-title{font-size:12px;margin-bottom:4px}.legend{font-size:8px;gap:10px}.legend i{width:10px}.scope-actions{gap:5px}.time-select{font-size:9px;padding:6px 7px;max-width:80px}.replay{padding:6px 7px;min-height:27px}.replay span{display:none}.plot-wrap{margin:0 4px 0 0}.stats{padding:9px 12px;grid-template-columns:1.3fr 1fr 1fr}.stat{padding-left:12px}.stat-label{font-size:8px;margin-bottom:4px;letter-spacing:0}.stat-value{font-size:13px;letter-spacing:-.5px}.stat:first-child .stat-value{font-size:11px}.stat:first-child .stat-value::before{width:4px;height:4px;margin-right:4px}.stat-value small{font-size:8px}.stat.frequency{display:none}.controls{flex:none;padding:10px 11px 9px;border-radius:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:12px;row-gap:8px}.control-heading,.range-limits,.component-name>span:not(.letter),.circuit{display:none}.component{padding:0;margin:0;border:0}.component-top{align-items:flex-start;justify-content:flex-start;gap:5px;margin-bottom:8px}.component-name{gap:0}.letter{width:19px;height:24px;background:none;border:0;font-size:12px}.value-box{flex:1;min-width:0;padding:4px 4px;gap:1px}.value-box input{width:100%;font-size:11px}.unit{font-size:8px;min-width:13px}.presets{grid-column:1/-1;margin:0;display:flex;align-items:center;gap:8px;border-top:1px solid #282a30;padding-top:7px}.preset-heading{margin:0}.preset-heading .eyebrow{font-size:7px;letter-spacing:1px}.preset-heading span:last-child{display:none}.preset-buttons{flex:1;gap:5px}.preset{font-size:9px;padding:5px 3px}.footer{font-size:8px;gap:4px}.formula{display:none}.tip-icon{font-size:10px}.footer>span:last-child{display:none}.probe{padding:6px 8px;font-size:9px;min-width:105px}.probe strong{font-size:11px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+</style></head><body>
+<main class="app">
+  <header class="topbar"><div class="brand"><div class="brandmark" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none"><path d="M2 16h5l3-9 5 15 4-12 3 6h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="brandname">Transient<span> / lab</span></div><div class="subtitle">A series RLC circuit, in your hands.</div></div></div><div class="topright"><span class="live"><i></i>LIVE MODEL</span><button class="reset" id="reset" title="Reset all values" aria-label="Reset all values"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 7a6.5 6.5 0 1 1-.3 6M4 2.5V7h4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Reset</span></button></div></header>
+  <div class="workspace">
+    <aside class="controls panel" aria-label="Circuit controls">
+      <div class="control-heading"><span class="eyebrow">THE COMPONENTS</span><span>01 — 03</span></div>
+      <div class="component resistor"><div class="component-top"><label class="component-name" for="r-value"><span class="letter">R</span><span>Resistance</span></label><div class="value-box"><input id="r-value" aria-label="Resistance in ohms" type="number" min="0" max="2000" step="any" value="6"><span class="unit">Ω</span></div></div><input class="slider" id="r-slider" aria-label="Adjust resistance" type="range" min="0" max="1000" value="256" style="--fill:25.6%"><div class="range-limits"><span>0 Ω</span><span>2 kΩ</span></div></div>
+      <div class="component inductor"><div class="component-top"><label class="component-name" for="l-value"><span class="letter">L</span><span>Inductance</span></label><div class="value-box"><input id="l-value" aria-label="Inductance in millihenries" type="number" min="0.1" max="100" step="any" value="10"><span class="unit">mH</span></div></div><input class="slider" id="l-slider" aria-label="Adjust inductance" type="range" min="0" max="1000" value="667" style="--fill:66.7%"><div class="range-limits"><span>0.1 mH</span><span>100 mH</span></div></div>
+      <div class="component capacitor"><div class="component-top"><label class="component-name" for="c-value"><span class="letter">C</span><span>Capacitance</span></label><div class="value-box"><input id="c-value" aria-label="Capacitance in microfarads" type="number" min="1" max="1000" step="any" value="100"><span class="unit">µF</span></div></div><input class="slider" id="c-slider" aria-label="Adjust capacitance" type="range" min="0" max="1000" value="667" style="--fill:66.7%"><div class="range-limits"><span>1 µF</span><span>1,000 µF</span></div></div>
+      <div class="presets"><div class="preset-heading"><span class="eyebrow">TRY A RESPONSE</span><span>changes R</span></div><div class="preset-buttons" role="group" aria-label="Damping presets"><button class="preset" data-zeta="0.3" aria-pressed="true" title="Set damping ratio to 0.3 by changing resistance">Oscillate</button><button class="preset" data-zeta="1" aria-pressed="false" title="Set critical damping by changing resistance">Critical</button><button class="preset" data-zeta="2" aria-pressed="false" title="Set damping ratio to 2 by changing resistance">Slow</button></div></div>
+      <div class="circuit"><div class="circuit-header"><span>THE CIRCUIT</span><span>1 V step → V<sub>C</sub></span></div><svg viewBox="0 0 240 91" role="img" aria-label="A one volt step source drives a resistor, inductor and capacitor in series. Output voltage is measured across the capacitor."><g fill="none" stroke="#505b5d" stroke-width="1.4" stroke-linejoin="round"><path d="M23 38V22H49M87 22h24m48 0h42v25m0 10v18H23V60"/><circle cx="23" cy="49" r="11"/><path d="M18 50h4v-5h6M111 22c0-15 12-15 12 0s12 15 12 0 12-15 12 0 12 15 12 0" stroke="#a5b9fa"/><path d="M49 22l4-6 6 12 6-12 6 12 6-12 6 12 4-6" stroke="#edba79"/><path d="M189 47h24m-24 10h24" stroke="#9befc3" stroke-width="2"/><path d="M201 32h25v9m0 21v7h-25" stroke="#507861" stroke-dasharray="2 3"/></g><g font-family="ui-monospace,monospace" font-size="9"><text x="65" y="9" fill="#edba79">R</text><text x="132" y="9" fill="#a5b9fa">L</text><text x="180" y="55" fill="#9befc3">C</text><text x="218" y="54" fill="#9befc3">V<tspan baseline-shift="sub" font-size="6">C</tspan></text><text x="3" y="82" fill="#7e8791">1 V</text></g><g fill="#9befc3"><circle cx="201" cy="32" r="2.3"/><circle cx="201" cy="69" r="2.3"/></g></svg><p class="circuit-note">Resistance decides how it settles.</p></div>
+    </aside>
+    <section class="scope panel" aria-label="Step response visualization">
+      <div class="scope-header"><div><h1 class="scope-title">The step response</h1><div class="legend"><span><i></i>Capacitor V<sub>C</sub></span><span><i class="input"></i>1 V input</span></div></div><div class="scope-actions"><select class="time-select" id="time-scale" aria-label="Time window" title="Adjust the displayed time window"><option value="1">Auto time ↔</option><option value="0.5">½ window</option><option value="2">2× window</option><option value="5">5× window</option></select><button class="replay" id="replay" aria-label="Replay step response" title="Replay the step response"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m5 3 7 5-7 5V3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Replay step</span></button></div></div>
+      <div class="plot-wrap" id="plot-wrap"><canvas id="plot" tabindex="0" role="img" aria-label="Capacitor step response. Use left and right arrow keys to inspect the curve." aria-describedby="plot-help">Capacitor voltage versus time for a series RLC circuit.</canvas><div class="probe" id="probe"></div><span class="sr-only" id="plot-help">Hover or touch the plot to inspect voltage. When the plot is focused, use arrow keys to move the probe and Escape to dismiss it.</span></div>
+      <div class="stats"><div class="stat"><div class="stat-label">Damping <span id="zeta-label">ζ = 0.30</span></div><div class="stat-value" id="regime">Underdamped</div></div><div class="stat frequency"><div class="stat-label">Natural frequency</div><div class="stat-value"><span id="frequency">159</span> <small id="frequency-unit">Hz</small></div></div><div class="stat"><div class="stat-label">Overshoot</div><div class="stat-value"><span id="overshoot">37.2</span> <small>%</small></div></div><div class="stat"><div class="stat-label">Settling <span style="opacity:.65">±2%</span></div><div class="stat-value" id="settling">11.2 <small>ms</small></div></div></div>
+    </section>
+  </div>
+  <footer class="footer"><div class="tip"><span class="tip-icon">↗</span><span id="insight">Turn up R to tame the oscillation.</span></div><span class="formula">LC · V″ + RC · V′ + V = 1</span><span>Ideal components · zero initial energy</span></footer>
+</main><div id="error" class="error" role="alert"></div><div id="readout" class="sr-only" role="status" aria-live="polite"></div>
+<script>
+try {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const canvas = $('plot'), ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('This browser could not create a 2D canvas.');
+  const state = {r:6,l:10,c:100};
+  const limits = {r:[0,2000],l:[0.1,100],c:[1,1000]};
+  const units = {r:'ohms',l:'millihenries',c:'microfarads'};
+  let model, width=1, height=1, ratio=1, frame=0, geometry=null, hover=null, replayStart=null, reveal=1, destroyed=false, resizeObserver;
+  const reducedMotion=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const tidy=v=>Number(v.toPrecision(4)).toString();
+  function fail(error){ $('error').textContent='The circuit could not be drawn: '+(error && error.message ? error.message : String(error)); cancelAnimationFrame(frame); }
+  function safe(fn){return function(...args){try{return fn.apply(this,args);}catch(error){fail(error);}};}
+  // Time x is normalized by the undamped natural frequency. Closed-form
+  // solutions avoid numerical integration instability for stiff circuits.
+  function response(x,z){
+    if(x<=0)return 0;
+    if(Math.abs(z-1)<1e-8)return -Math.expm1(-x)-x*Math.exp(-x);
+    if(z<1){const d=Math.sqrt(1-z*z);return 1-Math.exp(-z*x)*(Math.cos(d*x)+(z/d)*Math.sin(d*x));}
+    const p=z+Math.sqrt(z*z-1),q=1/p;
+    return (-p*Math.expm1(-q*x)+q*Math.expm1(-p*x))/(p-q);
+  }
+  // Last crossing of the 2% band. For ringing responses, bracket it
+  // after the final extremum outside the band; monotone responses are bisected.
+  function settlingX(z){
+    if(z===0)return Infinity;
+    let lo=0,hi=1;
+    if(z<1-1e-8){const half=Math.PI/Math.sqrt(1-z*z);const n=Math.floor(Math.log(50)/(z*half));lo=n*half;hi=(n+1)*half;}
+    else {while(Math.abs(1-response(hi,z))>.02)hi*=2;}
+    for(let n=0;n<64;n++){const mid=(lo+hi)/2;if(Math.abs(1-response(mid,z))>.02)lo=mid;else hi=mid;}
+    return (lo+hi)/2;
+  }
+  function niceCeiling(n){const base=Math.pow(10,Math.floor(Math.log10(n)));return ([1,1.5,2,2.5,3,4,5,6,8,10].find(v=>v*base>=n-1e-12)||10)*base;}
+  function timeParts(t){if(t<.001)return {v:t*1e6,u:'µs'};if(t<1)return {v:t*1000,u:'ms'};return {v:t,u:'s'};}
+  function short(v){return v>=100?v.toFixed(0):v>=10?v.toFixed(1):v.toFixed(2);}
+  function syncInputs(source){
+    for(const k of ['r','l','c']){
+      const s=$(k+'-slider'),input=$(k+'-value');
+      const p=k==='r'?Math.log1p(state[k])/Math.log1p(limits[k][1]):Math.log(state[k]/limits[k][0])/Math.log(limits[k][1]/limits[k][0]);
+      s.value=String(p*1000);s.style.setProperty('--fill',(p*100)+'%');s.setAttribute('aria-valuetext',tidy(state[k])+' '+units[k]);
+      if(source!==k)input.value=tidy(state[k]);input.removeAttribute('aria-invalid');
+    }
+  }
+  function update(source){
+    syncInputs(source);
+    const L=state.l/1000,C=state.c/1e6,wn=1/Math.sqrt(L*C),z=state.r/2*Math.sqrt(C/L);
+    const critical=Math.abs(z-1)<1e-8,under=z<1&&!critical;
+    const settling=settlingX(z),overshoot=under?100*Math.exp(-Math.PI*z/Math.sqrt(1-z*z)):0;
+    const horizon=z===0?8*Math.PI:under?Math.max(9,Math.min(36*Math.PI,settling*1.45)):settling*1.45;
+    const end=niceCeiling(horizon/wn)*Number($('time-scale').value);
+    model={wn,z,overshoot,settling:settling/wn,end,ymax:overshoot>45?2.2:1.6,critical,under};
+    $('zeta-label').textContent='ζ = '+(z<10?z.toFixed(2):short(z));
+    $('regime').textContent=z===0?'Undamped':critical?'Critical':under?'Underdamped':'Overdamped';
+    const f=wn/(2*Math.PI);$('frequency').textContent=short(f>=1000?f/1000:f);$('frequency-unit').textContent=f>=1000?'kHz':'Hz';
+    $('overshoot').textContent=overshoot.toFixed(1);
+    if(Number.isFinite(settling)){const s=timeParts(settling/wn);$('settling').innerHTML=short(s.v)+' <small>'+s.u+'</small>';}else $('settling').textContent='Never';
+    $('insight').textContent=z===0?'No resistance, no decay. Energy keeps oscillating.':critical?'Critical damping: the fastest return without overshoot.':under?'Turn up R to tame the oscillation.':'Too much resistance slows the return. Try Critical.';
+    document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',String(Math.abs(z-Number(b.dataset.zeta))<1e-7)));
+    canvas.setAttribute('aria-label','Capacitor voltage for a 1 volt step. '+$('regime').textContent+', damping ratio '+z.toFixed(3)+', overshoot '+overshoot.toFixed(1)+' percent. Use arrow keys to inspect.');
+    replayStart=null;reveal=1;$('replay').setAttribute('aria-label','Replay step response');hover=null;$('probe').style.display='none';requestDraw();
+  }
+  function requestDraw(){if(!frame&&!destroyed)frame=requestAnimationFrame(safe(tick));}
+  function tick(now){
+    frame=0;
+    if(replayStart!==null){reveal=clamp((now-replayStart)/2600,0,1);if(reveal===1)replayStart=null;}
+    draw();if(replayStart!==null)requestDraw();
+  }
+  function resize(){
+    const rect=canvas.getBoundingClientRect();
+    // The CSS box follows the viewport layout; only its bitmap is set here.
+    // Read viewport size on every resize, including inside an opaque iframe.
+    width=Math.max(1,Math.min(rect.width,window.innerWidth));height=Math.max(1,Math.min(rect.height,window.innerHeight));ratio=window.devicePixelRatio||1;
+    canvas.width=Math.max(1,Math.round(width*ratio));canvas.height=Math.max(1,Math.round(height*ratio));
+    ctx.setTransform(ratio,0,0,ratio,0,0);requestDraw();
+  }
+  function line(x1,y1,x2,y2,color,lw=1,dash=[]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+  function text(s,x,y,color='#66746e',align='left',size=10){ctx.font=size+'px ui-monospace, SFMono-Regular, Consolas, monospace';ctx.fillStyle=color;ctx.textAlign=align;ctx.fillText(s,x,y);}
+  function dot(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
+  function draw(){
+    if(!model)return;ctx.clearRect(0,0,width,height);
+    const compact=width<460;
+    const p={l:compact?38:51,r:width-(compact?17:27),t:compact?19:29,b:height-(compact?29:39)};
+    if(p.b<=p.t+8||p.r<=p.l+8)return;
+    const pw=p.r-p.l,ph=p.b-p.t;
+    const X=t=>p.l+t/model.end*pw,Y=v=>p.b-v/model.ymax*ph;
+    geometry={...p,pw,ph};
+    const tp=timeParts(model.end),factor=tp.v/model.end;
+    // A faint 2% tolerance band gives the settling statistic a visible reference.
+    ctx.fillStyle='#9befc308';ctx.fillRect(p.l,Y(1.02),pw,Y(.98)-Y(1.02));
+    const ystep=model.ymax>2?.5:.25;
+    for(let v=0;v<model.ymax;v+=ystep){const y=Y(v);line(p.l,y,p.r,y,v===0?'#35403c':'#242d2a',1);text(v===0?'0':v.toFixed(2).replace(/0$/,''),p.l-10,y+3,'#67756e','right',compact?9:10);}
+    const tickCount=compact?4:5;
+    for(let i=0;i<=tickCount;i++){
+      const t=model.end*i/tickCount,x=X(t);line(x,p.t,x,p.b,'#242d2a');
+      const n=t*factor;const label=n===0?'0':Number(n.toPrecision(3)).toString();text(label,x,p.b+17,'#67756e','center',compact?9:10);
+    }
+    text('V',p.l-10,p.t-7,'#9aa59f','right',compact?9:10);text('TIME / '+tp.u,p.r,p.b+(compact?27:33),'#7e8d84','right',compact?8:9);
+    line(p.l,Y(0),p.l,Y(1),'#ccb383',1.2,[4,5]);line(p.l,Y(1),p.r,Y(1),'#ccb38388',1,[5,6]);
+    if(!compact)text('1 V · INPUT',p.r-1,Y(1)-8,'#ae9e7e','right',9);
+    // Sample densely enough to preserve oscillations even when zoomed out.
+    const cycles=model.under?model.wn*model.end*Math.sqrt(1-model.z*model.z)/(2*Math.PI):0;
+    const count=Math.max(Math.ceil(pw*1.7),Math.ceil(cycles*42),400);
+    const points=[];for(let i=0;i<=count;i++){const t=model.end*i/count;points.push([X(t),Y(response(t*model.wn,model.z))]);}
+    ctx.save();ctx.beginPath();ctx.rect(p.l-2,p.t-2,pw+4,ph+4);ctx.clip();
+    function path(){ctx.beginPath();points.forEach((pt,i)=>i?ctx.lineTo(pt[0],pt[1]):ctx.moveTo(pt[0],pt[1]));}
+    const gradient=ctx.createLinearGradient(0,p.t,0,p.b);gradient.addColorStop(0,'#9befc321');gradient.addColorStop(1,'#9befc301');
+    path();ctx.lineTo(p.r,p.b);ctx.lineTo(p.l,p.b);ctx.closePath();ctx.fillStyle=gradient;ctx.globalAlpha=reveal<1?.25:1;ctx.fill();ctx.globalAlpha=1;
+    path();ctx.strokeStyle=reveal<1?'#9befc338':'#9befc3';ctx.lineWidth=2.3;ctx.lineJoin='round';ctx.stroke();
+    ctx.save();if(reveal<1){ctx.beginPath();ctx.rect(p.l-2,p.t-2,pw*reveal+2,ph+4);ctx.clip();}
+    path();ctx.strokeStyle='#9befc314';ctx.lineWidth=9;ctx.stroke();path();ctx.strokeStyle='#a5f0c8';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+    if(model.under&&model.overshoot>1&&reveal===1){
+      const peakTime=Math.PI/(model.wn*Math.sqrt(1-model.z*model.z));
+      if(peakTime<model.end){const x=X(peakTime),y=Y(1+model.overshoot/100);dot(x,y,7,'#9befc314');dot(x,y,2.5,'#bff4d6');
+        if(x<p.r-35&&ph>65){const label='+'+model.overshoot.toFixed(1)+'%',below=y-p.t<29;line(x,y+(below?7:-7),x,y+(below?16:-17),'#659577',1);text(label,Math.max(p.l+24,Math.min(p.r-24,x)),y+(below?28:-23),'#a9c5b5','center',compact?9:10);}
+      }
+    }
+    if(Number.isFinite(model.settling)&&model.settling<model.end&&model.z>0.12&&!compact){
+      const x=X(model.settling);line(x,p.t+3,x,p.b,'#658f723f',1,[2,5]);
+      if(x>p.l+100&&x<p.r-66){text('SETTLED',x+8,p.t+12,'#698b76','left',8);text('±2%',x+8,p.t+25,'#566e5f','left',8);}
+    }
+    if(reveal<1){const t=model.end*reveal,x=X(t),y=Y(response(t*model.wn,model.z));line(x,p.t,x,p.b,'#9befc326',1);dot(x,y,8,'#9befc325');dot(x,y,3.5,'#d3ffe3');}
+    ctx.restore();
+    if(hover!==null){const t=clamp(hover,0,1)*model.end,v=response(t*model.wn,model.z),x=X(t),y=Y(v);line(x,p.t,x,p.b,'#9befc368',1,[3,4]);dot(x,y,6,'#0e1915');dot(x,y,3,'#c6ffdf');
+      const probe=$('probe'),time=timeParts(t||model.end/10000);probe.innerHTML='<span>'+short(t===0?0:time.v)+' '+time.u+'</span><br><strong>'+v.toFixed(3)+' V</strong>';probe.style.display='block';
+      const bx=clamp(x+13,4,width-132),by=clamp(y-65,4,height-60);probe.style.left=bx+'px';probe.style.top=by+'px';
+    }
+  }
+  for(const key of ['r','l','c']){
+    $(key+'-slider').addEventListener('input',safe(e=>{const p=Number(e.target.value)/1000;state[key]=Number((key==='r'?Math.expm1(p*Math.log1p(limits[key][1])):limits[key][0]*Math.pow(limits[key][1]/limits[key][0],p)).toPrecision(4));update();}));
+    $(key+'-value').addEventListener('input',safe(e=>{const n=Number(e.target.value);if(e.target.value.trim()===''||!Number.isFinite(n)||n<limits[key][0]||n>limits[key][1]){e.target.setAttribute('aria-invalid','true');e.target.title='Enter a value from '+limits[key][0]+' to '+limits[key][1]+'.';return;}state[key]=n;e.target.title='';update(key);}));
+    $(key+'-value').addEventListener('change',safe(e=>{const n=Number(e.target.value);if(e.target.value.trim()!==''&&Number.isFinite(n))state[key]=clamp(n,...limits[key]);e.target.title='';update();}));
+    $(key+'-value').addEventListener('keydown',safe(e=>{if(e.key==='Enter')e.target.blur();}));
+  }
+  document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',safe(()=>{state.r=2*Number(b.dataset.zeta)*Math.sqrt((state.l/1000)/(state.c/1e6));update();$('readout').textContent=$('regime').textContent+'. Resistance set to '+tidy(state.r)+' ohms.';})));
+  $('reset').addEventListener('click',safe(()=>{Object.assign(state,{r:6,l:10,c:100});$('time-scale').value='1';update();$('readout').textContent='Reset to 6 ohms, 10 millihenries, 100 microfarads.';}));
+  $('time-scale').addEventListener('change',safe(()=>update()));
+  $('replay').addEventListener('click',safe(()=>{hover=null;$('probe').style.display='none';replayStart=performance.now();reveal=0;if(reducedMotion)replayStart-=2000;requestDraw();}));
+  canvas.addEventListener('pointermove',safe(e=>{if(!geometry)return;const rect=canvas.getBoundingClientRect();hover=clamp((e.clientX-rect.left-geometry.l)/geometry.pw,0,1);requestDraw();}));
+  canvas.addEventListener('pointerdown',safe(e=>{if(!geometry)return;const rect=canvas.getBoundingClientRect();hover=clamp((e.clientX-rect.left-geometry.l)/geometry.pw,0,1);requestDraw();}));
+  canvas.addEventListener('pointerleave',safe(()=>{hover=null;$('probe').style.display='none';requestDraw();}));
+  canvas.addEventListener('blur',safe(()=>{hover=null;$('probe').style.display='none';requestDraw();}));
+  canvas.addEventListener('keydown',safe(e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();hover=clamp((hover===null?0:hover)+(e.key==='ArrowRight'?1:-1)*(e.shiftKey?.1:.01),0,1);requestDraw();const t=model.end*hover,tp=timeParts(t||model.end/10000);$('readout').textContent=short(t===0?0:tp.v)+' '+tp.u+', '+response(t*model.wn,model.z).toFixed(3)+' volts.';}if(e.key==='Escape'){hover=null;$('probe').style.display='none';requestDraw();}}));
+  window.addEventListener('resize',safe(resize));
+  if(typeof ResizeObserver!=='undefined'){resizeObserver=new ResizeObserver(safe(resize));resizeObserver.observe($('plot-wrap'));}
+  window.addEventListener('unload',()=>{destroyed=true;cancelAnimationFrame(frame);if(resizeObserver)resizeObserver.disconnect();});
+  window.addEventListener('error',e=>fail(e.error||e.message));
+  update();resize();
+} catch(error) {document.getElementById('error').textContent='The circuit could not start: '+(error&&error.message?error.message:String(error));}
+</script></body></html>

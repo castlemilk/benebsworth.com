@@ -17,6 +17,13 @@ vars:
   CACHE: .cache/llm-benchmark-responses.json
 
 tasks:
+  visual-games-fixtures:
+    desc: Prove lighthouse and racer checks distinguish working, static, and missing controls
+    env:
+      BENCH_BROWSER_TESTS: '1'
+    cmds:
+      - '{{.BIN}}/vitest run lib/lab/llm-benchmark/plugins/visual-games/checks.test.ts lib/lab/llm-benchmark/scorers/canvas-capture.test.ts'
+
   default:
     desc: Show benchmark harness usage and the knobs that control a run
     silent: true
@@ -32,6 +39,9 @@ tasks:
           task bench:run MODELS=a,b             run specific models, all tasks
           task bench:run MODELS=a TASKS=t ITER=1
           task bench:cli MODELS=codex-gpt-5.5   CLI providers (forced concurrency 1)
+          task bench:devin-preflight           verify Devin commands and artifact delivery (one live call)
+          task bench:profile -- astra-devin    matched Astra xhigh / SWE-2 High sweep
+          task bench:visual-games-fixtures     run lighthouse, racer and WebGL browser fixtures
           task bench:probe                      prompt-regression probes (free tier) — run BEFORE a sweep
           task bench:probe -- --dry-run         print the probes + asserts, zero calls
           task bench:monitor                    quota-recovery plan for killed sweeps (free)
@@ -48,7 +58,7 @@ tasks:
           MODELS=   comma-separated registry ids   (default: kimi-k2.7)
           TASKS=    comma-separated task ids       (default: every task)
           ITER=     iterations per task/model      (default: task's iterationsDefault, 5)
-          CONC=     parallel task/model jobs       (default: 3; MUST be 1 for CLI providers)
+          CONC=     parallel task/model jobs       (default: 3; bench:cli forces 1)
           TIMEOUT=  per-call timeout ms            (default: 10 min)
           BUST=1    ignore the response cache and force fresh paid calls
 
@@ -86,6 +96,11 @@ tasks:
     cmds:
       - '{{.BIN}}/tsx scripts/run-benchmark.mjs --profile {{.CLI_ARGS}}'
 
+  devin-preflight:
+    desc: One live SWE-2 call verifying sandboxed command execution and HTML file delivery
+    cmds:
+      - '{{.BIN}}/tsx scripts/probe-devin.mjs'
+
   run:
     desc: Run the harness against live provider APIs (SPENDS MONEY — writes results.json)
     summary: |
@@ -99,7 +114,7 @@ tasks:
       CREDENTIALS  Only the providers whose keys are present are configured;
       a model whose key is missing simply fails its calls. Keys read from .env:
       OPENROUTER_API_KEY, MOONSHOT_API_KEY (+ MOONSHOT_BASE_URL), OPENAI_API_KEY,
-      ANTHROPIC_API_KEY, GOOGLE_API_KEY. CLI providers (agy, codex) need no key —
+      ANTHROPIC_API_KEY, GOOGLE_API_KEY. CLI providers (agy, codex, devin) need no key —
       they use the locally authenticated CLI.
 
       CACHING  Successful responses cache to {{.CACHE}} (gitignored). The key
@@ -150,7 +165,7 @@ tasks:
         vars: { MODELS: '{{.MODELS}}', ITER: '1' }
 
   cli:
-    desc: Run CLI-backed providers (agy, codex) — forces concurrency 1
+    desc: Run CLI-backed providers (agy, codex, devin) — forces concurrency 1
     summary: |
       CLI providers shell out to a locally-installed, locally-authenticated
       binary (`agy -p ... --model ...`, `codex exec --ephemeral --sandbox
@@ -158,6 +173,8 @@ tasks:
 
       CONCURRENCY IS FORCED TO 1. Running agy in parallel is unreliable — this
       task hardcodes CONC=1 rather than trusting the caller to remember.
+      The astra-devin profile instead uses four jobs with unique scratch
+      directories and artifact filenames for Codex and Devin.
 
       Test the CLI by hand first; a broken login looks like a harness bug:
         agy -p "say hi" --model "Gemini 3.5 Flash (High)"

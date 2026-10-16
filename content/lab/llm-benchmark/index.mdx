@@ -2,7 +2,7 @@
 
 Most public LLM leaderboards rank models on multiple-choice reasoning, code completion, or chat helpfulness. Those are useful signals, but they rarely capture the messy, end-to-end work of turning a vague creative brief into a runnable artifact: a physics simulation, a tiny game, a security-critical utility, or a polished UI.
 
-This benchmark asks each model to produce a **self-contained, runnable output** from a single prompt. There are no retrieval tools, no multi-turn scaffolding, and no hand-tuned system messages beyond the provider defaults. The tasks are chosen to stress different failure modes:
+This benchmark asks each model to produce a **self-contained, runnable output** from a single task prompt plus its published execution contract. API models answer directly. CLI agents can use their own tools and internal turns to produce the artifact, so a comparison across CLIs measures the model and its agent harness together. The tasks are chosen to stress different failure modes:
 
 - **Spatial reasoning**: does the model keep 3D coordinate systems, collisions, and integration stable?
 - **Game-state management**: can it track entities, win/lose conditions, and user input without leaks?
@@ -15,9 +15,9 @@ Each task is scored on a 0–100 rubric and run across multiple iterations so we
 
 ## How to read the numbers
 
-- **Score** is the task rubric average across iterations (correctness, completeness, style, robustness).
-- **Runtime** is wall-clock model inference time for one iteration, in milliseconds.
-- **Cost** is computed from reported input/output tokens and the published per-model price card.
-- **Tokens** are as returned by the provider API; they reflect prompt length plus generated output.
+- **Score** is the task rubric average across successful generations. Check the completion counts and per-iteration results alongside it. Browser tasks combine 70% interaction checks with 30% structural HTML checks; visual quality is not judged automatically.
+- **Runtime** is mean wall-clock generation time across successful attempts. For CLI agents it includes tool use, not just inference.
+- **Cost** uses the registry price and recorded token usage. A zero API charge on a CLI subscription route does not mean the subscription is free.
+- **Tokens** may be reported by an API or estimated by a CLI wrapper. The usage provenance distinguishes them; CLI estimates are not billing records.
 
 Scores are synthetic and anchored to the rubric, not to an absolute "human expert" baseline. Treat them as a directional comparison across models on the same prompt rather than a universal ranking.

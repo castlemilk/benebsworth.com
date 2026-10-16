@@ -33,6 +33,7 @@ export async function generateCodex(
   // against codex-cli 0.134.0).
   const baseArgs = ['exec', '--ephemeral', '--skip-git-repo-check', '--sandbox', 'workspace-write']
   if (codexModel) baseArgs.push('-c', `model="${codexModel}"`)
+  if (model.reasoningEffort) baseArgs.push('-c', `model_reasoning_effort="${model.reasoningEffort}"`)
   baseArgs.push('--')
 
   const runner: CliRunnerConfig = {

@@ -62,9 +62,10 @@ describe('parseSweepProfiles', () => {
 describe('shipped profiles', () => {
   const resolved = (name: string) => resolveSweepConfig({ flags: {}, env: {}, profile: name })
 
-  it('exposes exactly the five documented recipes, each with a description', () => {
+  it('exposes the documented recipes, each with a description', () => {
     expect(Object.keys(SWEEP_PROFILES).sort()).toEqual([
       'agy-quota',
+      'astra-devin',
       'builtins-only',
       'fast-refresh',
       'slow-model',

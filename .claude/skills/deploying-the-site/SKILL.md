@@ -13,16 +13,12 @@ description: Use when deploying benebsworth.com (staging or prod) or changing it
 > because Cloudflare's edge can serve a pre-deploy response for a few seconds and
 > make a good deploy look broken). Rollback procedure: `task deploy:rollback:info`.
 
-> **🔑 TOKEN VALIDITY — READ BEFORE CONCLUDING THE TOKEN IS DEAD.** The
-> `CLOUDFLARE_API_TOKEN` in `.env` is an **account-owned** token (`cfat_`
-> prefix). Verify it at **`/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify`**
-> — or just run **`task deploy:auth`**, which does that and then lists the Pages
-> projects. The **user** endpoint `/client/v4/user/tokens/verify` returns a
-> flatly misleading **`{"success":false,"code":1000,"message":"Invalid API
-> Token"}`** for a perfectly valid account token; that response means *wrong
-> endpoint for this token type*, not *bad token*. This already produced one
-> false alarm (2026-08-08) where an agent told the user to rotate a working
-> token. `task doctor` only reports PRESENCE, never validity.
+> **🔑 TOKEN VALIDITY — READ BEFORE CONCLUDING THE TOKEN IS DEAD.**
+> `task doctor` only reports whether `CLOUDFLARE_API_TOKEN` is present. Run
+> **`task deploy:auth`** to validate the credential against the Pages API and list
+> the projects it can reach. Do not use the `/tokens/verify` endpoints as the
+> authority for Wrangler credentials: some valid OAuth/API credential types return
+> 401 there while working for Pages deployment.
 
 > **⚡ NOW ON CLOUDFLARE PAGES (migrated 2026-06-23).** The live site is served by
 > **Cloudflare Pages**, not S3+CloudFront. Deploy with **`task deploy:staging`**

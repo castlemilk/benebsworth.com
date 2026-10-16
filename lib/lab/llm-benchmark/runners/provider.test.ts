@@ -6,6 +6,8 @@ import type { BenchmarkModel, BenchmarkTask, PluginGenerate } from '../types'
 // Mock the wire + cache layers so the runner logic is exercised in isolation.
 vi.mock('./moonshot', () => ({ generateMoonshot: vi.fn() }))
 vi.mock('./opencode', () => ({ generateOpencode: vi.fn() }))
+// Provider routing is a unit test: it must not depend on a local Ollama daemon.
+vi.mock('./ollama', () => ({ generateOllama: vi.fn(async () => { throw new Error('Ollama model not found') }) }))
 vi.mock('../cache', () => ({
   getCachedResponse: vi.fn(() => undefined),
   setCachedResponse: vi.fn(),
@@ -15,6 +17,7 @@ vi.mock('../cache', () => ({
 
 import {
   aggregateRuns,
+  cleanOutput,
   classifyFailureReason,
   clearPluginGeneratorCache,
   createProviderRunner,
@@ -33,6 +36,13 @@ import { promptBundleHash } from '../prompt-bundle'
 
 const generateMock = vi.mocked(generateMoonshot)
 const generateOpencodeMock = vi.mocked(generateOpencode)
+
+describe('complete HTML artifact normalization', () => {
+  it('preserves a document whose doctype and html element share a line', () => {
+    const html = '<!doctype html><html><head><style>canvas { width: 100vw }</style></head><body>\n<canvas></canvas><script>const note = "```js\\nexample\\n```";</script></body></html>'
+    expect(cleanOutput(html)).toBe(html)
+  })
+})
 
 const MODEL: BenchmarkModel = {
   id: 'test-kimi',

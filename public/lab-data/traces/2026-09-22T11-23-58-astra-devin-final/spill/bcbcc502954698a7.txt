@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crypto_hash.py — constant-time compare &amp; PBKDF2 password hashing</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 15px/1.6 -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+  main { max-width: 880px; margin: 0 auto; padding: 48px 24px 64px; }
+  h1 { font-size: 24px; color: #e6edf3; margin: 0 0 8px; }
+  h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: .09em;
+    color: #8b949e; margin: 36px 0 12px;
+  }
+  .sub { color: #8b949e; margin: 0 0 20px; }
+  .badges span {
+    display: inline-block;
+    font: 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: #161b22; border: 1px solid #30363d; border-radius: 999px;
+    padding: 6px 12px; color: #8b949e; margin: 0 6px 6px 0;
+  }
+  code, pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre.usage {
+    background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+    padding: 14px 16px; overflow: auto; font-size: 13px; margin: 0;
+  }
+  .codebar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #161b22; border: 1px solid #30363d; border-bottom: none;
+    border-radius: 8px 8px 0 0; padding: 8px 14px;
+    font: 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: #8b949e;
+  }
+  .codebar button {
+    font: inherit; color: #c9d1d9; background: #21262d;
+    border: 1px solid #30363d; border-radius: 6px;
+    padding: 4px 10px; cursor: pointer;
+  }
+  .codebar button:hover { background: #30363d; }
+  pre.code {
+    margin: 0; background: #010409; border: 1px solid #30363d;
+    border-radius: 0 0 8px 8px; padding: 16px;
+    overflow: auto; font-size: 13px; line-height: 1.55; tab-size: 4;
+  }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  li code, p code {
+    background: #161b22; border: 1px solid #30363d; border-radius: 4px;
+    padding: 1px 5px; font-size: 13px;
+  }
+  .kw  { color: #ff7b72; }
+  .str { color: #a5d6ff; }
+  .com { color: #8b949e; font-style: italic; }
+  .num { color: #79c0ff; }
+  .dec { color: #d2a8ff; }
+</style>
+</head>
+<body>
+<main>
+  <h1>crypto_hash.py</h1>
+  <p class="sub">Constant-time string comparison, PBKDF2-HMAC-SHA256 password
+  hashing with a random salt, and verification — Python standard library only,
+  with a built-in unittest suite.</p>
+  <div class="badges">
+    <span>python &ge; 3.10</span>
+    <span>stdlib only</span>
+    <span>PBKDF2-HMAC-SHA256</span>
+    <span>600 000 iterations (OWASP)</span>
+  </div>
+
+  <h2>Usage</h2>
+  <pre class="usage">import crypto_hash
+
+stored = crypto_hash.hash_password("hunter2")
+# 'pbkdf2_sha256$600000$&lt;salt-b64&gt;$&lt;key-b64&gt;'
+
+crypto_hash.verify_password("hunter2", stored)  # True
+crypto_hash.verify_password("nope", stored)     # False
+crypto_hash.constant_time_compare("a", "a")     # True</pre>
+
+  <h2>Run the tests</h2>
+  <pre class="usage">python3 crypto_hash.py            # unittest.main() at the bottom
+python3 -m unittest crypto_hash   # same suite</pre>
+
+  <h2>Source</h2>
+  <div class="codebar"><span id="lines">crypto_hash.py</span><button id="copy" type="button">Copy source</button></div>
+  <pre class="code"><code id="code"></code></pre>
+
+  <h2>Design notes</h2>
+  <ul>
+    <li><code>constant_time_compare</code> delegates to <code>hmac.compare_digest</code>,
+      whose running time depends on input length, not on where the inputs differ.</li>
+    <li>Salts are 16 bytes from <code>os.urandom</code>, fresh per hash, so identical
+      passwords produce different stored strings.</li>
+    <li>The stored string is self-describing (<code>algorithm$iterations$salt$key</code>),
+      so the iteration count can be raised later without a migration.</li>
+    <li><code>verify_password</code> re-derives the key with the stored parameters and
+      compares in constant time; malformed input returns <code>False</code> instead of raising.</li>
+  </ul>
+</main>
+
+<script type="text/x-python" id="src">#!/usr/bin/env python3
+"""crypto_hash.py -- password-hashing primitives, standard library only.
+
+Provides:
+
+* ``constant_time_compare(a, b)`` -- timing-safe equality check.
+* ``hash_password(password)`` -- PBKDF2-HMAC-SHA256 with a random salt.
+* ``verify_password(password, stored)`` -- constant-time verification.
+
+Stored hashes are self-describing strings of the form
+
+    pbkdf2_sha256$<iterations>$<salt-b64>$<key-b64>
+
+so the iteration count can be raised later without a schema migration.
+
+Run the unit tests with ``python3 crypto_hash.py`` or
+``python3 -m unittest crypto_hash``.
+"""
+
+from __future__ import annotations
+
+import base64
+import binascii
+import hashlib
+import hmac
+import os
+import unittest
+
+ALGORITHM = "pbkdf2_sha256"
+DEFAULT_ITERATIONS = 600_000  # OWASP-recommended minimum for PBKDF2-HMAC-SHA256.
+SALT_SIZE = 16                # Bytes; a fresh 128-bit salt per password.
+KEY_SIZE = 32                 # Bytes; 256-bit derived key.
+
+
+def constant_time_compare(a: str | bytes, b: str | bytes) -> bool:
+    """Return True iff ``a == b``, without leaking where they differ.
+
+    ``str`` inputs are encoded as UTF-8 first. Running time depends on
+    the input lengths, not on the position of the first difference.
+    """
+    if isinstance(a, str):
+        a = a.encode("utf-8")
+    if isinstance(b, str):
+        b = b.encode("utf-8")
+    return hmac.compare_digest(a, b)
+
+
+def hash_password(
+    password: ***REDACTED*** | bytes,
+    *,
+    salt: bytes | None = None,
+    iterations: int = DEFAULT_ITERATIONS,
+) -> str:
+    """Hash ``password`` and return a self-describing storage string.
+
+    A fresh random salt of ``SALT_SIZE`` bytes is generated unless
+    ``salt`` is supplied (used by ``verify_password`` and by tests).
+    """
+    if iterations < 1:
+        raise ValueError("iterations must be a positive integer")
+    if isinstance(password, str):
+        password = ***REDACTED***"utf-8")
+    if salt is None:
+        salt = os.urandom(SALT_SIZE)
+    key = hashlib.pbkdf2_hmac(
+        "sha256", password, salt, iterations, dklen=KEY_SIZE
+    )
+    return "$".join((ALGORITHM, str(iterations), _b64(salt), _b64(key)))
+
+
+def verify_password(password: ***REDACTED*** | bytes, stored: str) -> bool:
+    """Return True iff ``password`` matches the ``stored`` hash string.
+
+    Re-derives the key with the stored salt and iteration count and
+    compares in constant time. Malformed ``stored`` values return
+    False rather than raising.
+    """
+    try:
+        algorithm, iter_s, salt_b64, key_b64 = stored.split("$")
+        if algorithm != ALGORITHM:
+            return False
+        iterations = int(iter_s)
+        salt = _unb64(salt_b64)
+        expected = _unb64(key_b64)
+    except (TypeError, ValueError, binascii.Error):
+        return False
+    if iterations < 1 or not expected:
+        return False
+    if isinstance(password, str):
+        password = ***REDACTED***"utf-8")
+    key = hashlib.pbkdf2_hmac(
+        "sha256", password, salt, iterations, dklen=len(expected)
+    )
+    return hmac.compare_digest(key, expected)
+
+
+def _b64(raw: bytes) -> str:
+    return base64.b64encode(raw).decode("ascii")
+
+
+def _unb64(text: str) -> bytes:
+    return base64.b64decode(text.encode("ascii"), validate=True)
+
+
+class ConstantTimeCompareTests(unittest.TestCase):
+    def test_equal_strings(self):
+        self.assertTrue(constant_time_compare("s3cret", "s3cret"))
+
+    def test_unequal_strings(self):
+        self.assertFalse(constant_time_compare("s3cret", "s3creu"))
+
+    def test_different_lengths(self):
+        self.assertFalse(constant_time_compare("abc", "abcd"))
+        self.assertFalse(constant_time_compare("abcd", "abc"))
+
+    def test_bytes_and_mixed_inputs(self):
+        self.assertTrue(constant_time_compare(b"abc", b"abc"))
+        self.assertTrue(constant_time_compare("abc", b"abc"))
+        self.assertFalse(constant_time_compare("abc", b"abd"))
+
+
+class HashPasswordTests(unittest.TestCase):
+    def test_output_format(self):
+        stored = hash_password("hunter2", iterations=1_000)
+        algorithm, iter_s, salt_b64, key_b64 = stored.split("$")
+        self.assertEqual(algorithm, ALGORITHM)
+        self.assertEqual(int(iter_s), 1_000)
+        self.assertEqual(len(_unb64(salt_b64)), SALT_SIZE)
+        self.assertEqual(len(_unb64(key_b64)), KEY_SIZE)
+
+    def test_random_salt_produces_unique_hashes(self):
+        first = hash_password("same password", iterations=1_000)
+        second = hash_password("same password", iterations=1_000)
+        self.assertNotEqual(first, second)
+
+    def test_fixed_salt_is_deterministic(self):
+        salt = b"\x00" * SALT_SIZE
+        self.assertEqual(
+            hash_password("pw", salt=salt, iterations=1_000),
+            hash_password("pw", salt=salt, iterations=1_000),
+        )
+
+    def test_matches_pbkdf2_hmac_directly(self):
+        salt = bytes(range(SALT_SIZE))
+        stored = hash_password("pw", salt=salt, iterations=5_000)
+        expected = hashlib.pbkdf2_hmac(
+            "sha256", b"pw", salt, 5_000, dklen=KEY_SIZE
+        )
+        self.assertEqual(stored.split("$")[3], _b64(expected))
+
+    def test_accepts_bytes_password(self):
+        stored = hash_password(b"hunter2", iterations=1_000)
+        self.assertTrue(verify_password(b"hunter2", stored))
+        self.assertTrue(verify_password("hunter2", stored))
+
+    def test_rejects_nonpositive_iterations(self):
+        for bad in (0, -1):
+            with self.subTest(iterations=bad):
+                with self.assertRaises(ValueError):
+                    hash_password("pw", iterations=bad)
+
+
+class VerifyPasswordTests(unittest.TestCase):
+    PASSWORD = "***REDACTED*** horse battery staple"
+
+    @classmethod
+    def setUpClass(cls):
+        cls.stored = hash_password(cls.PASSWORD, iterations=5_000)
+
+    def test_correct_password(self):
+        self.assertTrue(verify_password(self.PASSWORD, self.stored))
+
+    def test_wrong_password(self):
+        self.assertFalse(verify_password("Tr0ub4dor&3", self.stored))
+
+    def test_empty_password(self):
+        stored = hash_password("", iterations=1_000)
+        self.assertTrue(verify_password("", stored))
+        self.assertFalse(verify_password("x", stored))
+
+    def test_unicode_password(self):
+        stored = hash_password("pässwörd 🔒", iterations=1_000)
+        self.assertTrue(verify_password("pässwörd 🔒", stored))
+        self.assertFalse(verify_password("pässwörd", stored))
+
+    def test_tampered_key_fails(self):
+        algorithm, iter_s, salt_b64, key_b64 = self.stored.split("$")
+        key = bytearray(_unb64(key_b64))
+        key[0] ^= 0x01
+        tampered = "$".join((algorithm, iter_s, salt_b64, _b64(bytes(key))))
+        self.assertFalse(verify_password(self.PASSWORD, tampered))
+
+    def test_malformed_stored_strings_return_false(self):
+        bad_values = (
+            "",
+            "garbage",
+            "a$b$c",
+            "argon2id$5$AAAA$AAAA",
+            ALGORITHM + "$nan$AAAA$AAAA",
+            ALGORITHM + "$0$AAAA$AAAA",
+            ALGORITHM + "$5$!!!notb64!!!$AAAA",
+            ALGORITHM + "$5$AAAA",
+            ALGORITHM + "$5$AAAA$",
+        )
+        for bad in bad_values:
+            with self.subTest(stored=bad):
+                self.assertFalse(verify_password("pw", bad))
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
+</script>
+
+<script>
+(function () {
+  var src = document.getElementById('src').textContent.replace(/^\n+/, '');
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  var re = /(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|(?:[fbr]{0,2})"(?:\\.|[^"\\\n])*"|(?:[fbr]{0,2})'(?:\\.|[^'\\\n])*')|(@[\w.]+)|\b(def|class|return|if|elif|else|for|while|try|except|finally|with|as|import|from|raise|lambda|in|is|not|and|or|pass|break|continue|yield|global|nonlocal|assert|del|async|await|None|True|False)\b|(\b\d[\d_]*(?:\.\d+)?\b)/g;
+  var out = '', last = 0, m;
+  while ((m = re.exec(src)) !== null) {
+    out += esc(src.slice(last, m.index));
+    var cls = m[1] ? 'com' : m[2] ? 'str' : m[3] ? 'dec' : m[4] ? 'kw' : 'num';
+    out += '<span class="' + cls + '">' + esc(m[0]) + '</span>';
+    last = m.index + m[0].length;
+  }
+  out += esc(src.slice(last));
+  document.getElementById('code').innerHTML = out;
+  document.getElementById('lines').textContent =
+    'crypto_hash.py — ' + src.split('\n').length + ' lines';
+  document.getElementById('copy').addEventListener('click', function (e) {
+    function done() {
+      e.target.textContent = 'Copied';
+      setTimeout(function () { e.target.textContent = 'Copy source'; }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(src).then(done, done);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = src;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (err) {}
+      ta.remove();
+      done();
+    }
+  });
+})();
+</script>
+</body>
+</html>

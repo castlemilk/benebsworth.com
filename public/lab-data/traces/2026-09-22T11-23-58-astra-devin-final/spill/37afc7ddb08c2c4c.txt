@@ -1,0 +1,251 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Transient — RLC circuit explorer</title><style>
+html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}*{box-sizing:border-box}body{height:100vh;height:100dvh;overflow:hidden}button,input{font:inherit}button{cursor:pointer}button,input{ -webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,.plot:focus-visible{outline:2px solid #c0f779;outline-offset:3px}button{color:inherit}button svg{width:15px;height:15px;flex:none}svg{display:block}button{transition:background .15s,border-color .15s,color .15s}button:hover{border-color:#64734d!important;background:#262c22!important}button:active{transform:translateY(1px)}button:disabled{opacity:.3;cursor:default;pointer-events:none}[hidden]{display:none!important}:root{--lime:#c0f779;--muted:#898b97;--border:#282a31;--mono:ui-monospace,SFMono-Regular,Consolas,monospace}#scene{position:fixed;inset:0;width:100vw;height:100vh;z-index:2;pointer-events:none}.app{height:100%;display:flex;flex-direction:column;position:relative;z-index:1}.topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-bottom:1px solid #23242b}.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:34px;height:34px;display:grid;place-items:center;background:#c0f779;border-radius:10px;color:#161d0f}.brand-mark svg{width:25px;height:25px}.brand h1{margin:0;font-size:21px;letter-spacing:-.8px;font-weight:650}.brand .edition{border-left:1px solid #36373e;margin-left:7px;padding-left:18px;color:#7f818d;font-size:10px;letter-spacing:1.9px;font-weight:550}.header-right{display:flex;align-items:center;gap:22px;font-size:11px;color:#9597a1}.live{display:flex;align-items:center;gap:7px}.live:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--lime);box-shadow:0 0 9px #c0f74e55}.experiment{font-family:var(--mono);color:#686b77;font-size:10px}.workspace{flex:1;min-height:0;display:grid;grid-template-columns:274px minmax(0,1fr);gap:18px;padding:20px 24px 12px}.panel{border:1px solid var(--border);border-radius:15px;background:#121318;overflow:hidden}.controls{display:flex;flex-direction:column;padding:16px 19px 10px;gap:0}.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.eyebrow{font-size:9px;letter-spacing:1.8px;font-weight:650;color:#8e919d}.section-head .index{font:10px var(--mono);color:#555966}.control-grid{display:grid;grid-template-columns:1fr;gap:12px}.control{--accent:var(--lime);min-width:0}.control.l{--accent:#a2b5ff}.control.c{--accent:#e8af92}.control-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.control label{display:flex;align-items:center;gap:8px;font-size:11px;color:#aaaeb9}.component-letter{font:500 13px var(--mono);color:var(--accent);width:23px;height:23px;border:1px solid color-mix(in srgb,var(--accent) 27%,transparent);border-radius:6px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 5%,transparent)}.value-box{display:flex;align-items:baseline;gap:4px}.value-box input{width:64px;background:transparent;color:#f1f1f2;font:500 19px var(--mono);text-align:right;padding:2px 0;border:0;border-bottom:1px solid #393c46;border-radius:0;appearance:textfield;-moz-appearance:textfield}.value-box input::-webkit-inner-spin-button,.value-box input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.value-box input[aria-invalid=true]{border-color:#fca38d}.unit{font:11px var(--mono);color:#818592;min-width:19px}.range{appearance:none;-webkit-appearance:none;display:block;width:100%;height:16px;background:transparent;cursor:ew-resize;margin:5px 0 0;border:0}.range::-webkit-slider-runnable-track{height:3px;border-radius:4px;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--fill,40%),#32343e var(--fill,40%),#32343e 100%)}.range::-moz-range-track{height:3px;border-radius:4px;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--fill,40%),#32343e var(--fill,40%),#32343e 100%)}.range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:12px;height:12px;margin-top:-4.5px;border:3px solid #15171a;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px var(--accent)}.range::-moz-range-thumb{width:8px;height:8px;border:3px solid #15171a;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px var(--accent)}.range:focus-visible{outline-offset:1px}.limits{display:flex;justify-content:space-between;margin-top:0;color:#626673;font:8px var(--mono)}.presets{margin-top:13px;padding-top:10px;border-top:1px solid #292b33}.presets-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.reset{padding:0;background:transparent;border:0;display:flex;align-items:center;gap:4px;color:#8c909b;font-size:10px}.reset svg{height:11px;width:11px}.preset-row{display:flex;gap:5px}.preset-row button{flex:1;padding:8px 0;border-radius:6px;background:#191b22;border:1px solid #30333c;color:#989ca8;font-size:10px}.preset-row button[aria-pressed=true]{background:#252e1e;border-color:#607745;color:var(--lime)}.insight{color:#8c919d;font-size:10px;line-height:1.6;margin:8px 0 0;min-height:32px}.schematic{margin-top:auto;padding-top:10px}.schematic-head{display:flex;justify-content:space-between;align-items:center}.schematic-head .eyebrow{font-size:8px;letter-spacing:1.1px}.schematic-head span:last-child{color:#727783;font:9px var(--mono)}.schematic svg{width:100%;height:75px;margin-top:1px}.scope{display:flex;flex-direction:column;position:relative;background:radial-gradient(ellipse at 36% 35%,#171b19 0%,#121418 60%)}.scope-head{padding:20px 23px 15px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.scope-title h2{font-weight:560;font-size:18px;letter-spacing:-.4px;margin:0 0 5px}.scope-title p{margin:0;color:#777d89;font-size:10px}.scope-actions{display:flex;gap:7px;align-items:center}.action{border:1px solid #333740;background:#191d22;border-radius:7px;padding:8px 10px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;color:#a9afb9;white-space:nowrap}.action[aria-pressed=true]{color:#acbbff;border-color:#68759f}.action.replay{color:var(--lime);border-color:#485239;background:#222a1c}.legend-bar{display:flex;align-items:center;justify-content:space-between;padding:0 23px;gap:8px}.legend{display:flex;gap:17px;align-items:center;white-space:nowrap}.legend-item{display:flex;align-items:center;gap:6px;color:#b4bac3;font-size:10px}.swatch{width:15px;height:2px;background:var(--lime);display:inline-block;flex:none;border-radius:2px}.swatch.step{background:transparent;border-top:1px dashed #9da3af}.swatch.pinned{background:transparent;border-top:1px dashed #9eb3ff}.regime{font:9px var(--mono);color:var(--lime);padding:5px 7px;background:#c0f7790b;border:1px solid #c0f77924;border-radius:5px;white-space:nowrap}.plot{flex:1;min-height:0;position:relative;margin:4px 12px 0;touch-action:none;cursor:crosshair;outline-offset:-4px!important}.plot-tools{height:30px;padding:0 23px;display:flex;align-items:center;justify-content:space-between;flex:none}.hint{font:9px var(--mono);color:#606875}.time-controls{display:flex;gap:7px;align-items:center;color:#77808c;font:9px var(--mono)}.time-controls button{height:21px;min-width:22px;padding:0 5px;display:grid;place-items:center;border:1px solid #303740;background:#161b20;border-radius:4px;font-size:12px}.time-controls .fit{font:9px var(--mono);padding:0 7px}.time-controls .fit[aria-pressed=true]{color:#b3bcaa;border-color:#4c5940}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid #2a2f34;margin-top:8px;background:#111419;padding:17px 7px}.stat{padding:0 17px;border-right:1px solid #282c34;min-width:0}.stat:last-child{border:0}.stat-label{color:#7d8592;font-size:9px;margin-bottom:8px;white-space:nowrap}.stat-value{font:500 23px var(--mono);letter-spacing:-1.1px;white-space:nowrap}.stat-value small{font:10px var(--mono);color:#88939e;margin-left:3px;letter-spacing:0}.stat:first-child .stat-value{color:var(--lime)}.stat-sub{font:8px var(--mono);color:#596373;margin-top:5px}.footnote{display:flex;align-items:center;justify-content:space-between;flex:none;padding:0 27px 11px;color:#616773;font-size:9px;line-height:15px}.footnote span:last-child{font-family:var(--mono);font-size:8px;letter-spacing:.3px}.footnote .note-dot{color:var(--lime);padding-right:5px}#error{position:fixed;z-index:10;bottom:10px;left:10px;right:10px;color:#ffd3c9;background:#422423;border:1px solid #bd6c5b;border-radius:7px;padding:10px;font-size:12px}.validation{font-size:10px;color:#ffb7a2;margin:6px 0 0}.noscript{padding:12px;background:#4a3029;color:#ffe0cc}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:701px) and (max-height:570px){.topbar{height:57px}.workspace{padding-top:13px;padding-bottom:8px}.controls{padding-top:13px}.section-head{margin-bottom:11px}.control-grid{gap:11px}.presets{margin-top:13px;padding-top:12px}.schematic{padding-top:9px}.schematic svg{height:68px}.insight{margin-top:8px}.scope-head{padding-top:16px}.stats{padding-top:12px;padding-bottom:12px}.stat-sub{display:none}.footnote{padding-bottom:6px}}
+@media(min-width:701px) and (max-height:490px){.schematic,.insight{display:none}.controls{overflow-y:auto}.stats{padding:10px 7px}.scope-head{padding-top:12px;padding-bottom:10px}}
+@media(max-width:900px) and (min-width:701px){.workspace{grid-template-columns:238px 1fr;gap:12px;padding-left:15px;padding-right:15px}.controls{padding-left:15px;padding-right:15px}.scope-head{padding-left:17px;padding-right:17px}.scope-actions .action span{display:none}.legend-bar{padding-left:17px;padding-right:17px}.legend{gap:10px}.stat{padding:0 10px}.stat-value{font-size:19px}.regime{font-size:8px}.stat-label{font-size:8px}}
+@media(max-width:700px){.topbar{height:48px;padding:0 14px}.brand{gap:8px}.brand-mark{width:28px;height:28px;border-radius:8px}.brand-mark svg{width:22px;height:22px}.brand h1{font-size:19px}.brand .edition,.experiment{display:none}.header-right{font-size:9px}.workspace{padding:8px 10px 6px;gap:8px;grid-template-columns:1fr;grid-template-rows:minmax(195px,1fr) 128px}.controls{grid-row:2;padding:9px 10px 7px;border-radius:11px}.scope{grid-row:1;border-radius:11px}.section-head,.limits,.schematic,.insight,.presets-label .eyebrow{display:none}.control-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.control-top{display:block}.control label{font-size:9px;gap:4px;white-space:nowrap}.component-letter{border:0;background:none;width:auto;height:15px;font-size:10px}.value-box{margin-top:3px;gap:3px}.value-box input{width:calc(100% - 26px);font-size:18px;text-align:left;padding:3px 0;max-width:76px}.unit{font-size:10px}.range{margin-top:3px;height:16px}.presets{margin-top:6px;padding-top:6px;display:flex;gap:8px;align-items:center}.presets-label{order:2;margin:0}.reset{width:25px;height:25px;justify-content:center}.reset span{display:none}.reset svg{width:13px;height:13px}.preset-row{flex:1;gap:5px}.preset-row button{padding:6px 0;font-size:9px}.scope-head{padding:8px 12px 7px;align-items:center}.scope-title h2{font-size:14px;margin-bottom:0}.scope-title p{display:none}.scope-actions{gap:5px}.action{padding:5px 7px;border-radius:5px}.scope-actions .action span{display:none}.action svg{width:13px;height:13px}.legend-bar{padding:0 12px}.legend{gap:10px}.legend-item{font-size:8px;gap:4px}.swatch{width:11px}.regime{font-size:7px;padding:3px 5px}.plot{margin:3px 4px 0;min-height:74px}.plot-tools{height:22px;padding:0 12px}.hint{font-size:7px}.time-controls{gap:4px;font-size:7px}.time-controls button{height:19px;min-width:20px}.time-controls .fit{font-size:7px;padding:0 5px}.stats{padding:7px 0;margin-top:4px}.stat{padding:0 10px}.stat-label{font-size:7px;margin-bottom:4px}.stat-value{font-size:16px;letter-spacing:-.5px}.stat-value small{font-size:8px;margin-left:1px}.stat-sub{display:none}.footnote{padding:0 13px 5px;font-size:7px;line-height:10px}.footnote span:last-child{display:none}.validation{position:fixed;z-index:5;bottom:158px;left:11px;right:11px;background:#452b24;padding:8px;border-radius:5px}.legend-item.pinned-label{font-size:0;gap:0}.legend-item.pinned-label .swatch{width:13px}}
+@media(max-width:350px){.workspace{padding:7px;gap:7px}.control-grid{gap:7px}.stat{padding:0 7px}.stat-value{font-size:14px}.stat-label{font-size:6px}.regime{font-size:6px}.hint{display:none}}
+@media(max-height:430px) and (max-width:700px){.topbar{height:43px}.workspace{grid-template-rows:minmax(150px,1fr) 128px;padding-top:6px;gap:6px}.controls{padding-top:7px;padding-bottom:6px}.presets{padding-top:4px;margin-top:4px}.stats{padding:6px 0}.scope-head{padding-top:8px;padding-bottom:6px}.footnote{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<canvas id="scene" role="img" aria-label="Step response of a series RLC circuit. Capacitor voltage versus time."></canvas>
+<div class="app">
+<header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h4c2 0 2-10 5-10s2 15 5 15 2-11 4-11h4"/></svg></div><h1>Transient<span style="color:#737b69">.</span></h1><span class="edition">CIRCUIT EXPLORER</span></div><div class="header-right"><span class="experiment">EXPERIMENT 001 / SERIES RLC</span><span class="live">Live simulation</span></div></header>
+<main class="workspace">
+<aside class="controls panel" aria-label="Circuit controls"><div class="section-head"><span class="eyebrow">THE COMPONENTS</span><span class="index">01 — 03</span></div>
+<div class="control-grid">
+<div class="control r"><div class="control-top"><label for="r-value"><span class="component-letter">R</span>Resistance</label><div class="value-box"><input id="r-value" type="number" min="1" max="5000" step="any" value="40" aria-label="Resistance in ohms" inputmode="decimal"><span class="unit">Ω</span></div></div><input class="range" id="r-range" type="range" min="0" max="1000" value="433" aria-label="Resistance slider" style="--fill:43.3%"><div class="limits"><span>1 Ω</span><span>5 kΩ</span></div></div>
+<div class="control l"><div class="control-top"><label for="l-value"><span class="component-letter">L</span>Inductance</label><div class="value-box"><input id="l-value" type="number" min="1" max="1000" step="any" value="100" aria-label="Inductance in millihenries" inputmode="decimal"><span class="unit">mH</span></div></div><input class="range" id="l-range" type="range" min="0" max="1000" value="667" aria-label="Inductance slider" style="--fill:66.7%"><div class="limits"><span>1 mH</span><span>1,000 mH</span></div></div>
+<div class="control c"><div class="control-top"><label for="c-value"><span class="component-letter">C</span>Capacitance</label><div class="value-box"><input id="c-value" type="number" min="1" max="1000" step="any" value="10" aria-label="Capacitance in microfarads" inputmode="decimal"><span class="unit">µF</span></div></div><input class="range" id="c-range" type="range" min="0" max="1000" value="333" aria-label="Capacitance slider" style="--fill:33.3%"><div class="limits"><span>1 µF</span><span>1,000 µF</span></div></div>
+</div><p class="validation" id="validation" role="status" hidden></p>
+<div class="presets"><div class="presets-label"><span class="eyebrow">TRY A RESPONSE</span><button id="reset" class="reset" title="Reset all values" aria-label="Reset all values"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 1 1 2 8M4 4v6h6"/></svg><span>Reset</span></button></div><div class="preset-row" aria-label="Damping presets"><button data-preset="under" aria-pressed="true" title="Set resistance for damping ratio 0.2">Underdamped</button><button data-preset="critical" aria-pressed="false" title="Set resistance for damping ratio 1">Critical</button><button data-preset="over" aria-pressed="false" title="Set resistance for damping ratio 2">Overdamped</button></div></div>
+<p id="insight" class="insight">Energy trades between L and C.<br>Resistance softens each oscillation.</p>
+<div class="schematic"><div class="schematic-head"><span class="eyebrow">SERIES CIRCUIT</span><span>Vout = Vc</span></div><svg viewBox="0 0 235 88" role="img" aria-label="A one volt step source in series with resistor R, inductor L and capacitor C. Output measured across C."><g fill="none" stroke="#69727e" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"><path d="M20 38V20h26m48 0h17m44 0h44v21m0 9v22H20V58"/><circle cx="20" cy="48" r="10"/><path d="M16 50h4v-5h4M46 20l4-6 7 12 7-12 7 12 7-12 7 12 5-6h4" stroke="#c0f779"/><path d="M111 20c0-13 11-13 11 0 0-13 11-13 11 0 0-13 11-13 11 0 0-13 11-13 11 0" stroke="#a2b5ff"/><path d="M187 41h24m-24 9h24" stroke="#e8af92"/><path d="M199 30h23m0 0v31m-3-3 3 3 3-3" stroke="#c0f779"/><path d="M113 72v7m-7 0h14m-11 4h8"/><circle cx="199" cy="30" r="2" fill="#c0f779" stroke="none"/></g><g font-family="ui-monospace,monospace" font-size="8" text-anchor="middle"><text x="71" y="8" fill="#9aa38f">R</text><text x="133" y="7" fill="#9eaacf">L</text><text x="177" y="49" fill="#b99a88">C</text><text x="20" y="86" fill="#77808c">1 V</text><text x="225" y="74" fill="#a4be87" font-size="7">Vc</text></g></svg></div>
+</aside>
+<section class="scope panel" aria-label="Step response chart"><div class="scope-head"><div class="scope-title"><h2>A small step. A whole response.</h2><p>1 V input step · capacitor voltage · zero initial energy</p></div><div class="scope-actions"><button class="action" id="pin" aria-pressed="false" title="Keep the current response for comparison" aria-label="Pin current trace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 5 5-4 2-3 6-3-3-7 7m1-10 6-3 2-4"/></svg><span id="pin-text">Pin trace</span></button><button class="action replay" id="replay" title="Replay the step response" aria-label="Replay step response"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="m9 5 11 7-11 7z"/></svg><span>Replay step</span></button></div></div>
+<div class="legend-bar"><div class="legend"><span class="legend-item"><i class="swatch"></i>Capacitor Vc</span><span class="legend-item"><i class="swatch step"></i>Input 1 V</span><span class="legend-item pinned-label" id="pinned-legend" hidden><i class="swatch pinned"></i>Pinned</span></div><span class="regime" id="regime">UNDERDAMPED</span></div>
+<div class="plot" id="plot" tabindex="0" role="group" aria-label="Voltage plot. Move the pointer or use left and right arrow keys to inspect the response."></div>
+<div class="plot-tools"><span class="hint" id="plot-hint">MOVE OVER THE TRACE TO INSPECT</span><div class="time-controls"><span id="time-window">30 ms</span><button id="zoom-in" aria-label="Zoom in on time" title="Show half the time span">−</button><button id="fit" class="fit" aria-pressed="true" title="Fit time to the circuit response">Auto</button><button id="zoom-out" aria-label="Zoom out on time" title="Show twice the time span">+</button></div></div>
+<div class="stats" aria-label="Response measurements"><div class="stat"><div class="stat-label">Damping ratio · ζ</div><div class="stat-value" id="zeta">0.200</div><div class="stat-sub">R / 2 × √(C / L)</div></div><div class="stat"><div class="stat-label">Natural frequency</div><div class="stat-value" id="frequency">159.2<small>Hz</small></div><div class="stat-sub">1 / (2π√LC)</div></div><div class="stat"><div class="stat-label">Overshoot</div><div class="stat-value" id="overshoot">52.7<small>%</small></div><div class="stat-sub">ABOVE FINAL VALUE</div></div><div class="stat"><div class="stat-label">Settling time</div><div class="stat-value" id="settling">19.6<small>ms</small></div><div class="stat-sub">WITHIN ±2% OF 1 V</div></div></div>
+</section>
+</main><footer class="footnote"><span><span class="note-dot">●</span>Change a component. See the physics.</span><span>IDEAL COMPONENTS &nbsp; / &nbsp; Vc″ + (R/L)Vc′ + Vc/(LC) = 1/(LC)</span></footer></div>
+<div id="error" role="alert" hidden></div><noscript><div class="noscript">Enable JavaScript to explore the circuit response.</div></noscript>
+<script>
+try {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const canvas = $('scene'), ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas is unavailable in this browser.');
+  const plot = $('plot');
+  const state = {r:40,l:100,c:10};
+  const specs = {r:{min:1,max:5000,unit:'Ω'},l:{min:1,max:1000,unit:'mH'},c:{min:1,max:1000,unit:'µF'}};
+  const motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : {matches:false};
+  let model, pinned = null, timeScale = 1, raf = 0, stopped = false, replayStart = null, cursor = null, box, graph, dirty = true, lastDraw = 0, lastDpr = 1;
+  const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+  const short = v => Number(v.toPrecision(4)).toString();
+  function fail(error) {
+    stopped = true;
+    cancelAnimationFrame(raf);
+    $('error').hidden = false;
+    $('error').textContent = 'The circuit explorer could not continue: ' + (error && error.message ? error.message : String(error));
+  }
+  function protect(fn) { return function(...args) {try {return fn(...args);} catch(error) {fail(error);}}; }
+  function buildModel(s) {
+    const L = s.l * 1e-3, C = s.c * 1e-6;
+    const wn = 1 / Math.sqrt(L*C), alpha = s.r/(2*L), z = alpha/wn;
+    const critical = Math.abs(z-1) < 1e-9;
+    const kind = critical ? 'critical' : z < 1 ? 'under' : 'over';
+    const wd = kind === 'under' ? wn*Math.sqrt((1-z)*(1+z)) : 0;
+    const root = kind === 'over' ? Math.sqrt((z-1)*(z+1)) : 0;
+    // The slow root is rationalized to avoid subtracting nearly equal numbers.
+    const slow = kind === 'over' ? wn/(z+root) : wn;
+    const fast = kind === 'over' ? wn*(z+root) : wn;
+    function value(t) {
+      if (t <= 0) return 0;
+      if (kind === 'under') {
+        const x = wd*t;
+        const sinc = Math.abs(x)<1e-4 ? 1-x*x/6+x*x*x*x/120 : Math.sin(x)/x;
+        return -Math.expm1(-alpha*t) + Math.exp(-alpha*t)*(2*Math.sin(x/2)**2-alpha*t*sinc);
+      }
+      if (kind === 'critical') return -Math.expm1(-wn*t)-wn*t*Math.exp(-wn*t);
+      const gap = fast-slow;
+      return -Math.expm1(-slow*t) + slow/gap*Math.exp(-slow*t)*Math.expm1(-gap*t);
+    }
+    const overshoot = kind === 'under' ? Math.exp(-Math.PI*alpha/wd) : 0;
+    const peakTime = kind === 'under' ? Math.PI/wd : null;
+    let lo=0, hi;
+    if (kind === 'under') {
+      // After the last extremum outside the 2% band, the next crossing is final.
+      const step = Math.PI/wd;
+      const lastPeak = Math.floor(Math.log(50)*wd/(Math.PI*alpha));
+      lo=lastPeak*step;
+      hi=lo+(Math.PI-Math.atan(wd/alpha))/wd;
+    } else hi=8/slow;
+    for (let i=0;i<64;i++) {
+      const mid=(lo+hi)/2;
+      if (Math.abs(value(mid)-1)>0.02) lo=mid; else hi=mid;
+    }
+    const settle=(lo+hi)/2;
+    const idealWindow=kind==='under' ? Math.max(8/wn,Math.min(6/alpha,12*2*Math.PI/wd)) : 7/slow;
+    return {wn,alpha,z,kind,wd,value,overshoot,peakTime,settle,idealWindow};
+  }
+  function timeUnit(t) {
+    return t<0.001 ? {factor:1e6,label:'µs'} : t<1 ? {factor:1e3,label:'ms'} : {factor:1,label:'s'};
+  }
+  function metricTime(t) {const u=timeUnit(t);return {value:(t*u.factor).toFixed(t*u.factor>=100?0:1),unit:u.label};}
+  function writeMetric(id,value,unit) {
+    const el=$(id);el.textContent=value;
+    if(unit){const small=document.createElement('small');small.textContent=unit;el.appendChild(small);}
+  }
+  function updateControls(except) {
+    Object.keys(specs).forEach(key=>{
+      const spec=specs[key],range=$(key+'-range');
+      const position=Math.log(state[key]/spec.min)/Math.log(spec.max/spec.min)*1000;
+      range.value=position;range.style.setProperty('--fill',position/10+'%');
+      range.setAttribute('aria-valuetext',short(state[key])+' '+spec.unit);
+      if(except!==key) $(key+'-value').value=short(state[key]);
+    });
+  }
+  function update(except) {
+    model=buildModel(state);updateControls(except);
+    $('regime').textContent={under:'UNDERDAMPED',critical:'CRITICALLY DAMPED',over:'OVERDAMPED'}[model.kind];
+    $('regime').style.color=model.kind==='over'?'#a2b5ff':model.kind==='critical'?'#e8d4a5':'#c0f779';
+    document.querySelectorAll('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===model.kind)));
+    $('insight').textContent={under:'Energy trades between L and C. Resistance softens each oscillation.',critical:'The fastest return without overshoot. Resistance exactly balances the oscillation.',over:'Resistance dominates. The capacitor approaches 1 V slowly, without overshoot.'}[model.kind];
+    writeMetric('zeta',model.z.toFixed(model.z>=100?1:3));
+    const f=model.wn/(2*Math.PI);writeMetric('frequency',f>=1000?(f/1000).toFixed(2):f.toFixed(1),f>=1000?'kHz':'Hz');
+    writeMetric('overshoot',(model.overshoot*100).toFixed(1),'%');
+    const st=metricTime(model.settle);writeMetric('settling',st.value,st.unit);
+    canvas.setAttribute('aria-label','Capacitor voltage after a 1 volt step. '+({under:'Underdamped',critical:'Critically damped',over:'Overdamped'}[model.kind])+'. Damping ratio '+model.z.toFixed(3)+', overshoot '+(model.overshoot*100).toFixed(1)+' percent, settling time '+st.value+' '+st.unit+'.');
+    if(replayStart!==null) replayStart=performance.now();
+    dirty=true;
+  }
+  function validateInput(key,commit) {
+    const input=$(key+'-value'), spec=specs[key], value=input.valueAsNumber;
+    const valid=Number.isFinite(value)&&value>=spec.min&&value<=spec.max;
+    input.setAttribute('aria-invalid',String(!valid));
+    if(!valid){$('validation').textContent='Enter '+spec.min+'–'+spec.max+' '+spec.unit+'.';$('validation').hidden=false;if(commit){input.value=short(state[key]);input.setAttribute('aria-invalid','false');$('validation').hidden=true;}return;}
+    $('validation').hidden=true;state[key]=value;update(key);
+  }
+  Object.keys(specs).forEach(key=>{
+    $(key+'-range').addEventListener('input',protect(event=>{
+      const spec=specs[key];state[key]=Number((spec.min*Math.pow(spec.max/spec.min,Number(event.target.value)/1000)).toPrecision(4));
+      $(key+'-value').setAttribute('aria-invalid','false');$('validation').hidden=true;update();
+    }));
+    $(key+'-value').addEventListener('input',protect(()=>validateInput(key,false)));
+    $(key+'-value').addEventListener('change',protect(()=>validateInput(key,true)));
+    $(key+'-value').addEventListener('keydown',protect(e=>{if(e.key==='Enter') e.target.blur();}));
+  });
+  document.querySelectorAll('[data-preset]').forEach(button=>button.addEventListener('click',protect(()=>{
+    const criticalR=2*Math.sqrt(state.l*1e-3/(state.c*1e-6));
+    const ratio={under:0.2,critical:1,over:2}[button.dataset.preset];
+    state.r=clamp(criticalR*ratio,specs.r.min,specs.r.max);$('validation').hidden=true;update();
+  })));
+  function clearPin(){pinned=null;$('pin').setAttribute('aria-pressed','false');$('pin').setAttribute('aria-label','Pin current trace');$('pin-text').textContent='Pin trace';$('pinned-legend').hidden=true;}
+  $('reset').addEventListener('click',protect(()=>{state.r=40;state.l=100;state.c=10;timeScale=1;replayStart=null;cursor=null;clearPin();$('validation').hidden=true;Object.keys(specs).forEach(k=>$(k+'-value').setAttribute('aria-invalid','false'));update();}));
+  $('pin').addEventListener('click',protect(()=>{
+    if(pinned)clearPin();else{pinned=buildModel(state);$('pin').setAttribute('aria-pressed','true');$('pin').setAttribute('aria-label','Clear pinned trace');$('pin-text').textContent='Clear trace';$('pinned-legend').hidden=false;}dirty=true;
+  }));
+  $('replay').addEventListener('click',protect(()=>{replayStart=performance.now();cursor=null;dirty=true;}));
+  $('zoom-in').addEventListener('click',protect(()=>{timeScale=clamp(timeScale/2,0.0625,16);dirty=true;}));
+  $('zoom-out').addEventListener('click',protect(()=>{timeScale=clamp(timeScale*2,0.0625,16);dirty=true;}));
+  $('fit').addEventListener('click',protect(()=>{timeScale=1;dirty=true;}));
+  function resize(){
+    const dpr=window.devicePixelRatio||1;lastDpr=dpr;
+    canvas.width=Math.round(window.innerWidth*dpr);canvas.height=Math.round(window.innerHeight*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);box=plot.getBoundingClientRect();dirty=true;
+  }
+  window.addEventListener('resize',protect(resize));
+  const resizeObserver=typeof ResizeObserver!=='undefined'?new ResizeObserver(protect(resize)):null;
+  if(resizeObserver) resizeObserver.observe(plot);
+  function pointer(event){if(!graph)return;cursor=clamp((event.clientX-graph.x)/graph.w,0,1);dirty=true;}
+  plot.addEventListener('pointermove',protect(pointer));
+  plot.addEventListener('pointerdown',protect(e=>{pointer(e);if(e.pointerType!=='mouse')plot.setPointerCapture(e.pointerId);}));
+  plot.addEventListener('pointerleave',protect(()=>{cursor=null;dirty=true;}));
+  plot.addEventListener('pointercancel',protect(()=>{cursor=null;dirty=true;}));
+  plot.addEventListener('keydown',protect(e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();cursor=clamp((cursor===null?0.2:cursor)+(e.key==='ArrowRight'?0.015:-0.015),0,1);dirty=true;}if(e.key==='Escape'){cursor=null;dirty=true;}}));
+  plot.addEventListener('blur',protect(()=>{cursor=null;dirty=true;}));
+  function line(x1,y1,x2,y2,color,width=1,dash=[]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+  function label(text,x,y,color='#7a8390',size=10,align='left'){ctx.font=size+'px ui-monospace, SFMono-Regular, Consolas, monospace';ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(text,x,y);}
+  function roundBox(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+  function draw(now){
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    if(!box||box.width<20||box.height<20)return;
+    const mobile=window.innerWidth<=700, tiny=box.height<130;
+    const left=mobile?35:45,right=mobile?15:25,top=mobile?13:30,bottom=mobile?20:33;
+    graph={x:box.left+left,y:box.top+top,w:Math.max(1,box.width-left-right),h:Math.max(1,box.height-top-bottom)};
+    const g=graph;
+    const windowTime=model.idealWindow*timeScale;
+    const maxPeak=Math.max(1+model.overshoot,pinned?1+pinned.overshoot:1);
+    const yMax=maxPeak>1.65?2:maxPeak>1.3?1.75:1.25;
+    const yMin=-0.08;
+    const x=t=>g.x+t/windowTime*g.w;
+    const y=v=>g.y+(yMax-v)/(yMax-yMin)*g.h;
+    const u=timeUnit(windowTime), displayWindow=windowTime*u.factor;
+    $('time-window').textContent=short(displayWindow)+' '+u.label;
+    $('fit').setAttribute('aria-pressed',String(timeScale===1));
+    $('zoom-in').disabled=timeScale<=0.0625;$('zoom-out').disabled=timeScale>=16;
+    ctx.save();ctx.beginPath();ctx.rect(box.left,box.top,box.width,box.height);ctx.clip();
+    const columns=mobile?4:6, rows=mobile?4:7;
+    // Quiet minor grid lines make the plot read like an instrument.
+    for(let i=0;i<=columns*4;i++){const xx=g.x+g.w*i/(columns*4);line(xx,g.y,xx,g.y+g.h,i%4===0?'#293237':'#1c2328',i%4===0?0.8:0.5);}
+    for(let i=0;i<=rows;i++){const yy=g.y+g.h*i/rows;line(g.x,yy,g.x+g.w,yy,'#1e282c',0.7);}
+    ctx.fillStyle='#c0f77907';ctx.fillRect(g.x,y(1.02),g.w,y(.98)-y(1.02));
+    line(g.x,y(0),g.x+g.w,y(0),'#3e494f',0.8);
+    const tickStep=yMax>1.3?.5:.25;
+    for(let v=0;v<=yMax+1e-6;v+=tickStep){if(mobile&&yMax===1.25&&Math.abs(v-.25)<1e-6||mobile&&yMax===1.25&&Math.abs(v-.75)<1e-6)continue;label(v.toFixed(v%0.5===0?1:2),g.x-10,y(v),'#727e8b',mobile?8:10,'right');}
+    label('V',g.x-10,g.y-11,'#9ba5ad',mobile?8:10,'right');
+    for(let i=0;i<=columns;i++){const t=displayWindow*i/columns;const decimals=displayWindow<3?2:displayWindow<20?1:0;label(t===0?'0':t.toFixed(decimals),g.x+g.w*i/columns,g.y+g.h+(mobile?13:20),'#788490',mobile?8:10,'center');}
+    label(u.label,g.x+g.w+right-4,g.y+g.h+(mobile?13:20),'#9ba5ad',mobile?8:10,'right');
+    let reveal=1;
+    if(replayStart!==null){reveal=clamp((now-replayStart)/1800,0,1);if(reveal>=1)replayStart=null;}
+    const samples=Math.min(7000,Math.max(800,Math.ceil(g.w*2),Math.ceil(windowTime*model.wd/(2*Math.PI)*42)));
+    function path(m,extent=1){ctx.beginPath();for(let i=0;i<=Math.ceil(samples*extent);i++){const fraction=Math.min(i/samples,extent),t=fraction*windowTime,xx=g.x+fraction*g.w,yy=y(m.value(t));if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}}
+    ctx.save();ctx.beginPath();ctx.rect(g.x-1,g.y-3,g.w+2,g.h+3);ctx.clip();
+    line(g.x,y(0),g.x,y(1),'#9ca4af',1,[4,5]);line(g.x,y(1),g.x+g.w,y(1),'#848c96',1,[5,6]);
+    if(pinned){path(pinned);ctx.setLineDash([5,5]);ctx.strokeStyle='#99b0f0aa';ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);}
+    if(reveal<1){path(model);ctx.strokeStyle='#c0f77922';ctx.lineWidth=1.5;ctx.stroke();}
+    path(model,reveal);ctx.lineTo(g.x+g.w*reveal,y(0));ctx.lineTo(g.x,y(0));ctx.closePath();
+    const gradient=ctx.createLinearGradient(0,g.y,0,y(0));gradient.addColorStop(0,'#b9f56e26');gradient.addColorStop(1,'#b9f56e01');ctx.fillStyle=gradient;ctx.fill();
+    path(model,reveal);ctx.strokeStyle='#c0f779';ctx.lineWidth=mobile?1.9:2.2;ctx.lineJoin='round';ctx.lineCap='round';ctx.shadowColor='#c0f77945';ctx.shadowBlur=9;ctx.stroke();ctx.shadowBlur=0;
+    if(reveal<1){const xx=g.x+g.w*reveal,yy=y(model.value(windowTime*reveal));line(xx,g.y,xx,g.y+g.h,'#c0f77944',1);ctx.beginPath();ctx.arc(xx,yy,3,0,Math.PI*2);ctx.fillStyle='#e5ffc8';ctx.fill();}
+    ctx.restore();
+    if(!mobile){label('1 V FINAL',g.x+g.w-5,y(1)-11,'#7d8993',8,'right');label('t = 0',g.x+7,y(0)-10,'#637480',8);}
+    if(cursor===null&&model.peakTime&&model.peakTime<windowTime&&model.overshoot>.025&&reveal>model.peakTime/windowTime){
+      const px=x(model.peakTime),py=y(1+model.overshoot),pulse=motionQuery.matches?0.5:(Math.sin(now/650)+1)/2;
+      ctx.beginPath();ctx.arc(px,py,5+pulse*3,0,Math.PI*2);ctx.fillStyle='#c0f77912';ctx.fill();ctx.beginPath();ctx.arc(px,py,2.8,0,Math.PI*2);ctx.fillStyle='#d5ffa0';ctx.fill();
+      const text='+'+(model.overshoot*100).toFixed(1)+'%';
+      if(!tiny){line(px,py-7,px,py-19,'#859967',.7);label(text,px+8,py-21,'#bfd49f',mobile?8:10);}
+    }
+    if(cursor!==null){
+      const t=cursor*windowTime,voltage=model.value(t),xx=x(t),yy=y(voltage);
+      line(xx,g.y,xx,g.y+g.h,'#c3d8b163',1,[3,4]);
+      ctx.beginPath();ctx.arc(xx,yy,4,0,Math.PI*2);ctx.fillStyle='#d9ffaf';ctx.fill();ctx.strokeStyle='#192619';ctx.lineWidth=2;ctx.stroke();
+      const tw=mobile?107:130,th=pinned?61:44;
+      const tx=clamp(xx+13,g.x+3,g.x+g.w-tw),ty=clamp(yy-th-12,g.y+3,g.y+g.h-th);
+      roundBox(tx,ty,tw,th,6);ctx.fillStyle='#171f24f5';ctx.fill();ctx.strokeStyle='#4c5a53';ctx.lineWidth=1;ctx.stroke();
+      label((t*u.factor).toFixed(2)+' '+u.label,tx+10,ty+13,'#909ea9',mobile?9:10);
+      label(voltage.toFixed(3)+' V',tx+10,ty+30,'#c0f779',mobile?10:12);
+      if(pinned)label(pinned.value(t).toFixed(3)+' V pinned',tx+10,ty+47,'#a2b5ff',mobile?8:9);
+      plot.setAttribute('aria-label','At '+(t*u.factor).toFixed(2)+' '+u.label+', capacitor voltage is '+voltage.toFixed(3)+' volts. Use arrow keys to inspect.');
+    }
+    ctx.restore();
+  }
+  function frame(now){
+    if(stopped)return;
+    try{
+      if((window.devicePixelRatio||1)!==lastDpr)resize();
+      if(dirty||replayStart!==null||(!motionQuery.matches&&now-lastDraw>40)){draw(now);dirty=false;lastDraw=now;}
+      raf=requestAnimationFrame(frame);
+    }catch(error){fail(error);}
+  }
+  function stop(){stopped=true;cancelAnimationFrame(raf);if(resizeObserver)resizeObserver.disconnect();}
+  window.addEventListener('unload',stop);
+  window.addEventListener('pagehide',stop);
+  window.addEventListener('pageshow',protect(event=>{if(event.persisted){stopped=false;if(resizeObserver)resizeObserver.observe(plot);resize();raf=requestAnimationFrame(frame);}}));
+  update();resize();draw(performance.now());raf=requestAnimationFrame(frame);
+} catch(error) {
+  const output=document.getElementById('error');
+  if(output){output.hidden=false;output.textContent='The circuit explorer could not start: '+(error&&error.message?error.message:String(error));}
+}
+</script></body></html>

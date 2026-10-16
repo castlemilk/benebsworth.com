@@ -10,6 +10,7 @@ import { ALL_SUMMARIES } from '@/lib/lab/harness-eval/results';
 import { rankModels, aggregateFailures, overallStats } from '@/lib/lab/harness-eval/analytics';
 import { HARNESS_SUITES, HARNESS_TASKS } from '@/lib/lab/harness-eval/registry';
 import { loadIntroContent } from '@/lib/lab/harness-eval/content';
+import { harnessModelPath } from '@/lib/lab/harness-eval/nav';
 
 export const metadata: Metadata = {
   title: 'Harness Eval · Lab',
@@ -150,7 +151,7 @@ export default function HarnessEvalPage() {
                       <tr key={r.model.id} className="border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface)]">
                         <td className="px-4 py-3 font-mono text-fg/40">{String(i + 1)}</td>
                         <td className="px-4 py-3">
-                          <Link href={`/lab/harness-eval/models/${encodeURIComponent(r.model.id)}/`} className="text-fg underline-offset-2 hover:underline">
+                          <Link href={harnessModelPath(r.model.id)} className="text-fg underline-offset-2 hover:underline">
                             {r.model.displayName}
                           </Link>
                         </td>
@@ -187,7 +188,7 @@ export default function HarnessEvalPage() {
                     return (
                       <div key={r.model.id} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
                         <div className="mb-3 flex items-baseline justify-between">
-                          <Link href={`/lab/harness-eval/models/${encodeURIComponent(r.model.id)}/`} className="type-label text-fg hover:underline">
+                          <Link href={harnessModelPath(r.model.id)} className="type-label text-fg hover:underline">
                             {r.model.displayName}
                           </Link>
                           <span className="font-mono text-xs text-fg/40">{String(r.totalToolCalls)} calls</span>
@@ -245,7 +246,7 @@ export default function HarnessEvalPage() {
               {ALL_SUMMARIES.slice(0, 6).map((s) => (
                 <Link
                   key={s.model.id}
-                  href={`/lab/harness-eval/models/${encodeURIComponent(s.model.id)}/`}
+                  href={harnessModelPath(s.model.id)}
                   className="flex items-center justify-between rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-muted)]"
                 >
                   <div>

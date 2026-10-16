@@ -253,5 +253,319 @@
     "spillRefs": [
       "spill/372e815603a83380.txt"
     ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-car-racer.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "car-racer",
+    "bytes": 20519,
+    "spillRefs": [
+      "spill/043a80f670e1f2b6.txt",
+      "spill/590ed82bf2cf197b.txt",
+      "spill/638c988c4830b1bc.txt",
+      "spill/a60a27a3557b1927.txt",
+      "spill/efd96fb433bce540.txt",
+      "spill/fe7359014b75d40d.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-circuit-builder-teaser.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "circuit-builder-teaser",
+    "bytes": 19794,
+    "spillRefs": [
+      "spill/07b7275d7e9a3819.txt",
+      "spill/0d044ecf25ac15e0.txt",
+      "spill/37afc7ddb08c2c4c.txt",
+      "spill/93a04e862efb2865.txt",
+      "spill/e2554c92d080b690.txt",
+      "spill/ef48e20f1e58c6fc.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-crypto-hash-race.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "crypto-hash-race",
+    "bytes": 23461,
+    "spillRefs": [
+      "spill/159ba5dc76b4bc37.txt",
+      "spill/8940a40d028005af.txt",
+      "spill/aa0a95deaace60cd.txt",
+      "spill/b8be6de629f88141.txt",
+      "spill/e94274c438883851.txt",
+      "spill/ef63716da8ea6415.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-equation-solver.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "equation-solver",
+    "bytes": 25607,
+    "spillRefs": [
+      "spill/64374b6001c494d9.txt",
+      "spill/94706c12f1a301b2.txt",
+      "spill/9cb4e720cc468189.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-gateway-console.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "gateway-console",
+    "bytes": 22300,
+    "spillRefs": [
+      "spill/407219d21e65117f.txt",
+      "spill/54e08a1d4340db13.txt",
+      "spill/a6be6f4686c4c670.txt",
+      "spill/d03e075d8cc11228.txt",
+      "spill/dbcfa04bed3dee5f.txt",
+      "spill/e82eaa041f4fc131.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-landing-page-morph.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "landing-page-morph",
+    "bytes": 19929,
+    "spillRefs": [
+      "spill/1928d5c98ee981a7.txt",
+      "spill/5af7d6fa74d7da8e.txt",
+      "spill/a36424d169c0a7b6.txt",
+      "spill/bb3368573ede404d.txt",
+      "spill/c3d26cdfe309c914.txt",
+      "spill/e9a0ac9235bc1f05.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-mini-platformer.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "mini-platformer",
+    "bytes": 19945,
+    "spillRefs": [
+      "spill/04a5e62f0952b6c4.txt",
+      "spill/67bd49f28ff9de97.txt",
+      "spill/7301e6e01377692a.txt",
+      "spill/bafc8652a752d201.txt",
+      "spill/e233436328e44216.txt",
+      "spill/eebe08be59e56c61.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-n-body-field.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "n-body-field",
+    "bytes": 19853,
+    "spillRefs": [
+      "spill/31b5aa50a40cf6cf.txt",
+      "spill/401afbfd673fe7a2.txt",
+      "spill/988e16335ea6081d.txt",
+      "spill/b641471af01d0c78.txt",
+      "spill/c967874ba08b23d2.txt",
+      "spill/e9d4dfd22649ca08.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-physics-pendulum-wave.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "physics-pendulum-wave",
+    "bytes": 19702,
+    "spillRefs": [
+      "spill/12c1da3bd3022636.txt",
+      "spill/3072ee537c93a6a7.txt",
+      "spill/a269743370708033.txt",
+      "spill/bd157133b01af0e3.txt",
+      "spill/ca8baa3a34511ab6.txt",
+      "spill/db30925cb1485063.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-tic-tac-toe.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "tic-tac-toe",
+    "bytes": 25915,
+    "spillRefs": [
+      "spill/03aae95389f46169.txt",
+      "spill/05fd0d02500ea1c3.txt",
+      "spill/1ac37e5d39877a0e.txt",
+      "spill/c4acdd95430bc6b3.txt",
+      "spill/d6a5fab7ea0e2316.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "codex-gpt-6-astra-xhigh-voxel-lighthouse.jsonl",
+    "modelId": "codex-gpt-6-astra-xhigh",
+    "taskId": "voxel-lighthouse",
+    "bytes": 19927,
+    "spillRefs": [
+      "spill/498057f44db13d5c.txt",
+      "spill/6995322ab2c15d90.txt",
+      "spill/a8e37ec3d2ec5d76.txt",
+      "spill/ae1932fd4dc94211.txt",
+      "spill/de1dc66fcc0aac4b.txt",
+      "spill/f52301fa53077aec.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-car-racer.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "car-racer",
+    "bytes": 20545,
+    "spillRefs": [
+      "spill/2ae79b67d2fe874c.txt",
+      "spill/66ac5adb914d6449.txt",
+      "spill/768eb8fe35b491f7.txt",
+      "spill/8504f4f6eb94180a.txt",
+      "spill/b7fbd8b39a403130.txt",
+      "spill/c99073ec86b208b7.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-circuit-builder-teaser.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "circuit-builder-teaser",
+    "bytes": 19857,
+    "spillRefs": [
+      "spill/30a89023007a8146.txt",
+      "spill/3d8900b759400868.txt",
+      "spill/85724d54548a9841.txt",
+      "spill/a677c77d0e88e3cb.txt",
+      "spill/b23e3f4ba22414bc.txt",
+      "spill/d1049a790dcafc66.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-crypto-hash-race.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "crypto-hash-race",
+    "bytes": 23512,
+    "spillRefs": [
+      "spill/0b903723ce8218cf.txt",
+      "spill/7f11bf7051a56c87.txt",
+      "spill/bcbcc502954698a7.txt",
+      "spill/c209557b47a5d771.txt",
+      "spill/f80f10c0ef38208c.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-equation-solver.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "equation-solver",
+    "bytes": 29421,
+    "spillRefs": [
+      "spill/2051035a19ef65d5.txt",
+      "spill/58042fb5d6d38ce7.txt",
+      "spill/7ed61dde3dcd2d88.txt",
+      "spill/a3e05e08e650c033.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-gateway-console.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "gateway-console",
+    "bytes": 34134,
+    "spillRefs": [
+      "spill/2719959922685f7b.txt",
+      "spill/36e3a210aaf22ec9.txt",
+      "spill/52f82e10005aba73.txt",
+      "spill/8f3fb5552acc674e.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-landing-page-morph.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "landing-page-morph",
+    "bytes": 20274,
+    "spillRefs": [
+      "spill/1e10ca8d84fb81f6.txt",
+      "spill/676e9377741f872b.txt",
+      "spill/6f421f364ed7d1d2.txt",
+      "spill/a35638f55bfe438e.txt",
+      "spill/b3bc8411e594dfe3.txt",
+      "spill/dbdcab0b34ed6d80.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-mini-platformer.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "mini-platformer",
+    "bytes": 20388,
+    "spillRefs": [
+      "spill/005f931d0e1cee2b.txt",
+      "spill/1d6362e5bf25d7cb.txt",
+      "spill/95c1e54be048391f.txt",
+      "spill/9af6d8f9950ded4f.txt",
+      "spill/e19477ea4632ec31.txt",
+      "spill/fa3078d3e919539f.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-n-body-field.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "n-body-field",
+    "bytes": 19891,
+    "spillRefs": [
+      "spill/08197a6e211fe670.txt",
+      "spill/284800a4e69eb00b.txt",
+      "spill/8117820da6d66900.txt",
+      "spill/a80c2d13f1bddc92.txt",
+      "spill/b94e5c08d0779484.txt",
+      "spill/f409dcedc8b69761.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-physics-pendulum-wave.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "physics-pendulum-wave",
+    "bytes": 30108,
+    "spillRefs": [
+      "spill/4081b50aa870ddc6.txt",
+      "spill/97847029dc9234a2.txt",
+      "spill/9868508411c0ac07.txt",
+      "spill/ab012443d11c578f.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-tic-tac-toe.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "tic-tac-toe",
+    "bytes": 33128,
+    "spillRefs": [
+      "spill/766f23faf6e9df73.txt",
+      "spill/7cb2f769cfce81ac.txt",
+      "spill/c3086731b40255ad.txt"
+    ]
+  },
+  {
+    "runId": "2026-09-22T11-23-58-astra-devin-final",
+    "file": "devin-swe-2-high-voxel-lighthouse.jsonl",
+    "modelId": "devin-swe-2-high",
+    "taskId": "voxel-lighthouse",
+    "bytes": 15063,
+    "spillRefs": [
+      "spill/91957f7e54b84172.txt",
+      "spill/92312158d6d3ea52.txt",
+      "spill/bbff07c13217b126.txt",
+      "spill/f64313327de4dc9e.txt"
+    ]
   }
 ]

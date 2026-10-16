@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All real solutions to x² + y² = 25 and xy = 12</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #192b3b; background: #f3f6f8; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 48px 20px; line-height: 1.65; }
+main { max-width: 800px; margin: auto; padding: 40px; background: #fff; border: 1px solid #dce4ea; border-radius: 16px; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.25; margin: 0 0 20px; }
+h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+p { margin: 12px 0; }
+.math { font-family: "Cambria Math", Cambria, Georgia, serif; font-size: 1.15em; }
+.equation { padding: 12px 16px; background: #f3f6f8; border-radius: 8px; }
+.answer { padding: 18px 20px; background: #eaf5ef; border-left: 4px solid #29865a; border-radius: 6px; }
+.answer strong { display: block; margin-bottom: 6px; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin: 16px 0; text-align: center; }
+caption { text-align: left; font-weight: 600; margin-bottom: 8px; }
+th, td { padding: 9px 12px; border-bottom: 1px solid #dce4ea; }
+th { background: #f3f6f8; }
+footer { border-top: 1px solid #dce4ea; margin-top: 26px; padding-top: 14px; }
+@media (max-width: 540px) { body { padding: 16px 12px; } main { padding: 24px 18px; } }
+@media print { body { padding: 0; background: white; } main { border: 0; padding: 0; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Solve the system over the reals</h1>
+<p class="math equation">x² + y² = 25, &nbsp; xy = 12.</p>
+<div class="answer">
+<strong>Every solution pair (x, y)</strong>
+<span class="math">(4, 3), &nbsp; (3, 4), &nbsp; (−3, −4), &nbsp; (−4, −3).</span>
+</div>
+<h2>1. Find the sum and difference</h2>
+<p>Expanding the square of the sum and substituting both given equations gives</p>
+<p class="math equation">(x + y)² = x² + y² + 2xy = 25 + 2(12) = 49.</p>
+<p>Thus <span class="math">x + y = 7</span> or <span class="math">x + y = −7</span>, since a real number whose square is 49 must be one of these two values.</p>
+<p>Likewise, expanding the square of the difference gives</p>
+<p class="math equation">(x − y)² = x² + y² − 2xy = 25 − 2(12) = 1.</p>
+<p>Hence <span class="math">x − y = 1</span> or <span class="math">x − y = −1</span>. Both signs must be retained in each square-root step.</p>
+<h2>2. Recover x and y for every sign choice</h2>
+<p>Let <span class="math">s = x + y</span> and <span class="math">d = x − y</span>. Adding these equations yields <span class="math">s + d = 2x</span>; subtracting them yields <span class="math">s − d = 2y</span>. Dividing by the nonzero constant 2 therefore gives</p>
+<p class="math equation">x = (s + d)/2, &nbsp; y = (s − d)/2.</p>
+<div class="table-wrap">
+<table>
+<caption>The four possible combinations</caption>
+<thead><tr><th scope="col">s = x + y</th><th scope="col">d = x − y</th><th scope="col">x</th><th scope="col">y</th><th scope="col">(x, y)</th></tr></thead>
+<tbody>
+<tr><td>7</td><td>1</td><td>4</td><td>3</td><td>(4, 3)</td></tr>
+<tr><td>7</td><td>−1</td><td>3</td><td>4</td><td>(3, 4)</td></tr>
+<tr><td>−7</td><td>1</td><td>−3</td><td>−4</td><td>(−3, −4)</td></tr>
+<tr><td>−7</td><td>−1</td><td>−4</td><td>−3</td><td>(−4, −3)</td></tr>
+</tbody>
+</table>
+</div>
+<h2>3. Verify the solutions and completeness</h2>
+<p>For every row, <span class="math">s² = 49</span> and <span class="math">d² = 1</span>. Substituting the formulas for <span class="math">x</span> and <span class="math">y</span> into the original expressions gives</p>
+<p class="math equation">x² + y² = [(s + d)² + (s − d)²]/4<br>= (s² + d²)/2 = (49 + 1)/2 = 25,</p>
+<p class="math equation">xy = (s + d)(s − d)/4<br>= (s² − d²)/4 = (49 − 1)/4 = 12.</p>
+<p>Thus all four pairs satisfy both original equations. Conversely, every real solution must have <span class="math">s ∈ {7, −7}</span> and <span class="math">d ∈ {1, −1}</span>, and each combination determines exactly one pair through the formulas above. The table exhausts these combinations, so there are no other real solutions.</p>
+<footer><strong>Solution set:</strong> <span class="math">{(4, 3), (3, 4), (−3, −4), (−4, −3)}.</span></footer>
+</main>
+</body>
+</html>

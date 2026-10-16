@@ -260,6 +260,7 @@ const runnerConfig = {
   // dies with the probe rather than at cli.ts's 10-minute default.
   agy: { timeoutMs },
   codex: { timeoutMs },
+  devin: { timeoutMs },
   opencode: { timeoutMs },
   timeoutMs,
 }

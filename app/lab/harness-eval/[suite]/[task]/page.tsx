@@ -9,6 +9,7 @@ import { Reveal } from '@/components/motion/reveal';
 import { HARNESS_TASKS, suiteForSlug } from '@/lib/lab/harness-eval/registry';
 import { resultsForTask } from '@/lib/lab/harness-eval/results';
 import { loadTaskContent } from '@/lib/lab/harness-eval/content';
+import { harnessModelPath } from '@/lib/lab/harness-eval/nav';
 import { ArrowRight, Terminal } from 'lucide-react';
 
 export function generateStaticParams() {
@@ -150,7 +151,7 @@ export default async function TaskDetailPage({
                       <td className="px-4 py-3 font-mono text-fg/40">{String(i + 1)}</td>
                       <td className="px-4 py-3">
                         <Link
-                          href={`/lab/harness-eval/models/${encodeURIComponent(r.modelId)}/`}
+                          href={harnessModelPath(r.modelId)}
                           className="font-medium text-fg underline-offset-2 hover:underline"
                         >
                           {r.modelId.split('/').pop()}
@@ -205,7 +206,7 @@ export default async function TaskDetailPage({
                   <div key={r.modelId} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
                     <div className="flex items-center gap-3">
                       <Link
-                        href={`/lab/harness-eval/models/${encodeURIComponent(r.modelId)}/`}
+                        href={harnessModelPath(r.modelId)}
                         className="font-medium text-fg underline-offset-2 hover:underline"
                       >
                         {r.modelId.split('/').pop()}

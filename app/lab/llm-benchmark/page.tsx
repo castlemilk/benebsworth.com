@@ -3,21 +3,12 @@ import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd, datasetLd } from '@/components/seo/json-ld'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/motion/reveal'
-import { MdxContent } from '@/components/mdx/mdx-content'
-import { CategoryGrid } from '@/components/lab/llm-benchmark/category-grid'
-import { ModelList } from '@/components/lab/llm-benchmark/model-list'
-import { ScoreRankings } from '@/components/lab/llm-benchmark/score-rankings'
-import { ResultsTable } from '@/components/lab/llm-benchmark/results-table'
-import { VerdictStrip } from '@/components/lab/llm-benchmark/verdict-strip'
 import { BenchmarkNav } from '@/components/lab/llm-benchmark/benchmark-nav'
-import { SectionLabel } from '@/components/lab/llm-benchmark/section-label'
+import { BenchmarkTable } from '@/components/lab/llm-benchmark/benchmark-table'
 import { BENCHMARK_TASKS, BENCHMARK_MODELS } from '@/lib/lab/llm-benchmark/registry'
 import { BENCHMARK_RESULTS, stripOutput } from '@/lib/lab/llm-benchmark/results'
-import { rankModels, headlineVerdicts, hasSeededResults } from '@/lib/lab/llm-benchmark/analytics'
-import { loadBenchmarkIntro } from '@/lib/lab/llm-benchmark/content'
+import { rankModels } from '@/lib/lab/llm-benchmark/analytics'
 import { taskPath } from '@/lib/lab/llm-benchmark/nav'
 
 const OG_IMAGE = { url: '/lab/llm-benchmark/opengraph-image.png', width: 1200, height: 630 }
@@ -48,10 +39,7 @@ export const metadata: Metadata = {
 
 export default function LlmBenchmarkPage() {
   const rankings = rankModels(BENCHMARK_RESULTS)
-  const verdicts = headlineVerdicts(rankings)
   const rows = BENCHMARK_RESULTS.map(stripOutput)
-  const intro = loadBenchmarkIntro()
-  const seeded = hasSeededResults(BENCHMARK_RESULTS)
 
   return (
     <>
@@ -110,77 +98,18 @@ export default function LlmBenchmarkPage() {
           </Reveal>
         </section>
 
-        {/* ── Verdict ────────────────────────────────────────────── */}
-        <section className="pb-24">
-          <VerdictStrip verdicts={verdicts} />
-        </section>
-
-        {/* ── Rankings ───────────────────────────────────────────── */}
-        <section className="pb-24">
-          <SectionLabel index="01">Rankings</SectionLabel>
-          <ScoreRankings rankings={rankings} />
-        </section>
-
-        {/* ── Categories ─────────────────────────────────────────── */}
-        <section className="pb-24">
-          <SectionLabel index="02">Categories</SectionLabel>
-          <CategoryGrid />
-        </section>
-
-        {/* ── Models ─────────────────────────────────────────────── */}
-        <section className="pb-24">
-          <SectionLabel index="03">Models</SectionLabel>
-          <ModelList />
-        </section>
-
-        {/* ── Local LLM callout ──────────────────────────────────── */}
-        <section className="pb-16">
+        <section>
           <Reveal>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="font-mono text-xs uppercase tracking-wider text-muted">Also — on-device</p>
-                  <h2 className="mt-1 type-h3">Local LLM throughput on M5 Max 128GB</h2>
-                  <p className="mt-2 max-w-xl type-body text-fg/70">
-                    Same harness, same prompts, but local: Qwen3 8B at <strong className="text-fg">81 tok/s</strong>, Gemma 3 4B at{' '}
-                    <strong className="text-fg">132 tok/s</strong>, 12B at 55 tok/s — TTFT, prompt prefill, and generation via Ollama Metal, not an API.
-                  </p>
-                </div>
-                <Link
-                  href="/lab/local-llm/"
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-fg px-5 py-3 font-mono text-xs uppercase tracking-wider text-bg transition-colors hover:bg-fg/90"
-                >
-                  View local benchmark <ArrowRight className="h-3 w-3" />
-                </Link>
+            <div className="mb-5 flex items-baseline justify-between gap-4">
+              <div>
+                <p className="type-label text-muted">01 · results</p>
+                <h2 className="mt-2 type-h2">Model performance</h2>
               </div>
+              <span className="hidden font-mono text-xs text-muted sm:block">Select a category to rank by it</span>
             </div>
           </Reveal>
+          <BenchmarkTable rankings={rankings} rows={rows} />
         </section>
-
-        {/* ── All results ────────────────────────────────────────── */}
-        <section className="pb-16">
-          <SectionLabel index="04">All results</SectionLabel>
-          <ResultsTable rows={rows} />
-        </section>
-
-        {/* ── Methodology ────────────────────────────────────────── */}
-        {intro && (
-          <section id="about-the-numbers" className="border-t border-[var(--color-border)] pt-16">
-            <SectionLabel index="05">About the numbers</SectionLabel>
-            <Reveal>
-              <article className="mx-auto max-w-3xl">
-                {seeded && (
-                  <p className="mb-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-fg/70">
-                    Some rows are marked <span className="font-mono text-xs">sample</span> — hand-authored
-                    reference outputs used to scaffold a model before it has a live API run. They are
-                    excluded from the headline verdicts and labelled wherever they appear.
-                  </p>
-                )}
-                <MdxContent source={intro} />
-              </article>
-            </Reveal>
-          </section>
-        )}
       </main>
       <SiteFooter />
     </>

@@ -111,3 +111,42 @@ resource "cloudflare_dns_record" "paprika" {
   comment  = "VKE paprika Envoy Gateway LB (managed in this file; revisit when cluster is decommissioned)"
   tags     = []
 }
+
+# ── ACM DNS-validation CNAMEs ────────────────────────────────────────────────
+# The us-east-1 ACM cert (a6f0b992-…) on CloudFront distribution E30L2WGIX5OPQG
+# still lists benebsworth.com + www as aliases. ACM re-checks these CNAMEs at
+# every renewal; they were lost in the Cloudflare cutover, so the Sep 2026
+# renewal stalled in PENDING_VALIDATION. Must be DNS-only (proxied = false).
+# Delete these (and the distribution) once CloudFront is fully retired.
+resource "cloudflare_dns_record" "acm_validation_apex" {
+  zone_id = var.cloudflare_zone_id
+  name    = "_522734140e7786b8b283f2024465d867"
+  type    = "CNAME"
+  content = "_5c35002a5fc00ea5e2d7f7d21ca4591b.acm-validations.aws"
+  ttl     = 300
+  proxied = false
+  comment = "ACM DNS validation for benebsworth.com (CloudFront cert)"
+}
+
+resource "cloudflare_dns_record" "acm_validation_www" {
+  zone_id = var.cloudflare_zone_id
+  name    = "_9be799bb7779523fe4661a8af081454b.www"
+  type    = "CNAME"
+  content = "_100e56b660f7df9e26134678bb2de12a.acm-validations.aws"
+  ttl     = 300
+  proxied = false
+  comment = "ACM DNS validation for www.benebsworth.com (CloudFront cert)"
+}
+
+# The two records above were created via the Cloudflare API on 2026-09-07 to
+# beat the ACM deadline. Import them on the next apply (safe to keep; no-op once
+# they are in state).
+import {
+  to = cloudflare_dns_record.acm_validation_apex
+  id = "${var.cloudflare_zone_id}/92c5a424bf1e6ce2acc3fbf705b60b9b"
+}
+
+import {
+  to = cloudflare_dns_record.acm_validation_www
+  id = "${var.cloudflare_zone_id}/1e4cb35401a067f7464a70ed5960ff9d"
+}

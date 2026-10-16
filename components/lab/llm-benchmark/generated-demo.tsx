@@ -52,7 +52,12 @@ type LoadState =
   | { phase: 'error'; message: string }
 
 export function GeneratedDemo({ task, results, className = '' }: GeneratedDemoProps) {
-  const [selectedModelId, setSelectedModelId] = useState<string>(BENCHMARK_MODELS[0]?.id ?? '')
+  const [selectedModelId, setSelectedModelId] = useState<string>(() =>
+    BENCHMARK_MODELS.find((m) => results.some((r) =>
+      r.modelId === m.id && r.hasOutput && (r.status === 'success' || r.status === 'partial')
+    ))?.id ??
+    BENCHMARK_MODELS[0]?.id ?? ''
+  )
   const [state, setState] = useState<LoadState>({ phase: 'idle' })
   const seq = useRef(0)
   // Boot overlay: shown from iframe mount until its 'load' event (+ a short

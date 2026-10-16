@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { BENCHMARK_TASKS, getTask } from '../registry'
-import { resultsForTask } from '../results'
 import { getChecksForTask } from '../scorers/checks'
 import { selectScorer } from '../scorers'
 import { behavioralScorer } from '../scorers/behavioral'
@@ -298,12 +297,11 @@ describe('gateway-tasks (first-party archetype plugin, #22)', () => {
     expect(report.ok).toBe(true)
   })
 
-  it('is exempt from the board floor until its first sweep', () => {
+  it('carries the plugin provenance used by the board-floor exemption', () => {
     // registry.test.ts's >=20-result data-loss floor skips rows with a
     // pluginId; a contributed task legitimately has zero results until swept.
     const t = getTask('gateway-console')!
-    expect(t.pluginId).toBeDefined()
-    expect(resultsForTask('gateway-console')).toEqual([])
+    expect(t.pluginId).toBe('gateway-tasks')
   })
 })
 

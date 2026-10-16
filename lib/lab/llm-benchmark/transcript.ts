@@ -135,6 +135,10 @@ export function renderTranscript(
     `  config: iterations=${cfg.iterations} timeoutMs=${cfg.timeoutMs} maxRetries=${cfg.maxRetries} bustCache=${cfg.bustCache}`,
   )
   emit(`  ${events.length} event(s)`)
+  if (cfg.rescoreOf) {
+    emit(`  offline rescore of ${cfg.rescoreOf.runId}/${cfg.rescoreOf.file}`)
+    emit(`  scorer commit ${cfg.rescoreOf.scorerCommit}; original generation timestamps retained`)
+  }
 
   // Run-level, not per-iteration: the sandbox policy (#12) has no
   // iterationIndex, so it is pulled out here rather than falling into the

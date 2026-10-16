@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Tic-tac-toe · Pass & play</title>
+  <style>
+    html,body{margin:0;padding:0;min-height:100%;box-sizing:border-box;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+    *,*::before,*::after{box-sizing:inherit}
+    body{min-height:100vh;min-height:100svh;display:grid;place-items:center}
+    main{width:min(100%,23rem);padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+    header{margin-bottom:4px}
+    .eyebrow{margin:0 0 4px;color:#93939f;font-size:10px;font-weight:650;line-height:14px;letter-spacing:.22em;text-transform:uppercase}
+    h1{margin:0;font-size:32px;font-weight:650;line-height:40px;letter-spacing:-1.3px}
+    .players{width:min(100%,20rem);display:flex;justify-content:space-between;align-items:center;height:24px;font-size:11px;color:#92929f}
+    .player{display:flex;align-items:center;gap:7px;transition:color .15s}
+    .player strong{font-size:17px;line-height:24px;font-weight:650}
+    .player[data-mark="X"] strong{color:#99ebcb}
+    .player[data-mark="O"] strong{color:#bcb0f5}
+    .player.active{color:#ececf0}
+    .player.active::after{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+    .local{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#737381}
+    .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:7px;width:min(100%,20rem,calc(100vh - 15.5rem));width:min(100%,20rem,calc(100svh - 15.5rem));aspect-ratio:1}
+    .cell{appearance:none;display:grid;place-items:center;min-width:0;min-height:0;margin:0;padding:0;border:1px solid #2a2a35;border-radius:13px;background:#17171f;color:#ececf0;font-family:inherit;font-size:clamp(30px,7.5svh,56px);line-height:1;font-weight:500;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background .15s,border-color .15s,box-shadow .15s}
+    @media(hover:hover){.cell:not([aria-disabled="true"]):hover{background:#22222d;border-color:#626272}.restart:hover{background:#282832;border-color:#676775}}
+    .cell[data-mark="X"]{color:#99ebcb}
+    .cell[data-mark="O"]{color:#bcb0f5}
+    .cell[aria-disabled="true"]{cursor:default}
+    .cell.winner{background:#1b302c;border-color:#99ebcb;box-shadow:inset 0 0 22px #99ebcb08}
+    .cell.winner[data-mark="O"]{background:#29243a;border-color:#bcb0f5}
+    button:focus-visible{outline:2px solid #ececf0;outline-offset:3px}
+    .status{height:38px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+    #announcement{margin:0;font-size:17px;line-height:20px;font-weight:600;letter-spacing:-.3px}
+    #hint{margin:0;font-size:11px;line-height:15px;color:#92929f}
+    .restart{appearance:none;display:flex;align-items:center;justify-content:center;gap:9px;height:38px;padding:0 21px;border:1px solid #3b3b48;border-radius:999px;background:#1b1b24;color:#ececf0;font:500 12px ui-sans-serif,system-ui;cursor:pointer;touch-action:manipulation;transition:background .15s,border-color .15s}
+    .restart svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+    #error{max-width:100%;padding:10px;border:1px solid #e99b9b;border-radius:8px;color:#ffd0d0;font-size:12px;overflow-wrap:anywhere}
+    #error[hidden]{display:none}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main aria-labelledby="title">
+    <header>
+      <p class="eyebrow">Two players. One board.</p>
+      <h1 id="title">Tic-tac-toe</h1>
+    </header>
+    <div class="players" aria-label="Players">
+      <span class="player active" data-mark="X"><strong>X</strong> Player 1</span>
+      <span class="local">Pass & play</span>
+      <span class="player" data-mark="O"><strong>O</strong> Player 2</span>
+    </div>
+    <div class="board" role="group" aria-label="Tic-tac-toe board" aria-describedby="announcement">
+      <button class="cell" type="button" aria-label="Row 1, column 1, empty"></button>
+      <button class="cell" type="button" aria-label="Row 1, column 2, empty"></button>
+      <button class="cell" type="button" aria-label="Row 1, column 3, empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 1, empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 2, empty"></button>
+      <button class="cell" type="button" aria-label="Row 2, column 3, empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 1, empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 2, empty"></button>
+      <button class="cell" type="button" aria-label="Row 3, column 3, empty"></button>
+    </div>
+    <div class="status" role="status" aria-live="polite" aria-atomic="true">
+      <p id="announcement">X's turn</p>
+      <p id="hint">Choose an empty square. Get three in a row.</p>
+    </div>
+    <button class="restart" id="restart" type="button">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6a7 7 0 1 1-1 7M4 2v4h4"/></svg>
+      Restart game
+    </button>
+    <div id="error" role="alert" hidden></div>
+    <noscript><p>Enable JavaScript to play tic-tac-toe.</p></noscript>
+  </main>
+  <script>
+    try {
+      'use strict';
+      const cells = Array.from(document.querySelectorAll('.cell'));
+      const players = Array.from(document.querySelectorAll('.player'));
+      const announcement = document.getElementById('announcement');
+      const hint = document.getElementById('hint');
+      const winningLines = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      let board = Array(9).fill('');
+      let turn = 'X';
+      let finished = false;
+
+      function label(index, mark) {
+        return 'Row ' + (Math.floor(index / 3) + 1) + ', column ' + (index % 3 + 1) + ', ' + (mark || 'empty');
+      }
+
+      function updatePlayers() {
+        players.forEach(player => player.classList.toggle('active', !finished && player.dataset.mark === turn));
+      }
+
+      function play(index) {
+        if (finished || board[index]) return;
+        board[index] = turn;
+        cells[index].textContent = turn;
+        cells[index].dataset.mark = turn;
+        cells[index].setAttribute('aria-label', label(index, turn));
+        cells[index].setAttribute('aria-disabled', 'true');
+
+        const wins = winningLines.filter(line => line.every(position => board[position] === turn));
+        if (wins.length) {
+          finished = true;
+          wins.forEach(line => line.forEach(position => cells[position].classList.add('winner')));
+          announcement.textContent = turn + ' wins!';
+          hint.textContent = 'Three in a row. Ready for a rematch?';
+        } else if (board.every(Boolean)) {
+          finished = true;
+          announcement.textContent = "It's a draw!";
+          hint.textContent = 'Well matched. Give it another go.';
+        } else {
+          turn = turn === 'X' ? 'O' : 'X';
+          announcement.textContent = turn + "'s turn";
+          hint.textContent = 'Choose an empty square. Get three in a row.';
+        }
+
+        if (finished) cells.forEach(cell => cell.setAttribute('aria-disabled', 'true'));
+        updatePlayers();
+      }
+
+      function restart() {
+        board = Array(9).fill('');
+        turn = 'X';
+        finished = false;
+        cells.forEach((cell, index) => {
+          cell.textContent = '';
+          delete cell.dataset.mark;
+          cell.classList.remove('winner');
+          cell.removeAttribute('aria-disabled');
+          cell.setAttribute('aria-label', label(index, ''));
+        });
+        announcement.textContent = "X's turn";
+        hint.textContent = 'Choose an empty square. Get three in a row.';
+        updatePlayers();
+      }
+
+      cells.forEach((cell, index) => cell.addEventListener('click', () => play(index)));
+      document.getElementById('restart').addEventListener('click', restart);
+    } catch (error) {
+      const errorBox = document.getElementById('error');
+      errorBox.hidden = false;
+      errorBox.textContent = 'Unable to start the game: ' + (error.message || String(error));
+    }
+  </script>
+</body>
+</html>

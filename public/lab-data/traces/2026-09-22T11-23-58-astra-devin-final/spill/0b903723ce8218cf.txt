@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crypto_hash — PBKDF2 password hashing &amp; constant-time compare</title>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --border: #30363d;
+    --fg: #c9d1d9; --dim: #8b949e; --accent: #58a6ff;
+    --kw: #ff7b72; --str: #a5d6a7; --num: #79c0ff;
+    --com: #8b949e; --func: #d2a8ff; --const: #ffa657;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2.5rem 1rem;
+    background: var(--bg); color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  h1 { font-size: 1.7rem; margin: 0 0 .4rem; }
+  h1 code { color: var(--accent); }
+  .sub { color: var(--dim); margin: 0 0 1.2rem; }
+  .badges { margin-bottom: 2rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+  .badge {
+    font-size: .75rem; padding: .2rem .6rem; border-radius: 999px;
+    border: 1px solid var(--border); color: var(--dim); background: var(--panel);
+  }
+  .file { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 1.6rem; }
+  .file-head {
+    display: flex; align-items: center; gap: .8rem;
+    background: var(--panel); padding: .55rem .9rem; border-bottom: 1px solid var(--border);
+  }
+  .fname { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; font-weight: 600; }
+  .fdesc { color: var(--dim); font-size: .8rem; flex: 1; }
+  .copy {
+    font: .72rem ui-monospace, Menlo, monospace; cursor: pointer;
+    color: var(--dim); background: none; border: 1px solid var(--border);
+    border-radius: 6px; padding: .15rem .55rem;
+  }
+  .copy:hover { color: var(--fg); border-color: var(--dim); }
+  pre {
+    margin: 0; padding: 1rem 1.1rem; overflow-x: auto;
+    font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  code { font-family: inherit; }
+  .kw { color: var(--kw); }
+  .string { color: var(--str); }
+  .number { color: var(--num); }
+  .comment { color: var(--com); font-style: italic; }
+  .func { color: var(--func); }
+  .const { color: var(--const); }
+  .result {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: .8rem 1.1rem; font-family: ui-monospace, Menlo, monospace;
+    font-size: .85rem; color: var(--dim);
+  }
+  .result .ok { color: #3fb950; font-weight: 600; }
+  footer { color: var(--dim); font-size: .8rem; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><code>crypto_hash</code> — password hashing, done right</h1>
+  <p class="sub">Constant-time string comparison · PBKDF2-HMAC-SHA256 password hashing with a random salt · safe verification. Python standard library only.</p>
+  <div class="badges">
+    <span class="badge">stdlib only: hashlib · hmac · secrets · base64</span>
+    <span class="badge">600k iterations (OWASP)</span>
+    <span class="badge">128-bit salt</span>
+    <span class="badge">self-describing hash format</span>
+    <span class="badge">18 unit tests</span>
+  </div>
+
+      <section class="file">
+        <div class="file-head">
+          <span class="fname">crypto_hash.py</span>
+          <span class="fdesc">the module — constant_time_compare · hash_password · verify_password</span>
+          <button class="copy" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><code><span class="string">&quot;&quot;&quot;Constant-time comparison and PBKDF2 password hashing.
+
+Public API
+----------
+constant_time_compare(a, b) -&gt; bool
+    Timing-safe equality check for str/bytes.
+hash_password(password, *, iterations=..., salt=None) -&gt; str
+    Derive a PBKDF2-HMAC-SHA256 hash with a random salt and return it in a
+    self-describing storage string.
+verify_password(password, stored) -&gt; bool
+    Re-derive and compare against a stored hash in constant time.
+
+Storage format:  pbkdf2_sha256$&lt;iterations&gt;$&lt;b64 salt&gt;$&lt;b64 derived key&gt;
+
+Stdlib only: hashlib, hmac, secrets, base64.
+&quot;&quot;&quot;</span>
+
+<span class="kw">from</span> __future__ <span class="kw">import</span> annotations
+
+<span class="kw">import</span> base64
+<span class="kw">import</span> hashlib
+<span class="kw">import</span> hmac
+<span class="kw">import</span> secrets
+
+<span class="const">ALGORITHM</span> = <span class="string">&quot;pbkdf2_sha256&quot;</span>
+<span class="const">DEFAULT_ITERATIONS</span> = <span class="number">600_000</span>  <span class="comment"># OWASP recommendation for PBKDF2-HMAC-SHA256</span>
+<span class="const">SALT_BYTES</span> = <span class="number">16</span>               <span class="comment"># 128-bit random salt</span>
+<span class="const">DKLEN</span> = <span class="number">32</span>                    <span class="comment"># 256-bit derived key</span>
+
+
+<span class="kw">def</span> <span class="func">_to_bytes</span>(value: str | bytes | bytearray, name: str) -&gt; bytes:
+    <span class="kw">if</span> <span class="func">isinstance</span>(value, str):
+        <span class="kw">return</span> value.<span class="func">encode</span>(<span class="string">&quot;utf-8&quot;</span>)
+    <span class="kw">if</span> <span class="func">isinstance</span>(value, (bytes, bytearray)):
+        <span class="kw">return</span> <span class="func">bytes</span>(value)
+    <span class="kw">raise</span> <span class="func">TypeError</span>(<span class="string">f&quot;{name} must be str or bytes, got {type(value).__name__}&quot;</span>)
+
+
+<span class="kw">def</span> <span class="func">_b64encode</span>(raw: bytes) -&gt; str:
+    <span class="kw">return</span> base64.<span class="func">b64encode</span>(raw).<span class="func">decode</span>(<span class="string">&quot;ascii&quot;</span>)
+
+
+<span class="kw">def</span> <span class="func">_b64decode</span>(text: str) -&gt; bytes:
+    <span class="kw">return</span> base64.<span class="func">b64decode</span>(text.<span class="func">encode</span>(<span class="string">&quot;ascii&quot;</span>), validate=<span class="kw">True</span>)
+
+
+<span class="kw">def</span> <span class="func">constant_time_compare</span>(a: str | bytes | bytearray, b: str | bytes | bytearray) -&gt; bool:
+    <span class="string">&quot;&quot;&quot;Return True iff a == b, in time independent of where they differ.
+
+    Wraps hmac.compare_digest so the comparison does not short-circuit on
+    the first differing byte, which would leak a prefix-length signal to a
+    timing attacker.
+    &quot;&quot;&quot;</span>
+    <span class="kw">return</span> hmac.<span class="func">compare_digest</span>(<span class="func">_to_bytes</span>(a, <span class="string">&quot;a&quot;</span>), <span class="func">_to_bytes</span>(b, <span class="string">&quot;b&quot;</span>))
+
+
+<span class="kw">def</span> <span class="func">hash_password</span>(
+    password: ***REDACTED*** | bytes,
+    *,
+    iterations: int = <span class="const">DEFAULT_ITERATIONS</span>,
+    salt: bytes | <span class="kw">None</span> = <span class="kw">None</span>,
+) -&gt; str:
+    <span class="string">&quot;&quot;&quot;Hash a password with PBKDF2-HMAC-SHA256 and a random salt.
+
+    Returns a self-describing string: algorithm, iteration count, salt, and
+    derived key — everything verify_password needs, nothing else.
+    &quot;&quot;&quot;</span>
+    <span class="kw">if</span> iterations &lt; <span class="number">1</span>:
+        <span class="kw">raise</span> <span class="func">ValueError</span>(<span class="string">&quot;iterations must be &gt;= 1&quot;</span>)
+    <span class="kw">if</span> salt <span class="kw">is</span> <span class="kw">None</span>:
+        salt = secrets.<span class="func">token_bytes</span>(<span class="const">SALT_BYTES</span>)
+    dk = hashlib.<span class="func">pbkdf2_hmac</span>(
+        <span class="string">&quot;sha256&quot;</span>, <span class="func">_to_bytes</span>(password, <span class="string">&quot;password&quot;</span>), salt, iterations, dklen=<span class="const">DKLEN</span>
+    )
+    <span class="kw">return</span> <span class="string">f&quot;{ALGORITHM}${iterations}${_b64encode(salt)}${_b64encode(dk)}&quot;</span>
+
+
+<span class="kw">def</span> <span class="func">verify_password</span>(password: ***REDACTED*** | bytes, stored: str) -&gt; bool:
+    <span class="string">&quot;&quot;&quot;Check a password against a stored hash string. Never raises on bad input.&quot;&quot;&quot;</span>
+    <span class="kw">try</span>:
+        algorithm, iterations_s, salt_b64, hash_b64 = stored.<span class="func">split</span>(<span class="string">&quot;$&quot;</span>)
+        <span class="kw">if</span> <span class="kw">not</span> <span class="func">constant_time_compare</span>(algorithm, <span class="const">ALGORITHM</span>):
+            <span class="kw">return</span> <span class="kw">False</span>
+        iterations = <span class="func">int</span>(iterations_s)
+        <span class="kw">if</span> iterations &lt; <span class="number">1</span>:
+            <span class="kw">return</span> <span class="kw">False</span>
+        salt = <span class="func">_b64decode</span>(salt_b64)
+        expected = <span class="func">_b64decode</span>(hash_b64)
+    <span class="kw">except</span> (ValueError, TypeError, AttributeError):
+        <span class="kw">return</span> <span class="kw">False</span>
+    dk = hashlib.<span class="func">pbkdf2_hmac</span>(
+        <span class="string">&quot;sha256&quot;</span>, <span class="func">_to_bytes</span>(password, <span class="string">&quot;password&quot;</span>), salt, iterations, dklen=<span class="func">len</span>(expected)
+    )
+    <span class="kw">return</span> <span class="func">constant_time_compare</span>(dk, expected)
+</code></pre>
+      </section>
+      <section class="file">
+        <div class="file-head">
+          <span class="fname">usage.py</span>
+          <span class="fdesc">example usage</span>
+          <button class="copy" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><code><span class="kw">from</span> crypto_hash <span class="kw">import</span> constant_time_compare, hash_password, verify_password
+
+<span class="comment"># Hash once at signup — a fresh 128-bit salt is generated every call</span>
+stored = <span class="func">hash_password</span>(<span class="string">&quot;correct horse battery staple&quot;</span>)
+<span class="comment"># -&gt; &quot;pbkdf2_sha256$600000$&lt;b64 salt&gt;$&lt;b64 key&gt;&quot;</span>
+
+<span class="comment"># Verify at login — parsing failures return False, never raise</span>
+<span class="kw">assert</span> <span class="func">verify_password</span>(<span class="string">&quot;correct horse battery staple&quot;</span>, stored)
+<span class="kw">assert</span> <span class="kw">not</span> <span class="func">verify_password</span>(<span class="string">&quot;wrong&quot;</span>, stored)
+
+<span class="comment"># Timing-safe equality for tokens, MACs, API keys, ...</span>
+<span class="kw">assert</span> <span class="func">constant_time_compare</span>(<span class="string">&quot;tok_a&quot;</span>, <span class="string">&quot;tok_a&quot;</span>)
+<span class="kw">assert</span> <span class="kw">not</span> <span class="func">constant_time_compare</span>(<span class="string">&quot;tok_a&quot;</span>, <span class="string">&quot;tok_b&quot;</span>)</code></pre>
+      </section>
+      <section class="file">
+        <div class="file-head">
+          <span class="fname">test_crypto_hash.py</span>
+          <span class="fdesc">unittest suite — run: python3 -m unittest test_crypto_hash -v</span>
+          <button class="copy" onclick="copyCode(this)">copy</button>
+        </div>
+        <pre><code><span class="kw">import</span> re
+<span class="kw">import</span> unittest
+
+<span class="kw">from</span> crypto_hash <span class="kw">import</span> (
+    <span class="const">ALGORITHM</span>,
+    <span class="const">DEFAULT_ITERATIONS</span>,
+    <span class="const">SALT_BYTES</span>,
+    constant_time_compare,
+    hash_password,
+    verify_password,
+)
+
+<span class="const">FAST</span> = <span class="func">dict</span>(iterations=<span class="number">1_000</span>)  <span class="comment"># keep the test suite quick</span>
+
+
+<span class="kw">class</span> <span class="func">ConstantTimeCompareTests</span>(unittest.TestCase):
+    <span class="kw">def</span> <span class="func">test_equal_strings</span>(self):
+        self.<span class="func">assertTrue</span>(<span class="func">constant_time_compare</span>(<span class="string">&quot;hunter2&quot;</span>, <span class="string">&quot;hunter2&quot;</span>))
+
+    <span class="kw">def</span> <span class="func">test_unequal_strings</span>(self):
+        self.<span class="func">assertFalse</span>(<span class="func">constant_time_compare</span>(<span class="string">&quot;hunter2&quot;</span>, <span class="string">&quot;hunter3&quot;</span>))
+
+    <span class="kw">def</span> <span class="func">test_different_lengths</span>(self):
+        self.<span class="func">assertFalse</span>(<span class="func">constant_time_compare</span>(<span class="string">&quot;abc&quot;</span>, <span class="string">&quot;abcd&quot;</span>))
+
+    <span class="kw">def</span> <span class="func">test_empty_strings</span>(self):
+        self.<span class="func">assertTrue</span>(<span class="func">constant_time_compare</span>(<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>))
+
+    <span class="kw">def</span> <span class="func">test_bytes_and_mixed_types</span>(self):
+        self.<span class="func">assertTrue</span>(<span class="func">constant_time_compare</span>(<span class="string">b&quot;abc&quot;</span>, <span class="string">&quot;abc&quot;</span>))
+        self.<span class="func">assertTrue</span>(<span class="func">constant_time_compare</span>(<span class="func">bytearray</span>(<span class="string">b&quot;abc&quot;</span>), <span class="string">&quot;abc&quot;</span>))
+        self.<span class="func">assertFalse</span>(<span class="func">constant_time_compare</span>(<span class="string">b&quot;abc&quot;</span>, <span class="string">&quot;abd&quot;</span>))
+
+    <span class="kw">def</span> <span class="func">test_rejects_non_text_types</span>(self):
+        <span class="kw">with</span> self.<span class="func">assertRaises</span>(TypeError):
+            <span class="func">constant_time_compare</span>(<span class="number">123</span>, <span class="string">&quot;123&quot;</span>)
+        <span class="kw">with</span> self.<span class="func">assertRaises</span>(TypeError):
+            <span class="func">constant_time_compare</span>(<span class="string">&quot;abc&quot;</span>, <span class="kw">None</span>)
+
+
+<span class="kw">class</span> <span class="func">HashPasswordTests</span>(unittest.TestCase):
+    <span class="kw">def</span> <span class="func">test_format_is_self_describing</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;s3cret&quot;</span>, **<span class="const">FAST</span>)
+        self.<span class="func">assertRegex</span>(
+            stored,
+            re.<span class="func">compile</span>(<span class="string">r&quot;^pbkdf2_sha256\$\d+\$[A-Za-z0-9+/=]+\$[A-Za-z0-9+/=]+$&quot;</span>),
+        )
+
+    <span class="kw">def</span> <span class="func">test_random_salt_gives_unique_hashes</span>(self):
+        h1 = <span class="func">hash_password</span>(<span class="string">&quot;same-password&quot;</span>, **<span class="const">FAST</span>)
+        h2 = <span class="func">hash_password</span>(<span class="string">&quot;same-password&quot;</span>, **<span class="const">FAST</span>)
+        self.<span class="func">assertNotEqual</span>(h1, h2)
+        salt1 = h1.<span class="func">split</span>(<span class="string">&quot;$&quot;</span>)[<span class="number">2</span>]
+        salt2 = h2.<span class="func">split</span>(<span class="string">&quot;$&quot;</span>)[<span class="number">2</span>]
+        self.<span class="func">assertNotEqual</span>(salt1, salt2)
+
+    <span class="kw">def</span> <span class="func">test_fixed_salt_is_deterministic</span>(self):
+        salt = <span class="string">b&quot;\x00&quot;</span> * <span class="const">SALT_BYTES</span>
+        self.<span class="func">assertEqual</span>(
+            <span class="func">hash_password</span>(<span class="string">&quot;pw&quot;</span>, salt=salt, **<span class="const">FAST</span>),
+            <span class="func">hash_password</span>(<span class="string">&quot;pw&quot;</span>, salt=salt, **<span class="const">FAST</span>),
+        )
+
+    <span class="kw">def</span> <span class="func">test_records_iteration_count</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;pw&quot;</span>, iterations=<span class="number">777</span>)
+        self.<span class="func">assertEqual</span>(stored.<span class="func">split</span>(<span class="string">&quot;$&quot;</span>)[<span class="number">1</span>], <span class="string">&quot;777&quot;</span>)
+
+    <span class="kw">def</span> <span class="func">test_rejects_bad_iterations</span>(self):
+        <span class="kw">with</span> self.<span class="func">assertRaises</span>(ValueError):
+            <span class="func">hash_password</span>(<span class="string">&quot;pw&quot;</span>, iterations=<span class="number">0</span>)
+
+    <span class="kw">def</span> <span class="func">test_accepts_bytes_password</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">b&quot;pw&quot;</span>, **<span class="const">FAST</span>)
+        self.<span class="func">assertTrue</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, stored))
+
+
+<span class="kw">class</span> <span class="func">VerifyPasswordTests</span>(unittest.TestCase):
+    <span class="kw">def</span> <span class="func">test_roundtrip</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;correct horse battery staple&quot;</span>, **<span class="const">FAST</span>)
+        self.<span class="func">assertTrue</span>(<span class="func">verify_password</span>(<span class="string">&quot;correct horse battery staple&quot;</span>, stored))
+
+    <span class="kw">def</span> <span class="func">test_wrong_password</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;right&quot;</span>, **<span class="const">FAST</span>)
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;wrong&quot;</span>, stored))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;right &quot;</span>, stored))  <span class="comment"># whitespace matters</span>
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;&quot;</span>, stored))
+
+    <span class="kw">def</span> <span class="func">test_unicode_password</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;pässwörd🔐&quot;</span>, **<span class="const">FAST</span>)
+        self.<span class="func">assertTrue</span>(<span class="func">verify_password</span>(<span class="string">&quot;pässwörd🔐&quot;</span>, stored))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;password&quot;</span>, stored))
+
+    <span class="kw">def</span> <span class="func">test_malformed_stored_strings_return_false</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;pw&quot;</span>, **<span class="const">FAST</span>)
+        parts = stored.<span class="func">split</span>(<span class="string">&quot;$&quot;</span>)
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">&quot;&quot;</span>))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">&quot;not-a-hash&quot;</span>))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">&quot;md5$&quot;</span> + <span class="string">&quot;$&quot;</span>.<span class="func">join</span>(parts[<span class="number">1</span>:])))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">f&quot;{ALGORITHM}$abc${parts[2]}${parts[3]}&quot;</span>))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">f&quot;{ALGORITHM}$0${parts[2]}${parts[3]}&quot;</span>))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">f&quot;{ALGORITHM}${parts[1]}$!!!${parts[3]}&quot;</span>))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">&quot;$&quot;</span>.<span class="func">join</span>(parts[:<span class="number">3</span>])))
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, stored + <span class="string">&quot;extra&quot;</span>))
+
+    <span class="kw">def</span> <span class="func">test_tampered_hash_fails</span>(self):
+        stored = <span class="func">hash_password</span>(<span class="string">&quot;pw&quot;</span>, **<span class="const">FAST</span>)
+        parts = stored.<span class="func">split</span>(<span class="string">&quot;$&quot;</span>)
+        parts[<span class="number">3</span>] = <span class="string">&quot;A&quot;</span> + parts[<span class="number">3</span>][<span class="number">1</span>:] <span class="kw">if</span> parts[<span class="number">3</span>][<span class="number">0</span>] != <span class="string">&quot;A&quot;</span> <span class="kw">else</span> <span class="string">&quot;B&quot;</span> + parts[<span class="number">3</span>][<span class="number">1</span>:]
+        self.<span class="func">assertFalse</span>(<span class="func">verify_password</span>(<span class="string">&quot;pw&quot;</span>, <span class="string">&quot;$&quot;</span>.<span class="func">join</span>(parts)))
+
+    <span class="kw">def</span> <span class="func">test_default_parameters</span>(self):
+        self.<span class="func">assertEqual</span>(<span class="const">DEFAULT_ITERATIONS</span>, <span class="number">600_000</span>)
+        self.<span class="func">assertEqual</span>(<span class="const">ALGORITHM</span>, <span class="string">&quot;pbkdf2_sha256&quot;</span>)
+
+
+<span class="kw">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:
+    unittest.<span class="func">main</span>()
+</code></pre>
+      </section>
+  <div class="result">
+    $ python3 -m unittest test_crypto_hash<br>
+    Ran 18 tests in 0.002s &nbsp;·&nbsp; <span class="ok">OK</span>
+  </div>
+
+  <footer>
+    Stored format: <code>pbkdf2_sha256$&lt;iterations&gt;$&lt;base64 salt&gt;$&lt;base64 key&gt;</code> —
+    the iteration count and salt travel with the hash, so parameters can be raised
+    later without invalidating old records. Verification uses <code>hmac.compare_digest</code>
+    so the comparison never short-circuits on a matching prefix.
+  </footer>
+</div>
+<script>
+function copyCode(btn) {
+  const code = btn.closest('.file').querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'copied';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+</script>
+</body>
+</html>

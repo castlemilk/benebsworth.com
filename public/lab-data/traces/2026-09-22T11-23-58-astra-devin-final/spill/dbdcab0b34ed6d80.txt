@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nebula — Ship product at lightspeed</title>
+<style>
+  :root{
+    --ease:cubic-bezier(.22,.8,.24,1);
+  }
+  html[data-theme="dark"]{
+    --bg:#0c0c10;
+    --bg-soft:#12121a;
+    --card:rgba(255,255,255,.035);
+    --card-solid:#14141d;
+    --text:#ececf0;
+    --muted:#9a9aad;
+    --faint:#6b6b7e;
+    --border:rgba(255,255,255,.09);
+    --border-strong:rgba(255,255,255,.16);
+    --accent:#818cf8;
+    --accent-2:#22d3ee;
+    --accent-3:#e879f9;
+    --accent-ink:#0b0b12;
+    --glow:rgba(129,140,248,.35);
+    --nav-bg:rgba(12,12,16,.72);
+    --shadow:0 18px 50px -18px rgba(0,0,0,.65);
+    --track:rgba(255,255,255,.12);
+    color-scheme:dark;
+  }
+  html[data-theme="light"]{
+    --bg:#f5f6fb;
+    --bg-soft:#ffffff;
+    --card:rgba(255,255,255,.75);
+    --card-solid:#ffffff;
+    --text:#181826;
+    --muted:#55556a;
+    --faint:#8a8a9d;
+    --border:rgba(24,24,44,.1);
+    --border-strong:rgba(24,24,44,.18);
+    --accent:#5b5ce2;
+    --accent-2:#0891b2;
+    --accent-3:#c026d3;
+    --accent-ink:#ffffff;
+    --glow:rgba(91,92,226,.28);
+    --nav-bg:rgba(245,246,251,.78);
+    --shadow:0 18px 45px -20px rgba(30,30,70,.25);
+    --track:rgba(24,24,44,.12);
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%;background:var(--bg);color:var(--text);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    transition:background .45s var(--ease),color .45s var(--ease);
+    -webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+  ::selection{background:var(--accent);color:var(--accent-ink)}
+  #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .wrap{position:relative;z-index:1}
+  .container{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:transparent;border-bottom:1px solid transparent;transition:background .3s,border-color .3s}
+  nav.scrolled{background:var(--nav-bg);border-color:var(--border)}
+  .nav-inner{display:flex;align-items:center;gap:28px;height:60px}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;letter-spacing:-.01em;text-decoration:none;color:var(--text)}
+  .logo-mark{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-3));box-shadow:0 4px 14px -4px var(--glow)}
+  .logo-mark svg{width:15px;height:15px}
+  .nav-links{display:flex;gap:4px;margin-left:auto}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:13.5px;font-weight:500;padding:7px 12px;border-radius:8px;transition:color .2s,background .2s}
+  .nav-links a:hover{color:var(--text);background:var(--card)}
+  .theme-btn{margin-left:8px;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);cursor:pointer;display:grid;place-items:center;
+    transition:border-color .2s,transform .2s,background .3s}
+  .theme-btn:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+  .theme-btn:active{transform:scale(.94)}
+  .theme-btn svg{width:17px;height:17px}
+  html[data-theme="dark"] .icon-sun{display:none}
+  html[data-theme="light"] .icon-moon{display:none}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:calc(100svh - 60px);display:flex;flex-direction:column;justify-content:center;
+    text-align:center;padding:56px 24px 72px;position:relative}
+  .badge{display:inline-flex;align-items:center;gap:8px;margin:0 auto 22px;padding:6px 14px 6px 8px;
+    border-radius:999px;border:1px solid var(--border);background:var(--card);
+    font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.01em}
+  .badge .pill{background:linear-gradient(135deg,var(--accent),var(--accent-3));color:var(--accent-ink);
+    font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:.04em}
+  h1{margin:0 auto;font-size:clamp(38px,6.4vw,68px);line-height:1.04;letter-spacing:-.035em;
+    font-weight:800;max-width:14ch}
+  h1 .grad{background:linear-gradient(100deg,var(--accent) 0%,var(--accent-3) 45%,var(--accent-2) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.sub{margin:20px auto 0;max-width:52ch;font-size:clamp(15px,1.9vw,18px);line-height:1.6;color:var(--muted)}
+  .cta-row{display:flex;gap:12px;justify-content:center;margin-top:32px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;text-decoration:none;
+    padding:12px 22px;border-radius:12px;border:1px solid transparent;cursor:pointer;
+    transition:transform .2s var(--ease),box-shadow .25s,border-color .2s,background .2s}
+  .btn-primary{color:var(--accent-ink);background:linear-gradient(135deg,var(--accent),var(--accent-3));
+    box-shadow:0 10px 28px -10px var(--glow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px var(--glow)}
+  .btn-ghost{color:var(--text);border-color:var(--border);background:var(--card)}
+  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--border-strong)}
+  .btn svg{width:15px;height:15px}
+  .stats{display:flex;gap:0;justify-content:center;margin-top:52px;flex-wrap:wrap}
+  .stat{padding:0 30px;border-right:1px solid var(--border)}
+  .stat:last-child{border-right:none}
+  .stat b{display:block;font-size:clamp(20px,2.6vw,27px);font-weight:800;letter-spacing:-.02em}
+  .stat span{font-size:12px;color:var(--faint);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+  /* ---------- sections ---------- */
+  section{padding:76px 0;position:relative}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;text-align:center}
+  h2{margin:0 auto 12px;text-align:center;font-size:clamp(26px,3.6vw,38px);letter-spacing:-.03em;font-weight:800}
+  .lede{margin:0 auto 44px;max-width:56ch;text-align:center;color:var(--muted);font-size:15.5px;line-height:1.6}
+
+  /* ---------- features ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    transition:transform .3s var(--ease),border-color .3s,box-shadow .3s,background .45s}
+  .card:hover{transform:translateY(-4px);border-color:var(--border-strong);box-shadow:var(--shadow)}
+  .ficon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-3));color:var(--accent-ink);
+    box-shadow:0 8px 20px -8px var(--glow)}
+  .ficon svg{width:20px;height:20px}
+  .card h3{margin:0 0 8px;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
+  .card p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+
+  /* ---------- pricing ---------- */
+  .billing{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:40px}
+  .billing span{font-size:14px;font-weight:600;color:var(--faint);transition:color .25s}
+  .billing span.on{color:var(--text)}
+  .save{font-size:11px;font-weight:700;color:var(--accent-2);border:1px solid var(--border);
+    padding:2px 8px;border-radius:999px;background:var(--card)}
+  .switch{position:relative;width:52px;height:28px;border-radius:999px;border:1px solid var(--border-strong);
+    background:var(--track);cursor:pointer;padding:0;transition:background .3s}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-3));
+    transition:transform .3s var(--ease);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .switch[aria-checked="true"]::after{transform:translateX(24px)}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+  .tier{display:flex;flex-direction:column}
+  .tier.pop{position:relative;border-color:transparent;
+    background:linear-gradient(var(--card-solid),var(--card-solid)) padding-box,
+      linear-gradient(135deg,var(--accent),var(--accent-3),var(--accent-2)) border-box;
+    border:1.5px solid transparent;box-shadow:0 22px 55px -20px var(--glow)}
+  .pop-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(135deg,var(--accent),var(--accent-3));color:var(--accent-ink);
+    font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:4px 12px;border-radius:999px;white-space:nowrap}
+  .tier h3{margin:0;font-size:15px;font-weight:700}
+  .tier .who{margin:6px 0 18px;font-size:13px;color:var(--faint)}
+  .price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px;min-height:46px}
+  .price b{font-size:40px;font-weight:800;letter-spacing:-.03em;transition:opacity .18s}
+  .price b.fade{opacity:0}
+  .price i{font-style:normal;color:var(--faint);font-size:14px;font-weight:600}
+  .cycle{font-size:12px;color:var(--faint);margin-bottom:18px;min-height:16px}
+  .tier ul{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:10px;flex:1}
+  .tier li{display:flex;gap:9px;font-size:13.5px;color:var(--muted);align-items:flex-start;line-height:1.45}
+  .tier li svg{flex:none;width:16px;height:16px;color:var(--accent-2);margin-top:1px}
+  .tier .btn{justify-content:center;width:100%}
+
+  /* ---------- cta banner ---------- */
+  .banner{position:relative;overflow:hidden;border-radius:24px;border:1px solid var(--border);
+    background:var(--card);backdrop-filter:blur(8px);padding:56px 32px;text-align:center}
+  .banner::before{content:"";position:absolute;inset:-40%;z-index:-1;
+    background:radial-gradient(circle at 30% 20%,var(--glow),transparent 45%),
+               radial-gradient(circle at 75% 85%,var(--glow),transparent 45%);
+    filter:blur(10px)}
+  .banner h2{margin-bottom:10px}
+  .banner p{margin:0 auto 26px;max-width:46ch;color:var(--muted);font-size:15px;line-height:1.6}
+
+  footer{border-top:1px solid var(--border);padding:26px 0 34px}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .foot small{color:var(--faint);font-size:13px}
+  .foot .links{display:flex;gap:18px}
+  .foot a{color:var(--muted);font-size:13px;text-decoration:none}
+  .foot a:hover{color:var(--text)}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{transition:none;opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+
+  #err{display:none;position:fixed;inset:auto 16px 16px 16px;z-index:99;background:#7f1d1d;color:#fecaca;
+    border:1px solid #ef4444;border-radius:10px;padding:12px 16px;font:13px/1.5 ui-monospace,monospace}
+
+  @media (max-width:860px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .tiers{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+    .tier.pop{order:-1}
+  }
+  @media (max-width:620px){
+    .nav-links{display:none}
+    .grid{grid-template-columns:1fr}
+    .hero{padding:40px 18px 56px;min-height:calc(100svh - 60px)}
+    .stat{padding:0 18px}
+    section{padding:56px 0}
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <nav id="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="#top" aria-label="Nebula home">
+        <span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></span>
+        Nebula
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#cta">Get started</a>
+      </div>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle dark and light theme" title="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="badge reveal"><span class="pill">NEW</span> Nebula 3.0 — realtime collaboration is here</div>
+    <h1 class="reveal">Ship product at <span class="grad">lightspeed</span>, not meetings</h1>
+    <p class="sub reveal">Nebula turns scattered issues, docs and deploys into one fluid workspace. Plan in the morning, ship by lunch — with automation that actually stays out of your way.</p>
+    <div class="cta-row reveal">
+      <a class="btn btn-primary" href="#pricing">Start free
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#features">See features</a>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><b>12k+</b><span>teams shipping</span></div>
+      <div class="stat"><b>99.99%</b><span>uptime SLA</span></div>
+      <div class="stat"><b>38%</b><span>faster releases</span></div>
+      <div class="stat"><b>4.9/5</b><span>user rating</span></div>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="container">
+      <p class="kicker reveal">Features</p>
+      <h2 class="reveal">Everything in one orbit</h2>
+      <p class="lede reveal">Six primitives that replace a dozen tools. Fast enough to feel instant, flexible enough to fit how your team already works.</p>
+      <div class="grid">
+        <div class="card reveal">
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
+          <h3>Instant sync</h3>
+          <p>Every keystroke replicates in under 50&nbsp;ms. Offline edits merge cleanly when you're back — no conflicts, no spinners.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <h3>Composable boards</h3>
+          <p>Kanban, timeline, table or doc — same data, any view. Reshape your workflow in seconds, not sprints.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18 9l-4.1 1.4L12 15l-1.9-4.6L6 9l4.1-1.4z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg></div>
+          <h3>AI copilot</h3>
+          <p>Drafts specs from a title, triages incoming issues, and writes status updates from real activity — you approve, it does the typing.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3>Zero-trust security</h3>
+          <p>SSO/SAML, SCIM, audit logs and end-to-end encrypted projects. SOC&nbsp;2 Type&nbsp;II and GDPR out of the box.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg></div>
+          <h3>Automations</h3>
+          <p>Trigger → condition → action, no code required. Auto-assign, escalate, and close the loop while you sleep.</p>
+        </div>
+        <div class="card reveal">
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 4-7"/></svg></div>
+          <h3>Live analytics</h3>
+          <p>Velocity, cycle time and burn-up charts generated from real work — no manual reporting, ever.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="container">
+      <p class="kicker reveal">Pricing</p>
+      <h2 class="reveal">Simple, scales with you</h2>
+      <p class="lede reveal">Start free, upgrade when you outgrow it. Every paid plan includes unlimited viewers and a 14-day trial.</p>
+      <div class="billing reveal">
+        <span id="lblMonthly" class="on">Monthly</span>
+        <button class="switch" id="billSwitch" role="switch" aria-checked="false" aria-label="Toggle annual billing"></button>
+        <span id="lblYearly">Yearly</span>
+        <span class="save">save ~20%</span>
+      </div>
+      <div class="tiers">
+        <div class="card tier reveal">
+          <h3>Starter</h3>
+          <p class="who">For side projects and trying things out</p>
+          <div class="price"><b data-m="$0" data-y="$0">$0</b><i>/mo</i></div>
+          <div class="cycle">free forever</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Up to 3 projects</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Boards &amp; docs</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Community support</li>
+          </ul>
+          <a class="btn btn-ghost" href="#cta">Get started</a>
+        </div>
+        <div class="card tier pop reveal">
+          <span class="pop-tag">Most popular</span>
+          <h3>Pro</h3>
+          <p class="who">For teams that ship every week</p>
+          <div class="price"><b data-m="$19" data-y="$15">$19</b><i>/user/mo</i></div>
+          <div class="cycle" data-m="billed monthly" data-y="billed annually">billed monthly</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Unlimited projects &amp; views</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>AI copilot included</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Automations &amp; integrations</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Priority support</li>
+          </ul>
+          <a class="btn btn-primary" href="#cta">Start 14-day trial</a>
+        </div>
+        <div class="card tier reveal">
+          <h3>Enterprise</h3>
+          <p class="who">For orgs with compliance needs</p>
+          <div class="price"><b data-m="$49" data-y="$39">$49</b><i>/user/mo</i></div>
+          <div class="cycle" data-m="billed monthly" data-y="billed annually">billed monthly</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Everything in Pro</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>SSO/SAML, SCIM, audit logs</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>Dedicated success manager</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>99.99% uptime SLA</li>
+          </ul>
+          <a class="btn btn-ghost" href="#cta">Contact sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="container">
+      <div class="banner reveal">
+        <p class="kicker" style="margin-bottom:8px">Ready?</p>
+        <h2>Your next release could be today</h2>
+        <p>Spin up a workspace in under a minute. Import from your existing tools with one click — no credit card required.</p>
+        <div class="cta-row" style="margin-top:0">
+          <a class="btn btn-primary" href="#top">Create free workspace
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container foot">
+      <small>© 2026 Nebula Labs — a demo landing page</small>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#top">Back to top</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div id="err" role="alert"></div>
+
+<script>
+try {
+  (function () {
+    "use strict";
+    var root = document.documentElement;
+    var errBox = document.getElementById("err");
+    function fail(msg) {
+      errBox.style.display = "block";
+      errBox.textContent = "Error: " + msg;
+    }
+    window.addEventListener("error", function (e) { fail(e.message || "script error"); });
+
+    /* ---------- storage (feature-detected) ---------- */
+    var store = {
+      get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+      set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+    };
+
+    /* ---------- theme ---------- */
+    var theme = store.get("nebula-theme");
+    if (theme !== "dark" && theme !== "light") {
+      var mq = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)");
+      theme = (mq && mq.matches) ? "light" : "dark";
+    }
+    root.setAttribute("data-theme", theme);
+
+    var PALETTES = {
+      dark:  [[129,140,248], [232,121,249], [34,211,238], [167,139,250], [56,189,248]],
+      light: [[99,102,241], [192,38,211], [8,145,178], [139,92,246], [2,132,199]]
+    };
+
+    document.getElementById("themeBtn").addEventListener("click", function () {
+      theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", theme);
+      store.set("nebula-theme", theme);
+      drawOnce(); // repaint backdrop in the new palette immediately
+    });
+
+    /* ---------- morphing blob backdrop ---------- */
+    var canvas = document.getElementById("bg");
+    var ctx = canvas.getContext("2d");
+    var W = 0, H = 0, dpr = 1, raf = 0, t0 = performance.now();
+    var BLOBS = [];
+    for (var i = 0; i < 5; i++) {
+      BLOBS.push({
+        px: [0.22, 0.78, 0.5, 0.12, 0.88][i],
+        py: [0.28, 0.32, 0.75, 0.85, 0.7][i],
+        r:  [0.34, 0.3, 0.38, 0.26, 0.24][i],
+        ax: 0.06 + i * 0.012,
+        ay: 0.05 + (4 - i) * 0.013,
+        sx: 0.00012 + i * 0.00003,
+        sy: 0.0001 + (4 - i) * 0.000028,
+        ph: i * 1.7
+      });
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawOnce();
+    }
+
+    function draw(now) {
+      ctx.clearRect(0, 0, W, H);
+      var pal = PALETTES[root.getAttribute("data-theme") === "light" ? "light" : "dark"];
+      var dark = root.getAttribute("data-theme") !== "light";
+      ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
+      var alpha = dark ? 0.16 : 0.14;
+      for (var i = 0; i < BLOBS.length; i++) {
+        var b = BLOBS[i];
+        var x = (b.px + Math.sin(now * b.sx + b.ph) * b.ax + Math.cos(now * b.sy * 1.3 + b.ph * 2) * b.ax * 0.6) * W;
+        var y = (b.py + Math.cos(now * b.sy + b.ph * 1.4) * b.ay + Math.sin(now * b.sx * 0.8 + b.ph) * b.ay * 0.5) * H;
+        var rad = Math.max(40, b.r * Math.min(W, H) * (1 + 0.12 * Math.sin(now * 0.00021 + b.ph * 3)));
+        var c = pal[i % pal.length];
+        var g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+        g.addColorStop(0, "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + alpha + ")");
+        g.addColorStop(0.55, "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + alpha * 0.35 + ")");
+        g.addColorStop(1, "rgba(" + c[0] + "," + c[1] + "," + c[2] + ",0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+      }
+      ctx.globalCompositeOperation = "source-over";
+    }
+
+    function drawOnce() { draw(performance.now() - t0); }
+
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function loop() {
+      draw(performance.now() - t0);
+      raf = requestAnimationFrame(loop);
+    }
+    window.addEventListener("resize", resize);
+    window.addEventListener("unload", function () { if (raf) cancelAnimationFrame(raf); });
+    resize();
+    if (!reduceMotion) raf = requestAnimationFrame(loop);
+
+    /* ---------- nav scroll state ---------- */
+    var nav = document.getElementById("nav");
+    function onScroll() { nav.classList.toggle("scrolled", window.scrollY > 8); }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    /* ---------- pricing toggle ---------- */
+    var sw = document.getElementById("billSwitch");
+    var lm = document.getElementById("lblMonthly");
+    var ly = document.getElementById("lblYearly");
+    sw.addEventListener("click", function () {
+      var yearly = sw.getAttribute("aria-checked") !== "true";
+      sw.setAttribute("aria-checked", String(yearly));
+      lm.classList.toggle("on", !yearly);
+      ly.classList.toggle("on", yearly);
+      var prices = document.querySelectorAll(".price b");
+      for (var i = 0; i < prices.length; i++) {
+        (function (el) {
+          el.classList.add("fade");
+          setTimeout(function () {
+            el.textContent = yearly ? el.getAttribute("data-y") : el.getAttribute("data-m");
+            el.classList.remove("fade");
+          }, 180);
+        })(prices[i]);
+      }
+      var cycles = document.querySelectorAll(".cycle[data-y]");
+      for (var j = 0; j < cycles.length; j++) {
+        cycles[j].textContent = yearly ? cycles[j].getAttribute("data-y") : cycles[j].getAttribute("data-m");
+      }
+    });
+
+    /* ---------- scroll reveal ---------- */
+    var els = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window && !reduceMotion) {
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            entries[i].target.classList.add("in");
+            io.unobserve(entries[i].target);
+          }
+        }
+      }, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
+      for (var k = 0; k < els.length; k++) io.observe(els[k]);
+    } else {
+      for (var m = 0; m < els.length; m++) els[m].classList.add("in");
+    }
+  })();
+} catch (e) {
+  var b = document.getElementById("err");
+  if (b) { b.style.display = "block"; b.textContent = "Error: " + (e && e.message ? e.message : e); }
+}
+</script>
+</body>
+</html>

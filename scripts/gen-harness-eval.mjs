@@ -16,7 +16,7 @@
 // and docs/postmortem/0005-harness-eval-clobber.md.
 import fs from 'node:fs';
 import path from 'node:path';
-import { computeSummary, mergeModelSummaries, assertNoShrink } from '../lib/lab/harness-eval/merge.mjs';
+import { computeSummary, dedupeTasks, mergeModelSummaries, assertNoShrink } from '../lib/lab/harness-eval/merge.mjs';
 
 const HOME = process.env.HOME || '/Users/' + process.env.USER;
 const REPORTS_DIR = path.join(HOME, '.omega', 'reports');
@@ -217,9 +217,11 @@ function buildModelSummaries(modelEvalReports, benchmarkReports) {
 
   // Aggregates live in computeSummary (merge.mjs) — one implementation
   // shared with the merge path, so a fresh-only model and a merged model
-  // summarise identically.
+  // summarise identically. Reports load newest first, so dedupeTasks keeps
+  // the newest record for a task that appears in several runs (duplicates
+  // in one report set otherwise each count as a "task").
   return [...modelMap.values()]
-    .map(({ model, results }) => computeSummary(model, results))
+    .map(({ model, results }) => computeSummary(model, dedupeTasks(results)))
     .sort((a, b) => b.passRate - a.passRate || a.totalTokens - b.totalTokens);
 }
 

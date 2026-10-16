@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { computeSummary, mergeModelSummaries, assertNoShrink } from './merge.mjs'
+import { computeSummary, dedupeTasks, mergeModelSummaries, assertNoShrink } from './merge.mjs'
 import type { HarnessModel, HarnessModelSummary, HarnessTaskResult } from './types.js'
 
 /**
@@ -73,7 +73,7 @@ describe('mergeModelSummaries', () => {
     expect(merged.find((m) => m.model.id === 'kimi/k3')?.tasks).toHaveLength(2)
   })
 
-  it('never shrinks: the merge output is a superset of the baseline for any inputs', () => {
+  it('never shrinks: the merge keeps every baseline model and task key for any inputs', () => {
     // The invariant the gen script's shrink guard asserts. Property-style
     // check over adversarial combinations.
     const baseline = [
@@ -85,18 +85,48 @@ describe('mergeModelSummaries', () => {
       [summary('a/one', [])],
       [summary('c/three', [taskResult('s', 't9')])],
       [summary('a/one', [taskResult('s', 't1', { passed: false, status: 'failed' })])],
+      // duplicates collapse, they do not race
+      [summary('a/one', [taskResult('s', 't1'), taskResult('s', 't1', { durationMs: 5 })])],
     ]
     for (const fresh of cases) {
       const merged = mergeModelSummaries(baseline, fresh)
-      const baselineTasks = baseline.reduce((acc, m) => acc + m.tasks.length, 0)
-      const mergedTasks = merged.reduce((acc, m) => acc + m.tasks.length, 0)
-      expect(merged.length, `models, fresh=${JSON.stringify(fresh.map((m) => m.model.id))}`).toBeGreaterThanOrEqual(baseline.length)
-      expect(mergedTasks, `tasks, fresh=${JSON.stringify(fresh.map((m) => m.model.id))}`).toBeGreaterThanOrEqual(baselineTasks)
+      const label = `fresh=${JSON.stringify(fresh.map((m) => m.model.id))}`
+      expect(() => assertNoShrink(baseline, merged)).not.toThrow()
+      expect(merged.length, `models, ${label}`).toBeGreaterThanOrEqual(baseline.length)
       for (const b of baseline) {
         const m = merged.find((x) => x.model.id === b.model.id)
-        expect(m, `baseline model ${b.model.id} survives`).toBeDefined()
+        expect(m, `baseline model ${b.model.id} survives, ${label}`).toBeDefined()
+        const keys = new Set((m?.tasks ?? []).map((t) => `${t.task.suite}|${t.task.id}`))
+        for (const t of b.tasks) {
+          expect(keys.has(`${t.task.suite}|${t.task.id}`), `baseline key ${t.task.suite}|${t.task.id} survives, ${label}`).toBe(true)
+        }
       }
     }
+  })
+
+  it('collapses accumulated duplicate records, keeping the newest, without tripping the guard', () => {
+    // Duplicates arrived via BENCH_RESET_HARNESS runs and benchmark reports;
+    // normalising them must not look like data loss to the shrink guard.
+    const baseline = [
+      summary('a/one', [
+        taskResult('s', 't1', { durationMs: 10 }),
+        taskResult('s', 't1', { durationMs: 20 }),
+        taskResult('s', 't2'),
+      ]),
+    ]
+    const merged = mergeModelSummaries(baseline, [])
+    expect(merged[0].tasks.map((t) => t.durationMs)).toEqual([10, 1000])
+    expect(merged[0].totalTasks).toBe(2)
+    expect(() => assertNoShrink(baseline, merged)).not.toThrow()
+  })
+
+  it('collapses duplicate records within one fresh batch, keeping the newest', () => {
+    const fresh = [
+      summary('a/one', [taskResult('s', 't1', { durationMs: 10 }), taskResult('s', 't1', { durationMs: 20 })]),
+    ]
+    const merged = mergeModelSummaries([], fresh)
+    expect(merged[0].tasks).toHaveLength(1)
+    expect(merged[0].tasks[0].durationMs).toBe(10)
   })
 
   it('recomputes passRate across the merged task list', () => {
@@ -123,10 +153,29 @@ describe('assertNoShrink', () => {
     expect(() => assertNoShrink(baseline, merged)).toThrow(/shrink results\.json.*bug in the merge/s)
   })
 
-  it('throws when the merged set keeps the models but loses task results', () => {
+  it('throws when the merged set keeps the models but loses task keys', () => {
     const baseline = [summary('a/one', [taskResult('s', 't1'), taskResult('s', 't2')])]
     const merged = [summary('a/one', [taskResult('s', 't1')])]
-    expect(() => assertNoShrink(baseline, merged)).toThrow(/2→1 task results/)
+    expect(() => assertNoShrink(baseline, merged)).toThrow(/1 task key\(s\).*a\/one s\|t2/s)
+  })
+})
+
+describe('dedupeTasks', () => {
+  it('keeps one result per (suite, task): the first, i.e. the newest in a newest-first list', () => {
+    const out = dedupeTasks([
+      taskResult('s', 't1', { durationMs: 10 }),
+      taskResult('s', 't1', { durationMs: 20 }),
+      taskResult('s2', 't1', { durationMs: 30 }),
+      taskResult('s', 't1', { durationMs: 40 }),
+    ])
+    expect(out.map((t) => [t.task.suite, t.task.id, t.durationMs])).toEqual([
+      ['s', 't1', 10],
+      ['s2', 't1', 30],
+    ])
+  })
+
+  it('is a no-op on an empty list', () => {
+    expect(dedupeTasks([])).toEqual([])
   })
 })
 

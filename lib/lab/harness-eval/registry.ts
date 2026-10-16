@@ -9,6 +9,12 @@ export const HARNESS_MODELS: HarnessModel[] = [
     "displayName": "nvidia/nemotron-3-ultra-550b-a55b:free"
   },
   {
+    "id": "opencode/deepseek-v4.1-flash-free",
+    "provider": "opencode",
+    "model": "deepseek-v4.1-flash-free",
+    "displayName": "deepseek-v4.1-flash-free"
+  },
+  {
     "id": "kimi/kimi-k3",
     "provider": "kimi",
     "model": "kimi-k3",
@@ -78,6 +84,12 @@ export const HARNESS_SUITES: HarnessSuite[] = [
     "taskCount": 10
   },
   {
+    "slug": "harder-v2",
+    "label": "Harder-v2 Suite",
+    "description": "",
+    "taskCount": 10
+  },
+  {
     "slug": "hard-targeting",
     "label": "Hard-targeting Suite",
     "description": "",
@@ -88,12 +100,6 @@ export const HARNESS_SUITES: HarnessSuite[] = [
     "label": "Harder Suite",
     "description": "The harder suite contains 12 capability-focused tasks designed to differentiate agents that all pass the fast suite. Four categories:",
     "taskCount": 12
-  },
-  {
-    "slug": "harder-v2",
-    "label": "Harder-v2 Suite",
-    "description": "",
-    "taskCount": 10
   },
   {
     "slug": "swebench-lite",
@@ -117,6 +123,86 @@ export const HARNESS_TASKS: HarnessTask[] = [
     "description": "Create `src/strings.js` exporting `capitalize(str)` which upper-cases the first character and lower-cases the rest. The test expects `capitalize(\"hELLO\") === \"Hello\"`.",
     "complexity": "simple",
     "suite": "fast"
+  },
+  {
+    "id": "harder-v2-state-machine",
+    "name": "harder-v2-state-machine",
+    "title": "Fix state machine to reject invalid transitions",
+    "description": "The state machine in src/state.js accepts any transition without validation. Fix it to check a transition table and throw on invalid transitions. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-retry-backoff",
+    "name": "harder-v2-retry-backoff",
+    "title": "Fix retry to use exponential backoff",
+    "description": "The retry function in src/retry.js uses a fixed delay for all retries. Fix it to use exponential backoff: delay doubles each attempt (base * 2^attempt). Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-async-queue",
+    "name": "harder-v2-async-queue",
+    "title": "Fix async queue to wait instead of dropping tasks",
+    "description": "The async queue in src/queue.js drops tasks when the queue is full. Fix it so tasks wait for a slot to open instead of being rejected. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-config-merger",
+    "name": "harder-v2-config-merger",
+    "title": "Fix config merger to deep merge arrays",
+    "description": "The config merger in src/config.js replaces arrays instead of merging them. Fix merge() to concatenate arrays from both sources instead of overwriting. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-rate-limiter",
+    "name": "harder-v2-rate-limiter",
+    "title": "Fix rate limiter to properly limit concurrent requests",
+    "description": "The rate limiter in src/ratelimit.js allows unlimited concurrent executions. Fix it so at most N functions run at the same time. Queued functions should wait for a slot. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-deep-clone-circular",
+    "name": "harder-v2-deep-clone-circular",
+    "title": "Fix deep clone to handle circular references",
+    "description": "The deepClone function in src/clone.js crashes on circular references. Fix it to detect and handle circular references by using a WeakSet to track visited objects. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-debounce-cancel",
+    "name": "harder-v2-debounce-cancel",
+    "title": "Fix debounce cancel not clearing pending timeout",
+    "description": "The debounce function in src/debounce.js has a cancel() method that does not actually clear the pending timeout. Fix it so cancel() prevents the pending execution from firing. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-lru-cache-eviction",
+    "name": "harder-v2-lru-cache-eviction",
+    "title": "Fix LRU cache max size eviction",
+    "description": "The LRU cache in src/lru.js does not evict the oldest entry when max size is reached. Fix it so that get() and set() both update access order, and the oldest entry is evicted when capacity is exceeded. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-promise-all-race",
+    "name": "harder-v2-promise-all-race",
+    "title": "Fix Promise.allSettled error propagation",
+    "description": "The parallelFetch() function swallows errors from failed promises. Fix src/parallel.js so that when ALL promises fail, the error is properly thrown. When SOME succeed, return the successful results. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
+  },
+  {
+    "id": "harder-v2-event-emitter-leak",
+    "name": "harder-v2-event-emitter-leak",
+    "title": "Fix event emitter memory leak from wrong listener reference",
+    "description": "Fix the memory leak in EventEmitter. The issue: off() is called with a NEW function reference instead of the original listener, so the listener is never removed. Fix src/emitter.js so listeners are properly removed. Do NOT change test.js.",
+    "complexity": "medium",
+    "suite": "harder-v2"
   },
   {
     "id": "hard-migrate-deprecated-api",
@@ -293,86 +379,6 @@ export const HARNESS_TASKS: HarnessTask[] = [
     "description": "src/debounce.js exports debounce(fn, ms) which returns a function that delays calling fn until ms have passed since the last invocation. The current implementation calls fn on EVERY invocation. Write tests in test.js that capture the spec. They must pass against src/debounce.correct.js.",
     "complexity": "medium",
     "suite": "harder"
-  },
-  {
-    "id": "harder-v2-event-emitter-leak",
-    "name": "harder-v2-event-emitter-leak",
-    "title": "Fix event emitter memory leak from wrong listener reference",
-    "description": "Fix the memory leak in EventEmitter. The issue: off() is called with a NEW function reference instead of the original listener, so the listener is never removed. Fix src/emitter.js so listeners are properly removed. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-promise-all-race",
-    "name": "harder-v2-promise-all-race",
-    "title": "Fix Promise.allSettled error propagation",
-    "description": "The parallelFetch() function swallows errors from failed promises. Fix src/parallel.js so that when ALL promises fail, the error is properly thrown. When SOME succeed, return the successful results. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-lru-cache-eviction",
-    "name": "harder-v2-lru-cache-eviction",
-    "title": "Fix LRU cache max size eviction",
-    "description": "The LRU cache in src/lru.js does not evict the oldest entry when max size is reached. Fix it so that get() and set() both update access order, and the oldest entry is evicted when capacity is exceeded. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-debounce-cancel",
-    "name": "harder-v2-debounce-cancel",
-    "title": "Fix debounce cancel not clearing pending timeout",
-    "description": "The debounce function in src/debounce.js has a cancel() method that does not actually clear the pending timeout. Fix it so cancel() prevents the pending execution from firing. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-deep-clone-circular",
-    "name": "harder-v2-deep-clone-circular",
-    "title": "Fix deep clone to handle circular references",
-    "description": "The deepClone function in src/clone.js crashes on circular references. Fix it to detect and handle circular references by using a WeakSet to track visited objects. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-rate-limiter",
-    "name": "harder-v2-rate-limiter",
-    "title": "Fix rate limiter to properly limit concurrent requests",
-    "description": "The rate limiter in src/ratelimit.js allows unlimited concurrent executions. Fix it so at most N functions run at the same time. Queued functions should wait for a slot. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-config-merger",
-    "name": "harder-v2-config-merger",
-    "title": "Fix config merger to deep merge arrays",
-    "description": "The config merger in src/config.js replaces arrays instead of merging them. Fix merge() to concatenate arrays from both sources instead of overwriting. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-async-queue",
-    "name": "harder-v2-async-queue",
-    "title": "Fix async queue to wait instead of dropping tasks",
-    "description": "The async queue in src/queue.js drops tasks when the queue is full. Fix it so tasks wait for a slot to open instead of being rejected. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-retry-backoff",
-    "name": "harder-v2-retry-backoff",
-    "title": "Fix retry to use exponential backoff",
-    "description": "The retry function in src/retry.js uses a fixed delay for all retries. Fix it to use exponential backoff: delay doubles each attempt (base * 2^attempt). Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
-  },
-  {
-    "id": "harder-v2-state-machine",
-    "name": "harder-v2-state-machine",
-    "title": "Fix state machine to reject invalid transitions",
-    "description": "The state machine in src/state.js accepts any transition without validation. Fix it to check a transition table and throw on invalid transitions. Do NOT change test.js.",
-    "complexity": "medium",
-    "suite": "harder-v2"
   },
   {
     "id": "swebench-django__django-11099",

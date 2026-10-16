@@ -60,6 +60,13 @@ const PRICING_USD_PER_1K = {
   'external/codex': null,
   'external/cursor-cli': null,
   'external/aider': null,
+  // OpenCode free tier: genuinely $0 under the plan, and the CLI reports no
+  // cost field, so the estimate must be an explicit zero rather than unknown.
+  'opencode/deepseek-v4.1-flash-free': { prompt: 0, completion: 0 },
+  // The same model under named prompt-injection arms (harness experiment:
+  // baseline vs curated skills vs a corpus-derived prior-art graph).
+  'opencode/deepseek-v4.1-flash-free+skills': { prompt: 0, completion: 0 },
+  'opencode/deepseek-v4.1-flash-free+kg': { prompt: 0, completion: 0 },
 };
 
 /**

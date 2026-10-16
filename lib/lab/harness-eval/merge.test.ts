@@ -148,6 +148,15 @@ describe('computeSummary', () => {
     expect(s.totalToolCalls).toBeNull()
   })
 
+  it('reports a measured-free route as $0, not as unknown', () => {
+    const s = computeSummary(model('opencode/free-tier'), [
+      taskResult('s', 't1', { costUsd: 0 }),
+      taskResult('s', 't2', { costUsd: 0 }),
+    ])
+    // 0 is a measurement: the free tier's price is known to be nothing.
+    expect(s.totalCostUsd).toBe(0)
+  })
+
   it('aggregates tool calls across tasks', () => {
     const s = computeSummary(model('a/one'), [
       taskResult('s', 't1', { toolCalls: { read: 3, edit: 1 } }),

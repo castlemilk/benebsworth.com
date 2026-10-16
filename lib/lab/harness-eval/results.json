@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-20T04:58:50.326Z",
+  "timestamp": "2026-10-16T06:33:14.198Z",
   "models": [
     {
       "model": {
@@ -84,6 +84,307 @@
           "patchBytes": 408,
           "hasPatch": true,
           "patch": "diff --git a/src/strings.js b/src/strings.js\nnew file mode 100644\nindex 0000000..85a5ab5\n--- /dev/null\n+++ b/src/strings.js\n@@ -0,0 +1,9 @@\n+export function capitalize(str) {\n+  if (typeof str !== 'string') {\n+    throw new TypeError('Expected a string');\n+  }\n+  if (str.length === 0) {\n+    return '';\n+  }\n+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();\n+}\n\\ No newline at end of file\n"
+        }
+      ]
+    },
+    {
+      "model": {
+        "id": "opencode/deepseek-v4.1-flash-free",
+        "provider": "opencode",
+        "model": "deepseek-v4.1-flash-free",
+        "displayName": "deepseek-v4.1-flash-free"
+      },
+      "totalTasks": 10,
+      "passed": 10,
+      "failed": 0,
+      "timeouts": 0,
+      "passRate": 100,
+      "totalDurationMs": 219143,
+      "totalTokens": 88838,
+      "totalCostUsd": 0,
+      "totalTurns": 46,
+      "averageTurns": 4.6,
+      "totalToolCalls": 66,
+      "toolBreakdown": {
+        "read": 33,
+        "edit": 7,
+        "shell": 19,
+        "write": 5,
+        "glob": 2
+      },
+      "avgDurationMs": 21914,
+      "tasks": [
+        {
+          "task": {
+            "id": "harder-v2-state-machine",
+            "name": "harder-v2-state-machine",
+            "title": "Fix state machine to reject invalid transitions",
+            "description": "The state machine in src/state.js accepts any transition without validation. Fix it to check a transition table and throw on invalid transitions. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 24055,
+          "tokens": 8953,
+          "promptTokens": 8390,
+          "completionTokens": 563,
+          "costUsd": 0,
+          "turns": 4,
+          "toolCalls": {
+            "read": 4,
+            "edit": 1,
+            "shell": 2
+          },
+          "tools": [],
+          "patchBytes": 443,
+          "hasPatch": true,
+          "patch": "diff --git a/src/state.js b/src/state.js\nindex 0029c65..ccab76a 100644\n--- a/src/state.js\n+++ b/src/state.js\n@@ -4,6 +4,10 @@ export class StateMachine {\n     this.transitions = transitions;\n   }\n   transition(to) {\n+    const allowed = this.transitions[this.state] || [];\n+    if (!allowed.includes(to)) {\n+      throw new Error(`Invalid transition from \"${this.state}\" to \"${to}\"`);\n+    }\n     this.state = to;\n     return this.state;\n   }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-retry-backoff",
+            "name": "harder-v2-retry-backoff",
+            "title": "Fix retry to use exponential backoff",
+            "description": "The retry function in src/retry.js uses a fixed delay for all retries. Fix it to use exponential backoff: delay doubles each attempt (base * 2^attempt). Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 15132,
+          "tokens": 7496,
+          "promptTokens": 7089,
+          "completionTokens": 407,
+          "costUsd": 0,
+          "turns": 4,
+          "toolCalls": {
+            "read": 3,
+            "edit": 1,
+            "shell": 1
+          },
+          "tools": [],
+          "patchBytes": 460,
+          "hasPatch": true,
+          "patch": "diff --git a/src/retry.js b/src/retry.js\nindex d593f86..acbd7fc 100644\n--- a/src/retry.js\n+++ b/src/retry.js\n@@ -5,7 +5,8 @@ export async function retry(fn, { maxAttempts = 3, baseDelay = 100 } = {}) {\n       return await fn();\n     } catch (e) {\n       lastError = e;\n-      await new Promise(r => setTimeout(r, baseDelay));\n+      const delay = baseDelay * Math.pow(2, i);\n+      await new Promise(r => setTimeout(r, delay));\n     }\n   }\n   throw lastError;\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-async-queue",
+            "name": "harder-v2-async-queue",
+            "title": "Fix async queue to wait instead of dropping tasks",
+            "description": "The async queue in src/queue.js drops tasks when the queue is full. Fix it so tasks wait for a slot to open instead of being rejected. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 45654,
+          "tokens": 14169,
+          "promptTokens": 12912,
+          "completionTokens": 1257,
+          "costUsd": 0,
+          "turns": 7,
+          "toolCalls": {
+            "read": 4,
+            "shell": 4,
+            "write": 1
+          },
+          "tools": [],
+          "patchBytes": 1823,
+          "hasPatch": true,
+          "patch": "diff --git a/src/queue.js b/src/queue.js\nindex 66cc5fe..a884dc9 100644\n--- a/src/queue.js\n+++ b/src/queue.js\n@@ -1,25 +1,52 @@\n export class AsyncQueue {\n-  constructor(concurrency, maxSize) {\n+  constructor(concurrency, maxSize = Infinity) {\n     this.concurrency = concurrency;\n     this.maxSize = maxSize;\n     this.running = 0;\n     this.queue = [];\n+    // Producers waiting for room in `queue` (blocking backpressure).\n+    this.slots = [];\n   }\n+\n   async push(fn) {\n-    if (this.running >= this.concurrency) {\n-      if (this.queue.length >= this.maxSize) {\n-        throw new Error('Queue full');\n-      }\n-      this.queue.push(fn);\n-      return;\n+    // Wait for a slot to open instead of dropping the task.\n+    while (this.running >= this.concurrency && this.queue.length >= this.maxSize) {\n+      await new Promise((resolve) => this.slots.push(resolve));\n     }\n+\n+    return new Promise((resolve, reject) => {\n+      const task = async () => {\n+        try {\n+          resolve(await fn());\n+        } catch (err) {\n+          reject(err);\n+        }\n+      };\n+\n+      if (this.running < this.concurrency) {\n+        this._start(task);\n+      } else {\n+        this.queue.push(task);\n+      }\n+    });\n+  }\n+\n+  _start(task) {\n     this.running++;\n-    try { await fn(); } finally {\n+    task().finally(() => {\n       this.running--;\n-      if (this.queue.length > 0) {\n-        const next = this.queue.shift();\n-        this.push(next);\n-      }\n+      this._next();\n+    });\n+  }\n+\n+  _next() {\n+    if (this.running < this.concurrency && this.queue.length > 0) {\n+      const task = this.queue.shift();\n+      this._start(task);\n+    }\n+    // Wake one producer that is waiting for room.\n+    if (this.slots.length > 0 && this.queue.length < this.maxSize) {\n+      this.slots.shift()();\n     }\n   }\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-config-merger",
+            "name": "harder-v2-config-merger",
+            "title": "Fix config merger to deep merge arrays",
+            "description": "The config merger in src/config.js replaces arrays instead of merging them. Fix merge() to concatenate arrays from both sources instead of overwriting. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 15069,
+          "tokens": 8966,
+          "promptTokens": 8406,
+          "completionTokens": 560,
+          "costUsd": 0,
+          "turns": 5,
+          "toolCalls": {
+            "read": 3,
+            "shell": 3,
+            "write": 1
+          },
+          "tools": [],
+          "patchBytes": 846,
+          "hasPatch": true,
+          "patch": "diff --git a/src/config.js b/src/config.js\nindex b894a23..dbd0a37 100644\n--- a/src/config.js\n+++ b/src/config.js\n@@ -1,7 +1,20 @@\n+function isPlainObject(value) {\n+  return typeof value === 'object' && value !== null && !Array.isArray(value);\n+}\n+\n export function merge(defaults, overrides) {\n   const result = { ...defaults };\n   for (const key of Object.keys(overrides)) {\n-    result[key] = overrides[key];\n+    const defaultValue = defaults[key];\n+    const overrideValue = overrides[key];\n+\n+    if (Array.isArray(defaultValue) && Array.isArray(overrideValue)) {\n+      result[key] = [...defaultValue, ...overrideValue];\n+    } else if (isPlainObject(defaultValue) && isPlainObject(overrideValue)) {\n+      result[key] = merge(defaultValue, overrideValue);\n+    } else {\n+      result[key] = overrideValue;\n+    }\n   }\n   return result;\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-rate-limiter",
+            "name": "harder-v2-rate-limiter",
+            "title": "Fix rate limiter to properly limit concurrent requests",
+            "description": "The rate limiter in src/ratelimit.js allows unlimited concurrent executions. Fix it so at most N functions run at the same time. Queued functions should wait for a slot. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 33697,
+          "tokens": 9349,
+          "promptTokens": 8275,
+          "completionTokens": 1074,
+          "costUsd": 0,
+          "turns": 6,
+          "toolCalls": {
+            "read": 3,
+            "write": 2,
+            "shell": 3
+          },
+          "tools": [],
+          "patchBytes": 1072,
+          "hasPatch": true,
+          "patch": "diff --git a/src/ratelimit.js b/src/ratelimit.js\nindex 03b4f44..ccdf61e 100644\n--- a/src/ratelimit.js\n+++ b/src/ratelimit.js\n@@ -1,14 +1,38 @@\n export class RateLimiter {\n   constructor(maxConcurrent) {\n+    if (!Number.isInteger(maxConcurrent) || maxConcurrent < 1) {\n+      throw new RangeError('maxConcurrent must be a positive integer');\n+    }\n     this.maxConcurrent = maxConcurrent;\n     this.running = 0;\n+    this.queue = [];\n+  }\n+\n+  async acquire() {\n+    if (this.running < this.maxConcurrent) {\n+      this.running++;\n+      return;\n+    }\n+    await new Promise((resolve) => this.queue.push(resolve));\n   }\n+\n+  release() {\n+    const next = this.queue.shift();\n+    if (next) {\n+      // Hand the freed slot directly to the next waiter so it does not\n+      // have to race with newly arriving calls for it.\n+      next();\n+    } else {\n+      this.running--;\n+    }\n+  }\n+\n   async run(fn) {\n-    this.running++;\n+    await this.acquire();\n     try {\n       return await fn();\n     } finally {\n-      this.running--;\n+      this.release();\n     }\n   }\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-deep-clone-circular",
+            "name": "harder-v2-deep-clone-circular",
+            "title": "Fix deep clone to handle circular references",
+            "description": "The deepClone function in src/clone.js crashes on circular references. Fix it to detect and handle circular references by using a WeakSet to track visited objects. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 21106,
+          "tokens": 8344,
+          "promptTokens": 7728,
+          "completionTokens": 616,
+          "costUsd": 0,
+          "turns": 4,
+          "toolCalls": {
+            "read": 4,
+            "write": 1,
+            "shell": 1
+          },
+          "tools": [],
+          "patchBytes": 1001,
+          "hasPatch": true,
+          "patch": "diff --git a/src/clone.js b/src/clone.js\nindex ff24a42..38da4d1 100644\n--- a/src/clone.js\n+++ b/src/clone.js\n@@ -1,9 +1,24 @@\n-export function deepClone(obj) {\n+export function deepClone(obj, seen = new WeakMap()) {\n   if (obj === null || typeof obj !== 'object') return obj;\n-  if (Array.isArray(obj)) return obj.map(item => deepClone(item));\n+\n+  // If we've already cloned this object, return the existing clone.\n+  // This both prevents infinite recursion and preserves shared/circular\n+  // references so the clone's internal pointers match the original.\n+  if (seen.has(obj)) return seen.get(obj);\n+\n+  if (Array.isArray(obj)) {\n+    const clone = [];\n+    seen.set(obj, clone);\n+    for (let i = 0; i < obj.length; i++) {\n+      clone[i] = deepClone(obj[i], seen);\n+    }\n+    return clone;\n+  }\n+\n   const clone = {};\n+  seen.set(obj, clone);\n   for (const key of Object.keys(obj)) {\n-    clone[key] = deepClone(obj[key]);\n+    clone[key] = deepClone(obj[key], seen);\n   }\n   return clone;\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-debounce-cancel",
+            "name": "harder-v2-debounce-cancel",
+            "title": "Fix debounce cancel not clearing pending timeout",
+            "description": "The debounce function in src/debounce.js has a cancel() method that does not actually clear the pending timeout. Fix it so cancel() prevents the pending execution from firing. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 24686,
+          "tokens": 7930,
+          "promptTokens": 7330,
+          "completionTokens": 600,
+          "costUsd": 0,
+          "turns": 5,
+          "toolCalls": {
+            "read": 3,
+            "glob": 1,
+            "edit": 2,
+            "shell": 1
+          },
+          "tools": [],
+          "patchBytes": 500,
+          "hasPatch": true,
+          "patch": "diff --git a/src/debounce.js b/src/debounce.js\nindex 810d06d..9828bb5 100644\n--- a/src/debounce.js\n+++ b/src/debounce.js\n@@ -1,10 +1,14 @@\n export function debounce(fn, delay) {\n   let timer = null;\n   const debounced = (...args) => {\n+    if (timer !== null) clearTimeout(timer);\n     timer = setTimeout(() => fn(...args), delay);\n   };\n   debounced.cancel = () => {\n-    timer = null;\n+    if (timer !== null) {\n+      clearTimeout(timer);\n+      timer = null;\n+    }\n   };\n   return debounced;\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-lru-cache-eviction",
+            "name": "harder-v2-lru-cache-eviction",
+            "title": "Fix LRU cache max size eviction",
+            "description": "The LRU cache in src/lru.js does not evict the oldest entry when max size is reached. Fix it so that get() and set() both update access order, and the oldest entry is evicted when capacity is exceeded. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 12560,
+          "tokens": 7360,
+          "promptTokens": 6924,
+          "completionTokens": 436,
+          "costUsd": 0,
+          "turns": 4,
+          "toolCalls": {
+            "read": 3,
+            "shell": 2,
+            "edit": 1
+          },
+          "tools": [],
+          "patchBytes": 672,
+          "hasPatch": true,
+          "patch": "diff --git a/src/lru.js b/src/lru.js\nindex faa20a3..222cfcb 100644\n--- a/src/lru.js\n+++ b/src/lru.js\n@@ -5,10 +5,20 @@ export class LRUCache {\n   }\n   get(key) {\n     if (!this.cache.has(key)) return -1;\n-    return this.cache.get(key);\n+    const value = this.cache.get(key);\n+    this.cache.delete(key);\n+    this.cache.set(key, value);\n+    return value;\n   }\n   set(key, value) {\n+    if (this.cache.has(key)) {\n+      this.cache.delete(key);\n+    }\n     this.cache.set(key, value);\n+    if (this.cache.size > this.capacity) {\n+      const oldest = this.cache.keys().next().value;\n+      this.cache.delete(oldest);\n+    }\n   }\n   size() { return this.cache.size; }\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-promise-all-race",
+            "name": "harder-v2-promise-all-race",
+            "title": "Fix Promise.allSettled error propagation",
+            "description": "The parallelFetch() function swallows errors from failed promises. Fix src/parallel.js so that when ALL promises fail, the error is properly thrown. When SOME succeed, return the successful results. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 12072,
+          "tokens": 7520,
+          "promptTokens": 7011,
+          "completionTokens": 509,
+          "costUsd": 0,
+          "turns": 3,
+          "toolCalls": {
+            "read": 3,
+            "edit": 1,
+            "shell": 1
+          },
+          "tools": [],
+          "patchBytes": 581,
+          "hasPatch": true,
+          "patch": "diff --git a/src/parallel.js b/src/parallel.js\nindex 6896135..b9a3146 100644\n--- a/src/parallel.js\n+++ b/src/parallel.js\n@@ -2,5 +2,12 @@ export async function parallelFetch(urls) {\n   const results = await Promise.allSettled(\n     urls.map(url => fetch(url).then(r => r.json()))\n   );\n-  return results.map(r => r.value);\n+\n+  const fulfilled = results.filter(r => r.status === 'fulfilled');\n+  if (fulfilled.length === 0) {\n+    const firstRejection = results.find(r => r.status === 'rejected');\n+    throw firstRejection.reason;\n+  }\n+\n+  return fulfilled.map(r => r.value);\n }\n"
+        },
+        {
+          "task": {
+            "id": "harder-v2-event-emitter-leak",
+            "name": "harder-v2-event-emitter-leak",
+            "title": "Fix event emitter memory leak from wrong listener reference",
+            "description": "Fix the memory leak in EventEmitter. The issue: off() is called with a NEW function reference instead of the original listener, so the listener is never removed. Fix src/emitter.js so listeners are properly removed. Do NOT change test.js.",
+            "complexity": "medium",
+            "suite": "harder-v2"
+          },
+          "passed": true,
+          "status": "done",
+          "durationMs": 15112,
+          "tokens": 8751,
+          "promptTokens": 8295,
+          "completionTokens": 456,
+          "costUsd": 0,
+          "turns": 4,
+          "toolCalls": {
+            "read": 3,
+            "glob": 1,
+            "edit": 1,
+            "shell": 1
+          },
+          "tools": [],
+          "patchBytes": 425,
+          "hasPatch": true,
+          "patch": "diff --git a/src/emitter.js b/src/emitter.js\nindex eabd894..7e46ba7 100644\n--- a/src/emitter.js\n+++ b/src/emitter.js\n@@ -7,7 +7,7 @@ export class EventEmitter {\n   }\n   off(event, fn) {\n     const listeners = this._events.get(event) || [];\n-    this._events.set(event, listeners.filter(l => l !== (() => fn())));\n+    this._events.set(event, listeners.filter(l => l !== fn));\n     return this;\n   }\n   emit(event, ...args) {\n"
         }
       ]
     },

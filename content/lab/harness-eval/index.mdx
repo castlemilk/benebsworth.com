@@ -23,3 +23,9 @@ A task passes if all test cases pass after applying the agent's patch. There is 
 **Beyond pass rate**
 
 The `harder` suite is designed to differentiate agents. Pass rate alone saturates fast — both claude-code and agy score 10/10 on `fast`. The dashboard also surfaces total tokens, total cost, average turns per task, and a per-tool breakdown so you can see which agent is more efficient at each task class.
+
+**A free route, and a prompt-injection test**
+
+`opencode/deepseek-v4.1-flash-free` runs through the OpenCode CLI on a plan with no per-token charge, the first $0 entry here. It passes all ten `harder-v2` tasks in about 4.6 turns and 8.9k tokens each.
+
+To see whether extra context helps at all, the same model ran the same ten tasks three ways. One run was unmodified, one carried a curated repair procedure for each bug class, and one carried a prior-art graph of similar repairs drawn from this corpus (operations and symbols only, never the task's own patch). Every arm passed every run across two iterations, so the suite saturates long before the injection can matter. The arms differ only in cost: 8.8k to 9.7k tokens per task, with the graph arm's dearest run nearly double any other. One further baseline run was lost to an OpenCode CLI crash before it produced a patch, and it is counted as infrastructure rather than a model failure. These are the least discriminating tasks in the lab, and the experiment is written up as a null result. The per-run sweep and its leakage guards live in the [harness repository](https://github.com/castlemilk/harness).

@@ -170,19 +170,84 @@ export function loopProgress(
   const prevScore = previous.rubricScore;
   const nowScore = current.rubricScore;
 
-  if (prevScore !== undefined && nowScore !== undefined) {
-    if (nowScore < prevScore) {
-      return { improving: false, regressed: true, reason: `rubric fell ${String(prevScore)} → ${String(nowScore)}` };
-    }
-    if (nowScore > prevScore) {
-      return { improving: true, regressed: false, reason: `rubric rose ${String(prevScore)} → ${String(nowScore)}` };
-    }
-  }
-  if (nowFails < prevFails) {
+  // Defects decide first; the rubric only breaks a tie.
+  //
+  // The rubric measured 100 on loop 1 of the landing-page run — while that page
+  // still had 10 design defects — so a rubric-first rule reads "no movement"
+  // while the page is being genuinely rewritten. That run went 10 → 8 → 4 → 2
+  // defects with the rubric pinned at 100 the whole way.
+  const failsDropped = nowFails < prevFails;
+  const failsRose = nowFails > prevFails;
+  const rubricFell = prevScore !== undefined && nowScore !== undefined && nowScore < prevScore;
+  const rubricRose = prevScore !== undefined && nowScore !== undefined && nowScore > prevScore;
+
+  if (failsDropped) {
     return { improving: true, regressed: false, reason: `FAIL findings ${String(prevFails)} → ${String(nowFails)}` };
   }
-  if (nowFails > prevFails) {
-    return { improving: false, regressed: true, reason: `FAIL findings rose ${String(prevFails)} → ${String(nowFails)}` };
+  if (failsRose || rubricFell) {
+    return {
+      improving: false,
+      regressed: true,
+      reason: failsRose
+        ? `FAIL findings rose ${String(prevFails)} → ${String(nowFails)}`
+        : `rubric fell ${String(prevScore)} → ${String(nowScore)}`,
+    };
   }
-  return { improving: false, regressed: false, reason: 'no movement in rubric or defects' };
+  if (rubricRose) {
+    return { improving: true, regressed: false, reason: `rubric rose ${String(prevScore)} → ${String(nowScore)}` };
+  }
+  return { improving: false, regressed: false, reason: 'no movement in defects or rubric' };
+}
+
+/**
+ * A human verdict on a loop's artefact, as recorded by the review surface.
+ *
+ * The rubric cannot see craft: it scored a page with ten design defects at 100,
+ * and a human looking at the same page called the other one better. A recorded
+ * judgement is therefore a first-class loop signal, not a nicety — it is the
+ * only one that measures the thing the rubric is blind to.
+ */
+export interface LoopJudgement {
+  /** Which loop the judge was looking at. */
+  loop?: number;
+  /** Free-form: which arm won, and why. */
+  winner?: string;
+  notes?: string;
+  /** Per-criterion scores, when the judge used the review surface's rubric. */
+  criteria?: { criterion: string; score: number }[];
+  recordedAt?: string;
+}
+
+/**
+ * Has the human verdict moved against the previous one?
+ *
+ * Compared as a plain score (sum of criterion scores, or the ones recorded),
+ * because the review surface labels its arms A and B and the loop only needs to
+ * know whether the page got better in the judgement that matters. A verdict
+ * naming a different artefact than the loop's own does not apply: a judge
+ * looking at loop 2 has not ruled on loop 5.
+ */
+export function judgementProgress(
+  previous: LoopJudgement | undefined,
+  current: LoopJudgement | undefined
+): 'improving' | 'regressing' | 'flat' | 'unknown' {
+  if (!current) return 'unknown';
+  const scoreOf = (j: LoopJudgement | undefined): number | undefined => {
+    if (!j) return undefined;
+    if (Array.isArray(j.criteria) && j.criteria.length > 0) {
+      return j.criteria.reduce((sum, c) => sum + (Number(c.score) || 0), 0);
+    }
+    return undefined;
+  };
+  const now = scoreOf(current);
+  const before = scoreOf(previous);
+  if (now === undefined || before === undefined) {
+    // No numeric rubric: fall back to whether the named winner changed.
+    if (!previous || !current) return 'unknown';
+    if (!previous.winner || !current.winner) return 'unknown';
+    return previous.winner === current.winner ? 'flat' : 'improving';
+  }
+  if (now > before) return 'improving';
+  if (now < before) return 'regressing';
+  return 'flat';
 }

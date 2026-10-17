@@ -220,3 +220,116 @@ function paletteWords(colors: string[] | undefined): string {
   const list = (colors ?? []).slice(0, 5).join(' ')
   return list ? `palette ${list}` : 'palette from the design system'
 }
+
+/**
+ * Gamma's own effect composition, via `gamma_compose_shader`.
+ *
+ * The hand-rolled SVG filters that came before this were a guess at what a
+ * shader does; this asks Gamma to compose the effect against a design system
+ * and hands back the aligned preset, the React source, the token stylesheet and
+ * MIT provenance. What a single-file page can use from that is the token
+ * stylesheet and the preset's props — the React export needs a build step — so
+ * `renderEffectCss` stays as the portable rendering of the composed props
+ * rather than of a guess.
+ */
+export interface ComposedEffect {
+  name: string;
+  /** The effect class name a page can apply. */
+  className: string;
+  /** Token-aligned props Gamma composed, when it returned them. */
+  props: Record<string, unknown>;
+  /** Gamma's token stylesheet for the composed system. */
+  stylesheet?: string;
+  /** Provenance: library version, commit and licence. */
+  provenance?: { version?: string; commit?: string; license?: string; repository?: string };
+  /** The recipe Gamma composed, for the run record. */
+  recipe?: unknown;
+}
+
+/**
+ * Find a shader that fits the subject and compose it against a design system.
+ *
+ * Gamma's shader list is filtered by the caller's query where it can be, and
+ * falls back to the whole catalogue otherwise — the same degrade-don't-fail
+ * rule the background lookup follows.
+ */
+export async function composeGammaEffect(
+  query: string,
+  options: {
+    url: string;
+    system?: string;
+    mode?: 'light' | 'dark';
+    timeoutMs?: number;
+    token?: string;
+  }
+): Promise<ComposedEffect | undefined> {
+  async function call<T>(tool: string, args: Record<string, unknown>): Promise<T | undefined> {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 20_000)
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json, text/event-stream',
+      }
+      if (options.token) headers.Authorization = `Bearer ${options.token}`
+      const response = await fetch(options.url, {
+        method: 'POST',
+        signal: controller.signal,
+        headers,
+        body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: tool, arguments: args } }),
+      })
+      if (!response.ok) return undefined
+      const text = await response.text()
+      const framed = text
+        .split('\n')
+        .filter((line) => line.startsWith('data:'))
+        .map((line) => line.slice(5).trim())
+        .join('')
+      const body = JSON.parse(framed || text) as { result?: { content?: { type: string; text?: string }[] } }
+      const first = body.result?.content?.find((c) => c.type === 'text')
+      return first?.text ? (JSON.parse(first.text) as T) : undefined
+    } catch {
+      return undefined
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+
+  const listed = await call<{ items?: { name?: string }[] }>('gamma_list_shaders', { query })
+  const names = (listed?.items ?? []).map((i) => i.name).filter((n): n is string => typeof n === 'string')
+  const name = names[0] ?? (await call<{ items?: { name?: string }[] }>('gamma_list_shaders', {}))?.items?.[0]?.name
+  if (typeof name !== 'string' || name.length === 0) return undefined
+
+  const full = await call<{
+    recipe?: unknown
+    stylesheet?: { source?: string }
+    provenance?: ComposedEffect['provenance']
+  }>('gamma_get_shader', { name, system: options.system ?? 'gamma', mode: options.mode ?? 'dark' })
+  const recipe = full?.recipe
+  if (!recipe) return undefined
+
+  // Compose against the design system: this is the step that binds the effect
+  // to Gamma's tokens instead of leaving them free-floating.
+  const composed = await call<{
+    preset?: { components?: { type?: string; props?: Record<string, unknown> }[] }
+    stylesheet?: { source?: string }
+    provenance?: ComposedEffect['provenance']
+    recipe?: unknown
+  }>('gamma_compose_shader', {
+    recipe,
+    system: options.system ?? 'gamma',
+    mode: options.mode ?? 'dark',
+    alignToSystem: true,
+  })
+  if (!composed) return undefined
+
+  const effectComponent = composed.preset?.components?.find((c) => c.type === name)
+  return {
+    name,
+    className: `fx-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+    props: effectComponent?.props ?? {},
+    stylesheet: composed.stylesheet?.source ?? full?.stylesheet?.source,
+    provenance: composed.provenance ?? full?.provenance,
+    recipe: composed.recipe ?? recipe,
+  }
+}

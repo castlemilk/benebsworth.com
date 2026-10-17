@@ -513,3 +513,67 @@ export function parseTemplates(text: string): { id: string; title: string }[] {
   }
   return out
 }
+
+/**
+ * Generate through `compare_image_models`, which actually honours the model.
+ *
+ * `set_generate_target` accepts `provider`/`modelId` without listing them in
+ * its schema and silently ignores them, so a "pinned" run still charges the
+ * template default (~$0.167). `compare_image_models` takes an explicit model
+ * list and a total ceiling, so the cheap model is a fact rather than a hope:
+ * pass one model and a budget and there is nothing else it can spend on.
+ */
+export async function generateWithPinnedModel(
+  client: BrandBrainFlowClient,
+  options: {
+    sessionId: string
+    models: { provider: string; modelId: string }[]
+    outPath: string
+    /** Hard ceiling for the whole comparison, in USD micros. */
+    maxTotalUsdMicros: number
+    mode?: 'mock' | 'live'
+  }
+): Promise<GenerateFlowResult | undefined> {
+  const mode = options.mode ?? 'live'
+  const started = await client.call('compare_image_models', {
+    sessionId: options.sessionId,
+    models: options.models,
+    mode,
+    maxTotalUsdMicros: options.maxTotalUsdMicros,
+  })
+  // The comparison clones a SIBLING session per model, so the run and its
+  // outputs live on that session — not the one created here. Reading outputs
+  // from the original is why a pinned run looked like it produced nothing.
+  const siblingSession =
+    /session (flow_session_[A-Za-z0-9_-]+)/.exec(started)?.[1] ?? options.sessionId
+  const runId = firstId(started, 'run') ?? /with run ([A-Za-z0-9]{16,})/.exec(started)?.[1]
+
+  if (runId) {
+    for (let attempt = 0; attempt < 90; attempt += 1) {
+      const status = await client.call('get_asset_flow_run', {
+        sessionId: siblingSession,
+        runId,
+      })
+      if (/completed|succeeded/i.test(status)) break
+      if (/failed|error/i.test(status)) return undefined
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+    }
+  }
+
+  const raw = await client.callRaw('get_flow_outputs', {
+    sessionId: siblingSession,
+    ...(runId ? { runId } : {}),
+  })
+  const image = raw.images[0]
+  if (!image) return undefined
+  const bytes = Buffer.from(image.data, 'base64')
+  if (bytes.byteLength === 0) return undefined
+
+  const ext = image.mimeType.includes('webp') ? 'webp' : image.mimeType.includes('jpeg') ? 'jpg' : 'png'
+  const { mkdirSync, writeFileSync } = await import('node:fs')
+  const target = options.outPath.replace(/\.[a-z0-9]+$/i, `.${ext}`)
+  const dir = target.split('/').slice(0, -1).join('/')
+  if (dir) mkdirSync(dir, { recursive: true })
+  writeFileSync(target, bytes)
+  return { sessionId: siblingSession, runId, path: target, bytes: bytes.byteLength, mode }
+}

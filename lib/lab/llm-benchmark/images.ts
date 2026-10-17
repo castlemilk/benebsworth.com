@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fetchBrandMark, guessBrand } from './brandbrain'
-import { BrandBrainFlowClient, generateFlowImage } from './brandbrain-flow'
+import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
 
 /**
  * Images for a generated artefact.
@@ -339,11 +339,28 @@ async function sourceGeneratedImage(
     maxSpendMicros: sources.flowMaxSpendMicros ?? 1_000_000,
   })
   try {
-    const result = await generateFlowImage(client, {
-      prompt: request.query,
+    // A flow has to exist before a model can be run against it.
+    const created = await client.call('create_asset_flow', {
+      title: `harness image · ${request.query.slice(0, 60)}`,
+      goal: request.query,
+    })
+    const sessionId = /flow_session_[A-Za-z0-9_-]+/.exec(created)?.[0]
+    if (!sessionId) return undefined
+
+    // Pin the cheapest CURRENT model with a real price, and hold the run to a
+    // ceiling: set_generate_target accepts a model it then ignores, so the
+    // comparison path is the one that actually prices at muse rates.
+    const cheapest = cheapestImageModel(await client.imageModels({ sortByCost: true }))
+    const provider = sources.flowModel?.provider ?? cheapest?.provider
+    const modelId = sources.flowModel?.modelId ?? cheapest?.modelId
+    if (!provider || !modelId) return undefined
+
+    const result = await generateWithPinnedModel(client, {
+      sessionId,
+      models: [{ provider, modelId }],
       outPath: path.join(sources.into, path.basename(request.fileName)),
-      provider: sources.flowModel?.provider,
-      modelId: sources.flowModel?.modelId,
+      maxTotalUsdMicros: sources.flowMaxSpendMicros ?? 20_000,
+      mode: 'live',
     })
     if (!result) return undefined
     return { ...request, path: result.path, bytes: result.bytes, source: 'generated' }

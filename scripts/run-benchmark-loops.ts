@@ -44,6 +44,10 @@ interface Args {
   /** BrandBrain MCP endpoint. */
   brandbrainUrl?: string
   brandbrainToken?: string
+  /** flow-orchestrator server path: generated pictures instead of searched ones. */
+  flowServerPath?: string
+  /** Ceiling for one generated picture, in USD micros. */
+  flowBudgetMicros: number
   /** Let a generated page wear a real company's mark. Off by default. */
   allowRealBrandMarks: boolean
 }
@@ -77,6 +81,8 @@ function parseArgs(argv: string[]): Args {
     gammaUrl: get('--gamma'),
     brandbrainUrl: get('--brandbrain'),
     brandbrainToken: get('--brandbrain-token'),
+    flowServerPath: get('--flow-mcp'),
+    flowBudgetMicros: Number(get('--flow-budget-micros') ?? 20_000),
     allowRealBrandMarks: argv.includes('--allow-real-brand-marks'),
   }
 }
@@ -342,6 +348,8 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
           assetsScript: args.assetsScript,
           openrouterKey: openrouterKey(),
           imageModel: 'google/gemini-3.1-flash-lite-image',
+          flowServerPath: args.flowServerPath,
+          flowMaxSpendMicros: args.flowBudgetMicros,
           brandbrainUrl: args.brandbrainUrl,
           brandbrainToken: args.brandbrainToken,
           allowRealBrandMarks: args.allowRealBrandMarks,

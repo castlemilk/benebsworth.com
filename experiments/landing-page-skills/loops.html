@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Improvement loops · landing page</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0b0c;
+        --panel: #141416;
+        --ink: #f4f4f5;
+        --muted: #9c9ca6;
+        --line: #26262a;
+        --accent: #e8b04b;
+        --win: #6ee7a8;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 ui-sans-serif, -apple-system, "Segoe UI", sans-serif; }
+      header { padding: 20px 26px 14px; border-bottom: 1px solid var(--line); }
+      h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: -0.02em; }
+      .sub { color: var(--muted); max-width: 76ch; margin: 0; }
+      .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+      button { font: inherit; color: var(--ink); background: #1c1c1f; border: 1px solid var(--line); border-radius: 8px; padding: 6px 11px; cursor: pointer; }
+      button:hover { border-color: #3a3a40; }
+      button[aria-pressed="true"] { background: var(--accent); color: #17170a; border-color: var(--accent); }
+      .hint { color: var(--muted); font-size: 13px; }
+      .strips { display: grid; gap: 10px; padding: 14px 26px 4px; }
+      .strip { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; }
+      .strip h3 { margin: 0; font-size: 14px; }
+      .metrics { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+      .metrics b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+      .delta { color: var(--win); }
+      .delta.down { color: #f08c8c; }
+      .bar { position: relative; height: 6px; border-radius: 3px; background: #232327; overflow: hidden; min-width: 120px; }
+      .bar > i { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
+      .frame { display: none; position: fixed; inset: 0; z-index: 20; background: var(--bg); }
+      .frame.open { display: flex; flex-direction: column; }
+      .frame header { display: flex; gap: 10px; align-items: center; }
+      .frame iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+      .defects { color: var(--muted); font-size: 12.5px; }
+      @media (max-width: 860px) { .strip { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Improvement loops — landing page, GLM 5.3</h1>
+      <p class="sub">
+        Each loop is handed the previous page plus what a real browser measured about it: screenshots at three
+        widths, the design rules that failed, and the rubric it scored. Then it is asked to improve those defects
+        <em>and</em> extend what is thin. Pick a loop to read it full screen.
+      </p>
+      <div class="toolbar">
+        <button id="compare">Compare 1 · 3 · 5</button>
+        <span class="hint">Every row opens full screen. <code>Esc</code> closes.</span>
+      </div>
+    </header>
+
+    <div class="strips" id="strips"></div>
+
+    <div class="frame" id="frame">
+      <header>
+        <h2 id="frameTitle" style="font-size:16px;margin:0"></h2>
+        <button id="close">Close</button>
+      </header>
+      <iframe id="frameBody" title="Loop artefact"></iframe>
+    </div>
+
+    <script>
+      // Filled from manifest.json when present; the literal below keeps the page
+      // reviewable before the first run lands.
+      const FALLBACK = [
+        { loop: 1, rubricScore: 65, fails: 11, tokensOut: 6863, runtimeMs: 519000 },
+        { loop: 2, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
+        { loop: 3, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
+        { loop: 4, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
+        { loop: 5, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
+      ];
+
+      const RUN = 'loops/latest';
+      const state = { rows: FALLBACK.slice() };
+
+      function fmtTokens(n) {
+        if (n == null) return '—';
+        return n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
+      }
+      function fmtRuntime(ms) {
+        if (ms == null) return '—';
+        const s = Math.round(ms / 1000);
+        return s >= 60 ? `${Math.floor(s / 60)}m ${String(s % 60)}s` : `${String(s)}s`;
+      }
+
+      function paint() {
+        const strips = document.getElementById('strips');
+        strips.innerHTML = state.rows
+          .map((r, i) => {
+            const prev = state.rows[i - 1];
+            const delta =
+              prev && prev.rubricScore != null && r.rubricScore != null ? r.rubricScore - prev.rubricScore : null;
+            const deltaHtml =
+              delta == null
+                ? ''
+                : `<span class="delta ${delta < 0 ? 'down' : ''}">${delta > 0 ? '+' : ''}${String(delta)}</span>`;
+            return `
+              <div class="strip">
+                <h3>Loop ${String(r.loop)}</h3>
+                <div class="metrics">
+                  <span>rubric <b>${r.rubricScore ?? '—'}</b> ${deltaHtml}</span>
+                  <span>FAILs <b>${r.fails ?? '—'}</b></span>
+                  <span>tokens <b>${fmtTokens(r.tokensOut)}</b></span>
+                  <span>runtime <b>${fmtRuntime(r.runtimeMs)}</b></span>
+                  ${r.intent ? `<span class="defects">${r.intent}</span>` : ''}
+                  ${r.error ? `<span class="defects" style="color:#f08c8c">${r.error}</span>` : ''}
+                  <span class="bar"><i style="width:${String(r.rubricScore ?? 0)}%"></i></span>
+                  <button data-loop="${String(r.loop)}">Full screen</button>
+                </div>
+              </div>`;
+          })
+          .join('');
+        for (const button of strips.querySelectorAll('button[data-loop]')) {
+          button.onclick = () => open(Number(button.dataset.loop));
+        }
+      }
+
+      function open(loop) {
+        const frame = document.getElementById('frame');
+        document.getElementById('frameTitle').textContent = `Loop ${String(loop)}`;
+        document.getElementById('frameBody').setAttribute('src', `${RUN}/loop-${String(loop)}/artifact.html`);
+        frame.classList.add('open');
+      }
+
+      document.getElementById('close').onclick = () =>
+        document.getElementById('frame').classList.remove('open');
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') document.getElementById('frame').classList.remove('open');
+      });
+      document.getElementById('compare').onclick = () => {
+        for (const loop of [1, 3, 5]) {
+          if (state.rows.some((r) => r.loop === loop)) open(loop);
+        }
+        document.getElementById('frame').classList.remove('open');
+        alert('Loops 1, 3 and 5 are listed above — open each one full screen to read it.');
+      };
+
+      async function load() {
+        try {
+          const res = await fetch(`${RUN}/manifest.json`);
+          if (!res.ok) return;
+          const manifest = await res.json();
+          state.rows = (manifest.loops || []).map((l, i) => ({
+            loop: i + 1,
+            rubricScore: l.rubricScore ?? null,
+            fails: (l.findings || []).filter((f) => f.level === 'FAIL').length,
+            tokensOut: l.tokensOut ?? null,
+            runtimeMs: l.runtimeMs ?? null,
+            intent: i === 0 ? 'generated from the brief' : 'reflected on the previous page',
+            error: l.error ?? '',
+          }));
+        } catch {
+          // No run yet: the fallback rows stand.
+        }
+        paint();
+      }
+
+      paint();
+      load();
+    </script>
+  </body>
+</html>

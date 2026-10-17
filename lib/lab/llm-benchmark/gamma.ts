@@ -83,6 +83,17 @@ export interface GammaCatalogueEntry {
 export interface GammaAssets {
   /** True when the catalogue answered at all. */
   reachable: boolean;
+  /** The background generator's own recipe, when one was returned. */
+  backgroundRecipe?: {
+    mode?: string
+    ratio?: string
+    seed?: number
+    scale?: number
+    flow?: number
+    detail?: number
+    grain?: number
+    colors?: string[]
+  };
   /** Design-system token CSS, ready to inline. */
   tokensCss?: string;
   /** Design-system name, so the model can name what it used. */
@@ -127,6 +138,46 @@ function findCss(value: unknown, depth = 0): string | undefined {
   if (value && typeof value === 'object') {
     for (const item of Object.values(value as Record<string, unknown>)) {
       const found = findCss(item, depth + 1)
+      if (found) return found
+    }
+  }
+  return undefined
+}
+
+/** The generator config from a background payload, wherever it sits. */
+function findRecipe(
+  value: unknown,
+  depth = 0
+): GammaAssets['backgroundRecipe'] {
+  if (depth > 5 || value === null || value === undefined) return undefined
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = findRecipe(item, depth + 1)
+      if (found) return found
+    }
+    return undefined
+  }
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    const config = (record.config ?? record) as Record<string, unknown>
+    if (typeof config.mode === 'string' && ('seed' in config || 'scale' in config || 'colors' in config)) {
+      const number = (key: string): number | undefined =>
+        typeof config[key] === 'number' ? (config[key] as number) : undefined
+      return {
+        mode: config.mode,
+        ratio: typeof config.ratio === 'string' ? config.ratio : undefined,
+        seed: number('seed'),
+        scale: number('scale'),
+        flow: number('flow'),
+        detail: number('detail'),
+        grain: number('grain'),
+        colors: Array.isArray(config.colors)
+          ? config.colors.filter((c): c is string => typeof c === 'string')
+          : undefined,
+      }
+    }
+    for (const item of Object.values(record)) {
+      const found = findRecipe(item, depth + 1)
       if (found) return found
     }
   }
@@ -282,11 +333,14 @@ export async function fetchGammaAssets(
     // not a stylesheet, so there is no CSS text to lift. What travels into a
     // single-file page is the palette: custom properties plus one gradient that
     // uses them, which is the part a hand-written page usually gets wrong.
-    const palette = findPalette(background)
+    const recipe = findRecipe(background)
+    if (recipe) assets.backgroundRecipe = recipe
+    const palette = recipe?.colors ?? findPalette(background)
     const summary = findSummary(background)
-    assets.backgroundCss = palette.length > 0 ? backgroundCssFromPalette(palette, backgroundName, summary) : findCss(background)
+    assets.backgroundCss =
+      palette.length > 0 ? backgroundCssFromPalette(palette, backgroundName, summary) : findCss(background)
     assets.backgroundName = backgroundName
-    if (!assets.backgroundCss) assets.notes.push(`background "${backgroundName}" returned neither CSS nor a palette`)
+    if (!assets.backgroundCss) assets.notes.push(`background "${backgroundName}" returned neither a recipe nor a palette`)
   }
 
   const shaders = await listWithFallback('gamma_list_shaders', { query, limit: 5 }, options)

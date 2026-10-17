@@ -204,33 +204,39 @@ export class BrandBrainFlowClient {
   }
 
   /**
-   * Image models the backend will actually accept, parsed out of the
-   * catalogue's own text. The backend is the only authority on valid pairs, so
-   * this reads its list rather than carrying a stale copy.
+   * Image models the backend will actually accept.
+   *
+   * `sortByCost` is BrandBrain's own recommendation when choosing a cheap one,
+   * and the catalogue is the only authority on valid pairs and prices.
    */
-  async imageModels(): Promise<FlowModel[]> {
-    const text = await this.call('list_image_models')
-    const models: FlowModel[] = []
-    let provider = ''
-    for (const line of text.split('\n')) {
-      const heading = /^([a-z]+)(?: \(default [^)]*\))?:/.exec(line.trim())
-      if (heading?.[1]) {
-        provider = heading[1]
-        continue
-      }
-      const entry = /^(\S+)\s+·\s+(\S+)(.*)$/.exec(line.trim())
-      if (!entry || provider === '') continue
-      const price = /~\$([\d.]+)\/1024²/.exec(entry[3] ?? '')
-      const references = /references≤(\d+)/.exec(entry[3] ?? '')
-      models.push({
-        provider,
-        modelId: entry[1]!,
-        status: entry[2],
-        approxUsdPerImage: price?.[1] ? Number(price[1]) : undefined,
-        supportsReferences: Boolean(references?.[1]),
-      })
-    }
-    return models
+  async imageModels(options: { sortByCost?: boolean } = {}): Promise<FlowModel[]> {
+    return parseImageModels(
+      await this.call('list_image_models', options.sortByCost ? { sortByCost: true } : {})
+    )
+  }
+
+  /**
+   * BrandBrain's own preflight, which also names the generate nodes.
+   *
+   * `get_asset_flow` returns a summary with node COUNTS, so the estimate text
+   * is the only place in this MCP surface that exposes a generate node id
+   * (`generate_hero: openai/gpt-image-1 · ~$0.1670`) — and the price the run
+   * would actually charge.
+   */
+  async estimateRun(
+    sessionId: string
+  ): Promise<{ usd?: number; nodes: { nodeId: string; provider: string; modelId: string; usd?: number }[] }> {
+    const text = await this.call('estimate_asset_flow_run_cost', { sessionId })
+    const total = /\$([\d.]+)/.exec(text)?.[1]
+    const nodes = [
+      ...text.matchAll(/([a-z_]+_[A-Za-z0-9_-]+):\s*([a-z]+)\/([A-Za-z0-9._-]+)\s*(?:·\s*~\$([\d.]+))?/g),
+    ].map((m) => ({
+      nodeId: m[1]!,
+      provider: m[2]!,
+      modelId: m[3]!,
+      usd: m[4] ? Number(m[4]) : undefined,
+    }))
+    return { usd: total ? Number(total) : undefined, nodes }
   }
 
   /** Canonical starter flow templates, as `{ id, title }`. */
@@ -250,8 +256,18 @@ export interface GenerateFlowOptions {
   prompt: string
   /** Where the generated file must land. */
   outPath: string
+  /**
+   * Pin the cheap model. Left unset, the flow runs the TEMPLATE's default —
+   * gpt-image-2 at ~$0.21 an image — which is twenty times what
+   * `openrouter/meta/muse-image` costs. Passing `cheapest: true` selects it
+   * from the catalogue rather than hard-coding an id that may be retired.
+   */
   provider?: string
   modelId?: string
+  /** Choose the cheapest catalogue model automatically. */
+  cheapest?: boolean
+  /** Refuse a live run whose estimate exceeds this, in USD. Default $0.05. */
+  budgetUsd?: number
   /** `mock` never calls a provider; `live` spends. Default `mock`. */
   mode?: 'mock' | 'live'
   /** Flow title, so the canvas is identifiable after the run. */
@@ -318,6 +334,44 @@ export async function generateFlowImage(
   const validation = await client.call('validate_asset_flow', { sessionId })
   if (/error|failed/i.test(validation) && !/valid|no errors/i.test(validation)) return undefined
 
+  // Pin the model BEFORE costing the run, so the estimate is for the model that
+  // will actually execute rather than the template's default.
+  if (mode === 'live') {
+    let provider = options.provider
+    let modelId = options.modelId
+    if (options.cheapest || (!provider && !modelId)) {
+      const cheapest = cheapestImageModel(await client.imageModels({ sortByCost: true }))
+      provider ??= cheapest?.provider
+      modelId ??= cheapest?.modelId
+    }
+    // The preflight names the generate nodes; get_asset_flow returns only node
+    // COUNTS, so a client that needs a node id has to read it from here.
+    const preflight = await client.estimateRun(sessionId)
+
+    if (provider && modelId) {
+      for (const node of preflight.nodes.filter((n) => n.nodeId.startsWith('generate'))) {
+        await selectFlowModel(client, {
+          sessionId,
+          nodeId: node.nodeId,
+          provider,
+          modelId,
+          aspectRatio: '16:9',
+          copySafety: 'clean negative space on one side for headline copy',
+        })
+      }
+      // Verify the pin landed rather than trusting a 200-shaped reply: this call
+      // accepts provider/modelId without listing them in its schema and ignores
+      // them, so the only proof is the re-priced preflight below.
+    }
+
+    // Re-estimate AFTER pinning, and refuse anything over budget: the price
+    // that matters is the one the run will actually charge, not the one the
+    // template defaulted to.
+    const budget = options.budgetUsd ?? 0.05
+    const after = await client.estimateRun(sessionId)
+    if (after.usd !== undefined && after.usd > budget) return undefined
+  }
+
   const started = await client.call('start_asset_flow_run', { sessionId, mode })
   const taskId = firstId(started, 'flow_task')
   let runId = firstId(started, 'run')
@@ -376,4 +430,86 @@ export async function generateFlowImage(
   writeFileSync(options.outPath, bytes)
 
   return { sessionId, runId, taskId, path: options.outPath, bytes: bytes.byteLength, mode, artifactUrl: locator.url }
+}
+
+/**
+ * Cheapest image model worth actually using.
+ *
+ * Two catalogue traps, both found by reading the live list rather than the
+ * docs: sorting by cost puts a $0 **legacy** model first (nothing generates
+ * from those reliably), and a $0 entry is far more likely to be a listing
+ * artefact than a free tier. So: a real price, a current model, and the
+ * cheapest of those — `openrouter/meta/muse-image` at ~$0.01 today.
+ */
+export function cheapestImageModel(models: FlowModel[]): FlowModel | undefined {
+  const usable = models.filter(
+    (m) =>
+      typeof m.approxUsdPerImage === 'number' &&
+      m.approxUsdPerImage > 0 &&
+      (m.status ?? 'current') === 'current'
+  )
+  return usable.sort((a, b) => a.approxUsdPerImage! - b.approxUsdPerImage!)[0]
+}
+
+/** Points a flow's generate node at a specific model before any run. */
+export async function selectFlowModel(
+  client: BrandBrainFlowClient,
+  args: { sessionId: string; nodeId: string; provider?: string; modelId?: string; aspectRatio?: string; copySafety?: string }
+): Promise<boolean> {
+  const text = await client.call('set_generate_target', args)
+  return !/error|failed|not found/i.test(text)
+}
+
+/** BrandBrain's own preflight estimate, in USD, before a live run spends. */
+export async function estimateRunCostUsd(
+  client: BrandBrainFlowClient,
+  args: { sessionId: string; targetNodeId?: string }
+): Promise<number | undefined> {
+  const text = await client.call('estimate_asset_flow_run_cost', args)
+  const dollars = /\$([\d.]+)/.exec(text)?.[1]
+  if (dollars !== undefined) return Number(dollars)
+  const micros = /([\d.]+)\s*(?:USD\s*)?micros?/i.exec(text)?.[1]
+  return micros !== undefined ? Number(micros) / 1_000_000 : undefined
+}
+
+/**
+ * Parse the image-model catalogue text.
+ *
+ * The backend is the only authority on which provider/model pairs are valid and
+ * what each costs, so this reads its own listing rather than carrying a copy
+ * that goes stale. The price is what a spend decision is made from, so it is
+ * parsed rather than approximated.
+ */
+export function parseImageModels(text: string): FlowModel[] {
+  const models: FlowModel[] = []
+  let provider = ''
+  for (const line of text.split('\n')) {
+    const heading = /^([a-z]+)(?: \(default [^)]*\))?:/.exec(line.trim())
+    if (heading?.[1]) {
+      provider = heading[1]
+      continue
+    }
+    const entry = /^(\S+)\s+·\s+(\S+)(.*)$/.exec(line.trim())
+    if (!entry || provider === '') continue
+    const price = /~\$([\d.]+)\/1024²/.exec(entry[3] ?? '')
+    const references = /references≤(\d+)/.exec(entry[3] ?? '')
+    models.push({
+      provider,
+      modelId: entry[1]!,
+      status: entry[2],
+      approxUsdPerImage: price?.[1] ? Number(price[1]) : undefined,
+      supportsReferences: Boolean(references?.[1]),
+    })
+  }
+  return models
+}
+
+/** Parse the template listing into `{ id, title }`. */
+export function parseTemplates(text: string): { id: string; title: string }[] {
+  const out: { id: string; title: string }[] = []
+  for (const line of text.split('\n')) {
+    const match = /^([a-z0-9][\w-]*):\s+(.+?)(?:\s+\(|$)/.exec(line.trim())
+    if (match) out.push({ id: match[1]!, title: match[2]! })
+  }
+  return out
 }

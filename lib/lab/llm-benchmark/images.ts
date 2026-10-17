@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
+import { fetchBrandMark, guessBrand } from './brandbrain'
 
 /**
  * Images for a generated artefact.
@@ -52,8 +53,13 @@ export interface ImageSources {
   openrouterKey?: string
   /** Cheap image model id, e.g. google/gemini-3.1-flash-lite-image. */
   imageModel?: string
-  /** BrandBrain search endpoint, when the platform is reachable. */
+  /** BrandBrain MCP endpoint, when the platform is reachable and authenticated. */
   brandbrainUrl?: string
+  brandbrainToken?: string
+  /** Opt-in: a standalone page may wear a real company's mark. */
+  allowRealBrandMarks?: boolean
+  /** The artefact, so the brand mark is chosen for the page it belongs to. */
+  artifactHtml?: string
   /** Directory downloads land in. */
   into: string
 }
@@ -138,25 +144,33 @@ export async function sourceOpenCollection(request: ImageRequest, sources: Image
   if (!script || !fs.existsSync(script)) return undefined
   fs.mkdirSync(sources.into, { recursive: true })
 
-  const searched = await run(
-    'node',
-    [script, request.query, '--limit', '4', '--min-width', '900', '--json', '--no-check'],
-    sources.into
+  // Try the full query, then its first two words, then the subject alone: a
+  // query that matches nothing must degrade to something rather than to nothing.
+  const terms = request.query.split(/\s+/).filter(Boolean)
+  const attempts = [request.query, terms.slice(0, 2).join(' '), terms.slice(0, 1)[0]].filter(
+    (q, i, all): q is string => typeof q === 'string' && q.length > 2 && all.indexOf(q) === i
   )
-  if (searched.code !== 0) return undefined
 
-  // The skill reports per source: `{ sources: [{ source, items: [{ ref, … }] }] }`.
-  // Flatten across sources in the order the skill ranked them, keeping only the
-  // refs its own `--get` can resolve.
-  let results: { ref?: string; title?: string }[]
-  try {
-    const parsed = JSON.parse(searched.stdout) as {
-      sources?: { items?: { ref?: string; title?: string }[] }[]
+  let searched = { code: 1, stdout: '', stderr: '' }
+  let results: { ref?: string; title?: string }[] = []
+  for (const attempt of attempts) {
+    searched = await run(
+      'node',
+      [script, attempt, '--limit', '4', '--min-width', '900', '--json', '--no-check'],
+      sources.into
+    )
+    if (searched.code !== 0) continue
+    try {
+      const parsed = JSON.parse(searched.stdout) as {
+        sources?: { items?: { ref?: string; title?: string }[] }[]
+      }
+      results = (parsed.sources ?? []).flatMap((source) => source.items ?? [])
+    } catch {
+      results = []
     }
-    results = (parsed.sources ?? []).flatMap((source) => source.items ?? [])
-  } catch {
-    return undefined
+    if (results.length > 0) break
   }
+
 
   for (const result of results) {
     const ref = result.ref
@@ -318,28 +332,40 @@ export async function sourceImage(
   return { attempted, reason: 'no source returned an image' }
 }
 
-/** BrandBrain search, when the platform is reachable. */
+/**
+ * BrandBrain brand mark, when the platform is reachable.
+ *
+ * Deliberately a real-brand gate rather than a picture search: a generated page
+ * inventing a logo is fine, a generated page wearing a real company's mark is not,
+ * so the asset is returned with its provenance and `sourceBrandAsset` only
+ * downloads it when the caller has opted in. Anything else falls through to the
+ * ordinary sources, which is the correct outcome when the platform is down.
+ */
 async function sourceBrandAsset(request: ImageRequest, sources: ImageSources): Promise<SourcedImage | undefined> {
-  if (!sources.brandbrainUrl) return undefined
-  try {
-    const url = new URL('/api/search', sources.brandbrainUrl)
-    url.searchParams.set('q', request.query)
-    const response = await fetch(url)
-    if (!response.ok) return undefined
-    const body = (await response.json()) as { results?: { logoUrl?: string; name?: string; sourceUrl?: string }[] }
-    const hit = body.results?.find((r) => typeof r.logoUrl === 'string')
-    if (!hit?.logoUrl) return undefined
-    const image = await fetch(hit.logoUrl)
-    if (!image.ok) return undefined
-    const bytes = Buffer.from(await image.arrayBuffer())
-    fs.mkdirSync(sources.into, { recursive: true })
-    const ext = path.extname(new URL(hit.logoUrl).pathname) || '.png'
-    const target = path.join(sources.into, `${path.basename(request.fileName, path.extname(request.fileName))}${ext}`)
-    fs.writeFileSync(target, bytes)
-    return { ...request, path: target, bytes: bytes.byteLength, source: 'brandbrain', page: hit.sourceUrl }
-  } catch {
-    return undefined
-  }
+  // All three, or none. The mark is a real company's identity, so it needs a
+  // reachable platform, credentials, AND an explicit opt-in; anything less falls
+  // through to the ordinary sources rather than putting a real brand's face on
+  // a page that invented its own company.
+  if (!sources.brandbrainUrl || !sources.brandbrainToken || !sources.allowRealBrandMarks) return undefined
+
+  const brand = guessBrand(sources.artifactHtml ?? '')
+  if (!brand) return undefined
+
+  const asset = await fetchBrandMark(brand, {
+    url: sources.brandbrainUrl,
+    token: sources.brandbrainToken,
+    allowRealBrandMarks: sources.allowRealBrandMarks,
+  })
+  if (!asset?.url) return undefined
+
+  const image = await fetch(asset.url)
+  if (!image.ok) return undefined
+  const bytes = Buffer.from(await image.arrayBuffer())
+  fs.mkdirSync(sources.into, { recursive: true })
+  const ext = path.extname(new URL(asset.url).pathname) || '.png'
+  const target = path.join(sources.into, `${path.basename(request.fileName, path.extname(request.fileName))}${ext}`)
+  fs.writeFileSync(target, bytes)
+  return { ...request, path: target, bytes: bytes.byteLength, source: 'brandbrain', page: asset.page }
 }
 
 /**
@@ -351,9 +377,14 @@ async function sourceBrandAsset(request: ImageRequest, sources: ImageSources): P
  * picture that belongs and one that decorates.
  */
 export function queryFromArtifact(html: string): string {
-  const headline = /<h1[^>]*>([\s\S]{0,200}?)<\/h1>/i.exec(html)?.[1] ?? ''
-  const title = /<title[^>]*>([\s\S]{0,120}?)<\/title>/i.exec(html)?.[1] ?? ''
-  const headings = [...html.matchAll(/<h[23][^>]*>([\s\S]{0,120}?)<\/h[23]>/gi)]
+  // Style and script bodies are not page content. Once a loop injects Gamma's
+  // stylesheet into the artefact, reading it as text turns the query into
+  // `--gamma-font-ui refined divider` — which matches nothing anywhere, and the
+  // failure looks like "no source has images" rather than "the query was junk".
+  const markup = html.replace(/<style\b[\s\S]*?<\/style>/gi, ' ').replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+  const headline = /<h1[^>]*>([\s\S]{0,200}?)<\/h1>/i.exec(markup)?.[1] ?? ''
+  const title = /<title[^>]*>([\s\S]{0,120}?)<\/title>/i.exec(markup)?.[1] ?? ''
+  const headings = [...markup.matchAll(/<h[23][^>]*>([\s\S]{0,120}?)<\/h[23]>/gi)]
     .map((m) => stripTags(m[1] ?? ''))
     .filter((t) => t.length > 3)
     .slice(0, 4)

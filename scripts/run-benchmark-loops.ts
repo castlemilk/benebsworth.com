@@ -39,9 +39,13 @@ interface Args {
   /** Source pictures when the rules report none on the page. */
   images: boolean
   assetsScript?: string
-  brandbrainUrl?: string
   /** Gamma MCP endpoint for components, backgrounds and effects. */
   gammaUrl?: string
+  /** BrandBrain MCP endpoint. */
+  brandbrainUrl?: string
+  brandbrainToken?: string
+  /** Let a generated page wear a real company's mark. Off by default. */
+  allowRealBrandMarks: boolean
 }
 
 function parseArgs(argv: string[]): Args {
@@ -70,8 +74,10 @@ function parseArgs(argv: string[]): Args {
     stopWhenStuck: !argv.includes('--no-stop-when-stuck'),
     images: argv.includes('--images'),
     assetsScript: get('--assets-script'),
-    brandbrainUrl: get('--brandbrain'),
     gammaUrl: get('--gamma'),
+    brandbrainUrl: get('--brandbrain'),
+    brandbrainToken: get('--brandbrain-token'),
+    allowRealBrandMarks: argv.includes('--allow-real-brand-marks'),
   }
 }
 
@@ -337,6 +343,9 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
           openrouterKey: openrouterKey(),
           imageModel: 'google/gemini-3.1-flash-lite-image',
           brandbrainUrl: args.brandbrainUrl,
+          brandbrainToken: args.brandbrainToken,
+          allowRealBrandMarks: args.allowRealBrandMarks,
+          artifactHtml: artifact,
         }
       )
       if (result.image) {

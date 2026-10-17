@@ -3,7 +3,7 @@ import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fetchBrandMark, guessBrand } from './brandbrain'
 import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
-import { generateWithComfy } from './comfy'
+import { generateWithMlx } from './mlx'
 
 /**
  * Images for a generated artefact.
@@ -42,7 +42,7 @@ export interface SourcedImage extends ImageRequest {
   /** Absolute path on disk. */
   path: string
   bytes: number
-  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated' | 'local-comfy'
+  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated' | 'local-mlx'
   licence?: string
   creator?: string
   page?: string
@@ -73,13 +73,15 @@ export interface ImageSources {
   /** Ceiling for one live run, in USD micros. */
   flowMaxSpendMicros?: number
   /**
-   * Local ComfyUI. The only rung that cannot fail for want of credit, so it is
-   * tried first: the hosted routes share one exhausted OpenRouter balance.
+   * Local MLX generation. The only rung that cannot fail for want of credit,
+   * so it is tried first: the hosted routes share one exhausted OpenRouter
+   * balance.
    */
-  comfyUrl?: string
-  comfySteps?: number
-  comfyWidth?: number
-  comfyHeight?: number
+  mlxCommand?: string
+  mlxModel?: string
+  mlxSteps?: number
+  mlxWidth?: number
+  mlxHeight?: number
   /** Directory downloads land in. */
   into: string
 }
@@ -384,19 +386,19 @@ export async function sourceImage(
 ): Promise<{ image?: SourcedImage; attempted: string[]; reason?: string }> {
   const attempted: string[] = []
 
-  if (sources.comfyUrl) {
-    attempted.push('local-comfy')
-    const local = await generateWithComfy({
-      url: sources.comfyUrl,
+  if (sources.mlxCommand && sources.mlxModel) {
+    attempted.push('local-mlx')
+    const local = await generateWithMlx({
+      command: sources.mlxCommand,
+      model: sources.mlxModel,
       prompt: request.query,
-      outPath: path.join(sources.into, path.basename(request.fileName)),
-      steps: sources.comfySteps,
-      width: sources.comfyWidth,
-      height: sources.comfyHeight,
-      filenamePrefix: 'harness/loop',
+      outPath: path.join(sources.into, path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, '') + '.png'),
+      steps: sources.mlxSteps,
+      width: sources.mlxWidth,
+      height: sources.mlxHeight,
     })
     if (local) {
-      return { image: { ...request, path: local.path, bytes: local.bytes, source: 'local-comfy' }, attempted }
+      return { image: { ...request, path: local.path, bytes: local.bytes, source: 'local-mlx' }, attempted }
     }
   }
 

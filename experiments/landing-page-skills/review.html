@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Landing-page A/B · review</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0b0c;
+        --panel: #141416;
+        --ink: #f4f4f5;
+        --muted: #9c9ca6;
+        --line: #26262a;
+        --accent: #e8b04b;
+        --win: #6ee7a8;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px/1.55 ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+      }
+      header { padding: 22px 28px 16px; border-bottom: 1px solid var(--line); }
+      h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.02em; }
+      .sub { color: var(--muted); max-width: 72ch; margin: 0; }
+      .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
+      button {
+        font: inherit; color: var(--ink); background: #1c1c1f; border: 1px solid var(--line);
+        border-radius: 8px; padding: 7px 12px; cursor: pointer;
+      }
+      button:hover { border-color: #3a3a40; }
+      button[aria-pressed="true"] { background: var(--accent); color: #17170a; border-color: var(--accent); }
+      .hint { color: var(--muted); font-size: 13px; }
+
+      /* Arms. In `stack` mode they sit side by side; in `full` mode one fills the
+         viewport. The artefact iframe is never clipped in full mode — the point
+         of full screen is that the page renders at its own height, because a
+         landing page is a scroll, not a card. */
+      .arms { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 28px 8px; }
+      .arms.full { grid-template-columns: 1fr; padding: 0; gap: 0; }
+      .arms.full .arm { border-radius: 0; border: 0; }
+      .arms.full .arm[hidden] { display: none; }
+      .arm { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+      .arm header { display: flex; align-items: baseline; gap: 12px; padding: 13px 16px 11px; border-bottom: 1px solid var(--line); }
+      .arm h2 { font-size: 15px; margin: 0; font-weight: 600; }
+      .tag { color: var(--muted); font-size: 13px; }
+      .score { margin-left: auto; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .facts { display: flex; gap: 14px; flex-wrap: wrap; padding: 9px 16px; color: var(--muted); font-size: 12.5px; border-bottom: 1px solid var(--line); }
+      .facts b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+      .frame { position: relative; flex: 1; min-height: 640px; background: #fff; }
+      iframe { width: 100%; height: 100%; min-height: 640px; border: 0; display: block; }
+      .arms.full .frame, .arms.full iframe { height: calc(100vh - 116px); min-height: 0; }
+
+      /* Judgement */
+      .judge { padding: 18px 28px 44px; border-top: 1px solid var(--line); margin-top: 12px; }
+      .judge h2 { font-size: 16px; margin: 0 0 4px; }
+      .judge .sub { margin-bottom: 14px; }
+      table { border-collapse: collapse; width: 100%; max-width: 900px; font-size: 14px; }
+      th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      th { color: var(--muted); font-weight: 500; font-size: 12.5px; text-transform: none; }
+      td.num { width: 92px; }
+      input[type="range"] { width: 78px; vertical-align: middle; accent-color: var(--accent); }
+      .verdict { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+      .outcome { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; margin-top: 14px; max-width: 900px; background: var(--panel); }
+      .outcome b { color: var(--win); }
+      code { background: #1c1c1f; padding: 1px 5px; border-radius: 5px; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Landing-page A/B — review</h1>
+      <p class="sub">
+        One task, one model (GLM 5.3), one iteration per arm. The arms are labelled <b>A</b> and <b>B</b> here on
+        purpose: which model produced which page is withheld until you record a verdict, because a judge who knows
+        the intervention is not a blind judge.
+      </p>
+      <div class="toolbar">
+        <button id="side">Side by side</button>
+        <button id="fullA">Full screen · A</button>
+        <button id="fullB">Full screen · B</button>
+        <button id="shuffle">Shuffle A/B</button>
+        <span class="hint">Full screen gives each page the whole viewport, so it renders as a scroll rather than a card. <code>Esc</code> returns.</span>
+      </div>
+    </header>
+
+    <div class="arms" id="arms">
+      <section class="arm" id="armA">
+        <header>
+          <h2 id="nameA">Page A</h2>
+          <span class="tag" id="tagA"></span>
+          <span class="score" id="scoreA"></span>
+        </header>
+        <div class="facts" id="factsA"></div>
+        <div class="frame"><iframe id="frameA" title="Page A"></iframe></div>
+      </section>
+
+      <section class="arm" id="armB">
+        <header>
+          <h2 id="nameB">Page B</h2>
+          <span class="tag" id="tagB"></span>
+          <span class="score" id="scoreB"></span>
+        </header>
+        <div class="facts" id="factsB"></div>
+        <div class="frame"><iframe id="frameB" title="Page B"></iframe></div>
+      </section>
+    </div>
+
+    <section class="judge">
+      <h2>Your judgement</h2>
+      <p class="sub">
+        Score each page on what the automated rubric cannot see. The rubric measures landmarks, focus, contrast and
+        theme behaviour; it has no way to tell whether a page looks like something you would buy. These rows are
+        the ones it is blind to.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Criterion</th><th class="num">A</th><th class="num">B</th></tr>
+        </thead>
+        <tbody id="criteria"></tbody>
+      </table>
+      <div class="verdict">
+        <button id="record">Record verdict</button>
+        <button id="reveal">Reveal which arm had skills</button>
+        <span class="hint" id="verdictHint">Nothing recorded yet.</span>
+      </div>
+      <div class="outcome" id="outcome" hidden></div>
+    </section>
+
+    <script>
+      // The two arms, with the rubric's score kept visible but its ordering
+      // hidden: a judge who sees "100" before choosing has already chosen.
+      const ARMS = {
+        A: {
+          src: 'baseline.html',
+          label: 'baseline',
+          score: 65,
+          facts: ['runtime 519s', 'out 6,863 tok', 'cost $0.00', '27KB'],
+        },
+        B: {
+          src: 'skills.html',
+          label: '+ design skills',
+          score: 100,
+          facts: ['runtime 538s', 'out 11,391 tok', 'cost $0.00', '45KB'],
+        },
+      };
+
+      const CRITERIA = [
+        'First screen states what the product is',
+        'Hierarchy: one thing leads',
+        'Typography is deliberate, not default',
+        'Reads as a real commercial product',
+        'Would I trust this brand with money',
+        'Nothing here feels generated',
+      ];
+
+      // `slots` decides which arm sits in the A frame. Shuffling swaps them.
+      let slots = ['A', 'B'];
+
+      function paint() {
+        for (const [frame, slot] of [['A', slots[0]], ['B', slots[1]]]) {
+          const arm = ARMS[slot];
+          document.getElementById('name' + frame).textContent = 'Page ' + frame;
+          document.getElementById('tag' + frame).textContent = '';
+          document.getElementById('score' + frame).textContent = 'rubric ' + arm.score;
+          document.getElementById('facts' + frame).innerHTML = arm.facts
+            .map((f) => `<span>${f.replace(/^(\S+)\s/, '<b>$1</b> ')}</span>`)
+            .join('');
+          const el = document.getElementById('frame' + frame);
+          if (el.getAttribute('src') !== arm.src) el.setAttribute('src', arm.src);
+        }
+      }
+
+      function paintCriteria() {
+        const body = document.getElementById('criteria');
+        body.innerHTML = CRITERIA.map(
+          (label, i) =>
+            `<tr><td>${label}</td>` +
+            `<td class="num"><input type="range" min="0" max="10" value="5" id="ca${i}" aria-label="${label} for A"></td>` +
+            `<td class="num"><input type="range" min="0" max="10" value="5" id="cb${i}" aria-label="${label} for B"></td></tr>`
+        ).join('');
+      }
+
+      function totals() {
+        let a = 0;
+        let b = 0;
+        CRITERIA.forEach((_, i) => {
+          a += Number(document.getElementById('ca' + i).value);
+          b += Number(document.getElementById('cb' + i).value);
+        });
+        return { a, b, max: CRITERIA.length * 10 };
+      }
+
+      function full(which) {
+        const arms = document.getElementById('arms');
+        arms.classList.add('full');
+        document.getElementById('armA').hidden = which !== 'A';
+        document.getElementById('armB').hidden = which !== 'B';
+        for (const id of ['side', 'fullA', 'fullB']) {
+          document.getElementById(id).setAttribute('aria-pressed', String(id === which + 'A' || id === which + 'B' && which === 'B' ? false : id === (which === 'A' ? 'fullA' : 'fullB')));
+        }
+        window.scrollTo(0, 0);
+      }
+
+      function side() {
+        const arms = document.getElementById('arms');
+        arms.classList.remove('full');
+        document.getElementById('armA').hidden = false;
+        document.getElementById('armB').hidden = false;
+        for (const id of ['fullA', 'fullB']) document.getElementById(id).setAttribute('aria-pressed', 'false');
+        document.getElementById('side').setAttribute('aria-pressed', 'true');
+      }
+
+      document.getElementById('side').onclick = side;
+      document.getElementById('fullA').onclick = () => full('A');
+      document.getElementById('fullB').onclick = () => full('B');
+      document.getElementById('shuffle').onclick = () => {
+        slots = slots[0] === 'A' ? ['B', 'A'] : ['A', 'B'];
+        paint();
+      };
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') side();
+        if (e.key === 'a') full('A');
+        if (e.key === 'b') full('B');
+      });
+
+      document.getElementById('reveal').onclick = () => {
+        const reveal = document.getElementById('outcome');
+        reveal.hidden = false;
+        reveal.innerHTML =
+          `<b>Page A</b> is ${ARMS[slots[0]].label} (rubric ${ARMS[slots[0]].score}). ` +
+          `<b>Page B</b> is ${ARMS[slots[1]].label} (rubric ${ARMS[slots[1]].score}).`;
+      };
+
+      document.getElementById('record').onclick = () => {
+        const t = totals();
+        const winner = t.a === t.b ? 'a tie' : t.a > t.b ? 'Page A' : 'Page B';
+        const verdict = {
+          recordedAt: new Date().toISOString(),
+          winner,
+          totals: t,
+          perCriterion: CRITERIA.map((label, i) => ({
+            criterion: label,
+            a: Number(document.getElementById('ca' + i).value),
+            b: Number(document.getElementById('cb' + i).value),
+          })),
+          revealed: {
+            A: ARMS[slots[0]].label,
+            B: ARMS[slots[1]].label,
+          },
+          rubric: { baseline: 65, skills: 100 },
+          note: 'Judgement criteria are the ones the automated rubric cannot measure.',
+        };
+        const blob = new Blob([JSON.stringify(verdict, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'judgement.json';
+        a.click();
+        document.getElementById('verdictHint').textContent =
+          `Recorded: ${winner} (A ${t.a} / ${t.b} B, max ${t.max}). judgement.json downloaded.`;
+        const out = document.getElementById('outcome');
+        out.hidden = false;
+        out.innerHTML = `Your judgement: <b>${winner}</b> (A ${t.a} · B ${t.b}). ` +
+          `The rubric's own verdict is ${ARMS[slots[0]].label} ${ARMS[slots[0]].score} / ${ARMS[slots[1]].label} ${ARMS[slots[1]].score}. ` +
+          'If the two disagree, the disagreement is the finding — record it either way.';
+      };
+
+      paint();
+      paintCriteria();
+      side();
+    </script>
+  </body>
+</html>

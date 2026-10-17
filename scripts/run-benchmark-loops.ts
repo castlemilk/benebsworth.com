@@ -21,6 +21,7 @@ import { spawn } from 'node:child_process'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from '../lib/lab/llm-benchmark/registry.js'
 import { scoreWithBreakdown } from '../lib/lab/llm-benchmark/scorers/behavioral.js'
 import { buildSkillBlock } from '../lib/lab/llm-benchmark/skills-context.js'
+import { imageBrief, inlineLocalImages, queryFromArtifact, sourceImage } from '../lib/lab/llm-benchmark/images.js'
 import { buildLoopPrompt, loopProgress, type LoopReport } from '../lib/lab/llm-benchmark/loops.js'
 import { runOpencodeArtifact, type OpencodeLoopOptions } from '../lib/lab/llm-benchmark/runners/opencode-loops.js'
 
@@ -34,6 +35,10 @@ interface Args {
   timeoutMs: number
   out: string
   stopWhenStuck: boolean
+  /** Source pictures when the rules report none on the page. */
+  images: boolean
+  assetsScript?: string
+  brandbrainUrl?: string
 }
 
 function parseArgs(argv: string[]): Args {
@@ -60,6 +65,22 @@ function parseArgs(argv: string[]): Args {
     timeoutMs: Number(get('--timeout-ms') ?? 1_200_000),
     out: get('--out') ?? `loops/${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`,
     stopWhenStuck: !argv.includes('--no-stop-when-stuck'),
+    images: argv.includes('--images'),
+    assetsScript: get('--assets-script'),
+    brandbrainUrl: get('--brandbrain'),
+  }
+}
+
+/** Read the OpenRouter key for the image-model rung, if the user has one. */
+function openrouterKey(): string | undefined {
+  const raw = fs.existsSync(`${process.env.HOME}/.local/share/opencode/auth.json`)
+    ? fs.readFileSync(`${process.env.HOME}/.local/share/opencode/auth.json`, 'utf8')
+    : '{}'
+  try {
+    const auth = JSON.parse(raw) as { openrouter?: { key?: string; access?: string } }
+    return auth.openrouter?.key ?? auth.openrouter?.access
+  } catch {
+    return undefined
   }
 }
 
@@ -181,6 +202,9 @@ console.log(`[loops] out: ${path.relative(process.cwd(), outDir)}/`)
 let previousReport: LoopReport | undefined
 let artifact = ''
 let artifactPath = ''
+/** Set when the previous loop's rules reported no pictures on the page. */
+let imageBriefText = ''
+let imageCredits: string[] = []
 
 for (let loop = 1; loop <= args.loops; loop += 1) {
   const loopDir = path.join(outDir, `loop-${String(loop)}`)
@@ -188,7 +212,10 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
 
   const plan = buildLoopPrompt({
     loop,
-    taskPrompt: task.prompt,
+    // The picture brief joins the task prompt so it sits with the brief rather
+    // than with the reflection's findings: it is an instruction about the page,
+    // not a defect to fix.
+    taskPrompt: imageBriefText ? `${task.prompt}\n\n${imageBriefText}` : task.prompt,
     artifact,
     report: previousReport ?? { measurements: [], findings: [] },
     skillsText: skills?.text,
@@ -220,6 +247,21 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   report.tokensOut = generation.tokensOut
   report.costUsd = 0
 
+  // Pictures must be EMBEDDED: the task ships one self-contained file, so a
+  // referenced path is a broken image in the delivered artefact. Inline first,
+  // then measure the artefact that will actually be delivered.
+  if (args.images) {
+    const inlined = inlineLocalImages(artifact, loopDir)
+    if (inlined.inlined.length > 0 || inlined.unresolved.length > 0) {
+      artifact = inlined.html
+      fs.writeFileSync(artifactPath, artifact, 'utf8')
+      console.log(
+        `[loops] loop ${String(loop)}: inlined ${String(inlined.inlined.length)} image(s)` +
+          (inlined.unresolved.length > 0 ? `, ${String(inlined.unresolved.length)} unresolved` : '')
+      )
+    }
+  }
+
   const measured = await inspectArtifact(artifactPath, loopDir, args.inspect)
   report.findings = measured.report.findings
   report.headline = measured.report.headline
@@ -236,11 +278,54 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   manifest.loops.push(report)
   fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2))
 
+  if (imageCredits.length > 0) {
+    report.imageSources = [...new Set(imageCredits)]
+    fs.writeFileSync(path.join(loopDir, 'report.json'), JSON.stringify(report, null, 2))
+  }
+
   console.log(
     `[loops] loop ${String(loop)} (${plan.intent}): rubric=${String(report.rubricScore)} ` +
       `fails=${String(report.findings.filter((f) => f.level === 'FAIL').length)} ` +
       `tokens=${String(report.tokensOut ?? 0)} ${progress.reason}`
   )
+
+  // When the rules say the page carries no pictures, source some for the NEXT
+  // round: the reflection is the only place a model can be told what it had to
+  // work with, and a rule finding on its own ("0 pictures") is not a brief.
+  if (args.images && report.findings.some((f) => f.id === 'few-pictures')) {
+    const query = queryFromArtifact(artifact)
+    const wanted = [
+      { fileName: 'hero.jpg', query: `${query} instrument` },
+      { fileName: 'detail.jpg', query: `${query} close-up` },
+    ]
+    const sourced: { fileName: string; credit?: string }[] = []
+    for (const request of wanted) {
+      const result = await sourceImage(
+        { query: request.query, fileName: request.fileName },
+        {
+          into: loopDir,
+          assetsScript: args.assetsScript,
+          openrouterKey: openrouterKey(),
+          imageModel: 'google/gemini-3.1-flash-lite-image',
+          brandbrainUrl: args.brandbrainUrl,
+        }
+      )
+      if (result.image) {
+        sourced.push({ fileName: path.basename(result.image.path), credit: result.image.credit })
+        imageCredits.push(`${path.basename(result.image.path)}: ${result.image.source}`)
+        console.log(
+          `[loops] loop ${String(loop)}: sourced ${path.basename(result.image.path)} from ${result.image.source}`
+        )
+      } else {
+        console.warn(
+          `[loops] loop ${String(loop)}: no image for "${request.query}" (tried ${result.attempted.join(', ')}${
+            result.reason ? `, ${result.reason}` : ''
+          })`
+        )
+      }
+    }
+    imageBriefText = imageBrief(sourced)
+  }
 
   if (loop > 1 && progress.improving === false && args.stopWhenStuck) {
     console.log(`[loops] stopping: ${progress.reason}`)

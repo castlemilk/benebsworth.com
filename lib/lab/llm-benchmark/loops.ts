@@ -51,6 +51,8 @@ export interface LoopReport {
   tokensOut?: number;
   runtimeMs?: number;
   costUsd?: number;
+  /** Where each picture came from, so a stock fallback is visible in the record. */
+  imageSources?: string[];
   error?: string;
 }
 

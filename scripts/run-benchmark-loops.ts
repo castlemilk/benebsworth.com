@@ -48,6 +48,8 @@ interface Args {
   flowServerPath?: string
   /** Ceiling for one generated picture, in USD micros. */
   flowBudgetMicros: number
+  /** Local ComfyUI base URL: free, unquota'd generation. */
+  comfyUrl?: string
   /** Let a generated page wear a real company's mark. Off by default. */
   allowRealBrandMarks: boolean
 }
@@ -83,6 +85,7 @@ function parseArgs(argv: string[]): Args {
     brandbrainToken: get('--brandbrain-token'),
     flowServerPath: get('--flow-mcp'),
     flowBudgetMicros: Number(get('--flow-budget-micros') ?? 20_000),
+    comfyUrl: get('--comfy'),
     allowRealBrandMarks: argv.includes('--allow-real-brand-marks'),
   }
 }
@@ -348,6 +351,7 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
           assetsScript: args.assetsScript,
           openrouterKey: openrouterKey(),
           imageModel: 'google/gemini-3.1-flash-lite-image',
+          comfyUrl: args.comfyUrl,
           flowServerPath: args.flowServerPath,
           flowMaxSpendMicros: args.flowBudgetMicros,
           brandbrainUrl: args.brandbrainUrl,

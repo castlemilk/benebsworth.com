@@ -3,6 +3,7 @@ import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fetchBrandMark, guessBrand } from './brandbrain'
 import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
+import { generateWithComfy } from './comfy'
 
 /**
  * Images for a generated artefact.
@@ -41,7 +42,7 @@ export interface SourcedImage extends ImageRequest {
   /** Absolute path on disk. */
   path: string
   bytes: number
-  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated'
+  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated' | 'local-comfy'
   licence?: string
   creator?: string
   page?: string
@@ -71,6 +72,14 @@ export interface ImageSources {
   flowModel?: { provider: string; modelId: string }
   /** Ceiling for one live run, in USD micros. */
   flowMaxSpendMicros?: number
+  /**
+   * Local ComfyUI. The only rung that cannot fail for want of credit, so it is
+   * tried first: the hosted routes share one exhausted OpenRouter balance.
+   */
+  comfyUrl?: string
+  comfySteps?: number
+  comfyWidth?: number
+  comfyHeight?: number
   /** Directory downloads land in. */
   into: string
 }
@@ -374,6 +383,22 @@ export async function sourceImage(
   sources: ImageSources
 ): Promise<{ image?: SourcedImage; attempted: string[]; reason?: string }> {
   const attempted: string[] = []
+
+  if (sources.comfyUrl) {
+    attempted.push('local-comfy')
+    const local = await generateWithComfy({
+      url: sources.comfyUrl,
+      prompt: request.query,
+      outPath: path.join(sources.into, path.basename(request.fileName)),
+      steps: sources.comfySteps,
+      width: sources.comfyWidth,
+      height: sources.comfyHeight,
+      filenamePrefix: 'harness/loop',
+    })
+    if (local) {
+      return { image: { ...request, path: local.path, bytes: local.bytes, source: 'local-comfy' }, attempted }
+    }
+  }
 
   if (sources.flowServerPath) {
     attempted.push('brandbrain-flow')

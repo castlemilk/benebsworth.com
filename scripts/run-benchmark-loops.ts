@@ -22,6 +22,7 @@ import { BENCHMARK_MODELS, BENCHMARK_TASKS } from '../lib/lab/llm-benchmark/regi
 import { scoreWithBreakdown } from '../lib/lab/llm-benchmark/scorers/behavioral.js'
 import { buildSkillBlock } from '../lib/lab/llm-benchmark/skills-context.js'
 import { imageBrief, inlineLocalImages, queryFromArtifact, sourceImage } from '../lib/lab/llm-benchmark/images.js'
+import { fetchGammaAssets, gammaBrief, gammaStylesheet, type GammaAssets } from '../lib/lab/llm-benchmark/gamma.js'
 import { buildLoopPrompt, loopProgress, type LoopReport } from '../lib/lab/llm-benchmark/loops.js'
 import { runOpencodeArtifact, type OpencodeLoopOptions } from '../lib/lab/llm-benchmark/runners/opencode-loops.js'
 
@@ -39,6 +40,8 @@ interface Args {
   images: boolean
   assetsScript?: string
   brandbrainUrl?: string
+  /** Gamma MCP endpoint for components, backgrounds and effects. */
+  gammaUrl?: string
 }
 
 function parseArgs(argv: string[]): Args {
@@ -68,6 +71,7 @@ function parseArgs(argv: string[]): Args {
     images: argv.includes('--images'),
     assetsScript: get('--assets-script'),
     brandbrainUrl: get('--brandbrain'),
+    gammaUrl: get('--gamma'),
   }
 }
 
@@ -195,6 +199,18 @@ const manifest: { model: string; task: string; skills: string[]; loops: LoopRepo
   loops: [],
 }
 
+// Fetched once for the whole run: the catalogue is stable between rounds, and
+// a per-loop fetch would make two loops non-comparable for no reason.
+let gammaAssets: GammaAssets | undefined
+if (args.gammaUrl) {
+  gammaAssets = await fetchGammaAssets('landing page marketing', { url: args.gammaUrl })
+  console.log(
+    `[loops] gamma: ${gammaAssets.reachable ? `reachable (system ${gammaAssets.system ?? 'unknown'}, ${String(gammaAssets.componentSlugs.length)} components)` : 'not reachable'}`
+  )
+  for (const note of gammaAssets.notes) console.warn(`[loops] gamma: ${note}`)
+}
+const gammaCss = gammaAssets ? gammaStylesheet(gammaAssets) : ''
+
 console.log(`[loops] model=${args.model} task=${args.task} loops=${String(args.loops)}`)
 console.log(`[loops] skills: ${skills && skills.names.length > 0 ? skills.names.join(', ') : 'none (baseline)'}`)
 console.log(`[loops] out: ${path.relative(process.cwd(), outDir)}/`)
@@ -215,7 +231,9 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     // The picture brief joins the task prompt so it sits with the brief rather
     // than with the reflection's findings: it is an instruction about the page,
     // not a defect to fix.
-    taskPrompt: imageBriefText ? `${task.prompt}\n\n${imageBriefText}` : task.prompt,
+    taskPrompt: [task.prompt, imageBriefText, gammaAssets ? gammaBrief(gammaAssets) : '']
+      .filter((part) => part.length > 0)
+      .join('\n\n'),
     artifact,
     report: previousReport ?? { measurements: [], findings: [] },
     skillsText: skills?.text,
@@ -246,6 +264,17 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   report.runtimeMs = generation.runtimeMs
   report.tokensOut = generation.tokensOut
   report.costUsd = 0
+
+  // The Gamma stylesheet is injected rather than referenced: the delivered file
+  // must stand alone, and tokens that live in a separate file are tokens the
+  // page will not have.
+  if (gammaCss.length > 0) {
+    artifact = artifact.includes('/* Gamma design tokens')
+      ? artifact
+      : artifact.replace(/<\/head>/i, `<style>\n${gammaCss}\n</style>\n</head>`)
+    fs.writeFileSync(artifactPath, artifact, 'utf8')
+    console.log(`[loops] loop ${String(loop)}: inlined ${String(gammaCss.length)} chars of Gamma CSS`)
+  }
 
   // Pictures must be EMBEDDED: the task ships one self-contained file, so a
   // referenced path is a broken image in the delivered artefact. Inline first,

@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fetchBrandMark, guessBrand } from './brandbrain'
+import { BrandBrainFlowClient, generateFlowImage } from './brandbrain-flow'
 
 /**
  * Images for a generated artefact.
@@ -40,7 +41,7 @@ export interface SourcedImage extends ImageRequest {
   /** Absolute path on disk. */
   path: string
   bytes: number
-  source: 'open-collection' | 'image-model' | 'brandbrain'
+  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated'
   licence?: string
   creator?: string
   page?: string
@@ -60,6 +61,16 @@ export interface ImageSources {
   allowRealBrandMarks?: boolean
   /** The artefact, so the brand mark is chosen for the page it belongs to. */
   artifactHtml?: string
+  /**
+   * BrandBrain flow MCP server, for GENERATED pictures. Its cheapest model is
+   * `openrouter/meta/muse-image` at ~$0.01 an image, which is the first rung
+   * that can invent a picture for the subject rather than search for one.
+   */
+  flowServerPath?: string
+  /** Provider/model to generate with; omitted means the backend's default. */
+  flowModel?: { provider: string; modelId: string }
+  /** Ceiling for one live run, in USD micros. */
+  flowMaxSpendMicros?: number
   /** Directory downloads land in. */
   into: string
 }
@@ -309,11 +320,49 @@ async function openrouterBalance(key: string): Promise<number | null> {
  * answered. The rung is recorded so a run that silently fell back to stock
  * photography is visible in the report rather than assumed.
  */
+/**
+ * Generate one picture through BrandBrain's flow MCP.
+ *
+ * Reached before the search sources on purpose: an invented picture for the
+ * subject beats a photograph of something adjacent, and at ~$0.01 the cheapest
+ * catalogue model makes the cost irrelevant. Live only — the caller must supply
+ * a server path, and BrandBrain's own spend ceiling bounds the run.
+ */
+async function sourceGeneratedImage(
+  request: ImageRequest,
+  sources: ImageSources
+): Promise<SourcedImage | undefined> {
+  if (!sources.flowServerPath) return undefined
+  const client = new BrandBrainFlowClient({
+    serverPath: sources.flowServerPath,
+    bearerToken: sources.brandbrainToken,
+    maxSpendMicros: sources.flowMaxSpendMicros ?? 1_000_000,
+  })
+  try {
+    const result = await generateFlowImage(client, {
+      prompt: request.query,
+      outPath: path.join(sources.into, path.basename(request.fileName)),
+      provider: sources.flowModel?.provider,
+      modelId: sources.flowModel?.modelId,
+    })
+    if (!result) return undefined
+    return { ...request, path: result.path, bytes: result.bytes, source: 'generated' }
+  } finally {
+    client.close()
+  }
+}
+
 export async function sourceImage(
   request: ImageRequest,
   sources: ImageSources
 ): Promise<{ image?: SourcedImage; attempted: string[]; reason?: string }> {
   const attempted: string[] = []
+
+  if (sources.flowServerPath) {
+    attempted.push('brandbrain-flow')
+    const generated = await sourceGeneratedImage(request, sources)
+    if (generated) return { image: generated, attempted }
+  }
 
   if (sources.brandbrainUrl) {
     attempted.push('brandbrain')

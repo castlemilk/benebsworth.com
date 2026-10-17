@@ -68,18 +68,12 @@
     </div>
 
     <script>
-      // Filled from manifest.json when present; the literal below keeps the page
-      // reviewable before the first run lands.
-      const FALLBACK = [
-        { loop: 1, rubricScore: 65, fails: 11, tokensOut: 6863, runtimeMs: 519000 },
-        { loop: 2, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
-        { loop: 3, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
-        { loop: 4, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
-        { loop: 5, rubricScore: null, fails: null, tokensOut: null, runtimeMs: null },
-      ];
-
+      // Rows come from the run's manifest, and nowhere else. A review surface
+      // that shows numbers it does not have is worse than one that shows none:
+      // a placeholder 65 reads as a result to anyone who did not write it.
+      const PLANNED = 5;
       const RUN = 'loops/latest';
-      const state = { rows: FALLBACK.slice() };
+      const state = { rows: [], loaded: false, planned: PLANNED };
 
       function fmtTokens(n) {
         if (n == null) return '—';
@@ -93,8 +87,24 @@
 
       function paint() {
         const strips = document.getElementById('strips');
-        strips.innerHTML = state.rows
+        if (!state.loaded) {
+          strips.innerHTML =
+            '<p class="hint" style="color:var(--muted);padding:14px 2px">' +
+            'No run has been recorded yet. Start one with ' +
+            '<code>scripts/run-benchmark-loops.ts</code>, or wait for the manifest to appear.</p>';
+          return;
+        }
+        const rows = [];
+        for (let i = 0; i < state.planned; i += 1) {
+          rows.push(state.rows[i] ?? { loop: i + 1, pending: true });
+        }
+        strips.innerHTML = rows
           .map((r, i) => {
+            if (r.pending) {
+              return `<div class="strip"><h3>Loop ${String(r.loop)}</h3>` +
+                `<div class="metrics"><span class="defects">not run yet</span>` +
+                `<button disabled>Full screen</button></div></div>`;
+            }
             const prev = state.rows[i - 1];
             const delta =
               prev && prev.rubricScore != null && r.rubricScore != null ? r.rubricScore - prev.rubricScore : null;
@@ -148,6 +158,8 @@
           const res = await fetch(`${RUN}/manifest.json`);
           if (!res.ok) return;
           const manifest = await res.json();
+          state.planned = Math.max(state.planned, (manifest.loops || []).length);
+          state.loaded = true;
           state.rows = (manifest.loops || []).map((l, i) => ({
             loop: i + 1,
             rubricScore: l.rubricScore ?? null,
@@ -158,7 +170,7 @@
             error: l.error ?? '',
           }));
         } catch {
-          // No run yet: the fallback rows stand.
+          state.loaded = false;
         }
         paint();
       }

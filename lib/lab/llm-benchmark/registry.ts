@@ -53,7 +53,25 @@ const BUILTIN_MODELS: BenchmarkModel[] = [
   { id: 'codex-gpt-5.6-sol', name: 'Codex GPT-5.6 Sol', provider: 'Codex', apiModelId: 'gpt-5.6-sol', costPer1kInputUsd: 0, costPer1kOutputUsd: 0, contextWindow: 128000, capabilities: 'OpenAI GPT-5.6 Sol tier via Codex CLI (ChatGPT auth)', modelCardUrl: 'https://openrouter.ai/openai/gpt-5.6-sol', vendorUrl: 'https://openai.com/', company: 'OpenAI', family: 'GPT-5.6', released: '2026-08', tags: ['chatgpt-auth', 'codex-cli'], blurb: 'GPT-5.6 Sol tier — OpenAI flagship, run via local codex CLI with ChatGPT account auth.' },
   { id: 'codex-gpt-5.6-terra', name: 'Codex GPT-5.6 Terra', provider: 'Codex', apiModelId: 'gpt-5.6-terra', costPer1kInputUsd: 0, costPer1kOutputUsd: 0, contextWindow: 128000, capabilities: 'OpenAI GPT-5.6 Terra tier via Codex CLI (ChatGPT auth)', modelCardUrl: 'https://openrouter.ai/openai/gpt-5.6-terra', vendorUrl: 'https://openai.com/', company: 'OpenAI', family: 'GPT-5.6', released: '2026-08', tags: ['chatgpt-auth', 'codex-cli'], blurb: 'GPT-5.6 Terra tier — mid-range, run via local codex CLI with ChatGPT account auth.' },
   { id: 'codex-gpt-5.6-luna', name: 'Codex GPT-5.6 Luna', provider: 'Codex', apiModelId: 'gpt-5.6-luna', costPer1kInputUsd: 0, costPer1kOutputUsd: 0, contextWindow: 128000, capabilities: 'OpenAI GPT-5.6 Luna tier via Codex CLI (ChatGPT auth)', modelCardUrl: 'https://openrouter.ai/openai/gpt-5.6-luna', vendorUrl: 'https://openai.com/', company: 'OpenAI', family: 'GPT-5.6', released: '2026-08', tags: ['chatgpt-auth', 'codex-cli'], blurb: 'GPT-5.6 Luna tier — lightweight/cheap, run via local codex CLI with ChatGPT account auth.' },
-  { id: 'deepseek-v4-flash-free', name: 'DeepSeek V4 Flash Free', provider: 'OpenCode', apiModelId: 'opencode/deepseek-v4-flash-free', costPer1kInputUsd: 0, costPer1kOutputUsd: 0, contextWindow: 128000, capabilities: 'DeepSeek V4 Flash free tier via the opencode CLI — fast general coding, locally orchestrated (`opencode run`)', vendorUrl: 'https://deepseek.com/', company: 'DeepSeek', family: 'V4', released: '2026-08', tags: ['opencode-cli', 'free', 'flash'], blurb: 'DeepSeek V4 Flash free tier, run headlessly via the local opencode CLI (`opencode run -m opencode/deepseek-v4-flash-free`) — the same CLI this report is authored with.' },
+  { id: 'deepseek-v4-flash-free', name: 'DeepSeek V4 Flash Free', provider: 'OpenCode', apiModelId: 'opencode/deepseek-v4.1-flash-free', costPer1kInputUsd: 0, costPer1kOutputUsd: 0, contextWindow: 128000, capabilities: 'DeepSeek V4 Flash free tier via the opencode CLI — fast general coding, locally orchestrated (`opencode run`)', vendorUrl: 'https://deepseek.com/', company: 'DeepSeek', family: 'V4', released: '2026-08', tags: ['opencode-cli', 'free', 'flash'], blurb: 'DeepSeek V4 Flash free tier, run headlessly via the local opencode CLI (`opencode run -m opencode/deepseek-v4.1-flash-free`) — the same CLI this report is authored with.' },
+  {
+    id: 'glm-5.3-coding-plan',
+    name: 'GLM 5.3 (coding plan)',
+    provider: 'OpenCode',
+    apiModelId: 'zai-coding-plan/glm-5.3',
+    costPer1kInputUsd: 0,
+    costPer1kOutputUsd: 0,
+    contextWindow: 1048000,
+    capabilities:
+      'GLM 5.3 on the Z.ai coding plan via the opencode CLI — $0 at the margin, quota-windowed rather than per-request rate limited',
+    vendorUrl: 'https://z.ai/',
+    company: 'Zhipu AI',
+    family: 'GLM',
+    released: '2026-09',
+    tags: ['opencode-cli', 'free', 'coding-plan'],
+    blurb:
+      'GLM 5.3 run headlessly via the local opencode CLI (`opencode run -m zai-coding-plan/glm-5.3`). Scored swe 68 / lcb 63 in the Token Horizon catalog, the strongest route reachable from this account while the DeepSeek free tier is rate limited.',
+  },
 
   // ── Local Ollama (M5 Max 128GB, Ollama Metal — no API cost) ──────
   {

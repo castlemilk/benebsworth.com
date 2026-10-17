@@ -7,6 +7,9 @@
 //   --task <id>          repeatable, or a comma list (default: every task)
 //   --plugins <a,b>      plugin bundles to mount (default: ALL registered);
 //                        `--plugins none` = builtins only. Repeatable/comma list.
+//   --skills-dir <path>  skills directory to mount prompt context from
+//   --skills <a,b>       skills (directory names under --skills-dir) prepended
+//                        to every task prompt. Omit both for the baseline arm.
 //   --iterations <n>     per task x model (default: the task's iterationsDefault)
 //   --concurrency <n>    parallel task/model jobs (default: 3)
 //   --timeout-ms <n>     per-call cap (default: the runner's 10 minutes)
@@ -46,7 +49,8 @@ import { runBenchmark } from '../lib/lab/llm-benchmark/harness.ts'
 import { closeSandbox } from '../lib/lab/llm-benchmark/scorers/sandbox.ts'
 import { resolveSandboxPolicy } from '../lib/lab/llm-benchmark/scorers/sandbox-backend.ts'
 import { setSweepRoot } from '../lib/lab/llm-benchmark/runners/cli.ts'
-import { resolveCliCommands } from '../lib/lab/llm-benchmark/runners/execution-target.ts'
+import { resolveCliCommands, setSkillBlock } from '../lib/lab/llm-benchmark/runners/execution-target.ts'
+import { buildSkillBlock } from '../lib/lab/llm-benchmark/skills-context.ts'
 import { setRunLogDir } from '../lib/lab/llm-benchmark/runlog.ts'
 import { redactText } from '../lib/lab/llm-benchmark/redact.ts'
 import { sweepRunId } from '../lib/lab/llm-benchmark/sweep.ts'
@@ -247,6 +251,16 @@ function dumpConfig({ models, tasks, locks, outPath, resumePlan, cliStatus }) {
   )
   row('maxRetries', config.maxRetries.value ?? 'runner default (2)', config.maxRetries.source)
   row('bustCache', config.bustCache.value, config.bustCache.source)
+  // Whether this run's prompts carry skill context, in the operator-facing
+  // pre-flight: an arm that silently lost its injection would otherwise look
+  // like a skills arm for the whole run.
+  row(
+    'skills',
+    config.skills.value
+      ? `${config.skills.value.join(',')} from ${config.skillsDir.value ?? '(no dir)'}`
+      : 'none (baseline)',
+    config.skills.source
+  )
   // Resolved HERE so a typo'd BENCH_SANDBOX kills the sweep before it spends
   // anything, and so the operator sees the enforcement level the run logs will
   // report (#12).
@@ -609,6 +623,19 @@ async function main() {
     }
     process.exit(1)
   }
+
+  // Skills are mounted once for the whole run, so every task in the arm gets a
+  // byte-identical block built from the same files. Absent flags => undefined
+  // => every prompt is exactly the pre-mechanism prompt.
+  const skillBlock = buildSkillBlock(config.skillsDir.value ?? '', config.skills.value ?? [])
+  if (config.skills.value !== undefined && skillBlock.names.length === 0) {
+    console.error(
+      `[harness] no skill resolved from --skills ${config.skills.value.join(',')}` +
+        (config.skillsDir.value ? ` in ${config.skillsDir.value}` : '') +
+        ' — running WITHOUT skills; check the names and the directory.'
+    )
+  }
+  setSkillBlock(skillBlock.names.length > 0 ? skillBlock : undefined)
 
   setSweepRoot(SWEEP_ROOT)
   // Per-iteration run logs live in the SAME tree: sweeps/<run-id>/<model>-<task>.jsonl

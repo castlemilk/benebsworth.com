@@ -159,6 +159,10 @@ export interface SweepFlags {
   bustCache?: boolean
   /** `--budget-max-usd 0.05`: per-model spend cap for this sweep. */
   budgetMaxUsd?: number
+  /** `--skills-dir <path>`: where the named skills live. */
+  skillsDir?: string
+  /** `--skills a,b`: skill directory names to mount as prompt context. */
+  skills?: string[]
   /** `--resume <run-id>`: skip pairs already checkpointed in that sweep. */
   resume?: string
 }
@@ -172,6 +176,13 @@ export interface ResolvedSweepConfig {
    * the behaviour before this knob existed); `[]` = builtins only.
    */
   plugins: Resolved<string[] | undefined>
+  /**
+   * Skills to mount as prompt context: a skills directory and the skill names
+   * inside it. undefined = no skills (the behaviour before this knob existed,
+   * and what the baseline arm of any skills experiment must use).
+   */
+  skillsDir: Resolved<string | undefined>
+  skills: Resolved<string[] | undefined>
   /** undefined = each task's own iterationsDefault. */
   iterations: Resolved<number | undefined>
   concurrency: Resolved<number>
@@ -296,6 +307,14 @@ export function resolveSweepConfig({ flags, env, profile: profileName }: Resolve
     return { value: fallback, source: 'default' }
   }
 
+  const skillsDir = pick<string | undefined>(flags.skillsDir, env.RUN_SKILLS_DIR, undefined, undefined)
+  const skills = pick<string[] | undefined>(flags.skills, envList(env.RUN_SKILLS), undefined, undefined)
+  if (skillsDir.value !== undefined && skills.value === undefined) {
+    // A directory with no skills named would silently run an un-injected arm
+    // that still looks like a skills arm in the log.
+    throw new Error('--skills-dir needs --skills <a,b>: naming the skills is what makes the arm auditable.')
+  }
+
   // RUN_MAX_RETRIES is the one knob read with `!== undefined` rather than
   // truthiness, so a defined-but-empty value has always meant 0. Preserved
   // deliberately: this module must not change any existing env invocation.
@@ -328,6 +347,8 @@ export function resolveSweepConfig({ flags, env, profile: profileName }: Resolve
     models: pick(flags.models, envList(env.RUN_MODELS), profile?.models, DEFAULT_MODELS),
     tasks: pick<string[] | undefined>(flags.tasks, envList(env.RUN_TASKS), profile?.tasks, undefined),
     plugins,
+    skillsDir,
+    skills,
     iterations: pick<number | undefined>(
       flags.iterations,
       envNumber(env.RUN_ITERATIONS),

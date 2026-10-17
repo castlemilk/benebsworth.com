@@ -1,0 +1,799 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Morph — zero-downtime migrations for Postgres</title><style>
+/* ---------- tokens ---------- */
+:root{
+  --bg:#0c0c10; --bg2:#101016; --surface:#15151c; --surface2:#191922;
+  --ink:#ececf0; --ink2:#a6a6b4; --ink3:#767684;
+  --line:rgba(236,236,240,.10); --line-strong:rgba(236,236,240,.24);
+  --warm:#ffb454; --cool:#4adbc8;
+  --btn-bg:#ececf0; --btn-ink:#0c0c10; --btn-bg-hover:#ffffff;
+  --tag-bg:rgba(74,219,200,.12); --tag-ink:#7fe8da;
+  --panel:rgba(16,16,22,.72); --err:#ff7b6b;
+  --shadow:0 2px 12px rgba(0,0,0,.28);
+}
+[data-theme="light"]{
+  --bg:#f2f2f0; --bg2:#e9e9e6; --surface:#ffffff; --surface2:#f7f7f5;
+  --ink:#1a1b21; --ink2:#53545e; --ink3:#84858e;
+  --line:rgba(20,21,26,.12); --line-strong:rgba(20,21,26,.30);
+  --warm:#b85c12; --cool:#0c7d6d;
+  --btn-bg:#1a1b21; --btn-ink:#f7f7f6; --btn-bg-hover:#000000;
+  --tag-bg:rgba(12,125,109,.10); --tag-ink:#0c7d6d;
+  --panel:rgba(255,255,255,.78); --err:#c03b2b;
+  --shadow:0 2px 12px rgba(20,21,26,.07);
+}
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;background:#0c0c10;color:#ececf0;font-family:ui-sans-serif,system-ui}
+html{background:var(--bg);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+main,nav,footer{background:transparent}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid var(--cool);outline-offset:2px;border-radius:4px}
+.display{font-family:ui-serif,Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.015em}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+@media (max-width:560px){.wrap{padding:0 20px}}
+/* ---------- nav ---------- */
+.nav{border-bottom:1px solid var(--line);transition:border-color .45s,background-color .45s}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand svg{display:block}
+.nav-right{display:flex;align-items:center;gap:10px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:var(--surface);transition:background-color .45s,border-color .45s,transform .15s cubic-bezier(.16,1,.3,1)}
+.icon-btn:hover{border-color:var(--line-strong)}
+.icon-btn:active{transform:scale(.94)}
+#themeToggle .sun,#themeToggle .moon{position:absolute;transition:opacity .4s,transform .5s cubic-bezier(.16,1,.3,1)}
+#themeToggle{position:relative;color:var(--ink)}
+[data-theme="dark"] #themeToggle .sun{opacity:0;transform:rotate(90deg) scale(.4)}
+[data-theme="dark"] #themeToggle .moon{opacity:1;transform:none}
+[data-theme="light"] #themeToggle .sun{opacity:1;transform:none}
+[data-theme="light"] #themeToggle .moon{opacity:0;transform:rotate(-90deg) scale(.4)}
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:11px 20px;font-weight:600;font-size:15px;line-height:1.2;transition:background-color .2s,color .2s,border-color .2s,transform .15s cubic-bezier(.16,1,.3,1),box-shadow .2s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--btn-bg);color:var(--btn-ink)}
+.btn.primary:hover{background:var(--btn-bg-hover);box-shadow:var(--shadow)}
+.btn.ghost{border:1px solid var(--line-strong);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink3);background:var(--surface)}
+.btn.sm{padding:8px 14px;font-size:14px}
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;min-height:clamp(460px,76vh,660px);display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(620px 380px at 68% 42%,rgba(74,219,200,.06),transparent 70%);pointer-events:none}
+[data-theme="light"] .hero::before{background:radial-gradient(620px 380px at 68% 42%,rgba(12,125,109,.07),transparent 70%)}
+#field{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:pointer}
+.hero-inner{position:relative;z-index:1;pointer-events:none;max-width:600px;padding:72px 0 120px}
+.hero-inner a,.hero-inner button{pointer-events:auto}
+h1.display{margin:0 0 18px;font-size:clamp(34px,4.4vw,56px);line-height:1.06;color:var(--ink)}
+.h-line{display:block;animation:rise .8s cubic-bezier(.16,1,.3,1) both}
+.h-line:nth-child(2){animation-delay:.09s}
+.h-line:nth-child(3){animation-delay:.18s}
+.hero .sub{margin:0 0 28px;max-width:46ch;color:var(--ink2);font-size:17px;animation:rise .8s cubic-bezier(.16,1,.3,1) .28s both}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;animation:rise .8s cubic-bezier(.16,1,.3,1) .38s both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+/* HUD */
+.hud{position:absolute;left:28px;right:28px;bottom:20px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;pointer-events:none;animation:rise .8s cubic-bezier(.16,1,.3,1) .5s both}
+@media (max-width:560px){.hud{left:20px;right:20px}}
+.hud-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hud-stage{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 14px;backdrop-filter:none}
+.hud-name{display:block;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;font-weight:600;color:var(--ink)}
+.hud-name.swap{animation:nameswap .35s cubic-bezier(.16,1,.3,1)}
+@keyframes nameswap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hud-hint{display:block;font-size:12px;color:var(--ink3)}
+.hud-ctrl{pointer-events:auto;display:flex;gap:6px}
+.dots{pointer-events:auto;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 12px;height:48px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ink3);opacity:.5;transition:background-color .3s,opacity .3s,transform .2s}
+.dot.on{background:var(--cool);opacity:1;transform:scale(1.25)}
+.hud-tip{font-size:12px;color:var(--ink3);max-width:180px;text-align:right;line-height:1.4}
+@media (max-width:680px){.hud-tip{display:none}}
+/* ---------- sections ---------- */
+section{padding:96px 0}
+@media (max-width:560px){section{padding:64px 0}}
+.sec-head{max-width:640px;margin-bottom:44px}
+.sec-head h2.display{margin:0 0 12px;font-size:clamp(26px,3.2vw,38px);line-height:1.12;color:var(--ink)}
+.sec-head p{margin:0;color:var(--ink2)}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+/* ---------- features ---------- */
+.features{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.fcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 26px;transition:background-color .45s,border-color .25s}
+.fcard:hover{border-color:var(--line-strong)}
+.fcard h3{margin:14px 0 8px;font-size:17px;letter-spacing:-.01em;color:var(--ink)}
+.fcard p{margin:0;font-size:14.5px;color:var(--ink2)}
+.fcard .fglyph{color:var(--ink2)}
+.f-big{grid-column:span 7}
+.f-med{grid-column:span 5}
+.f-sm{grid-column:span 3}
+@media (max-width:920px){.f-big,.f-med{grid-column:span 12}.f-sm{grid-column:span 6}}
+@media (max-width:560px){.f-sm{grid-column:span 12}.features{gap:12px}}
+/* big-card extras */
+.shadowstat{margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+.shadowstat .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12.5px}
+.shadowstat .file{color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shadowstat .pct{color:var(--cool);white-space:nowrap}
+.bar{margin-top:10px;height:3px;border-radius:2px;background:var(--bg2);overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--warm),var(--cool));transform-origin:0 50%;transform:scaleX(0)}
+.diagram{margin-top:20px;color:var(--ink3)}
+.diagram .lbl{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:10px;fill:var(--ink3)}
+.diagram .box{fill:var(--bg2);stroke:var(--line-strong)}
+.diagram .box.ghostbox{stroke-dasharray:4 4}
+.diagram .flow{stroke:var(--cool);stroke-dasharray:5 8;animation:dash 1.1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-13}}
+/* ---------- pricing ---------- */
+.bill-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:12px;padding:4px;gap:4px;background:var(--surface)}
+.seg-btn{border-radius:8px;padding:7px 14px;font-size:14px;font-weight:600;color:var(--ink2);display:inline-flex;align-items:center;gap:8px;transition:background-color .25s,color .25s}
+.seg-btn.on{background:var(--btn-bg);color:var(--btn-ink)}
+.save{font-size:11px;font-weight:600;color:var(--tag-ink);background:var(--tag-bg);border-radius:999px;padding:2px 8px}
+.seg-btn.on .save{background:rgba(0,0,0,.08);color:inherit}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+@media (max-width:920px){.plans{grid-template-columns:1fr;max-width:460px}}
+.plan{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;transition:background-color .45s,border-color .25s}
+.plan h3{margin:0;font-size:16px;color:var(--ink)}
+.plan .for{margin:2px 0 18px;font-size:13.5px;color:var(--ink3)}
+.price{display:flex;align-items:baseline;gap:6px;margin-bottom:2px}
+.price .cur{font-size:20px;color:var(--ink2)}
+.price .amount{font-family:ui-serif,Georgia,serif;font-weight:600;font-size:44px;line-height:1;letter-spacing:-.02em;color:var(--ink)}
+.amount.bump{animation:bump .4s cubic-bezier(.16,1,.3,1)}
+@keyframes bump{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+.bill-note{font-size:13px;color:var(--ink3);margin:0 0 22px}
+.plan ul{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
+.plan li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink2)}
+.plan li svg{flex:none;margin-top:3px;color:var(--cool)}
+.plan .btn{margin-top:auto;justify-content:center}
+.plan.featured{background:var(--surface2);border-color:var(--line-strong)}
+.plan-tag{position:absolute;top:-11px;left:26px;font-size:12px;font-weight:600;color:var(--tag-ink);background:var(--tag-bg);border-radius:999px;padding:3px 10px}
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:26px 0}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13.5px;color:var(--ink3)}
+/* ---------- dialog ---------- */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(8,8,12,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .25s ease-out}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.dialog{position:relative;width:min(400px,100%);background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;padding:30px 28px 26px;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:pop .28s cubic-bezier(.16,1,.3,1)}
+@keyframes pop{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:none}}
+.dialog h2{margin:0 0 6px;font-size:22px;letter-spacing:-.01em}
+.dialog .blurb{margin:0 0 20px;font-size:14.5px;color:var(--ink2)}
+.dlg-close{position:absolute;top:14px;right:14px}
+.dialog label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;color:var(--ink2)}
+.dialog input{width:100%;padding:11px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--bg2);color:var(--ink);font:inherit;font-size:15px;transition:border-color .2s,box-shadow .2s}
+.dialog input:focus{outline:none;border-color:var(--cool);box-shadow:0 0 0 3px rgba(74,219,200,.22)}
+[data-theme="light"] .dialog input:focus{box-shadow:0 0 0 3px rgba(12,125,109,.18)}
+.field-err{margin:8px 0 0;font-size:13px;color:var(--err)}
+#dlgForm .btn{width:100%;justify-content:center;margin-top:16px}
+#dlgDone p{margin:0 0 18px;font-size:15px;color:var(--ink2)}
+#dlgDone p strong{color:var(--ink);font-weight:600}
+#dlgDone .btn{width:100%;justify-content:center}
+[hidden]{display:none!important}
+/* ---------- reduced motion / misc ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+  .h-line,.hero .sub,.cta-row,.hud{opacity:1;transform:none;animation:none}
+}
+</style></head><body>
+<noscript><p style="padding:16px">Morph needs JavaScript for the interactive field and controls. The copy below still reads without it.</p></noscript>
+<nav class="nav">
+  <div class="wrap">
+    <span class="brand">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1.5" y="1.5" width="14" height="14" rx="4" fill="none" stroke="var(--warm)" stroke-width="1.6"/><circle cx="14" cy="14" r="6.2" fill="none" stroke="var(--cool)" stroke-width="1.6"/></svg>
+      Morph
+    </span>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle light theme" aria-pressed="false">
+        <svg class="sun" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3.2"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M2.9 2.9l1.2 1.2M11.9 11.9l1.2 1.2M13.1 2.9l-1.2 1.2M4.1 11.9l-1.2 1.2"/></svg>
+        <svg class="moon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.2 9.6A6 6 0 0 1 6.4 2.8 6 6 0 1 0 13.2 9.6Z"/></svg>
+      </button>
+      <button class="btn primary sm" data-signup="free">Start free</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero" id="hero" aria-label="Morph intro">
+    <canvas id="field" aria-label="Animated field of points morphing through migration stages. Click to advance."></canvas>
+    <div class="wrap" style="position:relative;z-index:1;width:100%">
+      <div class="hero-inner">
+        <h1 class="display">
+          <span class="h-line">Change the shape</span>
+          <span class="h-line">of your database.</span>
+          <span class="h-line">Never take it offline.</span>
+        </h1>
+        <p class="sub">Morph plans each change, builds it in a shadow copy, and cuts over in milliseconds. No locks. No maintenance window.</p>
+        <div class="cta-row">
+          <button class="btn primary" data-signup="free">Start free</button>
+          <a class="btn ghost" href="#features">See how it works</a>
+        </div>
+      </div>
+    </div>
+    <div class="hud" aria-label="Migration stage controls">
+      <div class="hud-left">
+        <div class="hud-stage">
+          <span class="hud-name mono" id="stName">select</span>
+          <span class="hud-hint" id="stHint">read the live table</span>
+        </div>
+        <div class="dots" role="group" aria-label="Jump to stage" id="stDots"></div>
+        <div class="hud-ctrl">
+          <button class="icon-btn" id="stPrev" aria-label="Previous stage"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 2.5 4.5 7 9 11.5"/></svg></button>
+          <button class="icon-btn" id="stPause" aria-label="Pause the field" aria-pressed="false">
+            <svg id="icPause" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="2" y="1.5" width="2.6" height="9" rx="1"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="1"/></svg>
+            <svg id="icPlay" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" hidden><path d="M2.8 1.6v8.8L10 6 2.8 1.6Z"/></svg>
+          </button>
+          <button class="icon-btn" id="stNext" aria-label="Next stage"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 2.5 9.5 7 5 11.5"/></svg></button>
+        </div>
+      </div>
+      <p class="hud-tip">Click the field to advance through a migration.</p>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <h2 class="display">Everything changes shape. Nothing stops.</h2>
+        <p>The moves that usually mean downtime, made safe by construction.</p>
+      </div>
+      <div class="features">
+        <article class="fcard f-big reveal">
+          <span class="fglyph"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="5" width="12" height="12" rx="3"/><rect x="8" y="2" width="12" height="12" rx="3" stroke-dasharray="3 3"/></svg></span>
+          <h3>Shadow tables</h3>
+          <p>Every change builds in a shadow copy of the table first. The live table keeps serving reads and writes the whole time; the cutover swaps them in milliseconds.</p>
+          <div class="diagram" aria-hidden="true">
+            <svg width="100%" height="96" viewBox="0 0 340 96" preserveAspectRatio="xMidYMid meet">
+              <rect class="box" x="16" y="22" width="118" height="52" rx="10"/>
+              <text class="lbl" x="34" y="44">live</text>
+              <text class="lbl" x="34" y="58">serving traffic</text>
+              <rect class="box ghostbox" x="206" y="22" width="118" height="52" rx="10"/>
+              <text class="lbl" x="224" y="44">shadow</text>
+              <text class="lbl" x="224" y="58">building</text>
+              <path class="flow" d="M138 48 C 162 48 176 48 202 48" fill="none" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <div class="shadowstat" aria-live="off">
+            <div class="row">
+              <span class="file">0042_add_user_rank.sql</span>
+              <span class="pct" id="shadowPct">shadow build 0%</span>
+            </div>
+            <div class="bar"><i id="shadowBar"></i></div>
+          </div>
+        </article>
+        <article class="fcard f-med reveal">
+          <span class="fglyph"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h16M3 11h16M3 16h16"/><path d="M3 11h9" stroke="var(--cool)" stroke-width="3" stroke-linecap="round"/></svg></span>
+          <h3>Lock-free backfill</h3>
+          <p>Backfills run in bounded batches and yield whenever replication lag moves. Your p99 does not notice.</p>
+        </article>
+        <article class="fcard f-sm reveal">
+          <span class="fglyph"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="7" width="8" height="8" rx="2"/><circle cx="15" cy="11" r="4"/><path d="M10.5 11h.5" stroke-dasharray="1.5 2"/></svg></span>
+          <h3>Type rewriting</h3>
+          <p>int to bigint, text to jsonb, across millions of rows. Rewritten in place and verified row by row.</p>
+        </article>
+        <article class="fcard f-sm reveal">
+          <span class="fglyph"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 11a7 7 0 0 1 12-4.9M18 11a7 7 0 0 1-12 4.9"/><path d="M16 2.6v3.6h-3.6M6 19.4v-3.6h3.6"/></svg></span>
+          <h3>Reversible cutovers</h3>
+          <p>Every migration ships with its inverse. If something looks wrong after the swap, one command puts it back.</p>
+        </article>
+        <article class="fcard f-sm reveal">
+          <span class="fglyph"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8.5"/><path d="m7.5 11 2.4 2.4 4.6-4.8"/></svg></span>
+          <h3>Dry-runs in CI</h3>
+          <p>Run the plan against a production snapshot on every pull request. If it would take a lock, the build fails.</p>
+        </article>
+        <article class="fcard f-sm reveal">
+          <span class="fglyph"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 5.5h14M4 11h14M4 16.5h9"/><circle cx="18" cy="16.5" r="2" stroke="var(--cool)"/></svg></span>
+          <h3>A numbered audit trail</h3>
+          <p>Each migration is a reviewable plan file with the exact DDL it will run, in order, forever.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <h2 class="display">Start free. Upgrade when your schema does.</h2>
+        <p>Every plan includes dry-runs and reversible cutovers. You pay for concurrency and support.</p>
+      </div>
+      <div class="bill-row reveal">
+        <div class="seg" role="group" aria-label="Billing period">
+          <button class="seg-btn on" data-bill="monthly" aria-pressed="true">Monthly</button>
+          <button class="seg-btn" data-bill="annual" aria-pressed="false">Annual <span class="save">save 20%</span></button>
+        </div>
+      </div>
+      <div class="plans">
+        <article class="plan reveal">
+          <h3>Hobby</h3>
+          <p class="for">For side projects</p>
+          <div class="price"><span class="cur">$</span><span class="amount">0</span></div>
+          <p class="bill-note">free forever</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Unlimited migration plans</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>1 concurrent migration</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Dry-runs in CI</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Community support</li>
+          </ul>
+          <button class="btn ghost" data-signup="free">Start free</button>
+        </article>
+        <article class="plan featured reveal">
+          <span class="plan-tag">Most teams start here</span>
+          <h3>Team</h3>
+          <p class="for">For products in production</p>
+          <div class="price"><span class="cur">$</span><span class="amount" id="teamPrice" data-m="49" data-a="39">49</span></div>
+          <p class="bill-note" id="teamNote" data-m="per project, billed monthly" data-a="per project, billed annually">per project, billed monthly</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Everything in Hobby</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Unlimited concurrent migrations</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Shadow builds on managed replicas</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>90-day audit trail</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Priority support</li>
+          </ul>
+          <button class="btn primary" data-signup="team">Start 14-day trial</button>
+        </article>
+        <article class="plan reveal">
+          <h3>Enterprise</h3>
+          <p class="for">For regulated teams</p>
+          <div class="price"><span class="amount" style="font-size:32px">Custom</span></div>
+          <p class="bill-note">annual contract</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Everything in Team</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Runs inside your VPC</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>SSO and role-based access</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>Migration reviews with an engineer</li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 7.5 2.6 2.6L11 4.4"/></svg>99.9% uptime SLA</li>
+          </ul>
+          <button class="btn ghost" data-signup="enterprise">Talk to us</button>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Morph — zero-downtime migrations for Postgres.</span>
+    <span>A single-file demo. No network, no trackers.</span>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <button class="icon-btn dlg-close" id="dlgClose" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 2.5l9 9M11.5 2.5l-9 9"/></svg></button>
+    <h2 id="dlgTitle">Start free</h2>
+    <p class="blurb" id="dlgBlurb"></p>
+    <form id="dlgForm" novalidate>
+      <label for="dlgEmail">Work email</label>
+      <input id="dlgEmail" type="email" placeholder="you@company.com" autocomplete="email">
+      <p class="field-err" id="dlgErr" hidden></p>
+      <button class="btn primary" type="submit" id="dlgSubmit">Create account</button>
+    </form>
+    <div id="dlgDone" hidden>
+      <p id="dlgDoneText"></p>
+      <button class="btn ghost" id="dlgDoneBtn" type="button">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fail(err) {
+    try {
+      var d = document.createElement('div');
+      d.setAttribute('role', 'alert');
+      d.style.cssText = 'margin:16px;padding:12px 16px;border:1px solid #ff7b6b;border-radius:8px;color:#ff7b6b;font:13px ui-monospace,monospace;background:#160d0d';
+      d.textContent = 'Something broke while booting this page: ' + (err && err.message ? err.message : err);
+      document.body.insertBefore(d, document.body.firstChild);
+    } catch (e2) { /* nothing more we can do */ }
+  }
+  try {
+
+  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= theme ================= */
+  var themeHooks = [];
+  function applyTheme(t, save) {
+    document.documentElement.setAttribute('data-theme', t);
+    var btn = document.getElementById('themeToggle');
+    btn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+    btn.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+    if (save) { try { localStorage.setItem('morph-theme', t); } catch (e) {} }
+    for (var i = 0; i < themeHooks.length; i++) themeHooks[i](t);
+  }
+  (function initTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem('morph-theme'); } catch (e) {}
+    if (saved !== 'light' && saved !== 'dark') saved = 'dark';
+    applyTheme(saved, false);
+    document.getElementById('themeToggle').addEventListener('click', function () {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light', true);
+    });
+  })();
+
+  /* ================= field engine ================= */
+  var FIELD = (function () {
+    var hero = document.getElementById('hero');
+    var cv = document.getElementById('field');
+    var ctx = cv.getContext('2d');
+    var COLS = 40, ROWS = 18, N = COLS * ROWS;
+    var STAGES = [
+      { name: 'select',  hint: 'read the live table' },
+      { name: 'shadow',  hint: 'build the copy' },
+      { name: 'backfill',hint: 'move the rows' },
+      { name: 'cutover', hint: 'swap in milliseconds' }
+    ];
+    var cur = new Float32Array(N * 3), from = new Float32Array(N * 3);
+    var to = null, targets = [null, null, null, null];
+    var del = new Float32Array(N), vari = new Float32Array(N);
+    var ox = new Float32Array(N), oy = new Float32Array(N);
+    var ovx = new Float32Array(N), ovy = new Float32Array(N);
+    var psx = new Float32Array(N), psy = new Float32Array(N);
+    var W = 0, H = 0, DPR = 1, cx = 0, cy = 0, S = 0;
+    var stage = 0, mt = 1, morphing = false, paused = false;
+    var tau = 0, last = performance.now(), lastSwitch = performance.now(), raf = 0;
+    var px = -1e4, py = -1e4, tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
+    var themeT = document.documentElement.getAttribute('data-theme') === 'light' ? 1 : 0;
+    var themeTarget = themeT;
+    var PAL = {
+      dark:  { w: [255, 180, 84],  c: [74, 219, 200] },
+      light: { w: [184, 92, 18],   c: [12, 125, 109] }
+    };
+    var i;
+    for (i = 0; i < N; i++) vari[i] = (i * 0.61803398875) % 1;
+
+    function each(a, fn) {
+      for (var i = 0; i < N; i++) {
+        var col = i % COLS, row = (i / COLS) | 0;
+        fn(a, i * 3, col / (COLS - 1), row / (ROWS - 1), col, row);
+      }
+    }
+    function buildTargets() {
+      var gw = S * 1.9, gh = S * 1.15, j, u, v, col, row, r, ang;
+      var t0 = new Float32Array(N * 3), t1 = new Float32Array(N * 3);
+      var t2 = new Float32Array(N * 3), t3 = new Float32Array(N * 3);
+      for (j = 0; j < N; j++) {
+        var i3 = j * 3;
+        col = j % COLS; row = (j / COLS) | 0;
+        u = col / (COLS - 1); v = row / (ROWS - 1);
+        // select: flat lattice (the live table)
+        t0[i3] = cx + (u - 0.5) * gw;
+        t0[i3 + 1] = cy + (v - 0.5) * gh;
+        t0[i3 + 2] = 0;
+        // shadow: interleaved second plane
+        var plane = (col + row) % 2;
+        t1[i3] = cx + (u - 0.5) * gw + (plane ? S * 0.11 : 0);
+        t1[i3 + 1] = cy + (v - 0.5) * gh - (plane ? S * 0.08 : 0);
+        t1[i3 + 2] = plane ? S * 0.2 : -S * 0.12;
+        // backfill: standing wave (rows streaming through)
+        t2[i3] = cx + (u - 0.5) * gw;
+        t2[i3 + 1] = cy + (v - 0.5) * S * 1.05;
+        t2[i3 + 2] = Math.sin(u * 7.2 + v * 4.4) * S * 0.15 + Math.cos(v * 9.4) * S * 0.06;
+        // cutover: compact disc
+        r = (0.3 + 0.7 * v) * S * 0.82;
+        ang = u * Math.PI * 2 - Math.PI / 2;
+        t3[i3] = cx + Math.cos(ang) * r;
+        t3[i3 + 1] = cy + Math.sin(ang) * r * 0.62;
+        t3[i3 + 2] = Math.sin(ang * 3) * S * 0.05;
+      }
+      targets = [t0, t1, t2, t3];
+    }
+    function resize() {
+      var r = hero.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (Math.abs(r.width - W) < 0.5 && Math.abs(r.height - H) < 0.5 && dpr === DPR) return;
+      W = r.width; H = r.height; DPR = dpr;
+      cv.width = Math.max(1, Math.round(W * DPR));
+      cv.height = Math.max(1, Math.round(H * DPR));
+      S = Math.min(W, H) * 0.34;
+      if (W < 560) S *= 0.82;
+      cx = W >= 880 ? W * 0.63 : W * 0.5;
+      cy = H * (W >= 880 ? 0.52 : 0.58);
+      buildTargets();
+      if (!morphing && to) to = targets[stage];
+    }
+    function ease(t) { return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2; }
+    function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+
+    var stName = document.getElementById('stName');
+    var stHint = document.getElementById('stHint');
+    var stDots = document.getElementById('stDots');
+    var dots = [];
+    STAGES.forEach(function (s, k) {
+      var b = document.createElement('button');
+      b.className = 'dot';
+      b.setAttribute('aria-label', 'Go to stage ' + (k + 1) + ', ' + s.name);
+      b.addEventListener('click', function () { goto(k); });
+      stDots.appendChild(b); dots.push(b);
+    });
+    function updateHUD() {
+      stName.textContent = STAGES[stage].name;
+      stHint.textContent = STAGES[stage].hint + ' — stage ' + (stage + 1) + ' of 4';
+      stName.classList.remove('swap'); void stName.offsetWidth; stName.classList.add('swap');
+      for (var k = 0; k < dots.length; k++) {
+        dots[k].classList.toggle('on', k === stage);
+        dots[k].setAttribute('aria-current', k === stage ? 'true' : 'false');
+      }
+    }
+    function goto(k, instant) {
+      k = ((k % 4) + 4) % 4;
+      stage = k;
+      lastSwitch = performance.now();
+      to = targets[stage];
+      updateHUD();
+      if (instant || REDUCED) {
+        for (var j = 0; j < N * 3; j++) { from[j] = to[j]; cur[j] = to[j]; }
+        mt = 1; morphing = false;
+        if (REDUCED) render();
+        return;
+      }
+      for (var j2 = 0; j2 < N; j2++) {
+        var i3 = j2 * 3;
+        from[i3] = cur[i3]; from[i3 + 1] = cur[i3 + 1]; from[i3 + 2] = cur[i3 + 2];
+        var dx = cur[i3] - cx, dy = cur[i3 + 1] - cy;
+        var d = Math.sqrt(dx * dx + dy * dy) / (S * 1.35);
+        del[j2] = clamp(d, 0, 1) * 0.32 + vari[j2] * 0.06;
+      }
+      mt = 0; morphing = true;
+    }
+
+    function mix3(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+    function render() {
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      var fracBase = morphing ? (stage - 1 + mt) : stage;
+      var frac = fracBase / 3;
+      var rotY = Math.sin(tau * 0.00012) * 0.10 + tiltX * 0.26;
+      var rotX = -0.30 + tiltY * 0.12;
+      var cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      var cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      var persp = S * 4.2;
+      var wp = mix3(PAL.dark.w, PAL.light.w, themeT);
+      var cp = mix3(PAL.dark.c, PAL.light.c, themeT);
+      for (var j = 0; j < N; j++) {
+        var i3 = j * 3;
+        var e = ease(clamp((mt - del[j]) / (1 - del[j]), 0, 1));
+        var x = from[i3] + (to[i3] - from[i3]) * e;
+        var y = from[i3 + 1] + (to[i3 + 1] - from[i3 + 1]) * e;
+        var z = from[i3 + 2] + (to[i3 + 2] - from[i3 + 2]) * e;
+        cur[i3] = x; cur[i3 + 1] = y; cur[i3 + 2] = z;
+        if (!paused && !REDUCED) z += Math.sin(tau * 0.0011 + x * 0.012 + y * 0.016) * 2.4;
+        ox[j] += ovx[j]; oy[j] += ovy[j];
+        ovx[j] = ovx[j] * 0.86 - ox[j] * 0.06;
+        ovy[j] = ovy[j] * 0.86 - oy[j] * 0.06;
+        var x1 = x * cosY + z * sinY, z1 = z * cosY - x * sinY;
+        var y1 = y * cosX - z1 * sinX, z2 = y * sinX + z1 * cosX;
+        var f = persp / (persp - z2);
+        var sx = cx + x1 * f + ox[j];
+        var sy = cy + y1 * f + oy[j];
+        psx[j] = sx; psy[j] = sy;
+        var cm = clamp(0.12 + frac * 0.8 + (vari[j] - 0.5) * 0.35, 0, 1);
+        var rC = (wp[0] + (cp[0] - wp[0]) * cm) | 0;
+        var gC = (wp[1] + (cp[1] - wp[1]) * cm) | 0;
+        var bC = (wp[2] + (cp[2] - wp[2]) * cm) | 0;
+        ctx.globalAlpha = clamp(0.28 + (f - 0.82) * 1.5, 0.18, 0.95);
+        ctx.fillStyle = 'rgb(' + rC + ',' + gC + ',' + bC + ')';
+        ctx.beginPath();
+        ctx.arc(sx, sy, clamp(1.05 * f + 0.5, 0.7, 2.6), 0, 6.2832);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    function repel() {
+      if (REDUCED || px < -9999) return;
+      var R = 110, R2 = R * R;
+      for (var j = 0; j < N; j++) {
+        var dx = psx[j] - px, dy = psy[j] - py;
+        var d2 = dx * dx + dy * dy;
+        if (d2 > R2 || d2 < 1) continue;
+        var d = Math.sqrt(d2), f = (1 - d / R);
+        var imp = f * f * 1.5;
+        ovx[j] = clamp(ovx[j] + dx / d * imp, -6, 6);
+        ovy[j] = clamp(ovy[j] + dy / d * imp, -6, 6);
+      }
+    }
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      var dt = Math.min(now - last, 50); last = now;
+      if (!paused) tau += dt;
+      if (morphing) { mt += dt / 1500; if (mt >= 1) { mt = 1; morphing = false; } }
+      tiltX += (tiltTX - tiltX) * Math.min(1, dt * 0.004);
+      tiltY += (tiltTY - tiltY) * Math.min(1, dt * 0.004);
+      themeT += (themeTarget - themeT) * Math.min(1, dt * 0.006);
+      repel();
+      render();
+      if (!paused && !REDUCED && !morphing && now - lastSwitch > 6800) goto(stage + 1);
+    }
+
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      px = e.clientX - r.left; py = e.clientY - r.top;
+      tiltTX = px / Math.max(1, r.width) - 0.5;
+      tiltTY = py / Math.max(1, r.height) - 0.5;
+    });
+    hero.addEventListener('pointerleave', function () { px = -1e4; py = -1e4; tiltTX = 0; tiltTY = 0; });
+    cv.addEventListener('click', function () { goto(stage + 1, REDUCED); });
+    document.getElementById('stPrev').addEventListener('click', function () { goto(stage - 1, REDUCED); });
+    document.getElementById('stNext').addEventListener('click', function () { goto(stage + 1, REDUCED); });
+    var pauseBtn = document.getElementById('stPause');
+    pauseBtn.addEventListener('click', function () {
+      paused = !paused;
+      pauseBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      pauseBtn.setAttribute('aria-label', paused ? 'Resume the field' : 'Pause the field');
+      document.getElementById('icPause').hidden = paused;
+      document.getElementById('icPlay').hidden = !paused;
+      if (!paused) { last = performance.now(); lastSwitch = performance.now(); }
+    });
+
+    // boot
+    resize();
+    for (var b = 0; b < N * 3; b += 3) {
+      cur[b] = cx + (Math.random() - 0.5) * W * 1.1;
+      cur[b + 1] = cy + (Math.random() - 0.5) * H * 1.1;
+      cur[b + 2] = (Math.random() - 0.5) * 60;
+      from[b] = cur[b]; from[b + 1] = cur[b + 1]; from[b + 2] = cur[b + 2];
+    }
+    to = targets[0];
+    updateHUD();
+    if (REDUCED) {
+      goto(0, true);
+    } else {
+      setTimeout(function () { goto(0); }, 150);
+      raf = requestAnimationFrame(frame);
+    }
+    window.addEventListener('resize', function () { resize(); if (REDUCED) render(); });
+    if (window.ResizeObserver) { try { new ResizeObserver(function () { resize(); if (REDUCED) render(); }).observe(hero); } catch (e) {} }
+    window.addEventListener('unload', function () { cancelAnimationFrame(raf); });
+
+    return {
+      onTheme: function (t) {
+        themeTarget = t === 'light' ? 1 : 0;
+        if (REDUCED) render();
+      }
+    };
+  })();
+  themeHooks.push(FIELD.onTheme);
+
+  /* ================= shadow-build stat ================= */
+  (function initShadowStat() {
+    var pctEl = document.getElementById('shadowPct');
+    var barEl = document.getElementById('shadowBar');
+    if (REDUCED) { pctEl.textContent = 'shadow build 100%'; barEl.style.transform = 'scaleX(1)'; return; }
+    var p = 0, holdUntil = 0;
+    setInterval(function () {
+      var now = performance.now();
+      if (holdUntil) {
+        if (now < holdUntil) return;
+        holdUntil = 0; p = 0;
+      }
+      p = Math.min(100, p + 0.8 + Math.random() * 2.4);
+      pctEl.textContent = 'shadow build ' + Math.round(p) + '%';
+      barEl.style.transform = 'scaleX(' + (p / 100).toFixed(3) + ')';
+      if (p >= 100) holdUntil = now + 1600;
+    }, 130);
+  })();
+
+  /* ================= billing toggle ================= */
+  (function initBilling() {
+    var btns = document.querySelectorAll('.seg-btn');
+    var price = document.getElementById('teamPrice');
+    var note = document.getElementById('teamNote');
+    btns.forEach = Array.prototype.forEach;
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-bill');
+        btns.forEach = Array.prototype.forEach;
+        btns.forEach(function (o) {
+          var on = o === b;
+          o.classList.toggle('on', on);
+          o.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        price.textContent = price.getAttribute(mode === 'annual' ? 'data-a' : 'data-m');
+        note.textContent = note.getAttribute(mode === 'annual' ? 'data-a' : 'data-m');
+        price.classList.remove('bump'); void price.offsetWidth; price.classList.add('bump');
+      });
+    });
+  })();
+
+  /* ================= signup sheet ================= */
+  (function initDialog() {
+    var overlay = document.getElementById('overlay');
+    var form = document.getElementById('dlgForm');
+    var done = document.getElementById('dlgDone');
+    var title = document.getElementById('dlgTitle');
+    var blurb = document.getElementById('dlgBlurb');
+    var email = document.getElementById('dlgEmail');
+    var err = document.getElementById('dlgErr');
+    var submit = document.getElementById('dlgSubmit');
+    var doneText = document.getElementById('dlgDoneText');
+    var lastFocus = null;
+    var VARIANTS = {
+      free: {
+        title: 'Start free',
+        blurb: 'Free forever for side projects. No card required.',
+        cta: 'Create account',
+        done: function (m) { return 'Check your inbox at ' + m + '. The invite link is valid for 24 hours.'; }
+      },
+      team: {
+        title: 'Start your Team trial',
+        blurb: 'Fourteen days of Team, free. Your first migration plan is waiting.',
+        cta: 'Start trial',
+        done: function (m) { return 'Trial invite sent to ' + m + '. It opens the full Team toolset for 14 days.'; }
+      },
+      enterprise: {
+        title: 'Talk to us',
+        blurb: 'Tell us where to reach you and an engineer will schedule a walkthrough.',
+        cta: 'Request access',
+        done: function (m) { return 'Thanks. We will reply to ' + m + ' within one business day.'; }
+      }
+    };
+    var current = VARIANTS.free;
+    function open(kind) {
+      current = VARIANTS[kind] || VARIANTS.free;
+      title.textContent = current.title;
+      blurb.textContent = current.blurb;
+      submit.textContent = current.cta;
+      form.hidden = false; done.hidden = true; err.hidden = true;
+      email.value = '';
+      overlay.hidden = false;
+      lastFocus = document.activeElement;
+      setTimeout(function () { email.focus(); }, 30);
+    }
+    function close() {
+      overlay.hidden = true;
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    var opener = document.querySelectorAll('[data-signup]');
+    opener.forEach = Array.prototype.forEach;
+    opener.forEach(function (b) {
+      b.addEventListener('click', function () { open(b.getAttribute('data-signup')); });
+    });
+    document.getElementById('dlgClose').addEventListener('click', close);
+    document.getElementById('dlgDoneBtn').addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (overlay.hidden) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'Tab') {
+        var f = [email, submit, document.getElementById('dlgClose')].filter(function (x) { return !x.hidden; });
+        var first = f[0], lastEl = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastEl.focus(); }
+        else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); first.focus(); }
+      }
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+        err.textContent = 'Enter a valid email address, like dev@company.com.';
+        err.hidden = false;
+        email.focus();
+        return;
+      }
+      err.hidden = true;
+      var strong = document.createElement('strong'); strong.textContent = v;
+      var parts = current.done(v).split(v);
+      doneText.textContent = '';
+      doneText.appendChild(document.createTextNode(parts[0] || ''));
+      doneText.appendChild(strong);
+      doneText.appendChild(document.createTextNode(parts[1] || ''));
+      form.hidden = true; done.hidden = false;
+      document.getElementById('dlgDoneBtn').focus();
+    });
+  })();
+
+  /* ================= scroll reveals ================= */
+  (function initReveals() {
+    var els = document.querySelectorAll('.reveal');
+    if (REDUCED || !window.IntersectionObserver) {
+      els.forEach = Array.prototype.forEach;
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach = Array.prototype.forEach;
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach = Array.prototype.forEach;
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  } catch (err) { fail(err); }
+})();
+</script>
+</body></html>

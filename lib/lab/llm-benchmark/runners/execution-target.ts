@@ -2,6 +2,7 @@ import type { BenchmarkModel, BenchmarkTask } from '../types'
 import { stat, access } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { delimiter, isAbsolute, join, resolve } from 'node:path'
+import { applySkillBlock, type SkillBlock } from '../skills-context'
 
 export interface CliRunnerConfig {
   /** Base CLI command (e.g. 'agy', 'codex'). */
@@ -169,6 +170,24 @@ export async function resolveCommand(
  * now consumes an answer rather than deriving one.
  */
 
+/**
+ * Prepended to the task prompt for every CLI target when the sweep mounts
+ * skills. Resolved once per run (see `setSkillBlock`) so the block is built
+ * from the same files for every task in the arm.
+ */
+let activeSkillBlock: SkillBlock | undefined
+
+/**
+ * Set (or clear, with undefined) the skill context for the rest of the run.
+ *
+ * Module-level like the sweep root: it is a property of the RUN, not of one
+ * provider, and threading it through every runner signature would put the same
+ * value in a dozen places for one feature.
+ */
+export function setSkillBlock(block: SkillBlock | undefined): void {
+  activeSkillBlock = block && block.chars > 0 ? block : undefined
+}
+
 export interface ExecutionTarget {
   /** The binary to spawn (unresolved — `spawn` does its own PATH lookup). */
   command: string
@@ -214,9 +233,15 @@ export function resolveExecutionTarget(
   const scratchDir =
     artifactViaFile && options.sweepRoot ? join(options.sweepRoot, 'scratch', label) : undefined
 
+  // Skills are prepended and the brief kept last: the instruction to actually
+  // build the artefact is the last thing the model reads. With no skills
+  // mounted this is `task.prompt + promptSuffix` exactly, so the baseline arm
+  // is byte-identical to a run from before the mechanism existed.
+  const prompt = applySkillBlock(task.prompt, activeSkillBlock) + promptSuffix
+
   return {
     command: config.command,
-    args: config.buildArgs(task.prompt + promptSuffix, model),
+    args: config.buildArgs(prompt, model),
     env: config.env,
     cwd: scratchDir ?? config.cwd,
     timeoutMs: config.timeoutMs ?? DEFAULT_CLI_TIMEOUT_MS,

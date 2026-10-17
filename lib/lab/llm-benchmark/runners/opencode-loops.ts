@@ -67,12 +67,13 @@ export async function runOpencodeArtifact(options: OpencodeLoopOptions): Promise
       stubTask,
       0,
     )
-    // The runner copies the artefact out of the CLI's own session dir; read it
-    // back from where we asked for it, and fall back to the reply if the CLI
-    // printed the page inline instead.
-    const artifact = fs.existsSync(options.artifactPath)
-      ? fs.readFileSync(options.artifactPath, 'utf8')
-      : response.output
+    // The runner hands the page back as the response's output (its own session
+    // dir is not ours to know about), so writing it to the loop's path is this
+    // function's job — the next loop has to open it in a browser and quote it.
+    const artifact = response.output
+    if (artifact.trim().length > 0 && !fs.existsSync(options.artifactPath)) {
+      fs.writeFileSync(options.artifactPath, artifact, 'utf8')
+    }
     return {
       ok: artifact.trim().length > 0,
       artifact,

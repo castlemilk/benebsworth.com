@@ -103,22 +103,27 @@ async function inspectArtifact(
   }
 
   const reportFile = path.join(loopDir, '.taste-skill', 'inspect', 'report.json')
-  if (fs.existsSync(reportFile)) {
-    try {
-      const parsed = JSON.parse(fs.readFileSync(reportFile, 'utf8')) as {
-        findings?: { level?: string; id?: string; message?: string; fix?: string }[]
-      }
-      report.findings = (parsed.findings ?? [])
-        .filter((f) => f.level === 'FAIL' || f.level === 'WARN')
-        .map((f) => ({
-          id: f.id ?? 'finding',
-          level: f.level === 'FAIL' ? 'FAIL' : 'WARN',
-          message: f.message ?? '',
-          fix: f.fix,
-        }))
-    } catch {
-      // A malformed report is not fatal: the loop proceeds with no findings.
+  if (!fs.existsSync(reportFile)) {
+    // A measurement step that produced nothing must be visible: the loop would
+    // otherwise reflect on a page it never actually looked at, and say so in
+    // the prompt as if the page were clean.
+    console.warn(`[loops] inspector produced no report for loop artefact — see ${path.basename(loopDir)}/`)
+    return { report, screenshots: [] }
+  }
+  try {
+    const parsed = JSON.parse(fs.readFileSync(reportFile, 'utf8')) as {
+      findings?: { level?: string; id?: string; message?: string; fix?: string }[]
     }
+    report.findings = (parsed.findings ?? [])
+      .filter((f) => f.level === 'FAIL' || f.level === 'WARN')
+      .map((f) => ({
+        id: f.id ?? 'finding',
+        level: f.level === 'FAIL' ? 'FAIL' : 'WARN',
+        message: f.message ?? '',
+        fix: f.fix,
+      }))
+  } catch {
+    // A malformed report is not fatal: the loop proceeds with no findings.
   }
 
   const headline = /hero headline\s+"([^"]+)"/.exec(raw)?.[1]

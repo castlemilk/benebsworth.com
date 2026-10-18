@@ -1,6 +1,91 @@
 {
   "runs": [
     {
+      "dir": "run-0808",
+      "model": "glm-5.3-coding-plan",
+      "task": "landing-page-morph",
+      "skills": [
+        "frontend-design",
+        "high-end-visual-design",
+        "minimalist-ui"
+      ],
+      "startedAt": "2026-10-18T21:08:23.217Z",
+      "loops": [
+        {
+          "loop": 1,
+          "rubricScore": 62,
+          "fails": 15,
+          "tokensOut": 14873,
+          "runtimeMs": 582281,
+          "images": [
+            {
+              "file": "hero.jpg",
+              "source": "comfy",
+              "subject": "a dark server-room aisle lined with steel rack cabinets, status LEDs glowing green and amber",
+              "bytes": 90880,
+              "ms": 72128
+            },
+            {
+              "file": "detail.jpg",
+              "source": "comfy",
+              "subject": "a braided ethernet cable seated in a steel patch panel, rows of orange and grey cords",
+              "bytes": 130734,
+              "ms": 80142
+            }
+          ],
+          "error": null
+        },
+        {
+          "loop": 2,
+          "rubricScore": 62,
+          "fails": 3,
+          "tokensOut": 12353,
+          "runtimeMs": 446155,
+          "images": [
+            {
+              "file": "hero.jpg",
+              "source": "comfy",
+              "subject": "A dark data centre aisle lined with tall black server racks, pinpricked with green and amber status lights.",
+              "bytes": 91952,
+              "ms": 72113
+            },
+            {
+              "file": "detail.jpg",
+              "source": "comfy",
+              "subject": "Close-up of fibre-optic cables, orange and aqua, crossing in the cable-management tray of a rack.",
+              "bytes": 99199,
+              "ms": 76132
+            }
+          ],
+          "error": null
+        },
+        {
+          "loop": 3,
+          "rubricScore": 62,
+          "fails": 2,
+          "tokensOut": 12874,
+          "runtimeMs": 510739,
+          "images": [
+            {
+              "file": "hero.jpg",
+              "source": "comfy",
+              "subject": "A long aisle of steel server racks in a dim data hall, amber status lights receding into the dark.",
+              "bytes": 104008,
+              "ms": 68115
+            },
+            {
+              "file": "detail.jpg",
+              "source": "comfy",
+              "subject": "Heat shimmer rising from the warm rear exhaust of a black steel server chassis in a dark hot aisle.",
+              "bytes": 61069,
+              "ms": 72100
+            }
+          ],
+          "error": null
+        }
+      ]
+    },
+    {
       "dir": "run-0313",
       "model": "glm-5.3-coding-plan",
       "task": "landing-page-morph",

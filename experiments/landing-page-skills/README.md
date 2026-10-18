@@ -117,6 +117,66 @@ the agent to use. `--skills-dir` with no `--skills` is refused, and a name that
 resolves to nothing prints a warning and runs the arm without skills, because an
 arm that silently lost its injection is worse than one that says so.
 
+## The improvement loop
+
+One iteration is worth little; the loop is where the page improves. Each round
+hands the model the previous page plus what a real browser measured about it,
+then asks for a better one.
+
+```bash
+npx tsx scripts/run-benchmark-loops.ts \
+  --model glm-5.3-coding-plan --task landing-page-morph --loops 3 \
+  --images --comfy http://127.0.0.1:8188 --capture-gamma \
+  --skills-dir /Users/benebsworth/projects/harness/.agents/skills/omega \
+  --skills frontend-design,high-end-visual-design,minimalist-ui \
+  --inspect ~/.agents/skills/design-taste-frontend/scripts/inspect.mjs \
+  --out experiments/landing-page-skills/loops/run-$(date +%H%M)
+```
+
+`loops.html` reads the index the run writes and lists every run on the machine,
+newest first. It shows numbers only where the manifest has them.
+
+### Pictures
+
+When the design rules report a page with no imagery, the loop asks the model that
+wrote the page what a camera could photograph about it, and builds a photographic
+prompt from the answer — light, lens, framing, and the page's own palette, with
+lettering and signage excluded. The model cannot see the pictures it is given, so
+the brief tells it what each one shows, and that description is what alt text is
+written from. Keyword extraction is not used for this: it turned a page about
+ephemeral preview environments into a suspension bridge.
+
+Generation is tried in order — Comfy Desktop's own backend, then MLX locally,
+then BrandBrain's flow, then the open collections — and never spends money
+without being told to. Generated files are compacted to JPEG at generation time,
+because a 1.6MB PNG cannot be embedded in a single-file page and the page was
+shipping references to it anyway.
+
+A reference is resolved by exact path, then by a compacted JPEG beside it, then
+by file name, then by stem, and only then is a real picture substituted for one
+the model invented — with the substitution recorded, and the alt text corrected
+to describe the picture that is actually there. The run record says which
+reference became which image, because a page claiming a photograph it does not
+have should be visible rather than quietly repaired.
+
+### Getting a page into Gamma
+
+`--capture-gamma` files a page into Gamma's capture inbox, which a person then
+reads as an example. Three things must hold: the rubric is at least 90, the
+design rules report at most 3 FAIL findings, and the file carries its own
+pictures with no unresolved references. The rubric alone is not enough — it read
+96 on a page with twelve design defects — and a capture that fails never fails
+the loop, because the run's result is the artefact and the inbox is a side
+effect.
+
+### When the provider is not there
+
+The loop asks the model one word before starting, and gives up after 90 seconds
+rather than spending the generation timeout — and a retry — to learn the
+endpoint is not answering. A generation that times out gets one more attempt,
+because the failure mode is slow rather than wrong. After the first loop, a
+failed round does not end the run.
+
 Neither arm is published in `lib/lab/llm-benchmark/results.json`: the model is
 GLM 5.3, and one of the two rows is an intervention, not the model. Publishing
 the skills row as the model's score would be the exact mistake this experiment

@@ -48,7 +48,9 @@ interface Args {
   flowServerPath?: string
   /** Ceiling for one generated picture, in USD micros. */
   flowBudgetMicros: number
-  /** Local MLX generation: free, unquota'd, and the fastest route on Apple Silicon. */
+  /** ComfyUI server URL (Comfy Desktop's backend) — the UI-backed route. */
+  comfyUrl?: string
+  /** Local MLX generation: the fallback when no ComfyUI server answers. */
   mlxCommand?: string
   mlxModel?: string
   /** Let a generated page wear a real company's mark. Off by default. */
@@ -86,6 +88,7 @@ function parseArgs(argv: string[]): Args {
     brandbrainToken: get('--brandbrain-token'),
     flowServerPath: get('--flow-mcp'),
     flowBudgetMicros: Number(get('--flow-budget-micros') ?? 20_000),
+    comfyUrl: get('--comfy'),
     mlxCommand: get('--mlx'),
     mlxModel: get('--mlx-model'),
     allowRealBrandMarks: argv.includes('--allow-real-brand-marks'),
@@ -353,6 +356,7 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
           assetsScript: args.assetsScript,
           openrouterKey: openrouterKey(),
           imageModel: 'google/gemini-3.1-flash-lite-image',
+          comfyUrl: args.comfyUrl,
           mlxCommand: args.mlxCommand,
           mlxModel: args.mlxModel,
           flowServerPath: args.flowServerPath,

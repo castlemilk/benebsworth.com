@@ -3,6 +3,7 @@ import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fetchBrandMark, guessBrand } from './brandbrain'
 import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
+import { generateWithComfy } from './comfy'
 import { generateWithMlx } from './mlx'
 
 /**
@@ -42,7 +43,7 @@ export interface SourcedImage extends ImageRequest {
   /** Absolute path on disk. */
   path: string
   bytes: number
-  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated' | 'local-mlx'
+  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated' | 'local-mlx' | 'comfy'
   licence?: string
   creator?: string
   page?: string
@@ -73,10 +74,15 @@ export interface ImageSources {
   /** Ceiling for one live run, in USD micros. */
   flowMaxSpendMicros?: number
   /**
-   * Local MLX generation. The only rung that cannot fail for want of credit,
-   * so it is tried first: the hosted routes share one exhausted OpenRouter
-   * balance.
+   * A ComfyUI server — Comfy Desktop's backend — driven over its HTTP API: the
+   * UI-backed route, so generation is a service the harness orchestrates (queue,
+   * poll, fetch) rather than a CLI it spawns per image.
    */
+  comfyUrl?: string
+  comfySteps?: number
+  comfyWidth?: number
+  comfyHeight?: number
+  /** Local MLX generation, and the fallback when no ComfyUI server answers. */
   mlxCommand?: string
   mlxModel?: string
   mlxSteps?: number
@@ -385,6 +391,22 @@ export async function sourceImage(
   sources: ImageSources
 ): Promise<{ image?: SourcedImage; attempted: string[]; reason?: string }> {
   const attempted: string[] = []
+
+  if (sources.comfyUrl) {
+    attempted.push('comfy')
+    const generated = await generateWithComfy({
+      url: sources.comfyUrl,
+      prompt: request.query,
+      outPath: path.join(sources.into, path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, '') + '.png'),
+      steps: sources.comfySteps,
+      width: sources.comfyWidth,
+      height: sources.comfyHeight,
+      filenamePrefix: 'harness/loop',
+    })
+    if (generated) {
+      return { image: { ...request, path: generated.path, bytes: generated.bytes, source: 'comfy' }, attempted }
+    }
+  }
 
   if (sources.mlxCommand && sources.mlxModel) {
     attempted.push('local-mlx')

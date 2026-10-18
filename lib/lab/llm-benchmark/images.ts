@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
+import sharp from 'sharp'
 import { fetchBrandMark, guessBrand } from './brandbrain'
 import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
 import { DEFAULT_COMFY_URL, generateWithComfy } from './comfy'
@@ -132,37 +133,54 @@ export function inlineLocalImages(
   const skippedTooLarge: string[] = []
   let out = html
   const available = collectImageFiles(dir)
+  // Only images we can actually embed may stand in for a reference. A file over
+  // the budget is not a candidate, or the page would inherit the brokenness the
+  // ladder exists to remove.
+  const donors = available.filter((file) => inlineable(file, maxBytes))
 
   for (const match of html.matchAll(/src=(["'])([^"']+)\1/g)) {
     const [, quote, src] = match
     if (!src || /^(https?:|data:|blob:|#)/i.test(src)) continue
     let candidate = path.resolve(dir, src)
     // Refuse anything that escapes the loop directory.
-    if (candidate.startsWith(path.resolve(dir) + path.sep) && fs.existsSync(candidate)) {
-      // Exact path: the happy path.
+    if (candidate.startsWith(path.resolve(dir) + path.sep) && inlineable(candidate, maxBytes)) {
+      // Exact path, and it fits: the happy path.
     } else {
-      const byName = available.find((file) => path.basename(file) === path.basename(src));
-      if (byName) {
+      // The exact file is missing or too large to embed. A compacted JPEG sits
+      // beside it under the same stem, so take that before going further: it is
+      // the same picture, made embeddable.
+      const compacted = candidate.replace(/\.[a-z0-9]+$/i, '') + '.jpg'
+      const byCompaction =
+        compacted.startsWith(path.resolve(dir) + path.sep) && inlineable(compacted, maxBytes) ? compacted : undefined
+      const byName = available.find((file) => path.basename(file) === path.basename(src))
+      if (byCompaction) {
+        candidate = byCompaction
+      } else if (byName && inlineable(byName, maxBytes)) {
         // The model moved the file (images/hero.png -> assets/hero.png) but the
         // bytes are the ones we generated, so it is still ours to inline.
-        candidate = byName;
+        candidate = byName
       } else {
         // The model invented a name for a picture it cannot see
         // (assets/data-center-cern.jpg). In a single-file page that reference is
         // broken whatever we do, so give it a real generated image rather than
         // leaving a hole — and record the substitution, because a silent swap is
         // how a page ends up claiming a photograph it does not have.
-        const donor = available.length > 0 ? available[inlined.length % available.length] : undefined;
+        const donor = donors.length > 0 ? donors[substituted.length % donors.length] : undefined
         if (donor) {
-          const bytes = Buffer.from(fs.readFileSync(donor));
-          if (bytes.byteLength > 0 && bytes.byteLength <= maxBytes) {
+          const bytes = Buffer.from(fs.readFileSync(donor))
+          if (bytes.byteLength > 0) {
             const mime = IMAGE_MIME[path.extname(donor).toLowerCase()] ?? 'image/png';
             out = out.split(`${quote}${src}${quote}`).join(`${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`);
             substituted.push(`${src} <- ${path.basename(donor)}`);
             continue;
           }
         }
-        unresolved.push(src);
+        // Nothing to stand in for it. Distinguish the two reasons a reference
+        // survives into the delivered page: the file is there and simply too
+        // heavy to embed, or there is no such file at all. Both are broken, and
+        // they are not the same bug to go and fix.
+        if (fs.existsSync(candidate) && !inlineable(candidate, maxBytes)) skippedTooLarge.push(src)
+        else unresolved.push(src)
         continue;
       }
     }
@@ -439,7 +457,17 @@ export async function sourceImage(
       filenamePrefix: 'harness/loop',
     })
     if (generated) {
-      return { image: { ...request, path: generated.path, bytes: generated.bytes, source: 'comfy' }, attempted }
+      const fit = await compactImage(generated.path)
+      return {
+        image: {
+          ...request,
+          path: fit.file,
+          fileName: path.basename(fit.file),
+          bytes: fit.bytes,
+          source: 'comfy',
+        },
+        attempted,
+      }
     }
   }
 
@@ -456,7 +484,19 @@ export async function sourceImage(
       count: sources.mlxCount,
     })
     if (local) {
-      return { image: { ...request, path: local.path, bytes: local.bytes, source: 'local-mlx' }, attempted }
+      if (local) {
+        const fit = await compactImage(local.path)
+        return {
+          image: {
+            ...request,
+            path: fit.file,
+            fileName: path.basename(fit.file),
+            bytes: fit.bytes,
+            source: 'local-mlx',
+          },
+          attempted,
+        }
+      }
     }
   }
 
@@ -520,6 +560,58 @@ async function sourceBrandAsset(request: ImageRequest, sources: ImageSources): P
 }
 
 
+/** The inline budget for one embedded image, in bytes. */
+const INLINE_BUDGET = 900_000
+
+/** JPEG encodings to try, widest first, when shrinking an image. */
+const COMPACT_STEPS: ReadonlyArray<readonly [number, number]> = [
+  [1600, 84],
+  [1280, 80],
+  [960, 76],
+  [720, 72],
+]
+
+/**
+ * Re-encode a generated image so it can actually be embedded.
+ *
+ * The image models hand back a 1024x576 PNG of roughly 1.6MB, which is over the
+ * single-file budget — so the page shipped a reference the inliner had to
+ * refuse, and the loop paid two generations to use neither. JPEG at a bounded
+ * width is about a tenth of that and indistinguishable on a page.
+ *
+ * The original is left in place: these are regenerable artefacts, but deleting
+ * someone's output to save a megabyte is not this function's call to make.
+ */
+export async function compactImage(
+  file: string,
+  maxBytes = INLINE_BUDGET
+): Promise<{ file: string; bytes: number; compacted: boolean }> {
+  const bytes = fs.statSync(file).size
+  if (bytes <= maxBytes) return { file, bytes, compacted: false }
+  const target = file.replace(/\.[a-z0-9]+$/i, '') + '.jpg'
+  for (const [width, quality] of COMPACT_STEPS) {
+    const buffer = await sharp(file)
+      .resize({ width, withoutEnlargement: true })
+      .jpeg({ quality, mozjpeg: true })
+      .toBuffer()
+    if (buffer.byteLength <= maxBytes) {
+      fs.writeFileSync(target, buffer)
+      return { file: target, bytes: buffer.byteLength, compacted: true }
+    }
+  }
+  return { file, bytes, compacted: false }
+}
+
+/** Whether a file can be embedded without shrinking it first. */
+function inlineable(file: string, maxBytes: number): boolean {
+  try {
+    const stats = fs.statSync(file)
+    return stats.isFile() && stats.size > 0 && stats.size <= maxBytes
+  } catch {
+    return false
+  }
+}
+
 /** MIME types for images we inline. */
 const IMAGE_MIME: Record<string, string> = {
   '.png': 'image/png',
@@ -531,11 +623,21 @@ const IMAGE_MIME: Record<string, string> = {
   '.svg': 'image/svg+xml',
 }
 
-/** Image files anywhere under a loop directory. */
+/**
+ * Images we GENERATED for this page, never the measurement evidence.
+ *
+ * The loop directory also holds the design inspector's screenshots under
+ * .taste-skill/ — pictures *of* the page. Substituting one of those into an
+ * <img> is the worst outcome available: it looks like a reference that resolves,
+ * and it is a screenshot of the thing that contains it. So this walks the loop
+ * directory's own files (and an images/ subdirectory if present) and refuses
+ * anything inside the inspector's folder.
+ */
 function collectImageFiles(dir: string, depth = 0): string[] {
-  if (depth > 2 || !fs.existsSync(dir)) return [];
+  if (depth > 1 || !fs.existsSync(dir)) return [];
   const out: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.') || entry.name === 'screenshots') continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...collectImageFiles(full, depth + 1));
     else if (IMAGE_MIME[path.extname(entry.name).toLowerCase()]) out.push(full);

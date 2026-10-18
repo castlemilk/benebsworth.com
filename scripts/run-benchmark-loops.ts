@@ -250,7 +250,7 @@ let artifact = ''
 let artifactPath = ''
 /** Set when the previous loop's rules reported no pictures on the page. */
 let imageBriefText = ''
-let imageCredits: string[] = []
+const imageCredits: string[] = []
 
 for (let loop = 1; loop <= args.loops; loop += 1) {
   const loopDir = path.join(outDir, `loop-${String(loop)}`)

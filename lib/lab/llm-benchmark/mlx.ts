@@ -111,7 +111,7 @@ export function generateWithMlx(options: MlxOptions): Promise<{ path: string; by
         return
       }
       const primary = candidates[0]!
-      let bytes = fs.statSync(primary).size
+      const bytes = fs.statSync(primary).size
       if (bytes === 0) {
         finish(undefined)
         return

@@ -68,6 +68,34 @@ describe('inlineLocalImages', () => {
     expect(result.html).toContain('data:image/png;base64,QQ==')
     expect(result.html).toContain('data:image/svg+xml;base64,')
   })
+
+  it('inlines the compacted JPEG when the reference names an oversized PNG', () => {
+    // What the loop hit in practice: a generated 1.6MB PNG beside its compacted
+    // JPEG. Refusing the reference because the PNG is heavy would leave the page
+    // broken when the same picture is sitting there in embeddable form.
+    const dir = tmpDir({ 'images/hero.png': 'x'.repeat(2_000), 'images/hero.jpg': 'small' })
+    const result = inlineLocalImages('<img src="images/hero.png">', dir, { maxBytes: 500 })
+    expect(result.inlined).toEqual(['images/hero.png'])
+    expect(result.skippedTooLarge).toEqual([])
+    expect(result.html).toContain('data:image/jpeg;base64,' + Buffer.from('small').toString('base64'))
+  })
+
+  it('never substitutes the inspector\'s screenshots for a missing image', () => {
+    // .taste-skill/ holds pictures *of* the page. Embedding one as "the
+    // photograph the page asked for" looks like a resolved reference and is not.
+    const dir = tmpDir({ '.taste-skill/inspect/desktop-fold.jpg': 'a screenshot' })
+    const result = inlineLocalImages('<img src="assets/photograph.jpg">', dir)
+    expect(result.substituted).toEqual([])
+    expect(result.unresolved).toEqual(['assets/photograph.jpg'])
+    expect(result.html).toContain('src="assets/photograph.jpg"')
+  })
+
+  it('substitutes real generated images in turn rather than repeating one', () => {
+    const dir = tmpDir({ 'hero.jpg': 'one', 'detail.jpg': 'two' })
+    const result = inlineLocalImages('<img src="a.jpg"><img src="b.jpg"><img src="c.jpg">', dir)
+    expect(result.unresolved).toEqual([])
+    expect(result.substituted.map((s) => s.split(' <- ')[1])).toEqual(['detail.jpg', 'hero.jpg', 'detail.jpg'])
+  })
 })
 
 describe('queryFromArtifact', () => {

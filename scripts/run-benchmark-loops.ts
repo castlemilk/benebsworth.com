@@ -52,6 +52,9 @@ interface Args {
   comfyUrl?: string
   /** Local MLX generation: the fallback when no ComfyUI server answers. */
   mlxCommand?: string
+  mlxSteps?: number
+  mlxWidth?: number
+  mlxHeight?: number
   mlxModel?: string
   /** Let a generated page wear a real company's mark. Off by default. */
   allowRealBrandMarks: boolean
@@ -90,6 +93,9 @@ function parseArgs(argv: string[]): Args {
     flowBudgetMicros: Number(get('--flow-budget-micros') ?? 20_000),
     comfyUrl: get('--comfy'),
     mlxCommand: get('--mlx'),
+    mlxSteps: Number(get('--mlx-steps') ?? 8),
+    mlxWidth: Number(get('--mlx-width') ?? 1024),
+    mlxHeight: Number(get('--mlx-height') ?? 576),
     mlxModel: get('--mlx-model'),
     allowRealBrandMarks: argv.includes('--allow-real-brand-marks'),
   }
@@ -358,6 +364,10 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
           imageModel: 'google/gemini-3.1-flash-lite-image',
           comfyUrl: args.comfyUrl,
           mlxCommand: args.mlxCommand,
+          mlxSteps: args.mlxSteps,
+          mlxWidth: args.mlxWidth,
+          mlxHeight: args.mlxHeight,
+          mlxCount: 3,
           mlxModel: args.mlxModel,
           flowServerPath: args.flowServerPath,
           flowMaxSpendMicros: args.flowBudgetMicros,

@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import path from 'node:path'
 import { spawn } from 'node:child_process'
 
 /**
@@ -26,6 +27,13 @@ export interface MlxOptions {
   height?: number
   steps?: number
   seed?: number
+  /**
+   * Images per weight load. Measured on the M5 Max: three images at the
+   * 8-step / 1024x576 operating point take 59s against 75s run one at a time
+   * (~1.27x per image), because the 4-bit weights stay resident across the
+   * batch. It is a throughput win, not a per-image one.
+   */
+  count?: number
   timeoutMs?: number
   /** Extra environment for the spawn (the venv's PATH, for instance). */
   env?: NodeJS.ProcessEnv
@@ -51,6 +59,10 @@ export function buildMlxArgs(options: MlxOptions): string[] {
   if (options.height) args.push('--height', String(options.height))
   if (options.steps) args.push('--steps', String(options.steps))
   if (options.seed !== undefined) args.push('--seed', String(options.seed))
+  // NOTE: with --auto-seeds, mflux ignores --output and saves into the working
+  // directory as image_seed_*.png, so the adapter resolves the files from the
+  // saved-path line rather than from the requested path.
+  if (options.count && options.count > 1) args.push('--auto-seeds', String(options.count))
   return args
 }
 
@@ -90,21 +102,29 @@ export function generateWithMlx(options: MlxOptions): Promise<{ path: string; by
       // mflux confirms the file itself: "Image saved successfully at: <path>".
       // Trusting that over the requested path matters because a run that saves
       // nothing still exits 0.
-      const saved = /Image saved successfully at: (.+)/.exec(stderr)?.[1]?.trim()
-      const candidate = saved && fs.existsSync(saved) ? saved : options.outPath
-      if (!candidate || !fs.existsSync(candidate)) {
+      // Every "Image saved successfully at:" line, so a batch is not silently
+      // reported as one image.
+      const saved = [...stderr.matchAll(/Image saved successfully at: (.+)/g)].map((m) => m[1]!.trim())
+      const candidates = saved.filter((p) => fs.existsSync(p))
+      if (candidates.length === 0) {
         finish(undefined)
         return
       }
-      const bytes = fs.statSync(candidate).size
+      const primary = candidates[0]!
+      let bytes = fs.statSync(primary).size
       if (bytes === 0) {
         finish(undefined)
         return
       }
-      if (candidate !== options.outPath) {
-        fs.mkdirSync(options.outPath.split('/').slice(0, -1).join('/'), { recursive: true })
-        fs.copyFileSync(candidate, options.outPath)
-      }
+      const dir = options.outPath.split('/').slice(0, -1).join('/')
+      if (dir) fs.mkdirSync(dir, { recursive: true })
+      if (primary !== options.outPath) fs.copyFileSync(primary, options.outPath)
+      // The rest of a batch, copied next to the primary so a caller asking for
+      // three images gets three files rather than one plus two lost somewhere.
+      candidates.slice(1).forEach((p, i) => {
+        const stem = options.outPath.replace(/\.[a-z0-9]+$/i, '')
+        fs.copyFileSync(p, `${stem}-${String(i + 2)}${path.extname(p) || '.png'}`)
+      })
       finish({ path: options.outPath, bytes })
     })
   })

@@ -90,6 +90,8 @@ export interface ImageSources {
   mlxSteps?: number
   mlxWidth?: number
   mlxHeight?: number
+  /** Images per weight load; see generateWithMlx for the measured gain. */
+  mlxCount?: number
   /** Directory downloads land in. */
   into: string
 }
@@ -423,6 +425,7 @@ export async function sourceImage(
       steps: sources.mlxSteps,
       width: sources.mlxWidth,
       height: sources.mlxHeight,
+      count: sources.mlxCount,
     })
     if (local) {
       return { image: { ...request, path: local.path, bytes: local.bytes, source: 'local-mlx' }, attempted }

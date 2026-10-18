@@ -119,24 +119,52 @@ export function inlineLocalImages(
   html: string,
   dir: string,
   { maxBytes = 900_000 }: { maxBytes?: number } = {}
-): { html: string; inlined: string[]; unresolved: string[]; skippedTooLarge: string[] } {
+): {
+  html: string
+  inlined: string[]
+  unresolved: string[]
+  substituted: string[]
+  skippedTooLarge: string[]
+} {
   const inlined: string[] = []
   const unresolved: string[] = []
+  const substituted: string[] = []
   const skippedTooLarge: string[] = []
   let out = html
+  const available = collectImageFiles(dir)
 
   for (const match of html.matchAll(/src=(["'])([^"']+)\1/g)) {
     const [, quote, src] = match
     if (!src || /^(https?:|data:|blob:|#)/i.test(src)) continue
-    const candidate = path.resolve(dir, src)
+    let candidate = path.resolve(dir, src)
     // Refuse anything that escapes the loop directory.
-    if (!candidate.startsWith(path.resolve(dir) + path.sep)) {
-      unresolved.push(src)
-      continue
-    }
-    if (!fs.existsSync(candidate)) {
-      unresolved.push(src)
-      continue
+    if (candidate.startsWith(path.resolve(dir) + path.sep) && fs.existsSync(candidate)) {
+      // Exact path: the happy path.
+    } else {
+      const byName = available.find((file) => path.basename(file) === path.basename(src));
+      if (byName) {
+        // The model moved the file (images/hero.png -> assets/hero.png) but the
+        // bytes are the ones we generated, so it is still ours to inline.
+        candidate = byName;
+      } else {
+        // The model invented a name for a picture it cannot see
+        // (assets/data-center-cern.jpg). In a single-file page that reference is
+        // broken whatever we do, so give it a real generated image rather than
+        // leaving a hole — and record the substitution, because a silent swap is
+        // how a page ends up claiming a photograph it does not have.
+        const donor = available.length > 0 ? available[inlined.length % available.length] : undefined;
+        if (donor) {
+          const bytes = Buffer.from(fs.readFileSync(donor));
+          if (bytes.byteLength > 0 && bytes.byteLength <= maxBytes) {
+            const mime = IMAGE_MIME[path.extname(donor).toLowerCase()] ?? 'image/png';
+            out = out.split(`${quote}${src}${quote}`).join(`${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`);
+            substituted.push(`${src} <- ${path.basename(donor)}`);
+            continue;
+          }
+        }
+        unresolved.push(src);
+        continue;
+      }
     }
     const bytes = fs.readFileSync(candidate)
     if (bytes.byteLength > maxBytes) {
@@ -149,7 +177,7 @@ export function inlineLocalImages(
     inlined.push(src)
   }
 
-  return { html: out, inlined, unresolved, skippedTooLarge }
+  return { html: out, inlined, unresolved, substituted, skippedTooLarge }
 }
 
 /** Run a command and capture stdout, without throwing on a non-zero exit. */
@@ -489,6 +517,30 @@ async function sourceBrandAsset(request: ImageRequest, sources: ImageSources): P
   const target = path.join(sources.into, `${path.basename(request.fileName, path.extname(request.fileName))}${ext}`)
   fs.writeFileSync(target, bytes)
   return { ...request, path: target, bytes: bytes.byteLength, source: 'brandbrain', page: asset.page }
+}
+
+
+/** MIME types for images we inline. */
+const IMAGE_MIME: Record<string, string> = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.gif': 'image/gif',
+  '.avif': 'image/avif',
+  '.svg': 'image/svg+xml',
+}
+
+/** Image files anywhere under a loop directory. */
+function collectImageFiles(dir: string, depth = 0): string[] {
+  if (depth > 2 || !fs.existsSync(dir)) return [];
+  const out: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...collectImageFiles(full, depth + 1));
+    else if (IMAGE_MIME[path.extname(entry.name).toLowerCase()]) out.push(full);
+  }
+  return out;
 }
 
 /**

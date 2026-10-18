@@ -316,6 +316,7 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
       fs.writeFileSync(artifactPath, artifact, 'utf8')
       console.log(
         `[loops] loop ${String(loop)}: inlined ${String(inlined.inlined.length)} image(s)` +
+          (inlined.substituted.length > 0 ? `, ${String(inlined.substituted.length)} substituted` : '') +
           (inlined.unresolved.length > 0 ? `, ${String(inlined.unresolved.length)} unresolved` : '')
       )
     }

@@ -309,7 +309,24 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     timeoutMs: args.timeoutMs,
   }
   const started = Date.now()
-  const generation = await runOpencodeArtifact(options)
+  // One generation takes 10-16 minutes routinely, and the cap is not much above
+  // that. A run that dies because one attempt landed slow throws away every loop
+  // before it, so a timeout gets one more go — and only a timeout, because a
+  // model that answered with a real failure would just burn the same wait twice.
+  let generation = await runOpencodeArtifact(options)
+  if (!generation.ok && /timed out|timeout/i.test(generation.error ?? '')) {
+    console.warn(`[loops] loop ${String(loop)}: timed out, retrying once`)
+    const retried = await runOpencodeArtifact(options)
+    generation = {
+      ...retried,
+      tokensOut: generation.tokensOut + retried.tokensOut,
+      runtimeMs: generation.runtimeMs + retried.runtimeMs,
+      // Both attempts failed if the second did; say so rather than blaming the
+      // retry for the first one's timeout.
+      error: retried.ok ? undefined : retried.error,
+    }
+    if (generation.ok) console.log(`[loops] loop ${String(loop)}: retry produced the page`)
+  }
   const report: LoopReport = { measurements: [], findings: [] }
 
   if (!generation.ok) {
@@ -318,7 +335,12 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     manifest.loops.push(report)
     fs.writeFileSync(path.join(loopDir, 'report.json'), JSON.stringify(report, null, 2))
     console.error(`[loops] loop ${String(loop)}: FAILED — ${generation.error}`)
-    break
+    // Nothing to reflect on yet if the first loop died. After that the last good
+    // page is still in hand, and one lost round is no reason to throw away the
+    // rest — but the failed report must not become the previous report, or the
+    // next prompt inherits a failure as if it were a finding about the page.
+    if (loop === 1) break
+    continue
   }
 
   artifact = generation.artifact
@@ -523,7 +545,8 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     console.log(`[loops] stopping: ${progress.reason}`)
     break
   }
-  previousReport = report
+  // Only a loop that produced a page can be the basis for the next one.
+  if (!report.error) previousReport = report
 }
 
 const scores = manifest.loops.map((l) => l.rubricScore).filter((s): s is number => s !== undefined)

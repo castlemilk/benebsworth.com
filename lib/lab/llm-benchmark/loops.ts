@@ -53,6 +53,19 @@ export interface LoopReport {
   costUsd?: number;
   /** Where each picture came from, so a stock fallback is visible in the record. */
   imageSources?: string[];
+  /**
+   * The pictures this loop was given, in full: what was asked for, where it came
+   * from, how big it landed and how long it took. A record that only says
+   * "hero.jpg: comfy" cannot answer whether the generation was worth its 72
+   * seconds, or whether the picture on the page is the one that was asked for.
+   */
+  images?: {
+    file: string;
+    source: string;
+    subject: string;
+    bytes: number;
+    ms: number;
+  }[];
   error?: string;
 }
 

@@ -457,8 +457,10 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
       { fileName: 'detail.jpg', role: 'detail' as const, subject: subjects?.detail },
     ]
     const sourced: { fileName: string; credit?: string; description?: string }[] = []
+    const loopImages: NonNullable<LoopReport['images']> = []
     for (const request of wanted) {
       const subject = request.subject ?? `${fallback} ${request.role === 'hero' ? 'wide establishing view' : 'close-up detail'}`
+      const startedAt = Date.now()
       const result = await sourceImage(
         { query: imagePrompt(request.role, subject, subjects?.palette), fileName: request.fileName },
         {
@@ -485,7 +487,14 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
         const name = path.basename(result.image.path)
         imageDescriptions[name] = subject
         sourced.push({ fileName: name, description: subject, credit: result.image.credit })
-        imageCredits.push(`${path.basename(result.image.path)}: ${result.image.source}`)
+        imageCredits.push(`${name}: ${result.image.source}`)
+        loopImages.push({
+          file: name,
+          source: result.image.source,
+          subject,
+          bytes: result.image.bytes,
+          ms: Date.now() - startedAt,
+        })
         console.log(
           `[loops] loop ${String(loop)}: sourced ${path.basename(result.image.path)} from ${result.image.source}`
         )
@@ -498,6 +507,16 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
       }
     }
     imageBriefText = imageBrief(sourced)
+
+    // The manifest and the loop's own report were written before this ran, so
+    // the provenance set here landed in neither. A run record that cannot say
+    // where its pictures came from is a run record that cannot be audited.
+    if (loopImages.length > 0) {
+      report.images = loopImages
+      report.imageSources = [...new Set(imageCredits)]
+      fs.writeFileSync(path.join(loopDir, 'report.json'), JSON.stringify(report, null, 2))
+      fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2))
+    }
   }
 
   if (loop > 1 && progress.improving === false && args.stopWhenStuck) {
@@ -509,4 +528,38 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
 
 const scores = manifest.loops.map((l) => l.rubricScore).filter((s): s is number => s !== undefined)
 console.log(`[loops] done. rubric across loops: ${scores.join(' → ')}`)
+
+// An index of every run under the review surface, so the page can offer them
+// all instead of one hardcoded directory that goes stale the moment a new run
+// starts. Written from the manifests on disk rather than from this run's memory,
+// because the point is to describe runs that are not this one.
+{
+  const runsDir = path.dirname(outDir)
+  const indexPath = path.join(runsDir, 'index.json')
+  const existing = fs.existsSync(indexPath)
+    ? (JSON.parse(fs.readFileSync(indexPath, 'utf8')) as { runs?: unknown[] })
+    : { runs: [] }
+  const runs = (existing.runs ?? []).filter((entry) => (entry as { dir?: string }).dir !== path.basename(outDir))
+  const finished = fs.readFileSync(path.join(outDir, 'manifest.json'), 'utf8')
+  const parsed = JSON.parse(finished) as { model?: string; task?: string; skills?: string[]; loops?: LoopReport[] }
+  runs.unshift({
+    dir: path.basename(outDir),
+    model: parsed.model ?? args.model,
+    task: parsed.task ?? args.task,
+    skills: parsed.skills ?? args.skills,
+    startedAt: fs.statSync(outDir).birthtime.toISOString(),
+    loops: (parsed.loops ?? []).map((l, i) => ({
+      loop: i + 1,
+      rubricScore: l.rubricScore ?? null,
+      fails: (l.findings ?? []).filter((f) => f.level === 'FAIL').length,
+      tokensOut: l.tokensOut ?? null,
+      runtimeMs: l.runtimeMs ?? null,
+      images: l.images ?? [],
+      error: l.error ?? null,
+    })),
+  })
+  fs.writeFileSync(indexPath, JSON.stringify({ runs }, null, 2))
+  console.log(`[loops] indexed ${String(runs.length)} run(s) at ${path.relative(process.cwd(), indexPath)}`)
+}
+
 process.exit(0)

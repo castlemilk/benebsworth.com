@@ -52,8 +52,12 @@
         <em>and</em> extend what is thin. Pick a loop to read it full screen.
       </p>
       <div class="toolbar">
+        <label class="hint" for="run" style="display:flex;gap:8px;align-items:center">
+          Run
+          <select id="run" style="background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:inherit"></select>
+        </label>
         <button id="compare">Compare 1 · 3 · 5</button>
-        <span class="hint">Every row opens full screen. <code>Esc</code> closes.</span>
+        <span class="hint">Every row opens full screen. <code>Esc</code> closes. Showing <b id="runLabel">—</b></span>
       </div>
     </header>
 
@@ -68,12 +72,24 @@
     </div>
 
     <script>
-      // Rows come from the run's manifest, and nowhere else. A review surface
+      // Rows come from a run's manifest, and nowhere else. A review surface
       // that shows numbers it does not have is worse than one that shows none:
       // a placeholder 65 reads as a result to anyone who did not write it.
+      //
+      // The run is chosen from index.json, which the loop writes when it ends.
+      // It used to be one hardcoded directory, which meant this page showed the
+      // last run someone remembered to point it at, and silently nothing after.
       const PLANNED = 5;
-      const RUN = 'loops/latest';
-      const state = { rows: [], loaded: false, planned: PLANNED };
+      const state = { rows: [], loaded: false, planned: PLANNED, run: 'latest', runs: [] };
+
+      function paintRuns() {
+        const select = document.getElementById('run');
+        if (!select) return;
+        select.innerHTML = state.runs
+          .map((r) => `<option value="${r.dir}">${r.dir} — ${r.model}</option>`)
+          .join('');
+        if (state.runs.some((r) => r.dir === state.run)) select.value = state.run;
+      }
 
       function fmtTokens(n) {
         if (n == null) return '—';
@@ -122,6 +138,10 @@
                   <span>runtime <b>${fmtRuntime(r.runtimeMs)}</b></span>
                   ${r.intent ? `<span class="defects">${r.intent}</span>` : ''}
                   ${r.error ? `<span class="defects" style="color:#f08c8c">${r.error}</span>` : ''}
+                  ${r.images && r.images.length > 0
+                    ? `<span class="defects" title="${r.images.map((im) => `${im.file} — ${im.subject}`).join(' | ')}">` +
+                      `${String(r.images.length)} generated image${r.images.length === 1 ? '' : 's'}</span>`
+                    : ''}
                   <span class="bar"><i style="width:${String(r.rubricScore ?? 0)}%"></i></span>
                   <button data-loop="${String(r.loop)}">Full screen</button>
                 </div>
@@ -136,7 +156,7 @@
       function open(loop) {
         const frame = document.getElementById('frame');
         document.getElementById('frameTitle').textContent = `Loop ${String(loop)}`;
-        document.getElementById('frameBody').setAttribute('src', `${RUN}/loop-${String(loop)}/artifact.html`);
+        document.getElementById('frameBody').setAttribute('src', `loops/${state.run}/loop-${String(loop)}/artifact.html`);
         frame.classList.add('open');
       }
 
@@ -154,8 +174,9 @@
       };
 
       async function load() {
+        const run = state.run;
         try {
-          const res = await fetch(`${RUN}/manifest.json`);
+          const res = await fetch(`loops/${run}/manifest.json`);
           if (!res.ok) return;
           const manifest = await res.json();
           state.planned = Math.max(state.planned, (manifest.loops || []).length);
@@ -166,6 +187,7 @@
             fails: (l.findings || []).filter((f) => f.level === 'FAIL').length,
             tokensOut: l.tokensOut ?? null,
             runtimeMs: l.runtimeMs ?? null,
+            images: l.images ?? [],
             intent: i === 0 ? 'generated from the brief' : 'reflected on the previous page',
             error: l.error ?? '',
           }));
@@ -175,8 +197,30 @@
         paint();
       }
 
+      async function loadIndex() {
+        try {
+          const res = await fetch('loops/index.json');
+          if (res.ok) {
+            const index = await res.json();
+            state.runs = index.runs || [];
+            state.run = state.runs[0]?.dir ?? 'latest';
+            document.getElementById('runLabel').textContent = state.run;
+          }
+        } catch {
+          state.runs = [];
+        }
+        paintRuns();
+        await load();
+      }
+
+      document.getElementById('run').onchange = async (e) => {
+        state.run = e.target.value;
+        document.getElementById('runLabel').textContent = state.run;
+        await load();
+      };
+
       paint();
-      load();
+      loadIndex();
     </script>
   </body>
 </html>

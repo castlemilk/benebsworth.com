@@ -1,0 +1,75 @@
+{
+  "runs": [
+    {
+      "dir": "run-0313",
+      "model": "glm-5.3-coding-plan",
+      "task": "landing-page-morph",
+      "skills": [
+        "frontend-design",
+        "high-end-visual-design",
+        "minimalist-ui"
+      ],
+      "startedAt": "2026-10-18T16:13:05.938Z",
+      "loops": [
+        {
+          "loop": 1,
+          "rubricScore": 62,
+          "fails": 3,
+          "tokensOut": 9073,
+          "runtimeMs": 965241,
+          "images": [],
+          "error": null
+        },
+        {
+          "loop": 2,
+          "rubricScore": 62,
+          "fails": 5,
+          "tokensOut": 12366,
+          "runtimeMs": 894008,
+          "images": [],
+          "error": null
+        }
+      ]
+    },
+    {
+      "dir": "run-1921",
+      "model": "glm-5.3-coding-plan",
+      "task": "landing-page-morph",
+      "skills": [
+        "frontend-design",
+        "high-end-visual-design",
+        "minimalist-ui"
+      ],
+      "startedAt": "2026-10-18T08:21:52.462Z",
+      "loops": [
+        {
+          "loop": 1,
+          "rubricScore": 96,
+          "fails": 12,
+          "tokensOut": 12618,
+          "runtimeMs": 617971,
+          "images": [],
+          "error": null
+        },
+        {
+          "loop": 2,
+          "rubricScore": 62,
+          "fails": 6,
+          "tokensOut": 13241,
+          "runtimeMs": 755548,
+          "images": [],
+          "error": null
+        },
+        {
+          "loop": 3,
+          "rubricScore": 62,
+          "fails": 3,
+          "tokensOut": 15401,
+          "runtimeMs": 656910,
+          "images": [],
+          "error": null
+        }
+      ]
+    }
+  ]
+}

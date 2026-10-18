@@ -787,6 +787,29 @@ export function imageBrief(files: { fileName: string; credit?: string; descripti
  *
  * Cheap on purpose: one short call, no artefact, no skills.
  */
+/**
+ * The page as prose, for anything that has to understand what it is about.
+ *
+ * Raw HTML is the wrong input twice over. Once a loop injects Gamma's
+ * stylesheet, the first slice of the file is thousands of characters of CSS, so
+ * the model reads type tokens instead of a page. Once images are inlined, it is
+ * megabytes of base64 — the planner was being handed a photograph as text and
+ * answering about nothing. Style and script go, tags go, and what is left is
+ * what a person would read.
+ */
+export function pageProse(html: string, maxChars = 6_000): string {
+  const text = html
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<svg\b[\s\S]*?<\/svg>/gi, ' ')
+    .replace(/data:image\/[a-z+]+;base64,[a-z0-9+/=]+/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z#0-9]+;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text.length > maxChars ? `${text.slice(0, maxChars)}…` : text
+}
+
 export async function planImageSubjects(
   html: string,
   ask: (prompt: string) => Promise<string>
@@ -814,7 +837,9 @@ export async function planImageSubjects(
     '  the page describes, never the name it goes by.',
     '',
     '---',
-    html.slice(0, 24_000),
+    'The page, as text:',
+    '',
+    pageProse(html),
   ].join('\n')
 
   try {

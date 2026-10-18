@@ -173,6 +173,22 @@ describe('imagePrompt', () => {
 describe('planImageSubjects', () => {
   const page = '<h1>Every pull request, running in seconds.</h1>'
 
+  it('reads the page as prose, not as markup', async () => {
+    // The page the loop actually passes in: an injected stylesheet up front and
+    // a megabyte of base64 where the pictures are. Sliced raw, the model reads
+    // CSS and base64 and answers about nothing — which is exactly what happened.
+    const noisy = `<html><head><style>${'a{color:red}'.repeat(2000)}</style></head><body><h1>Preview environments</h1><img src="data:image/png;base64,${'QUJD'.repeat(20_000)}"><p>Ephemeral, per-branch.</p></body></html>`
+    let sent = ''
+    await planImageSubjects(noisy, async (prompt) => {
+      sent = prompt
+      return '{"hero":"a container yard at dusk","detail":"steel rails under rain"}'
+    })
+    expect(sent).toContain('Preview environments')
+    expect(sent).toContain('Ephemeral, per-branch.')
+    expect(sent).not.toContain('base64')
+    expect(sent).not.toContain('color:red')
+  })
+
   it('takes the subjects and the palette from the model that wrote the page', async () => {
     const asked = await planImageSubjects(
       page,

@@ -194,8 +194,19 @@ const nBodyChecks: CheckFn[] = [
 ]
 
 /**
- * landing-page-morph: a rendered animated landing page. Check that the DOM
- * has heading/hero content and that the canvas/DOM is non-trivial.
+ * landing-page-morph: a rendered animated landing page.
+ *
+ * The DOM has heading/hero content, and the page actually moves.
+ *
+ * "Moves" used to mean "a <canvas> changed pixels". This task builds React and
+ * Tailwind markup and asks for theme-aware transitions; it never produces a
+ * canvas, so both captures were undefined, the diff was always zero, and every
+ * run scored 0 of 35 here — which, at more than half the behavioural weight, is
+ * why the rubric sat at 62 in every loop and no page could clear the capture
+ * gate's 90. The check measured motion through a medium the task does not use.
+ *
+ * It now measures motion where a landing page puts it: a running Web Animation,
+ * motion declared on real elements, or any visible change between two frames.
  */
 const landingPageChecks: CheckFn[] = [
   async (ctx) => {
@@ -216,18 +227,42 @@ const landingPageChecks: CheckFn[] = [
   async (ctx) => {
     const before = await ctx.captureCanvas('canvas').catch(() => undefined)
     const beforeBody = await ctx.page.evaluate(() => document.body.innerText?.length ?? 0)
+    // Motion on a DOM page: something is running now, or the stylesheet declares
+    // transitions or keyframes on real elements. `getAnimations()` counts what a
+    // browser is actually animating, including CSS transitions triggered by the
+    // page's own script; the declared count catches entrance animations that
+    // have not fired yet, which is most of what a landing page does.
+    const motion = await ctx.page.evaluate(() => {
+      const animations = typeof document.getAnimations === 'function' ? document.getAnimations() : []
+      const running = animations.filter((a) => a.playState === 'running').length
+      let declared = 0
+      const elements = document.querySelectorAll('body *')
+      for (let i = 0; i < elements.length && declared < 3; i += 1) {
+        const style = getComputedStyle(elements[i] as Element)
+        const durations = (style.transitionDuration || '').split(',')
+        const animated = style.animationName !== 'none' || durations.some((d) => parseFloat(d) > 0)
+        if (animated) declared += 1
+      }
+      return { running, declared, keyframes: declared }
+    })
     await ctx.page.waitForTimeout(1000)
     const afterBody = await ctx.page.evaluate(() => document.body.innerText?.length ?? 0)
     const after = await ctx.captureCanvas('canvas').catch(() => undefined)
     let diff = 0
     if (before && after) diff = pixelDiffScore(before.data, after.data)
-    const changed = diff > 0.005 || afterBody !== beforeBody
+    // Motion has to be a property of the page, not of one decorative element:
+    // a lone pulsing dot scores 35 of 65 behavioural points otherwise, and this
+    // task is about transitions across a page, not an animation somewhere in it.
+    const moving = motion.declared >= 3 || motion.running >= 2
+    const changed = diff > 0.005 || afterBody !== beforeBody || moving
     return {
       name: 'landing-animates',
       passed: changed,
       points: changed ? 35 : 0,
       maxPoints: 35,
-      detail: `pixel diff=${(diff * 100).toFixed(1)}% bodyTextLen before=${beforeBody} after=${afterBody}`,
+      detail:
+        `pixelDiff=${(diff * 100).toFixed(1)}% running=${String(motion.running)} ` +
+        `declaredMotion=${String(motion.declared)} bodyText ${String(beforeBody)}→${String(afterBody)}`,
     }
   },
 ]

@@ -31,6 +31,18 @@ describe('inlineLocalImages', () => {
     expect(result.unresolved).toEqual([])
   })
 
+  it('leaves a tag that a browser will actually load', () => {
+    // The bytes being present is not the same as the attribute being intact. A
+    // rewrite that dropped `src=` produced `<img "data:...">` — every counter
+    // said three images inlined, and the page showed three alt texts instead.
+    const dir = tmpDir({ 'images/hero.jpg': 'JPEGDATA' })
+    const result = inlineLocalImages('<img src="images/hero.jpg" alt="A hero">', dir)
+
+    expect(result.html).toContain('src="data:image/jpeg;base64,')
+    expect(result.html).not.toMatch(/<img\s+"/)
+    expect(result.html).not.toMatch(/<img(?![^>]*\ssrc=)[^>]*>/)
+  })
+
   it('reports a reference that resolves to nothing instead of shipping it', () => {
     const dir = tmpDir({})
     const result = inlineLocalImages('<img src="images/missing.jpg">', dir)
@@ -109,6 +121,7 @@ describe('inlineLocalImages', () => {
       descriptions: { 'hero.jpg': 'a data centre aisle at night under amber lights' },
     })
     expect(result.substituted).toHaveLength(1)
+    expect(result.html).toContain('src="data:image/jpeg;base64,')
     expect(result.html).toContain('alt="a data centre aisle at night under amber lights"')
     expect(result.html).not.toContain('CERN')
   })

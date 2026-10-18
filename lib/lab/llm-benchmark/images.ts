@@ -185,7 +185,11 @@ export function inlineLocalImages(
             edits.push({
               start: match.index,
               end: match.index + match[0].length,
-              text: `${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`,
+              // The whole `src="..."` match is replaced, so the attribute name
+              // has to go back in: dropping it leaves `<img "data:...">`, which
+              // is a tag with a picture in it and no source, and every counter
+              // in this module still reports a success.
+              text: `src=${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`,
             })
             // The alt on this tag describes a picture that does not exist — the
             // model wrote it for the name it invented. We now know what the
@@ -217,7 +221,7 @@ export function inlineLocalImages(
     edits.push({
       start: match.index,
       end: match.index + match[0].length,
-      text: `${quote}${dataUri}${quote}`,
+      text: `src=${quote}${dataUri}${quote}`,
     })
     inlined.push(src)
   }

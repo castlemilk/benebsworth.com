@@ -3,7 +3,7 @@ import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { fetchBrandMark, guessBrand } from './brandbrain'
 import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
-import { generateWithComfy } from './comfy'
+import { DEFAULT_COMFY_URL, generateWithComfy } from './comfy'
 import { generateWithMlx } from './mlx'
 
 /**
@@ -76,7 +76,9 @@ export interface ImageSources {
   /**
    * A ComfyUI server — Comfy Desktop's backend — driven over its HTTP API: the
    * UI-backed route, so generation is a service the harness orchestrates (queue,
-   * poll, fetch) rather than a CLI it spawns per image.
+   * poll, fetch) rather than a CLI it spawns per image. Defaults to Desktop's
+   * port, so the rung is live without configuration on this machine; an
+   * unreachable server falls through to mflux rather than failing the loop.
    */
   comfyUrl?: string
   comfySteps?: number
@@ -392,10 +394,13 @@ export async function sourceImage(
 ): Promise<{ image?: SourcedImage; attempted: string[]; reason?: string }> {
   const attempted: string[] = []
 
-  if (sources.comfyUrl) {
+  // Default to Comfy Desktop's backend: it is the route with a UI behind it, so
+  // a person can watch, steer and re-run a generation.
+  const comfyUrl = sources.comfyUrl ?? DEFAULT_COMFY_URL
+  {
     attempted.push('comfy')
     const generated = await generateWithComfy({
-      url: sources.comfyUrl,
+      url: comfyUrl,
       prompt: request.query,
       outPath: path.join(sources.into, path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, '') + '.png'),
       steps: sources.comfySteps,

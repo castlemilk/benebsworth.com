@@ -21,7 +21,14 @@ import { spawn } from 'node:child_process'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from '../lib/lab/llm-benchmark/registry.js'
 import { scoreWithBreakdown } from '../lib/lab/llm-benchmark/scorers/behavioral.js'
 import { buildSkillBlock } from '../lib/lab/llm-benchmark/skills-context.js'
-import { imageBrief, inlineLocalImages, queryFromArtifact, sourceImage } from '../lib/lab/llm-benchmark/images.js'
+import {
+  imageBrief,
+  imagePrompt,
+  inlineLocalImages,
+  planImageSubjects,
+  queryFromArtifact,
+  sourceImage,
+} from '../lib/lab/llm-benchmark/images.js'
 import { fetchGammaAssets, gammaBrief, gammaStylesheet, type GammaAssets } from '../lib/lab/llm-benchmark/gamma.js'
 import { buildLoopPrompt, loopProgress, type LoopReport } from '../lib/lab/llm-benchmark/loops.js'
 import { runOpencodeArtifact, type OpencodeLoopOptions } from '../lib/lab/llm-benchmark/runners/opencode-loops.js'
@@ -380,17 +387,38 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   // round: the reflection is the only place a model can be told what it had to
   // work with, and a rule finding on its own ("0 pictures") is not a brief.
   if (args.images && report.findings.some((f) => f.id === 'few-pictures')) {
-    const query = queryFromArtifact(artifact)
+    // Into `images/`, because that is the path the brief hands the model. The
+    // brief used to say `images/` while the files landed in the loop root, so
+    // the only path the model was ever given was a lie, and it wrote its own.
+    const imageDir = path.join(loopDir, 'images')
+
+    // The model knows what it built; keyword extraction does not. Asking it what
+    // to photograph costs one short call and is the difference between a
+    // photograph of this page and a photograph of a suspension bridge.
+    const subjects = await planImageSubjects(artifact, async (prompt) => {
+      const asked = await runOpencodeArtifact({
+        model: args.model,
+        prompt,
+        artifactPath: path.join(loopDir, 'image-plan.txt'),
+        timeoutMs: Math.min(args.timeoutMs, 240_000),
+      })
+      return asked.artifact
+    })
+    if (subjects) console.log(`[loops] loop ${loop}: image subjects: ${subjects.hero} / ${subjects.detail}`)
+    else console.warn(`[loops] loop ${loop}: no image subjects from the model; falling back to page keywords`)
+
+    const fallback = queryFromArtifact(artifact)
     const wanted = [
-      { fileName: 'hero.jpg', query: `${query} instrument` },
-      { fileName: 'detail.jpg', query: `${query} close-up` },
+      { fileName: 'hero.jpg', role: 'hero' as const, subject: subjects?.hero },
+      { fileName: 'detail.jpg', role: 'detail' as const, subject: subjects?.detail },
     ]
-    const sourced: { fileName: string; credit?: string }[] = []
+    const sourced: { fileName: string; credit?: string; description?: string }[] = []
     for (const request of wanted) {
+      const subject = request.subject ?? `${fallback} ${request.role === 'hero' ? 'wide establishing view' : 'close-up detail'}`
       const result = await sourceImage(
-        { query: request.query, fileName: request.fileName },
+        { query: imagePrompt(request.role, subject), fileName: request.fileName },
         {
-          into: loopDir,
+          into: imageDir,
           assetsScript: args.assetsScript,
           openrouterKey: openrouterKey(),
           imageModel: 'google/gemini-3.1-flash-lite-image',
@@ -410,14 +438,18 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
         }
       )
       if (result.image) {
-        sourced.push({ fileName: path.basename(result.image.path), credit: result.image.credit })
+        sourced.push({
+          fileName: path.basename(result.image.path),
+          description: subject,
+          credit: result.image.credit,
+        })
         imageCredits.push(`${path.basename(result.image.path)}: ${result.image.source}`)
         console.log(
           `[loops] loop ${String(loop)}: sourced ${path.basename(result.image.path)} from ${result.image.source}`
         )
       } else {
         console.warn(
-          `[loops] loop ${String(loop)}: no image for "${request.query}" (tried ${result.attempted.join(', ')}${
+          `[loops] loop ${String(loop)}: no image for "${subject}" (tried ${result.attempted.join(', ')}${
             result.reason ? `, ${result.reason}` : ''
           })`
         )

@@ -689,18 +689,102 @@ function stripTags(html: string): string {
 }
 
 /** The note handed to the model so it composes the pictures it is given. */
-export function imageBrief(files: { fileName: string; credit?: string }[]): string {
+export function imageBrief(files: { fileName: string; credit?: string; description?: string }[]): string {
   if (files.length === 0) return ''
-  const lines = files.map((f) => `- images/${f.fileName}${f.credit ? ` — ${f.credit}` : ''}`)
+  const lines = files.map((f) => {
+    const detail = [f.description, f.credit].filter(Boolean).join(' — ')
+    return `- images/${f.fileName}${detail ? ` — ${detail}` : ''}`
+  })
   return [
     '## Pictures are available',
     'These files sit next to this page in the `images/` folder. Reference them with a',
     'relative path, exactly as named, in a real `<img src="...">`:',
     ...lines,
     '',
-    'Choose one that belongs to what the page is about, give it a real `alt` describing',
-    'it, and let it carry the composition rather than sit in a grid of equal boxes. The',
-    'delivered file is inlined for you — a path that does not resolve is worse than no',
-    'picture at all.',
+    'Use these paths verbatim. Do not invent a filename, and do not reference any image',
+    'that is not on this list — a made-up path ships as a broken picture.',
+    '',
+    'The description after each file says what that photograph actually shows. Write the',
+    '`alt` from that description, not from what you imagine the picture contains, and do',
+    'not caption it with specifics it cannot support — a real photograph of a real thing,',
+    'described honestly, beats a caption claiming a location you never had a picture of.',
+    '',
+    'Choose one that belongs to what the page is about and let it carry the composition',
+    'rather than sit in a grid of equal boxes. The delivered file is inlined for you.',
   ].join('\n')
+}
+
+/**
+ * Ask the model what a photograph of its own page should show.
+ *
+ * Keyword extraction produces exactly the wrong input for an image model: the
+ * Meridian page yielded "every pull request running in seconds meridian", and the
+ * generator answered with a suspension bridge. The model knows what it built and
+ * what it is trying to sell; it does not know it is about to be asked for a
+ * photograph. This gives it that instruction in words, and it returns the subject
+ * rather than a bag of words.
+ *
+ * Cheap on purpose: one short call, no artefact, no skills.
+ */
+export async function planImageSubjects(
+  html: string,
+  ask: (prompt: string) => Promise<string>
+): Promise<{ hero: string; detail: string } | undefined> {
+  const prompt = [
+    'Read this page and name two photographs that would belong on it.',
+    '',
+    'Reply with JSON only, no prose and no code fence:',
+    '{"hero": "<one sentence, 8-20 words>", "detail": "<one sentence, 8-20 words>"}',
+    '',
+    'Rules for the two sentences:',
+    '- Name something a camera could actually photograph, with a material and a setting.',
+    '  "a shipping container yard at dusk under sodium lamps", not "speed" or "scale".',
+    '- They must be different from each other, and different in kind: one wide and',
+    '  establishing, one close and specific.',
+    '- No text, signage, screens or whiteboards in either. The camera cannot read them.',
+    '- Do not invent a customer, a person, a city or a product that the page does not',
+    '  describe. Nothing may claim to be somewhere it is not.',
+    '- Do not take the product or company name as a place, a person or an object. A',
+    '  product called Meridian is about whatever the page says it does, not about a',
+    '  meridian line, an observatory or anywhere in Greenwich. Photograph the work',
+    '  the page describes, never the name it goes by.',
+    '',
+    '---',
+    html.slice(0, 24_000),
+  ].join('\n')
+
+  try {
+    const raw = await ask(prompt)
+    const json = /\{[\s\S]*\}/.exec(raw)?.[0]
+    if (!json) return undefined
+    const parsed = JSON.parse(json) as { hero?: unknown; detail?: unknown }
+    const hero = typeof parsed.hero === 'string' ? parsed.hero.trim() : ''
+    const detail = typeof parsed.detail === 'string' ? parsed.detail.trim() : ''
+    if (hero.length < 8 || detail.length < 8) return undefined
+    return { hero, detail }
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Turn a subject sentence into a photographic prompt.
+ *
+ * Qwen-Image follows a described scene far better than a keyword list: it needs
+ * the light, the lens and the framing to know what kind of picture is being asked
+ * for. The negative half is not decoration — an unsuppressed prompt reliably
+ * produces garbled lettering on a screen or a sign, which is what a page about
+ * software should never show.
+ */
+export function imagePrompt(role: 'hero' | 'detail', subject: string): string {
+  const framing =
+    role === 'hero'
+      ? 'Wide establishing composition, 35mm, the subject placed off-centre with room to breathe, deep focus'
+      : 'Tight close-up, 85mm, shallow depth of field, the material and its texture filling the frame'
+  return [
+    subject.replace(/\s+/g, ' ').replace(/[.;]+$/, '') + '.',
+    'Photographic, natural light, honest colour, fine detail, muted palette.',
+    framing + '.',
+    'No text or lettering anywhere in frame, no signage, no screens, no watermark, no logo.',
+  ].join(' ')
 }

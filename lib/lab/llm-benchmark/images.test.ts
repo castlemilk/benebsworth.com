@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { imageBrief, inlineLocalImages, queryFromArtifact } from './images.js'
+import { imageBrief, imagePrompt, inlineLocalImages, planImageSubjects, queryFromArtifact } from './images.js'
 
 /**
  * The inliner is the half that cannot be faked: the task ships one
@@ -98,6 +98,52 @@ describe('inlineLocalImages', () => {
   })
 })
 
+describe('imageBrief', () => {
+  it('states the path and what each photograph actually shows', () => {
+    // The brief used to promise `images/hero.jpg` while the file landed in the
+    // loop root, and it told the model to write alt text for a picture it had
+    // never seen. Both are how alt text ends up describing a CERN data centre
+    // over a photograph of a bridge.
+    const brief = imageBrief([{ fileName: 'hero.jpg', description: 'a shipping container yard at dusk under sodium lamps' }])
+    expect(brief).toContain('images/hero.jpg')
+    expect(brief).toContain('a shipping container yard at dusk under sodium lamps')
+    expect(brief).toMatch(/do not reference any image/)
+  })
+})
+
+describe('imagePrompt', () => {
+  it('asks for a photograph with light, lens and framing, and forbids lettering', () => {
+    const prompt = imagePrompt('hero', 'a shipping container yard at dusk under sodium lamps')
+    expect(prompt).toContain('35mm')
+    expect(prompt).toMatch(/no text or lettering/i)
+    expect(prompt).toContain('a shipping container yard at dusk under sodium lamps')
+  })
+
+  it('frames the detail as a close-up rather than a second establishing shot', () => {
+    const prompt = imagePrompt('detail', 'a shipping container yard at dusk')
+    expect(prompt).toContain('85mm')
+    expect(prompt).toMatch(/close-up/i)
+  })
+})
+
+describe('planImageSubjects', () => {
+  const page = '<h1>Every pull request, running in seconds.</h1>'
+
+  it('takes the two subjects from the model that wrote the page', async () => {
+    const asked = await planImageSubjects(page, async () => 'Thinking… {"hero":"a container yard at dusk","detail":"corrugated steel under rain"}')
+    expect(asked).toEqual({ hero: 'a container yard at dusk', detail: 'corrugated steel under rain' })
+  })
+
+  it('returns nothing rather than guessing when the model does not answer with JSON', async () => {
+    expect(await planImageSubjects(page, async () => 'I would rather not.')).toBeUndefined()
+    expect(await planImageSubjects(page, async () => '{"hero":"x"}')).toBeUndefined()
+  })
+
+  it('never sends page content through a throwaway parse failure', async () => {
+    expect(await planImageSubjects(page, async () => '{')).toBeUndefined()
+  })
+})
+
 describe('queryFromArtifact', () => {
   it('takes its terms from what the page is about, not a mood word', () => {
     const html =
@@ -119,7 +165,7 @@ describe('imageBrief', () => {
     expect(brief).toContain('images/hero.jpg')
     expect(brief).toContain('Wikimedia, CC BY')
     expect(brief).toContain('alt')
-    expect(brief).toMatch(/worse than no/)
+    expect(brief).toMatch(/broken picture/)
   })
 
   it('is empty when there are no images', () => {

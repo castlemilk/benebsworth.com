@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { buildLoopPrompt, judgementProgress, loopProgress, type LoopReport } from './loops.js'
+import {
+  buildLoopPrompt,
+  defectCredit,
+  judgementProgress,
+  loopProgress,
+  type LoopRuleFinding,
+  type LoopReport,
+} from './loops.js'
 
 const BRIEF = 'Build a single-file React + Tailwind landing page with a hero, feature grid, pricing cards.'
 
@@ -168,5 +175,121 @@ describe('judgementProgress', () => {
   it('falls back to the named winner when no numeric rubric was used', () => {
     expect(judgementProgress({ winner: 'Page A' }, { winner: 'Page B' })).not.toBe('unknown');
     expect(judgementProgress({ winner: 'Page A' }, { winner: 'Page A' })).toBe('flat');
+  })
+})
+
+describe('defectCredit', () => {
+  const failing = (id: string): LoopRuleFinding => ({ id, level: 'FAIL', message: `${id} defect`, fix: 'fix it' })
+
+  it('counts a defect once per turn, not once per measurement', () => {
+    // TB-GAE's complaint: observations carry no decisions. One rule id reported
+    // at three widths is one defect, and must not outrank three real ones.
+    const noisy: LoopReport = {
+      measurements: [390, 768, 1440].map((width) => ({ width, summary: 'same page' })),
+      findings: [failing('eyebrow'), failing('eyebrow'), failing('eyebrow')],
+    }
+    const credits = defectCredit([noisy])
+    expect(credits).toHaveLength(1)
+    expect(credits[0]?.seenIn).toBe(1)
+  })
+
+  it('keeps full weight for a finding that survives every round', () => {
+    const history: LoopReport[] = [
+      { measurements: [], findings: [failing('eyebrow')] },
+      { measurements: [], findings: [failing('eyebrow')] },
+      { measurements: [], findings: [failing('eyebrow')] },
+    ]
+    const credits = defectCredit(history)
+    expect(credits[0]?.persistent).toBe(true)
+    expect(credits[0]?.seenIn).toBe(3)
+    expect(credits[0]?.weight).toBe(1)
+  })
+
+  it('decays a finding that has gone, across turns', () => {
+    const history: LoopReport[] = [
+      { measurements: [], findings: [failing('eyebrow')] },
+      { measurements: [], findings: [failing('eyebrow')] },
+      { measurements: [], findings: [] },
+    ]
+    const credits = defectCredit(history)
+    expect(credits[0]?.persistent).toBe(false)
+    expect(credits[0]?.weight).toBeLessThan(1)
+  })
+
+  it('orders persistent findings ahead of fresh ones', () => {
+    const history: LoopReport[] = [
+      { measurements: [], findings: [failing('eyebrow')] },
+      { measurements: [], findings: [failing('eyebrow'), failing('icon-cards')] },
+    ]
+    expect(defectCredit(history).map((c) => c.id)).toEqual(['eyebrow', 'icon-cards'])
+  })
+})
+
+describe('buildLoopPrompt with persistence', () => {
+  it('tells the model which finding has survived its own revisions', () => {
+    const stubborn = (id: string): LoopRuleFinding => ({ id, level: 'FAIL', message: `${id} defect` })
+    const history: LoopReport[] = [
+      { measurements: [], findings: [stubborn('eyebrow'), stubborn('icon-cards')] },
+      { measurements: [], findings: [stubborn('eyebrow')] },
+    ]
+    const plan = buildLoopPrompt({
+      loop: 3,
+      taskPrompt: BRIEF,
+      artifact: '<html></html>',
+      report: history[1] as LoopReport,
+      history,
+    })
+    expect(plan.prompt).toContain('still here after 2 revisions')
+    // Gone this round: kept in the record, but not presented as a live defect.
+    expect(plan.prompt).toContain('icon-cards defect')
+  })
+})
+
+describe('loopProgress with rewards', () => {
+  const withReward = (over: Partial<LoopReport> & { spr: number; strict?: boolean }): LoopReport => ({
+    measurements: [],
+    findings: [],
+    rubricScore: 62,
+    scorerVersion: 'v1',
+    reward: {
+      family: 'page',
+      passed: 30,
+      total: 65,
+      strict: over.strict,
+      strictEvaluated: over.strict !== undefined,
+      fdr: 0.5,
+      spr: over.spr,
+    },
+    ...stripReward(over),
+  })
+
+  function stripReward(over: { spr: number; strict?: boolean } & Partial<LoopReport>): Partial<LoopReport> {
+    const { spr: _spr, strict: _strict, ...rest } = over as Partial<LoopReport> & { spr: number; strict?: boolean }
+    return rest
+  }
+
+  it('calls clearing the gate an improvement even when nothing else moved', () => {
+    const progress = loopProgress(withReward({ spr: 0.9, strict: false }), withReward({ spr: 1.95, strict: true }))
+    expect(progress.improving).toBe(true)
+    expect(progress.reason).toContain('cleared the gate')
+  })
+
+  it('calls losing the gate a regression even when the rubric rose', () => {
+    const progress = loopProgress(
+      withReward({ spr: 1.95, strict: true, rubricScore: 62 }),
+      withReward({ spr: 1.6, strict: false, rubricScore: 90 })
+    )
+    expect(progress.regressed).toBe(true)
+    expect(progress.reason).toContain('lost the gate')
+  })
+
+  it('refuses to compare scores produced by different scoring versions', () => {
+    const before = withReward({ spr: 0.9, strict: false, scorerVersion: 'old' })
+    const after = withReward({ spr: 1.1, strict: false, scorerVersion: 'new' })
+    const progress = loopProgress(before, after)
+    // The movement is real in the numbers and not evidence of anything, so it is
+    // reported as no movement with the reason attached rather than as a gain.
+    expect(progress.improving).toBe(false)
+    expect(progress.reason).toContain('uncalibrated')
   })
 })

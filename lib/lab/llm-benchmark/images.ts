@@ -119,7 +119,10 @@ const MIME: Record<string, string> = {
 export function inlineLocalImages(
   html: string,
   dir: string,
-  { maxBytes = 900_000 }: { maxBytes?: number } = {}
+  {
+    maxBytes = 900_000,
+    descriptions = {},
+  }: { maxBytes?: number; descriptions?: Record<string, string> } = {}
 ): {
   html: string
   inlined: string[]
@@ -131,6 +134,9 @@ export function inlineLocalImages(
   const unresolved: string[] = []
   const substituted: string[] = []
   const skippedTooLarge: string[] = []
+  // Edits are collected as spans and applied last, so that rewriting a src and
+  // the alt beside it cannot invalidate the other's offsets.
+  const edits: { start: number; end: number; text: string }[] = []
   let out = html
   const available = collectImageFiles(dir)
   // Only images we can actually embed may stand in for a reference. A file over
@@ -153,12 +159,18 @@ export function inlineLocalImages(
       const byCompaction =
         compacted.startsWith(path.resolve(dir) + path.sep) && inlineable(compacted, maxBytes) ? compacted : undefined
       const byName = available.find((file) => path.basename(file) === path.basename(src))
+      // The model also renames the extension: it was told `images/hero.jpg` and
+      // wrote `images/hero.png`. Same picture, same stem — refusing it over a
+      // three-character difference is refusing to read the reference.
+      const byStem = available.find((file) => path.basename(file, path.extname(file)) === path.basename(src, path.extname(src)))
       if (byCompaction) {
         candidate = byCompaction
       } else if (byName && inlineable(byName, maxBytes)) {
         // The model moved the file (images/hero.png -> assets/hero.png) but the
         // bytes are the ones we generated, so it is still ours to inline.
         candidate = byName
+      } else if (byStem && inlineable(byStem, maxBytes)) {
+        candidate = byStem
       } else {
         // The model invented a name for a picture it cannot see
         // (assets/data-center-cern.jpg). In a single-file page that reference is
@@ -169,10 +181,21 @@ export function inlineLocalImages(
         if (donor) {
           const bytes = Buffer.from(fs.readFileSync(donor))
           if (bytes.byteLength > 0) {
-            const mime = IMAGE_MIME[path.extname(donor).toLowerCase()] ?? 'image/png';
-            out = out.split(`${quote}${src}${quote}`).join(`${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`);
-            substituted.push(`${src} <- ${path.basename(donor)}`);
-            continue;
+            const mime = IMAGE_MIME[path.extname(donor).toLowerCase()] ?? 'image/png'
+            edits.push({
+              start: match.index,
+              end: match.index + match[0].length,
+              text: `${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`,
+            })
+            // The alt on this tag describes a picture that does not exist — the
+            // model wrote it for the name it invented. We now know what the
+            // donor actually shows, so the caption follows the picture rather
+            // than the fantasy. Left alone, a page can claim a CERN data centre
+            // over a photograph of a bridge, which is worse than no caption.
+            const described = descriptions[path.basename(donor)]
+            if (described) rewriteAlt(html, match.index, edits, described)
+            substituted.push(`${src} <- ${path.basename(donor)}`)
+            continue
           }
         }
         // Nothing to stand in for it. Distinguish the two reasons a reference
@@ -191,8 +214,16 @@ export function inlineLocalImages(
     }
     const mime = MIME[path.extname(candidate).toLowerCase()] ?? 'application/octet-stream'
     const dataUri = `data:${mime};base64,${bytes.toString('base64')}`
-    out = out.split(`${quote}${src}${quote}`).join(`${quote}${dataUri}${quote}`)
+    edits.push({
+      start: match.index,
+      end: match.index + match[0].length,
+      text: `${quote}${dataUri}${quote}`,
+    })
     inlined.push(src)
+  }
+
+  for (const edit of edits.sort((a, b) => b.start - a.start)) {
+    out = out.slice(0, edit.start) + edit.text + out.slice(edit.end)
   }
 
   return { html: out, inlined, unresolved, substituted, skippedTooLarge }
@@ -563,6 +594,36 @@ async function sourceBrandAsset(request: ImageRequest, sources: ImageSources): P
 /** The inline budget for one embedded image, in bytes. */
 const INLINE_BUDGET = 900_000
 
+/**
+ * Point the alt text of the `<img>` around `index` at the picture that is
+ * actually there.
+ *
+ * Only called when the harness has just replaced the src with a real image, so
+ * this never overwrites alt text the model wrote about a file that resolved —
+ * those were written from the description in the brief and are as honest as the
+ * brief made them.
+ */
+function rewriteAlt(
+  html: string,
+  index: number,
+  edits: { start: number; end: number; text: string }[],
+  description: string
+): void {
+  const open = html.lastIndexOf('<img', index)
+  if (open < 0) return
+  const close = html.indexOf('>', index)
+  if (close < 0) return
+  const tag = html.slice(open, close + 1)
+  const escaped = description.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+  const existing = /\salt=(["'])([\s\S]*?)\1/i.exec(tag)
+  if (existing && existing.index !== undefined) {
+    const start = open + existing.index
+    edits.push({ start, end: start + existing[0].length, text: `alt="${escaped}"` })
+    return
+  }
+  edits.push({ start: close, end: close, text: ` alt="${escaped}"` })
+}
+
 /** JPEG encodings to try, widest first, when shrinking an image. */
 const COMPACT_STEPS: ReadonlyArray<readonly [number, number]> = [
   [1600, 84],
@@ -729,18 +790,21 @@ export function imageBrief(files: { fileName: string; credit?: string; descripti
 export async function planImageSubjects(
   html: string,
   ask: (prompt: string) => Promise<string>
-): Promise<{ hero: string; detail: string } | undefined> {
+): Promise<{ hero: string; detail: string; palette: string } | undefined> {
   const prompt = [
     'Read this page and name two photographs that would belong on it.',
     '',
     'Reply with JSON only, no prose and no code fence:',
-    '{"hero": "<one sentence, 8-20 words>", "detail": "<one sentence, 8-20 words>"}',
+    '{"hero": "<one sentence, 8-20 words>", "detail": "<one sentence, 8-20 words>",',
+    ' "palette": "<three or four colour words from this page\'s own palette>"}',
     '',
     'Rules for the two sentences:',
     '- Name something a camera could actually photograph, with a material and a setting.',
     '  "a shipping container yard at dusk under sodium lamps", not "speed" or "scale".',
     '- They must be different from each other, and different in kind: one wide and',
     '  establishing, one close and specific.',
+    '- For "palette", name the colours this page already uses, read off its own',
+    '  design — not colours that would suit a picture in the abstract.',
     '- No text, signage, screens or whiteboards in either. The camera cannot read them.',
     '- Do not invent a customer, a person, a city or a product that the page does not',
     '  describe. Nothing may claim to be somewhere it is not.',
@@ -757,11 +821,12 @@ export async function planImageSubjects(
     const raw = await ask(prompt)
     const json = /\{[\s\S]*\}/.exec(raw)?.[0]
     if (!json) return undefined
-    const parsed = JSON.parse(json) as { hero?: unknown; detail?: unknown }
+    const parsed = JSON.parse(json) as { hero?: unknown; detail?: unknown; palette?: unknown }
     const hero = typeof parsed.hero === 'string' ? parsed.hero.trim() : ''
     const detail = typeof parsed.detail === 'string' ? parsed.detail.trim() : ''
     if (hero.length < 8 || detail.length < 8) return undefined
-    return { hero, detail }
+    const palette = typeof parsed.palette === 'string' ? parsed.palette.trim().slice(0, 60) : ''
+    return { hero, detail, palette }
   } catch {
     return undefined
   }
@@ -776,14 +841,16 @@ export async function planImageSubjects(
  * produces garbled lettering on a screen or a sign, which is what a page about
  * software should never show.
  */
-export function imagePrompt(role: 'hero' | 'detail', subject: string): string {
+export function imagePrompt(role: 'hero' | 'detail', subject: string, palette?: string): string {
   const framing =
     role === 'hero'
       ? 'Wide establishing composition, 35mm, the subject placed off-centre with room to breathe, deep focus'
       : 'Tight close-up, 85mm, shallow depth of field, the material and its texture filling the frame'
   return [
     subject.replace(/\s+/g, ' ').replace(/[.;]+$/, '') + '.',
-    'Photographic, natural light, honest colour, fine detail, muted palette.',
+    // The page's own palette, when the planner could name it: a photograph that
+    // is on-topic but off-palette still looks pasted onto the design.
+    `Photographic, natural light, honest colour, fine detail${palette ? `, palette of ${palette}` : ', muted palette'}.`,
     framing + '.',
     'No text or lettering anywhere in frame, no signage, no screens, no watermark, no logo.',
   ].join(' ')

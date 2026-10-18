@@ -31,7 +31,11 @@ import {
 } from '../lib/lab/llm-benchmark/images.js'
 import { fetchGammaAssets, gammaBrief, gammaStylesheet, type GammaAssets } from '../lib/lab/llm-benchmark/gamma.js'
 import { buildLoopPrompt, loopProgress, type LoopReport } from '../lib/lab/llm-benchmark/loops.js'
-import { runOpencodeArtifact, type OpencodeLoopOptions } from '../lib/lab/llm-benchmark/runners/opencode-loops.js'
+import {
+  askOpencode,
+  runOpencodeArtifact,
+  type OpencodeLoopOptions,
+} from '../lib/lab/llm-benchmark/runners/opencode-loops.js'
 import { captureIntoGamma, defaultGammaCaptureOptions } from '../lib/lab/llm-benchmark/capture.js'
 
 interface Args {
@@ -257,18 +261,39 @@ let artifact = ''
 let artifactPath = ''
 /** Set when the previous loop's rules reported no pictures on the page. */
 let imageBriefText = ''
+let imageFeedback = ''
+/** What each supplied image actually shows, by file name. */
+const imageDescriptions: Record<string, string> = {}
 const imageCredits: string[] = []
+
+// One copy of the generated pictures for the whole run, so every loop has the
+// files its brief promises. They were previously written into the loop that was
+// being measured, which meant the NEXT loop's artefact referenced
+// `images/hero.jpg` next to an empty images/ folder — the brief was true for
+// one round and a lie for the next.
+const runImagesDir = path.join(outDir, 'images')
 
 for (let loop = 1; loop <= args.loops; loop += 1) {
   const loopDir = path.join(outDir, `loop-${String(loop)}`)
   fs.mkdirSync(loopDir, { recursive: true })
+
+  // Each loop's own copy, so a reviewer opening loop-3 sees the pictures that
+  // page was built with rather than having to know about the run-level folder.
+  if (fs.existsSync(runImagesDir)) {
+    const localImages = path.join(loopDir, 'images')
+    fs.mkdirSync(localImages, { recursive: true })
+    for (const file of fs.readdirSync(runImagesDir)) {
+      const from = path.join(runImagesDir, file)
+      if (fs.statSync(from).isFile()) fs.copyFileSync(from, path.join(localImages, file))
+    }
+  }
 
   const plan = buildLoopPrompt({
     loop,
     // The picture brief joins the task prompt so it sits with the brief rather
     // than with the reflection's findings: it is an instruction about the page,
     // not a defect to fix.
-    taskPrompt: [task.prompt, imageBriefText, gammaAssets ? gammaBrief(gammaAssets) : '']
+    taskPrompt: [task.prompt, imageBriefText, imageFeedback, gammaAssets ? gammaBrief(gammaAssets) : '']
       .filter((part) => part.length > 0)
       .join('\n\n'),
     artifact,
@@ -317,8 +342,8 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   // referenced path is a broken image in the delivered artefact. Inline first,
   // then measure the artefact that will actually be delivered.
   if (args.images) {
-    const inlined = inlineLocalImages(artifact, loopDir)
-    if (inlined.inlined.length > 0 || inlined.unresolved.length > 0) {
+    const inlined = inlineLocalImages(artifact, loopDir, { descriptions: imageDescriptions })
+    if (inlined.inlined.length > 0 || inlined.unresolved.length > 0 || inlined.substituted.length > 0) {
       artifact = inlined.html
       fs.writeFileSync(artifactPath, artifact, 'utf8')
       console.log(
@@ -327,6 +352,23 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
           (inlined.unresolved.length > 0 ? `, ${String(inlined.unresolved.length)} unresolved` : '')
       )
     }
+
+    // The loop is the only place that can fix this, and it cannot fix what it
+    // was never told. The harness quietly repaired the references above; the
+    // next round is told what it actually got, so the model stops inventing
+    // names and starts using the ones it was given.
+    const invented = [...inlined.substituted, ...inlined.unresolved]
+    imageFeedback = invented.length
+      ? [
+          '## Your last page referenced pictures that do not exist',
+          `${String(invented.length)} reference(s) named a file that was never supplied:`,
+          ...invented.slice(0, 6).map((entry) => `- ${entry}`),
+          '',
+          'The harness put a real photograph in their place and corrected the alt text,',
+          'so the page no longer breaks — but it is no longer the picture you designed.',
+          'This round, use only the file paths listed above, spelled exactly as written.',
+        ].join('\n')
+      : ''
   }
 
   const measured = await inspectArtifact(artifactPath, loopDir, args.inspect)
@@ -390,21 +432,23 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     // Into `images/`, because that is the path the brief hands the model. The
     // brief used to say `images/` while the files landed in the loop root, so
     // the only path the model was ever given was a lie, and it wrote its own.
-    const imageDir = path.join(loopDir, 'images')
+    const imageDir = runImagesDir
 
     // The model knows what it built; keyword extraction does not. Asking it what
     // to photograph costs one short call and is the difference between a
     // photograph of this page and a photograph of a suspension bridge.
     const subjects = await planImageSubjects(artifact, async (prompt) => {
-      const asked = await runOpencodeArtifact({
+      const asked = await askOpencode({
         model: args.model,
         prompt,
-        artifactPath: path.join(loopDir, 'image-plan.txt'),
         timeoutMs: Math.min(args.timeoutMs, 240_000),
       })
-      return asked.artifact
+      return asked.text
     })
-    if (subjects) console.log(`[loops] loop ${loop}: image subjects: ${subjects.hero} / ${subjects.detail}`)
+    if (subjects) {
+      console.log(`[loops] loop ${loop}: image subjects: ${subjects.hero} / ${subjects.detail}`)
+      if (subjects.palette) console.log(`[loops] loop ${loop}: image palette: ${subjects.palette}`)
+    }
     else console.warn(`[loops] loop ${loop}: no image subjects from the model; falling back to page keywords`)
 
     const fallback = queryFromArtifact(artifact)
@@ -416,7 +460,7 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     for (const request of wanted) {
       const subject = request.subject ?? `${fallback} ${request.role === 'hero' ? 'wide establishing view' : 'close-up detail'}`
       const result = await sourceImage(
-        { query: imagePrompt(request.role, subject), fileName: request.fileName },
+        { query: imagePrompt(request.role, subject, subjects?.palette), fileName: request.fileName },
         {
           into: imageDir,
           assetsScript: args.assetsScript,
@@ -438,11 +482,9 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
         }
       )
       if (result.image) {
-        sourced.push({
-          fileName: path.basename(result.image.path),
-          description: subject,
-          credit: result.image.credit,
-        })
+        const name = path.basename(result.image.path)
+        imageDescriptions[name] = subject
+        sourced.push({ fileName: name, description: subject, credit: result.image.credit })
         imageCredits.push(`${path.basename(result.image.path)}: ${result.image.source}`)
         console.log(
           `[loops] loop ${String(loop)}: sourced ${path.basename(result.image.path)} from ${result.image.source}`

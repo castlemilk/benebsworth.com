@@ -80,6 +80,16 @@ describe('inlineLocalImages', () => {
     expect(result.html).toContain('data:image/jpeg;base64,' + Buffer.from('small').toString('base64'))
   })
 
+  it('accepts the right picture under the wrong extension', () => {
+    // The loop told the model `images/hero.jpg`; it wrote `images/hero.png`.
+    // Same stem, same picture — the difference is three characters, not a
+    // different file.
+    const dir = tmpDir({ 'images/hero.jpg': 'aisle' })
+    const result = inlineLocalImages('<img src="images/hero.png" alt="a">', dir)
+    expect(result.unresolved).toEqual([])
+    expect(result.inlined).toEqual(['images/hero.png'])
+  })
+
   it('never substitutes the inspector\'s screenshots for a missing image', () => {
     // .taste-skill/ holds pictures *of* the page. Embedding one as "the
     // photograph the page asked for" looks like a resolved reference and is not.
@@ -88,6 +98,34 @@ describe('inlineLocalImages', () => {
     expect(result.substituted).toEqual([])
     expect(result.unresolved).toEqual(['assets/photograph.jpg'])
     expect(result.html).toContain('src="assets/photograph.jpg"')
+  })
+
+  it('gives a substituted picture the caption that matches it', () => {
+    // The alt on this tag was written for a picture the model invented. After a
+    // swap it describes the wrong image, which is worse than no alt at all.
+    const dir = tmpDir({ 'images/hero.jpg': 'aisle' })
+    const html = '<img src="assets/data-center-cern.jpg" alt="Racks at the CERN data centre">'
+    const result = inlineLocalImages(html, dir, {
+      descriptions: { 'hero.jpg': 'a data centre aisle at night under amber lights' },
+    })
+    expect(result.substituted).toHaveLength(1)
+    expect(result.html).toContain('alt="a data centre aisle at night under amber lights"')
+    expect(result.html).not.toContain('CERN')
+  })
+
+  it('leaves honest alt text alone when the reference resolved on its own', () => {
+    const dir = tmpDir({ 'images/hero.jpg': 'aisle' })
+    const html = '<img src="images/hero.jpg" alt="the aisle the model was told about">'
+    const result = inlineLocalImages(html, dir, { descriptions: { 'hero.jpg': 'something else entirely' } })
+    expect(result.html).toContain('alt="the aisle the model was told about"')
+  })
+
+  it('adds an alt to a substituted picture that had none', () => {
+    const dir = tmpDir({ 'images/hero.jpg': 'aisle' })
+    const result = inlineLocalImages('<img src="assets/nothing.jpg">', dir, {
+      descriptions: { 'hero.jpg': 'a data centre aisle at night' },
+    })
+    expect(result.html).toContain('alt="a data centre aisle at night"')
   })
 
   it('substitutes real generated images in turn rather than repeating one', () => {
@@ -119,6 +157,12 @@ describe('imagePrompt', () => {
     expect(prompt).toContain('a shipping container yard at dusk under sodium lamps')
   })
 
+  it('carries the page palette rather than a vague instruction', () => {
+    expect(imagePrompt('hero', 'a rack aisle at night', 'slate, amber, near-black')).toContain(
+      'palette of slate, amber, near-black'
+    )
+  })
+
   it('frames the detail as a close-up rather than a second establishing shot', () => {
     const prompt = imagePrompt('detail', 'a shipping container yard at dusk')
     expect(prompt).toContain('85mm')
@@ -129,9 +173,22 @@ describe('imagePrompt', () => {
 describe('planImageSubjects', () => {
   const page = '<h1>Every pull request, running in seconds.</h1>'
 
-  it('takes the two subjects from the model that wrote the page', async () => {
-    const asked = await planImageSubjects(page, async () => 'Thinking… {"hero":"a container yard at dusk","detail":"corrugated steel under rain"}')
-    expect(asked).toEqual({ hero: 'a container yard at dusk', detail: 'corrugated steel under rain' })
+  it('takes the subjects and the palette from the model that wrote the page', async () => {
+    const asked = await planImageSubjects(
+      page,
+      async () =>
+        'Thinking… {"hero":"a container yard at dusk","detail":"corrugated steel under rain","palette":"slate, amber, near-black"}'
+    )
+    expect(asked).toEqual({
+      hero: 'a container yard at dusk',
+      detail: 'corrugated steel under rain',
+      palette: 'slate, amber, near-black',
+    })
+  })
+
+  it('still works when the model names no palette', async () => {
+    const asked = await planImageSubjects(page, async () => '{"hero":"a container yard at dusk","detail":"steel rails under rain"}')
+    expect(asked?.palette).toBe('')
   })
 
   it('returns nothing rather than guessing when the model does not answer with JSON', async () => {

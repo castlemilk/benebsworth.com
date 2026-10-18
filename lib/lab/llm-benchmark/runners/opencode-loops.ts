@@ -91,3 +91,59 @@ export async function runOpencodeArtifact(options: OpencodeLoopOptions): Promise
     }
   }
 }
+
+/**
+ * Ask a question and take the answer as text.
+ *
+ * `runOpencodeArtifact` is for artefacts: it runs the CLI in a scratch dir,
+ * appends an instruction to write a named file, and throws when no such file
+ * appears. Asking for JSON to answer a question hits that path and throws
+ * "CLI artifact missing" — the loop's image planner did exactly this, so every
+ * run silently fell back to keyword soup and the new prompting never ran.
+ *
+ * Text comes back on stdout, which is where a question's answer already is.
+ */
+export async function askOpencode(options: {
+  model: string
+  prompt: string
+  timeoutMs?: number
+}): Promise<{ ok: boolean; text: string; tokensOut: number; error?: string }> {
+  const stubModel = {
+    id: `ask/${options.model.replaceAll('/', '-')}`,
+    name: options.model,
+    provider: 'OpenCode',
+    apiModelId: options.model,
+    costPer1kInputUsd: 0,
+    costPer1kOutputUsd: 0,
+    contextWindow: 0,
+    capabilities: '',
+    company: '',
+  } as unknown as BenchmarkModel
+  const stubTask = {
+    id: 'question',
+    name: 'Question',
+    prompt: options.prompt,
+    iterationsDefault: 1,
+  } as unknown as BenchmarkTask
+
+  try {
+    const response = await generateFromCli(
+      {
+        command: 'opencode',
+        buildArgs: (prompt: string) => ['run', '-m', options.model, prompt],
+        timeoutMs: options.timeoutMs,
+      },
+      stubModel,
+      stubTask,
+      0,
+    )
+    return { ok: response.output.trim().length > 0, text: response.output, tokensOut: response.tokensOut }
+  } catch (error) {
+    return {
+      ok: false,
+      text: '',
+      tokensOut: 0,
+      error: error instanceof Error ? error.message : String(error),
+    }
+  }
+}

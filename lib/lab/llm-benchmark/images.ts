@@ -812,7 +812,16 @@ export function pageProse(html: string, maxChars = 6_000): string {
 
 export async function planImageSubjects(
   html: string,
-  ask: (prompt: string) => Promise<string>
+  ask: (prompt: string) => Promise<string>,
+  /**
+   * Why the plan is unavailable, when it is.
+   *
+   * The planner has failed silently once already: a caller passed a model id
+   * opencode could not resolve, every run logged "no image subjects from the
+   * model", and the cause was invisible for four runs. A step whose failure
+   * looks identical to its fallback must say which one it was.
+   */
+  onFailure?: (reason: string) => void
 ): Promise<{ hero: string; detail: string; palette: string } | undefined> {
   const prompt = [
     'Read this page and name two photographs that would belong on it.',
@@ -842,19 +851,37 @@ export async function planImageSubjects(
     pageProse(html),
   ].join('\n')
 
+  let raw = ''
   try {
-    const raw = await ask(prompt)
-    const json = /\{[\s\S]*\}/.exec(raw)?.[0]
-    if (!json) return undefined
-    const parsed = JSON.parse(json) as { hero?: unknown; detail?: unknown; palette?: unknown }
-    const hero = typeof parsed.hero === 'string' ? parsed.hero.trim() : ''
-    const detail = typeof parsed.detail === 'string' ? parsed.detail.trim() : ''
-    if (hero.length < 8 || detail.length < 8) return undefined
-    const palette = typeof parsed.palette === 'string' ? parsed.palette.trim().slice(0, 60) : ''
-    return { hero, detail, palette }
-  } catch {
+    raw = await ask(prompt)
+  } catch (error) {
+    onFailure?.(`the model call threw: ${error instanceof Error ? error.message : String(error)}`)
     return undefined
   }
+  if (raw.trim().length === 0) {
+    onFailure?.('the model returned nothing at all')
+    return undefined
+  }
+  const json = /\{[\s\S]*\}/.exec(raw)?.[0]
+  if (!json) {
+    onFailure?.(`no JSON in the reply, which began: ${JSON.stringify(raw.trim().slice(0, 80))}`)
+    return undefined
+  }
+  let parsed: { hero?: unknown; detail?: unknown; palette?: unknown }
+  try {
+    parsed = JSON.parse(json) as { hero?: unknown; detail?: unknown; palette?: unknown }
+  } catch (error) {
+    onFailure?.(`the reply's JSON did not parse: ${error instanceof Error ? error.message : String(error)}`)
+    return undefined
+  }
+  const hero = typeof parsed.hero === 'string' ? parsed.hero.trim() : ''
+  const detail = typeof parsed.detail === 'string' ? parsed.detail.trim() : ''
+  if (hero.length < 8 || detail.length < 8) {
+    onFailure?.(`the reply was missing a usable subject: ${JSON.stringify(json.slice(0, 120))}`)
+    return undefined
+  }
+  const palette = typeof parsed.palette === 'string' ? parsed.palette.trim().slice(0, 60) : ''
+  return { hero, detail, palette }
 }
 
 /**

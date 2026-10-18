@@ -218,6 +218,13 @@ async function inspectArtifact(
 
 const args = parseArgs(process.argv.slice(2))
 const model = BENCHMARK_MODELS.find((m) => m.id === args.model)
+// opencode resolves provider/model ids. `--model` names a registry entry, and
+// passing its id to the CLI fails to resolve — silently, as an empty reply.
+const apiModelId = model?.apiModelId
+if (!apiModelId) {
+  console.error(`[loops] no API model id for "${args.model}" — the registry entry needs one to run.`)
+  process.exit(2)
+}
 const task = BENCHMARK_TASKS.find((t) => t.id === args.task)
 if (!model || !task) {
   console.error(`unknown model or task. models=${BENCHMARK_MODELS.length} tasks=${BENCHMARK_TASKS.length}`)
@@ -286,7 +293,7 @@ const runImagesDir = path.join(outDir, 'images')
 {
   const startedAt = Date.now()
   const probe = await askOpencode({
-    model: model.apiModelId,
+    model: apiModelId,
     prompt: 'Reply with one word: ready',
     timeoutMs: args.preflightSeconds * 1000,
   })
@@ -483,23 +490,37 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
     // brief used to say `images/` while the files landed in the loop root, so
     // the only path the model was ever given was a lie, and it wrote its own.
     const imageDir = runImagesDir
+    let plannerFailure: string | undefined
 
     // The model knows what it built; keyword extraction does not. Asking it what
     // to photograph costs one short call and is the difference between a
     // photograph of this page and a photograph of a suspension bridge.
-    const subjects = await planImageSubjects(artifact, async (prompt) => {
-      const asked = await askOpencode({
-        model: args.model,
-        prompt,
-        timeoutMs: Math.min(args.timeoutMs, 240_000),
-      })
-      return asked.text
-    })
+    const subjects = await planImageSubjects(
+      artifact,
+      async (prompt) => {
+        const asked = await askOpencode({
+          // The API id, not `--model`'s registry id: opencode cannot resolve
+          // "glm-5.3-coding-plan", and the planner has been silently answering
+          // "no image subjects" for that reason since it was written.
+          model: apiModelId,
+          prompt,
+          timeoutMs: Math.min(args.timeoutMs, 240_000),
+        })
+        return asked.text
+      },
+      (reason) => {
+        plannerFailure = reason
+      }
+    )
     if (subjects) {
       console.log(`[loops] loop ${loop}: image subjects: ${subjects.hero} / ${subjects.detail}`)
       if (subjects.palette) console.log(`[loops] loop ${loop}: image palette: ${subjects.palette}`)
+    } else {
+      console.warn(
+        `[loops] loop ${loop}: no image subjects from the model (${plannerFailure ?? 'unknown reason'}); ` +
+          'falling back to page keywords'
+      )
     }
-    else console.warn(`[loops] loop ${loop}: no image subjects from the model; falling back to page keywords`)
 
     const fallback = queryFromArtifact(artifact)
     const wanted = [

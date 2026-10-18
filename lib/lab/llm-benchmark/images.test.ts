@@ -212,6 +212,27 @@ describe('planImageSubjects', () => {
     expect(await planImageSubjects(page, async () => '{"hero":"x"}')).toBeUndefined()
   })
 
+  // A step whose failure looks identical to its fallback must say which it was.
+  it('says why it failed, for every way it can fail', async () => {
+    const reasons: string[] = []
+    const note = (reason: string) => reasons.push(reason)
+
+    await planImageSubjects(page, async () => '', note)
+    await planImageSubjects(page, async () => 'no braces here', note)
+    await planImageSubjects(page, async () => '{not json}', note)
+    await planImageSubjects(page, async () => '{"hero":"short","detail":"also short"}', note)
+    await planImageSubjects(page, async () => {
+      throw new Error('model id could not be resolved')
+    }, note)
+
+    expect(reasons).toHaveLength(5)
+    expect(reasons[0]).toContain('returned nothing')
+    expect(reasons[1]).toContain('no JSON')
+    expect(reasons[2]).toContain('did not parse')
+    expect(reasons[3]).toContain('missing a usable subject')
+    expect(reasons[4]).toContain('model id could not be resolved')
+  })
+
   it('never sends page content through a throwaway parse failure', async () => {
     expect(await planImageSubjects(page, async () => '{')).toBeUndefined()
   })

@@ -48,6 +48,8 @@ interface Args {
   timeoutMs: number
   out: string
   stopWhenStuck: boolean
+  /** Seconds to allow the model's one-line answer before giving up on the run. */
+  preflightSeconds: number
   /** Source pictures when the rules report none on the page. */
   images: boolean
   assetsScript?: string
@@ -98,6 +100,9 @@ function parseArgs(argv: string[]): Args {
     timeoutMs: Number(get('--timeout-ms') ?? 1_200_000),
     out: get('--out') ?? `loops/${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`,
     stopWhenStuck: !argv.includes('--no-stop-when-stuck'),
+    // A stalled endpoint otherwise costs the full generation timeout per loop,
+    // with a retry on top: up to fifty minutes to learn the model is not there.
+    preflightSeconds: Number(get('--preflight-seconds') ?? 90),
     images: argv.includes('--images'),
     assetsScript: get('--assets-script'),
     gammaUrl: get('--gamma'),
@@ -272,6 +277,29 @@ const imageCredits: string[] = []
 // `images/hero.jpg` next to an empty images/ folder — the brief was true for
 // one round and a lie for the next.
 const runImagesDir = path.join(outDir, 'images')
+
+// Is the model actually there? A generation that is slow and a generation that
+// is stalled look identical from inside the run, and the difference between them
+// is the whole timeout — with a retry, fifty minutes per loop to find out. One
+// question settles it in seconds, and the answer is also the run's record of
+// how healthy the endpoint was before any work started.
+{
+  const startedAt = Date.now()
+  const probe = await askOpencode({
+    model: model.apiModelId,
+    prompt: 'Reply with one word: ready',
+    timeoutMs: args.preflightSeconds * 1000,
+  })
+  const waited = Math.round((Date.now() - startedAt) / 1000)
+  if (!probe.ok) {
+    console.error(
+      `[loops] preflight: ${model.apiModelId} did not answer within ${String(args.preflightSeconds)}s ` +
+        `(${probe.error ?? 'no output'}). Nothing has been generated; fix the endpoint or pick another model.`
+    )
+    process.exit(1)
+  }
+  console.log(`[loops] preflight: ${model.apiModelId} answered in ${String(waited)}s — ${probe.text.trim().slice(0, 40)}`)
+}
 
 for (let loop = 1; loop <= args.loops; loop += 1) {
   const loopDir = path.join(outDir, `loop-${String(loop)}`)

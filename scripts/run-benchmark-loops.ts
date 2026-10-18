@@ -589,14 +589,17 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   const failureShare = failedRewardMass(allOutcomes, (o) =>
     successPrioritised(o, calibration),
   );
-  if (failureShare !== undefined && allOutcomes.length >= 3) {
-    console.log(
-      `[loops] loop ${String(loop)}: reward ${priced.spr.toFixed(2)} ` +
-        `(dense ${priced.fdr.toFixed(2)}, strict ${
-          priced.strictEvaluated ? String(priced.strict) : "not evaluated"
-        }) · failure share of reward mass ${(failureShare * 100).toFixed(0)}%`,
-    );
-  }
+  // The per-loop reward is always logged; the share is the paper's audit metric
+  // and means little on one page, so it waits for enough outcomes behind it.
+  console.log(
+    `[loops] loop ${String(loop)}: reward ${priced.spr.toFixed(2)} ` +
+      `(dense ${priced.fdr.toFixed(2)}, strict ${
+        priced.strictEvaluated ? String(priced.strict) : "not evaluated"
+      })` +
+      (failureShare !== undefined && allOutcomes.length >= 3
+        ? ` · failure share of reward mass ${(failureShare * 100).toFixed(0)}%`
+        : ""),
+  );
   fs.writeFileSync(
     path.join(loopDir, "report.json"),
     JSON.stringify(report, null, 2),

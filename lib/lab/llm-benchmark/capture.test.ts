@@ -9,10 +9,10 @@ import { captureIntoGamma, defaultGammaCaptureOptions } from './capture.js'
  * defects, so a capture decision that trusted the rubric alone would fill
  * Gamma's inbox with exactly the pages it exists to stop people copying.
  */
-function artefact(): string {
+function artefact(body = 'hi'): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gamma-capture-'))
   const file = path.join(dir, 'page.html')
-  fs.writeFileSync(file, '<html><body>hi</body></html>')
+  fs.writeFileSync(file, `<html><body>${body}</body></html>`)
   return file
 }
 
@@ -64,6 +64,51 @@ describe('captureIntoGamma', () => {
       { scriptPath: '/nonexistent/capture-page.mjs', apiUrl: 'http://127.0.0.1:3000' }
     )
     expect(result.captured).toBe(false)
+  })
+
+  // Gamma's inbox is read by people looking for examples to copy. A page that
+  // scores well while shipping references to files that do not exist is exactly
+  // the page that must not get there, and neither signal above can see it.
+  it('declines a page whose picture references do not resolve', async () => {
+    const result = await captureIntoGamma(
+      // One picture that loads, one that does not: a page can satisfy the first
+      // check and still ship a hole.
+      artefact('<img src="data:image/png;base64,AAA"><img src="assets/data-center.jpg">'),
+      { ...base, score: 96, fails: 1, title: 'x', notes: '' },
+      { scriptPath: '/nonexistent/capture-page.mjs', apiUrl: 'http://127.0.0.1:3000', requireImages: true }
+    )
+    expect(result.captured).toBe(false)
+    expect(result.reason).toContain('do not resolve')
+  })
+
+  it('declines a page with no pictures at all', async () => {
+    const result = await captureIntoGamma(
+      artefact(),
+      { ...base, score: 96, fails: 1, title: 'x', notes: '' },
+      { scriptPath: '/nonexistent/capture-page.mjs', apiUrl: 'http://127.0.0.1:3000', requireImages: true }
+    )
+    expect(result.captured).toBe(false)
+    expect(result.reason).toContain('no pictures')
+  })
+
+  it('still declines on the client when the page carries its own pictures', async () => {
+    const result = await captureIntoGamma(
+      artefact('<img src="data:image/png;base64,AAA">'),
+      { ...base, score: 96, fails: 1, title: 'x', notes: '' },
+      { scriptPath: '/nonexistent/capture-page.mjs', apiUrl: 'http://127.0.0.1:3000', requireImages: true }
+    )
+    // It got past both gates; the failure now is the client, not the page.
+    expect(result.captured).toBe(false)
+    expect(result.reason).not.toContain('pictures')
+  })
+
+  it('leaves the check off when it is not asked for', async () => {
+    const result = await captureIntoGamma(
+      artefact(),
+      { ...base, score: 100, fails: 0, title: 'x', notes: '' },
+      { scriptPath: '/nonexistent/capture-page.mjs', apiUrl: 'http://127.0.0.1:3000' }
+    )
+    expect(result.reason).not.toContain('pictures')
   })
 })
 

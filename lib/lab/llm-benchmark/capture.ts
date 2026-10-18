@@ -30,6 +30,17 @@ export interface GammaCaptureOptions {
   minScore?: number
   /** Maximum design-rule FAIL findings to capture with. */
   maxFails?: number
+  /**
+   * Require the delivered file to actually carry its pictures.
+   *
+   * The inbox is a component catalogue: what lands there gets read as an example
+   * of how to do this. A page that scores well while shipping two references to
+   * files that do not exist is a page that teaches broken images, and one with no
+   * images at all teaches a design system that never uses a picture. Both are
+   * worse than not capturing, and neither shows up in the rubric or the design
+   * rules. Left unset, the check is skipped.
+   */
+  requireImages?: boolean
 }
 
 export interface CaptureOutcome {
@@ -52,6 +63,13 @@ export async function captureIntoGamma(
   }
   if (meta.fails !== undefined && meta.fails > maxFails) {
     return { captured: false, reason: `${meta.fails} design FAIL findings > ${maxFails}` }
+  }
+  if (options.requireImages) {
+    const html = fs.readFileSync(artifactPath, 'utf8')
+    const embedded = (html.match(/src="data:image\//g) ?? []).length
+    const broken = (html.match(/src="(?!data:|https?:)[^"]+"/g) ?? []).length
+    if (embedded === 0) return { captured: false, reason: 'no pictures are embedded in the file' }
+    if (broken > 0) return { captured: false, reason: `${broken} picture reference(s) do not resolve` }
   }
 
   const args = [
@@ -88,5 +106,7 @@ export function defaultGammaCaptureOptions(): GammaCaptureOptions | undefined {
   const home = process.env.HOME ?? ''
   const script = path.join(home, 'projects/gamma/scripts/capture-page.mjs')
   if (!fs.existsSync(script)) return undefined
-  return { scriptPath: script, apiUrl: 'http://127.0.0.1:3000' }
+  // On by default here: the inbox is read by people looking for examples, and an
+  // example with broken or missing pictures is the one thing it must not contain.
+  return { scriptPath: script, apiUrl: 'http://127.0.0.1:3000', requireImages: true }
 }

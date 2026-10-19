@@ -379,7 +379,7 @@ export function externalResources(html: string): string[] {
     (block) => block,
   );
   for (const match of fromScripts.matchAll(
-    /https?:\/\/[a-z0-9.-]+\/[a-z0-9@._~:/?#\[\]!$&'()*+,;=%-]+/gi,
+    /https?:\/\/[a-z0-9.-]+\/[a-z0-9@._~:/?#[\]!$&'()*+,;=%-]+/gi,
   )) {
     const url = match[0] as string;
     if (

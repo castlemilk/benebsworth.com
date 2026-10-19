@@ -42,8 +42,10 @@ import {
 } from "../lib/lab/llm-benchmark/gamma.js";
 import {
   buildLoopPrompt,
+  externalResources,
   loopProgress,
   SCORER_VERSION,
+  selfContainedFinding,
   type LoopReport,
 } from "../lib/lab/llm-benchmark/loops.js";
 import {
@@ -606,7 +608,28 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   }
 
   const measured = await inspectArtifact(artifactPath, loopDir, args.inspect);
-  report.findings = measured.report.findings;
+
+  // Did the verifier see a page at all?
+  //
+  // A single-file page that pulls its runtime from a CDN renders as an error box
+  // where a CDN is unreachable, and the inspector then reports that box: no
+  // headline, no pictures, no buttons, nothing moved. Those are not defects, and
+  // a loop that reflects on them spends its next generation fixing a page it has
+  // never seen — which is what happened: rubric fell 97 → 30 on six invented
+  // findings about a CDN failure.
+  const external = externalResources(artifact);
+  if (external.length > 0) {
+    report.renderBlocked = true;
+    report.externalResources = external;
+    report.findings = [selfContainedFinding(external)];
+    console.warn(
+      `[loops] loop ${String(loop)}: page fetches ${String(external.length)} resource(s) from the network ` +
+        `(${external[0] as string}); it did not render here, so the inspector's findings are discarded ` +
+        "and replaced with the one real defect",
+    );
+  } else {
+    report.findings = measured.report.findings;
+  }
   report.headline = measured.report.headline;
   report.words = measured.report.words;
   report.screens = measured.report.screens;

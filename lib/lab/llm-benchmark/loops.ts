@@ -56,6 +56,14 @@ export interface LoopReport {
    */
   scorerVersion?: string;
   /**
+   * The artefact fetches its runtime from the network, so the verifier never saw
+   * the page — only what the browser drew without those fetches. Every finding
+   * from that measurement is therefore about the fallback, not the design.
+   */
+  renderBlocked?: boolean;
+  /** What it tried to fetch, so the model can be told exactly what to inline. */
+  externalResources?: string[];
+  /**
    * What the verifier said, priced: passed checks, strict success, and the
    * two rewards. Present so a decision never rests on the rubric alone.
    */
@@ -230,7 +238,12 @@ export function buildLoopPrompt(args: {
 
   const history =
     args.history && args.history.length > 0 ? args.history : [report];
-  const credits = defectCredit(history);
+  // A page that fetches its runtime renders as an error box in the measurement
+  // sandbox, and every finding below would then be about that error box rather
+  // than about the design. So when it happened, the finding list is the one real
+  // defect and nothing else, and the prompt says the verifier never saw the page.
+  const blocked = report.renderBlocked === true;
+  const credits = blocked ? [] : defectCredit(history);
   const fails = credits.filter((c) => c.level === "FAIL").slice(0, 12);
   const warns = credits.filter((c) => c.level === "WARN").slice(0, 8);
   const findingLines = [...fails, ...warns].map((c) => {
@@ -259,9 +272,30 @@ export function buildLoopPrompt(args: {
   sections.push(
     [
       `This is revision ${String(loop)} of the page below. A previous version already exists and has been`,
-      "measured in a real browser. Your job is to improve it against what the measurements",
-      "found, and to extend it where it is thin — not to start over, and not to keep what",
-      "is wrong.",
+      blocked
+        ? "opened in a browser that could not reach the network. It did not render, so nothing about its"
+        : "measured in a real browser. Your job is to improve it against what the measurements",
+      blocked
+        ? "design could be judged — the only thing measured was the page's own error message. Make it"
+        : "found, and to extend it where it is thin — not to start over, and not to keep what",
+      blocked
+        ? "self-contained first; every other judgement is suspended until it is."
+        : "is wrong.",
+      ...(blocked
+        ? [
+            "",
+            "## Why nothing else is listed",
+            `The previous file fetched ${String((report.externalResources ?? []).length)} resource(s) from the network when it loaded:`,
+            ...(report.externalResources ?? [])
+              .slice(0, 8)
+              .map((u) => `- ${u}`),
+            "",
+            "A single HTML file that needs a CDN is not single and not self-contained: offline, in a",
+            "sandbox, in an email, or behind a firewall it shows an error and nothing else. Inline the",
+            "runtime you need, or write the page so it needs nothing it does not contain. Everything",
+            "else about this page will be measured as soon as it renders.",
+          ]
+        : []),
       "",
       "## What the browser found",
       ...(widthLines.length > 0
@@ -318,6 +352,67 @@ export function buildLoopPrompt(args: {
   );
 
   return { loop, intent: "reflect-and-improve", prompt: sections.join("\n\n") };
+}
+
+/**
+ * Resources a single-file page fetches at runtime.
+ *
+ * Attributes are the easy half. The hard half is a loader written in script that
+ * builds its URL at runtime — one loop produced a page that pulled React and
+ * Babel from a CDN with a fallback chain, so no attribute held the URL and a
+ * naive check called the file self-contained. Inside the measurement sandbox,
+ * where a CDN is not reachable, that page renders an error box and nothing else.
+ *
+ * This matters more than it looks. The inspector then measures the error box:
+ * no headline, no pictures, no buttons, nothing moved. Those findings are not
+ * defects, they are the absence of the page, and a loop that reflects on them
+ * spends its next generation fixing a page it has never seen.
+ */
+export function externalResources(html: string): string[] {
+  const found = new Set<string>();
+  const fromMarkup = /\b(?:src|href)\s*=\s*["'](https?:\/\/[^"']+)["']/gi;
+  for (const match of html.matchAll(fromMarkup)) found.add(match[1] as string);
+  // Script bodies, where a CDN loader usually lives. Data URIs and comments that
+  // merely mention a host are noise; anything with a path is a fetch.
+  const fromScripts = html.replace(
+    /<script\b[\s\S]*?<\/script>/gi,
+    (block) => block,
+  );
+  for (const match of fromScripts.matchAll(
+    /https?:\/\/[a-z0-9.-]+\/[a-z0-9@._~:/?#\[\]!$&'()*+,;=%-]+/gi,
+  )) {
+    const url = match[0] as string;
+    if (
+      !/\.(png|jpe?g|webp|avif|gif|svg|css|woff2?)(\?|$)/i.test(url) ||
+      /fonts\.|cdnjs|unpkg|jsdelivr|esm\.sh|skypack/i.test(url)
+    ) {
+      found.add(url);
+    }
+  }
+  return [...found].slice(0, 12);
+}
+
+/**
+ * The one true finding for a page that cannot render on its own.
+ *
+ * Replaces the whole finding list rather than joining it: the other findings were
+ * measured against whatever the browser managed to draw, which for a CDN page is
+ * an error message, and listing them alongside a real defect would invite the
+ * model to chase them.
+ */
+export function selfContainedFinding(urls: string[]): LoopRuleFinding {
+  const shown = urls
+    .slice(0, 3)
+    .map((u) => u.replace(/^https?:\/\//, ""))
+    .join(", ");
+  return {
+    id: "external-runtime",
+    level: "FAIL",
+    message:
+      `the page loads ${String(urls.length)} resource(s) from the network at runtime (${shown}) ` +
+      "so it renders nothing at all without them — in the measurement sandbox, and on any machine offline",
+    fix: "inline the runtime, or write the page so it needs nothing it does not contain",
+  };
 }
 
 /**

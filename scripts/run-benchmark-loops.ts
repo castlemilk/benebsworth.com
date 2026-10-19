@@ -25,8 +25,10 @@ import {
 import { scoreWithBreakdown } from "../lib/lab/llm-benchmark/scorers/behavioral.js";
 import { buildSkillBlock } from "../lib/lab/llm-benchmark/skills-context.js";
 import {
+  compactImage,
   imageBrief,
   imagePrompt,
+  INLINE_IMAGE_BUDGET,
   inlineLocalImages,
   planImageSubjects,
   queryFromArtifact,
@@ -59,6 +61,7 @@ import {
 } from "../lib/lab/llm-benchmark/runners/opencode-loops.js";
 import {
   captureIntoGamma,
+  DEFAULT_CAPTURE_MAX_BYTES,
   defaultGammaCaptureOptions,
   evaluateGates,
 } from "../lib/lab/llm-benchmark/capture.js";
@@ -75,6 +78,8 @@ interface Args {
   stopWhenStuck: boolean;
   /** Seconds to allow the model's one-line answer before giving up on the run. */
   preflightSeconds: number;
+  /** Hard ceiling on a delivered page, so it can be filed. Gamma's is 500KB. */
+  captureMaxBytes: number;
   /** Source pictures when the rules report none on the page. */
   images: boolean;
   assetsScript?: string;
@@ -132,6 +137,9 @@ function parseArgs(argv: string[]): Args {
     // A stalled endpoint otherwise costs the full generation timeout per loop,
     // with a retry on top: up to fifty minutes to learn the model is not there.
     preflightSeconds: Number(get("--preflight-seconds") ?? 90),
+    captureMaxBytes: Number(
+      get("--capture-max-bytes") ?? DEFAULT_CAPTURE_MAX_BYTES,
+    ),
     images: argv.includes("--images"),
     assetsScript: get("--assets-script"),
     gammaUrl: get("--gamma"),
@@ -366,6 +374,39 @@ const runImagesDir = path.join(outDir, "images");
 const allOutcomes: VerifierOutcome[] = [];
 let calibration: RewardCalibration = { divisor: {}, divisorPrime: {} };
 
+/**
+ * Re-encode the loop's images so a self-contained page fits the capture limit.
+ *
+ * Returns the files it touched, so the run can say what it did rather than the
+ * page silently arriving smaller than the pictures that made it.
+ */
+async function fitImagesToBudget(
+  dir: string,
+  maxBytes: number,
+): Promise<string[]> {
+  const touched: string[] = [];
+  const walk = async (current: string, depth: number): Promise<void> => {
+    if (depth > 2 || !fs.existsSync(current)) return;
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      if (entry.name.startsWith(".") || entry.name === "screenshots") continue;
+      const full = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        await walk(full, depth + 1);
+      } else if (/\.(png|jpe?g|webp|avif)$/i.test(entry.name)) {
+        try {
+          const fit = await compactImage(full, maxBytes);
+          if (fit.compacted) touched.push(path.basename(fit.file));
+        } catch {
+          // A file sharp cannot read is left alone; the inliner will report it
+          // as unresolved rather than this passing quietly.
+        }
+      }
+    }
+  };
+  await walk(dir, 0);
+  return touched;
+}
+
 // Is the model actually there? A generation that is slow and a generation that
 // is stalled look identical from inside the run, and the difference between them
 // is the whole timeout — with a retry, fifty minutes per loop to find out. One
@@ -498,8 +539,35 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   // referenced path is a broken image in the delivered artefact. Inline first,
   // then measure the artefact that will actually be delivered.
   if (args.images) {
+    // Fit the page under the inbox's limit before embedding anything.
+    //
+    // A single-file page with three photographs in it is over half a megabyte,
+    // and the first page to clear every quality gate was rejected for exactly
+    // that. Per-image budget alone does not solve it: 900KB x 3 is 2.7MB. What
+    // matters is the whole document, so the cap is divided across the pictures
+    // the page actually references, and the files are re-encoded to fit.
+    const captureLimit = args.captureMaxBytes;
+    const referenceCount = Math.max(
+      1,
+      [...artifact.matchAll(/src=["'](?!data:|https?:)[^"']+["']/g)].length,
+    );
+    const baseBytes = Buffer.byteLength(artifact);
+    const room = Math.max(0, captureLimit - baseBytes);
+    const perImageBudget = Math.max(
+      20_000,
+      Math.min(INLINE_IMAGE_BUDGET, Math.floor(room / referenceCount)),
+    );
+    if (perImageBudget < INLINE_IMAGE_BUDGET) {
+      const shrunken = await fitImagesToBudget(loopDir, perImageBudget);
+      if (shrunken.length > 0) {
+        console.log(
+          `[loops] loop ${String(loop)}: ${String(shrunken.length)} image(s) re-encoded to fit the ${String(Math.round(captureLimit / 1000))}KB capture limit (${String(Math.round(perImageBudget / 1000))}KB each)`,
+        );
+      }
+    }
     const inlined = inlineLocalImages(artifact, loopDir, {
       descriptions: imageDescriptions,
+      maxBytes: perImageBudget,
     });
     if (
       inlined.inlined.length > 0 ||

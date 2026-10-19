@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { captureIntoGamma, defaultGammaCaptureOptions } from './capture.js'
+import { captureIntoGamma, defaultGammaCaptureOptions, evaluateGates } from './capture.js'
 
 /**
  * The gate is the whole point: the rubric read 100 on a page with ten design
@@ -118,5 +118,28 @@ describe('defaultGammaCaptureOptions', () => {
     // Either this machine has Gamma (and it is wired), or it does not (and the
     // loop runs unchanged) — never a path that does not exist.
     if (options) expect(fs.existsSync(options.scriptPath)).toBe(true)
+  })
+})
+
+describe('capture size limit', () => {
+  it('refuses a page the inbox would reject, before POSTing it', async () => {
+    // Found by failing: the first page to clear every quality gate came back
+    // `413 Capture exceeds 500 KB`. A self-contained page with three photographs
+    // in it is over half a megabyte, so this is the normal case, not an edge.
+    const result = await captureIntoGamma(
+      artefact('x'.repeat(600_000)),
+      { ...base, score: 96, fails: 0, title: 'x', notes: '' },
+      { scriptPath: '/nonexistent/capture-page.mjs', apiUrl: 'http://127.0.0.1:3000', maxArtefactBytes: 500_000 }
+    )
+    expect(result.captured).toBe(false)
+    expect(result.reason).toContain('over the capture limit')
+  })
+
+  it('lets a page under the limit through the size gate', () => {
+    const gates = evaluateGates(
+      { score: 96, fails: 1, embeddedImages: 3, unresolvedImages: 0, artefactBytes: 480_000 },
+      { requireImages: true, maxArtefactBytes: 500_000 }
+    )
+    expect(gates.ok).toBe(true)
   })
 })

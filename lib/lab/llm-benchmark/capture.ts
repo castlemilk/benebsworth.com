@@ -41,7 +41,19 @@ export interface GammaCaptureOptions {
    * rules. Left unset, the check is skipped.
    */
   requireImages?: boolean;
+  /** Over this size the inbox refuses the page. Defaults to Gamma's 500KB. */
+  maxArtefactBytes?: number;
 }
+
+/**
+ * Gamma's own limit on an uploaded page.
+ *
+ * Found the hard way: the first page to clear every quality gate was rejected
+ * with `413 Capture exceeds 500 KB`, because a single-file page with three
+ * photographs embedded is over half a megabyte. A limit the loop cannot satisfy
+ * is a limit the gate has to know about, or every run rediscovers it by failing.
+ */
+export const DEFAULT_CAPTURE_MAX_BYTES = 500_000;
 
 export interface CaptureOutcome {
   captured: boolean;
@@ -58,6 +70,8 @@ export interface GateInput {
   embeddedImages?: number;
   /** Picture references that resolve to nothing. */
   unresolvedImages?: number;
+  /** Size of the delivered file in bytes. */
+  artefactBytes?: number;
 }
 
 export interface GateResult {
@@ -91,6 +105,8 @@ export function evaluateGates(
     minScore?: number;
     maxFails?: number;
     requireImages?: boolean;
+    /** The inbox's own limit on an uploaded page, in bytes. */
+    maxArtefactBytes?: number;
   } = {},
 ): GateResult {
   const minScore = options.minScore ?? 90;
@@ -113,6 +129,20 @@ export function evaluateGates(
       );
     }
   }
+  // The inbox refuses a page over its size limit, and a self-contained page with
+  // three photographs embedded in it is over it. Finding that out by POSTing and
+  // reading a 413 is a wasted round trip, and a run record that says "capture
+  // rejected" with nothing saying why.
+  if (
+    options.maxArtefactBytes !== undefined &&
+    input.artefactBytes !== undefined &&
+    input.artefactBytes > options.maxArtefactBytes
+  ) {
+    reasons.push(
+      `artefact is ${String(Math.round(input.artefactBytes / 1000))}KB, over the capture limit of ${String(Math.round(options.maxArtefactBytes / 1000))}KB`,
+    );
+  }
+
   return { ok: reasons.length === 0, reasons, evaluated: true };
 }
 
@@ -133,6 +163,7 @@ export async function captureIntoGamma(
 
   let embeddedImages: number | undefined;
   let unresolvedImages: number | undefined;
+  const artefactBytes = fs.statSync(artifactPath).size;
   if (options.requireImages) {
     const html = fs.readFileSync(artifactPath, "utf8");
     embeddedImages = (html.match(/src="data:image\//g) ?? []).length;
@@ -141,11 +172,18 @@ export async function captureIntoGamma(
   }
 
   const gates = evaluateGates(
-    { score: meta.score, fails: meta.fails, embeddedImages, unresolvedImages },
+    {
+      score: meta.score,
+      fails: meta.fails,
+      embeddedImages,
+      unresolvedImages,
+      artefactBytes,
+    },
     {
       minScore: options.minScore,
       maxFails: options.maxFails,
       requireImages: options.requireImages,
+      maxArtefactBytes: options.maxArtefactBytes ?? DEFAULT_CAPTURE_MAX_BYTES,
     },
   );
   if (!gates.ok) {

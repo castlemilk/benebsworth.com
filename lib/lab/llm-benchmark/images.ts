@@ -1,11 +1,15 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import { spawn } from 'node:child_process'
-import sharp from 'sharp'
-import { fetchBrandMark, guessBrand } from './brandbrain'
-import { BrandBrainFlowClient, cheapestImageModel, generateWithPinnedModel } from './brandbrain-flow'
-import { DEFAULT_COMFY_URL, generateWithComfy } from './comfy'
-import { generateWithMlx } from './mlx'
+import fs from "node:fs";
+import path from "node:path";
+import { spawn } from "node:child_process";
+import sharp from "sharp";
+import { fetchBrandMark, guessBrand } from "./brandbrain";
+import {
+  BrandBrainFlowClient,
+  cheapestImageModel,
+  generateWithPinnedModel,
+} from "./brandbrain-flow";
+import { DEFAULT_COMFY_URL, generateWithComfy } from "./comfy";
+import { generateWithMlx } from "./mlx";
 
 /**
  * Images for a generated artefact.
@@ -33,47 +37,53 @@ import { generateWithMlx } from './mlx'
 
 export interface ImageRequest {
   /** Search terms describing the page's subject. */
-  query: string
+  query: string;
   /** Where the file must land, relative to the loop directory. */
-  fileName: string
+  fileName: string;
   /** Attribution line for the footer or the report. */
-  credit?: string
+  credit?: string;
 }
 
 export interface SourcedImage extends ImageRequest {
   /** Absolute path on disk. */
-  path: string
-  bytes: number
-  source: 'open-collection' | 'image-model' | 'brandbrain' | 'generated' | 'local-mlx' | 'comfy'
-  licence?: string
-  creator?: string
-  page?: string
+  path: string;
+  bytes: number;
+  source:
+    | "open-collection"
+    | "image-model"
+    | "brandbrain"
+    | "generated"
+    | "local-mlx"
+    | "comfy";
+  licence?: string;
+  creator?: string;
+  page?: string;
 }
 
 export interface ImageSources {
   /** Path to the vendored design skill's assets.mjs. */
-  assetsScript?: string
+  assetsScript?: string;
   /** OpenRouter key for the image-model path. */
-  openrouterKey?: string
+  openrouterKey?: string;
   /** Cheap image model id, e.g. google/gemini-3.1-flash-lite-image. */
-  imageModel?: string
+  imageModel?: string;
   /** BrandBrain MCP endpoint, when the platform is reachable and authenticated. */
-  brandbrainUrl?: string
-  brandbrainToken?: string
+  brandbrainUrl?: string;
+  brandbrainToken?: string;
   /** Opt-in: a standalone page may wear a real company's mark. */
-  allowRealBrandMarks?: boolean
+  allowRealBrandMarks?: boolean;
   /** The artefact, so the brand mark is chosen for the page it belongs to. */
-  artifactHtml?: string
+  artifactHtml?: string;
   /**
    * BrandBrain flow MCP server, for GENERATED pictures. Its cheapest model is
    * `openrouter/meta/muse-image` at ~$0.01 an image, which is the first rung
    * that can invent a picture for the subject rather than search for one.
    */
-  flowServerPath?: string
+  flowServerPath?: string;
   /** Provider/model to generate with; omitted means the backend's default. */
-  flowModel?: { provider: string; modelId: string }
+  flowModel?: { provider: string; modelId: string };
   /** Ceiling for one live run, in USD micros. */
-  flowMaxSpendMicros?: number
+  flowMaxSpendMicros?: number;
   /**
    * A ComfyUI server — Comfy Desktop's backend — driven over its HTTP API: the
    * UI-backed route, so generation is a service the harness orchestrates (queue,
@@ -81,31 +91,31 @@ export interface ImageSources {
    * port, so the rung is live without configuration on this machine; an
    * unreachable server falls through to mflux rather than failing the loop.
    */
-  comfyUrl?: string
-  comfySteps?: number
-  comfyWidth?: number
-  comfyHeight?: number
+  comfyUrl?: string;
+  comfySteps?: number;
+  comfyWidth?: number;
+  comfyHeight?: number;
   /** Local MLX generation, and the fallback when no ComfyUI server answers. */
-  mlxCommand?: string
-  mlxModel?: string
-  mlxSteps?: number
-  mlxWidth?: number
-  mlxHeight?: number
+  mlxCommand?: string;
+  mlxModel?: string;
+  mlxSteps?: number;
+  mlxWidth?: number;
+  mlxHeight?: number;
   /** Images per weight load; see generateWithMlx for the measured gain. */
-  mlxCount?: number
+  mlxCount?: number;
   /** Directory downloads land in. */
-  into: string
+  into: string;
 }
 
 const MIME: Record<string, string> = {
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.gif': 'image/gif',
-  '.svg': 'image/svg+xml',
-  '.avif': 'image/avif',
-}
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
+  ".gif": "image/gif",
+  ".svg": "image/svg+xml",
+  ".avif": "image/avif",
+};
 
 /**
  * Replace local image references with data URIs.
@@ -122,66 +132,82 @@ export function inlineLocalImages(
   {
     maxBytes = 900_000,
     descriptions = {},
-  }: { maxBytes?: number; descriptions?: Record<string, string> } = {}
+  }: { maxBytes?: number; descriptions?: Record<string, string> } = {},
 ): {
-  html: string
-  inlined: string[]
-  unresolved: string[]
-  substituted: string[]
-  skippedTooLarge: string[]
+  html: string;
+  inlined: string[];
+  unresolved: string[];
+  substituted: string[];
+  skippedTooLarge: string[];
 } {
-  const inlined: string[] = []
-  const unresolved: string[] = []
-  const substituted: string[] = []
-  const skippedTooLarge: string[] = []
+  const inlined: string[] = [];
+  const unresolved: string[] = [];
+  const substituted: string[] = [];
+  const skippedTooLarge: string[] = [];
   // Edits are collected as spans and applied last, so that rewriting a src and
   // the alt beside it cannot invalidate the other's offsets.
-  const edits: { start: number; end: number; text: string }[] = []
-  let out = html
-  const available = collectImageFiles(dir)
+  const edits: { start: number; end: number; text: string }[] = [];
+  let out = html;
+  const available = collectImageFiles(dir);
   // Only images we can actually embed may stand in for a reference. A file over
   // the budget is not a candidate, or the page would inherit the brokenness the
   // ladder exists to remove.
-  const donors = available.filter((file) => inlineable(file, maxBytes))
+  const donors = available.filter((file) => inlineable(file, maxBytes));
 
   for (const match of html.matchAll(/src=(["'])([^"']+)\1/g)) {
-    const [, quote, src] = match
-    if (!src || /^(https?:|data:|blob:|#)/i.test(src)) continue
-    let candidate = path.resolve(dir, src)
+    const [, quote, src] = match;
+    if (!src || /^(https?:|data:|blob:|#)/i.test(src)) continue;
+    let candidate = path.resolve(dir, src);
     // Refuse anything that escapes the loop directory.
-    if (candidate.startsWith(path.resolve(dir) + path.sep) && inlineable(candidate, maxBytes)) {
+    if (
+      candidate.startsWith(path.resolve(dir) + path.sep) &&
+      inlineable(candidate, maxBytes)
+    ) {
       // Exact path, and it fits: the happy path.
     } else {
       // The exact file is missing or too large to embed. A compacted JPEG sits
       // beside it under the same stem, so take that before going further: it is
       // the same picture, made embeddable.
-      const compacted = candidate.replace(/\.[a-z0-9]+$/i, '') + '.jpg'
+      const compacted = candidate.replace(/\.[a-z0-9]+$/i, "") + ".jpg";
       const byCompaction =
-        compacted.startsWith(path.resolve(dir) + path.sep) && inlineable(compacted, maxBytes) ? compacted : undefined
-      const byName = available.find((file) => path.basename(file) === path.basename(src))
+        compacted.startsWith(path.resolve(dir) + path.sep) &&
+        inlineable(compacted, maxBytes)
+          ? compacted
+          : undefined;
+      const byName = available.find(
+        (file) => path.basename(file) === path.basename(src),
+      );
       // The model also renames the extension: it was told `images/hero.jpg` and
       // wrote `images/hero.png`. Same picture, same stem — refusing it over a
       // three-character difference is refusing to read the reference.
-      const byStem = available.find((file) => path.basename(file, path.extname(file)) === path.basename(src, path.extname(src)))
+      const byStem = available.find(
+        (file) =>
+          path.basename(file, path.extname(file)) ===
+          path.basename(src, path.extname(src)),
+      );
       if (byCompaction) {
-        candidate = byCompaction
+        candidate = byCompaction;
       } else if (byName && inlineable(byName, maxBytes)) {
         // The model moved the file (images/hero.png -> assets/hero.png) but the
         // bytes are the ones we generated, so it is still ours to inline.
-        candidate = byName
+        candidate = byName;
       } else if (byStem && inlineable(byStem, maxBytes)) {
-        candidate = byStem
+        candidate = byStem;
       } else {
         // The model invented a name for a picture it cannot see
         // (assets/data-center-cern.jpg). In a single-file page that reference is
         // broken whatever we do, so give it a real generated image rather than
         // leaving a hole — and record the substitution, because a silent swap is
         // how a page ends up claiming a photograph it does not have.
-        const donor = donors.length > 0 ? donors[substituted.length % donors.length] : undefined
+        const donor =
+          donors.length > 0
+            ? donors[substituted.length % donors.length]
+            : undefined;
         if (donor) {
-          const bytes = Buffer.from(fs.readFileSync(donor))
+          const bytes = Buffer.from(fs.readFileSync(donor));
           if (bytes.byteLength > 0) {
-            const mime = IMAGE_MIME[path.extname(donor).toLowerCase()] ?? 'image/png'
+            const mime =
+              IMAGE_MIME[path.extname(donor).toLowerCase()] ?? "image/png";
             edits.push({
               start: match.index,
               end: match.index + match[0].length,
@@ -189,60 +215,66 @@ export function inlineLocalImages(
               // has to go back in: dropping it leaves `<img "data:...">`, which
               // is a tag with a picture in it and no source, and every counter
               // in this module still reports a success.
-              text: `src=${quote}data:${mime};base64,${bytes.toString('base64')}${quote}`,
-            })
+              text: `src=${quote}data:${mime};base64,${bytes.toString("base64")}${quote}`,
+            });
             // The alt on this tag describes a picture that does not exist — the
             // model wrote it for the name it invented. We now know what the
             // donor actually shows, so the caption follows the picture rather
             // than the fantasy. Left alone, a page can claim a CERN data centre
             // over a photograph of a bridge, which is worse than no caption.
-            const described = descriptions[path.basename(donor)]
-            if (described) rewriteAlt(html, match.index, edits, described)
-            substituted.push(`${src} <- ${path.basename(donor)}`)
-            continue
+            const described = descriptions[path.basename(donor)];
+            if (described) rewriteAlt(html, match.index, edits, described);
+            substituted.push(`${src} <- ${path.basename(donor)}`);
+            continue;
           }
         }
         // Nothing to stand in for it. Distinguish the two reasons a reference
         // survives into the delivered page: the file is there and simply too
         // heavy to embed, or there is no such file at all. Both are broken, and
         // they are not the same bug to go and fix.
-        if (fs.existsSync(candidate) && !inlineable(candidate, maxBytes)) skippedTooLarge.push(src)
-        else unresolved.push(src)
+        if (fs.existsSync(candidate) && !inlineable(candidate, maxBytes))
+          skippedTooLarge.push(src);
+        else unresolved.push(src);
         continue;
       }
     }
-    const bytes = fs.readFileSync(candidate)
+    const bytes = fs.readFileSync(candidate);
     if (bytes.byteLength > maxBytes) {
-      skippedTooLarge.push(src)
-      continue
+      skippedTooLarge.push(src);
+      continue;
     }
-    const mime = MIME[path.extname(candidate).toLowerCase()] ?? 'application/octet-stream'
-    const dataUri = `data:${mime};base64,${bytes.toString('base64')}`
+    const mime =
+      MIME[path.extname(candidate).toLowerCase()] ?? "application/octet-stream";
+    const dataUri = `data:${mime};base64,${bytes.toString("base64")}`;
     edits.push({
       start: match.index,
       end: match.index + match[0].length,
       text: `src=${quote}${dataUri}${quote}`,
-    })
-    inlined.push(src)
+    });
+    inlined.push(src);
   }
 
   for (const edit of edits.sort((a, b) => b.start - a.start)) {
-    out = out.slice(0, edit.start) + edit.text + out.slice(edit.end)
+    out = out.slice(0, edit.start) + edit.text + out.slice(edit.end);
   }
 
-  return { html: out, inlined, unresolved, substituted, skippedTooLarge }
+  return { html: out, inlined, unresolved, substituted, skippedTooLarge };
 }
 
 /** Run a command and capture stdout, without throwing on a non-zero exit. */
-function run(cmd: string, args: string[], cwd?: string): Promise<{ code: number; stdout: string; stderr: string }> {
+function run(
+  cmd: string,
+  args: string[],
+  cwd?: string,
+): Promise<{ code: number; stdout: string; stderr: string }> {
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { cwd })
-    let stdout = ''
-    let stderr = ''
-    child.stdout.on('data', (c) => (stdout += String(c)))
-    child.stderr.on('data', (c) => (stderr += String(c)))
-    child.on('close', (code) => resolve({ code: code ?? 0, stdout, stderr }))
-  })
+    const child = spawn(cmd, args, { cwd });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (c) => (stdout += String(c)));
+    child.stderr.on("data", (c) => (stderr += String(c)));
+    child.on("close", (code) => resolve({ code: code ?? 0, stdout, stderr }));
+  });
 }
 
 /**
@@ -252,112 +284,132 @@ function run(cmd: string, args: string[], cwd?: string): Promise<{ code: number;
  * the licence-checked download plus the credit record, so nothing here has to
  * re-implement provenance.
  */
-export async function sourceOpenCollection(request: ImageRequest, sources: ImageSources): Promise<SourcedImage | undefined> {
-  const script = sources.assetsScript
-  if (!script || !fs.existsSync(script)) return undefined
-  fs.mkdirSync(sources.into, { recursive: true })
+export async function sourceOpenCollection(
+  request: ImageRequest,
+  sources: ImageSources,
+): Promise<SourcedImage | undefined> {
+  const script = sources.assetsScript;
+  if (!script || !fs.existsSync(script)) return undefined;
+  fs.mkdirSync(sources.into, { recursive: true });
 
   // Try the full query, then its first two words, then the subject alone: a
   // query that matches nothing must degrade to something rather than to nothing.
-  const terms = request.query.split(/\s+/).filter(Boolean)
-  const attempts = [request.query, terms.slice(0, 2).join(' '), terms.slice(0, 1)[0]].filter(
-    (q, i, all): q is string => typeof q === 'string' && q.length > 2 && all.indexOf(q) === i
-  )
+  const terms = request.query.split(/\s+/).filter(Boolean);
+  const attempts = [
+    request.query,
+    terms.slice(0, 2).join(" "),
+    terms.slice(0, 1)[0],
+  ].filter(
+    (q, i, all): q is string =>
+      typeof q === "string" && q.length > 2 && all.indexOf(q) === i,
+  );
 
-  let searched = { code: 1, stdout: '', stderr: '' }
-  let results: { ref?: string; title?: string }[] = []
+  let searched = { code: 1, stdout: "", stderr: "" };
+  let results: { ref?: string; title?: string }[] = [];
   for (const attempt of attempts) {
     searched = await run(
-      'node',
-      [script, attempt, '--limit', '4', '--min-width', '900', '--json', '--no-check'],
-      sources.into
-    )
-    if (searched.code !== 0) continue
+      "node",
+      [
+        script,
+        attempt,
+        "--limit",
+        "4",
+        "--min-width",
+        "900",
+        "--json",
+        "--no-check",
+      ],
+      sources.into,
+    );
+    if (searched.code !== 0) continue;
     try {
       const parsed = JSON.parse(searched.stdout) as {
-        sources?: { items?: { ref?: string; title?: string }[] }[]
-      }
-      results = (parsed.sources ?? []).flatMap((source) => source.items ?? [])
+        sources?: { items?: { ref?: string; title?: string }[] }[];
+      };
+      results = (parsed.sources ?? []).flatMap((source) => source.items ?? []);
     } catch {
-      results = []
+      results = [];
     }
-    if (results.length > 0) break
+    if (results.length > 0) break;
   }
 
-
   for (const result of results) {
-    const ref = result.ref
-    if (!ref) continue
-    const before = listFiles(sources.into)
-    const fetched = await run('node', [
+    const ref = result.ref;
+    if (!ref) continue;
+    const before = listFiles(sources.into);
+    const fetched = await run("node", [
       script,
-      '--get',
+      "--get",
       String(ref),
-      '--to',
+      "--to",
       sources.into,
-      '--name',
+      "--name",
       path.basename(request.fileName),
-    ])
-    if (fetched.code !== 0) continue
+    ]);
+    if (fetched.code !== 0) continue;
     // The skill normalises the extension to the format it actually downloaded
     // (`hero.jpg` lands as `hero-jpg.jpg`), so the file to use is whatever
     // appeared, not the name we asked for. Assuming the name is how a page ends
     // up with an <img> pointing at a path that was never written.
-    const landed = listFiles(sources.into).filter((f) => !before.includes(f))
-    const target = landed[0]
-    if (!target) continue
-    const credit = creditFor(sources.into, path.basename(target))
-    const { size } = fs.statSync(target)
+    const landed = listFiles(sources.into).filter((f) => !before.includes(f));
+    const target = landed[0];
+    if (!target) continue;
+    const credit = creditFor(sources.into, path.basename(target));
+    const { size } = fs.statSync(target);
     return {
       ...request,
       fileName: path.basename(target),
       path: target,
       bytes: size,
-      source: 'open-collection',
+      source: "open-collection",
       licence: credit?.license,
       creator: credit?.creator,
       page: credit?.sourcePage,
       credit: credit
-        ? `${credit.title ?? 'photograph'} — ${credit.creator ?? 'unknown'}, ${credit.license ?? 'licence unrecorded'}`
+        ? `${credit.title ?? "photograph"} — ${credit.creator ?? "unknown"}, ${credit.license ?? "licence unrecorded"}`
         : undefined,
-    }
+    };
   }
-  return undefined
+  return undefined;
 }
 
 /** File names directly inside a directory (no recursion). */
 function listFiles(dir: string): string[] {
-  if (!fs.existsSync(dir)) return []
+  if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
-    .filter((name) => !name.endsWith('.json') && !name.startsWith('.'))
-    .map((name) => path.join(dir, name))
+    .filter((name) => !name.endsWith(".json") && !name.startsWith("."))
+    .map((name) => path.join(dir, name));
 }
 
 /** The skill records provenance in credits.json next to the downloads. */
 function creditFor(
   dir: string,
-  fileName: string
-): { title?: string; creator?: string; license?: string; sourcePage?: string } | undefined {
+  fileName: string,
+):
+  | { title?: string; creator?: string; license?: string; sourcePage?: string }
+  | undefined {
   try {
-    const records = JSON.parse(fs.readFileSync(path.join(dir, 'credits.json'), 'utf8')) as {
-      file?: string
-      title?: string
-      creator?: string
-      license?: string
-      page?: string
-      sourceUrl?: string
-    }[]
-    const hit = records.find((r) => r.file === fileName)
-    if (!hit) return undefined
+    const records = JSON.parse(
+      fs.readFileSync(path.join(dir, "credits.json"), "utf8"),
+    ) as {
+      file?: string;
+      title?: string;
+      creator?: string;
+      license?: string;
+      page?: string;
+      sourceUrl?: string;
+    }[];
+    const hit = records.find((r) => r.file === fileName);
+    if (!hit) return undefined;
     return {
       title: hit.title,
       creator: hit.creator,
       license: hit.license,
       sourcePage: hit.page ?? hit.sourceUrl,
-    }
+    };
   } catch {
-    return undefined
+    return undefined;
   }
 }
 
@@ -368,52 +420,68 @@ function creditFor(
  * is gone by generating four images and failing on the fourth is worse than one
  * that says so up front.
  */
-export async function sourceImageModel(request: ImageRequest, sources: ImageSources): Promise<SourcedImage | undefined> {
-  const key = sources.openrouterKey
-  const model = sources.imageModel
-  if (!key || !model) return undefined
+export async function sourceImageModel(
+  request: ImageRequest,
+  sources: ImageSources,
+): Promise<SourcedImage | undefined> {
+  const key = sources.openrouterKey;
+  const model = sources.imageModel;
+  if (!key || !model) return undefined;
 
-  const balance = await openrouterBalance(key)
-  if (balance === null || balance <= 0.05) return undefined
+  const balance = await openrouterBalance(key);
+  if (balance === null || balance <= 0.05) return undefined;
 
-  fs.mkdirSync(sources.into, { recursive: true })
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: request.query }],
-      modalities: ['image', 'text'],
-    }),
-  })
-  if (!response.ok) return undefined
+  fs.mkdirSync(sources.into, { recursive: true });
+  const response = await fetch(
+    "https://openrouter.ai/api/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: "user", content: request.query }],
+        modalities: ["image", "text"],
+      }),
+    },
+  );
+  if (!response.ok) return undefined;
 
   const body = (await response.json()) as {
-    choices?: { message?: { images?: { image_url?: { url?: string } }[] } }[]
-  }
-  const url = body.choices?.[0]?.message?.images?.[0]?.image_url?.url
-  if (!url) return undefined
+    choices?: { message?: { images?: { image_url?: { url?: string } }[] } }[];
+  };
+  const url = body.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+  if (!url) return undefined;
 
-  const image = await fetch(url)
-  if (!image.ok) return undefined
-  const bytes = Buffer.from(await image.arrayBuffer())
-  const target = path.join(sources.into, path.basename(request.fileName))
-  fs.writeFileSync(target, bytes)
-  return { ...request, path: target, bytes: bytes.byteLength, source: 'image-model' }
+  const image = await fetch(url);
+  if (!image.ok) return undefined;
+  const bytes = Buffer.from(await image.arrayBuffer());
+  const target = path.join(sources.into, path.basename(request.fileName));
+  fs.writeFileSync(target, bytes);
+  return {
+    ...request,
+    path: target,
+    bytes: bytes.byteLength,
+    source: "image-model",
+  };
 }
 
 async function openrouterBalance(key: string): Promise<number | null> {
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/credits', {
+    const response = await fetch("https://openrouter.ai/api/v1/credits", {
       headers: { Authorization: `Bearer ${key}` },
-    })
-    if (!response.ok) return null
-    const data = (await response.json()) as { data?: { total_credits?: number; total_usage?: number } }
-    const total = data.data?.total_credits ?? 0
-    const used = data.data?.total_usage ?? 0
-    return total - used
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as {
+      data?: { total_credits?: number; total_usage?: number };
+    };
+    const total = data.data?.total_credits ?? 0;
+    const used = data.data?.total_usage ?? 0;
+    return total - used;
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -432,130 +500,143 @@ async function openrouterBalance(key: string): Promise<number | null> {
  */
 async function sourceGeneratedImage(
   request: ImageRequest,
-  sources: ImageSources
+  sources: ImageSources,
 ): Promise<SourcedImage | undefined> {
-  if (!sources.flowServerPath) return undefined
+  if (!sources.flowServerPath) return undefined;
   const client = new BrandBrainFlowClient({
     serverPath: sources.flowServerPath,
     bearerToken: sources.brandbrainToken,
     maxSpendMicros: sources.flowMaxSpendMicros ?? 1_000_000,
-  })
+  });
   try {
     // A flow has to exist before a model can be run against it.
-    const created = await client.call('create_asset_flow', {
+    const created = await client.call("create_asset_flow", {
       title: `harness image · ${request.query.slice(0, 60)}`,
       goal: request.query,
-    })
-    const sessionId = /flow_session_[A-Za-z0-9_-]+/.exec(created)?.[0]
-    if (!sessionId) return undefined
+    });
+    const sessionId = /flow_session_[A-Za-z0-9_-]+/.exec(created)?.[0];
+    if (!sessionId) return undefined;
 
     // Pin the cheapest CURRENT model with a real price, and hold the run to a
     // ceiling: set_generate_target accepts a model it then ignores, so the
     // comparison path is the one that actually prices at muse rates.
-    const cheapest = cheapestImageModel(await client.imageModels({ sortByCost: true }))
-    const provider = sources.flowModel?.provider ?? cheapest?.provider
-    const modelId = sources.flowModel?.modelId ?? cheapest?.modelId
-    if (!provider || !modelId) return undefined
+    const cheapest = cheapestImageModel(
+      await client.imageModels({ sortByCost: true }),
+    );
+    const provider = sources.flowModel?.provider ?? cheapest?.provider;
+    const modelId = sources.flowModel?.modelId ?? cheapest?.modelId;
+    if (!provider || !modelId) return undefined;
 
     const result = await generateWithPinnedModel(client, {
       sessionId,
       models: [{ provider, modelId }],
       outPath: path.join(sources.into, path.basename(request.fileName)),
       maxTotalUsdMicros: sources.flowMaxSpendMicros ?? 20_000,
-      mode: 'live',
-    })
-    if (!result) return undefined
-    return { ...request, path: result.path, bytes: result.bytes, source: 'generated' }
+      mode: "live",
+    });
+    if (!result) return undefined;
+    return {
+      ...request,
+      path: result.path,
+      bytes: result.bytes,
+      source: "generated",
+    };
   } finally {
-    client.close()
+    client.close();
   }
 }
 
 export async function sourceImage(
   request: ImageRequest,
-  sources: ImageSources
+  sources: ImageSources,
 ): Promise<{ image?: SourcedImage; attempted: string[]; reason?: string }> {
-  const attempted: string[] = []
+  const attempted: string[] = [];
 
   // Default to Comfy Desktop's backend: it is the route with a UI behind it, so
   // a person can watch, steer and re-run a generation.
-  const comfyUrl = sources.comfyUrl ?? DEFAULT_COMFY_URL
+  const comfyUrl = sources.comfyUrl ?? DEFAULT_COMFY_URL;
   {
-    attempted.push('comfy')
+    attempted.push("comfy");
     const generated = await generateWithComfy({
       url: comfyUrl,
       prompt: request.query,
-      outPath: path.join(sources.into, path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, '') + '.png'),
+      outPath: path.join(
+        sources.into,
+        path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, "") + ".png",
+      ),
       steps: sources.comfySteps,
       width: sources.comfyWidth,
       height: sources.comfyHeight,
-      filenamePrefix: 'harness/loop',
-    })
+      filenamePrefix: "harness/loop",
+    });
     if (generated) {
-      const fit = await compactImage(generated.path)
+      const fit = await compactImage(generated.path);
       return {
         image: {
           ...request,
           path: fit.file,
           fileName: path.basename(fit.file),
           bytes: fit.bytes,
-          source: 'comfy',
+          source: "comfy",
         },
         attempted,
-      }
+      };
     }
   }
 
   if (sources.mlxCommand && sources.mlxModel) {
-    attempted.push('local-mlx')
+    attempted.push("local-mlx");
     const local = await generateWithMlx({
       command: sources.mlxCommand,
       model: sources.mlxModel,
       prompt: request.query,
-      outPath: path.join(sources.into, path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, '') + '.png'),
+      outPath: path.join(
+        sources.into,
+        path.basename(request.fileName).replace(/\.[a-z0-9]+$/i, "") + ".png",
+      ),
       steps: sources.mlxSteps,
       width: sources.mlxWidth,
       height: sources.mlxHeight,
       count: sources.mlxCount,
-    })
+    });
     if (local) {
       if (local) {
-        const fit = await compactImage(local.path)
+        const fit = await compactImage(local.path);
         return {
           image: {
             ...request,
             path: fit.file,
             fileName: path.basename(fit.file),
             bytes: fit.bytes,
-            source: 'local-mlx',
+            source: "local-mlx",
           },
           attempted,
-        }
+        };
       }
     }
   }
 
   if (sources.flowServerPath) {
-    attempted.push('brandbrain-flow')
-    const generated = await sourceGeneratedImage(request, sources)
-    if (generated) return { image: generated, attempted }
+    attempted.push("brandbrain-flow");
+    const generated = await sourceGeneratedImage(request, sources);
+    if (generated) return { image: generated, attempted };
   }
 
   if (sources.brandbrainUrl) {
-    attempted.push('brandbrain')
-    const branded = await sourceBrandAsset(request, sources)
-    if (branded) return { image: branded, attempted }
+    attempted.push("brandbrain");
+    const branded = await sourceBrandAsset(request, sources);
+    if (branded) return { image: branded, attempted };
   }
   if (sources.imageModel && sources.openrouterKey) {
-    attempted.push('image-model')
-    const generated = await sourceImageModel(request, sources)
-    if (generated) return { image: generated, attempted }
+    attempted.push("image-model");
+    const generated = await sourceImageModel(request, sources);
+    if (generated) return { image: generated, attempted };
   }
-  attempted.push('open-collection')
-  const collected = await sourceOpenCollection(request, sources)
-  if (collected) return { image: collected, attempted }
+  attempted.push("open-collection");
+  const collected = await sourceOpenCollection(request, sources);
+  if (collected) return { image: collected, attempted };
 
-  return { attempted, reason: 'no source returned an image' }
+  return { attempted, reason: "no source returned an image" };
 }
 
 /**
@@ -567,36 +648,52 @@ export async function sourceImage(
  * downloads it when the caller has opted in. Anything else falls through to the
  * ordinary sources, which is the correct outcome when the platform is down.
  */
-async function sourceBrandAsset(request: ImageRequest, sources: ImageSources): Promise<SourcedImage | undefined> {
+async function sourceBrandAsset(
+  request: ImageRequest,
+  sources: ImageSources,
+): Promise<SourcedImage | undefined> {
   // All three, or none. The mark is a real company's identity, so it needs a
   // reachable platform, credentials, AND an explicit opt-in; anything less falls
   // through to the ordinary sources rather than putting a real brand's face on
   // a page that invented its own company.
-  if (!sources.brandbrainUrl || !sources.brandbrainToken || !sources.allowRealBrandMarks) return undefined
+  if (
+    !sources.brandbrainUrl ||
+    !sources.brandbrainToken ||
+    !sources.allowRealBrandMarks
+  )
+    return undefined;
 
-  const brand = guessBrand(sources.artifactHtml ?? '')
-  if (!brand) return undefined
+  const brand = guessBrand(sources.artifactHtml ?? "");
+  if (!brand) return undefined;
 
   const asset = await fetchBrandMark(brand, {
     url: sources.brandbrainUrl,
     token: sources.brandbrainToken,
     allowRealBrandMarks: sources.allowRealBrandMarks,
-  })
-  if (!asset?.url) return undefined
+  });
+  if (!asset?.url) return undefined;
 
-  const image = await fetch(asset.url)
-  if (!image.ok) return undefined
-  const bytes = Buffer.from(await image.arrayBuffer())
-  fs.mkdirSync(sources.into, { recursive: true })
-  const ext = path.extname(new URL(asset.url).pathname) || '.png'
-  const target = path.join(sources.into, `${path.basename(request.fileName, path.extname(request.fileName))}${ext}`)
-  fs.writeFileSync(target, bytes)
-  return { ...request, path: target, bytes: bytes.byteLength, source: 'brandbrain', page: asset.page }
+  const image = await fetch(asset.url);
+  if (!image.ok) return undefined;
+  const bytes = Buffer.from(await image.arrayBuffer());
+  fs.mkdirSync(sources.into, { recursive: true });
+  const ext = path.extname(new URL(asset.url).pathname) || ".png";
+  const target = path.join(
+    sources.into,
+    `${path.basename(request.fileName, path.extname(request.fileName))}${ext}`,
+  );
+  fs.writeFileSync(target, bytes);
+  return {
+    ...request,
+    path: target,
+    bytes: bytes.byteLength,
+    source: "brandbrain",
+    page: asset.page,
+  };
 }
 
-
 /** The inline budget for one embedded image, in bytes. */
-const INLINE_BUDGET = 900_000
+export const INLINE_IMAGE_BUDGET = 900_000;
 
 /**
  * Point the alt text of the `<img>` around `index` at the picture that is
@@ -611,21 +708,28 @@ function rewriteAlt(
   html: string,
   index: number,
   edits: { start: number; end: number; text: string }[],
-  description: string
+  description: string,
 ): void {
-  const open = html.lastIndexOf('<img', index)
-  if (open < 0) return
-  const close = html.indexOf('>', index)
-  if (close < 0) return
-  const tag = html.slice(open, close + 1)
-  const escaped = description.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
-  const existing = /\salt=(["'])([\s\S]*?)\1/i.exec(tag)
+  const open = html.lastIndexOf("<img", index);
+  if (open < 0) return;
+  const close = html.indexOf(">", index);
+  if (close < 0) return;
+  const tag = html.slice(open, close + 1);
+  const escaped = description
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+  const existing = /\salt=(["'])([\s\S]*?)\1/i.exec(tag);
   if (existing && existing.index !== undefined) {
-    const start = open + existing.index
-    edits.push({ start, end: start + existing[0].length, text: `alt="${escaped}"` })
-    return
+    const start = open + existing.index;
+    edits.push({
+      start,
+      end: start + existing[0].length,
+      text: `alt="${escaped}"`,
+    });
+    return;
   }
-  edits.push({ start: close, end: close, text: ` alt="${escaped}"` })
+  edits.push({ start: close, end: close, text: ` alt="${escaped}"` });
 }
 
 /** JPEG encodings to try, widest first, when shrinking an image. */
@@ -634,7 +738,7 @@ const COMPACT_STEPS: ReadonlyArray<readonly [number, number]> = [
   [1280, 80],
   [960, 76],
   [720, 72],
-]
+];
 
 /**
  * Re-encode a generated image so it can actually be embedded.
@@ -649,44 +753,44 @@ const COMPACT_STEPS: ReadonlyArray<readonly [number, number]> = [
  */
 export async function compactImage(
   file: string,
-  maxBytes = INLINE_BUDGET
+  maxBytes = INLINE_IMAGE_BUDGET,
 ): Promise<{ file: string; bytes: number; compacted: boolean }> {
-  const bytes = fs.statSync(file).size
-  if (bytes <= maxBytes) return { file, bytes, compacted: false }
-  const target = file.replace(/\.[a-z0-9]+$/i, '') + '.jpg'
+  const bytes = fs.statSync(file).size;
+  if (bytes <= maxBytes) return { file, bytes, compacted: false };
+  const target = file.replace(/\.[a-z0-9]+$/i, "") + ".jpg";
   for (const [width, quality] of COMPACT_STEPS) {
     const buffer = await sharp(file)
       .resize({ width, withoutEnlargement: true })
       .jpeg({ quality, mozjpeg: true })
-      .toBuffer()
+      .toBuffer();
     if (buffer.byteLength <= maxBytes) {
-      fs.writeFileSync(target, buffer)
-      return { file: target, bytes: buffer.byteLength, compacted: true }
+      fs.writeFileSync(target, buffer);
+      return { file: target, bytes: buffer.byteLength, compacted: true };
     }
   }
-  return { file, bytes, compacted: false }
+  return { file, bytes, compacted: false };
 }
 
 /** Whether a file can be embedded without shrinking it first. */
 function inlineable(file: string, maxBytes: number): boolean {
   try {
-    const stats = fs.statSync(file)
-    return stats.isFile() && stats.size > 0 && stats.size <= maxBytes
+    const stats = fs.statSync(file);
+    return stats.isFile() && stats.size > 0 && stats.size <= maxBytes;
   } catch {
-    return false
+    return false;
   }
 }
 
 /** MIME types for images we inline. */
 const IMAGE_MIME: Record<string, string> = {
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.gif': 'image/gif',
-  '.avif': 'image/avif',
-  '.svg': 'image/svg+xml',
-}
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
+  ".gif": "image/gif",
+  ".avif": "image/avif",
+  ".svg": "image/svg+xml",
+};
 
 /**
  * Images we GENERATED for this page, never the measurement evidence.
@@ -702,7 +806,7 @@ function collectImageFiles(dir: string, depth = 0): string[] {
   if (depth > 1 || !fs.existsSync(dir)) return [];
   const out: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name.startsWith('.') || entry.name === 'screenshots') continue;
+    if (entry.name.startsWith(".") || entry.name === "screenshots") continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...collectImageFiles(full, depth + 1));
     else if (IMAGE_MIME[path.extname(entry.name).toLowerCase()]) out.push(full);
@@ -723,60 +827,94 @@ export function queryFromArtifact(html: string): string {
   // stylesheet into the artefact, reading it as text turns the query into
   // `--gamma-font-ui refined divider` — which matches nothing anywhere, and the
   // failure looks like "no source has images" rather than "the query was junk".
-  const markup = html.replace(/<style\b[\s\S]*?<\/style>/gi, ' ').replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
-  const headline = /<h1[^>]*>([\s\S]{0,200}?)<\/h1>/i.exec(markup)?.[1] ?? ''
-  const title = /<title[^>]*>([\s\S]{0,120}?)<\/title>/i.exec(markup)?.[1] ?? ''
-  const headings = [...markup.matchAll(/<h[23][^>]*>([\s\S]{0,120}?)<\/h[23]>/gi)]
-    .map((m) => stripTags(m[1] ?? ''))
+  const markup = html
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ");
+  const headline = /<h1[^>]*>([\s\S]{0,200}?)<\/h1>/i.exec(markup)?.[1] ?? "";
+  const title =
+    /<title[^>]*>([\s\S]{0,120}?)<\/title>/i.exec(markup)?.[1] ?? "";
+  const headings = [
+    ...markup.matchAll(/<h[23][^>]*>([\s\S]{0,120}?)<\/h[23]>/gi),
+  ]
+    .map((m) => stripTags(m[1] ?? ""))
     .filter((t) => t.length > 3)
-    .slice(0, 4)
+    .slice(0, 4);
 
-  const text = stripTags([headline, ...headings].join(' '))
+  const text = stripTags([headline, ...headings].join(" "));
   const stop = new Set([
-    'the', 'and', 'for', 'with', 'that', 'this', 'from', 'your', 'our', 'you', 'are', 'was', 'has', 'have',
-    'not', 'but', 'all', 'can', 'will', 'one', 'two', 'see', 'get', 'new', 'use', 'how', 'why', 'what', 'when',
-  ])
+    "the",
+    "and",
+    "for",
+    "with",
+    "that",
+    "this",
+    "from",
+    "your",
+    "our",
+    "you",
+    "are",
+    "was",
+    "has",
+    "have",
+    "not",
+    "but",
+    "all",
+    "can",
+    "will",
+    "one",
+    "two",
+    "see",
+    "get",
+    "new",
+    "use",
+    "how",
+    "why",
+    "what",
+    "when",
+  ]);
   const words = text
     .toLowerCase()
     .split(/[^a-z0-9]+/)
     .filter((w) => w.length > 3 && !stop.has(w))
-    .slice(0, 6)
-  const subject = title ? stripTags(title) : 'technology'
-  return [...words, subject].join(' ').slice(0, 120)
+    .slice(0, 6);
+  const subject = title ? stripTags(title) : "technology";
+  return [...words, subject].join(" ").slice(0, 120);
 }
 
 function stripTags(html: string): string {
   return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&[a-z]+;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /** The note handed to the model so it composes the pictures it is given. */
-export function imageBrief(files: { fileName: string; credit?: string; description?: string }[]): string {
-  if (files.length === 0) return ''
+export function imageBrief(
+  files: { fileName: string; credit?: string; description?: string }[],
+): string {
+  if (files.length === 0) return "";
   const lines = files.map((f) => {
-    const detail = [f.description, f.credit].filter(Boolean).join(' — ')
-    return `- images/${f.fileName}${detail ? ` — ${detail}` : ''}`
-  })
+    const detail = [f.description, f.credit].filter(Boolean).join(" — ");
+    return `- images/${f.fileName}${detail ? ` — ${detail}` : ""}`;
+  });
   return [
-    '## Pictures are available',
-    'These files sit next to this page in the `images/` folder. Reference them with a',
+    "## Pictures are available",
+    "These files sit next to this page in the `images/` folder. Reference them with a",
     'relative path, exactly as named, in a real `<img src="...">`:',
     ...lines,
-    '',
-    'Use these paths verbatim. Do not invent a filename, and do not reference any image',
-    'that is not on this list — a made-up path ships as a broken picture.',
-    '',
-    'The description after each file says what that photograph actually shows. Write the',
-    '`alt` from that description, not from what you imagine the picture contains, and do',
-    'not caption it with specifics it cannot support — a real photograph of a real thing,',
-    'described honestly, beats a caption claiming a location you never had a picture of.',
-    '',
-    'Choose one that belongs to what the page is about and let it carry the composition',
-    'rather than sit in a grid of equal boxes. The delivered file is inlined for you.',
-  ].join('\n')
+    "",
+    "Use these paths verbatim. Do not invent a filename, and do not reference any image",
+    "that is not on this list — a made-up path ships as a broken picture.",
+    "",
+    "The description after each file says what that photograph actually shows. Write the",
+    "`alt` from that description, not from what you imagine the picture contains, and do",
+    "not caption it with specifics it cannot support — a real photograph of a real thing,",
+    "described honestly, beats a caption claiming a location you never had a picture of.",
+    "",
+    "Choose one that belongs to what the page is about and let it carry the composition",
+    "rather than sit in a grid of equal boxes. The delivered file is inlined for you.",
+  ].join("\n");
 }
 
 /**
@@ -803,15 +941,15 @@ export function imageBrief(files: { fileName: string; credit?: string; descripti
  */
 export function pageProse(html: string, maxChars = 6_000): string {
   const text = html
-    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<svg\b[\s\S]*?<\/svg>/gi, ' ')
-    .replace(/data:image\/[a-z+]+;base64,[a-z0-9+/=]+/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&[a-z#0-9]+;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-  return text.length > maxChars ? `${text.slice(0, maxChars)}…` : text
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<svg\b[\s\S]*?<\/svg>/gi, " ")
+    .replace(/data:image\/[a-z+]+;base64,[a-z0-9+/=]+/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z#0-9]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length > maxChars ? `${text.slice(0, maxChars)}…` : text;
 }
 
 export async function planImageSubjects(
@@ -825,67 +963,82 @@ export async function planImageSubjects(
    * model", and the cause was invisible for four runs. A step whose failure
    * looks identical to its fallback must say which one it was.
    */
-  onFailure?: (reason: string) => void
+  onFailure?: (reason: string) => void,
 ): Promise<{ hero: string; detail: string; palette: string } | undefined> {
   const prompt = [
-    'Read this page and name two photographs that would belong on it.',
-    '',
-    'Reply with JSON only, no prose and no code fence:',
+    "Read this page and name two photographs that would belong on it.",
+    "",
+    "Reply with JSON only, no prose and no code fence:",
     '{"hero": "<one sentence, 8-20 words>", "detail": "<one sentence, 8-20 words>",',
     ' "palette": "<three or four colour words from this page\'s own palette>"}',
-    '',
-    'Rules for the two sentences:',
-    '- Name something a camera could actually photograph, with a material and a setting.',
+    "",
+    "Rules for the two sentences:",
+    "- Name something a camera could actually photograph, with a material and a setting.",
     '  "a shipping container yard at dusk under sodium lamps", not "speed" or "scale".',
-    '- They must be different from each other, and different in kind: one wide and',
-    '  establishing, one close and specific.',
+    "- They must be different from each other, and different in kind: one wide and",
+    "  establishing, one close and specific.",
     '- For "palette", name the colours this page already uses, read off its own',
-    '  design — not colours that would suit a picture in the abstract.',
-    '- No text, signage, screens or whiteboards in either. The camera cannot read them.',
-    '- Do not invent a customer, a person, a city or a product that the page does not',
-    '  describe. Nothing may claim to be somewhere it is not.',
-    '- Do not take the product or company name as a place, a person or an object. A',
-    '  product called Meridian is about whatever the page says it does, not about a',
-    '  meridian line, an observatory or anywhere in Greenwich. Photograph the work',
-    '  the page describes, never the name it goes by.',
-    '',
-    '---',
-    'The page, as text:',
-    '',
+    "  design — not colours that would suit a picture in the abstract.",
+    "- No text, signage, screens or whiteboards in either. The camera cannot read them.",
+    "- Do not invent a customer, a person, a city or a product that the page does not",
+    "  describe. Nothing may claim to be somewhere it is not.",
+    "- Do not take the product or company name as a place, a person or an object. A",
+    "  product called Meridian is about whatever the page says it does, not about a",
+    "  meridian line, an observatory or anywhere in Greenwich. Photograph the work",
+    "  the page describes, never the name it goes by.",
+    "",
+    "---",
+    "The page, as text:",
+    "",
     pageProse(html),
-  ].join('\n')
+  ].join("\n");
 
-  let raw = ''
+  let raw = "";
   try {
-    raw = await ask(prompt)
+    raw = await ask(prompt);
   } catch (error) {
-    onFailure?.(`the model call threw: ${error instanceof Error ? error.message : String(error)}`)
-    return undefined
+    onFailure?.(
+      `the model call threw: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    return undefined;
   }
   if (raw.trim().length === 0) {
-    onFailure?.('the model returned nothing at all')
-    return undefined
+    onFailure?.("the model returned nothing at all");
+    return undefined;
   }
-  const json = /\{[\s\S]*\}/.exec(raw)?.[0]
+  const json = /\{[\s\S]*\}/.exec(raw)?.[0];
   if (!json) {
-    onFailure?.(`no JSON in the reply, which began: ${JSON.stringify(raw.trim().slice(0, 80))}`)
-    return undefined
+    onFailure?.(
+      `no JSON in the reply, which began: ${JSON.stringify(raw.trim().slice(0, 80))}`,
+    );
+    return undefined;
   }
-  let parsed: { hero?: unknown; detail?: unknown; palette?: unknown }
+  let parsed: { hero?: unknown; detail?: unknown; palette?: unknown };
   try {
-    parsed = JSON.parse(json) as { hero?: unknown; detail?: unknown; palette?: unknown }
+    parsed = JSON.parse(json) as {
+      hero?: unknown;
+      detail?: unknown;
+      palette?: unknown;
+    };
   } catch (error) {
-    onFailure?.(`the reply's JSON did not parse: ${error instanceof Error ? error.message : String(error)}`)
-    return undefined
+    onFailure?.(
+      `the reply's JSON did not parse: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    return undefined;
   }
-  const hero = typeof parsed.hero === 'string' ? parsed.hero.trim() : ''
-  const detail = typeof parsed.detail === 'string' ? parsed.detail.trim() : ''
+  const hero = typeof parsed.hero === "string" ? parsed.hero.trim() : "";
+  const detail = typeof parsed.detail === "string" ? parsed.detail.trim() : "";
   if (hero.length < 8 || detail.length < 8) {
-    onFailure?.(`the reply was missing a usable subject: ${JSON.stringify(json.slice(0, 120))}`)
-    return undefined
+    onFailure?.(
+      `the reply was missing a usable subject: ${JSON.stringify(json.slice(0, 120))}`,
+    );
+    return undefined;
   }
-  const palette = typeof parsed.palette === 'string' ? parsed.palette.trim().slice(0, 60) : ''
-  return { hero, detail, palette }
+  const palette =
+    typeof parsed.palette === "string"
+      ? parsed.palette.trim().slice(0, 60)
+      : "";
+  return { hero, detail, palette };
 }
 
 /**
@@ -897,17 +1050,21 @@ export async function planImageSubjects(
  * produces garbled lettering on a screen or a sign, which is what a page about
  * software should never show.
  */
-export function imagePrompt(role: 'hero' | 'detail', subject: string, palette?: string): string {
+export function imagePrompt(
+  role: "hero" | "detail",
+  subject: string,
+  palette?: string,
+): string {
   const framing =
-    role === 'hero'
-      ? 'Wide establishing composition, 35mm, the subject placed off-centre with room to breathe, deep focus'
-      : 'Tight close-up, 85mm, shallow depth of field, the material and its texture filling the frame'
+    role === "hero"
+      ? "Wide establishing composition, 35mm, the subject placed off-centre with room to breathe, deep focus"
+      : "Tight close-up, 85mm, shallow depth of field, the material and its texture filling the frame";
   return [
-    subject.replace(/\s+/g, ' ').replace(/[.;]+$/, '') + '.',
+    subject.replace(/\s+/g, " ").replace(/[.;]+$/, "") + ".",
     // The page's own palette, when the planner could name it: a photograph that
     // is on-topic but off-palette still looks pasted onto the design.
-    `Photographic, natural light, honest colour, fine detail${palette ? `, palette of ${palette}` : ', muted palette'}.`,
-    framing + '.',
-    'No text or lettering anywhere in frame, no signage, no screens, no watermark, no logo.',
-  ].join(' ')
+    `Photographic, natural light, honest colour, fine detail${palette ? `, palette of ${palette}` : ", muted palette"}.`,
+    framing + ".",
+    "No text or lettering anywhere in frame, no signage, no screens, no watermark, no logo.",
+  ].join(" ");
 }

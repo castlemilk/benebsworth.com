@@ -56,12 +56,16 @@ export interface LoopReport {
    */
   scorerVersion?: string;
   /**
-   * The artefact fetches its runtime from the network, so the verifier never saw
-   * the page — only what the browser drew without those fetches. Every finding
-   * from that measurement is therefore about the fallback, not the design.
+   * What the page threw in the browser, verbatim.
+   *
+   * A page whose React loader crashes leaves an error box, and the inspector
+   * reports the symptoms — no headline, no buttons, nothing moved — without the
+   * cause. Those findings are true of the wreckage, which is exactly why they
+   * cannot be read as findings about the design: the exception is the defect and
+   * it is one line to fix.
    */
-  renderBlocked?: boolean;
-  /** What it tried to fetch, so the model can be told exactly what to inline. */
+  consoleErrors?: string[];
+  /** What the page fetches at runtime, for a deliverable meant to stand alone. */
   externalResources?: string[];
   /**
    * What the verifier said, priced: passed checks, strict success, and the
@@ -242,8 +246,11 @@ export function buildLoopPrompt(args: {
   // sandbox, and every finding below would then be about that error box rather
   // than about the design. So when it happened, the finding list is the one real
   // defect and nothing else, and the prompt says the verifier never saw the page.
-  const blocked = report.renderBlocked === true;
-  const credits = blocked ? [] : defectCredit(history);
+  // A page that threw has findings about the wreckage, not the design. They are
+  // kept — they are true — but the prompt leads with the exception so the next
+  // generation spends its effort on the cause.
+  const blocked = (report.consoleErrors ?? []).length > 0;
+  const credits = defectCredit(history);
   const fails = credits.filter((c) => c.level === "FAIL").slice(0, 12);
   const warns = credits.filter((c) => c.level === "WARN").slice(0, 8);
   const findingLines = [...fails, ...warns].map((c) => {
@@ -273,27 +280,28 @@ export function buildLoopPrompt(args: {
     [
       `This is revision ${String(loop)} of the page below. A previous version already exists and has been`,
       blocked
-        ? "opened in a browser that could not reach the network. It did not render, so nothing about its"
+        ? "opened in a real browser, and it threw before it finished loading. Nothing below describes"
         : "measured in a real browser. Your job is to improve it against what the measurements",
       blocked
-        ? "design could be judged — the only thing measured was the page's own error message. Make it"
+        ? "the design yet: what the browser measured is the wreckage, not the page. Fix the exception"
         : "found, and to extend it where it is thin — not to start over, and not to keep what",
       blocked
-        ? "self-contained first; every other judgement is suspended until it is."
+        ? "first, and every other finding will change once the page renders."
         : "is wrong.",
       ...(blocked
         ? [
             "",
-            "## Why nothing else is listed",
-            `The previous file fetched ${String((report.externalResources ?? []).length)} resource(s) from the network when it loaded:`,
-            ...(report.externalResources ?? [])
-              .slice(0, 8)
-              .map((u) => `- ${u}`),
-            "",
-            "A single HTML file that needs a CDN is not single and not self-contained: offline, in a",
-            "sandbox, in an email, or behind a firewall it shows an error and nothing else. Inline the",
-            "runtime you need, or write the page so it needs nothing it does not contain. Everything",
-            "else about this page will be measured as soon as it renders.",
+            "## The page threw — this is the defect",
+            ...(report.consoleErrors ?? [])
+              .slice(0, 4)
+              .map((e) => `- ${e.split("\\n")[0]}`),
+            ...(report.externalResources && report.externalResources.length > 0
+              ? [
+                  "",
+                  "It was loading these at the time:",
+                  ...report.externalResources.slice(0, 6).map((u) => `- ${u}`),
+                ]
+              : []),
           ]
         : []),
       "",

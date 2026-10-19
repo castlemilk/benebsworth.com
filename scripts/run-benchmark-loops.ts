@@ -619,14 +619,12 @@ for (let loop = 1; loop <= args.loops; loop += 1) {
   // findings about a CDN failure.
   const external = externalResources(artifact);
   if (external.length > 0) {
-    report.renderBlocked = true;
+    // Advisory, not blocking. A webfont link does not stop a page rendering — a
+    // whole run was nearly lost to treating one as if it did — so this joins the
+    // findings rather than replacing them.
     report.externalResources = external;
-    report.findings = [selfContainedFinding(external)];
-    console.warn(
-      `[loops] loop ${String(loop)}: page fetches ${String(external.length)} resource(s) from the network ` +
-        `(${external[0] as string}); it did not render here, so the inspector's findings are discarded ` +
-        "and replaced with the one real defect",
-    );
+    const crashed = (measured.report.consoleErrors ?? []).length > 0;
+    report.findings = [...(crashed ? [selfContainedFinding(external)] : []), ...measured.report.findings];
   } else {
     report.findings = measured.report.findings;
   }

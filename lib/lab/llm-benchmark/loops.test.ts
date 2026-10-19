@@ -460,7 +460,7 @@ describe("a page that cannot render on its own", () => {
     // took the rubric from 97 to 30.
     const report: LoopReport = {
       measurements: [],
-      renderBlocked: true,
+      consoleErrors: ["TypeError: Cannot read properties of undefined (reading 'createRoot')"],
       externalResources: externalResources(html),
       findings: [
         {
@@ -476,10 +476,10 @@ describe("a page that cannot render on its own", () => {
       artifact: html,
       report,
     });
-    expect(plan.prompt).toContain("did not render");
+    expect(plan.prompt).toContain("threw");
     expect(plan.prompt).toContain("unpkg.com/react");
     // The suspended judgements are named as suspended, not listed as defects.
     expect(plan.prompt).not.toContain("No headline found");
-    expect(plan.prompt).toContain("self-contained first");
+    expect(plan.prompt).toContain("TypeError");
   });
 });

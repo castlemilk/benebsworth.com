@@ -5,11 +5,12 @@ test('published Overland Track winter guide renders and links to the hike overvi
   page.on('pageerror', (error) => errors.push(String(error)))
 
   await page.goto('/blog/overland-track-guide/')
+  const article = page.getByRole('article')
 
-  await expect(page.getByRole('heading', { name: 'The Overland Track in winter: a trail guide' })).toBeVisible()
-  await expect(page.getByText('The Overland Track is usually a six-day summer walk')).toBeVisible()
-  await expect(page.getByText('The shuttle from Launceston was meant to drop us at Ronny Creek')).toBeVisible()
-  await expect(page.getByText('Night one, below Barn Bluff. Cold, exposed, and a good place to get dinner sorted early.')).toBeVisible()
+  await expect(article.getByRole('heading', { name: 'The Overland Track in winter: a trail guide', level: 1 })).toBeVisible()
+  await expect(article.getByText('The Overland Track is usually a six-day summer walk')).toBeVisible()
+  await expect(article.getByText('The shuttle from Launceston was meant to drop us at Ronny Creek')).toBeVisible()
+  await expect(article.getByText('Night one, below Barn Bluff. Cold, exposed, and a good place to get dinner sorted early.')).toBeVisible()
   await expect(page.getByRole('link', { name: /Overland Track — map, stats & gallery/i })).toHaveAttribute(
     'href',
     '/hiking/overland-track/',

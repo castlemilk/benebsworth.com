@@ -1,0 +1,78 @@
+name: Publish reviewed site
+on:
+  workflow_dispatch:
+    inputs:
+      approved_sha:
+        description: Full master commit SHA explicitly approved after review
+        required: true
+        type: string
+      target:
+        description: Approved destination
+        required: true
+        default: staging
+        type: choice
+        options: [staging, prod]
+permissions:
+  contents: read
+concurrency:
+  group: publish-site-${{ inputs.target }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      APPROVED_SHA: ${{ inputs.approved_sha }}
+      DEPLOY_TARGET: ${{ inputs.target }}
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          cache: npm
+      - run: node scripts/site-release.mjs dispatch
+      - run: npm ci
+      - run: npm run lint && npm run typecheck && node scripts/lint-prose.mjs --ci
+      - run: npm test -- --maxWorkers=2
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium && npm run e2e -- --workers=2
+      - run: node scripts/site-release.mjs record out site-release.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: reviewed-site-${{ github.sha }}
+          path: |
+            out/
+            site-release.json
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: ${{ inputs.target == 'prod' && 'production' || 'staging' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: reviewed-site-${{ github.sha }}
+          path: release
+      - name: Verify source and artifact before credentials are available
+        run: node scripts/site-release.mjs verify release/out release/site-release.json
+      - name: Publish verified static output through Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+          DEPLOY_TARGET: ${{ inputs.target }}
+        run: bash scripts/publish-reviewed-output.sh release/out

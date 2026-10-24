@@ -1231,8 +1231,12 @@ def main():
         
     if emit_llm:
         txt = render_llm(lo)
-        open(emit_llm, "w", encoding="utf-8").write(txt)
-        if emit_llm != "/dev/stdout":
+        if emit_llm in ("/dev/stdout", "-"):
+            sys.stdout.write(txt)
+        else:
+            with open(emit_llm, "w", encoding="utf-8") as output:
+                output.write(txt)
+        if emit_llm not in ("/dev/stdout", "-"):
             print(f"wrote LLM-friendly text to {emit_llm}")
         
     if not emit_svg and not emit_llm:

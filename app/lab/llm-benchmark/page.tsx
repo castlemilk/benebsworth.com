@@ -59,7 +59,7 @@ export default function LlmBenchmarkPage() {
           }),
           datasetLd({
             name: 'Frontier LLM Benchmark Results',
-            description: `Scored results for ${BENCHMARK_MODELS.length} language models — paid frontier models and open-weight free-tier models — across ${BENCHMARK_TASKS.length} runnable tasks (physics, game building, security, UI, mathematics, electronics), measuring correctness, runtime, and cost.`,
+            description: `Scored results for ${BENCHMARK_MODELS.length} language models, including paid frontier models and open-weight free-tier models, across ${BENCHMARK_TASKS.length} runnable tasks (physics, game building, security, UI, mathematics, electronics), measuring correctness, runtime, and cost.`,
             url: `${SITE_URL}/lab/llm-benchmark/`,
             variableMeasured: ['Correctness score (0–100)', 'Inference runtime (ms)', 'Token usage', 'Estimated cost (USD)'],
             keywords: ['LLM benchmark', 'Claude', 'GPT', 'Gemini', 'Kimi', 'Nemotron', 'Gemma', 'code generation', 'model evaluation'],

@@ -1,0 +1,122 @@
+---
+title: "Using my dot with Codex, and checking its work"
+date: "2026-10-24T00:00:00.000Z"
+description: "Working notes on using my dot with Codex for engineering, design and research, with screenshots of the tools and resources we found."
+labels: technology,developer experience,ai,personal
+release: false
+draft: true
+heroImage: /blog/using-my-dot-with-codex/hero.webp
+takeaways:
+  - "Useful agent results include evidence tied to the exact version reviewed."
+  - "The observed desktop has creative and engineering launchers, but each workflow still needs testing."
+  - "Remembered context needs checking against current project state."
+---
+
+An agent can finish its task while the work is still unfinished. I've been running into that distinction while using my dot with Codex across engineering, design and research. A patch can be ready to review. A portfolio can have a new direction. A film can exist while its narration still needs work. Calling all of these “done” hides the part I need to look at next.
+
+So I wanted to capture where this has been useful so far, along with the bits that still need fairly active supervision. This is a set of working notes, with some guesses about where agent assistance might go next.
+
+<Figure src="/blog/using-my-dot-with-codex/hero.webp" alt="A pencil-drawn circle overlaps an orange printed circle on paper." caption="Generated editorial illustration about comparing the proposed result with the intended one." width={1200} height={800} />
+
+## What I mean by my dot working with Codex
+
+There are two pieces to the setup. OpenAI describes a dot as an agent that can keep context across ongoing work. With local computer access enabled, it can create Work or Codex tasks on that computer. That's the connection I'm referring to here. The [dot documentation](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) also makes a useful qualification: a local task doesn't automatically receive every conversation I've had with my dot.
+
+Codex provides the place to work on the code and review the result. Its [app supports separate project threads, parallel agents, diff review and worktrees](https://openai.com/index/introducing-the-codex-app/). A worktree gives a task its own checkout. It still leaves us with the usual questions about whether a change is correct and how it fits with other changes.
+
+The useful part for me is continuity. I can return to a piece of work, connect it to another project, and keep the discussion moving without treating every request as a completely separate exercise. That helps with coordination. It doesn't mean the remembered state is current, or that every task has enough context to proceed.
+
+## A look inside the working environment
+
+One useful discovery was the desktop available alongside the conversation. The launcher in this session includes Blender, FreeCAD, GIMP and Inkscape, as well as Godot, Kdenlive, KiCad and QGIS. That's a fairly broad starting point for trying work beyond the editor: 3D models, graphics, video, electronics and maps.
+
+The screenshot establishes that those launchers were present. We haven't tested a complete workflow in every application. I'd want to open the relevant tool, produce something small and inspect the saved result before calling it usable for a project.
+
+<Figure src="/blog/using-my-dot-with-codex/dot-desktop-tools.png" alt="Desktop launcher showing creative, engineering and mapping application shortcuts." caption="Application shortcuts visible in this session. Their presence is not an end-to-end test of each tool." width={1323} height={966} />
+
+I also had a look at the machine's resources. The system monitor reports 9.73 GiB of RAM, roughly 10 GB in everyday terms, and CPU meters labelled 0 through 8. That is 9 visible logical CPUs. I initially described it as 8 vCPUs, but the screenshot doesn't support that count or tell us what CPU quota is guaranteed.
+
+<Figure src="/blog/using-my-dot-with-codex/dot-resource-monitor.png" alt="System monitor showing 9.73 GiB total memory and CPU meters numbered 0 through 8." caption="Observed resources: 9.73 GiB total RAM and 9 visible logical CPU meters. This does not establish a guaranteed allocation." width={1349} height={201} />
+
+These are observations from this environment on 24 October 2026, rather than a specification for every dot session. For me, the interesting question is what we can complete with it. A small image export or a focused test run gives us more useful information than the machine numbers alone.
+
+## CI investigations with a small boundary
+
+Continuous integration (CI) investigation has been one of the more concrete uses. I've used it to investigate failures across repositories, tied to exact commits, and to work on small fixes with tests.
+
+The commit matters. “The tests passed” is incomplete information if the branch has moved since that run. A failure on an earlier revision may explain how we got here, but it doesn't tell us whether the current revision is healthy. The same applies to a local check performed before the last edit.
+
+This is a task shape I can reason about: inspect a particular failure, trace it back to the relevant code, make a bounded change, and show what was checked. The result has something I can inspect besides the agent's explanation. I can read the diff and compare the test output with the claim.
+
+A passing check is evidence about the version it ran against and the behaviour it exercised. Keep both attached to the result.
+
+I wouldn't infer complete coverage from these fixes. A focused test can establish that a particular case now works while saying very little about the rest of the application. It is still useful evidence. We just need to keep the conclusion the same size as the check.
+
+Cross-project coordination adds another benefit here. I can keep several investigations in view and compare what each one has established. But similar failures can have different causes. Reusing an explanation across repositories needs the same care as reusing code.
+
+## Design work exposes a different gap
+
+I've also used this setup for portfolio design and work on 10 app walkthrough films. That's a broader sort of task, with more room for judgement about presentation and sequence.
+
+[The portfolio is now published](https://gamma-systems.castlemilk.chatgpt.site/portfolio/). Live playback, retry, the mobile viewer and the chapter-seeking fix have been checked. Narration and a subjective review of the soundtrack are still pending. A published site with working playback is progress, but there's still work to finish.
+
+User interface (UI) work has made the distinction particularly visible. In one application, the initial generated designs didn't match the implementation. I had to ask for repeated screenshots of the real interface to see what had actually been built and guide the next pass.
+
+A design image can suggest a good layout. It can't establish that the running page has that layout, that the spacing survives a smaller viewport, or that the controls behave as intended. Once we're discussing implementation, the running application needs to become the reference.
+
+This changes what I ask to review. Alongside the proposed design, I want a current screenshot of the implemented screen. If the task concerns interaction, I want the relevant interaction exercised too. A screenshot tells us something about appearance at one moment; it doesn't test a form submission.
+
+When the work is visual, inspect the implemented screen. A description of the changes cannot establish that the result matches the design.
+
+There's an interesting engineering problem in this. We have quite explicit ways to check whether a function returns an expected value. “This screen still looks wrong” contains several judgements that are harder to express. Some are measurable, such as an element overflowing its container. Others concern emphasis, rhythm or taste. I think agents will improve at the measurable parts, but I still need to decide whether the screen is the one I want.
+
+## Research is useful before a decision
+
+Naming and brand research has been another use, alongside research into local startups and events. These tasks involve exploring possibilities and collecting material that I can compare.
+
+The boundary is different from a code fix. A set of names can help me work out what I like, but a search result doesn't settle whether a name is suitable to use. A local event listing can point me towards something interesting, but its date and status still need checking with the organiser before I rely on it.
+
+For this kind of work, the sources are part of the output. I want to know where a claim came from and how current it is. A concise list with links I can follow is more useful to me than a long confident description whose evidence has disappeared into the conversation.
+
+These examples don't establish a productivity multiplier. That would need a measured comparison. For now, we can look at the investigations, fixes, design iterations and research material themselves.
+
+## The friction moves around
+
+Permissions and access can interrupt an otherwise sensible task. Sometimes the next step needs access to a repository, an application or a particular account. Sometimes the assistant needs a decision from me. From the outside, those can all look like the same pause, even though they need different responses.
+
+I want the interruption to explain the actual dependency. What action is blocked? What access is missing? What has already been completed? That gives me enough information to make a decision without reconstructing the whole task.
+
+The awkward part is calibration. Too many prompts make delegation feel like operating the tools one click at a time. Too few can let a task move beyond the scope I intended. I'd like permission boundaries that are clear enough for routine work to continue within them, with a specific request when something crosses the boundary.
+
+Notifications create a similar problem. More parallel work produces more updates competing for attention. A task starting, a task progressing, a task finishing its current step and a task needing a decision are different events. If they all interrupt me in the same way, the useful signal gets harder to find.
+
+This puts a limit on how much parallel work is helpful. At some point I still have to review the results. Increasing the number of active tasks without making their outputs easier to inspect can simply move the queue to me.
+
+## What I want back from a task
+
+The pattern across these examples is fairly practical. I want a task with a clear boundary and a result I can examine. A useful hand-off would answer:
+
+1. What changed, or what did the investigation establish?
+2. Which version or state was inspected?
+3. What evidence supports the result, and what does it leave untested?
+4. What remains unfinished, blocked or dependent on my judgement?
+
+For a code fix, that might mean the diff and relevant checks. For a design task, it includes the implemented screen. For research, it includes the sources. The evidence changes with the task, so “verified” needs a little more explanation than a tick beside the word.
+
+Useful continuity includes remembering what is unresolved, then checking whether the underlying work has changed before continuing.
+
+I think this is where an assistant that spans projects can be especially helpful. It can help keep unfinished pieces visible and bring the next decision back into focus. For that to work, a summary has to preserve uncertainty. “Published, with narration and soundtrack review still pending” tells me something that “completed” loses.
+
+## Where I think this goes next
+
+My expectation is that agents will take on larger pieces of work, but the examples above make me cautious about measuring progress only by task size. These are my guesses, rather than claims about OpenAI's roadmap.
+
+First, I expect verification to become a more substantial part of the product. An agent should be able to show the path from a request to a change and the checks behind it. Ideally I could open the exact screen, artifact or test result from the hand-off and understand the remaining uncertainty without reading a long transcript. That would make it easier to delegate larger tasks responsibly.
+
+I also expect continuity to become more selective. Remembering an old decision is useful until the repository, design or requirement has changed underneath it. The harder problem is recognising when to refresh that context. An assistant that can say “this was true last time; I checked it again” would give me more confidence than one that simply remembers more.
+
+Visual fidelity seems likely to improve as agents get better at comparing a design with the running application. I'd expect more of the screenshot-and-correction loop to happen within a task. Whether the result is good still depends on the reference, the checks and the judgement being applied. Automatically repeating a weak check won't get us very far.
+
+Finally, I hope the coordination becomes quieter. I'd like agents to collect routine progress, keep dependencies straight and interrupt when there is a decision I can usefully make. The number of tasks an agent can start seems less interesting than the quality of the work it brings back for review.
+
+For now, the practical approach is to give it something specific, keep the unfinished parts visible, and look at the evidence before accepting the result. I'll keep using these tasks to explore where that boundary can move. The next thing I'd like to understand is how much of the review loop can improve without making the evidence harder to inspect.

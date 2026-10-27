@@ -1,0 +1,58 @@
+BEN EBSWORTH BLOG — WORK BACKLOG
+27 October 2026
+Status: proposed unless explicitly stated. S/M/L are relative effort, not promised dates.
+
+Baseline: existing design Space/backlog updated. Blog implementation now starting locally; nothing from this uplift is deployed. Preserve open PR77 and current MDX/publishing contracts.
+
+BLOG-01 | P0 | M | TODO | Gamma editorial foundation
+Map Gamma through existing site tokens; preserve reading identity and MDX.
+Acceptance: No remote-font surprise; readable supported themes; provenance recorded.
+Depends on: Current source and open PR77 reconciliation
+
+BLOG-02 | P0 | M | TODO | Reading hierarchy and masthead
+Reading measure, title/deck/date/source hierarchy, restrained rule grammar.
+Acceptance: Long prose/code/math work on mobile; author/date/canonical unchanged.
+Depends on: BLOG-01
+
+BLOG-03 | P0 | M | TODO | Reusable MDX field notes
+FieldNote, Assumptions and FigureFocus components.
+Acceptance: Semantic static text; mobile notes below figures; decorative strokes hidden from screen readers.
+Depends on: BLOG-01
+
+BLOG-04 | P1 | M | TODO | Gamma lab controls
+Migrate a representative real simulation to Gamma sliders/buttons first.
+Acceptance: Units, numeric keyboard behavior, reset and existing calculations preserved.
+Depends on: BLOG-01
+
+BLOG-05 | P1 | M | TODO | Archive discovery
+Search/clear, topics and coherent article-card hierarchy.
+Acceptance: No-results recovery, stable URLs, keyboard access and image dimensions.
+Depends on: BLOG-01/02
+
+BLOG-06 | P1 | M | TODO | Technical illustration grammar
+Curated circuit, geometric and physical diagram treatments with captions.
+Acceptance: Meaningful annotation; no fictional measurements; source/provenance explicit.
+Depends on: BLOG-03
+
+BLOG-07 | P1 | M | TODO | Thumbnail families
+Essay, engineering explainer and interactive experiment styles.
+Acceptance: Three listing-size proofs; truthful authorship; consistent crop and alt text.
+Depends on: BLOG-06
+
+BLOG-08 | P1 | M | TODO | Handwritten gesture kit
+Small semantic presets for underline, arrow and margin bracket.
+Acceptance: No per-article absolute positioning; text still selectable; mobile connectors omitted.
+Depends on: BLOG-03
+
+BLOG-09 | P0 | M | TODO | Native publishing regression
+Preserve review-first workflow and static export phases.
+Acceptance: MDX/Markdown siblings, feed, sitemap, OG and routes verified; no live article publish without review.
+Depends on: Existing PR77 owner work
+
+BLOG-10 | P0 | M | TODO | Preview and release evidence
+Test one article and archive before wider rollout.
+Acceptance: Actual screenshots, relevant unit/types/build checks; report source vs deployed status accurately.
+Depends on: BLOG-02/03/04
+
+COMPLETION GATE
+Use canonical Gamma controls and documented token adapters; preserve concurrent work, accessibility, data boundaries and existing routes. Passing unit tests or publishing is not browser verification. No new spending, credentials, security changes, public audience changes or live fulfilment as side effects of UI work.

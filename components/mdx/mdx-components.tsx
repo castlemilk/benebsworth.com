@@ -1,3 +1,4 @@
+import { FieldNote, Assumptions, FigureFocus } from './research-folio'
 import type { MDXComponents } from 'mdx/types'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
@@ -80,6 +81,7 @@ import {
 } from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
+  FieldNote, Assumptions, FigureFocus,
   StatGroup,
   Stat,
   PullQuote,

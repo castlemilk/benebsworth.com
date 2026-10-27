@@ -1,0 +1,15 @@
+# Blog editorial implementation context
+
+The maintained brand authority remains `.impeccable.md`: dark canonical technical dossier, Space Grotesk display, Hanken Grotesk body and JetBrains Mono metadata, with teal blog accents. Do not silently replace this with the poster editor’s graphite/cyan interface or import a whole external font theme.
+
+## Gamma foundation, 27 October 2026
+The hosted Gamma MCP supplied current Button and Range slider source and portable CSS. `components/gamma/PROVENANCE.md` records retrieval and local scope. `app/editorial.css` is the sole adapter to existing site tokens; `app/globals.css` imports only the selected component CSS and adapter. Exact Atelier tokens were reviewed, not adopted wholesale, to preserve the established identity and avoid remote font imports.
+
+## Signature
+A research folio inside the technical dossier: fine structural rules, semantic field notes, explicitly stated assumptions, and figures with a quiet reading annotation. Decoration points to meaning, never fabricates measurements. Body content is server-renderable and selectable. A field note is not an interactive dashboard card. Smaller screens place notes below figures and omit connector brackets.
+
+## Scope
+This first slice adds reusable MDX FieldNote, Assumptions and FigureFocus primitives, refines existing Figure frames and article hierarchy, and adopts Gamma actions in archive filters and Gamma ranges/actions in the shared lab controls. Existing computation, article content, URLs, theme switching, publishing and auth behavior are preserved. Remaining native legacy controls are not claimed as migrated.
+
+## Verification
+Static rendering, component behavior, typecheck and full three-phase export are separate gates. Catalogue review is not browser evidence. Preserve review-first article publication; this UI branch must not include or replace PR77 content.

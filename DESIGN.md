@@ -47,3 +47,6 @@ Notes now respond to the figure container width as well as the window breakpoint
 
 ## Post-family authoring system
 The approved style now has shared PostBrief (explainer, experiment, essay, practical guide), EvidenceNote (explicit evidence basis and optional limits), and MethodSteps (real ordered procedure) MDX primitives. They inherit existing type and ink rather than separate card themes. Titles, author/date/canonical metadata, factual article content and publishing flow are unchanged. The editorial study demonstrates the patterns; docs/design/POST-PATTERNS.txt gives composition recipes. Repeated coil illustrations now use React-generated unique gradient IDs. Cross-block authored target-ID validation and real-article/browser rollout remain open.
+
+## Representative article adoption
+The RLC explainer and logistic-map experiment now use PostBrief around their existing opening paragraph and FieldNote for one existing observation. No claims, wording, equations, simulation parameters, source links or frontmatter changed. A content-hash regression protects authored text and metadata independently of the presentation wrappers; both MDX bodies compile in the focused tests. Other callouts retain their existing warning/meaning. This is a two-post preview rollout, not wholesale article rewriting.

@@ -12,11 +12,20 @@ export function connectorPath(target: Rect, note: Rect, anchor?: Rect, kind: 'ar
   else return null // Never draw through overlapping prose.
   if(anchor){ex=anchor.x+anchor.width/2;ey=anchor.y+anchor.height/2}
   const dx=ex-sx,dy=ey-sy
-  const c1x=vertical?sx+dx*.15:sx+dx*.5,c1y=vertical?sy+dy*.5:sy+dy*.15
-  const c2x=vertical?ex-dx*.1:ex-dx*.25,c2y=vertical?ey-dy*.25:ey-dy*.1
+  // A deliberate bow remains visible even when start and target align exactly.
+  // Scale with distance, cap the flourish, and keep controls inside the layout.
+  const distance=Math.hypot(dx,dy)
+  if(distance<2)return null
+  const bow=Math.min(64,distance*.34)*(vertical?1:-1)
+  const nx=-dy/distance,ny=dx/distance
+  const left=Math.min(target.x,note.x),right=Math.max(target.x+target.width,note.x+note.width)
+  const top=Math.min(target.y,note.y),bottom=Math.max(target.y+target.height,note.y+note.height)
+  const clamp=(n:number,min:number,max:number)=>Math.min(max,Math.max(min,n))
+  const c1x=clamp(sx+dx*.28+nx*bow,left,right),c1y=clamp(sy+dy*.28+ny*bow,top,bottom)
+  const c2x=clamp(sx+dx*.78+nx*bow*.85,left,right),c2y=clamp(sy+dy*.78+ny*bow*.85,top,bottom)
   const angle=Math.atan2(ey-c2y,ex-c2x),len=8
   const ax=ex-len*Math.cos(angle-.45),ay=ey-len*Math.sin(angle-.45),bx=ex-len*Math.cos(angle+.45),by=ey-len*Math.sin(angle+.45)
-  if(kind==='bracket'){
+  if(kind==='bracket'&&!vertical){
     const x=note.x>=target.x+target.width?target.x+target.width+gap:target.x-gap,cap=x>target.x?-7:7
     return `M${point(sx,sy)} Q${point((sx+x)/2,sy)} ${point(x,target.y+target.height/2)} M${point(x+cap,target.y)} L${point(x,target.y)} L${point(x,target.y+target.height)} L${point(x+cap,target.y+target.height)}`
   }
@@ -30,5 +39,5 @@ export function underlinePaths(rects: Rect[]): string[] {
     if(line){const right=Math.max(line.x+line.width,r.x+r.width);line.x=Math.min(line.x,r.x);line.width=right-line.x}
     else lines.push({...r})
   }
-  return lines.map(r=>{const x=r.x,y=r.y+r.height+3,w=r.width;return `M${point(x,y)} C${point(x+w*.23,y-2)} ${point(x+w*.63,y+3)} ${point(x+w,y-1)} M${point(x+w*.06,y+4)} Q${point(x+w*.52,y+2)} ${point(x+w*.91,y+3)}`})
+  return lines.map(r=>{const x=r.x,y=r.y+r.height+3,w=r.width;return `M${point(x,y)} C${point(x+w*.23,y+Math.min(9,w*.03))} ${point(x+w*.63,y+Math.min(12,w*.04))} ${point(x+w,y-1)} M${point(x+w*.06,y+4)} Q${point(x+w*.52,y+Math.min(13,w*.045))} ${point(x+w*.91,y+3)}`})
 }

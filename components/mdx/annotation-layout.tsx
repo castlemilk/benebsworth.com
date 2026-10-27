@@ -9,7 +9,7 @@ export function AnnotationLayout({children,placement='margin',className=''}:{chi
   const target=el.querySelector<HTMLElement>('[data-annotation-target]'),note=el.querySelector<HTMLElement>('[data-annotation-note]');if(!target||!note)return
   const measure=()=>{if(!alive)return;const box=el.getBoundingClientRect();const relative=(node:Element):Rect=>{const r=node.getBoundingClientRect();return{x:r.left-box.left,y:r.top-box.top,width:r.width,height:r.height}}
    const anchor=target.querySelector('[data-annotation-anchor]');const path=note.dataset.annotationMark==='none'?null:connectorPath(relative(target),relative(note),anchor?relative(anchor):undefined,note.dataset.annotationMark==='bracket'?'bracket':'arrow')
-   const next=window.innerWidth>760&&box.width>200&&path?{path,width:box.width,height:box.height}:null
+   const next=box.width>200&&path?{path,width:box.width,height:box.height}:null
    setDrawing(old=>JSON.stringify(old)===JSON.stringify(next)?old:next)
   }
   const schedule=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(measure)}

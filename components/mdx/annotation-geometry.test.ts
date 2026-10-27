@@ -7,5 +7,17 @@ describe('annotation placement geometry',()=>{
  it('suppresses overlapping, unmeasurable or non-finite placements',()=>{expect(connectorPath(target,{x:10,y:120,width:100,height:50})).toBeNull();expect(connectorPath({...target,width:0},{x:500,y:0,width:100,height:50})).toBeNull();expect(connectorPath(target,{x:NaN,y:0,width:100,height:50})).toBeNull()})
  it('underlines each wrapped line at its measured width, not its SVG aspect ratio',()=>{const paths=underlinePaths([{x:0,y:0,width:100,height:24},{x:100,y:0,width:80,height:24},{x:0,y:30,width:95,height:24}]);expect(paths).toHaveLength(2);expect(paths[0]).toContain('180 26');expect(paths[1]).toContain('95 56');})
  it('sizes a grouping bracket to its target rather than its note',()=>{const p=connectorPath(target,{x:450,y:130,width:120,height:80},undefined,'bracket');expect(p).toContain('407 100');expect(p).toContain('407 350')})
+ it('bows aligned endpoints instead of degenerating into a straight line',()=>{
+  const p=connectorPath(target,{x:240,y:0,width:130,height:60},{x:295.5,y:160,width:6,height:6})!
+  const values=p.split(' M')[0].match(/-?\d+(?:\.\d+)?/g)!.map(Number)
+  const [sx,sy,cx,cy,,,ex,ey]=values
+  expect(Math.abs((cx-sx)*(ey-sy)-(cy-sy)*(ex-sx))).toBeGreaterThan(100)
+  expect(p).toContain('298.5 163')
+ })
+ it('keeps short curves finite and rejects coincident endpoints',()=>{
+  expect(connectorPath(target,{x:240,y:0,width:130,height:60},{x:295.5,y:64,width:6,height:6})).toBeNull()
+  const p=connectorPath(target,{x:240,y:0,width:130,height:60},{x:295.5,y:70,width:6,height:6})
+  expect(p).not.toMatch(/NaN|Infinity/)
+ })
  it('ignores empty text fragments',()=>{expect(underlinePaths([{x:0,y:0,width:0,height:20}])).toEqual([])})
 })

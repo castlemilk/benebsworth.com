@@ -13,9 +13,10 @@ describe('red annotation handwriting',()=>{
   for(const bg of ['#f4f1e9','#f6f6f9'])expect(contrast(light,bg)).toBeGreaterThan(4.5)
   expect(contrast(dark,'#0a0a0c')).toBeGreaterThan(4.5)
  })
- it('changes handwriting without recolouring the diagram or connector token',()=>{
+ it('matches annotation lines to the handwriting without recolouring scientific diagrams',()=>{
   expect(value('.folio-study .handwritten-note,.research-article .handwritten-note,.folio-focus-note,.folio-note-label,.folio-note[data-kind=caution] .folio-note-label,.folio-archive-note>p','color')).toBe('var(--folio-handwriting,#b32624)')
-  expect(value('.annotation-connector-layer','color')).toBe('var(--folio-note)')
+  expect(value('.annotation-connector-layer','color')).toBe('var(--folio-handwriting,#b32624)')
+  expect(value('.annotation-mark,.folio-archive-note>.annotation-mark,.margin-note>.annotation-mark,.folio-focus-note .folio-connector,.folio-note-label .annotation-mark,.hand-underline>svg','color')).toBe('var(--folio-handwriting,#b32624)')
   expect(value('.folio-study','--folio-note')).toBe('#345675')
  })
 })

@@ -36,3 +36,6 @@ The user explicitly selected Excalidraw as the stroke-style reference. Rough.js 
 
 ## Red note writing
 The user requested red writing on notes. Dedicated handwriting ink is #b32624 on paper/light surfaces and #ffaaa5 on dark articles/archive. Apply it to handwritten margin/figure notes, field-note titles and archive note prose. Keep body text, figure geometry, connector ink, copper headings and Gamma controls unchanged. Both ink variants meet 4.5:1 on their supported surfaces; this is text colour, not a new warning state.
+
+## Matching red annotation lines
+Follow-up request: match the sketch lines to the red note writing. Connector overlays, decorative arrows/brackets/circles and measured underlines now use the same light/dark handwriting ink. Scientific SVG strokes and plot colours remain unchanged. This supersedes the earlier connector-colour preservation rule, without changing geometry or resize behaviour.

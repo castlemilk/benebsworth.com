@@ -55,7 +55,7 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .hand-underline[data-measured=true]{text-decoration:none}
 .hand-underline>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--folio-accent)}
 .annotation-layout{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 12rem;gap:3rem;align-items:center}
-.annotation-connector-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--folio-note);z-index:1}
+.annotation-connector-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--folio-handwriting,#b32624);z-index:1}
 .annotation-layout>.margin-note,.annotation-layout>.folio-focus-note{position:relative;padding:0;align-self:center}
 .annotation-layout .margin-note-label{display:inline-flex;align-items:center;min-height:32px}
 .folio-focus{display:block}
@@ -81,7 +81,10 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .folio-equation-block p:last-child{font:1.1rem/1.7 'Folio Serif',Georgia,serif;max-width:50ch;margin:1rem 0 0}
 .annotation-layout:not(:has([data-annotation-note])){grid-template-columns:minmax(0,1fr)}
 
-/* Red editorial handwriting, independent of diagram and connector ink. */
+/* Red editorial handwriting and annotations, independent of diagram ink. */
 .research-article,.folio-archive,.folio-study{--folio-handwriting:#b32624}
 .dark .research-article,.dark .folio-archive{--folio-handwriting:#ffaaa5}
 .folio-study .handwritten-note,.research-article .handwritten-note,.folio-focus-note,.folio-note-label,.folio-note[data-kind=caution] .folio-note-label,.folio-archive-note>p{color:var(--folio-handwriting,#b32624)}
+
+/* Sketch marks share the note ink; scientific SVG strokes retain their own colours. */
+.annotation-mark,.folio-archive-note>.annotation-mark,.margin-note>.annotation-mark,.folio-focus-note .folio-connector,.folio-note-label .annotation-mark,.hand-underline>svg{color:var(--folio-handwriting,#b32624)}

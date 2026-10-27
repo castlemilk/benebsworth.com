@@ -39,3 +39,5 @@ The user requested red writing on notes. Dedicated handwriting ink is #b32624 on
 
 ## Matching red annotation lines
 Follow-up request: match the sketch lines to the red note writing. Connector overlays, decorative arrows/brackets/circles and measured underlines now use the same light/dark handwriting ink. Scientific SVG strokes and plot colours remain unchanged. This supersedes the earlier connector-colour preservation rule, without changing geometry or resize behaviour.
+
+Anchor dots use the same red handwriting ink for both fill and stroke. The live signal anchor is painted after the polyline so its centre remains red at the attachment point; scientific trace colour/data are unchanged.

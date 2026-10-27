@@ -18,5 +18,6 @@ describe('red annotation handwriting',()=>{
   expect(value('.annotation-connector-layer','color')).toBe('var(--folio-handwriting,#b32624)')
   expect(value('.annotation-mark,.folio-archive-note>.annotation-mark,.margin-note>.annotation-mark,.folio-focus-note .folio-connector,.folio-note-label .annotation-mark,.hand-underline>svg','color')).toBe('var(--folio-handwriting,#b32624)')
   expect(value('.folio-study','--folio-note')).toBe('#345675')
+  for(const property of ['fill','stroke'])expect(value('.annotation-layout svg [data-annotation-anchor]',property)).toBe('var(--folio-handwriting,#b32624)')
  })
 })

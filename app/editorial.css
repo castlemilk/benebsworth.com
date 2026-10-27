@@ -88,3 +88,5 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 
 /* Sketch marks share the note ink; scientific SVG strokes retain their own colours. */
 .annotation-mark,.folio-archive-note>.annotation-mark,.margin-note>.annotation-mark,.folio-focus-note .folio-connector,.folio-note-label .annotation-mark,.hand-underline>svg{color:var(--folio-handwriting,#b32624)}
+
+.annotation-layout svg [data-annotation-anchor]{stroke:var(--folio-handwriting,#b32624);fill:var(--folio-handwriting,#b32624)}

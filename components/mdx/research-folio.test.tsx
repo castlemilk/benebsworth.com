@@ -22,3 +22,8 @@ describe('target-bound annotations',()=>{
 
 import {HandUnderline} from './hand-underline'
 describe('annotation fallbacks',()=>{it('keeps underlined text readable before layout measurement',()=>{const html=renderToStaticMarkup(<HandUnderline>A quiet signal</HandUnderline>);expect(html).toContain('A quiet signal');expect(html).toContain('data-measured="false"');expect(html).not.toContain('<svg');});it('retains bracket and no-mark intent for the layout owner',()=>{const html=renderToStaticMarkup(<MarginNote target="scope" mark="bracket">Bounded claim</MarginNote>);expect(html).toContain('data-annotation-mark="bracket"');expect(html).toContain('href="#scope"');});})
+
+import {FolioDemo} from '../../app/lab/editorial-system/preview'
+describe('annotation target marker',()=>{
+ it('paints the red anchor over the unchanged signal trace',()=>{const html=renderToStaticMarkup(<FolioDemo/>);expect(html.indexOf('data-annotation-anchor')).toBeGreaterThan(html.indexOf('<polyline'));expect(html).toContain('stroke="var(--blog)"')})
+})

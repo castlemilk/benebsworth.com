@@ -27,3 +27,6 @@ The archive heading and reading entries now share the research-folio typography.
 
 ## Curved connectors at responsive widths
 User feedback on 27 October: keep purposeful bowed connectors, including when the viewport crosses 760px. The old viewport cutoff hid the line entirely. Notes now move above their own targets on narrow screens (explicit below placements remain below); the same measured geometry reconnects them instead of disabling decoration by viewport. Cubic controls bow perpendicular to the endpoint chord, including vertically aligned endpoints, and are bounded by the target/note region. Short paths scale the flourish down. Underlines use a shallow sweep, not a ruler-straight double stroke. Overlap, unmeasurable layout and print still suppress decorative paths. This supersedes the earlier blanket mobile omission rule.
+
+## Pen-drawn gesture
+User refinement: more hand-drawn rather than mathematically smooth curves. Connectors and measured underlines use the same deterministic seven-segment pen gesture with small asymmetric drift, exact endpoints and uneven curved arrowhead legs. No per-render randomness, animated jitter, or alteration to the scientific drawing itself. Responsive anchoring remains unchanged.

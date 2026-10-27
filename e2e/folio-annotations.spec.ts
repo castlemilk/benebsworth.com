@@ -15,7 +15,7 @@ test('folio connectors survive narrow and wide resize cycles and track the actua
       const path = svg.querySelector('path')!
       const anchor = root.querySelector('[data-annotation-anchor]')!.getBoundingClientRect()
       const nums = path.getAttribute('d')!.split(' M')[0].match(/-?\d+(?:\.\d+)?/g)!.map(Number)
-      const end = new DOMPoint(nums[6], nums[7]).matrixTransform(svg.getScreenCTM()!)
+      const end = new DOMPoint(nums.at(-2), nums.at(-1)).matrixTransform(svg.getScreenCTM()!)
       return Math.hypot(end.x - anchor.x - anchor.width / 2, end.y - anchor.y - anchor.height / 2)
     })).toBeLessThan(1)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)

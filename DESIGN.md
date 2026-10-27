@@ -30,3 +30,6 @@ User feedback on 27 October: keep purposeful bowed connectors, including when th
 
 ## Pen-drawn gesture
 User refinement: more hand-drawn rather than mathematically smooth curves. Connectors and measured underlines use the same deterministic seven-segment pen gesture with small asymmetric drift, exact endpoints and uneven curved arrowhead legs. No per-render randomness, animated jitter, or alteration to the scientific drawing itself. Responsive anchoring remains unchanged.
+
+## Excalidraw reference refinement
+The user explicitly selected Excalidraw as the stroke-style reference. Rough.js 4.6.6 now owns the decorative sketch treatment: fixed seeds, double strokes, roughness 1.45, bounded randomness offset 3, and preserved vertices. This replaces the bespoke seven-segment wobble. The same helper serves connectors, arrowheads, brackets, circles and measured underlines. The diagram data/geometry, fonts, Gamma controls, resize measurements and endpoints are unchanged. Dependency pinned with lockfile; no full Excalidraw editor or font replacement. Reference: https://github.com/rough-stuff/rough/wiki .

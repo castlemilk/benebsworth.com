@@ -57,6 +57,7 @@
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
+    "roughjs": "4.6.6",
     "shadcn": "^4.8.3",
     "shiki": "^4.1.0",
     "tailwind-merge": "^3.6.0",

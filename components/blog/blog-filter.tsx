@@ -1,5 +1,6 @@
 'use client'
 
+import { GammaButton } from '@/components/gamma/GammaButton'
 import { useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
@@ -31,6 +32,8 @@ export function BlogFilter({
 
   return (
     <div
+      id="archive-index"
+      tabIndex={-1}
       className={cn(
         'sticky top-[93px] z-30 -mx-6 border-b border-[var(--color-border)]/60 px-6 sm:-mx-8 sm:px-8',
         scrolling
@@ -38,7 +41,7 @@ export function BlogFilter({
           : 'bg-[var(--color-bg)]/75 backdrop-blur-md backdrop-saturate-150',
       )}
     >
-      <div className="flex items-center gap-2 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex items-center gap-2 overflow-x-auto py-3 ">
         <div className="group/search relative shrink-0 pl-1">
           <svg
             aria-hidden
@@ -58,6 +61,7 @@ export function BlogFilter({
           <input
             ref={inputRef}
             type="search"
+            aria-label="Search posts"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search posts…"
@@ -69,12 +73,13 @@ export function BlogFilter({
                 : 'w-28 pr-3 focus:w-44 border-[var(--color-border)] text-fg/80 hover:border-[var(--color-muted)] focus:border-[var(--color-fg)]/30',
             )}
           />
-          <button
+          <GammaButton variant="quiet" size="sm"
             onClick={() => {
               onSearchChange('')
               inputRef.current?.focus()
             }}
             aria-label="Clear search"
+            disabled={!searchQuery}
             className={cn(
               'absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 transition-all duration-200',
               searchQuery
@@ -93,12 +98,13 @@ export function BlogFilter({
             >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
-          </button>
+          </GammaButton>
         </div>
 
         <span className="h-4 w-px shrink-0 bg-[var(--color-border)]" />
 
-        <button
+        <GammaButton variant="quiet" size="sm"
+          aria-pressed={!activeTopic}
           onClick={() => onTopicChange(null)}
           className={cn(
             'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider transition-all',
@@ -123,13 +129,14 @@ export function BlogFilter({
           >
             {total}
           </span>
-        </button>
+        </GammaButton>
 
         {topics.map((topic) => {
           const isActive = activeTopic === topic.key
           return (
-            <button
+            <GammaButton variant="quiet" size="sm"
               key={topic.key}
+              aria-pressed={isActive}
               onClick={() => onTopicChange(isActive ? null : topic.key)}
               className={cn(
                 'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider transition-all',
@@ -152,7 +159,7 @@ export function BlogFilter({
               >
                 {topic.count}
               </span>
-            </button>
+            </GammaButton>
           )
         })}
       </div>

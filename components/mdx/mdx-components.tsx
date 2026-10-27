@@ -1,3 +1,6 @@
+import { PostBrief, EvidenceNote, MethodSteps } from './post-patterns'
+import {AnnotatedBlock, AnnotationTarget, MarginNote} from './annotated-block'
+import { FieldNote, Assumptions, FigureFocus } from './research-folio'
 import type { MDXComponents } from 'mdx/types'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
@@ -80,6 +83,7 @@ import {
 } from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
+  PostBrief, EvidenceNote, MethodSteps, FieldNote, Assumptions, FigureFocus, AnnotatedBlock, AnnotationTarget, MarginNote,
   StatGroup,
   Stat,
   PullQuote,

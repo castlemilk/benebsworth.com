@@ -7,7 +7,7 @@ import type { BlogPostSummary } from '@/lib/content'
 import { tagColor } from '@/lib/tag-colors'
 import { fmtDate } from '@/lib/format'
 import { Reveal } from '@/components/motion/reveal'
-import { SpotlightCard } from '@/components/motion/spotlight-card'
+import { FolioEntry } from '@/components/blog/folio-entry'
 import { BlogFilter, type BlogFilterItem } from '@/components/blog/blog-filter'
 import { BlogPostCard } from '@/components/blog/blog-post-card'
 
@@ -85,7 +85,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
       {filtered !== null ? (
         <section className="pt-16">
           <div className="mb-8">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p role="status" className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
               {filtered.length} result{filtered.length !== 1 ? 's' : ''}
               {filterLabel && <> for {filterLabel}</>}
             </p>
@@ -109,7 +109,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
             return (
               <Reveal>
                 <Link href={`/blog/${lead.slug}/`} className="block rounded-2xl">
-                  <SpotlightCard accent={topic.accent} className="overflow-hidden">
+                  <FolioEntry accent={topic.accent} className="overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-[0.85fr_1fr]">
                       <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-[var(--color-border)] bg-surface md:border-b-0 md:border-r">
                         {lead.heroImage ? (
@@ -187,7 +187,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                               return (
                                 <span
                                   key={t}
-                                  className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
+                                  className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-wider"
                                   style={{
                                     '--ink': c,
                                     borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
@@ -208,7 +208,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         </span>
                       </div>
                     </div>
-                  </SpotlightCard>
+                  </FolioEntry>
                 </Link>
               </Reveal>
             )

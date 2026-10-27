@@ -59,7 +59,7 @@ export function Figure({
   }[placement]
 
   return (
-    <figure className={cn("not-prose relative clear-both", wrapperClasses)}>
+    <figure className={cn("not-prose research-figure relative clear-both", wrapperClasses)}>
       <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-fg)_3%,transparent)] shadow-sm">
         <img
           src={src}

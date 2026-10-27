@@ -1,0 +1,64 @@
+BEN EBSWORTH BLOG — WORK BACKLOG
+27 October 2026
+Status: implementation in draft PR78; preview evidence is separate from production. S/M/L are relative effort, not promised dates.
+
+Baseline: Gamma foundation, research-folio hierarchy, archive and red Rough.js annotations are implemented in draft PR78. Earlier preview builds passed; production is unchanged. Preserve PR77 and current MDX/publishing contracts.
+
+BLOG-01 | P0 | M | IMPLEMENTED / VISUAL QA OPEN | Gamma editorial foundation
+Map Gamma through existing site tokens; preserve reading identity and MDX.
+Acceptance: No remote-font surprise; readable supported themes; provenance recorded.
+Depends on: Current source and open PR77 reconciliation
+
+BLOG-02 | P0 | M | IMPLEMENTED / VISUAL QA OPEN | Reading hierarchy and masthead
+Reading measure, title/deck/date/source hierarchy, restrained rule grammar.
+Acceptance: Long prose/code/math work on mobile; author/date/canonical unchanged.
+Depends on: BLOG-01
+
+BLOG-03 | P0 | M | IMPLEMENTED / VISUAL QA OPEN | Reusable MDX field notes
+FieldNote, Assumptions and FigureFocus components.
+Acceptance: Semantic static text; narrow notes above figures unless explicitly below; decorative strokes hidden from screen readers.
+Depends on: BLOG-01
+
+BLOG-04 | P1 | M | IMPLEMENTED / VISUAL QA OPEN | Gamma lab controls
+Migrate a representative real simulation to Gamma sliders/buttons first.
+Acceptance: Units, numeric keyboard behavior, reset and existing calculations preserved.
+Depends on: BLOG-01
+
+BLOG-05 | P1 | M | IMPLEMENTED / VISUAL QA OPEN | Archive discovery
+Search/clear, topics and coherent article-card hierarchy.
+Acceptance: No-results recovery, stable URLs, keyboard access and image dimensions.
+Depends on: BLOG-01/02
+
+BLOG-06 | P1 | M | IMPLEMENTED / VISUAL QA OPEN | Technical illustration grammar
+Curated circuit, geometric and physical diagram treatments with captions.
+Acceptance: Meaningful annotation; no fictional measurements; source/provenance explicit.
+Depends on: BLOG-03
+
+BLOG-07 | P1 | M | TODO | Thumbnail families
+Essay, engineering explainer and interactive experiment styles.
+Acceptance: Three listing-size proofs; truthful authorship; consistent crop and alt text.
+Depends on: BLOG-06
+
+BLOG-08 | P1 | M | IMPLEMENTED / VISUAL QA OPEN | Handwritten gesture kit
+Small semantic presets for underline, arrow and margin bracket.
+Acceptance: No per-article absolute positioning; text still selectable; measured mobile connectors retained.
+Depends on: BLOG-03
+
+BLOG-09 | P0 | M | TODO | Native publishing regression
+Preserve review-first workflow and static export phases.
+Acceptance: MDX/Markdown siblings, feed, sitemap, OG and routes verified; no live article publish without review.
+Depends on: Existing PR77 owner work
+
+BLOG-10 | P0 | M | TODO | Preview and release evidence
+Test one article and archive before wider rollout.
+Acceptance: Actual screenshots, relevant unit/types/build checks; report source vs deployed status accurately.
+Depends on: BLOG-02/03/04
+
+COMPLETION GATE
+Use canonical Gamma controls and documented token adapters; preserve concurrent work, accessibility, data boundaries and existing routes. Passing unit tests or publishing is not browser verification. No new spending, credentials, security changes, public audience changes or live fulfilment as side effects of UI work.
+
+BLOG-11 | P1 | M | IMPLEMENTED / PREVIEW QA OPEN | Post-family patterns
+Shared PostBrief, EvidenceNote and MethodSteps, MDX registration and illustrative study examples. Authoring recipes in POST-PATTERNS.txt. No real article content migrated yet.
+
+BLOG-12 | P0 | M | TODO | Representative article adoption
+Choose one existing explainer and one experiment; preserve facts, metadata and publication state. Verify long code/math/tables, themes, narrow figures, keyboard and 200% zoom before wider rollout.

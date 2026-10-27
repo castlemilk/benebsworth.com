@@ -146,7 +146,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* data-pagefind-body scopes the search index to just the post content
               (nav/footer/TOC are excluded). The trailing author/related block is
               ignored so "more posts" titles don't pollute results. */}
-          <article data-pagefind-body className="min-w-0">
+          <article data-pagefind-body className="research-article min-w-0">
         {/* ── Post header spans the full (wide) page frame — editorial title +
             accent rule fill the screen. Only the long-form prose below is capped
             to a comfortable reading measure (~44rem ≈ 74ch). ── */}

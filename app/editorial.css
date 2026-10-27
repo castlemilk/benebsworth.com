@@ -1,0 +1,120 @@
+/* Gamma adapter uses existing site identity, not a second global palette/font import. */
+:root{--gamma-bg:var(--bg);--gamma-surface:var(--surface);--gamma-surface-2:var(--surface-2);--gamma-ink:var(--fg);--gamma-muted:var(--muted);--gamma-border:var(--border);--gamma-accent:var(--blog);--gamma-accent-ink:var(--bg);--gamma-accent-soft:color-mix(in srgb,var(--blog) 12%,var(--bg));--gamma-font-ui:var(--font-sans),sans-serif;--gamma-font-display:var(--font-display),sans-serif;--gamma-font-code:var(--font-mono),monospace;--gamma-radius-small:3px;--gamma-radius-button:4px;--gamma-radius-control:4px;--gamma-radius-panel:6px;--gamma-radius-pill:999px;--gamma-hairline:1px;--gamma-duration-fast:120ms;--gamma-duration-base:180ms;--gamma-duration-slow:240ms;--gamma-ease-standard:ease;--gamma-ease-emphasized:ease-out;--gamma-ease-spring:ease-out;--gamma-focus-ring:0 0 0 3px color-mix(in srgb,var(--blog) 35%,transparent);--gamma-selection:color-mix(in srgb,var(--blog) 20%,var(--bg));--gamma-shadow-low:none;--gamma-shadow-mid:0 8px 24px #0002;--gamma-shadow-high:0 18px 48px #0003;--gamma-tracking-display:-.025em;scrollbar-color:var(--muted) var(--bg);scrollbar-width:thin}
+.gamma-button{cursor:pointer}.gamma-button:disabled{cursor:not-allowed}.gamma-button[aria-pressed=true]{background:var(--gamma-accent-soft);border-color:var(--gamma-accent)}
+.research-article>header{border-top:1px solid var(--color-border);padding-top:24px}.research-article>header h1{max-width:22ch;text-wrap:balance}.research-article .prose p{line-height:1.85}.research-article .prose h2{margin-top:2.4em;padding-top:.7em;border-top:1px solid var(--color-border)}.research-figure>div{border-radius:4px;box-shadow:none}.research-figure figcaption{border-left:2px solid var(--blog);padding-left:12px}
+.folio-note{margin:2.5rem 0;display:grid;grid-template-columns:9rem minmax(0,1fr);gap:1.25rem;border-block:1px solid var(--color-border);padding:1.25rem 0}.folio-note-label,.folio-focus-label{font:600 .72rem/1.6 var(--font-mono),monospace;letter-spacing:.08em;color:var(--blog)}.folio-note-content{font-size:1rem;line-height:1.75}.folio-note-content>:first-child{margin-top:0}.folio-note-content>:last-child{margin-bottom:0}.folio-note[data-kind=caution] .folio-note-label{color:var(--about)}
+.folio-assumptions{margin:2.5rem 0;padding:1.25rem 1.5rem;background:var(--surface);border-left:3px solid var(--blog)}.folio-assumptions h3{font:600 .8rem/1.5 var(--font-mono),monospace;margin:0 0 .8rem}.folio-assumptions ul{padding-left:1.2rem;list-style:disc}.folio-assumptions li{padding:.2rem 0;line-height:1.7}
+.folio-focus{display:grid;grid-template-columns:minmax(0,1fr) 12rem;gap:1.5rem;margin:3rem 0}.folio-focus-main{min-width:0}.folio-focus-label{border-bottom:1px solid var(--color-border);padding-bottom:.7rem}.folio-focus-art{padding:1.25rem 0;overflow:auto;max-width:100%}.folio-focus figcaption{font-size:.85rem;color:var(--muted);line-height:1.65}.folio-focus-note{position:relative;padding:2rem 0 0 1rem;font-size:.9rem;line-height:1.75;color:var(--muted)}.folio-bracket{position:absolute;left:0;top:2rem;bottom:1rem;width:8px;border-left:1px solid var(--blog);border-block:1px solid var(--blog)}
+@media(max-width:700px){.folio-note{grid-template-columns:1fr;gap:.6rem}.folio-focus{grid-template-columns:1fr}.folio-focus-note{padding:1rem 0;border-top:1px solid var(--color-border)}.folio-bracket{display:none}.research-article>header h1{max-width:none}}
+@media(prefers-reduced-motion:reduce){.gamma-button{transition:none}.button-spinner{animation:none}}
+@media(forced-colors:active){:root{scrollbar-color:auto}.folio-assumptions,.folio-note,.folio-focus-label{border-color:CanvasText}.gamma-button[aria-pressed=true]{border:2px solid Highlight}}
+/* Research-folio correction: typography and authored marks are part of the system. */
+@font-face{font-family:'Folio Serif';src:url('/fonts/editorial/source-serif-4.woff') format('woff');font-weight:200 900;font-display:swap}
+@font-face{font-family:'Folio Hand';src:url('/fonts/editorial/caveat.ttf') format('truetype');font-weight:400 700;font-display:swap}
+@font-face{font-family:'Folio Condensed';src:url('/fonts/editorial/barlow-condensed-semibold.ttf') format('truetype');font-weight:600;font-display:swap}
+.research-article{--folio-accent:#a34c29;--folio-note:#345675}.dark .research-article{--folio-accent:#dda17a;--folio-note:#9ebedb}
+.research-article>header h1{font-family:'Folio Serif',Georgia,serif;font-weight:450;letter-spacing:-.045em;line-height:1.06}.research-article .prose :where(p,li,blockquote){font-family:'Folio Serif',Georgia,serif;font-size:1.18rem;line-height:1.75}.research-article .prose :where(h2,h3){font-family:'Folio Serif',Georgia,serif;font-weight:450;letter-spacing:-.025em}.research-article .prose h2{font-size:clamp(1.9rem,3vw,2.7rem)}
+.annotation-mark{display:block;color:var(--folio-accent,#a34c29);pointer-events:none;overflow:visible}.folio-note-label{position:relative;font-family:'Folio Hand',cursive;font-size:1.5rem;font-weight:500;letter-spacing:0;color:var(--folio-accent,#a34c29);align-self:start}.folio-note-label .annotation-mark{position:absolute;width:110px;height:45px;top:15px;left:0}.folio-note-content{font-family:'Folio Serif',Georgia,serif;font-size:1.12rem}.folio-assumptions{background:transparent;border-left:0;border-block:1px solid var(--color-border);padding:1.3rem 0}.folio-assumptions h3{font-family:'Folio Condensed',sans-serif;font-size:1.1rem;letter-spacing:.09em;text-transform:uppercase}.folio-assumptions li{font-family:'Folio Serif',Georgia,serif;font-size:1.05rem}
+.folio-focus-label{color:var(--fg);font-size:.68rem}.folio-focus-note{font-family:'Folio Hand',cursive;color:var(--folio-note,#345675);font-size:1.6rem;line-height:1.2;padding:2.8rem 0 0 1.5rem;align-self:start}.folio-focus-note p{margin-top:0}.folio-focus-note .folio-connector{position:absolute;width:70px;height:65px;top:-12px;left:-30px;transform:rotate(12deg);color:inherit}
+.annotated-block{display:grid;grid-template-columns:minmax(0,1fr) 12rem;gap:2rem;margin:2.5rem 0;align-items:center}.annotation-target{min-width:0;scroll-margin-top:130px}.margin-note{position:relative;padding-top:35px;color:var(--folio-note,#345675)}.margin-note>.annotation-mark{position:absolute;width:70px;height:65px;top:-25px;left:-45px;color:inherit}.margin-note-label{font: .65rem/1.4 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:underline;text-underline-offset:4px}.handwritten-note{font-family:'Folio Hand',cursive;font-size:1.7rem;line-height:1.2;transform:rotate(-2deg);margin-top:10px}.handwritten-note p{margin:0}.margin-note-label:focus-visible{outline:2px solid var(--blog);outline-offset:4px}
+.folio-study{--folio-accent:#a34c29;--folio-note:#345675;--bg:#f4f1e9;--fg:#202c34;--muted:#5b6670;--surface:#e9e7df;--surface-2:#e5e3db;--blog:#315b77;--border:#c7c7be;--color-border:#c7c7be;--color-fg:#202c34;--color-muted:#5b6670;background:var(--bg);color:var(--fg);min-height:100vh;padding:35px clamp(24px,6vw,90px) 80px;color-scheme:light}.folio-study-nav{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:18px;gap:20px}.folio-wordmark{font:1.45rem 'Folio Serif',Georgia,serif}.folio-study-nav a{font:11px var(--font-mono),monospace;text-transform:uppercase;letter-spacing:.08em}.folio-study-sheet{max-width:1180px;margin:0 auto}.folio-study-kicker{font:11px/1.5 var(--font-mono),monospace;letter-spacing:.13em;text-transform:uppercase;display:flex;gap:20px;align-items:center;margin:40px 0 24px}.folio-study-kicker:after{content:'';height:1px;flex:1;background:var(--border)}.folio-study-title{font:450 clamp(48px,6.3vw,83px)/1.02 'Folio Serif',Georgia,serif;letter-spacing:-.045em;max-width:13ch;margin:0}.folio-study-title em{font-weight:400;color:var(--folio-accent)}.folio-study-opening{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center}.folio-study-intro{font:1.25rem/1.65 'Folio Serif',Georgia,serif;max-width:42ch;margin:28px 0}.folio-study-section{margin-top:50px;padding-top:28px;border-top:1px solid var(--border)}.folio-study-section h2{font:450 clamp(30px,3.5vw,44px)/1.12 'Folio Serif',Georgia,serif;letter-spacing:-.03em;margin:0 0 18px}.folio-study-section>p{font:1.15rem/1.75 'Folio Serif',Georgia,serif;max-width:65ch}.folio-specimen{width:100%;height:auto}.folio-study .folio-note{margin:40px 0}.folio-study .range-slider{max-width:400px}.folio-study .gamma-button{margin-top:12px}.folio-study-foot{margin-top:50px;padding-top:18px;border-top:1px solid var(--border);font:11px/1.7 var(--font-mono),monospace;color:var(--muted)}
+@media(max-width:760px){.folio-study-opening{grid-template-columns:1fr;gap:15px}.folio-study-title{max-width:15ch}.annotated-block{grid-template-columns:1fr;gap:0}.margin-note{padding:15px 0 0}.margin-note>.annotation-mark,.folio-focus-note .folio-connector{display:none}.handwritten-note{transform:none}.folio-focus-note{padding:10px 0;border-top:1px solid var(--border);font-size:1.45rem}.folio-study-kicker{font-size:9px}.folio-note-label .annotation-mark{width:85px}}
+@media print{.annotated-block,.folio-study-opening,.folio-focus{display:block}.annotation-mark{display:none}.handwritten-note{transform:none}.folio-study{background:white;color:black}.margin-note{break-inside:avoid}}
+/* Hero note sits above its own target, never across the reading column. */
+.folio-study-opening>.annotated-block{display:flex;flex-direction:column-reverse;gap:0;margin:0}.folio-study-opening .margin-note{align-self:flex-end;padding:0 10px 0 60px;max-width:250px}.folio-study-opening .margin-note>.annotation-mark{top:25px;left:0;transform:rotate(-8deg)}.folio-study-opening .handwritten-note{color:var(--folio-accent)}.folio-study-opening .margin-note-label{font-size:9px}.folio-study-opening .annotation-target{width:100%}
+@media(max-width:760px){.folio-study-opening>.annotated-block{flex-direction:column}.folio-study-opening .margin-note{align-self:flex-start;padding:0;max-width:none}}
+.folio-study-title+div .annotation-mark{width:160px;height:30px}
+
+/* The archive shares the reading folio, not the dashboard spotlight surface. */
+.folio-archive{--folio-accent:#a34c29;--folio-note:#345675}
+.dark .folio-archive{--folio-accent:#dda17a;--folio-note:#9ebedb}
+.folio-archive-heading{display:grid;grid-template-columns:minmax(0,1fr) 12rem;gap:3rem;align-items:end;padding:3.5rem 0 4rem}
+.folio-archive-kicker{font:600 .85rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
+.folio-archive-heading h1{font:450 clamp(3.4rem,7vw,6.5rem)/1.03 'Folio Serif',Georgia,serif;letter-spacing:-.045em;margin:0}
+.folio-archive-heading h1>span{position:relative;display:inline-block}
+.folio-archive-heading h1 .annotation-mark{position:absolute;left:-4%;bottom:-.3em;width:110%;height:.5em;color:var(--folio-accent)}
+.folio-archive-intro{font:1.2rem/1.75 'Folio Serif',Georgia,serif;max-width:45ch;margin-top:2rem;color:var(--muted)}
+.folio-archive-note{position:relative;padding-bottom:.5rem;color:var(--folio-note)}
+.folio-archive-note>.annotation-mark{width:70px;height:55px;transform:rotate(95deg);color:inherit;margin-bottom:1rem}
+.folio-archive-note p{font:1.8rem/1.15 'Folio Hand',cursive;transform:rotate(-3deg);margin-bottom:1rem}
+.folio-archive-note a{font:.75rem/1.5 var(--font-mono),monospace;text-decoration:underline;text-underline-offset:5px;display:inline-flex;align-items:center;min-height:44px}
+#archive-index{scroll-margin-top:110px}
+#archive-index:focus-visible,.folio-archive-note a:focus-visible{outline:2px solid var(--blog);outline-offset:5px}
+.folio-entry{position:relative;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:transparent;transition:background-color 150ms ease}
+a:hover>.folio-entry{background:var(--surface)}
+a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
+.folio-entry h2{font-family:'Folio Serif',Georgia,serif;font-weight:450;letter-spacing:-.025em;line-height:1.18;font-size:clamp(1.6rem,2.6vw,2.3rem)}
+.folio-entry p{font-family:'Folio Serif',Georgia,serif;line-height:1.7}
+.folio-entry .type-h2{font-size:clamp(2rem,3.5vw,3.1rem)}
+.folio-entry img{border-radius:0}
+@media(max-width:700px){.folio-archive-heading{grid-template-columns:1fr;gap:1rem;padding:2.5rem 0}.folio-archive-note{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--border);padding-top:1rem}.folio-archive-note>.annotation-mark{display:none}.folio-archive-note p{font-size:1.45rem;transform:none;margin:0}.folio-archive-note a{max-width:10rem}.folio-entry h2{font-size:1.65rem}}
+@media(prefers-reduced-motion:reduce){.folio-entry{transition:none}}
+
+/* Content-anchored strokes. Readable static notes remain when measuring is unavailable. */
+.hand-underline{position:relative;display:inline-block;max-width:100%;padding-bottom:.12em;text-decoration:underline;text-decoration-color:var(--folio-accent);text-decoration-thickness:1px;text-underline-offset:.13em}
+.hand-underline[data-measured=true]{text-decoration:none}
+.hand-underline>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--folio-accent)}
+.annotation-layout{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 12rem;gap:3rem;align-items:center}
+.annotation-connector-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--folio-handwriting,#b32624);z-index:1}
+.annotation-layout>.margin-note,.annotation-layout>.folio-focus-note{position:relative;padding:0;align-self:center}
+.annotation-layout .margin-note-label{display:inline-flex;align-items:center;min-height:32px}
+.folio-focus{display:block}
+.folio-focus .folio-focus-note{font-size:1.55rem}
+.annotation-layout-above,.folio-study-opening>.annotation-layout-above{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;margin:0}
+.annotation-layout-above>[data-annotation-note]{grid-row:1;justify-self:end;max-width:18rem;padding:0}
+.annotation-layout-above>[data-annotation-target]{grid-row:2;width:100%}
+.annotation-layout-below{grid-template-columns:minmax(0,1fr);gap:2rem}
+.annotation-layout-below>[data-annotation-note]{justify-self:start;max-width:24rem}
+.folio-note-label .hand-underline{padding-bottom:.2em}
+@media(max-width:760px){
+ .annotation-layout,.folio-study-opening>.annotation-layout-above{display:flex;flex-direction:column;gap:1rem;align-items:stretch}
+ .annotation-layout>[data-annotation-note],.folio-study-opening>.annotation-layout-above>[data-annotation-note]{order:-1;align-self:flex-end;width:min(100%,18rem);max-width:100%;padding:0;border-top:0}
+ .annotation-layout,.folio-study-opening>.annotation-layout-above{gap:2.5rem}
+ .annotation-layout>[data-annotation-target]{width:100%}
+ .annotation-layout-below>[data-annotation-note]{order:2;align-self:flex-start}
+ .annotation-layout .handwritten-note{transform:none}
+}
+@media print{.annotation-connector-layer,.hand-underline>svg{display:none}.hand-underline[data-measured=true]{text-decoration:underline}.annotation-layout{display:block}}
+.folio-equation-block{border-block:1px solid var(--border);padding:1.5rem 0}
+.folio-equation-block .folio-equation-label{font:600 .85rem 'Folio Condensed',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 1rem}
+.folio-equation-block code{font:clamp(.9rem,2vw,1.2rem)/1.6 var(--font-mono),monospace;overflow-wrap:anywhere}
+.folio-equation-block p:last-child{font:1.1rem/1.7 'Folio Serif',Georgia,serif;max-width:50ch;margin:1rem 0 0}
+.annotation-layout:not(:has([data-annotation-note])){grid-template-columns:minmax(0,1fr)}
+
+/* Red editorial handwriting and annotations, independent of diagram ink. */
+.research-article,.folio-archive,.folio-study{--folio-handwriting:#b32624}
+.dark .research-article,.dark .folio-archive{--folio-handwriting:#ffaaa5}
+.folio-study .handwritten-note,.research-article .handwritten-note,.folio-focus-note,.folio-note-label,.folio-note[data-kind=caution] .folio-note-label,.folio-archive-note>p{color:var(--folio-handwriting,#b32624)}
+
+/* Sketch marks share the note ink; scientific SVG strokes retain their own colours. */
+.annotation-mark,.folio-archive-note>.annotation-mark,.margin-note>.annotation-mark,.folio-focus-note .folio-connector,.folio-note-label .annotation-mark,.hand-underline>svg{color:var(--folio-handwriting,#b32624)}
+
+.annotation-layout svg [data-annotation-anchor]{stroke:var(--folio-handwriting,#b32624);fill:var(--folio-handwriting,#b32624)}
+
+/* A figure may sit in a narrow article column even on a wide desktop window.
+   Compose its note using the available figure width, not just the viewport. */
+.annotation-layout{container:annotation / inline-size}
+.annotation-layout>[data-annotation-note]{min-width:0;overflow-wrap:anywhere}
+.annotation-layout .margin-note-label{font-size:.75rem;line-height:1.5;min-height:44px;text-underline-offset:.3em}
+.annotation-layout .handwritten-note{max-width:22ch;text-wrap:pretty}
+@container annotation (max-width:620px){
+ .annotation-layout>[data-annotation-target]{grid-column:1 / -1;grid-row:2;min-width:0}
+ .annotation-layout>[data-annotation-note]{grid-column:1 / -1;grid-row:1;justify-self:end;max-width:min(100%,18rem)}
+ .annotation-layout-below>[data-annotation-target]{grid-row:1}
+ .annotation-layout-below>[data-annotation-note]{grid-row:2;justify-self:start}
+}
+
+/* Authoring patterns share the reading palette, not independent card themes. */
+.folio-brief{border-block:1px solid var(--border);padding:1.5rem 0;margin:2.5rem 0;max-width:68ch}
+.folio-pattern-label{font:600 .85rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .75rem}
+.folio-brief-summary{font:1.25rem/1.6 'Folio Serif',Georgia,serif;text-wrap:pretty}
+.folio-brief-summary p:first-child{margin-top:0}.folio-brief-summary p:last-child{margin-bottom:0}
+.folio-brief-audience,.folio-prerequisites{font:1rem/1.65 'Folio Serif',Georgia,serif;margin-top:1rem}
+.folio-prerequisites>p{margin:0;font-weight:600}.folio-prerequisites ul{padding-left:1.25rem;margin:.5rem 0 0}
+.folio-evidence-limit{border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem;font-size:1rem}
+.folio-evidence-limit>strong{font-family:'Folio Condensed',sans-serif;letter-spacing:.05em}
+.folio-method{margin:2.5rem 0;max-width:68ch}.folio-method ol{padding-left:1.75rem}
+.folio-method li{padding-left:.6rem;margin:0 0 1.4rem;font:1.1rem/1.7 'Folio Serif',Georgia,serif}
+.folio-method li::marker{font-family:'Folio Hand',cursive;color:var(--folio-handwriting,#b32624);font-size:1.45rem}
+.folio-method li h4{font:600 1.1rem/1.5 'Folio Serif',Georgia,serif;margin:0 0 .35rem}
+.folio-method li p{margin:.35rem 0}

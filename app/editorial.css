@@ -80,3 +80,8 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .folio-equation-block code{font:clamp(.9rem,2vw,1.2rem)/1.6 var(--font-mono),monospace;overflow-wrap:anywhere}
 .folio-equation-block p:last-child{font:1.1rem/1.7 'Folio Serif',Georgia,serif;max-width:50ch;margin:1rem 0 0}
 .annotation-layout:not(:has([data-annotation-note])){grid-template-columns:minmax(0,1fr)}
+
+/* Red editorial handwriting, independent of diagram and connector ink. */
+.research-article,.folio-archive,.folio-study{--folio-handwriting:#b32624}
+.dark .research-article,.dark .folio-archive{--folio-handwriting:#ffaaa5}
+.folio-study .handwritten-note,.research-article .handwritten-note,.folio-focus-note,.folio-note-label,.folio-note[data-kind=caution] .folio-note-label,.folio-archive-note>p{color:var(--folio-handwriting,#b32624)}

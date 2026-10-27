@@ -33,3 +33,6 @@ User refinement: more hand-drawn rather than mathematically smooth curves. Conne
 
 ## Excalidraw reference refinement
 The user explicitly selected Excalidraw as the stroke-style reference. Rough.js 4.6.6 now owns the decorative sketch treatment: fixed seeds, double strokes, roughness 1.45, bounded randomness offset 3, and preserved vertices. This replaces the bespoke seven-segment wobble. The same helper serves connectors, arrowheads, brackets, circles and measured underlines. The diagram data/geometry, fonts, Gamma controls, resize measurements and endpoints are unchanged. Dependency pinned with lockfile; no full Excalidraw editor or font replacement. Reference: https://github.com/rough-stuff/rough/wiki .
+
+## Red note writing
+The user requested red writing on notes. Dedicated handwriting ink is #b32624 on paper/light surfaces and #ffaaa5 on dark articles/archive. Apply it to handwritten margin/figure notes, field-note titles and archive note prose. Keep body text, figure geometry, connector ink, copper headings and Gamma controls unchanged. Both ink variants meet 4.5:1 on their supported surfaces; this is text colour, not a new warning state.

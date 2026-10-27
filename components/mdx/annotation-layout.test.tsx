@@ -8,7 +8,7 @@ afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals()})
 function setup(){
  vi.stubGlobal('requestAnimationFrame',(fn:FrameRequestCallback)=>setTimeout(()=>fn(0),0))
  vi.stubGlobal('cancelAnimationFrame',(id:number)=>clearTimeout(id))
- vi.stubGlobal('ResizeObserver',class{observe(){}disconnect(){}})
+ vi.stubGlobal('ResizeObserver',class{observe(){}unobserve(){}disconnect(){}})
  Object.defineProperty(window,'innerWidth',{value:1200,writable:true,configurable:true})
  vi.spyOn(Element.prototype,'getBoundingClientRect').mockImplementation(function(this:Element){
   const narrow=window.innerWidth<=760
@@ -27,6 +27,34 @@ describe('annotation measurement lifecycle',()=>{
    await waitFor(()=>expect(container.querySelector('.annotation-connector-layer path')?.getAttribute('d')).toContain(width<=760?'343 253':'343 103'))
   }
   expect(container.textContent).toContain('Look here')
+ })
+ it('adds, removes and replaces notes without leaving a detached connector',async()=>{
+  setup()
+  const view=(note:boolean,key='first')=><AnnotationLayout><div data-annotation-target>Figure</div>{note&&<aside key={key} data-annotation-note>Reading note</aside>}</AnnotationLayout>
+  const {container,rerender}=render(view(false))
+  expect(container.querySelector('.annotation-connector-layer')).toBeNull()
+  rerender(view(true))
+  await waitFor(()=>expect(container.querySelector('.annotation-connector-layer path')).not.toBeNull())
+  rerender(view(false))
+  await waitFor(()=>expect(container.querySelector('.annotation-connector-layer')).toBeNull())
+  rerender(view(true,'replacement'))
+  await waitFor(()=>expect(container.querySelector('.annotation-connector-layer path')).not.toBeNull())
+ })
+ it('respects a note changing its mark without a viewport resize',async()=>{
+  setup()
+  const view=(mark:string)=><AnnotationLayout><div data-annotation-target>Figure</div><aside data-annotation-note data-annotation-mark={mark}>Note</aside></AnnotationLayout>
+  const {container,rerender}=render(view('connector'))
+  await waitFor(()=>expect(container.querySelector('.annotation-connector-layer')).not.toBeNull())
+  rerender(view('none'))
+  await waitFor(()=>expect(container.querySelector('.annotation-connector-layer')).toBeNull())
+  rerender(view('bracket'))
+  await waitFor(()=>expect(container.querySelector('.annotation-connector-layer')).not.toBeNull())
+ })
+ it('does not borrow a nested figure note for the outer layout',async()=>{
+  setup()
+  const {container}=render(<AnnotationLayout><div data-annotation-target><AnnotationLayout><div data-annotation-target>Inner</div><aside data-annotation-note>Inner note</aside></AnnotationLayout></div></AnnotationLayout>)
+  await waitFor(()=>expect(container.querySelectorAll('.annotation-connector-layer')).toHaveLength(1))
+  expect(container.firstElementChild?.querySelector(':scope > .annotation-connector-layer')).toBeNull()
  })
  it('keeps a native underline fallback until measured fragments become available',async()=>{
   setup();vi.spyOn(document,'createRange').mockReturnValue({selectNodeContents(){},getClientRects(){return [new DOMRect(0,0,180,24),new DOMRect(0,30,90,24)]}} as unknown as Range)

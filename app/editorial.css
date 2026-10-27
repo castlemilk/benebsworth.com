@@ -90,3 +90,31 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .annotation-mark,.folio-archive-note>.annotation-mark,.margin-note>.annotation-mark,.folio-focus-note .folio-connector,.folio-note-label .annotation-mark,.hand-underline>svg{color:var(--folio-handwriting,#b32624)}
 
 .annotation-layout svg [data-annotation-anchor]{stroke:var(--folio-handwriting,#b32624);fill:var(--folio-handwriting,#b32624)}
+
+/* A figure may sit in a narrow article column even on a wide desktop window.
+   Compose its note using the available figure width, not just the viewport. */
+.annotation-layout{container:annotation / inline-size}
+.annotation-layout>[data-annotation-note]{min-width:0;overflow-wrap:anywhere}
+.annotation-layout .margin-note-label{font-size:.75rem;line-height:1.5;min-height:44px;text-underline-offset:.3em}
+.annotation-layout .handwritten-note{max-width:22ch;text-wrap:pretty}
+@container annotation (max-width:620px){
+ .annotation-layout>[data-annotation-target]{grid-column:1 / -1;grid-row:2;min-width:0}
+ .annotation-layout>[data-annotation-note]{grid-column:1 / -1;grid-row:1;justify-self:end;max-width:min(100%,18rem)}
+ .annotation-layout-below>[data-annotation-target]{grid-row:1}
+ .annotation-layout-below>[data-annotation-note]{grid-row:2;justify-self:start}
+}
+
+/* Authoring patterns share the reading palette, not independent card themes. */
+.folio-brief{border-block:1px solid var(--border);padding:1.5rem 0;margin:2.5rem 0;max-width:68ch}
+.folio-pattern-label{font:600 .85rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .75rem}
+.folio-brief-summary{font:1.25rem/1.6 'Folio Serif',Georgia,serif;text-wrap:pretty}
+.folio-brief-summary p:first-child{margin-top:0}.folio-brief-summary p:last-child{margin-bottom:0}
+.folio-brief-audience,.folio-prerequisites{font:1rem/1.65 'Folio Serif',Georgia,serif;margin-top:1rem}
+.folio-prerequisites>p{margin:0;font-weight:600}.folio-prerequisites ul{padding-left:1.25rem;margin:.5rem 0 0}
+.folio-evidence-limit{border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem;font-size:1rem}
+.folio-evidence-limit>strong{font-family:'Folio Condensed',sans-serif;letter-spacing:.05em}
+.folio-method{margin:2.5rem 0;max-width:68ch}.folio-method ol{padding-left:1.75rem}
+.folio-method li{padding-left:.6rem;margin:0 0 1.4rem;font:1.1rem/1.7 'Folio Serif',Georgia,serif}
+.folio-method li::marker{font-family:'Folio Hand',cursive;color:var(--folio-handwriting,#b32624);font-size:1.45rem}
+.folio-method li h4{font:600 1.1rem/1.5 'Folio Serif',Georgia,serif;margin:0 0 .35rem}
+.folio-method li p{margin:.35rem 0}

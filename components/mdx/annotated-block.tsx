@@ -4,7 +4,7 @@ type TargetProps={id:string;children:ReactNode}
 type NoteProps={target:string;label?:string;children:ReactNode;mark?:'connector'|'bracket'|'none'}
 export function AnnotationTarget({id,children}:TargetProps){return <div id={id} className="annotation-target" data-annotation-target>{children}</div>}
 export function MarginNote({target,label='Working note',children,mark='connector'}:NoteProps){return <aside data-annotation-note data-annotation-mark={mark} className="margin-note" aria-label={label}><a className="margin-note-label" href={'#'+target}>{label}</a><div className="handwritten-note">{children}</div></aside>}
-/** One target/note per block. No runtime measuring or random paths. */
+/** One matched target/note per block; shared layout owns deterministic measured strokes. */
 export function AnnotatedBlock({children,placement='margin'}:{children:ReactNode;placement?:'margin'|'above'|'below'}){
  const nodes=Children.toArray(children).filter(isValidElement) as ReactElement[];
  const targets=nodes.filter(n=>n.type===AnnotationTarget) as ReactElement<TargetProps>[];

@@ -11,3 +11,11 @@ describe('research folio',()=>{
  it('renders real Gamma range with bounds and accessible value',()=>{const html=renderToStaticMarkup(<Controls specs={[{type:'range',key:'speed',label:'Speed',min:0,max:10,step:1}]} params={{speed:4}} onChange={()=>{}} onReset={()=>{}} onCopy={()=>{}}/>);expect(html).toContain('range-slider-input');expect(html).toContain('aria-valuetext="4"');expect(html).toContain('max="10"');expect(html).toContain('gamma-button');});
  it('archive controls expose selection and disable empty clear',()=>{const html=renderToStaticMarkup(<BlogFilter topics={[]} searchQuery="" onSearchChange={()=>{}} activeTopic={null} onTopicChange={()=>{}}/>);expect(html).toContain('aria-label="Search posts"');expect(html).toContain('aria-pressed="true"');expect(html).toContain('gamma-button');expect(html).not.toContain('scrollbar-width:none');});
 })
+
+import {AnnotatedBlock,AnnotationTarget,MarginNote} from './annotated-block'
+import {AnnotationMark} from './annotation-marks'
+describe('target-bound annotations',()=>{
+ it('renders source-order target then linked selectable note',()=>{const html=renderToStaticMarkup(<AnnotatedBlock><MarginNote target="curve" label="Observation">Look at the envelope.</MarginNote><AnnotationTarget id="curve"><p>Figure</p></AnnotationTarget></AnnotatedBlock>);expect(html.indexOf('id="curve"')).toBeLessThan(html.indexOf('class="margin-note"'));expect(html).toContain('href="#curve"');expect(html).toContain('handwritten-note');expect(html).toContain('aria-hidden="true"');});
+ it('rejects missing, mismatched or duplicate targets',()=>{expect(()=>renderToStaticMarkup(<AnnotatedBlock><AnnotationTarget id="a">A</AnnotationTarget></AnnotatedBlock>)).toThrow();expect(()=>renderToStaticMarkup(<AnnotatedBlock><AnnotationTarget id="a">A</AnnotationTarget><MarginNote target="b">B</MarginNote></AnnotatedBlock>)).toThrow();expect(()=>renderToStaticMarkup(<AnnotatedBlock><AnnotationTarget id="a">A</AnnotationTarget><AnnotationTarget id="a">B</AnnotationTarget><MarginNote target="a">C</MarginNote></AnnotatedBlock>)).toThrow();});
+ it('produces stable, non-random gesture geometry',()=>{expect(renderToStaticMarkup(<AnnotationMark kind="arrow"/>)).toBe(renderToStaticMarkup(<AnnotationMark kind="arrow"/>));});
+})

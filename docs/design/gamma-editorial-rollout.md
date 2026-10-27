@@ -28,3 +28,6 @@ Use a simple image/SVG child rather than nesting Figure when a single figcaption
 
 ## Remaining artistic work
 Keep three editorial families: personal field essays (restrained object/photographic compositions), engineering explainers (diagram-led figures) and interactive experiments (instrument/control framing). Develop thumbnail proofs at actual archive size, a small semantic annotation gesture kit, source trails and one full article review before broad content migration. Preserve MDX and the existing review gate.
+
+## Artistic correction after review
+The first generic component study was rejected. The revised specimen implements the actual folio hierarchy, locally licensed serif/condensed/handwritten fonts, deterministic SVG gestures, target-linked MarginNote/AnnotationTarget/AnnotatedBlock and a code-native wire specimen. This is a materially different composition, not a recolour. Article titles/prose and figure notes adopt the new typography; navigation and unrelated routes remain unchanged. Cross-block ID validation, all-article adoption and browser visual acceptance remain open.

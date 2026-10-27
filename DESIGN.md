@@ -13,3 +13,8 @@ This first slice adds reusable MDX FieldNote, Assumptions and FigureFocus primit
 
 ## Verification
 Static rendering, component behavior, typecheck and full three-phase export are separate gates. Catalogue review is not browser evidence. Preserve review-first article publication; this UI branch must not include or replace PR77 content.
+
+## Corrected artistic direction, 27 October 2026
+User rejected the initial specimen because handwritten lines, typography and hierarchy were missing. The research-folio references now take precedence for blog reading surfaces: Source Serif 4 titles/body, Barlow Condensed short technical labels, Caveat for short selectable margin annotations. Gamma remains the controls layer, not the artistic voice. Existing site navigation and other route identities remain intact. The specimen uses a paper/graphite/copper canvas; articles retain supported theme contrast through scoped mappings.
+
+Bundle the three fonts locally with their SIL OFL notices. No browser calls to a new font provider. Curated deterministic SVG arrows, underlines, brackets and circles are separate from exact scientific geometry. AnnotatedBlock requires one matching AnnotationTarget and MarginNote, rejects missing/mismatched/duplicate children, and keeps meaningful target links. Notes stack under targets on mobile/print; cross-block document-wide duplicate-ID validation is still TODO. No random marks or manually placed page-wide connectors.

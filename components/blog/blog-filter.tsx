@@ -32,6 +32,8 @@ export function BlogFilter({
 
   return (
     <div
+      id="archive-index"
+      tabIndex={-1}
       className={cn(
         'sticky top-[93px] z-30 -mx-6 border-b border-[var(--color-border)]/60 px-6 sm:-mx-8 sm:px-8',
         scrolling

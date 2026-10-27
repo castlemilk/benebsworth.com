@@ -1,0 +1,127 @@
+name: Vercel preview (build in GitHub Actions)
+
+# Production and shared staging remain on Cloudflare Pages. This replaces only
+# Vercel branch previews; do not disable the Git trigger until a canary is green.
+on:
+  push:
+    branches-ignore: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: team_xE5DMN3hIo8aPqyHNkBybg8r
+  VERCEL_PROJECT_ID: prj_sxj2GQBYr1GDrSADoiKBve3nAlmO
+  VERCEL_CLI_VERSION: '65.1.0'
+  VERCEL_TELEMETRY_DISABLED: '1'
+  NEXT_TELEMETRY_DISABLED: '1'
+  NO_COLOR: '1'
+
+jobs:
+  preview:
+    # Fail closed until the protected environment and credential have been
+    # verified. A same-repository branch is NOT sufficient evidence of trust.
+    if: >-
+      vars.VERCEL_PREVIEW_CI_ENABLED == 'true' &&
+      github.repository == 'castlemilk/benebsworth.com' &&
+      github.ref_type == 'branch' && github.ref_name != 'master' &&
+      github.ref_name != 'codex/blog-editorial-ci-reconcile-20261027' &&
+      github.event.deleted != true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: preview-deploy
+      url: ${{ steps.deploy.outputs.url }}
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the exact approved commit
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Match the existing Vercel project Node version
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          # Vercel currently uses 24.x; .nvmrc is an older local-dev default.
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Test deployment guardrails
+        run: node --test scripts/ci/vercel-preview.test.mjs
+
+      - name: Install locked site dependencies
+        run: npm ci
+
+      - name: Install the pinned Vercel CLI
+        run: npm install --global "vercel@${VERCEL_CLI_VERSION}"
+
+      - name: Pull this branch's preview configuration
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PREVIEW_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          : "${VERCEL_TOKEN:?Configure VERCEL_TOKEN in the protected preview-deploy environment}"
+          vercel pull --yes --environment=preview --git-branch="$PREVIEW_BRANCH"
+          node scripts/ci/vercel-preview.mjs project
+
+      - name: Build on the GitHub runner, never on Vercel
+        env:
+          VERCEL_GIT_COMMIT_REF: ${{ github.ref_name }}
+          VERCEL_GIT_COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          rm -rf .vercel/output .next out
+          # Uses the existing npm prebuild/build/postbuild lifecycle, including
+          # generated content, OG image rewriting, and the Pagefind index.
+          vercel build --target=preview
+          node scripts/ci/vercel-preview.mjs output
+
+      - name: Reject superseded commits before publishing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIEW_BRANCH: ${{ github.ref_name }}
+          PREVIEW_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          branch_ref="$(node -p 'encodeURIComponent(process.env.PREVIEW_BRANCH)')"
+          branch_sha="$(gh api "repos/${GITHUB_REPOSITORY}/branches/${branch_ref}" --jq '.commit.sha')"
+          if [[ "$branch_sha" != "$PREVIEW_SHA" ]]; then
+            echo 'Branch advanced since this run; refusing to replace its newer preview.' >&2
+            exit 1
+          fi
+
+      - name: Upload only the validated prebuilt preview
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PREVIEW_BRANCH: ${{ github.ref_name }}
+          PREVIEW_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          node scripts/ci/vercel-preview.mjs project
+          node scripts/ci/vercel-preview.mjs output
+          deployment_url="$(vercel deploy --prebuilt --target=preview --yes \
+            --meta githubDeployment=1 \
+            --meta githubCommitRef="$PREVIEW_BRANCH" \
+            --meta githubCommitSha="$PREVIEW_SHA" \
+            --meta githubOrg=castlemilk \
+            --meta githubRepo=benebsworth.com)"
+          DEPLOYMENT_URL="$deployment_url" node scripts/ci/vercel-preview.mjs url
+          printf 'url=%s\n' "$deployment_url" >> "$GITHUB_OUTPUT"
+          printf '### Vercel preview\n\n[Open preview](%s)\n\nCommit: `%s`\n\nBuilt in GitHub Actions; uploaded with `--prebuilt`.\n' \
+            "$deployment_url" "$PREVIEW_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove pulled environment files
+        if: always()
+        run: rm -rf .vercel

@@ -1,0 +1,39 @@
+.study {
+  --stage: var(--bg);
+  --color-stage: var(--stage);
+  --study-ink: #b32624;
+  position: relative;
+  min-width: 0;
+  padding: 1.15rem .25rem 1.25rem 2rem;
+  border-block: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  color: var(--color-fg);
+  background: transparent;
+}
+:global(.dark) .study { --study-ink: #ffaaa5; }
+.study::before,
+.study::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  width: 11px;
+  height: 11px;
+  background: linear-gradient(var(--color-muted), var(--color-muted)) center / 1px 11px no-repeat,
+    linear-gradient(var(--color-muted), var(--color-muted)) center / 11px 1px no-repeat;
+  pointer-events: none;
+}
+.study::before { top: -6px; }
+.study::after { bottom: -6px; }
+.header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; margin-bottom: 1.25rem; }
+.heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1rem; }
+.title { font: 450 1.25rem/1.3 'Folio Serif', Georgia, serif; }
+.kicker { font: 500 .75rem/1.5 'Folio Condensed', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); }
+.content, .controls { min-width: 0; }
+.guideSlot { padding-block: .85rem; min-height: 4.75rem; }
+.hint { margin: 0; font: 500 1.5rem/1.2 'Folio Hand', cursive; color: var(--study-ink); max-width: 32ch; visibility: hidden; }
+.hint[data-open="true"] { visibility: visible; }
+.overlay { position: absolute; inset: 0; pointer-events: none; color: var(--study-ink); }
+.overlay svg { display: block; width: 100%; height: 100%; overflow: visible; }
+/* Visibility, not animation or removal, keeps the reading position stable. */
+@media (prefers-reduced-motion: reduce) { .hint, .overlay { animation: none; transition: none; } }
+@media print { .overlay { display: none; } }

@@ -60,3 +60,6 @@ This rollout preserves all MDX/frontmatter, source links, schema/canonical metad
 
 ## Reference-led review gate
 Use [VISUAL-REVIEW.md](docs/design/VISUAL-REVIEW.md) before claiming artistic alignment. Judge composition, hierarchy, meaningful figure/annotation relationships and reading rhythm separately from functional test success. Record exact capture context and mark missing narrow/live evidence unverified. The accepted editorial study is the current authority for reading surfaces; the original dark dossier description above applies only to preserved non-reading identity, not a veto on the owner's later direction.
+
+## Open-folio interactive studies
+The owner selected the open-margin folio concept for interactive component boundaries, with light/dark support and a red guide shown on first visible entry then dismissed on meaningful use. Follow [INTERACTIVE-STUDY.md](docs/design/INTERACTIVE-STUDY.md). The frame/guide is reusable across renderer types; scientific output remains real, annotations remain separate selectable text/SVG, and guide replay is explicit. No modal wizard, forced focus, tracking or repeated automatic hints after interaction.

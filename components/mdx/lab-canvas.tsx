@@ -6,6 +6,7 @@ import type { EffectModule, Params, ParamValue } from '@/lib/lab/types'
 import { EffectCanvas } from '@/components/lab/effect-canvas'
 import { Controls } from '@/components/lab/controls'
 import styles from './lab-canvas.module.css'
+import { InteractiveStudy } from './interactive-study'
 
 /**
  * Inline interactive canvas for MDX knowledge articles.
@@ -32,7 +33,7 @@ export function LabCanvas({
   if (!effectModule) {
     return (
       <div className="not-prose my-8">
-        <LabFigure title={entry.title} height={height} caption={caption}>
+        <LabFigure title={entry.title} height={height} caption={caption} ready={false}>
           <div className="h-full w-full motion-safe:animate-pulse" />
         </LabFigure>
       </div>
@@ -81,6 +82,7 @@ function LabCanvasInner({
         title={title}
         height={height}
         caption={caption}
+        hint={controls && module.controls[0] ? `Try changing ${module.controls[0].label}.` : undefined}
         controls={controls && module.controls.length > 0 ? (
           <Controls
             variant="editorial"
@@ -132,7 +134,7 @@ export function LabSide({
   if (!effectModule) {
     return (
       <LabSideLayout reverse={reverse} commentary={children}>
-        <LabFigure title={entry.title} height={height} caption={caption}>
+        <LabFigure title={entry.title} height={height} caption={caption} ready={false}>
           <div className="h-full w-full motion-safe:animate-pulse" />
         </LabFigure>
       </LabSideLayout>
@@ -188,6 +190,7 @@ function LabSideInner({
         title={title}
         height={height}
         caption={caption}
+        hint={controls && module.controls[0] ? `Try changing ${module.controls[0].label}.` : undefined}
         controls={controls && module.controls.length > 0 ? (
           <Controls
             variant="editorial"
@@ -228,7 +231,9 @@ function LabSideLayout({ reverse, commentary, children }: {
   )
 }
 
-function LabFigure({ title, height, caption, controls, children }: {
+function LabFigure({ title, height, caption, controls, children, hint, ready = true }: {
+  hint?: string
+  ready?: boolean
   title: string
   height: number
   caption?: string
@@ -236,15 +241,13 @@ function LabFigure({ title, height, caption, controls, children }: {
   children: ReactNode
 }) {
   return (
-    <div className={styles.figure}>
+    <InteractiveStudy title={title} hint={hint} ready={ready} className={styles.figure} controls={controls ? <div className={styles.actions}>{controls}</div> : undefined}>
       <figure className={styles.media} aria-label={title}>
-        <div className={styles.title}>{title}</div>
         <div className={styles.stage} style={{ height }}>
           {children}
         </div>
         {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
       </figure>
-      {controls && <div className={styles.actions}>{controls}</div>}
-    </div>
+    </InteractiveStudy>
   )
 }

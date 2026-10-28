@@ -1,3 +1,4 @@
+import { InteractiveStudy } from './interactive-study'
 import { PostBrief, EvidenceNote, MethodSteps } from './post-patterns'
 import {AnnotatedBlock, AnnotationTarget, MarginNote} from './annotated-block'
 import { FieldNote, Assumptions, FigureFocus } from './research-folio'
@@ -83,7 +84,7 @@ import {
 } from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
-  PostBrief, EvidenceNote, MethodSteps, FieldNote, Assumptions, FigureFocus, AnnotatedBlock, AnnotationTarget, MarginNote,
+  InteractiveStudy, PostBrief, EvidenceNote, MethodSteps, FieldNote, Assumptions, FigureFocus, AnnotatedBlock, AnnotationTarget, MarginNote,
   StatGroup,
   Stat,
   PullQuote,

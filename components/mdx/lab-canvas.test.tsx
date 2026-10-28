@@ -9,6 +9,7 @@ import { LabCanvas, LabSide } from './lab-canvas'
 import { Controls } from '@/components/lab/controls'
 import styles from './lab-canvas.module.css'
 import controlStyles from '@/components/lab/controls.module.css'
+import studyStyles from './interactive-study.module.css'
 
 vi.mock('@/lib/lab/registry', () => ({
   getEffect: (slug: string) => slug === 'missing' ? undefined : { title: 'Response' },
@@ -30,7 +31,7 @@ beforeEach(() => vi.mocked(useEffectModule).mockReturnValue(effect))
 afterEach(() => { cleanup(); vi.clearAllMocks() })
 
 function composition(container: HTMLElement) {
-  return ['section', `.${styles.layout}`, `.${styles.figure}`, 'figure', `.${styles.title}`, `.${styles.stage}`, 'figcaption', `.${styles.commentary}`]
+  return ['section', `.${styles.layout}`, `.${styles.figure}`, 'figure', `.${studyStyles.title}`, `.${styles.stage}`, 'figcaption', `.${styles.commentary}`]
     .map(selector => container.querySelector(selector)?.className)
 }
 
@@ -59,7 +60,7 @@ describe('container-aware lab figures', () => {
     expect(container.querySelector(`.${styles.commentary} a`)?.getAttribute('href')).toBe('#method')
     expect(container.querySelector('canvas')?.getAttribute('aria-label')).toBe('Response diagram')
     expect(container.querySelector('canvas')?.getAttribute('data-quality')).toBe('mini')
-    expect(container.querySelector(`.${styles.layout}`)?.firstElementChild?.className).toBe(styles.figure)
+    expect(container.querySelector(`.${styles.layout}`)?.firstElementChild?.classList.contains(styles.figure)).toBe(true)
   })
 
   it.each([LabCanvas, LabSide])('retains native controls, overridden params, reconciliation and reset', Component => {
@@ -88,7 +89,9 @@ describe('container-aware lab figures', () => {
     expect(controls.classList.contains('rounded-2xl')).toBe(false)
     expect(getByRole('slider', { name: 'Speed' })).toBeTruthy()
     expect(getByRole('button', { name: /reset/ })).toBeTruthy()
-    expect(container.querySelectorAll('button')).toHaveLength(1)
+    expect(container.querySelectorAll('button')).toHaveLength(2)
+    expect(getByRole('button', { name: 'Show guide' })).toBeTruthy()
+    expect(container.querySelector('[data-study-target]')?.textContent).toContain('Speed')
     expect(container.textContent).not.toContain('copy')
     expect(container.querySelector(`.${styles.stage} canvas`)).not.toBeNull()
     const css = readFileSync('components/mdx/lab-canvas.module.css', 'utf8')
@@ -139,7 +142,7 @@ describe('container-aware lab figures', () => {
     const { container, rerender, getByRole } = render(<Component effect="response" caption={caption}>{commentary}</Component>)
     const assertFigure = () => {
       const figure = getByRole('figure', { name: 'Response' })
-      expect(figure.querySelector(`.${styles.title}`)?.textContent).toBe('Response')
+      expect(figure.closest('[data-interactive-study]')?.querySelector(`.${studyStyles.title}`)?.textContent).toBe('Response')
       const stage = figure.querySelector(`.${styles.stage}`)!
       expect(stage.nextElementSibling?.tagName).toBe('FIGCAPTION')
       expect(stage.nextElementSibling?.textContent).toBe(caption)
@@ -152,8 +155,10 @@ describe('container-aware lab figures', () => {
     vi.mocked(useEffectModule).mockReturnValue(effect)
     rerender(<Component effect="response" caption={caption}>{commentary}</Component>)
     const figure = assertFigure()
-    expect(figure.nextElementSibling?.className).toBe(styles.actions)
-    expect(figure.nextElementSibling?.querySelector('input[type="range"]')).not.toBeNull()
+    const actions = container.querySelector(`.${styles.actions}`)!
+    expect(figure.compareDocumentPosition(actions) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(actions.querySelector('input[type="range"]')).not.toBeNull()
+    expect(container.textContent).toContain('Try changing Speed.')
   })
 
   it('groups all editorial controls in authored order without hiding labels, ranges or values', () => {

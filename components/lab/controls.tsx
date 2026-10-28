@@ -26,8 +26,8 @@ export function Controls({ specs, params, onChange, onReset, onCopy, variant = '
         </div>
       </div>
       <div className={variant === 'editorial' ? styles.fields : "space-y-3"}>
-        {specs.map((s) => (
-          <div key={s.key}>
+        {specs.map((s, index) => (
+          <div key={s.key} data-study-target={variant === 'editorial' && index === 0 ? '' : undefined}>
             {s.type === 'range' ? <RangeSlider label={s.label} min={s.min} max={s.max} step={s.step} value={Number(params[s.key])} onChange={value=>onChange(s.key,value)} /> : <label className="flex items-center justify-between gap-4 text-xs">
             <span className="text-fg/70">{s.label}</span>
             {s.type === 'toggle' && (

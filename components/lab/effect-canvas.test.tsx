@@ -146,3 +146,19 @@ describe('EffectCanvas measured renderer lifecycle', () => {
     expect(env.methods.fillRect).toHaveBeenCalledWith(0, 0, 641, 320)
   })
 })
+
+
+it('reads the canvas wrapper palette so a study can inherit paper in either theme', () => {
+  const env = setup(true)
+  const effect = mockEffect()
+  const { getByRole } = render(<EffectCanvas effect={effect.effect} params={{}} />)
+  const wrapper = getByRole('img')
+  wrapper.style.setProperty('--stage', '#f4f1e9')
+  wrapper.style.setProperty('--fg', '#202c34')
+  env.resize(640, 320)
+  expect(effect.createRenderer).toHaveBeenLastCalledWith(expect.anything(), expect.anything(), { bg: '#f4f1e9', fg: '#202c34' })
+  wrapper.style.setProperty('--stage', '#0a0a0c')
+  wrapper.style.setProperty('--fg', '#ececf0')
+  env.theme()
+  expect(effect.createRenderer).toHaveBeenLastCalledWith(expect.anything(), expect.anything(), { bg: '#0a0a0c', fg: '#ececf0' })
+})

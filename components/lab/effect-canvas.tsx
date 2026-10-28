@@ -12,9 +12,9 @@ type Props = {
 }
 
 /** Read the live themed stage palette from CSS vars; dark fallback for SSR. */
-function resolveTheme(): EffectTheme {
+function resolveTheme(element?: Element): EffectTheme {
   if (typeof window === 'undefined') return { bg: '#0c0c10', fg: '#ececf0' }
-  const s = getComputedStyle(document.documentElement)
+  const s = getComputedStyle(element ?? document.documentElement)
   const bg = s.getPropertyValue('--stage').trim() || '#0c0c10'
   const fg = s.getPropertyValue('--fg').trim() || '#ececf0'
   return { bg, fg }
@@ -68,7 +68,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
         ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
         dims = { w, h, dpr }
         renderer?.destroy?.()
-        renderer = effect.createRenderer(ctx!, dims, resolveTheme())
+        renderer = effect.createRenderer(ctx!, dims, resolveTheme(wrap!))
         themeChanged = false
         last = -Infinity
         if (reduce) renderer.step(0, paramsRef.current)

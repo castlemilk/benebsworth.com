@@ -66,7 +66,7 @@ describe('folio stats and callouts', () => {
       if (rule.selector === '.kind') {
         expect(rule.nodes.map(node => node.toString()).join('')).toContain('display: none')
       } else {
-        expect(rule.selector.split(',\n').every(selector => selector.startsWith(':global(:is(.research-article, .folio-study))'))).toBe(true)
+        expect(rule.selector.split(',\n').every(selector => selector.trim().startsWith(':global(:is(.research-article, .folio-study))'))).toBe(true)
       }
     })
     expect(cssText).toContain('repeat(auto-fit, minmax(min(100%, 10rem), 1fr))')
@@ -75,6 +75,23 @@ describe('folio stats and callouts', () => {
     expect(cssText).toContain('3px solid var(--folio-accent')
     expect(cssText).toContain("[data-callout-type='error']")
     expect(cssText).toContain('3px double var(--folio-handwriting')
+  })
+
+  it('puts handwritten title ink in the utility layer to beat the shared important paragraph colour', () => {
+    const titleInk: postcss.Declaration[] = []
+    css.walkDecls('color', declaration => {
+      if (declaration.value === 'var(--folio-handwriting, #b32624)') titleInk.push(declaration)
+    })
+    expect(titleInk).toHaveLength(1)
+    const ink = titleInk[0]
+    expect(ink.important).toBe(true)
+    const rule = ink.parent as postcss.Rule
+    expect(rule.selector).toContain(".callout[data-callout-type='thinking'] .title")
+    expect(rule.selector).toContain(".callout[data-callout-type='feeling'] .title")
+    expect((rule.parent as postcss.AtRule).name).toBe('layer')
+    expect((rule.parent as postcss.AtRule).params).toBe('utilities')
+    const shared = readFileSync('components/ui/callout.tsx', 'utf8')
+    expect(shared).toContain('[&_p]:!text-fg/80')
   })
 
   it('inherits established light/dark inks instead of introducing a fixed orange palette', () => {

@@ -1,0 +1,21 @@
+.page {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 2rem clamp(1rem, 4vw, 3rem) 5rem;
+  color: var(--color-fg);
+}
+.navigation, .buttons { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; }
+.navigation { padding-bottom: 1.25rem; border-bottom: 1px solid var(--color-border); }
+.navigation a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: .2em; }
+.navigation a:hover { color: var(--blog); }
+.navigation a:focus-visible { outline: 2px solid var(--blog); outline-offset: 4px; }
+.header { max-width: 48rem; margin-block: 2.5rem; }
+.kicker, .controls legend, .status { font: 600 1rem/1.5 'Folio Condensed', sans-serif; letter-spacing: .06em; }
+.header h1 { margin-block: 1rem; font: 450 clamp(2.5rem, 5vw, 4.5rem)/1.08 'Folio Serif', Georgia, serif; letter-spacing: -.035em; }
+.header > p:last-child, .explanation { font: 400 1.1rem/1.65 'Folio Serif', Georgia, serif; }
+.controls { display: flex; flex-wrap: wrap; gap: 1.5rem 2rem; padding-block: 1.25rem; border-block: 1px solid var(--color-border); }
+.controls fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.controls legend { margin-bottom: .65rem; }
+.explanation { max-width: 68ch; margin-block: 1.25rem; }
+.status { margin-block: 1rem 2rem; }
+.column { width: 100%; min-width: 0; margin-inline: auto; }

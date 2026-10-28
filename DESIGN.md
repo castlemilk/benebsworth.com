@@ -66,3 +66,5 @@ The owner selected the open-margin folio concept for interactive component bound
 
 ## Editorial component coverage
 The owner requested aligned imagegen direction across components, including statistics and insight callouts. Follow [FOLIO-COMPONENT-COVERAGE.md](docs/design/FOLIO-COMPONENT-COVERAGE.md): all 96 registered MDX names are inventoried, with seven family boards and explicit remaining state/adoption checks. Generated mockup content is not source material. Scoped stats/callout styling retains semantic distinctions and does not restyle non-reading consumers.
+
+For each uplift work item, retain imagegen direction and prompt plus actual review assets in the existing blog Space. Follow the per-ticket workflow in FOLIO-UPLIFT-BACKLOG.md; generated boards are proposals, browser captures are evidence, and neither alone proves deployment.

@@ -39,13 +39,16 @@ tasks:
           `opengraph-image`. Static hosting rewrites extensionless paths to
           <path>/index.html, so they 404. The postbuild renames them to .png and
           rewrites the HTML refs. Never skip it.
-        * The build logs `Failed to load dynamic font` warnings from OG image
-          generation and a Turbopack NFT "whole project was traced" warning via
-          next.config.mjs -> lib/og.tsx. Both are pre-existing and non-fatal.
+        * OG fonts are bundled locally (assets/og-fonts + Next's Geist).
+          `Failed to load dynamic font` is a regression, not an ignorable warning;
+          run the OG font regression tests before attempting another export.
+          A Turbopack NFT "whole project was traced" warning via lib/og.tsx
+          remains pre-existing and non-fatal.
         * Force a rebuild despite the fingerprint with `task build --force`, or
           use `task build:clean` for a from-scratch build.
     sources:
       - app/**/*
+      - assets/og-fonts/**/*
       - components/**/*
       - lib/**/*
       - content/**/*

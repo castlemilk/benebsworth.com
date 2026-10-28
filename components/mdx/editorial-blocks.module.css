@@ -69,7 +69,16 @@
 :global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] .title,
 :global(:is(.research-article, .folio-study)) .callout[data-callout-type='feeling'] .title {
   font: 500 clamp(1.65rem, 3vw, 1.9rem)/1.2 'Folio Hand', cursive;
-  color: var(--folio-handwriting, #b32624) !important;
+}
+
+/* Tailwind's [&_p]:!text-fg/80 is layered: important layered declarations
+   outrank unlayered ones regardless of specificity. Join its layer so the
+   scoped handwritten title wins without changing shared non-blog callouts. */
+@layer utilities {
+  :global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] .title,
+  :global(:is(.research-article, .folio-study)) .callout[data-callout-type='feeling'] .title {
+    color: var(--folio-handwriting, #b32624) !important;
+  }
 }
 
 :global(:is(.research-article, .folio-study)) .callout .body,

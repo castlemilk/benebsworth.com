@@ -15,6 +15,10 @@ Board references below resolve to the numbered objects in the [retained imagegen
 - **Proposed:** actionable future work; existing components may already implement part of it. **Source implemented / awaiting visual acceptance:** identified source slice exists, but remaining acceptance gates are open. Neither status means merged, deployed or fully accepted.
 - **P0:** foundation/acceptance/release blocker. **P1:** primary uplift. **P2:** subsequent family rollout, still required for full coverage. Priority does not bypass dependencies.
 
+## Per ticket direction and Space record
+
+For each work item, establish imagegen direction before visual implementation: link the applicable approved family board and create a focused variation when the component/state needs further direction. Preserve the prompt, concept image and design decisions. Keep concepts distinct from actual browser captures, tests and deployment evidence. Update the [blog component Space page](https://chatgpt.com/space/page_47a9ae7ffb108191b4cefebcd1fe56ad) and [rollout page](https://chatgpt.com/space/page_8d9cfc951e9081918a9b9e720f19cb92) with assets/wireframes and exact progress for each item, preserving prior material and access. Do not regenerate or alter scientific content just to match a mockup.
+
 ## Shared acceptance contract (applies to every ticket)
 
 **V** — Capture the actual consuming route in light and dark at desktop and narrow phone width (record exact dimensions; use 390px as the initial phone target), plus a narrow article column where distinct. No page overflow, clipped text or covered focus; test 200% zoom and long content where relevant. Record screenshots/state/commit, artistic findings and what remains unverified. A generated board or mocked rectangle test cannot satisfy V.
@@ -28,11 +32,13 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 ## Work items
 
 ### FOLIO-028 · P0 · Restore a reliable local visual-review harness
-**Status:** Proposed · **Boards:** B1–B7 · **Depends:** none
+**Status:** Source implemented / partial local acceptance · **Boards:** B1–B7 · **Depends:** none
 
 **Scope:** Existing local preview/static-export and screenshot workflow, including the OG-font fetch dependency that previously blocked full export at `fonts.gstatic.com`.
 
 **Acceptance:** Provide a documented, repeatable local preview command for actual changed routes and their exact JS/CSS/assets without requiring a denied external font request. Reuse licensed local fonts or an existing supported scoped preview path; do not bypass network policy, relax permissions or silently substitute a fake screenshot. If using a scoped route preview, explicitly distinguish it from a successful full export and keep the production OG contract intact. Prove clean-start route loads, capture desktop/narrow light/dark and record build commit, port/URL, viewport and console errors. A fresh agent can repeat the command. Test any changed build/font handling and retain the separate full-export release gate.
+
+**Progress:** Local licensed OG fallback fonts eliminate the observed external-font build dependency. Full export and clean-start real RLC article loading passed; desktop light/dark captures are in the Space. True phone viewport, reduced-motion and print matrix remain open. The new review route adds an explicit 390px content-column fixture, not phone emulation.
 
 ### FOLIO-001 · P0 · Evidence baseline and coverage ledger
 **Status:** Proposed · **Boards:** B1–B7 · **Depends:** FOLIO-028

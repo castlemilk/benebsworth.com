@@ -135,7 +135,7 @@ test('workflow contract is opt-in, exact-head, read-only and credential-free', (
   assert.match(workflow, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
   assert.match(workflow, /ARTIFACT_SOURCE_SHA: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
   assert.match(workflow, /persist-credentials: false/);
-  assert.match(workflow, /permissions:\n  contents: read/);
+  assert.match(workflow, /permissions:\n {2}contents: read/);
   assert.match(workflow, /vercel-artifact\.mjs verify-request/);
   assert.match(workflow, /test "\$ARTIFACT_SOURCE_SHA" = "\$\(git rev-parse HEAD\)"/);
   assert.doesNotMatch(workflow, /pull_request_target|secrets\.|\benvironment:|\bwrite\b|\bvercel (?:pull|deploy|promote)\b/);

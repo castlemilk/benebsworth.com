@@ -50,3 +50,10 @@ The approved style now has shared PostBrief (explainer, experiment, essay, pract
 
 ## Representative article adoption
 The RLC explainer and logistic-map experiment now use PostBrief around their existing opening paragraph and FieldNote for one existing observation. No claims, wording, equations, simulation parameters, source links or frontmatter changed. A content-hash regression protects authored text and metadata independently of the presentation wrappers; both MDX bodies compile in the focused tests. Other callouts retain their existing warning/meaning. This is a two-post preview rollout, not wholesale article rewriting.
+
+## Shared reading-surface rollout — 28 October 2026
+The owner explicitly chose `/lab/editorial-system/` as the direction for all blog content. Extend that reading language through shared components, rather than rewriting each article or forcing every post into one experiment template. The shared masthead now uses the same serif display/deck, condensed metadata and quiet rules; authored takeaways use a restrained red handwritten heading and selectable list. Author context remains exact prose in a ruled folio section. Homepage writing and related-post entries share the semantic ReadingEntry component while GridNav, LabMatrix and non-blog route identity remain unchanged.
+
+Interactive LabSide figures respond to their containing width, not the viewport. They stack until both the simulation and its full commentary have a usable measure, preserving controls, parameters and scientific geometry. Generated image plates remain free of text/numbering/callouts by default; optional annotations belong to separate responsive components. Avoid adding annotations merely to decorate every paragraph.
+
+This rollout preserves all MDX/frontmatter, source links, schema/canonical metadata, search boundaries and published-state rules. Actual browser rendering is a separate acceptance gate; passing component tests does not establish visual fidelity.

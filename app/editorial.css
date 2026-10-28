@@ -118,3 +118,67 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .folio-method li::marker{font-family:'Folio Hand',cursive;color:var(--folio-handwriting,#b32624);font-size:1.45rem}
 .folio-method li h4{font:600 1.1rem/1.5 'Folio Serif',Georgia,serif;margin:0 0 .35rem}
 .folio-method li p{margin:.35rem 0}
+
+/* Reading rollout: the accepted study's hierarchy extends across real posts.
+   Existing prose, science graphics, code and theme tokens stay authoritative. */
+.folio-post-masthead{padding:1.5rem 0 2.25rem;border-bottom:1px solid var(--border)}
+.folio-post-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem 1.5rem;color:var(--muted);font:500 .85rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.06em}
+.folio-post-topic{display:inline-flex;gap:.6rem;align-items:center;font-weight:600}
+.folio-post-topic img{width:18px;height:18px;object-fit:contain}
+.folio-post-byline{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem}
+.research-article .folio-post-title{font:450 clamp(2.7rem,5vw,4.9rem)/1.09 'Folio Serif',Georgia,serif;letter-spacing:-.035em;text-wrap:balance;overflow-wrap:break-word;margin:1.65rem 0 0;max-width:22ch}
+.folio-post-deck{font:1.25rem/1.75 'Folio Serif',Georgia,serif;max-width:55ch;color:var(--muted);margin:1.35rem 0 0;text-wrap:pretty}
+.folio-post-tags{display:flex;flex-wrap:wrap;gap:.45rem 1rem;padding:0;margin:1.5rem 0 0;list-style:none;font:500 .8rem/1.5 'Folio Condensed',sans-serif;color:var(--muted);letter-spacing:.04em}
+.folio-post-tags li{padding:.2rem 0;border-bottom:1px solid var(--border)}
+.folio-takeaways{border-block:1px solid var(--border);padding:1.4rem 0 1.6rem;margin:0 0 2.5rem;max-width:68ch}
+.folio-takeaways h2{font:400 1.65rem/1.3 'Folio Hand',cursive;color:var(--folio-handwriting,#b32624);margin:0 0 1.3rem}
+.folio-takeaways ul{padding:0 0 0 1.2rem;margin:0;list-style:disc}
+.folio-takeaways li{font:1.06rem/1.75 'Folio Serif',Georgia,serif;color:var(--fg);padding-left:.45rem;margin:.7rem 0}
+.folio-takeaways li::marker{color:var(--folio-handwriting,#b32624);font-size:.8em}
+.folio-author{display:grid;grid-template-columns:5.25rem minmax(0,1fr);gap:1.5rem;border-block:1px solid var(--border);padding:2rem 0;margin-top:4rem;align-items:start}
+.folio-author-portrait{width:5.25rem;height:7.2rem;object-fit:cover;object-position:top;border-radius:2px;filter:grayscale(.2)}
+.folio-author-label{font:500 .8rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem}
+.folio-author-name{font:500 1.7rem/1.2 'Folio Serif',Georgia,serif;margin:0}
+.folio-author-description{font:1.02rem/1.75 'Folio Serif',Georgia,serif;color:var(--muted);margin:.9rem 0 0}
+.folio-author-link{display:inline-flex;align-items:center;gap:.6rem;min-height:44px;margin-top:.65rem;font:500 .9rem/1.4 'Folio Condensed',sans-serif;text-decoration:underline;text-underline-offset:.3em;color:var(--fg)}
+.folio-author-link:focus-visible{outline:2px solid var(--blog);outline-offset:4px}
+.folio-toc{padding-left:1.2rem;border-left:1px solid var(--border);margin-top:1.5rem}
+.folio-toc>h2{font:400 1.55rem/1.4 'Folio Hand',cursive;letter-spacing:0;text-transform:none;color:var(--folio-handwriting,#b32624);margin:0 0 1rem}
+.folio-toc a{font:400 .85rem/1.6 'Folio Condensed',sans-serif;min-height:32px;display:flex;align-items:center}
+.folio-toc a:focus-visible{outline:2px solid var(--blog);outline-offset:3px}
+.latest-writing__header{display:flex;align-items:baseline;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.65rem}
+.latest-writing__title,.related-writing__title{font:450 clamp(1.9rem,3vw,2.7rem)/1.2 'Folio Serif',Georgia,serif;letter-spacing:-.025em}
+.latest-writing__archive-link{font:500 .9rem/1.5 'Folio Condensed',sans-serif;min-height:44px;display:inline-flex;align-items:center;gap:.5rem;text-decoration:underline;text-underline-offset:.3em}
+.latest-writing__entries,.related-writing__entries{display:grid;gap:1.5rem;grid-template-columns:repeat(2,minmax(0,1fr))}
+.reading-entry__link{display:block;min-width:0;text-decoration:none}
+.reading-entry{padding:1.5rem 0;display:flex;align-items:start;gap:1.3rem;height:100%;border-bottom:0}
+.reading-entry__body{min-width:0;flex:1}
+.reading-entry__metadata{display:flex;flex-wrap:wrap;gap:.4rem .65rem;align-items:center;font:500 .75rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.03em;color:var(--muted);margin-bottom:1rem}
+.reading-entry__topic{font-weight:600}
+.folio-entry .reading-entry__title{font:450 clamp(1.4rem,2.4vw,2rem)/1.25 'Folio Serif',Georgia,serif;letter-spacing:-.02em;overflow-wrap:anywhere;text-wrap:pretty;margin:0}
+.folio-entry .reading-entry__description{font:1.05rem/1.65 'Folio Serif',Georgia,serif;color:var(--muted);margin:.8rem 0 0;text-wrap:pretty}
+.reading-entry__image{width:100%;max-width:130px;aspect-ratio:10/7;height:auto;object-fit:cover;border-radius:2px;flex-shrink:0}
+.reading-entry__arrow{margin-top:.3rem;flex-shrink:0;color:var(--muted)}
+.related-writing{margin-top:3.5rem}.related-writing__title{margin-bottom:1.4rem}.related-writing__entries{gap:1.25rem}.related-writing .reading-entry__title{font-size:1.5rem}
+@media(max-width:760px){.folio-post-masthead{padding-top:1rem}.folio-post-meta{justify-content:flex-start}.research-article .folio-post-title{font-size:clamp(2.4rem,8vw,3.6rem);max-width:none}.folio-post-deck{font-size:1.15rem}.latest-writing__entries,.related-writing__entries{grid-template-columns:1fr;gap:0}.reading-entry{padding:1.4rem 0}.reading-entry__image{max-width:96px}.folio-entry .reading-entry__title{font-size:1.6rem}.folio-author{grid-template-columns:4rem minmax(0,1fr);gap:1rem}.folio-author-portrait{width:4rem;height:5.5rem}.folio-author-name{font-size:1.45rem}.folio-author-description{font-size:1rem}}
+@media(max-width:390px){.reading-entry{gap:.8rem}.reading-entry__image{max-width:75px}.folio-post-byline{font-size:.8rem}.folio-author{grid-template-columns:1fr}.folio-author-portrait{width:4rem;height:5.5rem}}
+@media print{.folio-post-masthead,.folio-takeaways,.folio-author{break-inside:avoid}.folio-author-portrait{filter:none}.folio-post-title{max-width:none}}
+
+/* Warm paper belongs to reading routes, not the interactive lab or landing hero.
+   Scope on the root so nav, footer and Tailwind token aliases inherit together.
+   Dark mode and scientific stage/diagram colours remain untouched. */
+:root:not(.dark):has(.folio-reading-page, .folio-archive){
+ --bg:#f4f1e9;
+ --fg:#202c34;
+ --muted:#5b6670;
+ --surface:#e9e7df;
+ --surface-2:#e5e3db;
+ --border:#c7c7be;
+}
+@media print{
+ :root:not(.dark):has(.folio-reading-page, .folio-archive){--bg:#fff;--fg:#000}
+}
+
+/* The TOC is a sibling of the article, so ink must be inherited from the page. */
+.folio-reading-page{--folio-handwriting:#b32624}
+.dark .folio-reading-page{--folio-handwriting:#ffaaa5}

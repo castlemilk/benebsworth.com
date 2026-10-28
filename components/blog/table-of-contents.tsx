@@ -151,7 +151,7 @@ export function TableOfContents({
     <nav
       aria-label="Table of contents"
       className={cn(
-        'text-[0.78rem]',
+        'folio-toc text-[0.78rem]',
         // The wrapper is `position: sticky` so the TOC stays visible
         // as the user scrolls. The top offset clears the sticky
         // SiteNav (~57px) and the sticky breadcrumb (~37px) so the
@@ -179,7 +179,7 @@ export function TableOfContents({
                 onClick={(e) => onClick(e, h.id)}
                 aria-current={isActive ? 'location' : undefined}
                 className={cn(
-                  'block border-l-2 py-1 pl-3 pr-2 leading-snug transition-colors',
+                  'block border-l py-1 pl-3 pr-2 leading-snug transition-colors',
                   isActive
                     ? 'border-blog text-fg'
                     : 'border-transparent text-muted hover:border-fg/30 hover:text-fg/80',

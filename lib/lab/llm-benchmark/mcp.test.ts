@@ -561,11 +561,9 @@ describe('mcp-fs: openTraceFromDisk', () => {
 // the one integration test: the real server, over real stdio
 // ---------------------------------------------------------------------------
 
-const tsx = join(root, 'node_modules/.bin/tsx')
-
 describe('scripts/bench-mcp.mjs over stdio', () => {
   it('completes a handshake, lists tools and answers a tool call', async () => {
-    const child = spawn(tsx, [join(root, 'scripts/bench-mcp.mjs')], {
+    const child = spawn(process.execPath, ['--import', 'tsx', join(root, 'scripts/bench-mcp.mjs')], {
       cwd: root,
       stdio: ['pipe', 'pipe', 'pipe'],
     })
@@ -628,8 +626,10 @@ describe('scripts/bench-mcp.mjs over stdio', () => {
     // The server module must not print anything at import time — a stray
     // console.log would corrupt the very first framed message.
     const out = execFileSync(
-      tsx,
+      process.execPath,
       [
+        '--import',
+        'tsx',
         '-e',
         "import('./lib/lab/llm-benchmark/mcp-fs.ts').then(() => process.stdout.write('clean'))",
       ],

@@ -1,0 +1,66 @@
+.side {
+  container: lab-side / inline-size;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.figure,
+.commentary {
+  min-width: 0;
+}
+
+.figure {
+  margin: 0;
+}
+
+.stage {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-stage);
+}
+
+.caption {
+  margin-top: .75rem;
+  padding-top: .65rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font: 400 1rem/1.55 'Folio Serif', Georgia, serif;
+  text-align: left;
+}
+
+.commentary {
+  font-family: 'Folio Serif', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.commentary > :first-child {
+  margin-top: 0;
+}
+
+.commentary > :last-child {
+  margin-bottom: 0;
+}
+
+/* Both the simulation and long-form commentary need a usable reading measure.
+   A large viewport alone says nothing about the containing article column. */
+@container lab-side (min-width: 56rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .reversed > .figure {
+    order: 2;
+  }
+
+  .reversed > .commentary {
+    order: 1;
+  }
+}

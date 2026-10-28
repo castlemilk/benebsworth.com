@@ -118,6 +118,8 @@ tasks:
     sources:
       - content/blog/**/*.mdx
       - scripts/gen-md-siblings.mjs
+      - scripts/render-diagram.py
+      - content/blog/**/*.json
     generates:
       - public/blog/*/index.md
     cmds:
@@ -149,7 +151,7 @@ tasks:
     generates:
       - public/lab-data/llm-benchmark/outputs/**/*.json
     cmds:
-      - '{{.BIN}}/tsx scripts/gen-benchmark-outputs.mjs'
+      - 'node --import tsx scripts/gen-benchmark-outputs.mjs'
 
   gen:proto:
     desc: Regenerate protobuf types (buf generate) — see the footgun below

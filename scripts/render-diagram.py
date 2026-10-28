@@ -12,6 +12,7 @@ assignment, journey choice) stays in the model and arrives as JSON hints.
   python3 layout.py graph.json                     # geometry JSON -> stdout
   python3 layout.py graph.json --render out.html   # finished, ready-to-ship HTML
   python3 layout.py graph.json --emit-svg out.html # alias of --render (legacy name)
+  python3 layout.py graph.json --llm -             # LLM text -> stdout (/dev/stdout also supported)
 
 The --render path writes a COMPLETE self-contained HTML — geometry + the mode
 style layer (type colors, masking pairs, connector/dot classes) + the model's
@@ -1231,8 +1232,13 @@ def main():
         
     if emit_llm:
         txt = render_llm(lo)
-        open(emit_llm, "w", encoding="utf-8").write(txt)
-        if emit_llm != "/dev/stdout":
+        if emit_llm in ("-", "/dev/stdout"):
+            # Use the existing stream: reopening /dev/stdout fails when the
+            # caller captures output through a socket (e.g. Node execSync).
+            sys.stdout.write(txt)
+        else:
+            with open(emit_llm, "w", encoding="utf-8") as output:
+                output.write(txt)
             print(f"wrote LLM-friendly text to {emit_llm}")
         
     if not emit_svg and not emit_llm:

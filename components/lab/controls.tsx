@@ -4,20 +4,23 @@ import { RangeSlider } from '@/components/gamma/RangeSlider'
 import type { ControlSpec, Params, ParamValue } from '@/lib/lab/types'
 
 type Props = {
+  variant?: 'panel' | 'editorial'
   specs: ControlSpec[]
   params: Params
   onChange: (key: string, value: ParamValue) => void
   onReset: () => void
-  onCopy: () => void
+  onCopy?: () => void
 }
 
-export function Controls({ specs, params, onChange, onReset, onCopy }: Props) {
+export function Controls({ specs, params, onChange, onReset, onCopy, variant = 'panel' }: Props) {
   return (
-    <div className="rounded-2xl border border-[var(--color-border)] bg-surface p-5 font-mono">
+    <div className={variant === 'editorial'
+      ? 'border-y border-[var(--color-border)] bg-transparent py-4 font-mono'
+      : 'rounded-2xl border border-[var(--color-border)] bg-surface p-5 font-mono'}>
       <div className="mb-4 flex items-center justify-between">
         <span className="type-label text-muted">knobs</span>
         <div className="flex gap-2">
-          <GammaButton variant="secondary" size="sm" onClick={onCopy} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">⧉ copy</GammaButton>
+          {onCopy && <GammaButton variant="secondary" size="sm" onClick={onCopy} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">⧉ copy</GammaButton>}
           <GammaButton variant="secondary" size="sm" onClick={onReset} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">↺ reset</GammaButton>
         </div>
       </div>

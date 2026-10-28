@@ -5,11 +5,10 @@ import { getPublishedPosts, getPost, isPublished } from '@/lib/content'
 import { hikeForGuide, getHike } from '@/content/hiking'
 import { topicFor } from '@/lib/topics'
 import { MdxContent } from '@/components/mdx/mdx-content'
-import { TopicMarker } from '@/components/blog/topic-marker'
+import { ArticleMasthead } from '@/components/blog/article-masthead'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { tagColor } from '@/lib/tag-colors'
 import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { BlogGallery } from '@/components/blog/blog-gallery'
@@ -18,7 +17,6 @@ import { KeyTakeaways } from '@/components/blog/key-takeaways'
 import { AuthorBio } from '@/components/blog/author-bio'
 import { MobileToc } from '@/components/blog/mobile-toc'
 import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
-import { fmtDate } from '@/lib/format'
 
 export function generateStaticParams() {
   return getPublishedPosts().map((p) => ({ slug: p.slug }))
@@ -141,7 +139,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           measure) on the left, and the sticky TOC on the right. The
           post's own `pt-8` on <main> still creates the right breathing
           room because sticky elements stay in normal flow. */}
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
+      <main id="main-content" className="folio-reading-page mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] xl:grid-cols-[minmax(0,1fr)_16rem]">
           {/* data-pagefind-body scopes the search index to just the post content
               (nav/footer/TOC are excluded). The trailing author/related block is
@@ -150,62 +148,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {/* ── Post header spans the full (wide) page frame — editorial title +
             accent rule fill the screen. Only the long-form prose below is capped
             to a comfortable reading measure (~44rem ≈ 74ch). ── */}
-        <header className="relative">
-          {/* soft topic-tinted wash behind the title */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -top-12 left-0 -z-10 h-40 w-full opacity-70 blur-3xl"
-            style={{
-              background: `radial-gradient(60% 100% at 0% 0%, color-mix(in srgb, ${topic.accent} 16%, transparent), transparent 70%)`,
-            }}
-          />
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <TopicMarker topic={topic} />
-            <div className="flex flex-wrap items-center gap-2">
-              <time className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
-                {fmtDate(p.date)}
-              </time>
-              <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
-                · {readingTime} min read · Ben Ebsworth
-              </span>
-            </div>
-          </div>
-          <h1 className="type-h1 mt-5">
-            {p.title}
-          </h1>
-          {p.description && (
-            <p className="mt-4 max-w-2xl font-sans text-lg leading-8 text-fg/65">
-              {p.description}
-            </p>
-          )}
-          {p.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {p.tags.slice(0, 6).map((t) => {
-                const c = tagColor(t)
-                return (
-                  <span
-                    key={t}
-                    className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
-                    style={{
-                      '--ink': c,
-                      borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
-                      backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                    } as React.CSSProperties}
-                  >
-                    {t}
-                  </span>
-                )
-              })}
-            </div>
-          )}
-          {/* accent rule keyed to the topic */}
-          <div
-            className="mt-7 h-px w-full"
-            style={{
-              background: `linear-gradient(to right, ${topic.accent}, color-mix(in srgb, ${topic.accent} 8%, transparent) 60%, transparent)`,
-            }}
-          />
-        </header>
+        <ArticleMasthead title={p.title} description={p.description} date={p.date}
+          readingTime={readingTime} tags={p.tags} topic={topic}/>
+
         <div className="mt-10 max-w-[44rem]">
           {relatedHike && (
             <Link

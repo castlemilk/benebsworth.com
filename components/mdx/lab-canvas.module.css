@@ -14,8 +14,20 @@
   min-width: 0;
 }
 
-.figure {
+.figure,
+.media {
   margin: 0;
+}
+
+.title {
+  margin-bottom: .75rem;
+  color: var(--color-fg);
+  font: 600 1rem/1.4 'Folio Condensed', sans-serif;
+  letter-spacing: .06em;
+}
+
+.actions {
+  margin-top: 1.25rem;
 }
 
 .stage {
@@ -28,8 +40,7 @@
 
 .caption {
   margin-top: .75rem;
-  padding-top: .65rem;
-  border-top: 1px solid var(--color-border);
+  margin-bottom: 0;
   color: var(--color-muted);
   font: 400 1rem/1.55 'Folio Serif', Georgia, serif;
   text-align: left;

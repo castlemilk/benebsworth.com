@@ -121,14 +121,14 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 
 /* Reading rollout: the accepted study's hierarchy extends across real posts.
    Existing prose, science graphics, code and theme tokens stay authoritative. */
-.folio-post-masthead{padding:1.5rem 0 2.25rem;border-bottom:1px solid var(--border)}
+.folio-post-masthead{padding:1.5rem 0 1.6rem;border-bottom:1px solid var(--border)}
 .folio-post-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem 1.5rem;color:var(--muted);font:500 .85rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.06em}
 .folio-post-topic{display:inline-flex;gap:.6rem;align-items:center;font-weight:600}
 .folio-post-topic img{width:18px;height:18px;object-fit:contain}
 .folio-post-byline{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem}
-.research-article .folio-post-title{font:450 clamp(2.7rem,5vw,4.9rem)/1.09 'Folio Serif',Georgia,serif;letter-spacing:-.035em;text-wrap:balance;overflow-wrap:break-word;margin:1.65rem 0 0;max-width:22ch}
-.folio-post-deck{font:1.25rem/1.75 'Folio Serif',Georgia,serif;max-width:55ch;color:var(--muted);margin:1.35rem 0 0;text-wrap:pretty}
-.folio-post-tags{display:flex;flex-wrap:wrap;gap:.45rem 1rem;padding:0;margin:1.5rem 0 0;list-style:none;font:500 .8rem/1.5 'Folio Condensed',sans-serif;color:var(--muted);letter-spacing:.04em}
+.research-article .folio-post-title{font:450 clamp(2.7rem,4.6vw,4.6rem)/1.09 'Folio Serif',Georgia,serif;letter-spacing:-.035em;text-wrap:balance;overflow-wrap:break-word;margin:1.3rem 0 0;max-width:28ch}
+.folio-post-deck{font:1.25rem/1.75 'Folio Serif',Georgia,serif;max-width:62ch;color:var(--muted);margin:1rem 0 0;text-wrap:pretty}
+.folio-post-tags{display:flex;flex-wrap:wrap;gap:.45rem 1rem;padding:0;margin:1.1rem 0 0;list-style:none;font:500 .8rem/1.5 'Folio Condensed',sans-serif;color:var(--muted);letter-spacing:.04em}
 .folio-post-tags li{padding:.2rem 0;border-bottom:1px solid var(--border)}
 .folio-takeaways{border-block:1px solid var(--border);padding:1.4rem 0 1.6rem;margin:0 0 2.5rem;max-width:68ch}
 .folio-takeaways h2{font:400 1.65rem/1.3 'Folio Hand',cursive;color:var(--folio-handwriting,#b32624);margin:0 0 1.3rem}
@@ -185,3 +185,22 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 
 /* Authored component copy owns its type, even when MDX supplies paragraph utilities. */
 .folio-brief-summary :where(p),.folio-note-content :where(p,li),.folio-method li :where(p){font-family:inherit;font-size:inherit;line-height:inherit}
+
+/* Latest writing is a reading sequence, not an uneven two-column card grid. */
+.latest-writing__entries{grid-template-columns:minmax(0,1fr);gap:0}
+.latest-writing .reading-entry{align-items:center;gap:clamp(1.5rem,4vw,3rem);padding:1.8rem 0}
+.latest-writing .reading-entry__body{flex:1;min-width:0;max-width:66ch}
+.latest-writing .reading-entry__image{width:clamp(120px,18vw,200px);max-width:200px;aspect-ratio:10/7;margin-left:auto}
+.latest-writing .reading-entry__title{font-size:clamp(1.65rem,2.7vw,2.35rem)}
+.latest-writing .reading-entry__metadata{margin-bottom:.6rem}
+.folio-reading-recap{margin-top:3rem}
+@media(max-width:600px){
+ .latest-writing .reading-entry{align-items:start;gap:1rem}
+ .latest-writing .reading-entry__image{width:88px;max-width:88px}
+ .latest-writing .reading-entry__title{font-size:1.6rem}
+}
+@media(max-width:390px){
+ .latest-writing .reading-entry{flex-wrap:wrap}
+ .latest-writing .reading-entry__body{flex-basis:100%}
+ .latest-writing .reading-entry__image{width:120px;max-width:120px;margin-left:0}
+}

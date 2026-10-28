@@ -32,7 +32,7 @@ export function LabCanvas({
   if (!effectModule) {
     return (
       <div className="not-prose my-8">
-        <LabFigure height={height} caption={caption}>
+        <LabFigure title={entry.title} height={height} caption={caption}>
           <div className="h-full w-full motion-safe:animate-pulse" />
         </LabFigure>
       </div>
@@ -78,6 +78,7 @@ function LabCanvasInner({
   return (
     <div className="not-prose my-8">
       <LabFigure
+        title={title}
         height={height}
         caption={caption}
         controls={controls && module.controls.length > 0 ? (
@@ -131,7 +132,7 @@ export function LabSide({
   if (!effectModule) {
     return (
       <LabSideLayout reverse={reverse} commentary={children}>
-        <LabFigure height={height} caption={caption}>
+        <LabFigure title={entry.title} height={height} caption={caption}>
           <div className="h-full w-full motion-safe:animate-pulse" />
         </LabFigure>
       </LabSideLayout>
@@ -184,6 +185,7 @@ function LabSideInner({
   return (
     <LabSideLayout reverse={reverse} commentary={children}>
       <LabFigure
+        title={title}
         height={height}
         caption={caption}
         controls={controls && module.controls.length > 0 ? (
@@ -226,19 +228,23 @@ function LabSideLayout({ reverse, commentary, children }: {
   )
 }
 
-function LabFigure({ height, caption, controls, children }: {
+function LabFigure({ title, height, caption, controls, children }: {
+  title: string
   height: number
   caption?: string
   controls?: ReactNode
   children: ReactNode
 }) {
   return (
-    <figure className={styles.figure}>
-      <div className={styles.stage} style={{ height }}>
-        {children}
-      </div>
-      {controls && <div className="mt-3">{controls}</div>}
-      {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
-    </figure>
+    <div className={styles.figure}>
+      <figure className={styles.media} aria-label={title}>
+        <div className={styles.title}>{title}</div>
+        <div className={styles.stage} style={{ height }}>
+          {children}
+        </div>
+        {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
+      </figure>
+      {controls && <div className={styles.actions}>{controls}</div>}
+    </div>
   )
 }

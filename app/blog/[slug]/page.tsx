@@ -13,9 +13,8 @@ import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { BlogGallery } from '@/components/blog/blog-gallery'
 import { RelatedPosts } from '@/components/blog/related-posts'
-import { KeyTakeaways } from '@/components/blog/key-takeaways'
+import { ArticleReadingFlow } from '@/components/blog/article-reading-flow'
 import { AuthorBio } from '@/components/blog/author-bio'
-import { MobileToc } from '@/components/blog/mobile-toc'
 import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 
 export function generateStaticParams() {
@@ -151,7 +150,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <ArticleMasthead title={p.title} description={p.description} date={p.date}
           readingTime={readingTime} tags={p.tags} topic={topic}/>
 
-        <div className="mt-10 max-w-[44rem]">
+        <div className="mt-6 max-w-[44rem]">
           {relatedHike && (
             <Link
               href={`/hiking/${relatedHike.slug}/`}
@@ -171,9 +170,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <span className="shrink-0 font-mono text-sm transition-transform group-hover:translate-x-0.5" style={{ color: relatedHike.accent || topic.accent }}>→</span>
             </Link>
           )}
-          {p.takeaways?.length ? <KeyTakeaways items={p.takeaways} accent={topic.accent} /> : null}
-          <MobileToc />
-          <MdxContent source={p.body} slug={p.slug} />
+          <ArticleReadingFlow takeaways={p.takeaways} accent={topic.accent}>
+            <MdxContent source={p.body} slug={p.slug} />
+          </ArticleReadingFlow>
         </div>
           {/* Live photo gallery managed in /admin (renders nothing until photos
               are assigned to this post). */}

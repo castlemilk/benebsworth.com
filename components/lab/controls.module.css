@@ -1,0 +1,40 @@
+/* The reading surface groups parameters without replacing Gamma controls. */
+.editorial {
+  container: editorial-controls / inline-size;
+}
+
+.label {
+  color: var(--color-muted);
+  font: 600 .875rem/1.4 'Folio Condensed', sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: start;
+}
+
+.fields > * {
+  min-width: 0;
+}
+
+/* Keep the first authored parameter prominent and the remaining ones nearby.
+   Container widths, not viewport widths, protect sliders in narrow figures. */
+@container editorial-controls (min-width: 34rem) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fields > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@container editorial-controls (min-width: 48rem) {
+  .fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

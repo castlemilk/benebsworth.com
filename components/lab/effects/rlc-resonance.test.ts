@@ -28,7 +28,7 @@ function contrast(fg: string, bg: string, alpha = 1) {
   return (Math.max(a, b) + .05) / (Math.min(a, b) + .05)
 }
 
-function draw(theme?: EffectTheme) {
+function draw(theme?: EffectTheme, w = 640, h = 320) {
   const labels: { text: string; color: string; alpha: number; x: number; y: number }[] = []
   const strokes: { color: string; alpha: number; path: number[][] }[] = []
   let path: number[][] = []
@@ -36,6 +36,9 @@ function draw(theme?: EffectTheme) {
   const stack: Record<string, unknown>[] = []
   const ctx = new Proxy(state, {
     get(target, key: string) {
+      if (key === 'arc') return (_x: number, _y: number, radius: number) => {
+        if (!Number.isFinite(radius) || radius < 0) throw new Error('Invalid arc radius')
+      }
       if (key === 'fillText') return (text: string, x: number, y: number) => labels.push({ text, color: target.fillStyle as string, alpha: target.globalAlpha as number, x, y })
       if (key === 'stroke') return () => strokes.push({ color: target.strokeStyle as string, alpha: target.globalAlpha as number, path: [...path] })
       if (key === 'beginPath') return () => { path = [] }
@@ -45,11 +48,17 @@ function draw(theme?: EffectTheme) {
       return key in target ? target[key] : () => {}
     },
   }) as unknown as CanvasRenderingContext2D
-  rlcResonance.createRenderer(ctx, { w: 640, h: 320, dpr: 1 }, theme).step(16, defaults)
+  rlcResonance.createRenderer(ctx, { w, h, dpr: 1 }, theme).step(16, defaults)
   return { labels, strokes }
 }
 
 describe('RLC axis theme contrast', () => {
+  it.each([[0, 0], [1, 320], [2, 320], [40, 320], [82, 320], [640, 1], [640, 103]])('does not draw unusable %s × %s geometry', (w, h) => {
+    const result = draw(undefined, w, h)
+    expect(result.labels).toEqual([])
+    expect(result.strokes).toEqual([])
+  })
+
   it('covers the current light, dark and editorial-light stage palettes', () => {
     expect(basePalettes).toHaveLength(2)
     expect(palettes).toHaveLength(3)

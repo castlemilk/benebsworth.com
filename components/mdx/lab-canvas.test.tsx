@@ -8,6 +8,7 @@ import { useEffectModule } from '@/lib/lab/use-effect-module'
 import { LabCanvas, LabSide } from './lab-canvas'
 import { Controls } from '@/components/lab/controls'
 import styles from './lab-canvas.module.css'
+import controlStyles from '@/components/lab/controls.module.css'
 
 vi.mock('@/lib/lab/registry', () => ({
   getEffect: (slug: string) => slug === 'missing' ? undefined : { title: 'Response' },
@@ -29,7 +30,7 @@ beforeEach(() => vi.mocked(useEffectModule).mockReturnValue(effect))
 afterEach(() => { cleanup(); vi.clearAllMocks() })
 
 function composition(container: HTMLElement) {
-  return ['section', `.${styles.layout}`, 'figure', `.${styles.stage}`, 'figcaption', `.${styles.commentary}`]
+  return ['section', `.${styles.layout}`, `.${styles.figure}`, 'figure', `.${styles.title}`, `.${styles.stage}`, 'figcaption', `.${styles.commentary}`]
     .map(selector => container.querySelector(selector)?.className)
 }
 
@@ -58,7 +59,7 @@ describe('container-aware lab figures', () => {
     expect(container.querySelector(`.${styles.commentary} a`)?.getAttribute('href')).toBe('#method')
     expect(container.querySelector('canvas')?.getAttribute('aria-label')).toBe('Response diagram')
     expect(container.querySelector('canvas')?.getAttribute('data-quality')).toBe('mini')
-    expect(container.querySelector(`.${styles.layout}`)?.firstElementChild?.tagName).toBe('FIGURE')
+    expect(container.querySelector(`.${styles.layout}`)?.firstElementChild?.className).toBe(styles.figure)
   })
 
   it.each([LabCanvas, LabSide])('retains native controls, overridden params, reconciliation and reset', Component => {
@@ -81,7 +82,7 @@ describe('container-aware lab figures', () => {
   it.each([LabCanvas, LabSide])('opts article figures into transparent ruled controls without changing the stage', Component => {
     const { container, getByText, getByRole } = render(<Component effect="response">{commentary}</Component>)
     const controls = getByText('knobs').parentElement!.parentElement!
-    expect(controls.classList.contains('border-y')).toBe(true)
+    expect(controls.classList.contains('border-t')).toBe(true)
     expect(controls.classList.contains('bg-transparent')).toBe(true)
     expect(controls.classList.contains('bg-surface')).toBe(false)
     expect(controls.classList.contains('rounded-2xl')).toBe(false)
@@ -118,7 +119,7 @@ describe('container-aware lab figures', () => {
     expect(before).toContain('<figcaption')
     vi.mocked(useEffectModule).mockReturnValue(effect)
     rerender(<LabCanvas effect="response" caption="Trace caption" height={220} controls={false} />)
-    expect(container.querySelector('figure')?.className).toBe(styles.figure)
+    expect(container.querySelector('figure')?.className).toBe(styles.media)
     expect(container.querySelector('figcaption')?.textContent).toBe('Trace caption')
     expect(container.querySelector(`.${styles.stage}`)?.getAttribute('style')).toBe('height: 220px;')
     expect(container.querySelector('input')).toBeNull()
@@ -130,6 +131,56 @@ describe('container-aware lab figures', () => {
     expect(container.querySelector('canvas')).not.toBeNull()
     rerender(<LabSide effect="missing">Commentary</LabSide>)
     expect(getByText('Unknown effect: missing')).toBeTruthy()
+  })
+
+  it.each([LabCanvas, LabSide])('places exact caption between the stage and actions, with loading parity', Component => {
+    const caption = 'Watch the response: keep R fixed, then change C.'
+    vi.mocked(useEffectModule).mockReturnValue(undefined)
+    const { container, rerender, getByRole } = render(<Component effect="response" caption={caption}>{commentary}</Component>)
+    const assertFigure = () => {
+      const figure = getByRole('figure', { name: 'Response' })
+      expect(figure.querySelector(`.${styles.title}`)?.textContent).toBe('Response')
+      const stage = figure.querySelector(`.${styles.stage}`)!
+      expect(stage.nextElementSibling?.tagName).toBe('FIGCAPTION')
+      expect(stage.nextElementSibling?.textContent).toBe(caption)
+      expect(figure.lastElementChild).toBe(stage.nextElementSibling)
+      expect(figure.querySelector('input')).toBeNull()
+      return figure
+    }
+    assertFigure()
+    expect(container.querySelector(`.${styles.actions}`)).toBeNull()
+    vi.mocked(useEffectModule).mockReturnValue(effect)
+    rerender(<Component effect="response" caption={caption}>{commentary}</Component>)
+    const figure = assertFigure()
+    expect(figure.nextElementSibling?.className).toBe(styles.actions)
+    expect(figure.nextElementSibling?.querySelector('input[type="range"]')).not.toBeNull()
+  })
+
+  it('groups all editorial controls in authored order without hiding labels, ranges or values', () => {
+    const specs: EffectModule['controls'] = [
+      { type: 'range', key: 'R', label: 'Resistance R (Ω)', min: .1, max: 5, step: .1 },
+      { type: 'range', key: 'L', label: 'Inductance L (H)', min: .01, max: 1, step: .01 },
+      { type: 'range', key: 'C', label: 'Capacitance C (F)', min: .0001, max: .01, step: .0001 },
+      { type: 'range', key: 'amplitude', label: 'Step amplitude (V)', min: .5, max: 5, step: .1 },
+    ]
+    const params = { R: 1, L: .5, C: .001, amplitude: 2 }
+    const onChange = vi.fn()
+    const { container, getAllByRole } = render(<Controls variant="editorial" specs={specs} params={params} onChange={onChange} onReset={() => {}} />)
+    expect(container.querySelector(`.${controlStyles.fields}`)?.children).toHaveLength(4)
+    const inputs = getAllByRole('slider') as HTMLInputElement[]
+    specs.forEach((spec, index) => {
+      expect(inputs[index].labels?.[0].textContent).toBe(spec.label)
+      expect(inputs[index].value).toBe(String(params[spec.key as keyof typeof params]))
+      expect(inputs[index].getAttribute('aria-valuetext')).toBe(String(params[spec.key as keyof typeof params]))
+    })
+    fireEvent.change(inputs[2], { target: { value: '.002' } })
+    expect(onChange).toHaveBeenCalledWith('C', .002)
+    const css = readFileSync('components/lab/controls.module.css', 'utf8')
+    expect(css).toContain('container: editorial-controls / inline-size')
+    expect(css).toContain('@container editorial-controls (min-width: 34rem)')
+    expect(css).toContain('.fields > :first-child')
+    expect(css).toContain('grid-column: 1 / -1')
+    expect(css).not.toMatch(/display:\s*none|visibility:\s*hidden|\border:/)
   })
 
   it('defines the named container and limits splitting/reversal to its width query', () => {

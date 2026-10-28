@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
-import type { EffectModule, Params, Dims, EffectTheme } from '@/lib/lab/types'
+import type { EffectModule, Params, Dims, EffectTheme, Renderer } from '@/lib/lab/types'
 
 type Props = {
   effect: EffectModule
@@ -44,7 +44,9 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     const minFrameMs = quality === 'mini' ? 1000 / 30 : 0
 
     let dims: Dims = { w: 0, h: 0, dpr }
-    let renderer = effect.createRenderer(ctx, dims, resolveTheme())
+    let renderer: Renderer | undefined
+    let drawable = false
+    let themeChanged = false
     let raf = 0
     let last = -Infinity
     let visible = true
@@ -52,25 +54,40 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
 
     function size() {
       const r = wrap!.getBoundingClientRect()
-      const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height))
-      if (w === dims.w && h === dims.h) return
-      canvas!.width = w * dpr; canvas!.height = h * dpr
-      canvas!.style.width = `${w}px`; canvas!.style.height = `${h}px`
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
-      dims = { w, h, dpr }
-      renderer.destroy?.()
-      renderer = effect.createRenderer(ctx!, dims, resolveTheme())
-      if (reduce) renderer.step(0, paramsRef.current) // static frame after resize
+      const w = Math.round(r.width), h = Math.round(r.height)
+      drawable = Number.isFinite(w) && Number.isFinite(h) && w > 1 && h > 1
+      if (!drawable) {
+        // Hidden/transient layout sizes are not render targets. Keep the last
+        // valid bitmap and renderer so a brief collapse cannot blank the figure.
+        stop()
+        return
+      }
+      if (!renderer || w !== dims.w || h !== dims.h || themeChanged) {
+        canvas!.width = w * dpr; canvas!.height = h * dpr
+        canvas!.style.width = `${w}px`; canvas!.style.height = `${h}px`
+        ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
+        dims = { w, h, dpr }
+        renderer?.destroy?.()
+        renderer = effect.createRenderer(ctx!, dims, resolveTheme())
+        themeChanged = false
+        last = -Infinity
+        if (reduce) renderer.step(0, paramsRef.current)
+      }
+      start()
     }
 
     function loop(t: number) {
+      raf = 0
+      if (!drawable || !renderer) return
       raf = requestAnimationFrame(loop)
-      if (scrollingRef.current) return
+      // Allow the first visible frame even during scrolling; subsequent frames
+      // still honour the existing scroll-pause policy.
+      if (scrollingRef.current && last !== -Infinity) return
       if (minFrameMs && t - last < minFrameMs) return
       last = t
       renderer.step(t, paramsRef.current)
     }
-    function start() { if (!raf && !reduce && visible && onscreen) raf = requestAnimationFrame(loop) }
+    function start() { if (!raf && !reduce && visible && onscreen && drawable && renderer) raf = requestAnimationFrame(loop) }
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
 
     const ro = new ResizeObserver(size); ro.observe(wrap)
@@ -86,9 +103,8 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
 
     // Recreate the renderer with the new palette when the theme class flips.
     const themeObserver = new MutationObserver(() => {
-      renderer.destroy?.()
-      renderer = effect.createRenderer(ctx!, dims, resolveTheme())
-      if (reduce) renderer.step(0, paramsRef.current) // static repaint under reduced motion
+      themeChanged = true
+      size() // Repaint only when measured dimensions are usable.
     })
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
@@ -98,7 +114,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     return () => {
       stop(); ro.disconnect(); io.disconnect(); themeObserver.disconnect()
       document.removeEventListener('visibilitychange', onVis)
-      renderer.destroy?.()
+      renderer?.destroy?.()
     }
     // effect identity + quality are the only structural deps; params are live via ref
   }, [effect, quality])

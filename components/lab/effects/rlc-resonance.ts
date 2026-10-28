@@ -93,6 +93,9 @@ export const rlcResonance: EffectModule = {
 
     return {
       step(timeMs, p) {
+        // Fixed schematic gutters need positive circuit spans and plot area.
+        // Tiny previews/layout transitions must not produce negative arc radii.
+        if (!Number.isFinite(w) || !Number.isFinite(h) || w <= 82 || h <= 103) return
         const dt = Math.min((timeMs - lastTime) / 1000, 0.05)
         lastTime = timeMs
 

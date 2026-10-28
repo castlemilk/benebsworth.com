@@ -1,0 +1,70 @@
+name: Credential-free Vercel artifact
+
+# Opt-in build validation only. No environment, Vercel authentication or upload.
+on:
+  pull_request:
+    types: [labeled, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      confirm_sha:
+        description: Exact reviewed source SHA to build (must equal selected revision)
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blog-artifact-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  artifact:
+    if: >-
+      github.repository == 'castlemilk/benebsworth.com' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == 'castlemilk/benebsworth.com' &&
+        contains(github.event.pull_request.labels.*.name, 'ci:vercel-artifact')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      ARTIFACT_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Verify the requested source
+        run: |
+          node scripts/ci/vercel-artifact.mjs verify-request
+          test "$ARTIFACT_SOURCE_SHA" = "$(git rev-parse HEAD)"
+      - name: Test artifact controls
+        run: node --test scripts/ci/vercel-artifact.test.mjs scripts/ci/vercel-preview.test.mjs
+      - name: Install locked application dependencies
+        run: npm ci
+      - name: Install pinned build adapter without deployment credentials
+        run: |
+          npm install --prefix "$RUNNER_TEMP/artifact-cli" --no-save --no-audit --no-fund vercel@59.13.1
+          echo "$RUNNER_TEMP/artifact-cli/node_modules/.bin" >> "$GITHUB_PATH"
+      - name: Compile self-contained Build Output without credentials
+        run: node scripts/ci/vercel-artifact.mjs
+      - name: Archive only validated Build Output and provenance
+        run: |
+          tar -C vercel-artifact -czf vercel-artifact.tgz .vercel manifest.json
+          sha256sum vercel-artifact.tgz > vercel-artifact.tgz.sha256
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vercel-artifact-${{ env.ARTIFACT_SOURCE_SHA }}-${{ github.run_attempt }}
+          path: |
+            vercel-artifact.tgz
+            vercel-artifact.tgz.sha256
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove temporary build configuration
+        if: always()
+        run: rm -rf .vercel vercel-artifact "$RUNNER_TEMP/artifact-cli"

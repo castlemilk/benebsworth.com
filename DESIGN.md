@@ -57,3 +57,6 @@ The owner explicitly chose `/lab/editorial-system/` as the direction for all blo
 Interactive LabSide figures respond to their containing width, not the viewport. They stack until both the simulation and its full commentary have a usable measure, preserving controls, parameters and scientific geometry. Generated image plates remain free of text/numbering/callouts by default; optional annotations belong to separate responsive components. Avoid adding annotations merely to decorate every paragraph.
 
 This rollout preserves all MDX/frontmatter, source links, schema/canonical metadata, search boundaries and published-state rules. Actual browser rendering is a separate acceptance gate; passing component tests does not establish visual fidelity.
+
+## Reference-led review gate
+Use [VISUAL-REVIEW.md](docs/design/VISUAL-REVIEW.md) before claiming artistic alignment. Judge composition, hierarchy, meaningful figure/annotation relationships and reading rhythm separately from functional test success. Record exact capture context and mark missing narrow/live evidence unverified. The accepted editorial study is the current authority for reading surfaces; the original dark dossier description above applies only to preserved non-reading identity, not a veto on the owner's later direction.

@@ -1,5 +1,7 @@
 'use client'
 
+import { getArticleHeadings } from './article-headings'
+
 import { useState, useEffect } from 'react'
 
 export function MobileToc() {
@@ -7,8 +9,8 @@ export function MobileToc() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    // Only query within the article to avoid picking up footer/sidebar headings
-    const elements = document.querySelectorAll('article h2[id], article h3[id]')
+    // Share the desktop scope: authored sections, never ancillary recommendations.
+    const elements = getArticleHeadings(document)
     const parsed = Array.from(elements).map((el) => ({
       id: el.id,
       title: el.textContent || '',

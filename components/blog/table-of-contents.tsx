@@ -1,5 +1,7 @@
 'use client'
 
+import { getArticleHeadings } from './article-headings'
+
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -48,9 +50,7 @@ export function TableOfContents({
   // MDX pipeline auto-generates heading ids via rehype-slug, so each
   // heading has a stable `id` attribute we can scroll to.
   useEffect(() => {
-    const candidates = Array.from(
-      document.querySelectorAll<HTMLHeadingElement>('article h2[id], article h3[id]'),
-    )
+    const candidates = getArticleHeadings(document)
     const items = candidates
       .map((h) => ({ id: h.id, text: h.textContent ?? h.id, level: Number(h.tagName.slice(1)) }))
       .filter((h) => h.text.trim().length > 0)

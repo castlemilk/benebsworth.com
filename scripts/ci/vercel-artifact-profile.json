@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "profile": "credential-free-validation",
+  "releaseApproved": false,
+  "auditedSourceSha": "85e8e52fa894a6fc343c89f165c544b0a17d037b",
+  "project": {
+    "projectId": "prj_sxj2GQBYr1GDrSADoiKBve3nAlmO",
+    "orgId": "team_xE5DMN3hIo8aPqyHNkBybg8r",
+    "projectName": "benebsworth.com",
+    "settings": {
+      "framework": "nextjs",
+      "nodeVersion": "24.x",
+      "rootDirectory": null,
+      "buildCommand": "npm run build",
+      "installCommand": "",
+      "devCommand": null,
+      "outputDirectory": null,
+      "directoryListing": false
+    }
+  },
+  "publicEnvironment": {},
+  "evidence": {
+    "identityFrameworkNode": "Vercel get_project read on 2026-10-28; confirms project/team/name/framework/nodeVersion only",
+    "rootDirectory": "Repository-root validation choice: package.json and next.config.mjs at audited SHA; live Vercel rootDirectory not exposed by connector and not asserted equivalent",
+    "buildCommand": "Explicit npm lifecycle from package.json: prebuild generators, next build static export, postbuild OG rewriting and Pagefind",
+    "installCommand": "Empty adapter install override; npm ci runs once in credential-free workflow beforehand",
+    "otherSettings": "Explicit local defaults for validation, not a live settings snapshot",
+    "publicEnvironment": "No supplied environment values; no remote environment pull. Public analytics/runtime parity is unverified. Missing required private build values must block, never be fetched."
+  }
+}

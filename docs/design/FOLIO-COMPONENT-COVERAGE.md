@@ -101,7 +101,7 @@ Source locations: `components/blog/`, `components/site/`, `components/search/sit
 
 ## 5. TrailKit: a separate field-guide identity
 
-All 15 registered names are covered below. Share reading typography/spacing and annotation discipline only where appropriate; preserve trail green accents, topography, navigation/geography, units, difficulty/safety meaning and hiking-specific imagery. Board 6 is a compatibility preview, not permission to flatten the hiking product into the technical-study palette.
+All 15 registered names are covered below. Share reading typography/spacing and annotation discipline only where appropriate; preserve trail green accents, topography, navigation/geography, units, difficulty/safety meaning and hiking-specific imagery. Board 7 is a compatibility preview, not permission to flatten the hiking product into the technical-study palette.
 
 | Registered MDX names | Distinct family |
 | --- | --- |
@@ -127,15 +127,15 @@ Apply to each relevant family, not every component indiscriminately:
 | Preferences/output | Reduced motion, print without decorative connectors, selectable text, forced-colour legibility where applicable |
 | Integration | Scroll/anchor offsets, no annotation collisions, no plot or focus obstruction, independent/nested studies, no horizontal page overflow, preserved routes/search/publishing |
 
-**Six-board insufficiencies:** (1) board 6 cannot legibly enumerate all TrailKit types and the entire responsive/status matrix; a dedicated trail detail sheet is needed, (2) search dialog, gallery lightbox and sandbox artifact recovery need their own state/detail sheet, (3) dense tables/code/math require a long-content narrow-width detail, (4) controls need a real browser state sheet, including native popup appearance; (5) one study screenshot cannot certify every scientific renderer. These are explicit follow-ups, not missing names disguised as completed coverage. Additional imagegen sheets can clarify visual intent; only implemented-browser captures establish runtime fidelity.
+**Remaining detail gaps:** (1) board 7 now supplies the dedicated trail family direction, but does not enumerate every TrailKit variant or state, (2) search dialog, gallery lightbox and sandbox artifact recovery need their own state/detail sheet, (3) dense tables/code/math require a long-content narrow-width detail, (4) controls need a real browser state sheet, including native popup appearance; (5) one study screenshot cannot certify every scientific renderer. These are explicit follow-ups, not missing names disguised as completed coverage. Additional imagegen sheets can clarify visual intent; only implemented-browser captures establish runtime fidelity.
 
 ## Phased backlog and acceptance
 
-1. **Direction coverage (this document + six boards):** reconcile every registered name to the map; inspect actual generated panels; mark pictured vs representative vs absent without treating mockup text/data as authoritative. Exit: complete inventory and honest board index.
+1. **Direction coverage (this document + seven boards):** reconcile every registered name to the map; inspect actual generated panels; mark pictured vs representative vs absent without treating mockup text/data as authoritative. Exit: complete inventory and honest board index.
 2. **Static reading primitives:** align stats, seven callouts, quote, technical prose/source links, post-pattern variants and figure placements through shared styles/components. Preserve semantic distinctions; no article rewriting. Exit: component/prose regression tests and real light/dark/narrow captures.
 3. **Interactive adapters:** reuse InteractiveStudy/Gamma where appropriate; audit renderer-local controls and readiness one family at a time. Keep static diagrams static and iframe policy unchanged. Exit: target/guide lifecycle tests, unchanged model checks and browser evidence for DOM/SVG/canvas plus separately validated iframe behaviour.
 4. **Discovery/media/recovery:** review archive/TOC/search, gallery/lightbox, embeds and loading/empty/error/404 as complete flows; preserve site-wide identity. Exit: keyboard, focus/close/recovery, async race and responsive visual evidence.
-5. **Trail compatibility:** produce dedicated field-guide detail, adapt shared reading surfaces selectively, verify geography/elevation/safety/gear/zoom semantics. Exit: trail-specific browser review, not blanket recolouring.
+5. **Trail compatibility:** use board 7 as the field-guide direction, adapt shared reading surfaces selectively, verify geography/elevation/safety/gear/zoom semantics. Exit: trail-specific browser review, not blanket recolouring.
 6. **Rollout gates:** follow `VISUAL-REVIEW.md`; record exact route, viewport, theme, data/state and capture provenance. Run project tests/typecheck/export through existing workflow; distinguish local source, CI, deployed and browser acceptance. No generated board alone establishes implementation, successful export or deployment.
 
 This documentation-only inventory performs no implementation, test run, build, merge or deployment. Earlier verification documented elsewhere applies only to its explicitly recorded scope.

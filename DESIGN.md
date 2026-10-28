@@ -63,3 +63,6 @@ Use [VISUAL-REVIEW.md](docs/design/VISUAL-REVIEW.md) before claiming artistic al
 
 ## Open-folio interactive studies
 The owner selected the open-margin folio concept for interactive component boundaries, with light/dark support and a red guide shown on first visible entry then dismissed on meaningful use. Follow [INTERACTIVE-STUDY.md](docs/design/INTERACTIVE-STUDY.md). The frame/guide is reusable across renderer types; scientific output remains real, annotations remain separate selectable text/SVG, and guide replay is explicit. No modal wizard, forced focus, tracking or repeated automatic hints after interaction.
+
+## Editorial component coverage
+The owner requested aligned imagegen direction across components, including statistics and insight callouts. Follow [FOLIO-COMPONENT-COVERAGE.md](docs/design/FOLIO-COMPONENT-COVERAGE.md): all 96 registered MDX names are inventoried, with seven family boards and explicit remaining state/adoption checks. Generated mockup content is not source material. Scoped stats/callout styling retains semantic distinctions and does not restyle non-reading consumers.

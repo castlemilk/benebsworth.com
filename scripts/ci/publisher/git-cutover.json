@@ -1,0 +1,13 @@
+{
+  "approved": true,
+  "action": "disconnect-git-source-after-current-ci-preview",
+  "repository": "castlemilk/benebsworth.com",
+  "projectId": "prj_sxj2GQBYr1GDrSADoiKBve3nAlmO",
+  "orgId": "team_xE5DMN3hIo8aPqyHNkBybg8r",
+  "preserveDeploymentProtection": true,
+  "preserveAllAliases": true,
+  "expiresAt": "2026-10-29T02:00:00Z",
+  "qualifiedBasisSha": "a372a35464fba33602ddae70a3ee96cea0e7011f",
+  "qualifiedPublisherRunId": 40619683170,
+  "qualifiedDeploymentId": "dpl_4w1rES5ckB5QTGvjCynrSNaP5HjD"
+}

@@ -34,6 +34,14 @@
 .hint[data-open="true"] { visibility: visible; }
 .overlay { position: absolute; inset: 0; pointer-events: none; color: var(--study-ink); }
 .overlay svg { display: block; width: 100%; height: 100%; overflow: visible; }
+/* A quiet pen-coloured perimeter, not a selected/checked or focus state. */
+.overlay .highlight {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none;
+}
+@media (forced-colors: active) { .overlay .highlight { color: Highlight; } }
 /* Visibility, not animation or removal, keeps the reading position stable. */
 @media (prefers-reduced-motion: reduce) { .hint, .overlay { animation: none; transition: none; } }
 @media print { .overlay { display: none; } }

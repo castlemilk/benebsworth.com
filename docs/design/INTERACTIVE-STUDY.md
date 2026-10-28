@@ -38,3 +38,42 @@ The shared frame is wired into LabCanvas/LabSide, TokenSampler, ThresholdCurve, 
 Final automated verification: 1,649 tests passed, five explicitly skipped; full two-worker static export passed. Actual local browser at 1180×757 confirmed RLC offscreen hiding, entry reveal, no dismissal on Tab/focus, dismissal on keyboard range change, no reappearance after scrolling out/back, and explicit replay without value/focus change. A second study remained independent. Light/dark guide ink and scoped stage palette were verified and light mode restored. ThresholdCurve direct SVG drag changed its real operating point and dismissed its guide; hint typography remained Folio Hand24px. Curves stayed in empty gutter space, with no horizontal overflow or application/ResizeObserver errors.
 
 A consuming-browser refinement now waits for both the target and readable hint region before automatic reveal. The final targeted check showed no detached arrow while the note was offscreen, joint reveal once both were visible, and working drag/replay afterwards. Narrow-device and browser reduced-motion emulation remain unavailable; reduced-motion behaviour has unit coverage. Screenshots are local implementation previews, not deployed acceptance.
+
+## Arbitrary author-selected targets — 28 October 2026
+`targetSelector` accepts a scoped CSS selector and may change during the life of
+one study. The first matching non-guide element owned by that study is the
+explicit target; matching a nested study never borrows its controls. Use unique
+IDs or data attributes when the intended target is not the first match. This is
+author-selected guidance, not random focus or automatic form selection.
+
+While the guide is open, a thin deterministic red pen perimeter identifies a measured control
+target, including an inset/grid control for which no safe gutter curve exists.
+The curve still appears only when it can travel through reserved empty space.
+Pure canvas/SVG plot targets retain the approved gutter cue without a large
+perimeter around scientific output. The padded control perimeter is bounded to
+the frame, including after internal scrolling. The perimeter uses the existing light/dark handwriting ink, has no fill and is
+pointer-transparent, decorative and absent from print. It does not write target
+styles, move focus, change text selection, set checked/value state or override a
+native keyboard-focus outline. Keep hints specific enough to identify the target
+without relying on the visual perimeter alone.
+
+Native select/text/radio controls and authored slider, spinbutton, combobox,
+checkbox/radio/switch, textbox or editable surfaces retain their own semantics.
+Direct-manipulation adapters can continue to use `data-study-action`. Read-only,
+disabled, inert, hidden, absent and malformed-selector targets do not offer a
+guide; wrappers whose owned controls are all unavailable do not either. Selector,
+attribute, replacement-node, resize and internal-scroll changes remeasure the
+cue. They do not reset the mounted study's one-time automatic reveal/dismissal
+state. No target-selection action is implied by mounting or showing a guide.
+
+Regression coverage includes inset targets without unsafe connectors, dynamic and
+malformed selectors, replacement nodes, arbitrary data-attribute changes,
+unavailable wrapped fields, native/custom input interactions, retained focus and
+text selection, and nested/broad-selector isolation. These are mocked-layout
+component tests; real-browser theme/geometry review remains a separate gate.
+
+
+### Target-selection verification
+The editorial-system specimen now allows explicit Amplitude/Frequency/Damping guide targets using Gamma actions and ranges. It preserves values and focus when selecting a cue. Final local verification: 1,660 tests passed, five skipped; typecheck, lint and prose gates passed. Strict design audit reported zero findings. A full static export was attempted but stopped by the environment's blocked fonts.gstatic.com access after compilation/typecheck and partial route generation; this is not a successful full export.
+
+The newly generated editorial route and its exact local JS/CSS were reviewed in the cloud browser against local static hosting at 1180×757. Middle- and right-column controls received a 4px padded pen perimeter; keyboard ArrowRight changed only frequency from 1.0 to 1.1 and dismissed the guide. Explicit replay/retargeting retained values and did not steal focus. No horizontal overflow. Narrow-device and new dark-mode browser capture remain unverified; existing palette tokens are reused. No merge or production deployment performed.

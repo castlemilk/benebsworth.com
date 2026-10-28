@@ -5,6 +5,9 @@ import { GammaButton } from '@/components/gamma/GammaButton'
 import { sketchPath } from './annotation-geometry'
 import styles from './interactive-study.module.css'
 
+const actionSelector = 'input, select, textarea, button, [data-study-action], [role="slider"], [role="spinbutton"], [role="combobox"], [role="checkbox"], [role="radio"], [role="switch"], [role="textbox"], [contenteditable="true"]'
+const unavailable = (node: Element) => node.matches(':disabled, [readonly], [aria-readonly="true"]') || !!node.closest('[inert], [hidden], [aria-disabled="true"]')
+type Highlight = { left: number; top: number; width: number; height: number }
 type Drawing = { path: string; x: number; y: number; width: number; height: number }
 
 /** A shared reading frame and optional, dismissible first-interaction guide. */
@@ -23,6 +26,7 @@ export function InteractiveStudy({ title, hint, targetSelector = '[data-study-ta
   const automaticUsed = useRef(false)
   const [shown, setShown] = useState(false)
   const [hasTarget, setHasTarget] = useState(false)
+  const [highlight, setHighlight] = useState<Highlight | null>(null)
   const [drawing, setDrawing] = useState<Drawing | null>(null)
 
   useEffect(() => {
@@ -45,9 +49,15 @@ export function InteractiveStudy({ title, hint, targetSelector = '[data-study-ta
     resize?.observe(el)
     if (note.current) resize?.observe(note.current)
 
+    function findTarget() {
+      // Author selectors are scoped to this frame; malformed or temporarily
+      // unmatched selectors fail closed, never to another study's controls.
+      try { return [...el!.querySelectorAll<HTMLElement>(targetSelector)].find(node => own(node) && !node.closest('[data-study-guide-ui]')) ?? null }
+      catch { return null }
+    }
     function measure() {
       if (!alive) return
-      const nextTarget = [...el!.querySelectorAll<HTMLElement>(targetSelector)].find(own) ?? null
+      const nextTarget = findTarget()
       if (target !== nextTarget) {
         if (target) { intersection?.unobserve(target); resize?.unobserve(target) }
         target = nextTarget
@@ -57,10 +67,20 @@ export function InteractiveStudy({ title, hint, targetSelector = '[data-study-ta
       const box = el!.getBoundingClientRect()
       const t = target?.getBoundingClientRect()
       const n = note.current?.getBoundingClientRect()
+      const actions = target ? (target.matches(actionSelector) ? [target] : [...target.querySelectorAll(actionSelector)].filter(own)) : []
       const usable = !!(ready && hint && target && t && t.width > 0 && t.height > 0 &&
-        getComputedStyle(target).visibility !== 'hidden' && !target.closest('[hidden], [inert], [aria-disabled="true"]') &&
-        !target.matches(':disabled, [readonly]'))
+        getComputedStyle(target).visibility !== 'hidden' && getComputedStyle(target).display !== 'none' && !unavailable(target) &&
+        (!actions.length || actions.some(action => !unavailable(action))))
       setHasTarget(usable)
+      // Keep the outline separate from native focus/selection and control CSS.
+      // No fill, layout changes, tabindex, value writes or pointer interception.
+      const left = t ? Math.max(0, t.left - box.left - el!.clientLeft - 4) : 0
+      const top = t ? Math.max(0, t.top - box.top - el!.clientTop - 4) : 0
+      const right = t ? Math.min(box.width - el!.clientLeft, t.right - box.left - el!.clientLeft + 4) : 0
+      const bottom = t ? Math.min(box.height - el!.clientTop, t.bottom - box.top - el!.clientTop + 4) : 0
+      const highlightControl = actions.some(action => action instanceof HTMLElement && !action.matches('canvas'))
+      const nextHighlight = usable && highlightControl && right > left && bottom > top ? { left, top, width: right - left, height: bottom - top } : null
+      setHighlight(previous => JSON.stringify(previous) === JSON.stringify(nextHighlight) ? previous : nextHighlight)
       if (usable && inView && noteInView && !automaticUsed.current) {
         automaticUsed.current = true
         setShown(true)
@@ -93,23 +113,21 @@ export function InteractiveStudy({ title, hint, targetSelector = '[data-study-ta
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(measure)
     }
-    const layoutAttributes = new Set(['class', 'style', 'hidden', 'inert', 'disabled', 'aria-disabled'])
-    const containsTarget = (node: Node) => node instanceof Element &&
-      (node.matches(targetSelector) || !!node.querySelector(targetSelector))
     const mutations = new MutationObserver(records => {
       if (records.some(record => {
         const node = record.target instanceof Element ? record.target : record.target.parentElement
-        if (!node || node.closest('[data-study-guide-ui]')) return false
-        if (record.type === 'childList') return [...record.addedNodes, ...record.removedNodes].some(containsTarget)
-        // Do not measure animated plot paths, bars or text. Only target/ancestor
-        // layout/availability or a changed target marker can affect the cue.
-        if (node === target && !node.matches(targetSelector)) return true
-        if (node !== target && node.matches(targetSelector) && own(node)) return true
-        return layoutAttributes.has(record.attributeName ?? '') && !!target && (node === target || node.contains(target))
+        if (!node || node.closest('[data-study-guide-ui]') || !own(node)) return false
+        // Re-resolve all selector attributes (id, data-*, ancestor classes, etc.)
+        // without measuring unrelated animated plot paths or chart text.
+        if (findTarget() !== target) return true
+        if (!target) return false
+        if (record.type === 'childList') return node === target || node.contains(target) || target.contains(node)
+        return node === target || node.contains(target) || (target.contains(node) && node.matches(actionSelector))
       })) schedule()
     })
     mutations.observe(el, { childList: true, subtree: true, attributes: true })
     window.addEventListener('resize', schedule)
+    el.addEventListener('scroll', schedule, { capture: true, passive: true })
     document.fonts?.ready.then(schedule)
     measure()
     // The reserved hint region must be readable too: tall frames can expose
@@ -120,23 +138,24 @@ export function InteractiveStudy({ title, hint, targetSelector = '[data-study-ta
       cancelAnimationFrame(frame)
       intersection?.disconnect(); resize?.disconnect(); mutations.disconnect()
       window.removeEventListener('resize', schedule)
+      el.removeEventListener('scroll', schedule, true)
     }
   }, [ready, hint, targetSelector])
 
   function dismiss(event: SyntheticEvent) {
     const node = event.target instanceof Element ? event.target : null
     if (!node || node.closest('[data-interactive-study]') !== root.current || node.closest('[data-study-guide-ui]')) return
-    const action = node.closest('input, select, textarea, button, [data-study-action]')
+    const action = node.closest(actionSelector)
     if (!action || action.closest('[data-interactive-study]') !== root.current ||
-      action.matches(':disabled, [readonly]') || action.closest('[inert], [hidden], [aria-disabled="true"]')) return
+      unavailable(action)) return
     automaticUsed.current = true
     setShown(false)
   }
   function keyDown(event: KeyboardEvent) {
     const node = event.target instanceof Element ? event.target : null
     if (!node) return
-    const valueControl = node.matches('input[type="range"], input[type="number"], select')
-    const activatable = node.closest('button, select, input[type="checkbox"], input[type="radio"], [data-study-action]')
+    const valueControl = node.matches('input[type="range"], input[type="number"], input[type="radio"], select, [role="slider"], [role="spinbutton"], [role="combobox"], [role="radio"]')
+    const activatable = node.closest('button, select, input[type="checkbox"], input[type="radio"], [data-study-action], [role="checkbox"], [role="radio"], [role="switch"]')
     if ((activatable && (event.key === 'Enter' || event.key === ' ')) || (valueControl && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key))) dismiss(event)
   }
   function toggleGuide() {
@@ -166,7 +185,10 @@ export function InteractiveStudy({ title, hint, targetSelector = '[data-study-ta
       </div>}
       {controls && <div className={styles.controls}>{controls}</div>}
       <div data-study-guide-ui className={styles.overlay} aria-hidden="true">
-        {open && drawing && <svg focusable="false" viewBox={`0 0 ${drawing.width} ${drawing.height}`} preserveAspectRatio="none">
+        {open && highlight && <svg data-study-highlight className={styles.highlight} style={highlight} focusable="false" viewBox={`0 0 ${highlight.width} ${highlight.height}`}>
+          <path d={sketchPath(`M3 2 L${highlight.width - 3} 2 Q${highlight.width - 2} 2 ${highlight.width - 2} 3 L${highlight.width - 2} ${highlight.height - 3} Q${highlight.width - 2} ${highlight.height - 2} ${highlight.width - 3} ${highlight.height - 2} L3 ${highlight.height - 2} Q2 ${highlight.height - 2} 2 ${highlight.height - 3} L2 3 Q2 2 3 2`, 631, .5)} fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        </svg>}
+        {open && drawing && <svg data-study-connector focusable="false" viewBox={`0 0 ${drawing.width} ${drawing.height}`} preserveAspectRatio="none">
           <path d={drawing.path} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           <circle cx={drawing.x} cy={drawing.y} r="3" fill="currentColor" />
         </svg>}

@@ -40,6 +40,8 @@ function setup(observer = true) {
       const note = [...root.querySelectorAll('[data-open]')].find(node => node.closest('[data-interactive-study]') === root)!
       visible(note, isVisible, 1)
     },
+    setTargetPosition(x: number) { targetX = x },
+    observedTargets() { return observers.flatMap(observer => [...observer.targets]) },
     moveTarget(x: number) { targetX = x; act(() => resizeCallbacks.forEach(fn => fn())) },
   }
 }
@@ -86,7 +88,7 @@ describe('InteractiveStudy guide', () => {
     env.visible(target)
     env.visible(note, false, 0)
     expect(help.getAttribute('aria-expanded')).toBe('false')
-    expect(first.querySelector('svg')).toBeNull()
+    expect(first.querySelector('svg[data-study-connector]')).toBeNull()
     env.visible(note, true, .74)
     expect(help.getAttribute('aria-expanded')).toBe('false')
     env.visible(note, true, .75)
@@ -178,24 +180,24 @@ describe('InteractiveStudy guide', () => {
     // Mutation measurement is asynchronous; ready=false makes loading safe immediately.
     rerender(<InteractiveStudy title="No target" hint="Try this." ready={false}><p>Loading</p></InteractiveStudy>)
     expect(getByRole('button', { name: 'Show guide' }).hasAttribute('disabled')).toBe(true)
-    expect(container.querySelector('svg')).toBeNull()
+    expect(container.querySelector('svg[data-study-connector]')).toBeNull()
   })
 
   it('measures deterministic gutter geometry and suppresses unsafe inset targets', async () => {
     const env = setup()
     const { container, getByRole } = render(study())
     env.guideVisible(container.querySelector('[data-study-target]')!)
-    const path = container.querySelector('svg path')?.getAttribute('d')
+    const path = container.querySelector('svg[data-study-connector] path')?.getAttribute('d')
     expect(path).toBeTruthy()
     expect(container.querySelector('svg circle')?.getAttribute('cx')).toBe('25')
     expect(container.querySelector('svg circle')?.getAttribute('cy')).toBe('430')
-    expect(container.querySelector('svg')?.getAttribute('focusable')).toBe('false')
+    expect(container.querySelector('svg[data-study-connector]')?.getAttribute('focusable')).toBe('false')
     fireEvent.click(getByRole('button', { name: 'Hide guide' })); fireEvent.click(getByRole('button', { name: 'Show guide' }))
-    expect(container.querySelector('svg path')?.getAttribute('d')).toBe(path)
+    expect(container.querySelector('svg[data-study-connector] path')?.getAttribute('d')).toBe(path)
     env.moveTarget(100)
-    await waitFor(() => expect(container.querySelector('svg')).toBeNull())
+    await waitFor(() => expect(container.querySelector('svg[data-study-connector]')).toBeNull())
     env.moveTarget(32)
-    await waitFor(() => expect(container.querySelector('svg path')?.getAttribute('d')).toBe(path))
+    await waitFor(() => expect(container.querySelector('svg[data-study-connector] path')?.getAttribute('d')).toBe(path))
   })
 
   it('reaches padded SVG/canvas targets through their measured empty left padding', async () => {
@@ -204,9 +206,9 @@ describe('InteractiveStudy guide', () => {
     env.guideVisible(container.querySelector('[data-study-target]')!)
     env.moveTarget(48)
     await waitFor(() => expect(container.querySelector('svg circle')?.getAttribute('cx')).toBe('41'))
-    expect(container.querySelector('svg path')).not.toBeNull()
+    expect(container.querySelector('svg[data-study-connector] path')).not.toBeNull()
     env.moveTarget(100)
-    await waitFor(() => expect(container.querySelector('svg')).toBeNull())
+    await waitFor(() => expect(container.querySelector('svg[data-study-connector]')).toBeNull())
   })
 
   it.each(['disabled', 'readOnly'] as const)('does not offer a guide to a %s target', kind => {
@@ -215,6 +217,118 @@ describe('InteractiveStudy guide', () => {
     env.guideVisible(container.querySelector('[data-study-target]')!)
     expect((getByRole('button', {name: 'Show guide'}) as HTMLButtonElement).disabled).toBe(true)
     expect(container.querySelector('[data-open="true"]')).toBeNull()
+  })
+
+  it('highlights inset targets without an unsafe curve or changing focus, values, or selection', async () => {
+    const env = setup(false)
+    const { container, getByRole } = render(<InteractiveStudy title="Text" hint="Edit the name."><input data-study-target aria-label="Name" defaultValue="unchanged" /></InteractiveStudy>)
+    const input = getByRole('textbox') as HTMLInputElement
+    input.focus(); input.setSelectionRange(1, 4)
+    fireEvent.click(getByRole('button', { name: 'Show guide' }))
+    env.moveTarget(300)
+    await waitFor(() => expect((container.querySelector('[data-study-highlight]') as HTMLElement)?.style.left).toBe('296px'))
+    expect(container.querySelector('svg[data-study-connector]')).toBeNull()
+    expect(input.value).toBe('unchanged')
+    expect([input.selectionStart, input.selectionEnd]).toEqual([1, 4])
+    expect(document.activeElement).toBe(input)
+    expect(container.querySelector('[data-study-highlight]')?.parentElement?.getAttribute('aria-hidden')).toBe('true')
+    fireEvent.input(input, { target: { value: 'changed' } })
+    expect(container.querySelector('[data-study-highlight]')).toBeNull()
+  })
+
+  it.each([
+    { name: 'select', control: <select data-study-target aria-label="Choice" defaultValue="a"><option value="a">A</option><option value="b">B</option></select>, role: 'combobox', event: 'change' },
+    { name: 'radio', control: <input data-study-target type="radio" aria-label="Choice" />, role: 'radio', event: 'click' },
+    { name: 'custom slider', control: <div data-study-target role="slider" tabIndex={0} aria-label="Choice" aria-valuenow={2} aria-valuemin={0} aria-valuemax={5} />, role: 'slider', event: 'key' },
+    { name: 'editable text', control: <div data-study-target role="textbox" contentEditable aria-label="Choice" />, role: 'textbox', event: 'input' },
+  ])('supports an arbitrary $name target without replacing its semantics', ({ control: selected, role, event }) => {
+    setup(false)
+    const { container, getByRole } = render(<InteractiveStudy title="Arbitrary" hint="Try this.">{selected}</InteractiveStudy>)
+    fireEvent.click(getByRole('button', { name: 'Show guide' }))
+    expect(container.querySelector('[data-study-highlight]')).not.toBeNull()
+    const input = getByRole(role, { name: 'Choice' })
+    fireEvent.focus(input); fireEvent.keyDown(input, { key: 'Tab' })
+    expect(container.querySelector('[data-study-highlight]')).not.toBeNull()
+    if (event === 'key') fireEvent.keyDown(input, { key: 'ArrowRight' })
+    else if (event === 'click') fireEvent.click(input)
+    else if (event === 'change') fireEvent.change(input, { target: { value: 'b' } })
+    else fireEvent.input(input)
+    expect(container.querySelector('[data-study-highlight]')).toBeNull()
+  })
+
+  it('re-resolves dynamic selectors, malformed/missing selectors and replacement nodes safely', async () => {
+    setup(false)
+    const fixture = (selector: string, replaced = false) => <InteractiveStudy title="Targets" hint="Try the selected field." targetSelector={selector}>
+      <input key={replaced ? 'replacement' : 'original'} id="first" data-study-target aria-label="First" />
+      <input id="second" data-study-target aria-label="Second" />
+    </InteractiveStudy>
+    const { container, getByRole, rerender } = render(fixture('#first'))
+    const first = getByRole('textbox', { name: 'First' })
+    first.focus()
+    fireEvent.click(getByRole('button', { name: 'Show guide' }))
+    rerender(fixture('#second'))
+    expect(container.querySelector('[data-study-highlight]')).not.toBeNull()
+    expect(document.activeElement).toBe(first)
+    rerender(fixture('['))
+    expect((getByRole('button', { name: 'Show guide' }) as HTMLButtonElement).disabled).toBe(true)
+    expect(container.querySelector('[data-study-highlight]')).toBeNull()
+    rerender(fixture('#missing'))
+    expect((getByRole('button', { name: 'Show guide' }) as HTMLButtonElement).disabled).toBe(true)
+    rerender(fixture('#first', true))
+    await waitFor(() => expect(container.querySelector('[data-study-highlight]')).not.toBeNull())
+    expect(getByRole('textbox', { name: 'First' })).not.toBe(first)
+  })
+
+  it('tracks arbitrary selector attribute changes and disables wrappers with unavailable controls', async () => {
+    setup(false)
+    const { container, getByRole } = render(<InteractiveStudy title="Dynamic" hint="Try this." targetSelector='[data-picked="yes"]'>
+      <label data-picked="yes">Choice<input aria-label="Dynamic" /></label>
+    </InteractiveStudy>)
+    const label = container.querySelector('label')!
+    const input = getByRole('textbox') as HTMLInputElement
+    fireEvent.click(getByRole('button', { name: 'Show guide' }))
+    input.readOnly = true
+    await waitFor(() => expect((getByRole('button', { name: 'Show guide' }) as HTMLButtonElement).disabled).toBe(true))
+    expect(container.querySelector('[data-study-highlight]')).toBeNull()
+    input.readOnly = false
+    await waitFor(() => expect(container.querySelector('[data-study-highlight]')).not.toBeNull())
+    label.dataset.picked = 'no'
+    await waitFor(() => expect(container.querySelector('[data-study-highlight]')).toBeNull())
+    label.dataset.picked = 'yes'
+    await waitFor(() => expect(container.querySelector('[data-study-highlight]')).not.toBeNull())
+    input.disabled = true
+    await waitFor(() => expect(container.querySelector('[data-study-highlight]')).toBeNull())
+  })
+
+  it('never selects nested or guide UI controls even with a broad selector', () => {
+    setup(false)
+    const { container } = render(<InteractiveStudy title="Outer" hint="Outer" targetSelector="button">
+      <InteractiveStudy title="Inner" hint="Inner"><button data-study-target>Nested</button></InteractiveStudy>
+    </InteractiveStudy>)
+    const [outer, inner] = [...container.querySelectorAll<HTMLElement>('[data-interactive-study]')]
+    expect((outer.querySelector('button[aria-expanded]') as HTMLButtonElement).disabled).toBe(true)
+    fireEvent.click(within(inner).getByRole('button', { name: 'Show guide' }))
+    expect(inner.querySelector('[data-study-highlight]')).not.toBeNull()
+    expect([...outer.querySelectorAll('[data-study-highlight]')].filter(node => node.closest('[data-interactive-study]') === outer)).toHaveLength(0)
+  })
+
+  it('remeasures internal scrolls, bounds the padded perimeter and cleans up observers', async () => {
+    const env = setup()
+    const { container, unmount } = render(study())
+    const target = container.querySelector('[data-study-target]')!
+    env.guideVisible(target)
+    const highlight = () => container.querySelector('[data-study-highlight]') as HTMLElement
+    expect(highlight().style.left).toBe('28px')
+    env.setTargetPosition(100)
+    fireEvent.scroll(target.parentElement!)
+    await waitFor(() => expect(highlight().style.left).toBe('96px'))
+    expect(highlight().style.width).toBe('544px')
+    env.setTargetPosition(700)
+    fireEvent.scroll(target.parentElement!)
+    await waitFor(() => expect(highlight()).toBeNull())
+    expect(env.observedTargets().length).toBeGreaterThan(0)
+    unmount()
+    expect(env.observedTargets()).toHaveLength(0)
   })
 
   it('keeps light/dark red ink, open-right rules, noninteractive overlays and stable hidden hint space', () => {

@@ -18,5 +18,22 @@
   "requiredCiWorkflowPath": ".github/workflows/vercel-artifact.yml",
   "artifactWorkflowPath": ".github/workflows/vercel-artifact.yml",
   "allowOwnerPush": true,
-  "qualityScope": "credential-free-static-canary"
+  "qualityScope": "credential-free-static-canary",
+  "allowedSourceBranches": [
+    "codex/gamma-blog-editorial-20261027"
+  ],
+  "configurationProfile": "credential-free-validation",
+  "publicEnvironment": {},
+  "reviewedProjectSettings": {
+    "framework": "nextjs",
+    "nodeVersion": "24.x",
+    "rootDirectory": null,
+    "buildCommand": "npm run build",
+    "installCommand": "",
+    "devCommand": null,
+    "outputDirectory": null,
+    "directoryListing": false
+  },
+  "configurationReview": "Owner-trusted editorial push using the exact public-only profile qualified by READY CI canary dpl_7QoN8JDLEcPwgKTBvU7epoQQ6CMh; no full-suite or live-settings parity claim.",
+  "previewAlias": "benebsworthcom-git-codex-gamma-blog-ed-351f7b-document-analyser.vercel.app"
 }

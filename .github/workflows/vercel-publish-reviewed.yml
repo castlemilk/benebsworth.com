@@ -1,30 +1,17 @@
-name: Reviewed prebuilt CI publisher
-# Owner selected trusted-maintainer CI publishing on 2026-10-28; canary only.
+name: CI prebuilt editorial preview
+# Owner selected trusted-maintainer CI publishing; recurring preview-only editorial pushes.
 # A writable allowed ref trusts ALL its writers; this is NOT native review protection.
 on:
   push:
     branches: [codex/gamma-blog-editorial-20261027]
-    paths: [scripts/ci/publisher/approvals/blog-6251b5b-canary.json]
   pull_request:
     paths:
       - '.github/workflows/vercel-publish-reviewed.yml'
+      - '.github/workflows/vercel-artifact.yml'
+      - 'scripts/ci/vercel-artifact*'
       - 'scripts/ci/publisher/**'
       - 'vercel.json'
       - 'scripts/ci/vercel-preview.test.mjs'
-  workflow_dispatch:
-    inputs:
-      control_sha:
-        description: Full reviewed publisher workflow/config revision, not application SHA
-        required: true
-        type: string
-      approval_id:
-        description: Reviewed approval filename (without .json)
-        required: true
-        type: string
-      confirm:
-        description: Type APPROVE_PREBUILT_CI_PUBLISH to authorize this exact run
-        required: true
-        type: string
 permissions:
   contents: read
   actions: read
@@ -52,18 +39,18 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/controls-cli" --ignore-scripts --no-save --no-audit --no-fund vercel@59.13.1
           "$RUNNER_TEMP/controls-cli/node_modules/.bin/vercel" --version
       - name: Test publisher controls without deployment environment or credentials
-        run: python3 -m unittest discover -s scripts/ci/publisher -p 'test_*.py' -v
+        run: |
+          python3 -m unittest discover -s scripts/ci/publisher -p 'test_*.py' -v
+          node --test scripts/ci/vercel-artifact.test.mjs scripts/ci/vercel-preview.test.mjs
   publish:
     needs: controls
     if: github.repository == 'castlemilk/benebsworth.com' && github.ref == 'refs/heads/codex/gamma-blog-editorial-20261027'
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 55
     environment: preview-deploy
     env:
       GH_TOKEN: ${{ github.token }}
-      CONTROL_SHA: ${{ inputs.control_sha || github.sha }}
-      APPROVAL_ID: ${{ inputs.approval_id || 'blog-6251b5b-canary' }}
-      CONFIRM: ${{ inputs.confirm || 'APPROVE_PREBUILT_CI_PUBLISH' }}
+      CONTROL_SHA: ${{ github.sha }}
       EXPECTED_REPOSITORY: castlemilk/benebsworth.com
       EXPECTED_TARGET: preview
       VERCEL_TELEMETRY_DISABLED: '1'
@@ -73,30 +60,42 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = "$EXPECTED_REPOSITORY"
-          test "$CONFIRM" = APPROVE_PREBUILT_CI_PUBLISH
           [[ "$CONTROL_SHA" =~ ^[a-f0-9]{40}$ ]]
           test "$CONTROL_SHA" = "$GITHUB_SHA"
-          [[ "$APPROVAL_ID" =~ ^[a-z0-9][a-z0-9-]{0,70}$ ]]
           mkdir -p "$RUNNER_TEMP/publisher-controls" "$RUNNER_TEMP/publisher-input"
           cd "$RUNNER_TEMP/publisher-controls"
-          for file in verify_extract.py authorize.py policy.json; do
+          for file in verify_extract.py authorize.py policy.json prepare_push_approval.py verify_deployment.py; do
             gh api "repos/$GITHUB_REPOSITORY/contents/scripts/ci/publisher/$file?ref=$CONTROL_SHA" --jq .content | base64 --decode > "$file"
           done
-          gh api "repos/$GITHUB_REPOSITORY/contents/scripts/ci/publisher/approvals/$APPROVAL_ID.json?ref=$CONTROL_SHA" --jq .content | base64 --decode > approval.json
-          python3 authorize.py
-      - name: Fetch exact CI provenance and artifact using read-only GitHub token
+      - name: Wait for this exact push's separate credential-free artifact workflow
         shell: bash
         run: |
           set -euo pipefail
           cd "$RUNNER_TEMP/publisher-controls"
-          run_id=$(jq -er '.runId | tostring | select(test("^[0-9]+$"))' approval.json)
-          ci_id=$(jq -er '.ciRunId | tostring | select(test("^[0-9]+$"))' approval.json)
-          artifact_id=$(jq -er '.artifactId | tostring | select(test("^[0-9]+$"))' approval.json)
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > run.json
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ci_id" > ci-run.json
+          deadline=$((SECONDS + 2700))
+          while (( SECONDS < deadline )); do
+            current=$(gh api "repos/$GITHUB_REPOSITORY/branches/codex%2Fgamma-blog-editorial-20261027" --jq .commit.sha)
+            if [[ "$current" != "$GITHUB_SHA" ]]; then echo 'Superseded push; no deployment or alias update.'; exit 1; fi
+            gh api "repos/$GITHUB_REPOSITORY/actions/workflows/vercel-artifact.yml/runs?event=push&head_sha=$GITHUB_SHA&per_page=20" > runs.json
+            jq '[.workflow_runs[] | select(.head_sha == env.GITHUB_SHA and .head_branch == "codex/gamma-blog-editorial-20261027" and .path == ".github/workflows/vercel-artifact.yml")] | sort_by(.run_number) | last' runs.json > run.json
+            if [[ $(jq -r '.status // "missing"' run.json) == completed ]]; then
+              test "$(jq -r .conclusion run.json)" = success
+              break
+            fi
+            sleep 20
+          done
+          test "$(jq -r .status run.json)" = completed
+          test "$(jq -r .conclusion run.json)" = success
+          run_id=$(jq -er '.id | tostring | select(test("^[0-9]+$"))' run.json)
+          attempt=$(jq -er '.run_attempt | tostring | select(test("^[0-9]+$"))' run.json)
+          name="vercel-artifact-$GITHUB_SHA-$attempt"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts?name=$name" > artifacts.json
+          artifact_id=$(jq -er --arg name "$name" '[.artifacts[] | select(.name == $name and .expired == false)] | select(length == 1) | .[0].id | tostring' artifacts.json)
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id" > artifact.json
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > "$RUNNER_TEMP/publisher-input/artifact.zip"
-          python3 verify_extract.py "$RUNNER_TEMP/publisher-input/artifact.zip" "$RUNNER_TEMP/publisher-payload" approval.json run.json artifact.json ci-run.json
+          python3 prepare_push_approval.py "$RUNNER_TEMP/publisher-input/artifact.zip" policy.json run.json artifact.json "$GITHUB_SHA" > approval.json
+          python3 authorize.py
+          python3 verify_extract.py "$RUNNER_TEMP/publisher-input/artifact.zip" "$RUNNER_TEMP/publisher-payload" approval.json run.json artifact.json run.json
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24'
@@ -117,6 +116,8 @@ jobs:
           set -euo pipefail
           cd "$RUNNER_TEMP/publisher-controls"
           python3 authorize.py
+          current=$(gh api "repos/$GITHUB_REPOSITORY/branches/codex%2Fgamma-blog-editorial-20261027" --jq .commit.sha)
+          test "$current" = "$GITHUB_SHA"
       - name: Upload validated prebuilt output in CI, never build or promote
         shell: bash
         env:
@@ -128,7 +129,7 @@ jobs:
           cd "$RUNNER_TEMP/publisher-payload"
           source_sha=$(jq -r .sourceSha "$RUNNER_TEMP/publisher-controls/approval.json")
           source_branch=$(jq -r .sourceBranch "$RUNNER_TEMP/publisher-controls/approval.json")
-          canary_ref="ci-canary-${source_sha:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          canary_ref="ci-preview-${source_sha:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           export VERCEL_GIT_COMMIT_REF="$canary_ref"
           export VERCEL_GIT_COMMIT_SHA="$source_sha"
           "$RUNNER_TEMP/publisher-cli/node_modules/.bin/vercel" deploy --prebuilt --yes --target=preview --scope team_xE5DMN3hIo8aPqyHNkBybg8r \
@@ -136,7 +137,58 @@ jobs:
             --meta githubOrg=castlemilk --meta githubRepo=benebsworth.com > "$RUNNER_TEMP/deployment-url.txt"
           url=$(cat "$RUNNER_TEMP/deployment-url.txt")
           [[ "$url" =~ ^https://[a-zA-Z0-9-]+\.vercel\.app/?$ ]]
-          printf '### Prebuilt upload\n\n%s\n\nSource: `%s`\n\nPreview-only commit-specific canary; READY, route and alias observations required before cutover.\n' "$url" "$source_sha" >> "$GITHUB_STEP_SUMMARY"
+          printf '### Prebuilt upload\n\n%s\n\nSource: `%s`\n\nPreview upload; verified READY and latest-head alias eligibility are checked next.\n' "$url" "$source_sha" >> "$GITHUB_STEP_SUMMARY"
+      - name: Verify READY deployment identity without fetching environment secrets
+        id: deployment_check
+        env:
+          GH_TOKEN: ''
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          cd "$RUNNER_TEMP/publisher-controls"
+          python3 verify_deployment.py approval.json "$RUNNER_TEMP/deployment-url.txt" > "$RUNNER_TEMP/deployment-receipt.json"
+      - name: Recheck newest head before existing preview alias assignment
+        id: alias_guard
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/publisher-controls"
+          python3 authorize.py
+          current=$(gh api "repos/$GITHUB_REPOSITORY/branches/codex%2Fgamma-blog-editorial-20261027" --jq .commit.sha)
+          if [[ "$current" == "$GITHUB_SHA" ]]; then echo 'current=true' >> "$GITHUB_OUTPUT"; else echo 'Superseded during upload; immutable preview kept, branch alias unchanged.' >> "$GITHUB_STEP_SUMMARY"; fi
+      - name: Keep the existing editorial preview URL tracking qualified CI output
+        id: assign_alias
+        if: steps.alias_guard.outputs.current == 'true'
+        env:
+          GH_TOKEN: ''
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/publisher-payload"
+          url=$(jq -r .url "$RUNNER_TEMP/deployment-receipt.json")
+          alias=$(jq -r .previewAlias "$RUNNER_TEMP/publisher-controls/policy.json")
+          test "$alias" = benebsworthcom-git-codex-gamma-blog-ed-351f7b-document-analyser.vercel.app
+          "$RUNNER_TEMP/publisher-cli/node_modules/.bin/vercel" alias set "$url" "$alias" --scope team_xE5DMN3hIo8aPqyHNkBybg8r
+          printf 'Editorial preview: https://%s\nSource: `%s`\n' "$alias" "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+      - name: Record minimal deployment evidence, not raw API responses
+        id: receipt
+        if: always() && steps.deployment_check.outcome == 'success'
+        env:
+          ALIAS_OUTCOME: ${{ steps.assign_alias.outcome }}
+        run: |
+          python3 - <<'PYRECEIPT'
+          import json, os, pathlib
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])
+          receipt = json.loads((root / 'deployment-receipt.json').read_text())
+          approval = json.loads((root / 'publisher-controls/approval.json').read_text())
+          receipt.update(repository=approval['repository'], artifactId=approval['artifactId'], artifactZipSha256=approval['zipSha256'], buildRunId=approval['runId'], publisherRunId=os.environ['GITHUB_RUN_ID'], aliasCommandOutcome=os.environ['ALIAS_OUTCOME'], aliasMappingIndependentlyVerified=False)
+          (root / 'ci-preview-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          PYRECEIPT
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always() && steps.receipt.outcome == 'success'
+        with:
+          name: ci-preview-receipt-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/ci-preview-receipt.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Remove temporary payload and controls
         if: always()
         shell: bash

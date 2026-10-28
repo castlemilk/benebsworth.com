@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
@@ -44,10 +44,68 @@ const navLinks = [
 export function SiteNav() {
   const scrolling = useScrollActivity(200)
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
+  const [openPath, setOpenPath] = useState<string | null>(null)
+  const [previousPath, setPreviousPath] = useState(pathname)
+  if (previousPath !== pathname) {
+    setPreviousPath(pathname)
+    setOpenPath(null)
+  }
+  const open = openPath === pathname
+  const headerRef = useRef<HTMLElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const closeMenu = () => setOpenPath(null)
+
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+    const root = document.documentElement
+    const measure = () => root.style.setProperty('--site-nav-height', `${header.getBoundingClientRect().height}px`)
+    measure()
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    observer?.observe(header)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', measure)
+      root.style.setProperty('--site-nav-height', '0px')
+    }
+  }, [])
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 640px)')
+    const onBreakpoint = () => {
+      if (!desktop.matches) return
+      const focused = document.activeElement
+      if (focused instanceof HTMLAnchorElement && focused.closest('#mobile-nav')) {
+        const desktopLink = headerRef.current?.querySelector<HTMLAnchorElement>(`[data-desktop-nav] a[href="${focused.getAttribute('href')}"]`)
+        desktopLink?.focus()
+      } else if (focused === menuButtonRef.current) {
+        const nav = headerRef.current?.querySelector('[data-desktop-nav]')
+        const destination = nav?.querySelector<HTMLAnchorElement>('a[aria-current]') ?? nav?.querySelector<HTMLAnchorElement>('a')
+        destination?.focus()
+      }
+      setOpenPath(null)
+    }
+    desktop.addEventListener('change', onBreakpoint)
+    return () => desktop.removeEventListener('change', onBreakpoint)
+  }, [])
+
+  useEffect(() => {
+    if (!open) return
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented) return
+      event.preventDefault()
+      setOpenPath(null)
+      menuButtonRef.current?.focus()
+    }
+    document.addEventListener('keydown', onEscape)
+    return () => document.removeEventListener('keydown', onEscape)
+  }, [open])
 
   return (
     <header
+      ref={headerRef}
+      data-site-nav=""
       className={cn(
         'sticky top-0 z-50 border-b border-[var(--color-border)]/60',
         scrolling
@@ -59,19 +117,20 @@ export function SiteNav() {
         <Link
           href="/"
           className="font-display text-[1.05rem] font-bold tracking-tight"
-          onClick={() => setOpen(false)}
+          onClick={closeMenu}
         >
           ben ebsworth
         </Link>
         <div className="flex items-center gap-3 sm:gap-4">
-          <nav className="hidden gap-6 font-mono text-[0.78rem] uppercase tracking-[0.18em] text-muted sm:flex">
+          <nav aria-label="Primary" data-desktop-nav="" className="hidden gap-6 font-mono text-[0.78rem] uppercase tracking-[0.18em] text-muted sm:flex">
             {navLinks.map(({ href, label, prefix }) => {
-              const isActive = pathname.startsWith(prefix)
+              const isActive = pathname === prefix || pathname.startsWith(`${prefix}/`)
               const accent = NAV_COLORS[href]
               return (
                 <Link
                   key={href}
                   href={href}
+                  aria-current={isActive ? (pathname === href || pathname === prefix ? 'page' : 'location') : undefined}
                   className={cn(
                     'relative transition-colors',
                     isActive
@@ -88,8 +147,9 @@ export function SiteNav() {
           <SiteSearch />
           <ThemeToggle />
           <button
+            ref={menuButtonRef}
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpenPath(open ? null : pathname)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -101,21 +161,22 @@ export function SiteNav() {
       </div>
 
       {/* Mobile menu panel */}
-      {open && (
-        <nav
+      <nav
           id="mobile-nav"
+          hidden={!open}
           aria-label="Primary"
           className="border-t border-[var(--color-border)]/60 bg-[var(--color-bg)] px-6 py-3 sm:hidden"
         >
           <ul className="flex flex-col">
             {navLinks.map(({ href, label, prefix }) => {
-              const isActive = pathname.startsWith(prefix)
+              const isActive = pathname === prefix || pathname.startsWith(`${prefix}/`)
               const accent = NAV_COLORS[href]
               return (
                 <li key={href}>
                   <Link
                     href={href}
-                    onClick={() => setOpen(false)}
+                    aria-current={isActive ? (pathname === href || pathname === prefix ? 'page' : 'location') : undefined}
+                    onClick={closeMenu}
                     className={cn(
                       'block py-2.5 font-mono text-sm uppercase tracking-[0.18em] transition-colors',
                       isActive ? 'accent-ink' : 'text-muted hover:text-fg',
@@ -129,7 +190,6 @@ export function SiteNav() {
             })}
           </ul>
         </nav>
-      )}
     </header>
   )
 }

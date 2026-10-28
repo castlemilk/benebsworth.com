@@ -102,11 +102,13 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 **Progress:** Improved metadata wrapping, semantic lead date, decorative linked thumbnails, long entry wrapping and blog-scoped related-lab typography. Empty archive and trimmed result messages are tested. Actual browser checks verified no-results, clear-search focus restoration and Electrical Engineering’s nine results. Full light/dark/phone/long-content matrix remains open. Direction prompt retained in `folio-007-direction.txt`; no production deployment.
 
 ### FOLIO-008 · P1 · TOC and preserved site navigation compatibility
-**Status:** Proposed · **Boards:** B4, B6 · **Depends:** FOLIO-006
+**Status:** Source implemented / partial local acceptance · **Boards:** B4, B6 · **Depends:** FOLIO-006
 
 **Scope:** `TableOfContents`, `MobileToc`, heading discovery, `SiteNav`, `Breadcrumb`, `SiteFooter`, `ThemeToggle`/provider and skip/main-content context.
 
 **Acceptance:** V/K for long h2/h3 labels, no headings, active section, mobile disclosure/menu open/closed, theme switch and breadcrumb overflow. Anchor arrival clears sticky UI; navigation/focus order and current-route cues remain accurate. Disclosure names/expanded state match content; theme switching does not lose location. Preserve site-wide route identities, not a global folio repaint.
+
+**Progress:** Measured sticky heights remove the observed 12px overlap at normal browser 200% zoom (590px CSS width): header bottom and breadcrumb top now both 69px. Mobile contents collapse before arrival, retain the hash, focus the destination and leave a 16px gap. Escape returns focus to the menu trigger; the closed panel is hidden. Shared active-section state handles jumps and article replacement; native pointer Back restores the exact desktop scroll position. Theme switching preserves the hash. Full verification: 1,764 tests passed, 5 skipped; 535-route export and 76-page search index passed. True phone/print and broad non-blog route matrix remain open. No production deployment.
 
 ### FOLIO-009 · P1 · Site search dialog and recovery
 **Status:** Proposed · **Boards:** B4, B6 · **Depends:** FOLIO-008

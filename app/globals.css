@@ -3,6 +3,7 @@
 @import "../components/gamma/controls.css";
 @import "../components/gamma/action-menu.css";
 @import "./editorial.css";
+@import "../components/blog/article-navigation.css";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));

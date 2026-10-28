@@ -14,6 +14,8 @@ export function verifyArtifactRequest(event, env) {
   if (!/^[a-f0-9]{40}$/.test(source || '')) throw new Error('Exact artifact source SHA required');
   if (env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
     if (source !== env.GITHUB_SHA || event.inputs?.confirm_sha !== source) throw new Error('Manual SHA confirmation mismatch');
+  } else if (env.GITHUB_EVENT_NAME === 'push') {
+    if (env.GITHUB_REF !== 'refs/heads/codex/gamma-blog-editorial-20261027' || source !== env.GITHUB_SHA || event.after !== source || event.deleted === true) throw new Error('Push artifact requires exact live editorial head');
   } else if (env.GITHUB_EVENT_NAME === 'pull_request') {
     if (!['labeled', 'synchronize', 'reopened'].includes(event.action) ||
         event.pull_request?.head?.repo?.full_name !== 'castlemilk/benebsworth.com' ||
@@ -134,3 +136,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
   catch (error) { console.error(error.message); process.exitCode = 1; }
 }
+

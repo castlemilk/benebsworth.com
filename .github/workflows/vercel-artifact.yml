@@ -1,7 +1,9 @@
 name: Credential-free Vercel artifact
 
-# Opt-in build validation only. No environment, Vercel authentication or upload.
+# Editorial pushes and opt-in PR validation. No deployment environment or Vercel credentials.
 on:
+  push:
+    branches: [codex/gamma-blog-editorial-20261027]
   pull_request:
     types: [labeled, synchronize, reopened]
   workflow_dispatch:
@@ -22,7 +24,7 @@ jobs:
   artifact:
     if: >-
       github.repository == 'castlemilk/benebsworth.com' &&
-      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch' ||
        (github.event_name == 'pull_request' &&
         github.event.pull_request.head.repo.full_name == 'castlemilk/benebsworth.com' &&
         contains(github.event.pull_request.labels.*.name, 'ci:vercel-artifact')))
@@ -68,3 +70,4 @@ jobs:
       - name: Remove temporary build configuration
         if: always()
         run: rm -rf .vercel vercel-artifact "$RUNNER_TEMP/artifact-cli"
+

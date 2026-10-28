@@ -169,3 +169,12 @@ test('production metadata and missing postbuild assets cannot produce an artifac
     assert.equal(fs.existsSync(path.join(root, '.vercel')), false);
   });
 });
+
+
+test('ongoing push build accepts only exact live editorial revision', () => {
+  const env = { GITHUB_REPOSITORY: 'castlemilk/benebsworth.com', GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/codex/gamma-blog-editorial-20261027', GITHUB_SHA: sha, ARTIFACT_SOURCE_SHA: sha };
+  assert.equal(verifyArtifactRequest({ after: sha, deleted: false }, env), sha);
+  assert.throws(() => verifyArtifactRequest({ after: sha }, { ...env, GITHUB_REF: 'refs/heads/other' }), /editorial/);
+  assert.throws(() => verifyArtifactRequest({ after: 'b'.repeat(40) }, env), /editorial/);
+  assert.throws(() => verifyArtifactRequest({ after: sha, deleted: true }, env), /editorial/);
+});

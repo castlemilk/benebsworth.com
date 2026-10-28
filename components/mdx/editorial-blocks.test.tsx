@@ -63,7 +63,7 @@ describe('folio stats and callouts', () => {
 
   it('scopes every restyling rule to reading surfaces; the extra type label is hidden elsewhere', () => {
     css.walkRules(rule => {
-      if (rule.selector === '.kind') {
+      if (rule.selector === '.kind' || rule.selector === '.focusRail') {
         expect(rule.nodes.map(node => node.toString()).join('')).toContain('display: none')
       } else {
         expect(rule.selector.split(',\n').every(selector => selector.trim().startsWith(':global(:is(.research-article, .folio-study))'))).toBe(true)
@@ -80,7 +80,7 @@ describe('folio stats and callouts', () => {
   it('puts handwritten title ink in the utility layer to beat the shared important paragraph colour', () => {
     const titleInk: postcss.Declaration[] = []
     css.walkDecls('color', declaration => {
-      if (declaration.value === 'var(--folio-handwriting, #b32624)') titleInk.push(declaration)
+      if (declaration.value === 'var(--folio-handwriting, #b32624)' && (declaration.parent as postcss.Rule).selector.includes('.title')) titleInk.push(declaration)
     })
     expect(titleInk).toHaveLength(1)
     const ink = titleInk[0]
@@ -92,6 +92,29 @@ describe('folio stats and callouts', () => {
     expect((rule.parent as postcss.AtRule).params).toBe('utilities')
     const shared = readFileSync('components/ui/callout.tsx', 'utf8')
     expect(shared).toContain('[&_p]:!text-fg/80')
+  })
+
+  it('retains a dedicated decorative SVG focus rail for insight, not other callout meanings', () => {
+    const { container, rerender } = render(<article className="research-article"><Callout type="thinking" title="Exact insight"><p>Exact body</p></Callout></article>)
+    const rail = container.querySelector('[data-insight-focus-rail]')!
+    expect(rail.tagName.toLowerCase()).toBe('svg')
+    expect(rail.getAttribute('aria-hidden')).toBe('true')
+    expect(rail.getAttribute('focusable')).toBe('false')
+    expect(rail.classList.contains(styles.decoration)).toBe(false)
+    expect(rail.querySelector('path')?.getAttribute('d')).toContain('C')
+    expect(rail.querySelector('circle')?.getAttribute('fill')).toBe('currentColor')
+    expect(rail.querySelector('path')?.getAttribute('vector-effect')).toBe('non-scaling-stroke')
+    expect(container.querySelector(`.${styles.title}`)?.textContent).toBe('Exact insight')
+    expect(container.querySelector(`.${styles.body}`)?.textContent).toBe('Exact body')
+    const rules: Record<string, string> = {}
+    css.walkRules(rule => {
+      if (rule.selector.endsWith("[data-callout-type='thinking'] .focusRail")) {
+        rule.walkDecls(d => { rules[d.prop] = d.value })
+      }
+    })
+    expect(rules).toMatchObject({ display: 'block', 'pointer-events': 'none', 'user-select': 'none', color: 'var(--folio-handwriting, #b32624)', height: 'calc(100% - 2.75rem)' })
+    rerender(<Callout type="warning">Warning</Callout>)
+    expect(container.querySelector('[data-insight-focus-rail]')).toBeNull()
   })
 
   it('inherits established light/dark inks instead of introducing a fixed orange palette', () => {

@@ -37,6 +37,7 @@
 }
 
 .kind { display: none; }
+.focusRail { display: none; }
 
 :global(:is(.research-article, .folio-study)) .callout {
   margin-block: 2.75rem;
@@ -51,7 +52,9 @@
 :global(:is(.research-article, .folio-study)) .calloutContent { margin: 0; }
 
 :global(:is(.research-article, .folio-study)) .kind {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
   margin-bottom: .7rem;
   font: 600 .9rem/1.4 'Folio Condensed', sans-serif;
   text-transform: uppercase;
@@ -109,4 +112,33 @@
 @media print {
   :global(:is(.research-article, .folio-study)) .stat { break-inside: avoid; }
   :global(:is(.research-article, .folio-study)) .callout .title { break-after: avoid; }
+}
+
+/* Retain the original insight's focusing gesture without its tinted panel.
+   A separate rail is not part of the hidden legacy badge/corner decoration. */
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] {
+  padding-inline-start: 3rem;
+  border-top: 0;
+}
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] .focusRail {
+  display: block;
+  position: absolute;
+  inset-inline-start: 0;
+  top: 1.25rem;
+  width: 2rem;
+  height: calc(100% - 2.75rem);
+  overflow: visible;
+  color: var(--folio-handwriting, #b32624);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Transparent original glyphs share the annotation ink, never a badge fill. */
+:global(:is(.research-article, .folio-study)) .inkIcon {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--folio-handwriting, #b32624);
+  pointer-events: none;
+  user-select: none;
 }

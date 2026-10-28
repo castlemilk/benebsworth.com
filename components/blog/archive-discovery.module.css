@@ -1,0 +1,30 @@
+/* FOLIO-007: preserve complete copy on reading entries, not dashboard tiles. */
+.entry :where(h2,h3,p),
+.entry :global(.accent-ink) {
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 100%;
+}
+.status { overflow-wrap: anywhere; }
+.empty {
+  overflow-wrap: anywhere;
+  padding-block: 2rem;
+  color: var(--muted);
+  font: 1.1rem/1.7 'Folio Serif', Georgia, serif;
+}
+/* About is also a consumer: adapt typography only in the blog reading shell. */
+:global(.folio-reading-page) .related :where(h2,h3) {
+  font-family: 'Folio Serif', Georgia, serif;
+  font-weight: 450;
+  letter-spacing: -.025em;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+:global(.folio-reading-page) .related p {
+  font-family: 'Folio Serif', Georgia, serif;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+:global(.folio-reading-page) .related :where(li,a) { min-width: 0; }
+:global(.folio-reading-page) .related :global(.accent-ink) { max-width: 100%; overflow-wrap: anywhere; }
+:global(.folio-reading-page) .related > div:first-child { flex-wrap: wrap; gap: .75rem; }

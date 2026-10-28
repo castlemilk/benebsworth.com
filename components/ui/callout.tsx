@@ -1,3 +1,5 @@
+import { CalloutInkIcon, type CalloutType } from './callout-ink-icon'
+import { InsightFocusRail } from './insight-focus-rail'
 import { AlertCircle, Info, CheckCircle, XCircle, Brain, Heart, Hammer } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import styles from '@/components/mdx/editorial-blocks.module.css'
@@ -32,8 +34,6 @@ import styles from '@/components/mdx/editorial-blocks.module.css'
  *     Body content — supports inline markdown via the MDX pipeline.
  *   </Callout>
  */
-
-type CalloutType = 'info' | 'warning' | 'success' | 'error' | 'thinking' | 'feeling' | 'doing'
 
 interface CalloutProps {
   children: React.ReactNode
@@ -178,10 +178,12 @@ export function Callout({ children, type = 'info', title, className }: CalloutPr
         </div>
       </div>
 
+      {type === 'thinking' && <InsightFocusRail />}
+
       {/* Content area: optional title in the accent colour, then the
           children (which can be plain text or rich MDX content). */}
       <div className={cn("mt-2 ml-4", styles.calloutContent)}>
-        <span className={styles.kind}>{type === 'thinking' ? 'Insight' : type === 'feeling' ? 'Reflection' : type === 'doing' ? 'Practice' : type}</span>
+        <span className={styles.kind}><CalloutInkIcon type={type} className={styles.inkIcon} />{type === 'thinking' ? 'Insight' : type === 'feeling' ? 'Reflection' : type === 'doing' ? 'Practice' : type}</span>
         {title && (
           <p className={cn('text-base font-semibold m-0 mb-2', style.titleColor, styles.title)}>{title}</p>
         )}

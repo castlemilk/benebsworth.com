@@ -64,7 +64,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
                 <div className="relative h-24 w-32 overflow-hidden rounded-lg border border-[var(--color-border)] bg-black/20 sm:h-28 sm:w-40">
                   <img
                     src={post.heroImage}
-                    alt={post.title}
+                    alt=""
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 h-full w-full object-cover opacity-85 transition-transform duration-500 group-hover/spot:scale-110 group-hover/spot:opacity-100"

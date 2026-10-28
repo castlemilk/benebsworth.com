@@ -48,11 +48,13 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 **Acceptance:** Establish route/fixture for every registered name (grouped fixtures allowed); machine-check none are missing. Record existing-vs-proposed and source/CI/local-browser/deployed evidence separately. Capture baseline opening, figure/commentary and ending in V; list known missing search/lightbox/embed/long-content states. No invented data or generated-board content is introduced.
 
 ### FOLIO-002 · P0 · Accept the statistics and seven-callout first slice
-**Status:** Source implemented / awaiting visual acceptance · **Boards:** B1, B6 · **Depends:** FOLIO-001
+**Status:** Source implemented / partial local acceptance · **Boards:** B1, B6 · **Depends:** FOLIO-001
 
 **Scope:** `StatGroup`, `Stat`, `Callout`; `editorial-blocks.module.css`, scoped `.research-article`/`.folio-study` consumers.
 
 **Acceptance:** V on real article and specimen: open rules, serif values, case-sensitive symbols/units, wrapping long labels and 1/2/3-column compositions. All info/warning/success/error/thinking/feeling/doing remain identifiable without colour; red handwriting never silently means error. Optional titles and nested MDX render correctly. Existing non-blog appearance remains unchanged. Re-run focused editorial-block tests after corrections. Coverage records 1,672 tests passed/5 skipped and lint/types/prose passed for the earlier source slice; this is **not** new browser, full-export or CI evidence.
+
+**Correction, 28 October:** Restored the measured red hand-drawn insight hook/rail/dot and added seven original transparent SVG icons beside explicit type labels. Light/dark specimens and the real RLC article were reviewed; a 390px content column preserves the continuous rail and wrapped title without page overflow. Full verification: 1,750 tests passed, 5 skipped; 535-route export and 76-page search index passed. True phone, zoom/print matrix and production adoption remain unverified.
 
 ### FOLIO-003 · P1 · Notes, quotation and post-family composition
 **Status:** Source implemented / partial local acceptance · **Boards:** B1, B2, B4 · **Depends:** FOLIO-001, FOLIO-002
@@ -91,11 +93,13 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 **Progress:** Existing approved masthead/endings retained. Heading discovery now excludes figure/interactive/ancillary labels while preserving authored nested sections; focused contracts pass. Actual practical-guide route had one H1, correct canonical, six displayed tags, recap before author and no overflow; Hello World had no empty recap. Full visual/optional-data matrix remains open. No production deployment.
 
 ### FOLIO-007 · P1 · Archive, filters and related reading
-**Status:** Proposed · **Boards:** B4, B6 · **Depends:** FOLIO-004, FOLIO-006
+**Status:** Source implemented / partial local acceptance · **Boards:** B4, B6 · **Depends:** FOLIO-004, FOLIO-006
 
 **Scope:** `FolioArchiveHeading`, `BlogContent`, `BlogPostCard`, `FolioEntry`, `ReadingEntry`, `BlogFilter`, `RelatedPosts`, `RelatedLabs`, `TopicMarker`, Latest writing.
 
 **Acceptance:** V covers lead/ordinary entries, thumbnail/no thumbnail, long titles, many tags, result count and no-results. K exercises search/clear (focus returns), All/topic toggling and links; counts/order/filter intersection are correct. Preserve related-lab/topic identity and destination URLs. Filter overflow remains usable on phone; no unapproved pagination or URL-state change. Shared entry style does not restyle GridNav/LabMatrix.
+
+**Progress:** Improved metadata wrapping, semantic lead date, decorative linked thumbnails, long entry wrapping and blog-scoped related-lab typography. Empty archive and trimmed result messages are tested. Actual browser checks verified no-results, clear-search focus restoration and Electrical Engineering’s nine results. Full light/dark/phone/long-content matrix remains open. Direction prompt retained in `folio-007-direction.txt`; no production deployment.
 
 ### FOLIO-008 · P1 · TOC and preserved site navigation compatibility
 **Status:** Proposed · **Boards:** B4, B6 · **Depends:** FOLIO-006

@@ -73,18 +73,22 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 **Progress:** Production MDX pipeline is shared with a genuine server-rendered review fixture. Native pre/table scroll surfaces preserve syntax/header semantics and contain overflow in reading and non-reading consumers. Local 390px-column browser review measured code388/1590px and table388/768px client/scroll widths; keyboard ArrowRight moved each40px with no page overflow. Footnote/backlink hashes and dark syntax/table contrast were checked. Full1703-test pass with5 skipped and535-route export completed; phone/zoom/preference/print and wider consumer acceptance remain open.
 
 ### FOLIO-005 · P1 · Equation reading and copy states
-**Status:** Proposed · **Boards:** B2, B6 · **Depends:** FOLIO-004
+**Status:** Source implemented / partial local acceptance · **Boards:** B2, B6 · **Depends:** FOLIO-004
 
 **Scope:** `Equation`, KaTeX inline/display output, captions/numbers/cross-reference anchors and optional LaTeX/text copy menu.
 
 **Acceptance:** V covers long expression, numbered/unnumbered, caption/no caption and inline math. K opens copy actions without hover and retains focus; tests assert exact clipboard payload, copied feedback/reset and failed clipboard fallback without false success. Missing `latex` hides copy controls; children remain the rendered math source. Anchor links, selectable math and local horizontal overflow remain usable.
 
+**Progress:** Canonical Gamma ActionMenu replaces the bespoke popup; exact LaTeX and math payloads, truthful fallback, source-change invalidation and focus recovery are tested. Browser verified ArrowDown/End/Escape, exact clipboard payload and stable feedback geometry (288.34px figure height and69px math offset unchanged). Existing PLL identity exercises actual390/772px client/scroll widths with accessible left edge and40px keyboard scrolling. Normal browser200% zoom was verified at590px CSS viewport with menu inside bounds, then restored. Full1727 tests passed,5 skipped;535-route export passed. Error branches have automated coverage, not forced live clipboard-failure evidence. No production deployment.
+
 ### FOLIO-006 · P1 · Complete article hierarchy and endings
-**Status:** Proposed · **Boards:** B4, B6 · **Depends:** FOLIO-003, FOLIO-004
+**Status:** Source implemented / partial local acceptance · **Boards:** B4, B6 · **Depends:** FOLIO-003, FOLIO-004
 
 **Scope:** `ArticleMasthead`, `ArticleReadingFlow`, `KeyTakeaways`, `AuthorBio`, `MdxContent`, article route shell.
 
 **Acceptance:** V across explainer/experiment/essay-or-guide: long title/deck/tags, missing optional description/takeaways, first paragraph, recap and author ending. Title/author/date/read time/canonical data remain exact; recap does not displace the argument. Heading discovery excludes incidental figure/control labels. Prose/frontmatter regression and published-state tests pass; no per-post rewrites required.
+
+**Progress:** Existing approved masthead/endings retained. Heading discovery now excludes figure/interactive/ancillary labels while preserving authored nested sections; focused contracts pass. Actual practical-guide route had one H1, correct canonical, six displayed tags, recap before author and no overflow; Hello World had no empty recap. Full visual/optional-data matrix remains open. No production deployment.
 
 ### FOLIO-007 · P1 · Archive, filters and related reading
 **Status:** Proposed · **Boards:** B4, B6 · **Depends:** FOLIO-004, FOLIO-006

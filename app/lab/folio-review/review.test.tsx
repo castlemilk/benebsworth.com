@@ -84,6 +84,11 @@ describe('local folio review', () => {
     expect(container.querySelectorAll('[data-testid="server-mdx"]')).toHaveLength(1)
   })
 
+  it('keeps the real equation MDX slot inside the same review reading column', () => {
+    const { container, getByRole } = render(<FolioReview equations={<div className="prose" data-testid="equation-mdx">Equation MDX slot</div>} />)
+    expect(container.querySelector('[data-testid="equation-mdx"]')?.parentElement).toBe(getByRole('article'))
+  })
+
   it('opts the dedicated fixture out of indexing and following', () => {
     expect(metadata.robots).toEqual({ index: false, follow: false })
   })

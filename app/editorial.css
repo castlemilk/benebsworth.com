@@ -224,3 +224,21 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 :where(.research-article,.folio-study) .technical-source-label{min-width:0}
 :where(.research-article,.folio-study) .technical-source-link :where(svg,[aria-hidden]){flex-shrink:0}
 @media(forced-colors:active){:where(.research-article,.folio-study) .prose :where(.technical-pre,.technical-table-scroll){scrollbar-color:auto}}
+
+/* FOLIO-005: the source actions use Gamma; mathematical glyphs remain KaTeX.
+   A single outer scroll region keeps long expressions selectable and reachable. */
+.equation{min-width:0;max-width:100%;scroll-margin-top:130px}
+.equation-math{max-width:100%;min-width:0;overflow-x:auto;padding-block:.25rem}
+.equation-math .katex-display{overflow:visible;width:max-content;min-width:100%}
+.equation-math:focus-visible{outline:2px solid var(--blog);outline-offset:3px}
+.equation-controls{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;min-height:44px;margin-bottom:.5rem;text-align:left}
+.equation-feedback{display:grid;min-width:0;font:.85rem/1.5 var(--font-sans),sans-serif;color:var(--fg);overflow-wrap:anywhere}
+.equation-feedback-reserve,.equation-copy-status{grid-area:1 / 1}
+.equation-feedback-reserve{visibility:hidden;pointer-events:none}
+:is(.research-article,.folio-study) .equation{border-block:1px solid var(--border);padding:1rem 0 1.25rem;text-align:left}
+:is(.research-article,.folio-study) .equation-caption{font:1rem/1.6 'Folio Serif',Georgia,serif;color:var(--muted);overflow-wrap:anywhere}
+:is(.research-article,.folio-study) .equation-number{font-family:'Folio Condensed',sans-serif;font-size:1rem;font-weight:600;color:var(--fg)}
+@media print{.equation-controls{display:none}.equation-math{overflow:visible}}
+/* Local size adapters only; maintained ActionMenu source and CSS stay intact. */
+.equation-controls .action-menu-trigger,.equation-controls .action-menu-item{min-height:44px}
+.equation-controls .action-menu-panel{min-width:min(230px,calc(100vw - 3rem));max-width:min(310px,calc(100vw - 3rem))}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { compileMDX } from 'next-mdx-remote/rsc'
@@ -40,4 +41,53 @@ describe('production technical MDX pipeline', () => {
     expect(html).toContain('data-count="3"')
   })
 
+})
+
+describe('production equation MDX pipeline', () => {
+  it('renders real inline, display and aligned mathematics, optional metadata and anchors', async () => {
+    const { equationFixture } = await import('@/app/lab/folio-review/equation-fixture')
+    const { content } = await compileMDX({ source: equationFixture, options: mdxOptions(), components: mdxComponents })
+    const html = renderToStaticMarkup(<>{content}</>)
+    expect(html.match(/data-equation="true"/g)).toHaveLength(5)
+    expect(html.match(/class="katex-display"/g)).toHaveLength(5)
+    expect(html.match(/class="katex"/g)).toHaveLength(6)
+    expect(html).toContain('<math')
+    expect(html).toContain('encoding="application/x-tex"')
+    expect(html).toContain('class="mtable"')
+    expect(html).toContain('href="#eqn:review-rlc"')
+    expect(html).toContain('id="eqn:review-rlc"')
+    expect(html.match(/aria-label="Copy equation to clipboard"/g)).toHaveLength(4)
+    expect(html.match(/<figcaption/g)).toHaveLength(4)
+    expect(html).not.toContain('katex-error')
+    expect(html).not.toContain('role="group"')
+  })
+  it('reproduces the long published PLL equation and copy source unchanged', async () => {
+    const { equationFixture } = await import('@/app/lab/folio-review/equation-fixture')
+    const original = readFileSync('content/blog/pll-from-first-principles/index.mdx', 'utf8')
+      .match(/<Equation id="eqn:pll-multiply"[\s\S]*?<\/Equation>/)![0]
+    const fixture = equationFixture.match(/<Equation id="eqn:review-pll-multiply"[\s\S]*?<\/Equation>/)![0]
+    expect(fixture.replace('eqn:review-pll-multiply', 'eqn:pll-multiply')).toBe(original)
+    const { content } = await compileMDX({ source: fixture, options: mdxOptions(), components: mdxComponents })
+    const html = renderToStaticMarkup(<>{content}</>)
+    expect(html).toContain('id="eqn:review-pll-multiply"')
+    expect(html).toContain('role="region"')
+    expect(html).toContain('tabindex="0"')
+    expect(html).toContain('class="katex-display"')
+    expect(html).toContain('encoding="application/x-tex"')
+    expect(html).not.toContain('katex-error')
+  })
+  it('uses children for displayed mathematics even when the copy prop is different', async () => {
+    const source = String.raw`<Equation latex="copy-only-source">
+
+$$
+\Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}
+$$
+
+</Equation>`
+    const { content } = await compileMDX({ source, options: mdxOptions(), components: mdxComponents })
+    const html = renderToStaticMarkup(<>{content}</>)
+    expect(html).toContain('data-latex="copy-only-source"')
+    expect(html).toContain('encoding="application/x-tex">\\Gamma = \\frac{Z_L - Z_0}{Z_L + Z_0}</annotation>')
+    expect(html).not.toContain('katex-error')
+  })
 })

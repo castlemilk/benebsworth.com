@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "../components/gamma/controls.css";
+@import "../components/gamma/action-menu.css";
 @import "./editorial.css";
 @plugin "@tailwindcss/typography";
 

@@ -64,11 +64,13 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 **Progress:** Scoped serif pull quotes, validated explicit note kinds and complete brief/evidence/assumption/method specimens are implemented. Actual 390px-column review caught and corrected fixed note columns, excessive long-title margins and a missing dark prose context. Narrow light/dark captures now show readable bodies and stacked notes with no overflow. True phone/zoom/preference/print checks and production rollout remain open.
 
 ### FOLIO-004 · P1 · Technical prose, tables, code and source links
-**Status:** Proposed · **Boards:** B2, B6 · **Depends:** FOLIO-001
+**Status:** Source implemented / partial local acceptance · **Boards:** B2, B6 · **Depends:** FOLIO-001
 
 **Scope:** Registered `h2`, `h3`, `p`, `a`, `ul`, `code`; inherited headings/lists/emphasis/blockquotes/rules/images/pre/tables/footnotes; `GithubLink`; actual MDX pipeline and scoped prose CSS.
 
 **Acceptance:** V uses long code line, long URL, nested lists, wide table with proper headers and citation/backlink where supported by existing content. Wide content scrolls locally without hiding scrollbars or forcing body overflow; prose retains readable measure. K reaches links/scroll regions and preserves source destinations. Syntax contrast works in both themes. No fictitious Table/Citation API or copy button is added merely because a mockup shows one.
+
+**Progress:** Production MDX pipeline is shared with a genuine server-rendered review fixture. Native pre/table scroll surfaces preserve syntax/header semantics and contain overflow in reading and non-reading consumers. Local 390px-column browser review measured code388/1590px and table388/768px client/scroll widths; keyboard ArrowRight moved each40px with no page overflow. Footnote/backlink hashes and dark syntax/table contrast were checked. Full1703-test pass with5 skipped and535-route export completed; phone/zoom/preference/print and wider consumer acceptance remain open.
 
 ### FOLIO-005 · P1 · Equation reading and copy states
 **Status:** Proposed · **Boards:** B2, B6 · **Depends:** FOLIO-004

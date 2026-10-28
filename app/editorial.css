@@ -204,3 +204,23 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
  .latest-writing .reading-entry__body{flex-basis:100%}
  .latest-writing .reading-entry__image{width:120px;max-width:120px;margin-left:0}
 }
+
+/* FOLIO-004: reading-only technical prose. Native syntax colours remain paired
+   with PrettyCode's dark surface in both themes; red stays annotation ink. */
+:where(.research-article,.folio-study) .prose{min-width:0}
+:where(.research-article,.folio-study) .prose :where(h4,h5,h6):not(:where(.not-prose,.not-prose *)){font-family:'Folio Serif',Georgia,serif;line-height:1.35;scroll-margin-top:8rem}
+:where(.research-article,.folio-study) .prose :where(a, :not(pre)>code):not(:where(.not-prose,.not-prose *)){overflow-wrap:anywhere}
+:where(.research-article,.folio-study) .prose :where(pre,[data-rehype-pretty-code-figure],.technical-table-scroll){min-width:0;max-width:100%}
+:where(.research-article,.folio-study) .prose :where(.technical-pre,.technical-table-scroll){overflow-x:auto;scrollbar-width:auto;scrollbar-color:var(--muted) var(--surface);border:1px solid var(--border);border-radius:4px}
+:where(.research-article,.folio-study) .prose .technical-pre{white-space:pre;overflow-wrap:normal}
+:where(.research-article,.folio-study) .prose .technical-pre code{white-space:pre;overflow-wrap:normal}
+:where(.research-article,.folio-study) .technical-table-scroll{margin-block:1.75rem}
+:where(.research-article,.folio-study) .technical-table-scroll table{margin:0;width:100%;font-family:'Folio Serif',Georgia,serif;font-size:1rem;line-height:1.6}
+:where(.research-article,.folio-study) .technical-table-scroll :where(th,td){padding:.7rem 1rem;min-width:8rem;vertical-align:top;border-bottom:1px solid var(--border)}
+:where(.research-article,.folio-study) .technical-table-scroll th{font-family:'Folio Condensed',sans-serif;font-weight:600;color:var(--fg);background:var(--surface)}
+:where(.research-article,.folio-study) .technical-table-scroll tr:last-child td{border-bottom:0}
+:where(.research-article,.folio-study) .prose :where(a,.technical-pre,.technical-table-scroll):focus-visible{outline:2px solid var(--blog);outline-offset:3px}
+:where(.research-article,.folio-study) .technical-source-link{max-width:100%;border-radius:4px;background:transparent;overflow-wrap:anywhere}
+:where(.research-article,.folio-study) .technical-source-label{min-width:0}
+:where(.research-article,.folio-study) .technical-source-link :where(svg,[aria-hidden]){flex-shrink:0}
+@media(forced-colors:active){:where(.research-article,.folio-study) .prose :where(.technical-pre,.technical-table-scroll){scrollbar-color:auto}}

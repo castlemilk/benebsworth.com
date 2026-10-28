@@ -10,7 +10,7 @@ import styles from './review.module.css'
 import { FieldNote, Assumptions } from '@/components/mdx/research-folio'
 import { PostBrief, EvidenceNote, MethodSteps } from '@/components/mdx/post-patterns'
 
-export function FolioReview() {
+export function FolioReview({ technicalProse }: { technicalProse?: React.ReactNode }) {
   const [narrow, setNarrow] = useState(false)
   const { setTheme } = useTheme()
 
@@ -21,7 +21,7 @@ export function FolioReview() {
         <Link href="/blog/">Writing archive</Link>
       </nav>
       <header className={styles.header}>
-        <p className={styles.kicker}>FOLIO-001 / FOLIO-002 / FOLIO-003 · Local review specimen</p>
+        <p className={styles.kicker}>FOLIO-001 / FOLIO-002 / FOLIO-003 / FOLIO-004 · Local review specimen</p>
         <h1>Notes, reasoning &amp; field callouts</h1>
         <p>Production components, illustrative copy. No measurements, research findings or authored article text are represented here.</p>
       </header>
@@ -102,6 +102,7 @@ export function FolioReview() {
             <MethodSteps title="One-step recheck" steps={[{ title: 'Read the scope', content: <p>Confirm the distinction between content-column review and phone-viewport testing.</p> }]} />
           </section>
         </div>
+        {technicalProse}
       </article>
     </main>
   )

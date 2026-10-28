@@ -1,12 +1,14 @@
+import { MdxContent } from '@/components/mdx/mdx-content'
+import { technicalProseFixture } from './technical-prose-fixture'
 import type { Metadata } from 'next'
 import { FolioReview } from './review'
 
 export const metadata: Metadata = {
   title: 'Folio component review',
-  description: 'Illustrative statistics, callouts, notes and reasoning specimens for local visual review.',
+  description: 'Illustrative statistics, callouts, notes, reasoning and technical prose specimens for local visual review.',
   robots: { index: false, follow: false },
 }
 
 export default function FolioReviewPage() {
-  return <FolioReview />
+  return <FolioReview technicalProse={<MdxContent source={technicalProseFixture} />} />
 }

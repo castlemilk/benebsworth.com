@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { FolioReview } from './review'
 import { metadata } from './page'
+vi.mock('@/components/mdx/mdx-content', () => ({ MdxContent: () => null }))
 import blockStyles from '@/components/mdx/editorial-blocks.module.css'
 
 const { setTheme } = vi.hoisted(() => ({ setTheme: vi.fn() }))
@@ -74,6 +75,13 @@ describe('local folio review', () => {
     for (const family of ['.folio-note', '.folio-assumptions', '.folio-brief', '.folio-method']) {
       expect(prose.querySelectorAll(family).length).toBeGreaterThan(0)
     }
+  })
+
+  it('keeps server-rendered technical MDX inside the reading column without nesting prose wrappers', () => {
+    const { container, getByRole } = render(<FolioReview technicalProse={<div className="prose" data-testid="server-mdx">Server-rendered content slot</div>} />)
+    const slot = container.querySelector('[data-testid="server-mdx"]')!
+    expect(slot.parentElement).toBe(getByRole('article'))
+    expect(container.querySelectorAll('[data-testid="server-mdx"]')).toHaveLength(1)
   })
 
   it('opts the dedicated fixture out of indexing and following', () => {

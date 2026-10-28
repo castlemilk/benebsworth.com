@@ -5,12 +5,9 @@ import { dirname, join } from 'node:path'
 import test from 'node:test'
 import { ORG_ID, PROJECT_ID, validateOutput, validateProject, validateUrl } from './vercel-preview.mjs'
 
-test('preparation source-build guard affects only the migration preparation branches', () => {
+test('Git source builds are disabled while prebuilt CI previews remain available', () => {
   const config = JSON.parse(readFileSync(new URL('../../vercel.json', import.meta.url), 'utf8'))
-  assert.deepEqual(config.git.deploymentEnabled, {
-    'codex/github-actions-vercel-previews-20261027': false,
-    'codex/blog-editorial-ci-reconcile-20261027': false,
-  })
+  assert.equal(config.git.deploymentEnabled, false)
   assert.deepEqual(Object.keys(config).sort(), ['$schema', 'git'])
   assert.deepEqual(Object.keys(config.git), ['deploymentEnabled'])
 })

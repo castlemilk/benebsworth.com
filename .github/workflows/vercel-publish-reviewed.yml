@@ -1,0 +1,143 @@
+name: Reviewed prebuilt CI publisher
+# Owner selected trusted-maintainer CI publishing on 2026-10-28; canary only.
+# A writable allowed ref trusts ALL its writers; this is NOT native review protection.
+on:
+  push:
+    branches: [codex/gamma-blog-editorial-20261027]
+    paths: [scripts/ci/publisher/approvals/blog-6251b5b-canary.json]
+  pull_request:
+    paths:
+      - '.github/workflows/vercel-publish-reviewed.yml'
+      - 'scripts/ci/publisher/**'
+      - 'vercel.json'
+      - 'scripts/ci/vercel-preview.test.mjs'
+  workflow_dispatch:
+    inputs:
+      control_sha:
+        description: Full reviewed publisher workflow/config revision, not application SHA
+        required: true
+        type: string
+      approval_id:
+        description: Reviewed approval filename (without .json)
+        required: true
+        type: string
+      confirm:
+        description: Type APPROVE_PREBUILT_CI_PUBLISH to authorize this exact run
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: reviewed-prebuilt-publisher
+  cancel-in-progress: false
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Prove pinned CLI installs without lifecycle scripts or deployment credentials
+        env:
+          GH_TOKEN: ''
+          VERCEL_TOKEN: ''
+        run: |
+          npm install --prefix "$RUNNER_TEMP/controls-cli" --ignore-scripts --no-save --no-audit --no-fund vercel@59.13.1
+          "$RUNNER_TEMP/controls-cli/node_modules/.bin/vercel" --version
+      - name: Test publisher controls without deployment environment or credentials
+        run: python3 -m unittest discover -s scripts/ci/publisher -p 'test_*.py' -v
+  publish:
+    needs: controls
+    if: github.repository == 'castlemilk/benebsworth.com' && github.ref == 'refs/heads/codex/gamma-blog-editorial-20261027'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: preview-deploy
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CONTROL_SHA: ${{ inputs.control_sha || github.sha }}
+      APPROVAL_ID: ${{ inputs.approval_id || 'blog-6251b5b-canary' }}
+      CONFIRM: ${{ inputs.confirm || 'APPROVE_PREBUILT_CI_PUBLISH' }}
+      EXPECTED_REPOSITORY: castlemilk/benebsworth.com
+      EXPECTED_TARGET: preview
+      VERCEL_TELEMETRY_DISABLED: '1'
+    steps:
+      - name: Fetch only reviewed publisher controls, never application source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "$EXPECTED_REPOSITORY"
+          test "$CONFIRM" = APPROVE_PREBUILT_CI_PUBLISH
+          [[ "$CONTROL_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$CONTROL_SHA" = "$GITHUB_SHA"
+          [[ "$APPROVAL_ID" =~ ^[a-z0-9][a-z0-9-]{0,70}$ ]]
+          mkdir -p "$RUNNER_TEMP/publisher-controls" "$RUNNER_TEMP/publisher-input"
+          cd "$RUNNER_TEMP/publisher-controls"
+          for file in verify_extract.py authorize.py policy.json; do
+            gh api "repos/$GITHUB_REPOSITORY/contents/scripts/ci/publisher/$file?ref=$CONTROL_SHA" --jq .content | base64 --decode > "$file"
+          done
+          gh api "repos/$GITHUB_REPOSITORY/contents/scripts/ci/publisher/approvals/$APPROVAL_ID.json?ref=$CONTROL_SHA" --jq .content | base64 --decode > approval.json
+          python3 authorize.py
+      - name: Fetch exact CI provenance and artifact using read-only GitHub token
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/publisher-controls"
+          run_id=$(jq -er '.runId | tostring | select(test("^[0-9]+$"))' approval.json)
+          ci_id=$(jq -er '.ciRunId | tostring | select(test("^[0-9]+$"))' approval.json)
+          artifact_id=$(jq -er '.artifactId | tostring | select(test("^[0-9]+$"))' approval.json)
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > run.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ci_id" > ci-run.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id" > artifact.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > "$RUNNER_TEMP/publisher-input/artifact.zip"
+          python3 verify_extract.py "$RUNNER_TEMP/publisher-input/artifact.zip" "$RUNNER_TEMP/publisher-payload" approval.json run.json artifact.json ci-run.json
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install pinned upload tool outside the artifact, with no credentials or lifecycle scripts
+        shell: bash
+        env:
+          GH_TOKEN: ''
+          VERCEL_TOKEN: ''
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          npm install --prefix "$RUNNER_TEMP/publisher-cli" --ignore-scripts --no-save --no-audit --no-fund vercel@59.13.1
+          "$RUNNER_TEMP/publisher-cli/node_modules/.bin/vercel" --version
+      - name: Recheck approval identity and expiry immediately before upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/publisher-controls"
+          python3 authorize.py
+      - name: Upload validated prebuilt output in CI, never build or promote
+        shell: bash
+        env:
+          GH_TOKEN: ''
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${VERCEL_TOKEN:?Missing existing environment credential}"
+          cd "$RUNNER_TEMP/publisher-payload"
+          source_sha=$(jq -r .sourceSha "$RUNNER_TEMP/publisher-controls/approval.json")
+          source_branch=$(jq -r .sourceBranch "$RUNNER_TEMP/publisher-controls/approval.json")
+          canary_ref="ci-canary-${source_sha:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          export VERCEL_GIT_COMMIT_REF="$canary_ref"
+          export VERCEL_GIT_COMMIT_SHA="$source_sha"
+          "$RUNNER_TEMP/publisher-cli/node_modules/.bin/vercel" deploy --prebuilt --yes --target=preview --scope team_xE5DMN3hIo8aPqyHNkBybg8r \
+            --meta githubDeployment=1 --meta "githubCommitSha=$source_sha" --meta "githubCommitRef=$canary_ref" --meta "sourceGitRef=$source_branch" \
+            --meta githubOrg=castlemilk --meta githubRepo=benebsworth.com > "$RUNNER_TEMP/deployment-url.txt"
+          url=$(cat "$RUNNER_TEMP/deployment-url.txt")
+          [[ "$url" =~ ^https://[a-zA-Z0-9-]+\.vercel\.app/?$ ]]
+          printf '### Prebuilt upload\n\n%s\n\nSource: `%s`\n\nPreview-only commit-specific canary; READY, route and alias observations required before cutover.\n' "$url" "$source_sha" >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove temporary payload and controls
+        if: always()
+        shell: bash
+        run: rm -rf "$RUNNER_TEMP/publisher-payload" "$RUNNER_TEMP/publisher-input" "$RUNNER_TEMP/publisher-controls" "$RUNNER_TEMP/publisher-cli"

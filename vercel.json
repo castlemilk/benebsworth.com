@@ -1,9 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "git": {
-    "deploymentEnabled": {
-      "codex/github-actions-vercel-previews-20261027": false,
-      "codex/blog-editorial-ci-reconcile-20261027": false
-    }
+    "deploymentEnabled": false
   }
 }

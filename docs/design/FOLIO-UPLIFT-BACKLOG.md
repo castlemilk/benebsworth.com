@@ -55,11 +55,13 @@ Each ticket must satisfy applicable V/K/R **and** its specific acceptance below.
 **Acceptance:** V on real article and specimen: open rules, serif values, case-sensitive symbols/units, wrapping long labels and 1/2/3-column compositions. All info/warning/success/error/thinking/feeling/doing remain identifiable without colour; red handwriting never silently means error. Optional titles and nested MDX render correctly. Existing non-blog appearance remains unchanged. Re-run focused editorial-block tests after corrections. Coverage records 1,672 tests passed/5 skipped and lint/types/prose passed for the earlier source slice; this is **not** new browser, full-export or CI evidence.
 
 ### FOLIO-003 · P1 · Notes, quotation and post-family composition
-**Status:** Proposed · **Boards:** B1, B2, B4 · **Depends:** FOLIO-001, FOLIO-002
+**Status:** Source implemented / partial local acceptance · **Boards:** B1, B2, B4 · **Depends:** FOLIO-001, FOLIO-002
 
 **Scope:** `PullQuote`, `FieldNote`, `Assumptions`, `PostBrief`, `EvidenceNote`, `MethodSteps`.
 
 **Acceptance:** V fixtures cover note observation/caution/method; all four post kinds; audience/prerequisites absent/present; all four explicit evidence bases with/without limitations; long MDX quote and real ordered method. Valid blockquote/paragraph nesting and heading semantics pass render tests. Reject invalid kinds/empty steps consistently; never infer measured evidence or add ornamental numbering. Preserve existing article text.
+
+**Progress:** Scoped serif pull quotes, validated explicit note kinds and complete brief/evidence/assumption/method specimens are implemented. Actual 390px-column review caught and corrected fixed note columns, excessive long-title margins and a missing dark prose context. Narrow light/dark captures now show readable bodies and stacked notes with no overflow. True phone/zoom/preference/print checks and production rollout remain open.
 
 ### FOLIO-004 · P1 · Technical prose, tables, code and source links
 **Status:** Proposed · **Boards:** B2, B6 · **Depends:** FOLIO-001

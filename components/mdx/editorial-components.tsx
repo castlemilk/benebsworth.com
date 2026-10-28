@@ -1,6 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import styles from './editorial-blocks.module.css'
+import noteStyles from './folio-notes.module.css'
 
 export function StatGroup({ children }: { children: React.ReactNode }) {
   return (
@@ -27,7 +28,7 @@ export function PullQuote({ children }: { children: React.ReactNode }) {
   // inside a component <p> — the invalid nesting that triggers a hydration
   // mismatch. `blockquote > p` is valid; `p > p` is not.
   return (
-    <blockquote className="not-prose my-14 border-l-[3px] border-[var(--color-blog)] pl-6 font-display text-[1.45rem] font-medium italic leading-[1.35] tracking-[-0.015em] text-fg/90 sm:pl-8 [&_p]:!m-0 [&_p]:!font-display [&_p]:!text-[1.45rem] [&_p]:!font-medium [&_p]:!italic [&_p]:!leading-[1.35] [&_p]:!tracking-[-0.015em] [&_p]:!text-fg/90">
+    <blockquote className={cn(noteStyles.quote, "not-prose my-14 border-l-[3px] border-[var(--color-blog)] pl-6 font-display text-[1.45rem] font-medium italic leading-[1.35] tracking-[-0.015em] text-fg/90 sm:pl-8 [&_p]:!m-0 [&_p]:!font-display [&_p]:!text-[1.45rem] [&_p]:!font-medium [&_p]:!italic [&_p]:!leading-[1.35] [&_p]:!tracking-[-0.015em] [&_p]:!text-fg/90")}>
       {children}
     </blockquote>
   )

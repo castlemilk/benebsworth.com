@@ -24,6 +24,20 @@ describe('local folio review', () => {
     expect(container.querySelector('[role="alert"]')).toBeNull()
   })
 
+  it('covers all note kinds, brief kinds, evidence bases and optional limits with honest specimen copy', () => {
+    const { container } = render(<FolioReview />)
+    expect([...container.querySelectorAll('[data-post-kind]')].map(el => el.getAttribute('data-post-kind'))).toEqual(['explainer', 'experiment', 'essay', 'guide'])
+    expect(container.querySelectorAll('.folio-brief-audience')).toHaveLength(2)
+    expect(container.querySelectorAll('.folio-prerequisites')).toHaveLength(2)
+    for (const kind of ['observation', 'caution', 'method']) expect(container.querySelector(`[data-kind="${kind}"]`)).not.toBeNull()
+    for (const basis of ['measured', 'simulated', 'illustrative', 'interpretation']) expect(container.querySelectorAll(`[data-evidence-basis="${basis}"]`)).toHaveLength(2)
+    expect(container.querySelectorAll('.folio-evidence-limit')).toHaveLength(4)
+    expect(container.querySelectorAll('blockquote > p')).toHaveLength(2)
+    expect(container.querySelectorAll('.folio-method ol > li')).toHaveLength(4)
+    expect(container.textContent).toContain('No measurement, simulation, research finding or interpretation of real evidence is reported.')
+    expect(container.querySelector('p p')).toBeNull()
+  })
+
   it('changes only the column constraint with native Gamma controls, preserving focus and content', () => {
     const { container, getByRole } = render(<FolioReview />)
     const column = getByRole('article')
@@ -53,6 +67,13 @@ describe('local folio review', () => {
     expect(getByRole('article').classList.contains('research-article')).toBe(true)
     expect(getByRole('main').classList.contains('folio-study')).toBe(false)
     expect(getByRole('main').classList.contains('folio-reading-page')).toBe(true)
+    // Match the production MDX wrapper: not-prose excludes typography rules,
+    // but its descendants still inherit the surrounding prose body's ink.
+    const prose = getByRole('article').querySelector('.prose')!
+    expect(prose.classList.contains('dark:prose-invert')).toBe(true)
+    for (const family of ['.folio-note', '.folio-assumptions', '.folio-brief', '.folio-method']) {
+      expect(prose.querySelectorAll(family).length).toBeGreaterThan(0)
+    }
   })
 
   it('opts the dedicated fixture out of indexing and following', () => {

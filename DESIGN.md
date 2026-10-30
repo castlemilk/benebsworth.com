@@ -50,3 +50,29 @@ The approved style now has shared PostBrief (explainer, experiment, essay, pract
 
 ## Representative article adoption
 The RLC explainer and logistic-map experiment now use PostBrief around their existing opening paragraph and FieldNote for one existing observation. No claims, wording, equations, simulation parameters, source links or frontmatter changed. A content-hash regression protects authored text and metadata independently of the presentation wrappers; both MDX bodies compile in the focused tests. Other callouts retain their existing warning/meaning. This is a two-post preview rollout, not wholesale article rewriting.
+
+## Shared reading-surface rollout — 28 October 2026
+The owner explicitly chose `/lab/editorial-system/` as the direction for all blog content. Extend that reading language through shared components, rather than rewriting each article or forcing every post into one experiment template. The shared masthead now uses the same serif display/deck, condensed metadata and quiet rules; authored takeaways use a restrained red handwritten heading and selectable list. Author context remains exact prose in a ruled folio section. Homepage writing and related-post entries share the semantic ReadingEntry component while GridNav, LabMatrix and non-blog route identity remain unchanged.
+
+Interactive LabSide figures respond to their containing width, not the viewport. They stack until both the simulation and its full commentary have a usable measure, preserving controls, parameters and scientific geometry. Generated image plates remain free of text/numbering/callouts by default; optional annotations belong to separate responsive components. Avoid adding annotations merely to decorate every paragraph.
+
+This rollout preserves all MDX/frontmatter, source links, schema/canonical metadata, search boundaries and published-state rules. Actual browser rendering is a separate acceptance gate; passing component tests does not establish visual fidelity.
+
+## Reference-led review gate
+Use [VISUAL-REVIEW.md](docs/design/VISUAL-REVIEW.md) before claiming artistic alignment. Judge composition, hierarchy, meaningful figure/annotation relationships and reading rhythm separately from functional test success. Record exact capture context and mark missing narrow/live evidence unverified. The accepted editorial study is the current authority for reading surfaces; the original dark dossier description above applies only to preserved non-reading identity, not a veto on the owner's later direction.
+
+## Open-folio interactive studies
+The owner selected the open-margin folio concept for interactive component boundaries, with light/dark support and a red guide shown on first visible entry then dismissed on meaningful use. Follow [INTERACTIVE-STUDY.md](docs/design/INTERACTIVE-STUDY.md). The frame/guide is reusable across renderer types; scientific output remains real, annotations remain separate selectable text/SVG, and guide replay is explicit. No modal wizard, forced focus, tracking or repeated automatic hints after interaction.
+
+## Editorial component coverage
+The owner requested aligned imagegen direction across components, including statistics and insight callouts. Follow [FOLIO-COMPONENT-COVERAGE.md](docs/design/FOLIO-COMPONENT-COVERAGE.md): all 96 registered MDX names are inventoried, with seven family boards and explicit remaining state/adoption checks. Generated mockup content is not source material. Scoped stats/callout styling retains semantic distinctions and does not restyle non-reading consumers.
+
+For each uplift work item, retain imagegen direction and prompt plus actual review assets in the existing blog Space. Follow the per-ticket workflow in FOLIO-UPLIFT-BACKLOG.md; generated boards are proposals, browser captures are evidence, and neither alone proves deployment.
+
+## Insight focus and custom callout icons — 28 October 2026
+The owner explicitly requested restoring the insight SVG focusing gesture lost in the open-folio uplift, then requested a custom transparent hand-drawn icon for every callout type. Keep the continuous curved shoulder/rail and terminal dot with a clear gutter. The original seven-glyph family uses a brain for thinking/insight, lightbulb for info, warning triangle, checked seal for success, crossed seal for error, heart for feeling/reflection and hammer for doing/practice. These are decorative fixed-seed Rough.js outlines beside explicit readable type labels, never substitutes for semantic text. Use existing light/dark handwriting ink tokens; retain approved title/body typography and exact authored content. Do not reinstate tinted cards, floating filled badges or orange brain styling on reading surfaces. Non-reading consumers keep their existing skin.
+
+Original code-native SVG is appropriate for this reusable icon family: transparent, scalable, deterministic and testable. The existing imagegen insight-rail board remains direction for the focus gesture, not evidence that icons or live pages have been verified. Validate all seven types plus long/narrow insight content in light and dark after the build; tests alone do not establish visual acceptance.
+
+## Navigation clearance and continuity
+Sticky reading navigation uses measured header and breadcrumb heights, not a fixed desktop offset. Keep existing site typography, logo and route identity. Contents links preserve native history and modified activation, collapse mobile disclosure before measuring, and focus the authored heading without animated scrolling. Back restores the entry’s saved reading position; do not force every history hash back to its heading. Current-section indicators reflect actual viewport geometry in both contents surfaces. Keep native links/details, named navigation landmarks and clear Escape focus return. The FOLIO-008 board is direction only, not permission to adopt generated copy, dates or imagery.

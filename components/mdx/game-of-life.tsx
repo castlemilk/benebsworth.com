@@ -18,6 +18,7 @@
  * all work manually even under reduced motion.
  */
 
+import { InteractiveStudy } from '@/components/mdx/interactive-study'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useInViewport } from './use-in-viewport'
 
@@ -458,9 +459,10 @@ export function GameOfLife() {
   const patternNames = useMemo(() => Object.keys(PATTERNS) as PatternName[], [])
 
   return (
+    <InteractiveStudy title="Conway’s Game of Life" hint="Draw cells on the grid, or step one generation.">
     <figure
       ref={inViewRef}
-      className="not-prose my-10 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-surface"
+      className="not-prose m-0"
     >
       {/* hidden probe element to read theme custom properties from */}
       <span ref={probeRef} aria-hidden className="hidden text-blog" />
@@ -510,6 +512,8 @@ export function GameOfLife() {
         >
           <canvas
             ref={canvasRef}
+            data-study-target
+            data-study-action
             className="block w-full cursor-crosshair touch-none"
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -553,5 +557,6 @@ export function GameOfLife() {
         </p>
       </div>
     </figure>
+    </InteractiveStudy>
   )
 }

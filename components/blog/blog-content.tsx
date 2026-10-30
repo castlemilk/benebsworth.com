@@ -1,5 +1,6 @@
 'use client'
 
+import styles from './archive-discovery.module.css'
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { TOPIC, topicFor } from '@/lib/topics'
@@ -62,7 +63,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
 
   const filterLabel = (() => {
     const parts: string[] = []
-    if (query) parts.push(`"${query}"`)
+    if (query.trim()) parts.push(`"${query.trim()}"`)
     if (topicFilter) {
       const t = Object.values(TOPIC).find((t) => TOPIC_ACCENT_REVERSE[t.label] === topicFilter)
       if (t) parts.push(t.label)
@@ -85,7 +86,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
       {filtered !== null ? (
         <section className="pt-16">
           <div className="mb-8">
-            <p role="status" className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p role="status" className={`${styles.status} font-mono text-xs uppercase tracking-[0.2em] text-muted`}>
               {filtered.length} result{filtered.length !== 1 ? 's' : ''}
               {filterLabel && <> for {filterLabel}</>}
             </p>
@@ -104,6 +105,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
         </section>
       ) : (
         <section>
+          {posts.length === 0 && <p role="status" className={styles.empty}>No posts are available yet.</p>}
           {lead && (() => {
             const topic = topicFor(lead)
             return (
@@ -115,7 +117,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         {lead.heroImage ? (
                           <img
                             src={lead.heroImage}
-                            alt={lead.title}
+                            alt=""
                             fetchPriority="high"
                             loading="eager"
                             decoding="async"
@@ -162,11 +164,11 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         )}
                       </div>
 
-                      <div className="flex flex-col justify-center p-9 sm:p-12">
-                        <div className="flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
+                      <div className="min-w-0 flex flex-col justify-center p-6 sm:p-12">
+                        <div className="flex flex-wrap items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
                           <span className="text-blog">Latest</span>
                           <span className="text-muted">·</span>
-                          <span className="text-muted">{fmtDate(lead.date)}</span>
+                          <time dateTime={lead.date} className="text-muted">{fmtDate(lead.date)}</time>
                           {lead.readingTime ? (
                             <>
                               <span className="text-muted">·</span>

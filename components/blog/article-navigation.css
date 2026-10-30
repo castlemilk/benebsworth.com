@@ -1,0 +1,5 @@
+/* Real sticky heights are supplied by SiteNav and Breadcrumb. */
+:root { --article-anchor-offset: calc(var(--site-nav-height, 69px) + var(--site-breadcrumb-height, 37px) + 16px); }
+.research-article :is(h2[id], h3[id]), #main-content {
+  scroll-margin-top: var(--article-anchor-offset);
+}

@@ -1,0 +1,80 @@
+/* Only reading surfaces adopt this skin; shared MDX keeps its legacy quote. */
+:global(:is(.research-article, .folio-study)) .quote {
+  margin-block: 2.75rem;
+  padding: 1.25rem 0 1.25rem 1.5rem;
+  border: 0;
+  border-left: 1px solid var(--folio-handwriting, #b32624);
+  font: italic 450 clamp(1.5rem, 3vw, 1.85rem)/1.45 'Folio Serif', Georgia, serif;
+  letter-spacing: -.015em;
+  color: var(--color-fg);
+  overflow-wrap: anywhere;
+}
+
+/* The existing MDX paragraph utilities are important and layered. */
+@layer utilities {
+  :global(:is(.research-article, .folio-study)) .quote p {
+    margin: 0 !important;
+    font: inherit !important;
+    letter-spacing: inherit !important;
+    color: inherit !important;
+  }
+  :global(:is(.research-article, .folio-study)) .quote p + p {
+    margin-top: .9em !important;
+  }
+}
+
+:global(:is(.research-article, .folio-study)) .note > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.kind {
+  display: block;
+  margin-bottom: .45rem;
+  font: 600 .85rem/1.5 'Folio Condensed', sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+@media (max-width: 700px) {
+  :global(:is(.research-article, .folio-study)) .quote { padding-left: 1rem; }
+}
+
+@media (forced-colors: active) {
+  :global(:is(.research-article, .folio-study)) .quote { border-color: CanvasText; }
+}
+
+/* Respond to the actual reading column, not just the browser viewport. */
+:global(:is(.research-article, .folio-study)) .note {
+  container-type: inline-size;
+  container-name: folio-note;
+}
+
+:global(:is(.research-article, .folio-study)) .longTitle > div {
+  grid-column: 1 / -1;
+}
+
+@container folio-note (max-width: 30rem) {
+  :global(:is(.research-article, .folio-study)) .note > div {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Raw ReactNode consumers may sit inside a non-inverted prose wrapper.
+   Reset inherited body ink at the boundary without recolouring child figures,
+   authored text classes, mapped links, or handwritten labels. */
+:global(:is(.research-article, .folio-study)) :is(.note, .copy) {
+  color: var(--color-fg);
+}
+
+:global(:is(.research-article, .folio-study)) :is(.note, .copy, .quote) a:not([class]) {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+:global(:is(.research-article, .folio-study)) :is(.note, .copy, .quote) a:not([class]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}

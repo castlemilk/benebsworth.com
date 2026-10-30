@@ -93,6 +93,9 @@ export const rlcResonance: EffectModule = {
 
     return {
       step(timeMs, p) {
+        // Fixed schematic gutters need positive circuit spans and plot area.
+        // Tiny previews/layout transitions must not produce negative arc radii.
+        if (!Number.isFinite(w) || !Number.isFinite(h) || w <= 82 || h <= 103) return
         const dt = Math.min((timeMs - lastTime) / 1000, 0.05)
         lastTime = timeMs
 
@@ -355,9 +358,10 @@ export const rlcResonance: EffectModule = {
           return py + ph - frac * ph // top..bottom
         }
 
-        // Axes
-        ctx.strokeStyle = '#1a2a3a'; ctx.lineWidth = 1
+        // Axes follow the stage theme; scientific trace colours stay fixed.
+        ctx.strokeStyle = fg; ctx.globalAlpha = 0.55; ctx.lineWidth = 1
         ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + ph); ctx.lineTo(px + pw, py + ph); ctx.stroke()
+        ctx.globalAlpha = 1
 
         // Zero line (clamped to visible area)
         const y0v = vScale(0)
@@ -372,7 +376,7 @@ export const rlcResonance: EffectModule = {
         ctx.setLineDash([])
 
         // Y-axis labels
-        ctx.font = '8px monospace'; ctx.fillStyle = '#4a5a6a'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'
+        ctx.font = '8px monospace'; ctx.fillStyle = fg; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'
         ctx.fillText('0', px - 4, y0v)
         ctx.fillText(`${A.toFixed(1)}V`, px - 4, yAv)
 
@@ -396,7 +400,7 @@ export const rlcResonance: EffectModule = {
         ctx.fillText('Vc(t)', px + pw - 50, py + 6)
 
         // Time label
-        ctx.fillStyle = '#4a5a6a'; ctx.textAlign = 'center'; ctx.font = '8px monospace'
+        ctx.fillStyle = fg; ctx.textAlign = 'center'; ctx.font = '8px monospace'
         ctx.fillText('time →', px + pw / 2, py + ph + 14)
 
         // ── Particle motion ────────────────────────────────────────

@@ -35,6 +35,8 @@ canonical_url: 'https://benebsworth.com/blog/every-wire-is-an-rlc-circuit/'
 - Damping ratio governs overshoot exponentially: zeta=0.5 gives 16%, zeta=0.1 gives 73% — enough for a 3.3 V edge to briefly hit 5.7 V.
 - Treat a trace as a transmission line once its length exceeds ~t_r·v/2; the factor of 2 is the round trip a reflection must make before it matters.
 
+> [PostBrief component] Component `PostBrief` — see the rendered post.
+
 There is no such thing as a digital signal at the physical layer. The clean trapezoid you draw on a whiteboard, flat low, sharp rising edge, flat high, is a fiction your oscilloscope never sees. What it sees instead is a smear of overshoot, ringing, and little reflected ghosts that arrive too late. We tend to call these problems "signal integrity" and treat them as a separate, intimidating discipline with its own black-magic reputation. They're not separate. They're the step response of a second-order circuit you already know, run at picosecond timescales.
 
 Here's the claim worth testing as you read: every copper trace on a printed circuit board (PCB) is a resistor, an inductor, and a capacitor wired in series, an RLC circuit. Drive it with a logic edge and you're not sending a "1". You're kicking an underdamped resonator and watching it ring down. The overshoot, the ringing, the reflections that plague high-speed design are not noise to be filtered out. They're the lumped RLC step response, the same transient you'd analyse in a first-year circuits course, sped up by a factor of a billion.
@@ -53,7 +55,7 @@ It has **capacitance**, because the trace and the ground plane beneath it are tw
 
 And it has a little **resistance**. The copper isn't superconducting, and at high frequencies the current crowds into the outer skin of the conductor (the skin effect), raising the effective resistance further. Resistance is the smallest of the three personalities, but it's the one that decides whether the circuit rings or settles, so it earns its place.
 
-> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+> [FieldNote component] Component `FieldNote` — see the rendered post.
 
 We call L, C, and R "parasitics" as if they were unwanted hitchhikers. They're not optional; they are what a conductor *is*. A trace with no inductance and no capacitance would be a mathematical abstraction, not a physical object. The trapezoid on your whiteboard is the real parasite, the fiction. The RLC behaviour is the wire telling you the truth about itself.
 

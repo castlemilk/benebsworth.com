@@ -5,20 +5,17 @@ import { getPublishedPosts, getPost, isPublished } from '@/lib/content'
 import { hikeForGuide, getHike } from '@/content/hiking'
 import { topicFor } from '@/lib/topics'
 import { MdxContent } from '@/components/mdx/mdx-content'
-import { TopicMarker } from '@/components/blog/topic-marker'
+import { ArticleMasthead } from '@/components/blog/article-masthead'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { tagColor } from '@/lib/tag-colors'
 import { TableOfContents } from '@/components/blog/table-of-contents'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { BlogGallery } from '@/components/blog/blog-gallery'
 import { RelatedPosts } from '@/components/blog/related-posts'
-import { KeyTakeaways } from '@/components/blog/key-takeaways'
+import { ArticleReadingFlow } from '@/components/blog/article-reading-flow'
 import { AuthorBio } from '@/components/blog/author-bio'
-import { MobileToc } from '@/components/blog/mobile-toc'
 import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
-import { fmtDate } from '@/lib/format'
 
 export function generateStaticParams() {
   return getPublishedPosts().map((p) => ({ slug: p.slug }))
@@ -137,12 +134,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         className="mb-0"
         items={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: p.title }]}
       />
-      {/* Two-column layout on lg+: the article (capped at 44rem reading
-          measure) on the left, and the sticky TOC on the right. The
-          post's own `pt-8` on <main> still creates the right breathing
-          room because sticky elements stay in normal flow. */}
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] xl:grid-cols-[minmax(0,1fr)_16rem]">
+      {/* Prose keeps its reading measure; authored study chapters can use the
+          wider canvas without moving into the independent navigation rail. */}
+      <main id="main-content" className="folio-reading-page folio-article-page mx-auto w-full px-6 pb-32 pt-6 sm:px-8 md:pt-8">
           {/* data-pagefind-body scopes the search index to just the post content
               (nav/footer/TOC are excluded). The trailing author/related block is
               ignored so "more posts" titles don't pollute results. */}
@@ -150,67 +144,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {/* ── Post header spans the full (wide) page frame — editorial title +
             accent rule fill the screen. Only the long-form prose below is capped
             to a comfortable reading measure (~44rem ≈ 74ch). ── */}
-        <header className="relative">
-          {/* soft topic-tinted wash behind the title */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -top-12 left-0 -z-10 h-40 w-full opacity-70 blur-3xl"
-            style={{
-              background: `radial-gradient(60% 100% at 0% 0%, color-mix(in srgb, ${topic.accent} 16%, transparent), transparent 70%)`,
-            }}
-          />
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <TopicMarker topic={topic} />
-            <div className="flex flex-wrap items-center gap-2">
-              <time className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
-                {fmtDate(p.date)}
-              </time>
-              <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
-                · {readingTime} min read · Ben Ebsworth
-              </span>
-            </div>
-          </div>
-          <h1 className="type-h1 mt-5">
-            {p.title}
-          </h1>
-          {p.description && (
-            <p className="mt-4 max-w-2xl font-sans text-lg leading-8 text-fg/65">
-              {p.description}
-            </p>
-          )}
-          {p.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {p.tags.slice(0, 6).map((t) => {
-                const c = tagColor(t)
-                return (
-                  <span
-                    key={t}
-                    className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
-                    style={{
-                      '--ink': c,
-                      borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
-                      backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                    } as React.CSSProperties}
-                  >
-                    {t}
-                  </span>
-                )
-              })}
-            </div>
-          )}
-          {/* accent rule keyed to the topic */}
-          <div
-            className="mt-7 h-px w-full"
-            style={{
-              background: `linear-gradient(to right, ${topic.accent}, color-mix(in srgb, ${topic.accent} 8%, transparent) 60%, transparent)`,
-            }}
-          />
-        </header>
-        <div className="mt-10 max-w-[44rem]">
+        <ArticleMasthead title={p.title} description={p.description} date={p.date}
+          readingTime={readingTime} tags={p.tags} topic={topic}/>
+
+        <div className="folio-article-grid mt-6">
+        <div className="folio-article-body min-w-0">
+        <div className="folio-reading-main">
           {relatedHike && (
             <Link
               href={`/hiking/${relatedHike.slug}/`}
-              className="group mb-8 flex items-center justify-between gap-4 rounded-xl border px-4 py-3 transition-colors"
+              className="group mb-8 flex max-w-[44rem] items-center justify-between gap-4 rounded-xl border px-4 py-3 transition-colors"
               style={{
                 borderColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 35%, transparent)`,
                 backgroundColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 7%, transparent)`,
@@ -226,9 +169,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <span className="shrink-0 font-mono text-sm transition-transform group-hover:translate-x-0.5" style={{ color: relatedHike.accent || topic.accent }}>→</span>
             </Link>
           )}
-          {p.takeaways?.length ? <KeyTakeaways items={p.takeaways} accent={topic.accent} /> : null}
-          <MobileToc />
-          <MdxContent source={p.body} slug={p.slug} />
+          <ArticleReadingFlow takeaways={p.takeaways} accent={topic.accent}>
+            <MdxContent source={p.body} slug={p.slug} />
+          </ArticleReadingFlow>
         </div>
           {/* Live photo gallery managed in /admin (renders nothing until photos
               are assigned to this post). */}
@@ -241,13 +184,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <RelatedLabs tags={p.tags} labels={p.tags} limit={3} />
             <RelatedPosts currentSlug={slug} tags={p.tags} />
           </div>
-          </article>
-          {/* Sticky right-rail TOC. Only visible on lg+ — mobile users
-              get the in-content inline mini-map already. */}
-          <aside className="hidden lg:block">
+        </div>
+          {/* Navigation is outside the indexed reading body and never shares
+              the study's figure/commentary columns. */}
+          <aside data-pagefind-ignore className="hidden lg:block">
             <TableOfContents />
           </aside>
         </div>
+          </article>
       </main>
       <SiteFooter />
     </>

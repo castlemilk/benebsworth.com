@@ -1,0 +1,7 @@
+.specimen { min-width: 0; }
+.choices { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-block: 1.5rem; }
+.label { font: 500 .8rem/1.5 'Folio Condensed', sans-serif; text-transform: uppercase; letter-spacing: .1em; margin-right: .5rem; }
+.choices button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: .3em; }
+.plot { display: block; width: 100%; height: auto; margin-bottom: 1.5rem; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1.5rem; }
+.caption { font-size: .9rem; color: var(--color-muted); max-width: 65ch; margin-top: 1rem; }

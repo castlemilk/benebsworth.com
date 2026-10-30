@@ -12,3 +12,12 @@ The MCP response did not supply a repository commit identifier. These content ha
 
 Canonical repository: https://github.com/skunkworq/gamma
 App adapter: app/editorial.css maps the maintained site palette/fonts and supports the existing theme state.
+
+## Action menu — 28 October 2026
+
+Retrieved through the authenticated Gamma MCP during FOLIO-005 review. The maintained ActionMenu React source and portable action-menu CSS are copied unchanged; no shortcut bindings are implied. Equation supplies the existing two copy actions and keeps asynchronous feedback outside the closing menu. Local sizing adapters remain in `app/editorial.css`; `app/globals.css` imports the portable stylesheet.
+
+- ActionMenu.tsx: SHA256 fa7fab17f819f6ae42645b6087fbc6fee3c145dc13acacf402e1a31cd584a4e2
+- action-menu.css: SHA256 f72c9e53d40d0733255da356913ca19bccec95598ef2d62c0b79af0113d4472a
+
+No upstream commit identifier was supplied; these are snapshot content hashes, not runtime acceptance evidence.

@@ -1,10 +1,12 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, type ReactNode } from 'react'
 import { getEffect } from '@/lib/lab/registry'
 import { useEffectModule } from '@/lib/lab/use-effect-module'
 import type { EffectModule, Params, ParamValue } from '@/lib/lab/types'
 import { EffectCanvas } from '@/components/lab/effect-canvas'
 import { Controls } from '@/components/lab/controls'
+import styles from './lab-canvas.module.css'
+import { InteractiveStudy } from './interactive-study'
 
 /**
  * Inline interactive canvas for MDX knowledge articles.
@@ -30,14 +32,11 @@ export function LabCanvas({
 
   if (!effectModule) {
     return (
-      <figure className="not-prose my-8">
-        <div
-          className="w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]"
-          style={{ height }}
-        >
-          <div className="h-full w-full animate-pulse" />
-        </div>
-      </figure>
+      <div data-folio-width="wide" className="not-prose my-8">
+        <LabFigure title={entry.title} height={height} caption={caption} ready={false}>
+          <div className="h-full w-full motion-safe:animate-pulse" />
+        </LabFigure>
+      </div>
     )
   }
 
@@ -78,10 +77,21 @@ function LabCanvasInner({
   }, [reconcile])
 
   return (
-    <figure className="not-prose my-8">
-      <div
-        className="w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]"
-        style={{ height }}
+    <div data-folio-width="wide" className="not-prose my-8">
+      <LabFigure
+        title={title}
+        height={height}
+        caption={caption}
+        hint={controls && module.controls[0] ? `Try changing ${module.controls[0].label}.` : undefined}
+        controls={controls && module.controls.length > 0 ? (
+          <Controls
+            variant="editorial"
+            specs={module.controls}
+            params={params}
+            onChange={setParam}
+            onReset={() => setParams(initial)}
+          />
+        ) : undefined}
       >
         <EffectCanvas
           effect={module}
@@ -90,30 +100,14 @@ function LabCanvasInner({
           ariaLabel={`${title} diagram`}
           className="h-full w-full"
         />
-      </div>
-      {controls && module.controls.length > 0 && (
-        <div className="mt-3">
-          <Controls
-            specs={module.controls}
-            params={params}
-            onChange={setParam}
-            onReset={() => setParams(initial)}
-            onCopy={() => {}}
-          />
-        </div>
-      )}
-      {caption && (
-        <figcaption className="mt-3 text-center text-sm text-[var(--color-muted)]">
-          {caption}
-        </figcaption>
-      )}
-    </figure>
+      </LabFigure>
+    </div>
   )
 }
 
 /**
  * Side-by-side layout: text on one side, canvas on the other.
- * On mobile, stacks vertically.
+ * Stacks whenever the containing column cannot comfortably fit both sides.
  */
 export function LabSide({
   effect: slug,
@@ -130,7 +124,7 @@ export function LabSide({
   controls?: boolean
   caption?: string
   reverse?: boolean
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const entry = getEffect(slug)
   const effectModule = useEffectModule(slug)
@@ -139,21 +133,11 @@ export function LabSide({
 
   if (!effectModule) {
     return (
-      <section className="not-prose my-10">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className={reverse ? 'lg:order-2' : ''}>
-            <div
-              className="w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]"
-              style={{ height }}
-            >
-              <div className="h-full w-full animate-pulse" />
-            </div>
-          </div>
-          <div className={`prose dark:prose-invert max-w-none flex flex-col justify-center ${reverse ? 'lg:order-1' : ''}`}>
-            {children}
-          </div>
-        </div>
-      </section>
+      <LabSideLayout reverse={reverse} commentary={children}>
+        <LabFigure title={entry.title} height={height} caption={caption} ready={false}>
+          <div className="h-full w-full motion-safe:animate-pulse" />
+        </LabFigure>
+      </LabSideLayout>
     )
   }
 
@@ -190,7 +174,7 @@ function LabSideInner({
   caption?: string
   controls?: boolean
   reverse?: boolean
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const reconcile = module.reconcileParams
   const base: Params = { ...module.defaults, ...overrides }
@@ -201,40 +185,69 @@ function LabSideInner({
   }, [reconcile])
 
   return (
-    <section className="not-prose my-10">
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className={reverse ? 'lg:order-2' : ''}>
-          <div
-            className="w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]"
-            style={{ height }}
-          >
-            <EffectCanvas
-              effect={module}
-              params={params}
-              quality="mini"
-              ariaLabel={`${title} diagram`}
-              className="h-full w-full"
-            />
-          </div>
-          {controls && module.controls.length > 0 && (
-            <div className="mt-3">
-              <Controls
-                specs={module.controls}
-                params={params}
-                onChange={setParam}
-                onReset={() => setParams(initial)}
-                onCopy={() => {}}
-              />
-            </div>
-          )}
-          {caption && (
-            <p className="mt-2 text-center text-sm text-[var(--color-muted)]">{caption}</p>
-          )}
-        </div>
-        <div className={`prose dark:prose-invert max-w-none flex flex-col justify-center ${reverse ? 'lg:order-1' : ''}`}>
-          {children}
+    <LabSideLayout reverse={reverse} commentary={children}>
+      <LabFigure
+        title={title}
+        height={height}
+        caption={caption}
+        hint={controls && module.controls[0] ? `Try changing ${module.controls[0].label}.` : undefined}
+        controls={controls && module.controls.length > 0 ? (
+          <Controls
+            variant="editorial"
+            specs={module.controls}
+            params={params}
+            onChange={setParam}
+            onReset={() => setParams(initial)}
+          />
+        ) : undefined}
+      >
+        <EffectCanvas
+          effect={module}
+          params={params}
+          quality="mini"
+          ariaLabel={`${title} diagram`}
+          className="h-full w-full"
+        />
+      </LabFigure>
+    </LabSideLayout>
+  )
+}
+
+// Shared shells keep loading and mounted figures in the same composition.
+function LabSideLayout({ reverse, commentary, children }: {
+  reverse?: boolean
+  commentary: ReactNode
+  children: ReactNode
+}) {
+  return (
+    <section data-folio-width="wide" className={`not-prose my-10 ${styles.side}`}>
+      <div className={`${styles.layout}${reverse ? ` ${styles.reversed}` : ''}`}>
+        {children}
+        <div className={`prose dark:prose-invert max-w-none ${styles.commentary}`}>
+          {commentary}
         </div>
       </div>
     </section>
+  )
+}
+
+function LabFigure({ title, height, caption, controls, children, hint, ready = true }: {
+  hint?: string
+  ready?: boolean
+  title: string
+  height: number
+  caption?: string
+  controls?: ReactNode
+  children: ReactNode
+}) {
+  return (
+    <InteractiveStudy title={title} hint={hint} ready={ready} className={styles.figure} controls={controls ? <div className={styles.actions}>{controls}</div> : undefined}>
+      <figure className={styles.media} aria-label={title}>
+        <div className={styles.stage} style={{ height }}>
+          {children}
+        </div>
+        {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
+      </figure>
+    </InteractiveStudy>
   )
 }

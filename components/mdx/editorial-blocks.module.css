@@ -1,0 +1,144 @@
+/* Reading surfaces only. Shared UI and non-blog MDX retain their existing skin. */
+:global(:is(.research-article, .folio-study)) .stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: 1.5rem 2rem;
+  margin-block: 2.75rem;
+}
+
+:global(:is(.research-article, .folio-study)) .stat {
+  min-width: 0;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  transition: none;
+}
+
+:global(:is(.research-article, .folio-study)) .stat dt {
+  font: 600 1rem/1.4 'Folio Condensed', sans-serif;
+  letter-spacing: .06em;
+  text-transform: none; /* Preserve case-sensitive scientific symbols. */
+  color: var(--color-fg);
+}
+
+:global(:is(.research-article, .folio-study)) .stat dd {
+  margin: .6rem 0 0;
+  font: 450 clamp(2.6rem, 5vw, 3.5rem)/1.05 'Folio Serif', Georgia, serif;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -.045em;
+  color: var(--color-fg);
+  overflow-wrap: anywhere;
+}
+
+:global(:is(.research-article, .folio-study)) .stat dd + dd {
+  max-width: 28ch;
+  margin-top: .7rem;
+  font: 400 1.05rem/1.5 'Folio Serif', Georgia, serif;
+  letter-spacing: 0;
+}
+
+.kind { display: none; }
+.focusRail { display: none; }
+
+:global(:is(.research-article, .folio-study)) .callout {
+  margin-block: 2.75rem;
+  padding: 1.25rem 0 1.5rem;
+  border-block: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-fg);
+}
+
+:global(:is(.research-article, .folio-study)) .decoration { display: none; }
+:global(:is(.research-article, .folio-study)) .calloutContent { margin: 0; }
+
+:global(:is(.research-article, .folio-study)) .kind {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .7rem;
+  font: 600 .9rem/1.4 'Folio Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--color-fg);
+}
+
+:global(:is(.research-article, .folio-study)) .callout .title {
+  margin: 0 0 1rem;
+  font: 450 1.4rem/1.35 'Folio Serif', Georgia, serif;
+  color: var(--color-fg) !important;
+  overflow-wrap: anywhere;
+}
+
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] .title,
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='feeling'] .title {
+  font: 500 clamp(1.65rem, 3vw, 1.9rem)/1.2 'Folio Hand', cursive;
+}
+
+/* Tailwind's [&_p]:!text-fg/80 is layered: important layered declarations
+   outrank unlayered ones regardless of specificity. Join its layer so the
+   scoped handwritten title wins without changing shared non-blog callouts. */
+@layer utilities {
+  :global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] .title,
+  :global(:is(.research-article, .folio-study)) .callout[data-callout-type='feeling'] .title {
+    color: var(--folio-handwriting, #b32624) !important;
+  }
+}
+
+:global(:is(.research-article, .folio-study)) .callout .body,
+:global(:is(.research-article, .folio-study)) .callout .body :where(p, li) {
+  font: 400 1.125rem/1.75 'Folio Serif', Georgia, serif;
+  color: var(--color-fg) !important;
+  overflow-wrap: anywhere;
+}
+
+:global(:is(.research-article, .folio-study)) .body > :first-child { margin-top: 0; }
+:global(:is(.research-article, .folio-study)) .body > :last-child { margin-bottom: 0; }
+:global(:is(.research-article, .folio-study)) .callout .body a {
+  color: inherit !important;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+/* Explicit labels and distinct rules carry meaning without relying on colour. */
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='warning'] {
+  border-left: 3px solid var(--folio-accent, #a34c29);
+  padding-left: 1rem;
+}
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='error'] {
+  border-left: 3px double var(--folio-handwriting, #b32624);
+  padding-left: 1rem;
+}
+
+@media print {
+  :global(:is(.research-article, .folio-study)) .stat { break-inside: avoid; }
+  :global(:is(.research-article, .folio-study)) .callout .title { break-after: avoid; }
+}
+
+/* Retain the original insight's focusing gesture without its tinted panel.
+   A separate rail is not part of the hidden legacy badge/corner decoration. */
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] {
+  padding-inline-start: 3rem;
+  border-top: 0;
+}
+:global(:is(.research-article, .folio-study)) .callout[data-callout-type='thinking'] .focusRail {
+  display: block;
+  position: absolute;
+  inset-inline-start: 0;
+  top: 1.25rem;
+  width: 2rem;
+  height: calc(100% - 2.75rem);
+  overflow: visible;
+  color: var(--folio-handwriting, #b32624);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Transparent original glyphs share the annotation ink, never a badge fill. */
+:global(:is(.research-article, .folio-study)) .inkIcon {
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--folio-handwriting, #b32624);
+  pointer-events: none;
+  user-select: none;
+}

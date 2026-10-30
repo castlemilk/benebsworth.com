@@ -97,6 +97,33 @@ describe('article anchor navigation', () => {
     expect(v.queryAllByRole('link', { name: 'First' })).toHaveLength(0)
     expect(v.getAllByRole('link', { name: 'Replacement article' })).toHaveLength(2)
   })
+  it.each(['id', 'text', 'both'])('refreshes both TOCs when a retained heading changes %s', async change => {
+    function RetainedHeading({ updated = false }: { updated?: boolean }) {
+      return <><article><h2 id={updated && change !== 'text' ? 'updated-section' : 'original-section'}><span>{updated && change !== 'id' ? 'Updated section' : 'Original section'}</span></h2></article><TableOfContents /><MobileToc /></>
+    }
+    const v = render(<RetainedHeading />)
+    const heading = v.container.querySelector('article h2')
+    v.rerender(<RetainedHeading updated />); await settle()
+    expect(v.container.querySelector('article h2')).toBe(heading)
+    const expectedName = change === 'id' ? 'Original section' : 'Updated section'
+    const expectedId = change === 'text' ? 'original-section' : 'updated-section'
+    expect(v.getAllByRole('link', { name: expectedName })).toHaveLength(2)
+    expect(v.container.querySelectorAll(`a[href="#${expectedId}"]`)).toHaveLength(2)
+    if (change !== 'id') expect(v.queryAllByRole('link', { name: 'Original section' })).toHaveLength(0)
+    if (change !== 'text') expect(v.container.querySelectorAll('a[href="#original-section"]')).toHaveLength(0)
+  })
+  it.each(['id', 'text'])('removes and rediscovers a retained heading with temporarily empty %s', async field => {
+    function OptionalHeading({ valid = true }: { valid?: boolean }) {
+      return <><article><h2 id={!valid && field === 'id' ? '' : 'section'}><span>{!valid && field === 'text' ? ' ' : 'Section'}</span></h2></article><TableOfContents /><MobileToc /></>
+    }
+    const v = render(<OptionalHeading />)
+    const heading = v.container.querySelector('article h2')
+    v.rerender(<OptionalHeading valid={false} />); await settle()
+    expect(v.queryAllByRole('link', { name: 'Section' })).toHaveLength(0)
+    v.rerender(<OptionalHeading />); await settle()
+    expect(v.container.querySelector('article h2')).toBe(heading)
+    expect(v.getAllByRole('link', { name: 'Section' })).toHaveLength(2)
+  })
   it('renders neither navigation surface for empty or ancillary-only headings', () => {
     const v = render(<><article><figure><h2 id="figure">Figure</h2></figure><h2 id="empty"> </h2></article><TableOfContents /><MobileToc /></>)
     expect(v.queryByRole('navigation')).toBeNull()

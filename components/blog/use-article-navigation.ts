@@ -43,7 +43,8 @@ function start() {
   const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
   const mutations = new MutationObserver(records => {
     const relevant = records.some(record => {
-      if (record.target instanceof Element && record.target.matches('h2, h3')) return true
+      const target = record.target instanceof Element ? record.target : record.target.parentElement
+      if (target?.closest('h2, h3')) return true
       return [...record.addedNodes, ...record.removedNodes].some(node => node instanceof Element &&
         (node.matches('article, h2, h3') || node.querySelector('article, h2[id], h3[id]')))
     })
@@ -54,7 +55,7 @@ function start() {
     headings = elements.map(h => ({ id: h.id, text: h.textContent!.trim(), level: Number(h.tagName.slice(1)) }))
     schedule()
   })
-  mutations.observe(document.body, { childList: true, subtree: true })
+  mutations.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['id'] })
   // One shared passive listener and one batch of layout reads for both TOCs.
   // Unlike intersection bookkeeping this also handles restored/instant jumps.
   window.addEventListener('scroll', schedule, { passive: true })

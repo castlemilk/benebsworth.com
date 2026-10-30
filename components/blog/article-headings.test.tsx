@@ -35,6 +35,21 @@ describe('shared article navigation scope', () => {
       expect(container.querySelector(`#${id}`)).not.toBeNull()
     }
   })
+  it.each([TableOfContents, MobileToc])('keeps one destination per authored ID during overlapping article trees', Navigation => {
+    const { container } = render(<>
+      <article><h2 id="shared">First authored destination</h2><h3 id="detail">Detail</h3></article>
+      <article><h2 id="shared">Overlapping destination</h2><h3 id="additional">Additional section</h3></article>
+      <Navigation />
+    </>)
+    const headings = getArticleHeadings(container)
+    expect(headings.map(h => h.id)).toEqual(['shared', 'detail', 'additional'])
+    expect(headings[0]).toBe(container.querySelector('#shared'))
+    expect([...container.querySelectorAll('nav a')].map(a => a.getAttribute('href')))
+      .toEqual(['#shared', '#detail', '#additional'])
+    // Navigation normalization must not rewrite IDs, text, or authored DOM.
+    expect(container.querySelectorAll('h2#shared')).toHaveLength(2)
+    expect(container.querySelectorAll('h2#shared')[1].textContent).toBe('Overlapping destination')
+  })
   it('returns no navigation candidates when an article has only ancillary headings', () => {
     const { container } = render(<article>
       <figure><h2 id="figure-only">Figure</h2></figure>

@@ -32,7 +32,7 @@ export function LabCanvas({
 
   if (!effectModule) {
     return (
-      <div className="not-prose my-8">
+      <div data-folio-width="wide" className="not-prose my-8">
         <LabFigure title={entry.title} height={height} caption={caption} ready={false}>
           <div className="h-full w-full motion-safe:animate-pulse" />
         </LabFigure>
@@ -77,7 +77,7 @@ function LabCanvasInner({
   }, [reconcile])
 
   return (
-    <div className="not-prose my-8">
+    <div data-folio-width="wide" className="not-prose my-8">
       <LabFigure
         title={title}
         height={height}
@@ -220,7 +220,7 @@ function LabSideLayout({ reverse, commentary, children }: {
   children: ReactNode
 }) {
   return (
-    <section className={`not-prose my-10 ${styles.side}`}>
+    <section data-folio-width="wide" className={`not-prose my-10 ${styles.side}`}>
       <div className={`${styles.layout}${reverse ? ` ${styles.reversed}` : ''}`}>
         {children}
         <div className={`prose dark:prose-invert max-w-none ${styles.commentary}`}>

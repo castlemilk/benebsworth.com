@@ -67,3 +67,12 @@
     order: 1;
   }
 }
+
+/* The commentary is authored reading text, not the sans-serif instrument UI.
+   Target its own blocks only: nested components retain explicit typography. */
+.side .commentary > :is(p, ul, ol, blockquote),
+.side .commentary > :is(ul, ol) > li {
+  font-family: 'Folio Serif', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}

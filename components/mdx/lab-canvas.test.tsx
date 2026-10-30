@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import React from 'react'
 import { readFileSync } from 'node:fs'
+import postcss, { type Rule } from 'postcss'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import type { EffectModule, Params } from '@/lib/lab/types'
@@ -38,6 +39,28 @@ function composition(container: HTMLElement) {
 const commentary = <><h3>Observe the response</h3><p>All the extended explanation remains readable.</p><ul><li>Keep the boundary fixed.</li></ul><a href="#method">Read the method</a></>
 
 describe('container-aware lab figures', () => {
+  it('applies real commentary typography only to authored blocks, not nested instruments', () => {
+    const css = postcss.parse(readFileSync('components/mdx/lab-canvas.module.css', 'utf8'))
+    const rules: Rule[] = []
+    css.walkRules(rule => { if (rule.selector.includes('.side .commentary > :is(p,')) rules.push(rule) })
+    expect(rules).toHaveLength(1)
+    const rule = rules[0]
+    const declarations: Record<string, string> = {}
+    rule.walkDecls(decl => { declarations[decl.prop] = decl.value })
+    expect(declarations).toEqual({ 'font-family': "'Folio Serif', Georgia, serif", 'font-size': '1.125rem', 'line-height': '1.75' })
+    const { container } = render(<LabSide effect="response"><p>Authored commentary.</p><div className="not-prose"><p>Instrument readout.</p></div></LabSide>)
+    const selector = rule.selector.replaceAll('.side', `.${styles.side}`).replaceAll('.commentary', `.${styles.commentary}`)
+    expect([...container.querySelectorAll(selector)].map(node => node.textContent)).toEqual(['Authored commentary.'])
+  })
+
+  it.each([undefined, effect])('opts loading and ready study roots into the article canvas', module => {
+    vi.mocked(useEffectModule).mockReturnValue(module)
+    const { container } = render(<><LabCanvas effect="response" /><LabSide effect="response">{commentary}</LabSide></>)
+    const roots = container.querySelectorAll('[data-folio-width="wide"]')
+    expect(roots).toHaveLength(2)
+    for (const root of roots) expect(root.classList.contains('not-prose')).toBe(true)
+  })
+
   it.each([false, true])('shares loading and mounted composition, including reverse=%s', reverse => {
     vi.mocked(useEffectModule).mockReturnValue(undefined)
     const view = <LabSide effect="response" height={280} caption="A response trace" reverse={reverse}>{commentary}</LabSide>

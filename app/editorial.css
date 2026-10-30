@@ -242,3 +242,14 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 /* Local size adapters only; maintained ActionMenu source and CSS stay intact. */
 .equation-controls .action-menu-trigger,.equation-controls .action-menu-item{min-height:44px}
 .equation-controls .action-menu-panel{min-width:min(230px,calc(100vw - 3rem));max-width:min(310px,calc(100vw - 3rem))}
+
+/* A reading line is not a figure canvas. Only explicit authored study roots
+   break the 44rem measure; their own container decides when to split. */
+.folio-article-page{max-width:88rem}
+.folio-article-grid{display:grid;gap:3rem;grid-template-columns:minmax(0,1fr)}
+.folio-reading-main > :not(.prose),
+.folio-reading-main > .prose > *{max-width:44rem}
+.folio-reading-main > .prose > [data-folio-width="wide"]{max-width:none;width:100%}
+@media(min-width:1024px){
+ .folio-article-grid{grid-template-columns:minmax(0,1fr) 12rem}
+}

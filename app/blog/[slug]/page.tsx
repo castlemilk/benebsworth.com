@@ -134,12 +134,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         className="mb-0"
         items={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog/' }, { label: p.title }]}
       />
-      {/* Two-column layout on lg+: the article (capped at 44rem reading
-          measure) on the left, and the sticky TOC on the right. The
-          post's own `pt-8` on <main> still creates the right breathing
-          room because sticky elements stay in normal flow. */}
-      <main id="main-content" className="folio-reading-page mx-auto w-full max-w-6xl px-6 pb-32 pt-6 sm:px-8 md:pt-8">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem] xl:grid-cols-[minmax(0,1fr)_16rem]">
+      {/* Prose keeps its reading measure; authored study chapters can use the
+          wider canvas without moving into the independent navigation rail. */}
+      <main id="main-content" className="folio-reading-page folio-article-page mx-auto w-full px-6 pb-32 pt-6 sm:px-8 md:pt-8">
           {/* data-pagefind-body scopes the search index to just the post content
               (nav/footer/TOC are excluded). The trailing author/related block is
               ignored so "more posts" titles don't pollute results. */}
@@ -150,11 +147,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <ArticleMasthead title={p.title} description={p.description} date={p.date}
           readingTime={readingTime} tags={p.tags} topic={topic}/>
 
-        <div className="mt-6 max-w-[44rem]">
+        <div className="folio-article-grid mt-6">
+        <div className="folio-article-body min-w-0">
+        <div className="folio-reading-main">
           {relatedHike && (
             <Link
               href={`/hiking/${relatedHike.slug}/`}
-              className="group mb-8 flex items-center justify-between gap-4 rounded-xl border px-4 py-3 transition-colors"
+              className="group mb-8 flex max-w-[44rem] items-center justify-between gap-4 rounded-xl border px-4 py-3 transition-colors"
               style={{
                 borderColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 35%, transparent)`,
                 backgroundColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 7%, transparent)`,
@@ -185,13 +184,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <RelatedLabs tags={p.tags} labels={p.tags} limit={3} />
             <RelatedPosts currentSlug={slug} tags={p.tags} />
           </div>
-          </article>
-          {/* Sticky right-rail TOC. Only visible on lg+ — mobile users
-              get the in-content inline mini-map already. */}
-          <aside className="hidden lg:block">
+        </div>
+          {/* Navigation is outside the indexed reading body and never shares
+              the study's figure/commentary columns. */}
+          <aside data-pagefind-ignore className="hidden lg:block">
             <TableOfContents />
           </aside>
         </div>
+          </article>
       </main>
       <SiteFooter />
     </>

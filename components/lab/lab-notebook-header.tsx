@@ -21,12 +21,12 @@ export function LabNotebookHeader() {
       <div className="lab-notebook-desk">
         <Link href="/lab/wave-superposition/" className="lab-notebook-feature">
           <div className="lab-notebook-feature-meta"><span>Start exploring</span><span className="lab-notebook-topic"><CategoryIcon category="physics" fallback="" /> Physics</span></div>
+          <p className="lab-notebook-note">Open this. Change a wave.<svg aria-hidden="true" viewBox="0 0 64 48"><path d="M4 5 C46 2 54 16 43 41 M35 32 L43 42 L53 35" /></svg></p>
           <LabCard slug="wave-superposition" />
           <div className="lab-notebook-feature-caption"><h2>Wave Superposition</h2><ArrowUpRight aria-hidden="true" size={18} /></div>
           <p>Two waves. One changing pattern. Explore interference, beats and standing waves.</p>
         </Link>
         <aside className="lab-notebook-index" aria-labelledby="lab-tools-heading">
-          <p className="lab-notebook-note">Try changing one thing.<svg aria-hidden="true" viewBox="0 0 160 40"><path d="M4 8 Q80 38 145 16 M133 12 L148 15 L139 27" /></svg></p>
           <h2 id="lab-tools-heading">Research &amp; tools</h2>
           <ol>{tools.map((tool, index) => <li key={tool.href}><Link href={tool.href}><span className="lab-notebook-number" aria-hidden="true">0{index + 1}</span><span><strong>{tool.title}</strong><small>{tool.detail}</small></span><ArrowUpRight aria-hidden="true" size={18} /></Link></li>)}</ol>
           <a className="lab-notebook-browse" href="#experiment-index">Browse the experiment index <ArrowDown aria-hidden="true" size={16} /></a>

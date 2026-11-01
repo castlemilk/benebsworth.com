@@ -15,8 +15,10 @@ html:not(.dark) body:has(.lab-notebook) { --bg:#f7f3ea; --surface:#fffcf6; --sur
 .lab-notebook-feature h2 { font:450 clamp(1.7rem,3vw,2.35rem)/1.15 'Folio Serif',Georgia,serif; letter-spacing:-.025em; }
 .lab-notebook-feature p { font-size:.95rem; line-height:1.6; color:var(--muted); }
 .lab-notebook-index { min-width:0; }
-.lab-notebook-note { position:relative; padding:.3rem 0 2rem; color:var(--notebook-red); font:1.8rem/1.1 'Folio Hand',cursive; transform:rotate(-2deg); }
-.lab-notebook-note svg { display:block; width:140px; height:35px; margin-left:3rem; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; }
+/* Keep the annotation inside its target link, directly above the wave preview.
+   This relationship survives the single-column layout without a floating arrow. */
+.lab-notebook-feature .lab-notebook-note { display:flex; align-items:flex-start; justify-content:flex-end; gap:.4rem; margin:0; padding:.15rem .5rem .25rem 0; color:var(--notebook-red); font:1.65rem/1.2 'Folio Hand',cursive; }
+.lab-notebook-note svg { flex:none; width:48px; height:40px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .lab-notebook-index h2 { font:.7rem/1.5 var(--font-mono),monospace; text-transform:uppercase; letter-spacing:.1em; padding-bottom:.8rem; }
 .lab-notebook-index ol { list-style:none; margin:0; padding:0; border-top:1px solid var(--border); }
 .lab-notebook-index li { border-bottom:1px solid var(--border); }
@@ -30,6 +32,6 @@ html:not(.dark) body:has(.lab-notebook) { --bg:#f7f3ea; --surface:#fffcf6; --sur
 .lab-notebook-index li a:hover strong { text-decoration:underline; text-underline-offset:4px; }
 .lab-notebook .lab-experiment-card { border-radius:4px; background:transparent; padding:1rem 0; border-width:1px 0 0; }
 .lab-notebook .lab-experiment-card h3 { font-family:'Folio Serif',Georgia,serif; font-weight:450; }
-@media(max-width:700px) { .lab-notebook-desk{grid-template-columns:1fr;gap:1.5rem}.lab-notebook-title{padding-bottom:1.75rem}.lab-notebook-note{padding-bottom:.5rem}.lab-notebook-index ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}.lab-notebook-index li a{grid-template-columns:minmax(0,1fr) 1rem}.lab-notebook-number{display:none} }
+@media(max-width:700px) { .lab-notebook-desk{grid-template-columns:1fr;gap:1.5rem}.lab-notebook-title{padding-bottom:1.75rem}.lab-notebook-index ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}.lab-notebook-index li a{grid-template-columns:minmax(0,1fr) 1rem}.lab-notebook-number{display:none} }
 @media(max-width:420px) { .lab-notebook-index ol{grid-template-columns:1fr}.lab-notebook-feature-meta{font-size:.6rem} }
 @media(prefers-reduced-motion:reduce) { .lab-notebook *, .lab-notebook *::before, .lab-notebook *::after { scroll-behavior:auto; } }

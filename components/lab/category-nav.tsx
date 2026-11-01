@@ -4,6 +4,8 @@ import { useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 
+import { CategoryIcon } from './category-icon'
+
 export type CategoryNavItem = {
   key: string
   label: string
@@ -64,6 +66,7 @@ export function CategoryNav({
           <input
             ref={inputRef}
             type="search"
+            aria-label="Search lab experiments"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search effects…"
@@ -81,6 +84,8 @@ export function CategoryNav({
               inputRef.current?.focus()
             }}
             aria-label="Clear search"
+            type="button"
+            disabled={!searchQuery}
             className={cn(
               'absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full p-0.5 transition-all duration-200',
               searchQuery
@@ -106,6 +111,8 @@ export function CategoryNav({
 
         {/* ── All pill ───────────────────────────────────────── */}
         <button
+          type="button"
+          aria-pressed={!activeCategory}
           onClick={() => onCategoryChange(null)}
           className={cn(
             'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider transition-all',
@@ -138,6 +145,8 @@ export function CategoryNav({
           return (
             <button
               key={cat.key}
+              type="button"
+              aria-pressed={isActive}
               onClick={() => onCategoryChange(isActive ? null : cat.key)}
               className={cn(
                 'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider transition-all',
@@ -151,7 +160,7 @@ export function CategoryNav({
                   : undefined
               }
             >
-              <span className="text-[0.85em]">{cat.glyph}</span>
+              <CategoryIcon category={cat.key} fallback={cat.glyph} />
               <span>{cat.label}</span>
               <span
                 className={cn(

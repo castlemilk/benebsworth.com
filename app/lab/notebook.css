@@ -1,0 +1,35 @@
+html:not(.dark) body:has(.lab-notebook) { --bg:#f7f3ea; --surface:#fffcf6; --surface-2:#eee8dc; }
+/* Field notebook: use existing editorial fonts and theme tokens. */
+.lab-notebook { --notebook-red: #b32624; }
+.dark .lab-notebook { --notebook-red: #ffaaa5; }
+.lab-notebook-opening { padding-bottom: 2.75rem; }
+.lab-notebook-title { padding: 1rem 0 2.5rem; border-top: 1px solid var(--border); }
+.lab-notebook-title h1 { font: 450 clamp(2.6rem,5.5vw,4.9rem)/1.06 'Folio Serif',Georgia,serif; letter-spacing: -.045em; margin: 1rem 0; text-wrap: balance; }
+.lab-notebook-title h1 em { font-weight: 400; }
+.lab-notebook-intro { max-width: 46rem; font-size: 1.1rem; line-height: 1.65; color: var(--muted); }
+.lab-notebook-desk { display:grid; grid-template-columns: minmax(0,1.6fr) minmax(0,1fr); gap:clamp(1.5rem,4vw,3.5rem); align-items:start; }
+.lab-notebook-feature { display:block; min-width:0; padding:1rem; border:1px solid var(--border); border-radius:4px; background:var(--surface); }
+.lab-notebook-feature-meta { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:.85rem; font: .67rem/1.5 var(--font-mono),monospace; text-transform:uppercase; letter-spacing:.07em; }
+.lab-notebook-topic { display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.3rem .65rem; background:color-mix(in srgb,var(--notebook-red) 10%,var(--bg)); }
+.lab-notebook-feature-caption { display:flex; justify-content:space-between; gap:1rem; align-items:center; margin:1rem 0 .4rem; }
+.lab-notebook-feature h2 { font:450 clamp(1.7rem,3vw,2.35rem)/1.15 'Folio Serif',Georgia,serif; letter-spacing:-.025em; }
+.lab-notebook-feature p { font-size:.95rem; line-height:1.6; color:var(--muted); }
+.lab-notebook-index { min-width:0; }
+.lab-notebook-note { position:relative; padding:.3rem 0 2rem; color:var(--notebook-red); font:1.8rem/1.1 'Folio Hand',cursive; transform:rotate(-2deg); }
+.lab-notebook-note svg { display:block; width:140px; height:35px; margin-left:3rem; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; }
+.lab-notebook-index h2 { font:.7rem/1.5 var(--font-mono),monospace; text-transform:uppercase; letter-spacing:.1em; padding-bottom:.8rem; }
+.lab-notebook-index ol { list-style:none; margin:0; padding:0; border-top:1px solid var(--border); }
+.lab-notebook-index li { border-bottom:1px solid var(--border); }
+.lab-notebook-index li a { display:grid; grid-template-columns:1.7rem minmax(0,1fr) 1rem; gap:.6rem; align-items:start; padding:1rem 0; min-height:44px; }
+.lab-notebook-number { font:.65rem/1.8 var(--font-mono),monospace; color:var(--muted); }
+.lab-notebook-index strong { display:block; font-weight:550; font-size:1rem; }
+.lab-notebook-index small { display:block; font-size:.8rem; line-height:1.5; margin-top:.2rem; color:var(--muted); }
+.lab-notebook-browse { display:flex; justify-content:space-between; padding:1.2rem 0; font-size:.85rem; text-decoration:underline; text-underline-offset:4px; }
+.lab-notebook a:focus-visible { outline:2px solid var(--notebook-red); outline-offset:5px; }
+.lab-notebook-feature:hover,.lab-notebook-index li a:hover { border-color:var(--notebook-red); }
+.lab-notebook-index li a:hover strong { text-decoration:underline; text-underline-offset:4px; }
+.lab-notebook .lab-experiment-card { border-radius:4px; background:transparent; padding:1rem 0; border-width:1px 0 0; }
+.lab-notebook .lab-experiment-card h3 { font-family:'Folio Serif',Georgia,serif; font-weight:450; }
+@media(max-width:700px) { .lab-notebook-desk{grid-template-columns:1fr;gap:1.5rem}.lab-notebook-title{padding-bottom:1.75rem}.lab-notebook-note{padding-bottom:.5rem}.lab-notebook-index ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}.lab-notebook-index li a{grid-template-columns:minmax(0,1fr) 1rem}.lab-notebook-number{display:none} }
+@media(max-width:420px) { .lab-notebook-index ol{grid-template-columns:1fr}.lab-notebook-feature-meta{font-size:.6rem} }
+@media(prefers-reduced-motion:reduce) { .lab-notebook *, .lab-notebook *::before, .lab-notebook *::after { scroll-behavior:auto; } }

@@ -107,8 +107,7 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
             { label: e.title },
           ]}
         />
-        <LabDetailHeader title={e.title} blurb={e.blurb} category={e.category} label={catMeta?.label ?? e.category} glyph={catMeta?.glyph ?? ''} hasExplainer={Boolean(body)} />
-        <section id="experiment" aria-label={`${e.title} interactive simulation`} className="lab-detail-experiment mt-10"><EffectPlayground slug={slug} variant="editorial" /></section>
+        <section id="experiment" aria-label={`${e.title} interactive simulation`} className="lab-detail-experiment mt-10"><EffectPlayground slug={slug} variant="editorial" header={<LabDetailHeader title={e.title} blurb={e.blurb} category={e.category} label={catMeta?.label ?? e.category} glyph={catMeta?.glyph ?? ''} hasExplainer={Boolean(body)} />} /></section>
         {body && <article id="explanation" aria-label={`${e.title} explanation`} className="lab-detail-explanation mt-14 mx-auto max-w-3xl px-4"><MdxContent source={body} /></article>}
       </main>
       <SiteFooter />

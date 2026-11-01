@@ -105,7 +105,7 @@ describe('container-aware lab figures', () => {
 
   it.each([LabCanvas, LabSide])('opts article figures into themed instrument controls without changing the stage', Component => {
     const { container, getByText, getByRole } = render(<Component effect="response">{commentary}</Component>)
-    const controls = getByText('Parameters').parentElement!.parentElement!
+    const controls = getByText('Parameters').closest(`.${controlStyles.editorial}`)!
     expect(controls.className).toContain('editorial')
     expect(controls.classList.contains('bg-surface')).toBe(false)
     expect(controls.classList.contains('rounded-2xl')).toBe(false)
@@ -122,7 +122,7 @@ describe('container-aware lab figures', () => {
 
   it('keeps the standalone lab controls in their original panel by default', () => {
     const { getByText } = render(<Controls specs={effect.controls} params={effect.defaults} onChange={() => {}} onCopy={() => {}} onReset={() => {}} />)
-    const controls = getByText('knobs').parentElement!.parentElement!
+    const controls = getByText('knobs').parentElement!.parentElement!.parentElement!
     expect(controls.className).toBe('rounded-2xl border border-[var(--color-border)] bg-surface p-5 font-mono')
   })
 
@@ -204,9 +204,9 @@ describe('container-aware lab figures', () => {
     expect(onChange).toHaveBeenCalledWith('C', .002)
     const css = readFileSync('components/lab/controls.module.css', 'utf8')
     expect(css).toContain('container: editorial-controls / inline-size')
-    expect(css).toContain('@container editorial-controls (min-width: 34rem)')
-    expect(css).toContain('.fields > :first-child')
-    expect(css).toContain('grid-column: 1 / -1')
+    expect(css).toContain('.fields { display: grid;')
+    expect(css).toContain('--instrument-paper: #faf7ef')
+    expect(css).toContain(':global(.dark) .editorial')
     expect(css).not.toMatch(/display:\s*none|visibility:\s*hidden|\border:/)
   })
 

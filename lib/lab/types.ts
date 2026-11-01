@@ -1,11 +1,13 @@
 export type ParamValue = number | boolean | string
 export type Params = Record<string, ParamValue>
 
-export type ControlSpec =
+export type ControlSpec = { group?: string; unit?: string } & (
   | { key: string; label: string; type: 'range'; min: number; max: number; step: number }
   | { key: string; label: string; type: 'toggle' }
   | { key: string; label: string; type: 'color' }
   | { key: string; label: string; type: 'select'; options: { label: string; value: string }[] }
+
+)
 
 export type Dims = { w: number; h: number; dpr: number }
 export type EffectTheme = { bg: string; fg: string }

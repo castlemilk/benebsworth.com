@@ -1,11 +1,15 @@
 'use client'
+import { RotateCcw, Link2 } from 'lucide-react'
 import { GammaButton } from '@/components/gamma/GammaButton'
 import { RangeSlider } from '@/components/gamma/RangeSlider'
 import type { ControlSpec, Params, ParamValue } from '@/lib/lab/types'
+import { CategoryIcon } from './category-icon'
 import styles from './controls.module.css'
 
 type Props = {
   variant?: 'panel' | 'editorial'
+  title?: string
+  category?: string
   specs: ControlSpec[]
   params: Params
   onChange: (key: string, value: ParamValue) => void
@@ -13,22 +17,26 @@ type Props = {
   onCopy?: () => void
 }
 
-export function Controls({ specs, params, onChange, onReset, onCopy, variant = 'panel' }: Props) {
+export function Controls({ specs, params, onChange, onReset, onCopy, title, category, variant = 'panel' }: Props) {
+  const editorial = variant === 'editorial'
+  const actions = <div className={editorial ? styles.actions : 'flex gap-2'}>
+    <GammaButton variant="quiet" size="sm" onClick={onReset}>{editorial && <RotateCcw size={14} aria-hidden="true" />}{editorial ? 'Reset' : '↺ reset'}</GammaButton>
+    {onCopy && <GammaButton variant="quiet" size="sm" onClick={onCopy}>{editorial && <Link2 size={14} aria-hidden="true" />}{editorial ? 'Copy link' : '⧉ copy'}</GammaButton>}
+  </div>
   return (
     <div className={variant === 'editorial'
       ? `${styles.editorial} font-mono`
       : 'rounded-2xl border border-[var(--color-border)] bg-surface p-5 font-mono'}>
-      <div className={variant === 'editorial' ? "mb-4 flex flex-wrap items-center justify-between gap-3" : "mb-4 flex items-center justify-between"}>
-        <span className={variant === 'editorial' ? styles.label : "type-label text-muted"}>{variant === 'editorial' ? 'Parameters' : 'knobs'}</span>
-        <div className="flex gap-2">
-          {onCopy && <GammaButton variant="secondary" size="sm" onClick={onCopy} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">{variant === 'editorial' ? 'Copy link' : '⧉ copy'}</GammaButton>}
-          <GammaButton variant="secondary" size="sm" onClick={onReset} className="rounded-md border border-[var(--color-border)] px-2 py-1 text-xs text-fg/70 hover:text-fg">{variant === 'editorial' ? 'Reset' : '↺ reset'}</GammaButton>
-        </div>
+      <div className={editorial ? styles.header : "mb-4 flex items-center justify-between"}>
+        <div><span className={editorial ? styles.label : "type-label text-muted"}>{editorial ? 'Parameters' : 'knobs'}</span>{editorial && title && <p className={styles.subtitle}>{title}</p>}</div>
+        {editorial && category && <CategoryIcon category={category} fallback="" size={30} />}
+        {!editorial && actions}
       </div>
       <div className={variant === 'editorial' ? styles.fields : "space-y-3"}>
         {specs.map((s, index) => (
           <div key={s.key} className={variant === 'editorial' ? styles.field : undefined} data-control-type={s.type} data-study-target={variant === 'editorial' && index === 0 ? '' : undefined}>
-            {s.type === 'range' ? <RangeSlider label={s.label} min={s.min} max={s.max} step={s.step} value={Number(params[s.key])} onChange={value=>onChange(s.key,value)} /> : <label className="flex items-center justify-between gap-4 text-xs">
+            {editorial && s.group && (index === 0 || specs[index - 1].group !== s.group) && <h3 className={styles.group}>{s.group}</h3>}
+            {s.type === 'range' ? <RangeSlider label={s.label} formatValue={editorial && s.unit ? value => `${value} ${s.unit}` : undefined} min={s.min} max={s.max} step={s.step} value={Number(params[s.key])} onChange={value=>onChange(s.key,value)} /> : <label className="flex items-center justify-between gap-4 text-xs">
             <span className="text-fg/70">{s.label}</span>
             {s.type === 'toggle' && (
               <input type="checkbox" checked={Boolean(params[s.key])} onChange={(e) => onChange(s.key, e.target.checked)} className="accent-project" />
@@ -45,6 +53,7 @@ export function Controls({ specs, params, onChange, onReset, onCopy, variant = '
           </div>
         ))}
       </div>
+      {editorial && actions}
     </div>
   )
 }

@@ -1,11 +1,11 @@
 import type { ControlSpec, EffectModule, Params } from '@/lib/lab/types'
 
 export const controls: ControlSpec[] = [
-  { key: 'freq1', label: 'Frequency 1', type: 'range', min: 0.5, max: 8, step: 0.1 },
-  { key: 'freq2', label: 'Frequency 2', type: 'range', min: 0.5, max: 8, step: 0.1 },
-  { key: 'amp', label: 'Amplitude', type: 'range', min: 0.1, max: 1, step: 0.05 },
-  { key: 'showComponents', label: 'Show components', type: 'toggle' },
-  { key: 'color', label: 'Color', type: 'color' },
+  { key: 'freq1', group: 'Waves', unit: 'Hz', label: 'Frequency 1', type: 'range', min: 0.5, max: 8, step: 0.1 },
+  { key: 'freq2', group: 'Waves', unit: 'Hz', label: 'Frequency 2', type: 'range', min: 0.5, max: 8, step: 0.1 },
+  { key: 'amp', group: 'Appearance', label: 'Amplitude', type: 'range', min: 0.1, max: 1, step: 0.05 },
+  { key: 'showComponents', group: 'Appearance', label: 'Show components', type: 'toggle' },
+  { key: 'color', group: 'Appearance', label: 'Color', type: 'color' },
 ]
 
 export const defaults: Params = { freq1: 2, freq2: 2.3, amp: 0.6, showComponents: true, color: '#7c5cff' }
@@ -122,7 +122,7 @@ export const waveSuperposition: EffectModule = {
 
         // Labels
         ctx.font = '11px monospace'
-        ctx.fillStyle = theme.fg + '60'
+        ctx.fillStyle = theme.fg + 'c0'
         ctx.fillText(`f₁ = ${f1.toFixed(1)} Hz`, 8, 20)
         ctx.fillText(`f₂ = ${f2.toFixed(1)} Hz`, 8, 36)
         ctx.fillText(`Δf = ${(f2 - f1).toFixed(1)} Hz`, 8, 52)

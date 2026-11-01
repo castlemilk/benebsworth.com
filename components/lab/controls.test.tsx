@@ -2,6 +2,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
+import { controls as waveControls, defaults as waveDefaults } from './effects/wave-superposition'
 import { Controls } from './controls'
 import type { ControlSpec } from '@/lib/lab/types'
 afterEach(cleanup)
@@ -31,4 +32,14 @@ describe('Editorial instrument controls', () => {
     const ui = render(<Controls variant="editorial" specs={specs} params={{amplitude:.6,components:false}} onChange={()=>{}} onReset={()=>{}} />)
     expect(ui.queryByRole('button',{name:'Copy link'})).toBeNull()
   })
+  it('uses authored groups and units without copying the concept amplitude scale', () => {
+    const ui = render(<Controls variant="editorial" title="Wave Superposition" specs={waveControls} params={waveDefaults} onChange={()=>{}} onReset={()=>{}} />)
+    expect(ui.getByRole('heading',{name:'Waves'})).toBeTruthy()
+    expect(ui.getByRole('heading',{name:'Appearance'})).toBeTruthy()
+    expect(ui.getByRole('slider',{name:'Frequency 1'}).getAttribute('aria-valuetext')).toBe('2 Hz')
+    expect(ui.getByRole('slider',{name:'Amplitude'}).getAttribute('max')).toBe('1')
+    const reset = ui.getByRole('button',{name:'Reset'})
+    expect(ui.getByRole('slider',{name:'Amplitude'}).compareDocumentPosition(reset) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
 })

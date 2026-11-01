@@ -13,6 +13,8 @@ export type Dims = { w: number; h: number; dpr: number }
 export type EffectTheme = { bg: string; fg: string }
 export type Renderer = { step: (timeMs: number, params: Params) => void; destroy?: () => void }
 export type EffectModule = {
+  /** Optional presentation metadata; readout values remain effect-authored. */
+  inspection?: { title?: string; caption?: string }
   /** Exact readout for a normalized horizontal position and rendered frame. */
   inspect?: (x: number, timeMs: number, params: Params) => { label: string; value: string }[]
   controls: ControlSpec[]

@@ -167,9 +167,9 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
       {probe && effect.inspect && <>
         <span className={styles.crosshair} style={{left:`${probe.x/probe.w*100}%`}} aria-hidden="true" />
         <div id={tooltipId} role="tooltip" className={styles.readout} style={(() => { const position=inspectionPosition(probe.x-probe.clipX,probe.y-probe.clipY,probe.visibleW,probe.visibleH); return {...position,left:position.left+probe.clipX,top:position.top+probe.clipY} })()}>
-          <strong>Sample readout</strong>
+          <strong>{effect.inspection?.title ?? 'Sample readout'}</strong>
           <dl>{effect.inspect(probe.x/probe.w,probe.t,params).map(row=><Fragment key={row.label}><dt>{row.label}</dt><dd>{row.value}</dd></Fragment>)}</dl>
-          <small>Frame held · relative amplitude<br />Move to inspect · Esc to dismiss</small>
+          <small>Frame held{effect.inspection?.caption && ` · ${effect.inspection.caption}`}<br />Move to inspect · Esc to dismiss</small>
         </div>
       </>}
     </div>

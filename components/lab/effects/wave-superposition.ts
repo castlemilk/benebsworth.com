@@ -19,6 +19,7 @@ function hexRgb(hex: string): [number, number, number] {
 export const waveSuperposition: EffectModule = {
   controls,
   defaults,
+  inspection: { title: 'Wave readout', caption: 'Relative amplitude' },
   inspect(x, timeMs, p) {
     const sampleX = Math.round(Math.max(0, Math.min(1, x)) * 599) / 599
     const phase = timeMs / 1000 * 4

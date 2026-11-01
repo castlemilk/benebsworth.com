@@ -38,3 +38,66 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* One instrument, two reading environments. These tokens are scoped to Labs;
+   authored bounds and Gamma's native keyboard behaviour remain unchanged. */
+.editorial {
+  --instrument-paper: #f7f4ed;
+  --instrument-ink: #292a28;
+  --instrument-muted: #66665f;
+  --instrument-rule: #d6d1c6;
+  --instrument-accent: #aa392f;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background: var(--instrument-paper);
+  color: var(--instrument-ink);
+  border-block: 1px solid var(--instrument-rule);
+  border-radius: 2px;
+  box-shadow: inset 3px 0 var(--instrument-accent);
+}
+:global(.dark) .editorial {
+  --instrument-paper: #202423;
+  --instrument-ink: #f1eee6;
+  --instrument-muted: #b4b8b1;
+  --instrument-rule: #454c47;
+  --instrument-accent: #ed9b8d;
+}
+.editorial .label { color: var(--instrument-muted); }
+.field {
+  padding-block: .65rem;
+  border-top: 1px solid var(--instrument-rule);
+}
+.editorial :global(.range-slider-heading) { color: var(--instrument-ink); gap: 1rem; }
+.editorial :global(.range-slider-heading output) {
+  color: var(--instrument-accent);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.editorial :global(.range-slider-bounds) { color: var(--instrument-muted); }
+.editorial :global(.range-slider-input) { min-height: 44px; accent-color: var(--instrument-accent); }
+.editorial button {
+  min-height: 44px;
+  color: var(--instrument-ink);
+  background: transparent;
+  border-color: var(--instrument-rule);
+  border-radius: 3px;
+  padding-inline: .85rem;
+}
+.editorial button:hover { background: color-mix(in srgb, var(--instrument-ink) 8%, transparent); }
+.editorial :is(button, input, select):focus-visible {
+  outline: 2px solid var(--instrument-accent);
+  outline-offset: 4px;
+}
+.editorial .field > label { min-height: 44px; color: var(--instrument-ink); flex-wrap: wrap; }
+.editorial .field > label > span { color: var(--instrument-ink); }
+.editorial input[type='color'], .editorial select { min-height: 44px; }
+.editorial select { max-width: 100%; background: var(--instrument-paper); color: var(--instrument-ink); }
+.editorial input[type='checkbox'] { width: 1.25rem; height: 1.25rem; accent-color: var(--instrument-accent); }
+.editorial :global(.range-slider) {
+  --gamma-accent: var(--instrument-accent);
+  --gamma-bg: var(--instrument-paper);
+  --gamma-surface-2: var(--instrument-rule);
+  --gamma-ink: var(--instrument-ink);
+  --gamma-muted: var(--instrument-muted);
+}

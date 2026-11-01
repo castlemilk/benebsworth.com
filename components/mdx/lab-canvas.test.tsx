@@ -99,19 +99,18 @@ describe('container-aware lab figures', () => {
     fireEvent.change(slider, { target: { value: '7' } })
     expect(reconcileParams).toHaveBeenCalledWith(expect.objectContaining({ speed: 4 }), { key: 'speed', value: 7 })
     expect(JSON.parse(container.querySelector('canvas')!.getAttribute('data-params')!)).toEqual({ speed: 7, colour: '#ff0000' })
-    fireEvent.click(getByRole('button', { name: /reset/ }))
+    fireEvent.click(getByRole('button', { name: /reset/i }))
     expect(slider.value).toBe('4')
   })
 
-  it.each([LabCanvas, LabSide])('opts article figures into transparent ruled controls without changing the stage', Component => {
+  it.each([LabCanvas, LabSide])('opts article figures into themed instrument controls without changing the stage', Component => {
     const { container, getByText, getByRole } = render(<Component effect="response">{commentary}</Component>)
-    const controls = getByText('knobs').parentElement!.parentElement!
-    expect(controls.classList.contains('border-t')).toBe(true)
-    expect(controls.classList.contains('bg-transparent')).toBe(true)
+    const controls = getByText('Parameters').parentElement!.parentElement!
+    expect(controls.className).toContain('editorial')
     expect(controls.classList.contains('bg-surface')).toBe(false)
     expect(controls.classList.contains('rounded-2xl')).toBe(false)
     expect(getByRole('slider', { name: 'Speed' })).toBeTruthy()
-    expect(getByRole('button', { name: /reset/ })).toBeTruthy()
+    expect(getByRole('button', { name: /reset/i })).toBeTruthy()
     expect(container.querySelectorAll('button')).toHaveLength(2)
     expect(getByRole('button', { name: 'Show guide' })).toBeTruthy()
     expect(container.querySelector('[data-study-target]')?.textContent).toContain('Speed')
@@ -135,7 +134,7 @@ describe('container-aware lab figures', () => {
     expect(onCopy).toHaveBeenCalledOnce()
     rerender(<Controls {...props} />)
     expect(queryByRole('button', { name: /copy/ })).toBeNull()
-    expect(getByRole('button', { name: /reset/ })).toBeTruthy()
+    expect(getByRole('button', { name: /reset/i })).toBeTruthy()
   })
 
   it('retains the standalone figure and caption before and after loading', () => {

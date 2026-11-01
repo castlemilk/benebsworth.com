@@ -1,5 +1,7 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { Fragment, useEffect, useId, useRef, useState } from 'react'
+import { inspectionPosition } from './inspection-position'
+import styles from './inspection.module.css'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 import type { EffectModule, Params, Dims, EffectTheme, Renderer } from '@/lib/lab/types'
 
@@ -23,6 +25,30 @@ function resolveTheme(element?: Element): EffectTheme {
 export function EffectCanvas({ effect, params, quality = 'full', className, ariaLabel }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const tooltipId = useId()
+  const [probe, setProbe] = useState<{x:number;y:number;w:number;h:number;t:number;clipX:number;clipY:number;visibleW:number;visibleH:number}|null>(null)
+  const probeRef = useRef(probe)
+  probeRef.current = probe
+  const frameRef = useRef(0)
+  const inspectable = quality === 'full' && Boolean(effect.inspect)
+  function inspectAt(x:number,y:number) {
+    const r=wrapRef.current?.getBoundingClientRect()
+    if (!r || r.width<32 || r.height<32) return
+    const clipX=Math.max(0,-(r.left || 0)), clipY=Math.max(0,-(r.top || 0))
+    const visibleW=Math.min(r.width,window.innerWidth-(r.left || 0))-clipX
+    const visibleH=Math.min(r.height,window.innerHeight-(r.top || 0))-clipY
+    if(visibleW<120 || visibleH<150) {setProbe(null);return}
+    setProbe({x:Math.max(0,Math.min(r.width,x)),y:Math.max(0,Math.min(r.height,y)),w:r.width,h:r.height,t:probeRef.current?.t ?? frameRef.current,clipX,clipY,visibleW,visibleH})
+  }
+  useEffect(() => {
+    if (!probe) return
+    const outside=(event:PointerEvent) => { if (!wrapRef.current?.contains(event.target as Node)) setProbe(null) }
+    const dismiss=() => setProbe(null)
+    document.addEventListener('pointerdown',outside)
+    window.addEventListener('resize',dismiss)
+    window.addEventListener('scroll',dismiss,true)
+    return () => { document.removeEventListener('pointerdown',outside);window.removeEventListener('resize',dismiss);window.removeEventListener('scroll',dismiss,true) }
+  },[probe])
   // live params: step() reads the latest without recreating the renderer
   const paramsRef = useRef(params)
   paramsRef.current = params
@@ -85,7 +111,9 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
       if (scrollingRef.current && last !== -Infinity) return
       if (minFrameMs && t - last < minFrameMs) return
       last = t
-      renderer.step(t, paramsRef.current)
+      const frame = probeRef.current?.t ?? t
+      frameRef.current = frame
+      renderer.step(frame, paramsRef.current)
     }
     function start() { if (!raf && !reduce && visible && onscreen && drawable && renderer) raf = requestAnimationFrame(loop) }
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
@@ -120,8 +148,30 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
   }, [effect, quality])
 
   return (
-    <div ref={wrapRef} className={className} role="img" aria-label={ariaLabel}>
+    <div ref={wrapRef} className={`${className ?? ''} ${inspectable ? styles.inspectable : ''}`} role={inspectable ? 'group' : 'img'} aria-label={inspectable ? `${ariaLabel}. Inspect with arrow keys; Escape dismisses.` : ariaLabel}
+      tabIndex={inspectable ? 0 : undefined} aria-describedby={probe ? tooltipId : undefined}
+      onPointerMove={inspectable ? e => { if(e.pointerType !== 'touch') { const r=e.currentTarget.getBoundingClientRect(); inspectAt(e.clientX-r.left,e.clientY-r.top) } } : undefined}
+      onPointerDown={inspectable ? e => { const r=e.currentTarget.getBoundingClientRect(); inspectAt(e.clientX-r.left,e.clientY-r.top) } : undefined}
+      onPointerLeave={inspectable ? e => { if(e.pointerType !== 'touch') setProbe(null) } : undefined}
+      onFocus={inspectable ? e => { const r=e.currentTarget.getBoundingClientRect(); inspectAt(r.width/2,r.height/2) } : undefined}
+      onBlur={() => setProbe(null)}
+      onKeyDown={inspectable ? e => {
+        if(e.key==='Escape') {setProbe(null);return}
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return
+        e.preventDefault()
+        const r=e.currentTarget.getBoundingClientRect(), x=probe?.x ?? r.width/2
+        inspectAt(e.key==='Home'?0:e.key==='End'?r.width:x+(e.key==='ArrowRight'?1:-1)*r.width/100,r.height/2)
+      } : undefined}>
+
       <canvas ref={canvasRef} className="block h-full w-full" />
+      {probe && effect.inspect && <>
+        <span className={styles.crosshair} style={{left:`${probe.x/probe.w*100}%`}} aria-hidden="true" />
+        <div id={tooltipId} role="tooltip" className={styles.readout} style={(() => { const position=inspectionPosition(probe.x-probe.clipX,probe.y-probe.clipY,probe.visibleW,probe.visibleH); return {...position,left:position.left+probe.clipX,top:position.top+probe.clipY} })()}>
+          <strong>Sample readout</strong>
+          <dl>{effect.inspect(probe.x/probe.w,probe.t,params).map(row=><Fragment key={row.label}><dt>{row.label}</dt><dd>{row.value}</dd></Fragment>)}</dl>
+          <small>Frame held · relative amplitude<br />Move to inspect · Esc to dismiss</small>
+        </div>
+      </>}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from 'react'
-import { act, cleanup, render } from '@testing-library/react'
+import { act, cleanup, render, fireEvent } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { EffectCanvas } from './effect-canvas'
 import { rlcResonance } from './effects/rlc-resonance'
@@ -161,4 +161,33 @@ it('reads the canvas wrapper palette so a study can inherit paper in either them
   wrapper.style.setProperty('--fg', '#ececf0')
   env.theme()
   expect(effect.createRenderer).toHaveBeenLastCalledWith(expect.anything(), expect.anything(), { bg: '#0a0a0c', fg: '#ececf0' })
+})
+
+
+describe('EffectCanvas inspection', () => {
+  it('holds the rendered frame, supports keyboard movement and dismisses with Escape', () => {
+    const env=setup(), {effect,step}=mockEffect()
+    effect.inspect=vi.fn(()=>[{label:'Sum',value:'0.25'}])
+    const ui=render(<EffectCanvas effect={effect} params={{}} ariaLabel="Test plot" />)
+    env.resize(640,320); env.visible(true); env.frame(100)
+    const chart=ui.getByRole('group')
+    fireEvent.focus(chart)
+    expect(ui.getByRole('tooltip').textContent).toContain('0.25')
+    env.frame(200)
+    expect(step).toHaveBeenLastCalledWith(100,{})
+    fireEvent.keyDown(chart,{key:'End'})
+    expect(effect.inspect).toHaveBeenLastCalledWith(1,100,{})
+    fireEvent.keyDown(chart,{key:'Escape'})
+    expect(ui.queryByRole('tooltip')).toBeNull()
+    env.frame(300)
+    expect(step).toHaveBeenLastCalledWith(300,{})
+  })
+  it('does not expose invented readouts on unsupported effects or mini cards', () => {
+    setup();const {effect}=mockEffect()
+    const ui=render(<EffectCanvas effect={effect} params={{}} ariaLabel="Unsupported" />)
+    expect(ui.getByRole('img').getAttribute('tabindex')).toBeNull()
+    effect.inspect=()=>[]
+    ui.rerender(<EffectCanvas effect={effect} params={{}} quality="mini" ariaLabel="Mini" />)
+    expect(ui.getByRole('img').getAttribute('tabindex')).toBeNull()
+  })
 })

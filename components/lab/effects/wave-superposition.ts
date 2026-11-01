@@ -19,6 +19,19 @@ function hexRgb(hex: string): [number, number, number] {
 export const waveSuperposition: EffectModule = {
   controls,
   defaults,
+  inspect(x, timeMs, p) {
+    const sampleX = Math.round(Math.max(0, Math.min(1, x)) * 599) / 599
+    const phase = timeMs / 1000 * 4
+    const a = Number(p.amp)
+    const y1 = a * Math.sin(2 * Math.PI * Number(p.freq1) * sampleX * 4 - phase)
+    const y2 = a * Math.sin(2 * Math.PI * Number(p.freq2) * sampleX * 4 - phase)
+    return [
+      { label: 'Position', value: `${(sampleX * 100).toFixed(1)}%` },
+      { label: 'Wave 1', value: y1.toFixed(3) },
+      { label: 'Wave 2', value: y2.toFixed(3) },
+      { label: 'Sum', value: (y1 + y2).toFixed(3) },
+    ]
+  },
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {
     const N = 600 // sample points
     const yBuf = new Float32Array(N)

@@ -1,4 +1,6 @@
 .shell { min-width:0; width:100%; }
+/* Mini/article canvases retain their original parent sizing contract. */
+.shell[data-inspectable='false'] { display:contents; }
 .inspectable { position:relative; outline-offset:4px; }
 .inspectable:focus-visible { outline:2px solid #a33b30; }
 .crosshair { position:absolute; top:0; bottom:0; width:1px; background:var(--fg); opacity:.35; pointer-events:none; }

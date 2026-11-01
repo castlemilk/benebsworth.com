@@ -48,8 +48,9 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     const dismiss=() => setProbe(null)
     document.addEventListener('pointerdown',outside)
     window.addEventListener('resize',dismiss)
-    window.addEventListener('scroll',dismiss,true)
-    return () => { document.removeEventListener('pointerdown',outside);window.removeEventListener('resize',dismiss);window.removeEventListener('scroll',dismiss,true) }
+    const onScroll=()=>{if(probe.w>=480)setProbe(null)}
+    window.addEventListener('scroll',onScroll,true)
+    return () => { document.removeEventListener('pointerdown',outside);window.removeEventListener('resize',dismiss);window.removeEventListener('scroll',onScroll,true) }
   },[probe])
   // live params: step() reads the latest without recreating the renderer
   const paramsRef = useRef(params)
@@ -154,7 +155,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
   const readout=probe && <GraphReadout id={tooltipId} rows={rows} title={effect.inspection?.title} caption={effect.inspection?.caption} docked={docked} onClose={()=>setProbe(null)}
     style={docked ? undefined : (()=>{const p=inspectionPosition(probe.x-probe.clipX,probe.y-probe.clipY,probe.visibleW,probe.visibleH);return {...p,left:p.left+probe.clipX,top:p.top+probe.clipY}})()} />
   return (
-    <div ref={shellRef} className={styles.shell} onKeyDown={e=>{if(e.key==='Escape')setProbe(null)}}>
+    <div ref={shellRef} data-inspectable={inspectable} className={styles.shell} onKeyDown={e=>{if(e.key==='Escape')setProbe(null)}}>
     <div data-lab-canvas ref={wrapRef} className={`${className ?? ''} ${inspectable ? styles.inspectable : ''}`} role={inspectable ? 'group' : 'img'} aria-label={inspectable ? `${ariaLabel}. Inspect with arrow keys; Escape dismisses.` : ariaLabel}
       tabIndex={inspectable ? 0 : undefined} aria-describedby={probe ? tooltipId : undefined}
       onPointerMove={inspectable ? e => { if(e.pointerType !== 'touch') { const r=e.currentTarget.getBoundingClientRect(); inspectAt(e.clientX-r.left,e.clientY-r.top) } } : undefined}

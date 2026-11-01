@@ -186,9 +186,11 @@ describe('EffectCanvas inspection', () => {
     setup();const {effect}=mockEffect()
     const ui=render(<EffectCanvas effect={effect} params={{}} ariaLabel="Unsupported" />)
     expect(ui.getByRole('img').getAttribute('tabindex')).toBeNull()
+    expect(ui.getByRole('img').parentElement?.getAttribute('data-inspectable')).toBe('false')
     effect.inspect=()=>[]
     ui.rerender(<EffectCanvas effect={effect} params={{}} quality="mini" ariaLabel="Mini" />)
     expect(ui.getByRole('img').getAttribute('tabindex')).toBeNull()
+    expect(ui.getByRole('img').parentElement?.getAttribute('data-inspectable')).toBe('false')
   })
 })
 
@@ -209,6 +211,8 @@ it('docks narrow readouts outside the plot and closes without losing the control
   expect(dock.textContent).toContain('1.25')
   expect(dock.textContent).toContain('Volts')
   expect(ui.queryByRole('tooltip')).toBeNull()
+  fireEvent.scroll(window)
+  expect(ui.getByRole('region',{name:'Test instrument'})).toBe(dock)
   fireEvent.click(ui.getByRole('button',{name:'Close graph readout'}))
   expect(ui.queryByRole('region')).toBeNull()
   expect(ui.getByRole('group')).toBe(plot)

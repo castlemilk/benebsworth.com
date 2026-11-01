@@ -6,7 +6,7 @@ import { EffectCanvas } from './effect-canvas'
 import { Controls } from './controls'
 import { useUrlParams } from './use-url-params'
 
-export function EffectPlayground({ slug }: { slug: string }) {
+export function EffectPlayground({ slug, variant = 'panel' }: { slug: string; variant?: 'panel' | 'editorial' }) {
   const entry = getEffect(slug)!
   const effectModule = useEffectModule(slug)
 
@@ -23,10 +23,10 @@ export function EffectPlayground({ slug }: { slug: string }) {
     )
   }
 
-  return <EffectPlaygroundInner key={slug} slug={slug} title={entry.title} module={effectModule} />
+  return <EffectPlaygroundInner key={slug} slug={slug} title={entry.title} module={effectModule} variant={variant} />
 }
 
-function EffectPlaygroundInner({ slug, title, module }: { slug: string; title: string; module: EffectModule }) {
+function EffectPlaygroundInner({ slug, title, module, variant }: { slug: string; title: string; module: EffectModule; variant: 'panel' | 'editorial' }) {
   void slug
   const { params, setParam, reset, permalink } = useUrlParams(module.defaults, module.controls)
   return (
@@ -34,7 +34,7 @@ function EffectPlaygroundInner({ slug, title, module }: { slug: string; title: s
       <EffectCanvas effect={module} params={params} quality="full"
         ariaLabel={`${title} animation`}
         className="aspect-[16/10] w-full min-w-0 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-stage)]" />
-      <Controls specs={module.controls} params={params} onChange={setParam} onReset={reset}
+      <Controls variant={variant} specs={module.controls} params={params} onChange={setParam} onReset={reset}
         onCopy={() => navigator.clipboard?.writeText(permalink()).catch(() => {})} />
     </div>
   )

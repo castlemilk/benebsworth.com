@@ -47,3 +47,6 @@ Labs landing and icon changes are locally validated: 1,782 tests passed, 5 skipp
 ## Current publication preparation
 
 The shell has no GitHub login. The connected GitHub Git-data tools are being used to publish one atomic tree, with exact local-tree comparison and expected-head guard. This is not a merge or deployment. Canonical Space final update was denied on1November; preserve this repository checkpoint until access is restored.
+
+## 1 November 13:23 continuation
+User asked to continue after the annotation correction. Latest published baseline0224289800c0fe84fc3a7cf7c0bc6f6ba968afee has passed GitHub artifact/controls checks. The workspace was recovered non-destructively from that remote into recovery/notebook-20261101-1306. New bounded slice: shared experiment detail header/category and existing editorial Controls variant; tests1785passed/5skipped, full build passed. Review evidence in lab-notebook-review.md. No ongoing build after verification. Canonical Space remains access-blocked; do not route around it. Pending merge question and three-store source credential request remain unanswered.

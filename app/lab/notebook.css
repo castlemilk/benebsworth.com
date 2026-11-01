@@ -35,3 +35,14 @@ html:not(.dark) body:has(.lab-notebook) { --bg:#f7f3ea; --surface:#fffcf6; --sur
 @media(max-width:700px) { .lab-notebook-desk{grid-template-columns:1fr;gap:1.5rem}.lab-notebook-title{padding-bottom:1.75rem}.lab-notebook-index ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem}.lab-notebook-index li a{grid-template-columns:minmax(0,1fr) 1rem}.lab-notebook-number{display:none} }
 @media(max-width:420px) { .lab-notebook-index ol{grid-template-columns:1fr}.lab-notebook-feature-meta{font-size:.6rem} }
 @media(prefers-reduced-motion:reduce) { .lab-notebook *, .lab-notebook *::before, .lab-notebook *::after { scroll-behavior:auto; } }
+
+/* Detail pages carry the same notebook vocabulary without replacing simulations. */
+.lab-detail-header { margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border); }
+.lab-detail-category { display:inline-flex; align-items:center; gap:.6rem; padding:.4rem .9rem; border-radius:999px; color:var(--notebook-red); background:color-mix(in srgb,var(--notebook-red) 9%,var(--bg)); font:.75rem/1.4 var(--font-mono),monospace; }
+.lab-detail-kicker { margin:1.6rem 0 .65rem; color:var(--muted); font:.65rem/1.5 var(--font-mono),monospace; text-transform:uppercase; letter-spacing:.12em; }
+.lab-detail-header h1 { font:450 clamp(2.4rem,5.5vw,4.8rem)/1.08 'Folio Serif',Georgia,serif; letter-spacing:-.035em; text-wrap:balance; }
+.lab-detail-blurb { margin-top:1rem; max-width:46rem; color:var(--muted); font-size:1.1rem; line-height:1.65; }
+.lab-detail-sections { display:flex; flex-wrap:wrap; gap:.5rem 1.5rem; margin-top:1.4rem; font-size:.85rem; }
+.lab-detail-sections a { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; text-underline-offset:5px; }
+.lab-detail-experiment,.lab-detail-explanation { scroll-margin-top:6rem; }
+.lab-detail-experiment canvas { border-radius:4px; }

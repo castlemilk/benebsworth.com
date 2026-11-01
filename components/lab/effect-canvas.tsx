@@ -1,5 +1,6 @@
 'use client'
-import { Fragment, useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
+import { GraphReadout } from './graph-readout'
 import { inspectionPosition } from './inspection-position'
 import styles from './inspection.module.css'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
@@ -23,6 +24,7 @@ function resolveTheme(element?: Element): EffectTheme {
 }
 
 export function EffectCanvas({ effect, params, quality = 'full', className, ariaLabel }: Props) {
+  const shellRef = useRef<HTMLDivElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const tooltipId = useId()
@@ -37,12 +39,12 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     const clipX=Math.max(0,-(r.left || 0)), clipY=Math.max(0,-(r.top || 0))
     const visibleW=Math.min(r.width,window.innerWidth-(r.left || 0))-clipX
     const visibleH=Math.min(r.height,window.innerHeight-(r.top || 0))-clipY
-    if(visibleW<120 || visibleH<150) {setProbe(null);return}
+    if(visibleW<120 || visibleH<(r.width<480 ? 100 : 220)) {setProbe(null);return}
     setProbe({x:Math.max(0,Math.min(r.width,x)),y:Math.max(0,Math.min(r.height,y)),w:r.width,h:r.height,t:probeRef.current?.t ?? frameRef.current,clipX,clipY,visibleW,visibleH})
   }
   useEffect(() => {
     if (!probe) return
-    const outside=(event:PointerEvent) => { if (!wrapRef.current?.contains(event.target as Node)) setProbe(null) }
+    const outside=(event:PointerEvent) => { if (!shellRef.current?.contains(event.target as Node)) setProbe(null) }
     const dismiss=() => setProbe(null)
     document.addEventListener('pointerdown',outside)
     window.addEventListener('resize',dismiss)
@@ -147,14 +149,19 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     // effect identity + quality are the only structural deps; params are live via ref
   }, [effect, quality])
 
+  const rows=probe && effect.inspect ? effect.inspect(probe.x/probe.w,probe.t,params) : []
+  const docked=Boolean(probe && probe.w<480)
+  const readout=probe && <GraphReadout id={tooltipId} rows={rows} title={effect.inspection?.title} caption={effect.inspection?.caption} docked={docked} onClose={()=>setProbe(null)}
+    style={docked ? undefined : (()=>{const p=inspectionPosition(probe.x-probe.clipX,probe.y-probe.clipY,probe.visibleW,probe.visibleH);return {...p,left:p.left+probe.clipX,top:p.top+probe.clipY}})()} />
   return (
-    <div ref={wrapRef} className={`${className ?? ''} ${inspectable ? styles.inspectable : ''}`} role={inspectable ? 'group' : 'img'} aria-label={inspectable ? `${ariaLabel}. Inspect with arrow keys; Escape dismisses.` : ariaLabel}
+    <div ref={shellRef} className={styles.shell} onKeyDown={e=>{if(e.key==='Escape')setProbe(null)}}>
+    <div data-lab-canvas ref={wrapRef} className={`${className ?? ''} ${inspectable ? styles.inspectable : ''}`} role={inspectable ? 'group' : 'img'} aria-label={inspectable ? `${ariaLabel}. Inspect with arrow keys; Escape dismisses.` : ariaLabel}
       tabIndex={inspectable ? 0 : undefined} aria-describedby={probe ? tooltipId : undefined}
       onPointerMove={inspectable ? e => { if(e.pointerType !== 'touch') { const r=e.currentTarget.getBoundingClientRect(); inspectAt(e.clientX-r.left,e.clientY-r.top) } } : undefined}
       onPointerDown={inspectable ? e => { const r=e.currentTarget.getBoundingClientRect(); inspectAt(e.clientX-r.left,e.clientY-r.top) } : undefined}
-      onPointerLeave={inspectable ? e => { if(e.pointerType !== 'touch') setProbe(null) } : undefined}
+      onPointerLeave={inspectable ? e => { if(e.pointerType !== 'touch' && !docked) setProbe(null) } : undefined}
       onFocus={inspectable ? e => { const r=e.currentTarget.getBoundingClientRect(); inspectAt(r.width/2,r.height/2) } : undefined}
-      onBlur={() => setProbe(null)}
+      onBlur={e => { if(!shellRef.current?.contains(e.relatedTarget as Node)) setProbe(null) }}
       onKeyDown={inspectable ? e => {
         if(e.key==='Escape') {setProbe(null);return}
         if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return
@@ -166,12 +173,11 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
       <canvas ref={canvasRef} className="block h-full w-full" />
       {probe && effect.inspect && <>
         <span className={styles.crosshair} style={{left:`${probe.x/probe.w*100}%`}} aria-hidden="true" />
-        <div id={tooltipId} role="tooltip" className={styles.readout} style={(() => { const position=inspectionPosition(probe.x-probe.clipX,probe.y-probe.clipY,probe.visibleW,probe.visibleH); return {...position,left:position.left+probe.clipX,top:position.top+probe.clipY} })()}>
-          <strong>{effect.inspection?.title ?? 'Sample readout'}</strong>
-          <dl>{effect.inspect(probe.x/probe.w,probe.t,params).map(row=><Fragment key={row.label}><dt>{row.label}</dt><dd>{row.value}</dd></Fragment>)}</dl>
-          <small>Frame held{effect.inspection?.caption && ` · ${effect.inspection.caption}`}<br />Move to inspect · Esc to dismiss</small>
-        </div>
+        {rows.filter(row=>row.y!==undefined && row.y>=0 && row.y<=1).map(row=><span key={row.label} className={styles.marker} style={{left:`${probe.x/probe.w*100}%`,top:`${row.y!*100}%`,color:row.color}} aria-hidden="true" />)}
+        {!docked && readout}
       </>}
+    </div>
+    {docked && readout}
     </div>
   )
 }

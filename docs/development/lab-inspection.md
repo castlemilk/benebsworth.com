@@ -7,3 +7,10 @@ The shared EffectCanvas owns pointer-following positioning, chart/visible-window
 Inspection holds the displayed timestamp while active; renderers opting in must support replaying a frame without advancing mutable physics state. For stateful simulations, add a snapshot adapter before opting in. Keep readouts short (the current wave readout uses four rows); validate actual longest labels/values at desktop and narrow widths, including a partially scrolled chart. Very small visible graph regions suppress the readout rather than clipping the data. A plot's own accessibility summary is still required; a tooltip is not a replacement for an accessible table or explanation.
 
 Regression boundaries: exact sampling, numeric formatting, edge placement, unsupported/mini opt-out, held frame, keyboard navigation and dismissal. Run the full suite and inspect actual themed screenshots; functional tests alone do not accept the design. Add effect-specific tests whenever another graph adopts the capability.
+
+
+## Standard visual hierarchy
+
+InspectionRow supports optional `role: 'primary' | 'position'`, `color`, and normalized plot `y` (top=0). The reusable GraphReadout uses the position in its sample header, promotes the primary result, and pairs remaining series with colour swatches. Metadata is optional: ordinary label/value rows still work. A marker must use the renderer's true mapping, never infer a coordinate from a formatted value. Omit markers for hidden or non-plotted series.
+
+Below480px chart width, the same readout docks after the plot instead of covering it. The dock includes a Close button; desktop remains a pointer-following tooltip. Both layouts retain the same values, held timestamp and keyboard controls. The plot keeps its own measured aspect and canvas size while the dock grows below it. Reuse the shared stylesheet rather than per-effect tooltip styling.

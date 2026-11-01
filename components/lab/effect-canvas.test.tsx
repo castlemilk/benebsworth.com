@@ -191,3 +191,25 @@ describe('EffectCanvas inspection', () => {
     expect(ui.getByRole('img').getAttribute('tabindex')).toBeNull()
   })
 })
+
+it('docks narrow readouts outside the plot and closes without losing the controls', () => {
+  const env=setup(), {effect}=mockEffect()
+  effect.inspection={title:'Test instrument',caption:'Volts'}
+  effect.inspect=()=>[
+    {label:'Position',value:'50%',role:'position'},
+    {label:'Result',value:'1.25',role:'primary',color:'#7755cc',y:.25},
+    {label:'Component',value:'0.5',color:'#008877',y:.5},
+  ]
+  const ui=render(<EffectCanvas effect={effect} params={{}} ariaLabel="Inspectable plot" />)
+  env.resize(390,240);env.visible(true);env.frame(100)
+  const plot=ui.getByRole('group')
+  fireEvent.focus(plot)
+  const dock=ui.getByRole('region',{name:'Test instrument'})
+  expect(plot.contains(dock)).toBe(false)
+  expect(dock.textContent).toContain('1.25')
+  expect(dock.textContent).toContain('Volts')
+  expect(ui.queryByRole('tooltip')).toBeNull()
+  fireEvent.click(ui.getByRole('button',{name:'Close graph readout'}))
+  expect(ui.queryByRole('region')).toBeNull()
+  expect(ui.getByRole('group')).toBe(plot)
+})

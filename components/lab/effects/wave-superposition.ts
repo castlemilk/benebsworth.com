@@ -27,10 +27,10 @@ export const waveSuperposition: EffectModule = {
     const y1 = a * Math.sin(2 * Math.PI * Number(p.freq1) * sampleX * 4 - phase)
     const y2 = a * Math.sin(2 * Math.PI * Number(p.freq2) * sampleX * 4 - phase)
     return [
-      { label: 'Position', value: `${(sampleX * 100).toFixed(1)}%` },
-      { label: 'Wave 1', value: y1.toFixed(3) },
-      { label: 'Wave 2', value: y2.toFixed(3) },
-      { label: 'Sum', value: (y1 + y2).toFixed(3) },
+      { label: 'Position', role: 'position', value: `${(sampleX * 100).toFixed(1)}%` },
+      { label: 'Wave 1', value: y1.toFixed(3), color: '#00c8b4', y: p.showComponents ? .5 - .35*y1 : undefined },
+      { label: 'Wave 2', value: y2.toFixed(3), color: '#e68c3c', y: p.showComponents ? .5 - .35*y2 : undefined },
+      { label: 'Result / sum', role: 'primary', value: (y1 + y2).toFixed(3), color: String(p.color), y: .5 - .35*(y1+y2) },
     ]
   },
   createRenderer(ctx, dims, theme = { bg: '#0a0a0c', fg: '#ececf0' }) {

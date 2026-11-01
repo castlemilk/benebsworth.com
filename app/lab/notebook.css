@@ -57,7 +57,7 @@ html:not(.dark) body:has(.lab-notebook) { --bg:#f7f3ea; --surface:#fffcf6; --sur
 .lab-instrument > :first-child { --stage:#f7f3ea; border:0; border-radius:0; background:transparent; margin-top:1.25rem; }
 .dark .lab-instrument > :first-child { --stage:#101212; }
 @media(max-width:850px) { .lab-instrument { grid-template-columns:minmax(0,1fr); gap:1rem; } .lab-instrument > :first-child { margin-top:0; } }
-.lab-instrument-stage > [class*='aspect-'] { border:0; border-radius:0; background:transparent; }
+.lab-instrument-stage [data-lab-canvas] { border:0; border-radius:0; background:transparent; }
 .lab-instrument-legend { display:flex; flex-wrap:wrap; gap:.6rem 1.25rem; padding:1rem 0; border-top:1px solid var(--border); color:var(--muted); font:.65rem/1.5 var(--font-mono),monospace; }
 .lab-instrument-legend span { display:inline-flex; align-items:center; gap:.45rem; }
 .lab-instrument-legend i { width:1.5rem; height:2px; display:inline-block; }

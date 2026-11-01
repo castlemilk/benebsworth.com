@@ -16,6 +16,6 @@ describe('Inspection placement and exact samples',()=>{
     expect(rows.map(x=>x.value)).toEqual(['0.0%','0.000','0.000','0.000'])
     const quarter=waveSuperposition.inspect!(0,Math.PI/8*1000,defaults)
     expect(quarter.find(x=>x.label==='Wave 1')?.value).toBe('-0.600')
-    expect(quarter.find(x=>x.label==='Sum')?.value).toBe('-1.200')
+    expect(quarter.find(x=>x.label==='Result / sum')?.value).toBe('-1.200')
   })
 })

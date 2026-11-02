@@ -157,6 +157,10 @@ const TAG_RULES: Array<{ match: string[]; topic: Topic }> = [
   { match: ['kubernetes', 'containers', 'ci/cd', 'knative', 'skaffold'], topic: TOPIC.kubernetes },
   { match: ['cosmology', 'astrophysics', 'black hole', 'cosmic', 'relativity', 'spacetime'], topic: TOPIC.cosmology },
   { match: ['hiking', 'trail-guide', 'trek', 'trekking'], topic: TOPIC.hiking },
+  { match: ['ai', 'artificial intelligence', 'machine-learning', 'machine learning', 'deep-learning', 'deep learning', 'llm'], topic: TOPIC.ai },
+  { match: ['electrical engineering', 'electronics', 'circuits', 'dsp', 'signal processing'], topic: TOPIC.ee },
+  { match: ['physics', 'quantum', 'mechanics'], topic: TOPIC.physics },
+  { match: ['software', 'programming', 'python', 'go', 'nodejs'], topic: TOPIC.software },
   { match: ['personal', 'general'], topic: TOPIC.general },
 ]
 

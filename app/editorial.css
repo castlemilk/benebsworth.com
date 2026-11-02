@@ -129,7 +129,7 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .research-article .folio-post-title{font:450 clamp(2.7rem,4.6vw,4.6rem)/1.09 'Folio Serif',Georgia,serif;letter-spacing:-.035em;text-wrap:balance;overflow-wrap:break-word;margin:1.3rem 0 0;max-width:28ch}
 .folio-post-deck{font:1.25rem/1.75 'Folio Serif',Georgia,serif;max-width:62ch;color:var(--muted);margin:1rem 0 0;text-wrap:pretty}
 .folio-post-tags{display:flex;flex-wrap:wrap;gap:.45rem 1rem;padding:0;margin:1.1rem 0 0;list-style:none;font:500 .8rem/1.5 'Folio Condensed',sans-serif;color:var(--muted);letter-spacing:.04em}
-.folio-post-tags li{padding:.2rem 0;border-bottom:1px solid var(--border)}
+.folio-post-tags li{padding:0;border:0}
 .folio-takeaways{border-block:1px solid var(--border);padding:1.4rem 0 1.6rem;margin:0 0 2.5rem;max-width:68ch}
 .folio-takeaways h2{font:400 1.65rem/1.3 'Folio Hand',cursive;color:var(--folio-handwriting,#b32624);margin:0 0 1.3rem}
 .folio-takeaways ul{padding:0 0 0 1.2rem;margin:0;list-style:disc}
@@ -253,3 +253,11 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 @media(min-width:1024px){
  .folio-article-grid{grid-template-columns:minmax(0,1fr) 12rem}
 }
+
+/* Shared compact subject labels: semantic colour, readable text, original glyphs. */
+.topic-lozenge{display:inline-flex;align-items:center;gap:.4rem;max-width:100%;padding:.28rem .65rem;border:1px solid color-mix(in srgb,var(--ink) 22%,var(--border));border-radius:999px;background:color-mix(in srgb,var(--ink) 8%,var(--bg));color:var(--fg);font:500 .8125rem/1.35 var(--font-sans),sans-serif;letter-spacing:0;text-transform:none;vertical-align:middle}
+.topic-lozenge>span:last-child{overflow-wrap:anywhere;min-width:0}
+.topic-lozenge__glyph{display:inline-flex;flex-shrink:0;color:color-mix(in srgb,var(--ink) 65%,var(--fg))}
+.topic-lozenge__dot{width:4px;height:4px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.topic-lozenge--primary{font-weight:650;gap:.5rem;padding:.35rem .8rem .35rem .5rem}
+.topic-lozenge--primary .topic-lozenge__glyph{box-sizing:content-box;padding:4px;border-radius:50%;background:color-mix(in srgb,var(--ink) 12%,transparent)}

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import type { BlogPostSummary } from '@/lib/content'
-import { tagColor } from '@/lib/tag-colors'
+import { PostTag } from './post-tag'
 import { topicFor } from '@/lib/topics'
 import { fmtDate } from '@/lib/format'
 import { Reveal } from '@/components/motion/reveal'
@@ -40,22 +40,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
               </p>
               {post.tags.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
-                  {post.tags.slice(0, 4).map((t) => {
-                    const c = tagColor(t)
-                    return (
-                      <span
-                        key={t}
-                        className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-wider"
-                        style={{
-                          '--ink': c,
-                          borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
-                          backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                        } as React.CSSProperties}
-                      >
-                        {t}
-                      </span>
-                    )
-                  })}
+                  {post.tags.slice(0, 4).map((t) => <PostTag key={t} tag={t} />)}
                 </div>
               )}
             </div>

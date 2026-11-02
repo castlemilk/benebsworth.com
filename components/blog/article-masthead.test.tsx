@@ -9,7 +9,7 @@ const topic=topicFor({slug:'every-wire-is-an-rlc-circuit',tags:['electronics']} 
 describe('shared reading folio shell',()=>{
  it('preserves authored masthead data with one semantic h1',()=>{
   const html=renderToStaticMarkup(<ArticleMasthead title="A deliberately long technical title" description="Authored description, unchanged." date="2026-10-22" readingTime={7} tags={['circuits','systems']} topic={topic}/>);
-  expect(html).toContain('folio-post-topic accent-ink');expect(html).toContain(`--ink:${topic.accent}`);expect(html.match(/<h1/g)).toHaveLength(1);expect(html).toContain('A deliberately long technical title');expect(html).toContain('Authored description, unchanged.');expect(html).toContain('dateTime="2026-10-22"');expect(html).toContain('min read');expect(html).toContain('Ben Ebsworth');expect(html).toContain('aria-label="Article topics"');expect(html).not.toContain('blur-3xl');expect(html).not.toContain('radial-gradient');
+  expect(html).toContain('folio-post-topic');expect(html).toContain(`--ink:${topic.accent}`);expect(html.match(/<h1/g)).toHaveLength(1);expect(html).toContain('A deliberately long technical title');expect(html).toContain('Authored description, unchanged.');expect(html).toContain('dateTime="2026-10-22"');expect(html).toContain('min read');expect(html).toContain('Ben Ebsworth');expect(html).toContain('aria-label="Article topics"');expect(html).not.toContain('blur-3xl');expect(html).not.toContain('radial-gradient');
  });
  it('omits absent deck/tags without placeholders and keeps the six-tag limit',()=>{
   const empty=renderToStaticMarkup(<ArticleMasthead title="Title" date="2026-10-22" readingTime={1} tags={[]} topic={topic}/>);expect(empty).not.toContain('folio-post-deck');expect(empty).not.toContain('Article topics');

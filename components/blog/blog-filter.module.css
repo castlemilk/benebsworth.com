@@ -1,0 +1,26 @@
+/* Hallmark: established editorial archive; shared tokens, real subject marks, restrained controls. */
+/* Critique: connect guidance to the input; separate search from naturally wrapping topics. */
+.discovery{position:relative;padding:0 0 1.5rem;border-bottom:1px solid var(--border);scroll-margin-top:10rem;min-width:0}
+.labelRow{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:.65rem;min-height:2.5rem}
+.labelRow label{font:600 .9rem/1.5 var(--font-sans),sans-serif;color:var(--fg)}
+.note{position:relative;margin-right:2rem;color:var(--folio-handwriting);font:1.65rem/1.2 'Folio Hand',cursive;transform:rotate(-3deg);padding-bottom:.15rem}
+.note svg{position:absolute;width:40px;height:28px;right:100%;top:60%;margin-right:.3rem;pointer-events:none}
+.search{display:flex;align-items:center;gap:.85rem;min-height:56px;padding:0 .65rem 0 1rem;border:1px solid var(--border);border-radius:12px;background:color-mix(in srgb,var(--bg) 94%,var(--fg));color:var(--muted);transition:border-color .16s,box-shadow .16s}
+.search:focus-within{border-color:var(--blog);box-shadow:0 0 0 3px color-mix(in srgb,var(--blog) 15%,transparent)}
+.search>svg{flex-shrink:0}
+.search input{flex:1;min-width:0;width:100%;padding:.9rem 0;background:transparent;border:0;color:var(--fg);font:400 1rem/1.5 var(--font-sans),sans-serif;outline:none}
+.search input::placeholder{color:var(--muted);opacity:1}
+.search input::-webkit-search-cancel-button{display:none}
+.search .clear{display:grid;place-items:center;width:44px;height:44px;min-width:44px;padding:0;border:0;background:transparent;color:var(--muted);font-size:1.6rem;border-radius:50%}
+.topics{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:1.1rem}
+.topics .topic{--ink:var(--blog);display:inline-flex;align-items:center;gap:.5rem;min-height:44px;max-width:100%;padding:.4rem .75rem;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--fg);font:500 .85rem/1.35 var(--font-sans),sans-serif;text-transform:none;letter-spacing:0;transition:background-color .16s,border-color .16s}
+.topics .topic:hover{background:color-mix(in srgb,var(--ink) 8%,var(--bg));border-color:color-mix(in srgb,var(--ink) 55%,var(--border))}
+.topics .topic[aria-pressed=true]{background:color-mix(in srgb,var(--ink) 13%,var(--bg));border-color:color-mix(in srgb,var(--ink) 65%,var(--border));font-weight:650}
+.topic>span{min-width:0;overflow-wrap:anywhere}
+.count{font:500 .68rem/1 var(--font-mono),monospace;background:color-mix(in srgb,var(--fg) 8%,transparent);padding:.2rem .35rem;border-radius:999px;color:var(--muted)}
+@media(max-width:600px){.note{font-size:1.25rem;margin-right:.3rem}.note svg{width:27px;height:23px;top:75%;margin-right:0}.labelRow label{font-size:.85rem}.labelRow{gap:.7rem}.topics{gap:.4rem}.topics .topic{font-size:.8rem;padding:.35rem .6rem;gap:.4rem}.search{gap:.65rem;padding-left:.8rem}.discovery{padding-bottom:1.2rem}}
+@media(prefers-reduced-motion:reduce){.search,.topics .topic{transition:none}}
+@media(forced-colors:active){.topics .topic[aria-pressed=true]{border:2px solid Highlight}}
+
+.topics .topic:active,.search .clear:active{background:color-mix(in srgb,var(--fg) 12%,var(--bg))}
+.topics .topic:disabled,.search .clear:disabled{opacity:.5;cursor:not-allowed}

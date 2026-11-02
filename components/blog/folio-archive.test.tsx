@@ -6,12 +6,12 @@ import { FolioEntry } from './folio-entry'
 import { BlogPostCard } from './blog-post-card'
 
 describe('research folio archive', () => {
-  it('renders a semantic heading and meaningful note target without client scripting', () => {
+  it('keeps the editorial heading without a detached instruction', () => {
     const html = renderToStaticMarkup(<FolioArchiveHeading />)
     expect(html).toContain('<h1>')
-    expect(html).toContain('href="#archive-index"')
-    expect(html).toContain('Pick a thread.')
-    expect(html).toContain('aria-hidden="true"')
+    expect(html).not.toContain('folio-archive-note')
+    expect(html).not.toContain('Pick a thread.')
+    expect(html).toContain('hand-underline')
     expect(html).not.toContain('<canvas')
   })
   it('keeps the entry semantic without pointer tracking or fake actions', () => {

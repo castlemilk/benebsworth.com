@@ -21,7 +21,7 @@ export function RelatedLabs({
   limit = 3,
   variant = 'default',
 }: {
-  /** Post tags — match against lab effect tags (case-insensitive substring). */
+  /** Post tags — match whole topics or phrases, never fragments inside words. */
   tags?: string[]
   /** Post labels — also match against lab effect tags. */
   labels?: string[]
@@ -68,9 +68,12 @@ export function RelatedLabs({
 
   const scored: Array<{ entry: LabEntry; score: number }> = LAB_DEMO_EFFECTS
     .map((entry) => {
-      const entryTags = entry.tags.map((t) => t.toLowerCase())
+      const entryTags = entry.tags.map(normaliseTopic)
       const tagScore = query.reduce((acc, q) => {
-        return acc + (entryTags.some((t) => t.includes(q) || q.includes(t)) ? 1 : 0)
+        const topic = normaliseTopic(q)
+        return acc + (topic && entryTags.some((t) => t && (
+          ` ${t} `.includes(` ${topic} `) || ` ${topic} `.includes(` ${t} `)
+        )) ? 1 : 0)
       }, 0)
       const categoryScore = wantedCategories.has(entry.category) ? 1 : 0
       return { entry, score: tagScore + categoryScore }
@@ -183,6 +186,10 @@ export function RelatedLabs({
 
 // Deterministic 32-bit hash. Used for the day-stable "random" shuffle
 // fallback so the same set of fillers appears for 24h before rotating.
+function normaliseTopic(value: string): string {
+  return value.toLowerCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 function hash(s: string): number {
   let h = 2166136261
   for (let i = 0; i < s.length; i++) {

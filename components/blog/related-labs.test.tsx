@@ -27,6 +27,17 @@ describe('related labs preserve registry identity', () => {
     expect(hrefs).toHaveLength(3)
     for (const href of hrefs) expect(LAB_DEMO_EFFECTS.find(e => href === `/lab/${e.slug}`)?.category).toBe('ai')
   })
+  it('does not match RF inside performance on an AI article', () => {
+    const hrefs = destinations(renderToStaticMarkup(<RelatedLabs tags={['software', 'machine-learning', 'llm', 'metal', 'performance']} limit={3} />))
+    expect(hrefs).toHaveLength(3)
+    for (const href of hrefs) expect(LAB_DEMO_EFFECTS.find(e => href === `/lab/${e.slug}`)?.category).toBe('ai')
+  })
+  it('retains explicit RF and multi-word topic matches', () => {
+    const rf = destinations(renderToStaticMarkup(<RelatedLabs tags={['RF']} limit={3} />))
+    for (const href of rf) expect(LAB_DEMO_EFFECTS.find(e => href === `/lab/${e.slug}`)?.tags).toContain('rf')
+    const attention = destinations(renderToStaticMarkup(<RelatedLabs tags={['self-attention']} limit={1} />))
+    expect(attention).toEqual(['/lab/self-attention'])
+  })
   it('keeps inline links and About-sized limits; typography is scoped to reading pages', () => {
     const inline = renderToStaticMarkup(<RelatedLabs tags={['physics']} variant="inline" limit={4} />)
     expect(destinations(inline)).toHaveLength(4)

@@ -13,6 +13,18 @@ const cssText = css.toString()
 afterEach(cleanup)
 
 describe('folio stats and callouts', () => {
+  it('keeps all four M5 metrics and shares label/value/context rows', () => {
+    const source = readFileSync('content/blog/beating-splash-on-an-m5-max/index.mdx', 'utf8')
+    const stats = [...source.matchAll(/<Stat label="([^"]+)" value="([^"]+)" context="([^"]+)" \/>/g)].filter(stat => stat[1].includes('per round'))
+    expect(stats.map(stat => stat[2])).toEqual(['28', '86', '25 ms', '48'])
+    const { container } = render(<article className="research-article"><StatGroup>{stats.map(([, label, value, context]) =>
+      <Stat key={label} label={label} value={value} context={context} />)}</StatGroup></article>)
+    expect(container.querySelectorAll('dl > div')).toHaveLength(4)
+    expect(cssText).toContain('grid-template-rows: subgrid')
+    expect(cssText).toContain('grid-row: span 3')
+    expect(cssText).toContain('row-gap: 0')
+  })
+
   it('retains definition-list semantics and the exact authored RLC values/context', () => {
     const source = readFileSync('content/blog/every-wire-is-an-rlc-circuit/index.mdx', 'utf8')
     const stats = [...source.matchAll(/<Stat label="([^"]+)" value="([^"]+)" context="([^"]+)" \/>/g)]
@@ -69,7 +81,7 @@ describe('folio stats and callouts', () => {
         expect(rule.selector.split(',\n').every(selector => selector.trim().startsWith(':global(:is(.research-article, .folio-study))'))).toBe(true)
       }
     })
-    expect(cssText).toContain('repeat(auto-fit, minmax(min(100%, 10rem), 1fr))')
+    expect(cssText).toContain('repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr))')
     expect(cssText).toContain('overflow-wrap: anywhere')
     expect(cssText).toContain("[data-callout-type='warning']")
     expect(cssText).toContain('3px solid var(--folio-accent')

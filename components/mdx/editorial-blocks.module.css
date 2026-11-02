@@ -1,11 +1,15 @@
 /* Reading surfaces only. Shared UI and non-blog MDX retain their existing skin. */
 :global(:is(.research-article, .folio-study)) .stats {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-  gap: 1.5rem 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  gap: 1.5rem;
   margin-block: 2.75rem;
 }
 
 :global(:is(.research-article, .folio-study)) .stat {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  row-gap: 0;
   min-width: 0;
   padding: 1rem 0 0;
   border: 0;

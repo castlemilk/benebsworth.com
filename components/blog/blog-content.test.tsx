@@ -16,19 +16,19 @@ function titles(container: HTMLElement) { return Array.from(container.querySelec
 describe('archive discovery interactions', () => {
   it('keeps full counts, stable topic ties, source order, dates and exact destinations', () => {
     const v = render(<BlogContent posts={posts} />)
-    expect(v.getAllByRole('button').map(b => b.textContent)).toEqual(['', 'All4', 'Kubernetes2', 'Service Mesh1', 'React1'])
+    expect(v.getAllByRole('button').map(b => b.textContent)).toEqual(['All topics4', 'Kubernetes2', 'Service Mesh1', 'React1'])
     expect(titles(v.container)).toEqual(posts.map(p => p.title))
     expect(v.getAllByRole('link').map(a => a.getAttribute('href')?.replace(/\/$/, ''))).toEqual(posts.map(p => `/blog/${p.slug}`))
     expect(v.container.querySelector('time')?.getAttribute('datetime')).toBe(posts[0].date)
     for (const src of ['/first.webp', '/third.webp']) expect(v.container.querySelector(`img[src="${src}"]`)?.getAttribute('alt')).toBe('')
-    expect((v.getByRole('button', { name: 'Clear search' }) as HTMLButtonElement).disabled).toBe(true)
+    expect(v.queryByRole('button', { name: 'Clear search' })).toBeNull()
   })
   it.each([['  SIGNAL  ', ['Signal alpha', 'Second note']], ['RARE-TAG', ['Signal alpha']], ['ordinary', ['Third note']]])('matches title, description and tags for %s', (query, expected) => {
     const v = render(<BlogContent posts={posts} />)
     fireEvent.change(v.getByRole('searchbox'), { target: { value: query } })
     expect(titles(v.container)).toEqual(expected)
     expect(v.getByRole('status').textContent).toBe(`${expected.length} result${expected.length === 1 ? '' : 's'} for "${query.trim()}"`)
-    expect(v.getByRole('button', { name: /All\s*4/ }).textContent).toBe('All4')
+    expect(v.getByRole('button', { name: /All topics\s*4/ }).textContent).toBe('All topics4')
   })
   it('intersects topic/search, restores clear focus without clearing topic, and toggles topic/All', () => {
     const v = render(<BlogContent posts={posts} />)
@@ -48,7 +48,7 @@ describe('archive discovery interactions', () => {
     expect(topic.getAttribute('aria-pressed')).toBe('false')
     expect(titles(v.container)).toEqual(posts.map(p => p.title))
     fireEvent.change(input, { target: { value: 'signal' } }); fireEvent.click(topic)
-    fireEvent.click(v.getByRole('button', { name: /All\s*4/ }))
+    fireEvent.click(v.getByRole('button', { name: /All topics\s*4/ }))
     expect(input.value).toBe('signal')
     expect(titles(v.container)).toEqual(['Signal alpha', 'Second note'])
   })
@@ -73,7 +73,7 @@ describe('archive discovery interactions', () => {
   it('distinguishes empty source data from filtered no-results', () => {
     const v = render(<BlogContent posts={[]} />)
     expect(v.getByRole('status').textContent).toBe('No posts are available yet.')
-    expect(v.getByRole('button', { name: /All\s*0/ })).toBeTruthy()
+    expect(v.getByRole('button', { name: /All topics\s*0/ })).toBeTruthy()
     expect(v.queryAllByRole('link')).toHaveLength(0)
   })
   it('preserves long copy and existing tag limits without inventing missing thumbnails', () => {

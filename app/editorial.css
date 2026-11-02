@@ -28,12 +28,12 @@
 /* The archive shares the reading folio, not the dashboard spotlight surface. */
 .folio-archive{--folio-accent:#a34c29;--folio-note:#345675}
 .dark .folio-archive{--folio-accent:#dda17a;--folio-note:#9ebedb}
-.folio-archive-heading{display:grid;grid-template-columns:minmax(0,1fr) 12rem;gap:3rem;align-items:end;padding:3.5rem 0 4rem}
+.folio-archive-heading{display:grid;grid-template-columns:minmax(0,1fr);gap:0;align-items:end;padding:2.5rem 0 1.5rem}
 .folio-archive-kicker{font:600 .85rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
-.folio-archive-heading h1{font:450 clamp(3.4rem,7vw,6.5rem)/1.03 'Folio Serif',Georgia,serif;letter-spacing:-.045em;margin:0}
+.folio-archive-heading h1{font:450 clamp(3rem,6vw,5.5rem)/1.03 'Folio Serif',Georgia,serif;letter-spacing:-.045em;margin:0}
 .folio-archive-heading h1>span{position:relative;display:inline-block}
 .folio-archive-heading h1 .annotation-mark{position:absolute;left:-4%;bottom:-.3em;width:110%;height:.5em;color:var(--folio-accent)}
-.folio-archive-intro{font:1.2rem/1.75 'Folio Serif',Georgia,serif;max-width:45ch;margin-top:2rem;color:var(--muted)}
+.folio-archive-intro{font:1.2rem/1.75 'Folio Serif',Georgia,serif;max-width:60ch;margin-top:1.5rem;color:var(--muted)}
 .folio-archive-note{position:relative;padding-bottom:.5rem;color:var(--folio-note)}
 .folio-archive-note>.annotation-mark{width:70px;height:55px;transform:rotate(95deg);color:inherit;margin-bottom:1rem}
 .folio-archive-note p{font:1.8rem/1.15 'Folio Hand',cursive;transform:rotate(-3deg);margin-bottom:1rem}

@@ -13,7 +13,7 @@
 .field input { min-width:0; width:100%; min-height:52px; background:transparent; color:var(--color-fg); font-size:1rem; padding:.75rem .25rem; }
 .field input::placeholder { color:var(--color-muted); }
 .results { max-height:55dvh; overflow:auto; overscroll-behavior:contain; }
-.result { display:block; padding:1rem .75rem; border-bottom:1px solid var(--color-border); text-decoration:none; }
+.result { position:relative; display:flex; align-items:flex-start; gap:1rem; padding:1rem .75rem; border-bottom:1px solid var(--color-border); text-decoration:none; }
 .result[data-active=true],.result:hover { background:var(--color-surface); }
 .resultTitle { display:block; font-family:var(--font-editorial-display); font-size:1.25rem; line-height:1.3; color:var(--color-fg); }
 .excerpt { display:block; font-size:.875rem; line-height:1.6; color:var(--color-muted); margin-top:.4rem; }
@@ -31,3 +31,14 @@
 
 .field:focus-within { border-bottom:2px solid var(--editorial-search-focus); margin-bottom:-1px; }
 .field input:focus-visible { outline:none; }
+
+.result[data-active=true]::before { content:''; position:absolute; inset-block:.75rem; left:0; width:2px; background:var(--editorial-search-focus); }
+.resultCopy { display:block; min-width:0; }
+.topicIcon { flex:0 0 28px; width:28px; height:28px; margin-top:.2rem; color:var(--color-fg); }
+.topicIcon img { width:28px; height:28px; object-fit:contain; }
+.topicIcon span { display:block; width:28px; height:28px; background:currentColor; mask-position:center; mask-size:contain; mask-repeat:no-repeat; }
+.cue { display:flex; align-items:center; justify-content:flex-end; gap:.5rem; height:36px; color:var(--editorial-search-focus); font-family:var(--font-editorial-hand); font-size:1.15rem; padding-right:1rem; }
+.cue svg { width:46px; height:26px; transform:rotate(-20deg); }
+@media(max-width:600px) { .cue { display:none; } .result { gap:.75rem; } .topicIcon,.topicIcon img,.topicIcon span { width:24px; height:24px; } .topicIcon { flex-basis:24px; } }
+
+.cue[data-visible=false] { visibility:hidden; }

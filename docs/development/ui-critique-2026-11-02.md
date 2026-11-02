@@ -41,3 +41,9 @@ This is a consolidation of the user's requested existing sections, not six new p
 ## Narrow-width follow-through
 
 At 390px, Projects has the project title below the fold after a large emblem; Hiking begins with its photo only near 680px; About puts a tall dark interactive portrait before the author name. These are composition findings, not overflow bugs. The existing menu opened and selecting Blog/Hiking/About closed it and navigated correctly. Search reproduces the containment bug at 390×104.8 inside a 390×740 frame. Mobile Blog preserves readable serif copy but the first actual archive item remains below the first screen. Preserve functional menu wiring; prioritize useful content over introductory chrome.
+
+## Approved search direction follow-through
+
+The owner approved the light/dark imagegen search concept on 2 November. This implementation reuses the existing category assets (including canonical Kubernetes), adds a quiet red selected-result rule and a compact handwritten cue, and indexes authored descriptions instead of showing concatenated post-header text. Generated icons, foliage and paper textures are not shipped. Older indexes retain excerpt/title fallbacks. Local asset paths are validated before image/mask rendering. The cue reserves its space when keyboard selection changes, avoiding a result-list jump.
+
+Source baseline: PR84 `240739b06b838c2887cf0806abc660eb18e1005f`. Focused verification: 10 search tests passed, TypeScript and targeted ESLint passed using already installed offline tools. Actual desktop/mobile light/dark review of the new artifact remains pending; this section is not a deployment or aesthetic-acceptance claim.

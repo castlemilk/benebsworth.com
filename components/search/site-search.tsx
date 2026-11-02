@@ -18,17 +18,8 @@ import styles from './site-search.module.css'
  * No backend, no third-party service — the index is static files on the CDN.
  */
 
-interface PagefindSubResult {
-  url: string
-  excerpt: string
-  title?: string
-}
-interface PagefindData {
-  url: string
-  excerpt: string
-  meta?: { title?: string; image?: string }
-  sub_results?: PagefindSubResult[]
-}
+import { mapSearchHit, type PagefindData, type Hit } from './search-hit'
+
 interface Pagefind {
   search: (q: string) => Promise<{ results: { id: string; data: () => Promise<PagefindData> }[] }>
   options?: (o: Record<string, unknown>) => Promise<void>
@@ -55,12 +46,6 @@ function loadPagefind(): Promise<Pagefind | null> {
     })()
   }
   return pagefindPromise
-}
-
-interface Hit {
-  url: string
-  title: string
-  excerpt: string
 }
 
 type Status = 'idle' | 'loading' | 'ok' | 'empty' | 'unavailable'
@@ -137,11 +122,7 @@ export function SiteSearch() {
       const res = await pf.search(q)
       const data = await Promise.all(res.results.slice(0, 8).map((r) => r.data()))
       if (id !== seqRef.current) return
-      const mapped: Hit[] = data.map((d) => ({
-        url: d.url,
-        title: d.meta?.title || d.sub_results?.[0]?.title || d.url,
-        excerpt: d.excerpt,
-      }))
+      const mapped = data.map(mapSearchHit)
       setHits(mapped)
       setActive(0)
       setStatus(mapped.length ? 'ok' : 'empty')
@@ -221,12 +202,20 @@ export function SiteSearch() {
                 spellCheck={false}
               />
             </div>
+            {status === 'ok' && <div className={styles.cue} data-visible={active === 0} aria-hidden="true">
+              <span>follow the thread</span><svg viewBox="0 0 70 30" fill="none"><path d="M65 3C44 0 25 10 9 24M9 24l3-10M9 24l11-1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>}
             <div className={styles.results} aria-busy={status === 'loading'}>
               {status === 'ok' && hits.map((h, i) => (
                 <a key={h.url} href={h.url} onClick={() => setOpen(false)} onMouseMove={() => setActive(i)}
                   className={styles.result} data-active={i === active}>
-                  <span className={styles.resultTitle}>{h.title}</span>
-                  <span className={styles.excerpt} dangerouslySetInnerHTML={{ __html: h.excerpt }} />
+                  {h.topicIcon && <span className={styles.topicIcon} aria-hidden="true">
+                    {h.topicMode === 'mask' ? <span style={{ maskImage:`url("${h.topicIcon}")`, WebkitMaskImage:`url("${h.topicIcon}")` }} /> : <img src={h.topicIcon} width={28} height={28} alt=""/>}
+                  </span>}
+                  <span className={styles.resultCopy}>
+                    <span className={styles.resultTitle}>{h.title}</span>
+                    {h.description ? <span className={styles.excerpt}>{h.description}</span> : <span className={styles.excerpt} dangerouslySetInnerHTML={{ __html: h.excerpt }} />}
+                  </span>
                 </a>
               ))}
               <p className={styles.status} role="status" aria-live="polite">

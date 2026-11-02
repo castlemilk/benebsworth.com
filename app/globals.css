@@ -453,7 +453,7 @@ a:focus-visible .word .snake-body {
 }
 
 /* Shared editorial display face for overlays outside page-level wrappers. */
-:root { --font-editorial-display: 'Folio Serif', Georgia, serif; }
+:root { --font-editorial-display: 'Folio Serif', Georgia, serif; --font-editorial-hand: 'Folio Hand', cursive; }
 
 :root {
   --editorial-search-paper: #faf7ef;

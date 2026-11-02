@@ -39,6 +39,17 @@ function composition(container: HTMLElement) {
 const commentary = <><h3>Observe the response</h3><p>All the extended explanation remains readable.</p><ul><li>Keep the boundary fixed.</li></ul><a href="#method">Read the method</a></>
 
 describe('container-aware lab figures', () => {
+  it('bounds narrow worked-example plots without changing authored desktop heights', () => {
+    const css = postcss.parse(readFileSync('components/mdx/lab-canvas.module.css', 'utf8'))
+    const limits: string[] = []
+    css.walkAtRules('container', rule => {
+      if (rule.params === 'lab-side (max-width: 32rem)') {
+        rule.walkDecls('max-height', declaration => { limits.push(declaration.value) })
+      }
+    })
+    expect(limits).toEqual(['15rem'])
+  })
+
   it('names worked examples while preserving independent presets and reset', () => {
     const { getByRole, getAllByRole } = render(<>
       <LabSide effect="response" title="Worked example: slow" params={{ speed: 2 }}><p>Slow example</p></LabSide>

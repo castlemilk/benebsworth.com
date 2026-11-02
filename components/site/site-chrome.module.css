@@ -1,5 +1,5 @@
 /* Editorial field-notebook chrome. Preserve native navigation and theme controls. */
-.header { position:sticky; top:0; z-index:50; border-bottom:1px solid var(--color-border); background:var(--color-bg); color:var(--color-fg); }
+.header { position:sticky; top:0; z-index:50; border-bottom:1px solid var(--color-border); background:var(--editorial-search-paper); color:var(--color-fg); }
 .headerInner { max-width:72rem; margin-inline:auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 2rem; }
 .brand { flex-shrink:0; font-family:var(--font-editorial-display); font-size:1.6rem; line-height:1.1; letter-spacing:-.045em; }
 .actions { display:flex; align-items:center; gap:.75rem; }
@@ -9,11 +9,11 @@
 .navLink:hover,.mobileLink:hover { color:var(--editorial-search-focus); }
 .active::after { content:''; position:absolute; left:0; right:0; bottom:2px; border-bottom:2px solid var(--editorial-search-focus); border-radius:45%; transform:rotate(-2deg); }
 .menuButton { display:grid; place-items:center; width:44px; height:44px; flex-shrink:0; border:1px solid var(--color-border); border-radius:50%; color:var(--color-fg); }
-.mobileNav { border-top:1px solid var(--color-border); padding:.5rem 1.5rem 1rem; background:var(--color-bg); }
+.mobileNav { border-top:1px solid var(--color-border); padding:.5rem 1.5rem 1rem; background:var(--editorial-search-paper); }
 .mobileNav[hidden] { display:none; }
 .mobileLink { display:inline-flex; min-height:44px; align-items:center; font-size:1.2rem; }
 .header a:focus-visible,.header button:focus-visible,.ancestor:focus-visible { outline:2px solid var(--color-fg); outline-offset:4px; }
-.breadcrumb { background:var(--color-bg); color:var(--color-muted); border-bottom:1px solid var(--color-border); }
+.breadcrumb { background:var(--editorial-search-paper); color:var(--color-muted); border-bottom:1px solid var(--color-border); }
 .crumbInner { max-width:72rem; margin-inline:auto; padding:.65rem 2rem; }
 .crumbList { display:flex; flex-wrap:wrap; align-items:baseline; gap:.25rem .75rem; font-family:var(--font-editorial-display); font-size:1rem; line-height:1.55; }
 .crumbItem { display:flex; min-width:0; align-items:baseline; gap:.75rem; }

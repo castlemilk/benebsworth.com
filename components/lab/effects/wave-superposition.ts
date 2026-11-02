@@ -10,6 +10,9 @@ export const controls: ControlSpec[] = [
 
 export const defaults: Params = { freq1: 2, freq2: 2.3, amp: 0.6, showComponents: true, color: '#7c5cff' }
 
+// Opaque component inks remain legible on both paper and dark stages.
+export const waveInks = { first: '#008c80', second: '#bd762e' } as const
+
 /** Parse hex to r,g,b 0-255 */
 function hexRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '')
@@ -28,8 +31,8 @@ export const waveSuperposition: EffectModule = {
     const y2 = a * Math.sin(2 * Math.PI * Number(p.freq2) * sampleX * 4 - phase)
     return [
       { label: 'Position', role: 'position', value: `${(sampleX * 100).toFixed(1)}%` },
-      { label: 'Wave 1', value: y1.toFixed(3), color: '#00c8b4', y: p.showComponents ? .5 - .35*y1 : undefined },
-      { label: 'Wave 2', value: y2.toFixed(3), color: '#e68c3c', y: p.showComponents ? .5 - .35*y2 : undefined },
+      { label: 'Wave 1', value: y1.toFixed(3), color: waveInks.first, y: p.showComponents ? .5 - .35*y1 : undefined },
+      { label: 'Wave 2', value: y2.toFixed(3), color: waveInks.second, y: p.showComponents ? .5 - .35*y2 : undefined },
       { label: 'Result / sum', role: 'primary', value: (y1 + y2).toFixed(3), color: String(p.color), y: .5 - .35*(y1+y2) },
     ]
   },
@@ -89,8 +92,8 @@ export const waveSuperposition: EffectModule = {
         if (show) {
           // Wave 1 — teal
           ctx.beginPath()
-          ctx.strokeStyle = `rgba(0,200,180,0.4)`
-          ctx.lineWidth = 1.5
+          ctx.strokeStyle = waveInks.first
+          ctx.lineWidth = 2
           for (let i = 0; i < N; i++) {
             const x = (i / (N - 1)) * w
             const y = midY - y1Buf[i] * norm * ampPx * 2
@@ -100,8 +103,8 @@ export const waveSuperposition: EffectModule = {
 
           // Wave 2 — warm orange
           ctx.beginPath()
-          ctx.strokeStyle = `rgba(230,140,60,0.4)`
-          ctx.lineWidth = 1.5
+          ctx.strokeStyle = waveInks.second
+          ctx.lineWidth = 2
           for (let i = 0; i < N; i++) {
             const x = (i / (N - 1)) * w
             const y = midY - y2Buf[i] * norm * ampPx * 2

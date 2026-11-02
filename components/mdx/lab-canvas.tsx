@@ -111,6 +111,7 @@ function LabCanvasInner({
  */
 export function LabSide({
   effect: slug,
+  title: exampleTitle,
   height = 320,
   params: overrides,
   controls = true,
@@ -119,6 +120,8 @@ export function LabSide({
   children,
 }: {
   effect: string
+  /** Authored worked-example name; does not change the registered effect. */
+  title?: string
   height?: number
   params?: Record<string, number | boolean | string>
   controls?: boolean
@@ -134,7 +137,7 @@ export function LabSide({
   if (!effectModule) {
     return (
       <LabSideLayout reverse={reverse} commentary={children}>
-        <LabFigure title={entry.title} height={height} caption={caption} ready={false}>
+        <LabFigure title={exampleTitle ?? entry.title} height={height} caption={caption} ready={false}>
           <div className="h-full w-full motion-safe:animate-pulse" />
         </LabFigure>
       </LabSideLayout>
@@ -144,7 +147,7 @@ export function LabSide({
   return (
     <LabSideInner
       key={slug}
-      title={entry.title}
+      title={exampleTitle ?? entry.title}
       module={effectModule}
       height={height}
       overrides={overrides}

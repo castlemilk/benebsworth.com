@@ -39,6 +39,20 @@ function composition(container: HTMLElement) {
 const commentary = <><h3>Observe the response</h3><p>All the extended explanation remains readable.</p><ul><li>Keep the boundary fixed.</li></ul><a href="#method">Read the method</a></>
 
 describe('container-aware lab figures', () => {
+  it('names worked examples while preserving independent presets and reset', () => {
+    const { getByRole, getAllByRole } = render(<>
+      <LabSide effect="response" title="Worked example: slow" params={{ speed: 2 }}><p>Slow example</p></LabSide>
+      <LabSide effect="response" title="Worked example: fast" params={{ speed: 7 }}><p>Fast example</p></LabSide>
+    </>)
+    expect(getByRole('figure', { name: 'Worked example: slow' })).toBeTruthy()
+    expect(getByRole('figure', { name: 'Worked example: fast' })).toBeTruthy()
+    const sliders = getAllByRole('slider', { name: 'Speed' }) as HTMLInputElement[]
+    fireEvent.change(sliders[0], { target: { value: '4' } })
+    expect(sliders.map(slider => slider.value)).toEqual(['4', '7'])
+    fireEvent.click(getAllByRole('button', { name: /reset/i })[0])
+    expect(sliders.map(slider => slider.value)).toEqual(['2', '7'])
+  })
+
   it('applies real commentary typography only to authored blocks, not nested instruments', () => {
     const css = postcss.parse(readFileSync('components/mdx/lab-canvas.module.css', 'utf8'))
     const rules: Rule[] = []

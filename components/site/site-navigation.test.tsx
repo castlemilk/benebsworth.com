@@ -2,6 +2,7 @@
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, within } from '@testing-library/react'
+import { readFileSync } from 'node:fs'
 import { SiteNav } from './site-nav'
 import { Breadcrumb } from './breadcrumb'
 
@@ -42,14 +43,36 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); docume
 function menu(container: HTMLElement) { return container.querySelector('#mobile-nav') as HTMLElement }
 
 describe('preserved site navigation', () => {
+  it('uses readable mixed-case navigation without losing any destinations', () => {
+    const view = render(<SiteNav />)
+    const nav = view.container.querySelector('[data-desktop-nav]') as HTMLElement
+    expect(within(nav).getAllByRole('link').map(link => [link.textContent, link.getAttribute('href')])).toEqual([
+      ['Projects', '/projects'], ['Blog', '/blog'], ['Lab', '/lab'],
+      ['Vectors', '/vectors'], ['Hiking', '/hiking'], ['About', '/about'],
+    ])
+    const css = readFileSync('components/site/site-chrome.module.css', 'utf8')
+    expect(css).not.toMatch(/text-transform:\s*uppercase|backdrop-filter/)
+    expect(css).toContain('@media(min-width:1024px)')
+    expect(css).toContain('var(--editorial-search-focus)')
+  })
+
+  it('keeps full breadcrumb titles and clickable ancestors', () => {
+    const title = 'A very long scientific worked example with a descriptive title'
+    const view = render(<Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Lab', href: '/lab/' }, { label: title }]} />)
+    expect(view.getByRole('link', { name: 'Home' }).getAttribute('href')).toBe('/')
+    expect(view.getByRole('link', { name: 'Lab' }).getAttribute('href')).toBe('/lab')
+    expect(view.getByText(title).getAttribute('aria-current')).toBe('page')
+    expect(view.getByText(title).className).not.toContain('truncate')
+  })
+
   it('names primary landmarks and identifies exact pages versus current sections', () => {
     const view = render(<SiteNav />)
     const nav = view.container.querySelector('[data-desktop-nav]') as HTMLElement
     expect(nav.getAttribute('aria-label')).toBe('Primary')
-    expect(within(nav).getByRole('link', { name: 'blog' }).getAttribute('aria-current')).toBe('location')
+    expect(within(nav).getByRole('link', { name: 'Blog' }).getAttribute('aria-current')).toBe('location')
     route.pathname = '/blog/'
     view.rerender(<SiteNav />)
-    expect(within(nav).getByRole('link', { name: 'blog' }).getAttribute('aria-current')).toBe('page')
+    expect(within(nav).getByRole('link', { name: 'Blog' }).getAttribute('aria-current')).toBe('page')
     route.pathname = '/blogroll/'
     view.rerender(<SiteNav />)
     expect(nav.querySelector('[aria-current]')).toBeNull()
@@ -62,7 +85,7 @@ describe('preserved site navigation', () => {
     expect(menu(view.container).hidden).toBe(true)
     fireEvent.click(trigger)
     expect(trigger.getAttribute('aria-expanded')).toBe('true')
-    const link = within(menu(view.container)).getByRole('link', { name: 'blog' })
+    const link = within(menu(view.container)).getByRole('link', { name: 'Blog' })
     expect(link.getAttribute('aria-current')).toBe('location')
     link.focus()
     fireEvent.keyDown(link, { key: 'Escape' })
@@ -74,7 +97,7 @@ describe('preserved site navigation', () => {
   it('closes on selection and route changes, without reopening when returning', () => {
     const view = render(<SiteNav />)
     fireEvent.click(view.getByRole('button', { name: 'Open menu' }))
-    const selected = within(menu(view.container)).getByRole('link', { name: 'blog' })
+    const selected = within(menu(view.container)).getByRole('link', { name: 'Blog' })
     selected.addEventListener('click', event => event.preventDefault())
     fireEvent.click(selected)
     expect(menu(view.container).hidden).toBe(true)
@@ -90,10 +113,10 @@ describe('preserved site navigation', () => {
   it('closes at the desktop breakpoint and moves hidden menu focus to its desktop counterpart', () => {
     const view = render(<SiteNav />)
     fireEvent.click(view.getByRole('button', { name: 'Open menu' }))
-    within(menu(view.container)).getByRole('link', { name: 'projects' }).focus()
+    within(menu(view.container)).getByRole('link', { name: 'Projects' }).focus()
     act(() => { desktop = true; breakpointListeners.forEach(listener => listener()) })
     expect(menu(view.container).hidden).toBe(true)
-    expect(document.activeElement).toBe(within(view.container.querySelector('[data-desktop-nav]') as HTMLElement).getByRole('link', { name: 'projects' }))
+    expect(document.activeElement).toBe(within(view.container.querySelector('[data-desktop-nav]') as HTMLElement).getByRole('link', { name: 'Projects' }))
     act(() => { desktop = false; breakpointListeners.forEach(listener => listener()) })
     expect(menu(view.container).hidden).toBe(true)
   })
@@ -103,7 +126,7 @@ describe('preserved site navigation', () => {
     view.getByRole('button', { name: 'Open menu' }).focus()
     act(() => { desktop = true; breakpointListeners.forEach(listener => listener()) })
     const nav = view.container.querySelector('[data-desktop-nav]') as HTMLElement
-    expect(document.activeElement).toBe(within(nav).getByRole('link', { name: 'blog' }))
+    expect(document.activeElement).toBe(within(nav).getByRole('link', { name: 'Blog' }))
   })
 
   it('publishes actual header and wrapped breadcrumb sizes, reacts to resize and cleans up', () => {

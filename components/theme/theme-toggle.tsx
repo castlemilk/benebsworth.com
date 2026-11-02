@@ -30,7 +30,7 @@ function useReducedMotion(): boolean {
  * the thumb snaps to the real theme position on load without an animated jump,
  * then glides for every user toggle after that.
  */
-export function ThemeToggle({ className = '' }: { className?: string }) {
+export function ThemeToggle({ className = '', variant = 'default' }: { className?: string; variant?: 'default' | 'editorial' }) {
   const { resolvedTheme, setTheme } = useTheme()
   const reduced = useReducedMotion()
   const [mounted, setMounted] = useState(false)
@@ -43,6 +43,15 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
 
   const isDark = mounted && resolvedTheme === 'dark'
   const glide = ready && !reduced
+
+  if (variant === 'editorial') return (
+    <button type="button" role="switch" aria-checked={isDark} aria-label="Toggle dark mode"
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      className={`inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] text-fg focus-visible:outline-2 focus-visible:outline-offset-4 ${className}`}>
+      {isDark ? <Moon aria-hidden className="size-5" /> : <Sun aria-hidden className="size-5" />}
+    </button>
+  )
 
   return (
     <button

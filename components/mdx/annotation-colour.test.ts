@@ -7,8 +7,8 @@ function luminance(hex:string){const rgb=hex.match(/[a-f\d]{2}/gi)!.map(s=>parse
 function contrast(a:string,b:string){const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
 describe('red annotation handwriting',()=>{
  it('keeps readable red ink on paper and supported dark surfaces',()=>{
-  const light=value('.research-article,.folio-archive,.folio-study','--folio-handwriting')
-  const dark=value('.dark .research-article,.dark .folio-archive','--folio-handwriting')
+  const light=value('.research-article,.folio-archive,.folio-study,.lab-discovery','--folio-handwriting')
+  const dark=value('.dark .research-article,.dark .folio-archive,.dark .lab-discovery','--folio-handwriting')
   expect(light).toBe('#b32624');expect(dark).toBe('#ffaaa5')
   for(const bg of ['#f4f1e9','#f6f6f9'])expect(contrast(light,bg)).toBeGreaterThan(4.5)
   expect(contrast(dark,'#0a0a0c')).toBeGreaterThan(4.5)

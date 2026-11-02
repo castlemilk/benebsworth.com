@@ -82,8 +82,8 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .annotation-layout:not(:has([data-annotation-note])){grid-template-columns:minmax(0,1fr)}
 
 /* Red editorial handwriting and annotations, independent of diagram ink. */
-.research-article,.folio-archive,.folio-study{--folio-handwriting:#b32624}
-.dark .research-article,.dark .folio-archive{--folio-handwriting:#ffaaa5}
+.research-article,.folio-archive,.folio-study,.lab-discovery{--folio-handwriting:#b32624}
+.dark .research-article,.dark .folio-archive,.dark .lab-discovery{--folio-handwriting:#ffaaa5}
 .folio-study .handwritten-note,.research-article .handwritten-note,.folio-focus-note,.folio-note-label,.folio-note[data-kind=caution] .folio-note-label,.folio-archive-note>p{color:var(--folio-handwriting,#b32624)}
 
 /* Sketch marks share the note ink; scientific SVG strokes retain their own colours. */

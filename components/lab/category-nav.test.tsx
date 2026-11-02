@@ -14,10 +14,13 @@ const render = (searchQuery = '', activeCategory: string | null = 'physics') => 
 describe('category navigation accessibility and custom icons', () => {
   it('names search independently of its placeholder', () => {
     expect(render()).toContain('aria-label="Search lab experiments"')
+    expect(render()).toContain('for="lab-search"')
+    expect(render()).toContain('Search the lab')
+    expect(render()).toContain('Filter experiments by category')
   })
-  it('disables the invisible empty Clear control', () => {
-    expect(render()).toMatch(/aria-label="Clear search"[^>]*disabled=""/)
-    expect(render('wave')).not.toMatch(/aria-label="Clear search"[^>]*disabled=""/)
+  it('shows Clear only when a query exists', () => {
+    expect(render()).not.toContain('aria-label="Clear search"')
+    expect(render('wave')).toContain('aria-label="Clear search"')
   })
   it('announces selection including All without relying on colour', () => {
     expect([...render().matchAll(/aria-pressed="(true|false)"/g)].map(m => m[1])).toEqual(['false', 'true', 'false'])

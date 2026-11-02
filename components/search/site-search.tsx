@@ -162,6 +162,8 @@ export function SiteSearch() {
     if (e.key === 'Escape') {
       e.preventDefault()
       setOpen(false)
+    } else if (e.target !== inputRef.current) {
+      return // Preserve native button/link activation outside the query field.
     } else if (e.key === 'ArrowDown') {
       e.preventDefault()
       setActive((a) => Math.max(0, Math.min(a + 1, hits.length - 1)))

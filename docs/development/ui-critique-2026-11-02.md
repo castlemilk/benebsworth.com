@@ -37,3 +37,7 @@ Acceptance: actual backdrop covers viewport; focus remains in dialog; Escape/Clo
 | Ready | Home / archive continuity | High / medium | Preserve distinctive home; review motion, entry labels, topic-strip discoverability |
 
 This is a consolidation of the user's requested existing sections, not six new product features. No completion claim for unreviewed mobile/dark route combinations, screen-reader use, production browser behaviour, or every nested Labs tool.
+
+## Narrow-width follow-through
+
+At 390px, Projects has the project title below the fold after a large emblem; Hiking begins with its photo only near 680px; About puts a tall dark interactive portrait before the author name. These are composition findings, not overflow bugs. The existing menu opened and selecting Blog/Hiking/About closed it and navigated correctly. Search reproduces the containment bug at 390×104.8 inside a 390×740 frame. Mobile Blog preserves readable serif copy but the first actual archive item remains below the first screen. Preserve functional menu wiring; prioritize useful content over introductory chrome.

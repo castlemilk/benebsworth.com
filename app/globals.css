@@ -451,3 +451,24 @@ a:focus-visible .word .snake-body {
     to { stroke-dashoffset: 0; }
   }
 }
+
+/* Shared editorial display face for overlays outside page-level wrappers. */
+:root { --font-editorial-display: 'Folio Serif', Georgia, serif; --font-editorial-hand: 'Folio Hand', cursive; }
+
+:root {
+  --editorial-search-paper: #faf7ef;
+  --editorial-search-ink: #292a28;
+  --editorial-search-muted: #66665f;
+  --editorial-search-rule: #d6d1c6;
+  --editorial-search-surface: #f0ece2;
+  --editorial-search-focus: #aa392f;
+  --editorial-search-scrim: #13191699;
+}
+.dark {
+  --editorial-search-paper: #202423;
+  --editorial-search-ink: #f1eee6;
+  --editorial-search-muted: #b4b8b1;
+  --editorial-search-rule: #454c47;
+  --editorial-search-surface: #2b312e;
+  --editorial-search-focus: #ed9b8d;
+}

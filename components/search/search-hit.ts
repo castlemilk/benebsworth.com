@@ -28,3 +28,8 @@ export function mapSearchHit(data: PagefindData): Hit {
     topicMode: topicIcon ? (data.meta?.topicMode === 'mask' ? 'mask' : 'image') : undefined,
   }
 }
+
+/** Native nearest scrolling keeps arrow navigation inside the result viewport. */
+export function revealSearchSelection(dialog: HTMLElement | null) {
+  dialog?.querySelector<HTMLElement>('a[data-active="true"]')?.scrollIntoView?.({ block: 'nearest' })
+}

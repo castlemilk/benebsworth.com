@@ -3,6 +3,7 @@ import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { SiteSearch } from './site-search'
+import { revealSearchSelection } from './search-hit'
 
 beforeEach(() => {
   Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable:true, value:vi.fn(function (this: HTMLDialogElement) { this.open = true }) })
@@ -52,3 +53,16 @@ describe('site search modal', () => {
     expect(document.body.style.overflow).toBe('clip')
   })
 })
+
+ it('reveals only the selected result without smooth motion', () => {
+   const dialog = document.createElement('div')
+   dialog.innerHTML = '<a data-active="false">First</a><a data-active="true">Second</a>'
+   const first = dialog.children[0] as HTMLElement
+   const selected = dialog.children[1] as HTMLElement
+   first.scrollIntoView = vi.fn()
+   selected.scrollIntoView = vi.fn()
+   revealSearchSelection(dialog)
+   expect(first.scrollIntoView).not.toHaveBeenCalled()
+   expect(selected.scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' })
+   expect(() => revealSearchSelection(null)).not.toThrow()
+ })

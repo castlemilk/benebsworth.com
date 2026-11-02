@@ -18,7 +18,7 @@ import styles from './site-search.module.css'
  * No backend, no third-party service — the index is static files on the CDN.
  */
 
-import { mapSearchHit, type PagefindData, type Hit } from './search-hit'
+import { mapSearchHit, revealSearchSelection, type PagefindData, type Hit } from './search-hit'
 
 interface Pagefind {
   search: (q: string) => Promise<{ results: { id: string; data: () => Promise<PagefindData> }[] }>
@@ -138,6 +138,11 @@ export function SiteSearch() {
     debounceRef.current = window.setTimeout(() => runSearch(query), 140)
     return () => window.clearTimeout(debounceRef.current)
   }, [query, runSearch])
+
+  // Keep keyboard selection visible inside the bounded result list.
+  useEffect(() => {
+    if (open) revealSearchSelection(dialogRef.current)
+  }, [active, hits, open])
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {

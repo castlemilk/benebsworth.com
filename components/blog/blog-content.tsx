@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { TOPIC, topicFor } from '@/lib/topics'
 import type { BlogPostSummary } from '@/lib/content'
-import { tagColor } from '@/lib/tag-colors'
+import { PostTag } from './post-tag'
 import { fmtDate } from '@/lib/format'
 import { Reveal } from '@/components/motion/reveal'
 import { FolioEntry } from '@/components/blog/folio-entry'
@@ -184,22 +184,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         </p>
                         {lead.tags.length > 0 && (
                           <div className="mt-5 flex flex-wrap gap-1.5">
-                            {lead.tags.slice(0, 5).map((t) => {
-                              const c = tagColor(t)
-                              return (
-                                <span
-                                  key={t}
-                                  className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-wider"
-                                  style={{
-                                    '--ink': c,
-                                    borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
-                                    backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                                  } as React.CSSProperties}
-                                >
-                                  {t}
-                                </span>
-                              )
-                            })}
+                            {lead.tags.slice(0, 5).map((t) => <PostTag key={t} tag={t} />)}
                           </div>
                         )}
                         <span className="mt-7 inline-flex items-center gap-2 font-mono text-sm text-blog">

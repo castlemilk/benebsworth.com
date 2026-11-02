@@ -11,6 +11,9 @@ describe('archive discovery controls',()=>{
  it('keeps topics in an accessible group with exact counts and canonical symbols',()=>{
   const html=render('', 'ai');expect(html).toContain('aria-label="Filter by topic"');expect(html).toContain('/topics/custom-v6/ai.svg');expect(html).toContain('src="/topics/kubernetes.png"');expect(html).toContain('>9</span>');expect(html.match(/aria-pressed="true"/g)).toHaveLength(1);expect(html).toContain('type="button"')
  })
+ it('does not reuse the generic robot for unrelated subjects',()=>{
+  const html=renderToStaticMarkup(<BlogFilter topics={[{key:'maths',label:'Mathematics',accent:'#4c9be8',count:6}]} searchQuery="" activeTopic={null} onSearchChange={()=>{}} onTopicChange={()=>{}}/>);expect(html).toContain('Mathematics');expect(html).not.toContain('/topics/technology.png')
+ })
  it('shows clear only for an active query and preserves authored search text',()=>{
   expect(render()).not.toContain('aria-label="Clear search"');const html=render('Quantum & circuits');expect(html).toContain('aria-label="Clear search"');expect(html).toContain('value="Quantum &amp; circuits"')
  })

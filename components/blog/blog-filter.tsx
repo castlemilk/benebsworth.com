@@ -34,7 +34,7 @@ export function BlogFilter({ topics, searchQuery, onSearchChange, activeTopic, o
       {topics.map(topic => {
         const symbol = TOPIC[topic.key as keyof typeof TOPIC]
         return <GammaButton key={topic.key} type="button" variant="quiet" className={styles.topic} aria-pressed={activeTopic === topic.key} style={{ '--ink': topic.accent } as CSSProperties} onClick={() => onTopicChange(activeTopic === topic.key ? null : topic.key)}>
-          {symbol && <TopicGlyph topic={symbol} size={17}/>}
+          {symbol && symbol.icon !== TOPIC.technology.icon && <TopicGlyph topic={symbol} size={17}/>}
           <span>{topic.label}</span><span className={styles.count}>{topic.count}</span>
         </GammaButton>
       })}

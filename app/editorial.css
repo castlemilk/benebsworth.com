@@ -261,3 +261,9 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .topic-lozenge__dot{width:4px;height:4px;border-radius:50%;background:var(--muted);flex-shrink:0}
 .topic-lozenge--primary{font-weight:650;gap:.5rem;padding:.35rem .8rem .35rem .5rem}
 .topic-lozenge--primary .topic-lozenge__glyph{box-sizing:content-box;padding:4px;border-radius:50%;background:color-mix(in srgb,var(--ink) 12%,transparent)}
+
+/* Keep archive discovery in reach without changing the reading masthead. */
+.folio-archive-heading{padding-top:1.75rem;padding-bottom:1rem}
+.folio-archive-heading h1{font-size:clamp(3rem,5.2vw,4.5rem)}
+.folio-archive-intro{max-width:78ch;font-size:1.1rem;line-height:1.65;margin-top:1.3rem}
+@media(max-width:700px){.folio-archive-heading{padding-top:1.75rem;padding-bottom:.75rem}.folio-archive-intro{font-size:1.05rem;line-height:1.65}}

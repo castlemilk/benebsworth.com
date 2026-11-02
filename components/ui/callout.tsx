@@ -1,5 +1,8 @@
+import { CalloutInkIcon, type CalloutType } from './callout-ink-icon'
+import { InsightFocusRail } from './insight-focus-rail'
 import { AlertCircle, Info, CheckCircle, XCircle, Brain, Heart, Hammer } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import styles from '@/components/mdx/editorial-blocks.module.css'
 
 /**
  * Callout — styled info-block for MDX posts. Ported from
@@ -31,8 +34,6 @@ import { cn } from '@/lib/utils'
  *     Body content — supports inline markdown via the MDX pipeline.
  *   </Callout>
  */
-
-type CalloutType = 'info' | 'warning' | 'success' | 'error' | 'thinking' | 'feeling' | 'doing'
 
 interface CalloutProps {
   children: React.ReactNode
@@ -128,9 +129,11 @@ export function Callout({ children, type = 'info', title, className }: CalloutPr
 
   return (
     <div
+      data-callout-type={type}
       className={cn(
         'not-prose my-8 rounded-lg p-6 relative overflow-visible',
         style.container,
+        styles.callout,
         className,
       )}
     >
@@ -138,7 +141,7 @@ export function Callout({ children, type = 'info', title, className }: CalloutPr
           type's accent colour. Provides a strong vertical anchor for
           the eye to associate the block with its type. */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-1 rounded-bl-lg"
+        className={cn("absolute left-0 top-0 bottom-0 w-1 rounded-bl-lg", styles.decoration)}
         style={{ backgroundColor: style.accentHex }}
         aria-hidden
       />
@@ -154,7 +157,7 @@ export function Callout({ children, type = 'info', title, className }: CalloutPr
         fill="none"
         viewBox="0 0 57 69"
         preserveAspectRatio="none"
-        className="absolute top-0 left-0"
+        className={cn("absolute top-0 left-0", styles.decoration)}
         aria-hidden
       >
         <path
@@ -169,19 +172,22 @@ export function Callout({ children, type = 'info', title, className }: CalloutPr
 
       {/* Floating icon badge — sits half off the top edge, half inside.
           Background matches the page bg so it punches out of the card. */}
-      <div className="absolute -top-4 -left-4 z-10">
+      <div className={cn("absolute -top-4 -left-4 z-10", styles.decoration)}>
         <div className="rounded-full p-2" style={{ backgroundColor: 'var(--color-bg, #f6f6f9)' }}>
           <Icon className={cn('w-6 h-6', style.iconColor)} />
         </div>
       </div>
 
+      {type === 'thinking' && <InsightFocusRail />}
+
       {/* Content area: optional title in the accent colour, then the
           children (which can be plain text or rich MDX content). */}
-      <div className="mt-2 ml-4">
+      <div className={cn("mt-2 ml-4", styles.calloutContent)}>
+        <span className={styles.kind}><CalloutInkIcon type={type} className={styles.inkIcon} />{type === 'thinking' ? 'Insight' : type === 'feeling' ? 'Reflection' : type === 'doing' ? 'Practice' : type}</span>
         {title && (
-          <p className={cn('text-base font-semibold m-0 mb-2', style.titleColor)}>{title}</p>
+          <p className={cn('text-base font-semibold m-0 mb-2', style.titleColor, styles.title)}>{title}</p>
         )}
-        <div className="leading-relaxed text-base">{children}</div>
+        <div className={cn("leading-relaxed text-base", styles.body)}>{children}</div>
       </div>
     </div>
   )

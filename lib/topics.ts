@@ -16,6 +16,8 @@ import type { LoadedPost } from '@/lib/content'
 export type Topic = {
   /** absolute path to the topic icon under /public/topics (lowercase, static-export safe) */
   icon: string
+  /** Custom monochrome symbols inherit theme ink; brands retain image rendering. */
+  renderMode?: 'mask'
   /** short human label shown beside the glyph */
   label: string
   /** brand accent hex keyed to the topic's meaning */
@@ -44,15 +46,16 @@ const TOPIC = {
   minikube: { icon: '/topics/minikube.png', label: 'Local Dev', accent: ACCENT.teal },
   gcp: { icon: '/topics/gcp.png', label: 'Google Cloud', accent: ACCENT.orange },
   react: { icon: '/topics/react.png', label: 'React', accent: ACCENT.teal },
-  algorithms: { icon: '/topics/technology.png', label: 'Algorithms', accent: ACCENT.orange },
+  algorithms: { icon: '/topics/custom-v6/algorithms.svg', renderMode: 'mask', label: 'Algorithms', accent: ACCENT.orange },
   general: { icon: '/topics/technology.png', label: 'Field Notes', accent: ACCENT.orange },
   technology: { icon: '/topics/technology.png', label: 'Engineering', accent: ACCENT.teal },
+  ai: { icon: '/topics/custom-v6/ai.svg', renderMode: 'mask', label: 'AI', accent: ACCENT.purple },
   // Science desks
   maths: { icon: '/topics/technology.png', label: 'Mathematics', accent: ACCENT.blue },
-  physics: { icon: '/topics/technology.png', label: 'Physics', accent: ACCENT.violet },
-  software: { icon: '/topics/technology.png', label: 'Software', accent: ACCENT.green },
-  ee: { icon: '/topics/technology.png', label: 'Electrical Eng', accent: ACCENT.amber },
-  cosmology: { icon: '/topics/technology.png', label: 'Cosmology', accent: ACCENT.indigo },
+  physics: { icon: '/topics/custom-v6/physics.svg', renderMode: 'mask', label: 'Physics', accent: ACCENT.violet },
+  software: { icon: '/topics/custom-v6/software.svg', renderMode: 'mask', label: 'Software', accent: ACCENT.green },
+  ee: { icon: '/topics/custom-v6/ee.svg', renderMode: 'mask', label: 'Electrical Eng', accent: ACCENT.amber },
+  cosmology: { icon: '/topics/custom-v6/cosmology.svg', renderMode: 'mask', label: 'Cosmology', accent: ACCENT.indigo },
   hiking: { icon: '/topics/technology.png', label: 'Hiking', accent: ACCENT.hiking },
 } satisfies Record<string, Topic>
 

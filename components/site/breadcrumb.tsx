@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { useScrollActivity } from '@/components/mdx/use-scroll-activity'
 
@@ -34,12 +35,30 @@ export function Breadcrumb({
   sticky?: boolean
 }) {
   const scrolling = useScrollActivity(200)
+  const navRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    if (!sticky || !navRef.current) return
+    const nav = navRef.current
+    const root = document.documentElement
+    const measure = () => root.style.setProperty('--site-breadcrumb-height', `${nav.getBoundingClientRect().height}px`)
+    measure()
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    observer?.observe(nav)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', measure)
+      root.style.setProperty('--site-breadcrumb-height', '0px')
+    }
+  }, [sticky])
   return (
     <nav
+      ref={navRef}
+      data-site-breadcrumb={sticky ? "" : undefined}
       aria-label="Breadcrumb"
       className={cn(
         sticky
-          ? `sticky top-[57px] z-40 border-b border-[var(--color-border)]/60 ${
+          ? `sticky top-[var(--site-nav-height,69px)] z-40 border-b border-[var(--color-border)]/60 ${
               scrolling
                 ? // Active scroll: solid, no blur.
                   'bg-[var(--color-bg)]'

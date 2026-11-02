@@ -1,3 +1,4 @@
+import styles from './archive-discovery.module.css'
 import Link from 'next/link'
 import { tagColor } from '@/lib/tag-colors'
 import { LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
@@ -126,7 +127,7 @@ export function RelatedLabs({
   }
 
   return (
-    <section className="not-prose mt-16 border-t border-fg/10 pt-8">
+    <section className={`${styles.related} not-prose mt-16 border-t border-fg/10 pt-8`}>
       <div className="mb-5 flex items-baseline justify-between">
         <h2 className="font-display text-2xl font-semibold tracking-[-0.015em] text-fg/90">
           Try it in the lab

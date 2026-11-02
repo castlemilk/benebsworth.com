@@ -127,3 +127,6 @@ graphify query "how does X reach Y"  # BFS subgraph for a question
 
 `GRAPH_REPORT.md` lists god nodes and communities — a 30-second map of what
 connects to what.
+
+## Visual review
+For blog layout work, read DESIGN.md and docs/design/VISUAL-REVIEW.md. Keep artistic alignment and functional verification separate, compare actual rendered pages with the accepted editorial study, and report unavailable viewport/authentication evidence honestly. Do not substitute generic design defaults for the owner's approved direction.

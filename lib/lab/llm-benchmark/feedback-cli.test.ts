@@ -143,12 +143,11 @@ describe('renderFeedbackList', () => {
 describe('scripts/bench-feedback.mjs', () => {
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
   const script = join(root, 'scripts/bench-feedback.mjs')
-  const tsx = join(root, 'node_modules/.bin/tsx')
   let dir: string
   let sidecar: string
 
   const run = (args: string[]): string =>
-    execFileSync(tsx, [script, ...args], {
+    execFileSync(process.execPath, ['--import', 'tsx', script, ...args], {
       cwd: root,
       encoding: 'utf8',
       env: { ...process.env, FEEDBACK_PATH: sidecar },

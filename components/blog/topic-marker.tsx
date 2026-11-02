@@ -37,6 +37,17 @@ export function TopicMarker({ topic, size = 16, className }: TopicMarkerProps) {
           backgroundColor: `color-mix(in srgb, ${topic.accent} 14%, transparent)`,
         }}
       >
+        {topic.renderMode === 'mask' ? (
+          <span
+            aria-hidden="true"
+            style={{
+              display: 'inline-block', width: size, height: size,
+              backgroundColor: 'currentColor',
+              mask: `url("${topic.icon}") center / contain no-repeat`,
+              WebkitMask: `url("${topic.icon}") center / contain no-repeat`,
+            }}
+          />
+        ) : (
         <img
           src={topic.icon}
           alt=""
@@ -46,6 +57,7 @@ export function TopicMarker({ topic, size = 16, className }: TopicMarkerProps) {
           className="object-contain"
           style={{ width: size, height: size }}
         />
+        )}
       </span>
       {topic.label}
     </span>

@@ -1,0 +1,78 @@
+.side {
+  container: lab-side / inline-size;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.figure,
+.commentary {
+  min-width: 0;
+}
+
+.figure,
+.media {
+  margin: 0;
+}
+
+
+.actions {
+  margin-top: 1.25rem;
+}
+
+.stage {
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-stage);
+}
+
+.caption {
+  margin-top: .75rem;
+  margin-bottom: 0;
+  color: var(--color-muted);
+  font: 400 1rem/1.55 'Folio Serif', Georgia, serif;
+  text-align: left;
+}
+
+.commentary {
+  font-family: 'Folio Serif', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.commentary > :first-child {
+  margin-top: 0;
+}
+
+.commentary > :last-child {
+  margin-bottom: 0;
+}
+
+/* Both the simulation and long-form commentary need a usable reading measure.
+   A large viewport alone says nothing about the containing article column. */
+@container lab-side (min-width: 56rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .reversed > .figure {
+    order: 2;
+  }
+
+  .reversed > .commentary {
+    order: 1;
+  }
+}
+
+/* The commentary is authored reading text, not the sans-serif instrument UI.
+   Target its own blocks only: nested components retain explicit typography. */
+.side .commentary > :is(p, ul, ol, blockquote),
+.side .commentary > :is(ul, ol) > li {
+  font-family: 'Folio Serif', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}

@@ -11,6 +11,7 @@ import {
 } from '@/lib/lab/registry'
 import type { LabEntry } from '@/lib/lab/registry'
 import { tagColor } from '@/lib/tag-colors'
+import { CategoryIcon } from './category-icon'
 import { LabCard } from '@/components/lab/lab-card'
 import { CategoryNav, type CategoryNavItem } from '@/components/lab/category-nav'
 import { Reveal } from '@/components/motion/reveal'
@@ -32,16 +33,16 @@ function LabCardLink({ e }: { e: LabEntry }) {
   return (
     <Link
       href={`/lab/${e.slug}/`}
-      className="group min-w-0 rounded-2xl border border-[var(--color-border)] bg-surface p-4 transition hover:border-[var(--color-muted)]"
+      className="lab-experiment-card group min-w-0 rounded-2xl border border-[var(--color-border)] bg-surface p-4 transition hover:border-[var(--color-muted)]"
     >
       <LabCard slug={e.slug} />
       <div className="mt-4 flex items-start justify-between gap-3">
         <h3 className="type-h3">{e.title}</h3>
         <span
-          className="accent-ink mt-0.5 shrink-0 rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
+          className="accent-ink mt-0.5 inline-flex items-center gap-1.5 shrink-0 rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
           style={{ '--ink': accent, borderColor: accent } as React.CSSProperties}
         >
-          {cat.glyph} {cat.label}
+          <CategoryIcon category={cat.key} fallback={cat.glyph} /> {cat.label}
         </span>
       </div>
       <p className="mt-1 type-body text-fg/65">{e.blurb}</p>
@@ -167,7 +168,7 @@ export function LabContent({ navItems }: { navItems: CategoryNavItem[] }) {
                         className="accent-ink mr-2 inline-block text-[0.85em]"
                         style={{ '--ink': accent } as React.CSSProperties}
                       >
-                        {cat.glyph}
+                        <CategoryIcon category={cat.key} fallback={cat.glyph} />
                       </span>
                       <span className="opacity-40">·</span>
                       <span className="ml-2">{cat.label}</span>

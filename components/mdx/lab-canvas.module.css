@@ -76,3 +76,11 @@
   font-size: 1.125rem;
   line-height: 1.75;
 }
+
+/* Keep the first control within reach in a narrow worked-example column.
+   The canvas observes its actual container size, so this resizes rather than crops. */
+@container lab-side (max-width: 32rem) {
+  .stage {
+    max-height: 15rem;
+  }
+}

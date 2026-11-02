@@ -1,6 +1,8 @@
-<LabSide effect="wave-superposition" height={340} params={{ freq1: 2, freq2: 2.3, amp: 0.6, showComponents: true }} caption="Two sine waves at slightly different frequencies (2.0 and 2.3 Hz) producing visible beats. The composite swells and fades as the components drift in and out of phase.">
+<LabSide effect="wave-superposition" title="Worked example: two waves, one sum" height={340} params={{ freq1: 2, freq2: 2.3, amp: 0.6, showComponents: true }} caption="Starting preset: 2.0 and 2.3 Hz. Watch the sum swell and fade.">
 
 ## The Core Idea
+
+These worked examples have their own controls. Change a setting to explore, then use Reset to return to that example’s starting preset.
 
 When two waves share the same medium, they don't collide: they **add**. The resulting displacement at every point is simply the sum of what each wave would produce alone. This principle of **superposition** is one of the most powerful ideas in physics: it underlies interference patterns, beat frequencies, standing waves, and the entire framework of linear systems.
 
@@ -23,7 +25,7 @@ y = y₁ + y₂ = 2A cos(Δk·x/2 − Δω·t/2) · sin(k̄x − ω̄t)
 
 where `Δω = ω₁ − ω₂` and `k̄, ω̄` are the averages. The result is a fast oscillation at the average frequency, modulated by a slow envelope at the **beat frequency** `Δf = |f₁ − f₂|`. This is why tuning a guitar by ear works: you listen for the beats slow to zero as the strings approach unison.
 
-<LabSide effect="wave-superposition" height={280} params={{ freq1: 4, freq2: 4.5, amp: 0.6, showComponents: true }} caption="Higher frequencies with a 0.5 Hz difference. The beat envelope is clearly visible as periodic amplitude modulation.">
+<LabSide effect="wave-superposition" title="Worked example: a faster beat" height={280} params={{ freq1: 4, freq2: 4.5, amp: 0.6, showComponents: true }} caption="Starting preset: 4.0 and 4.5 Hz. Compare the beat pattern.">
 
 ### Beats in action
 
@@ -49,7 +51,7 @@ The key insight is all about **phase**:
 - **Destructive**: waves out of phase → amplitudes cancel → quieter, darker, smaller.
 - **Complete cancellation**: equal amplitude, 180° phase difference → total silence at that point.
 
-<LabSide effect="wave-superposition" height={280} params={{ freq1: 3, freq2: 3, amp: 0.6, showComponents: true }} reverse={true} caption="Same frequency — pure constructive interference with double amplitude.">
+<LabSide effect="wave-superposition" title="Worked example: perfectly in step" height={280} params={{ freq1: 3, freq2: 3, amp: 0.6, showComponents: true }} reverse={true} caption="Starting preset: both waves at 3 Hz. Their amplitudes add.">
 
 Try setting both frequencies to the same value above — the two waves are always in phase, producing pure constructive interference with double amplitude.
 

@@ -1,6 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import Link from 'next/link'
+import styles from './site-search.module.css'
 
 /**
  * ⌘K command-palette search over the blog, powered by Pagefind.
@@ -38,11 +41,12 @@ function loadPagefind(): Promise<Pagefind | null> {
   if (!pagefindPromise) {
     pagefindPromise = (async () => {
       try {
-        // @ts-expect-error — Pagefind is generated into /pagefind/ at build time;
+        // Pagefind is generated into /pagefind/ at build time;
         // it is not resolvable at compile time and ships no type declarations.
         // webpackIgnore keeps the bundler from trying to resolve it — it's a
         // native browser dynamic import of a CDN file (CSP-safe, no eval).
-        const mod: Pagefind = await import(/* webpackIgnore: true */ '/pagefind/pagefind.js')
+        const modulePath: string = '/pagefind/pagefind.js'
+        const mod: Pagefind = await import(/* webpackIgnore: true */ /* @vite-ignore */ modulePath)
         await mod.options?.({ excerptLength: 22 })
         return mod
       } catch {
@@ -68,6 +72,7 @@ export function SiteSearch() {
   const [active, setActive] = useState(0)
   const [status, setStatus] = useState<Status>('idle')
   const inputRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const debounceRef = useRef(0)
   // Monotonic search id: a slow search (cold pagefind WASM load) must not
   // resolve after a later keystroke's search and clobber the newer results.
@@ -101,11 +106,15 @@ export function SiteSearch() {
   useEffect(() => {
     if (!open) return
     loadPagefind()
-    const t = window.setTimeout(() => inputRef.current?.focus(), 20)
+    const previousFocus = document.activeElement
+    const dialog = dialogRef.current
+    dialog?.showModal()
+    inputRef.current?.focus()
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
-      window.clearTimeout(t)
+      dialog?.close()
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus()
       document.body.style.overflow = prevOverflow
     }
   }, [open])
@@ -151,10 +160,11 @@ export function SiteSearch() {
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
+      e.preventDefault()
       setOpen(false)
     } else if (e.key === 'ArrowDown') {
       e.preventDefault()
-      setActive((a) => Math.min(a + 1, hits.length - 1))
+      setActive((a) => Math.max(0, Math.min(a + 1, hits.length - 1)))
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
       setActive((a) => Math.max(a - 1, 0))
@@ -171,7 +181,7 @@ export function SiteSearch() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Search the site"
-        className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted transition-colors hover:text-fg/80"
+        className={styles.trigger}
       >
         <SearchIcon />
         <span className="hidden sm:inline">Search</span>
@@ -180,71 +190,54 @@ export function SiteSearch() {
         </kbd>
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[60] flex items-start justify-center p-4 pt-[12vh]"
-          role="dialog"
-          aria-modal="true"
+      {open && createPortal(
+        <dialog
+          ref={dialogRef}
+          className={styles.overlay}
           aria-label="Search"
+          onCancel={() => setOpen(false)}
+          onClick={(event) => { if (event.target === event.currentTarget) setOpen(false) }}
+          onKeyDown={onKeyDown}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div
-            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg)] shadow-2xl"
-            onKeyDown={onKeyDown}
-          >
-            <div className="flex items-center gap-3 border-b border-[var(--color-border)] px-4">
+          <section className={styles.sheet}>
+            <header className={styles.heading}>
+              <div>
+                <h2>Find a field note</h2>
+                <p>Search the writing, follow an idea.</p>
+              </div>
+              <button type="button" className={styles.close} aria-label="Close search" onClick={() => setOpen(false)}>×</button>
+            </header>
+            <div className={styles.field}>
               <SearchIcon />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search posts…"
-                className="w-full bg-transparent py-3.5 font-sans text-[0.95rem] text-fg outline-none placeholder:text-muted"
+                aria-label="Search posts"
                 autoComplete="off"
                 spellCheck={false}
               />
-              <kbd className="rounded border border-[var(--color-border)] px-1.5 py-0.5 font-mono text-[0.6rem] text-muted">
-                esc
-              </kbd>
             </div>
-
-            <div className="max-h-[55vh] overflow-y-auto">
-              {status === 'ok' &&
-                hits.map((h, i) => (
-                  <a
-                    key={h.url}
-                    href={h.url}
-                    onClick={() => setOpen(false)}
-                    onMouseMove={() => setActive(i)}
-                    className={`block w-full border-b border-[var(--color-border)]/50 px-4 py-3 text-left transition-colors ${
-                      i === active ? 'bg-[color-mix(in_srgb,var(--color-blog)_12%,transparent)]' : ''
-                    }`}
-                  >
-                    <span className="block font-display text-sm font-semibold text-fg">{h.title}</span>
-                    <span
-                      className="mt-1 block font-sans text-[0.8rem] leading-6 text-fg/55 [&_mark]:rounded [&_mark]:bg-[color-mix(in_srgb,var(--color-blog)_28%,transparent)] [&_mark]:px-0.5 [&_mark]:text-fg"
-                      // Pagefind returns a sanitised excerpt with <mark> around matches.
-                      dangerouslySetInnerHTML={{ __html: h.excerpt }}
-                    />
-                  </a>
-                ))}
-              {status === 'loading' && (
-                <p className="px-4 py-6 text-center font-mono text-xs text-muted">Searching…</p>
-              )}
-              {status === 'empty' && (
-                <p className="px-4 py-6 text-center font-mono text-xs text-muted">No matches for “{query}”.</p>
-              )}
-              {status === 'idle' && (
-                <p className="px-4 py-6 text-center font-mono text-xs text-muted">Type to search the blog.</p>
-              )}
-              {status === 'unavailable' && (
-                <p className="px-4 py-6 text-center font-mono text-xs leading-6 text-muted">
-                  The search index is built at deploy time — it isn’t available in local dev.
-                </p>
-              )}
+            <div className={styles.results} aria-busy={status === 'loading'}>
+              {status === 'ok' && hits.map((h, i) => (
+                <a key={h.url} href={h.url} onClick={() => setOpen(false)} onMouseMove={() => setActive(i)}
+                  className={styles.result} data-active={i === active}>
+                  <span className={styles.resultTitle}>{h.title}</span>
+                  <span className={styles.excerpt} dangerouslySetInnerHTML={{ __html: h.excerpt }} />
+                </a>
+              ))}
+              <p className={styles.status} role="status" aria-live="polite">
+                {status === 'loading' && 'Searching…'}
+                {status === 'empty' && `No matches for “${query}”. Try a topic or a different phrase.`}
+                {status === 'idle' && 'Start with a subject, a title, or a question.'}
+                {status === 'unavailable' && 'Search is unavailable right now. You can still browse every post.'}
+              </p>
+              {status === 'unavailable' && <Link className={styles.browse} href="/blog/" onClick={() => setOpen(false)}>Browse the archive</Link>}
             </div>
-          </div>
-        </div>
+            <footer className={styles.footer}><span>↑ ↓ to choose</span><span>Enter to open</span><span>Esc to close</span></footer>
+          </section>
+        </dialog>, document.body
       )}
     </>
   )

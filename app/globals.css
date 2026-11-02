@@ -451,3 +451,6 @@ a:focus-visible .word .snake-body {
     to { stroke-dashoffset: 0; }
   }
 }
+
+/* Shared editorial display face for overlays outside page-level wrappers. */
+:root { --font-editorial-display: 'Folio Serif', Georgia, serif; }

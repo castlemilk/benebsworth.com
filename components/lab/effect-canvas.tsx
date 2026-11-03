@@ -54,6 +54,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
   },[probe])
   // live params: step() reads the latest without recreating the renderer
   const paramsRef = useRef(params)
+  const redrawStaticRef = useRef<(() => void) | null>(null)
   paramsRef.current = params
   // scroll-aware: skip render frames while user is actively scrolling so the
   // browser can dedicate the frame budget to scroll + repaint. Synced via ref
@@ -74,12 +75,20 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
 
     let dims: Dims = { w: 0, h: 0, dpr }
     let renderer: Renderer | undefined
+    let lastStaticParams: Params | undefined
     let drawable = false
     let themeChanged = false
     let raf = 0
     let last = -Infinity
     let visible = true
     let onscreen = false // IntersectionObserver drives the first start → off-screen canvases run zero frames
+
+    function paintStatic() {
+      if (!reduce || !drawable || !renderer || lastStaticParams === paramsRef.current) return
+      frameRef.current = 0
+      renderer.step(0, paramsRef.current)
+      lastStaticParams = paramsRef.current
+    }
 
     function size() {
       const r = wrap!.getBoundingClientRect()
@@ -100,8 +109,9 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
         renderer = effect.createRenderer(ctx!, dims, resolveTheme(wrap!))
         themeChanged = false
         last = -Infinity
-        if (reduce) renderer.step(0, paramsRef.current)
+        lastStaticParams = undefined
       }
+      paintStatic()
       start()
     }
 
@@ -121,6 +131,7 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     function start() { if (!raf && !reduce && visible && onscreen && drawable && renderer) raf = requestAnimationFrame(loop) }
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0 } }
 
+    redrawStaticRef.current = paintStatic
     const ro = new ResizeObserver(size); ro.observe(wrap)
     size()
 
@@ -140,15 +151,20 @@ export function EffectCanvas({ effect, params, quality = 'full', className, aria
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
     // Motion: the IntersectionObserver callback fires the first start() once on-screen.
-    // Reduced motion: size() already painted the single static frame; no loop.
+    // Reduced motion: repaint on sizing/theme/parameter changes, never a loop.
 
     return () => {
+      if (redrawStaticRef.current === paintStatic) redrawStaticRef.current = null
       stop(); ro.disconnect(); io.disconnect(); themeObserver.disconnect()
       document.removeEventListener('visibilitychange', onVis)
       renderer?.destroy?.()
     }
     // effect identity + quality are the only structural deps; params are live via ref
   }, [effect, quality])
+
+  // Parameter edits must update a motion-reduced plot too. Reuse the renderer;
+  // the callback defers invalid sizes and avoids a duplicate initial paint.
+  useEffect(() => { redrawStaticRef.current?.() }, [params])
 
   const rows=probe && effect.inspect ? effect.inspect(probe.x/probe.w,probe.t,params) : []
   const docked=Boolean(probe && probe.w<480)

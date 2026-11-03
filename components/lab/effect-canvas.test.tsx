@@ -112,6 +112,57 @@ describe('EffectCanvas measured renderer lifecycle', () => {
     expect(env.pending()).toBe(0)
   })
 
+  it('repaints changed parameters once under reduced motion without restarting animation', () => {
+    const env = setup(true)
+    const { effect, createRenderer, step, destroy } = mockEffect()
+    const first = { R: 1 }, next = { R: 2 }
+    const { rerender } = render(<EffectCanvas effect={effect} params={first} />)
+    env.resize(640, 320)
+    expect(step).toHaveBeenCalledTimes(1)
+    rerender(<EffectCanvas effect={effect} params={next} />)
+    expect(step).toHaveBeenCalledTimes(2)
+    expect(step).toHaveBeenLastCalledWith(0, next)
+    rerender(<EffectCanvas effect={effect} params={next} />)
+    expect(step).toHaveBeenCalledTimes(2)
+    expect(createRenderer).toHaveBeenCalledOnce()
+    expect(destroy).not.toHaveBeenCalled()
+    expect(env.pending()).toBe(0)
+  })
+
+  it('defers reduced-motion edits during collapse and repaints the latest values on same-size restore', () => {
+    const env = setup(true)
+    const { effect, createRenderer, step } = mockEffect()
+    const { rerender } = render(<EffectCanvas effect={effect} params={{ R: 1 }} />)
+    env.resize(640, 320)
+    env.resize(0, 0)
+    rerender(<EffectCanvas effect={effect} params={{ R: 2 }} />)
+    rerender(<EffectCanvas effect={effect} params={{ R: 3 }} />)
+    expect(step).toHaveBeenCalledTimes(1)
+    env.resize(640, 320)
+    expect(createRenderer).toHaveBeenCalledOnce()
+    expect(step).toHaveBeenCalledTimes(2)
+    expect(step).toHaveBeenLastCalledWith(0, { R: 3 })
+    env.resize(640, 320)
+    expect(step).toHaveBeenCalledTimes(2)
+    expect(env.pending()).toBe(0)
+  })
+
+  it('binds reduced-motion repaint to the current renderer and avoids duplicate initial frames', () => {
+    const env = setup(true)
+    const first = mockEffect(), replacement = mockEffect()
+    const { rerender, unmount } = render(<EffectCanvas effect={first.effect} params={{ R: 1 }} />)
+    env.resize(640, 320)
+    rerender(<EffectCanvas effect={replacement.effect} params={{ R: 2 }} />)
+    expect(first.step).toHaveBeenCalledTimes(1)
+    expect(first.destroy).toHaveBeenCalledOnce()
+    expect(replacement.step).toHaveBeenCalledTimes(1)
+    expect(replacement.step).toHaveBeenLastCalledWith(0, { R: 2 })
+    expect(env.pending()).toBe(0)
+    unmount()
+    expect(replacement.destroy).toHaveBeenCalledOnce()
+    expect(env.pending()).toBe(0)
+  })
+
   it('paints the first on-screen frame while scrolling, then retains scroll and intersection pauses', () => {
     const env = setup()
     scroll.active = true

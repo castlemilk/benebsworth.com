@@ -12,6 +12,25 @@
   color: var(--muted);
   font: 1.1rem/1.7 'Folio Serif', Georgia, serif;
 }
+/* A quiet recovery beat in the reading sequence, not an empty dashboard card. */
+.emptyRecovery {
+  max-width: 42ch;
+  padding-block: .25rem 2rem;
+  overflow-wrap: anywhere;
+}
+.emptyRecovery h2 {
+  margin: 0 0 .65rem;
+  color: var(--fg);
+  font: 450 clamp(1.6rem, 3vw, 2rem)/1.25 'Folio Serif', Georgia, serif;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.emptyRecovery p {
+  margin: 0;
+  color: var(--muted);
+  font: 1.1rem/1.7 'Folio Serif', Georgia, serif;
+}
+.emptyRecovery button { min-height: 44px; margin-top: 1.25rem; }
 /* About is also a consumer: adapt typography only in the blog reading shell. */
 :global(.folio-reading-page) .related :where(h2,h3) {
   font-family: 'Folio Serif', Georgia, serif;

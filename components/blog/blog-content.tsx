@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './archive-discovery.module.css'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import { TOPIC, topicFor } from '@/lib/topics'
 import type { BlogPostSummary } from '@/lib/content'
@@ -11,6 +11,7 @@ import { Reveal } from '@/components/motion/reveal'
 import { FolioEntry } from '@/components/blog/folio-entry'
 import { BlogFilter, type BlogFilterItem } from '@/components/blog/blog-filter'
 import { BlogPostCard } from '@/components/blog/blog-post-card'
+import { GammaButton } from '@/components/gamma/GammaButton'
 
 const TOPIC_ACCENT_REVERSE: Record<string, string> = {}
 for (const [key, t] of Object.entries(TOPIC)) {
@@ -25,6 +26,7 @@ function topicKey(post: BlogPostSummary): string {
 export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
   const [query, setQuery] = useState('')
   const [topicFilter, setTopicFilter] = useState<string | null>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const navItems: BlogFilterItem[] = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -81,6 +83,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
         onSearchChange={setQuery}
         activeTopic={topicFilter}
         onTopicChange={setTopicFilter}
+        searchInputRef={searchInputRef}
       />
 
       {filtered !== null ? (
@@ -98,9 +101,19 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
               ))}
             </div>
           ) : (
-            <p className="font-sans text-base leading-7 text-muted">
-              No posts match your search. Try a different term or topic.
-            </p>
+            <div className={styles.emptyRecovery}>
+              <h2>No matching field notes</h2>
+              <p>No posts match your search. Try a different term or topic.</p>
+              {posts.length > 0 && <GammaButton
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setQuery('')
+                  setTopicFilter(null)
+                  searchInputRef.current?.focus()
+                }}
+              >Clear filters</GammaButton>}
+            </div>
           )}
         </section>
       ) : (

@@ -1,21 +1,23 @@
 'use client'
 
 import { GammaButton } from '@/components/gamma/GammaButton'
-import { useRef, type CSSProperties } from 'react'
+import { useRef, type CSSProperties, type RefObject } from 'react'
 import { TOPIC } from '@/lib/topics'
 import { TopicGlyph } from './topic-marker'
 import styles from './blog-filter.module.css'
 
 export type BlogFilterItem = { key: string; label: string; accent: string; count: number }
 
-export function BlogFilter({ topics, searchQuery, onSearchChange, activeTopic, onTopicChange }: {
+export function BlogFilter({ topics, searchQuery, onSearchChange, activeTopic, onTopicChange, searchInputRef }: {
   topics: BlogFilterItem[]
   searchQuery: string
   onSearchChange: (q: string) => void
   activeTopic: string | null
   onTopicChange: (key: string | null) => void
+  searchInputRef?: RefObject<HTMLInputElement | null>
 }) {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const localInputRef = useRef<HTMLInputElement>(null)
+  const inputRef = searchInputRef ?? localInputRef
   const total = topics.reduce((sum, topic) => sum + topic.count, 0)
   return <section id="archive-index" className={styles.discovery} aria-label="Find an article">
     <div className={styles.labelRow}>

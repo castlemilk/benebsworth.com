@@ -70,11 +70,37 @@ describe('archive discovery interactions', () => {
     fireEvent.click(v.getByRole('button', { name: /React\s*1/ }))
     expect(v.getByRole('status').textContent).toBe('1 result for React')
   })
+  it('recovers from an empty query/topic intersection in one action and returns focus to search', () => {
+    const v = render(<BlogContent posts={posts} />)
+    const url = window.location.href
+    const input = v.getByRole('searchbox') as HTMLInputElement
+    const topic = v.getByRole('button', { name: /React\s*1/ })
+    fireEvent.change(input, { target: { value: 'rare-tag' } })
+    fireEvent.click(topic)
+    expect(v.getByRole('status').textContent).toBe('0 results for "rare-tag" · React')
+    expect(v.getByRole('heading', { name: 'No matching field notes' })).toBeTruthy()
+    const reset = v.getByRole('button', { name: 'Clear filters' })
+    reset.focus()
+    fireEvent.click(reset)
+    expect(input.value).toBe('')
+    expect(document.activeElement).toBe(input)
+    expect(topic.getAttribute('aria-pressed')).toBe('false')
+    expect(v.getByRole('button', { name: /All topics\s*4/ }).getAttribute('aria-pressed')).toBe('true')
+    expect(titles(v.container)).toEqual(posts.map(p => p.title))
+    expect(v.queryByRole('button', { name: 'Clear filters' })).toBeNull()
+    expect(window.location.href).toBe(url)
+
+    fireEvent.change(input, { target: { value: 'unmatched again' } })
+    fireEvent.click(v.getByRole('button', { name: 'Clear filters' }))
+    expect(document.activeElement).toBe(input)
+    expect(titles(v.container)).toEqual(posts.map(p => p.title))
+  })
   it('distinguishes empty source data from filtered no-results', () => {
     const v = render(<BlogContent posts={[]} />)
     expect(v.getByRole('status').textContent).toBe('No posts are available yet.')
     expect(v.getByRole('button', { name: /All topics\s*0/ })).toBeTruthy()
     expect(v.queryAllByRole('link')).toHaveLength(0)
+    expect(v.queryByRole('button', { name: 'Clear filters' })).toBeNull()
   })
   it('preserves long copy and existing tag limits without inventing missing thumbnails', () => {
     const long = 'LongUnbrokenToken'.repeat(20)

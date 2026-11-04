@@ -72,7 +72,7 @@ const ssGet = (k: string): string | null => {
   }
 }
 
-export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
+export function HalftoneHero({ accent = '#ff7a59', variant = 'dossier' }: { accent?: string; variant?: 'dossier' | 'folio' }) {
   const frameRef = useRef<HTMLDivElement>(null)
   const plateRef = useRef<HTMLCanvasElement>(null)
 
@@ -414,10 +414,11 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
   const pct = Math.round(Math.min(1, coverage) * 100)
 
   return (
-    <div className="relative mx-auto w-full max-w-[26rem] sm:max-w-[28rem] [perspective:1000px]">
+    <div data-portrait-style={variant} className="relative mx-auto w-full max-w-[26rem] sm:max-w-[28rem] [perspective:1000px]">
       {/* ambient bloom behind the frame */}
       <div
         aria-hidden
+        data-portrait-decoration
         className="absolute -inset-6 -z-10 rounded-[2rem] opacity-70 blur-3xl"
         style={{
           background: `radial-gradient(60% 60% at 50% 30%, color-mix(in srgb, ${accent} 40%, transparent), transparent 72%)`,
@@ -426,6 +427,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
 
       <div
         ref={frameRef}
+        data-portrait-frame
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -483,6 +485,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
         {/* technical grid texture, above the imagery */}
         <span
           aria-hidden
+          data-portrait-decoration
           className="pointer-events-none absolute inset-0 opacity-[0.35]"
           style={{
             backgroundImage:

@@ -76,3 +76,6 @@ Original code-native SVG is appropriate for this reusable icon family: transpare
 
 ## Navigation clearance and continuity
 Sticky reading navigation uses measured header and breadcrumb heights, not a fixed desktop offset. Keep existing site typography, logo and route identity. Contents links preserve native history and modified activation, collapse mobile disclosure before measuring, and focus the authored heading without animated scrolling. Back restores the entry’s saved reading position; do not force every history hash back to its heading. Current-section indicators reflect actual viewport geometry in both contents surfaces. Keep native links/details, named navigation landmarks and clear Escape focus return. The FOLIO-008 board is direction only, not permission to adopt generated copy, dates or imagery.
+
+## Personal folio extension, 4 November 2026
+The owner requested About, Hiking and Projects to share the red-annotated editorial reading language, including résumé, certifications and speaking. Follow [PERSONAL-FOLIO.md](docs/design/PERSONAL-FOLIO.md). Preserve all real content and interactions. A generated notebook is decorative only and has recorded provenance; concept boards do not supply claims, downloadable files or contact functionality. This scope does not decide the pending RelatedLabs treatment or include search PR93.

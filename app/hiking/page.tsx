@@ -37,13 +37,15 @@ export default function HikingPage() {
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Hiking' }]} />
       <header className={`${styles.hero} ${styles.hikingHero}`}>
         <div className={styles.hikingTitle}><h1 className={styles.title}><HandUnderline>Hiking</HandUnderline></h1><img src="/trailkit/emblem.webp" alt="" width={64} height={64} /></div>
-        <p className={styles.intro}>The long walks — multi-day traverses across alps, deserts and wilderness. Each one has a journey map, the numbers, and a gallery. A record of where my feet have taken me, and where they’re headed next.</p>
+        <div>
+          <p className={styles.intro}>The long walks — multi-day traverses across alps, deserts and wilderness. Each one has a journey map, the numbers, and a gallery. A record of where my feet have taken me, and where they’re headed next.</p>
+          <nav aria-label="Hiking sections" className={`${styles.jumpLinks} ${styles.hikingJumpLinks}`}><a href="#completed">Completed · {completedHikes.length}</a><a href="#planned">On the list · {plannedHikes.length}</a></nav>
+        </div>
       </header>
-      <nav aria-label="Hiking sections" className={styles.jumpLinks}><a href="#completed">Completed · {completedHikes.length}</a><a href="#planned">On the list · {plannedHikes.length}</a></nav>
       <section id="completed" className={styles.section}>
         <div className={styles.sectionHead}><h2>Completed</h2><p>On foot · long-distance trails</p></div>
         {lead && <div className={styles.trailFeature}>
-          <AnnotatedBlock placement="above">
+          <AnnotatedBlock placement="below">
             <AnnotationTarget id="featured-trail"><FolioHikeEntry hike={lead} featured /></AnnotationTarget>
             <MarginNote target="featured-trail" label="The latest trail"><p>{lead.region}, {lead.year}.</p></MarginNote>
           </AnnotatedBlock>

@@ -77,6 +77,11 @@ describe('personal folio page preservation', () => {
       expect([...entries[i].querySelectorAll('ul li')].map(text)).toEqual(entry.tech)
     })
     expect(structured(doc)).toContainEqual(profilePageLd)
+    const notebook = doc.querySelector('#resume img[src="/about/editorial/learning-notebook-v1.webp"]')
+    expect(notebook?.getAttribute('alt')).toBe('')
+    expect(notebook?.getAttribute('width')).toBe('640')
+    expect(notebook?.getAttribute('height')).toBe('427')
+    expect(doc.querySelector('a[download], form')).toBeNull()
   })
 
   it('preserves all credential destinations and all five talks', () => {

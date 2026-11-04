@@ -18,4 +18,12 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 ## Asset provenance
 
-No raster is created or replaced. The existing `public/about/portrait-main.webp` and halftone, `public/hiking/art/*`, `public/trailkit/emblem.webp`, content-declared project emblems, certification/company logos and YouTube facades remain source-controlled assets with their existing provenance. Trail art and stylized waypoint traces are not new geographic claims. The concept board is not shipped.
+One decorative résumé notebook is generated and optimized as `public/about/editorial/learning-notebook-v1.webp`. Its prompt, source identity and encoding are recorded in `PERSONAL-FOLIO-ASSETS.md`. It carries no factual content. The existing `public/about/portrait-main.webp` and halftone, `public/hiking/art/*`, `public/trailkit/emblem.webp`, content-declared project emblems, certification/company logos and YouTube facades remain source-controlled assets with their existing provenance. Trail art and stylized waypoint traces are not new geographic claims. The concept board is not shipped.
+
+## Résumé and credentials extension
+
+The owner subsequently requested assets and résumé/certification designs, followed by a complete résumé wireframe. The wireframe informs the long-form flow, not new claims or services. About keeps every authored career/education record, all nine credentials, all five talks and the full skills provenance. The notebook marks the career section; original employer logos and credential marks remain. No placeholder impact metrics, fabricated download, contact form or new résumé route is introduced.
+
+## First rendered pass
+
+The exact-head CI artifact passed its three-phase export. Desktop/narrow browser review found excessive opening space on Hiking before its first trail plate and an unavailable northeast-arrow glyph in the condensed credential label. The second candidate moves trail section navigation into the intro, places the measured note after its featured entry and uses the existing SVG icon library for external-link marks. The second build must pass rendered light/dark and narrow review before acceptance.

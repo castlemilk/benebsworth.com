@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
@@ -78,7 +79,10 @@ export default function AboutPage() {
         <a href="#lab">The lab</a>
       </nav>
       <section id="resume" className={styles.section}>
-        <div className={styles.sectionHead}><h2>The track record</h2><p>Career &amp; education</p></div>
+        <div className={`${styles.sectionHead} ${styles.resumeHead}`}>
+          <div><p className={styles.label}>Career &amp; education</p><h2>The work, so far.</h2></div>
+          <img src="/about/editorial/learning-notebook-v1.webp" alt="" width={640} height={427} loading="lazy" decoding="async" className={styles.notebook} />
+        </div>
         <ol className={styles.timeline}>
           {about.timeline.map((entry, i) => <li key={i}>
             <p className={styles.timelineDate}>{entry.when}</p>
@@ -105,7 +109,7 @@ export default function AboutPage() {
               {items.map(cert => <li key={cert.title}>
                 <a href={cert.url || '#'} target="_blank" rel="noreferrer" className={styles.credential}>
                   <img src={cert.badge} alt={`${cert.title} badge`} width={88} height={88} loading="lazy" />
-                  <div><p className={styles.credentialTitle}>{cert.title}</p><p className={styles.label}>{issuer.tag} ↗</p></div>
+                  <div><p className={styles.credentialTitle}>{cert.title}</p><p className={styles.label}>{issuer.tag} <ArrowUpRight size={14} aria-hidden="true" /></p></div>
                 </a>
               </li>)}
             </ul>
@@ -125,7 +129,7 @@ export default function AboutPage() {
           {otherTalks.map(talk => <a href={talk.url || '#'} key={`${talk.title}-${talk.date}-${talk.url}`} target="_blank" rel="noreferrer" className={`${styles.talk} ${styles.talkLink}`}>
             <div className={styles.talkCaption}>
               <img src={talk.image} alt={`${talk.title} logo`} width={40} height={40} loading="lazy" />
-              <div><h3>{talk.title} <span aria-hidden="true">↗</span></h3><p className={styles.talkDate}>{talk.date}</p><p className={styles.talkDescription}>{talk.description}</p></div>
+              <div><h3>{talk.title} <ArrowUpRight size={18} aria-hidden="true" className={styles.externalArrow} /></h3><p className={styles.talkDate}>{talk.date}</p><p className={styles.talkDescription}>{talk.description}</p></div>
             </div>
           </a>)}
         </div>

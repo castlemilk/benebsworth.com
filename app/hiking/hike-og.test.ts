@@ -11,10 +11,11 @@ describe('hiking social thumbnails', () => {
   it.each(hikes)('uses the same $slug image and truthful type as the page', async hike => {
     await Image({params:Promise.resolve({slug:hike.slug})})
     expect(mocks.image).toHaveBeenLastCalledWith(hikeImagery(hike).src, {width:1200,height:630,fit:'cover'})
-    expect(mocks.render).toHaveBeenLastCalledWith(expect.objectContaining({title:hike.name, backgroundUri:`data:${hikeImagery(hike).src}`, description:expect.stringContaining(hikeImagery(hike).kind === 'photograph' ? 'Photograph' : 'Illustration')}))
+    expect(mocks.render).toHaveBeenLastCalledWith(expect.objectContaining({title:hike.name, backgroundContrast:'high', backgroundUri:`data:${hikeImagery(hike).src}`, description:expect.stringContaining(hikeImagery(hike).kind === 'photograph' ? 'Photograph' : 'Illustration')}))
   })
   it('brings the index into the same cover family', async () => {
     await IndexImage()
     expect(mocks.image).toHaveBeenLastCalledWith(hikeImagery(hikes[0]).src, {width:1200,height:630,fit:'cover'})
+    expect(mocks.render).toHaveBeenLastCalledWith(expect.objectContaining({backgroundContrast:'high'}))
   })
 })

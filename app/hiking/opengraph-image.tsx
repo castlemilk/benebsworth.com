@@ -10,6 +10,7 @@ export const alt = 'Hiking · Ben Ebsworth'
 export default async function Image() {
   return renderOgCard({
     eyebrow: 'Hiking',
+    backgroundContrast: 'high',
     backgroundUri: await publicOgImageDataUri(hikeImagery(completedHikes[0]).src, { width: 1200, height: 630, fit: 'cover' }),
     title: 'Long-distance hikes & treks',
     footer: 'Journey maps · stats · galleries',

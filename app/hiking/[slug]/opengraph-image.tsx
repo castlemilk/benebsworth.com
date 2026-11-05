@@ -24,5 +24,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     accent: h?.accent ?? '#5b9e6f',
     glyph: backgroundUri ? undefined : '⛰',
     backgroundUri,
+    backgroundContrast: 'high',
   })
 }

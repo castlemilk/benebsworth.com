@@ -79,3 +79,6 @@ Sticky reading navigation uses measured header and breadcrumb heights, not a fix
 
 ## Personal folio extension, 4 November 2026
 The owner requested About, Hiking and Projects to share the red-annotated editorial reading language, including résumé, certifications and speaking. Follow [PERSONAL-FOLIO.md](docs/design/PERSONAL-FOLIO.md). Preserve all real content and interactions. A generated notebook is decorative only and has recorded provenance; concept boards do not supply claims, downloadable files or contact functionality. This scope does not decide the pending RelatedLabs treatment or include search PR93.
+
+### Superseding About distinction
+The owner clarified that About must be crisp, clean and elevated, separate from the intentionally handwritten blog and lab. About uses existing Space Grotesk and Hanken Grotesk, neutral light/dark surfaces and structured professional content. Remove handwritten annotations and the notebook from About; retain the notebook only as a concept artifact outside public output. Hiking/Projects keep their requested editorial extension. This clarification overrides the earlier About folio treatment above.

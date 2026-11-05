@@ -4,13 +4,11 @@ import { ArrowUpRight } from 'lucide-react'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { HandUnderline } from '@/components/mdx/hand-underline'
 import styles from '@/components/personal/folio.module.css'
 import { about } from '@/content/about'
 import { SkillMarquee } from '@/components/motion/skill-marquee'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { HalftoneHero } from '@/components/about/halftone-hero'
-import { AnnotatedBlock, AnnotationTarget, MarginNote } from '@/components/mdx/annotated-block'
 import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
 import { techColor } from '@/lib/tech-colors'
@@ -51,11 +49,11 @@ export default function AboutPage() {
       { name: 'About', url: `${SITE_URL}/about/` },
     ])]} />
     <SiteNav />
-    <main id="main-content" className={styles.page}>
+      <main id="main-content" className={`${styles.page} ${styles.aboutPage}`}>
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
       <header className={`${styles.hero} ${styles.aboutHero}`}>
         <div className={styles.aboutCopy}>
-          <h1 className={styles.title}>Ben<br /><HandUnderline>Ebsworth</HandUnderline></h1>
+          <h1 className={styles.title}>Ben<br />Ebsworth</h1>
           <p className={styles.role}>Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia</p>
           <p className={styles.intro}>{about.bio}</p>
           <dl className={styles.facts}>
@@ -65,10 +63,7 @@ export default function AboutPage() {
           </dl>
         </div>
         <div className={styles.portrait}>
-          <AnnotatedBlock placement="above">
-            <AnnotationTarget id="about-portrait"><HalftoneHero accent="var(--folio-handwriting)" variant="folio" /></AnnotationTarget>
-            <MarginNote target="about-portrait" label="The portrait"><p>Drag to develop.</p></MarginNote>
-          </AnnotatedBlock>
+          <HalftoneHero accent="var(--fg)" variant="folio" />
         </div>
       </header>
       <nav aria-label="About sections" className={styles.jumpLinks}>
@@ -79,10 +74,7 @@ export default function AboutPage() {
         <a href="#lab">The lab</a>
       </nav>
       <section id="resume" className={styles.section}>
-        <div className={`${styles.sectionHead} ${styles.resumeHead}`}>
-          <div><p className={styles.label}>Career &amp; education</p><h2>The work, so far.</h2></div>
-          <img src="/about/editorial/learning-notebook-v1.webp" alt="" width={640} height={427} loading="lazy" decoding="async" className={styles.notebook} />
-        </div>
+        <div className={styles.sectionHead}><h2>Career &amp; education</h2></div>
         <ol className={styles.timeline}>
           {about.timeline.map((entry, i) => <li key={i}>
             <p className={styles.timelineDate}>{entry.when}</p>
@@ -100,7 +92,7 @@ export default function AboutPage() {
         </ol>
       </section>
       <section id="certifications" className={styles.section}>
-        <div className={styles.sectionHead}><h2>The trophy shelf</h2><p>{about.certifications.length} active certifications across the three clouds &amp; the cloud-native ecosystem.</p></div>
+        <div className={styles.sectionHead}><h2>Certifications</h2><p>{about.certifications.length} active certifications across the three clouds &amp; the cloud-native ecosystem.</p></div>
         {ISSUERS.map(issuer => {
           const items = about.certifications.filter(cert => cert.issuer === issuer.name)
           return items.length > 0 && <div className={styles.credentialGroup} key={issuer.name}>
@@ -120,7 +112,7 @@ export default function AboutPage() {
         <div className={styles.sectionHead}><h2>Talks &amp; speaking</h2><p>On the record</p></div>
         <div className={styles.talks}>
           {recordings.map(({ talk, id }) => <article key={id} className={styles.talk}>
-            <YouTube id={id} title={talk.title} accent="var(--folio-handwriting)" />
+            <YouTube id={id} title={talk.title} accent="var(--profile-action)" />
             <div className={styles.talkCaption}>
               <img src={talk.image} alt={`${talk.title} logo`} width={32} height={32} loading="lazy" />
               <div><h3>{talk.title}</h3><p className={styles.talkDate}>{talk.date} · Recording</p><p className={styles.talkDescription}>{talk.description}</p></div>

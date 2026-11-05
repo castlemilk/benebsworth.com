@@ -18,7 +18,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 ## Asset provenance
 
-One decorative résumé notebook is generated and optimized as `public/about/editorial/learning-notebook-v1.webp`. Its prompt, source identity and encoding are recorded in `PERSONAL-FOLIO-ASSETS.md`. It carries no factual content. The existing `public/about/portrait-main.webp` and halftone, `public/hiking/art/*`, `public/trailkit/emblem.webp`, content-declared project emblems, certification/company logos and YouTube facades remain source-controlled assets with their existing provenance. Trail art and stylized waypoint traces are not new geographic claims. The concept board is not shipped.
+One decorative résumé notebook was generated and optimized. The later clean-About direction supersedes its placement: the derivative is retained under `docs/design/assets/`, outside public output. Its prompt, source identity and encoding are recorded in `PERSONAL-FOLIO-ASSETS.md`. No new raster ships on About. The existing `public/about/portrait-main.webp` and halftone, `public/hiking/art/*`, `public/trailkit/emblem.webp`, content-declared project emblems, certification/company logos and YouTube facades remain source-controlled assets with their existing provenance. Trail art and stylized waypoint traces are not new geographic claims. The concept board is not shipped.
 
 ## Résumé and credentials extension
 
@@ -27,3 +27,7 @@ The owner subsequently requested assets and résumé/certification designs, foll
 ## First rendered pass
 
 The exact-head CI artifact passed its three-phase export. Desktop/narrow browser review found excessive opening space on Hiking before its first trail plate and an unavailable northeast-arrow glyph in the condensed credential label. The second candidate moves trail section navigation into the intro, places the measured note after its featured entry and uses the existing SVG icon library for external-link marks. The second build must pass rendered light/dark and narrow review before acceptance.
+
+## Superseding About direction, 4 November 2026
+
+The owner explicitly separated About from the intentionally handwritten blog and lab: About should be crisp, clean and elevated. This takes precedence over the earlier About concept. About now uses the existing Space Grotesk / Hanken Grotesk type pair, cool neutral light/dark surfaces, restrained rules, a date-led career ledger and clean credential grouping. No handwritten name underline, margin note or notebook is displayed. The original interactive portrait, actual logos and all original facts remain. Hiking and Projects retain the editorial reading treatment. No blog/lab styles or pending RelatedLabs choices change.

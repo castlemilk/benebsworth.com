@@ -77,10 +77,8 @@ describe('personal folio page preservation', () => {
       expect([...entries[i].querySelectorAll('ul li')].map(text)).toEqual(entry.tech)
     })
     expect(structured(doc)).toContainEqual(profilePageLd)
-    const notebook = doc.querySelector('#resume img[src="/about/editorial/learning-notebook-v1.webp"]')
-    expect(notebook?.getAttribute('alt')).toBe('')
-    expect(notebook?.getAttribute('width')).toBe('640')
-    expect(notebook?.getAttribute('height')).toBe('427')
+    expect(doc.querySelector('.hand-underline, .annotated-block, .handwritten-note')).toBeNull()
+    expect(doc.querySelector('#resume img[src*="notebook"]')).toBeNull()
     expect(doc.querySelector('a[download], form')).toBeNull()
   })
 
@@ -105,13 +103,13 @@ describe('personal folio page preservation', () => {
       if (!youtubeId(talk.url)) expect(link(doc, talk.url)).toBeDefined()
     }
     expect([...doc.querySelectorAll('[data-youtube]')].map(node => jsonAttribute(node, 'data-youtube'))).toEqual(
-      about.speaking.flatMap(talk => youtubeId(talk.url) ? [{ id: youtubeId(talk.url), title: talk.title, accent: 'var(--folio-handwriting)' }] : []),
+      about.speaking.flatMap(talk => youtubeId(talk.url) ? [{ id: youtubeId(talk.url), title: talk.title, accent: 'var(--profile-action)' }] : []),
     )
   })
 
   it('passes complete existing content to portrait, skills and lab interactions', () => {
     const doc = render(AboutPage)
-    expect(jsonAttribute(doc.querySelector('[data-portrait-props]'), 'data-portrait-props')).toEqual({ accent: 'var(--folio-handwriting)', variant: 'folio' })
+    expect(jsonAttribute(doc.querySelector('[data-portrait-props]'), 'data-portrait-props')).toEqual({ accent: 'var(--fg)', variant: 'folio' })
     const skills = jsonAttribute(doc.querySelector('[data-skills]'), 'data-skills')
     expect(skills).toHaveLength(50)
     expect(skills).toEqual(about.skills)

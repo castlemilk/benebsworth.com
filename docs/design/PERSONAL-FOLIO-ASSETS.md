@@ -2,15 +2,15 @@
 
 Generated on 4 November 2026 with the built-in image generation tool for the owner-requested résumé/learning direction.
 
-## Shipped derivative
+## Retained concept derivative (not shipped)
 
-- Path: `public/about/editorial/learning-notebook-v1.webp`
+- Path: `docs/design/assets/learning-notebook-v1.webp`
 - Dimensions: 640 × 427, RGBA, alpha preserved.
 - Bytes: 47304
 - SHA-256: `2c95a2aa615cac0e6b64e0b9ee406bb721e6ca6ece1957a78c44af0495441d4d`
 - Source: `learning-notebook-accent-v1.png`, 1536 × 1024 RGBA. SHA-256 `851cc6e82c41f314f271f836852f2d98d18ad2cf9e39c19a8b542bc239af77aa`. Original retained with the generated concept deliverables.
 - Encoding: existing Sharp dependency, resize to width 640 without enlargement, WebP quality 85 / alphaQuality 100. No artistic alteration, invented text, logo or factual content.
-- Placement: decorative empty-alt illustration beside the career heading, explicit dimensions, lazy loading. Its paper fill and translucent halo require actual light/dark review.
+- Status: the owner subsequently requested a clean, elevated About distinct from handwritten blog/lab surfaces. This notebook is therefore retained as a concept asset outside the public output, not used on About.
 
 ## Original generation prompt and usage notes
 

@@ -52,13 +52,14 @@ if (args.apply) {
     process.exit(2)
   }
   console.error(`▸ applying cached proposal for ${args.slug} (${cached.proposal.gallery.length} photos, saved ${cached.savedAt})`)
+  console.error(`  review report: ${cached.reportPath}`)
   if (!(await confirmWrite('Write this cached manifest to GCS (live)? type "yes": '))) {
     console.error('aborted.')
     process.exit(0)
   }
   const stamp = new Date().toISOString().replace(/[:.]/g, '-')
   await backupManifest(args.slug, cached.manifest, cached.dir, stamp)
-  const uri = await writeManifest(args.slug, cached.proposal, cached.dir)
+  const uri = await writeManifest(args.slug, cached.proposal, cached.dir, cached.generation)
   console.error(`✓ wrote ${uri}\n  live: https://benebsworth.com/hiking/${args.slug}/`)
   process.exit(0)
 }
@@ -104,6 +105,6 @@ if (!(await confirmWrite('\nWrite this manifest to GCS (live)? type "yes": '))) 
 const stamp = new Date().toISOString().replace(/[:.]/g, '-')
 const backup = await backupManifest(args.slug, run.manifest, run.tmpDir, stamp)
 console.error(`  backup of current manifest → ${backup}`)
-const uri = await writeManifest(args.slug, run.proposal, run.tmpDir)
+const uri = await writeManifest(args.slug, run.proposal, run.tmpDir, run.generation)
 console.error(`✓ wrote ${uri}`)
 console.error(`  live: https://${process.env.HIKE_SITE || 'benebsworth.com'}/hiking/${args.slug}/`)

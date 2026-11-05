@@ -7,6 +7,9 @@
   "bin": {
     "hike-annotate": "bin/annotate.mjs"
   },
+  "scripts": {
+    "test": "node --test test-manifest.mjs"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "zod": "^4.4.3"

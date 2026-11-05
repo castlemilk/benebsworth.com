@@ -72,7 +72,7 @@ const ssGet = (k: string): string | null => {
   }
 }
 
-export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
+export function HalftoneHero({ accent = '#ff7a59', variant = 'dossier' }: { accent?: string; variant?: 'dossier' | 'profile' }) {
   const frameRef = useRef<HTMLDivElement>(null)
   const plateRef = useRef<HTMLCanvasElement>(null)
 
@@ -397,7 +397,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
     '--accent': accent,
     '--lx': '50%',
     '--ly': '50%',
-    transform: !reducedMotion
+    transform: variant === 'profile' ? 'none' : !reducedMotion
       ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.012)`
       : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
     transition: 'transform 280ms cubic-bezier(0.16,1,0.3,1), box-shadow 280ms ease, border-color 280ms ease',
@@ -408,16 +408,21 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
     touchAction: done ? undefined : 'pan-y',
     cursor: done ? 'default' : 'crosshair',
     borderColor: active ? 'color-mix(in srgb, var(--accent) 55%, transparent)' : undefined,
-    boxShadow: active ? '0 40px 90px -40px color-mix(in srgb, var(--accent) 70%, transparent)' : undefined,
+    boxShadow: active && variant === 'dossier' ? '0 40px 90px -40px color-mix(in srgb, var(--accent) 70%, transparent)' : undefined,
   }
 
   const pct = Math.round(Math.min(1, coverage) * 100)
 
   return (
-    <div className="relative mx-auto w-full max-w-[26rem] sm:max-w-[28rem] [perspective:1000px]">
+    <div data-portrait-style={variant} className="relative mx-auto w-full max-w-[26rem] sm:max-w-[28rem] [perspective:1000px]">
+      {variant === 'profile' && <div data-portrait-controls className="mb-3 min-h-16 flex items-start justify-between gap-4 font-sans">
+        <p aria-live="polite" className="max-w-40 py-3 text-sm leading-5 text-muted">{done ? 'Portrait revealed.' : 'Drag to reveal, or use the button.'}</p>
+        <button type="button" onClick={done ? reset : finish} className="min-h-11 shrink-0 cursor-pointer px-1 text-sm font-medium text-fg underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg">{done ? 'Reset portrait' : 'Show portrait'}</button>
+      </div>}
       {/* ambient bloom behind the frame */}
       <div
         aria-hidden
+        data-portrait-decoration
         className="absolute -inset-6 -z-10 rounded-[2rem] opacity-70 blur-3xl"
         style={{
           background: `radial-gradient(60% 60% at 50% 30%, color-mix(in srgb, ${accent} 40%, transparent), transparent 72%)`,
@@ -426,6 +431,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
 
       <div
         ref={frameRef}
+        data-portrait-frame
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -466,7 +472,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
         />
 
         {/* trailing brush glow — follows the cursor while painting (decorative) */}
-        {!reducedMotion && !done && (
+        {variant === 'dossier' && !reducedMotion && !done && (
           <span
             aria-hidden
             className="pointer-events-none absolute -z-0 h-40 w-40 rounded-full transition-opacity duration-200"
@@ -483,6 +489,7 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
         {/* technical grid texture, above the imagery */}
         <span
           aria-hidden
+          data-portrait-decoration
           className="pointer-events-none absolute inset-0 opacity-[0.35]"
           style={{
             backgroundImage:
@@ -493,22 +500,24 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
         />
 
         {/* corner registration ticks — dossier detail */}
-        <span aria-hidden className="absolute left-3 top-3 size-3 border-l border-t border-fg/25" />
-        <span aria-hidden className="absolute right-3 top-3 size-3 border-r border-t border-fg/25" />
-        <span aria-hidden className="absolute bottom-3 left-3 size-3 border-b border-l border-fg/25" />
-        <span aria-hidden className="absolute bottom-3 right-3 size-3 border-b border-r border-fg/25" />
+        {variant === 'dossier' && <>
+          <span aria-hidden className="absolute left-3 top-3 size-3 border-l border-t border-fg/25" />
+          <span aria-hidden className="absolute right-3 top-3 size-3 border-r border-t border-fg/25" />
+          <span aria-hidden className="absolute bottom-3 left-3 size-3 border-b border-l border-fg/25" />
+          <span aria-hidden className="absolute bottom-3 right-3 size-3 border-b border-r border-fg/25" />
+        </>}
 
         {/* "drag to develop" hint — fades out once the visitor starts painting */}
-        <span
+        {variant === 'dossier' && <span
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-mono text-[0.62rem] uppercase tracking-[0.3em] text-fg/55 transition-opacity duration-500"
           style={{ opacity: ready && !touched && !done ? 1 : 0 }}
         >
           <span className="rounded-full bg-bg/40 px-3 py-1.5 backdrop-blur-sm">drag to develop ↯</span>
-        </span>
+        </span>}
 
         {/* metadata strip */}
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-fg/45">
+        {variant === 'dossier' && <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-fg/45">
           <span className="accent-ink" style={{ '--ink': accent } as React.CSSProperties}>
             subject · be
           </span>
@@ -526,8 +535,9 @@ export function HalftoneHero({ accent = '#ff7a59' }: { accent?: string }) {
           ) : (
             <span>plate 02 · halftone</span>
           )}
-        </span>
+        </span>}
       </div>
+
     </div>
   )
 }

@@ -76,3 +76,12 @@ Original code-native SVG is appropriate for this reusable icon family: transpare
 
 ## Navigation clearance and continuity
 Sticky reading navigation uses measured header and breadcrumb heights, not a fixed desktop offset. Keep existing site typography, logo and route identity. Contents links preserve native history and modified activation, collapse mobile disclosure before measuring, and focus the authored heading without animated scrolling. Back restores the entry’s saved reading position; do not force every history hash back to its heading. Current-section indicators reflect actual viewport geometry in both contents surfaces. Keep native links/details, named navigation landmarks and clear Escape focus return. The FOLIO-008 board is direction only, not permission to adopt generated copy, dates or imagery.
+
+## Personal folio extension, 4 November 2026
+The owner requested About, Hiking and Projects to share the red-annotated editorial reading language, including résumé, certifications and speaking. Follow [PERSONAL-FOLIO.md](docs/design/PERSONAL-FOLIO.md). Preserve all real content and interactions. A generated notebook is decorative only and has recorded provenance; concept boards do not supply claims, downloadable files or contact functionality. This scope does not decide the pending RelatedLabs treatment or include search PR93.
+
+### Superseding About distinction
+The owner clarified that About must be crisp, clean and elevated, separate from the intentionally handwritten blog and lab. About uses existing Space Grotesk and Hanken Grotesk, neutral light/dark surfaces and structured professional content. Remove handwritten annotations and the notebook from About; retain the notebook only as a concept artifact outside public output. Hiking/Projects keep their requested editorial extension. This clarification overrides the earlier About folio treatment above.
+
+### Deduplicated technical profile
+The owner asked to reduce repetition and emphasize science, engineering and software. About groups career roles by employer, presents each degree once with credentials, and groups the existing unique skills by discipline. Role-specific technologies remain accessible in native disclosures. One Lab heading and introduction lead to unchanged recommendations. Use factual systems content, aligned dates and quiet rules as technical cues, not invented diagrams or decorative numbering. See PERSONAL-FOLIO.md for preservation and review gates.

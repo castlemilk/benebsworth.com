@@ -1,0 +1,222 @@
+.page {
+  --folio-handwriting: #b32624;
+  --folio-accent: var(--folio-handwriting);
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: 2rem clamp(1.5rem, 4vw, 3rem) 7rem;
+}
+:global(.dark) .page { --folio-handwriting: #ffaaa5; }
+:global(:root:not(.dark)):has(.page) {
+  --bg: #f4f1e9;
+  --fg: #202c34;
+  --muted: #5b6670;
+  --surface: #e9e7df;
+  --surface-2: #e5e3db;
+  --border: #c7c7be;
+}
+.page :where(a, button):focus-visible { outline: 2px solid var(--folio-handwriting); outline-offset: 5px; }
+.page :where(section[id], [data-annotation-target]) { scroll-margin-top: 8rem; }
+.page ::selection { background: var(--folio-handwriting); color: var(--bg); }
+.hero { padding-block: clamp(2.5rem, 6vw, 5rem) 3.5rem; }
+.title { font: 500 clamp(3.4rem, 7.6vw, 6rem)/1.02 'Folio Serif', Georgia, serif; letter-spacing: -.04em; text-wrap: balance; }
+.title :global(.hand-underline) { padding-bottom: .12em; }
+.intro { max-width: 58ch; font: 400 clamp(1.15rem, 1rem + .4vw, 1.35rem)/1.65 'Folio Serif', Georgia, serif; color: var(--muted); }
+.hero > .intro { margin-top: 1.75rem; }
+.label { font: 600 .9rem/1.4 'Folio Condensed', sans-serif; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.section { padding-block: 2rem 4.5rem; border-top: 1px solid var(--border); }
+.sectionHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 2rem; }
+.sectionHead h2 { font: 500 clamp(2rem, 3.5vw, 3rem)/1.1 'Folio Serif', Georgia, serif; letter-spacing: -.025em; }
+.sectionHead p { max-width: 43ch; font-size: 1rem; color: var(--muted); line-height: 1.6; }
+.jumpLinks { display: flex; flex-wrap: wrap; gap: .25rem 1.75rem; border-block: 1px solid var(--border); padding-block: .6rem; margin-bottom: 3.5rem; }
+.jumpLinks a, .textLink { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .3em; }
+.jumpLinks a { font: 600 1rem 'Folio Condensed', sans-serif; letter-spacing: .035em; }
+.jumpLinks a:hover, .textLink:hover { color: var(--folio-handwriting); }
+.aboutHero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .85fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
+.aboutCopy .intro { margin-top: 1.5rem; }
+.role { margin-top: 1.5rem !important; font: 600 1rem/1.5 'Folio Condensed', sans-serif; letter-spacing: .025em; max-width: 40ch; }
+.facts { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; margin-top: 1.75rem !important; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+.facts > div { display: flex; gap: .35rem; align-items: baseline; }
+.facts dt { font-weight: 600; font-variant-numeric: tabular-nums; }
+.facts dd { margin: 0; color: var(--muted); font-size: .875rem; }
+.portrait { min-width: 0; }
+.portrait :global(.annotated-block) { margin: 0; gap: 2rem; }
+.portrait :global(.margin-note) { justify-self: end; max-width: 15rem; }
+.page :global(.margin-note-label) { color: var(--muted); font: 600 .8rem/1.4 'Folio Condensed', sans-serif; letter-spacing: .06em; min-height: 44px; }
+.page :global(.handwritten-note) { color: var(--folio-handwriting); font-size: 1.7rem; }
+.portrait :global([data-portrait-style=profile]) { max-width: 20rem; }
+.portrait :global([data-portrait-style=profile] [data-portrait-frame]) { border-radius: 0; background: var(--surface); }
+.portrait :global([data-portrait-style=profile] [data-portrait-decoration]) { display: none; }
+.portrait :global([data-portrait-style=profile] canvas), .portrait :global([data-portrait-style=profile] img) { filter: none; }
+.portrait :global([data-portrait-style=profile] button) { min-height: 44px; color: var(--fg); }
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline > li { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 2rem; padding-block: 1.75rem; border-top: 1px solid var(--border); }
+.timeline > li:first-child { padding-top: 0; border-top: 0; }
+.timelineDate { color: var(--muted); font-size: .9rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
+.timelineHeading { display: flex; align-items: flex-start; gap: 1rem; }
+.companyLogo { width: 40px; height: 40px; object-fit: contain; flex: 0 0 auto; }
+.timeline h3 { margin-top: .35rem; font: 500 1.65rem/1.2 'Folio Serif', Georgia, serif; letter-spacing: -.02em; }
+.timelineDetail { margin-top: .9rem !important; max-width: 70ch; line-height: 1.75; color: var(--muted); }
+.technologies { display: flex; flex-wrap: wrap; gap: .45rem 1.15rem; padding: 0; list-style: none; margin: 1rem 0 0; }
+.technologies li { display: inline-flex; gap: .45rem; align-items: center; font-size: .8rem; color: var(--muted); line-height: 1.6; padding: 0; border: 0; }
+.technologies li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--tech-color, var(--muted)); flex-shrink: 0; }
+.credentialGroup + .credentialGroup { margin-top: 2.5rem; }
+.credentialGroup h3 { margin-bottom: 1rem; }
+.credentials { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem 1.5rem; }
+.credential { display: flex; align-items: center; gap: .9rem; min-height: 112px; padding-block: 1rem; border-top: 1px solid var(--border); }
+.credential:hover .credentialTitle { text-decoration: underline; text-underline-offset: .2em; }
+.credential img { width: 64px; height: 64px; object-fit: contain; flex: 0 0 auto; }
+.credentialTitle { font: 500 1.15rem/1.3 'Folio Serif', Georgia, serif; }
+.credential .label { display: flex; align-items: center; gap: .35rem; margin-top: .4rem; font-size: .8rem; }
+.externalArrow { display: inline; vertical-align: baseline; }
+.talks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 2rem; }
+.talk { min-width: 0; }
+.talkCaption { display: flex; align-items: flex-start; gap: 1rem; padding-top: 1.2rem; }
+.talkCaption img { width: 38px; height: 38px; object-fit: contain; flex-shrink: 0; }
+.talk h3 { font: 500 1.4rem/1.25 'Folio Serif', Georgia, serif; }
+.talkDescription { margin-top: .7rem !important; font-size: 1rem; line-height: 1.65; color: var(--muted); }
+.talkDate { margin-top: .5rem !important; font-size: .85rem; color: var(--muted); }
+.talkLink { display: block; border-top: 1px solid var(--border); padding-top: .3rem; }
+.talkLink:hover h3 { text-decoration: underline; text-underline-offset: .2em; }
+.labIntro { max-width: 70ch; font: 1.15rem/1.75 'Folio Serif', Georgia, serif; }
+.labContent { margin-top: 2rem; }
+.hikingHero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem 4rem; align-items: start; padding-bottom: 2rem; }
+.hikingJumpLinks { margin: 1.5rem 0 0; border-bottom: 0; padding-bottom: 0; }
+.hikingTitle { display: flex; align-items: center; gap: 1.5rem; }
+.hikingTitle img { width: 64px; height: 64px; object-fit: contain; }
+:global(.dark) .hikingTitle img { background: #f4f1e9; border-radius: 50%; padding: 6px; }
+.trailFeature { margin-bottom: 2.5rem; }
+.trailFeature :global(.annotated-block) { margin: 0; gap: 2rem; }
+.trailFeature :global(.margin-note) { justify-self: start; }
+.hikeEntry { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: 2rem; padding-block: 1.75rem; border-top: 1px solid var(--border); }
+.hikeArt { position: relative; aspect-ratio: 16/10; align-self: start; background: var(--surface); overflow: hidden; }
+.hikeArt img { width: 100%; height: 100%; object-fit: cover; }
+.hikeArt svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .8; pointer-events: none; }
+.hikeCopy { min-width: 0; align-self: center; }
+.hikeCopy h3 { font: 500 clamp(1.7rem, 3vw, 2.6rem)/1.12 'Folio Serif', Georgia, serif; letter-spacing: -.025em; margin-top: .55rem; }
+.hikeEntry:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+.hikeSummary { color: var(--muted); font: 1.05rem/1.7 'Folio Serif', Georgia, serif; margin-top: .8rem !important; }
+.hikeStats { display: flex; flex-wrap: wrap; gap: .7rem 1.2rem; margin-top: 1.1rem !important; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.hikeStats > div { display: flex; flex-direction: column-reverse; gap: .15rem; }
+.hikeStats dt { color: var(--muted); }
+.hikeStats dd { margin: 0; font-size: .95rem; }
+.hikeFeature { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); border: 0; padding: 0; gap: 2rem; }
+.hikeFeature .hikeArt { aspect-ratio: 4/3; }
+.hikeStatus { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: .65rem !important; }
+.hikeStatus span { color: var(--folio-handwriting); }
+.plannedGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; }
+.plannedGrid .hikeEntry { grid-template-columns: 1fr; gap: 1rem; align-content: start; padding-bottom: 2rem; }
+.plannedGrid .hikeArt { aspect-ratio: 2/1; }
+.plannedGrid h3 { font-size: 2rem; }
+.projectList { padding: 0; margin: 0; list-style: none; }
+.projectEntry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 3rem; padding-block: 3rem; border-top: 1px solid var(--border); align-items: center; }
+.projectEntry h2 { font: 500 clamp(2.2rem, 4.5vw, 3.6rem)/1.08 'Folio Serif', Georgia, serif; letter-spacing: -.03em; }
+.projectEntry:hover h2 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+.projectPlate { display: grid; place-items: center; min-height: 240px; padding: 2.5rem; border: 1px solid var(--border); background: var(--surface); }
+.projectPlate img { width: 160px; height: 160px; object-fit: contain; }
+.projectDescription { margin-top: 1.2rem !important; font: 1.2rem/1.7 'Folio Serif', Georgia, serif; color: var(--muted); }
+.projectTech { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1.5rem; }
+.projectTech > * { border-radius: 2px; font-size: .75rem; }
+.projectAction { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; font-weight: 500; text-decoration: underline; text-underline-offset: .3em; }
+.projectList > li:first-child .projectPlate { min-height: 300px; }
+
+/* About is a clean professional profile, separate from the reading folio. */
+:global(:root):has(.aboutPage) {
+  --font-editorial-display: var(--font-display), sans-serif;
+  --editorial-search-paper: var(--bg);
+  --editorial-search-focus: var(--fg);
+}
+:global(:root):has(.aboutPage) :global([data-site-nav] a[aria-current])::after { border-radius: 0; transform: none; }
+:global(:root:not(.dark)):has(.aboutPage) {
+  --bg: #fafbfc;
+  --fg: #19212d;
+  --muted: #536170;
+  --surface: #f0f3f6;
+  --surface-2: #e9edf2;
+  --border: #d2d9e1;
+}
+:global(:root.dark):has(.aboutPage) {
+  --bg: #10141a;
+  --fg: #edf1f5;
+  --muted: #a8b4c2;
+  --surface: #191f28;
+  --surface-2: #222b36;
+  --border: #35404e;
+}
+.aboutPage, :global(.dark) .aboutPage { --folio-handwriting: var(--fg); --profile-action: #263445; }
+.aboutPage .title { font-family: var(--font-display), sans-serif; font-size: clamp(3.25rem, 6.5vw, 5.25rem); font-weight: 600; line-height: 1.02; }
+.aboutPage .aboutHero { grid-template-columns: minmax(0, 1.3fr) minmax(0, .8fr); align-items: start; gap: clamp(2rem, 6vw, 5rem); padding-block: 2.5rem 3rem; }
+.aboutPage .intro { font: 400 clamp(1.1rem, 1rem + .3vw, 1.25rem)/1.65 var(--font-sans), sans-serif; }
+.aboutPage .role { font: 600 1rem/1.6 var(--font-sans), sans-serif; letter-spacing: 0; max-width: 44ch; }
+.profileMeta { margin-top: 1rem; color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.aboutPage .jumpLinks { gap: .25rem 1.5rem; margin: 1.5rem 0 0; border-bottom: 0; }
+.profileBio { max-width: 72ch; margin-bottom: 3.5rem; font: 400 clamp(1.1rem, 1rem + .3vw, 1.25rem)/1.75 var(--font-sans), sans-serif; color: var(--muted); }
+.aboutPage .jumpLinks a { font: 500 .95rem/1.5 var(--font-sans), sans-serif; letter-spacing: 0; }
+.aboutPage .section { padding-top: 2.5rem; padding-bottom: 5rem; }
+.aboutPage .sectionHead { margin-bottom: 2.5rem; }
+.aboutPage .sectionHead h2 { font: 600 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-display), sans-serif; letter-spacing: -.035em; }
+.aboutPage .label { font: 600 .85rem/1.5 var(--font-sans), sans-serif; letter-spacing: .015em; text-transform: none; }
+.aboutPage .timeline { margin-left: .25rem; }
+.timelineGroup + .timelineGroup { margin-top: 3rem; }
+.employer { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; }
+.employer h3 { font: 600 1.2rem/1.4 var(--font-display), sans-serif; letter-spacing: -.02em; }
+.technologyDetails { margin-top: .75rem; }
+.technologyDetails summary { width: fit-content; min-height: 44px; align-content: center; cursor: pointer; font-size: .875rem; color: var(--muted); text-decoration: underline; text-underline-offset: .3em; }
+.technologyDetails summary:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+.technologyDetails .technologies { margin-top: .25rem; }
+.certificationGroups { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.aboutPage :global([data-skill-layout=grouped]) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem 2rem; }
+.aboutPage :global([data-skill-group]) { min-width: 0; padding-top: 1rem; border-top: 1px solid var(--border); }
+.aboutPage :global([data-skill-group] h3) { margin-bottom: 1rem; font: 600 1rem/1.5 var(--font-sans), sans-serif; }
+.aboutPage .labContent { margin-top: 0; }
+.aboutPage .labContent > section { margin-top: 0; padding-top: 0; border-top: 0; }
+.aboutPage .labContent h2 { font: 600 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-display), sans-serif; letter-spacing: -.035em; }
+.aboutPage .labIntro { margin-bottom: 2rem; }
+.aboutPage .timeline > li { grid-template-columns: 10rem minmax(0, 1fr); gap: 2.5rem; padding-block: 2rem; }
+.aboutPage .timeline > li:first-child { padding-top: 0; }
+.aboutPage .timeline h4 { font: 500 1.5rem/1.3 var(--font-display), sans-serif; letter-spacing: -.025em; }
+.aboutPage .timelineDetail { max-width: 68ch; line-height: 1.75; }
+.aboutPage .credentialTitle { font: 500 1.05rem/1.45 var(--font-sans), sans-serif; }
+.aboutPage .credential img { width: 64px; height: 64px; }
+.aboutPage .talk h3 { font: 500 1.35rem/1.3 var(--font-display), sans-serif; letter-spacing: -.02em; }
+.aboutPage :global([data-skill-chip]) { min-height: 44px; border-radius: 4px; font-family: var(--font-sans), sans-serif; padding-inline: .85rem; max-width: 100%; white-space: normal; text-align: left; }
+.aboutPage :global([data-skill-chip] > span) { display: none; }
+.aboutPage .labIntro { font: 400 1.1rem/1.75 var(--font-sans), sans-serif; }
+.aboutPage .portrait :global([data-portrait-style=profile] [data-portrait-frame]) { border-radius: 4px; }
+@media (max-width: 900px) {
+  .aboutHero { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 2rem; }
+  .credentials { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hikingHero { grid-template-columns: 1fr; gap: 1.5rem; }
+  .hikeFeature { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .aboutPage :global([data-skill-layout=grouped]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .aboutPage .aboutHero { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 2rem; }
+}
+@media (max-width: 650px) {
+  .page { padding-top: 1.5rem; }
+  .hero { padding-block: 2.5rem 3rem; }
+  .aboutHero, .hikeFeature, .hikeEntry, .projectEntry { grid-template-columns: 1fr; }
+  .portrait { margin-top: .5rem; }
+  .portrait :global([data-portrait-style=profile]) { max-width: 18rem; }
+  .portrait :global(.margin-note) { align-self: flex-end; }
+  .timeline > li { grid-template-columns: 1fr; gap: .8rem; }
+  .credentials, .talks, .plannedGrid { grid-template-columns: 1fr; }
+  .hikeEntry { gap: 1.2rem; }
+  .hikeFeature .hikeArt { aspect-ratio: 16/10; }
+  .hikingTitle { justify-content: space-between; gap: 1rem; }
+  .hikingTitle img { width: 48px; height: 48px; }
+  .projectEntry { gap: 1.5rem; padding-block: 2rem; }
+  .projectPlate, .projectList > li:first-child .projectPlate { min-height: 200px; }
+  .projectPlate img { width: 128px; height: 128px; }
+  .jumpLinks { gap: .2rem 1.5rem; margin-bottom: 2rem; }
+  .hikingJumpLinks { margin-bottom: 0; }
+  .section { padding-bottom: 3rem; }
+  .aboutPage .aboutHero, .aboutPage .timeline > li, .aboutPage :global([data-skill-layout=grouped]) { grid-template-columns: 1fr; }
+  .aboutPage .timeline > li { gap: .75rem; }
+  .aboutPage .section { padding-block: 2rem 3.5rem; }
+  .aboutPage .jumpLinks { column-gap: 1.5rem; }
+}
+@media print {
+  .page { padding: 0; }
+  .page :global(.annotation-connector-layer) { display: none; }
+  .hikeEntry, .projectEntry, .timeline > li { break-inside: avoid; }
+  .technologyDetails > ul { display: flex; }
+}

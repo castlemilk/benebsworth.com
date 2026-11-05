@@ -67,7 +67,7 @@ export function HikeCard({ hike }: { hike: Hike }) {
   )
 }
 
-function RangePlaceholder({ accent }: { accent: string }) {
+export function RangePlaceholder({ accent }: { accent: string }) {
   return (
     <div
       className="relative h-full w-full"

@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { about } from '@/content/about'
+import { ArrowUpRight } from 'lucide-react'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { Reveal } from '@/components/motion/reveal'
-import { AnimatedHeading } from '@/components/motion/animated-heading'
-import { SpotlightCard } from '@/components/motion/spotlight-card'
+import styles from '@/components/personal/folio.module.css'
+import { about } from '@/content/about'
 import { SkillMarquee } from '@/components/motion/skill-marquee'
 import { RelatedLabs } from '@/components/blog/related-labs'
 import { HalftoneHero } from '@/components/about/halftone-hero'
@@ -14,6 +12,7 @@ import { YouTube } from '@/components/media/youtube'
 import { youtubeId } from '@/lib/youtube'
 import { techColor } from '@/lib/tech-colors'
 import { JsonLd, SITE_URL, profilePageLd, breadcrumbLd } from '@/components/seo/json-ld'
+import type { CSSProperties } from 'react'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -31,375 +30,129 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: 'About · Ben Ebsworth', creator: '@benebsworth', site: '@benebsworth' },
 }
 
-// Theme-aware brand accents: in dark these tokens equal the original neon
-// hexes (#00e0b8/#7c5cff/#ff7a59); in light they resolve to the deepened
-// AA-safe values, so accent text reads on white without touching dark.
-const ACCENT = {
-  blog: 'var(--color-blog)',
-  project: 'var(--color-project)',
-  about: 'var(--color-about)',
+const ISSUERS = [
+  { name: 'Amazon Web Services', label: 'Amazon Web Services' },
+  { name: 'Google Cloud', label: 'Google Cloud' },
+  { name: 'CNCF', label: 'Cloud Native Computing Foundation' },
+] as const
+
+function TimelineGroups({ kind }: { kind: 'work' | 'education' }) {
+  const entries = about.timeline.filter(entry => entry.kind === kind)
+  const companies = [...new Set(entries.map(entry => entry.company))]
+  return <div className={styles.timelineGroups}>
+    {companies.map(company => {
+      const roles = entries.filter(entry => entry.company === company)
+      return <article key={company} className={styles.timelineGroup} data-timeline-group={company}>
+        <div className={styles.employer}>
+          <img src={roles[0].logo} alt={`${company} logo`} width={40} height={40} className={styles.companyLogo} />
+          <h3>{company}</h3>
+        </div>
+        <ol className={styles.timeline}>
+          {roles.map(entry => <li key={`${entry.when}-${entry.title}`} data-timeline-entry>
+            <p className={styles.timelineDate}>{entry.when}</p>
+            <div>
+              <h4>{entry.title.endsWith(` · ${company}`) ? entry.title.slice(0, -(` · ${company}`).length) : entry.title}</h4>
+              <p className={styles.timelineDetail}>{entry.detail}</p>
+              {entry.tech.length > 0 && <details className={styles.technologyDetails}>
+                <summary>{kind === 'education' ? 'Areas of study' : 'Technologies used'}</summary>
+                <ul className={styles.technologies}>
+                  {entry.tech.map(tech => <li key={tech} style={{ '--tech-color': techColor(tech) } as CSSProperties}>{tech}</li>)}
+                </ul>
+              </details>}
+            </div>
+          </li>)}
+        </ol>
+      </article>
+    })}
+  </div>
 }
 
-// Issuer → accent (coding system consistent with the timeline company colors):
-// AWS = orange (about), GCP = teal (blog), CNCF = purple (project).
-const ISSUER_ORDER = ['Amazon Web Services', 'Google Cloud', 'CNCF'] as const
-const ISSUER_META: Record<string, { label: string; accent: string; tag: string }> = {
-  'Amazon Web Services': { label: 'Amazon Web Services', accent: ACCENT.about, tag: 'AWS' },
-  'Google Cloud': { label: 'Google Cloud', accent: ACCENT.blog, tag: 'GCP' },
-  CNCF: { label: 'Cloud Native Computing Foundation', accent: ACCENT.project, tag: 'CNCF' },
-}
-
-function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
-  return (
-    <div className="mb-6 flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
-      <span className="text-about">{index}</span>
-      <span>{children}</span>
-      <span className="h-px flex-1 bg-[var(--color-border)]" />
-    </div>
-  )
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return <div className={styles.sectionHead}><h2>{children}</h2></div>
 }
 
 export default function AboutPage() {
-  const certCount = about.certifications.length
-  const talkCount = about.speaking.length
-
-  const certsByIssuer = ISSUER_ORDER.map((issuer) => ({
-    issuer,
-    meta: ISSUER_META[issuer],
-    items: about.certifications.filter((c) => c.issuer === issuer),
-  })).filter((g) => g.items.length > 0)
-
-  return (
-    <>
-      <JsonLd
-        data={[
-          profilePageLd,
-          breadcrumbLd([
-            { name: 'Home', url: `${SITE_URL}/` },
-            { name: 'About', url: `${SITE_URL}/about/` },
-          ]),
-        ]}
-      />
-      <SiteNav />
-
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
-        <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
-
-        {/* ── Hero — portrait is the focal point, copy framing it ──── */}
-        <section className="grid grid-cols-1 items-center gap-12 pt-8 pb-28 md:grid-cols-[1fr_minmax(24rem,32rem)] md:gap-20 md:pt-14">
-          <div className="order-2 text-center md:order-1 md:text-left">
-            <Reveal>
-              <p className="font-mono text-xs uppercase tracking-[0.3em] text-about">
-                Dossier · Software · Platform · Hardware
-              </p>
-            </Reveal>
-            <Reveal delay={80}>
-              <h1 className="type-display mt-4">
-                Ben
-                <br />
-                Ebsworth
-              </h1>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mx-auto mt-6 max-w-xl font-mono text-base text-fg/60 md:mx-0">
-                Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia
-              </p>
-            </Reveal>
-            <Reveal delay={220}>
-              <p className="mx-auto mt-7 max-w-2xl type-body text-fg/85 md:mx-0">
-                {about.bio}
-              </p>
-            </Reveal>
-            <Reveal delay={300}>
-              <dl className="mt-8 flex flex-wrap justify-center gap-x-10 gap-y-4 font-mono md:justify-start">
-                <Fact value="10+" label="years building" accent={ACCENT.about} />
-                <Fact value={`${certCount}`} label="certifications" accent={ACCENT.blog} />
-                <Fact value={`${talkCount}`} label="talks given" accent={ACCENT.project} />
-              </dl>
-            </Reveal>
+  const recordings = about.speaking.flatMap(talk => {
+    const id = youtubeId(talk.url)
+    return id ? [{ talk, id }] : []
+  })
+  const otherTalks = about.speaking.filter(talk => !youtubeId(talk.url))
+  return <>
+    <JsonLd data={[profilePageLd, breadcrumbLd([
+      { name: 'Home', url: `${SITE_URL}/` },
+      { name: 'About', url: `${SITE_URL}/about/` },
+    ])]} />
+    <SiteNav />
+    <main id="main-content" className={`${styles.page} ${styles.aboutPage}`}>
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
+      <header className={`${styles.hero} ${styles.aboutHero}`}>
+        <div className={styles.aboutCopy}>
+          <h1 className={styles.title}>Ben<br />Ebsworth</h1>
+          <p className={styles.role}>Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia</p>
+          <p className={styles.profileMeta}>10+ years building</p>
+          <nav aria-label="About sections" className={styles.jumpLinks}>
+            <a href="#resume">Career</a>
+            <a href="#skills">Technical practice</a>
+            <a href="#certifications">Education &amp; credentials</a>
+            <a href="#speaking">Talks</a>
+            <a href="#lab">Simulations</a>
+          </nav>
+        </div>
+        <div className={styles.portrait}>
+          <HalftoneHero accent="var(--fg)" variant="profile" />
+        </div>
+      </header>
+      <p className={styles.profileBio}>{about.bio}</p>
+      <section id="resume" className={styles.section}>
+        <SectionHeading>Career</SectionHeading>
+        <TimelineGroups kind="work" />
+      </section>
+      <section id="skills" className={styles.section}>
+        <SectionHeading>Technical practice</SectionHeading>
+        <SkillMarquee skills={about.skills} layout="grouped" />
+      </section>
+      <section id="certifications" className={styles.section}>
+        <SectionHeading>Education &amp; credentials</SectionHeading>
+        <TimelineGroups kind="education" />
+        <div className={styles.certificationGroups} aria-label="Professional certifications">
+        {ISSUERS.map(issuer => {
+          const items = about.certifications.filter(cert => cert.issuer === issuer.name)
+          return items.length > 0 && <div className={styles.credentialGroup} key={issuer.name}>
+            <h3 className={styles.label}>{issuer.label}</h3>
+            <ul className={styles.credentials}>
+              {items.map(cert => <li key={cert.title}>
+                <a href={cert.url || '#'} target="_blank" rel="noreferrer" className={styles.credential}>
+                  <img src={cert.badge} alt={`${cert.title} badge`} width={88} height={88} loading="lazy" />
+                  <p className={styles.credentialTitle}>{cert.title} <ArrowUpRight size={14} aria-hidden="true" className={styles.externalArrow} /></p>
+                </a>
+              </li>)}
+            </ul>
           </div>
-
-          <Reveal delay={120} className="order-1 md:order-2">
-            <HalftoneHero accent={ACCENT.about} />
-          </Reveal>
-        </section>
-
-        {/* ── Resume / Career ────────────────────────────────────── */}
-        <section id="resume" className="pb-28">
-          <SectionLabel index="01">Career &amp; education</SectionLabel>
-          <AnimatedHeading
-            text="The track record"
-            as="h2"
-            className="type-h2 mb-10"
-          />
-
-          <ol className="relative ml-2 sm:ml-3">
-            {/* vertical spine */}
-            <span
-              aria-hidden
-              className="absolute left-[11px] top-2 bottom-2 w-px bg-[var(--color-border)]"
-            />
-            {about.timeline.map((t, i) => (
-              <li key={i} className="relative pl-10 pb-8 last:pb-0 sm:pl-12">
-                {/* spine node, colored per entry */}
-                <span
-                  aria-hidden
-                  className="absolute left-[3px] top-5 grid size-4 place-items-center rounded-full border border-[var(--color-border)] bg-bg sm:left-[4px]"
-                  style={{ boxShadow: `0 0 0 3px color-mix(in srgb, ${t.color} 18%, transparent)` }}
-                >
-                  <span className="size-1.5 rounded-full" style={{ backgroundColor: t.color }} />
-                </span>
-
-                <Reveal delay={i * 40}>
-                  <SpotlightCard accent={t.color} className="p-6 sm:p-8">
-                    <div className="flex items-start gap-5">
-                      <span className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-surface p-3">
-                        <img
-                          src={t.logo}
-                          alt={`${t.company} logo`}
-                          width={40}
-                          height={40}
-                          className="block h-full w-full object-contain"
-                        />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                          <span
-                            className="accent-ink font-mono text-[0.65rem] uppercase tracking-[0.2em]"
-                            style={{ '--ink': t.color } as React.CSSProperties}
-                          >
-                            {t.kind === 'education' ? 'Education' : 'Work'} · {t.company}
-                          </span>
-                          <span className="font-mono text-[0.7rem] text-muted">{t.when}</span>
-                        </div>
-                        <h3 className="mt-2 font-display text-xl font-semibold leading-snug tracking-[-0.01em] sm:text-2xl">{t.title}</h3>
-                        <p className="mt-2.5 font-sans text-base leading-7 text-fg/65">{t.detail}</p>
-                        {t.tech.length > 0 && (
-                          <ul className="mt-4 flex flex-wrap gap-1.5">
-                            {t.tech.map((tech) => {
-                              const c = techColor(tech)
-                              return (
-                                <li
-                                  key={tech}
-                                  className="accent-ink rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] tracking-tight"
-                                  style={{
-                                    '--ink': c,
-                                    borderColor: `color-mix(in srgb, ${c} 45%, transparent)`,
-                                    backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                                  } as React.CSSProperties}
-                                >
-                                  {tech}
-                                </li>
-                              )
-                            })}
-                          </ul>
-                        )}
-                      </div>
-                    </div>
-                  </SpotlightCard>
-                </Reveal>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        {/* ── Certifications ─────────────────────────────────────── */}
-        <section id="certifications" className="pb-28">
-          <SectionLabel index="02">Verified credentials</SectionLabel>
-          <AnimatedHeading
-            text="The trophy shelf"
-            as="h2"
-            className="type-h2 mb-2"
-          />
-          <p className="mb-10 max-w-lg font-sans text-sm text-fg/55">
-            {certCount}{' '}active certifications across the three clouds &amp; the cloud-native ecosystem.
-          </p>
-
-          <div className="space-y-12">
-            {certsByIssuer.map((group) => (
-              <div key={group.issuer}>
-                <div className="mb-5 flex items-center gap-3">
-                  <span
-                    className="size-2.5 rounded-sm"
-                    style={{ backgroundColor: group.meta.accent }}
-                    aria-hidden
-                  />
-                  <h3 className="font-mono text-sm uppercase tracking-[0.18em] text-fg/85">
-                    {group.meta.label}
-                  </h3>
-                  <span className="font-mono text-xs text-muted">
-                    {group.items.length} {group.items.length === 1 ? 'cert' : 'certs'}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {group.items.map((c) => (
-                    <Reveal key={c.title}>
-                      <a
-                        href={c.url || '#'}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block h-full rounded-xl"
-                      >
-                        <SpotlightCard
-                          accent={group.meta.accent}
-                          className="flex h-full items-center gap-5 p-5"
-                        >
-                          <img
-                            src={c.badge}
-                            alt={`${c.title} badge`}
-                            width={88}
-                            height={88}
-                            className="size-20 shrink-0 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
-                          />
-                          <div className="min-w-0">
-                            <p className="font-display text-base font-semibold leading-snug tracking-[-0.01em]">{c.title}</p>
-                            <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-wider text-muted">
-                              {group.meta.tag} ↗
-                            </p>
-                          </div>
-                        </SpotlightCard>
-                      </a>
-                    </Reveal>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Speaking ───────────────────────────────────────────── */}
-        <section id="speaking" className="pb-28">
-          <SectionLabel index="03">On the record</SectionLabel>
-          <AnimatedHeading
-            text="Talks & speaking"
-            as="h2"
-            className="type-h2 mb-10"
-          />
-
-          {(() => {
-            const withVideo = about.speaking
-              .map((e) => ({ e, vid: youtubeId(e.url) }))
-              .filter((x): x is { e: typeof x.e; vid: string } => x.vid !== null)
-            const noVideo = about.speaking.filter((e) => youtubeId(e.url) === null)
-
-            return (
-              <>
-                {/* Talks with recordings — the embed is the hero of each card */}
-                {withVideo.length > 0 && (
-                  <div className="mb-5 grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    {withVideo.map(({ e, vid }, i) => (
-                      <Reveal key={`v-${i}`} delay={i * 60}>
-                        <SpotlightCard accent={ACCENT.project} className="flex h-full flex-col p-4">
-                          <YouTube id={vid} title={e.title} accent={ACCENT.project} />
-                          <div className="flex items-start gap-3 px-1 pt-4">
-                            <span className="grid size-11 shrink-0 place-items-center rounded-lg border border-[var(--color-border)] bg-surface p-2">
-                              <img
-                                src={e.image}
-                                alt={`${e.title} logo`}
-                                width={32}
-                                height={32}
-                                className="max-h-7 max-w-7 object-contain"
-                              />
-                            </span>
-                            <div className="min-w-0">
-                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                <h3 className="font-display text-base font-semibold leading-snug tracking-[-0.01em]">{e.title}</h3>
-                                <span className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-project">
-                                  ▶ Recording
-                                </span>
-                              </div>
-                              <p className="mt-1 font-mono text-[0.7rem] text-muted">{e.date}</p>
-                              <p className="mt-2 font-sans text-sm leading-6 text-fg/60">
-                                {e.description}
-                              </p>
-                            </div>
-                          </div>
-                        </SpotlightCard>
-                      </Reveal>
-                    ))}
-                  </div>
-                )}
-
-                {/* Remaining talks — logo + external link card */}
-                {noVideo.length > 0 && (
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    {noVideo.map((e, i) => (
-                      <Reveal key={`n-${i}`} delay={i * 40}>
-                        <a
-                          href={e.url || '#'}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block h-full rounded-xl"
-                        >
-                          <SpotlightCard accent={ACCENT.project} className="flex h-full gap-4 p-5">
-                            <span className="grid size-14 shrink-0 place-items-center self-start rounded-lg border border-[var(--color-border)] bg-surface p-2.5">
-                              <img
-                                src={e.image}
-                                alt={`${e.title} logo`}
-                                width={40}
-                                height={40}
-                                className="max-h-9 max-w-9 object-contain"
-                              />
-                            </span>
-                            <div className="min-w-0">
-                              <h3 className="font-display text-base font-semibold leading-snug tracking-[-0.01em]">{e.title}</h3>
-                              <p className="mt-1 font-mono text-[0.7rem] text-muted">{e.date}</p>
-                              <p className="mt-2 font-sans text-sm leading-6 text-fg/60">
-                                {e.description}
-                              </p>
-                            </div>
-                          </SpotlightCard>
-                        </a>
-                      </Reveal>
-                    ))}
-                  </div>
-                )}
-              </>
-            )
-          })()}
-        </section>
-
-        {/* ── Skills ─────────────────────────────────────────────── */}
-        <section id="skills">
-          <SectionLabel index="04">Toolkit</SectionLabel>
-          <Reveal>
-            <SkillMarquee skills={about.skills} />
-          </Reveal>
-        </section>
-
-        {/* ── Lab ─────────────────────────────────────────────── */}
-        <section id="lab">
-          <SectionLabel index="05">The lab</SectionLabel>
-          <Reveal>
-            <div className="mt-6 max-w-2xl">
-              <p className="font-sans text-[1.0625rem] leading-8 text-fg/80">
-                I keep an <Link href="/lab/" className="underline decoration-fg/30 underline-offset-4 hover:decoration-fg/70">interactive lab</Link> of small visual essays — each effect is a working simulation, parameterised, playable, and shareable. They are the working sketches behind many of my posts: oscillators, attractors, filters, modulation, signal integrity. Drop in, drag the controls, watch what happens.
-              </p>
+        })}
+        </div>
+      </section>
+      <section id="speaking" className={styles.section}>
+        <SectionHeading>Talks</SectionHeading>
+        <div className={styles.talks}>
+          {recordings.map(({ talk, id }) => <article key={id} className={styles.talk}>
+            <YouTube id={id} title={talk.title} accent="var(--profile-action)" />
+            <div className={styles.talkCaption}>
+              <img src={talk.image} alt={`${talk.title} logo`} width={32} height={32} loading="lazy" />
+              <div><h3>{talk.title}</h3><p className={styles.talkDate}>{talk.date} · Recording</p><p className={styles.talkDescription}>{talk.description}</p></div>
             </div>
-            <div className="mt-8">
-              <RelatedLabs
-                tags={['electrical', 'engineering', 'physics', 'algorithms', 'signal']}
-                labels={['physics', 'engineering', 'algorithms', 'simulation']}
-                limit={4}
-              />
+          </article>)}
+          {otherTalks.map(talk => <a href={talk.url || '#'} key={`${talk.title}-${talk.date}-${talk.url}`} target="_blank" rel="noreferrer" className={`${styles.talk} ${styles.talkLink}`}>
+            <div className={styles.talkCaption}>
+              <img src={talk.image} alt={`${talk.title} logo`} width={40} height={40} loading="lazy" />
+              <div><h3>{talk.title} <ArrowUpRight size={18} aria-hidden="true" className={styles.externalArrow} /></h3><p className={styles.talkDate}>{talk.date}</p><p className={styles.talkDescription}>{talk.description}</p></div>
             </div>
-          </Reveal>
-        </section>
-      </main>
-
-      <SiteFooter />
-    </>
-  )
-}
-
-function Fact({ value, label, accent }: { value: string; label: string; accent: string }) {
-  return (
-    <div>
-      <dt className="text-4xl font-bold leading-none sm:text-5xl" style={{ color: accent }}>
-        {value}
-      </dt>
-      <dd className="mt-2 text-[0.78rem] uppercase tracking-[0.18em] text-muted">{label}</dd>
-    </div>
-  )
+          </a>)}
+        </div>
+      </section>
+      <section id="lab" className={styles.section}>
+        <div className={styles.labContent}><RelatedLabs tags={['electrical', 'engineering', 'physics', 'algorithms', 'signal']} labels={['physics', 'engineering', 'algorithms', 'simulation']} limit={4} intro={<p className={styles.labIntro}>I keep an interactive lab of small visual essays — each effect is a working simulation, parameterised, playable, and shareable. They are the working sketches behind many of my posts: oscillators, attractors, filters, modulation, signal integrity. Drop in, drag the controls, watch what happens.</p>} /></div>
+      </section>
+    </main>
+    <SiteFooter />
+  </>
 }

@@ -22,7 +22,17 @@ describe('related labs preserve registry identity', () => {
     expect(html).toContain('Try it in the lab')
     expect(html).toMatch(/href="\/lab\/?"/)
   })
-  it('retains category-constrained recommendations', () => {
+  it('places optional authored context below one heading without changing recommendations', () => {
+    const before = renderToStaticMarkup(<RelatedLabs tags={['physics']} limit={4} />)
+    const after = renderToStaticMarkup(<RelatedLabs tags={['physics']} limit={4} intro={<p>Working simulations and signal experiments.</p>} />)
+    expect(destinations(after)).toEqual(destinations(before))
+    expect(after.match(/<h2/g)).toHaveLength(1)
+    expect(after.match(/href="\/lab\/?"/g)).toHaveLength(1)
+    expect(after.indexOf('Try it in the lab')).toBeLessThan(after.indexOf('Working simulations'))
+    expect(after.indexOf('Working simulations')).toBeLessThan(after.indexOf('<ul'))
+    expect(before).not.toContain('Working simulations')
+  })
+  it('retains category-constrained recommendations' , () => {
     const hrefs = destinations(renderToStaticMarkup(<RelatedLabs tags={['machine-learning']} limit={3} />))
     expect(hrefs).toHaveLength(3)
     for (const href of hrefs) expect(LAB_DEMO_EFFECTS.find(e => href === `/lab/${e.slug}`)?.category).toBe('ai')

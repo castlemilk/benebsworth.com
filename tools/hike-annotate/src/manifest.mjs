@@ -2,19 +2,25 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { GCLOUD_ACCOUNT, PUBLIC_BASE, manifestObject, manifestPublicUrl, gsUri } from './config.mjs'
+import { GCLOUD_ACCOUNT, PUBLIC_BASE, manifestObject, manifestPublicUrl, gsUri, validateHikeSlug } from './config.mjs'
 
 const pexec = promisify(execFile)
 
 /** Read a hike's ContentManifest { hero?, og?, gallery[] } from the public GCS
  *  object (cache-busted). Returns an empty manifest on 404. */
-export async function readManifest(slug) {
+export async function readManifestSnapshot(slug) {
   const url = `${manifestPublicUrl(slug)}?t=${Date.now()}`
   const res = await fetch(url, { cache: 'no-store' })
-  if (res.status === 404) return { hero: undefined, og: undefined, gallery: [] }
+  if (res.status === 404) return { manifest: { hero: undefined, og: undefined, gallery: [] }, generation: '0' }
   if (!res.ok) throw new Error(`readManifest(${slug}): HTTP ${res.status}`)
   const m = await res.json()
-  return { hero: m.hero, og: m.og, gallery: Array.isArray(m.gallery) ? m.gallery : [] }
+  const header = res.headers.get('x-goog-generation')
+  const generation = header && /^[1-9][0-9]*$/.test(header) ? header : null
+  return { manifest: { hero: m.hero, og: m.og, gallery: Array.isArray(m.gallery) ? m.gallery : [] }, generation }
+}
+
+export async function readManifest(slug) {
+  return (await readManifestSnapshot(slug)).manifest
 }
 
 /** Read the global library registry from the public GCS object. */
@@ -35,15 +41,18 @@ export function mergeLibraryAssets(manifest, library, slug) {
   return [...(manifest.gallery || []), ...extra]
 }
 
-/** Write a ContentManifest back to GCS via gsutil (pinned account; cache-control
- *  no-store to match the admin so public reads never go stale). Returns the gs:// uri. */
-export async function writeManifest(slug, manifest, tmpDir) {
+/** Write only if the manifest still has the generation used by the proposal. */
+export async function writeManifest(slug, manifest, tmpDir, generation) {
+  validateHikeSlug(slug)
+  if (typeof generation !== 'string' || !/^(0|[1-9][0-9]*)$/.test(generation)) {
+    throw new Error('The proposal has no valid manifest generation. Create a new proposal before writing.')
+  }
   const file = join(tmpDir, `${slug}.write.json`)
   await writeFile(file, JSON.stringify(manifest))
   const obj = manifestObject(slug)
   await pexec(
-    'gsutil',
-    ['-h', 'Cache-Control:no-store', '-h', 'Content-Type:application/json', 'cp', file, gsUri(obj)],
+    'gcloud',
+    ['storage', 'cp', file, gsUri(obj), `--if-generation-match=${generation}`, '--cache-control=no-store', '--content-type=application/json'],
     { env: { ...process.env, CLOUDSDK_CORE_ACCOUNT: GCLOUD_ACCOUNT } },
   )
   return gsUri(obj)
@@ -51,6 +60,7 @@ export async function writeManifest(slug, manifest, tmpDir) {
 
 /** Write a timestamped backup of the pre-write manifest locally. */
 export async function backupManifest(slug, manifest, tmpDir, stamp) {
+  validateHikeSlug(slug)
   const file = join(tmpDir, `${slug}.backup.${stamp}.json`)
   await writeFile(file, JSON.stringify(manifest, null, 2))
   return file

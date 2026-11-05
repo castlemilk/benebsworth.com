@@ -10,6 +10,8 @@ This slice reuses real, already-authored guide photographs where verified and re
 
 ## Presentation contract
 
+The 5 November follow-up direction separates Hiking from the handwritten blog and Lab. Hiking index and trail details use their own stone/forest palette, plain serif display hierarchy, sans-serif navigation/metadata and straight selected-state rules. The index's red hand underline and duplicate handwritten latest-trail annotation are removed. About retains its independent crisp professional theme. Blog articles, including trail guides, retain the blog's authored editorial system; their shared image cross-links are unchanged.
+
 content/hiking-imagery.ts is the shared source/type/caption/focal-point authority. HikeCover serves index entries, detail banners, legacy cards and guide cross-links. Photographs are explicitly captioned; eight other hikes keep labelled illustrations. Art fallback remains available after a failed photograph, followed by an honest unavailable state if both fail. Source dimensions and responsive sizes reserve space and select the smaller photo on narrow views.
 
 The prior large route overlay is removed from imagery. A separate small caption diagram is explicitly labelled Schematic route. JourneyMap likewise labels its hand-set route and elevation spacing as illustrative and removes invented contour rings. These are not accurate geographic maps. Source-backed route replacement is separate work in progress; do not silently substitute a generic trail for the author's actual itinerary or transfer legs.

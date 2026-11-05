@@ -88,3 +88,7 @@ The owner asked to reduce repetition and emphasize science, engineering and soft
 
 ### About composition and hiking imagery refinement
 The owner requested another look-and-feel pass and consistent thumbnails across hiking views. About keeps the clean profile identity with a tighter opening, quieter technical controls and intentional recording/credential layouts. Hike imagery uses one shared source and presentation contract with verified existing photographs, labelled original illustrations and separately labelled schematic paths. See docs/design/HIKING-IMAGERY.md. Source-backed geographic routes are a separate active request; existing normalized path geometry must never be presented as an accurate map.
+
+### Hiking direction, 5 November 2026
+
+Hiking has its own natural trail-journal identity, distinct from the red handwriting and curved annotations of Blog/Lab. Use stone and forest tones in light/dark, plain serif display type, restrained sans-serif utility text, straight navigation rules and authentic imagery. Keep About crisp and professional. Preserve all route facts and explicitly identify schematic traces until geographic source validation is complete.

@@ -60,6 +60,7 @@ describe('personal folio page preservation', () => {
 
   it('preserves About biography, facts, all timeline entries and section anchors', () => {
     const doc = render(AboutPage)
+    expect(doc.querySelector('[data-hiking-page]')).toBeNull()
     expect(text(doc.querySelector('main'))).toContain(about.bio)
     expect(text(doc.querySelector('header'))).toContain('10+ years building')
     expect(doc.querySelector('header dl')).toBeNull()
@@ -131,6 +132,9 @@ describe('personal folio page preservation', () => {
 
   it('preserves every hike, status, stat, image, destination and authored route trace', () => {
     const doc = render(HikingPage)
+    expect(doc.querySelector('main')?.getAttribute('data-hiking-page')).toBe('index')
+    expect(doc.querySelector('.hand-underline, .annotated-block, .handwritten-note, [data-annotation-anchor]')).toBeNull()
+    expect(text(doc.querySelector('h1'))).toBe('Hiking')
     expect(doc.querySelectorAll('#completed a[href^="/hiking/"]')).toHaveLength(4)
     expect(doc.querySelectorAll('#planned a[href^="/hiking/"]')).toHaveLength(6)
     for (const hike of [...completedHikes, ...plannedHikes]) {

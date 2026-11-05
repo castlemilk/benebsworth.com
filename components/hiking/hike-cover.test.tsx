@@ -41,9 +41,12 @@ describe('consistent hiking image family', () => {
 
   it.each(hikes)('uses the same verified cover on the $slug detail page without altering the journey', async hike => {
     const detail = doc(await HikePage({params:Promise.resolve({slug:hike.slug})}))
+    expect(detail.querySelector('main')?.getAttribute('data-hiking-page')).toBe('detail')
+    expect(detail.querySelector('.hand-underline, .annotated-block, .handwritten-note')).toBeNull()
     expect(detail.querySelector('[data-hike-cover] img')?.getAttribute('src')).toBe(hikeImagery(hike).src)
     expect(detail.querySelector('[data-hike-cover] img')?.getAttribute('loading')).toBe('eager')
     expect(detail.querySelector('h1')?.textContent).toBe(hike.name)
+    expect(detail.querySelector('h2')?.textContent).toBe(hike.status === 'planned' ? 'Planned route' : 'The journey')
     expect(detail.querySelector('[data-journey]')?.getAttribute('data-journey')).toBe(hike.slug)
     expect([...detail.querySelectorAll('a')].some(link => link.getAttribute('href')?.replace(/\/$/, '') === '/hiking')).toBe(true)
   })

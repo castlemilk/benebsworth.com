@@ -6,6 +6,7 @@ import AboutPage, { metadata as aboutMetadata } from '@/app/about/page'
 import HikingPage, { metadata as hikingMetadata } from '@/app/hiking/page'
 import ProjectsPage, { metadata as projectsMetadata } from '@/app/projects/page'
 import { about } from '@/content/about'
+import { hikeImagery } from '@/content/hiking-imagery'
 import { completedHikes, plannedHikes } from '@/content/hiking'
 import { getAllProjects } from '@/lib/content'
 import { project, smoothPath } from '@/components/hiking/journey-core'
@@ -62,6 +63,8 @@ describe('personal folio page preservation', () => {
     expect(text(doc.querySelector('main'))).toContain(about.bio)
     expect(text(doc.querySelector('header'))).toContain('10+ years building')
     expect(doc.querySelector('header dl')).toBeNull()
+    expect(text(doc.querySelector('header'))).toContain(about.bio)
+    expect(doc.querySelector('h1 br')).toBeNull()
     for (const id of ['resume', 'certifications', 'speaking', 'skills', 'lab']) {
       expect(doc.querySelector(`section#${id}`)).not.toBeNull()
       expect(link(doc, `#${id}`)).toBeDefined()
@@ -133,20 +136,21 @@ describe('personal folio page preservation', () => {
     for (const hike of [...completedHikes, ...plannedHikes]) {
       const anchor = link(doc, `/hiking/${hike.slug}/`)
       for (const value of [hike.name, hike.region, hike.country, hike.summary, `${hike.distanceKm} km`, `${hike.days} days`, `${hike.maxAltitudeM.toLocaleString('en-AU')} m`, hike.status === 'planned' ? 'Planned' : hike.year]) expect(text(anchor)).toContain(value)
-      expect(anchor.querySelector('img')?.getAttribute('src')).toBe(hike.hero)
+      expect(anchor.querySelector('img')?.getAttribute('src')).toBe(hikeImagery(hike).src)
       const paths = anchor.querySelectorAll('svg path')
-      expect(paths).toHaveLength(2)
+      expect(paths).toHaveLength(1)
       for (const path of paths) expect(path.getAttribute('d')).toBe(smoothPath(hike.waypoints.map(project)))
-      expect(paths[1].getAttribute('stroke')).toBe(hike.accent || '#5b9e6f')
+      expect(text(anchor)).toContain('Schematic route')
+      expect(anchor.querySelector('figure')?.getAttribute('data-image-kind')).toBe(hikeImagery(hike).kind)
     }
     const items = structured(doc).find(item => item['@type'] === 'CollectionPage')?.mainEntity?.itemListElement ?? []
     expect(items).toHaveLength(10)
     expect(items.map((item: { url: string }) => item.url)).toEqual([...completedHikes, ...plannedHikes].map(hike => `${SITE_URL}/hiking/${hike.slug}/`))
   })
 
-  it('retains the existing illustration fallback when a hike has no hero', () => {
+  it('shows an honest empty image state while retaining route information when a hike has no hero', () => {
     const html = renderToStaticMarkup(<FolioHikeEntry hike={{ ...completedHikes[0], hero: '' }} />)
-    expect(html).toContain('photo coming soon')
+    expect(html).toContain('Image unavailable')
     expect(html).toContain(completedHikes[0].name)
     expect(html).toContain(smoothPath(completedHikes[0].waypoints.map(project)))
   })

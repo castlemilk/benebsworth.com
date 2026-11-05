@@ -12,8 +12,8 @@ import { fmtDate } from '@/lib/format'
  * full lightbox: keyboard + swipe navigation, neighbour preloading, a thumbnail
  * filmstrip, and a rich caption (date · place · waypoint). If a gallery image
  * carries a `slot` matching the active waypoint, selecting that waypoint filters
- * to its photos. Before any photos exist it shows placeholder tiles keyed to the
- * route's waypoints so the section never looks broken.
+ * to its photos. Empty galleries use a compact, explicit no-photographs state rather than
+ * invented images or rows of placeholder tiles.
  */
 export function HikeGallery({
   gallery,
@@ -125,11 +125,10 @@ function GalleryTile({
     <button
       type="button"
       onClick={onOpen}
-      className={`group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-stage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] ${sized ? '' : 'aspect-[4/3] w-full'}`}
+      className={`group relative overflow-hidden rounded-sm border border-[var(--color-border)] bg-[var(--color-stage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] ${sized ? '' : 'aspect-[4/3] w-full'}`}
       style={sized ? { width, height } : undefined}
       aria-label={asset.alt || asset.caption || `${hike.name} photo — open`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={thumbOf(asset)}
         alt={asset.alt || asset.caption || `${hike.name} photo`}
@@ -154,27 +153,10 @@ function GalleryTile({
 }
 
 function GalleryPlaceholder({ hike }: { hike: Hike }) {
-  const accent = hike.accent || '#5b9e6f'
-  const tiles = hike.waypoints.slice(0, 8)
-  return (
-    <div style={{ '--accent': accent } as CSSProperties}>
-      <div className="mb-4 flex items-center gap-3">
-        <h3 className="type-h3">Gallery</h3>
-        <span className="font-mono text-xs text-muted">photos coming soon</span>
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {tiles.map((w, i) => (
-          <div
-            key={i}
-            className="relative flex aspect-square flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-dashed border-[var(--color-border)] bg-[radial-gradient(120%_120%_at_30%_0%,color-mix(in_srgb,var(--accent)_8%,var(--color-stage)),var(--color-stage))] p-3 text-center"
-          >
-            <span className="font-mono text-lg" style={{ color: 'color-mix(in srgb, var(--accent) 70%, transparent)' }}>◰</span>
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-muted">{w.name}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+  return <div className="border-t border-[var(--color-border)] py-6">
+    <h3 className="type-h3">Gallery</h3>
+    <p className="mt-2 max-w-prose text-sm leading-6 text-muted">{hike.status === 'planned' ? 'This walk is still planned. No gallery photographs are available to display.' : 'No gallery photographs are available to display.'}</p>
+  </div>
 }
 
 // ── justified-rows layout ────────────────────────────────────────────────
@@ -316,8 +298,7 @@ function Lightbox({
             <button type="button" className="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition-colors hover:bg-white/20 sm:right-4" onClick={() => nav(1)} aria-label="Next photo">›</button>
           </>
         )}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+          <img
           key={image.url}
           src={image.url}
           alt={image.alt || image.caption || `${hikeName} photo`}
@@ -353,8 +334,7 @@ function Lightbox({
                   i === index ? 'opacity-100 ring-[var(--accent)]' : 'opacity-50 ring-transparent hover:opacity-90'
                 }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={thumbOf(im)} alt="" loading="lazy" className="h-full w-full object-cover" />
+                          <img src={thumbOf(im)} alt="" loading="lazy" className="h-full w-full object-cover" />
               </button>
             ))}
           </div>

@@ -85,3 +85,6 @@ The owner clarified that About must be crisp, clean and elevated, separate from 
 
 ### Deduplicated technical profile
 The owner asked to reduce repetition and emphasize science, engineering and software. About groups career roles by employer, presents each degree once with credentials, and groups the existing unique skills by discipline. Role-specific technologies remain accessible in native disclosures. One Lab heading and introduction lead to unchanged recommendations. Use factual systems content, aligned dates and quiet rules as technical cues, not invented diagrams or decorative numbering. See PERSONAL-FOLIO.md for preservation and review gates.
+
+### About composition and hiking imagery refinement
+The owner requested another look-and-feel pass and consistent thumbnails across hiking views. About keeps the clean profile identity with a tighter opening, quieter technical controls and intentional recording/credential layouts. Hike imagery uses one shared source and presentation contract with verified existing photographs, labelled original illustrations and separately labelled schematic paths. See docs/design/HIKING-IMAGERY.md. Source-backed geographic routes are a separate active request; existing normalized path geometry must never be presented as an accurate map.

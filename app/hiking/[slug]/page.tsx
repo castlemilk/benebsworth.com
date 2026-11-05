@@ -6,6 +6,7 @@ import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { Reveal } from '@/components/motion/reveal'
+import { HikeCover } from '@/components/hiking/hike-cover'
 import { HikeJourney } from '@/components/hiking/hike-journey'
 import { JsonLd, SITE_URL, breadcrumbLd, hikeLd } from '@/components/seo/json-ld'
 
@@ -59,14 +60,7 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
         />
 
         {/* ── Art banner ──────────────────────────────────────────── */}
-        {hike.hero && (
-          <Reveal>
-            <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--color-border)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={hike.hero} alt={hike.name} className="aspect-[2/1] w-full object-cover sm:aspect-[12/5]" />
-            </div>
-          </Reveal>
-        )}
+        <div className="mt-6"><HikeCover hike={hike} priority banner /></div>
 
         {/* ── Hero ─────────────────────────────────────────────────── */}
         <header className="pt-8 pb-10 md:pt-10">

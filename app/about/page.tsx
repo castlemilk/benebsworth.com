@@ -49,30 +49,30 @@ export default function AboutPage() {
       { name: 'About', url: `${SITE_URL}/about/` },
     ])]} />
     <SiteNav />
-      <main id="main-content" className={`${styles.page} ${styles.aboutPage}`}>
+    <main id="main-content" className={`${styles.page} ${styles.aboutPage}`}>
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
       <header className={`${styles.hero} ${styles.aboutHero}`}>
         <div className={styles.aboutCopy}>
           <h1 className={styles.title}>Ben<br />Ebsworth</h1>
           <p className={styles.role}>Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia</p>
-          <p className={styles.intro}>{about.bio}</p>
           <dl className={styles.facts}>
             <div><dt>10+</dt><dd>years building</dd></div>
             <div><dt>{about.certifications.length}</dt><dd>certifications</dd></div>
             <div><dt>{about.speaking.length}</dt><dd>talks given</dd></div>
           </dl>
+          <nav aria-label="About sections" className={styles.jumpLinks}>
+            <a href="#resume">Career &amp; education</a>
+            <a href="#certifications">Certifications</a>
+            <a href="#speaking">Talks &amp; speaking</a>
+            <a href="#skills">Toolkit</a>
+            <a href="#lab">The lab</a>
+          </nav>
         </div>
         <div className={styles.portrait}>
-          <HalftoneHero accent="var(--fg)" variant="folio" />
+          <HalftoneHero accent="var(--fg)" variant="profile" />
         </div>
       </header>
-      <nav aria-label="About sections" className={styles.jumpLinks}>
-        <a href="#resume">Career &amp; education</a>
-        <a href="#certifications">Certifications</a>
-        <a href="#speaking">Talks &amp; speaking</a>
-        <a href="#skills">Toolkit</a>
-        <a href="#lab">The lab</a>
-      </nav>
+      <p className={styles.profileBio}>{about.bio}</p>
       <section id="resume" className={styles.section}>
         <div className={styles.sectionHead}><h2>Career &amp; education</h2></div>
         <ol className={styles.timeline}>
@@ -128,7 +128,7 @@ export default function AboutPage() {
       </section>
       <section id="skills" className={styles.section}>
         <div className={styles.sectionHead}><h2>Toolkit</h2></div>
-        <SkillMarquee skills={about.skills} />
+        <SkillMarquee skills={about.skills} layout="static" />
       </section>
       <section id="lab" className={styles.section}>
         <div className={styles.sectionHead}><h2>The lab</h2></div>

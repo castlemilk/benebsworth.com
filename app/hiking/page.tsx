@@ -47,7 +47,7 @@ export default function HikingPage() {
         {lead && <div className={styles.trailFeature}>
           <AnnotatedBlock placement="below">
             <AnnotationTarget id="featured-trail"><FolioHikeEntry hike={lead} featured /></AnnotationTarget>
-            <MarginNote target="featured-trail" label="The latest trail"><p>{lead.region}, {lead.year}.</p></MarginNote>
+            <MarginNote target="featured-trail" label="The latest trail" mark="none"><p>{lead.region}, {lead.year}.</p></MarginNote>
           </AnnotatedBlock>
         </div>}
         {otherCompleted.map(hike => <FolioHikeEntry key={hike.slug} hike={hike} />)}

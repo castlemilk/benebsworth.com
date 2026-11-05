@@ -20,7 +20,7 @@ vi.mock('@/components/site/site-nav', () => ({ SiteNav: () => <nav data-site-nav
 vi.mock('@/components/site/site-footer', () => ({ SiteFooter: () => <footer /> }))
 vi.mock('@/components/site/breadcrumb', () => ({ Breadcrumb: ({ items }: { items: { label: string; href?: string }[] }) => <nav aria-label="Breadcrumb">{items.map(item => item.href ? <a key={item.label} href={item.href}>{item.label}</a> : <span key={item.label}>{item.label}</span>)}</nav> }))
 vi.mock('@/components/about/halftone-hero', () => ({ HalftoneHero: (props: object) => <div data-portrait-props={JSON.stringify(props)} /> }))
-vi.mock('@/components/motion/skill-marquee', () => ({ SkillMarquee: ({ skills }: { skills: Skill[] }) => <div data-skills={JSON.stringify(skills)} /> }))
+vi.mock('@/components/motion/skill-marquee', () => ({ SkillMarquee: ({ skills, layout }: { skills: Skill[]; layout?: string }) => <div data-skills={JSON.stringify(skills)} data-skill-layout={layout} /> }))
 vi.mock('@/components/media/youtube', () => ({ YouTube: (props: object) => <div data-youtube={JSON.stringify(props)} /> }))
 vi.mock('@/components/blog/related-labs', () => ({ RelatedLabs: (props: object) => <div data-related-labs={JSON.stringify(props)} /> }))
 
@@ -109,10 +109,11 @@ describe('personal folio page preservation', () => {
 
   it('passes complete existing content to portrait, skills and lab interactions', () => {
     const doc = render(AboutPage)
-    expect(jsonAttribute(doc.querySelector('[data-portrait-props]'), 'data-portrait-props')).toEqual({ accent: 'var(--fg)', variant: 'folio' })
+    expect(jsonAttribute(doc.querySelector('[data-portrait-props]'), 'data-portrait-props')).toEqual({ accent: 'var(--fg)', variant: 'profile' })
     const skills = jsonAttribute(doc.querySelector('[data-skills]'), 'data-skills')
     expect(skills).toHaveLength(50)
     expect(skills).toEqual(about.skills)
+    expect(doc.querySelector('[data-skill-layout]')?.getAttribute('data-skill-layout')).toBe('static')
     expect(jsonAttribute(doc.querySelector('[data-related-labs]'), 'data-related-labs')).toEqual({ tags: ['electrical', 'engineering', 'physics', 'algorithms', 'signal'], labels: ['physics', 'engineering', 'algorithms', 'simulation'], limit: 4 })
     expect(link(doc, '/lab/')).toBeDefined()
   })

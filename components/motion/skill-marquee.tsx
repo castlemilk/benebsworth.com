@@ -19,7 +19,7 @@ import { SkillCard } from '@/components/about/skill-card'
  * prefers-reduced-motion → static wrapped row (expander still works). Chips are
  * always rendered, so they land in the static-exported HTML.
  */
-export function SkillMarquee({ skills }: { skills: Skill[] }) {
+export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; layout?: 'marquee' | 'static' }) {
   const [reduced, setReduced] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [active, setActive] = useState<{ skill: Skill; rect: DOMRect } | null>(null)
@@ -89,10 +89,10 @@ export function SkillMarquee({ skills }: { skills: Skill[] }) {
         )
       : null
 
-  if (reduced) {
+  if (reduced || layout === 'static') {
     return (
       <>
-        <div className="flex flex-wrap gap-3">{skills.map((s) => chip(s, s.name))}</div>
+        <div className="flex flex-wrap gap-3" data-skill-layout="static">{skills.map((s) => chip(s, s.name))}</div>
         {popover}
       </>
     )

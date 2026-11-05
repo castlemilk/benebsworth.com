@@ -31,3 +31,9 @@ The exact-head CI artifact passed its three-phase export. Desktop/narrow browser
 ## Superseding About direction, 4 November 2026
 
 The owner explicitly separated About from the intentionally handwritten blog and lab: About should be crisp, clean and elevated. This takes precedence over the earlier About concept. About now uses the existing Space Grotesk / Hanken Grotesk type pair, cool neutral light/dark surfaces, restrained rules, a date-led career ledger and clean credential grouping. No handwritten name underline, margin note or notebook is displayed. The original interactive portrait, actual logos and all original facts remain. Hiking and Projects retain the editorial reading treatment. No blog/lab styles or pending RelatedLabs choices change.
+
+## Requested review corrections
+
+Hallmark and design-taste review identified inherited pointer-only portrait reveal, tiny low-contrast specimen labels, and a moving duplicated keyboard skill sequence. The clean profile now adds native reveal/reset controls using the existing persisted interaction, removes specimen decoration, and uses one static wrapped copy of all 50 skills while retaining focus/tap provenance. Its section links move into the opening identity block before the full biography, preserving every word while making the résumé discoverable sooner. The default dossier portrait and marquee consumers retain their prior presentation.
+
+The revised Hiking desktop capture exposed a below-figure connector crossing the statistics column. Its selectable note remains, but the optional decorative connector is disabled for that placement. The title’s red measured underline and real authored route trace remain. The dark trail emblem receives a light backing to preserve its existing geometry and legibility.

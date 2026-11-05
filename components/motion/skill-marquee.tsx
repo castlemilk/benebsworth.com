@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import type { Skill } from '@/lib/gen/content'
 import { SkillCard } from '@/components/about/skill-card'
@@ -24,6 +24,8 @@ export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; 
   const [mounted, setMounted] = useState(false)
   const [active, setActive] = useState<{ skill: Skill; rect: DOMRect } | null>(null)
   const closeTimer = useRef(0)
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -36,6 +38,7 @@ export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; 
 
   const open = useCallback((skill: Skill, el: HTMLElement) => {
     window.clearTimeout(closeTimer.current)
+    triggerRef.current = el
     setActive({ skill, rect: el.getBoundingClientRect() })
   }, [])
 
@@ -45,9 +48,10 @@ export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; 
   }, [])
 
   const closeSoon = useCallback(() => {
+    if (layout === 'grouped' && (popoverRef.current?.contains(document.activeElement) || triggerRef.current === document.activeElement)) return
     window.clearTimeout(closeTimer.current)
     closeTimer.current = window.setTimeout(() => setActive(null), 120)
-  }, [])
+  }, [layout])
 
   // A scroll or resize invalidates the captured rect — dismiss rather than
   // leave the card stranded. Also lets a tap-elsewhere close it on touch.
@@ -56,7 +60,7 @@ export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; 
     const onScroll = () => closeNow()
     const onPointerDown = (e: PointerEvent) => {
       const t = e.target as HTMLElement | null
-      if (!t?.closest('[data-skill-chip]')) closeNow()
+      if (!t?.closest('[data-skill-chip], [data-skill-popover]')) closeNow()
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
@@ -75,14 +79,21 @@ export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; 
       isActive={active?.skill.name === s.name}
       onOpen={open}
       onCloseSoon={closeSoon}
-      onToggle={(skill, el) => (active?.skill.name === skill.name ? closeNow() : open(skill, el))}
+      onToggle={(skill, el, wasActive) => ((layout === 'grouped' ? wasActive : active?.skill.name === skill.name) ? closeNow() : open(skill, el))}
+      onInspect={layout === 'grouped' ? (skill, el) => {
+        open(skill, el)
+        requestAnimationFrame(() => popoverRef.current?.focus())
+      } : undefined}
     />
   )
 
   const popover =
     mounted && active
       ? createPortal(
-          <Positioned rect={active.rect}>
+          <Positioned rect={active.rect} profile={layout === 'grouped'} popoverRef={popoverRef}
+            label={`${active.skill.name} provenance`}
+            onHold={() => window.clearTimeout(closeTimer.current)} onLeave={closeSoon}
+            onDismiss={() => { triggerRef.current?.focus(); closeNow() }}>
             <SkillCard skill={active.skill} variant={layout === 'grouped' ? 'profile' : 'default'} />
           </Positioned>,
           document.body,
@@ -135,14 +146,17 @@ function SkillChip({
   onOpen,
   onCloseSoon,
   onToggle,
+  onInspect,
 }: {
   skill: Skill
   isActive: boolean
   onOpen: (skill: Skill, el: HTMLElement) => void
   onCloseSoon: () => void
-  onToggle: (skill: Skill, el: HTMLElement) => void
+  onToggle: (skill: Skill, el: HTMLElement, wasActive: boolean) => void
+  onInspect?: (skill: Skill, el: HTMLElement) => void
 }) {
   const touch = useRef(false)
+  const activeBeforePointerDown = useRef(false)
   return (
     <button
       type="button"
@@ -150,6 +164,7 @@ function SkillChip({
       aria-expanded={isActive}
       onPointerDown={(e) => {
         touch.current = e.pointerType === 'touch'
+        activeBeforePointerDown.current = isActive
       }}
       onPointerEnter={(e) => {
         if (e.pointerType !== 'touch') onOpen(skill, e.currentTarget)
@@ -158,10 +173,18 @@ function SkillChip({
         if (e.pointerType !== 'touch') onCloseSoon()
       }}
       onClick={(e) => {
-        if (touch.current) onToggle(skill, e.currentTarget)
+        if (touch.current) onToggle(skill, e.currentTarget, activeBeforePointerDown.current)
       }}
       onFocus={(e) => onOpen(skill, e.currentTarget)}
       onBlur={onCloseSoon}
+      onKeyDown={onInspect ? (event) => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault()
+          onInspect(skill, event.currentTarget)
+        }
+      } : undefined}
+      aria-keyshortcuts={onInspect ? 'ArrowDown' : undefined}
+      aria-description={onInspect ? 'Arrow Down opens the provenance details. Escape returns to this skill.' : undefined}
       className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border bg-surface px-4 py-2 font-mono text-sm text-fg/80 transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-about/60"
       style={
         {
@@ -179,12 +202,54 @@ function SkillChip({
 }
 
 /** Fixed-positioned, portaled wrapper that anchors the card to a chip's rect. */
-function Positioned({ rect, children }: { rect: DOMRect; children: React.ReactNode }) {
+export function profileCardPosition(rect: Pick<DOMRect, 'left' | 'width' | 'top' | 'bottom'>, height: number, vw: number, vh: number) {
+  const gutter = 8
+  const width = Math.min(288, Math.max(1, vw - gutter * 2))
+  const maxHeight = Math.max(1, vh - gutter * 2)
+  const visibleHeight = Math.min(height, maxHeight)
+  const above = rect.top - 10 - visibleHeight
+  const below = rect.bottom + 10
+  const fitsAbove = above >= gutter
+  const fitsBelow = below + visibleHeight <= vh - gutter
+  const preferred = rect.top > vh / 2 ? above : below
+  const top = fitsAbove && fitsBelow ? preferred : fitsAbove ? above : fitsBelow ? below : preferred
+  return {
+    left: Math.max(gutter, Math.min(rect.left + rect.width / 2 - width / 2, vw - width - gutter)),
+    top: Math.max(gutter, Math.min(top, vh - visibleHeight - gutter)),
+    width,
+    maxHeight,
+  }
+}
+
+function Positioned({ rect, children, profile, popoverRef, label, onHold, onLeave, onDismiss }: {
+  rect: DOMRect
+  children: React.ReactNode
+  profile: boolean
+  popoverRef: React.RefObject<HTMLDivElement | null>
+  label: string
+  onHold: () => void
+  onLeave: () => void
+  onDismiss: () => void
+}) {
+  const [height, setHeight] = useState(0)
+  useLayoutEffect(() => {
+    if (!profile || !popoverRef.current) return
+    const element = popoverRef.current
+    const measure = () => setHeight(element.getBoundingClientRect().height)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [profile, rect, popoverRef])
   const CARD_W = 288 // matches SkillCard w-72
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 768
   const above = rect.top > 240
   const left = Math.min(Math.max(rect.left + rect.width / 2 - CARD_W / 2, 8), vw - CARD_W - 8)
-  const style: CSSProperties = {
+  const style: CSSProperties = profile ? {
+    ...profileCardPosition(rect, height, vw, vh),
+    position: 'fixed', zIndex: 60, overflowY: 'auto', overscrollBehavior: 'contain',
+  } : {
     position: 'fixed',
     left,
     width: CARD_W,
@@ -194,7 +259,11 @@ function Positioned({ rect, children }: { rect: DOMRect; children: React.ReactNo
     pointerEvents: 'none',
   }
   return (
-    <div style={style}>
+    <div ref={popoverRef} style={style} data-skill-popover={profile || undefined}
+      tabIndex={profile ? 0 : undefined} role={profile ? 'region' : undefined} aria-label={profile ? label : undefined}
+      onPointerEnter={profile ? onHold : undefined} onPointerLeave={profile ? onLeave : undefined}
+      onFocus={profile ? onHold : undefined} onBlur={profile ? onLeave : undefined}
+      onKeyDown={profile ? event => { if (event.key === 'Escape') { event.preventDefault(); onDismiss() } } : undefined}>
       {children}
     </div>
   )

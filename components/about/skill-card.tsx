@@ -17,7 +17,7 @@ const KIND_GLYPH: Record<string, string> = {
 export function SkillCard({ skill, variant = 'default' }: { skill: Skill; variant?: 'default' | 'profile' }) {
   const profile = variant === 'profile'
   return (
-    <div data-skill-card-style={variant} className="w-72 origin-top animate-[skillpop_160ms_cubic-bezier(0.16,1,0.3,1)] rounded-xl border border-[var(--color-border)] bg-surface/95 p-4 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.7)] backdrop-blur-md">
+    <div data-skill-card-style={variant} className={`${profile ? 'w-full' : 'w-72'} origin-top animate-[skillpop_160ms_cubic-bezier(0.16,1,0.3,1)] rounded-xl border border-[var(--color-border)] bg-surface/95 p-4 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.7)] backdrop-blur-md`}>
       <div className={profile ? "flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1" : "flex items-baseline justify-between gap-3"}>
         <p className="font-display text-base font-semibold tracking-[-0.01em]">
           {!profile && <span className="text-about">▸ </span>}

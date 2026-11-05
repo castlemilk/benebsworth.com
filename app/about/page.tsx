@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
@@ -32,10 +31,45 @@ export const metadata: Metadata = {
 }
 
 const ISSUERS = [
-  { name: 'Amazon Web Services', label: 'Amazon Web Services', tag: 'AWS' },
-  { name: 'Google Cloud', label: 'Google Cloud', tag: 'GCP' },
-  { name: 'CNCF', label: 'Cloud Native Computing Foundation', tag: 'CNCF' },
+  { name: 'Amazon Web Services', label: 'Amazon Web Services' },
+  { name: 'Google Cloud', label: 'Google Cloud' },
+  { name: 'CNCF', label: 'Cloud Native Computing Foundation' },
 ] as const
+
+function TimelineGroups({ kind }: { kind: 'work' | 'education' }) {
+  const entries = about.timeline.filter(entry => entry.kind === kind)
+  const companies = [...new Set(entries.map(entry => entry.company))]
+  return <div className={styles.timelineGroups}>
+    {companies.map(company => {
+      const roles = entries.filter(entry => entry.company === company)
+      return <article key={company} className={styles.timelineGroup} data-timeline-group={company}>
+        <div className={styles.employer}>
+          <img src={roles[0].logo} alt={`${company} logo`} width={40} height={40} className={styles.companyLogo} />
+          <h3>{company}</h3>
+        </div>
+        <ol className={styles.timeline}>
+          {roles.map(entry => <li key={`${entry.when}-${entry.title}`} data-timeline-entry>
+            <p className={styles.timelineDate}>{entry.when}</p>
+            <div>
+              <h4>{entry.title.endsWith(` · ${company}`) ? entry.title.slice(0, -(` · ${company}`).length) : entry.title}</h4>
+              <p className={styles.timelineDetail}>{entry.detail}</p>
+              {entry.tech.length > 0 && <details className={styles.technologyDetails}>
+                <summary>{kind === 'education' ? 'Areas of study' : 'Technologies used'}</summary>
+                <ul className={styles.technologies}>
+                  {entry.tech.map(tech => <li key={tech} style={{ '--tech-color': techColor(tech) } as CSSProperties}>{tech}</li>)}
+                </ul>
+              </details>}
+            </div>
+          </li>)}
+        </ol>
+      </article>
+    })}
+  </div>
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return <div className={styles.sectionHead}><h2>{children}</h2></div>
+}
 
 export default function AboutPage() {
   const recordings = about.speaking.flatMap(talk => {
@@ -55,17 +89,13 @@ export default function AboutPage() {
         <div className={styles.aboutCopy}>
           <h1 className={styles.title}>Ben<br />Ebsworth</h1>
           <p className={styles.role}>Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia</p>
-          <dl className={styles.facts}>
-            <div><dt>10+</dt><dd>years building</dd></div>
-            <div><dt>{about.certifications.length}</dt><dd>certifications</dd></div>
-            <div><dt>{about.speaking.length}</dt><dd>talks given</dd></div>
-          </dl>
+          <p className={styles.profileMeta}>10+ years building</p>
           <nav aria-label="About sections" className={styles.jumpLinks}>
-            <a href="#resume">Career &amp; education</a>
-            <a href="#certifications">Certifications</a>
-            <a href="#speaking">Talks &amp; speaking</a>
-            <a href="#skills">Toolkit</a>
-            <a href="#lab">The lab</a>
+            <a href="#resume">Career</a>
+            <a href="#skills">Technical practice</a>
+            <a href="#certifications">Education &amp; credentials</a>
+            <a href="#speaking">Talks</a>
+            <a href="#lab">Simulations</a>
           </nav>
         </div>
         <div className={styles.portrait}>
@@ -74,42 +104,35 @@ export default function AboutPage() {
       </header>
       <p className={styles.profileBio}>{about.bio}</p>
       <section id="resume" className={styles.section}>
-        <div className={styles.sectionHead}><h2>Career &amp; education</h2></div>
-        <ol className={styles.timeline}>
-          {about.timeline.map((entry, i) => <li key={i}>
-            <p className={styles.timelineDate}>{entry.when}</p>
-            <div>
-              <div className={styles.timelineHeading}>
-                <img src={entry.logo} alt={`${entry.company} logo`} width={40} height={40} className={styles.companyLogo} />
-                <div><p className={styles.label}>{entry.kind === 'education' ? 'Education' : 'Work'} · {entry.company}</p><h3>{entry.title}</h3></div>
-              </div>
-              <p className={styles.timelineDetail}>{entry.detail}</p>
-              {entry.tech.length > 0 && <ul className={styles.technologies} aria-label="Technologies">
-                {entry.tech.map(tech => <li key={tech} style={{ '--tech-color': techColor(tech) } as CSSProperties}>{tech}</li>)}
-              </ul>}
-            </div>
-          </li>)}
-        </ol>
+        <SectionHeading>Career</SectionHeading>
+        <TimelineGroups kind="work" />
+      </section>
+      <section id="skills" className={styles.section}>
+        <SectionHeading>Technical practice</SectionHeading>
+        <SkillMarquee skills={about.skills} layout="grouped" />
       </section>
       <section id="certifications" className={styles.section}>
-        <div className={styles.sectionHead}><h2>Certifications</h2><p>{about.certifications.length} active certifications across the three clouds &amp; the cloud-native ecosystem.</p></div>
+        <SectionHeading>Education &amp; credentials</SectionHeading>
+        <TimelineGroups kind="education" />
+        <div className={styles.certificationGroups} aria-label="Professional certifications">
         {ISSUERS.map(issuer => {
           const items = about.certifications.filter(cert => cert.issuer === issuer.name)
           return items.length > 0 && <div className={styles.credentialGroup} key={issuer.name}>
-            <h3 className={styles.label}>{issuer.label} · {items.length} {items.length === 1 ? 'cert' : 'certs'}</h3>
+            <h3 className={styles.label}>{issuer.label}</h3>
             <ul className={styles.credentials}>
               {items.map(cert => <li key={cert.title}>
                 <a href={cert.url || '#'} target="_blank" rel="noreferrer" className={styles.credential}>
                   <img src={cert.badge} alt={`${cert.title} badge`} width={88} height={88} loading="lazy" />
-                  <div><p className={styles.credentialTitle}>{cert.title}</p><p className={styles.label}>{issuer.tag} <ArrowUpRight size={14} aria-hidden="true" /></p></div>
+                  <p className={styles.credentialTitle}>{cert.title} <ArrowUpRight size={14} aria-hidden="true" className={styles.externalArrow} /></p>
                 </a>
               </li>)}
             </ul>
           </div>
         })}
+        </div>
       </section>
       <section id="speaking" className={styles.section}>
-        <div className={styles.sectionHead}><h2>Talks &amp; speaking</h2><p>On the record</p></div>
+        <SectionHeading>Talks</SectionHeading>
         <div className={styles.talks}>
           {recordings.map(({ talk, id }) => <article key={id} className={styles.talk}>
             <YouTube id={id} title={talk.title} accent="var(--profile-action)" />
@@ -126,14 +149,8 @@ export default function AboutPage() {
           </a>)}
         </div>
       </section>
-      <section id="skills" className={styles.section}>
-        <div className={styles.sectionHead}><h2>Toolkit</h2></div>
-        <SkillMarquee skills={about.skills} layout="static" />
-      </section>
       <section id="lab" className={styles.section}>
-        <div className={styles.sectionHead}><h2>The lab</h2></div>
-        <p className={styles.labIntro}>I keep an <Link href="/lab/" className={styles.textLink}>interactive lab</Link> of small visual essays — each effect is a working simulation, parameterised, playable, and shareable. They are the working sketches behind many of my posts: oscillators, attractors, filters, modulation, signal integrity. Drop in, drag the controls, watch what happens.</p>
-        <div className={styles.labContent}><RelatedLabs tags={['electrical', 'engineering', 'physics', 'algorithms', 'signal']} labels={['physics', 'engineering', 'algorithms', 'simulation']} limit={4} /></div>
+        <div className={styles.labContent}><RelatedLabs tags={['electrical', 'engineering', 'physics', 'algorithms', 'signal']} labels={['physics', 'engineering', 'algorithms', 'simulation']} limit={4} intro={<p className={styles.labIntro}>I keep an interactive lab of small visual essays — each effect is a working simulation, parameterised, playable, and shareable. They are the working sketches behind many of my posts: oscillators, attractors, filters, modulation, signal integrity. Drop in, drag the controls, watch what happens.</p>} /></div>
       </section>
     </main>
     <SiteFooter />

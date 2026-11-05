@@ -22,7 +22,7 @@ One decorative résumé notebook was generated and optimized. The later clean-Ab
 
 ## Résumé and credentials extension
 
-The owner subsequently requested assets and résumé/certification designs, followed by a complete résumé wireframe. The wireframe informs the long-form flow, not new claims or services. About keeps every authored career/education record, all nine credentials, all five talks and the full skills provenance. The notebook marks the career section; original employer logos and credential marks remain. No placeholder impact metrics, fabricated download, contact form or new résumé route is introduced.
+The owner subsequently requested assets and résumé/certification designs, followed by a complete résumé wireframe. The wireframe informs the long-form flow, not new claims or services. About keeps every authored career/education record, all nine credentials, all five talks and the full skills provenance. The notebook was explored for the career section, then removed under the later clean-About direction; original employer logos and credential marks remain. No placeholder impact metrics, fabricated download, contact form or new résumé route is introduced.
 
 ## First rendered pass
 
@@ -37,3 +37,11 @@ The owner explicitly separated About from the intentionally handwritten blog and
 Hallmark and design-taste review identified inherited pointer-only portrait reveal, tiny low-contrast specimen labels, and a moving duplicated keyboard skill sequence. The clean profile now adds native reveal/reset controls using the existing persisted interaction, removes specimen decoration, and uses one static wrapped copy of all 50 skills while retaining focus/tap provenance. Its section links move into the opening identity block before the full biography, preserving every word while making the résumé discoverable sooner. The default dossier portrait and marquee consumers retain their prior presentation.
 
 The revised Hiking desktop capture exposed a below-figure connector crossing the statistics column. Its selectable note remains, but the optional decorative connector is disabled for that placement. The title’s red measured underline and real authored route trace remain. The dark trail emblem receives a light backing to preserve its existing geometry and legibility.
+
+## Consolidated engineering profile, 5 November 2026
+
+The owner asked to remove duplication and orient the profile around science, engineering and software. The actual content, rather than illustrative wireframe copy, determines the structure. Career groups the seven work roles under their three employers, with each employer name/logo once. Exact dates, descriptions and role-specific technologies remain; technologies use native disclosures. The two science/engineering degrees appear once under Education & credentials, followed by the original nine linked badges. Duplicate issuer footers, total-count prose and the hero’s repeated credential/talk counts are removed.
+
+Technical practice groups all 50 unique skills by their nine existing disciplines. Each keeps its authored note and provenance; the profile-only popover uses readable sans metadata and neutral full-opacity dates. The default marquee and skill-card presentation remain unchanged. One Lab header precedes the original introduction and unchanged recommendations, through an optional intro slot that does not alter shared selection or card styling. No pending RelatedLabs typography/pill decision is adopted.
+
+Technical character comes from real dates, grouped disciplines, actual degrees, aligned rules and systems descriptions. No fake graphs, scientific decoration, numbered sections, proficiency scores, invented impact claims or controls are added. The portrait remains real and interactive, with accessible reveal/reset controls and a stable-height control strip. Existing section IDs and destinations remain stable. The latest artifact still requires exact-head rendered review before release.

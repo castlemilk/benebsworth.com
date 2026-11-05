@@ -1,5 +1,6 @@
 import styles from './archive-discovery.module.css'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { tagColor } from '@/lib/tag-colors'
 import { LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
 
@@ -20,6 +21,7 @@ export function RelatedLabs({
   labels = [],
   limit = 3,
   variant = 'default',
+  intro,
 }: {
   /** Post tags — match whole topics or phrases, never fragments inside words. */
   tags?: string[]
@@ -29,6 +31,8 @@ export function RelatedLabs({
   limit?: number
   /** 'default' for the standard post-footer block. 'inline' for compact use in about pages. */
   variant?: 'default' | 'inline'
+  /** Optional authored context below the one shared heading. */
+  intro?: ReactNode
 }) {
   const query = [...tags, ...labels].map((s) => s.toLowerCase().trim()).filter(Boolean)
 
@@ -142,6 +146,7 @@ export function RelatedLabs({
           All effects →
         </Link>
       </div>
+      {intro}
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {chosen.map((e) => (
           <li key={e.slug}>

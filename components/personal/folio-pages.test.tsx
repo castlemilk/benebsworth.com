@@ -22,7 +22,7 @@ vi.mock('@/components/site/breadcrumb', () => ({ Breadcrumb: ({ items }: { items
 vi.mock('@/components/about/halftone-hero', () => ({ HalftoneHero: (props: object) => <div data-portrait-props={JSON.stringify(props)} /> }))
 vi.mock('@/components/motion/skill-marquee', () => ({ SkillMarquee: ({ skills, layout }: { skills: Skill[]; layout?: string }) => <div data-skills={JSON.stringify(skills)} data-skill-layout={layout} /> }))
 vi.mock('@/components/media/youtube', () => ({ YouTube: (props: object) => <div data-youtube={JSON.stringify(props)} /> }))
-vi.mock('@/components/blog/related-labs', () => ({ RelatedLabs: (props: object) => <div data-related-labs={JSON.stringify(props)} /> }))
+vi.mock('@/components/blog/related-labs', () => ({ RelatedLabs: ({ intro, ...props }: { intro?: React.ReactNode }) => <div data-related-labs={JSON.stringify(props)}><h2>Try it in the lab</h2>{intro}<a href="/lab/">All effects</a></div> }))
 
 function render(Page: () => React.JSX.Element) {
   return new DOMParser().parseFromString(renderToStaticMarkup(<Page />), 'text/html')
@@ -60,22 +60,27 @@ describe('personal folio page preservation', () => {
   it('preserves About biography, facts, all timeline entries and section anchors', () => {
     const doc = render(AboutPage)
     expect(text(doc.querySelector('main'))).toContain(about.bio)
-    expect(text(doc.querySelector('header dl'))).toContain('10+years building')
-    expect(text(doc.querySelector('header dl'))).toContain('9certifications')
-    expect(text(doc.querySelector('header dl'))).toContain('5talks given')
+    expect(text(doc.querySelector('header'))).toContain('10+ years building')
+    expect(doc.querySelector('header dl')).toBeNull()
     for (const id of ['resume', 'certifications', 'speaking', 'skills', 'lab']) {
       expect(doc.querySelector(`section#${id}`)).not.toBeNull()
       expect(link(doc, `#${id}`)).toBeDefined()
     }
-    const entries = doc.querySelectorAll('#resume ol > li')
+    const entries = doc.querySelectorAll('[data-timeline-entry]')
     expect(entries).toHaveLength(9)
     about.timeline.forEach((entry, i) => {
       expect(text(entries[i])).toContain(entry.when)
-      expect(text(entries[i])).toContain(entry.title)
+      const group = entries[i].closest('[data-timeline-group]')!
+      expect(text(group.querySelector('h3'))).toBe(entry.company)
+      expect(`${text(entries[i].querySelector('h4'))} · ${entry.company}`).toBe(entry.title)
       expect(text(entries[i])).toContain(entry.detail)
-      expect(entries[i].querySelector('img')?.getAttribute('src')).toBe(entry.logo)
+      expect(group.querySelector('img')?.getAttribute('src')).toBe(entry.logo)
       expect([...entries[i].querySelectorAll('ul li')].map(text)).toEqual(entry.tech)
     })
+    expect(doc.querySelectorAll('#resume [data-timeline-entry]')).toHaveLength(7)
+    expect(doc.querySelectorAll('#certifications [data-timeline-entry]')).toHaveLength(2)
+    expect(doc.querySelectorAll('[data-timeline-group]')).toHaveLength(4)
+    expect(doc.querySelectorAll('[data-timeline-entry] details')).toHaveLength(9)
     expect(structured(doc)).toContainEqual(profilePageLd)
     expect(doc.querySelector('.hand-underline, .annotated-block, .handwritten-note')).toBeNull()
     expect(doc.querySelector('#resume img[src*="notebook"]')).toBeNull()
@@ -84,9 +89,9 @@ describe('personal folio page preservation', () => {
 
   it('preserves all credential destinations and all five talks', () => {
     const doc = render(AboutPage)
-    expect(doc.querySelectorAll('#certifications li')).toHaveLength(9)
-    expect([...doc.querySelectorAll('#certifications h3')].map(text)).toEqual([
-      'Amazon Web Services · 4 certs', 'Google Cloud · 3 certs', 'Cloud Native Computing Foundation · 2 certs',
+    expect(doc.querySelectorAll('#certifications a[target="_blank"]')).toHaveLength(9)
+    expect([...doc.querySelectorAll('[aria-label="Professional certifications"] h3')].map(text)).toEqual([
+      'Amazon Web Services', 'Google Cloud', 'Cloud Native Computing Foundation',
     ])
     for (const cert of about.certifications) {
       const anchor = link(doc, cert.url)
@@ -113,9 +118,12 @@ describe('personal folio page preservation', () => {
     const skills = jsonAttribute(doc.querySelector('[data-skills]'), 'data-skills')
     expect(skills).toHaveLength(50)
     expect(skills).toEqual(about.skills)
-    expect(doc.querySelector('[data-skill-layout]')?.getAttribute('data-skill-layout')).toBe('static')
+    expect(doc.querySelector('[data-skill-layout]')?.getAttribute('data-skill-layout')).toBe('grouped')
     expect(jsonAttribute(doc.querySelector('[data-related-labs]'), 'data-related-labs')).toEqual({ tags: ['electrical', 'engineering', 'physics', 'algorithms', 'signal'], labels: ['physics', 'engineering', 'algorithms', 'simulation'], limit: 4 })
     expect(link(doc, '/lab/')).toBeDefined()
+    expect(doc.querySelectorAll('#lab h2')).toHaveLength(1)
+    expect(doc.querySelectorAll('#lab a[href="/lab/"]')).toHaveLength(1)
+    expect(text(doc.querySelector('#lab'))).toContain('oscillators, attractors, filters, modulation, signal integrity')
   })
 
   it('preserves every hike, status, stat, image, destination and authored route trace', () => {

@@ -65,6 +65,19 @@ describe('clean About interactions', () => {
     expect(screen.queryByText(about.skills[0].note)).toBeNull()
   })
 
+  it('groups every skill once by its actual discipline and uses readable profile provenance', () => {
+    const view = render(<SkillMarquee skills={about.skills} layout="grouped" />)
+    expect(view.container.querySelector('[data-skill-layout="grouped"]')).toBeTruthy()
+    expect(screen.getAllByRole('button')).toHaveLength(about.skills.length)
+    expect(screen.getAllByRole('heading').map(heading => heading.textContent)).toEqual([...new Set(about.skills.map(skill => skill.category))])
+    for (const skill of about.skills) expect(screen.getAllByRole('button', { name: skill.name })).toHaveLength(1)
+    act(() => screen.getAllByRole('button')[0].focus())
+    const card = document.querySelector('[data-skill-card-style="profile"]')!
+    expect(card).toBeTruthy()
+    expect(card.querySelector('.opacity-60')).toBeNull()
+    expect(card.textContent).toContain(about.skills[0].note)
+  })
+
   it('retains the default marquee for existing consumers', () => {
     const view = render(<SkillMarquee skills={about.skills.slice(0, 2)} />)
     expect(view.container.querySelector('[data-skill-layout="static"]')).toBeNull()

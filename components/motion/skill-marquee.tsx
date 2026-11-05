@@ -19,7 +19,7 @@ import { SkillCard } from '@/components/about/skill-card'
  * prefers-reduced-motion → static wrapped row (expander still works). Chips are
  * always rendered, so they land in the static-exported HTML.
  */
-export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; layout?: 'marquee' | 'static' }) {
+export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; layout?: 'marquee' | 'static' | 'grouped' }) {
   const [reduced, setReduced] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [active, setActive] = useState<{ skill: Skill; rect: DOMRect } | null>(null)
@@ -83,11 +83,24 @@ export function SkillMarquee({ skills, layout = 'marquee' }: { skills: Skill[]; 
     mounted && active
       ? createPortal(
           <Positioned rect={active.rect}>
-            <SkillCard skill={active.skill} />
+            <SkillCard skill={active.skill} variant={layout === 'grouped' ? 'profile' : 'default'} />
           </Positioned>,
           document.body,
         )
       : null
+
+  if (layout === 'grouped') {
+    const categories = [...new Set(skills.map(skill => skill.category))]
+    return <>
+      <div data-skill-layout="grouped">
+        {categories.map(category => <div key={category} data-skill-group>
+          <h3>{category}</h3>
+          <div className="flex flex-wrap gap-2">{skills.filter(skill => skill.category === category).map(skill => chip(skill, skill.name))}</div>
+        </div>)}
+      </div>
+      {popover}
+    </>
+  }
 
   if (reduced || layout === 'static') {
     return (
@@ -159,7 +172,7 @@ function SkillChip({
         } as CSSProperties
       }
     >
-      <span className="text-about">▸</span>
+      <span aria-hidden="true" className="text-about">▸</span>
       {skill.name}
     </button>
   )

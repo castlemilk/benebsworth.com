@@ -82,3 +82,6 @@ The owner requested About, Hiking and Projects to share the red-annotated editor
 
 ### Superseding About distinction
 The owner clarified that About must be crisp, clean and elevated, separate from the intentionally handwritten blog and lab. About uses existing Space Grotesk and Hanken Grotesk, neutral light/dark surfaces and structured professional content. Remove handwritten annotations and the notebook from About; retain the notebook only as a concept artifact outside public output. Hiking/Projects keep their requested editorial extension. This clarification overrides the earlier About folio treatment above.
+
+### Deduplicated technical profile
+The owner asked to reduce repetition and emphasize science, engineering and software. About groups career roles by employer, presents each degree once with credentials, and groups the existing unique skills by discipline. Role-specific technologies remain accessible in native disclosures. One Lab heading and introduction lead to unchanged recommendations. Use factual systems content, aligned dates and quiet rules as technical cues, not invented diagrams or decorative numbering. See PERSONAL-FOLIO.md for preservation and review gates.

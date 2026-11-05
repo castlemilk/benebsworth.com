@@ -415,7 +415,7 @@ export function HalftoneHero({ accent = '#ff7a59', variant = 'dossier' }: { acce
 
   return (
     <div data-portrait-style={variant} className="relative mx-auto w-full max-w-[26rem] sm:max-w-[28rem] [perspective:1000px]">
-      {variant === 'profile' && <div data-portrait-controls className="mb-3 flex items-start justify-between gap-4 font-sans">
+      {variant === 'profile' && <div data-portrait-controls className="mb-3 min-h-16 flex items-start justify-between gap-4 font-sans">
         <p aria-live="polite" className="max-w-40 py-3 text-sm leading-5 text-muted">{done ? 'Portrait revealed.' : 'Drag to reveal, or use the button.'}</p>
         <button type="button" onClick={done ? reset : finish} className="min-h-11 shrink-0 cursor-pointer px-1 text-sm font-medium text-fg underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg">{done ? 'Reset portrait' : 'Show portrait'}</button>
       </div>}

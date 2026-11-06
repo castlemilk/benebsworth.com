@@ -21,3 +21,9 @@ Hike detail social images read the same source through the existing build-time c
 ## Verification gates
 
 Preserve all ten hike records, waypoint sequences, guide links, statistics and planned/completed status. Check all index covers and representative completed/photo/planned detail pages; narrow/light/dark; fallback; gallery filter/lightbox close/focus; and the generated social images. Exact CI build and rendered acceptance remain separate from source tests and deployment.
+
+## Photo trail journal refinement, 5 November 2026
+
+The photo/trail view is an experience surface: a retained route drawing beside an original photograph, rather than a control dashboard. Keep the established stone (#f4f3ed), forest ink (#26372d), muted leaf (#58685c), pale sage (#e9ede5) and forest accent (#405d45), with the existing dark counterpart. Source Serif/Folio Serif carries the restrained headings and photo action; the existing sans face carries controls and caveats. The signature is the honest relationship between the unjoined source line, coarse photo footprint and original photograph. No decorative cartography or invented place names.
+
+Show only the selected area's ordinal on the drawing. Preserve all coarse cell bounds; these are not point locations or sequential hiking stages. One native selector and one photographic action lead into the contact sheet. Detailed source/projection notes live in a native disclosure; standard-reference, approximate-area, non-navigation and ODbL notices remain visible. Gallery controls are an inline toolbar. Narrow contact sheets preserve original aspect ratios without 70px portrait slivers; the lightbox gives the image the width and puts navigation beneath, with overflow content accessible by scrolling. No photograph or metadata is reassigned.

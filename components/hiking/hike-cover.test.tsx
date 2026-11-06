@@ -99,7 +99,7 @@ describe('consistent hiking image family', () => {
     view.rerender(<HikeGallery hike={hikes[0]} gallery={gallery} active="Second stop" onSelect={onSelect} />)
     expect(screen.queryByRole('button', {name:'Trail photo 0'})).toBeNull()
     expect(screen.getByRole('button', {name:'Trail photo 1'})).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', {name:'Second stop ✕'}))
+    fireEvent.click(screen.getByRole('button', {name:'Clear filters'}))
     expect(onSelect).toHaveBeenCalledWith(null)
   })
 

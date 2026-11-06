@@ -51,3 +51,6 @@
   .page .indexHero { padding-block: 2rem 2.5rem; }
   .page .title { font-size: clamp(2.75rem, 10vw, 4rem); }
 }
+
+/* In-page photo journeys clear both measured sticky chrome rows. */
+.page :where([data-photo-focus-target], [id^="photos-"]) { scroll-margin-top:calc(var(--site-nav-height, 0px) + var(--site-breadcrumb-height, 0px) + 16px); }

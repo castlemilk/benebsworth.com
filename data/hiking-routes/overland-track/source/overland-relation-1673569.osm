@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="openstreetmap-cgimap 2.1.1 (163303 spike-08.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <relation id="1673569" visible="true" version="33" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="relation" ref="7765187" role=""/>
+  <member type="relation" ref="7765186" role=""/>
+  <member type="relation" ref="7765185" role=""/>
+  <member type="relation" ref="7765184" role=""/>
+  <member type="relation" ref="7765183" role=""/>
+  <member type="relation" ref="7765182" role=""/>
+  <tag k="access:conditional" v="permit @ (Oct 01-May 31: 00:00-24:00)"/>
+  <tag k="fee:conditional" v="yes @ (Oct 01-May 31: 00:00-24:00)"/>
+  <tag k="name" v="Overland Track"/>
+  <tag k="network" v="nwn"/>
+  <tag k="note" v="top level relation. Each 'section' as another route - makes route/profile generation easier"/>
+  <tag k="note_1" v="permits by booking with fee 1 Oct to 31 May"/>
+  <tag k="operator" v="Parks &amp; Wildlife Service Tasmania"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="website" v="https://parks.tas.gov.au/explore-our-parks/cradle-mountain/overland-track"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+ <relation id="7765182" visible="true" version="3" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="way" ref="218590038" role=""/>
+  <member type="way" ref="218592446" role=""/>
+  <member type="way" ref="218593929" role=""/>
+  <member type="way" ref="317702202" role=""/>
+  <tag k="name" v="Overland Track section 6"/>
+  <tag k="network" v="nwn"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+ <relation id="7765183" visible="true" version="4" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="way" ref="1210646831" role=""/>
+  <member type="way" ref="1210646830" role=""/>
+  <member type="way" ref="50801805" role=""/>
+  <member type="way" ref="50804211" role=""/>
+  <member type="way" ref="50802374" role=""/>
+  <member type="way" ref="50803252" role=""/>
+  <member type="way" ref="50803250" role=""/>
+  <tag k="name" v="Overland Track section 5"/>
+  <tag k="network" v="nwn"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+ <relation id="7765184" visible="true" version="4" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="way" ref="50800680" role=""/>
+  <member type="way" ref="741807334" role=""/>
+  <member type="way" ref="741807335" role=""/>
+  <member type="way" ref="543203156" role=""/>
+  <tag k="name" v="Overland Track section 4"/>
+  <tag k="network" v="nwn"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+ <relation id="7765185" visible="true" version="4" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="way" ref="225223568" role=""/>
+  <member type="way" ref="225223567" role=""/>
+  <member type="way" ref="741808930" role=""/>
+  <member type="way" ref="741808931" role=""/>
+  <member type="way" ref="741808928" role=""/>
+  <member type="way" ref="741808929" role=""/>
+  <member type="way" ref="50800041" role=""/>
+  <member type="way" ref="50800518" role=""/>
+  <member type="way" ref="741808927" role=""/>
+  <member type="way" ref="741808926" role=""/>
+  <member type="way" ref="50800522" role=""/>
+  <tag k="name" v="Overland Track section 3"/>
+  <tag k="network" v="nwn"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+ <relation id="7765186" visible="true" version="3" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="way" ref="50800149" role=""/>
+  <member type="way" ref="50800152" role=""/>
+  <member type="way" ref="543203157" role=""/>
+  <tag k="name" v="Overland Track section 2"/>
+  <tag k="network" v="nwn"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+ <relation id="7765187" visible="true" version="6" changeset="181332161" timestamp="2026-04-14T16:36:41Z" user="user_24022513" uid="24022513">
+  <member type="way" ref="142340714" role=""/>
+  <member type="way" ref="142340709" role=""/>
+  <member type="way" ref="50799180" role=""/>
+  <member type="way" ref="142340704" role=""/>
+  <member type="way" ref="142340698" role=""/>
+  <member type="way" ref="623967632" role=""/>
+  <member type="way" ref="55426176" role=""/>
+  <member type="way" ref="623967633" role=""/>
+  <member type="way" ref="623967634" role=""/>
+  <member type="way" ref="623967635" role=""/>
+  <member type="way" ref="623967636" role=""/>
+  <member type="way" ref="623967637" role=""/>
+  <member type="way" ref="623967638" role=""/>
+  <member type="way" ref="1025737281" role=""/>
+  <member type="way" ref="1025737282" role=""/>
+  <member type="way" ref="623967639" role=""/>
+  <member type="way" ref="318213524" role=""/>
+  <member type="way" ref="318213525" role=""/>
+  <member type="way" ref="46245094" role=""/>
+  <member type="way" ref="225519532" role=""/>
+  <tag k="name" v="Overland Track section 1"/>
+  <tag k="network" v="nwn"/>
+  <tag k="route" v="hiking"/>
+  <tag k="type" v="route"/>
+  <tag k="wikidata" v="Q491216"/>
+  <tag k="wikipedia" v="en:Overland Track"/>
+ </relation>
+</osm>

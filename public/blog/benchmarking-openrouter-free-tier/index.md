@@ -36,9 +36,9 @@ canonical_url: 'https://benebsworth.com/blog/benchmarking-openrouter-free-tier/'
 - Some free endpoints quietly break: Nemotron Nano 12B VL's free route hung indefinitely (we excluded it after one fail) and Gemma 4 31B flickered between perfect scores and 429 rate-limits depending on upstream load.
 - Total spend for 84 fresh runs across 12 models, 7 tasks, 5 iterations each: $0.00. The free tier is genuinely free in the way the word suggests.
 
-Last week we pointed our [7-task LLM benchmark](/lab/llm-benchmark/) at [OpenRouter's free tier](https://openrouter.ai/models?max_price=0) — thirteen models that don't charge for inference — and ran the same fair 5-iteration sweep we use for the frontier. The short version: three free models beat Kimi K3 on the board. The longer version is the interesting one, because the data complicates the story we tell ourselves about the gap between open-weight free models and the paid frontier.
+Last week we pointed our [7-task LLM benchmark](/lab/llm-benchmark/) at [OpenRouter's free tier](https://openrouter.ai/models?max_price=0), thirteen models that don't charge for inference, and ran the same fair 5-iteration sweep we use for the frontier. The short version: three free models beat Kimi K3 on the board. The longer version is the interesting one, because the data complicates the story we tell ourselves about the gap between open-weight free models and the paid frontier.
 
-The full sweep took about six and a half hours, produced 84 fresh run records, and cost nothing. Every artifact the free models produced is now published as a standalone page on this site, so you can read the post and then click through to the exact HTML each model emitted — no cherry-picking, no summary table hiding a single-shot luck. Twelve of the thirteen models finished all 35 runs (7 tasks × 5 iterations); one endpoint hung and was excluded after a single failed iteration.
+The full sweep took about six and a half hours, produced 84 fresh run records, and cost nothing. Every artifact the free models produced is now published as a standalone page on this site, so you can read the post and then click through to the exact HTML each model emitted. There is no cherry-picking or summary table hiding single-shot luck. Twelve of the thirteen models finished all 35 runs (7 tasks × 5 iterations); one endpoint hung and was excluded after a single failed iteration.
 
 ## What we added
 
@@ -55,7 +55,7 @@ The free tier is rate-limited per provider, not per request, and the limits are 
 
 ## The thirteen models
 
-Thirteen free models were registered. One endpoint (`nemotron-nano-12b-vl`) hung on every direct probe — its free route simply does not respond — so it was excluded from the sweep after one `fail` record. The other twelve completed the full board:
+Thirteen free models were registered. One endpoint (`nemotron-nano-12b-vl`) hung on every direct probe. Its free route did not respond, so it was excluded from the sweep after one `fail` record. The other twelve completed the full board:
 
 - **NVIDIA**: Nemotron 3 Ultra, Nemotron 3 Super, Nemotron 3 Nano 30B, Nemotron 3 Nano Omni, Nemotron Nano 9B (the Nano 12B VL is the one that hung)
 - **Google**: Gemma 4 26B, Gemma 4 31B
@@ -98,7 +98,7 @@ Ling 3.0 Tiny, Laguna XS 2.1 and Gemma 4 26B all beat Claude 4's 92.6, and they 
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-The frontier gap on this benchmark was always narrow — Claude 4 to K2.7 is a 9.5-point spread, not 50. The free tier didn't "narrow" that gap; it took it. The honest reading is that these particular tasks — single-file self-contained artifacts scored against a fixed rubric — favour compact, deterministic models over the long-context frontier, and the free tier happens to be where several of those compact models live.
+The frontier gap on this benchmark was always narrow: Claude 4 to K2.7 is a 9.5-point spread, not 50. The free tier didn't "narrow" that gap; it took it. The honest reading is that these particular tasks (single-file self-contained artifacts scored against a fixed rubric) favour compact, deterministic models over the long-context frontier, and the free tier happens to be where several of those compact models live.
 
 ## What actually went wrong
 
@@ -110,7 +110,7 @@ Nemotron Nano 12B VL's free route simply does not respond. A direct probe with a
 
 ### Upstream rate-limits that flicker
 
-Gemma 4 31B is the clearest example of upstream flicker. The same model, run five times in a row against the same task, returned either a perfect 100, a partial 88, or a hard `fail` with `finish_reason: 429`, depending on which Google AI Studio shared pool instance answered. By the end of the sweep the 31B was sitting on a 41.1 average — a number that almost entirely describes OpenRouter's relationship with Google's free quota rather than the model itself. If you want to read its actual capability, look at the two tasks where it ran cleanly: it scored 100 on the equation solver and 88 on the crypto hash race, which is competitive with the 26B sibling. The other four tasks were infrastructure failures.
+Gemma 4 31B is the clearest example of upstream flicker. The same model, run five times in a row against the same task, returned either a perfect 100, a partial 88, or a hard `fail` with `finish_reason: 429`, depending on which Google AI Studio shared pool instance answered. By the end of the sweep the 31B was sitting on a 41.1 average. That number almost entirely describes OpenRouter's relationship with Google's free quota rather than the model itself. If you want to read its actual capability, look at the two tasks where it ran cleanly: it scored 100 on the equation solver and 88 on the crypto hash race, which is competitive with the 26B sibling. The other four tasks were infrastructure failures.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
@@ -118,33 +118,33 @@ A free-tier score is part model capability and part "how loaded was the shared p
 
 ### Partial vs full completion
 
-Ling 3.0 Tiny has a `partial` on every single task. That does not mean it failed — it means one or more of its five iterations came back with empty or truncated content where a full provider would have answered. The runner counts a `partial` run as scored at whatever the surviving iterations achieved, and the † in the table marks it. The pattern across all seven tasks (95.5 to 100, never below) says the model is capable; it just occasionally drops a request.
+Ling 3.0 Tiny has a `partial` on every single task. That does not mean it failed. It means one or more of its five iterations came back with empty or truncated content where a full provider would have answered. The runner counts a `partial` run as scored at whatever the surviving iterations achieved, and the † in the table marks it. The pattern across all seven tasks (95.5 to 100, never below) says the model is capable; it just occasionally drops a request.
 
 ## The standouts
 
-### Ling 3.0 Tiny — the surprise
+### Ling 3.0 Tiny: the surprise
 
 A 3-billion-parameter model from InclusionAI sitting at 99.4 average. Every task is 95 or above, every task is a `partial` because at least one iteration returned empty, and the surviving iterations are uniformly strong. The n-body field at 100, the platformer at 100, the landing page at 100, the equation solver at 100. The crypto hash race at 95.5 is its only task below 99. This is not a model you'd have heard of a year ago. It's one to watch.
 
 > [ArtifactFrame component] Embeds a live model-generated HTML artifact from the site's LLM benchmark (fetched from /lab-data/llm-benchmark/outputs and run in a sandboxed srcdoc iframe). Props: taskId, modelId, optional version/title/caption/height.
 
-### Laguna XS 2.1 — the consistent one
+### Laguna XS 2.1: the consistent one
 
 Zero partials, no fails, a 100 on five of the seven tasks and a 96 on the other two. This is what a stable, well-served free endpoint looks like: every iteration returns a clean response, the rubric fills in, and the model quietly accumulates the second-best average on the board. The single visible weakness is the n-body field at 96 (where the integrator slightly under-resolves the softening term compared to the 100-scoring models), and a 100 on the crypto hash race that was the joint-highest score of any model on that task.
 
-### Gemma 4 26B — the clean 100s
+### Gemma 4 26B: the clean 100s
 
 Six of seven tasks at a clean 100, with a 89.2 on the crypto hash race as the only mark below perfect. The 26B is a sibling of the 31B that was rate-limited into the ground, which makes the contrast sharper: when Google's free pool cooperates, Gemma 4 is genuinely in the conversation with the frontier. If you only have time to try one free model, try this one.
 
-### North Mini Code — the n-body mystery
+### North Mini Code: the n-body mystery
 
 North Mini Code's n-body field scored 10. That's the only mark below 80 on its record; the platformer came in at 100, the landing page at 81, the circuit builder at 100. Looking at the artifact, the model shipped a working simulation but used a one-step Euler integrator with no softening term, and the 200-body cloud collapsed within two seconds. The rubric reads that as "the system is unstable", not "the model didn't try". It's a useful object lesson: an LLM can produce a complete, well-structured, syntactically correct file that still scores a single-digit on the task it claims to solve.
 
 > [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
 
-The rubric weights correctness over completeness. A complete-looking artifact that fails its physics integration scores lower than a partial artifact that gets the physics right. That's the intended shape of the benchmark — "did it work?" matters more than "did it look finished?" — and it is exactly why a model can post a 10 next to a 100 on adjacent tasks.
+The rubric weights correctness over completeness. A complete-looking artifact that fails its physics integration scores lower than a partial artifact that gets the physics right. That's the intended shape of the benchmark: "did it work?" matters more than "did it look finished?". It explains why a model can post a 10 next to a 100 on adjacent tasks.
 
-### Nemotron 3 Nano 30B — the best price-for-quality ratio
+### Nemotron 3 Nano 30B: the best price-for-quality ratio
 
 98.0 average, six tasks at 97 or above, and a parameter count that is small enough to be cheap to serve even on a paid tier. NVIDIA's Nemotron family was the strongest cluster on the board: four of the top six free models are Nemotrons.
 
@@ -152,13 +152,13 @@ The rubric weights correctness over completeness. A complete-looking artifact th
 
 The free-tier table above is sorted by mean across all seven tasks, but the more interesting comparison is per-task. The frontier and the free tier share the top of several boards:
 
-- **n-body field**: Kimi K3 at 100, Nemotron 3 Ultra at 100, Nemotron 3 Nano 30B at 100 — three free models tie Kimi K3.
-- **mini platformer**: Kimi K2.7 at 100, Nemotron 3 Nano Omni at 100, Gemma 4 26B at 100 — free models take two of the three top spots.
-- **crypto hash race**: Laguna XS 2.1 at 100, Nemotron 3 Super at 97.6, Kimi K2.7 at 96.4 — the free models are the top two, and Kimi K3 sits below them at 86.8.
-- **landing page morph**: Nemotron 3 Super at 100, Nemotron 3 Nano 30B at 100, Gemma 4 26B at 100 — free models take the top three.
+- **n-body field**: Kimi K3 at 100, Nemotron 3 Ultra at 100, Nemotron 3 Nano 30B at 100. Three free models tie Kimi K3.
+- **mini platformer**: Kimi K2.7 at 100, Nemotron 3 Nano Omni at 100, Gemma 4 26B at 100. Free models take two of the three top spots.
+- **crypto hash race**: Laguna XS 2.1 at 100, Nemotron 3 Super at 97.6, Kimi K2.7 at 96.4. The free models are the top two, and Kimi K3 sits below them at 86.8.
+- **landing page morph**: Nemotron 3 Super at 100, Nemotron 3 Nano 30B at 100, Gemma 4 26B at 100. Free models take the top three.
 - **equation solver**: a four-way tie at 100 between Kimi K2.7, Gemini 3.5 Flash, Codex GPT-5.5 and three free models.
-- **physics pendulum wave**: Kimi K2.7 at 100, Kimi K3 at 100, Nemotron 3 Super at 100 — free models tied at the top.
-- **circuit builder teaser**: Kimi K3 at 100, Nemotron 3 Ultra at 100, Nemotron 3 Nano 30B at 100 — free models tie Kimi K3.
+- **physics pendulum wave**: Kimi K2.7 at 100, Kimi K3 at 100, Nemotron 3 Super at 100. Free models tied at the top.
+- **circuit builder teaser**: Kimi K3 at 100, Nemotron 3 Ultra at 100, Nemotron 3 Nano 30B at 100. Free models tie Kimi K3.
 
 Across seven tasks, free models occupy two or more of the top-three slots on five of them, and they share the top spot with the frontier on the other two. The gap is not what the marketing would have you believe.
 
@@ -176,10 +176,10 @@ The [models index](/lab/llm-benchmark/models/) now groups the free tier as a cat
 
 A few honest conclusions, hedged appropriately for a 7-task, 5-iteration sample:
 
-- **The free tier is genuinely good on this benchmark.** Three free models beat Claude 4 on the board. The top six free models all average above 96; the top five frontier models span 83 to 93. The variance between free models is also much narrower — the spread from rank 1 to rank 6 is 2.5 points, versus the frontier's 9.5.
+- **The free tier is genuinely good on this benchmark.** Three free models beat Claude 4 on the board. The top six free models all average above 96; the top five frontier models span 83 to 93. The variance between free models is also much narrower. The spread from rank 1 to rank 6 is 2.5 points, versus the frontier's 9.5.
 - **The score is part capability, part upstream weather.** Gemma 4 31B's 41.1 is the wrong number for the model; the 100s and 88 it posted on the tasks it did get to run are the right number. Re-runs on quiet days will move almost every free-tier score.
 - **The free tier is a different serving shape.** Models flicker, hang, return empty bodies, and 429 in ways the paid frontier rarely does. The harness has the circuit breaker and the merge guard, but the rate-limits are real. If you're going to build on these models in production, expect to retry.
-- **The harness earned its keep again.** The streaming runner, the `partial` accounting, the rate-limit classification, and the merge guard are all extensions of the same lessons the K3 sweep taught — and they made this sweep cheap and fast. The full pre-build now publishes 133 output JSON files and 90 standalone HTML artifacts under `public/lab-data/llm-benchmark/outputs/`, one for every result in `results.json`, so every model on every task is one click away from its raw output.
+- **The harness earned its keep again.** The streaming runner, the `partial` accounting, the rate-limit classification, and the merge guard are all extensions of the same lessons the K3 sweep taught, and they made this sweep cheap and fast. The full pre-build now publishes 133 output JSON files and 90 standalone HTML artifacts under `public/lab-data/llm-benchmark/outputs/`, one for every result in `results.json`, so every model on every task is one click away from its raw output.
 
 Next up: re-running Gemma 4 31B against a less-loaded window to get a fair read on the model itself, and a follow-up sweep of the free tier with the quota-circuit-breaker configured at the iteration level rather than the task level, so a transient 429 doesn't skip an entire task's worth of attempts. Watch this space.
 
@@ -187,5 +187,5 @@ Next up: re-running Gemma 4 31B against a less-loaded window to get a fair read 
 
 - [Our LLM benchmark](/lab/llm-benchmark/). The live version of everything in this post: all seven tasks, every model's artifacts, the side-by-side source comparisons, and the metadata tables on each model page.
 - [We pointed our own benchmark at Kimi K3 on launch week](/blog/benchmarking-kimi-k3/). The frontier counterpart to this post: same harness, same prompts, paid models. Useful for the side-by-side table.
-- [OpenRouter free models](https://openrouter.ai/models?max_price=0). The current free tier — useful as a freshness check, because the list rotates as providers come and go.
+- [OpenRouter free models](https://openrouter.ai/models?max_price=0). The current free tier is useful as a freshness check because the list rotates as providers come and go.
 - [How Kimi K3 works](/blog/how-kimi-k3-works/). The architecture post for the frontier leader on this benchmark: 2.8T parameters, 16 experts awake, Kimi Delta Attention.

@@ -87,7 +87,7 @@ export default function AboutPage() {
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
       <header className={`${styles.hero} ${styles.aboutHero}`}>
         <div className={styles.aboutCopy}>
-          <h1 className={styles.title}>Ben<br />Ebsworth</h1>
+          <h1 className={styles.title}>Ben Ebsworth</h1>
           <p className={styles.role}>Software, platform &amp; hardware engineer · AI-native · Melbourne, Australia</p>
           <p className={styles.profileMeta}>10+ years building</p>
           <nav aria-label="About sections" className={styles.jumpLinks}>
@@ -101,8 +101,8 @@ export default function AboutPage() {
         <div className={styles.portrait}>
           <HalftoneHero accent="var(--fg)" variant="profile" />
         </div>
+        <p className={styles.profileBio}>{about.bio}</p>
       </header>
-      <p className={styles.profileBio}>{about.bio}</p>
       <section id="resume" className={styles.section}>
         <SectionHeading>Career</SectionHeading>
         <TimelineGroups kind="work" />
@@ -133,7 +133,7 @@ export default function AboutPage() {
       </section>
       <section id="speaking" className={styles.section}>
         <SectionHeading>Talks</SectionHeading>
-        <div className={styles.talks}>
+        <div className={styles.recordings}>
           {recordings.map(({ talk, id }) => <article key={id} className={styles.talk}>
             <YouTube id={id} title={talk.title} accent="var(--profile-action)" />
             <div className={styles.talkCaption}>
@@ -141,6 +141,8 @@ export default function AboutPage() {
               <div><h3>{talk.title}</h3><p className={styles.talkDate}>{talk.date} · Recording</p><p className={styles.talkDescription}>{talk.description}</p></div>
             </div>
           </article>)}
+        </div>
+        <div className={styles.talkLinks}>
           {otherTalks.map(talk => <a href={talk.url || '#'} key={`${talk.title}-${talk.date}-${talk.url}`} target="_blank" rel="noreferrer" className={`${styles.talk} ${styles.talkLink}`}>
             <div className={styles.talkCaption}>
               <img src={talk.image} alt={`${talk.title} logo`} width={40} height={40} loading="lazy" />

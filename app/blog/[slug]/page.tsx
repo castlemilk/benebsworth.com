@@ -1,3 +1,4 @@
+import { HikeCover } from '@/components/hiking/hike-cover'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -162,13 +163,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 backgroundColor: `color-mix(in srgb, ${relatedHike.accent || topic.accent} 7%, transparent)`,
               }}
             >
-              <span className="flex items-center gap-3">
-                <span className="text-lg" aria-hidden>⛰</span>
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="w-24 shrink-0 sm:w-32"><HikeCover hike={relatedHike} compact /></div>
                 <span>
-                  <span className="block font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted">Part of Hiking · route overview</span>
+                  <span className="block font-sans text-xs text-muted">Hiking · route overview</span>
                   <span className="block font-display text-sm font-semibold text-fg">{relatedHike.name} — map, stats & gallery</span>
                 </span>
-              </span>
+              </div>
               <span className="shrink-0 font-mono text-sm transition-transform group-hover:translate-x-0.5" style={{ color: relatedHike.accent || topic.accent }}>→</span>
             </Link>
           )}

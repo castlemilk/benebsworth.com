@@ -3,7 +3,7 @@
 import { useId, useMemo, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
 import type { Hike, HikeWaypoint } from '@/lib/gen/content'
-import { VB_W, VB_H, project, smoothPath, buildProfile, peakIndex, stageAnchor } from './journey-core'
+import { VB_W, VB_H, project, smoothPath, buildProfile, peakIndex } from './journey-core'
 
 /**
  * Bespoke stylized "journey map" for a hike — a hand-drawn topographic plate, not
@@ -18,7 +18,7 @@ import { VB_W, VB_H, project, smoothPath, buildProfile, peakIndex, stageAnchor }
  * phone). A pinned popover (works on touch, no cursor tracking) gives the day,
  * altitude and note, and — when a published trail guide exists — a "Day N →"
  * drilldown link into that day's stage. Selecting a waypoint also drives the
- * gallery on the hike page. An honest elevation strip mirrors the same selection.
+ * gallery on the hike page. A schematic elevation strip mirrors the same selection.
  *
  * The route draw-in animation is gated behind the global prefers-reduced-motion.
  */
@@ -99,6 +99,7 @@ export function JourneyMap({
 
   return (
     <figure className="not-prose m-0" style={{ '--accent': accent } as CSSProperties}>
+      <figcaption className="mb-3 max-w-prose text-sm leading-6 text-muted"><strong className="font-medium text-fg">Schematic itinerary.</strong> Route shape and elevation spacing are illustrative, not geographic. Not for navigation.</figcaption>
       {/* ── the map plate ───────────────────────────────────────────── */}
       <div className="relative w-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[radial-gradient(120%_120%_at_30%_0%,color-mix(in_srgb,var(--accent)_10%,var(--color-stage)),var(--color-stage))]">
         <div
@@ -132,11 +133,6 @@ export function JourneyMap({
             {/* grid backdrop, vignetted */}
             <rect width={VB_W} height={VB_H} fill={`url(#grid-${uid})`} mask={`url(#fade-${uid})`} />
             <rect width={VB_W} height={VB_H} fill={`url(#shade-${uid})`} />
-
-            {/* stylized contour rings around the high point */}
-            {[3.4, 6.2, 9.4, 13].map((r, i) => (
-              <ellipse key={`hi${r}`} cx={pts[peakIdx].x} cy={pts[peakIdx].y} rx={r} ry={r * 0.6} fill="none" stroke="color-mix(in srgb, var(--accent) 24%, transparent)" strokeWidth={0.18} opacity={1 - i * 0.16} />
-            ))}
 
             {/* route — soft halo then crisp animated line */}
             <path d={route} fill="none" stroke="var(--accent)" strokeWidth={2.4} strokeLinecap="round" opacity={0.18} style={{ filter: 'blur(1.2px)' }} />
@@ -231,7 +227,7 @@ export function JourneyMap({
           )}
         </div>
 
-        {/* ── elevation profile strip (honest + interactive) ──────────── */}
+        {/* ── schematic elevation profile strip ─────────────────────── */}
         {showElevation && (
           <div className="relative border-t border-[var(--color-border)] bg-bg/30 px-1 pt-1">
             <svg viewBox="0 0 100 20" className="block h-14 w-full" preserveAspectRatio="none" aria-hidden focusable="false">

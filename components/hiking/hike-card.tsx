@@ -1,57 +1,22 @@
 import Link from 'next/link'
 import type { Hike } from '@/lib/gen/content'
 import type { CSSProperties } from 'react'
-import { project, smoothPath } from './journey-core'
+import { HikeCover } from './hike-cover'
 
-/**
- * Index card for a hike. Until a cover photo (hike.hero) is set it shows a
- * stylized mountain-range placeholder tinted with the hike's accent, so the
- * grid looks intentional before any images exist. A faint route trace of the
- * hike's own waypoints rides over the cover, so each card telegraphs the shape
- * of the trek at a glance (crisp accent on hover).
- */
+/** Legacy card consumer shares the verified image family with the live folio. */
 export function HikeCard({ hike }: { hike: Hike }) {
   const accent = hike.accent || '#5b9e6f'
   const planned = hike.status === 'planned'
-  const route = hike.waypoints.length >= 2 ? smoothPath(hike.waypoints.map(project)) : null
   return (
     <Link
       href={`/hiking/${hike.slug}/`}
       className="group block h-full overflow-hidden rounded-2xl border border-[var(--color-border)] bg-surface transition-colors hover:border-[var(--color-muted)]"
       style={{ '--accent': accent } as CSSProperties}
     >
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
-        {hike.hero ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={hike.hero} alt={hike.name} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-        ) : (
-          <RangePlaceholder accent={accent} />
-        )}
-        {route && (
-          <svg
-            viewBox="0 0 100 74"
-            preserveAspectRatio="xMidYMid meet"
-            className="pointer-events-none absolute inset-0 h-full w-full opacity-55 transition-opacity duration-500 group-hover:opacity-90"
-            aria-hidden
-          >
-            {/* soft glow so the trace reads on light or dark covers, then the crisp dashed route */}
-            <path d={route} fill="none" stroke={accent} strokeWidth={2.8} strokeLinecap="round" opacity={0.4} style={{ filter: 'blur(1.6px)' }} />
-            <path d={route} fill="none" stroke={accent} strokeWidth={1} strokeLinecap="round" strokeDasharray="1 2.6" />
-          </svg>
-        )}
-        <span
-          className="absolute left-3 top-3 rounded-full px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em]"
-          style={{
-            color: planned ? 'var(--color-muted)' : '#fff',
-            backgroundColor: planned ? 'color-mix(in srgb, var(--color-fg) 8%, transparent)' : `color-mix(in srgb, ${accent} 80%, transparent)`,
-            border: planned ? '1px dashed color-mix(in srgb, var(--color-fg) 25%, transparent)' : 'none',
-          }}
-        >
-          {planned ? 'planned' : hike.year}
-        </span>
-      </div>
+      <HikeCover hike={hike} />
 
       <div className="flex flex-col p-5">
+        <p className="mb-2 font-sans text-xs text-muted">{planned ? 'Planned' : `Completed · ${hike.year}`}</p>
         <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-muted">
           {hike.region} · {hike.country}
         </p>

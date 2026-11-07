@@ -82,6 +82,7 @@ export function renderOgCard({
   iconDataUri,
   tags,
   backgroundUri,
+  backgroundContrast = 'standard',
 }: {
   eyebrow: string
   title: string
@@ -97,6 +98,8 @@ export function renderOgCard({
   /** Optional full-bleed background image (data URI) — replaces the glows/dot-grid
       with the photo + a dark scrim for text legibility. */
   backgroundUri?: string
+  /** Opt-in for detailed hiking photographs: a full-size scrim and light metadata. */
+  backgroundContrast?: 'standard' | 'high'
 }) {
   return new ImageResponse(
     (
@@ -115,11 +118,17 @@ export function renderOgCard({
             {/* full-bleed hike art (pre-cropped to exactly 1200×630) */}
             { }
             <img src={backgroundUri} width={1200} height={630} style={{ position: 'absolute', top: 0, left: 0 }} alt="" />
+            {backgroundContrast === 'high' ? (
+              // Satori does not size an empty absolute layer from inset alone.
+              // Explicit dimensions keep text readable even over white snow.
+              <div style={{ position: 'absolute', top: 0, left: 0, width: OG_SIZE.width, height: OG_SIZE.height, backgroundColor: 'rgba(8,8,11,0.68)' }} />
+            ) : <>
             {/* scrim for text legibility (Satori has no blur, so use stacked gradients):
                 darken the left two-thirds (eyebrow/title/footer-left) + the bottom strip,
                 leaving the right side of the art clear. */}
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(100deg, rgba(8,8,11,0.80) 0%, rgba(8,8,11,0.30) 46%, transparent 78%)' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(8,8,11,0.12) 0%, rgba(8,8,11,0.04) 45%, rgba(8,8,11,0.66) 100%)' }} />
+            </>}
           </>
         ) : (
           <>
@@ -161,7 +170,7 @@ export function renderOgCard({
                   <div key={c} style={{ width: 18, height: 18, borderRadius: 9999, background: c, marginRight: 13 }} />
                 ))}
               </div>
-              <div style={{ display: 'flex', color: '#9a9aa8', fontSize: 27, letterSpacing: 6, marginLeft: 14, textTransform: 'uppercase' }}>
+              <div style={{ display: 'flex', color: backgroundContrast === 'high' ? '#e6e6ec' : '#9a9aa8', fontSize: 27, letterSpacing: 6, marginLeft: 14, textTransform: 'uppercase' }}>
                 {eyebrow}
               </div>
             </div>
@@ -184,7 +193,7 @@ export function renderOgCard({
             </div>
             <div style={{ display: 'flex', width: 128, height: 7, marginTop: 34, borderRadius: 9999, background: accent }} />
             {description ? (
-              <div style={{ display: 'flex', marginTop: 26, fontSize: 30, color: '#c1c1cd', lineHeight: 1.4, maxWidth: 1000 }}>
+              <div style={{ display: 'flex', marginTop: 26, fontSize: 30, color: backgroundContrast === 'high' ? '#e6e6ec' : '#c1c1cd', lineHeight: 1.4, maxWidth: 1000 }}>
                 {truncate(description, 140)}
               </div>
             ) : null}
@@ -216,7 +225,7 @@ export function renderOgCard({
           {/* footer: name + meta */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div style={{ display: 'flex', color: '#e6e6ec', fontSize: 33, fontWeight: 600 }}>Ben Ebsworth</div>
-            <div style={{ display: 'flex', color: accent, fontSize: 27, letterSpacing: 1 }}>{footer}</div>
+            <div style={{ display: 'flex', color: backgroundContrast === 'high' ? '#e6e6ec' : accent, fontSize: 27, letterSpacing: 1 }}>{footer}</div>
           </div>
         </div>
       </div>

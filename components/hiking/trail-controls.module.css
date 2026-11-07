@@ -1,0 +1,43 @@
+/* Gamma-informed primitives scoped to Hiking, never global token replacement. */
+.button,.photoButton,.field,.photoNavigation {
+ --control-bg:var(--trail-control-bg,var(--color-bg));
+ --control-surface:var(--trail-control-surface,var(--color-surface));
+ --control-ink:var(--trail-control-ink,var(--color-fg));
+ --control-border:var(--trail-control-border,var(--color-border));
+ --control-accent:var(--trail-control-accent,var(--trail-accent,var(--color-fg)));
+ --control-on-accent:var(--trail-control-on-accent,var(--color-bg));
+ --control-radius:6px;
+ --control-duration:140ms;
+ --control-ease:cubic-bezier(.25,.1,.25,1);
+}
+.button { display:inline-flex; align-items:center; justify-content:center; gap:.65rem; min-height:46px; padding:.65rem 1rem; border:1px solid transparent; border-radius:var(--control-radius); font:500 .875rem/1.4 var(--font-sans),sans-serif; cursor:pointer; color:var(--control-ink); text-align:center; touch-action:manipulation; transition:background var(--control-duration) var(--control-ease),border-color var(--control-duration) var(--control-ease),transform var(--control-duration) var(--control-ease); }
+.button>span:first-child{min-width:0}.icon {display:inline-flex;flex:none}.icon svg{width:18px;height:18px}
+.primary { background:var(--control-accent); color:var(--control-on-accent); }
+.secondary { background:var(--control-bg);border-color:var(--control-border); }
+.quiet {background:transparent;color:var(--control-accent);}
+.primary:hover:not(:disabled){background:color-mix(in srgb,var(--control-accent) 90%,var(--control-ink));transform:translateY(-1px)}
+.secondary:hover:not(:disabled){background:var(--control-surface);border-color:var(--control-accent)}
+.quiet:hover:not(:disabled){background:var(--control-surface)}
+.button:active:not(:disabled){transform:translateY(1px)}
+.button:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.button:focus-visible,.photoButton:focus-visible,.field select:focus-visible {outline:2px solid var(--control-accent);outline-offset:4px}
+.iconButton{width:46px;min-width:46px;min-height:46px;padding:0}.iconButton svg{pointer-events:none}
+.field {display:grid;gap:.5rem;min-width:0;color:var(--control-ink);font:500 .8125rem/1.4 var(--font-sans),sans-serif}
+.selectFrame{display:block;position:relative}
+.field select{display:block;appearance:none;width:100%;min-width:0;min-height:48px;padding:.7rem 2.6rem .7rem .85rem;border:1px solid var(--control-border);border-radius:var(--control-radius);background:var(--control-bg);color:var(--control-ink);font:400 .9375rem/1.4 var(--font-sans),sans-serif;cursor:pointer;text-overflow:ellipsis;transition:border-color var(--control-duration) var(--control-ease),background var(--control-duration) var(--control-ease)}
+.field select:hover{border-color:var(--control-accent);background:var(--control-surface)}.field select:disabled{opacity:.55;cursor:not-allowed}
+.chevron{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--control-accent)}
+.photoButton{display:block;width:100%;border:0;padding:0;background:transparent;text-align:left;cursor:pointer;border-radius:8px;touch-action:manipulation}
+.photoMedia{display:block;aspect-ratio:4/3;overflow:hidden;border-radius:8px;background:var(--control-surface)}
+.photoMedia img{display:block;width:100%;height:100%;object-fit:cover}
+.photoAction{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:50px;padding:.75rem 1rem;margin-top:.75rem;border-radius:var(--control-radius);background:var(--control-accent);color:var(--control-on-accent);font:500 .9375rem/1.4 var(--font-sans),sans-serif;transition:background var(--control-duration) var(--control-ease),transform var(--control-duration) var(--control-ease)}
+.photoAction svg{flex:none}.photoButton:hover .photoAction{background:color-mix(in srgb,var(--control-accent) 90%,var(--control-ink));transform:translateY(-1px)}.photoButton:active .photoAction{transform:translateY(1px)}
+.photoNavigation{display:inline-flex;align-items:center;border:1px solid color-mix(in srgb,var(--control-ink) 19%,transparent);border-radius:6px;background:color-mix(in srgb,var(--control-bg) 88%,transparent);color:var(--control-ink);overflow:visible}
+.photoNavigation .button{background:transparent;color:inherit;border:0;border-radius:5px;transform:none;min-width:46px;width:46px;min-height:46px;padding:0}.photoNavigation .button+.button{border-left:1px solid color-mix(in srgb,var(--control-ink) 19%,transparent);border-top-left-radius:0;border-bottom-left-radius:0}.photoNavigation .button:first-child{border-top-right-radius:0;border-bottom-right-radius:0}.photoNavigation .button:hover{background:color-mix(in srgb,var(--control-ink) 9%,transparent)}.photoNavigation .button:active{background:color-mix(in srgb,var(--control-ink) 19%,transparent)}
+.photoNavigation .button:focus-visible,.photoExpand:focus-visible{outline:2px solid var(--control-ink);outline-offset:-4px}
+.photoExpand{cursor:pointer;justify-content:center;flex:none;width:48px;min-width:48px;height:48px;touch-action:manipulation;transition:background var(--control-duration) var(--control-ease)}
+.photoExpand:hover{background:color-mix(in srgb,var(--control-bg) 91%,var(--control-ink))}.photoExpand:active{background:color-mix(in srgb,var(--control-bg) 81%,var(--control-ink))}
+.position{min-width:4rem;text-align:center;font:500 .8125rem/1 var(--font-sans),sans-serif;font-variant-numeric:tabular-nums}
+.srOnly{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(prefers-reduced-motion:reduce){.button,.field select,.photoAction,.photoExpand{transition:none!important;transform:none!important}}
+@media(forced-colors:active){.button,.photoAction,.field select,.photoExpand{border:1px solid ButtonText}.photoButton:focus-visible{outline-color:Highlight}}

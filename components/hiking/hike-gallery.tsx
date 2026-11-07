@@ -5,7 +5,7 @@ import type { Hike, Asset } from '@/lib/gen/content'
 import { thumbOf } from '@/lib/admin/storage'
 import { discoverPhotos, hasRecordedLocation, photoPlaces, photoAreas, type PhotoArea, type LocationFilter } from '@/lib/hiking/photo-discovery'
 import styles from './photo-discovery.module.css'
-import { galleryAssignmentNotice } from '@/lib/hiking/gallery-source-review'
+import { galleryAssignmentNotice, galleryForHike } from '@/lib/hiking/gallery-source-review'
 import {photoTrailReasonText,type PhotoTrailConnections} from '@/lib/hiking/photo-trail'
 import { fmtDate } from '@/lib/format'
 import {TrailButton,TrailIconButton,TrailSelect,TrailPhotoNavigation,TrailPhotoPosition,TrailPhotoExpand,TrailPhotoLocation} from './trail-controls'
@@ -14,7 +14,7 @@ import {justifyGalleryRows} from '@/lib/hiking/gallery-layout'
 
 /** Browse only metadata already present in this hike's published manifest.
  * Place labels are editorial assignments, not precise positions on the schematic. */
-export function HikeGallery({ gallery, hike, active, onSelect, loading, error, onRetry, trailConnections, selectedTrailArea, onShowPhotoArea, onClearTrailArea, filterResetKey }: {
+export function HikeGallery({ gallery: publishedGallery, hike, active, onSelect, loading, error, onRetry, trailConnections, selectedTrailArea, onShowPhotoArea, onClearTrailArea, filterResetKey }: {
   gallery: Asset[]
   hike: Hike
   active: string | null
@@ -33,7 +33,8 @@ export function HikeGallery({ gallery, hike, active, onSelect, loading, error, o
   const [unlabelled, setUnlabelled] = useState(false)
   const [areaId, setAreaId] = useState<string | null>(null)
   useEffect(()=>{setLocation('all');setUnlabelled(false);setAreaId(null)},[filterResetKey])
-  const assignmentNotice = galleryAssignmentNotice(hike.slug, gallery)
+  const assignmentNotice = galleryAssignmentNotice(hike.slug, publishedGallery)
+  const gallery = galleryForHike(hike.slug, publishedGallery)
   const places = photoPlaces(gallery, hike)
   const areas = photoAreas(gallery)
   const area = areas.find(item => item.id === areaId)
@@ -51,11 +52,11 @@ export function HikeGallery({ gallery, hike, active, onSelect, loading, error, o
       <h3 data-photo-focus-target ref={headingRef} tabIndex={-1} className={`${styles.title} type-h3`}>Gallery</h3>
       {!loading && !error && <span role="status" aria-live="polite" className={styles.count}>{shown.length} photo{shown.length === 1 ? '' : 's'}{filtered ? ` of ${gallery.length}` : ''}</span>}
     </div>
+    {!loading && !error && assignmentNotice && <aside className={styles.notice} aria-label="Photo source review">{assignmentNotice}</aside>}
     {loading ? <div className={styles.status} role="status">Loading photographs…</div>
       : error ? <div className={styles.status} role="alert"><p>Photographs could not be loaded. Please try again.</p>{onRetry && <TrailButton onClick={onRetry}>Try again</TrailButton>}</div>
-      : gallery.length === 0 ? <p className={styles.status}>{hike.status === 'planned' ? 'This walk is still planned. ' : ''}No gallery photographs are available to display.</p>
+      : gallery.length === 0 ? <p className={styles.status}>{assignmentNotice ? 'No verified photographs are available for this hike yet.' : `${hike.status === 'planned' ? 'This walk is still planned. ' : ''}No gallery photographs are available to display.`}</p>
       : <>
-        {assignmentNotice && <aside className={styles.notice} aria-label="Photo source review">{assignmentNotice}</aside>}
         {selectedTrailArea&&<p className={styles.selectedArea}>{trailArea?`Trail photo area ${trailArea.number}. Locations are approximate.`:'Photographs not linked to this walking reference.'}</p>}
         {!selectedTrailArea&&<p className={styles.intro}>{trailConnections ? 'Browse published place labels or use a photo area on the walking reference. Open a photograph to return to its approximate area; place labels and proximity do not prove a walked stage.' : places.length > 0 ? 'Browse by published place labels or nearby photo areas. Place labels are not exact positions on the schematic route.' : 'These photographs have no published place labels yet. Browse nearby photo areas where location metadata is available; no place names are inferred.'}</p>}
         {(places.length > 0 || active || (recorded > 0 && recorded < gallery.length) || filtered) && <div className={styles.filters}>
@@ -84,7 +85,7 @@ export function HikeGallery({ gallery, hike, active, onSelect, loading, error, o
           </div>
         </fieldset>}
         {shown.length === 0 ? <div className={styles.status}><p>No photographs match these filters{active ? ` for ${active}` : ''}. Try another place or clear the filters.</p></div>
-          : <GalleryResults key={`${hike.slug}:${active}:${unlabelled}:${location}:${areaId}:${selectedTrailArea}`} shown={shown} showPlaceLabels={active === null} hike={assignmentNotice ? {...hike,name:'Published gallery'} : hike} focusFallback={headingRef} trailConnections={trailConnections} onShowPhotoArea={onShowPhotoArea} />}
+          : <GalleryResults key={`${hike.slug}:${active}:${unlabelled}:${location}:${areaId}:${selectedTrailArea}`} shown={shown} showPlaceLabels={active === null} hike={hike} focusFallback={headingRef} trailConnections={trailConnections} onShowPhotoArea={onShowPhotoArea} />}
       </>}
   </section>
 }
@@ -99,18 +100,46 @@ function PhotoAreaButton({area, number, selected, onClick}: {area:PhotoArea;numb
 
 function GalleryResults({shown, hike, focusFallback, showPlaceLabels,trailConnections,onShowPhotoArea}: {shown:Asset[]; hike:Hike; showPlaceLabels:boolean; focusFallback:React.RefObject<HTMLElement|null>;trailConnections?:PhotoTrailConnections|null;onShowPhotoArea?:(id:string)=>void}) {
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const [returnFocus, setReturnFocus] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const width = useContainerWidth(containerRef)
+  const openerUrl = useRef<string | null>(null)
+  const openPhoto = (index: number) => {
+    openerUrl.current = shown[index].url
+    setLightbox(index)
+  }
+  const resolveOpener = useCallback(() => {
+    // Justified rows can remount tiles on resize. Resolve the opening photo,
+    // not the navigated index, and never reach into a replacement filter session.
+    return [...(containerRef.current?.querySelectorAll<HTMLButtonElement>('button[data-gallery-photo-url]') ?? [])]
+      .find(button => button.dataset.galleryPhotoUrl === openerUrl.current)
+  }, [])
+  const [width, measureWidth] = useContainerWidth(containerRef)
+  const restoreGalleryFocus = useCallback(() => {
+    if (!containerRef.current) { focusFallback.current?.focus(); return }
+    // Unlocking the page can restore a scrollbar and regroup rows once more.
+    // Measure that width and focus after React has committed those new tiles.
+    measureWidth()
+    setReturnFocus(true)
+  }, [measureWidth, focusFallback])
+  useLayoutEffect(() => {
+    if (!returnFocus) return
+    setReturnFocus(false)
+    // StrictMode replays the viewer's mount cleanup in development. A viewer
+    // that is still rendered owns focus; only an actual dismissal returns it.
+    if (lightbox !== null && shown[lightbox]) return
+    const target = resolveOpener() ?? focusFallback.current
+    target?.focus()
+  }, [returnFocus, width, lightbox, shown, resolveOpener, focusFallback])
   const rows = width > 0 ? justifyGalleryRows(shown, width, rowHeightFor(width), 12) : null
   return <>
     <div ref={containerRef}>
       {rows ? rows.map((row, ri) => <div key={ri} className="flex" style={{gap:12,marginBottom:12}}>
-        {row.items.map(it => <GalleryTile key={it.asset.url} asset={it.asset} hike={hike} showPlaceLabel={showPlaceLabels} number={shown.indexOf(it.asset) + 1} width={it.width} height={row.height} onOpen={() => setLightbox(shown.indexOf(it.asset))} />)}
+        {row.items.map(it => <GalleryTile key={it.asset.url} asset={it.asset} hike={hike} showPlaceLabel={showPlaceLabels} number={shown.indexOf(it.asset) + 1} width={it.width} height={row.height} onOpen={() => openPhoto(shown.indexOf(it.asset))} />)}
       </div>) : <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {shown.map((photo, i) => <GalleryTile key={photo.url} asset={photo} hike={hike} showPlaceLabel={showPlaceLabels} number={i + 1} onOpen={() => setLightbox(i)} />)}
+        {shown.map((photo, i) => <GalleryTile key={photo.url} asset={photo} hike={hike} showPlaceLabel={showPlaceLabels} number={i + 1} onOpen={() => openPhoto(i)} />)}
       </div>}
     </div>
-    {lightbox !== null && shown[lightbox] && <Lightbox focusFallback={focusFallback} images={shown} index={lightbox} hikeName={hike.name} trailConnections={trailConnections} onShowPhotoArea={onShowPhotoArea} onClose={() => setLightbox(null)} onIndex={index => setLightbox(((index % shown.length) + shown.length) % shown.length)} />}
+    {lightbox !== null && shown[lightbox] && <Lightbox restoreGalleryFocus={restoreGalleryFocus} images={shown} index={lightbox} hikeName={hike.name} trailConnections={trailConnections} onShowPhotoArea={onShowPhotoArea} onClose={() => setLightbox(null)} onIndex={index => setLightbox(((index % shown.length) + shown.length) % shown.length)} />}
   </>
 }
 
@@ -136,6 +165,7 @@ function GalleryTile({
   return (
     <button
       type="button"
+      data-gallery-photo-url={asset.url}
       onClick={onOpen}
       className={`group relative overflow-hidden rounded-sm border border-[var(--color-border)] bg-[var(--color-stage)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] ${sized ? '' : 'aspect-[4/3] w-full'}`}
       style={sized ? { width, height } : undefined}
@@ -165,23 +195,26 @@ function rowHeightFor(w: number) {
 
 function useContainerWidth(ref: React.RefObject<HTMLElement | null>) {
   const [w, setW] = useState(0)
+  const measureWidth = useCallback(() => {
+    if (ref.current) setW(ref.current.clientWidth)
+  }, [ref])
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
-    setW(el.clientWidth)
-    const ro = new ResizeObserver((entries) => {
-      for (const e of entries) setW(e.contentRect.width)
-    })
+    measureWidth()
+    // Use the same box and integer precision for explicit and observed reads.
+    // A fractional contentRect can cross a row boundary after focus returns.
+    const ro = new ResizeObserver(measureWidth)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [ref])
-  return w
+  }, [ref, measureWidth])
+  return [w, measureWidth] as const
 }
 
 // ── lightbox ─────────────────────────────────────────────────────────────
 function Lightbox({
   images,
-  focusFallback,
+  restoreGalleryFocus,
   index,
   hikeName,
   onClose,
@@ -190,7 +223,7 @@ function Lightbox({
   onShowPhotoArea,
 }: {
   images: Asset[]
-  focusFallback: React.RefObject<HTMLElement|null>
+  restoreGalleryFocus: () => void
   index: number
   hikeName: string
   onClose: () => void
@@ -261,18 +294,13 @@ function Lightbox({
   // body scroll lock + focus management (restore focus to the opener on close)
   useEffect(() => {
     const prevOverflow = document.body.style.overflow
-    const opener = document.activeElement as HTMLElement | null
-    const fallback = focusFallback.current
     document.body.style.overflow = 'hidden'
     dialogRef.current?.focus()
     return () => {
       document.body.style.overflow = prevOverflow
-      if (restoreOpener.current) {
-        if (opener?.isConnected) opener.focus()
-        else if (fallback?.isConnected) fallback.focus()
-      }
+      if (restoreOpener.current) restoreGalleryFocus()
     }
-  }, [focusFallback])
+  }, [restoreGalleryFocus])
 
   // preload neighbours
   useEffect(() => {

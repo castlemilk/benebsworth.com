@@ -54,13 +54,19 @@ describe('photo location discovery',()=>{
   fireEvent.keyDown(expand,{key:'Tab'});expect(document.activeElement).toBe(within(dialog).getByRole('button',{name:'Close'}))
  })
 
- it('shows a precise source notice without asserting an unverified trail identity, and clears it for replacement data',()=>{
+ it('withholds known cross-hike copies without deleting source data, and restores corrected photos',()=>{
   const ambiguous={...photo('reviewed'),alt:'',url:`https://storage.googleapis.com/benebsworth-hiking/assets/${reviewedSharedAssetIds[0]}.webp`}
   const view=render(<HikeGallery hike={hikes[0]} gallery={[ambiguous]} active={null} onSelect={()=>{}}/>)
   expect(screen.getByLabelText('Photo source review').textContent).toContain('assignment to Alta Via 1 is unverified')
-  expect(screen.getByRole('button',{name:'Published gallery photo 1 — open'})).toBeTruthy()
+  expect(screen.queryByRole('button',{name:'Published gallery photo 1 — open'})).toBeNull()
+  expect(screen.getByRole('status').textContent).toBe('0 photos')
+  expect(screen.getByText('No verified photographs are available for this hike yet.')).toBeTruthy()
+  expect(document.querySelector('img')).toBeNull()
+  expect(ambiguous.url).toContain(reviewedSharedAssetIds[0])
   view.rerender(<HikeGallery hike={hikes[0]} gallery={[{...ambiguous,url:'/corrected.webp'}]} active={null} onSelect={()=>{}}/>)
   expect(screen.queryByLabelText('Photo source review')).toBeNull()
+  expect(screen.getByRole('status').textContent).toBe('1 photo')
+  expect(document.querySelector('img')?.getAttribute('src')).toBe('/corrected.webp')
  })
  it('filters existing places, unlabelled metadata and coordinates, then clears all filters',()=>{
   render(<View/>);fireEvent.change(screen.getByLabelText('Place'),{target:{value:'place:First place'}})

@@ -2,7 +2,7 @@ import type { Asset } from '@/lib/gen/content'
 
 /** Read-only audit, 2026-11-05: these exact public image URLs were assigned to
  * both Alta Via 1 and Walker's Haute Route. No GPS or capture times are retained
- * here. This flags known source ambiguity; it does not reclassify/delete media.
+ * here. This supports a reversible display filter; it does not reclassify/delete media.
  * A corrected gallery with replacement URLs does not inherit this notice. */
 export const reviewedSharedAssetIds = [
   "1782650244631-img-2675",
@@ -58,8 +58,16 @@ export const reviewedSharedAssetIds = [
   "1782650244681-img-1099"
 ] as const
 const sharedUrls = new Set(reviewedSharedAssetIds.map(id => `https://storage.googleapis.com/benebsworth-hiking/assets/${id}.webp`))
+/** Hide only these reviewed cross-hike copies in Alta Via's public view.
+ * Preserve source manifests, originals, order and all other assignments. A
+ * replacement URL is never withheld based on a reused ID or a guessed location. */
+export function galleryForHike(slug: string, gallery: Asset[]): Asset[] {
+  return slug === 'dolomites-alta-via-1'
+    ? gallery.filter(photo => !sharedUrls.has(photo.url))
+    : gallery
+}
 export function galleryAssignmentNotice(slug: string, gallery: Asset[]) {
   return slug === 'dolomites-alta-via-1' && gallery.some(photo => sharedUrls.has(photo.url))
-    ? 'Source check: this gallery includes photographs also published in the Walker’s Haute Route gallery. Their assignment to Alta Via 1 is unverified. Nearby areas describe photo locations, not the Alta Via route.'
+    ? 'Source check: this gallery includes photographs also published in the Walker’s Haute Route gallery. Their assignment to Alta Via 1 is unverified, so those copies are hidden here pending source review. The originals are unchanged.'
     : null
 }

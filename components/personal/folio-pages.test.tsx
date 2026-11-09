@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import AboutPage, { metadata as aboutMetadata } from '@/app/about/page'
 import HikingPage, { metadata as hikingMetadata } from '@/app/hiking/page'
 import ProjectsPage, { metadata as projectsMetadata } from '@/app/projects/page'
+import ProjectPage, { generateMetadata as projectMetadata } from '@/app/projects/[slug]/page'
 import { about } from '@/content/about'
 import { completedHikes, plannedHikes } from '@/content/hiking'
 import { getAllProjects } from '@/lib/content'
@@ -22,6 +23,7 @@ vi.mock('@/components/site/breadcrumb', () => ({ Breadcrumb: ({ items }: { items
 vi.mock('@/components/about/halftone-hero', () => ({ HalftoneHero: (props: object) => <div data-portrait-props={JSON.stringify(props)} /> }))
 vi.mock('@/components/motion/skill-marquee', () => ({ SkillMarquee: ({ skills, layout }: { skills: Skill[]; layout?: string }) => <div data-skills={JSON.stringify(skills)} data-skill-layout={layout} /> }))
 vi.mock('@/components/media/youtube', () => ({ YouTube: (props: object) => <div data-youtube={JSON.stringify(props)} /> }))
+vi.mock('@/components/mdx/mdx-content', () => ({ MdxContent: ({ source }: { source: string }) => <div data-mdx-source={source} /> }))
 vi.mock('@/components/blog/related-labs', () => ({ RelatedLabs: ({ intro, ...props }: { intro?: React.ReactNode }) => <div data-related-labs={JSON.stringify(props)}><h2>Try it in the lab</h2>{intro}<a href="/lab/">All effects</a></div> }))
 
 function render(Page: () => React.JSX.Element) {
@@ -168,5 +170,46 @@ describe('personal folio page preservation', () => {
     })
     const items = structured(doc).find(item => item['@type'] === 'CollectionPage')?.mainEntity?.itemListElement ?? []
     expect(items.map((item: { url: string }) => item.url)).toEqual(projects.map(project => `${SITE_URL}/projects/${project.slug}/`))
+  })
+
+  it('aligns each project detail with the index and keeps its facts, emblem, source link and return journeys', async () => {
+    const projects = getAllProjects()
+    for (const [i, project] of projects.entries()) {
+      const doc = new DOMParser().parseFromString(renderToStaticMarkup(await ProjectPage({ params: Promise.resolve({ slug: project.slug }) })), 'text/html')
+      expect(doc.querySelectorAll('main#main-content')).toHaveLength(1)
+      expect(doc.querySelectorAll('h1')).toHaveLength(1)
+      expect(text(doc.querySelector('h1'))).toBe(project.title)
+      expect(doc.querySelector('h1 .hand-underline')).not.toBeNull()
+      expect(text(doc.querySelector('header'))).toContain(project.description)
+      expect(doc.querySelector('header img')?.getAttribute('src')).toBe(project.image)
+      expect(doc.querySelector('header img')?.getAttribute('alt')).toBe(`${project.title} emblem`)
+      // The description and technologies precede the emblem in source order, so a phone reads title → copy → plate.
+      expect(doc.querySelector('header')!.innerHTML.indexOf(project.description)).toBeLessThan(doc.querySelector('header')!.innerHTML.indexOf(project.image))
+      const technologies = [...doc.querySelectorAll('header ul[aria-label="Built with"] li')]
+      expect(technologies.map(text)).toEqual(project.technologies.map(tech => tech.text))
+      project.technologies.forEach((tech, j) => expect((technologies[j] as HTMLElement).getAttribute('style')).toContain(tech.color))
+      expect(doc.querySelector('[data-slot="badge"]')).toBeNull()
+      if (project.link?.url) {
+        const source = link(doc, project.link.url)
+        expect(text(source)).toContain('View source')
+        expect(source.getAttribute('target')).toBe('_blank')
+        expect(source.getAttribute('rel')).toContain('noreferrer')
+      }
+      expect(doc.querySelector('[data-mdx-source]')?.getAttribute('data-mdx-source')).toBe(project.body)
+      expect(text(doc.querySelector('nav[aria-label="Breadcrumb"]'))).toContain(project.title)
+      const more = doc.querySelector('nav[aria-label="More projects"]')!
+      const moreLink = (href: string) => [...more.querySelectorAll('a')].find(a => a.getAttribute('href')?.replace(/\/$/, '') === href.replace(/\/$/, ''))!
+      expect(text(moreLink('/projects/'))).toContain('All projects')
+      const other = projects[(i + 1) % projects.length]
+      expect(text(moreLink(`/projects/${other.slug}/`))).toContain(other.title)
+      const metadata = await projectMetadata({ params: Promise.resolve({ slug: project.slug }) })
+      expect(metadata.title).toBe(project.title)
+      expect(metadata.alternates?.canonical).toBe(`/projects/${project.slug}/`)
+      expect(structured(doc).find(item => item['@type'] === 'BreadcrumbList')?.itemListElement).toEqual([
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Projects', item: `${SITE_URL}/projects/` },
+        { '@type': 'ListItem', position: 3, name: project.title, item: `${SITE_URL}/projects/${project.slug}/` },
+      ])
+    }
   })
 })

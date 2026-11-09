@@ -1,157 +1,140 @@
 'use client'
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { Copy, Check, Eye, Download, Sparkles } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Copy, Download } from 'lucide-react'
 import type { VectorItem } from '@/lib/vectors/registry'
 import { cn } from '@/lib/utils'
 
+export type StageBg = 'dark' | 'blueprint' | 'light' | 'checker' | 'tint'
+export type CardScale = 'sm' | 'md' | 'lg'
+export type CopyState = 'idle' | 'copied' | 'failed'
+
+/** The matte the marks sit on. The artwork is luminous on transparency, so the
+ *  default stays dark in both themes; the gallery exposes the alternatives. */
+export const STAGE_CLASSES: Record<StageBg, string> = {
+  dark: 'bg-[#0e0f14] border-white/10',
+  blueprint:
+    'bg-[#0d121f] bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:12px_12px] border-blue-500/20',
+  light: 'bg-white border-black/10',
+  checker:
+    'bg-[#181920] bg-[repeating-conic-gradient(#22232d_0%_25%,#181920_0%_50%)] [background-size:16px_16px] border-white/10',
+  tint: 'bg-[#0f141c] border-white/10',
+}
+
+export const COPY_STATUS: Record<CopyState, string> = {
+  idle: '',
+  copied: 'SVG copied to clipboard',
+  failed: 'Copy failed — download the SVG instead',
+}
+
+/**
+ * Copies the SVG markup itself and reports whether that actually happened.
+ * A missing file or a refused clipboard is a failure, never a path quietly
+ * substituted under a success tick.
+ */
+export async function copySvgSource(svgPath: string): Promise<boolean> {
+  try {
+    const res = await fetch(svgPath)
+    if (!res.ok) return false
+    const text = await res.text()
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    return false
+  }
+}
+
 interface VectorCardProps {
   item: VectorItem
-  previewBg: 'dark' | 'blueprint' | 'light' | 'checker' | 'tint'
-  scaleSize: 'sm' | 'md' | 'lg'
+  previewBg: StageBg
+  scaleSize: CardScale
   onInspect: (item: VectorItem) => void
 }
 
+/**
+ * One mark on a quiet matte. The stage is the card: no shell, badge, aura or
+ * hover lift competes with the artwork. The name and semantic role sit below
+ * as plain text; copy/download appear on hover or focus (always on touch), and
+ * the status line keeps a fixed footprint so a copy never shifts the grid.
+ */
 export function VectorCard({ item, previewBg, scaleSize, onInspect }: VectorCardProps) {
-  const [copied, setCopied] = useState(false)
+  const [copy, setCopy] = useState<CopyState>('idle')
   const [imgError, setImgError] = useState(false)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const timer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+  // A lazy image that already failed before hydration never fires onError again.
+  useEffect(() => {
+    const img = imgRef.current
+    if (img && img.complete && img.naturalWidth === 0) setImgError(true)
+  }, [])
 
-  const handleCopySvg = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    try {
-      const res = await fetch(item.svgPath)
-      if (!res.ok) throw new Error('Failed to fetch SVG')
-      const text = await res.text()
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      // Fallback: copy path
-      await navigator.clipboard.writeText(item.svgPath)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
+  const handleCopy = async () => {
+    const ok = await copySvgSource(item.svgPath)
+    setCopy(ok ? 'copied' : 'failed')
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setCopy('idle'), 2500)
   }
 
-  const handleDownload = (e: React.MouseEvent, ext: 'svg' | 'png') => {
-    e.stopPropagation()
-    const link = document.createElement('a')
-    link.href = ext === 'svg' ? item.svgPath : item.pngPath
-    link.download = `${item.filename_stem}.${ext}`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
-
-  const bgClasses = {
-    dark: 'bg-[#0e0f14] border-white/5',
-    blueprint: 'bg-[#0d121f] bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:12px_12px] border-blue-500/20',
-    light: 'bg-[#ffffff] border-black/10',
-    checker: 'bg-[#181920] bg-[repeating-conic-gradient(#22232d_0%_25%,#181920_0%_50%)] [background-size:16px_16px] border-white/10',
-    tint: 'bg-[#0f141c] border-current/20',
-  }[previewBg]
-
-  const iconSizes = {
-    sm: 'w-16 h-16',
-    md: 'w-24 h-24',
-    lg: 'w-36 h-36',
-  }[scaleSize]
+  const markSize = { sm: 'h-12 w-12 sm:h-14 sm:w-14', md: 'h-20 w-20 sm:h-24 sm:w-24', lg: 'h-28 w-28 sm:h-36 sm:w-36' }[scaleSize]
+  const action =
+    'inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--color-border)] text-muted-foreground transition-colors hover:border-[var(--color-fg)] hover:text-[var(--color-fg)] focus-visible:opacity-100'
 
   return (
-    <div
-      onClick={() => onInspect(item)}
-      className="group relative flex cursor-pointer flex-col justify-between rounded-xl border border-[var(--color-border)]/70 bg-[var(--color-surface)]/80 p-4 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-border)] hover:shadow-xl hover:shadow-[var(--color-surface-2)]/50"
-      style={{
-        // @ts-expect-error custom css variable for dynamic accent
-        '--card-accent': item.accentColor,
-      }}
-    >
-      {/* Top Bar: Role badge & Quick Actions */}
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <span
-          className="inline-flex items-center gap-1 rounded-full border border-white/10 px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-muted-foreground"
-          style={{ color: item.accentColor, borderColor: `${item.accentColor}33` }}
-        >
-          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: item.accentColor }} />
-          {item.semantic_role}
-        </span>
-
-        <div className="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <button
-            type="button"
-            onClick={handleCopySvg}
-            title="Copy SVG Code"
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] text-muted-foreground transition-colors hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]"
-          >
-            {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-          </button>
-          <button
-            type="button"
-            onClick={(e) => handleDownload(e, 'svg')}
-            title="Download SVG"
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] text-muted-foreground transition-colors hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]"
-          >
-            <Download className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Vector Stage */}
-      <div
+    <article className="group/vector flex min-w-0 flex-col" data-vector-card={item.id}>
+      <button
+        type="button"
+        onClick={() => onInspect(item)}
+        aria-label={`Inspect ${item.name}`}
         className={cn(
-          'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border transition-all duration-300',
-          bgClasses,
+          'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-md border transition-colors hover:border-[var(--color-fg)]/50',
+          STAGE_CLASSES[previewBg],
         )}
       >
-        {/* Subtle radial aura */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-15 transition-opacity duration-300 group-hover:opacity-35"
-          style={{
-            background: `radial-gradient(circle at 50% 50%, ${item.accentColor} 0%, transparent 70%)`,
-          }}
-        />
-
-        {/* Vector Image */}
-        <div className={cn('relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105', iconSizes)}>
-          {!imgError ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={item.svgPath}
-              alt={item.name}
-              onError={() => setImgError(true)}
-              className="h-full w-full object-contain drop-shadow-md"
-              loading="lazy"
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center text-center text-xs text-muted-foreground">
-              <Sparkles className="mb-1 h-6 w-6 opacity-40" />
-              <span>Generating...</span>
-            </div>
-          )}
-        </div>
-
-        {/* Quick View Pill on Hover */}
-        <div className="absolute bottom-2 flex translate-y-2 items-center gap-1 rounded-full border border-white/20 bg-black/70 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg backdrop-blur-md transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
-          <Eye className="h-3 w-3" />
-          <span>Inspect Vector</span>
-        </div>
-      </div>
-
-      {/* Item Footer */}
-      <div className="mt-3 flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <h3 className="font-display text-sm font-semibold tracking-tight text-[var(--color-fg)]">
-            {item.name}
-          </h3>
-          <span className="font-mono text-[10px] text-muted-foreground">
-            #{item.grid_index + 1}
+        {imgError ? (
+          <span className={cn('px-3 text-center text-xs', previewBg === 'light' ? 'text-black/60' : 'text-white/60')}>
+            Preview unavailable
           </span>
+        ) : (
+          <img
+            ref={imgRef}
+            src={item.svgPath}
+            alt=""
+            onError={() => setImgError(true)}
+            loading="lazy"
+            className={cn('object-contain', markSize)}
+          />
+        )}
+      </button>
+
+      <div className="mt-2 flex min-w-0 items-start justify-between gap-2">
+        <div className="min-w-0">
+          <h3 className="truncate font-display text-sm font-semibold text-[var(--color-fg)]">{item.name}</h3>
+          <p className="truncate font-mono text-[0.7rem] text-muted-foreground">{item.semantic_role}</p>
         </div>
-        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-          {item.description}
-        </p>
+        <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover/vector:opacity-100 group-focus-within/vector:opacity-100 pointer-coarse:opacity-100">
+          <button type="button" onClick={handleCopy} aria-label={`Copy ${item.name} SVG`} title="Copy SVG" className={action}>
+            {copy === 'copied' ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
+          </button>
+          <a
+            href={item.svgPath}
+            download={`${item.filename_stem}.svg`}
+            aria-label={`Download ${item.name} SVG`}
+            title="Download SVG"
+            className={action}
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        </div>
       </div>
-    </div>
+
+      <p
+        role="status"
+        aria-live="polite"
+        className={cn('mt-1 h-4 truncate text-[0.7rem]', copy === 'failed' ? 'text-[var(--color-fg)]' : 'text-muted-foreground')}
+      >
+        {COPY_STATUS[copy]}
+      </p>
+    </article>
   )
 }

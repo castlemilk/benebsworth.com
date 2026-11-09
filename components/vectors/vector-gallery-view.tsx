@@ -1,12 +1,10 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { Search, SlidersHorizontal, Sparkles, Filter, Layers, Download, Check } from 'lucide-react'
-import type { VectorBatchManifest, VectorCategory, VectorItem } from '@/lib/vectors/registry'
+import { useMemo, useRef, useState } from 'react'
+import type { VectorBatchManifest, VectorItem } from '@/lib/vectors/registry'
 import { VECTOR_CATEGORIES } from '@/lib/vectors/registry'
-import { VectorCard } from '@/components/vectors/vector-card'
+import { VectorCard, type CardScale, type StageBg } from '@/components/vectors/vector-card'
 import { VectorStudioModal } from '@/components/vectors/vector-studio-modal'
-import { Reveal } from '@/components/motion/reveal'
 import { cn } from '@/lib/utils'
 
 interface VectorGalleryViewProps {
@@ -14,239 +12,219 @@ interface VectorGalleryViewProps {
   allVectors: VectorItem[]
 }
 
-type StageBg = 'dark' | 'blueprint' | 'light' | 'checker' | 'tint'
-type CardScale = 'sm' | 'md' | 'lg'
+/** Category and free-text filters intersect; the query matches name, role, description, category and prompt. */
+export function filterVectors(all: VectorItem[], category: string, query: string): VectorItem[] {
+  const q = query.trim().toLowerCase()
+  return all.filter((item) => {
+    if (category !== 'all' && item.categoryKey !== category) return false
+    if (!q) return true
+    return [item.name, item.semantic_role, item.description, item.category, item.generation_prompt].some((field) =>
+      field.toLowerCase().includes(q),
+    )
+  })
+}
 
+const GRID_COLUMNS: Record<CardScale, string> = {
+  sm: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6',
+  md: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
+  lg: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+}
+
+// Compact on phones so six categories wrap into three rows rather than six; counts return from `sm` up.
+const pill =
+  'inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:min-h-11 sm:px-3.5 sm:text-sm'
+const pillOff = 'border-[var(--color-border)] text-muted-foreground hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]'
+const pillOn = 'border-[var(--color-fg)] bg-[var(--color-fg)] text-[var(--color-bg)]'
+
+function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string
+  value: T
+  options: { value: T; label: string }[]
+  onChange: (value: T) => void
+}) {
+  return (
+    <div role="group" aria-label={label} className="flex items-center gap-2">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <div className="flex rounded-md border border-[var(--color-border)] p-0.5">
+        {options.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={option.value === value}
+            onClick={() => onChange(option.value)}
+            className={cn(
+              'min-h-9 rounded px-2.5 text-xs transition-colors',
+              option.value === value
+                ? 'bg-[var(--color-fg)] font-medium text-[var(--color-bg)]'
+                : 'text-muted-foreground hover:text-[var(--color-fg)]',
+            )}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The marks are the subject. Controls are one ruled toolbar — category
+ * toggles, a labelled search, matte and size — with no card shell, sticky
+ * overlay or accent tints competing with the artwork. Filters intersect,
+ * the result count is announced, and the empty state names what was asked
+ * for and offers one honest way back that returns focus to the search field.
+ */
 export function VectorGalleryView({ batches, allVectors }: VectorGalleryViewProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [stageBg, setStageBg] = useState<StageBg>('dark')
   const [cardScale, setCardScale] = useState<CardScale>('md')
   const [inspectingItem, setInspectingItem] = useState<VectorItem | null>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
 
-  // Filter vectors by category and search term
-  const filteredVectors = useMemo(() => {
-    return allVectors.filter((item) => {
-      const matchesCategory =
-        selectedCategory === 'all' || item.categoryKey === selectedCategory
+  const filteredVectors = useMemo(
+    () => filterVectors(allVectors, selectedCategory, searchQuery),
+    [allVectors, selectedCategory, searchQuery],
+  )
+  const activeCategory = VECTOR_CATEGORIES.find((category) => category.key === selectedCategory)
+  const activeBatch = inspectingItem ? batches.find((batch) => batch.id === inspectingItem.batchId) : undefined
+  const trimmedQuery = searchQuery.trim()
 
-      if (!matchesCategory) return false
+  const clearSearch = () => {
+    setSearchQuery('')
+    searchRef.current?.focus()
+  }
+  const resetFilters = () => {
+    setSearchQuery('')
+    setSelectedCategory('all')
+    searchRef.current?.focus()
+  }
 
-      if (!searchQuery.trim()) return true
-
-      const query = searchQuery.toLowerCase()
-      return (
-        item.name.toLowerCase().includes(query) ||
-        item.semantic_role.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query) ||
-        item.generation_prompt.toLowerCase().includes(query)
-      )
-    })
-  }, [allVectors, selectedCategory, searchQuery])
-
-  const activeBatch = useMemo(() => {
-    if (!inspectingItem) return undefined
-    return batches.find((b) => b.id === inspectingItem.batchId)
-  }, [batches, inspectingItem])
-
-  const gridColumnsClass = {
-    sm: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
-    md: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
-    lg: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4',
-  }[cardScale]
+  const scope = (
+    <>
+      {activeCategory && <> in {activeCategory.label}</>}
+      {trimmedQuery && <> matching &ldquo;{trimmedQuery}&rdquo;</>}
+    </>
+  )
 
   return (
     <div className="w-full">
-      {/* Control Bar: Categories, Search, Stage & Size Options */}
-      <div className="sticky top-20 z-30 mb-8 rounded-2xl border border-[var(--color-border)]/80 bg-[var(--color-bg)]/85 p-4 shadow-lg backdrop-blur-md">
-        <div className="flex flex-col gap-4">
-          {/* Top Row: Category Pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setSelectedCategory('all')}
-              className={cn(
-                'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium transition-all duration-200',
-                selectedCategory === 'all'
-                  ? 'border-[var(--color-fg)] bg-[var(--color-fg)] text-[var(--color-bg)] shadow-sm'
-                  : 'border-[var(--color-border)] bg-[var(--color-surface)] text-muted-foreground hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]',
-              )}
-            >
-              <span>◈</span>
-              <span>All Sets</span>
-              <span className="ml-1 rounded-full bg-white/15 px-1.5 py-0.2 font-mono text-[10px]">
-                {allVectors.length}
-              </span>
-            </button>
+      <div className="border-y border-[var(--color-border)] py-4" role="region" aria-label="Gallery controls">
+        <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            aria-pressed={selectedCategory === 'all'}
+            onClick={() => setSelectedCategory('all')}
+            className={cn(pill, selectedCategory === 'all' ? pillOn : pillOff)}
+          >
+            All <span className="hidden font-mono text-xs opacity-70 sm:inline">{allVectors.length}</span>
+          </button>
+          {VECTOR_CATEGORIES.map((category) => {
+            const count = allVectors.filter((item) => item.categoryKey === category.key).length
+            const pressed = selectedCategory === category.key
+            return (
+              <button
+                key={category.key}
+                type="button"
+                aria-pressed={pressed}
+                onClick={() => setSelectedCategory(category.key)}
+                className={cn(pill, pressed ? pillOn : pillOff)}
+              >
+                <span aria-hidden="true" className="font-mono text-xs">{category.glyph}</span>
+                {category.label}
+                <span className="hidden font-mono text-xs opacity-70 sm:inline">{count}</span>
+              </button>
+            )
+          })}
+        </div>
 
-            {VECTOR_CATEGORIES.map((cat) => {
-              const count = allVectors.filter((v) => v.categoryKey === cat.key).length
-              const isSelected = selectedCategory === cat.key
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.key)}
-                  className={cn(
-                    'flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium transition-all duration-200',
-                    isSelected
-                      ? 'shadow-sm font-semibold'
-                      : 'border-[var(--color-border)] bg-[var(--color-surface)] text-muted-foreground hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]',
-                  )}
-                  style={{
-                    borderColor: isSelected ? cat.accent : undefined,
-                    backgroundColor: isSelected ? `${cat.accent}20` : undefined,
-                    color: isSelected ? cat.accent : undefined,
-                  }}
-                >
-                  <span style={{ color: cat.accent }}>{cat.glyph}</span>
-                  <span>{cat.label}</span>
-                  <span className="ml-1 rounded-full bg-white/10 px-1.5 py-0.2 font-mono text-[10px]">
-                    {count}
-                  </span>
-                </button>
-              )
-            })}
+        <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="relative min-w-0 flex-1 basis-64">
+            <label htmlFor="vector-search" className="sr-only">Search vectors</label>
+            <input
+              id="vector-search"
+              ref={searchRef}
+              type="text"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search by name, role or concept"
+              autoComplete="off"
+              className="h-11 w-full rounded-md border border-[var(--color-border)] bg-transparent px-3 pr-16 text-sm text-[var(--color-fg)] placeholder:text-muted-foreground focus:border-[var(--color-fg)] focus:outline-none"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="absolute top-1/2 right-1.5 min-h-8 -translate-y-1/2 rounded px-2 text-xs text-muted-foreground underline underline-offset-4 hover:text-[var(--color-fg)]"
+              >
+                Clear
+              </button>
+            )}
           </div>
-
-          {/* Bottom Row: Search Input + Stage Mode + Grid Scale */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border)]/50 pt-3">
-            {/* Search Bar */}
-            <div className="relative min-w-[240px] flex-1 sm:max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by vector name, semantic role, or concept..."
-                className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)]/60 py-2 pl-9 pr-4 text-xs text-[var(--color-fg)] placeholder:text-muted-foreground focus:border-cyan-400 focus:outline-none"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-muted-foreground hover:text-[var(--color-fg)]"
-                >
-                  clear
-                </button>
-              )}
-            </div>
-
-            {/* Quick Display Switches: Stage Background & Card Scale */}
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Background Selector */}
-              <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[11px] text-muted-foreground">Grid Matte:</span>
-                <div className="flex rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] p-0.5">
-                  {(['dark', 'blueprint', 'light', 'checker'] as StageBg[]).map((bg) => (
-                    <button
-                      key={bg}
-                      type="button"
-                      onClick={() => setStageBg(bg)}
-                      className={cn(
-                        'rounded px-2 py-1 font-mono text-[10px] capitalize transition-colors',
-                        stageBg === bg
-                          ? 'bg-[var(--color-surface)] text-[var(--color-fg)] font-semibold shadow-xs'
-                          : 'text-muted-foreground hover:text-[var(--color-fg)]',
-                      )}
-                    >
-                      {bg}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card Scale Selector */}
-              <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[11px] text-muted-foreground">Density:</span>
-                <div className="flex rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] p-0.5">
-                  {(['sm', 'md', 'lg'] as CardScale[]).map((scale) => (
-                    <button
-                      key={scale}
-                      type="button"
-                      onClick={() => setCardScale(scale)}
-                      className={cn(
-                        'rounded px-2.5 py-1 font-mono text-[10px] uppercase transition-colors',
-                        cardScale === scale
-                          ? 'bg-[var(--color-surface)] text-[var(--color-fg)] font-semibold shadow-xs'
-                          : 'text-muted-foreground hover:text-[var(--color-fg)]',
-                      )}
-                    >
-                      {scale}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <Segmented
+            label="Matte"
+            value={stageBg}
+            onChange={setStageBg}
+            options={[
+              { value: 'dark', label: 'Dark' },
+              { value: 'blueprint', label: 'Blueprint' },
+              { value: 'light', label: 'Light' },
+              { value: 'checker', label: 'Checker' },
+            ]}
+          />
+          <Segmented
+            label="Size"
+            value={cardScale}
+            onChange={setCardScale}
+            options={[
+              { value: 'sm', label: 'S' },
+              { value: 'md', label: 'M' },
+              { value: 'lg', label: 'L' },
+            ]}
+          />
         </div>
       </div>
 
-      {/* Vector Results Counter & Active Category Info */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-2 px-1">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>
-            Showing <strong className="text-[var(--color-fg)]">{filteredVectors.length}</strong> of{' '}
-            {allVectors.length} vector icons
-          </span>
-          {searchQuery && (
-            <span>
-              matching &ldquo;<span className="text-[var(--color-fg)]">{searchQuery}</span>&rdquo;
-            </span>
-          )}
-        </div>
+      <p role="status" aria-live="polite" data-vector-count className="my-5 text-sm text-muted-foreground">
+        Showing <strong className="font-medium text-[var(--color-fg)]">{filteredVectors.length}</strong> of {allVectors.length}{' '}
+        vectors{scope}.
+        {activeCategory && <span className="mt-1 block">{activeCategory.description}</span>}
+      </p>
 
-        {selectedCategory !== 'all' && (
-          <div className="text-xs font-mono text-muted-foreground">
-            {VECTOR_CATEGORIES.find((c) => c.key === selectedCategory)?.description}
-          </div>
-        )}
-      </div>
-
-      {/* Vectors Grid */}
       {filteredVectors.length > 0 ? (
-        <div className={cn('grid gap-4 sm:gap-6', gridColumnsClass)}>
-          {filteredVectors.map((item, idx) => (
-            <Reveal key={item.id} delay={Math.min(idx * 35, 300)}>
-              <VectorCard
-                item={item}
-                previewBg={stageBg}
-                scaleSize={cardScale}
-                onInspect={(v) => setInspectingItem(v)}
-              />
-            </Reveal>
+        <div className={cn('grid gap-x-4 gap-y-6 sm:gap-x-6', GRID_COLUMNS[cardScale])}>
+          {filteredVectors.map((item) => (
+            <VectorCard
+              key={item.id}
+              item={item}
+              previewBg={stageBg}
+              scaleSize={cardScale}
+              onInspect={(vector) => setInspectingItem(vector)}
+            />
           ))}
         </div>
       ) : (
-        /* Empty State */
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--color-border)] p-12 text-center">
-          <Sparkles className="mb-3 h-10 w-10 text-muted-foreground opacity-40" />
-          <h3 className="font-display text-base font-semibold text-[var(--color-fg)]">
-            No vectors match your search
-          </h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Try adjusting your search query or switching to another category.
+        <div className="border-t border-[var(--color-border)] py-10" data-vector-empty>
+          <h3 className="font-display text-lg font-semibold text-[var(--color-fg)]">No vectors match</h3>
+          <p className="mt-1 max-w-prose text-sm text-muted-foreground">
+            Nothing{scope}. Try another word, or clear the search and category.
           </p>
           <button
             type="button"
-            onClick={() => {
-              setSearchQuery('')
-              setSelectedCategory('all')
-            }}
-            className="mt-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-xs font-medium text-[var(--color-fg)] hover:bg-[var(--color-surface-2)]"
+            onClick={resetFilters}
+            className="mt-4 inline-flex min-h-11 items-center rounded-md border border-[var(--color-border)] px-4 text-sm text-[var(--color-fg)] hover:border-[var(--color-fg)]"
           >
-            Reset Filters
+            Clear search and filters
           </button>
         </div>
       )}
 
-      {/* Studio Modal */}
-      <VectorStudioModal
-        item={inspectingItem}
-        batch={activeBatch}
-        onClose={() => setInspectingItem(null)}
-      />
+      <VectorStudioModal item={inspectingItem} batch={activeBatch} onClose={() => setInspectingItem(null)} />
     </div>
   )
 }

@@ -6,6 +6,10 @@ import AboutPage, { metadata as aboutMetadata } from '@/app/about/page'
 import HikingPage, { metadata as hikingMetadata } from '@/app/hiking/page'
 import ProjectsPage, { metadata as projectsMetadata } from '@/app/projects/page'
 import ProjectPage, { generateMetadata as projectMetadata } from '@/app/projects/[slug]/page'
+import UsesPage, { metadata as usesMetadata } from '@/app/uses/page'
+import NowPage, { metadata as nowMetadata } from '@/app/now/page'
+import { USES } from '@/content/uses'
+import { NOW, NOW_UPDATED, NOW_UPDATED_ISO } from '@/content/now'
 import { about } from '@/content/about'
 import { completedHikes, plannedHikes } from '@/content/hiking'
 import { getAllProjects } from '@/lib/content'
@@ -38,6 +42,8 @@ const cases = [
   { name: 'About', route: '/about/', Page: AboutPage, metadata: aboutMetadata },
   { name: 'Hiking', route: '/hiking/', Page: HikingPage, metadata: hikingMetadata },
   { name: 'Projects', route: '/projects/', Page: ProjectsPage, metadata: projectsMetadata },
+  { name: 'Uses', route: '/uses/', Page: UsesPage, metadata: usesMetadata },
+  { name: 'Now', route: '/now/', Page: NowPage, metadata: nowMetadata },
 ]
 
 describe('personal folio page preservation', () => {
@@ -211,5 +217,42 @@ describe('personal folio page preservation', () => {
         { '@type': 'ListItem', position: 3, name: project.title, item: `${SITE_URL}/projects/${project.slug}/` },
       ])
     }
+  })
+
+  it('keeps every Uses group and entry in order, as readable headings and a name → note ledger', () => {
+    const doc = render(UsesPage)
+    const sections = [...doc.querySelectorAll('main section')]
+    expect(sections.map(section => text(section.querySelector('h2')))).toEqual(USES.map(group => group.group))
+    USES.forEach((group, i) => {
+      expect(sections[i].id).toBe(group.id)
+      expect(link(doc, `#${group.id}`)).toBeDefined()
+      const rows = [...sections[i].querySelectorAll('dl > div')]
+      expect(rows.map(row => text(row.querySelector('dt')))).toEqual(group.items.map(item => item.name))
+      expect(rows.map(row => text(row.querySelector('dd')))).toEqual(group.items.map(item => item.note))
+    })
+    expect(USES.flatMap(group => group.items)).toHaveLength(20)
+    expect(text(doc.querySelector('header'))).toContain('colophon of exactly how this site is built and shipped')
+    for (const href of ['https://uses.tech', '/now/', '/projects/']) expect(link(doc, href)).toBeDefined()
+    expect(link(doc, 'https://uses.tech').getAttribute('rel')).toContain('noreferrer')
+    // The clean profile family has no tracked mono labels, entrance motion or invented machine rows.
+    expect(doc.querySelector('.accent-ink, [data-reveal], .type-h1')).toBeNull()
+    expect(doc.querySelectorAll('main h1, main h2')).toHaveLength(1 + USES.length)
+  })
+
+  it('keeps every Now entry, its links and the authored update date', () => {
+    const doc = render(NowPage)
+    const sections = [...doc.querySelectorAll('main section')]
+    expect(sections.map(section => text(section.querySelector('h2')))).toEqual(NOW.map(entry => entry.label))
+    NOW.forEach((entry, i) => {
+      expect(sections[i].id).toBe(entry.id)
+      expect(text(sections[i].querySelector('p'))).toBe(entry.text)
+    })
+    const time = doc.querySelector('header time')!
+    expect(time.getAttribute('dateTime')).toBe(NOW_UPDATED_ISO)
+    expect(text(time)).toBe(NOW_UPDATED)
+    expect(text(doc.querySelector('header'))).toContain(`Updated ${NOW_UPDATED}`)
+    for (const href of ['/lab/', '/lab/circuit-sim/', '/blog/', '/projects/', '/uses/', 'https://nownownow.com/about']) expect(link(doc, href)).toBeDefined()
+    expect(structured(doc)).toContainEqual(expect.objectContaining({ '@type': 'WebPage', dateModified: NOW_UPDATED_ISO }))
+    expect(doc.querySelector('.accent-ink, [data-reveal], .type-h1')).toBeNull()
   })
 })

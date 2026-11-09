@@ -190,13 +190,13 @@ export function GridNav({ latest }: { latest: Latest }) {
   )
 
   return (
-    <main className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 overflow-x-clip p-4 sm:justify-start sm:gap-4 sm:p-6">
+    <section aria-label="Letter-grid navigation" className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 overflow-x-clip p-4 sm:justify-start sm:gap-4 sm:p-6">
       <ThemeToggle className="absolute right-4 top-4" />
       <header className="w-full pt-3 text-center sm:pt-4">
         <h1 className="font-display text-[2.1rem] font-bold leading-none tracking-[-0.03em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>
         <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-muted sm:text-[0.7rem] lg:text-[0.8rem] lg:tracking-[0.38em]">INFRA | SOFTWARE | HARDWARE</p>
       </header>
-      {/* Mobile: the whole title+matrix+shuffle block is centred by the main's
+      {/* Mobile: the whole title+matrix+shuffle block is centred by the section's
           justify-center, so the matrix sits tight under the header and the leftover
           height splits into even margins above the title and below the shuffle.
           Desktop restores justify-start + a flex-1 wrapper that centres the grid in
@@ -349,8 +349,10 @@ export function GridNav({ latest }: { latest: Latest }) {
       </svg>
       </div>
       </div>
-      <button onClick={() => setSeed(Math.floor(Math.random() * 1e9))}
-        className="text-xs uppercase tracking-wider text-muted hover:text-fg">↻ shuffle</button>
-    </main>
+      <button type="button" onClick={() => setSeed(Math.floor(Math.random() * 1e9))}
+        className="inline-flex min-h-11 items-center gap-1.5 px-3 text-xs uppercase tracking-wider text-muted hover:text-fg">
+        <span aria-hidden="true">↻</span> shuffle
+      </button>
+    </section>
   )
 }

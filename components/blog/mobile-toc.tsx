@@ -9,7 +9,9 @@ export function MobileToc() {
   useEffect(() => {
     // Only query within the article to avoid picking up footer/sidebar headings
     const elements = document.querySelectorAll('article h2[id], article h3[id]')
-    const parsed = Array.from(elements).map((el) => ({
+    // Match the desktop TOC when streamed MDX briefly exposes duplicate anchors.
+    const unique = [...new Map(Array.from(elements).map(el => [el.id, el])).values()]
+    const parsed = unique.map((el) => ({
       id: el.id,
       title: el.textContent || '',
       level: el.tagName === 'H2' ? 2 : 3,

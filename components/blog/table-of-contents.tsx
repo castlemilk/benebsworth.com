@@ -51,7 +51,10 @@ export function TableOfContents({
     const candidates = Array.from(
       document.querySelectorAll<HTMLHeadingElement>('article h2[id], article h3[id]'),
     )
-    const items = candidates
+    // Streamed MDX can briefly expose two copies during hydration. Keep one
+    // navigation item per anchor even if discovery runs during that handover.
+    const unique = [...new Map(candidates.map(h => [h.id, h])).values()]
+    const items = unique
       .map((h) => ({ id: h.id, text: h.textContent ?? h.id, level: Number(h.tagName.slice(1)) }))
       .filter((h) => h.text.trim().length > 0)
     setHeadings(items)

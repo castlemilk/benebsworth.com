@@ -1,0 +1,24 @@
+## Three numbers, one growing circle
+
+The lime surface is Raup's shell: a circle, the generating curve, sweeps around the vertical axis and grows as it goes. Three constants fix it, in Raup's 1966 conventions. $W$ is the ratio of distances from the axis for points one revolution apart. $D$ is the inner-edge distance divided by the outer-edge distance. $T$ is how far the circle's centre drops along the axis per unit of its distance from the axis. The cyan line follows the outer edge, the spiral you would measure on a sawn shell. The violet line joins the circle centres, and the amber ring is the aperture. The timeline peels the last whorl back and grows it again.
+
+### Four experiments
+
+1. Start at the defaults, a nautilus-like shell with $W = 3.4$. Each quarter turn grows the spiral by **1.358×**, and the spiral meets every radius at **78.98°**.
+2. Select **Golden spiral**. With $W = 6.85$ the growth per quarter turn reads **1.618×** and the angle drops to **72.97°**. It opens like a cap, nothing like a nautilus.
+3. Select **Evolute ammonite**. At $W = 2$ and $D = 0.4$ the overlap readout shows **0.80**: the whorls still overlap. Push $D$ to 0.5 and they just kiss. At 0.6 the tube separates from itself.
+4. Select **Turret shell**. Translation $T = 3$ stacks the whorls into a spire. Return to the defaults and drag $T$ above 1.3: the verdict flips to disjunct although $W \cdot D$ has not moved.
+
+The outer edge is a logarithmic spiral,
+
+$$
+r(\theta) = r_0\, W^{\theta / 2\pi},
+$$
+
+and a golden spiral is the single case $W = \varphi^4 \approx 6.854$. The third readout uses the full meridional test $\sqrt{1+T^2}\,(W-1)(1+D) < (W+1)(1-D)$, which collapses to Raup's $W \cdot D < 1$ boundary when $T = 0$.
+
+### What the model leaves out
+
+The generating curve is a perfect circle and the three constants never change, so there are no ribs, septa or growth that slows with age. Every setting gets the same final outer-edge size and tall shells shrink to fit, so sizes between presets mean nothing. The default $W$ of 3.4 is above the measured *Nautilus pompilius* mean of about 3.1 (Moseley 3.14, Falbo 3.13), inside the 2.4 to 4.2 spread of individual shells. Overlapping whorls pass through each other, as in Raup's own model.
+
+Read [The nautilus is not a golden spiral](/blog/the-nautilus-is-not-a-golden-spiral/).

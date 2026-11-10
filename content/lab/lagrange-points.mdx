@@ -1,0 +1,24 @@
+## Read the sheet as a rotating-frame landscape
+
+The blue sheet is the effective potential $\Phi$ of two bodies in circular orbit, drawn in the frame that turns with them: both gravitational wells plus the centrifugal term. The white spheres sit in their wells. The violet markers are the five Lagrange points: L1, L2 and L3 are saddles on the line through the bodies, and L4 and L5 are the two hilltops. The amber curve is the zero-velocity contour at the level of L1, the neck between the wells. The cyan path is a massless particle released at rest beside L4 and integrated as the timeline runs.
+
+### Four experiments
+
+1. Press **Reset experiment** for the Earth-Moon default ($\mu \approx 0.01215$). L1 and L2 read 0.1509 and 0.1678 of the Earth-Moon distance from the Moon, and libration reads 1.048 and 3.353 orbits. Over 2 orbits the particle wanders 0.59 units from L4 along the Moon's orbit and comes back: a tadpole, not a fall.
+2. Select **Sun-Jupiter Trojans**. The hilltops are nearly flat, the slow libration period is 12.42 orbits (147 years), and 6 orbits show only half a swing. Raise the release offset to 0.02 and the path becomes a horseshoe that reaches L5.
+3. Select **Pluto-Charon: L4 unstable**. With $27\mu(1-\mu) = 2.62$ the readout switches to an e-folding time of 0.40 orbits, and the particle has left L4 by 1 orbit and falls toward Charon at 1.30 orbits.
+4. Select **Equal masses**. Two matching wells, L1 at the midpoint, and the particle reaches a body at 1.13 orbits.
+
+The sheet is
+
+$$
+\Phi(x,y) = -\frac{1-\mu}{r_1} - \frac{\mu}{r_2} - \tfrac12\left(x^2+y^2\right),
+$$
+
+and $\Phi(\mathrm{L4}) = -\tfrac12\bigl(3-\mu(1-\mu)\bigr)$ is its global maximum.
+
+### What the model leaves out
+
+The Coriolis force is what keeps the particle near the hilltop, and it has no height on the sheet; look for it in the way the cyan path loops rather than rolls. Heights below the saddles use an asinh compression so the wells stay visible, a Plummer softening of 0.01 removes the singularities at the bodies, and the Moon's well is one grid cell wide. The particle is massless and the orbits circular and coplanar. A path ends early where it would leave the plotted square or pass within 0.05 of a body, beyond the integrator's trust.
+
+Read [The stable Lagrange points sit on top of hills](/blog/stable-lagrange-points-sit-on-hilltops/).

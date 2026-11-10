@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useTheme } from 'next-themes'
+import { useTheme } from '@/components/theme/use-theme'
 import { Moon, Sun } from 'lucide-react'
 
 /** Tracks `prefers-reduced-motion: reduce` so we can fall back to an instant flip. */
@@ -78,7 +78,7 @@ export function ThemeToggle({ className = '', variant = 'default' }: { className
       {/* Thumb — fg-colored disc (always high-contrast on the track in either
           theme), carrying the current icon in bg color. Glides on toggle; the
           `theme-thumb` class supplies an !important transition that survives
-          next-themes' transition suppression (see globals.css). */}
+          the theme store's transition suppression (see globals.css). */}
       <span
         className={
           'relative z-10 grid size-[22px] place-items-center rounded-full bg-[var(--color-fg)] ' +

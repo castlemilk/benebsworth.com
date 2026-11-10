@@ -34,6 +34,14 @@ function render(Page: () => React.JSX.Element) {
   return new DOMParser().parseFromString(renderToStaticMarkup(<Page />), 'text/html')
 }
 function text(node: Element | null) { return node?.textContent?.replace(/\s+/g, ' ').trim() ?? '' }
+
+// Expected plain text of each Now entry, kept here so content/now.tsx holds the copy once.
+const NOW_TEXT: Record<string, string> = {
+  work: 'Senior Software Engineer at Atlassian, in the Micros platform team — building and operating the internal platform, developer tooling and orchestration that thousands of Atlassian services deploy and run on, on top of AWS.',
+  building: 'Pouring spare cycles into this site — an interactive lab of parameterised simulations and a from-scratch circuit simulator. Each lab piece is a working model you can drag, tune and share.',
+  learning: 'AI-native engineering — treating LLMs, agents and MCP as core toolchain rather than a bolt-on. Coding agents, retrieval, and evals, pointed at real production work.',
+  writing: 'Long-form essays on the blog — distributed systems, signal processing, and the physics hiding inside everyday things. The lab sketches are usually where a post starts.',
+}
 function jsonAttribute(node: Element | null, name: string) { return JSON.parse(node!.getAttribute(name)!) }
 function structured(doc: Document): { '@type': string; itemListElement?: unknown[]; mainEntity?: { itemListElement: { url: string }[] } }[] { return JSON.parse(doc.querySelector('script[type="application/ld+json"]')!.textContent!) }
 function link(doc: Document, href: string) { return [...doc.querySelectorAll('a')].find(a => a.getAttribute('href')?.replace(/\/$/, '') === href.replace(/\/$/, ''))! }
@@ -190,7 +198,13 @@ describe('personal folio page preservation', () => {
       expect(doc.querySelector('header img')?.getAttribute('src')).toBe(project.image)
       expect(doc.querySelector('header img')?.getAttribute('alt')).toBe(`${project.title} emblem`)
       // The description and technologies precede the emblem in source order, so a phone reads title → copy → plate.
-      expect(doc.querySelector('header')!.innerHTML.indexOf(project.description)).toBeLessThan(doc.querySelector('header')!.innerHTML.indexOf(project.image))
+      const header = doc.querySelector('header')!
+      const plate = header.querySelector('img')!
+      const intro = [...header.querySelectorAll('p')].find(p => text(p) === project.description)
+      expect(intro).toBeDefined()
+      for (const node of [intro!, header.querySelector('ul[aria-label="Built with"]')!]) {
+        expect(node.compareDocumentPosition(plate) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      }
       const technologies = [...doc.querySelectorAll('header ul[aria-label="Built with"] li')]
       expect(technologies.map(text)).toEqual(project.technologies.map(tech => tech.text))
       project.technologies.forEach((tech, j) => expect((technologies[j] as HTMLElement).getAttribute('style')).toContain(tech.color))
@@ -235,7 +249,7 @@ describe('personal folio page preservation', () => {
     for (const href of ['https://uses.tech', '/now/', '/projects/']) expect(link(doc, href)).toBeDefined()
     expect(link(doc, 'https://uses.tech').getAttribute('rel')).toContain('noreferrer')
     // The clean profile family has no tracked mono labels, entrance motion or invented machine rows.
-    expect(doc.querySelector('.accent-ink, [data-reveal], .type-h1')).toBeNull()
+    expect(doc.querySelector('.accent-ink, [style*="translateY"], [style*="opacity:0"], .type-h1')).toBeNull()
     expect(doc.querySelectorAll('main h1, main h2')).toHaveLength(1 + USES.length)
   })
 
@@ -245,7 +259,7 @@ describe('personal folio page preservation', () => {
     expect(sections.map(section => text(section.querySelector('h2')))).toEqual(NOW.map(entry => entry.label))
     NOW.forEach((entry, i) => {
       expect(sections[i].id).toBe(entry.id)
-      expect(text(sections[i].querySelector('p'))).toBe(entry.text)
+      expect(text(sections[i].querySelector('p'))).toBe(NOW_TEXT[entry.id])
     })
     const time = doc.querySelector('header time')!
     expect(time.getAttribute('dateTime')).toBe(NOW_UPDATED_ISO)
@@ -253,6 +267,6 @@ describe('personal folio page preservation', () => {
     expect(text(doc.querySelector('header'))).toContain(`Updated ${NOW_UPDATED}`)
     for (const href of ['/lab/', '/lab/circuit-sim/', '/blog/', '/projects/', '/uses/', 'https://nownownow.com/about']) expect(link(doc, href)).toBeDefined()
     expect(structured(doc)).toContainEqual(expect.objectContaining({ '@type': 'WebPage', dateModified: NOW_UPDATED_ISO }))
-    expect(doc.querySelector('.accent-ink, [data-reveal], .type-h1')).toBeNull()
+    expect(doc.querySelector('.accent-ink, [style*="translateY"], [style*="opacity:0"], .type-h1')).toBeNull()
   })
 })

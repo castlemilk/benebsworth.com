@@ -5,6 +5,7 @@ import { expect, it } from 'vitest'
 import { buildSearch } from '../../scripts/build-search.mjs'
 import { checkStudySearch } from '../../scripts/check-study-search.mjs'
 import { STUDIES } from './model'
+import { ARTWORK } from '../editorial-artwork/registry'
 
 it('builds a real combined Pagefind index alongside articles and resolves every study title/alias', async () => {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'svg-search-test-'))
@@ -13,7 +14,9 @@ it('builds a real combined Pagefind index alongside articles and resolves every 
     const result = await buildSearch(directory)
     expect(result.svgStudies).toBe(STUDIES.length)
     const checked = await checkStudySearch(directory)
-    expect(checked.indexedPages).toBe(STUDIES.length + 1)
+    expect(checked.indexedPages).toBe(STUDIES.length + ARTWORK.length + 1)
+    expect(result.pngArtwork).toBe(ARTWORK.length)
+    expect(checked.artworkDiscovery).toBe('passed')
     expect(checked.titleAndAliasSearch).toBe('passed')
     expect(checked.excludedCaveats).toBe('passed')
   } finally {

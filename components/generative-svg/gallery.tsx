@@ -6,6 +6,7 @@ import { DEFAULT_APPEARANCE, renderStudySvg, type Appearance } from '@/lib/gener
 import { useVectorCopy } from '@/components/vectors/use-vector-copy'
 import styles from './gallery.module.css'
 import { StyleLab } from './style-lab'
+import { ArtworkCollection } from '@/components/editorial-artwork/collection'
 import { searchStudies, studyUrl, STUDY_CATEGORIES } from '@/lib/generative-svg/registry'
 
 function Drawing({ study, appearance, values = {} }: { study: Study; appearance: Appearance; values?: Record<string, number> }) {
@@ -103,8 +104,10 @@ export function GenerativeGallery() {
     <div className={styles.gallery}>
       <header className={styles.opening}>
         <h1>Drawing with <em>rules.</em></h1>
-        <p>Curves from equations. Diagrams from relationships. A small collection of SVG studies, with a drawing language you can change.</p>
+        <p>Curves from equations. Diagrams from relationships. A small collection of SVG studies, with a drawing language you can change. Transparent editorial artwork lives alongside them.</p>
       </header>
+
+      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a></nav>
 
       {linkWarning && <p role="status">{linkWarning}</p>}
       <StyleLab appearance={appearance} setAppearance={setAppearance} />
@@ -113,7 +116,7 @@ export function GenerativeGallery() {
         <StudyWorkbench study={selected} appearance={appearance} values={selectedValues} setValues={values => setStudyValues(current => ({ ...current, [selected.id]: values }))} />
       </section>
 
-      <section className={styles.collection} aria-labelledby="collection-title">
+      <section id="svg-studies" className={styles.collection} aria-labelledby="collection-title">
         <div className={styles.collectionHeader}>
           <h2 id="collection-title">The collection</h2>
           <p>{STUDIES.length} working studies. One shared geometry and export framework.</p>
@@ -140,10 +143,11 @@ export function GenerativeGallery() {
           </div>
         )}
       </section>
+      <ArtworkCollection />
       <footer className={styles.notes}>
         <h2>Geometry first. Style second.</h2>
-        <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Each download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
-        <p>The collection preserves all 25 original motifs and can grow through the shared study registry. Original artwork remains preserved separately. Your parameter tuning stays while you browse this page. Sampled curves are approximations; illustrative studies are labelled individually.</p>
+        <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Each SVG download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
+        <p>The collection preserves all 25 original motifs and can grow through the shared study registry. Original SVG artwork remains preserved separately. The editorial PNG masters above are unchanged, with their prompts and provenance available as a separate metadata download. Your parameter tuning stays while you browse this page. Sampled curves are approximations; illustrative studies are labelled individually.</p>
       </footer>
     </div>
   )

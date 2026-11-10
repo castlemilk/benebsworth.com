@@ -3,6 +3,7 @@ import { pathToFileURL } from 'node:url'
 import { createIndex, close } from 'pagefind'
 import { STUDY_REGISTRY } from '../lib/generative-svg/model'
 import { studySearchRecords } from '../lib/generative-svg/registry'
+import { artworkSearchRecords } from '../lib/editorial-artwork/registry'
 
 function check(errors: readonly string[], step: string) {
   if (errors.length) throw new Error(`${step}: ${errors.join('; ')}`)
@@ -17,11 +18,13 @@ export async function buildSearch(site = 'out') {
     const index = created.index
     const html = await index.addDirectory({ path: site })
     check(html.errors, 'Index exported HTML')
-    const records = studySearchRecords(STUDY_REGISTRY)
+    const studies = studySearchRecords(STUDY_REGISTRY)
+    const artwork = artworkSearchRecords()
+    const records = [...studies, ...artwork]
     for (const record of records) check((await index.addCustomRecord(record)).errors, `Index ${record.url}`)
     const written = await index.writeFiles({ outputPath: path.join(site, 'pagefind') })
     check(written.errors, 'Write search index')
-    return { htmlFilesScanned: html.page_count, svgStudies: records.length, outputPath: written.outputPath }
+    return { htmlFilesScanned: html.page_count, svgStudies: studies.length, pngArtwork: artwork.length, outputPath: written.outputPath }
   } finally {
     await close()
   }

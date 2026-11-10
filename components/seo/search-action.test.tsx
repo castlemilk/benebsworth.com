@@ -31,7 +31,7 @@ describe('published SearchAction entry contract', () => {
     window.history.replaceState(null, '', `${url.pathname}${url.search}`)
     render(<SiteSearch />)
     expect(screen.getByRole('dialog', { name: 'Search' })).toBeTruthy()
-    expect((screen.getByRole('textbox', { name: 'Search posts and SVG studies' }) as HTMLInputElement).value).toBe(query)
+    expect((screen.getByRole('textbox', { name: 'Search posts and assets' }) as HTMLInputElement).value).toBe(query)
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalledOnce()
   })
 })

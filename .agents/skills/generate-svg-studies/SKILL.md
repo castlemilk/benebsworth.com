@@ -7,6 +7,10 @@ description: Create or extend mathematical SVG studies for this blog's tunable g
 
 Use the existing geometry-first framework. A new study should become searchable and tunable through registration, without another renderer or a one-off gallery component.
 
+## Keep raster artwork separate
+
+For generated PNG editorial illustrations, use the image generation workflow and `docs/editorial-artwork.md`. Register them in the separate artwork manifest, not as a `Study`. Keep real transparency, original master bytes and prompts; never wrap or trace them into a nominal SVG. The library and site search support both formats with distinct labels.
+
 ## Choose the model before drawing
 
 Recover the current branch, concurrent edits and relevant existing study. Confirm what the requested image represents, then choose `math-derived`, `simulated`, `topology` or `illustrative`. State the equation or graph, domain, units/normalization, sampling or integration method, and exclusions in the definition's `basis`. If the request has an unresolved consequential scientific interpretation, clarify it rather than inventing accuracy.

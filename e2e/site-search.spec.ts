@@ -17,7 +17,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
         const trigger = page.getByRole('button', { name: 'Search the site' })
         await trigger.click()
         const dialog = page.getByRole('dialog', { name: 'Search', exact: true })
-        const input = dialog.getByRole('textbox', { name: 'Search posts and SVG studies' })
+        const input = dialog.getByRole('textbox', { name: 'Search posts and assets' })
         await expect(input).toBeFocused()
         await input.fill('RLC')
         const result = dialog.locator('a[data-active]').first()
@@ -86,7 +86,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
         const archiveUrl = page.url()
         await page.getByRole('button', { name: 'Search the site' }).click()
         const dialog = page.getByRole('dialog', { name: 'Search', exact: true })
-        const input = dialog.getByRole('textbox', { name: 'Search posts and SVG studies' })
+        const input = dialog.getByRole('textbox', { name: 'Search posts and assets' })
         await input.fill('old query')
         await expect(dialog.getByRole('link', { name: 'Old result', exact: false })).toBeVisible()
         // Freeze time so the first Enter is provably inside the 140ms debounce,

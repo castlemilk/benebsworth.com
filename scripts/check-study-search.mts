@@ -3,6 +3,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { STUDY_REGISTRY } from '../lib/generative-svg/model'
 import { studyUrl } from '../lib/generative-svg/registry'
+import { ARTWORK, artworkUrl } from '../lib/editorial-artwork/registry'
 
 /** Exercise the real emitted Pagefind WASM index in Node, not a browser acceptance test. */
 export async function checkStudySearch(site = 'out') {
@@ -35,7 +36,12 @@ export async function checkStudySearch(site = 'out') {
     for (const [query, id] of [['noise', 'qam-constellation'], ['Snell', 'prism-dispersion'], ['elections', 'raft-consensus']]) {
       if ((await urls(query)).includes(`/vectors/?study=${id}`)) throw new Error(`Caveat leaked into search: ${id}`)
     }
-    return { indexedPages: entry.languages.en.page_count, studies: STUDY_REGISTRY.studies.length, titleAndAliasSearch: 'passed', excludedCaveats: 'passed' }
+    for (const asset of ARTWORK) {
+      for (const query of [asset.title, ...asset.aliases, ...asset.tags]) {
+        if (!(await urls(query.replaceAll('-', ' '))).includes(artworkUrl(asset))) throw new Error(`Artwork search failed: ${asset.id} via ${query}`)
+      }
+    }
+    return { artwork: ARTWORK.length, artworkDiscovery: 'passed', indexedPages: entry.languages.en.page_count, studies: STUDY_REGISTRY.studies.length, titleAndAliasSearch: 'passed', excludedCaveats: 'passed' }
   } finally {
     try { await pagefind?.destroy() } finally { globalThis.fetch = originalFetch }
   }

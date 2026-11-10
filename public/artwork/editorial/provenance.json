@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "scope": "Generated raster editorial illustrations, not SVGs or validated scientific diagrams. Original PNG master bytes are preserved.",
+  "assets": [
+    {
+      "id": "memory-layer-stack",
+      "title": "Memory layer stack",
+      "tags": [
+        "memory",
+        "storage",
+        "cache",
+        "hardware"
+      ],
+      "aliases": [
+        "memory hierarchy"
+      ],
+      "alt": "Four separated pale square layers above a tabbed base with one red connector.",
+      "use": "Article opener or thumbnail for memory, storage, cache hierarchy and hardware systems.",
+      "basis": "Architectural metaphor, not an exact chip package or measured memory hierarchy.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/memory-layer-stack-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1174912,
+      "sha256": "32fc31412f7c4ec26e339af8af969f9ad4d7e072b2ce84d637dc7422532b31d6",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical blog's research-folio asset collection, suitable for article openers and gallery thumbnails. This is evocative concept art, never a scientific schematic, measured data visualization or official product.\nArt direction: restrained contemporary technical pen-and-ink field notebook; crisp vector-like silhouette with gently handmade graphite outlines, smooth confident contours and very sparse deliberate crosshatching. Match a family of clean graphite/red sinusoidal, prism and binary-tree sketches. Clear object volume through outline and a few planar boundaries, not realistic shading. The visual should feel considered and bespoke rather than generic clipart.\nPalette: graphite #28343b for main ink, muted vermilion #b32624 for one small focal element, optional warm ivory #f4f1e8 only within physical surfaces. No other colors. Main contours substantial enough to read at thumbnail size; secondary edges lighter but deliberate.\nComposition: square canvas; a single compact centered motif about 68% of the canvas width and height, with comfortable transparent padding on every side. No title or surrounding layout. Clean readable silhouette, limited detail, one consistent perspective.\nBackdrop: genuinely transparent RGBA background. All unmarked space outside the motif has zero alpha. Do not draw a paper rectangle, colored backdrop, simulated checkerboard, glow, haze, vignette, ground plane, drop shadow, grain field or border.\nConstraints: no lettering, words, numbers, symbols, labels, captions, equations, logos, watermarks, badges, interface panels or corner marks. No invented measurement, circuit topology, plotted data or calibration. No decorative stars, extra floating specks, heavy scratchy pencil rendering, glossy 3D or photoreal materials.\nSubject: a compact exploded assembly of four simple square wafer-like memory layers, seen from a stable three-quarter isometric angle, vertically separated by modest even gaps. The lowest layer is a graphite outlined thin base with eight short broad connector tabs visible along the front and side edges, shown as physical details rather than an exact chip package. The three upper layers are plain pale planes with graphite edges. One short vermilion ribbon-like connector bridges the nearest corner of the top two layers; this is the only red element. No traces, circuit routes, tiny component forest, arrow or labels. The stack must feel physically coherent, airy and architectural, not a scientific cutaway.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 963613,
+        "borderMax": 1
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "event-pipeline",
+      "title": "Event pipeline",
+      "tags": [
+        "events",
+        "messaging",
+        "buffering",
+        "distributed-systems"
+      ],
+      "aliases": [
+        "event stream",
+        "message queue"
+      ],
+      "alt": "Five blank upright cards in a shallow channel, with one red leading edge.",
+      "use": "Decorative article opener for event streaming, messaging, batching and distributed-system essays.",
+      "basis": "Editorial metaphor for orderly passage and buffering, not a protocol or topology diagram.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/event-pipeline-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 720940,
+      "sha256": "5688031f9e9dcf47276e68e09c42a51d7f81ee77a4cc293efa1266efe5878ab2",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical blog's research-folio asset collection, suitable for article openers and gallery thumbnails. This is evocative concept art, never a scientific schematic, measured data visualization or official product.\nArt direction: restrained contemporary technical pen-and-ink field notebook; crisp vector-like silhouette with gently handmade graphite outlines, smooth confident contours and very sparse deliberate crosshatching. Match a family of clean graphite/red sinusoidal, prism and binary-tree sketches. Clear object volume through outline and a few planar boundaries, not realistic shading. The visual should feel considered and bespoke rather than generic clipart.\nPalette: graphite #28343b for main ink, muted vermilion #b32624 for one small focal element, optional warm ivory #f4f1e8 only within physical surfaces. No other colors. Main contours substantial enough to read at thumbnail size; secondary edges lighter but deliberate.\nComposition: square canvas; a single compact centered motif about 68% of the canvas width and height, with comfortable transparent padding on every side. No title or surrounding layout. Clean readable silhouette, limited detail, one consistent perspective.\nBackdrop: genuinely transparent RGBA background. All unmarked space outside the motif has zero alpha. Do not draw a paper rectangle, colored backdrop, simulated checkerboard, glow, haze, vignette, ground plane, drop shadow, grain field or border.\nConstraints: no lettering, words, numbers, symbols, labels, captions, equations, logos, watermarks, badges, interface panels or corner marks. No invented measurement, circuit topology, plotted data or calibration. No decorative stars, extra floating specks, heavy scratchy pencil rendering, glossy 3D or photoreal materials.\nSubject: a short gently bending open U-shaped transport channel holding five simple upright thin rectangular event cards in an orderly spaced sequence. Each card is a blank physical tile with no writing and softly chamfered corners. The nearest card has a single narrow vermilion edge, with every other card graphite outlined and sparsely ivory filled. View from three-quarter above so the procession through the channel reads clearly. Make the channel a simple shallow line-built tray, no industrial machine, wheels, conveyor rollers, arrows, topology diagram or chart. The illustration is a metaphor for orderly passage and buffering, not an exact protocol schematic.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 1154460,
+        "borderMax": 0
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "wound-inductor",
+      "title": "Wound inductor",
+      "tags": [
+        "electronics",
+        "resonance",
+        "coil"
+      ],
+      "aliases": [
+        "inductor",
+        "winding"
+      ],
+      "alt": "A graphite coil-like bench specimen with two leads and one red wire section.",
+      "use": "Decorative article opener for electronics, resonators and electromagnetic intuition; not an instructional wiring diagram.",
+      "basis": "Illustrative coil; turns and overlapping wire are not a validated winding construction.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/wound-inductor-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1127605,
+      "sha256": "a5838ba0cc490fdae952e2b374b703fcbb3c168bc6087b647fde9f3d5a42a326",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical blog's research-folio asset collection, suitable for article openers and gallery thumbnails. This is evocative concept art, never a scientific schematic, measured data visualization or official product.\nArt direction: restrained contemporary technical pen-and-ink field notebook; crisp vector-like silhouette with gently handmade graphite outlines, smooth confident contours and very sparse deliberate crosshatching. Match a family of clean graphite/red sinusoidal, prism and binary-tree sketches. Clear object volume through outline and a few planar boundaries, not realistic shading. The visual should feel considered and bespoke rather than generic clipart.\nPalette: graphite #28343b for main ink, muted vermilion #b32624 for one small focal element, optional warm ivory #f4f1e8 only within physical surfaces. No other colors. Main contours substantial enough to read at thumbnail size; secondary edges lighter but deliberate.\nComposition: square canvas; a single compact centered motif about 68% of the canvas width and height, with comfortable transparent padding on every side. No title or surrounding layout. Clean readable silhouette, limited detail, one consistent perspective.\nBackdrop: genuinely transparent RGBA background. All unmarked space outside the motif has zero alpha. Do not draw a paper rectangle, colored backdrop, simulated checkerboard, glow, haze, vignette, ground plane, drop shadow, grain field or border.\nConstraints: no lettering, words, numbers, symbols, labels, captions, equations, logos, watermarks, badges, interface panels or corner marks. No invented measurement, circuit topology, plotted data or calibration. No decorative stars, extra floating specks, heavy scratchy pencil rendering, glossy 3D or photoreal materials.\nSubject: one small freestanding air-core wire coil, a clear six-turn helix around an open center with two short exposed leads, shown in an elegant three-quarter side view. Use substantial graphite outlines for the six broad wire loops, with slight handmade character and very sparse fine hatching only where one loop turns away. One short segment on the frontmost central turn is vermilion, continuous with the graphite wire. No magnet, board, circuit symbols, arrows, field lines, radiation lobes or measurements. It is an illustrative bench specimen, not a dimensioned winding or validated electrical schematic.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 1129216,
+        "borderMax": 1
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "research-folio",
+      "title": "Research folio",
+      "tags": [
+        "research",
+        "notes",
+        "methods",
+        "writing"
+      ],
+      "aliases": [
+        "notebook",
+        "field notes"
+      ],
+      "alt": "An open blank notebook with a pencil and red ribbon.",
+      "use": "Editorial accent for research notes, methods, source collections and essay index; no invented article content.",
+      "basis": "Editorial stationery study. No article content, data or technical annotation is represented.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/research-folio-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1057368,
+      "sha256": "3d1032e7d86c3b342deac174b514e572ef7b4268b84160fc90c1eeb853b5e2d5",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical blog's research-folio asset collection, suitable for article openers and gallery thumbnails. This is evocative concept art, never a scientific schematic, measured data visualization or official product.\nArt direction: restrained contemporary technical pen-and-ink field notebook; crisp vector-like silhouette with gently handmade graphite outlines, smooth confident contours and very sparse deliberate crosshatching. Match a family of clean graphite/red sinusoidal, prism and binary-tree sketches. Clear object volume through outline and a few planar boundaries, not realistic shading. The visual should feel considered and bespoke rather than generic clipart.\nPalette: graphite #28343b for main ink, muted vermilion #b32624 for one small focal element, optional warm ivory #f4f1e8 only within physical surfaces. No other colors. Main contours substantial enough to read at thumbnail size; secondary edges lighter but deliberate.\nComposition: square canvas; a single compact centered motif about 68% of the canvas width and height, with comfortable transparent padding on every side. No title or surrounding layout. Clean readable silhouette, limited detail, one consistent perspective.\nBackdrop: genuinely transparent RGBA background. All unmarked space outside the motif has zero alpha. Do not draw a paper rectangle, colored backdrop, simulated checkerboard, glow, haze, vignette, ground plane, drop shadow, grain field or border.\nConstraints: no lettering, words, numbers, symbols, labels, captions, equations, logos, watermarks, badges, interface panels or corner marks. No invented measurement, circuit topology, plotted data or calibration. No decorative stars, extra floating specks, heavy scratchy pencil rendering, glossy 3D or photoreal materials.\nSubject: one open compact research notebook seen three-quarter from above, with a gentle center fold, a few clean uneven page edges and one small plain vermilion ribbon bookmark emerging from the center toward the viewer. Both visible pages are completely blank with no rules, letters, diagrams or symbols. A short simple graphite mechanical pencil rests diagonally alongside the right page, never across it; show only its clear silhouette and minimal construction seams, no brand. Keep the composition airy and quiet, with restrained graphite contour and at most a few corner hatches. No extra desk props or background.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 835403,
+        "borderMax": 1
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "network-switch",
+      "title": "Network switch",
+      "tags": [
+        "networking",
+        "infrastructure",
+        "distributed-systems",
+        "hardware"
+      ],
+      "aliases": [
+        "packet switch",
+        "network appliance",
+        "ethernet"
+      ],
+      "alt": "A pale four-port network switch with one connected red cable.",
+      "use": "Editorial opener for networking, infrastructure or distributed-system articles.",
+      "basis": "Illustrative network appliance; no claim of an exact commercial device, port specification, wiring or topology.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/network-switch-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1173168,
+      "sha256": "ae93848b816151a427806db89f05acaef9bc5ab7e47bb6df633c232b3254a3cb",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical research-folio blog, to join a coherent set of an exploded memory stack, event-card channel, coil and open notebook. This is evocative editorial concept art, never a precise schematic or an official product render.\nArt direction: refined technical pen-and-ink field notebook. A compact three-quarter object drawing with confident graphite outlines, gently handmade contour, warm ivory physical surfaces and sparse short diagonal hatching. Crisp readable silhouette, purposeful mechanical details, flat restrained form with no photo-real lighting. Design for 160\u2013360px article thumbnails while retaining thoughtful detail in the master.\nPalette: main ink graphite #28343b, surfaces warm ivory #f4f1e8, one small focal accent muted vermilion #b32624. No other colors; avoid neon or saturated orange. Main contours slightly heavier than construction edges. Interior surfaces may be pale ivory, never a surrounding background.\nComposition: square canvas, single centered isolated object occupying about 70% of the width and height with generous real transparent padding. No environmental setting or surrounding graphic layout.\nBackdrop: genuinely transparent RGBA. Every unmarked area outside the object has zero alpha. No paper rectangle, colored backdrop, fake checkerboard, glow, haze, vignette, cast shadow, grain field, frame or ground plane.\nConstraints: no text, letters, numbers, labels, units, scale ticks, equations, logo, watermark, ornamental marks or interface. No fabricated measurements, plotted data, network topology, instructional wiring or branded product details. No extra props beyond the subject. No dense scratchy shading or polished 3D effects.\nSubject: a single small unbranded rectangular network switch appliance, seen from three-quarter above. Four simplified empty port openings line its front, and a few broad ventilation slots appear on one side. One short vermilion cable with a plain graphite plug connects to the nearest port and curls in a modest open hook toward the viewer; the free end is a simple plug, not cut wire. Ports and panels have clean blank surfaces. Keep cable connection visually unambiguous, physically plausible and the dominant red accent. The enclosure remains graphite outlined and ivory filled. No power lights, numerical ports, symbols, extra devices or floating packets.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 1061484,
+        "borderMax": 0
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "storage-disk",
+      "title": "Storage disk",
+      "tags": [
+        "storage",
+        "persistence",
+        "hardware",
+        "data-systems"
+      ],
+      "aliases": [
+        "hard disk",
+        "magnetic storage",
+        "disk drive"
+      ],
+      "alt": "An open pale disk-drive housing with a platter and graphite arm with a red detail.",
+      "use": "Editorial opener for storage, persistence, filesystems and systems-design essays.",
+      "basis": "Illustrative open disk-drive specimen, not a calibrated geometry, engineering cutaway or exact product.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/storage-disk-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1257841,
+      "sha256": "22dc35413da42deaf30936c1f5169da3acb58a340391656b84938d84c25a79d6",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical research-folio blog, to join a coherent set of an exploded memory stack, event-card channel, coil and open notebook. This is evocative editorial concept art, never a precise schematic or an official product render.\nArt direction: refined technical pen-and-ink field notebook. A compact three-quarter object drawing with confident graphite outlines, gently handmade contour, warm ivory physical surfaces and sparse short diagonal hatching. Crisp readable silhouette, purposeful mechanical details, flat restrained form with no photo-real lighting. Design for 160\u2013360px article thumbnails while retaining thoughtful detail in the master.\nPalette: main ink graphite #28343b, surfaces warm ivory #f4f1e8, one small focal accent muted vermilion #b32624. No other colors; avoid neon or saturated orange. Main contours slightly heavier than construction edges. Interior surfaces may be pale ivory, never a surrounding background.\nComposition: square canvas, single centered isolated object occupying about 70% of the width and height with generous real transparent padding. No environmental setting or surrounding graphic layout.\nBackdrop: genuinely transparent RGBA. Every unmarked area outside the object has zero alpha. No paper rectangle, colored backdrop, fake checkerboard, glow, haze, vignette, cast shadow, grain field, frame or ground plane.\nConstraints: no text, letters, numbers, labels, units, scale ticks, equations, logo, watermark, ornamental marks or interface. No fabricated measurements, plotted data, network topology, instructional wiring or branded product details. No extra props beyond the subject. No dense scratchy shading or polished 3D effects.\nSubject: one small unbranded open hard-disk-drive specimen, viewed three-quarter from above. A plain shallow rectangular ivory chassis holds one broad round disk with a small concentric center hub. A single simple graphite actuator arm reaches diagonally from the rear corner over the disk, ending in one short muted vermilion head accent. Use only two or three restrained circular contour lines for the disk; no shiny reflections, textures resembling data tracks, tiny screws forest, electronics board or decorative circuit traces. The arm and disk should read as separate physical parts with a clear layer order. Quiet precise object illustration with a readable silhouette and no removed cover floating nearby.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 1018720,
+        "borderMax": 1
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "optical-lens",
+      "title": "Optical lens",
+      "tags": [
+        "optics",
+        "observation",
+        "physics",
+        "instruments"
+      ],
+      "aliases": [
+        "lens assembly",
+        "focus",
+        "optical instrument"
+      ],
+      "alt": "A graphite-outlined lens housing with pale glass and a red ring detail.",
+      "use": "Editorial opener for optics, observation, scientific instruments and measurement essays.",
+      "basis": "Illustrative lens housing, not a ray diagram, calibrated optical system or named photographic product.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/optical-lens-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1333878,
+      "sha256": "e710bbddea9156dc3050be06dc6c773097ddaced48bb9275bd39ab37ad39a68c",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical research-folio blog, to join a coherent set of an exploded memory stack, event-card channel, coil and open notebook. This is evocative editorial concept art, never a precise schematic or an official product render.\nArt direction: refined technical pen-and-ink field notebook. A compact three-quarter object drawing with confident graphite outlines, gently handmade contour, warm ivory physical surfaces and sparse short diagonal hatching. Crisp readable silhouette, purposeful mechanical details, flat restrained form with no photo-real lighting. Design for 160\u2013360px article thumbnails while retaining thoughtful detail in the master.\nPalette: main ink graphite #28343b, surfaces warm ivory #f4f1e8, one small focal accent muted vermilion #b32624. No other colors; avoid neon or saturated orange. Main contours slightly heavier than construction edges. Interior surfaces may be pale ivory, never a surrounding background.\nComposition: square canvas, single centered isolated object occupying about 70% of the width and height with generous real transparent padding. No environmental setting or surrounding graphic layout.\nBackdrop: genuinely transparent RGBA. Every unmarked area outside the object has zero alpha. No paper rectangle, colored backdrop, fake checkerboard, glow, haze, vignette, cast shadow, grain field, frame or ground plane.\nConstraints: no text, letters, numbers, labels, units, scale ticks, equations, logo, watermark, ornamental marks or interface. No fabricated measurements, plotted data, network topology, instructional wiring or branded product details. No extra props beyond the subject. No dense scratchy shading or polished 3D effects.\nSubject: one compact unbranded optical lens housing resting in no environment, seen from three-quarter front. A clear circular front opening and two or three nested graphite rings define the glass and short cylindrical barrel. The central glass is a very pale ivory surface with just one fine diagonal reflection line, no scene reflected. A single narrow vermilion index notch appears on the upper right rim. The barrel has a few broad blank grip ribs, not dense fine grooves. Keep the object compact and architectural, with balanced ring weights and restrained short hatching on one receding side. No arrows, rays, focal-plane diagram, aperture labels, camera body or measurement marks.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 932176,
+        "borderMax": 1
+      },
+      "masterUnmodified": true
+    },
+    {
+      "id": "precision-caliper",
+      "title": "Precision caliper",
+      "tags": [
+        "measurement",
+        "benchmarks",
+        "engineering",
+        "methods"
+      ],
+      "aliases": [
+        "caliper",
+        "comparison",
+        "precision tool"
+      ],
+      "alt": "An unmarked pale caliper with graphite edges and a red adjustment knob.",
+      "use": "Editorial opener for benchmarking, validation, comparison and engineering-method articles.",
+      "basis": "Decorative measurement-tool metaphor without readable graduations or asserted measurement; not a usable calibrated instrument.",
+      "format": "png",
+      "provenance": "generated-artwork",
+      "src": "/artwork/editorial/precision-caliper-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 676632,
+      "sha256": "893e3621b87d1fb0614a6b7295fe08f1b824476fe5d10052c86621760e19dc0a",
+      "transparent": true,
+      "generatedAt": "2026-11-10",
+      "generator": "OpenAI imagegen",
+      "prompt": "Use case: stylized-concept.\nAsset type: one standalone transparent editorial illustration for a technical research-folio blog, to join a coherent set of an exploded memory stack, event-card channel, coil and open notebook. This is evocative editorial concept art, never a precise schematic or an official product render.\nArt direction: refined technical pen-and-ink field notebook. A compact three-quarter object drawing with confident graphite outlines, gently handmade contour, warm ivory physical surfaces and sparse short diagonal hatching. Crisp readable silhouette, purposeful mechanical details, flat restrained form with no photo-real lighting. Design for 160\u2013360px article thumbnails while retaining thoughtful detail in the master.\nPalette: main ink graphite #28343b, surfaces warm ivory #f4f1e8, one small focal accent muted vermilion #b32624. No other colors; avoid neon or saturated orange. Main contours slightly heavier than construction edges. Interior surfaces may be pale ivory, never a surrounding background.\nComposition: square canvas, single centered isolated object occupying about 70% of the width and height with generous real transparent padding. No environmental setting or surrounding graphic layout.\nBackdrop: genuinely transparent RGBA. Every unmarked area outside the object has zero alpha. No paper rectangle, colored backdrop, fake checkerboard, glow, haze, vignette, cast shadow, grain field, frame or ground plane.\nConstraints: no text, letters, numbers, labels, units, scale ticks, equations, logo, watermark, ornamental marks or interface. No fabricated measurements, plotted data, network topology, instructional wiring or branded product details. No extra props beyond the subject. No dense scratchy shading or polished 3D effects.\nSubject: one recognizable manual precision caliper arranged diagonally from lower left to upper right, with its large measuring jaws open by a modest clear gap. Show one fixed jaw, one sliding jaw, a simple rectangular slider block and long blank straight beam. Use plain surfaces with no ruler graduations or numerals at all. A small muted vermilion thumb wheel is the only color accent. Keep the instrument mechanically legible through clean overlapping planes and clear negative space, not dense details; no digital screen, loose parts, measured object, labels, arrows or shadow. Main jaw contours moderately strong, beam and secondary seams lighter.",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparentPixels": 1284962,
+        "borderMax": 1
+      },
+      "masterUnmodified": true
+    }
+  ]
+}

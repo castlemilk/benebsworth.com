@@ -1,0 +1,20 @@
+[
+  {
+    "name": "technical-deep-dive",
+    "arguments": "--dry-run --kind technical --slug bounded-go-queues \"Explain bounded queues and backpressure in a Go worker pool for backend engineers. No benchmark results are supplied.\"",
+    "expected_kind": "technical",
+    "expected_source": "content/blog/bounded-go-queues/index.mdx"
+  },
+  {
+    "name": "personal-essay",
+    "arguments": "--dry-run --kind personal --slug checking-agent-work --images reuse \"My notes on checking agent work: I inspected exact-commit CI results and asked for screenshots when generated designs differed from the running UI. I have no measured time savings to report.\"",
+    "expected_kind": "personal",
+    "expected_source": "content/blog/checking-agent-work/index.mdx"
+  },
+  {
+    "name": "science-explainer",
+    "arguments": "--dry-run --kind science --slug wave-packet-two-speeds \"Explain why a wave packet can have different phase and group velocities, for a curious engineer comfortable with basic calculus. Use a qualitative illustration, not invented experimental data.\"",
+    "expected_kind": "science",
+    "expected_source": "content/blog/wave-packet-two-speeds/index.mdx"
+  }
+]

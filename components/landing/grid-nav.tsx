@@ -190,7 +190,7 @@ export function GridNav({ latest }: { latest: Latest }) {
   )
 
   return (
-    <section aria-label="Letter-grid navigation" className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 overflow-x-clip p-4 sm:justify-start sm:gap-4 sm:p-6">
+    <section className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 overflow-x-clip p-4 sm:justify-start sm:gap-4 sm:p-6">
       <ThemeToggle className="absolute right-4 top-4" />
       <header className="w-full pt-3 text-center sm:pt-4">
         <h1 className="font-display text-[2.1rem] font-bold leading-none tracking-[-0.03em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>

@@ -187,6 +187,7 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .folio-brief-summary :where(p),.folio-note-content :where(p,li),.folio-method li :where(p){font-family:inherit;font-size:inherit;line-height:inherit}
 
 /* Latest writing is a reading sequence, not an uneven two-column card grid. */
+.latest-writing__lede{max-width:60ch;margin:-.4rem 0 1.5rem;font:1.05rem/1.65 'Folio Serif',Georgia,serif;color:var(--muted);text-wrap:pretty}
 .latest-writing__entries{grid-template-columns:minmax(0,1fr);gap:0}
 .latest-writing .reading-entry{align-items:center;gap:clamp(1.5rem,4vw,3rem);padding:1.8rem 0}
 .latest-writing .reading-entry__body{flex:1;min-width:0;max-width:66ch}

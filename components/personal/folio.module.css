@@ -220,3 +220,50 @@
   .hikeEntry, .projectEntry, .timeline > li { break-inside: avoid; }
   .technologyDetails > ul { display: flex; }
 }
+
+/* Project detail (#130): the index entry opened up. Copy precedes the plate in
+   source so narrow screens read title → description → emblem; the writeup
+   borrows the blog's serif reading prose and the page ends with a way back. */
+.projectHero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.projectCopy { min-width: 0; }
+.projectCopy .intro { margin-top: 1.5rem; }
+.projectHero .technologies { margin-top: 1.5rem; gap: .5rem 1.25rem; }
+.projectHero .technologies li { font-size: .9rem; color: var(--fg); }
+.projectCopy .textLink { margin-top: 1.25rem; font-weight: 500; }
+.projectDetailPlate { min-height: 320px; }
+.projectWriteup { max-width: 44rem; padding-top: 3rem; border-top: 1px solid var(--border); }
+.projectWriteup :global(.prose > h2:first-child) { margin-top: 0; padding-top: 0; border-top: 0; }
+.projectFooterNav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.projectFooterNav .textLink { font-weight: 500; }
+@media (max-width: 650px) {
+  .projectHero { grid-template-columns: 1fr; gap: 2rem; }
+  .projectDetailPlate { min-height: 220px; }
+  .projectWriteup { padding-top: 2rem; }
+  .projectFooterNav { margin-top: 3rem; }
+}
+@media print {
+  .projectFooterNav { display: none; }
+}
+
+/* Uses and Now (#129) join About's clean profile family: `.aboutPage` supplies
+   the type pair and cool neutral surfaces; `.notesPage` tightens the rhythm for
+   short ledger sections. Authored entries are unchanged; only presentation moves. */
+.notesHero { padding-block: 2.5rem 2.5rem; }
+.notesHero .intro { max-width: 60ch; }
+.notesHero .profileMeta { margin-top: 1.25rem; }
+.notesPage .section { padding-block: 2rem 3rem; }
+.notesPage .sectionHead { margin-bottom: 1.25rem; }
+.notesPage .sectionHead h2 { font-size: clamp(1.5rem, 2.4vw, 1.9rem); }
+.notesList { margin: 0; max-width: 72ch; }
+.notesList > div { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: .25rem 2rem; padding-block: .7rem; border-top: 1px solid var(--border); }
+.notesList > div:first-child { border-top: 0; padding-top: 0; }
+.notesList dt { font-weight: 600; line-height: 1.6; }
+.notesList dd { margin: 0; color: var(--muted); line-height: 1.6; }
+.notesBody { max-width: 68ch; font: 400 1.125rem/1.75 var(--font-sans), sans-serif; }
+.notesBody strong { font-weight: 600; }
+.notesFooter { max-width: 68ch; margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .95rem; line-height: 1.7; }
+@media (max-width: 650px) {
+  .notesHero { padding-block: 2rem 2rem; }
+  .notesPage .section { padding-block: 1.75rem 2.5rem; }
+  .notesList > div { grid-template-columns: 1fr; gap: .15rem; }
+}

@@ -65,6 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page('/projects/', { changeFrequency: 'monthly', priority: 0.7 }),
     page('/uses/', { changeFrequency: 'yearly', priority: 0.4 }),
     page('/vectors/', { changeFrequency: 'monthly', priority: 0.6 }),
+    page('/vectors/originals/', { changeFrequency: 'yearly', priority: 0.3 }),
     page('/lab/', { changeFrequency: 'weekly', priority: 0.9 }),
     page('/lab/black-hole-sim/', { changeFrequency: 'monthly', priority: 0.7 }),
     page('/lab/carbon/', { changeFrequency: 'monthly', priority: 0.7 }),

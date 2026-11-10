@@ -107,7 +107,7 @@ export function GenerativeGallery() {
         <p>Curves from equations. Diagrams from relationships. A small collection of SVG studies, with a drawing language you can change. Transparent editorial artwork lives alongside them.</p>
       </header>
 
-      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a></nav>
+      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a><a href="/vectors/originals/">Original vectors</a></nav>
 
       {linkWarning && <p role="status">{linkWarning}</p>}
       <StyleLab appearance={appearance} setAppearance={setAppearance} />

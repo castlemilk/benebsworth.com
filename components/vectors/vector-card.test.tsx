@@ -52,13 +52,14 @@ describe('VectorCard', () => {
     expect(screen.getByRole('status').textContent).toBe('')
   })
 
-  it('reports failure when the file is missing instead of copying a path under a success tick', async () => {
+  it('says the file is missing instead of copying a path or suggesting a download that would 404', async () => {
     stubFetch(false)
     const writeText = stubClipboard(vi.fn(async () => {}))
     render(<VectorCard item={item} previewBg="dark" scaleSize="md" onInspect={() => {}} />)
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: `Copy ${item.name} SVG` })) })
     expect(writeText).not.toHaveBeenCalled()
-    expect(screen.getByRole('status').textContent).toContain('Copy failed — download the SVG instead')
+    expect(screen.getByRole('status').textContent).toBe('SVG file not found')
+    await expect(copySvgSource(item.svgPath)).resolves.toBe('missing')
   })
 
   it('reports failure when the clipboard refuses', async () => {
@@ -66,8 +67,8 @@ describe('VectorCard', () => {
     stubClipboard(vi.fn(async () => { throw new DOMException('denied', 'NotAllowedError') }))
     render(<VectorCard item={item} previewBg="dark" scaleSize="md" onInspect={() => {}} />)
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: `Copy ${item.name} SVG` })) })
-    expect(screen.getByRole('status').textContent).toContain('Copy failed')
-    await expect(copySvgSource(item.svgPath)).resolves.toBe(false)
+    expect(screen.getByRole('status').textContent).toBe('Copy failed — download the SVG instead')
+    await expect(copySvgSource(item.svgPath)).resolves.toBe('failed')
   })
 
   it('tells the truth when a mark cannot be previewed', () => {
@@ -75,5 +76,8 @@ describe('VectorCard', () => {
     fireEvent.error(screen.getByRole('button', { name: `Inspect ${item.name}` }).querySelector('img')!)
     expect(screen.getByText('Preview unavailable')).not.toBeNull()
     expect(screen.queryByText(/generating/i)).toBeNull()
+    // A file that failed to load is not offered for copy or download.
+    expect(screen.queryByRole('button', { name: `Copy ${item.name} SVG` })).toBeNull()
+    expect(screen.queryByRole('link', { name: `Download ${item.name} SVG` })).toBeNull()
   })
 })

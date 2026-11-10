@@ -46,7 +46,9 @@ describe('VectorGalleryView', () => {
     const expected = allVectors.filter((item) => item.categoryKey === category.key).length
     expect(cards()).toHaveLength(expected)
     expect(count()).toContain(`Showing ${expected} of ${allVectors.length} vectors in ${category.label}.`)
-    expect(count()).toContain(category.description)
+    // The description is shown beside the count but not inside the live region.
+    expect(count()).not.toContain(category.description)
+    expect(screen.getByText(category.description).closest('[data-vector-count]')).toBeNull()
     expect(filters.getByRole('button', { name: new RegExp(category.label) }).getAttribute('aria-pressed')).toBe('true')
     expect(filters.getByRole('button', { name: /^All/ }).getAttribute('aria-pressed')).toBe('false')
   })

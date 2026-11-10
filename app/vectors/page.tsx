@@ -78,10 +78,10 @@ export default function VectorsPage() {
 
             <header className="mt-6 mb-10">
               <h1 className="type-h1">Vector Gallery</h1>
-              <p className="mt-4 text-sm text-muted-foreground">
+              <p className="mt-4 text-sm text-muted">
                 {allVectors.length} technical vectors · SVG + PNG · generated with the BrandBrain Flow Engine
               </p>
-              <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted sm:text-lg">
                 A high-precision suite of algorithmic, physical, and systems vector graphics. Engineered with strict
                 optical weight consistency (~2.5px relative), transparent alphas, and multi-scale legibility (24px
                 favicon to 512px hero). Copy raw SVG source or React JSX with one click.
@@ -91,12 +91,12 @@ export default function VectorsPage() {
             <VectorGalleryView batches={batches} allVectors={allVectors} />
 
             <section className="mt-16 border-t border-[var(--color-border)] pt-10" aria-labelledby="pipeline-heading">
-              <p className="text-sm text-muted-foreground">Pipeline architecture</p>
+              <p className="text-sm text-muted">Pipeline architecture</p>
               <h2 id="pipeline-heading" className="mt-1 font-display text-2xl font-semibold text-[var(--color-fg)]">
                 Automated prompt-to-vector synthesis
               </h2>
               <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
-                <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                <p className="max-w-2xl text-base leading-7 text-muted">
                   Each batch is synthesized end-to-end via BrandBrain&apos;s canonical{' '}
                   <code className="rounded bg-[var(--color-surface-2)] px-1.5 py-0.5 font-mono text-sm text-[var(--color-fg)]">icon-set</code>{' '}
                   flow template. The orchestrated pipeline coordinates manifest layout generation, high-density contact
@@ -105,7 +105,7 @@ export default function VectorsPage() {
                 <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-2 self-start text-sm">
                   {PIPELINE_FACTS.map((fact) => (
                     <div key={fact.term} className="contents">
-                      <dt className="text-muted-foreground">{fact.term}</dt>
+                      <dt className="text-muted">{fact.term}</dt>
                       <dd className="font-mono text-xs text-[var(--color-fg)]">{fact.detail}</dd>
                     </div>
                   ))}
@@ -114,9 +114,9 @@ export default function VectorsPage() {
               <ol className="mt-8 grid gap-6 border-t border-[var(--color-border)] pt-6 sm:grid-cols-2 lg:grid-cols-4">
                 {PIPELINE_STEPS.map((step) => (
                   <li key={step.step}>
-                    <p className="font-mono text-xs text-muted-foreground">{step.step}</p>
+                    <p className="font-mono text-xs text-muted">{step.step}</p>
                     <h3 className="mt-1 font-display text-sm font-semibold text-[var(--color-fg)]">{step.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{step.detail}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">{step.detail}</p>
                   </li>
                 ))}
               </ol>

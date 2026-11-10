@@ -50,8 +50,8 @@ export function reactSnippet(name: string, svgSource: string): string {
 
 const segment = (active: boolean) =>
   cn(
-    'min-h-9 rounded px-2.5 text-xs transition-colors',
-    active ? 'bg-[var(--color-fg)] font-medium text-[var(--color-bg)]' : 'text-muted-foreground hover:text-[var(--color-fg)]',
+    'min-h-9 rounded px-2.5 text-xs transition-colors forced-colors:aria-pressed:bg-[color:Highlight] forced-colors:aria-pressed:text-[color:HighlightText]',
+    active ? 'bg-[var(--color-fg)] font-medium text-[var(--color-bg)]' : 'text-muted hover:text-[var(--color-fg)]',
   )
 const quietButton =
   'inline-flex min-h-10 items-center justify-center gap-1.5 rounded-md border border-[var(--color-border)] px-3 text-xs font-medium text-[var(--color-fg)] transition-colors hover:border-[var(--color-fg)] disabled:cursor-not-allowed disabled:opacity-50'
@@ -70,6 +70,9 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
   const [viewTab, setViewTab] = useState<ViewTab>('preview')
   const [source, setSource] = useState<SourceState>({ status: 'loading' })
   const [copy, setCopy] = useState<{ svg: CopyState; jsx: CopyState }>({ svg: 'idle', jsx: 'idle' })
+  // The status line reports the most recent copy, not a fixed priority over both kinds.
+  const [lastCopy, setLastCopy] = useState<'svg' | 'jsx' | null>(null)
+  const [previewError, setPreviewError] = useState(false)
   const timers = useRef<{ svg?: number; jsx?: number }>({})
 
   // Open and close the native dialog with the inspected item, locking page scroll while open.
@@ -92,6 +95,8 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
     setSource({ status: 'loading' })
     setViewTab('preview')
     setCopy({ svg: 'idle', jsx: 'idle' })
+    setLastCopy(null)
+    setPreviewError(false)
     fetch(item.svgPath)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -124,6 +129,7 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
     } catch {
       ok = false
     }
+    setLastCopy(kind)
     setCopy((current) => ({ ...current, [kind]: ok ? 'copied' : 'failed' }))
     window.clearTimeout(timers.current[kind])
     timers.current[kind] = window.setTimeout(() => setCopy((current) => ({ ...current, [kind]: 'idle' })), 2500)
@@ -149,7 +155,7 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
               <h2 id={titleId} className="font-display text-lg font-semibold">
                 {item.name}
               </h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">
+              <p className="mt-0.5 text-xs text-muted">
                 {item.category} · {item.semantic_role} · {item.filename_stem}.svg
               </p>
             </div>
@@ -165,7 +171,7 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
                 type="button"
                 onClick={close}
                 aria-label="Close"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[var(--color-border)] text-muted-foreground hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[var(--color-border)] text-muted hover:border-[var(--color-fg)] hover:text-[var(--color-fg)]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -178,16 +184,20 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
                 <div className="flex w-full max-w-xl flex-col items-center gap-4">
                   <div className={cn('relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-md border', STAGE_CLASSES[stageBg])}>
                     <div className={cn('flex items-center justify-center', SIZE_CLASSES[opticalSize])}>
-                      <img src={item.svgPath} alt={item.description} className="h-full w-full object-contain" />
+                      {previewError ? (
+                        <span className={cn('text-center text-xs', stageBg === 'light' ? 'text-black/70' : 'text-white/70')}>Preview unavailable</span>
+                      ) : (
+                        <img src={item.svgPath} alt={item.description} onError={() => setPreviewError(true)} className="h-full w-full object-contain" />
+                      )}
                     </div>
-                    <p className="absolute right-3 bottom-3 rounded bg-black/60 px-2 py-0.5 font-mono text-[10px] text-white/80">
+                    <p className="absolute right-3 bottom-3 rounded bg-black/60 px-2 py-0.5 font-mono text-[10px] text-white">
                       {opticalSize} × {opticalSize} px
                     </p>
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-between gap-3 text-xs">
                     <div role="group" aria-label="Matte" className="flex items-center gap-2">
-                      <span className="text-muted-foreground">Matte</span>
-                      <div className="flex rounded-md border border-[var(--color-border)] p-0.5">
+                      <span className="text-muted">Matte</span>
+                      <div className="flex flex-wrap rounded-md border border-[var(--color-border)] p-0.5">
                         {(['dark', 'blueprint', 'light', 'checker', 'tint'] as StageBg[]).map((bg) => (
                           <button key={bg} type="button" aria-pressed={stageBg === bg} onClick={() => setStageBg(bg)} className={cn(segment(stageBg === bg), 'capitalize')}>
                             {bg}
@@ -196,8 +206,8 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
                       </div>
                     </div>
                     <div role="group" aria-label="Scale" className="flex items-center gap-2">
-                      <span className="text-muted-foreground">Scale</span>
-                      <div className="flex rounded-md border border-[var(--color-border)] p-0.5">
+                      <span className="text-muted">Scale</span>
+                      <div className="flex flex-wrap rounded-md border border-[var(--color-border)] p-0.5">
                         {(['24', '64', '128', '256', '512'] as OpticalSize[]).map((size) => (
                           <button key={size} type="button" aria-pressed={opticalSize === size} onClick={() => setOpticalSize(size)} className={segment(opticalSize === size)}>
                             {size}px
@@ -212,7 +222,7 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
               {viewTab === 'code' && (
                 <div className="flex w-full flex-col gap-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-xs text-muted-foreground">
+                    <span className="font-mono text-xs text-muted">
                       {source.status === 'ready' ? `SVG source (${source.text.length.toLocaleString('en-AU')} bytes)` : source.status === 'loading' ? 'Loading SVG source…' : 'SVG source unavailable'}
                     </span>
                     <div className="flex items-center gap-2">
@@ -235,12 +245,12 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
               {viewTab === 'prompt' && (
                 <div className="flex w-full flex-col gap-5 text-sm">
                   <div>
-                    <h3 className="text-xs font-medium text-muted-foreground">Generation prompt</h3>
+                    <h3 className="text-xs font-medium text-muted">Generation prompt</h3>
                     <p className="mt-1.5 leading-relaxed">&ldquo;{item.generation_prompt}&rdquo;</p>
                   </div>
                   <div>
-                    <h3 className="text-xs font-medium text-muted-foreground">Batch consistency rules</h3>
-                    <ul className="mt-1.5 list-disc space-y-1.5 pl-5 leading-relaxed text-muted-foreground">
+                    <h3 className="text-xs font-medium text-muted">Batch consistency rules</h3>
+                    <ul className="mt-1.5 list-disc space-y-1.5 pl-5 leading-relaxed text-muted">
                       {BATCH_RULES.map((rule) => <li key={rule}>{rule}</li>)}
                     </ul>
                   </div>
@@ -252,19 +262,19 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
               <div className="flex flex-col gap-5 text-sm">
                 <p className="leading-relaxed">{item.description}</p>
                 <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 border-t border-[var(--color-border)] pt-4 text-xs">
-                  <dt className="text-muted-foreground">Category</dt>
+                  <dt className="text-muted">Category</dt>
                   <dd>{item.category}</dd>
-                  <dt className="text-muted-foreground">Semantic role</dt>
+                  <dt className="text-muted">Semantic role</dt>
                   <dd className="font-mono">{item.semantic_role}</dd>
-                  <dt className="text-muted-foreground">Grid index</dt>
+                  <dt className="text-muted">Grid index</dt>
                   <dd className="font-mono">#{item.grid_index + 1} of {batch?.items.length ?? '—'}</dd>
-                  <dt className="text-muted-foreground">Formats</dt>
+                  <dt className="text-muted">Formats</dt>
                   <dd className="font-mono">SVG · PNG (512px)</dd>
-                  <dt className="text-muted-foreground">Engine</dt>
+                  <dt className="text-muted">Engine</dt>
                   <dd>BrandBrain icon-set flow</dd>
                   {batch?.sessionId && (
                     <>
-                      <dt className="text-muted-foreground">Session</dt>
+                      <dt className="text-muted">Session</dt>
                       <dd className="truncate font-mono" title={batch.sessionId}>{batch.sessionId}</dd>
                     </>
                   )}
@@ -287,15 +297,23 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
                   {source.status === 'failed' ? 'SVG source unavailable' : COPY_LABEL[copy.svg].svg}
                 </button>
                 <div className="flex gap-2">
-                  <a href={item.svgPath} download={`${item.filename_stem}.svg`} className={cn(quietButton, 'flex-1')}>
-                    <Download className="h-3.5 w-3.5" aria-hidden="true" /> Download SVG
-                  </a>
+                  {source.status !== 'failed' && (
+                    <a href={item.svgPath} download={`${item.filename_stem}.svg`} className={cn(quietButton, 'flex-1')}>
+                      <Download className="h-3.5 w-3.5" aria-hidden="true" /> Download SVG
+                    </a>
+                  )}
                   <a href={item.pngPath} download={`${item.filename_stem}.png`} className={cn(quietButton, 'flex-1')}>
                     <Download className="h-3.5 w-3.5" aria-hidden="true" /> Download PNG
                   </a>
                 </div>
-                <p role="status" aria-live="polite" className="h-4 text-xs text-muted-foreground">
-                  {copy.svg === 'failed' || copy.jsx === 'failed' ? 'Copy failed — download the file instead.' : copy.svg === 'copied' ? 'SVG copied to clipboard.' : copy.jsx === 'copied' ? 'React component copied to clipboard.' : ''}
+                <p role="status" aria-live="polite" className="h-4 text-xs text-muted">
+                  {!lastCopy || copy[lastCopy] === 'idle'
+                    ? ''
+                    : copy[lastCopy] === 'failed'
+                      ? 'Copy failed — download the file instead.'
+                      : lastCopy === 'svg'
+                        ? 'SVG copied to clipboard.'
+                        : 'React component copied to clipboard.'}
                 </p>
               </div>
             </div>

@@ -6,7 +6,7 @@ test('published Overland Track winter guide renders and links to the hike overvi
 
   await page.goto('/blog/overland-track-guide/')
 
-  await expect(page.getByRole('heading', { name: 'The Overland Track in winter — a trail guide' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'The Overland Track in winter: a trail guide' })).toBeVisible()
   await expect(page.getByText('The Overland Track is usually a six-day summer walk')).toBeVisible()
   await expect(page.getByText('The shuttle from Launceston was meant to drop us at Ronny Creek')).toBeVisible()
   await expect(page.getByText('Night one, below Barn Bluff. Cold, exposed, and a good place to get dinner sorted early.')).toBeVisible()

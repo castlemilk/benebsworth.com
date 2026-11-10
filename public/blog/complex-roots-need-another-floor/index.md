@@ -1,0 +1,161 @@
+---
+title: Complex roots need another floor
+date: '2026-10-24T00:00:00.000Z'
+description: >-
+  Follow a square root around zero and it changes sign. A two-sheeted 3D
+  workbench makes branch cuts, continuation, and the missing second circuit
+  visible.
+labels: 'maths,complex-analysis,geometry'
+release: true
+heroImage: /blog/complex-roots-need-another-floor/hero.webp
+takeaways:
+  - >-
+    Continuously following a complex square root around zero once changes its
+    sign. Two circuits restore the initial root.
+  - >-
+    A branch cut makes one choice single-valued by preventing loops around the
+    branch point.
+  - >-
+    The two-sheet picture is a projection of a relation in four real dimensions,
+    so apparent crossings can be misleading.
+markdown_url: /blog/complex-roots-need-another-floor/
+canonical_url: 'https://benebsworth.com/blog/complex-roots-need-another-floor/'
+---
+## Key takeaways
+
+- Continuously following a complex square root around zero once changes its sign. Two circuits restore the initial root.
+- A branch cut makes one choice single-valued by preventing loops around the branch point.
+- The two-sheet picture is a projection of a relation in four real dimensions, so apparent crossings can be misleading.
+
+Start with the square root of 1, walk once around zero in the complex plane, and return to 1. If we keep following the same root continuously, the answer is now −1.
+
+No arithmetic failed. The input returned to its starting value, but our choice of root carried a little history with it. A second circuit brings the answer back to +1. The extra floor in the title is a way to remember that history without inserting a sudden jump into an otherwise smooth journey.
+
+## One circle, half a turn
+
+The workbench shows a two-sheeted square-root surface. Horizontal position represents the complex input $z$. Height represents the real part of its root. The amber marker follows one continuous choice while the blue marker traces the corresponding input circle underneath.
+
+> [SpatialLab component] Interactive spatial science workbench. The slug selects a mathematical or physical model with an orbitable 3D scene, parameter sliders, experiment presets, a scrubbable animation timeline, quantitative measurements, a colour legend and explicit model limitations. Play/pause, reset and camera views support careful comparisons. A projected SVG view preserves the same model and controls without WebGL. Each experiment is also available at /lab/<slug>/.
+
+Choose **One circuit**, then move time from start to finish. The input circle closes, but the amber marker finishes on the opposite root. Choose **Two circuits** and repeat: now both the input and the tracked root return. Use **Loop radius** to bring the path closer to zero and watch the two roots approach one another.
+
+The colours identify the first and second angular sheets in this drawing. They help us follow the route, but they are not two disconnected objects. The route joins them. This is the purpose of a Riemann surface: enlarge the bookkeeping space until a function with several possible outputs becomes single-valued on that space. [MIT's square-root visualisation](https://ocw.mit.edu/courses/18-04-complex-variables-with-applications-fall-1999/pages/study-materials/riemann-surfaces-the-square-root/) offers another view of the same construction.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Height is the real part of the root, not a physical height and not its magnitude. The two roots have the same magnitude. A surface drawn only with root magnitude would hide the sign change we want to inspect.
+
+## Write the angle without resetting it
+
+Let the input have radius $r$ and angle $\theta$. Squaring a complex number squares its magnitude and doubles its angle, so taking a square root does the reverse.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+z=re^{i\theta}, \qquad w_{\pm}=\pm\sqrt r\,e^{i\theta/2}
+```
+
+$$
+z=re^{i\theta}, \qquad w_{\pm}=\pm\sqrt r\,e^{i\theta/2}
+$$
+
+Suppose we start with the plus sign and let $\theta$ increase continuously. At $\theta=0$, the root is $\sqrt r$. At $\theta=\pi$, it is $i\sqrt r$. At $\theta=2\pi$, it is $-\sqrt r$. Only at $\theta=4\pi$ does it return to its original value.
+
+This is a good place to resist a habit from plotting angles. If we reduce $\theta$ modulo $2\pi$ after every update, we throw away which circuit we are on. The input position needs only the reduced angle. The continued square root needs the accumulated angle, at least modulo $4\pi$.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+For radius 1, we can calculate the whole experiment without a calculator. A quarter of an input circuit reaches $z=i$. The continued root is $(1+i)/\sqrt2$. Half a circuit reaches $z=-1$, with tracked root $i$. Three quarters reaches $z=-i$, with tracked root $(-1+i)/\sqrt2$. Finally $z=1$ again, with tracked root $-1$.
+
+Square each result and the input comes back. That is the invariant the animation must preserve at every frame. Matching a pretty spiral is not enough.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+The input position forgot the first circuit. The root did not.
+
+## Why a library function jumps
+
+A programming language usually offers a single answer for a square root, rather than asking which path we took to the input. It needs a convention. A common choice is the principal branch, using an input argument in $(-\pi,\pi]$ and taking half of that argument.
+
+That convention places a cut along the negative real axis. Approach a negative real number from above and the root approaches the positive imaginary axis. Approach from below and it approaches the negative imaginary axis. Each side behaves smoothly, but the two limiting values disagree.
+
+The cut is chosen bookkeeping. Zero is the branch point: the obstruction that prevents a continuous single-valued square root on the entire punctured plane. Moving the cut can move the visible jump, but cannot remove that obstruction. [Rodolfo Rosales's MIT notes on branch points and cuts](https://math.mit.edu/classes/18.305/Notes/n00Branch_Points_B_Cuts.pdf) work through why the route around a point matters.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Do not silently replace continuous root tracking with repeated calls to a principal square-root function. Near the branch cut, the returned value can switch sign relative to the branch you were following. Both values square correctly; only one continues the previous path.
+
+For discrete samples, a practical local strategy is to calculate both roots and choose the one closest to the previous sample's root. That works when the samples are close enough and stay away from the branch point. It is not a substitute for knowing the path: a large jump can make the nearest-root rule ambiguous or choose the wrong continuation.
+
+This lab avoids that ambiguity by specifying the complete circular path analytically. Time is an angular path parameter. It is not a physical process or a numerical integration of a force law.
+
+## Two sheets, four coordinates
+
+We can write the surface without any drawing conventions:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\mathcal S=\{(z,w)\in\mathbb C^2:w^2=z\}, \qquad \pi(z,w)=z
+```
+
+$$
+\mathcal S=\{(z,w)\in\mathbb C^2:w^2=z\}, \qquad \pi(z,w)=z
+$$
+
+There are two complex coordinates, so the surrounding space has four real dimensions. Away from zero, the projection $\pi$ has two points above each input. At zero the two roots meet. A route around zero in the input plane lifts to a route on this surface that can end above the same input on the other sheet.
+
+The workbench keeps $\operatorname{Re}z$, $\operatorname{Im}z$, and $\operatorname{Re}w$ as its three spatial coordinates. It leaves out $\operatorname{Im}w$. Consequently, the surfaces appear to cross above the negative real axis: the roots there are $+i\sqrt r$ and $-i\sqrt r$, both with real part zero. The apparent crossing does not make them the same point on the mathematical surface.
+
+[Mario Bonk's UCLA complex-analysis notes](https://www.math.ucla.edu/~mbonk/complana.pdf), section 10.5, describe the two slit planes and their crosswise gluing. Our coloured sheets use successive unwrapped angular intervals rather than claiming a unique preferred cut.
+
+There is a useful twist here. If we use $w$ itself as our coordinate, then every point of the surface is simply $(w^2,w)$. The surface can be parameterised by an ordinary complex plane. The “two floors” exist relative to projecting onto $z$. We should not confuse a complicated projection with a complicated object in every coordinate system.
+
+## Near zero, small changes matter more
+
+Differentiate $w^2=z$ on a local branch away from zero. The derivative of the chosen root is inversely proportional to that root.
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+2w\frac{dw}{dz}=1, \qquad \left|\frac{dw}{dz}\right|=\frac{1}{2\sqrt{|z|}}
+```
+
+$$
+2w\frac{dw}{dz}=1, \qquad
+\left|\frac{dw}{dz}\right|=\frac{1}{2\sqrt{|z|}}
+$$
+
+At radius 1, this local sensitivity is 0.5. At radius 0.25, it is 1. The roots are closer together, but each responds more sharply to a small change in the input. These are compatible statements: separation measures the distance between two answers, while sensitivity measures how an answer moves as the question changes.
+
+The **Near the branch point** preset uses radius 0.2. Its roots have magnitude about 0.447. Scrubbing two circuits still restores the starting root. Shrinking the loop does not gradually eliminate the sign exchange, provided the loop continues to wind once around zero and does not pass through it.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The winding number matters. A loop around an ordinary nonzero point can be shrunk without meeting the branch point and need not exchange roots. The lab always centres its circles on zero, so every selected circuit encloses the obstruction.
+
+## The same problem hides in an eigenvalue calculation
+
+Consider the small matrix with rows $(0,z)$ and $(1,0)$. Its characteristic equation is $\lambda^2-z=0$, so its eigenvalues are the same two square roots. Move the complex parameter $z$ around zero and track one eigenvalue continuously. The two eigenvalues exchange places after one circuit.
+
+This example needs no claim about a particular physical device. It is already a warning for plotting parameter sweeps: sorting outputs independently at every sample can manufacture discontinuities, while attaching a persistent label can reveal an exchange. The choice of labelling belongs to the problem, not merely to the plotting library.
+
+Some food for thought: the related [conformal-grid lab](/lab/conformal-grid/) shows the forward map $w\mapsto w^2$. One circuit in its input makes two circuits in its output. This article followed the inverse relation and found the missing sheet. It is the same angle-doubling arithmetic seen from the other end.
+
+Open the [standalone square-root workbench](/lab/complex-roots/) and predict the amber height after half of a **One circuit** sweep. Then compare it with halfway through **Two circuits**. The time fraction is identical; the input's accumulated angle is not.
+
+## Reading further
+
+- [MIT: Riemann surfaces, the square root](https://ocw.mit.edu/courses/18-04-complex-variables-with-applications-fall-1999/pages/study-materials/riemann-surfaces-the-square-root/) gives visual views of the two-sheet construction.
+- [Rodolfo Rosales: branch points and branch cuts](https://math.mit.edu/classes/18.305/Notes/n00Branch_Points_B_Cuts.pdf) develops continuation around branch points and the role of cuts.
+- [Mario Bonk: complex analysis](https://www.math.ucla.edu/~mbonk/complana.pdf) gives a formal account of the square-root surface in section 10.5, alongside the logarithm and other elementary functions.

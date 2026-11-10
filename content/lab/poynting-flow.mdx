@@ -1,0 +1,26 @@
+## A circuit result from fields
+
+Amber arrows show radial electric field $\mathbf E$, purple arrows show azimuthal magnetic field $\mathbf H$, and cyan arrows show their cross product. The transparent cage marks the coaxial return conductor.
+
+### Follow the signs
+
+1. Select **24 W forward**. The voltage is 12 V and the current is 2 A.
+2. Select **Reverse power**. Current and magnetic field reverse, so power flows back along the cable. The electric field keeps its direction.
+3. Select **Charged, no flow**. The electric field remains, but the steady current, magnetic field and axial power flow are zero.
+4. Compare 12 V at 2 A with 24 V at 1 A. Both give 24 W, with different local field strengths.
+
+For inner radius $a$ and outer radius $b$,
+
+$$
+E_r=\frac{V}{r\ln(b/a)},\qquad
+H_\phi=\frac{I}{2\pi r},\qquad
+\int_a^b E_rH_\phi\,2\pi r\,dr=VI.
+$$
+
+The inner radius is fixed at 1 mm. Field readouts use $r=\sqrt{ab}$. Vary **Outer / inner radius** while holding voltage and current fixed: the local fields change while the total power remains constant.
+
+### Scope of the picture
+
+This is steady DC in an ideal lossless coax. Voltage and current are independent circuit quantities; the lab does not impose the impedance of one travelling wave. Arrow lengths have separate visual scales. The moving dots indicate flow direction, not electron motion or a physical propagation speed.
+
+Read [Power flows around the wire](/blog/power-flows-around-the-wire/) for the full integral, the role of the conductors and the difference between stored energy and transmitted power.

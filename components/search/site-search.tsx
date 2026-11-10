@@ -18,35 +18,9 @@ import styles from './site-search.module.css'
  * No backend, no third-party service — the index is static files on the CDN.
  */
 
-import { mapSearchHit, revealSearchSelection, type PagefindData, type Hit } from './search-hit'
+import { mapSearchHit, revealSearchSelection, type Hit } from './search-hit'
 
-interface Pagefind {
-  search: (q: string) => Promise<{ results: { id: string; data: () => Promise<PagefindData> }[] }>
-  options?: (o: Record<string, unknown>) => Promise<void>
-}
-
-// Module-level singleton so the WASM bundle loads at most once per session.
-let pagefindPromise: Promise<Pagefind | null> | null = null
-function loadPagefind(): Promise<Pagefind | null> {
-  if (typeof window === 'undefined') return Promise.resolve(null)
-  if (!pagefindPromise) {
-    pagefindPromise = (async () => {
-      try {
-        // Pagefind is generated into /pagefind/ at build time;
-        // it is not resolvable at compile time and ships no type declarations.
-        // webpackIgnore keeps the bundler from trying to resolve it — it's a
-        // native browser dynamic import of a CDN file (CSP-safe, no eval).
-        const modulePath: string = '/pagefind/pagefind.js'
-        const mod: Pagefind = await import(/* webpackIgnore: true */ /* @vite-ignore */ modulePath)
-        await mod.options?.({ excerptLength: 22 })
-        return mod
-      } catch {
-        return null // dev (no static export) or index missing — handled in the UI
-      }
-    })()
-  }
-  return pagefindPromise
-}
+import { loadPagefind } from './pagefind-loader'
 
 type Status = 'idle' | 'loading' | 'ok' | 'empty' | 'unavailable'
 
@@ -62,6 +36,7 @@ export function SiteSearch() {
   // Monotonic search id: a slow search (cold pagefind WASM load) must not
   // resolve after a later keystroke's search and clobber the newer results.
   const seqRef = useRef(0)
+  const invalidateSearch = useCallback(() => { ++seqRef.current }, [])
 
   // ⌘K / Ctrl-K toggles the palette from anywhere.
   useEffect(() => {
@@ -75,7 +50,7 @@ export function SiteSearch() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  // The WebSite JSON-LD advertises `/?q={query}` as a SearchAction — honour it.
+  // The WebSite JSON-LD advertises `/blog/?q={query}` as a SearchAction — honour it.
   // Plain location parsing (NOT useSearchParams — that forces a Suspense
   // boundary in the static export); runs once on mount, and the debounced
   // search effect below picks the query up and runs it.
@@ -135,9 +110,15 @@ export function SiteSearch() {
   // Debounce the query so we don't search on every keystroke.
   useEffect(() => {
     window.clearTimeout(debounceRef.current)
+    if (!open) return
     debounceRef.current = window.setTimeout(() => runSearch(query), 140)
-    return () => window.clearTimeout(debounceRef.current)
-  }, [query, runSearch])
+    return () => {
+      window.clearTimeout(debounceRef.current)
+      // Closed or replaced searches must not publish late results. Reopening
+      // reruns the retained query, including after a transient loader failure.
+      invalidateSearch()
+    }
+  }, [open, query, runSearch, invalidateSearch])
 
   // Keep keyboard selection visible inside the bounded result list.
   useEffect(() => {
@@ -145,6 +126,8 @@ export function SiteSearch() {
   }, [active, hits, open])
 
   const onKeyDown = (e: React.KeyboardEvent) => {
+    // IME uses Enter and arrow keys to choose/commit text, not search results.
+    if (e.nativeEvent.isComposing || e.keyCode === 229) return
     if (e.key === 'Escape') {
       e.preventDefault()
       setOpen(false)
@@ -156,7 +139,7 @@ export function SiteSearch() {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
       setActive((a) => Math.max(a - 1, 0))
-    } else if (e.key === 'Enter' && hits[active]) {
+    } else if (e.key === 'Enter' && status === 'ok' && hits[active]) {
       e.preventDefault()
       // Full navigation — bulletproof on static hosting (no RSC dependency).
       window.location.href = hits[active].url
@@ -200,7 +183,14 @@ export function SiteSearch() {
               <input
                 ref={inputRef}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  const next = e.target.value
+                  invalidateSearch()
+                  setHits([])
+                  setActive(0)
+                  setStatus(next.trim() ? 'loading' : 'idle')
+                  setQuery(next)
+                }}
                 placeholder="Search posts and SVG studies…"
                 aria-label="Search posts and SVG studies"
                 autoComplete="off"

@@ -74,6 +74,7 @@ export function GenerativeGallery() {
   const searchRef = useRef<HTMLInputElement>(null)
   const workbenchRef = useRef<HTMLElement>(null)
   const selected = STUDIES.find(study => study.id === selectedId)!
+  const selectedValues = Object.hasOwn(studyValues, selected.id) ? studyValues[selected.id] : parametersFor(selected)
   const filtered = searchStudies(STUDY_REGISTRY, query, { category: category === 'All studies' ? undefined : category, tag: tag || undefined })
   useEffect(() => {
     const restore = () => {
@@ -109,7 +110,7 @@ export function GenerativeGallery() {
       <StyleLab appearance={appearance} setAppearance={setAppearance} />
 
       <section ref={workbenchRef} tabIndex={-1} aria-label="Selected study" className={styles.selected}>
-        <StudyWorkbench study={selected} appearance={appearance} values={studyValues[selected.id] ?? parametersFor(selected)} setValues={values => setStudyValues(current => ({ ...current, [selected.id]: values }))} />
+        <StudyWorkbench study={selected} appearance={appearance} values={selectedValues} setValues={values => setStudyValues(current => ({ ...current, [selected.id]: values }))} />
       </section>
 
       <section className={styles.collection} aria-labelledby="collection-title">

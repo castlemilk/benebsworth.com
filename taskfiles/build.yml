@@ -74,9 +74,12 @@ tasks:
       zero ambiguity about what is in out/.
 
       Clears BOTH .next and out/ — clearing only .next/cache does not reliably
-      evict stale chunks.
+      evict stale chunks. Runs both generation steps before rebuilding so a
+      fresh checkout includes Markdown siblings and benchmark output assets.
     cmds:
       - rm -rf .next {{.OUT_DIR}}
+      - task: gen:md
+      - task: gen:outputs
       - '{{.BIN}}/next build'
       - task: post
 

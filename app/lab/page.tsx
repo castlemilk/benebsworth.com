@@ -15,18 +15,21 @@ const CATEGORY_ACCENT: Record<string, string> = {
   art: '#00e0b8',
   maths: '#7c5cff',
   physics: '#ff7a59',
+  chemistry: '#f472b6',
+  biology: '#a3e635',
+  earth: '#38bdf8',
   engineering: '#00b4d8',
 }
 
 export const metadata: Metadata = {
   title: 'Lab',
   description:
-    'Interactive experiments in generative art, mathematics, physics, and electrical engineering — canvas animations with live parameter controls.',
+    'Interactive experiments in generative art, mathematics, physics, chemistry, life sciences, earth and space science, and electrical engineering — canvas and 3D animations with live parameter controls.',
   alternates: { canonical: '/lab/' },
   openGraph: {
     type: 'website',
     title: 'Lab · Ben Ebsworth',
-    description: 'Interactive experiments in generative art, mathematics, physics, and electrical engineering.',
+    description: 'Interactive experiments in generative art, mathematics, physics, chemistry, life sciences, earth and space science, and electrical engineering.',
     url: '/lab/',
     siteName: 'Ben Ebsworth',
     locale: 'en_AU',
@@ -53,7 +56,7 @@ export default function LabPage() {
           ]),
           collectionPageLd({
             name: 'Lab · Ben Ebsworth',
-            description: 'Interactive experiments in generative art, mathematics, and physics.',
+            description: 'Interactive experiments in generative art, mathematics, physics, chemistry, life sciences, and earth and space science.',
             url: `${SITE_URL}/lab/`,
             items: LAB_EFFECTS.map((e) => ({ name: e.title, url: `${SITE_URL}/lab/${e.slug}/` })),
           }),
@@ -73,7 +76,7 @@ export default function LabPage() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-4 max-w-prose type-body text-fg/70">
-              Small canvas animations spanning generative art, mathematics, and physics — each with
+              Small canvas and 3D animations spanning generative art, mathematics, physics, chemistry, the life sciences, and earth and space science. Each comes with
               live knobs and a note on how it works. Tune them, share a link, steal the idea.
             </p>
           </Reveal>

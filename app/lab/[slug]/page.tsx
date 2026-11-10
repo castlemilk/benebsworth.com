@@ -7,6 +7,8 @@ import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { LAB_EFFECTS, getEffect, CATEGORIES } from '@/lib/lab/registry'
 import { EffectPlayground } from '@/components/lab/effect-playground'
+import { SpatialLab } from '@/components/mdx/spatial-lab'
+import { isSpatialLab } from '@/lib/lab/spatial/catalog'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 
@@ -14,6 +16,9 @@ const CATEGORY_ACCENT: Record<string, string> = {
   art: '#00e0b8',
   maths: '#7c5cff',
   physics: '#ff7a59',
+  chemistry: '#f472b6',
+  biology: '#a3e635',
+  earth: '#38bdf8',
   engineering: '#00b4d8',
   cosmology: '#6366f1',
 }
@@ -127,7 +132,7 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
         </div>
         <h1 className="mt-3 type-h1">{e.title}</h1>
         <p className="mt-3 max-w-prose type-body text-fg/70">{e.blurb}</p>
-        <div className="mt-10"><EffectPlayground slug={slug} /></div>
+        <div className="mt-10">{isSpatialLab(slug) ? <SpatialLab slug={slug} /> : <EffectPlayground slug={slug} />}</div>
         {body && <article className="mt-14 mx-auto max-w-3xl px-4"><MdxContent source={body} /></article>}
       </main>
       <SiteFooter />

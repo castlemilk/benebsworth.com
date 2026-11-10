@@ -19,6 +19,9 @@ const CATEGORY_ACCENT: Record<string, string> = {
   art: '#00e0b8',
   maths: '#7c5cff',
   physics: '#ff7a59',
+  chemistry: '#f472b6',
+  biology: '#a3e635',
+  earth: '#38bdf8',
   engineering: '#00b4d8',
 }
 

@@ -8,12 +8,13 @@ const line=(m:Mark)=>{if(m.kind!=='line')throw new Error('Expected curve');retur
 const texts=(marks:Mark[])=>marks.filter((m):m is Extract<Mark,{kind:'text'}>=>m.kind==='text')
 
 describe('complete original catalogue',()=>{
- it('matches all 25 original manifest IDs exactly, with five studies per category',()=>{
+ it('preserves all 25 original identities while allowing new unique studies',()=>{
   const directory=path.join(process.cwd(),'public/vectors')
   const ids=fs.readdirSync(directory).filter(name=>fs.existsSync(path.join(directory,name,'manifest.json'))).flatMap(name=>JSON.parse(fs.readFileSync(path.join(directory,name,'manifest.json'),'utf8')).items.map((item:{id:string})=>item.id))
-  expect(STUDIES.map(s=>s.id).sort()).toEqual(ids.sort())
+  expect(STUDIES.map(s=>s.id)).toEqual(expect.arrayContaining(ids))
+  expect(new Set(STUDIES.map(s=>s.id)).size).toBe(STUDIES.length)
   expect(new Set(ids).size).toBe(25)
-  for(const category of ['Mathematics','Physics','Algorithms','Distributed systems','Electronics'])expect(STUDIES.filter(s=>s.category===category)).toHaveLength(5)
+  for(const category of ['Mathematics','Physics','Algorithms','Distributed systems','Electronics'])expect(STUDIES.filter(s=>s.category===category).length).toBeGreaterThanOrEqual(5)
  })
  it('preserves the integral family derivative and stated initial condition',()=>{
   const g=geometryFor(study('integral-trajectory'),{initial:1}),central=line(g.marks[3])

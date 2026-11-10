@@ -9,10 +9,10 @@ import styles from './site-search.module.css'
  * ⌘K command-palette search over the blog, powered by Pagefind.
  *
  * Pagefind builds a tiny WASM-backed search index from the EXPORTED HTML at
- * deploy time (see the `postbuild` script → `pagefind --site out`), writing it
- * to /pagefind/. Only the blog post <article> is indexed — it carries
+ * deploy time (see the `postbuild` script → `scripts/build-search.mts`), writing it
+ * to /pagefind/. Blog post <article> elements carry
  * `data-pagefind-body`, so nav/footer/TOC chrome is excluded and results are
- * just posts. The index lives only in the built output, so in `next dev` there
+ * posts plus curated SVG-study records from scripts/build-search.mts. The index lives only in the built output, so in `next dev` there
  * is nothing to load and the dialog says so gracefully.
  *
  * No backend, no third-party service — the index is static files on the CDN.
@@ -190,8 +190,8 @@ export function SiteSearch() {
           <section className={styles.sheet}>
             <header className={styles.heading}>
               <div>
-                <h2>Find a field note</h2>
-                <p>Search the writing, follow an idea.</p>
+                <h2>Find a note or study</h2>
+                <p>Search writing and SVG studies by name, subject or tag.</p>
               </div>
               <button type="button" className={styles.close} aria-label="Close search" onClick={() => setOpen(false)}>×</button>
             </header>
@@ -201,8 +201,8 @@ export function SiteSearch() {
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search posts…"
-                aria-label="Search posts"
+                placeholder="Search posts and SVG studies…"
+                aria-label="Search posts and SVG studies"
                 autoComplete="off"
                 spellCheck={false}
               />
@@ -227,9 +227,9 @@ export function SiteSearch() {
                 {status === 'loading' && 'Searching…'}
                 {status === 'empty' && `No matches for “${query}”. Try a topic or a different phrase.`}
                 {status === 'idle' && 'Start with a subject, a title, or a question.'}
-                {status === 'unavailable' && 'Search is unavailable right now. You can still browse every post.'}
+                {status === 'unavailable' && 'Search is unavailable right now. You can still browse the archive and SVG studies.'}
               </p>
-              {status === 'unavailable' && <Link className={styles.browse} href="/blog/" onClick={() => setOpen(false)}>Browse the archive</Link>}
+              {status === 'unavailable' && <><Link className={styles.browse} href="/blog/" onClick={() => setOpen(false)}>Browse the archive</Link><Link className={styles.browse} href="/vectors/" onClick={() => setOpen(false)}>Browse SVG studies</Link></>}
             </div>
             <footer className={styles.footer}><span>↑ ↓ to choose</span><span>Enter to open</span><span>Esc to close</span></footer>
           </section>

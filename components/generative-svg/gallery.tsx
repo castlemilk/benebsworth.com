@@ -1,11 +1,12 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { STUDIES, parametersFor, type Study } from '@/lib/generative-svg/model'
+import { useEffect, useRef, useState } from 'react'
+import { STUDIES, STUDY_REGISTRY, parametersFor, type Study } from '@/lib/generative-svg/model'
 import { DEFAULT_APPEARANCE, renderStudySvg, type Appearance } from '@/lib/generative-svg/render'
 import { useVectorCopy } from '@/components/vectors/use-vector-copy'
 import styles from './gallery.module.css'
 import { StyleLab } from './style-lab'
+import { searchStudies, studyUrl, STUDY_CATEGORIES } from '@/lib/generative-svg/registry'
 
 function Drawing({ study, appearance, values = {} }: { study: Study; appearance: Appearance; values?: Record<string, number> }) {
   return <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: renderStudySvg(study, values, appearance) }} />
@@ -38,6 +39,8 @@ function StudyWorkbench({ study, appearance, values, setValues }: { study: Study
       </div>
       <div className={styles.studyDetails}>
         <h2>{study.title}</h2>
+        <p className={styles.tags} aria-label="Study tags">{study.tags.map(tag => <span key={tag}>{tag.replaceAll('-', ' ')}</span>)}</p>
+        <a className={styles.permalink} href={studyUrl(study)}>Link to this study</a>
         <p>{study.description}</p>
         <p className={styles.basis}><strong>{study.provenance === 'math-derived' ? 'Mathematical model' : study.provenance === 'simulated' ? 'Numerical model' : study.provenance === 'topology' ? 'Graph construction' : 'Illustrative study'}</strong>{study.basis}</p>
         {study.parameters.length > 0 && (
@@ -66,11 +69,35 @@ export function GenerativeGallery() {
   const [selectedId, setSelectedId] = useState(STUDIES[0].id)
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('All studies')
+  const [tag, setTag] = useState('')
+  const [linkWarning, setLinkWarning] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
   const workbenchRef = useRef<HTMLElement>(null)
   const selected = STUDIES.find(study => study.id === selectedId)!
-  const filtered = STUDIES.filter(study => (category === 'All studies' || study.category === category) && `${study.title} ${study.description}`.toLowerCase().includes(query.trim().toLowerCase()))
-  const clear = () => { setQuery(''); setCategory('All studies'); searchRef.current?.focus() }
+  const filtered = searchStudies(STUDY_REGISTRY, query, { category: category === 'All studies' ? undefined : category, tag: tag || undefined })
+  useEffect(() => {
+    const restore = () => {
+      const id = new URLSearchParams(window.location.search).get('study')
+      const found = id ? STUDY_REGISTRY.get(id) : undefined
+      setSelectedId(found?.id ?? STUDIES[0].id)
+      setLinkWarning(id && !found ? 'That study link was not found. Showing the first study instead.' : '')
+    }
+    restore()
+    window.addEventListener('popstate', restore)
+    return () => window.removeEventListener('popstate', restore)
+  }, [])
+  const openStudy = (study: Study) => {
+    setSelectedId(study.id)
+    setLinkWarning('')
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('study') !== study.id) {
+      url.searchParams.set('study', study.id)
+      url.hash = ''
+      window.history.pushState(null, '', url)
+    }
+    workbenchRef.current?.focus()
+  }
+  const clear = () => { setQuery(''); setCategory('All studies'); setTag(''); searchRef.current?.focus() }
   return (
     <div className={styles.gallery}>
       <header className={styles.opening}>
@@ -78,6 +105,7 @@ export function GenerativeGallery() {
         <p>Curves from equations. Diagrams from relationships. A small collection of SVG studies, with a drawing language you can change.</p>
       </header>
 
+      {linkWarning && <p role="status">{linkWarning}</p>}
       <StyleLab appearance={appearance} setAppearance={setAppearance} />
 
       <section ref={workbenchRef} tabIndex={-1} aria-label="Selected study" className={styles.selected}>
@@ -87,11 +115,12 @@ export function GenerativeGallery() {
       <section className={styles.collection} aria-labelledby="collection-title">
         <div className={styles.collectionHeader}>
           <h2 id="collection-title">The collection</h2>
-          <p>Twenty-five working studies. One shared geometry and export framework.</p>
+          <p>{STUDIES.length} working studies. One shared geometry and export framework.</p>
         </div>
         <div className={styles.filters}>
-          <label>Find a study<input ref={searchRef} type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Wave, tree, prism…" /></label>
-          <label>Subject<select value={category} onChange={e => setCategory(e.target.value)}>{['All studies', 'Mathematics', 'Algorithms', 'Physics', 'Electronics', 'Distributed systems'].map(value => <option key={value}>{value}</option>)}</select></label>
+          <label>Find a study<input ref={searchRef} type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Name, tag or alias, such as BST…" /></label>
+          <label>Subject<select value={category} onChange={e => setCategory(e.target.value)}>{['All studies', ...STUDY_CATEGORIES].map(value => <option key={value}>{value}</option>)}</select></label>
+          <label>Tag<select value={tag} onChange={e => setTag(e.target.value)}><option value="">All tags</option>{STUDY_REGISTRY.tags.map(value => <option key={value} value={value}>{value.replaceAll('-', ' ')}</option>)}</select></label>
           <button type="button" onClick={clear}>Clear filters</button>
           <p role="status" aria-live="polite">{filtered.length} {filtered.length === 1 ? 'study' : 'studies'}</p>
         </div>
@@ -99,9 +128,10 @@ export function GenerativeGallery() {
           <div className={styles.specimens}>
             {filtered.map(study => (
               <article key={study.id} id={study.id} className={styles.specimen}>
-                <button type="button" onClick={() => { setSelectedId(study.id); workbenchRef.current?.focus() }} aria-label={`Open ${study.title}`} aria-pressed={selectedId === study.id}>
+                <button type="button" onClick={() => openStudy(study)} aria-label={`Open ${study.title}`} aria-pressed={selectedId === study.id}>
                   <span className={styles.thumbnail} data-surface={appearance.theme}><Drawing study={study} appearance={appearance} /></span>
                   <span className={styles.specimenTitle}>{study.title}</span>
+                  <span className={styles.tags}>{study.tags.map(tag => <span key={tag}>{tag.replaceAll('-', ' ')}</span>)}</span>
                   <span className={styles.kind}>{study.provenance === 'math-derived' ? 'Mathematical model' : study.provenance === 'simulated' ? 'Numerical model' : study.provenance === 'topology' ? 'Graph construction' : 'Illustrative geometry'}</span>
                 </button>
               </article>
@@ -112,7 +142,7 @@ export function GenerativeGallery() {
       <footer className={styles.notes}>
         <h2>Geometry first. Style second.</h2>
         <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Each download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
-        <p>All 25 original motifs now have working studies. Original artwork remains preserved separately. Your parameter tuning stays while you browse this page. Sampled curves are approximations; illustrative studies are labelled individually.</p>
+        <p>The collection preserves all 25 original motifs and can grow through the shared study registry. Original artwork remains preserved separately. Your parameter tuning stays while you browse this page. Sampled curves are approximations; illustrative studies are labelled individually.</p>
       </footer>
     </div>
   )

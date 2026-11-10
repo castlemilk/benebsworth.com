@@ -74,3 +74,15 @@ Three.js is not installed: none of this slice requires rotatable 3D geometry. A 
 ## Acceptance
 
 Model, DOM, static export and actual browser acceptance are separate. The gallery retains existing visual/access/release holds. Native clipboard/download, narrow/theme layout, zoom, keyboard, print and forced-color acceptance still need the existing permitted browser path. Complete motif coverage does not imply full scientific simulation, actual-browser acceptance, visual certification or deployment.
+
+## Extending and finding studies
+
+The repository skill `.agents/skills/generate-svg-studies/SKILL.md` guides new model authoring. Its executable Lissajous example lives in `lib/generative-svg/examples/lissajous.ts` and is deliberately not registered as another public motif. The original 25 IDs are a required preserved subset, not a hard limit.
+
+`definition.ts` owns the model contract. `registry.ts` validates stable unique IDs, curated tags/aliases and bounded parameter controls, then derives lookups, search results and Pagefind records from the definitions. A new valid registered model automatically joins gallery counts, filters, metadata and site search; it does not need another renderer or a separate search list.
+
+Gallery search normalizes case, accents, whitespace, punctuation and letter/digit boundaries. All terms must match word prefixes across the title, ID, aliases, subject and tags. Exact names/aliases rank first. Subject and tag filters intersect with the query. Scientific prose and negated caveats are excluded from discovery text. The visible tag vocabulary is independent of the blog's existing editorial topics.
+
+The existing Pagefind postbuild now adds one curated record per study alongside the article index. The site's search dialog finds both notes and studies. Pagefind descriptions use subject/tag summaries because its metadata can also be indexed; this prevents a description's “no noise” caveat from advertising noise simulation. Numeric aliases include compact spellings such as 64QAM. Direct `/vectors/?study=ID` links select the correct workbench; navigation updates selection history, and Back/Forward preserves local tuning. A permalink opens default parameters after a reload; portable SVG recipes retain tuned settings.
+
+Validation includes a real Pagefind/WASM index test, not just mocked search results. The emitted-index checker exercises each title/alias, representative tags/acronyms, and caveat exclusion. Native browser acceptance remains a separate gate.

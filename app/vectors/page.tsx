@@ -4,13 +4,14 @@ import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
 import { JsonLd, SITE_URL, breadcrumbLd, collectionPageLd } from '@/components/seo/json-ld'
 import { GenerativeGallery } from '@/components/generative-svg/gallery'
+import { studyUrl } from '@/lib/generative-svg/registry'
 import { STUDIES } from '@/lib/generative-svg/model'
 
 export const metadata: Metadata = {
   title: 'Generative SVG Studies',
   description: 'Mathematical curves, graph constructions and illustrative geometry with configurable ink and transparent SVG export.',
   alternates: { canonical: '/vectors/' },
-  openGraph: { type: 'website', title: 'Generative SVG Studies · Ben Ebsworth', description: 'Geometry first, style second. Explore 25 deterministic SVG studies in a tunable drawing lab.', url: '/vectors/', siteName: 'Ben Ebsworth', locale: 'en_AU' },
+  openGraph: { type: 'website', title: 'Generative SVG Studies · Ben Ebsworth', description: `Geometry first, style second. Explore ${STUDIES.length} deterministic SVG studies in a tunable drawing lab.`, url: '/vectors/', siteName: 'Ben Ebsworth', locale: 'en_AU' },
   twitter: { card: 'summary_large_image', title: 'Generative SVG Studies · Ben Ebsworth', creator: '@benebsworth', site: '@benebsworth' },
 }
 
@@ -19,7 +20,7 @@ export default function VectorsPage() {
     <>
       <JsonLd data={[
         breadcrumbLd([{ name: 'Home', url: `${SITE_URL}/` }, { name: 'SVG studies', url: `${SITE_URL}/vectors/` }]),
-        collectionPageLd({ name: 'Generative SVG Studies · Ben Ebsworth', description: metadata.description!, url: `${SITE_URL}/vectors/`, items: STUDIES.map(study => ({ name: study.title, url: `${SITE_URL}/vectors/#${study.id}` })) }),
+        collectionPageLd({ name: 'Generative SVG Studies · Ben Ebsworth', description: metadata.description!, url: `${SITE_URL}/vectors/`, items: STUDIES.map(study => ({ name: study.title, url: `${SITE_URL}${studyUrl(study)}` })) }),
       ]} />
       <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
         <SiteNav />

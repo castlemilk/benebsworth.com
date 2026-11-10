@@ -19,6 +19,8 @@ import { StageProfile } from './trailkit/stage-profile'
 import { UniverseScale } from './universe-scale-embed'
 import { BlackHoleSim } from './black-hole-sim-embed'
 import { ArtifactFrame } from './artifact-frame'
+import { SpatialLab } from './spatial-lab'
+import { UsbIdentityChain, DriverLayerStack, BringupTimeline } from './usb-wifi-diagrams'
 import {
   IngressFlowBasic,
   EgressFlowBasic,
@@ -80,6 +82,7 @@ import {
 } from './lazy-mdx-components'
 
 export const mdxComponents: MDXComponents = {
+  SpatialLab,
   StatGroup,
   Stat,
   PullQuote,
@@ -163,6 +166,9 @@ export const mdxComponents: MDXComponents = {
   TrailFigure,
   StageProfile,
   Callout,
+  UsbIdentityChain,
+  DriverLayerStack,
+  BringupTimeline,
   Equation,
   h2: (p) => <h2 className="font-display mt-12 scroll-mt-32 text-[clamp(1.85rem,1.35rem+2vw,3rem)] font-semibold leading-[1.05] tracking-[-0.025em] text-fg" {...p} />,
   h3: (p) => <h3 className="font-display mt-8 scroll-mt-32 text-[clamp(1.3rem,1.1rem+0.75vw,1.65rem)] font-semibold leading-[1.25] tracking-[-0.015em] text-fg" {...p} />,

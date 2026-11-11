@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { ThemeToggle } from './theme-toggle'
 const state = vi.hoisted(() => ({ theme: 'light', setTheme: vi.fn() }))
-vi.mock('next-themes', () => ({ useTheme: () => ({ resolvedTheme: state.theme, setTheme: state.setTheme }) }))
+vi.mock('./use-theme', () => ({ useTheme: () => ({ resolvedTheme: state.theme, setTheme: state.setTheme }) }))
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.clearAllMocks() })
 describe('editorial theme control', () => {
   it.each(['light', 'dark'])('retains switch semantics in %s mode', theme => {

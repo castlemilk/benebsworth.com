@@ -38,7 +38,7 @@ export function BlogGallery({ slug, accent = '#7c5cff' }: { slug: string; accent
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={thumbOf(a)} alt={a.alt || a.caption || ''} loading="lazy" decoding="async" width={a.width || undefined} height={a.height || undefined} className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" />
             {a.caption && (
-              <span className="pointer-events-none absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/70 to-transparent p-2 font-sans text-[0.7rem] text-white/90 opacity-0 transition-opacity group-hover:opacity-100">{a.caption}</span>
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/70 to-transparent p-2 font-sans text-[0.75rem] text-white/90 opacity-0 transition-opacity group-hover:opacity-100">{a.caption}</span>
             )}
           </button>
         ))}

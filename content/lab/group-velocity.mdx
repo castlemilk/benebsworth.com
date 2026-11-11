@@ -1,0 +1,12 @@
+## Track two different motions
+
+The cyan curve plots the complex wave: vertical displacement is its real part, and depth is the imaginary quadrature. The violet surface is its Gaussian magnitude. The amber ring follows the envelope centre.
+
+1. Choose **Together**. The central carrier phase speed and group speed are both 1.
+2. Choose **Crests overtake**. The group speed falls to 0.5, while phase speed remains 1. The envelope keeps its width.
+3. Choose **Spreading**. Curvature is now 0.3. After 3 model time units, the initial width of 0.65 becomes 1.530.
+4. Change **Initial packet width**. A tighter initial packet contains a wider spectrum and spreads more strongly for the same curvature.
+
+This is the exact Gaussian solution for a quadratic dispersion relation, used as a local narrowband model. Curvature means the second derivative of angular frequency with respect to wavenumber. The model conserves integrated intensity over the entire infinite line, although the finite viewing window may crop the packet's tails. One timeline pass lasts 3 model time units and then restarts.
+
+Read the derivation in [A wave packet has two speeds](/blog/a-wave-packet-has-two-speeds/).

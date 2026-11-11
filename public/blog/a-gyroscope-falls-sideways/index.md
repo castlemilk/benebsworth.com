@@ -1,0 +1,161 @@
+---
+title: A gyroscope falls sideways
+date: '2026-10-24T00:00:00.000Z'
+description: >-
+  Use a 3D spinning top to see why gravitational torque turns angular momentum
+  sideways, and why doubling the spin halves slow precession.
+labels: 'physics,mechanics,angular-momentum,gyroscope'
+release: true
+heroImage: /blog/a-gyroscope-falls-sideways/hero.webp
+takeaways:
+  - >-
+    A torque changes angular momentum in the direction of the torque, which can
+    turn its direction without greatly changing its magnitude.
+  - >-
+    For a rapidly spinning symmetric top in steady slow precession, the
+    precession rate is mgl divided by spin angular momentum.
+  - >-
+    The simple precession formula omits nutation, friction, and the angular
+    momentum associated with precession itself.
+markdown_url: /blog/a-gyroscope-falls-sideways/
+canonical_url: 'https://benebsworth.com/blog/a-gyroscope-falls-sideways/'
+---
+## Key takeaways
+
+- A torque changes angular momentum in the direction of the torque, which can turn its direction without greatly changing its magnitude.
+- For a rapidly spinning symmetric top in steady slow precession, the precession rate is mgl divided by spin angular momentum.
+- The simple precession formula omits nutation, friction, and the angular momentum associated with precession itself.
+
+A supported spinning wheel can respond to gravity by turning sideways. Remove the spin and the same wheel falls. Spin it faster and its sideways turning gets slower. This is an excellent way for an ordinary object to make Newton's laws look suspicious.
+
+The laws survive. The difficulty is that torque changes a vector, and we tend to imagine it changing only a scalar speed. A gyroscope makes the missing direction impossible to ignore.
+
+## Watch the arrow, not the spokes
+
+The violet rotor below sits on a cyan axle above a fixed pivot. The downward amber arrow is gravity. The horizontal amber arrow at the pivot is gravitational torque. The cyan arrow represents the dominant spin angular momentum.
+
+Choose **Baseline** and let the scene run. The axle traces a cone around the vertical. Its tilt stays constant in this deliberately simplified model. Then choose **Double the spin** and watch the cone being traced more slowly.
+
+> [SpatialLab component] Interactive spatial science workbench. The slug selects a mathematical or physical model with an orbitable 3D scene, parameter sliders, experiment presets, a scrubbable animation timeline, quantitative measurements, a colour legend and explicit model limitations. Play/pause, reset and camera views support careful comparisons. A projected SVG view preserves the same model and controls without WebGL. Each experiment is also available at /lab/<slug>/.
+
+The rotor spokes are slowed tenfold to make them readable. The precession angle follows the calculated rate, and one full timeline pass represents $\pi$ seconds before restarting. The wheel's drawn size and arrow lengths are illustrative; the readouts carry the physical measurements.
+
+The important motion belongs to the cyan arrow's direction. Freeze the scene, then move the timeline a small amount. Its tip moves approximately along the torque direction at that instant.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Gravity is still acting. The model does not cancel gravity or switch it off when the rotor spins. The support provides a force at the pivot, and gravity supplies a torque about that pivot.
+
+## Torque is a rate of change of a vector
+
+For a particle, angular momentum about a chosen origin is $\mathbf r\times\mathbf p$. Add those contributions across the rotor and we get the total angular momentum. The governing relation says that external torque equals its time derivative:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\boldsymbol\tau=\frac{\mathrm d\mathbf L}{\mathrm dt}=\mathbf r_{\rm cm}\times m\mathbf g
+```
+
+$$
+\boldsymbol\tau=\frac{\mathrm d\mathbf L}{\mathrm dt}=\mathbf r_{\rm cm}\times m\mathbf g
+$$
+
+If torque points along angular momentum, it changes the magnitude. If torque points perpendicular to it, the immediate change is sideways. Adding a small perpendicular vector turns the original vector. [Feynman's discussion of rotation in space](https://www.feynmanlectures.caltech.edu/I_20.html) is a useful reference for why these quantities must be handled in three dimensions.
+
+For our top, the centre of mass lies along the axle and gravity points down. Their cross product is horizontal and perpendicular to the axle. In the fast-spin approximation, angular momentum also points along the axle, so the torque keeps changing its direction.
+
+Notice the phrase “in the fast-spin approximation”. A real top also has angular momentum because the whole axle is precessing. We are assuming that contribution is small compared with the rotor's spin angular momentum. Without that assumption, the simple picture needs more bookkeeping.
+
+## Turning an arrow around a cone
+
+Suppose the axle makes a fixed angle $\theta$ with the vertical and precesses at angular speed $\Omega$. The tip of an angular-momentum vector of magnitude $L$ travels around a circle of radius $L\sin\theta$.
+
+Its speed around that circle is $\Omega L\sin\theta$. That is the magnitude of $\mathrm d\mathbf L/\mathrm dt$. The gravitational torque magnitude is $mgl\sin\theta$, where $l$ is the distance from the pivot to the centre of mass. Equating them gives the slow-precession result:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\Omega L\sin\theta=mgl\sin\theta,\qquad \Omega\simeq\frac{mgl}{I_s\omega_s}
+```
+
+$$
+\Omega L\sin\theta=mgl\sin\theta,\qquad \Omega\simeq\frac{mgl}{I_s\omega_s}
+$$
+
+The sine factors cancel. Tilt increases the torque, but it also increases the radius of the circle that the angular-momentum tip must trace. In this approximation those changes balance exactly. [Richard Fitzpatrick's University of Texas derivation](https://farside.ph.utexas.edu/teaching/355/Surveyhtml/node44.html) shows how the slow-precession expression emerges from the more complete rigid-body problem.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+A larger angular momentum vector needs a smaller turn to absorb the same sideways change.
+
+That is the reason faster spin gives slower precession. There is no need to say that the wheel “resists gravity”. A specified torque adds the same amount of angular momentum per second. When the existing vector is longer, that addition changes its direction by a smaller angle.
+
+## Put numbers on a small rotor
+
+The workbench uses a uniform solid disc with mass $m=0.4\,\mathrm{kg}$ and radius $R=0.08\,\mathrm m$. Its spin-axis moment of inertia is $I_s=mR^2/2=0.00128\,\mathrm{kg\,m^2}$.
+
+For the **Baseline** preset, the spin is $1200\,\mathrm{rpm}$, the lever arm is $0.06\,\mathrm m$, and the tilt is $45^\circ$. Convert revolutions per minute before using an equation written in radians per second:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\omega_s=1200\frac{2\pi}{60}\approx125.66\,{\rm rad/s},\qquad \Omega\approx1.464\,{\rm rad/s},\qquad T_p=\frac{2\pi}{\Omega}\approx4.29\,{\rm s}
+```
+
+$$
+\omega_s=1200\frac{2\pi}{60}\approx125.66\,{\rm rad/s},\qquad
+\Omega\approx1.464\,{\rm rad/s},\qquad
+T_p=\frac{2\pi}{\Omega}\approx4.29\,{\rm s}
+$$
+
+The spin angular momentum is $I_s\omega_s\approx0.1608\,\mathrm{kg\,m^2/s}$. Gravity contributes $mgl\approx0.2354\,\mathrm{N\,m}$ before the tilt factor. Divide those values and the precession rate follows.
+
+At $45^\circ$, the actual torque magnitude is about $0.1665\,\mathrm{N\,m}$. Multiplying $L\sin45^\circ$ by the predicted precession rate returns that same value. This second route is a useful check that the geometry and the scalar formula agree.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+## Three experiments worth predicting first
+
+Start with **Double the spin**. The angular momentum doubles while the gravitational torque stays the same. The precession rate drops to approximately $0.732\,\mathrm{rad/s}$, and its period doubles to $8.59\,\mathrm s$.
+
+Next select **Double the lever**. Moving the centre of mass twice as far from the pivot doubles the gravitational torque for the same tilt. The spin-axis inertia stays fixed in this model because the rotor itself has not changed. The predicted precession rate doubles to about $2.927\,\mathrm{rad/s}$.
+
+Finally return to **Baseline** and change **Tilt from vertical**. The precession-rate readout stays at $1.464\,\mathrm{rad/s}$. The cone becomes narrower or wider. The torque changes with tilt, but so does the circular path of the angular-momentum tip.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Before changing a control, predict the precession rate as a ratio of its current value. Double spin: half the rate. Double lever: twice the rate. Change tilt: the same rate within this approximation.
+
+The last experiment is especially useful for catching an implementation error. If a visualisation inserts $\sin\theta$ into the numerator of the final rate but forgets the same factor in the geometry of $\mathrm d\mathbf L/\mathrm dt$, it will incorrectly slow precession as the top becomes more upright.
+
+## Why a real top wobbles
+
+Release a real top from an arbitrary pose and it may nod up and down while precessing. That nodding is **nutation**. A steady-precession solution is a particular motion, not the inevitable immediate response to every release condition. [OpenStax's gyroscope treatment](https://openstax.org/books/university-physics-volume-1/pages/11-4-precession-of-a-gyroscope) gives an accessible introduction to the angular-momentum picture and a numerical precession example.
+
+The workbench prescribes constant tilt and spin, then evaluates the slow-precession solution. It does not integrate the full Euler equations from an initial release. It cannot predict startup wobble, a bearing's friction, or the final collapse as the rotor runs down.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Do not extrapolate the formula to zero spin. Its divergence signals a failed fast-spin assumption, not an infinitely fast real precession. The spin control stays well above zero for that reason.
+
+For the baseline, $\Omega/\omega_s\approx0.0116$. Precession is much slower than spin, which supports the approximation. At the most demanding control combination, the ratio approaches $0.1$, so the model is less accurate. The tidy cone should be read as an ideal solution, not a promise about a physical top.
+
+There is a broader geometric habit here: when an arrow changes, ask whether its length changed, its direction changed, or both. We use the same habit in [parallel transport on a sphere](/blog/a-loop-on-a-sphere-turns-an-arrow/), although the mechanism there is geometric transport rather than gravitational torque.
+
+The [standalone gyroscope lab](/lab/gyroscope/) is a good place to practise the cross product. Look down from above, pause, and predict the next tiny movement of the axle from the torque arrow. If that direction makes sense, the wheel has stopped being mysterious even if it still looks slightly cheeky.
+
+## Reading further
+
+- [Feynman, volume I, chapter 20: Rotation in space](https://www.feynmanlectures.caltech.edu/I_20.html): torque and angular momentum as three-dimensional vectors.
+- [Richard Fitzpatrick, University of Texas: Gyroscopic precession](https://farside.ph.utexas.edu/teaching/355/Surveyhtml/node44.html): the steady-precession equations and the slow-precession approximation.
+- [OpenStax, University Physics, section 11.4](https://openstax.org/books/university-physics-volume-1/pages/11-4-precession-of-a-gyroscope): a worked introductory example and diagrams of the torque geometry.

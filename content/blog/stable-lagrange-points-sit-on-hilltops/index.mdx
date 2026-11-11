@@ -1,0 +1,153 @@
+---
+title: "The stable Lagrange points sit on top of hills"
+date: "2026-11-10T09:00:00.000Z"
+description: "Plot the Earth-Moon effective potential and L4 and L5 are hilltops, yet they are the only Lagrange points that hold a spacecraft for free. Coriolis is why."
+labels: earth,orbital-mechanics,three-body-problem,lagrange-points
+release: true
+heroImage: /blog/stable-lagrange-points-sit-on-hilltops/hero.webp
+takeaways:
+  - "In the rotating frame, the effective potential of two orbiting bodies has five stationary points: three saddles on the line through the bodies and two maxima at L4 and L5."
+  - "L4 and L5 are stable despite being hilltops because the Coriolis force bends every downhill roll into a loop, which only works below Routh's mass ratio of 0.0385."
+  - "For the Earth and Moon, L1 and L2 sit about 58,000 and 64,500 km from the Moon, and a particle near L4 librates with periods of 1.048 and 3.353 orbits."
+  - "The sheet shows potential energy only; the Coriolis force has no height on it, so watch the particle loop around the hilltop rather than the slope."
+---
+
+Here is a claim that sounds wrong. Take the Earth and the Moon, sit in the frame that rotates with them, add up the gravity of both bodies and the centrifugal term, and plot the result as a landscape. The two points where a spacecraft can park for free, L4 and L5, are the tops of the two hills. The three points everyone draws on the line through the Earth and Moon are saddles, and nothing parks at a saddle for long.
+
+A marble on a hilltop rolls off. A spacecraft at L4 does not, and neither do Jupiter's Trojan asteroids. Something is missing from the landscape picture: the Coriolis force, which has no potential energy and so no height on the sheet. It turns every attempt to roll downhill into a loop. We will see that it only manages this when the smaller body carries less than about 3.85 percent of the total mass, which is the honest reason Jupiter has Trojans and Pluto and Charon cannot.
+
+Before the equations, roll a particle off the hill yourself. Press play below and watch the cyan path: a massless particle released at rest a little way down the L4 hilltop toward the Earth. Then select **Pluto-Charon: L4 unstable** and press play again. Same release, same kind of sheet, different outcome.
+
+<SpatialLab slug="lagrange-points" />
+
+The blue sheet is the effective potential. The white spheres are the two bodies, the violet markers are the five Lagrange points, and the amber curve is the contour through L1 that separates the two wells. The first slider is the mass ratio on a log scale; the stable regime is the left two thirds of its track.
+
+## A landscape that only exists if you spin with it
+
+In an inertial frame there is no static landscape. The Earth and Moon move, so the gravitational field at any fixed point changes every second. The trick, which goes back to Euler and Lagrange in the 1760s and 1770s, is to describe the motion in a frame that rotates with the two bodies. In that frame they hold still, and so does their gravity. The price is two fictitious forces: the centrifugal force, which has a potential, and the Coriolis force, which does not.
+
+Let's set the units so the separation of the two bodies is 1, their total mass is 1, and the angular rate of the frame is 1, so one orbit takes $2\pi$ time units. Call the smaller mass fraction $\mu$. The larger body sits at $(-\mu, 0)$ and the smaller at $(1-\mu, 0)$, which puts the centre of mass at the origin. The effective potential a test particle feels is then
+
+<Equation id="eqn:lagrange-points-potential" number="1" caption="The effective potential of the circular restricted three-body problem in the rotating frame; r₁ and r₂ are distances to the larger and smaller body." latex="\Phi(x,y) = -\frac{1-\mu}{r_1} - \frac{\mu}{r_2} - \frac{1}{2}\left(x^2 + y^2\right)">
+
+$$
+\Phi(x,y) = -\frac{1-\mu}{r_1} - \frac{\mu}{r_2} - \frac{1}{2}\left(x^2 + y^2\right)
+$$
+
+</Equation>
+
+The first two terms are the gravitational wells. The last is the centrifugal potential, an upside-down bowl falling away from the axis of rotation. Far from both bodies the bowl wins and the sheet drops toward the edges. Close to either body the well wins and the sheet plunges. In between, the landscape has to have some flat spots, and the flat spots are the Lagrange points.
+
+<Callout type="info">
+A note on sign. I use $\Phi$ as written above, the convention on Neil Cornish's NASA page, so L4 and L5 come out as maxima and the title of this post is literal. Murray and Dermott plot $U = -\Phi$ instead, and in their figures the same two points are minima of $U$. The physics is identical; only the vertical axis flips.
+</Callout>
+
+## Five places where the slope is zero
+
+Three of the stationary points lie on the $x$ axis, where the problem collapses to one dimension. Setting $\partial\Phi/\partial x = 0$ along $y = 0$ gives a force balance between the two bodies' pulls and the centrifugal term:
+
+<Equation id="eqn:lagrange-points-collinear" number="2" caption="The collinear force balance whose three roots are L1, L2 and L3; the lab solves it by Newton's method from Hill-sphere seeds." latex="f(x) = x - \frac{(1-\mu)(x+\mu)}{|x+\mu|^3} - \frac{\mu\,(x-1+\mu)}{|x-1+\mu|^3} = 0">
+
+$$
+f(x) = x - \frac{(1-\mu)(x+\mu)}{|x+\mu|^3} - \frac{\mu\,(x-1+\mu)}{|x-1+\mu|^3} = 0
+$$
+
+</Equation>
+
+This is a quintic in disguise, so there is no tidy closed form, but it is a friendly root-finding problem: $f$ is monotone between the poles, with $f'(x) \geq 1$ everywhere. Newton's method from the Hill-sphere estimate $(\mu/3)^{1/3}$ on either side of the smaller body converges in a handful of steps. For the Earth and Moon with $\mu \approx 0.01215$, L1 lands 0.1509 of the Earth-Moon distance from the Moon on the Earth side and L2 lands 0.1678 beyond it. In kilometres that is about 58,000 and 64,500 km from the Moon, against a Hill estimate of 0.1594, or 61,300 km, for both. L3 sits at $x = -1.0051$, on the far side of the Earth and just outside the Moon's orbit.
+
+The Sun-Earth system has $\mu = 3.0\times10^{-6}$, far below the slider's floor, but the same calculation puts L1 and L2 at 0.0100 au, about 1.5 million km from the Earth. That is where the James Webb Space Telescope (JWST) sits, in a wide halo orbit about L2.
+
+L4 and L5 need no root finding. By symmetry they sit where $r_1 = r_2 = 1$, at the third corner of an equilateral triangle with the two bodies: $(\tfrac12 - \mu, \pm\tfrac{\sqrt3}{2})$. Putting those coordinates into equation (1) gives the height of the hilltops in closed form, $\Phi(\mathrm{L4}) = -\tfrac12\bigl(3 - \mu(1-\mu)\bigr)$, which is $-1.4940$ for the Earth and Moon. Every other point on the sheet is lower. L1 is 0.100 below, L2 is 0.092 below, and L3 only 0.012 below; the lab triples those drops in world units, so the saddles sit roughly 0.3 of a world unit under the hilltops.
+
+<PullQuote>
+The hilltops are the highest points on the sheet, and they are the only places a spacecraft can stay without touching its thrusters.
+</PullQuote>
+
+## Why a hilltop can hold
+
+So why doesn't the particle roll off? Write down the equations of motion in the rotating frame rather than just the potential:
+
+<Equation id="eqn:lagrange-points-motion" number="3" caption="Rotating-frame equations of motion. The 2ẏ and 2ẋ terms are the Coriolis acceleration, which does no work and has no potential." latex="\ddot x - 2\dot y = -\frac{\partial \Phi}{\partial x}, \qquad \ddot y + 2\dot x = -\frac{\partial \Phi}{\partial y}">
+
+$$
+\ddot x - 2\dot y = -\frac{\partial \Phi}{\partial x}, \qquad \ddot y + 2\dot x = -\frac{\partial \Phi}{\partial y}
+$$
+
+</Equation>
+
+The right-hand sides are the slope of the sheet. The extra terms on the left are Coriolis, and they depend on velocity: a particle moving in $+x$ feels a push in $-y$, and so on. Coriolis never changes a particle's speed, which is exactly why it cannot appear in $\Phi$. But it bends paths, and the faster you move the harder it bends you.
+
+Picture the release in the lab. The particle starts at rest, a little way down the hill. The slope accelerates it, it picks up speed, and Coriolis swings it sideways. If the swing is strong enough relative to the slope, the particle curves right round before it has lost much height and climbs back toward the hilltop. The result is a slow loop around L4 rather than a fall. In the default Earth-Moon run the cyan path wanders about 0.59 units from L4 along the Moon's orbit over 2 orbits and comes back. That banana-shaped excursion is a tadpole orbit, a 30-fold amplification of the 0.02 radial nudge it started with.
+
+Linearise equation (3) about L4 and you get a quartic in the frequency $\omega$ of small oscillations. The algebra is in Murray and Dermott's section 3.7, and the result is short:
+
+<Equation id="eqn:lagrange-points-libration" number="4" caption="Frequencies of small oscillations about L4 and L5, in units of the orbital angular rate. Both are real only when 27μ(1 − μ) < 1." latex="\omega^2 = \frac{1}{2}\left[1 \pm \sqrt{1 - 27\mu(1-\mu)}\right]">
+
+$$
+\omega^2 = \frac{1}{2}\left[1 \pm \sqrt{1 - 27\mu(1-\mu)}\right]
+$$
+
+</Equation>
+
+If the square root is real, both values of $\omega^2$ are positive and the particle oscillates forever in a mix of two modes. For the Earth and Moon, $27\mu(1-\mu) = 0.324$, giving periods of 1.048 and 3.353 orbits, or 28.6 and 91.6 days against a sidereal month of 27.3 days. The fast mode is a small epicycle; the slow one is the big tadpole swing you see in the lab.
+
+If the square root goes imaginary, so does $\omega$, and one mode grows exponentially. The boundary is $27\mu(1-\mu) = 1$, which solves to $\mu_c = \bigl(1 - \sqrt{23/27}\bigr)/2 \approx 0.03852$, the critical mass ratio found by Gascheau in 1843 and generalised by Routh in 1875. Below it the hilltop holds. Above it, a hilltop is a hilltop in the ordinary sense.
+
+<Callout type="thinking">
+Some food for thought: this is the same trick as a rotating saddle trap. Spin a saddle-shaped surface fast enough and a ball bearing at its centre stays put, because by the time it has started to roll off along the downhill direction, the saddle has turned and that direction is uphill. A Paul ion trap does the same with an oscillating electric field. The Lagrange hilltop is a gravitational cousin, and I suspect the connection is more than an analogy, though I have not pushed the mapping through carefully.
+</Callout>
+
+## Jupiter has Trojans, Pluto does not
+
+Let's put numbers on the three presets. The Sun-Jupiter mass ratio is $\mu = 9.55\times10^{-4}$, deep in the stable regime. The libration periods come out as 1.003 and 12.42 Jupiter orbits, and with Jupiter's 11.86-year orbit the slow mode takes about 147 years. The hilltops are so flat that over the 6 orbits the preset runs, the particle only completes half a swing of its tadpole. That is where the Trojans live, thousands of them, librating slowly around L4 and L5. Push the release offset to 0.02 in that preset and the tadpole opens into a horseshoe that crosses L3 and reaches L5 by the end of the run. Horseshoe orbits are real dynamics; a few of Earth's co-orbital asteroids follow them.
+
+Pluto and Charon have $\mu \approx 0.109$, so $27\mu(1-\mu) = 2.62$ and equation (4) gives a complex $\omega$. Working out the imaginary part, a displacement from L4 grows by a factor of $e$ every 0.40 orbits. In the lab the released particle is still within 0.5 of L4 at 0.9 orbits, has clearly left by 1 orbit, and the integrator stops at 1.30 orbits with a close approach to Charon. A real binary with that mass ratio cannot keep anything at its triangular points. The equal-mass case is more extreme still, with an e-folding time of 0.25 orbits and two identical wells joined at an L1 exactly halfway between them.
+
+Routh's bound is a statement about linear stability. Deprit and Deprit-Bartholomé showed in 1967 that two isolated ratios below it, $\mu = 0.013516$ and $\mu = 0.024294$, are nonlinearly unstable through 3:1 and 2:1 resonances between the two libration modes. The Earth-Moon value of 0.01215 is close to the first but not on it, which is a little unnerving the first time you notice.
+
+There is one more number worth having. Multiply equation (3) through by the velocity and integrate, and the Coriolis terms drop out because they do no work. What remains is a conserved quantity, the Jacobi constant:
+
+<Equation id="eqn:lagrange-points-jacobi" number="5" caption="The Jacobi constant, the only conserved quantity of the restricted problem. A particle with constant C can only reach places where Φ ≤ −C/2." latex="C = -2\Phi(x,y) - \left(\dot x^2 + \dot y^2\right)">
+
+$$
+C = -2\Phi(x,y) - \left(\dot x^2 + \dot y^2\right)
+$$
+
+</Equation>
+
+At L4 at rest, $C = 3 - \mu(1-\mu) = 2.988$ for the Earth and Moon, and at L1 it is 3.188. Kinetic energy cannot go negative, so the curve $\Phi = -C/2$ walls a particle in. The amber contour in the lab is that wall for the L1 value of $C$: it pinches to a point at L1, and anything with less energy stays in one well or the other. The lab also uses $C$ to check its own integrator, and stops drawing if the drift passes 1 percent.
+
+<StatGroup>
+  <Stat label="Earth-Moon L1" value="58,000 km" context="0.1509 of the Earth-Moon distance, Moon side; L2 at 64,500 km" />
+  <Stat label="Slow libration about L4" value="91.6 days" context="3.353 orbits; the fast mode takes 28.6 days" />
+  <Stat label="Routh's limit" value="μ = 0.0385" context="27μ(1 − μ) = 1; the Earth and Moon sit at 0.324" />
+</StatGroup>
+
+## Predict before you drag
+
+<Callout type="doing">
+Before touching a slider, write down what you expect, then check the readouts.
+
+1. Press **Reset experiment**. L1 and L2 should read 0.1509 and 0.1678, and libration 1.048 and 3.353 orbits. Watch two full orbits: does the particle ever get more than about 0.6 units from L4?
+2. Raise the release offset to 0.10 and the simulated time to 3 orbits. The readout now says the particle leaves the plotted square at 2.08 orbits. Where does it go first?
+3. Drag the mass-ratio slider slowly to the right and watch the libration readout flip from two periods to an e-folding time. You are looking for $\log_{10}\mu = -1.414$.
+4. Select **Equal masses**. L1 reads exactly 0.5000 from either body. Predict which well the particle falls into before you press play.
+</Callout>
+
+## What the sheet cannot show
+
+<Callout type="warning">
+The sheet is the rotating-frame effective potential, not a rubber-sheet picture of spacetime. The [spacetime curvature lab](/lab/spacetime-curvature/) elsewhere on this site draws a surface that looks similar and means something else entirely. Here the heights are classical potential energy per unit mass in a spinning frame, and the Coriolis force, which decides whether a hilltop holds, has no height at all. If the picture tempts you to think of L4 as a place where forces balance, remember that the balance is dynamic: the particle is always falling, and always being turned.
+</Callout>
+
+A few other idealisations deserve naming. The particle is massless, so it does not pull back on the bodies. The two bodies move on exact circles; the Moon's real orbit has an eccentricity of 0.055 and the Sun's tide is not small, so the real Earth-Moon L4 and L5 are far messier than this lab suggests. Everything stays in the orbital plane. The lab softens the two singularities with a Plummer length of 0.01, compresses the sheet below the saddles with an asinh so the wells stay visible, and stops integrating when a path comes within 0.05 of a body, because a fixed-step integrator with 960 steps is not trustworthy there.
+
+I find the honest version of the picture more satisfying than the "balance of forces" one. Nothing balances at L4. A particle placed there precisely does sit still, but nudge it and it falls, and it goes on falling and turning in a loop that never quite leaves. The [standalone Lagrange points lab](/lab/lagrange-points/) lets you take that loop apart one slider at a time. Next I would like to give the particle a little thrust and see how cheaply a station-keeping burn can hold a spacecraft at the L2 saddle, where JWST actually lives. That is a question about the unstable manifold of a saddle, a different kind of landscape walk. Watch this space.
+
+## Reading further
+
+- [Neil Cornish, "The Lagrange Points" (NASA WMAP education page)](https://web.archive.org/web/20240112100152/https://map.gsfc.nasa.gov/ContentMedia/lagrange.pdf): a four-page derivation of all five points and the stability of L4 and L5, in the same sign convention as this post (archived; NASA has since retired the PDF).
+- [Murray and Dermott, *Solar System Dynamics*, chapter 3](https://doi.org/10.1017/CBO9781139174817): the restricted three-body problem in full, with the linear stability analysis of the triangular points in section 3.7 and the motion near L4 and L5 in sections 3.8 and 3.9.
+- [Routh, "On Laplace's three particles, with a supplement on the stability of steady motion" (1875)](https://doi.org/10.1112/plms/s1-6.1.86): the original general proof of the critical mass ratio, building on Gascheau's 1843 note.
+- [Deprit and Deprit-Bartholomé, "Stability of the triangular Lagrangian points" (1967)](https://ui.adsabs.harvard.edu/abs/1967AJ.....72..173D): the nonlinear analysis that finds the two resonant exceptions below Routh's bound.

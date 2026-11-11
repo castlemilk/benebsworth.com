@@ -16,6 +16,8 @@ describe('prose source manifest', () => {
       'content/projects/**/*.mdx',
       'content/about.ts',
       'content/hiking.ts',
+      'content/uses.ts',
+      'content/now.tsx',
       'app/**/*.tsx',
       'app/**/*.ts',
       'components/**/*.tsx',

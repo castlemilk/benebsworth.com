@@ -71,7 +71,7 @@ export function IterationChecks({
             title={tooltip}
             aria-label={tooltip}
             className={cn(
-              'inline-flex items-center gap-1 rounded-full border px-1.5 py-px font-mono text-[10px] leading-4',
+              'inline-flex items-center gap-1 rounded-full border px-1.5 py-px font-mono text-[0.75rem] leading-4',
               row.fallback
                 ? 'border-muted-foreground/30 bg-muted/40 text-muted-foreground'
                 : all

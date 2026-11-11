@@ -21,7 +21,7 @@ describe('site search modal', () => {
     expect(dialog.parentElement).toBe(document.body)
     expect(view.container.contains(dialog)).toBe(false)
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalledOnce()
-    expect(document.activeElement).toBe(screen.getByRole('textbox', { name:'Search posts' }))
+    expect(document.activeElement).toBe(screen.getByRole('textbox', { name:'Search posts and assets' }))
     expect(document.body.style.overflow).toBe('hidden')
     const closeButton = screen.getByRole('button', { name:'Close search' })
     expect(fireEvent.keyDown(closeButton, { key:'ArrowDown', cancelable:true })).toBe(true)
@@ -47,7 +47,7 @@ describe('site search modal', () => {
     document.body.style.overflow = 'clip'
     const view = render(<SiteSearch />)
     fireEvent.click(screen.getByRole('button', { name:'Search the site' }))
-    fireEvent.click(screen.getByRole('heading', { name:'Find a field note' }))
+    fireEvent.click(screen.getByRole('heading', { name:'Find a note or asset' }))
     expect(screen.getByRole('dialog')).toBeTruthy()
     view.unmount()
     expect(document.body.style.overflow).toBe('clip')

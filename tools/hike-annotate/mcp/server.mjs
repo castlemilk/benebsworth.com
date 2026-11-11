@@ -68,6 +68,7 @@ server.tool(
       partial: run.partial,
       placement: byWp,
       reportPath: saved.reportPath,
+      proposalId: saved.proposalId,
     })
   },
 )
@@ -79,21 +80,22 @@ server.tool(
   async ({ slug }) => {
     const p = await loadProposal(slug).catch(() => null)
     if (!p) return text(`No proposal cached for ${slug}. Run propose_annotations first.`)
-    return text({ slug, partial: p.partial, heroId: p.heroId, reportPath: p.reportPath, galleryCount: p.proposal.gallery.length })
+    return text({ slug, proposalId: p.proposalId, partial: p.partial, heroId: p.heroId, reportPath: p.reportPath, galleryCount: p.proposal.gallery.length })
   },
 )
 
 server.tool(
   'write_manifest',
-  'Write the cached proposed manifest for a hike to GCS (LIVE). Requires confirm:true and a non-partial proposal.',
-  { slug: z.string(), confirm: z.boolean() },
-  async ({ slug, confirm }) => {
+  'Write the reviewed proposal to GCS (LIVE). Requires its proposalId, confirm:true and a non-partial proposal.',
+  { slug: z.string(), proposalId: z.string(), confirm: z.boolean() },
+  async ({ slug, proposalId, confirm }) => {
     if (!confirm) return err('Refused: pass confirm:true to write the live manifest.')
     const p = await loadProposal(slug).catch(() => null)
     if (!p) return err(`No proposal cached for ${slug}. Run propose_annotations first.`)
+    if (!p.proposalId || p.proposalId !== proposalId) return err('The proposal has changed. Review the current proposal before writing.')
     if (p.partial) return err(`Refused: cached proposal for ${slug} is PARTIAL (limit was set). Re-run propose_annotations without limit.`)
     await backupManifest(slug, p.manifest, p.dir, new Date().toISOString().replace(/[:.]/g, '-'))
-    const uri = await writeManifest(slug, p.proposal, p.dir)
+    const uri = await writeManifest(slug, p.proposal, p.dir, p.generation)
     return text(`Wrote ${uri} (${p.proposal.gallery.length} photos). Live manifest: ${manifestPublicUrl(slug)}`)
   },
 )

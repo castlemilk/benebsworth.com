@@ -1,0 +1,26 @@
+## The sign moves, the density does not
+
+The pink and amber lobes are the **angular factor** $|Y_{lm}|$ of a real hydrogen orbital, scaled by $\cos(\text{phase})$: pink where the real wavefunction is positive, amber where it is negative. They are not a textbook isosurface and carry no physical length. The white cage is $|Y_{lm}|^2$, the angular part of the probability density, and it never moves. Violet circles mark the nodal cones and planes. The white floor curve is the radial density $r^2 R_{nl}^2$ in picometres, with violet dots at radial nodes and a white dot at the most probable radius.
+
+### Five experiments
+
+1. Select **1s ground state**. A sphere with no nodes, most probable radius 52.9 pm (one Bohr radius), mean radius 79.4 pm. Play: it shrinks to nothing after a quarter turn and returns amber.
+2. Select **2s radial node**. The cage is still a sphere, but the floor curve touches zero at 105.8 pm (2 $a_0$) and peaks at 277.1 pm.
+3. Select **3d z² magic angle**. Two violet cones at 54.74° and 125.26° separate three lobes: 0 radial, 2 angular nodes.
+4. Select **3d x²−y² planes**. Same energy and radii, but the two angular nodes are vertical planes at 45° and 135°. Nothing orbits.
+5. Return to the default 2p and push **Angular momentum l** to 3. The orbital aliases to 4f z³, the energy rises to −0.850 eV and the most probable radius jumps to 846.7 pm.
+
+Only the time factor of the wavefunction is complex, and it drops out of the density:
+
+$$
+\psi_{nlm}(r,\theta,\phi,t)=R_{nl}(r)\,Y_{lm}(\theta,\phi)\,e^{-iE_nt/\hbar},
+\qquad |\psi|^2=R_{nl}^2\,Y_{lm}^2 .
+$$
+
+One timeline pass is one period $h/|E_n|$ of the real part, 1.216 fs for n = 2, so the lobes swap sign once per loop.
+
+### What the model leaves out
+
+The m > 0 shapes are the chemist's real $\cos(m\phi)$ orbitals ($p_x$, $d_{xz}$, $d_{x^2-y^2}$ and so on). The complex $e^{\pm im\phi}$ orbitals do carry angular momentum about $z$. Energies use the infinite-nuclear-mass Rydberg constant, 13.6057 eV, which overstates real hydrogen by 0.05%. Spin, fine structure and the Lamb shift are left out. The floor window $(3n^2+2)\,a_0$ clips under 0.5% of the radial probability.
+
+Read [A p electron is never found between its lobes](/blog/a-p-electron-is-never-between-its-lobes/).

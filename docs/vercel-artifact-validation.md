@@ -79,8 +79,33 @@ node --test scripts/ci/vercel-artifact.test.mjs scripts/ci/vercel-preview.test.m
 The local fixture/control tests do not establish a successful full application
 build. A real green Actions artifact run is required to establish compilation
 and packaging for its exact SHA; inspect the manifest and downloaded archive.
-The existing `task ci` remains the full site quality gate and is not replaced by
-these checks.
+The artifact lane now also runs the application quality checks before packaging:
+
+1. Locked dependencies and isolated output-audit regression tests.
+2. `next typegen` (route declarations only), TypeScript, and ESLint. ESLint errors
+   fail the lane; inherited warnings remain visible and are not called clean.
+3. The full Vitest application suite, single-worker. Report skipped cases as
+   skipped, never passed.
+4. The existing credential-free compile, followed by
+   `node --import tsx scripts/check-library-output.mts <static-output>`.
+   This checks serialized library/archive title structure, canonical URLs, return links,
+   catalogue identities, the default deterministic SVG download, all PNG hashes
+   and provenance, every original vector byte, sitemap entries, and the emitted
+   Pagefind WASM index (all study titles/aliases, selected study tags, all artwork
+   titles/aliases/tags and excluded scientific caveats).
+
+All checks precede artifact upload and fail closed. The same-source publisher
+already waits for this artifact workflow, so a failed check cannot supply a new
+artifact through that path. This does not broaden deployment permissions.
+
+The always-run job summary reports exact source and each step outcome, including
+**browser acceptance: NOT RUN**, **deployment: NOT RUN**, and
+**release approval: false**. Serialized HTML inspection does not execute scripts
+or hydrate React. Next may serialize a loading main beside its streamed final
+main; the checker validates the final title's main, not hydrated landmark count.
+Native download/clipboard behavior, keyboard/focus, narrow layout, motion and
+visual approval remain independent browser gates. The existing `task ci` and its
+browser work are not replaced or represented as passed by these checks.
 
 Even a green artifact run is NOT a deployment canary. Before any token-bearing
 release, independently review the exact workflow/artifact/settings, establish a

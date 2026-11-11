@@ -178,3 +178,21 @@ test('ongoing push build accepts only exact live editorial revision', () => {
   assert.throws(() => verifyArtifactRequest({ after: 'b'.repeat(40) }, env), /editorial/);
   assert.throws(() => verifyArtifactRequest({ after: sha, deleted: true }, env), /editorial/);
 });
+
+test('application quality and built-library gates precede archive and cannot be ignored', () => {
+  const workflow = fs.readFileSync(new URL('../../.github/workflows/vercel-artifact.yml', import.meta.url), 'utf8');
+  const ordered = ['npm ci', 'node --import tsx --test scripts/check-library-output.test.mts', 'npx --no-install next typegen', 'npm run typecheck', 'npm run lint', 'npm test -- --maxWorkers=1', 'run: node scripts/ci/vercel-artifact.mjs\n', 'node --import tsx scripts/check-library-output.mts', 'tar -C vercel-artifact', 'uses: actions/upload-artifact@'];
+  let previous = -1;
+  for (const command of ordered) {
+    const index = workflow.indexOf(command);
+    assert(index > previous, `Missing or out-of-order gate: ${command}`);
+    previous = index;
+  }
+  assert.doesNotMatch(workflow, /continue-on-error|\|\|\s*true|--passWithNoTests/);
+  for (const gate of ['Browser acceptance: NOT RUN', 'Deployment: NOT RUN', 'Release approval: false']) assert(workflow.includes(gate));
+  assert.match(workflow, /Summarize exact-source validation and remaining gates\n\s+if: always\(\)/);
+  const checker = fs.readFileSync(new URL('../check-library-output.mts', import.meta.url), 'utf8');
+  assert.match(checker, /const library = await checkLibraryOutput\(site\)/);
+  assert.match(checker, /const search = await checkStudySearch\(site\)/);
+  assert.doesNotMatch(checker, /runScripts|resources:|playwright|puppeteer/);
+});

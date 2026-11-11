@@ -1,4 +1,7 @@
+import { SPATIAL_CATALOG } from './spatial/catalog'
+
 export const LAB_POSTERS: Record<string, string> = {
+  ...Object.fromEntries(SPATIAL_CATALOG.map(entry => [entry.slug, `/blog/${entry.blogSlug}/hero.webp`])),
   'universe-scale': '/lab/previews/universe-scale.jpg',
   'aliasing-and-nyquist': '/lab/previews/aliasing-and-nyquist.webp',
   'feedback-stability-margins': '/lab/previews/feedback-stability-margins.webp',

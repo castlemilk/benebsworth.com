@@ -9,6 +9,8 @@ import { LAB_EFFECTS, getEffect, CATEGORIES } from '@/lib/lab/registry'
 import { LabDetailHeader } from '@/components/lab/lab-detail-header'
 import '../notebook.css'
 import { EffectPlayground } from '@/components/lab/effect-playground'
+import { SpatialLab } from '@/components/mdx/spatial-lab'
+import { isSpatialLab } from '@/lib/lab/spatial/catalog'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
 
@@ -95,19 +97,32 @@ export default async function LabEffectPage({ params }: { params: Promise<{ slug
     },
     author: authorLd,
   }
+  const detailHeader = <LabDetailHeader
+    title={e.title}
+    blurb={e.blurb}
+    category={e.category}
+    label={catMeta?.label ?? e.category}
+    glyph={catMeta?.glyph ?? ''}
+    hasExplainer={Boolean(body)}
+  />
   return (
     <>
       <JsonLd data={[breadcrumb, appLd]} />
       <SiteNav />
-      <main id="main-content" className="lab-notebook lab-detail mx-auto w-full max-w-6xl px-6 py-16 sm:px-8">
-        <Breadcrumb
+      <main id="main-content" className="lab-notebook lab-detail mx-auto w-full max-w-6xl px-6 pb-16 sm:px-8">
+        <Breadcrumb className="mb-10"
           items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },
             { label: e.title },
           ]}
         />
-        <section id="experiment" aria-label={`${e.title} interactive simulation`} className="lab-detail-experiment mt-10"><EffectPlayground slug={slug} variant="editorial" header={<LabDetailHeader title={e.title} blurb={e.blurb} category={e.category} label={catMeta?.label ?? e.category} glyph={catMeta?.glyph ?? ''} hasExplainer={Boolean(body)} />} /></section>
+        <section id="experiment" aria-label={`${e.title} interactive simulation`} className="lab-detail-experiment mt-10">
+          {isSpatialLab(slug) ? <>
+            {detailHeader}
+            <SpatialLab slug={slug} />
+          </> : <EffectPlayground slug={slug} variant="editorial" header={detailHeader} />}
+        </section>
         {body && <article id="explanation" aria-label={`${e.title} explanation`} className="lab-detail-explanation mt-14 mx-auto max-w-3xl px-4"><MdxContent source={body} /></article>}
       </main>
       <SiteFooter />

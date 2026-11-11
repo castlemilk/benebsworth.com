@@ -50,12 +50,12 @@ function CuratorNoteRow({ entry }: { entry: CuratorFeedback }) {
         {/* The subject first when it is narrower than the record: a note about
             iteration 2 must not read as a verdict on all five. */}
         {iteration !== undefined && (
-          <span className="mr-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+          <span className="mr-1.5 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
             iteration {iteration}
           </span>
         )}
         {entry.note}
-        <span className="ml-1.5 whitespace-nowrap font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+        <span className="ml-1.5 whitespace-nowrap font-mono text-[0.75rem] uppercase tracking-wider text-muted">
           — curator note
         </span>
         <span className="sr-only">
@@ -100,7 +100,7 @@ export function CuratorNotesPanel({
     <div className="mt-8 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="border-b border-[var(--color-border)] bg-[var(--color-surface-2)] px-5 py-3">
         <h3 className="font-mono text-xs uppercase tracking-wider text-muted">Curator notes</h3>
-        <p className="mt-1 text-xs text-fg/60">
+        <p className="mt-1 text-xs text-muted">
           One person&rsquo;s judgment of these artifacts — mine, written while reviewing them, and
           committed alongside the results. These are not reader ratings: the site is a static
           export and has no way to collect them.
@@ -142,7 +142,7 @@ export function CuratorTally({
     <p
       data-curator-tally
       title="Ratings recorded by the site maintainer during review — not reader votes."
-      className={`font-mono text-[0.65rem] uppercase tracking-wider text-muted ${className}`}
+      className={`font-mono text-[0.75rem] uppercase tracking-wider text-muted ${className}`}
     >
       curator: {segments.join(' · ')}
     </p>

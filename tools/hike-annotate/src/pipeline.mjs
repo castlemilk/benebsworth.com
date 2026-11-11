@@ -1,7 +1,8 @@
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { readManifest, readLibrary, mergeLibraryAssets } from './manifest.mjs'
+import { readManifestSnapshot, readLibrary, mergeLibraryAssets } from './manifest.mjs'
+import { validateHikeSlug } from './config.mjs'
 import { getWaypoints, getHikeMeta } from './waypoints.mjs'
 import { geocodeWaypoints } from './geocode.mjs'
 import { nearestWaypoint } from './geo.mjs'
@@ -37,13 +38,15 @@ async function downloadThumb(asset, dir) {
  * limit < total the proposal is `partial` (not safe to write).
  */
 export async function annotateHike(slug, opts = {}) {
+  validateHikeSlug(slug)
   const { limit = Infinity, hint = '', concurrency = 4, onProgress = () => {} } = opts
-  const [meta, wps, manifest, library] = await Promise.all([
+  const [meta, wps, snapshot, library] = await Promise.all([
     getHikeMeta(slug),
     getWaypoints(slug),
-    readManifest(slug),
+    readManifestSnapshot(slug),
     readLibrary(),
   ])
+  const { manifest, generation } = snapshot
   const geo = await geocodeWaypoints(wps, hint || meta.country || '')
   const validNames = new Set(geo.map((w) => w.name))
 
@@ -79,5 +82,5 @@ export async function annotateHike(slug, opts = {}) {
   const heroAsset = heroId ? annotated.find((a) => a.id === heroId) : undefined
 
   const proposal = { hero: heroAsset || manifest.hero, og: manifest.og, gallery: [...ordered, ...rest] }
-  return { slug, meta, geo, manifest, proposal, metas, metaById, heroId, tmpDir: dir, partial }
+  return { slug, meta, geo, manifest, generation, proposal, metas, metaById, heroId, tmpDir: dir, partial }
 }

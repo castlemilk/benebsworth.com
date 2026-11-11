@@ -13,6 +13,17 @@ description: Use when deploying benebsworth.com (staging or prod) or changing it
 > because Cloudflare's edge can serve a pre-deploy response for a few seconds and
 > make a good deploy look broken). Rollback procedure: `task deploy:rollback:info`.
 
+> **🛡️ PROD = MASTER, FORWARD ONLY (postmortem 0010).** Release production with
+> the GitHub **"Publish checked site"** workflow (`gh workflow run publish-site.yml
+> --ref master -f expected_sha=<master sha> -f article_path=/blog/<slug>/ -f
+> reviewed_base_sha=<earlier master sha> -f confirmation=publish-benebsworth.com`;
+> the `Production` environment holds the Cloudflare secrets and the GA var).
+> `task deploy:prod` is the local fallback and refuses anything but a clean
+> origin/master tip that contains the live commit (`/build-info.json`). Vercel
+> previews are NOT production; "merged" means merged to master, not to a branch.
+> `production-drift.yml` fails daily if prod leaves master or master sits
+> unreleased for >72h.
+
 > **🔑 TOKEN VALIDITY — READ BEFORE CONCLUDING THE TOKEN IS DEAD.**
 > `task doctor` only reports whether `CLOUDFLARE_API_TOKEN` is present. Run
 > **`task deploy:auth`** to validate the credential against the Pages API and list

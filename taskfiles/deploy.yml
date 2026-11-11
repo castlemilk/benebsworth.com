@@ -97,10 +97,14 @@ tasks:
       lab page in the build — check `git status` and the content frontmatter
       first.
 
-      Prod does NOT require the branch to be master: --branch is forced to the
-      project's production_branch so the deploy is a production one regardless
-      of the git branch you are on. That also means prod can end up serving code
-      that is not on master — deliberate, but worth stating in the deploy note.
+      PROD IS MASTER, FORWARD ONLY (docs/postmortem/0010). The normal release
+      path is the GitHub "Publish checked site" workflow. This local task is the
+      fallback and refuses unless the checkout is clean and HEAD is exactly the
+      tip of origin/master, and unless that commit contains the commit
+      production serves now (read from the live /build-info.json receipt). It
+      stamps a new receipt so the next deploy can check it in turn. A deliberate
+      rollback needs ALLOW_PROD_ROLLBACK=<live sha>; prefer
+      `task deploy:rollback:info` (Cloudflare's own rollback) instead.
 
       AFTER DEPLOY  the verify step runs automatically. Cloudflare's edge can
       still hand you a stale HTML response for a few seconds; the verify task

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { createPortal, flushSync } from 'react-dom'
 import Link from 'next/link'
 import styles from './site-search.module.css'
 
@@ -9,10 +9,10 @@ import styles from './site-search.module.css'
  * ⌘K command-palette search over the blog, powered by Pagefind.
  *
  * Pagefind builds a tiny WASM-backed search index from the EXPORTED HTML at
- * deploy time (see the `postbuild` script → `pagefind --site out`), writing it
- * to /pagefind/. Only the blog post <article> is indexed — it carries
+ * deploy time (see the `postbuild` script → `scripts/build-search.mts`), writing it
+ * to /pagefind/. Blog post <article> elements carry
  * `data-pagefind-body`, so nav/footer/TOC chrome is excluded and results are
- * just posts. The index lives only in the built output, so in `next dev` there
+ * posts plus curated SVG-study and PNG-artwork records from scripts/build-search.mts. The index lives only in the built output, so in `next dev` there
  * is nothing to load and the dialog says so gracefully.
  *
  * No backend, no third-party service — the index is static files on the CDN.
@@ -21,6 +21,7 @@ import styles from './site-search.module.css'
 import { mapSearchHit, revealSearchSelection, type Hit } from './search-hit'
 
 import { loadPagefind } from './pagefind-loader'
+import { announceSearchAnchor } from './search-navigation'
 
 type Status = 'idle' | 'loading' | 'ok' | 'empty' | 'unavailable'
 
@@ -50,7 +51,7 @@ export function SiteSearch() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  // The WebSite JSON-LD advertises `/?q={query}` as a SearchAction — honour it.
+  // The WebSite JSON-LD advertises `/blog/?q={query}` as a SearchAction — honour it.
   // Plain location parsing (NOT useSearchParams — that forces a Suspense
   // boundary in the static export); runs once on mount, and the debounced
   // search effect below picks the query up and runs it.
@@ -141,8 +142,12 @@ export function SiteSearch() {
       setActive((a) => Math.max(a - 1, 0))
     } else if (e.key === 'Enter' && status === 'ok' && hits[active]) {
       e.preventDefault()
-      // Full navigation — bulletproof on static hosting (no RSC dependency).
-      window.location.href = hits[active].url
+      const destination = hits[active].url
+      // Close and unlock before a same-document artwork anchor navigation.
+      flushSync(() => setOpen(false))
+      announceSearchAnchor(destination)
+      // Full navigation remains reliable on static hosting (no RSC dependency).
+      window.location.href = destination
     }
   }
 
@@ -173,8 +178,8 @@ export function SiteSearch() {
           <section className={styles.sheet}>
             <header className={styles.heading}>
               <div>
-                <h2>Find a field note</h2>
-                <p>Search the writing, follow an idea.</p>
+                <h2>Find a note or asset</h2>
+                <p>Search writing, SVG studies and PNG artwork by name, subject or tag.</p>
               </div>
               <button type="button" className={styles.close} aria-label="Close search" onClick={() => setOpen(false)}>×</button>
             </header>
@@ -191,8 +196,8 @@ export function SiteSearch() {
                   setStatus(next.trim() ? 'loading' : 'idle')
                   setQuery(next)
                 }}
-                placeholder="Search posts…"
-                aria-label="Search posts"
+                placeholder="Search posts and assets…"
+                aria-label="Search posts and assets"
                 autoComplete="off"
                 spellCheck={false}
               />
@@ -202,7 +207,7 @@ export function SiteSearch() {
             </div>}
             <div className={styles.results} aria-busy={status === 'loading'}>
               {status === 'ok' && hits.map((h, i) => (
-                <a key={h.url} href={h.url} onClick={() => setOpen(false)} onMouseMove={() => setActive(i)}
+                <a key={h.url} href={h.url} onClick={() => { flushSync(() => setOpen(false)); announceSearchAnchor(h.url) }} onMouseMove={() => setActive(i)}
                   className={styles.result} data-active={i === active}>
                   {h.topicIcon && <span className={styles.topicIcon} aria-hidden="true">
                     {h.topicMode === 'mask' ? <span style={{ maskImage:`url("${h.topicIcon}")`, WebkitMaskImage:`url("${h.topicIcon}")` }} /> : <img src={h.topicIcon} width={28} height={28} alt=""/>}
@@ -217,9 +222,9 @@ export function SiteSearch() {
                 {status === 'loading' && 'Searching…'}
                 {status === 'empty' && `No matches for “${query}”. Try a topic or a different phrase.`}
                 {status === 'idle' && 'Start with a subject, a title, or a question.'}
-                {status === 'unavailable' && 'Search is unavailable right now. You can still browse every post.'}
+                {status === 'unavailable' && 'Search is unavailable right now. You can still browse the archive and asset library.'}
               </p>
-              {status === 'unavailable' && <Link className={styles.browse} href="/blog/" onClick={() => setOpen(false)}>Browse the archive</Link>}
+              {status === 'unavailable' && <><Link className={styles.browse} href="/blog/" onClick={() => setOpen(false)}>Browse the archive</Link><Link className={styles.browse} href="/vectors/" onClick={() => setOpen(false)}>Browse asset library</Link></>}
             </div>
             <footer className={styles.footer}><span>↑ ↓ to choose</span><span>Enter to open</span><span>Esc to close</span></footer>
           </section>

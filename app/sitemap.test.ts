@@ -23,6 +23,7 @@ describe('sitemap', () => {
       '/hiking/',
       '/uses/',
       '/vectors/',
+      '/vectors/originals/',
       '/lab/',
       '/lab/black-hole-sim/',
       '/lab/carbon/',

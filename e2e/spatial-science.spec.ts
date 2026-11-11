@@ -147,6 +147,9 @@ test('background work pauses offscreen and context loss keeps controls usable', 
 })
 
 test('mobile WebGL scenes support dark mode, orbit and camera reset', async ({ browser }) => {
+  // One test walks every WebGL scene in the catalogue; 30s is too tight on a
+  // busy machine (it timed out mid-catalogue twice under parallel workers).
+  test.setTimeout(120_000)
   const context = await browser.newContext({ viewport: { width: 375, height: 812 }, reducedMotion: 'reduce', colorScheme: 'dark' })
   const page = await context.newPage()
   await page.addInitScript(() => localStorage.setItem('theme', 'dark'))

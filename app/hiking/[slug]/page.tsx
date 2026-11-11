@@ -55,7 +55,7 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
 
       <main id="main-content" data-hiking-page="detail" className={`${trail.page} mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8`}>
         <Breadcrumb
-          className="pt-8 sm:pt-10"
+          className="mb-8 sm:mb-10"
           items={[{ label: 'Home', href: '/' }, { label: 'Hiking', href: '/hiking/' }, { label: hike.name }]}
         />
 

@@ -10,7 +10,7 @@ export default function BlogLoading() {
         id="main-content"
         className="mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8"
       >
-        <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
+        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
         <div className="pt-8 pb-20 md:pt-10">
           <div className="h-4 w-48 animate-pulse rounded bg-surface-2" />
           <div className="mt-4 h-16 w-2/3 animate-pulse rounded-lg bg-surface-2" />

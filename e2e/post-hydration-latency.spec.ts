@@ -62,7 +62,7 @@ test('a first-visit blog post hydrates out of its loading skeleton when every re
     await page.goto(origin + POST)
     // Role locators skip the hidden streamed copy of the article, and the
     // stuck state hides the real <main>, so this only passes on a revealed post.
-    await expect(page.getByRole('main').getByRole('article'), `load ${load} of ${LOADS}`).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('main').getByRole('article').first(), `load ${load} of ${LOADS}`).toBeVisible({ timeout: 15_000 })
     await context.close()
   }
 })

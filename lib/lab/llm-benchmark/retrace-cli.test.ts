@@ -14,12 +14,11 @@ import { contentAddress } from './content-address'
  * extracted. That promise is only worth making if it is exercised, so this
  * builds an extracted-export-shaped tree (a `<model>-<task>.jsonl`, a `spill/`
  * store, a README.txt that is not a log) and runs the real script over it.
- * Slower than a unit test because it spawns tsx; it is the only thing that
- * proves the documented command works.
+ * Slower than a unit test because it spawns Node with the tsx loader; it is
+ * the only thing that proves the documented command works.
  */
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const script = join(root, 'scripts/retrace.mjs')
-const tsx = join(root, 'node_modules/.bin/tsx')
 
 const SPILL_TEXT = '<!doctype html>\n<title>exported artifact</title>\n'
 const SPILL_REF = `spill/${contentAddress(SPILL_TEXT)}.txt`
@@ -90,12 +89,12 @@ beforeAll(() => {
 afterAll(() => rmSync(dir, { recursive: true, force: true }))
 
 function retrace(args: string[]): string {
-  return execFileSync(tsx, [script, ...args], { encoding: 'utf8', cwd: root })
+  return execFileSync(process.execPath, ['--import', 'tsx', script, ...args], { encoding: 'utf8', cwd: root })
 }
 
 describe('retrace --dir', () => {
-  // Generous timeouts: each case spawns tsx, and the FIRST spawn on a cold
-  // machine pays for the whole TypeScript transform pipeline.
+  // Generous timeouts: each case spawns Node with the tsx loader, and the FIRST
+  // spawn on a cold machine pays for the whole TypeScript transform pipeline.
   it('replays an extracted export directory', () => {
     const out = retrace(['--dir', dir])
     expect(out).toContain('gemini-3.6-flash :: tic-tac-toe')

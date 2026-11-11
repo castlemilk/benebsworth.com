@@ -5,11 +5,9 @@ import { dirname, join } from 'node:path'
 import test from 'node:test'
 import { ORG_ID, PROJECT_ID, validateOutput, validateProject, validateUrl } from './vercel-preview.mjs'
 
-test('preparation source-build guard affects only the new migration branch', () => {
+test('Git source builds are disabled while prebuilt CI previews remain available', () => {
   const config = JSON.parse(readFileSync(new URL('../../vercel.json', import.meta.url), 'utf8'))
-  assert.deepEqual(config.git.deploymentEnabled, {
-    'codex/github-actions-vercel-previews-20261027': false,
-  })
+  assert.equal(config.git.deploymentEnabled, false)
   assert.deepEqual(Object.keys(config).sort(), ['$schema', 'git'])
   assert.deepEqual(Object.keys(config.git), ['deploymentEnabled'])
 })
@@ -67,6 +65,7 @@ test('workflow preserves exact-SHA, preview-only, prebuilt-only, opt-in security
   assert.match(workflow, /branches-ignore: \[master\]/)
   assert.match(workflow, /github\.ref_name != 'master'/)
   assert.match(workflow, /vars\.VERCEL_PREVIEW_CI_ENABLED == 'true'/)
+  assert.ok(workflow.includes("github.ref_name != 'codex/blog-editorial-ci-reconcile-20261027'"), 'reconciliation branch cannot deploy even if the opt-in variable is already enabled')
   assert.match(workflow, /name: preview-deploy/)
   assert.match(workflow, /ref: \$\{\{ github\.sha \}\}/)
   assert.match(workflow, /persist-credentials: false/)

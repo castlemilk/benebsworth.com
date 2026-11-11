@@ -19,6 +19,7 @@
  * Honours prefers-reduced-motion (skips the anime; the draw still works).
  */
 
+import { InteractiveStudy } from '@/components/mdx/interactive-study'
 import { useEffect, useId, useRef, useState } from 'react'
 import { animate, createScope, type Scope } from 'animejs'
 import {
@@ -95,9 +96,10 @@ export function TokenSampler() {
   const truncated = (i: number) => dist[i] === 0
 
   return (
+    <InteractiveStudy title="Token sampling" hint="Change temperature, then sample a token.">
     <figure
       ref={root}
-      className="not-prose my-10 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-surface"
+      className="not-prose m-0"
     >
       {/* stem + sample button */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] bg-surface-2/40 px-5 py-3">
@@ -158,7 +160,7 @@ export function TokenSampler() {
       </div>
 
       {/* controls */}
-      <div className="space-y-2.5 border-t border-[var(--color-border)] bg-surface-2/40 px-5 py-3.5">
+      <div data-study-target className="space-y-2.5 border-t border-[var(--color-border)] bg-surface-2/40 px-5 py-3.5">
         <Slider
           id={`t-${uid}`}
           label="temperature T"
@@ -210,6 +212,7 @@ export function TokenSampler() {
         </div>
       )}
     </figure>
+    </InteractiveStudy>
   )
 }
 

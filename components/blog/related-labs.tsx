@@ -1,4 +1,6 @@
+import styles from './archive-discovery.module.css'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { tagColor } from '@/lib/tag-colors'
 import { LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
 
@@ -19,8 +21,9 @@ export function RelatedLabs({
   labels = [],
   limit = 3,
   variant = 'default',
+  intro,
 }: {
-  /** Post tags — match against lab effect tags (case-insensitive substring). */
+  /** Post tags — match whole topics or phrases, never fragments inside words. */
   tags?: string[]
   /** Post labels — also match against lab effect tags. */
   labels?: string[]
@@ -28,6 +31,8 @@ export function RelatedLabs({
   limit?: number
   /** 'default' for the standard post-footer block. 'inline' for compact use in about pages. */
   variant?: 'default' | 'inline'
+  /** Optional authored context below the one shared heading. */
+  intro?: ReactNode
 }) {
   const query = [...tags, ...labels].map((s) => s.toLowerCase().trim()).filter(Boolean)
 
@@ -67,9 +72,12 @@ export function RelatedLabs({
 
   const scored: Array<{ entry: LabEntry; score: number }> = LAB_DEMO_EFFECTS
     .map((entry) => {
-      const entryTags = entry.tags.map((t) => t.toLowerCase())
+      const entryTags = entry.tags.map(normaliseTopic)
       const tagScore = query.reduce((acc, q) => {
-        return acc + (entryTags.some((t) => t.includes(q) || q.includes(t)) ? 1 : 0)
+        const topic = normaliseTopic(q)
+        return acc + (topic && entryTags.some((t) => t && (
+          ` ${t} `.includes(` ${topic} `) || ` ${topic} `.includes(` ${t} `)
+        )) ? 1 : 0)
       }, 0)
       const categoryScore = wantedCategories.has(entry.category) ? 1 : 0
       return { entry, score: tagScore + categoryScore }
@@ -126,7 +134,7 @@ export function RelatedLabs({
   }
 
   return (
-    <section className="not-prose mt-16 border-t border-fg/10 pt-8">
+    <section className={`${styles.related} not-prose mt-16 border-t border-fg/10 pt-8`}>
       <div className="mb-5 flex items-baseline justify-between">
         <h2 className="font-display text-2xl font-semibold tracking-[-0.015em] text-fg/90">
           Try it in the lab
@@ -138,6 +146,7 @@ export function RelatedLabs({
           All effects →
         </Link>
       </div>
+      {intro}
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {chosen.map((e) => (
           <li key={e.slug}>
@@ -182,6 +191,10 @@ export function RelatedLabs({
 
 // Deterministic 32-bit hash. Used for the day-stable "random" shuffle
 // fallback so the same set of fillers appears for 24h before rotating.
+function normaliseTopic(value: string): string {
+  return value.toLowerCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 function hash(s: string): number {
   let h = 2166136261
   for (let i = 0; i < s.length; i++) {

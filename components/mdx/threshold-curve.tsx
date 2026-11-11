@@ -31,6 +31,7 @@
  * gated on in-view + reduced-motion (jumps straight to the target otherwise).
  */
 
+import { InteractiveStudy } from '@/components/mdx/interactive-study'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useInViewport } from './use-in-viewport'
 
@@ -242,9 +243,10 @@ export function ThresholdCurve({
   const markerX = tx(p)
 
   return (
+    <InteractiveStudy title="Error-correction threshold" hint="Move the operating point to compare error rates.">
     <figure
       ref={inViewRef}
-      className="not-prose my-10 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-surface"
+      className="not-prose m-0"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] bg-surface-2/40 px-5 py-3">
         <span className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted">
@@ -266,6 +268,8 @@ export function ThresholdCurve({
       <div className="px-2 py-4 sm:px-4">
         <svg
           ref={svgRef}
+          data-study-target
+          data-study-action
           viewBox={`0 0 ${VB_W} ${VB_H}`}
           className="block h-auto w-full touch-none select-none"
           style={{ maxWidth: 660, margin: '0 auto' }}
@@ -564,6 +568,7 @@ export function ThresholdCurve({
         </p>
       </div>
     </figure>
+    </InteractiveStudy>
   )
 }
 

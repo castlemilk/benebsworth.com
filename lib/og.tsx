@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og'
 import fs from 'node:fs'
 import path from 'node:path'
+import { ogFonts } from './og-fonts'
 
 /** Shared 1200×630 OpenGraph card. Rendered at build time (static export). */
 export const OG_SIZE = { width: 1200, height: 630 }
@@ -220,7 +221,7 @@ export function renderOgCard({
         </div>
       </div>
     ),
-    { ...OG_SIZE },
+    { ...OG_SIZE, fonts: ogFonts() },
   )
 }
 
@@ -331,6 +332,6 @@ export function renderBlogOgCard({
         </div>
       </div>
     ),
-    { ...OG_SIZE },
+    { ...OG_SIZE, fonts: ogFonts() },
   )
 }

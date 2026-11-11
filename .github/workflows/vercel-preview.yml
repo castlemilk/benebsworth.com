@@ -1,7 +1,8 @@
 name: Vercel preview (build in GitHub Actions)
 
-# Production and shared staging remain on Cloudflare Pages. This replaces only
-# Vercel branch previews; do not disable the Git trigger until a canary is green.
+# Legacy opt-in preview lane. Keep disabled while the separate credential-free
+# artifact/reviewed-publisher lane serves editorial previews. Production and
+# shared staging remain on Cloudflare Pages; vercel.json disables Git-source builds.
 on:
   push:
     branches-ignore: [master]
@@ -30,6 +31,7 @@ jobs:
       vars.VERCEL_PREVIEW_CI_ENABLED == 'true' &&
       github.repository == 'castlemilk/benebsworth.com' &&
       github.ref_type == 'branch' && github.ref_name != 'master' &&
+      github.ref_name != 'codex/blog-editorial-ci-reconcile-20261027' &&
       github.event.deleted != true
     runs-on: ubuntu-24.04
     timeout-minutes: 30

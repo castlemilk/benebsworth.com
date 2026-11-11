@@ -1,0 +1,25 @@
+.shell { min-width:0; width:100%; }
+/* Mini/article canvases retain their original parent sizing contract. */
+.shell[data-inspectable='false'] { display:contents; }
+.inspectable { position:relative; outline-offset:4px; }
+.inspectable:focus-visible { outline:2px solid #a33b30; }
+.crosshair { position:absolute; top:0; bottom:0; width:1px; background:var(--fg); opacity:.35; pointer-events:none; }
+.marker { position:absolute; width:9px; height:9px; border:2px solid currentColor; border-radius:50%; background:var(--stage,#faf7ef); transform:translate(-50%,-50%); box-shadow:0 0 0 2px var(--stage,#faf7ef); pointer-events:none; }
+.readout { --readout-rule:#d3cec2; position:absolute; z-index:2; box-sizing:border-box; padding:12px 14px; border:1px solid #b8b2a6; border-radius:5px; background:#fcf9f1; color:#292a28; box-shadow:0 6px 20px #00000014; pointer-events:none; overflow:hidden; font:11px/1.45 var(--font-mono),monospace; }
+:global(.dark) .readout { --readout-rule:#596057; background:#202522; color:#f2eee4; border-color:#687268; box-shadow:0 6px 20px #0005; }
+.readoutHeader { display:flex; align-items:center; justify-content:space-between; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--readout-rule); font-size:9px; text-transform:uppercase; letter-spacing:.1em; }
+.readoutHeader b { margin-left:8px; font-weight:500; }
+.primary { display:grid; margin:9px 0 11px; }
+.primary output { font:500 34px/1.1 'Folio Serif',Georgia,serif; font-variant-numeric:tabular-nums; letter-spacing:-.025em; }
+.primary span { margin-top:3px; font-size:10px; }
+.readout dl { display:grid; grid-template-columns:1fr auto; gap:5px 12px; margin:0; }
+.readout dt { display:flex; align-items:center; gap:8px; }
+.readout dt i { width:20px; height:2px; display:inline-block; }
+.readout dd { margin:0; font-variant-numeric:tabular-nums; }
+.readout footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:8px; border-top:1px solid var(--readout-rule); font-size:8px; text-transform:uppercase; letter-spacing:.08em; }
+.readout small { display:block; margin-top:2px; font-size:8px; text-transform:none; letter-spacing:0; opacity:.75; }
+.readout kbd { border:1px solid var(--readout-rule); padding:2px 4px; border-radius:3px; text-transform:none; }
+.docked { position:relative; width:100%; max-height:none; margin-top:12px; pointer-events:auto; box-shadow:none; }
+.docked .readoutHeader button { min-height:44px; padding:0 10px; border:1px solid var(--readout-rule); border-radius:3px; background:transparent; color:inherit; cursor:pointer; }
+.docked button:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
+.docked .primary { margin-top:4px; }

@@ -62,7 +62,7 @@ describe('topicFor()', () => {
   })
 
   it('returns technology for unknown slug with no matching tags', () => {
-    const t = topicFor({ slug: 'totally-new-post', tags: ['machine-learning'] })
+    const t = topicFor({ slug: 'totally-new-post', tags: ['unmapped-subject'] })
     expect(t.label).toBe('Engineering')
     expect(t.accent).toBe('#00e0b8')
 

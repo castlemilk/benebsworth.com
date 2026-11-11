@@ -1,0 +1,46 @@
+RESEARCH FOLIO — AUTHORING PATTERNS
+27 October 2026. Preview implementation, not a publication instruction.
+
+Keep the existing article frontmatter, title, date, canonical URL, sources and review-first publishing process. These components belong inside the MDX body and are already registered in the shared MDX component map. They do not generate articles, evidence or reading-time claims.
+
+EXPLAINER
+PostBrief kind="explainer": one paragraph telling readers what mechanism they will understand. Optional audience string.
+Then: the mechanism in prose → FigureFocus with truthful caption → Assumptions → worked example → limits.
+Use an AnnotatedBlock only when a note has a specific target. One meaningful annotation is stronger than marks on every paragraph.
+
+EXPERIMENT
+PostBrief kind="experiment": state the question; prerequisites lists actual requirements.
+Then: Assumptions → MethodSteps → existing Gamma-controlled experiment → EvidenceNote → conclusion.
+EvidenceNote requires basis="measured", "simulated", "illustrative" or "interpretation". The author owns this declaration. Never call a generated diagram a measured result. Put run/commit identifiers, inputs, environment, units, sample count and source links in the authored content where relevant; do not fabricate missing values.
+Use limitations to state what the result does not establish.
+
+ESSAY
+PostBrief kind="essay" is optional. Lead with the argument and let prose do the work.
+Then: sections of reasoning → a restrained FieldNote for a genuine qualification → conclusion and sources.
+Do not force steps, a diagram, benchmark statistics or a handwritten flourish into an essay that needs none.
+
+PRACTICAL GUIDE
+PostBrief kind="guide", audience and prerequisites orient the reader.
+MethodSteps takes steps=[{title, content}, ...]. Ordered numbering is for an actual procedure.
+Include expected outcomes, reversible recovery and checks in authored step content. Link source/version documentation. Preserve existing code-block components and syntax highlighting.
+
+COMPONENT EXAMPLE (MDX)
+<PostBrief kind="experiment" audience="Engineers comparing models" prerequisites={["A stated equation", "A fixed input range"]}>
+  <p>Compare the model while holding its inputs constant.</p>
+</PostBrief>
+<EvidenceNote basis="illustrative" limitations={<p>No physical system was measured.</p>}>
+  <p>This figure is generated from the displayed equation.</p>
+</EvidenceNote>
+
+ANNOTATION RULES
+- Reuse AnnotatedBlock / AnnotationTarget / MarginNote, not page-wide absolute positioning.
+- Each explicit target ID must be unique across the entire article. Matching pairs are checked per block; document-wide duplicate checking remains open.
+- Above/margin/below are layout choices. Narrow figure containers stack notes; red curved lines stay connected when measurable.
+- mark="none" is appropriate when a line adds no information. mark="bracket" groups a region.
+- Scientific geometry retains its own colours and accuracy. Rough.js red ink guides reading only.
+- Repeated CoilSpecimen figures use independent paint IDs.
+- No new local CSS or fonts per article. Use the shared serif/condensed/handwritten roles and theme-aware ink.
+
+ROLL OUT IN REVIEW
+The editorial study route shows examples of these patterns. Next, choose one existing explainer and one experiment for a scoped preview adoption, without changing their factual content or publication metadata. Verify code/math/table overflow, captions, long notes, both themes, keyboard access, 320/390/706px and a narrow figure column at a wide viewport, plus 200% zoom.
+Focused tests and a green hosted build do not establish visual acceptance. Browser screenshots remain a release gate. Keep PR77 content work separate.

@@ -1,15 +1,17 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import styles from './archive-discovery.module.css'
+import { useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import { TOPIC, topicFor } from '@/lib/topics'
 import type { BlogPostSummary } from '@/lib/content'
-import { tagColor } from '@/lib/tag-colors'
+import { PostTag } from './post-tag'
 import { fmtDate } from '@/lib/format'
 import { Reveal } from '@/components/motion/reveal'
-import { SpotlightCard } from '@/components/motion/spotlight-card'
+import { FolioEntry } from '@/components/blog/folio-entry'
 import { BlogFilter, type BlogFilterItem } from '@/components/blog/blog-filter'
 import { BlogPostCard } from '@/components/blog/blog-post-card'
+import { GammaButton } from '@/components/gamma/GammaButton'
 
 const TOPIC_ACCENT_REVERSE: Record<string, string> = {}
 for (const [key, t] of Object.entries(TOPIC)) {
@@ -24,6 +26,7 @@ function topicKey(post: BlogPostSummary): string {
 export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
   const [query, setQuery] = useState('')
   const [topicFilter, setTopicFilter] = useState<string | null>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const navItems: BlogFilterItem[] = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -62,7 +65,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
 
   const filterLabel = (() => {
     const parts: string[] = []
-    if (query) parts.push(`"${query}"`)
+    if (query.trim()) parts.push(`"${query.trim()}"`)
     if (topicFilter) {
       const t = Object.values(TOPIC).find((t) => TOPIC_ACCENT_REVERSE[t.label] === topicFilter)
       if (t) parts.push(t.label)
@@ -80,12 +83,13 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
         onSearchChange={setQuery}
         activeTopic={topicFilter}
         onTopicChange={setTopicFilter}
+        searchInputRef={searchInputRef}
       />
 
       {filtered !== null ? (
         <section className="pt-16">
           <div className="mb-8">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            <p role="status" className={`${styles.status} font-mono text-xs uppercase tracking-[0.2em] text-muted`}>
               {filtered.length} result{filtered.length !== 1 ? 's' : ''}
               {filterLabel && <> for {filterLabel}</>}
             </p>
@@ -97,25 +101,36 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
               ))}
             </div>
           ) : (
-            <p className="font-sans text-base leading-7 text-muted">
-              No posts match your search. Try a different term or topic.
-            </p>
+            <div className={styles.emptyRecovery}>
+              <h2>No matching field notes</h2>
+              <p>No posts match your search. Try a different term or topic.</p>
+              {posts.length > 0 && <GammaButton
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setQuery('')
+                  setTopicFilter(null)
+                  searchInputRef.current?.focus()
+                }}
+              >Clear filters</GammaButton>}
+            </div>
           )}
         </section>
       ) : (
         <section>
+          {posts.length === 0 && <p role="status" className={styles.empty}>No posts are available yet.</p>}
           {lead && (() => {
             const topic = topicFor(lead)
             return (
               <Reveal>
                 <Link href={`/blog/${lead.slug}/`} className="block rounded-2xl">
-                  <SpotlightCard accent={topic.accent} className="overflow-hidden">
+                  <FolioEntry accent={topic.accent} className="overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-[0.85fr_1fr]">
                       <div className="relative grid min-h-[19rem] place-items-center overflow-hidden border-b border-[var(--color-border)] bg-surface md:border-b-0 md:border-r">
                         {lead.heroImage ? (
                           <img
                             src={lead.heroImage}
-                            alt={lead.title}
+                            alt=""
                             fetchPriority="high"
                             loading="eager"
                             decoding="async"
@@ -162,11 +177,11 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         )}
                       </div>
 
-                      <div className="flex flex-col justify-center p-9 sm:p-12">
-                        <div className="flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
+                      <div className="min-w-0 flex flex-col justify-center p-6 sm:p-12">
+                        <div className="flex flex-wrap items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
                           <span className="text-blog">Latest</span>
                           <span className="text-muted">·</span>
-                          <span className="text-muted">{fmtDate(lead.date)}</span>
+                          <time dateTime={lead.date} className="text-muted">{fmtDate(lead.date)}</time>
                           {lead.readingTime ? (
                             <>
                               <span className="text-muted">·</span>
@@ -182,22 +197,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         </p>
                         {lead.tags.length > 0 && (
                           <div className="mt-5 flex flex-wrap gap-1.5">
-                            {lead.tags.slice(0, 5).map((t) => {
-                              const c = tagColor(t)
-                              return (
-                                <span
-                                  key={t}
-                                  className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
-                                  style={{
-                                    '--ink': c,
-                                    borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
-                                    backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                                  } as React.CSSProperties}
-                                >
-                                  {t}
-                                </span>
-                              )
-                            })}
+                            {lead.tags.slice(0, 5).map((t) => <PostTag key={t} tag={t} />)}
                           </div>
                         )}
                         <span className="mt-7 inline-flex items-center gap-2 font-mono text-sm text-blog">
@@ -208,7 +208,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                         </span>
                       </div>
                     </div>
-                  </SpotlightCard>
+                  </FolioEntry>
                 </Link>
               </Reveal>
             )

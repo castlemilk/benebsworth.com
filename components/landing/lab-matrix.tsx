@@ -119,20 +119,21 @@ function LabMatrixTile({
           <div className="h-full w-full animate-pulse" />
         )}
       </div>
-      {/* Title overlay. Slides up slightly on hover to feel alive. */}
+      {/* Title overlay. Ink and scrim both follow the theme tokens, so the
+          label reads on a light canvas as well as a dark one. */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--color-bg,#0a0a0c)]/85 via-[var(--color-bg,#0a0a0c)]/40 to-transparent px-3 pb-2.5 pt-6">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="font-display text-sm font-semibold text-white/95">
+          <h3 className="font-display text-sm font-semibold text-fg">
             {entry.title}
           </h3>
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/55">
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted">
             {entry.category}
           </span>
         </div>
       </div>
       {/* Hover affordance — small "→" that fades in on hover. */}
       <div
-        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/70 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/85 transition-opacity ${
+        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/80 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-fg transition-opacity ${
           hovered === entry.slug ? 'opacity-100' : 'opacity-0'
         }`}
       >

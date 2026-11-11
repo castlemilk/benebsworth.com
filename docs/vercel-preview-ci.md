@@ -1,21 +1,60 @@
 # Vercel previews built in GitHub Actions
 
-The live site and shared staging stay on **Cloudflare Pages**, using the existing
-`task deploy:prod` and `task deploy:staging` paths. This workflow replaces only
-the remaining Vercel **branch-preview build execution**. It does not publish to
-either Cloudflare project, promote production, alter domains, or disable existing
-branches' Git integration by itself.
+## Current source configuration
 
-`vercel.json` prevents an unnecessary source build of **only** the new preparation
-branch `codex/github-actions-vercel-previews-20261027`. Every unspecified branch
-retains Vercel's default enabled behavior. There is deliberately no `"*": true`
-rule: a matching `true` rule would override a `false` rule. Publish this file in
-the branch's **initial commit** (create the tree/commit first, then create the
-branch ref directly at that commit). Creating the branch at an unguarded base
-commit first can trigger a chargeable build. This branch-specific Git guard does
-not disable explicit prebuilt CLI uploads or replace the global cutover below.
+The public site is published to **Cloudflare Pages** project `benebsworth` by
+`.github/workflows/publish-site.yml` (**Publish checked site**), after its exact
+master commit passes `task remote:check`. See
+[Remote blog drafts and publication](remote-blog-publishing.md) for the release
+inputs, existing Production environment and live-byte verification. Vercel
+preview deployments do not establish what `benebsworth.com` serves. Existing
+shared staging remains a separate Cloudflare path.
 
-## What runs
+The reconciled source retains three independent CI lanes:
+
+| Lane | Source and purpose | Deployment behavior |
+| --- | --- | --- |
+| Cloudflare release | `site-checks.yml` and manual `publish-site.yml` | Validate the reviewed master source, then publish its checked export to the public domain through the existing Production environment. |
+| Editorial artifact and publisher | `vercel-artifact.yml` and `vercel-publish-reviewed.yml` | Build the exact editorial source without deployment credentials; the separate reviewed publisher verifies the artifact and uploads only a prebuilt preview. |
+| Legacy opt-in preview | `vercel-preview.yml` | Retained behind `VERCEL_PREVIEW_CI_ENABLED == 'true'` and `preview-deploy`; keep this lane disabled while the reviewed publisher is active. |
+
+`vercel.json` contains **`git.deploymentEnabled: false`**. Preserve that global
+source-build guard and its matching assertion in
+`scripts/ci/vercel-preview.test.mjs`; restoring the older branch-only map would
+re-enable Vercel source builds on other branches. The guard does not prevent
+explicit `--prebuilt` uploads or change Cloudflare publishing. Current dashboard
+configuration and served content still require deployment evidence; this source
+setting is not a claim about a live release.
+
+## Editorial preview lane
+
+The artifact workflow builds the exact `codex/gamma-blog-editorial-20261027`
+commit on editorial pushes, or an explicitly selected same-repository PR head.
+It uses the committed public-only configuration profile and records source,
+run, file hashes and `releaseApproved: false`. It does not pull environment
+secrets. See [Build Output validation](vercel-artifact-validation.md) for that
+lane's original scope and limitations; its initial branch-guard/cutover notes
+are historical, and the current global guard is described above.
+
+The separate publisher preserves its existing owner-trusted branch policy,
+`preview-deploy` environment, allowed actor/ref checks, immutable artifact
+verification and fresh branch-head checks. It installs the pinned upload tool
+outside the artifact, uploads with `--prebuilt --target=preview`, verifies READY
+identity and updates only the established editorial preview alias. The policy
+records the earlier qualified canary; that receipt does not qualify a new
+source commit. No application code runs in the upload job, and no Cloudflare
+release, Vercel production promotion or broadened credential access is implied.
+
+The legacy reconciliation branch exclusion is retained in
+`vercel-preview.yml`, even if its opt-in flag is enabled elsewhere. Resolving
+these source conflicts does not enable that legacy lane or modify any GitHub
+environment, credential, publisher policy, domain or protection setting.
+
+## Legacy opt-in preview workflow
+
+The following describes the retained `vercel-preview.yml` implementation. It
+is not the active editorial artifact/publisher path and must not run alongside
+that publisher for the same branch.
 
 - A push to a non-`master` branch in `castlemilk/benebsworth.com`, or a manual
   retry on such a branch. No duplicate push + PR build and no tag/branch-delete
@@ -46,53 +85,28 @@ never logged, cached, or uploaded as Actions artifacts and are removed at job en
 Build code can read the preview configuration pulled for it, so environment
 review must happen before **any** job code executes.
 
-## Enable safely, then cut over
+## Preserve the existing release boundaries
 
-This is an intentionally staged migration. Until the following prerequisites
-are verified, `VERCEL_PREVIEW_CI_ENABLED` stays absent/false and the job skips.
-Adding workflow YAML alone does **not** stop Vercel build charges.
+- Keep `VERCEL_PREVIEW_CI_ENABLED` absent/false while the separate reviewed
+  publisher serves editorial previews. A merge is not an instruction to enable
+  another deployment lane.
+- Keep `git.deploymentEnabled: false` and the matching regression together.
+  The earlier preparation-branch maps are superseded by this current guard.
+- Keep the fixed project/team identity checks, exact-source checkout,
+  branch-head freshness, preview-only target and prebuilt-only upload. Never
+  add a source-upload fallback or `pull_request_target` credential path.
+- Keep the existing environment and credential bindings. Inspect their actual
+  configuration through the supported provider before a release; documentation
+  or an old success does not prove current availability. Do not move secrets or
+  relax branch/environment controls to make a job run.
+- Confirm the exact run, source SHA, artifact, deployment target and established
+  alias after each preview publication. A successful artifact build alone is
+  not browser acceptance or a public-domain release.
 
-1. Inspect existing GitHub environment configuration and reuse the established
-   protected preview environment if one exists (update the workflow name if
-   needed). Otherwise, configure `preview-deploy` with required reviewers and
-   suitable branch restrictions. This is a separate authorized settings change.
-   Never allow arbitrary PR code through `pull_request_target`.
-2. Verify that a suitably scoped **existing** `VERCEL_TOKEN` is available as an
-   environment secret. Do not put it in YAML, repository-wide PR-accessible
-   secrets, logs, artifacts, or chat. Any creation/transfer of a token requires
-   explicit authorization; this patch creates no credentials or ongoing access.
-   Project/team IDs are fixed public identifiers:
-   `prj_sxj2GQBYr1GDrSADoiKBve3nAlmO` /
-   `team_xE5DMN3hIo8aPqyHNkBybg8r`.
-3. Review/publish this change, verify the exact remote SHA, then explicitly enable
-   the repository variable `VERCEL_PREVIEW_CI_ENABLED=true`. Push a reviewed
-   non-master canary commit containing the workflow, or dispatch on that branch
-   once GitHub recognizes the workflow. Approve its exact commit.
-4. Leave existing branches' Vercel Git triggers enabled for this first canary;
-   only the new preparation branch has the source-build guard above. Require
-   a green Actions run and READY deployment for the same SHA. Inspect logs:
-   compilation, static generation, postbuild, and Pagefind must run in Actions;
-   the Vercel upload must not run `npm run build` / `next build` remotely.
-   Prebuilt upload processing can still incur Vercel charges.
-5. Verify the new preview and branch alias with authenticated Vercel access.
-   The project currently has SSO protection on non-custom domains; an anonymous
-   401/403 is not a failed app. Check home, blog, an actual post, a lab page,
-   search and an OG image. Compare against the previous preview for the same
-   branch. Confirm a Preview deployment (REST may report `target: null`), the
-   expected team/project and commit metadata.
-6. **Only after that proof**, separately disable Vercel's automatic Git builds
-   for this project (all branches, including the obsolete Vercel master build).
-   Do not delete the project, domains, aliases, deployment history, or Cloudflare
-   configuration. An `ignoreCommand` that starts a remote build is not the goal.
-7. Push one more reviewed preview change: require exactly one Actions-built
-   preview, no parallel Git-source build, correct updated branch alias, and the
-   old immutable preview still accessible. Record both commit/run/deployment
-   IDs and the settings change as the cutover evidence.
-
-Changes reach existing feature branches only after they incorporate this
-workflow. In particular, incorporate it into
-`codex/gamma-blog-editorial-20261027` before relying on its next preview. Merely
-merging into master does not retrofit older feature branch workflow files.
+The original branch-only migration and canary plan remains in Git history.
+Reconciliation preserves the later editorial configuration instead of replaying
+that initial cutover. Existing feature branches inherit these files only when
+they incorporate the reconciled source.
 
 ## Failure and rollback
 
@@ -100,10 +114,10 @@ merging into master does not retrofit older feature branch workflow files.
   previous preview; do not upload source as a workaround or deploy production.
 - Incorrect project/team, missing build artifacts or invalid CLI URL: fail
   closed before producing a success link.
-- After cutover, stop new CI runs with `VERCEL_PREVIEW_CI_ENABLED=false`. If a
-  preview must be restored urgently, temporarily re-enable the previous Git
-  trigger as a separately authorized rollback, accepting the remote-build cost.
-  Do not run both pipelines indefinitely.
+- Keep the legacy opt-in flag disabled during recovery. Inspect the existing
+  immutable deployment and branch alias before changing any source or settings.
+  Any rollback uses the already authorized provider process; do not re-enable
+  Git-source builds or another publisher as an automatic fallback.
 
 ## Focused checks
 
@@ -114,7 +128,9 @@ node --check scripts/ci/vercel-preview.mjs
 
 These test guardrails, not the site's full build or a real Vercel upload. Run the
 actual canary and authenticated smoke checks before declaring migration complete.
-The existing full site quality gate remains `task ci`.
+The Cloudflare release uses `task remote:check`, including the full export and
+browser suite. The editorial artifact lane has its own documented scope; do not
+claim that one lane's checks establish the other lane's release acceptance.
 
 References: [Vercel prebuilt deployments and branch metadata](https://vercel.com/docs/cli/deploy),
 [branch-scoped pull](https://vercel.com/docs/cli/pull),

@@ -1,11 +1,11 @@
 'use client'
 import Link from 'next/link'
 import type { BlogPostSummary } from '@/lib/content'
-import { tagColor } from '@/lib/tag-colors'
+import { PostTag } from './post-tag'
 import { topicFor } from '@/lib/topics'
 import { fmtDate } from '@/lib/format'
 import { Reveal } from '@/components/motion/reveal'
-import { SpotlightCard } from '@/components/motion/spotlight-card'
+import { FolioEntry } from '@/components/blog/folio-entry'
 import { TopicMarker } from '@/components/blog/topic-marker'
 
 export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index?: number }) {
@@ -13,7 +13,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
   return (
     <Reveal delay={Math.min(index, 6) * 50}>
       <Link href={`/blog/${post.slug}/`} className="block rounded-xl">
-        <SpotlightCard accent={topic.accent} className="overflow-hidden p-6 sm:p-8">
+        <FolioEntry accent={topic.accent} className="overflow-hidden p-6 sm:p-8">
           <span
             aria-hidden
             className="absolute inset-y-0 left-0 z-10 w-[3px]"
@@ -23,7 +23,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-3">
                 <TopicMarker topic={topic} />
-                <time className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                <time dateTime={post.date} className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
                   {fmtDate(post.date)}
                 </time>
                 {post.readingTime ? (
@@ -40,22 +40,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
               </p>
               {post.tags.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
-                  {post.tags.slice(0, 4).map((t) => {
-                    const c = tagColor(t)
-                    return (
-                      <span
-                        key={t}
-                        className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.5rem] uppercase tracking-wider"
-                        style={{
-                          '--ink': c,
-                          borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
-                          backgroundColor: `color-mix(in srgb, ${c} 14%, transparent)`,
-                        } as React.CSSProperties}
-                      >
-                        {t}
-                      </span>
-                    )
-                  })}
+                  {post.tags.slice(0, 4).map((t) => <PostTag key={t} tag={t} />)}
                 </div>
               )}
             </div>
@@ -64,7 +49,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
                 <div className="relative h-24 w-32 overflow-hidden rounded-lg border border-[var(--color-border)] bg-black/20 sm:h-28 sm:w-40">
                   <img
                     src={post.heroImage}
-                    alt={post.title}
+                    alt=""
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 h-full w-full object-cover opacity-85 transition-transform duration-500 group-hover/spot:scale-110 group-hover/spot:opacity-100"
@@ -81,7 +66,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
               </span>
             )}
           </div>
-        </SpotlightCard>
+        </FolioEntry>
       </Link>
     </Reveal>
   )

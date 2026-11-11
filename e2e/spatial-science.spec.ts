@@ -1,6 +1,7 @@
 import { test, expect, type Locator } from '@playwright/test'
 import sharp from 'sharp'
 import { SPATIAL_CATALOG } from '../lib/lab/spatial/catalog'
+import { gotoSettled } from './settled'
 
 const pixels = async (canvas: Locator) => canvas.evaluate(node => (node as HTMLCanvasElement).toDataURL())
 
@@ -10,8 +11,8 @@ test.describe('spatial science collection', () => {
     test(`${entry.slug}: published essay, model, controls and assets`, async ({ page, request }) => {
       const errors: string[] = []
       page.on('pageerror', error => errors.push(error.message))
-      await page.goto(`/blog/${entry.blogSlug}/`)
-      await expect(page.locator('h1')).toBeVisible()
+      await gotoSettled(page, `/blog/${entry.blogSlug}/`)
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
       const toc = page.getByRole('navigation', { name: 'Table of contents', exact: true })
       await expect(toc).toBeVisible()
       for (const links of [toc.locator('a'), page.locator('article details nav a')]) {
@@ -65,7 +66,7 @@ test.describe('spatial science collection', () => {
       expect(md.ok()).toBe(true)
       expect(await md.text()).toContain('Interactive spatial science workbench')
       for (const path of [`/blog/${entry.blogSlug}/hero.webp`, `/blog/${entry.blogSlug}/opengraph-image.png`]) expect((await request.get(path)).ok()).toBe(true)
-      await page.goto(`/lab/${entry.slug}/`)
+      await gotoSettled(page, `/lab/${entry.slug}/`)
       await expect(page.getByRole('heading', { level: 1, name: entry.title, exact: true })).toBeVisible()
       await expect(page.locator(`[data-workbench="${entry.slug}"]`)).toBeVisible()
       await page.locator(`[data-workbench="${entry.slug}"] canvas`).waitFor()
@@ -75,7 +76,7 @@ test.describe('spatial science collection', () => {
   }
 
   test('all spatial labs appear in their category with loaded posters', async ({ page }) => {
-    await page.goto('/lab/')
+    await gotoSettled(page, '/lab/')
     for (const entry of SPATIAL_CATALOG) {
       const card = page.locator(`#cat-${entry.category} a[href="/lab/${entry.slug}/"]`)
       await expect(card).toHaveCount(1)
@@ -97,7 +98,7 @@ test('mobile, light theme, reduced motion and WebGL fallback retain the experime
     } as typeof original
   })
   for (const entry of SPATIAL_CATALOG) {
-    await page.goto(`/lab/${entry.slug}/`)
+    await gotoSettled(page, `/lab/${entry.slug}/`)
     const workbench = page.locator(`[data-workbench="${entry.slug}"]`)
     await expect(workbench).toBeVisible()
     await expect(workbench.locator('[data-renderer="svg"]')).toBeVisible()
@@ -117,7 +118,7 @@ test('mobile, light theme, reduced motion and WebGL fallback retain the experime
 })
 
 test('background work pauses offscreen and context loss keeps controls usable', async ({ page }) => {
-  await page.goto('/lab/singular-values/')
+  await gotoSettled(page, '/lab/singular-values/')
   const workbench = page.locator('[data-workbench="singular-values"]')
   await expect(workbench).toHaveAttribute('data-running', 'true')
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
@@ -150,7 +151,7 @@ test('mobile WebGL scenes support dark mode, orbit and camera reset', async ({ b
   const page = await context.newPage()
   await page.addInitScript(() => localStorage.setItem('theme', 'dark'))
   for (const entry of SPATIAL_CATALOG) {
-    await page.goto(`/lab/${entry.slug}/`)
+    await gotoSettled(page, `/lab/${entry.slug}/`)
     const workbench = page.locator(`[data-workbench="${entry.slug}"]`)
     const canvas = workbench.locator('canvas')
     await expect(canvas).toBeVisible()

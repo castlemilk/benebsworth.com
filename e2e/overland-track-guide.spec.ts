@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test'
+import { gotoSettled } from './settled'
 
 test('published Overland Track winter guide renders and links to the hike overview', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(String(error)))
 
-  await page.goto('/blog/overland-track-guide/')
+  await gotoSettled(page, '/blog/overland-track-guide/')
 
   await expect(page.getByRole('heading', { name: 'The Overland Track in winter: a trail guide' })).toBeVisible()
   await expect(page.getByText('The Overland Track is usually a six-day summer walk')).toBeVisible()

@@ -53,7 +53,9 @@ skill is not available to a fresh remote clone merely because the workflow exist
    needs rendered HTML must remain an explicitly prepared review artifact; never
    flip the committed draft flags just to make CI render it.
 6. Inspect the CI result and download `site-review-<sha>` before claiming artifact
-   delivery. The artifact is a production-shaped export, so it excludes drafts.
+   delivery. It holds `site-review.tar.gz` (unpack with `tar -xzf`), a
+   production-shaped export of **out/** plus `.next/site-release.json`, so it
+   excludes drafts.
    Inspect the MDX/image diff or an authoring-host preview for draft content.
 
 New/changed posts must have tracked, matching asset mirrors. `PROSE_BASE` scopes

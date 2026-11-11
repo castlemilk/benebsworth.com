@@ -44,12 +44,14 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: node_modules/.bin/playwright install --with-deps chromium
       - run: task remote:check
+      # upload-artifact rejects paths containing ':' and other characters that
+      # are legal in exported routes (e.g. OpenRouter model ids ending ':free'),
+      # so ship the export as one tarball instead of a file tree.
+      - name: Pack the reviewed export
+        run: tar -czf site-review.tar.gz out .next/site-release.json
       - uses: actions/upload-artifact@v4
         with:
           name: site-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            out/
-            .next/site-release.json
-          include-hidden-files: true
+          path: site-review.tar.gz
           retention-days: 7
           if-no-files-found: error

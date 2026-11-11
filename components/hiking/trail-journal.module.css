@@ -1,0 +1,56 @@
+/* Hiking is a natural trail journal, separate from the handwritten blog/Lab. */
+:global(:root):has(main.page[data-hiking-page]) {
+  --trail-accent: #405d45;
+  --font-editorial-display: var(--font-sans), sans-serif;
+  --editorial-search-paper: var(--bg);
+  --editorial-search-ink: var(--fg);
+  --editorial-search-muted: var(--muted);
+  --editorial-search-rule: var(--border);
+  --editorial-search-surface: var(--surface);
+  --editorial-search-focus: var(--trail-accent);
+}
+:global(:root:not(.dark)):has(main.page[data-hiking-page]) {
+  --bg: #f4f3ed;
+  --fg: #26372d;
+  --muted: #58685c;
+  --surface: #e9ede5;
+  --surface-2: #e1e7dc;
+  --border: #c5cec1;
+}
+:global(:root.dark):has(main.page[data-hiking-page]) {
+  --bg: #141e18;
+  --fg: #edf1e6;
+  --muted: #b4c2b0;
+  --surface: #1e2b22;
+  --surface-2: #29392d;
+  --border: #405444;
+  --trail-accent: #b7cca2;
+}
+:global(:root):has(main.page[data-hiking-page]) :global([data-site-nav] a[aria-current])::after {
+  border-radius: 0;
+  transform: none;
+}
+.page[data-hiking-page] { --folio-handwriting: var(--trail-accent); --folio-accent: var(--trail-accent); }
+.page :where(a, button, summary):focus-visible { outline: 2px solid var(--trail-accent); outline-offset: 5px; }
+.page ::selection { background: var(--trail-accent); color: var(--bg); }
+.page .title { font: 500 clamp(3rem, 6.4vw, 5.25rem)/1.04 'Folio Serif', Georgia, serif; letter-spacing: -.035em; text-wrap: balance; min-width: 0; overflow-wrap: break-word; }
+.page .indexHero { padding-block: 3rem; }
+.page .jumpLinks a { font: 500 .95rem/1.5 var(--font-sans), sans-serif; letter-spacing: 0; text-decoration: none; border-bottom: 1px solid var(--border); }
+.page .jumpLinks a:hover { border-color: var(--trail-accent); }
+.entry .entryMeta { font: 500 .8rem/1.6 var(--font-sans), sans-serif; letter-spacing: 0; text-transform: none; color: var(--muted); }
+.entry .entryMeta span { color: var(--trail-accent); font-weight: 600; }
+.entry:hover h3 { text-decoration-color: var(--trail-accent); }
+.detailHero .detailMeta { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem .75rem; font: 500 .875rem/1.6 var(--font-sans), sans-serif; color: var(--trail-accent); }
+.summary { font: 400 clamp(1.1rem, 1rem + .3vw, 1.3rem)/1.7 'Folio Serif', Georgia, serif; color: var(--muted); }
+.highlights { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); list-style: none; }
+.highlights li { font: 400 .875rem/1.6 var(--font-sans), sans-serif; color: var(--muted); }
+.journeyHeading { font: 500 1.8rem/1.2 'Folio Serif', Georgia, serif; margin-bottom: 1rem; letter-spacing: -.02em; }
+.returnLinks { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+.returnLinks a { display: inline-flex; align-items: center; min-height: 44px; font: 500 .95rem/1.5 var(--font-sans), sans-serif; color: var(--trail-accent); text-decoration: underline; text-underline-offset: .25em; }
+@media (max-width: 650px) {
+  .page .indexHero { padding-block: 2rem 2.5rem; }
+  .page .title { font-size: clamp(2.75rem, 10vw, 4rem); }
+}
+
+/* In-page photo journeys clear both measured sticky chrome rows. */
+.page :where([data-photo-focus-target], [id^="photos-"]) { scroll-margin-top:calc(var(--site-nav-height, 0px) + var(--site-breadcrumb-height, 0px) + 16px); }

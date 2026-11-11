@@ -1,5 +1,9 @@
 # Blog development checkpoint
 
+## Current continuation: Hiking opener identity
+
+The current blog continuation starts from PR95 head `d453c8c65bf2b0c01527d04e1b14553d354a4c63`, on local branch `fix/hiking-opener-identity-20261106`. The responsive photo return-focus correction is complete locally, with regression and actual-component browser evidence. See [photo-opener-review.md](photo-opener-review.md) for exact scope, five manual critique stages, screenshots, build limits and the unchanged release/data decision. PR95 remains held, unmerged and undeployed; this local continuation has not been pushed. The older sections below are historical checkpoints, not the current release status.
+
 ## Current scope and decisions
 
 Restore the existing branch, integrate the six approved category symbols consistently, retain the editorial identity and solidify the development loop. Work directly here; no spawned implementation tasks. The user endorsed the Field Notebook direction on 1 November; its first bounded Labs landing-page implementation is complete. See lab-notebook-review.md for current evidence.

@@ -34,6 +34,7 @@ beforeEach(() => {
 })
 afterEach(() => {
   cleanup()
+  document.body.style.overflow = ''
   vi.useRealTimers()
   vi.unstubAllGlobals()
 })
@@ -58,6 +59,32 @@ async function openCodeTab() {
 }
 
 describe('VectorStudioModal', () => {
+  it.each(['', 'clip'])('restores the previous overflow %j after native close and unmount', async (previousOverflow) => {
+    stubFetch(true)
+    document.body.style.overflow = previousOverflow
+    function ControlledStudio() {
+      const [inspecting, setInspecting] = React.useState<typeof item | null>(item)
+      return <>
+        <button onClick={() => setInspecting(item)}>Inspect again</button>
+        <VectorStudioModal item={inspecting} batch={batch} onClose={() => setInspecting(null)} />
+      </>
+    }
+    const { container, getByRole, unmount } = render(<ControlledStudio />)
+    await waitFor(() => expect(button(/^Copy SVG$/).disabled).toBe(false))
+    expect(document.body.style.overflow).toBe('hidden')
+
+    // Browsers queue this event after hiding the native dialog and restoring focus.
+    // The controlled parent then clears the item, releasing the scroll lock.
+    fireEvent(container.querySelector('dialog')!, new Event('close'))
+    expect(container.querySelector('[data-vector-studio]')).toBeNull()
+    expect(document.body.style.overflow).toBe(previousOverflow)
+
+    fireEvent.click(getByRole('button', { name: 'Inspect again' }))
+    expect(document.body.style.overflow).toBe('hidden')
+    unmount()
+    expect(document.body.style.overflow).toBe(previousOverflow)
+  })
+
   it('announces the latest copy rather than a fixed priority over SVG and JSX', async () => {
     await openCodeTab()
     await click(/^Copy SVG$/)

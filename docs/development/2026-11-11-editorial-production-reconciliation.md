@@ -114,6 +114,44 @@ is not an E2E pass, and source/build checks do not establish rendered acceptance
 Actual browser review, new visual-direction approval and physical-device coverage
 are not claimed here.
 
+## First remote browser gate and follow-up
+
+[Site checks run 42969156818](https://github.com/castlemilk/benebsworth.com/actions/runs/42969156818)
+checked integration commit `eed79ccc7ba5c8a37f8d25c139b177d0cf93a5a5` against
+master `fef0be322e860a10ad9ba5e0466206d8f2beb566`. It passed the build, type checks,
+2,063 unit tests (five skipped), 29 release-control tests and 97 Markdown sibling
+checks. Its browser result was **96 passed and 12 failed**, so no merge or
+production publication followed that run.
+
+The failures identified a retired Lab-title assertion, article selectors that
+also matched three related-post cards, the timing of the native vector dialog's
+queued close event, and a real width regression in the memory-chip diagram.
+Follow-up assertions retain the intended notebook H1, target the main Pagefind
+article, and wait for the existing dialog cleanup to restore the exact previous
+overflow value. Controlled-parent tests cover dialog close, reopening and unmount.
+The memory graph now opts into the existing wide-study contract and allocates its
+rails from its own container width. Its graph data, coordinates, measurement and
+expanded modal remain unchanged; the original containment and node-click browser
+assertions remain the acceptance gate. Existing graph/data unit suites passed
+(eight tests).
+
+The preview also prompted a reproducible date-hydration check: a UTC-rendered date
+could change when hydrated in Los Angeles. Publication dates now explicitly use
+Australia/Melbourne, preserving the author's calendar across visitor timezones.
+Isolated SSR and production React hydration tests cover daylight-saving, standard
+time and legacy timestamps. The date and modal suites passed together under the
+release pipeline's Node 22 runtime (seven tests).
+
+The integrated Vercel preview visibly retains the folio type and red annotations,
+archive topic filtering and the spatial article renderer. In the browser's
+projected fallback, doubling the gyroscope spin changed its precession rate from
+1.464 to 0.732 rad/s. This is preview evidence, not a Cloudflare deployment claim.
+A read-only production-route preflight found **336 live routes and 336 built
+routes, with none missing**.
+
+The final follow-up revision must pass the complete remote browser gate. Final
+commit, CI, merge and publication receipts belong on PR #78 as described below.
+
 ## Production route and security
 
 Actual production is **Cloudflare Pages project `benebsworth`**, serving

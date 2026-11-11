@@ -29,7 +29,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
 
         await input.press('Enter')
         await expect(page).toHaveURL(destination)
-        await expect(page.locator('article')).toBeVisible()
+        await expect(page.locator('article[data-pagefind-body="true"]')).toBeVisible()
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
         await page.goBack()
         await expect(page).toHaveURL(archiveUrl)
@@ -110,7 +110,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
         await expect(dialog.getByRole('link', { name: 'Current result', exact: false })).toBeVisible()
         await input.press('Enter')
         await expect(page).toHaveURL(new URL(destinationPath, archiveUrl).href)
-        await expect(page.locator('article')).toBeVisible()
+        await expect(page.locator('article[data-pagefind-body="true"]')).toBeVisible()
       })
     })
   }

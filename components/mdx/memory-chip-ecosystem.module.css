@@ -1,0 +1,60 @@
+.explorer {
+  container: memory-graph / inline-size;
+  min-width: 0;
+}
+
+.layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.controlRail {
+  grid-column: 1 / -1;
+}
+
+.railFull,
+.inspectorPanel {
+  display: none;
+}
+
+.railCompact,
+.inspectorDisclosure {
+  display: block;
+}
+
+/* The article has its own navigation column. Allocate the inspector only when
+   this study has enough width left for a usable graph, regardless of viewport. */
+@container memory-graph (min-width: 56rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+  }
+
+  .inspectorDisclosure {
+    display: none;
+  }
+
+  .inspectorPanel {
+    display: block;
+    max-height: 760px;
+    overflow-y: auto;
+  }
+}
+
+/* Keep both full rails for genuinely wide embeds. The intermediate layout
+   moves controls above the graph instead of squeezing its coordinate space. */
+@container memory-graph (min-width: 80rem) {
+  .layout {
+    grid-template-columns: 224px minmax(0, 1fr) 380px;
+  }
+
+  .controlRail {
+    grid-column: auto;
+  }
+
+  .railFull {
+    display: block;
+  }
+
+  .railCompact {
+    display: none;
+  }
+}

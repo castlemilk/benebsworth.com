@@ -35,6 +35,9 @@ const ACCENT = {
   green: '#34d399', // software / computer science
   amber: '#f5a623', // electrical engineering / signals
   indigo: '#6366f1', // cosmology / astrophysics
+  rose: '#f472b6', // chemistry
+  lime: '#a3e635', // life sciences
+  sky: '#38bdf8', // earth & space science
   hiking: '#5b9e6f', // trail guides / the hiking desk
 } as const
 
@@ -56,6 +59,9 @@ const TOPIC = {
   software: { icon: '/topics/custom-v6/software.svg', renderMode: 'mask', label: 'Software', accent: ACCENT.green },
   ee: { icon: '/topics/custom-v6/ee.svg', renderMode: 'mask', label: 'Electrical Eng', accent: ACCENT.amber },
   cosmology: { icon: '/topics/custom-v6/cosmology.svg', renderMode: 'mask', label: 'Cosmology', accent: ACCENT.indigo },
+  chemistry: { icon: '/topics/technology.png', label: 'Chemistry', accent: ACCENT.rose },
+  biology: { icon: '/topics/technology.png', label: 'Life Sciences', accent: ACCENT.lime },
+  earth: { icon: '/topics/technology.png', label: 'Earth & Space', accent: ACCENT.sky },
   hiking: { icon: '/topics/technology.png', label: 'Hiking', accent: ACCENT.hiking },
 } satisfies Record<string, Topic>
 
@@ -63,6 +69,26 @@ export { TOPIC }
 
 /** Explicit, hand-curated per-slug overrides — the source of truth. */
 const BY_SLUG: Record<string, Topic> = {
+  'singular-values-are-stretches': TOPIC.maths,
+  'a-loop-on-a-sphere-turns-an-arrow': TOPIC.maths,
+  'complex-roots-need-another-floor': TOPIC.maths,
+  'light-draws-an-ellipse': TOPIC.physics,
+  'a-wave-packet-has-two-speeds': TOPIC.physics,
+  'a-gyroscope-falls-sideways': TOPIC.physics,
+  'steering-a-beam-without-moving-an-antenna': TOPIC.ee,
+  'three-phases-make-a-rotating-field': TOPIC.ee,
+  'a-waveguide-is-a-high-pass-filter': TOPIC.ee,
+  'power-flows-around-the-wire': TOPIC.ee,
+  'a-p-electron-is-never-between-its-lobes': TOPIC.chemistry,
+  'a-lone-pair-takes-more-room-than-an-atom': TOPIC.chemistry,
+  'two-crystals-hide-in-one-stack-of-oranges': TOPIC.chemistry,
+  'every-virus-shell-has-twelve-pentagons': TOPIC.biology,
+  'the-nautilus-is-not-a-golden-spiral': TOPIC.biology,
+  'dna-strands-are-not-opposite': TOPIC.biology,
+  'earth-is-closest-to-the-sun-in-winter': TOPIC.earth,
+  'the-sun-pulls-harder-but-the-moon-makes-the-tides': TOPIC.earth,
+  'a-ring-of-silence-proves-the-core-is-liquid': TOPIC.earth,
+  'stable-lagrange-points-sit-on-hilltops': TOPIC.earth,
   'istio-patterns': TOPIC.istio,
   'kubernetes-cicd-part-1': TOPIC.kubernetes,
   'kubernetes-cicd-part-2': TOPIC.kubernetes,
@@ -118,6 +144,7 @@ const BY_SLUG: Record<string, Topic> = {
   'pll-from-first-principles': TOPIC.ee,
   'filters-from-poles-and-zeros': TOPIC.ee,
   'how-dram-remembers-a-bit': TOPIC.ee,
+  'usb-wifi-in-userspace': TOPIC.ee,
   'backpressure-is-the-system-saying-no': TOPIC.software,
   'dspark-speculative-decoding': TOPIC.software,
   // Physics foundations for the cosmology desk (violet)
@@ -156,6 +183,9 @@ const TAG_RULES: Array<{ match: string[]; topic: Topic }> = [
   { match: ['gcp'], topic: TOPIC.gcp },
   { match: ['kubernetes', 'containers', 'ci/cd', 'knative', 'skaffold'], topic: TOPIC.kubernetes },
   { match: ['cosmology', 'astrophysics', 'black hole', 'cosmic', 'relativity', 'spacetime'], topic: TOPIC.cosmology },
+  { match: ['chemistry', 'biochemistry', 'molecules'], topic: TOPIC.chemistry },
+  { match: ['biology', 'life sciences', 'epidemiology', 'ecology', 'evolution'], topic: TOPIC.biology },
+  { match: ['earth science', 'geoscience', 'geophysics', 'climate', 'oceanography', 'meteorology', 'planetary science', 'orbital mechanics'], topic: TOPIC.earth },
   { match: ['hiking', 'trail-guide', 'trek', 'trekking'], topic: TOPIC.hiking },
   { match: ['ai', 'artificial intelligence', 'machine-learning', 'machine learning', 'deep-learning', 'deep learning', 'llm'], topic: TOPIC.ai },
   { match: ['electrical engineering', 'electronics', 'circuits', 'dsp', 'signal processing'], topic: TOPIC.ee },

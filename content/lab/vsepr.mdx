@@ -1,0 +1,27 @@
+## Read the lobes as room, not electrons
+
+The white sphere is the central atom. Cyan lines are bonding domains ending at ligand atoms on the faint direction sphere. Pink lobes are lone-pair domains, drawn wider as their repulsion weight grows. The bright amber arc spans the closest pair of bonds; the faint arc spans the lone-pair angle. The readouts always use the full weight.
+
+The timeline ramps that weight from its full value at either end down to 1 at the midpoint, so the middle of the sweep shows the shape the molecule would have if lone pairs repelled like bonds.
+
+### Five experiments
+
+1. Select **Methane CH4**. Four equal domains settle at 109.47° and the energy reads 3.674, the Thomson minimum for four charges.
+2. Return to the default water state. The bonds close to 104.40° while the lone pairs open to 114.71°; experiment says 104.48°.
+3. Select **Ammonia NH3**. The same weight gives 106.69° against a measured 106.67°.
+4. From the water state, drag **Electron domains N** to 6. The lobes jump to opposite poles and the bonds flatten into a square: xenon tetrafluoride, 90.00°, energy 11.681, a local minimum the trans seed selects (cis is 11.679).
+5. Select **Sulfur tetrafluoride SF4**. The lone pair takes an equatorial seat and the axial fluorines lean away to 87.33°. Push **Lone-pair repulsion weight** to 1.5 and the seesaw folds further.
+
+The scene minimises a weighted Thomson energy over unit vectors $\mathbf u_i$,
+
+$$
+E=\sum_{i<j}\frac{w_i\,w_j}{\lvert\mathbf u_i-\mathbf u_j\rvert},
+$$
+
+with $w=1$ for bonds and the slider value for lone pairs, using 200 steps of projected gradient descent from a nudged ideal seed.
+
+### What the model leaves out
+
+Domains are sizeless points, so bond lengths and lobe shapes are illustrative. The weight is fitted, not derived. Electronegativity, multiple bonds and d orbitals are absent, and the SF4 equatorial angle comes out wrong (123.6° against a measured 101.6°). The lone-pair slider is clamped to $N-2$ so two bonds always remain; the shape readout says when.
+
+Read [A lone pair takes up more room than a hydrogen atom](/blog/a-lone-pair-takes-more-room-than-an-atom/) for the derivation.

@@ -100,5 +100,6 @@ test('vector gallery filters, recovers from no results and inspects in a native 
   await page.keyboard.press('Escape')
   await expect(dialog).toBeHidden()
   await expect(stage).toBeFocused()
-  expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
+  // Native close restores focus before its queued close event triggers React cleanup.
+  await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('')
 })

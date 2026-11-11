@@ -200,7 +200,7 @@ export interface Artifact {
 // ── MANUAL ADDITION (re-apply after `npm run proto:gen`) ──────────────────
 // `category` / `LabCategory` are not in content.proto — they're hand-added to
 // the generated type. buf regeneration drops them, so they must be restored.
-export type LabCategory = 'art' | 'maths' | 'physics' | 'engineering' | 'ai' | 'cosmology'
+export type LabCategory = 'art' | 'maths' | 'physics' | 'chemistry' | 'biology' | 'earth' | 'engineering' | 'ai' | 'cosmology'
 
 export interface LabEffect {
   slug: string;

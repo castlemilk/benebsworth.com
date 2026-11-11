@@ -1,0 +1,25 @@
+## Count the amber spheres
+
+Amber spheres are pentamers on the twelve five-fold vertices of the icosahedron. Cyan spheres are hexamers at every other lattice site. The lime honeycomb is the dual of that lattice: a pentagon around each amber sphere, a hexagon around each cyan one. The violet path is the $(h, k)$ walk between two neighbouring pentamers: $h$ steps along a lattice row, a 60° left turn as seen from outside, then $k$ steps.
+
+### Five experiments
+
+1. Select **T = 3 (1, 1): 32 capsomers**. The readouts give 180 quasi-equivalent positions and 32 capsomers: 12 pentamers plus 20 hexamers.
+2. Return to the default $(2, 1)$. $T$ is 7, the shell holds 72 capsomers and the hand reads laevo. Swap the sliders to $(1, 2)$: the same 72 capsomers, but the walk now takes one step before its left turn and two after it, the mirror-image lattice, and the readout says dextro.
+3. Select **T = 16 herpes simplex (4, 0)**. The walk runs straight along an icosahedron edge, so the lattice is achiral: 162 capsomers, 150 hexons and 12 pentons.
+4. Select **Pseudo-T = 25 adenovirus (5, 0)** and drag **Sphericity** to 0. This is the faceted particle Horne photographed in 1959, with 252 capsomers.
+5. Push **Lattice step h** to 5 with $k$ at 3. $T$ becomes 49 and 492 capsomers appear. Count the amber spheres: still twelve.
+
+The two integers fix everything else:
+
+$$
+T = h^2 + hk + k^2, \qquad N_\text{capsomers} = 10T + 2, \qquad N_\text{positions} = 60T.
+$$
+
+Play the timeline and the shell pulls apart along radial lines before it reassembles. The honeycomb corners are lattice-triangle centroids, so they follow the capsomers.
+
+### What the model leaves out
+
+Capsomers are points on an ideal Caspar-Klug lattice rather than folded proteins, and the honeycomb is the geometric dual of that lattice with no molecular surface behind it. The shell radius stays at 2 world units for every $T$, so a larger $T$ shrinks the capsomer spacing instead of growing the virus. The assembly animation is a radial staging and says nothing about nucleation kinetics. The hand label follows the walking convention above (HK97 and phage lambda are 7-laevo, SV40 and polyomavirus 7-dextro), and polyomavirus shows the limit of the lattice idea by building all 72 sites from pentamers.
+
+Read [Every virus shell built from hexagons has exactly twelve pentagons](/blog/every-virus-shell-has-twelve-pentagons/) for Euler's argument and the Pick's theorem count.

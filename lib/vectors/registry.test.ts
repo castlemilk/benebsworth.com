@@ -1,8 +1,8 @@
+import { readFileSync } from 'node:fs'
 import { describe, it, expect } from 'vitest'
 import {
   VECTOR_CATEGORIES,
   CATEGORY_MAP,
-  DEFAULT_BATCH_CONFIGS,
   getVectorBatches,
   getAllVectors,
 } from './registry'
@@ -53,6 +53,28 @@ describe('Vector Registry', () => {
       expect(v.pngPath).toMatch(/^\/vectors\/[\w-]+\/[\w-]+\.png$/)
       expect(v.desired_formats).toContain('svg')
       expect(v.desired_formats).toContain('png')
+    }
+  })
+
+  it('resolves every advertised vector to a shipped SVG and PNG asset', () => {
+    for (const vector of getAllVectors()) {
+      const svg = readFileSync(new URL(`../../public${vector.svgPath}`, import.meta.url), 'utf8')
+      expect(svg, vector.svgPath).toContain('<svg')
+
+      const png = readFileSync(new URL(`../../public${vector.pngPath}`, import.meta.url))
+      expect(png.subarray(0, 8).toString('hex'), vector.pngPath).toBe('89504e470d0a1a0a')
+    }
+  })
+
+  it('keeps vector identities aligned with the shipped generation manifests', () => {
+    for (const batch of getVectorBatches()) {
+      const manifest = JSON.parse(readFileSync(
+        new URL(`../../public/vectors/${batch.id}/manifest.json`, import.meta.url), 'utf8',
+      )) as { items: { id: string; filename_stem: string }[] }
+      const identities = (items: { id: string; filename_stem: string }[]) =>
+        items.map(({ id, filename_stem }) => ({ id, filename_stem }))
+
+      expect(identities(batch.items), batch.id).toEqual(identities(manifest.items))
     }
   })
 

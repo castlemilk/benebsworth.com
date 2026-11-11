@@ -1,0 +1,27 @@
+## A transverse pattern sets a propagation threshold
+
+The cyan arrows show the $\mathrm{TE}_{10}$ electric field in an air-filled rectangular guide. The wide dimension is $a$, the height is $a/2$, and the displayed length is $2a$.
+
+### Cross cutoff slowly
+
+1. Select **Propagating**. The electric-field pattern advances down the guide.
+2. Select **Near cutoff**. Its longitudinal wavelength becomes long, while the transverse half-sine remains fixed.
+3. Select **Below cutoff**. The field changes sign in place and its amber envelope decays away from the entrance.
+
+The frequency threshold and longitudinal dispersion are
+
+$$
+f_c=\frac{c}{2a},
+\qquad
+\beta^2=\left(\frac{2\pi f}{c}\right)^2-\left(\frac{\pi}{a}\right)^2.
+$$
+
+At $a=22.86\ \mathrm{mm}$, cutoff is approximately $6.557\ \mathrm{GHz}$. At $f/f_c=1.5$, group velocity is about $0.745c$. At $f/f_c=0.75$, the field envelope falls to about 1.57% after the displayed two-width length.
+
+Changing **Wide wall** scales the physical geometry and the frequency readouts together. The drawing stays normalised. Changing **Frequency / cutoff** changes the actual field behaviour.
+
+### Scope of the picture
+
+The guide is perfectly conducting and lossless. Only $E_y$ is drawn; the magnetic field also has a longitudinal component. Below cutoff, the model shows a single decaying solution in a guide extending away from a driven entrance. It does not model transmission through a finite evanescent section.
+
+Read [A waveguide is a high-pass filter](/blog/a-waveguide-is-a-high-pass-filter/) for the boundary conditions, phase/group velocity distinction and practical limits of the filter analogy.

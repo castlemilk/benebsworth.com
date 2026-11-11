@@ -62,7 +62,7 @@ export function FolioReview({ technicalProse, equations }: { technicalProse?: Re
             <Callout type="info"><p>This titleless information specimen contains <strong>selectable rich text</strong> and a <a href="#review-statistics">link to the statistics</a>.</p></Callout>
             <Callout type="warning" title="Illustrative caution"><p>Do not interpret the invented values above as measured results.</p></Callout>
             <Callout type="success" title="Illustrative confirmation"><p>This is sample confirmation copy, not a report that a test or deployment passed.</p></Callout>
-            <Callout type="error" title="Illustrative error"><p>This specimen demonstrates an error label and rule. No actual application failure is being reported.</p></Callout>
+            <Callout type="error" title="Illustrative error"><p>This specimen shows an error label and rule. No actual application failure is being reported.</p></Callout>
             <Callout type="thinking" title="A deliberately longer insight title that should wrap without crowding the reading column"><p>Inspect how the title, explicit <em>Insight</em> label and body stay distinct when the column narrows.</p></Callout>
             <Callout type="feeling" title="A subjective reflection"><p>This is illustrative personal commentary, not evidence. Red handwriting marks the note style rather than an error state.</p></Callout>
             <Callout type="doing" title="Compare the two column widths"><p>Use the controls above, then inspect this real list:</p><ul><li>Read the type label and optional title.</li><li>Check the long statistics label and unit spacing.</li></ul></Callout>

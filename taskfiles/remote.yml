@@ -1,0 +1,43 @@
+# Remote publication uses the existing build tasks, with explicit release evidence.
+version: '3'
+
+tasks:
+  check:
+    desc: Validate a committed remote checkout and create a fingerprinted static export
+    summary: |
+      Run in a disposable, clean checkout. EXPECTED_SHA must be its full commit.
+      Uses the existing verify, generation/build and browser-test tasks. No
+      deployment credentials or Mac-local reports are needed. Does not publish.
+      PROSE_BASE optionally limits gating prose checks to the reviewed change.
+    requires:
+      vars: [EXPECTED_SHA]
+    cmds:
+      - node scripts/site-release.mjs assert-clean "$EXPECTED_SHA"
+      - node scripts/check-blog-assets.mjs --base "${PROSE_BASE:-$EXPECTED_SHA}"
+      - node --test scripts/check-blog-assets.test.mjs scripts/site-release.test.mjs
+      - task: ':verify'
+      - node scripts/lint-prose.mjs --changed --ci
+      - task: ':clean'
+      # build:clean on older commits misses generators. The normal build owns
+      # all phases; force it after clean rather than duplicating its commands.
+      - task: ':build'
+        vars: { CLI_ARGS: '' }
+        force: true
+      - node scripts/gen-md-siblings.mjs --check
+      - node scripts/check-blog-assets.mjs --base "${PROSE_BASE:-$EXPECTED_SHA}" --sanitize-export
+      - task: ':test:e2e:fast'
+        vars: { CLI_ARGS: '--config playwright.remote.config.ts --workers=1' }
+      - node scripts/site-release.mjs stamp "$EXPECTED_SHA"
+
+  publish:
+    desc: Publish an already validated export to Cloudflare production, explicitly
+    summary: |
+      Invoked by the separate manual workflow only after remote:check. Does not
+      rebuild: deploys the exact fingerprinted out/ that passed browser checks.
+      Requires explicit confirmation, selected master SHA, tracked assets and
+      production route preservation. A failed/blocked live read stops upload.
+      Never use this to publish unrelated dirty work or bypass protection.
+    requires:
+      vars: [EXPECTED_SHA, ARTICLE_PATH, PUBLISH_CONFIRMATION, CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID]
+    cmds:
+      - bash scripts/publish-checked-site.sh

@@ -11,6 +11,8 @@ node scripts/site-release.mjs verify-artifact "$EXPECTED_SHA"
 node scripts/site-release.mjs assert-analytics
 node scripts/site-release.mjs check-article "$EXPECTED_SHA" "$ARTICLE_PATH"
 node scripts/site-release.mjs preflight
+# Forward-only: the release must contain what production serves now.
+node scripts/site-release.mjs assert-forward "$EXPECTED_SHA"
 remote_sha="$(git ls-remote origin refs/heads/master | cut -f1)"
 [[ "$remote_sha" == "$EXPECTED_SHA" ]] || { echo 'Selected commit is no longer remote master; review the new commit' >&2; exit 1; }
 # Existing Pages project and production branch; no infrastructure mutations.

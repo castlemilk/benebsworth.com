@@ -26,7 +26,7 @@ describe('photo keyboard ownership',()=>{
  it('leaves search cursor keys alone while the native search dialog is above the viewer',()=>{
   const {viewer}=openViewer()
   fireEvent.keyDown(viewer,{key:'k',ctrlKey:true})
-  const input=screen.getByRole('textbox',{name:'Search posts'})
+  const input=screen.getByRole('textbox',{name:'Search posts and assets'})
   fireEvent.change(input,{target:{value:'mountain'}})
   for(const key of ['ArrowLeft','ArrowRight','Tab']){
    expect(fireEvent.keyDown(input,{key,cancelable:true})).toBe(true)

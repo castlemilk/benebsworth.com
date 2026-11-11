@@ -390,9 +390,9 @@ a:focus-visible .word .snake-body {
   animation: cs-shine 4.5s linear infinite;
 }
 
-/* Theme toggle thumb glide. next-themes' `disableTransitionOnChange` injects a
-   global `*{transition:none!important}` during the theme swap to stop colours
-   flashing — which also kills the toggle thumb's slide. These class selectors
+/* Theme toggle thumb glide. The theme store (components/theme/theme-store.ts)
+   injects a global `*{transition:none!important}` during the theme swap to stop
+   colours flashing — which also kills the toggle thumb's slide. These class selectors
    have higher specificity than `*`, so their `!important` transition wins and
    the thumb keeps gliding while the rest of the page still switches instantly.
    Applied only once the toggle is "ready" (one frame after mount) so the thumb

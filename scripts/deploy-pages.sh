@@ -29,6 +29,24 @@ fi
 
 : "${CLOUDFLARE_API_TOKEN:?set CLOUDFLARE_API_TOKEN}"
 : "${CLOUDFLARE_ACCOUNT_ID:?set CLOUDFLARE_ACCOUNT_ID}"
+
+# Production only ever serves the tip of origin/master, and only moves forward.
+# A local prod deploy from a stale checkout or a side branch once looked like
+# "the redesign got wiped" (docs/postmortem/0010). The checked GitHub workflow
+# ("Publish checked site") is the normal path; this is the local fallback.
+if [[ "$ENV" == "prod" ]]; then
+  git fetch --quiet origin master
+  HEAD_SHA="$(git rev-parse HEAD)"
+  if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
+    echo "error: production deploys need a clean, fully committed checkout" >&2; exit 1
+  fi
+  if [[ "$HEAD_SHA" != "$(git rev-parse origin/master)" ]]; then
+    echo "error: HEAD ($HEAD_SHA) is not the tip of origin/master." >&2
+    echo "       Merge to master and deploy master; prefer the 'Publish checked site' workflow." >&2
+    exit 1
+  fi
+  node scripts/site-release.mjs assert-forward "$HEAD_SHA"
+fi
 # Always a from-scratch build. `task build` fingerprints its inputs and would
 # legitimately skip, but a deploy is the one place where "out/ is exactly this
 # working tree, with no stale chunk from an earlier run" is worth the extra ~60s.
@@ -40,5 +58,11 @@ if [[ "$ENV" == "prod" ]] && ! rg --quiet --fixed-strings --glob '*.html' \
   exit 1
 fi
 
-npx wrangler pages deploy out --project-name="$PROJECT" --branch="$BRANCH" --commit-dirty=true
+if [[ "$ENV" == "prod" ]]; then
+  # The receipt (out/build-info.json) is what the forward-only check reads next time.
+  node scripts/site-release.mjs stamp-local "$HEAD_SHA" > /dev/null
+  npx wrangler pages deploy out --project-name="$PROJECT" --branch="$BRANCH" --commit-hash="$HEAD_SHA" --commit-dirty=false
+else
+  npx wrangler pages deploy out --project-name="$PROJECT" --branch="$BRANCH" --commit-dirty=true
+fi
 echo "deployed $ENV -> Cloudflare Pages project $PROJECT"

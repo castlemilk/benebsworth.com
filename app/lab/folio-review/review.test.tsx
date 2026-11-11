@@ -8,7 +8,7 @@ vi.mock('@/components/mdx/mdx-content', () => ({ MdxContent: () => null }))
 import blockStyles from '@/components/mdx/editorial-blocks.module.css'
 
 const { setTheme } = vi.hoisted(() => ({ setTheme: vi.fn() }))
-vi.mock('next-themes', () => ({ useTheme: () => ({ setTheme }) }))
+vi.mock('@/components/theme/use-theme', () => ({ useTheme: () => ({ setTheme }) }))
 afterEach(() => { cleanup(); vi.clearAllMocks() })
 
 describe('local folio review', () => {

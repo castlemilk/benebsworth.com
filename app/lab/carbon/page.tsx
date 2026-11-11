@@ -55,8 +55,8 @@ export default function CarbonLabPageRoute() {
         ]}
       />
       <SiteNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-8">
-        <Breadcrumb
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-16 sm:px-8">
+        <Breadcrumb className="mb-10"
           items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },

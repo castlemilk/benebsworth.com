@@ -165,7 +165,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <span className="flex items-center gap-3">
                 <span className="text-lg" aria-hidden>⛰</span>
                 <span>
-                  <span className="block font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted">Part of Hiking · route overview</span>
+                  <span className="block font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">Part of Hiking · route overview</span>
                   <span className="block font-display text-sm font-semibold text-fg">{relatedHike.name} — map, stats & gallery</span>
                 </span>
               </span>

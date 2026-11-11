@@ -106,7 +106,7 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
         />
         <span className="font-medium">{modelName ?? entry.modelId}</span>
         <span className="text-muted">iteration trace</span>
-        <span className="ml-auto truncate text-[0.65rem] text-muted" title={`${entry.runId}/${entry.file}`}>
+        <span className="ml-auto truncate text-[0.75rem] text-muted" title={`${entry.runId}/${entry.file}`}>
           run {entry.runId}
           {typeof entry.bytes === 'number' && ` · ${formatTraceBytes(entry.bytes)}`}
         </span>
@@ -142,7 +142,7 @@ export function RunTrace({ entry, modelName }: RunTraceProps) {
             ))}
             {groups.map(([index, events]) => (
               <section key={index} className="mb-4 last:mb-0">
-                <h4 className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted">
+                <h4 className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">
                   Iteration #{index + 1}
                   {state.iterations > 0 && <span className="normal-case"> of {state.iterations}</span>}
                 </h4>
@@ -243,19 +243,19 @@ function TraceExportControl({ entry }: { entry: TraceIndexEntry }) {
         <Download aria-hidden />
         {state.phase === 'working' ? 'Building…' : 'Export trace (ZIP)'}
       </Button>
-      <span className="font-mono text-[0.65rem] leading-snug text-muted">
+      <span className="font-mono text-[0.75rem] leading-snug text-muted">
         the full run log, every artifact it references, and a README with the score it backs and
         the offline re-verification commands — the check-level evidence behind this row.
       </span>
       {state.phase === 'done' && (
-        <span className="w-full font-mono text-[0.65rem] text-muted">
+        <span className="w-full font-mono text-[0.75rem] text-muted">
           Downloaded {state.filename} ({formatTraceBytes(state.bytes)})
           {state.missing > 0 &&
             ` — INCOMPLETE: ${state.missing} referenced artifact${state.missing === 1 ? '' : 's'} could not be fetched (noted in the README).`}
         </span>
       )}
       {state.phase === 'error' && (
-        <span className="w-full font-mono text-[0.65rem] text-rose-600 dark:text-rose-400">
+        <span className="w-full font-mono text-[0.75rem] text-rose-600 dark:text-rose-400">
           Couldn’t build the export ({state.message}).
         </span>
       )}
@@ -330,7 +330,7 @@ function Label({ children, tone }: { children: string; tone?: 'bad' | 'warn' }) 
   return (
     <span
       className={cn(
-        'w-[4.5rem] shrink-0 font-mono text-[0.65rem] uppercase tracking-wider',
+        'w-[4.5rem] shrink-0 font-mono text-[0.75rem] uppercase tracking-wider',
         tone === 'bad'
           ? 'text-rose-600 dark:text-rose-400'
           : tone === 'warn'
@@ -374,7 +374,7 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
       return (
         <Row label="retry" tone="warn">
           attempt {event.attempt} ({event.kind}) after {event.delayMs.toLocaleString()} ms —{' '}
-          <span className="text-fg/60">
+          <span className="text-muted">
             <EventText text={oneLine(event.error)} />
           </span>
         </Row>
@@ -385,7 +385,7 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
         <Row label="response">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             {event.cacheHit ? (
-              <span className="rounded-full border border-[var(--color-border)] px-1.5 py-px text-[0.65rem] text-muted">
+              <span className="rounded-full border border-[var(--color-border)] px-1.5 py-px text-[0.75rem] text-muted">
                 cache hit
               </span>
             ) : (
@@ -422,7 +422,7 @@ function EventLine({ event, runId }: { event: RunLogEvent; runId: string }) {
       return (
         <Row label="failure" tone="bad">
           {event.failureReason}
-          {event.timedOut && ' (timed out)'} — <span className="text-fg/60">
+          {event.timedOut && ' (timed out)'} — <span className="text-muted">
             <EventText text={oneLine(event.error)} />
           </span>
         </Row>
@@ -487,7 +487,7 @@ function Artifact({ value, runId, note }: { value: Spillable; runId: string; not
 
   return (
     <div className="mt-1">
-      <div className="flex flex-wrap items-center gap-x-2 text-[0.65rem] text-muted">
+      <div className="flex flex-wrap items-center gap-x-2 text-[0.75rem] text-muted">
         <span>
           {note} · {formatTraceBytes(bytes)}
           {spilled ? ' spilled' : ' inline'}
@@ -506,7 +506,7 @@ function Artifact({ value, runId, note }: { value: Spillable; runId: string; not
         {excerpt.length < text.length && <span>excerpt</span>}
       </div>
       {excerpt.trim() !== '' && (
-        <pre className="mt-1 max-h-40 overflow-auto rounded border border-[var(--color-border)] bg-[var(--color-bg)] p-2 text-[0.7rem] leading-relaxed text-fg/70">
+        <pre className="mt-1 max-h-40 overflow-auto rounded border border-[var(--color-border)] bg-[var(--color-bg)] p-2 text-[0.75rem] leading-relaxed text-fg/70">
           <code>{excerpt}</code>
         </pre>
       )}
@@ -525,7 +525,7 @@ function AggregateLine({ result }: { result: Record<string, unknown> }) {
   return (
     <div className="mt-3 border-t border-[var(--color-border)] pt-3 font-mono text-xs text-fg/80">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <span className="text-[0.65rem] uppercase tracking-wider text-muted">aggregate</span>
+        <span className="text-[0.75rem] uppercase tracking-wider text-muted">aggregate</span>
         {score !== undefined && <span className="tabular-nums">score {score}</span>}
         {typeof result.status === 'string' && <span>{result.status}</span>}
         {num('iterationsSucceeded') !== undefined && (
@@ -542,7 +542,7 @@ function AggregateLine({ result }: { result: Record<string, unknown> }) {
         {cost !== undefined && <span className="tabular-nums">${cost.toFixed(4)}</span>}
       </div>
       {scores.length > 0 && (
-        <div className="mt-1 text-[0.7rem] text-muted">
+        <div className="mt-1 text-[0.75rem] text-muted">
           per-iteration scores: [{scores.join(', ')}]
         </div>
       )}

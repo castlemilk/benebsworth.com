@@ -67,16 +67,14 @@ export default function LlmBenchmarkPage() {
         ]}
       />
       <SiteNav />
-      <BenchmarkNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-20 pt-16 sm:px-8">
-        <Breadcrumb
-          className="mb-10"
-          items={[
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
+        <Breadcrumb items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },
             { label: 'LLM Benchmark' },
           ]}
         />
+        <BenchmarkNav />
 
         {/* ── Hero ───────────────────────────────────────────────── */}
         <section className="pb-12">

@@ -118,8 +118,8 @@ export function RelatedLabs({
 
   if (variant === 'inline') {
     return (
-      <div className="not-prose mt-8 flex flex-wrap items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
-        <span className="text-fg/60">Try in the lab:</span>
+      <div className="not-prose mt-8 flex flex-wrap items-center gap-2 font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">
+        <span className="text-muted">Try in the lab:</span>
         {chosen.map((e) => (
           <Link
             key={e.slug}
@@ -141,7 +141,7 @@ export function RelatedLabs({
         </h2>
         <Link
           href="/lab/"
-          className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted transition-colors hover:text-fg/80"
+          className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted transition-colors hover:text-fg/80 font-semibold"
         >
           All effects →
         </Link>
@@ -158,18 +158,18 @@ export function RelatedLabs({
                 <h3 className="font-display text-base font-semibold text-fg/90 group-hover/lab:text-fg">
                   {e.title}
                 </h3>
-                <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-fg/40">
+                <span className="type-label text-muted">
                   {e.category}
                 </span>
               </div>
-              <p className="font-sans text-sm leading-5 text-fg/65">{e.blurb}</p>
+              <p className="font-sans text-sm leading-5 text-muted">{e.blurb}</p>
               <div className="mt-auto flex flex-wrap gap-1 pt-2">
                 {e.tags.slice(0, 3).map((t) => {
                   const c = tagColor(t)
                   return (
                     <span
                       key={t}
-                      className="accent-ink rounded-full border px-1.5 py-0.5 font-mono text-[0.5rem] uppercase leading-none tracking-wider"
+                      className="accent-ink rounded-full border px-1.5 py-0.5 font-label text-[0.75rem] font-semibold uppercase leading-none tracking-[0.06em]"
                       style={{
                         '--ink': c,
                         borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,

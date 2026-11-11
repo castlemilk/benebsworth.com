@@ -148,13 +148,13 @@ export function VectorCard({ item, previewBg, scaleSize, onInspect }: VectorCard
         <h3 title={item.name} className="line-clamp-2 break-words font-display text-sm font-semibold text-[var(--color-fg)]">
           {item.name}
         </h3>
-        <p title={item.semantic_role} className="truncate font-mono text-[0.7rem] text-muted">{item.semantic_role}</p>
+        <p title={item.semantic_role} className="truncate font-mono text-[0.75rem] text-muted">{item.semantic_role}</p>
       </div>
 
       <p
         role="status"
         aria-live="polite"
-        className={cn('mt-1 h-4 truncate text-[0.7rem]', copy === 'failed' || copy === 'missing' ? 'text-[var(--color-fg)]' : 'text-muted')}
+        className={cn('mt-1 h-4 truncate text-[0.75rem]', copy === 'failed' || copy === 'missing' ? 'text-[var(--color-fg)]' : 'text-muted')}
       >
         {COPY_STATUS[copy]}
       </p>

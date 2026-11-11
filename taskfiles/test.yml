@@ -103,3 +103,18 @@ tasks:
         msg: "out/ does not exist — run `task build` first"
     cmds:
       - '{{.BIN}}/serve {{.OUT_DIR}} -l {{.E2E_PORT}}'
+
+  annotate:
+    desc: Node test suite for the hike photo annotator (tools/hike-annotate)
+    summary: |
+      The annotator is its own package with its own lockfile, so the site's
+      Vitest run never sees it. This installs that package (two dependencies,
+      a few seconds) and runs `node --test`.
+
+      The suite covers the GCS generation guard from #96: a reviewed proposal
+      can only be written over the manifest version it was made from. Ten
+      tests, about two seconds, no network and no live bucket.
+    dir: tools/hike-annotate
+    cmds:
+      - npm ci --no-audit --no-fund --silent
+      - npm test

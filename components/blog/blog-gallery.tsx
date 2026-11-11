@@ -2,13 +2,28 @@
 
 import { useEffect, useState, type CSSProperties } from 'react'
 import type { Asset, ContentManifest } from '@/lib/gen/content'
-import { cacheBust, hasGeo, mapsLink, manifestUrl, thumbOf } from '@/lib/admin/storage'
+import { cacheBust, hasGeo, listingHas, manifestListingUrl, manifestObject, mapsLink, manifestUrl, thumbOf } from '@/lib/admin/storage'
 
 /**
  * Live "Photos" block for a blog post: reads the post's image manifest from GCS
  * (managed in /admin) and renders the assigned ordered gallery with a lightbox.
  * Renders nothing until photos are assigned, so it's invisible on posts without.
  */
+/**
+ * Most posts have no manifest. Ask the bucket listing first (always 200) so a
+ * post without photos costs one quiet request instead of a console 404. If the
+ * listing itself is refused, fall back to fetching the manifest directly.
+ */
+async function loadManifest(slug: string, url: string): Promise<ContentManifest | null> {
+  const listing = manifestListingUrl('blog', slug)
+  if (listing) {
+    const r = await fetch(listing, { cache: 'no-store' }).catch(() => null)
+    if (r?.ok && !listingHas(await r.json().catch(() => null), manifestObject('blog', slug))) return null
+  }
+  const r = await fetch(cacheBust(url), { cache: 'no-store' })
+  return r.ok ? r.json() : null
+}
+
 export function BlogGallery({ slug, accent = '#7c5cff' }: { slug: string; accent?: string }) {
   const [gallery, setGallery] = useState<Asset[]>([])
   const [lightbox, setLightbox] = useState<number | null>(null)
@@ -17,9 +32,8 @@ export function BlogGallery({ slug, accent = '#7c5cff' }: { slug: string; accent
     const url = manifestUrl('blog', slug)
     if (!url) return
     let alive = true
-    fetch(cacheBust(url), { cache: 'no-store' })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((m: ContentManifest | null) => { if (alive) setGallery(Array.isArray(m?.gallery) ? m!.gallery : []) })
+    loadManifest(slug, url)
+      .then((m) => { if (alive) setGallery(Array.isArray(m?.gallery) ? m!.gallery : []) })
       .catch(() => {})
     return () => { alive = false }
   }, [slug])

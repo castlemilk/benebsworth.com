@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { gotoSettled } from './settled'
+import { gotoSettled, waitForSettled } from './settled'
 
 test.use({ launchOptions: process.env.BROWSER_EXECUTABLE_PATH ? { executablePath: process.env.BROWSER_EXECUTABLE_PATH } : {} })
 
@@ -35,6 +35,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
         await expect(page.locator('article[data-pagefind-body="true"]')).toBeVisible()
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
         await page.goBack()
+        await waitForSettled(page)
         await expect(page).toHaveURL(archiveUrl)
         // A browser may restore the open dialog from its back/forward cache.
         if (await dialog.isVisible()) await input.press('Escape')

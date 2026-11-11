@@ -63,3 +63,8 @@ machine, a nearby edge or Chrome's throttling profiles never produced.
 - The folio-review lab (`app/lab/folio-review/review.tsx`) and its test, plus
   the theme toggle test, read `@/components/theme/use-theme`; nothing imports
   `next-themes` any more.
+- Trade-off, measured in CI on 2026-11-11: without the forced root re-render,
+  a page's Suspense boundaries hydrate at normal priority. On a slow runner the
+  header was live within 0.2s of `load` in 1 of 6 loads, against 6 of 6 with
+  next-themes, and in every load by 2s. A click in that window is ignored, and
+  the reader repeats it. Specs wait with `waitForSettled` (`e2e/settled.ts`).

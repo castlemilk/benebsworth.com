@@ -49,12 +49,27 @@ jobs:
         run: node --test scripts/ci/vercel-artifact.test.mjs scripts/ci/vercel-preview.test.mjs
       - name: Install locked application dependencies
         run: npm ci
+      - name: Test library output controls
+        run: node --import tsx --test scripts/check-library-output.test.mts
+      - name: Check application types and lint
+        id: quality
+        run: |
+          npx --no-install next typegen
+          npm run typecheck
+          npm run lint
+      - name: Run application regression suite
+        id: unit
+        run: npm test -- --maxWorkers=1
       - name: Install pinned build adapter without deployment credentials
         run: |
           npm install --prefix "$RUNNER_TEMP/artifact-cli" --no-save --no-audit --no-fund vercel@59.13.1
           echo "$RUNNER_TEMP/artifact-cli/node_modules/.bin" >> "$GITHUB_PATH"
       - name: Compile self-contained Build Output without credentials
+        id: compile
         run: node scripts/ci/vercel-artifact.mjs
+      - name: Audit built library and real search index
+        id: library
+        run: node --import tsx scripts/check-library-output.mts vercel-artifact/.vercel/output/static > library-output-audit.json
       - name: Archive only validated Build Output and provenance
         run: |
           tar -C vercel-artifact -czf vercel-artifact.tgz .vercel manifest.json
@@ -67,6 +82,22 @@ jobs:
             vercel-artifact.tgz.sha256
           if-no-files-found: error
           retention-days: 7
+      - name: Summarize exact-source validation and remaining gates
+        if: always()
+        env:
+          QUALITY_OUTCOME: ${{ steps.quality.outcome }}
+          UNIT_OUTCOME: ${{ steps.unit.outcome }}
+          BUILD_OUTCOME: ${{ steps.compile.outcome }}
+          LIBRARY_OUTCOME: ${{ steps.library.outcome }}
+        run: |
+          {
+            printf '### Credential-free validation\n\nSource: `%s`\n\n' "$ARTIFACT_SOURCE_SHA"
+            printf -- '- Typecheck and lint: %s\n- Full unit suite: %s\n- Build: %s\n- Built library and search: %s\n' "$QUALITY_OUTCOME" "$UNIT_OUTCOME" "$BUILD_OUTCOME" "$LIBRARY_OUTCOME"
+            printf -- '- Browser acceptance: NOT RUN\n- Deployment: NOT RUN\n- Release approval: false\n'
+            if [ -s library-output-audit.json ]; then
+              printf '\n```json\n'; cat library-output-audit.json; printf '\n```\n'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Remove temporary build configuration
         if: always()
         run: rm -rf .vercel vercel-artifact "$RUNNER_TEMP/artifact-cli"

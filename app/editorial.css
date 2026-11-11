@@ -167,7 +167,7 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 /* Warm paper belongs to reading routes, not the interactive lab or landing hero.
    Scope on the root so nav, footer and Tailwind token aliases inherit together.
    Dark mode and scientific stage/diagram colours remain untouched. */
-:root:not(.dark):has(.folio-reading-page, .folio-archive){
+:root:not(.dark):has(.folio-reading-page, .folio-archive, .vectors-library){
  --bg:#f4f1e9;
  --fg:#202c34;
  --muted:#5b6670;
@@ -176,7 +176,7 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
  --border:#c7c7be;
 }
 @media print{
- :root:not(.dark):has(.folio-reading-page, .folio-archive){--bg:#fff;--fg:#000}
+ :root:not(.dark):has(.folio-reading-page, .folio-archive, .vectors-library){--bg:#fff;--fg:#000}
 }
 
 /* The TOC is a sibling of the article, so ink must be inherited from the page. */

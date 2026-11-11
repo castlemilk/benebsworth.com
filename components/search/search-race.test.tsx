@@ -5,6 +5,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 const mocks = vi.hoisted(() => ({ search: vi.fn(), loadPagefind: vi.fn() }))
 vi.mock('./pagefind-loader', () => ({ loadPagefind: mocks.loadPagefind }))
 import { SiteSearch } from './site-search'
+import { ArtworkCollection } from '../editorial-artwork/collection'
 
 beforeEach(() => {
   vi.useFakeTimers()
@@ -23,14 +24,14 @@ it('retries the retained query when reopening after initialization recovers', as
   render(<SiteSearch />)
   const trigger = screen.getByRole('button', { name: 'Search the site' })
   fireEvent.click(trigger)
-  fireEvent.change(screen.getByRole('textbox', { name: 'Search posts' }), { target: { value: 'retained' } })
+  fireEvent.change(screen.getByRole('textbox', { name: 'Search posts and assets' }), { target: { value: 'retained' } })
   await tick()
   expect(screen.getByRole('status').textContent).toContain('Search is unavailable')
 
   fireEvent.click(screen.getByRole('button', { name: 'Close search' }))
   mocks.loadPagefind.mockResolvedValue({ search: mocks.search })
   fireEvent.click(trigger)
-  expect((screen.getByRole('textbox', { name: 'Search posts' }) as HTMLInputElement).value).toBe('retained')
+  expect((screen.getByRole('textbox', { name: 'Search posts and assets' }) as HTMLInputElement).value).toBe('retained')
   await tick()
 
   expect(mocks.search).toHaveBeenCalledExactlyOnceWith('retained')
@@ -45,7 +46,7 @@ it('ignores a search completed while closed and refreshes the retained query on 
   render(<SiteSearch />)
   const trigger = screen.getByRole('button', { name: 'Search the site' })
   fireEvent.click(trigger)
-  fireEvent.change(screen.getByRole('textbox', { name: 'Search posts' }), { target: { value: 'retained' } })
+  fireEvent.change(screen.getByRole('textbox', { name: 'Search posts and assets' }), { target: { value: 'retained' } })
   await tick()
   fireEvent.click(screen.getByRole('button', { name: 'Close search' }))
   await act(async () => finishClosed(result('closed result')))
@@ -63,7 +64,8 @@ function captureNavigation<T>(navigate: (url: string) => void, action: () => T):
   // Capture the assignment, not a simulated successful page load. jsdom does
   // not implement cross-document navigation; leave the real Window intact
   // except during this synchronous event, and restore it even on failure.
-  const location = { set href(url: string) { navigate(url) } }
+  const current = new URL(window.location.href)
+  const location = { origin: current.origin, pathname: current.pathname, search: current.search, get href() { return current.href }, set href(url: string) { navigate(url) } }
   vi.stubGlobal('window', new Proxy(window, {
     get: (target, key) => key === 'location' ? location : Reflect.get(target, key, target),
   }))
@@ -78,7 +80,7 @@ it('invalidates old results immediately and ignores superseded responses', async
   let resolveOld!:(x:ReturnType<typeof result>)=>void
   mocks.search.mockImplementation((q:string)=>q==='old' ? new Promise(resolve=>{resolveOld=resolve}) : Promise.resolve(result(q)))
   render(<SiteSearch/>);fireEvent.click(screen.getByRole('button',{name:'Search the site'}))
-  const input=screen.getByRole('textbox',{name:'Search posts'})
+  const input=screen.getByRole('textbox',{name:'Search posts and assets'})
   fireEvent.change(input,{target:{value:'old'}});await tick()
   fireEvent.change(input,{target:{value:'new'}})
   await act(async()=>resolveOld(result('old')))
@@ -90,7 +92,7 @@ it('invalidates old results immediately and ignores superseded responses', async
 it('does not activate previous results while new search fails', async () => {
   mocks.search.mockImplementation((q:string)=>q==='first'?Promise.resolve(result(q)):Promise.reject(Error('unavailable')))
   render(<SiteSearch/>);fireEvent.click(screen.getByRole('button',{name:'Search the site'}))
-  const input=screen.getByRole('textbox',{name:'Search posts'})
+  const input=screen.getByRole('textbox',{name:'Search posts and assets'})
   fireEvent.change(input,{target:{value:'first'}});await tick()
   expect(screen.getByRole('link',{name:'first'})).toBeTruthy()
   fireEvent.change(input,{target:{value:'second'}})
@@ -104,7 +106,7 @@ it('clearing the query prevents a pending response from restoring results', asyn
   let finish!:(x:ReturnType<typeof result>)=>void
   mocks.search.mockImplementation(()=>new Promise(resolve=>{finish=resolve}))
   render(<SiteSearch/>);fireEvent.click(screen.getByRole('button',{name:'Search the site'}))
-  const input=screen.getByRole('textbox',{name:'Search posts'})
+  const input=screen.getByRole('textbox',{name:'Search posts and assets'})
   fireEvent.change(input,{target:{value:'first'}});await tick()
   fireEvent.change(input,{target:{value:''}})
   await act(async()=>finish(result('first')))
@@ -115,7 +117,7 @@ it('ignores old result data that resolves after a newer query', async () => {
   let finish!:(x:{url:string;excerpt:string;meta:{title:string}})=>void
   mocks.search.mockImplementation((q:string)=>Promise.resolve(q==='old'?{results:[{id:'old',data:()=>new Promise(resolve=>{finish=resolve})}]}:result(q)))
   render(<SiteSearch/>);fireEvent.click(screen.getByRole('button',{name:'Search the site'}))
-  const input=screen.getByRole('textbox',{name:'Search posts'})
+  const input=screen.getByRole('textbox',{name:'Search posts and assets'})
   fireEvent.change(input,{target:{value:'old'}});await tick()
   fireEvent.change(input,{target:{value:'new'}});await tick()
   await act(async()=>finish({url:'/old',excerpt:'',meta:{title:'old'}}))
@@ -125,7 +127,7 @@ it('ignores old result data that resolves after a newer query', async () => {
 it('does not intercept keys while an IME composition is active', async () => {
   mocks.search.mockResolvedValue(result('first'))
   render(<SiteSearch/>);fireEvent.click(screen.getByRole('button',{name:'Search the site'}))
-  const input=screen.getByRole('textbox',{name:'Search posts'})
+  const input=screen.getByRole('textbox',{name:'Search posts and assets'})
   fireEvent.change(input,{target:{value:'first'}});await tick()
   expect(screen.getByRole('link',{name:'first'})).toBeTruthy()
   expect(fireEvent.keyDown(input,{key:'Enter',isComposing:true,cancelable:true})).toBe(true)
@@ -142,7 +144,7 @@ it.each([
   })
   render(<SiteSearch />)
   fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
-  const input = screen.getByRole('textbox', { name: 'Search posts' })
+  const input = screen.getByRole('textbox', { name: 'Search posts and assets' })
   fireEvent.change(input, { target: { value: 'query' } })
   await tick()
 
@@ -177,7 +179,7 @@ it('does not start an obsolete search when the loader resolves during a newer de
   mocks.search.mockImplementation((query: string) => Promise.resolve(result(query)))
   render(<SiteSearch />)
   fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
-  const input = screen.getByRole('textbox', { name: 'Search posts' })
+  const input = screen.getByRole('textbox', { name: 'Search posts and assets' })
 
   fireEvent.change(input, { target: { value: 'old' } })
   await tick()
@@ -201,7 +203,7 @@ it('keeps newer successful results when an obsolete search rejects', async () =>
     : Promise.resolve(result(query)))
   render(<SiteSearch />)
   fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
-  const input = screen.getByRole('textbox', { name: 'Search posts' })
+  const input = screen.getByRole('textbox', { name: 'Search posts and assets' })
 
   fireEvent.change(input, { target: { value: 'old' } })
   await tick()
@@ -223,7 +225,7 @@ it('shows unavailable without previous results when current result data rejects'
     : { results: [{ id: 'second', data: () => new Promise((_resolve, reject) => { rejectData = reject }) }] }))
   render(<SiteSearch />)
   fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
-  const input = screen.getByRole('textbox', { name: 'Search posts' })
+  const input = screen.getByRole('textbox', { name: 'Search posts and assets' })
 
   fireEvent.change(input, { target: { value: 'first' } })
   await tick()
@@ -237,8 +239,9 @@ it('shows unavailable without previous results when current result data rejects'
 
   expect(screen.queryByRole('link', { name: 'first' })).toBeNull()
   expect(screen.queryByRole('link', { name: 'second' })).toBeNull()
-  expect(screen.getByRole('status').textContent).toBe('Search is unavailable right now. You can still browse every post.')
+  expect(screen.getByRole('status').textContent).toBe('Search is unavailable right now. You can still browse the archive and asset library.')
   expect(screen.getByRole('link', { name: 'Browse the archive' }).getAttribute('href')).toMatch(/^\/blog\/?$/)
+  expect(screen.getByRole('link', { name: 'Browse asset library' }).getAttribute('href')).toMatch(/^\/vectors\/?$/)
   expect(fireEvent.keyDown(input, { key: 'Enter', cancelable: true })).toBe(true)
 })
 
@@ -248,7 +251,7 @@ it('resets keyboard selection to the first result after the query changes', asyn
   }))
   render(<SiteSearch />)
   fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
-  const input = screen.getByRole('textbox', { name: 'Search posts' })
+  const input = screen.getByRole('textbox', { name: 'Search posts and assets' })
 
   fireEvent.change(input, { target: { value: 'old' } })
   await tick()
@@ -274,7 +277,7 @@ it('requests the exact current selected destination and never the previous query
     : new Promise(resolve => { resolveNew = resolve }))
   render(<SiteSearch />)
   fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
-  const input = screen.getByRole('textbox', { name: 'Search posts' })
+  let input = screen.getByRole('textbox', { name: 'Search posts and assets' })
   const navigate = vi.fn()
   const pressEnter = () => captureNavigation(navigate, () =>
     fireEvent.keyDown(input, { key: 'Enter', cancelable: true }))
@@ -285,6 +288,9 @@ it('requests the exact current selected destination and never the previous query
   expect(pressEnter()).toBe(false)
   expect(navigate).toHaveBeenCalledExactlyOnceWith('/blog/old-second/?from=search#details')
   navigate.mockClear()
+  expect(screen.queryByRole('dialog')).toBeNull()
+  fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
+  input = screen.getByRole('textbox', { name: 'Search posts and assets' })
 
   fireEvent.change(input, { target: { value: 'new' } })
   expect(pressEnter()).toBe(true)
@@ -299,4 +305,41 @@ it('requests the exact current selected destination and never the previous query
   ] }))
   expect(pressEnter()).toBe(false)
   expect(navigate).toHaveBeenCalledExactlyOnceWith('/blog/new-first/?from=search#summary')
+})
+
+it('closes the modal and releases scroll before keyboard navigation to same-page artwork', async () => {
+  window.history.replaceState(null, '', '/vectors/')
+  document.body.style.overflow = 'clip'
+  mocks.search.mockResolvedValue({ results: [{ data: async () => ({ url: '/vectors/#artwork-memory-layer-stack', excerpt: '', meta: { title: 'Memory layer stack', description: 'Generated PNG artwork' } }) }] })
+  render(<SiteSearch />)
+  fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
+  const input = screen.getByRole('textbox', { name: 'Search posts and assets' })
+  fireEvent.change(input, { target: { value: 'memory' } })
+  await tick()
+  const navigate = vi.fn(() => {
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(document.body.style.overflow).toBe('clip')
+  })
+  captureNavigation(navigate, () => fireEvent.keyDown(input, { key: 'Enter', cancelable: true }))
+  expect(navigate).toHaveBeenCalledExactlyOnceWith('/vectors/#artwork-memory-layer-stack')
+  document.body.style.overflow = ''
+  window.history.replaceState(null, '', '/')
+})
+
+it.each(['keyboard', 'mouse'])('reveals a filtered artwork on repeated same-hash %s search navigation', async method => {
+  window.history.replaceState(null, '', '/vectors/#artwork-memory-layer-stack')
+  mocks.search.mockResolvedValue({ results: [{ data: async () => ({ url: '/vectors/#artwork-memory-layer-stack', excerpt: '', meta: { title: 'Memory layer stack' } }) }] })
+  render(<><SiteSearch /><ArtworkCollection /></>)
+  fireEvent.change(screen.getByLabelText('Find artwork'), { target: { value: 'missing' } })
+  const target = document.getElementById('artwork-memory-layer-stack')!
+  expect(target.hidden).toBe(true)
+  fireEvent.click(screen.getByRole('button', { name: 'Search the site' }))
+  fireEvent.change(screen.getByRole('textbox', { name: 'Search posts and assets' }), { target: { value: 'memory' } })
+  await tick()
+  if (method === 'keyboard') captureNavigation(() => {}, () => fireEvent.keyDown(screen.getByRole('textbox', { name: 'Search posts and assets' }), { key: 'Enter', cancelable: true }))
+  else fireEvent.click(screen.getByRole('link', { name: 'Memory layer stack' }))
+  expect(screen.queryByRole('dialog')).toBeNull()
+  expect(target.hidden).toBe(false)
+  expect(document.activeElement).toBe(target)
+  window.history.replaceState(null, '', '/')
 })

@@ -8,7 +8,7 @@ const css = readFileSync('app/globals.css', 'utf8')
 const basePalettes = [...css.matchAll(/--fg:\s*(#[\da-f]+);[\s\S]*?--stage:\s*(#[\da-f]+);/gi)]
   .map(([, fg, bg]) => ({ fg, bg }))
 const editorialCss = readFileSync('app/editorial.css', 'utf8')
-const editorialRule = editorialCss.match(/:root:not\(\.dark\):has\(\.folio-reading-page,\s*\.folio-archive\)\s*\{([^}]+)\}/)![1]
+const editorialRule = editorialCss.match(/:root:not\(\.dark\):has\(\.folio-reading-page,\s*\.folio-archive(?:,\s*\.[\w-]+)*\)\s*\{([^}]+)\}/)![1]
 const editorialForeground = editorialRule.match(/--fg:\s*(#[\da-f]+);/i)![1]
 const palettes = [...basePalettes, { fg: editorialForeground, bg: basePalettes[0].bg }]
 

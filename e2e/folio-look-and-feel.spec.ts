@@ -79,7 +79,7 @@ test('Uses and Now keep their authored entries under readable headings', async (
 })
 
 test('vector gallery filters, recovers from no results and inspects in a native dialog', async ({ page }) => {
-  await page.goto('/vectors/')
+  await page.goto('/vectors/originals/')
   const count = page.locator('[data-vector-count]')
   await expect(count).toContainText('Showing 25 of 25 vectors')
   await page.getByRole('group', { name: 'Filter by category' }).getByRole('button', { name: /RF & Electronics/ }).click()

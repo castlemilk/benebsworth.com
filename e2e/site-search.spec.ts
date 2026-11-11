@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { gotoSettled } from './settled'
 
 test.use({ launchOptions: process.env.BROWSER_EXECUTABLE_PATH ? { executablePath: process.env.BROWSER_EXECUTABLE_PATH } : {} })
 
@@ -12,7 +13,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
       test.use({ viewport, colorScheme })
 
       test('built Pagefind opens an article and search remains usable after Back', async ({ page }, testInfo) => {
-        await page.goto('/blog/')
+        await gotoSettled(page, '/blog/')
         const archiveUrl = page.url()
         const trigger = page.getByRole('button', { name: 'Search the site' })
         await trigger.click()
@@ -29,6 +30,8 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
 
         await input.press('Enter')
         await expect(page).toHaveURL(destination)
+        // The destination streams in; wait for React to retire the hidden copy.
+        await page.waitForFunction(() => !document.querySelector('div[hidden][id^="S:"]'))
         await expect(page.locator('article[data-pagefind-body="true"]')).toBeVisible()
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
         await page.goBack()
@@ -82,7 +85,7 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
             meta: { title: query === 'old query' ? 'Old result' : 'Current result' },
           } })
         })
-        await page.goto('/blog/')
+        await gotoSettled(page, '/blog/')
         const archiveUrl = page.url()
         await page.getByRole('button', { name: 'Search the site' }).click()
         const dialog = page.getByRole('dialog', { name: 'Search', exact: true })
@@ -110,6 +113,8 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
         await expect(dialog.getByRole('link', { name: 'Current result', exact: false })).toBeVisible()
         await input.press('Enter')
         await expect(page).toHaveURL(new URL(destinationPath, archiveUrl).href)
+        // The destination streams in; wait for React to retire the hidden copy.
+        await page.waitForFunction(() => !document.querySelector('div[hidden][id^="S:"]'))
         await expect(page.locator('article[data-pagefind-body="true"]')).toBeVisible()
       })
     })

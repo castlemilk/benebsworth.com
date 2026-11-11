@@ -50,7 +50,7 @@ export function HikeGallery({
           <button
             type="button"
             onClick={() => onSelect(null)}
-            className="rounded-full border px-2.5 py-0.5 font-mono text-[0.62rem] uppercase tracking-wider transition-colors hover:text-fg"
+            className="rounded-full border px-2.5 py-0.5 font-mono text-[0.75rem] uppercase tracking-wider transition-colors hover:text-fg"
             style={{ color: 'var(--accent)', borderColor: 'color-mix(in srgb, var(--accent) 45%, transparent)' }}
           >
             {active} ✕
@@ -142,11 +142,11 @@ function GalleryTile({
       {(asset.caption || asset.slot) && (
         <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end gap-2 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
           {asset.slot && (
-            <span className="rounded-full px-1.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider text-white" style={{ backgroundColor: 'color-mix(in srgb, var(--accent) 70%, transparent)' }}>
+            <span className="rounded-full px-1.5 py-0.5 font-mono text-[0.75rem] uppercase tracking-wider text-white" style={{ backgroundColor: 'color-mix(in srgb, var(--accent) 70%, transparent)' }}>
               {asset.slot}
             </span>
           )}
-          {asset.caption && <span className="line-clamp-2 font-sans text-[0.7rem] leading-tight text-white/90">{asset.caption}</span>}
+          {asset.caption && <span className="line-clamp-2 font-sans text-[0.75rem] leading-tight text-white/90">{asset.caption}</span>}
         </span>
       )}
     </button>
@@ -169,7 +169,7 @@ function GalleryPlaceholder({ hike }: { hike: Hike }) {
             className="relative flex aspect-square flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-dashed border-[var(--color-border)] bg-[radial-gradient(120%_120%_at_30%_0%,color-mix(in_srgb,var(--accent)_8%,var(--color-stage)),var(--color-stage))] p-3 text-center"
           >
             <span className="font-mono text-lg" style={{ color: 'color-mix(in srgb, var(--accent) 70%, transparent)' }}>◰</span>
-            <span className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-muted">{w.name}</span>
+            <span className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">{w.name}</span>
           </div>
         ))}
       </div>
@@ -301,9 +301,9 @@ function Lightbox({
     >
       {/* top bar */}
       <div className="flex items-center justify-between gap-3 p-3 sm:p-4" onClick={(e) => e.stopPropagation()}>
-        <span className="font-mono text-xs uppercase tracking-[0.18em] text-white/60">{hikeName}</span>
+        <span className="font-label text-xs uppercase tracking-[0.1em] text-white/60 font-semibold">{hikeName}</span>
         <div className="flex items-center gap-2">
-          <a href={image.url} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/10 px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-wider text-white/90 transition-colors hover:bg-white/20">full size ↗</a>
+          <a href={image.url} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/10 px-3 py-1.5 font-mono text-[0.75rem] uppercase tracking-wider text-white/90 transition-colors hover:bg-white/20">full size ↗</a>
           <button type="button" className="rounded-full bg-white/10 px-3 py-1.5 font-mono text-xs text-white transition-colors hover:bg-white/20" onClick={onClose} aria-label="Close">esc ✕</button>
         </div>
       </div>
@@ -331,7 +331,7 @@ function Lightbox({
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-1 font-mono text-xs text-white/70">
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             {image.caption && <span className="font-sans text-sm text-white/90">{image.caption}</span>}
-            {image.slot && <span className="rounded-full bg-white/10 px-2 py-0.5 text-[0.6rem] uppercase tracking-wider">{image.slot}</span>}
+            {image.slot && <span className="rounded-full bg-white/10 px-2 py-0.5 text-[0.75rem] uppercase tracking-wider">{image.slot}</span>}
             {image.takenAt && <span className="text-white/50">{fmtDate(image.takenAt)}</span>}
             {hasGeo(image) && (
               <a href={mapsLink(image.lat, image.lng)} target="_blank" rel="noopener noreferrer" className="text-white/85 underline underline-offset-2">📍 location</a>

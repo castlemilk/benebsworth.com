@@ -34,7 +34,7 @@ export function SandboxContract({ task }: { task: BenchmarkTask }) {
 
   return (
     <details className="mt-4 border-t border-[var(--color-border)] pt-4">
-      <summary className="cursor-pointer font-mono text-[0.7rem] uppercase tracking-[0.18em] text-fg/80 marker:text-muted">
+      <summary className="cursor-pointer font-label text-[0.75rem] uppercase tracking-[0.1em] text-fg/80 marker:text-muted font-semibold">
         Sandbox contract ({source}) — appended to the prompt
       </summary>
       <p className="mt-3 max-w-prose text-xs text-muted">

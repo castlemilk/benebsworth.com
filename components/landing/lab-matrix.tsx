@@ -126,14 +126,14 @@ function LabMatrixTile({
           <h3 className="font-display text-sm font-semibold text-fg">
             {entry.title}
           </h3>
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-muted">
+          <span className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">
             {entry.category}
           </span>
         </div>
       </div>
       {/* Hover affordance — small "→" that fades in on hover. */}
       <div
-        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/80 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-fg transition-opacity ${
+        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/80 px-2 py-0.5 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-fg transition-opacity ${
           hovered === entry.slug ? 'opacity-100' : 'opacity-0'
         }`}
       >

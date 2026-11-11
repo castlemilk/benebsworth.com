@@ -93,17 +93,15 @@ export default async function BenchmarkCategoryPage({
     <>
       <JsonLd data={[breadcrumb, collection]} />
       <SiteNav />
-      <BenchmarkNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8">
-        <Breadcrumb
-          className="mb-10"
-          items={[
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 sm:px-8">
+        <Breadcrumb items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },
             { label: 'LLM Benchmark', href: '/lab/llm-benchmark/' },
             { label: cat.label },
           ]}
         />
+        <BenchmarkNav />
 
         <section className="pb-10">
           <Reveal>
@@ -202,7 +200,7 @@ function MiniStat({
     <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-3">
       <div className="flex items-center gap-1.5 text-muted">
         {icon}
-        <span className="font-mono text-[0.65rem] uppercase tracking-wider">{label}</span>
+        <span className="font-mono text-[0.75rem] uppercase tracking-wider">{label}</span>
       </div>
       <p className="mt-1 font-mono text-sm font-semibold">{value}</p>
     </div>

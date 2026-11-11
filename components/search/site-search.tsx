@@ -161,7 +161,7 @@ export function SiteSearch() {
       >
         <SearchIcon />
         <span className="hidden sm:inline">Search</span>
-        <kbd className="hidden rounded border border-[var(--color-border)] px-1 text-[0.6rem] leading-tight text-muted md:inline">
+        <kbd className="hidden rounded border border-[var(--color-border)] px-1 text-[0.75rem] leading-tight text-muted md:inline">
           ⌘K
         </kbd>
       </button>

@@ -103,7 +103,7 @@ function MetaRow({
         className="w-44 px-5 py-3 font-mono text-xs uppercase tracking-wider text-muted"
       >
         <span className="inline-flex items-center gap-2">
-          <span className="text-fg/40">{icon}</span>
+          <span className="text-muted">{icon}</span>
           {label}
         </span>
       </th>
@@ -136,11 +136,8 @@ export default async function ModelDetailPage({
     <>
       <JsonLd data={[breadcrumb]} />
       <SiteNav />
-      <BenchmarkNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8">
-        <Breadcrumb
-          className="mb-10"
-          items={[
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 sm:px-8">
+        <Breadcrumb items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },
             { label: 'LLM Benchmark', href: '/lab/llm-benchmark/' },
@@ -148,6 +145,7 @@ export default async function ModelDetailPage({
             { label: model.name },
           ]}
         />
+        <BenchmarkNav />
 
         <section className="pb-10">
           <Reveal>
@@ -393,7 +391,7 @@ function IterationSpread({ scores }: { scores: number[] }) {
   return (
     <div
       title={tooltip}
-      className="mt-1 font-mono text-[10px] text-muted"
+      className="mt-1 font-mono text-[0.75rem] text-muted"
       aria-label={tooltip}
     >
       {min.toFixed(0)}–{max.toFixed(0)}

@@ -59,7 +59,7 @@ export function RelatedRunsPanel({ results }: { results: BenchmarkResult[] }) {
     >
       <div className="border-b border-[var(--color-border)] bg-[var(--color-surface-2)] px-5 py-3">
         <h3 className="font-mono text-xs uppercase tracking-wider text-muted">Related runs</h3>
-        <p className="mt-1 text-xs text-fg/60">
+        <p className="mt-1 text-xs text-muted">
           Runs elsewhere on the board that failed at least one of the same checks — same task
           first, then the same model on other tasks. Computed from the current board
           (results.json) at build time, not a live query.
@@ -112,7 +112,7 @@ function RelatedRunRow({ item }: { item: RelatedRun }) {
       ) : (
         <span title={uri}>{label}</span>
       )}
-      <span className="text-[0.65rem] uppercase tracking-wider text-muted">
+      <span className="text-[0.75rem] uppercase tracking-wider text-muted">
         {item.tier === 'same-task' ? 'same task' : item.tier === 'same-model' ? 'same model' : 'elsewhere'}
       </span>
       {/* Shared FAILED checks, in the failing band of the IterationChecks
@@ -121,7 +121,7 @@ function RelatedRunRow({ item }: { item: RelatedRun }) {
       {item.sharedChecks.map((name) => (
         <span
           key={name}
-          className="inline-flex items-center rounded-full border border-rose-600/40 bg-rose-600/10 px-1.5 py-px text-[10px] leading-4 text-rose-600 dark:text-rose-400"
+          className="inline-flex items-center rounded-full border border-rose-600/40 bg-rose-600/10 px-1.5 py-px text-[0.75rem] leading-4 text-rose-600 dark:text-rose-400"
         >
           {name}
         </span>

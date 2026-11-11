@@ -34,7 +34,7 @@ export function VerdictStrip({ verdicts }: { verdicts: Verdict[] }) {
                 <span className="type-h2 tabular-nums">{v.value}</span>
               </p>
               <p className="mt-1.5 type-body font-medium">{v.modelName}</p>
-              <p className="mt-0.5 font-mono text-[0.7rem] text-muted">{v.detail}</p>
+              <p className="mt-0.5 font-mono text-[0.75rem] text-muted">{v.detail}</p>
             </Link>
           </Reveal>
         )

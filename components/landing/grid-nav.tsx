@@ -193,8 +193,8 @@ export function GridNav({ latest }: { latest: Latest }) {
     <section className="font-mono relative flex min-h-[100svh] flex-col items-center justify-center gap-3 overflow-x-clip p-4 sm:justify-start sm:gap-4 sm:p-6">
       <ThemeToggle className="absolute right-4 top-4" />
       <header className="w-full pt-3 text-center sm:pt-4">
-        <h1 className="font-display text-[2.1rem] font-bold leading-none tracking-[-0.03em] text-fg sm:text-4xl lg:text-5xl">BEN EBSWORTH</h1>
-        <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-muted sm:text-[0.7rem] lg:text-[0.8rem] lg:tracking-[0.38em]">INFRA | SOFTWARE | HARDWARE</p>
+        <h1 className="font-serif text-[clamp(2.6rem,1.7rem+3.6vw,4.25rem)] font-[450] leading-none tracking-[-0.045em] text-fg">Ben Ebsworth</h1>
+        <p className="type-label mt-3 tracking-[0.14em] text-muted">Infrastructure · Software · Hardware</p>
       </header>
       {/* Mobile: the whole title+matrix+shuffle block is centred by the section's
           justify-center, so the matrix sits tight under the header and the leftover

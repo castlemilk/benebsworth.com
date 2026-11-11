@@ -55,14 +55,14 @@ export function ScoreRankings({ rankings }: { rankings: ModelRanking[] }) {
                       <h3 className="type-h3 truncate">{model.name}</h3>
                       {seededOnly && (
                         <span
-                          className="shrink-0 rounded-full border border-[var(--color-border)] px-1.5 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider text-muted"
+                          className="shrink-0 rounded-full border border-[var(--color-border)] px-1.5 py-0.5 font-mono text-[0.75rem] uppercase tracking-wider text-muted"
                           title="Hand-authored sample data — not a live API run"
                         >
                           sample
                         </span>
                       )}
                     </div>
-                    <p className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+                    <p className="font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                       {model.company ?? model.provider} · {model.family ?? model.provider} · {stats.count} run{stats.count !== 1 ? 's' : ''}
                     </p>
                   </div>
@@ -71,7 +71,7 @@ export function ScoreRankings({ rankings }: { rankings: ModelRanking[] }) {
                 <div className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
                   {/* Score bar — the leaderboard's one comparison visualization */}
                   <div className="flex items-center gap-3">
-                    <span className="w-16 shrink-0 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+                    <span className="w-16 shrink-0 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                       Avg score
                     </span>
                     <ScoreBar score={stats.avgScore} className="flex-1" />
@@ -84,7 +84,7 @@ export function ScoreRankings({ rankings }: { rankings: ModelRanking[] }) {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-wider text-muted transition-colors group-hover:text-fg">
+              <div className="mt-4 flex items-center gap-1.5 font-mono text-[0.75rem] uppercase tracking-wider text-muted transition-colors group-hover:text-fg">
                 View per-task breakdown
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
               </div>

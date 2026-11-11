@@ -167,7 +167,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                                 style={{ width: 112, height: 112 }}
                               />
                               <span
-                                className="accent-ink font-mono text-[0.62rem] uppercase tracking-[0.28em]"
+                                className="accent-ink type-label"
                                 style={{ '--ink': topic.accent } as React.CSSProperties}
                               >
                                 {topic.label}
@@ -178,7 +178,7 @@ export function BlogContent({ posts }: { posts: BlogPostSummary[] }) {
                       </div>
 
                       <div className="min-w-0 flex flex-col justify-center p-6 sm:p-12">
-                        <div className="flex flex-wrap items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.22em]">
+                        <div className="type-meta flex flex-wrap items-center gap-3">
                           <span className="text-blog">Latest</span>
                           <span className="text-muted">·</span>
                           <time dateTime={lead.date} className="text-muted">{fmtDate(lead.date)}</time>

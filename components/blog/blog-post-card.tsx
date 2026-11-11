@@ -23,11 +23,11 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-3">
                 <TopicMarker topic={topic} />
-                <time dateTime={post.date} className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                <time dateTime={post.date} className="type-meta">
                   {fmtDate(post.date)}
                 </time>
                 {post.readingTime ? (
-                  <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                  <span className="type-meta">
                     · {post.readingTime} min read
                   </span>
                 ) : null}
@@ -35,7 +35,7 @@ export function BlogPostCard({ post, index = 0 }: { post: BlogPostSummary; index
               <h2 className="font-display text-xl font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover/spot:text-blog sm:text-2xl">
                 {post.title}
               </h2>
-              <p className="mt-2 max-w-2xl font-sans text-base leading-7 text-fg/65">
+              <p className="mt-2 max-w-2xl font-serif text-[1.0625rem] leading-7 text-muted">
                 {post.description}
               </p>
               {post.tags.length > 0 && (

@@ -148,11 +148,8 @@ export default async function BenchmarkTaskPage({
     <>
       <JsonLd data={[breadcrumb, appLd]} />
       <SiteNav />
-      <BenchmarkNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8">
-        <Breadcrumb
-          className="mb-10"
-          items={[
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 sm:px-8">
+        <Breadcrumb items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },
             { label: 'LLM Benchmark', href: '/lab/llm-benchmark/' },
@@ -160,6 +157,7 @@ export default async function BenchmarkTaskPage({
             { label: t.title },
           ]}
         />
+        <BenchmarkNav />
 
         {/* ── Header ──────────────────────────────────────────────────── */}
         <section className="pb-10">
@@ -321,7 +319,7 @@ export default async function BenchmarkTaskPage({
                               result.modelId
                             )}
                             {result.source === 'seeded' && (
-                              <span className="relative z-10 ml-1.5 font-mono text-[0.6rem] text-muted">· sample</span>
+                              <span className="relative z-10 ml-1.5 font-mono text-[0.75rem] text-muted">· sample</span>
                             )}
                             {/* Stale-bundle marker: shown ONLY when this record
                                 names a bundle and it is not the current one. A
@@ -330,7 +328,7 @@ export default async function BenchmarkTaskPage({
                             {result.promptBundle && result.promptBundle !== currentBundle && (
                               <span
                                 title={`Produced under prompt bundle ${result.promptBundle}; current is ${currentBundle}. The prompt, its sandbox contract, or the frame prelude this artifact is published in has changed since this run.`}
-                                className="relative z-10 ml-1.5 font-mono text-[0.6rem] text-muted"
+                                className="relative z-10 ml-1.5 font-mono text-[0.75rem] text-muted"
                               >
                                 · bundle {result.promptBundle.slice(0, 8)} (stale)
                               </span>

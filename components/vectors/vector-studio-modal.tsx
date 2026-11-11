@@ -190,7 +190,7 @@ export function VectorStudioModal({ item, batch, onClose }: VectorStudioModalPro
                         <img src={item.svgPath} alt={item.description} onError={() => setPreviewError(true)} className="h-full w-full object-contain" />
                       )}
                     </div>
-                    <p className="absolute right-3 bottom-3 rounded bg-black/60 px-2 py-0.5 font-mono text-[10px] text-white">
+                    <p className="absolute right-3 bottom-3 rounded bg-black/60 px-2 py-0.5 font-mono text-[0.75rem] text-white">
                       {opticalSize} × {opticalSize} px
                     </p>
                   </div>

@@ -32,8 +32,8 @@ export function CategoryGrid() {
                 />
               </div>
               <h3 className="mt-4 type-h3">{cat.label}</h3>
-              <p className="mt-1 flex-1 type-body text-fg/65">{cat.blurb}</p>
-              <div className="mt-4 flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+              <p className="mt-1 flex-1 type-body text-muted">{cat.blurb}</p>
+              <div className="mt-4 flex items-center gap-2 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                 <span
                   className="rounded-full px-1.5 py-0.5"
                   style={{

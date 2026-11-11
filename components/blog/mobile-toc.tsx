@@ -10,7 +10,7 @@ export function MobileToc() {
     <details
       className="mb-8 rounded-lg border border-[var(--color-border)] bg-surface p-4 lg:hidden"
     >
-      <summary className="cursor-pointer font-mono text-[0.7rem] uppercase tracking-[0.18em] text-fg/80 marker:text-muted">
+      <summary className="cursor-pointer font-label text-[0.75rem] uppercase tracking-[0.1em] text-fg/80 marker:text-muted font-semibold">
         On this page
       </summary>
       <nav aria-label="Table of contents" className="mt-4 flex flex-col gap-2.5 border-t border-[var(--color-border)]/50 pt-4">

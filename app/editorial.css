@@ -9,9 +9,9 @@
 @media(prefers-reduced-motion:reduce){.gamma-button{transition:none}.button-spinner{animation:none}}
 @media(forced-colors:active){:root{scrollbar-color:auto}.folio-assumptions,.folio-note,.folio-focus-label{border-color:CanvasText}.gamma-button[aria-pressed=true]{border:2px solid Highlight}}
 /* Research-folio correction: typography and authored marks are part of the system. */
-@font-face{font-family:'Folio Serif';src:url('/fonts/editorial/source-serif-4.woff') format('woff');font-weight:200 900;font-display:swap}
-@font-face{font-family:'Folio Hand';src:url('/fonts/editorial/caveat.ttf') format('truetype');font-weight:400 700;font-display:swap}
-@font-face{font-family:'Folio Condensed';src:url('/fonts/editorial/barlow-condensed-semibold.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:'Folio Serif';src:url('/fonts/editorial/source-serif-4.woff2') format('woff2'),url('/fonts/editorial/source-serif-4.woff') format('woff');font-weight:200 900;font-display:swap;unicode-range:U+0000-024F,U+0259,U+02B0-02FF,U+0300-036F,U+0370-03FF,U+1E00-1EFF,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F,U+2150-218F,U+2190-21FF,U+2200-22FF,U+2300-23FF,U+25A0-25FF,U+2600-26FF,U+2713-2717,U+FB00-FB06}
+@font-face{font-family:'Folio Hand';src:url('/fonts/editorial/caveat.woff2') format('woff2'),url('/fonts/editorial/caveat.ttf') format('truetype');font-weight:400 700;font-display:swap;unicode-range:U+0000-024F,U+2000-206F,U+20AC,U+2190-21FF}
+@font-face{font-family:'Folio Condensed';src:url('/fonts/editorial/barlow-condensed-semibold.woff2') format('woff2'),url('/fonts/editorial/barlow-condensed-semibold.ttf') format('truetype');font-weight:600;font-display:swap}
 .research-article{--folio-accent:#a34c29;--folio-note:#345675}.dark .research-article{--folio-accent:#dda17a;--folio-note:#9ebedb}
 .research-article>header h1{font-family:'Folio Serif',Georgia,serif;font-weight:450;letter-spacing:-.045em;line-height:1.06}.research-article .prose :where(p,li,blockquote):not(:where(.not-prose,.not-prose *)){font-family:'Folio Serif',Georgia,serif;font-size:1.18rem;line-height:1.75}.research-article .prose :where(h2,h3):not(:where(.not-prose,.not-prose *)){font-family:'Folio Serif',Georgia,serif;font-weight:450;letter-spacing:-.025em}.research-article .prose h2:not(:where(.not-prose,.not-prose *)){font-size:clamp(1.9rem,3vw,2.7rem)}
 .annotation-mark{display:block;color:var(--folio-accent,#a34c29);pointer-events:none;overflow:visible}.folio-note-label{position:relative;font-family:'Folio Hand',cursive;font-size:1.5rem;font-weight:500;letter-spacing:0;color:var(--folio-accent,#a34c29);align-self:start}.folio-note-label .annotation-mark{position:absolute;width:110px;height:45px;top:15px;left:0}.folio-note-content{font-family:'Folio Serif',Georgia,serif;font-size:1.12rem}.folio-assumptions{background:transparent;border-left:0;border-block:1px solid var(--color-border);padding:1.3rem 0}.folio-assumptions h3{font-family:'Folio Condensed',sans-serif;font-size:1.1rem;letter-spacing:.09em;text-transform:uppercase}.folio-assumptions li{font-family:'Folio Serif',Georgia,serif;font-size:1.05rem}
@@ -268,3 +268,18 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 .folio-archive-heading h1{font-size:clamp(3rem,5.2vw,4.5rem)}
 .folio-archive-intro{max-width:78ch;font-size:1.1rem;line-height:1.65;margin-top:1.3rem}
 @media(max-width:700px){.folio-archive-heading{padding-top:1.75rem;padding-bottom:.75rem}.folio-archive-intro{font-size:1.05rem;line-height:1.65}}
+
+/* Type-system pass (docs/type-system.md): one reading rhythm, aligned columns. */
+.folio-article-page{max-width:72rem}
+.research-article .prose p:not(:where(.not-prose,.not-prose *)){line-height:1.7}
+.research-article .prose h2:not(:where(.not-prose,.not-prose *)){line-height:1.15}
+.research-article .prose h3:not(:where(.not-prose,.not-prose *)){line-height:1.25}
+.folio-post-deck{font-size:clamp(1.2rem,1.1rem + .4vw,1.375rem);line-height:1.5}
+@media(max-width:760px){.research-article .prose p:not(:where(.not-prose,.not-prose *)){line-height:1.65}}
+.folio-note-label,.folio-focus-label,.margin-note-label,.folio-study-nav a,.folio-study-kicker{font-family:var(--font-label);font-weight:600;font-size:.8125rem;letter-spacing:.1em}
+.folio-study-foot{font-family:var(--font-label);font-size:.875rem;letter-spacing:.04em}
+.folio-archive-note a{font-family:var(--font-label);font-weight:600;font-size:.875rem;letter-spacing:.04em}
+/* The article starts on the header's 72rem line; the contents rail sits out in
+   the right margin like marginalia, so wide studies keep the >=896px their
+   layouts need (e2e/article-reading-canvas.spec.ts, memory-chip-ecosystem). */
+@media(min-width:1024px){.folio-article-grid{margin-right:calc(min(0px, (72rem - 100vw)/2 + 1rem));grid-template-columns:minmax(0,1fr) 11rem;gap:2.5rem}}

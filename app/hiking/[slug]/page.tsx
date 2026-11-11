@@ -71,7 +71,7 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
         {/* ── Hero ─────────────────────────────────────────────────── */}
         <header className="pt-8 pb-10 md:pt-10">
           <Reveal>
-            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.25em]" style={{ color: accent }}>
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-label text-xs uppercase tracking-[0.1em] font-semibold" style={{ color: accent }}>
               <span>{planned ? 'Planned' : `Completed · ${hike.year}`}</span>
               <span className="text-muted">·</span>
               <span className="text-muted">{hike.region} · {hike.country}</span>
@@ -89,7 +89,7 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
                 {hike.highlights.map((h) => (
                   <li
                     key={h}
-                    className="rounded-full border px-3 py-1 font-mono text-[0.7rem]"
+                    className="rounded-full border px-3 py-1 font-mono text-[0.75rem]"
                     style={{ borderColor: `color-mix(in srgb, ${accent} 40%, transparent)`, backgroundColor: `color-mix(in srgb, ${accent} 10%, transparent)`, color: `color-mix(in srgb, ${accent} 85%, var(--color-fg))` }}
                   >
                     {h}
@@ -102,7 +102,7 @@ export default async function HikePage({ params }: { params: Promise<{ slug: str
 
         {/* ── Journey map + gallery (client) ───────────────────────── */}
         <Reveal>
-          <p className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-muted">
+          <p className="mb-4 font-label text-xs uppercase tracking-[0.1em] text-muted font-semibold">
             <span style={{ color: accent }}>▸</span> {planned ? 'Planned route' : 'The journey'}
           </p>
           <HikeJourney hike={hike} guideSlug={guide} />

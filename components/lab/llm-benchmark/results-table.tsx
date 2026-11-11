@@ -64,7 +64,7 @@ export function ResultsTable({ rows }: { rows: BenchmarkResultMeta[] }) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="inline-flex rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5 font-mono text-[0.65rem] uppercase tracking-wider">
+        <div className="inline-flex rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5 font-mono text-[0.75rem] uppercase tracking-wider">
           {(['byTask', 'flat'] as View[]).map((v) => (
             <button
               key={v}
@@ -80,7 +80,7 @@ export function ResultsTable({ rows }: { rows: BenchmarkResultMeta[] }) {
             </button>
           ))}
         </div>
-        <p className="hidden font-mono text-[0.65rem] text-muted sm:block">
+        <p className="hidden font-mono text-[0.75rem] text-muted sm:block">
           {rows.length} results · scores are heuristic 0–100
         </p>
       </div>
@@ -92,14 +92,14 @@ export function ResultsTable({ rows }: { rows: BenchmarkResultMeta[] }) {
           </caption>
           <thead>
             <tr className="border-b border-[var(--color-border)]">
-              <th scope="col" className="whitespace-nowrap py-3 pl-5 text-left font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+              <th scope="col" className="whitespace-nowrap py-3 pl-5 text-left font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                 {view === 'byTask' ? 'Model' : 'Task · Model'}
               </th>
               <SortHeader label="Score" sortKey="score" sort={sort} onToggle={toggle} view={view} />
               <SortHeader label="Runtime" sortKey="runtimeMs" sort={sort} onToggle={toggle} view={view} />
               <SortHeader label="Tokens" sortKey="tokens" sort={sort} onToggle={toggle} view={view} />
               <SortHeader label="Cost" sortKey="costUsd" sort={sort} onToggle={toggle} view={view} />
-              <th scope="col" className="whitespace-nowrap py-3 pr-5 text-right font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+              <th scope="col" className="whitespace-nowrap py-3 pr-5 text-right font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                 Status
               </th>
             </tr>
@@ -167,7 +167,7 @@ function SortHeader({
     <th
       scope="col"
       aria-sort={disabled ? undefined : active ? (sort.dir === 'desc' ? 'descending' : 'ascending') : 'none'}
-      className="whitespace-nowrap py-3 text-right font-mono text-[0.65rem] uppercase tracking-wider text-muted"
+      className="whitespace-nowrap py-3 text-right font-mono text-[0.75rem] uppercase tracking-wider text-muted"
     >
       {disabled ? (
         <span className="pr-1">{label}</span>
@@ -179,7 +179,7 @@ function SortHeader({
         >
           {label}
           <Icon
-            className={cn('h-3 w-3', active ? 'text-fg' : 'text-muted/50 group-hover:text-fg/60')}
+            className={cn('h-3 w-3', active ? 'text-fg' : 'text-muted/50 group-hover:text-muted')}
             aria-hidden
           />
         </button>
@@ -227,13 +227,13 @@ function ResultRow({ row, showTask }: { row: Row; showTask: boolean }) {
             {model ? (
               <Link
                 href={modelPath(model)}
-                className="relative z-10 w-fit truncate font-mono text-[0.72rem] text-fg/70 transition-colors hover:text-[var(--color-project)]"
+                className="relative z-10 w-fit truncate font-mono text-[0.75rem] text-fg/70 transition-colors hover:text-[var(--color-project)]"
               >
                 {model.name}
-                {row.source === 'seeded' && <span className="ml-1.5 text-[0.6rem] text-muted">· sample</span>}
+                {row.source === 'seeded' && <span className="ml-1.5 text-[0.75rem] text-muted">· sample</span>}
               </Link>
             ) : (
-              <span className="truncate font-mono text-[0.72rem] text-fg/70">{row.modelId}</span>
+              <span className="truncate font-mono text-[0.75rem] text-fg/70">{row.modelId}</span>
             )}
           </div>
         </div>
@@ -241,13 +241,13 @@ function ResultRow({ row, showTask }: { row: Row; showTask: boolean }) {
       <td className="py-3 pl-4">
         <ScoreBar score={row.score} width="w-16" className="justify-end" />
       </td>
-      <td className="whitespace-nowrap py-3 text-right font-mono text-[0.72rem] tabular-nums text-fg/70">
+      <td className="whitespace-nowrap py-3 text-right font-mono text-[0.75rem] tabular-nums text-fg/70">
         {formatRuntime(row.runtimeMs)}
       </td>
-      <td className="whitespace-nowrap py-3 text-right font-mono text-[0.72rem] tabular-nums text-fg/70">
+      <td className="whitespace-nowrap py-3 text-right font-mono text-[0.75rem] tabular-nums text-fg/70">
         {formatTokens(row.tokens)}
       </td>
-      <td className="whitespace-nowrap py-3 text-right font-mono text-[0.72rem] tabular-nums text-fg/70">
+      <td className="whitespace-nowrap py-3 text-right font-mono text-[0.75rem] tabular-nums text-fg/70">
         {formatCost(row.costUsd)}
       </td>
       <td className="py-3 pr-5 text-right">

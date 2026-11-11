@@ -58,7 +58,7 @@ export default function BlogPage() {
       <SiteNav />
 
       <main id="main-content" className="folio-archive mx-auto w-full max-w-6xl px-6 pb-32 sm:px-8">
-        <Breadcrumb className="pt-8 sm:pt-10" items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
+        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
 
         <FolioArchiveHeading />
 

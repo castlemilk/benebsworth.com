@@ -23,10 +23,10 @@ export default function VectorsPage() {
         breadcrumbLd([{ name: 'Home', url: `${SITE_URL}/` }, { name: 'Asset library', url: `${SITE_URL}/vectors/` }]),
         collectionPageLd({ name: 'SVG Studies & Editorial Artwork · Ben Ebsworth', description: metadata.description!, url: `${SITE_URL}/vectors/`, items: [...STUDIES.map(study => ({ name: study.title, url: `${SITE_URL}${studyUrl(study)}` })), ...ARTWORK.map(asset => ({ name: `${asset.title} (PNG artwork)`, url: `${SITE_URL}${artworkUrl(asset)}` }))] }),
       ]} />
-      <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
+      <div className="vectors-library flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
         <SiteNav />
         <main id="main-content" className="flex-1">
-          <div className="mx-auto max-w-[1440px] px-6 pt-6 sm:px-8"><Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Asset library', href: '/vectors/' }]} /></div>
+          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Asset library', href: '/vectors/' }]} />
           <GenerativeGallery />
         </main>
         <SiteFooter />

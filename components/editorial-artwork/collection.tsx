@@ -47,7 +47,7 @@ export function ArtworkCollection() {
         <div className={styles.artworkImage} data-surface={surface}><Image src={asset.src} width={asset.width} height={asset.height} alt={asset.alt} unoptimized loading="lazy" /></div>
         <h3>{asset.title}</h3>
         <p className={styles.tags}>{asset.tags.map(value => <span key={value}>{value.replaceAll('-', ' ')}</span>)}</p>
-        <p className={styles.kind}>Generated PNG · {asset.width} × {asset.height} · {(asset.bytes / 1024 / 1024).toFixed(2)} MB · Transparent</p>
+        <p className={styles.artworkMeta}>Generated PNG · {asset.width} × {asset.height} · {(asset.bytes / 1024 / 1024).toFixed(2)} MB · Transparent</p>
         <p>{asset.use}</p><p className={styles.artworkBasis}>{asset.basis}</p>
         <div className={styles.actions}><a href={asset.src} download={asset.src.split('/').pop()} aria-label={`Download ${asset.title} PNG`}>Download PNG</a><a href={`#artwork-${asset.id}`} aria-label={`Link to ${asset.title}`}>Link to artwork</a></div>
         <details className={styles.artworkProvenance}><summary>Generation and provenance</summary><p>{asset.generator}, {asset.generatedAt}. Unmodified master; original alpha retained. A preview surface is not part of the download.</p><p>SHA-256: <span className={styles.assetHash}>{asset.sha256}</span></p><p>{asset.prompt}</p></details>

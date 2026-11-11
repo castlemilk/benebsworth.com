@@ -31,6 +31,11 @@ function ExportActions({ svg, title, id }: { svg: string; title: string; id: str
   )
 }
 
+/** One name per provenance, used by the card kicker and the study notes alike. */
+function kindLabel(study: Study) {
+  return study.provenance === 'math-derived' ? 'Mathematical model' : study.provenance === 'simulated' ? 'Numerical model' : study.provenance === 'topology' ? 'Graph construction' : 'Illustrative geometry'
+}
+
 function StudyWorkbench({ study, appearance, values, setValues }: { study: Study; appearance: Appearance; values: Record<string, number>; setValues: (values: Record<string, number>) => void }) {
   const svg = renderStudySvg(study, values, appearance)
   return (
@@ -39,11 +44,12 @@ function StudyWorkbench({ study, appearance, values, setValues }: { study: Study
         <Drawing study={study} appearance={appearance} values={values} />
       </div>
       <div className={styles.studyDetails}>
+        <p className={styles.kicker}>{kindLabel(study)}</p>
         <h2>{study.title}</h2>
         <p className={styles.tags} aria-label="Study tags">{study.tags.map(tag => <span key={tag}>{tag.replaceAll('-', ' ')}</span>)}</p>
         <a className={styles.permalink} href={studyUrl(study)}>Link to this study</a>
         <p>{study.description}</p>
-        <p className={styles.basis}><strong>{study.provenance === 'math-derived' ? 'Mathematical model' : study.provenance === 'simulated' ? 'Numerical model' : study.provenance === 'topology' ? 'Graph construction' : 'Illustrative study'}</strong>{study.basis}</p>
+        <p className={styles.basis}><strong>{kindLabel(study)}</strong>{study.basis}</p>
         {study.parameters.length > 0 && (
           <fieldset className={styles.parameters}>
             <legend>Parameters</legend>
@@ -134,9 +140,9 @@ export function GenerativeGallery() {
               <article key={study.id} id={study.id} className={styles.specimen}>
                 <button type="button" onClick={() => openStudy(study)} aria-label={`Open ${study.title}`} aria-pressed={selectedId === study.id}>
                   <span className={styles.thumbnail} data-surface={appearance.theme}><Drawing study={study} appearance={appearance} /></span>
+                  <span className={styles.kind}>{kindLabel(study)}</span>
                   <span className={styles.specimenTitle}>{study.title}</span>
                   <span className={styles.tags}>{study.tags.map(tag => <span key={tag}>{tag.replaceAll('-', ' ')}</span>)}</span>
-                  <span className={styles.kind}>{study.provenance === 'math-derived' ? 'Mathematical model' : study.provenance === 'simulated' ? 'Numerical model' : study.provenance === 'topology' ? 'Graph construction' : 'Illustrative geometry'}</span>
                 </button>
               </article>
             ))}

@@ -70,7 +70,7 @@ export default function VectorsPage() {
         ]}
       />
 
-      <div className="flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
+      <div className="vectors-library flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-fg)]">
         <SiteNav />
 
         <main id="main-content" className="flex-1">

@@ -1,0 +1,26 @@
+## Two backbones, one angle between them
+
+The lime and violet traces are the two sugar-phosphate backbones of B-DNA at the 10 Å radius of the 20 Å envelope. Amber chords join them at each of 25 base-pair levels. At mid-height the amber arc and axial bar span the minor groove, and the cyan arc and bar span the major groove. The faint vertical line is the helix axis.
+
+### Four experiments
+
+1. Select **Classic B-DNA fibre model**. With 10 base pairs per turn the pitch is 34.0 Å, the twist 36.0°, and the grooves read 11.99 Å and 22.01 Å: the textbook 12 and 22.
+2. Look down the axis: the central chord passes 4.46 Å from it, so the strands are not opposite. Drag **Strand offset angle Δ** to 180° and the chords cross the axis while both grooves read 17.00 Å, half of the 34 Å pitch. The **Equal grooves** preset is the same twisted ladder at 10.5 base pairs per turn, 17.85 Å each: the picture most diagrams draw.
+3. Select **Mirror-image stock art** and press play. The chords stay at their levels, so the motion is a rotation, yet the backbones appear to slide. Set handedness back to +1 and they slide the other way.
+4. Return to the defaults and move **Base pairs per turn** from 8 to 12. The pitch runs from 27.2 Å to 40.8 Å and both grooves scale with it, while the closest approach stays at 4.46 Å.
+
+The axial widths split the pitch in the ratio set by the offset angle:
+
+$$
+w_\text{minor} = P\,\frac{\Delta}{360^\circ}, \qquad
+w_\text{major} = P\left(1 - \frac{\Delta}{360^\circ}\right), \qquad
+P = 3.4\,\text{Å}\times n_\text{bp}
+$$
+
+At the default 127° and 10.5 base pairs per turn, $P = 35.7$ Å and the grooves are 12.59 Å and 23.11 Å.
+
+### What the model leaves out
+
+No bases, sugars or atoms. The chords share only their subtended angle with the real 10.5 Å line between the two C1′ atoms. Groove widths are axial fractions of the pitch between backbone centre-lines, the textbook 12 and 22 Å convention. Crystallographic widths between phosphate van der Waals surfaces (Dickerson and colleagues, 1982) are 5.7 Å and 11.7 Å: same helix, different ruler. Sequence-dependent twist, bending and the A and Z forms are left out.
+
+Read [The two strands of DNA are not opposite each other](/blog/dna-strands-are-not-opposite/) for where the 127° comes from and why so much DNA art is a mirror image.

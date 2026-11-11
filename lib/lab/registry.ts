@@ -1,11 +1,15 @@
 import type { LabEffect, LabCategory } from '@/lib/gen/content'
 import type { EffectModule } from './types'
+import { SPATIAL_ENTRIES } from './spatial/catalog'
 
 // ── Category metadata ──────────────────────────────────────────────────
 export const CATEGORIES: { key: LabCategory; label: string; glyph: string; blurb: string }[] = [
   { key: 'art', label: 'Generative Art', glyph: '◆', blurb: 'Canvas animations exploring noise, flow, and organic form.' },
   { key: 'maths', label: 'Mathematics', glyph: '∫', blurb: 'Visualising differential equations, geometry, and statistics.' },
   { key: 'physics', label: 'Physics', glyph: 'ψ', blurb: 'Waves, quantum states, and condensed-matter phenomena.' },
+  { key: 'chemistry', label: 'Chemistry', glyph: '⬡', blurb: 'Molecular shape, orbitals, reactions, and the structure of matter.' },
+  { key: 'biology', label: 'Life Sciences', glyph: '❋', blurb: 'The geometry and dynamics of living things, from capsids to epidemics.' },
+  { key: 'earth', label: 'Earth & Space', glyph: '♁', blurb: 'Seasons, tides, seismology, atmospheres, and orbital mechanics.' },
   { key: 'engineering', label: 'Electrical Engineering', glyph: 'Ω', blurb: 'Circuits, signal processing, control systems, and software radio.' },
   { key: 'ai', label: 'AI & Machine Learning', glyph: '✦', blurb: 'Attention, transformers, and the mechanics of deep models.' },
   { key: 'cosmology', label: 'Cosmology', glyph: '✷', blurb: 'Spacetime, black holes, and the structure of the universe — from the Planck length to the cosmic web.' },
@@ -18,6 +22,7 @@ export const CATEGORIES: { key: LabCategory; label: string; glyph: string; blurb
 export type LabEntry = LabEffect
 
 export const LAB_EFFECTS: LabEntry[] = [
+  ...SPATIAL_ENTRIES,
   // ── Art ─────────────────────────────────────────────────────────────
   { slug: 'orbits', title: 'Orbits', blurb: 'Bodies tracing a shared circle, leaving light trails.', tags: ['trails', 'trig'], category: 'art', homeEmbedSafe: true },
   { slug: 'flow-field', title: 'Flow Field', blurb: 'Particles advected by a value-noise vector field.', tags: ['noise', 'particles'], category: 'art', homeEmbedSafe: false },

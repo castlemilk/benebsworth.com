@@ -1,0 +1,57 @@
+name: Site checks
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: site-checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+      EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PROSE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+      E2E_PORT: '4339'
+    steps:
+      - name: Require the PR diff context
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == 'pull_request' ]]; then
+            [[ "$PR_BASE" =~ ^[0-9a-f]{40}$ && "$PR_BASE" != "$EXPECTED_SHA" ]]
+            [[ "$PROSE_BASE" == "$PR_BASE" ]]
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: go-task/setup-task@v1
+        with:
+          version: '3.x'
+      - run: npm ci --no-audit --no-fund
+      - run: node_modules/.bin/playwright install --with-deps chromium
+      - run: task remote:check
+      # upload-artifact rejects paths containing ':' and other characters that
+      # are legal in exported routes (e.g. OpenRouter model ids ending ':free'),
+      # so ship the export as one tarball instead of a file tree.
+      - name: Pack the reviewed export
+        run: tar -czf site-review.tar.gz out .next/site-release.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: site-review.tar.gz
+          retention-days: 7
+          if-no-files-found: error

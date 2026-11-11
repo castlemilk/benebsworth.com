@@ -1,7 +1,8 @@
 name: Vercel preview (build in GitHub Actions)
 
-# Production and shared staging remain on Cloudflare Pages. This replaces only
-# Vercel branch previews; do not disable the Git trigger until a canary is green.
+# Legacy opt-in preview lane. Keep disabled while the separate credential-free
+# artifact/reviewed-publisher lane serves editorial previews. Production and
+# shared staging remain on Cloudflare Pages; vercel.json disables Git-source builds.
 on:
   push:
     branches-ignore: [master]

@@ -1,0 +1,161 @@
+---
+title: "The two strands of DNA are not opposite each other"
+date: "2026-11-10T05:00:00.000Z"
+description: "Twist a 3D double helix to see why DNA's backbones sit 127° apart, why that makes a 12 Å and a 22 Å groove, and why so much DNA art is a mirror image."
+labels: biology,molecular-biology,dna,structural-biochemistry
+release: true
+heroImage: /blog/dna-strands-are-not-opposite/hero.webp
+takeaways:
+  - "The two backbones of B-DNA attach to each base pair about 127° apart around the helix axis, not 180°, so a line joining them misses the axis by about 4.5 Å."
+  - "That offset splits each 34 Å pitch into a 12 Å minor groove and a 22 Å major groove measured along the axis; a 180° offset would give two identical 17 Å grooves."
+  - "The major groove is where the four base pairs look different from outside, which is why most sequence-reading proteins work there."
+  - "B-DNA is right-handed, and a helix drawn as (R cos θ, y, R sin θ) with θ increasing along y is left-handed: the same mistake that fills decades of textbook covers."
+---
+
+Nearly every drawing of DNA is a ladder that somebody twisted. Two rails, a set of rungs, and a spiral. The trouble is that a ladder's rungs cross the middle, which means its two rails sit directly opposite each other. Real DNA does not do that.
+
+The two sugar-phosphate backbones attach to each base pair on the same side of it, roughly 127° apart around the helix axis rather than 180°. The line joining them misses the centre by about 4.5 Å. Twist that lopsided pair of rails into a helix and you get two grooves of different widths, a wide one and a narrow one, running the length of the molecule. The wide one is where most of molecular biology happens.
+
+I wanted to see the geometry rather than take the textbook's word for it, so the lab below is a bare double helix with the offset angle on a slider. Select **Equal grooves**, the twisted-ladder picture, and look down the axis: the chords pass through the centre and both groove readouts say 17.85 Å. Then drag **Strand offset angle Δ** back to 127° and watch one groove open while the other closes.
+
+<SpatialLab slug="dna-grooves" />
+
+The lime and violet traces are the two backbones at the 10 Å radius of the 20 Å B-DNA envelope, and the amber chords join them at each of 25 base-pair levels. At mid-height, amber marks the minor groove and cyan the major. Nothing here is an atom. A geometric helix with the real pitch, radius and strand offset turns out to be enough to explain the grooves.
+
+## A ladder has rungs through the middle
+
+Suppose two points sit on a circle of radius $R$ separated by an angle $\Delta$ around the centre. The chord between them has length $2R\sin(\Delta/2)$, and its closest approach to the centre is $R\cos(\Delta/2)$:
+
+<Equation id="eqn:dna-grooves-chord" number="1" caption="Length of the chord joining the two backbones at one level, and its distance from the helix axis." latex="c = 2R\sin\frac{\Delta}{2}, \qquad d = R\cos\frac{\Delta}{2}">
+
+$$
+c = 2R\sin\frac{\Delta}{2}, \qquad d = R\cos\frac{\Delta}{2}
+$$
+
+</Equation>
+
+At $\Delta = 180^\circ$ the chord is a diameter and $d = 0$. That is the ladder. At the B-DNA value of $127^\circ$ with $R = 10$ Å, the chord is 17.9 Å long and passes 4.46 Å from the axis. Stack those chords one above the other, each rotated by the twist, and the base pairs form a column that is visibly off to one side of the backbones. The readout labelled closest approach tracks $d$ as you move the slider.
+
+So far this is a statement about one base pair. The grooves come from what happens when you twist.
+
+## Where the 127° comes from
+
+Here is the bit I found most satisfying: you can get the offset angle without knowing anything about the chemistry, just from two textbook widths.
+
+Walk along the helix axis at a fixed compass bearing. You cross backbone 1, then backbone 2, then backbone 1 again one full pitch later. The gap from strand 1 to strand 2 is one groove and the gap from strand 2 back to strand 1 is the other. Because a helix is a screw, moving along the axis by a fraction $f$ of the pitch is the same as rotating by $f$ of a turn, so the two axial gaps are in the ratio $\Delta : (360^\circ - \Delta)$. Textbooks give the B-DNA grooves as about 12 Å and 22 Å, summing to the 34 Å pitch:
+
+<Equation id="eqn:dna-grooves-partition" number="2" caption="The strand offset implied by the textbook groove partition of a 34 Å pitch." latex="\Delta = 360^\circ\,\frac{w_\text{minor}}{w_\text{minor}+w_\text{major}} = 360^\circ\times\frac{12}{34} \approx 127^\circ">
+
+$$
+\Delta = 360^\circ\,\frac{w_\text{minor}}{w_\text{minor}+w_\text{major}} = 360^\circ\times\frac{12}{34} \approx 127^\circ
+$$
+
+</Equation>
+
+Now let's check it from the other direction, with the actual atoms. Each base attaches to its sugar at a carbon called C1′. In a Watson-Crick pair the two C1′ atoms are about 10.5 Å apart and sit roughly 5.9 Å from the helix axis. A chord of 10.5 Å on a circle of radius 5.9 Å subtends
+
+<Equation id="eqn:dna-grooves-c1" number="3" caption="The same angle, this time from the C1′ to C1′ distance across a base pair." latex="\Delta = 2\arcsin\frac{c}{2r} = 2\arcsin\frac{10.5}{2\times 5.9} \approx 125.7^\circ">
+
+$$
+\Delta = 2\arcsin\frac{c}{2r} = 2\arcsin\frac{10.5}{2\times 5.9} \approx 125.7^\circ
+$$
+
+</Equation>
+
+Two unrelated measurements, one from fibre diffraction groove widths and one from the geometry of a single base pair, land within a degree and a half of each other. The real cause is the chemistry: both glycosidic bonds leave the base pair on the same edge, so both sugars, and therefore both backbones, sit on one side. The side they share becomes the narrow groove.
+
+<Callout type="thinking">
+You will see this angle quoted as 120° in some textbooks, 125° or 130° in others. The offset is a property of the whole helix, not of any one drawing radius, so these are all the same fact rounded differently. The lab uses 127° because it reproduces the 12 and 22 Å figures exactly, and a slider lets you try the others.
+</Callout>
+
+## Two grooves from one pitch
+
+With the angle in hand, we can get the groove widths along the axis in one line. The pitch is the rise per base pair, 3.4 Å, times the number of base pairs per turn:
+
+<Equation id="eqn:dna-grooves-widths" number="4" caption="Axial groove widths between backbone centre-lines, the convention behind the textbook figures." latex="w_\text{minor} = P\,\frac{\Delta}{360^\circ}, \qquad w_\text{major} = P\left(1-\frac{\Delta}{360^\circ}\right), \qquad P = 3.4\,\text{Å}\times n_\text{bp}">
+
+$$
+w_\text{minor} = P\,\frac{\Delta}{360^\circ}, \qquad
+w_\text{major} = P\left(1-\frac{\Delta}{360^\circ}\right), \qquad
+P = 3.4\,\text{Å}\times n_\text{bp}
+$$
+
+</Equation>
+
+Watson and Crick's 1953 model had 10 residues per turn, so a 34 Å pitch and a 36° twist per step. Put that in with 127° and you get 11.99 Å and 22.01 Å. That is the **Classic B-DNA fibre model** preset, and it is why the grooves are usually quoted as 12 and 22.
+
+DNA in solution is a little less tightly wound. Wang measured 10.4 ± 0.1 base pairs per turn in 1979, which is a twist of about 34.6° per step, and Rhodes and Klug found 10.6 ± 0.1 by a different method a year later. The lab defaults to 10.5, the rounded solution value, which gives a 35.7 Å pitch and 34.3° per step. The grooves then come out at 12.59 Å and 23.11 Å.
+
+<StatGroup>
+  <Stat label="Pitch at 10.5 bp per turn" value="35.7 Å" context="3.4 Å rise, 34.3° twist per base pair" />
+  <Stat label="Minor groove" value="12.59 Å" context="35.7 Å × 127 / 360, measured along the axis" />
+  <Stat label="Major groove" value="23.11 Å" context="35.7 Å × 233 / 360, measured along the axis" />
+</StatGroup>
+
+The two bars at mid-height in the lab are these two numbers drawn to scale, end to end along a single bearing. They always add up to one pitch. Change the base pairs per turn and both stretch together. Change the offset and one grows at the other's expense.
+
+<Callout type="doing">
+Predict before you drag. From the defaults: (1) set **Strand offset angle Δ** to 90°, and the minor groove should drop to a quarter of the pitch, 8.92 Å, while the chord's closest approach rises to 7.07 Å. (2) Set **Base pairs per turn** to 8, the pitch falls to 27.2 Å and the grooves shrink to 9.60 Å and 17.60 Å, but the closest approach stays at 4.46 Å because it never depended on the pitch. (3) Set the offset to 180° at 12 base pairs per turn: two grooves of 20.40 Å each.
+</Callout>
+
+## Same helix, different ruler
+
+Crystallography papers quote much smaller groove widths, and it pays to see why before deciding the lab is wrong.
+
+Dickerson and colleagues, in their 1982 survey of the A, B and Z forms, define groove width as the shortest phosphorus to phosphorus distance across the groove, minus 5.8 Å for two phosphate van der Waals radii. For B-DNA that gives a minor groove 5.7 Å wide and 7.5 Å deep, and a major groove 11.7 Å wide and 8.5 Å deep. Roughly half the axial figures.
+
+Two things shrink the number. The shortest line across a groove runs perpendicular to the backbones, and the backbones are inclined at about 59° to the axis at the phosphorus radius, so the perpendicular width is the axial width times the sine of that angle. Then the atoms themselves take up room, which the 5.8 Å subtraction accounts for. The 12 and 22 Å are distances between the centre-lines of two idealised backbone helices. The 5.7 and 11.7 Å are the gap a probe would actually find between atoms. Same molecule, different question.
+
+<Callout type="warning">
+The lab draws the backbone as a thin ribbon at the nominal 10 Å envelope radius, and reports axial widths between those centre-lines. It has no atoms, so it cannot report Dickerson's widths, and the phosphorus atoms in real B-DNA sit at 8.9 to 9.4 Å rather than 10 Å. Treat the readouts as the textbook convention made explicit, not as a prediction of what a protein side chain would fit into.
+</Callout>
+
+## Why the wide groove is the one that gets read
+
+The two grooves expose different edges of each base pair. In 1976 Seeman, Rosenberg and Rich pointed out that along the major-groove edge, each of the four base pairs (A·T, T·A, G·C and C·G) presents a distinct pattern of hydrogen-bond donors, acceptors and the thymine methyl group. Along the minor-groove edge, A·T and T·A look almost identical, and so do G·C and C·G.
+
+<PullQuote>
+A protein pressed into the major groove can tell all four base pairs apart by touch. The same protein in the minor groove can mostly tell only whether a pair is A·T or G·C.
+</PullQuote>
+
+That is why the classic sequence-specific DNA-binding motifs, the helix-turn-helix of bacterial repressors and the zinc fingers of transcription factors, insert a recognition helix into the major groove. The groove is wide enough to admit an α-helix and informative enough to be worth reading.
+
+I should hedge this, because the minor groove is far from unread. TATA-binding protein sits in it and bends the DNA by 80°, HMG-box proteins work there, and the Hox family reads minor-groove shape rather than hydrogen-bond patterns. The honest claim is that the major groove carries a four-letter alphabet on its surface and the minor groove a two-letter one, plus shape. Both are read. One is easier.
+
+## The mirror-image problem
+
+B-DNA is a right-handed helix. Curl the fingers of your right hand along the backbone and your thumb points the way the strand advances. Dozens of published illustrations get this wrong, and Tom Schneider has spent years cataloguing them in his [Left Handed DNA Hall of Fame](https://users.fred.net/tds/leftdna/): journal covers, textbook figures, logos, a postage stamp or two. The **Mirror-image stock art** preset shows what they drew.
+
+It is a very easy mistake to make in code, and I made it while building this lab. With the helix axis along $y$, the natural thing to type is $(R\cos\theta,\, y,\, R\sin\theta)$ with $\theta$ increasing as $y$ increases. In a right-handed coordinate system that helix is left-handed. The version that comes out right-handed swaps the two trigonometric functions:
+
+<Equation id="eqn:dna-grooves-helix" number="5" caption="The lab's backbone parametrisation. With s = +1 and θ increasing along y, this helix is right-handed about the y axis." latex="\mathbf{P}(y) = \big(R\sin\theta,\; y,\; R\cos\theta\big), \qquad \theta(y) = s\,\frac{2\pi y}{P} + \varphi">
+
+$$
+\mathbf{P}(y) = \big(R\sin\theta,\; y,\; R\cos\theta\big), \qquad
+\theta(y) = s\,\frac{2\pi y}{P} + \varphi
+$$
+
+</Equation>
+
+Rather than trust my eye, the lab's test file checks it: for three consecutive points on the backbone, the triple product $((\mathbf p_1 - \mathbf p_0)\times(\mathbf p_2 - \mathbf p_1))\cdot\hat{\mathbf y}$ must be positive when $s = +1$ and negative when $s = -1$. If a future edit flips the handedness, the test fails before the lab ships a mirror image. I'd suggest the same test to anyone rendering a helix.
+
+The timeline is a second way to see handedness. The phase $\varphi$ rotates the whole helix rigidly about its axis. For an infinitely long helix, rotating by a fraction of a turn is indistinguishable from sliding it along the axis by the same fraction of a pitch: that is what a screw is. On this finite 25-base-pair segment the chords stay at their levels, so the motion is visibly a rotation, but the backbones give the barber-pole illusion of sliding, in opposite directions for the two handednesses. Flip **Handedness** while it plays and the slide reverses.
+
+<Callout type="info">
+Some food for thought while the helix turns. The haploid human genome is about 3.1 × 10⁹ base pairs, and at 0.34 nm each that is 1.05 m of double helix, about 2 m per diploid cell. The 25 base pairs on screen are 8.5 nm of it. Not all DNA is right-handed, either: Z-DNA is a genuinely left-handed zigzag with 12 base pairs per turn and a 3.7 Å mean rise. But a left-handed picture of ordinary genomic DNA is simply wrong.
+</Callout>
+
+## Putting it together
+
+Three numbers, 3.4 Å per base pair, about 10.5 base pairs per turn and a 127° strand offset, are enough to build a helix that gets the pitch, the diameter, the groove widths and the handedness right. None of them is a free parameter. The offset in particular is something you can derive from the groove widths or from the C1′ chord, and the two agree.
+
+That is what I'd like you to carry away from [the standalone double-helix grooves lab](/lab/dna-grooves/): the grooves are not a decoration on a twisted ladder. They follow from the two backbones attaching on the same side of each base pair, and the wide one is why proteins can read a sequence without unzipping it. The [polarisation essay](/blog/light-draws-an-ellipse/) has another helix whose handedness matters, though there it is a field tip that spirals.
+
+Next I want to put atoms back in: a proper base pair with its hydrogen bonds, so the major and minor groove edges can be inspected directly instead of inferred from two chords. Watch this space.
+
+## Reading further
+
+- [Watson & Crick (1953), Molecular structure of nucleic acids, Nature 171, 737](https://doi.org/10.1038/171737a0): the original one-page model, with the 34 Å repeat, 10 residues per turn and 20 Å diameter that the fibre preset uses.
+- [Wang (1979), Helical repeat of DNA in solution, PNAS 76, 200](https://doi.org/10.1073/pnas.76.1.200): the band-shift measurement giving 10.4 ± 0.1 base pairs per turn, the reason the lab's default is not 10.
+- [Dickerson, Drew, Conner, Wing, Fratini & Kopka (1982), The anatomy of A-, B-, and Z-DNA, Science 216, 475](https://doi.org/10.1126/science.7071593): the crystallographic survey whose Table 1 defines the 5.7 and 11.7 Å groove widths and the convention behind them.
+- [Seeman, Rosenberg & Rich (1976), Sequence-specific recognition of double helical nucleic acids by proteins, PNAS 73, 804](https://doi.org/10.1073/pnas.73.3.804): the argument that the major-groove edge distinguishes all four base pairs while the minor-groove edge mostly does not.

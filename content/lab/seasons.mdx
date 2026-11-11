@@ -1,0 +1,27 @@
+## Keep the axis pointed at one star
+
+Blue is Earth: the spin axis, equator, tropics and polar circles stay pointed at the same star all year, tilted $\varepsilon$ from the faint vertical orbit normal. Amber is sunlight: the Sun marker on its relative orbit, the sub-solar point and the lit arc of the observer's parallel. Violet is night: the terminator, the night cap and the dark arc. The white dot is the observer at local noon.
+
+Phase is one year from the December solstice. The Sun marker is nearest at phase 13°, about 3 January. The readouts are solstice values, so they stay fixed while the year runs.
+
+### Experiments
+
+1. Press play at the defaults (London, 51.5°N) and watch the lit arc grow from phase 0 to π. Read **16.40 h / 7.60 h**, **61.9° / 15.1°** and **6.8× tilt vs 1.069× distance**.
+2. Select **Equator**. The lit arc is exactly half the parallel at every phase: **12.00 h / 12.00 h**, and the tilt effect falls to 1.0×.
+3. Select **Arctic Circle**. The dark arc vanishes in June and the lit arc in December: **24.00 h / 0.00 h**, with the December noon Sun on the horizon at **0.0°**.
+4. Select **No tilt**. The tropics collapse onto the equator and London gets **12.00 h** every day. The eccentric amber ring is unchanged: distance alone gives no seasons.
+5. Select **Mars-like orbit**. The ring is visibly off-centre and the distance effect reaches **1.455×**, yet the tilt effect at London is **8.4×**.
+
+The sunset hour angle $H_0$ sets the day:
+
+$$
+\cos H_0 = -\tan\varphi\,\tan\delta,\qquad \text{day length} = \frac{2H_0}{15^\circ\ \text{per hour}}
+$$
+
+with the cosine clamped to $[-1, 1]$ for midnight sun and polar night.
+
+### What the model leaves out
+
+Day lengths are geometric, without refraction or the solar disc, which add about 14 min at London's solstices. The Sun's longitude is uniform in phase (no equation of time) and daily rotation is not animated. Insolation is a daily mean at the top of the atmosphere, on a horizontal surface, at mean Sun distance, with $S_0 = 1361\ \mathrm{W/m^2}$.
+
+Read [Earth is closest to the Sun in the northern winter](/blog/earth-is-closest-to-the-sun-in-winter/).

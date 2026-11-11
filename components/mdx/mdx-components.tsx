@@ -24,6 +24,8 @@ import { StageProfile } from './trailkit/stage-profile'
 import { UniverseScale } from './universe-scale-embed'
 import { BlackHoleSim } from './black-hole-sim-embed'
 import { ArtifactFrame } from './artifact-frame'
+import { SpatialLab } from './spatial-lab'
+import { UsbIdentityChain, DriverLayerStack, BringupTimeline } from './usb-wifi-diagrams'
 import {
   IngressFlowBasic,
   EgressFlowBasic,
@@ -86,6 +88,7 @@ import {
 
 export const mdxComponents: MDXComponents = {
   InteractiveStudy, PostBrief, EvidenceNote, MethodSteps, FieldNote, Assumptions, FigureFocus, AnnotatedBlock, AnnotationTarget, MarginNote,
+  SpatialLab,
   StatGroup,
   Stat,
   PullQuote,
@@ -169,6 +172,9 @@ export const mdxComponents: MDXComponents = {
   TrailFigure,
   StageProfile,
   Callout,
+  UsbIdentityChain,
+  DriverLayerStack,
+  BringupTimeline,
   Equation,
   pre: TechnicalPre,
   table: TechnicalTable,

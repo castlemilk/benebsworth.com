@@ -1,0 +1,26 @@
+## A phase gradient is a steering instruction
+
+The cyan surface plots normalised far-field **amplitude** as radius. It is not a wavefront. The source line lies along the array's $x$ axis, and the steering angle is measured from broadside in the highlighted $xz$ slice.
+
+### Three experiments
+
+1. Select **Broadside**, then increase **Elements**. The central feature narrows as the aperture grows.
+2. Select **Steer 30°**. At half-wavelength spacing the adjacent drive phase is $-90^\circ$. Rotate the camera to see that a linear array's three-dimensional maximum is a cone.
+3. Select **Grating lobes**. With wavelength spacing, $30^\circ$ and $-30^\circ$ produce equally strong maxima. Add more elements: both peaks become narrower, but the alias remains.
+
+The amplitude at direction cosine $u_x$ is
+
+$$
+A(u_x)=\frac1N\left|\sum_{n=0}^{N-1}
+\exp\left[i2\pi n\frac d\lambda(u_x-\sin\theta_0)\right]\right|.
+$$
+
+The model sums complex fields directly, including at the points where the closed-form sine ratio would have a removable singularity. Relative power is $A^2$.
+
+### What the model leaves out
+
+Every element is an isotropic, uncoupled source with equal amplitude. There is no element pattern, mutual coupling or wideband beam squint. Element positions are rescaled to fit the view; **Element spacing** still controls the phase calculation in wavelength units.
+
+The rotating amber arrows show drive phase. The static envelope already includes the interference over a steady sinusoidal cycle.
+
+Read [Steering a beam without moving an antenna](/blog/steering-a-beam-without-moving-an-antenna/) for the derivation, numerical null example and hardware trade-offs.

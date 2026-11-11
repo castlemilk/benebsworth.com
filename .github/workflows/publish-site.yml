@@ -1,0 +1,75 @@
+name: Publish checked site
+# No push, PR, workflow_run or scheduled trigger. Draft CI is secret-free in a
+# different file because Cuttlefish scans workflow-wide secret references.
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Full reviewed master SHA to build and publish
+        required: true
+        type: string
+      article_path:
+        description: Published /blog/slug/ route to verify after upload
+        required: true
+        type: string
+      reviewed_base_sha:
+        description: Full earlier ancestor SHA bounding the reviewed release diff
+        required: true
+        type: string
+      confirmation:
+        description: Type publish-benebsworth.com to authorize this production release
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: benebsworth-production
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch'
+    environment: Production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      CI: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+      EXPECTED_SHA: ${{ inputs.expected_sha }}
+      ARTICLE_PATH: ${{ inputs.article_path }}
+      PUBLISH_CONFIRMATION: ${{ inputs.confirmation }}
+      PROSE_BASE: ${{ inputs.reviewed_base_sha }}
+      E2E_PORT: '4339'
+    steps:
+      - name: Validate explicit release request
+        env:
+          EVENT_SHA: ${{ github.sha }}
+        run: |
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$EXPECTED_SHA" == "$EVENT_SHA" ]]
+          [[ "$PROSE_BASE" =~ ^[0-9a-f]{40}$ && "$PROSE_BASE" != "$EXPECTED_SHA" ]]
+          [[ "$PUBLISH_CONFIRMATION" == 'publish-benebsworth.com' ]]
+          [[ "$ARTICLE_PATH" =~ ^/blog/[a-z0-9]+(-[a-z0-9]+)*/$ ]]
+          [[ "$NEXT_PUBLIC_GA_MEASUREMENT_ID" =~ ^G-[A-Z0-9]+$ ]]
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check the reviewed diff baseline
+        run: git merge-base --is-ancestor "$PROSE_BASE" "$EXPECTED_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: go-task/setup-task@v1
+        with:
+          version: '3.x'
+      - run: npm ci --no-audit --no-fund
+      - run: node_modules/.bin/playwright install --with-deps chromium
+      - run: task remote:check
+      - name: Publish the checked export and verify production bytes
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: task remote:publish

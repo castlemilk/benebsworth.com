@@ -35,6 +35,12 @@ jobs:
       CI: 'true'
       NEXT_TELEMETRY_DISABLED: '1'
       NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+      # Public client config baked into the JS bundle. Without these, hike
+      # galleries and trail photos never load and /admin reports unconfigured
+      # (docs/postmortem/0011).
+      NEXT_PUBLIC_HIKE_BUCKET: ${{ vars.NEXT_PUBLIC_HIKE_BUCKET }}
+      NEXT_PUBLIC_HIKE_PUBLIC_BASE: ${{ vars.NEXT_PUBLIC_HIKE_PUBLIC_BASE }}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
       EXPECTED_SHA: ${{ inputs.expected_sha }}
       ARTICLE_PATH: ${{ inputs.article_path }}
       PUBLISH_CONFIRMATION: ${{ inputs.confirmation }}
@@ -51,6 +57,9 @@ jobs:
           [[ "$PUBLISH_CONFIRMATION" == 'publish-benebsworth.com' ]]
           [[ "$ARTICLE_PATH" =~ ^/blog/[a-z0-9]+(-[a-z0-9]+)*/$ ]]
           [[ "$NEXT_PUBLIC_GA_MEASUREMENT_ID" =~ ^G-[A-Z0-9]+$ ]]
+          [[ "$NEXT_PUBLIC_HIKE_BUCKET" =~ ^[a-z0-9][a-z0-9._-]{1,61}[a-z0-9]$ ]]
+          [[ "$NEXT_PUBLIC_HIKE_PUBLIC_BASE" == "https://storage.googleapis.com/$NEXT_PUBLIC_HIKE_BUCKET" ]]
+          [[ "$NEXT_PUBLIC_GOOGLE_CLIENT_ID" =~ \.apps\.googleusercontent\.com$ ]]
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
@@ -68,6 +77,14 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: node_modules/.bin/playwright install --with-deps chromium
       - run: task remote:check
+      - name: Confirm the export carries its public client config
+        run: |
+          # Client components read these at build time; an unset value builds
+          # cleanly and fails silently in the browser.
+          for value in "$NEXT_PUBLIC_HIKE_PUBLIC_BASE" "$NEXT_PUBLIC_GOOGLE_CLIENT_ID"; do
+            grep -rqF -- "$value" out/_next/static || { echo "::error::a NEXT_PUBLIC value is missing from the built JS"; exit 1; }
+          done
+          grep -rqF --include='*.html' -- "$NEXT_PUBLIC_GA_MEASUREMENT_ID" out || grep -rqF -- "$NEXT_PUBLIC_GA_MEASUREMENT_ID" out/_next/static
       - name: Publish the checked export and verify production bytes
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

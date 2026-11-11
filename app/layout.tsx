@@ -23,14 +23,9 @@ export const metadata: Metadata = {
   creator: 'Ben Ebsworth',
   openGraph: { type: 'website', siteName: 'Ben Ebsworth', url: SITE_URL, locale: 'en_AU' },
   twitter: { card: 'summary_large_image', creator: '@benebsworth' },
-  alternates: {
-    types: {
-      'application/rss+xml': '/feed.xml',
-      // Advertise the llms.txt site manifest for AI crawlers/tools that read
-      // <link rel="alternate"> rather than probing /llms.txt by convention.
-      'text/plain': '/llms.txt',
-    },
-  },
+  // No `alternates` here: every page sets its own canonical, and Next replaces
+  // the whole `alternates` object rather than merging it, so feed links
+  // declared here never reached a page. They are rendered in <body> below.
 }
 
 export const viewport: Viewport = {
@@ -56,6 +51,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             bucket — warm the connection early. Hoisted into <head> by Next. */}
         <link rel="preconnect" href="https://storage.googleapis.com" />
         <link rel="dns-prefetch" href="https://storage.googleapis.com" />
+        {/* Feed and llms.txt autodiscovery on every page (hoisted into <head>). */}
+        <link rel="alternate" type="application/rss+xml" title="Ben Ebsworth" href="/feed.xml" />
+        <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
         <a
           href="#main-content"
           className="skip-link"

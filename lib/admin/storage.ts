@@ -24,6 +24,21 @@ export const manifestUrl = (type: ItemType, slug: string) =>
   ADMIN.publicBase ? publicUrl(manifestObject(type, slug)) : ''
 export const libraryUrl = () => (ADMIN.publicBase ? publicUrl(libraryObject()) : '')
 
+/**
+ * JSON API listing for one manifest object. The bucket is public-read, so this
+ * answers 200 whether or not the manifest exists, unlike the object URL, which
+ * logs a console 404 on every post without a gallery (most of them).
+ */
+export const manifestListingUrl = (type: ItemType, slug: string) =>
+  ADMIN.bucket
+    ? `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(ADMIN.bucket)}/o?prefix=${encodeURIComponent(manifestObject(type, slug))}&fields=items(name)`
+    : ''
+
+/** Whether a listing response names `object` exactly (prefix matches can include siblings). */
+export const listingHas = (listing: unknown, object: string) =>
+  Array.isArray((listing as { items?: unknown } | null)?.items) &&
+  (listing as { items: Array<{ name?: unknown }> }).items.some((i) => i?.name === object)
+
 /** Append a unique query so a read bypasses any stale GCS public-object cache. */
 export const cacheBust = (url: string) => (url ? `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}` : url)
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useTheme } from 'next-themes'
+import { useTheme } from '@/components/theme/use-theme'
 import { GammaButton } from '@/components/gamma/GammaButton'
 import { Stat, StatGroup, PullQuote } from '@/components/mdx/editorial-components'
 import { Callout } from '@/components/ui/callout'

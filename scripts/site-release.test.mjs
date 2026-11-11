@@ -4,7 +4,7 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { articleFiles, assertAnalytics, assertCommit, assertPreservesRoutes, normalizeEdgeHtml, readPublic, stamp, validateArticlePath, validateSha, verifyArtifact, verifyLive } from './site-release.mjs'
+import { articleFiles, assertAnalytics, assertCommit, assertForward, assessDrift, readLiveCommit, assertPreservesRoutes, normalizeEdgeHtml, readPublic, stamp, validateArticlePath, validateSha, verifyArtifact, verifyLive } from './site-release.mjs'
 
 const xml = (...paths) => `<urlset>${paths.map((p) => `<url><loc>https://benebsworth.com${p}</loc></url>`).join('')}</urlset>`
 function fixture(t) {
@@ -20,7 +20,7 @@ function fixture(t) {
   write('out/blog/post/index.html', '<html><img src="/blog/post/hero.webp"></html>')
   write('out/blog/post/index.md', 'Article text')
   write('out/blog/post/hero.webp', 'fixture-image')
-  return { root, commit, write }
+  return { root, commit, write, git }
 }
 test('only explicit complete SHA and article path are accepted', () => {
   for (const value of ['', 'master', 'abc', 'A'.repeat(40), ';id']) assert.throws(() => validateSha(value))
@@ -105,4 +105,47 @@ test('only the known Cloudflare analytics injection is ignored in HTML compariso
   assert.equal(normalizeEdgeHtml(`<body>Article<!-- Cloudflare Web Analytics -->${beacon}\n</body>`), original)
   assert.notEqual(normalizeEdgeHtml('<body>Changed article</body>'), original)
   assert.notEqual(normalizeEdgeHtml('<body>Article<script src="https://other.test/beacon.min.js"></script></body>'), original)
+})
+
+// docs/postmortem/0010: production only moves forward along master.
+function history(t) {
+  const f = fixture(t)
+  const commit = (message, branch) => {
+    if (branch) f.git('checkout', '-q', '-B', branch)
+    f.git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', '-c', 'core.hooksPath=/dev/null', 'commit', '-q', '--allow-empty', '-m', message)
+    return f.git('rev-parse', 'HEAD')
+  }
+  const live = commit('uplift released')
+  const next = commit('later master work')
+  f.git('checkout', '-q', f.commit)
+  const stale = commit('stale branch without the uplift', 'stale')
+  return { ...f, live, next, stale }
+}
+test('a release must contain the commit production serves', (t) => {
+  const h = history(t)
+  assert.equal(assertForward(h.root, h.live, h.next).forward, true)
+  assert.equal(assertForward(h.root, h.live, h.live).forward, true)
+  assert.throws(() => assertForward(h.root, h.live, h.stale), /roll production back or sideways/)
+  assert.throws(() => assertForward(h.root, h.next, h.live), /roll production back or sideways/)
+})
+test('only a typed rollback naming the live commit bypasses the forward check', (t) => {
+  const h = history(t)
+  assert.throws(() => assertForward(h.root, h.next, h.live, 'yes'), /ALLOW_PROD_ROLLBACK=/)
+  assert.equal(assertForward(h.root, h.next, h.live, h.next).override, 'ALLOW_PROD_ROLLBACK')
+})
+test('a live commit missing from local history fails instead of passing', (t) => {
+  const h = history(t)
+  assert.throws(() => assertForward(h.root, 'c'.repeat(40), h.next), /not in this checkout/)
+})
+test('an unreadable or malformed live receipt refuses to publish blind', async () => {
+  await assert.rejects(readLiveCommit('https://example.invalid', async () => new Response('missing', { status: 404 })), /refusing to publish blind/)
+  await assert.rejects(readLiveCommit('https://example.invalid', async () => new Response('{"commit":"abc"}')), /40-character/)
+  assert.equal(await readLiveCommit('https://example.invalid', async () => new Response(JSON.stringify({ commit: 'a'.repeat(40) }))), 'a'.repeat(40))
+})
+test('drift flags production off master and long-unreleased master work', () => {
+  const live = 'a'.repeat(40), master = 'b'.repeat(40)
+  assert.equal(assessDrift({ live, master, liveOnMaster: false, unreleased: 0, oldestUnreleasedHours: 0 }).ok, false)
+  assert.equal(assessDrift({ live: master, master, liveOnMaster: true, unreleased: 0, oldestUnreleasedHours: 0 }).ok, true)
+  assert.equal(assessDrift({ live, master, liveOnMaster: true, unreleased: 3, oldestUnreleasedHours: 5 }).ok, true)
+  assert.match(assessDrift({ live, master, liveOnMaster: true, unreleased: 3, oldestUnreleasedHours: 80 }).reason, /Publish checked site/)
 })

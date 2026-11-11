@@ -32,6 +32,7 @@ import {
   type GraphNodeType,
   type GraphSource,
 } from '@/lib/memory-chip-knowledge-graph'
+import styles from './memory-chip-ecosystem.module.css'
 
 const TEAL = 'var(--color-blog)'
 const PURPLE = '#7c5cff'
@@ -56,10 +57,9 @@ function FigureShell({
 }) {
   return (
     <figure
+      data-folio-width={wide ? 'wide' : undefined}
       className={`not-prose my-10 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-surface ${
-        wide
-          ? 'relative ml-[-1.5rem] w-screen max-w-none rounded-none border-x-0 sm:ml-[-2rem] sm:rounded-2xl sm:border-x lg:ml-[calc((min(100vw,72rem)-100vw)/2-2rem)]'
-          : ''
+        wide ? 'w-full max-w-none' : ''
       }`}
     >
       <div className="border-b border-[var(--color-border)] bg-surface-2/45 px-4 py-3 sm:px-5">
@@ -1370,7 +1370,7 @@ function GraphExplorer({
         : `${selectedNode?.label ?? 'Selected company'} drilldown`
 
   return (
-    <div className={expanded ? 'flex h-full min-h-0 flex-col bg-surface' : 'bg-surface'}>
+    <div className={expanded ? 'flex h-full min-h-0 flex-col bg-surface' : `${styles.explorer} bg-surface`}>
       <div className="flex flex-col flex-wrap gap-3 border-b border-[var(--color-border)] bg-surface px-3 py-3 sm:px-4 lg:flex-row lg:items-center">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className="min-w-0">
@@ -1435,7 +1435,7 @@ function GraphExplorer({
         className={
           expanded
             ? 'grid min-h-0 flex-1 gap-px overflow-hidden bg-[var(--color-border)] lg:grid-cols-[224px_minmax(0,1fr)_380px]'
-            : 'grid items-start gap-px bg-surface xl:grid-cols-[224px_minmax(0,1fr)_380px]'
+            : `${styles.layout} grid items-start gap-px bg-surface`
         }
       >
         <GraphControlRail
@@ -1499,8 +1499,8 @@ function GraphControlRail({
   panelMode: GraphPanelMode
 }) {
   return (
-    <aside className={expanded ? 'hidden min-h-0 overflow-y-auto bg-surface p-3 lg:block' : 'self-start bg-surface p-2 sm:p-3 xl:p-4'}>
-      <div className={expanded ? 'space-y-3' : 'hidden space-y-3 xl:block'}>
+    <aside className={expanded ? 'hidden min-h-0 overflow-y-auto bg-surface p-3 lg:block' : `${styles.controlRail} self-start bg-surface p-2 sm:p-3 xl:p-4`}>
+      <div className={expanded ? 'space-y-3' : `${styles.railFull} space-y-3`}>
         <GraphModePanel onModeChange={onModeChange} panelMode={panelMode} />
         <div className="rounded-2xl border border-[var(--color-border)] bg-bg/75 p-3">
           <GraphNodeTypeLegend />
@@ -1516,7 +1516,7 @@ function GraphControlRail({
       </div>
 
       {!expanded && (
-        <div className="space-y-2 xl:hidden">
+        <div className={`${styles.railCompact} space-y-2`}>
           <div className="grid gap-1.5 sm:grid-cols-3">
             <GraphModeButton
               active={panelMode === 'profile'}
@@ -1530,14 +1530,14 @@ function GraphControlRail({
               icon={<BarChart3 aria-hidden className="h-3.5 w-3.5" />}
               onClick={() => onModeChange('financial')}
             >
-              Finance
+              Financial Flow
             </GraphModeButton>
             <GraphModeButton
               active={panelMode === 'trace'}
               icon={<Route aria-hidden className="h-3.5 w-3.5" />}
               onClick={() => onModeChange('trace')}
             >
-              Routes
+              Route Trace
             </GraphModeButton>
           </div>
           <details className="group rounded-2xl border border-[var(--color-border)] bg-bg/75">
@@ -2150,7 +2150,7 @@ function GraphInspector({
 
   return (
     <aside className="min-w-0 self-start bg-surface p-3 sm:p-4 xl:p-5">
-      <details className="rounded-2xl border border-[var(--color-border)] bg-bg/70 xl:hidden">
+      <details className={`${styles.inspectorDisclosure} rounded-2xl border border-[var(--color-border)] bg-bg/70`}>
         <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-mono text-[0.58rem] uppercase tracking-wider text-muted transition-colors hover:text-fg [&::-webkit-details-marker]:hidden">
           <span className="truncate">{panelTitle}</span>
           <span className="text-[0.52rem]">Open</span>
@@ -2167,7 +2167,7 @@ function GraphInspector({
           />
         </div>
       </details>
-      <div className="hidden rounded-2xl border border-[var(--color-border)] bg-bg/70 p-4 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-fg)_7%,transparent)] sm:p-5 xl:block xl:max-h-[760px] xl:overflow-y-auto">
+      <div className={`${styles.inspectorPanel} rounded-2xl border border-[var(--color-border)] bg-bg/70 p-4 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-fg)_7%,transparent)] sm:p-5`}>
         <GraphInspectorContent
           panelMode={panelMode}
           sankey={sankey}

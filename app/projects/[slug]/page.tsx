@@ -1,16 +1,16 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import type { CSSProperties } from 'react'
+import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 import { getAllProjects, getProject } from '@/lib/content'
 import { MdxContent } from '@/components/mdx/mdx-content'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Breadcrumb } from '@/components/site/breadcrumb'
-import { Badge } from '@/components/ui/badge'
-import { Reveal } from '@/components/motion/reveal'
-import { ProjectEmblem } from '@/components/projects/project-emblem'
+import { HandUnderline } from '@/components/mdx/hand-underline'
+import styles from '@/components/personal/folio.module.css'
 import { JsonLd, SITE_URL, breadcrumbLd, authorLd } from '@/components/seo/json-ld'
-
-const PROJECT = '#7c5cff'
 
 export function generateStaticParams() {
   return getAllProjects().map((p) => ({ slug: p.slug }))
@@ -29,10 +29,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
+/**
+ * A project detail is the Projects index entry opened up: the same paper,
+ * serif title with its measured underline, ruled plate and quiet technology
+ * list, followed by the authored writeup in the blog's reading prose. Copy
+ * precedes the emblem in source so a phone reads title → description → plate,
+ * and the page ends with the way back to the index rather than dropping into
+ * the footer.
+ */
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const p = getProject(slug)
+  const projects = getAllProjects()
+  const index = projects.findIndex((candidate) => candidate.slug === slug)
+  const p = index === -1 ? undefined : projects[index]
   if (!p) notFound()
+  const next = projects.length > 1 ? projects[(index + 1) % projects.length] : undefined
 
   const url = `${SITE_URL}/projects/${slug}/`
   const ld = [
@@ -57,65 +68,47 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <JsonLd data={ld} />
       <SiteNav />
 
-      <main id="main-content" className="mx-auto w-full max-w-5xl px-6 pb-32 sm:px-8">
-        <Reveal>
-          <Breadcrumb
-            className="mt-8"
-            items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: p.title }]}
-          />
-        </Reveal>
+      <main id="main-content" className={styles.page}>
+        <Breadcrumb
+          items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects/' }, { label: p.title }]}
+        />
 
-        {/* ── Hero ───────────────────────────────────────────────── */}
-        <header className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[1.1fr_1fr] md:items-stretch">
-          <Reveal className="order-2 flex flex-col justify-center md:order-1">
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-project">Project</p>
-            <h1 className="type-h1 mt-4">
-              {p.title}
-            </h1>
-            <p className="mt-5 max-w-xl font-sans text-[1.2rem] leading-8 text-fg/75">
-              {p.description}
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {p.technologies.map((t) => (
-                <Badge key={t.text} style={{ backgroundColor: t.color }} className="text-black">
-                  {t.text}
-                </Badge>
-              ))}
-            </div>
+        <header className={`${styles.hero} ${styles.projectHero}`}>
+          <div className={styles.projectCopy}>
+            <h1 className={styles.title}><HandUnderline>{p.title}</HandUnderline></h1>
+            <p className={styles.intro}>{p.description}</p>
+            {p.technologies.length > 0 && (
+              <ul className={styles.technologies} aria-label="Built with">
+                {p.technologies.map((tech) => (
+                  <li key={tech.text} style={{ '--tech-color': tech.color } as CSSProperties}>{tech.text}</li>
+                ))}
+              </ul>
+            )}
             {p.link?.url && (
-              <a
-                className="mt-7 inline-flex w-fit items-center gap-2 rounded-lg border border-project/40 bg-project/10 px-4 py-2 font-mono text-sm text-project transition-colors hover:bg-project/20"
-                href={p.link.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View source <span aria-hidden>↗</span>
+              <a href={p.link.url} target="_blank" rel="noreferrer" className={styles.textLink}>
+                View source <ArrowUpRight size={16} aria-hidden="true" className={styles.externalArrow} />
               </a>
             )}
-          </Reveal>
-
-          <Reveal delay={120} className="order-1 md:order-2">
-            <ProjectEmblem
-              src={p.image}
-              alt={`${p.title} emblem`}
-              accent={PROJECT}
-              className="h-full min-h-[19rem] rounded-2xl border border-[var(--color-border)]"
-              emblemSize={160}
-            />
-          </Reveal>
+          </div>
+          <div className={`${styles.projectPlate} ${styles.projectDetailPlate}`}>
+            <img src={p.image} alt={`${p.title} emblem`} width={160} height={160} />
+          </div>
         </header>
 
-        {/* ── Body ───────────────────────────────────────────────── */}
-        <div className="mt-12 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-muted">
-          <span className="text-project">02</span>
-          <span>Writeup</span>
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
-        <Reveal>
-          <article className="mt-8 max-w-[44rem]">
-            <MdxContent source={p.body} />
-          </article>
-        </Reveal>
+        <article className={`research-article ${styles.projectWriteup}`}>
+          <MdxContent source={p.body} />
+        </article>
+
+        <nav aria-label="More projects" className={styles.projectFooterNav}>
+          <Link href="/projects/" className={styles.textLink}>
+            <span aria-hidden="true">←</span> All projects
+          </Link>
+          {next && (
+            <Link href={`/projects/${next.slug}/`} className={styles.textLink}>
+              Next project: {next.title} <span aria-hidden="true">→</span>
+            </Link>
+          )}
+        </nav>
       </main>
 
       <SiteFooter />

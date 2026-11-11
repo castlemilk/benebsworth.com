@@ -29,7 +29,7 @@ export function MetricCard({
           {value}
         </span>
         {unit && (
-          <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+          <span className="font-mono text-[0.75rem] uppercase tracking-wider text-muted">
             {unit}
           </span>
         )}

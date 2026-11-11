@@ -46,13 +46,8 @@ export const personLd = {
 } as const
 
 /**
- * WebSite schema with a SearchAction. The SearchAction isn't useful for
- * internal-site search (the site has none), but Google uses the
- * declaration to build sitelinks search and to understand the
- * site-search relationship. The search URL is a placeholder that
- * points to the homepage with a `?q=` param — Google will index this
- * as the canonical search template even if it doesn't do anything
- * special on our side.
+ * WebSite identity and the real blog search entry point. SiteSearch reads `q`
+ * on mount and opens the Pagefind dialog; the archive's local filter is separate.
  */
 export const websiteLd = {
   '@context': 'https://schema.org',
@@ -66,11 +61,9 @@ export const websiteLd = {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+      urlTemplate: `${SITE_URL}/blog/?q={search_term_string}`,
     },
-    // Google's documentation requires the query-input to be in this
-    // exact format (a property-of-EntryPoint with a quoted string).
-    // Satori-friendly serialised shape.
+    // The required input name matches the placeholder in the URL template.
     'query-input': 'required name=search_term_string',
   },
 } as const

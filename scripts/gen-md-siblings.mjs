@@ -32,6 +32,7 @@ const CHECK_ONLY = process.argv.includes('--check')
  * the markdown link back to the canonical post will see it.
  */
 const COMPONENT_DESCRIPTIONS = {
+  SpatialLab: 'Interactive spatial science workbench. The slug selects a mathematical or physical model with an orbitable 3D scene, parameter sliders, experiment presets, a scrubbable animation timeline, quantitative measurements, a colour legend and explicit model limitations. Play/pause, reset and camera views support careful comparisons. A projected SVG view preserves the same model and controls without WebGL. Each experiment is also available at /lab/<slug>/.',
   // NOTE: LabCanvas / LabSide are described further down (near PllDiagram) —
   // a duplicate pair used to live here and the later keys silently won.
   UniverseScale:
@@ -224,6 +225,13 @@ const COMPONENT_DESCRIPTIONS = {
     'A real-photo figure for a trail guide: a single bordered photo (a co-located path or an absolute GCS URL) with an optional accent meta eyebrow (e.g. "Day 3 · Pas de Chèvres"), a caption and a credit. The photo-led counterpart to the researched Landmark/Stop cards — drop one inline for a single beat, or wrap several in a <TrailGrid> for a 2-up strip of trip photos. The rendered post shows the actual image.',
   StageProfile:
     'A per-day route-profile minimap for a trail guide: the day\'s up-and-over elevation line with each village, hut, pass and lake pinned at its altitude (icon + name + metres), peaks labelled above the line and valleys below. Driven by an ordered `points` array ({name, elevM, kind}). The at-a-glance "what does today look like" sketch at the top of each <Stage>. The rendered post shows the live SVG profile.',
+  // USB Wi-Fi in user space (event-horizon).
+  UsbIdentityChain:
+    'Interactive three-stage diagram of the USB identities a UGREEN AX900 (AIC8800D80) dongle presents over its life: a69c:5723 ZeroCD mass storage, then a69c:8d80 boot ROM after a SCSI eject, then 368b:8d85 once firmware is uploaded and running. Tapping a stage shows what happens there and what triggers the next transition. The rendered post has the live version.',
+  DriverLayerStack:
+    'Nine-row stack of everything the user-space driver implements, bottom (USB transport) to top (IP over a utun): what each layer does and which component normally provides it. Rows the kernel or a vendor kernel extension would normally own are shaded amber. A static figure in the rendered post.',
+  BringupTimeline:
+    'Horizontal timeline of a measured cold-replug bring-up (about 32 s total): flash 344 ms, firmware upload 26.5 s, associate 2.29 s, WPA2 handshake 107 ms, DHCP and utun bridge 3.05 s. Widths are on a square-root scale so the short stages remain visible; hovering a segment shows what happens inside it.',
 }
 
 /**

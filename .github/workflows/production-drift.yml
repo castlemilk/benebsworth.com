@@ -1,0 +1,30 @@
+name: Production drift
+# docs/postmortem/0010. Fails (and so emails the owner) when production is not
+# on master, or when master has sat unreleased for more than 72 hours.
+# Read-only: no secrets, no deployment, no writes.
+on:
+  schedule:
+    - cron: '23 22 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  drift:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compare the live build receipt with master
+        run: |
+          status=0
+          node scripts/site-release.mjs drift > drift.json 2>&1 || status=$?
+          cat drift.json
+          printf '### Production drift\n\n```json\n%s\n```\n' "$(cat drift.json)" >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"

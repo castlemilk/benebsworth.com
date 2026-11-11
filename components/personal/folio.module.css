@@ -119,46 +119,25 @@
 .projectAction { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; font-weight: 500; text-decoration: underline; text-underline-offset: .3em; }
 .projectList > li:first-child .projectPlate { min-height: 300px; }
 
-/* About is a clean professional profile, separate from the reading folio. */
-:global(:root):has(.aboutPage) {
-  --font-editorial-display: var(--font-display), sans-serif;
-  --editorial-search-paper: var(--bg);
-  --editorial-search-focus: var(--fg);
-}
-:global(:root):has(.aboutPage) :global([data-site-nav] a[aria-current])::after { border-radius: 0; transform: none; }
-:global(:root:not(.dark)):has(.aboutPage) {
-  --bg: #fafbfc;
-  --fg: #19212d;
-  --muted: #536170;
-  --surface: #f0f3f6;
-  --surface-2: #e9edf2;
-  --border: #d2d9e1;
-}
-:global(:root.dark):has(.aboutPage) {
-  --bg: #10141a;
-  --fg: #edf1f5;
-  --muted: #a8b4c2;
-  --surface: #191f28;
-  --surface-2: #222b36;
-  --border: #35404e;
-}
+/* About shares the site's chrome, paper and serif voice (docs/type-system.md);
+   its layout, not a second palette, makes it a profile page. */
 .aboutPage, :global(.dark) .aboutPage { --folio-handwriting: var(--fg); --profile-action: #263445; }
-.aboutPage .title { font-family: var(--font-display), sans-serif; font-size: clamp(3.25rem, 6.5vw, 5.25rem); font-weight: 600; line-height: 1.02; }
+.aboutPage .title { font-family: var(--font-serif); font-size: clamp(3.25rem, 6.5vw, 5.25rem); font-weight: 450; line-height: 1.02; letter-spacing: -.04em; }
 .aboutPage .aboutHero { grid-template-columns: minmax(0, 1.3fr) minmax(0, .8fr); align-items: start; gap: clamp(2rem, 6vw, 5rem); padding-block: 2.5rem 3rem; }
-.aboutPage .intro { font: 400 clamp(1.1rem, 1rem + .3vw, 1.25rem)/1.65 var(--font-sans), sans-serif; }
+.aboutPage .intro { font: 400 clamp(1.15rem, 1.05rem + .4vw, 1.375rem)/1.55 var(--font-serif); }
 .aboutPage .role { font: 600 1rem/1.6 var(--font-sans), sans-serif; letter-spacing: 0; max-width: 44ch; }
 .profileMeta { margin-top: 1rem; color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
 .aboutPage .jumpLinks { gap: .25rem 1.5rem; margin: 1.5rem 0 0; border-bottom: 0; }
-.profileBio { max-width: 72ch; margin-bottom: 3.5rem; font: 400 clamp(1.1rem, 1rem + .3vw, 1.25rem)/1.75 var(--font-sans), sans-serif; color: var(--muted); }
+.profileBio { max-width: 68ch; margin-bottom: 3.5rem; font: 400 clamp(1.0625rem, 1rem + .25vw, 1.1875rem)/1.7 var(--font-serif); color: var(--fg); }
 .aboutPage .jumpLinks a { font: 500 .95rem/1.5 var(--font-sans), sans-serif; letter-spacing: 0; }
 .aboutPage .section { padding-top: 2.5rem; padding-bottom: 5rem; }
 .aboutPage .sectionHead { margin-bottom: 2.5rem; }
-.aboutPage .sectionHead h2 { font: 600 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-display), sans-serif; letter-spacing: -.035em; }
+.aboutPage .sectionHead h2 { font: 460 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-serif); letter-spacing: -.035em; }
 .aboutPage .label { font: 600 .85rem/1.5 var(--font-sans), sans-serif; letter-spacing: .015em; text-transform: none; }
 .aboutPage .timeline { margin-left: .25rem; }
 .timelineGroup + .timelineGroup { margin-top: 3rem; }
 .employer { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; }
-.employer h3 { font: 600 1.2rem/1.4 var(--font-display), sans-serif; letter-spacing: -.02em; }
+.employer h3 { font: 500 1.2rem/1.4 var(--font-serif); letter-spacing: -.02em; }
 .technologyDetails { margin-top: .75rem; }
 .technologyDetails summary { width: fit-content; min-height: 44px; align-content: center; cursor: pointer; font-size: .875rem; color: var(--muted); text-decoration: underline; text-underline-offset: .3em; }
 .technologyDetails summary:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
@@ -169,15 +148,15 @@
 .aboutPage :global([data-skill-group] h3) { margin-bottom: 1rem; font: 600 1rem/1.5 var(--font-sans), sans-serif; }
 .aboutPage .labContent { margin-top: 0; }
 .aboutPage .labContent > section { margin-top: 0; padding-top: 0; border-top: 0; }
-.aboutPage .labContent h2 { font: 600 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-display), sans-serif; letter-spacing: -.035em; }
+.aboutPage .labContent h2 { font: 460 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-serif); letter-spacing: -.035em; }
 .aboutPage .labIntro { margin-bottom: 2rem; }
 .aboutPage .timeline > li { grid-template-columns: 10rem minmax(0, 1fr); gap: 2.5rem; padding-block: 2rem; }
 .aboutPage .timeline > li:first-child { padding-top: 0; }
-.aboutPage .timeline h4 { font: 500 1.5rem/1.3 var(--font-display), sans-serif; letter-spacing: -.025em; }
+.aboutPage .timeline h4 { font: 480 1.5rem/1.3 var(--font-serif); letter-spacing: -.025em; }
 .aboutPage .timelineDetail { max-width: 68ch; line-height: 1.75; }
 .aboutPage .credentialTitle { font: 500 1.05rem/1.45 var(--font-sans), sans-serif; }
 .aboutPage .credential img { width: 64px; height: 64px; }
-.aboutPage .talk h3 { font: 500 1.35rem/1.3 var(--font-display), sans-serif; letter-spacing: -.02em; }
+.aboutPage .talk h3 { font: 480 1.35rem/1.3 var(--font-serif); letter-spacing: -.02em; }
 .aboutPage :global([data-skill-chip]) { min-height: 44px; border-radius: 4px; font-family: var(--font-sans), sans-serif; padding-inline: .85rem; max-width: 100%; white-space: normal; text-align: left; }
 .aboutPage :global([data-skill-chip] > span) { display: none; }
 .aboutPage .labIntro { font: 400 1.1rem/1.75 var(--font-sans), sans-serif; }
@@ -220,3 +199,53 @@
   .hikeEntry, .projectEntry, .timeline > li { break-inside: avoid; }
   .technologyDetails > ul { display: flex; }
 }
+
+/* Project detail (#130): the index entry opened up. Copy precedes the plate in
+   source so narrow screens read title → description → emblem; the writeup
+   borrows the blog's serif reading prose and the page ends with a way back. */
+.projectHero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.projectCopy { min-width: 0; }
+.projectCopy .intro { margin-top: 1.5rem; }
+.projectHero .technologies { margin-top: 1.5rem; gap: .5rem 1.25rem; }
+.projectHero .technologies li { font-size: .9rem; color: var(--fg); }
+.projectCopy .textLink { margin-top: 1.25rem; font-weight: 500; }
+.projectDetailPlate { min-height: 320px; }
+.projectWriteup { max-width: 44rem; padding-top: 3rem; border-top: 1px solid var(--border); }
+.projectWriteup :global(.prose > h2:first-child) { margin-top: 0; padding-top: 0; border-top: 0; }
+.projectFooterNav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.projectFooterNav .textLink { font-weight: 500; }
+@media (max-width: 650px) {
+  .projectHero { grid-template-columns: 1fr; gap: 2rem; }
+  .projectDetailPlate { min-height: 220px; }
+  .projectWriteup { padding-top: 2rem; }
+  .projectFooterNav { margin-top: 3rem; }
+}
+@media print {
+  .projectFooterNav { display: none; }
+}
+
+/* Uses and Now (#129) join About's clean profile family: `.aboutPage` supplies
+   the type pair and cool neutral surfaces; `.notesPage` tightens the rhythm for
+   short ledger sections. Authored entries are unchanged; only presentation moves. */
+.notesHero { padding-block: 2.5rem 2.5rem; }
+.notesHero .intro { max-width: 60ch; }
+.notesHero .profileMeta { margin-top: 1.25rem; }
+.notesPage .section { padding-block: 2rem 3rem; }
+.notesPage .sectionHead { margin-bottom: 1.25rem; }
+.notesPage .sectionHead h2 { font-size: clamp(1.5rem, 2.4vw, 1.9rem); }
+.notesList { margin: 0; max-width: 72ch; }
+.notesList > div { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: .25rem 2rem; padding-block: .7rem; border-top: 1px solid var(--border); }
+.notesList > div:first-child { border-top: 0; padding-top: 0; }
+.notesList dt { font-weight: 600; line-height: 1.6; }
+.notesList dd { margin: 0; color: var(--muted); line-height: 1.6; }
+.notesBody { max-width: 68ch; font: 400 1.125rem/1.75 var(--font-sans), sans-serif; }
+.notesBody strong { font-weight: 600; }
+.notesFooter { max-width: 68ch; margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .95rem; line-height: 1.7; }
+@media (max-width: 650px) {
+  .notesHero { padding-block: 2rem 2rem; }
+  .notesPage .section { padding-block: 1.75rem 2.5rem; }
+  .notesList > div { grid-template-columns: 1fr; gap: .15rem; }
+}
+
+/* The breadcrumb strip sits flush under the header; the page's top space goes below it. */
+.page > nav[data-site-breadcrumb]:first-child { margin-top: -2rem; margin-bottom: 2rem; }

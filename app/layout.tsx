@@ -1,16 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { JetBrains_Mono, Space_Grotesk, Hanken_Grotesk } from 'next/font/google'
+import { JetBrains_Mono, Hanken_Grotesk } from 'next/font/google'
+import { preload } from 'react-dom'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { Analytics } from '@/components/analytics/analytics'
 import { SITE_URL } from '@/components/seo/json-ld'
 
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
-const display = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-display',
-})
 const sans = Hanken_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -39,17 +35,21 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f6f6f9' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0c' },
+    { media: '(prefers-color-scheme: light)', color: '#f4f1e9' },
+    { media: '(prefers-color-scheme: dark)', color: '#111312' },
   ],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // The folio serif carries every heading and most reading text; fetch it with
+  // the HTML instead of after CSS discovery (app/editorial.css @font-face).
+  preload('/fonts/editorial/source-serif-4.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' })
+  preload('/fonts/editorial/barlow-condensed-semibold.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' })
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${mono.variable} ${display.variable} ${sans.variable}`}
+      className={`${mono.variable} ${sans.variable}`}
     >
       <body className="font-sans antialiased">
         {/* Photos (hike galleries, trail-guide figures) are served from the GCS

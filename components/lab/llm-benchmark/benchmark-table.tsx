@@ -137,8 +137,8 @@ export function BenchmarkTable({ rankings, rows }: { rankings: ModelRanking[]; r
           <caption className="sr-only">LLM benchmark model rankings with score, runtime, cost, token usage, completion and expandable task details.</caption>
           <thead>
             <tr className="border-b border-[var(--color-border)]">
-              <th scope="col" className="w-12 py-3 pl-4 text-left font-mono text-[0.65rem] uppercase tracking-wider text-muted">#</th>
-              <th scope="col" className="min-w-[240px] py-3 text-left font-mono text-[0.65rem] uppercase tracking-wider text-muted">Model</th>
+              <th scope="col" className="w-12 py-3 pl-4 text-left font-mono text-[0.75rem] uppercase tracking-wider text-muted">#</th>
+              <th scope="col" className="min-w-[240px] py-3 text-left font-mono text-[0.75rem] uppercase tracking-wider text-muted">Model</th>
               <SortHeader label={scoreLabel} sortKey="score" sort={sort} onToggle={toggleSort} />
               <SortHeader label="Runtime" sortKey="runtime" sort={sort} onToggle={toggleSort} />
               <SortHeader label="Avg cost" sortKey="cost" sort={sort} onToggle={toggleSort} />
@@ -176,9 +176,9 @@ function SortHeader({ label, sortKey, sort, onToggle }: { label: string; sortKey
   const active = sort.key === sortKey
   const Icon = active ? (sort.direction === 'desc' ? ArrowDown : ArrowUp) : ArrowUpDown
   return (
-    <th scope="col" aria-sort={active ? (sort.direction === 'desc' ? 'descending' : 'ascending') : 'none'} className="whitespace-nowrap py-3 text-right font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+    <th scope="col" aria-sort={active ? (sort.direction === 'desc' ? 'descending' : 'ascending') : 'none'} className="whitespace-nowrap py-3 text-right font-mono text-[0.75rem] uppercase tracking-wider text-muted">
       <button type="button" onClick={() => onToggle(sortKey)} className="group ml-auto inline-flex items-center gap-1 pr-1 hover:text-fg">
-        {label}<Icon className={cn('h-3 w-3', active ? 'text-fg' : 'text-muted/50 group-hover:text-fg/60')} aria-hidden />
+        {label}<Icon className={cn('h-3 w-3', active ? 'text-fg' : 'text-muted/50 group-hover:text-muted')} aria-hidden />
       </button>
     </th>
   )
@@ -196,7 +196,7 @@ function ModelTableRow({ row, index, isExpanded, onToggle, category }: { row: Mo
             <ModelLogoBadge model={model} size={34} />
             <div className="min-w-0">
               <Link href={modelPath(model)} className="block truncate font-medium hover:text-[var(--color-project)]">{model.name}</Link>
-              <div className="truncate font-mono text-[0.62rem] uppercase tracking-wider text-muted">{model.company ?? model.provider} · {model.family ?? model.provider} · {row.stats.count} runs</div>
+              <div className="truncate font-mono text-[0.75rem] uppercase tracking-wider text-muted">{model.company ?? model.provider} · {model.family ?? model.provider} · {row.stats.count} runs</div>
             </div>
           </div>
         </td>
@@ -223,31 +223,31 @@ function ExpandedModelRow({ row, category }: { row: ModelRow; category: string }
       <td colSpan={8} className="p-0">
               <div className="grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="sm:col-span-2 lg:col-span-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[var(--color-border)]/70 pb-3">
-            <div className="flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+            <div className="flex items-center gap-2 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
               <ModelLogoBadge model={row.ranking.model} size={24} />
               <span>{row.ranking.model.company ?? row.ranking.model.provider}</span>
               {row.ranking.model.provider !== (row.ranking.model.company ?? row.ranking.model.provider) && (
                 <span className="text-muted/60">via {row.ranking.model.provider}</span>
               )}
             </div>
-            <span className="font-mono text-[0.65rem] text-muted">{formatContextWindow(row.ranking.model.contextWindow)} context</span>
-            <span className="font-mono text-[0.65rem] text-muted">{formatPricingPer1M(row.ranking.model)}</span>
-            {row.ranking.model.params && <span className="font-mono text-[0.65rem] text-muted">{row.ranking.model.params}</span>}
+            <span className="font-mono text-[0.75rem] text-muted">{formatContextWindow(row.ranking.model.contextWindow)} context</span>
+            <span className="font-mono text-[0.75rem] text-muted">{formatPricingPer1M(row.ranking.model)}</span>
+            {row.ranking.model.params && <span className="font-mono text-[0.75rem] text-muted">{row.ranking.model.params}</span>}
             <div className="ml-auto flex items-center gap-2">
               {row.ranking.model.modelCardUrl && (
-                <a href={row.ranking.model.modelCardUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-[0.65rem] text-muted hover:text-fg">
+                <a href={row.ranking.model.modelCardUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-[0.75rem] text-muted hover:text-fg">
                   <BookOpen className="h-3 w-3" aria-hidden /> Card
                 </a>
               )}
               {row.ranking.model.vendorUrl && (
-                <a href={row.ranking.model.vendorUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-[0.65rem] text-muted hover:text-fg">
+                <a href={row.ranking.model.vendorUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-[0.75rem] text-muted hover:text-fg">
                   <ExternalLink className="h-3 w-3" aria-hidden /> Site
                 </a>
               )}
             </div>
           </div>
           {row.ranking.model.blurb && (
-            <p className="sm:col-span-2 lg:col-span-3 font-mono text-[0.68rem] leading-relaxed text-muted">{row.ranking.model.blurb}</p>
+            <p className="sm:col-span-2 lg:col-span-3 font-mono text-[0.75rem] leading-relaxed text-muted">{row.ranking.model.blurb}</p>
           )}
            {results.map((result) => {
             const task = getTask(result.taskId)
@@ -258,7 +258,7 @@ function ExpandedModelRow({ row, category }: { row: ModelRow; category: string }
                   <span className="min-w-0 truncate font-mono text-xs text-fg/75">{task?.title ?? result.taskId}</span>
                   <span className="shrink-0 font-mono text-sm font-semibold tabular-nums">{result.score.toFixed(1)}</span>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.62rem] text-muted">
+                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.75rem] text-muted">
                   {taskCategory && <span style={{ color: taskCategory.accent }}>{taskCategory.label}</span>}
                   <span>{formatRuntime(result.runtimeMs)}</span>
                   <span>{formatCost(result.costUsd)}</span>
@@ -268,7 +268,7 @@ function ExpandedModelRow({ row, category }: { row: ModelRow; category: string }
             )
           })}
           {results.length === 0 && <p className="font-mono text-xs text-muted">No results for this category.</p>}
-          {category === 'all' && row.ranking.hasSeeded && <p className="sm:col-span-2 lg:col-span-3 font-mono text-[0.65rem] text-muted">Sample data is included for this model and marked in the source results.</p>}
+          {category === 'all' && row.ranking.hasSeeded && <p className="sm:col-span-2 lg:col-span-3 font-mono text-[0.75rem] text-muted">Sample data is included for this model and marked in the source results.</p>}
         </div>
       </td>
     </tr>

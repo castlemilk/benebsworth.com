@@ -2,9 +2,12 @@
 
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
-import { LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
+import { EFFECT_LOADERS, LAB_DEMO_EFFECTS, type LabEntry } from '@/lib/lab/registry'
 import { useEffectModule } from '@/lib/lab/use-effect-module'
 import { EffectCanvas } from '@/components/lab/effect-canvas'
+
+/** Effects with a live preview module. A tile without one would pulse forever (for example the spatial labs). */
+export const MATRIX_EFFECTS = LAB_DEMO_EFFECTS.filter((e) => e.slug in EFFECT_LOADERS)
 
 /**
  * <LabMatrix> — a 2x3 grid of randomly selected lab previews for the
@@ -26,7 +29,7 @@ export function LabMatrix({ count = 6 }: { count?: number }) {
   // doesn't flicker.
   useEffect(() => {
     const day = Math.floor(Date.now() / 86_400_000)
-    const sorted = [...LAB_DEMO_EFFECTS].sort((a, b) => {
+    const sorted = [...MATRIX_EFFECTS].sort((a, b) => {
       // Hash of slug + day, then subtract to get a stable random order
       const ha = hash(a.slug + ':' + day)
       const hb = hash(b.slug + ':' + day)
@@ -45,7 +48,7 @@ export function LabMatrix({ count = 6 }: { count?: number }) {
       if (document.hidden) return
       setPicks((prev) => {
         const used = new Set(prev.map((p) => p.slug))
-        const pool = LAB_DEMO_EFFECTS.filter((e) => !used.has(e.slug))
+        const pool = MATRIX_EFFECTS.filter((e) => !used.has(e.slug))
         if (pool.length === 0) return prev
         const idx = tickRef.current++ % prev.length
         const next = pool[Math.floor(Math.random() * pool.length)]
@@ -116,20 +119,21 @@ function LabMatrixTile({
           <div className="h-full w-full animate-pulse" />
         )}
       </div>
-      {/* Title overlay. Slides up slightly on hover to feel alive. */}
+      {/* Title overlay. Ink and scrim both follow the theme tokens, so the
+          label reads on a light canvas as well as a dark one. */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--color-bg,#0a0a0c)]/85 via-[var(--color-bg,#0a0a0c)]/40 to-transparent px-3 pb-2.5 pt-6">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="font-display text-sm font-semibold text-white/95">
+          <h3 className="font-display text-sm font-semibold text-fg">
             {entry.title}
           </h3>
-          <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/55">
+          <span className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">
             {entry.category}
           </span>
         </div>
       </div>
       {/* Hover affordance — small "→" that fades in on hover. */}
       <div
-        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/70 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-white/85 transition-opacity ${
+        className={`pointer-events-none absolute right-2 top-2 rounded-full bg-[var(--color-bg,#0a0a0c)]/80 px-2 py-0.5 font-mono text-[0.75rem] uppercase tracking-[0.16em] text-fg transition-opacity ${
           hovered === entry.slug ? 'opacity-100' : 'opacity-0'
         }`}
       >

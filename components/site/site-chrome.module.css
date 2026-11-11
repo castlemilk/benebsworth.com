@@ -14,6 +14,9 @@
 .mobileLink { display:inline-flex; min-height:44px; align-items:center; font-size:1.2rem; }
 .header a:focus-visible,.header button:focus-visible,.ancestor:focus-visible { outline:2px solid var(--color-fg); outline-offset:4px; }
 .breadcrumb { background:var(--editorial-search-paper); color:var(--color-muted); border-bottom:1px solid var(--color-border); }
+/* One breadcrumb strip on every page: full-bleed even when a page renders it
+   inside its own centred column, with its text on the header's 72rem line. */
+.breadcrumb[data-site-breadcrumb] { margin-inline:calc(50% - 50vw); }
 .crumbInner { max-width:72rem; margin-inline:auto; padding:.65rem 2rem; }
 .crumbList { display:flex; flex-wrap:wrap; align-items:baseline; gap:.25rem .75rem; font-family:var(--font-editorial-display); font-size:1rem; line-height:1.55; }
 .crumbItem { display:flex; min-width:0; align-items:baseline; gap:.75rem; }

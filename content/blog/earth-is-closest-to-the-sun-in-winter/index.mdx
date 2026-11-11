@@ -1,0 +1,159 @@
+---
+title: "Earth is closest to the Sun in the northern winter"
+date: "2026-11-10T06:00:00.000Z"
+description: "Perihelion falls in early January, yet London freezes. A 3D model of a tilted axis shows why 23.44° of tilt outweighs 5 million kilometres of distance."
+labels: earth,astronomy,climate,seasons,orbital-mechanics
+release: true
+heroImage: /blog/earth-is-closest-to-the-sun-in-winter/hero.webp
+takeaways:
+  - "Earth is 5.0 Gm nearer the Sun in early January than in early July, which raises the sunlight reaching the whole planet by 6.9%, and that change is the same for both hemispheres."
+  - "The 23.44° tilt of a spin axis that stays pointed at one star changes London's geometric day from 7.60 h to 16.40 h and its daily top-of-atmosphere sunlight by a factor of 6.8."
+  - "Day length follows cos H0 = -tan(latitude) tan(declination); the Arctic Circle is exactly where that cosine reaches -1 in June and +1 in December."
+  - "Eccentricity still matters as a modulator: it softens today's northern winter to a 6.4× contrast, and over 21,000 years it swaps which hemisphere gets the harsher seasons."
+---
+
+Around 3 January, Earth passes perihelion: 147.1 Gm from the Sun, the nearest it gets all year. By early July it has drifted out to 152.1 Gm. That 5.0 Gm difference raises the sunlight arriving at the top of the atmosphere by 6.9%, and it arrives in the middle of a London winter.
+
+If distance set the seasons, the whole planet would have winter at the same time. Sydney and London would share a January. They don't, and that single observation kills the distance explanation before any arithmetic. Something else must dominate, and the something else is a tilt of 23.44° that points at the same star all year.
+
+I wanted to see both effects on one screen rather than take the textbook's word for it. So the model below keeps Earth's axis fixed in space, runs the Sun around a slightly eccentric relative orbit, and lets one latitude circle show how much of its day is lit.
+
+Before you touch anything, press play. The amber Sun marker circles Earth once per year, starting at the December solstice. Watch the amber lit arc on London's parallel: short at the start, long half a year later, short again. Then drag **Axial tilt** to 0° and watch every season vanish while the orbit ring stays exactly as eccentric as before.
+
+<SpatialLab slug="seasons" />
+
+The readouts are solstice values, so they stay still while the year runs. That is deliberate: the two numbers we care about are the extremes, and the lab's job is to show the geometry that produces them.
+
+## Two numbers that are not even close
+
+Let's put the two candidate explanations on the same footing. The distance effect is an inverse-square law. If $r$ is the Sun–Earth distance and $a$ the semi-major axis, Kepler's ellipse gives
+
+<Equation id="eqn:seasons-distance" number="1" caption="Sun–Earth distance along the orbit; perihelion sits at ecliptic longitude 283°, about 3 January." latex="\frac{r}{a} = \frac{1 - e^2}{1 + e\cos(\lambda - 283^\circ)}">
+
+$$
+\frac{r}{a} = \frac{1 - e^2}{1 + e\cos(\lambda - 283^\circ)}
+$$
+
+</Equation>
+
+with $e = 0.0167$. The irradiance at perihelion over the irradiance at aphelion is then
+
+<Equation id="eqn:seasons-flux" number="2" caption="Perihelion to aphelion irradiance ratio for Earth's present orbit." latex="\frac{S_\text{peri}}{S_\text{aph}} = \left(\frac{1 + e}{1 - e}\right)^2 = \left(\frac{152.1}{147.1}\right)^2 = 1.069">
+
+$$
+\frac{S_\text{peri}}{S_\text{aph}} = \left(\frac{1 + e}{1 - e}\right)^2 = \left(\frac{152.1}{147.1}\right)^2 = 1.069
+$$
+
+</Equation>
+
+So the whole planet receives 6.9% more sunlight in early January than in early July. That is the entire distance effect, and it is shared equally by both hemispheres.
+
+Now the tilt. At London (51.5°N), the daily sunlight reaching the top of the atmosphere on a horizontal surface is about 497 W/m² at the June solstice and 73 W/m² at the December solstice, at mean Sun distance. That is a factor of 6.8, or 580%. Against a 6.9% nudge. The two effects differ by roughly two orders of magnitude, and the small one points the wrong way for the north.
+
+<PullQuote>
+Distance sets the whole planet's sunlight budget at once. Tilt decides how that budget is split between the hemispheres, and the split is the season.
+</PullQuote>
+
+<Callout type="info">
+In 1987 the Harvard-Smithsonian film *A Private Universe* interviewed 23 people at a Harvard commencement: graduating seniors, alumni and faculty. 21 of them gave wrong explanations for the seasons or the phases of the Moon, and the usual wrong answer for the seasons was distance. I don't think that is embarrassing. The distance story is the first idea anyone would reach for, and the tilt story needs a picture to beat it.
+</Callout>
+
+## An axis that points at one star
+
+Here is the fact that does all the work: Earth's spin axis keeps its direction in space as the planet goes round the Sun. It points at roughly the same spot near Polaris in January and in July. Earth is a very large gyroscope, and the same angular-momentum argument from [a gyroscope falls sideways](/blog/a-gyroscope-falls-sideways/) is why the axis only wanders through a full precession circle in about 26,000 years.
+
+In the lab, the blue axis is tilted $\varepsilon$ from the faint vertical line, which is the normal to the orbital plane. The Sun direction $\hat{s}$ sweeps round in that plane. The angle between the sunlight and Earth's equator is the solar declination $\delta$, and it comes from one dot product:
+
+<Equation id="eqn:seasons-declination" number="3" caption="Solar declination through the year; θ is the lab's phase, zero at the December solstice." latex="\sin\delta = \hat{s}\cdot\hat{a} = -\sin\varepsilon\cos\theta">
+
+$$
+\sin\delta = \hat{s}\cdot\hat{a} = -\sin\varepsilon\cos\theta
+$$
+
+</Equation>
+
+At $\theta = 0$ the declination is $-\varepsilon$: the Sun stands over the Tropic of Capricorn and the north pole is in the dark. At $\theta = \pi$ it is $+\varepsilon$ and the Sun is over the Tropic of Cancer. In between, at the two equinoxes, $\delta = 0$ and the terminator passes through both poles.
+
+The blue circles on the globe are this equation made visible. The tropics sit at $\pm\varepsilon$, the furthest latitudes the sub-solar point ever reaches. The polar circles sit at $\pm(90^\circ - \varepsilon)$, the nearest latitudes to the equator that ever see a full day of darkness. Drag the tilt slider and watch both pairs slide: at 45° they meet, and at 0° the tropics fall onto the equator while the polar circles shrink to the poles.
+
+Notice what does not move when you drag tilt: the violet terminator and the night cap. They are perpendicular to the sunlight, and the sunlight does not care about the tilt. Everything that changes is on Earth's side of the picture.
+
+## How long is the day
+
+Pick a latitude $\varphi$ and draw its parallel. The terminator cuts that circle in two: a lit arc and a dark arc. The day is the lit arc, measured in hour angle at 15° per hour. A little spherical trigonometry (Meeus gives it as equation 15.1 of *Astronomical Algorithms*, in the geometric case where the Sun's centre is on the horizon) puts the sunset hour angle $H_0$ at
+
+<Equation id="eqn:seasons-day" number="4" caption="Sunset hour angle and geometric day length. Clamp the cosine to [-1, 1] for midnight sun and polar night." latex="\cos H_0 = -\tan\varphi\,\tan\delta,\qquad T = \frac{2H_0}{15^\circ\ \text{per hour}}">
+
+$$
+\cos H_0 = -\tan\varphi\,\tan\delta,\qquad T = \frac{2H_0}{15^\circ\ \text{per hour}}
+$$
+
+</Equation>
+
+For London in June, $\tan 51.5^\circ \tan 23.44^\circ = 0.545$, so $H_0 = \arccos(-0.545) = 123.0^\circ$ and the day is $2 \times 123.0 / 15 = 16.40$ hours. In December the sign flips, $H_0 = 57.0^\circ$, and the day is 7.60 hours. The two add to 24, as they must by symmetry.
+
+The formula has a wall built into it. When $\tan\varphi\tan\delta$ reaches 1, the cosine is $-1$, $H_0 = 180^\circ$ and the Sun never sets. That happens exactly where $\varphi = 90^\circ - \delta$, which for $\delta = 23.44^\circ$ is 66.56°N: the Arctic Circle. Select the **Arctic Circle** preset and the violet arc disappears entirely in June, then the amber arc disappears in December. The December noon elevation reads 0.0°, the Sun exactly kissing the horizon.
+
+<Callout type="thinking">
+A quiet implementation note, because it bit me. At the Arctic Circle the product of tangents comes out as 1.0000000000000002 in floating point, and the arccosine of anything past 1 is NaN. Clamp the cosine before you take the arccosine, not the hours afterwards. The lab's unit tests check this preset specifically.
+</Callout>
+
+An almanac will tell you London's longest day is 16 h 38 min, not 16 h 24 min. The 14 minutes are refraction (about 34 arcminutes at the horizon) plus the Sun's own 16 arcminute radius: sunrise is called when the upper edge appears, not when the centre crosses. Together they lift the effective horizon by 0.8333°, and at London's solstices that is worth about 14 minutes, or 11 minutes at the equinoxes. The model ignores it and says so.
+
+## Where the factor of 6.8 comes from
+
+Day length is only half of the tilt effect. The other half is the angle at which sunlight meets the ground. At noon in June the London Sun stands $90^\circ - (51.5^\circ - 23.44^\circ) = 61.9^\circ$ high. In December it is $90^\circ - (51.5^\circ + 23.44^\circ) = 15.1^\circ$. Sunlight spread over a horizontal surface is diluted by the sine of its elevation, and $\sin 61.9^\circ / \sin 15.1^\circ = 3.4$.
+
+Multiply the two levers naively, 2.2 for the hours and 3.4 for the angle, and you get about 7.3. The true daily integral is a bit lower because the Sun is not at its noon height all day. Integrating the sine of the elevation across the lit arc gives the standard daily-mean insolation (Hartmann, *Global Physical Climatology*, chapter 2):
+
+<Equation id="eqn:seasons-insolation" number="5" caption="Daily-mean top-of-atmosphere insolation on a horizontal surface, with H₀ in radians and S₀ = 1361 W/m² (Kopp and Lean 2011)." latex="Q = \frac{S_0}{\pi}\left(\frac{a}{r}\right)^2\left[H_0\sin\varphi\sin\delta + \cos\varphi\cos\delta\sin H_0\right]">
+
+$$
+Q = \frac{S_0}{\pi}\left(\frac{a}{r}\right)^2\left[H_0\sin\varphi\sin\delta + \cos\varphi\cos\delta\sin H_0\right]
+$$
+
+</Equation>
+
+Set $a/r = 1$ to isolate the tilt, and London gives 497.0 W/m² in June and 73.3 W/m² in December: the factor of 6.8 in the third readout. (H₀ = 123.0° is 2.147 rad in the bracket.) At 45°N the same calculation gives 499.3 and 116.5 W/m², a factor of 4.3, with days of 15.43 and 8.57 hours. At the equator, both solstices give 397.5 W/m² and the ratio is exactly 1.
+
+<StatGroup>
+  <Stat label="Perihelion over aphelion" value="1.069×" context="((1 + e)/(1 − e))² with e = 0.0167: 6.9% more sunlight in early January, for both hemispheres" />
+  <Stat label="London day length" value="16.40 h / 7.60 h" context="Geometric June and December solstices at 51.5°N, before refraction" />
+  <Stat label="London daily sunlight" value="497 vs 73 W/m²" context="Top of atmosphere, horizontal surface, mean distance: a factor of 6.8" />
+</StatGroup>
+
+Now put the distance back in. The December solstice sits 13 days before perihelion and the June solstice 13 days before aphelion, so $(a/r)^2$ is 1.033 in December and 0.968 in June. London's numbers become about 481 and 76 W/m², and the contrast softens from 6.8× to 6.4×. The northern winter really is a little milder for being near perihelion, and the southern winter a little harsher. It is a correction to the tilt story, not a rival to it.
+
+<Callout type="doing">
+Predict before you drag:
+
+1. **Equator**: will the day length readout change at all through the year? (It reads 12.00 h / 12.00 h, and the lit arc is exactly half the parallel at every phase.)
+2. **No tilt**: the amber orbit ring is still eccentric. What happens to the tilt-effect readout? (It collapses to 1.0× with the Sun 38.5° high at every London noon.)
+3. **Mars-like orbit**: eccentricity 0.0934. How large does the distance effect get, and does it beat the tilt at London? (1.455× against 8.4×. Not close.)
+4. Drag **Axial tilt** to 45°. Where does London end up? (Inside the polar circle: 24.00 h / 0.00 h, December Sun below the horizon.)
+</Callout>
+
+## What eccentricity actually does
+
+So is eccentricity irrelevant? No, and the **Mars-like orbit** preset is the honest way to see it. At $e = 0.0934$ the amber ring is visibly off-centre, the Sun marker swells and shrinks, and the distance effect climbs to 1.455×. On the real Mars that is a serious seasonal asymmetry: southern summer, near perihelion, is short and hot, and the southern winter is long and cold. Yet in the preset the tilt effect at 51.5° latitude still reads 8.4×. Even on Mars, obliquity sets the seasons and eccentricity modulates them.
+
+Some food for thought on Earth. Perihelion does not stay in January. The orbit's long axis turns slowly and the spin axis precesses, and together they move the date of perihelion through the calendar once every 21,000 years or so. In about 11,000 years perihelion will fall in July. Then the two effects will line up for the north instead of fighting, and northern seasons will be a few percent harsher, all else being equal. Milanković built a theory of the ice ages out of exactly these slow changes in $e$, $\varepsilon$ and the timing of perihelion. The 6.9% is small, but applied to the right latitude for the right ten thousand years it is apparently enough to grow an ice sheet. I find that genuinely strange.
+
+## What the model leaves out
+
+<Callout type="warning">
+Everything in the readouts is geometry at the top of the atmosphere. There is no atmosphere, no ocean, no cloud and no thermal lag, which is why the hottest day in London is weeks after the solstice. The day lengths are geometric, with no refraction and no solar disc. The Sun's ecliptic longitude is uniform in phase, so there is no equation of time, and the Earth does not spin: the white observer dot is pinned to local noon. The Sun marker is to scale with eccentricity and irradiance, not with the Earth, which is drawn about 15,000 times too large.
+</Callout>
+
+Surface sunlight in a London December is far less than 73 W/m² once the long air path and the cloud are included, which only widens the gap. The equation of time shifts noon by up to 16 minutes through the year, and the real declination curve is not quite a cosine because the Sun moves faster near perihelion. None of this changes the ranking of the two effects.
+
+What I like about the lab is how little of it is needed to make the point. One fixed axis, one circle cut in two by a plane, and the ratio of two arcs. The [standalone seasons lab](/lab/seasons/) is the place to try latitudes we have not covered: push the observer to 23.44°N and watch the noon Sun pass straight overhead once a year, or go to the south pole and read the six-month day.
+
+The thing I want to model next is the (a/r)² factor's slow drift: let the perihelion longitude be a control and see the Milanković asymmetry swap hemispheres. That is a different lab, with a much longer phase. Watch this space.
+
+## Reading further
+
+- [Hartmann, *Global Physical Climatology*, 2nd ed., chapter 2](https://www.sciencedirect.com/book/9780123285317/global-physical-climatology): the daily-insolation integral of equation (5) and the latitude-season insolation maps it produces.
+- [Kopp and Lean (2011), "A new, lower value of total solar irradiance"](https://doi.org/10.1029/2010GL045777): the source of $S_0 = 1360.8 \pm 0.5$ W/m², rounded to 1361 here.
+- [NOAA Global Monitoring Laboratory solar calculator](https://gml.noaa.gov/grad/solcalc/): sunrise, sunset and declination with refraction included, to compare against the lab's geometric numbers.
+- [*A Private Universe* (Harvard-Smithsonian Center for Astrophysics, 1987)](https://www.learner.org/series/a-private-universe/): the commencement-day interviews, and a useful lesson in how sticky the distance explanation is.

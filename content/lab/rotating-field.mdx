@@ -1,0 +1,26 @@
+## Add the fields, not the animation
+
+The coloured arrows oscillate along fixed winding axes. The white arrow is their instantaneous vector sum. For balanced sinusoidal excitation, its magnitude is always three halves of one phase's peak field.
+
+### Check the invariant
+
+1. Select **Forward sequence** and pause at phase zero. The phase amplitudes are $1$, $-1/2$ and $-1/2$ times the chosen peak.
+2. Scrub through a quarter-cycle. The white arrow turns by $90^\circ$ while its tip remains on the white circle.
+3. Select **Reverse sequence**. Exchanging B and C reverses the rotation without changing the magnitude.
+4. Select **Half field**. The resultant falls from $1.5B_0$ to $0.75B_0$ in the lab's reference units.
+
+For winding axes $\alpha_k=2\pi k/3$,
+
+$$
+\mathbf B=B_0\sum_{k=0}^2\cos(\phi-\alpha_k)
+\begin{pmatrix}\cos\alpha_k\\\sin\alpha_k\end{pmatrix}
+=\frac{3B_0}{2}\begin{pmatrix}\cos\phi\\\sin\phi\end{pmatrix}.
+$$
+
+**Phase field amplitude** scales all three contributions together. **Phase sequence** is +1 for A → B → C and −1 for A → C → B. Neither control introduces an unbalanced current.
+
+### Scope of the picture
+
+This is an ideal two-pole field with sinusoidally distributed windings and no magnetic saturation. The coil loops indicate axes, rather than a manufacturable winding layout. The white arrow is a field vector, not a rotor: the model does not calculate induction, slip or torque. Playback is slowed for inspection.
+
+Read [Three phases make a rotating field](/blog/three-phases-make-a-rotating-field/) for the vector derivation and the distinction between electrical frequency, pole count and rotor speed.

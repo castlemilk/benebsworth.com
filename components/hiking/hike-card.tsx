@@ -40,7 +40,7 @@ export function HikeCard({ hike }: { hike: Hike }) {
           </svg>
         )}
         <span
-          className="absolute left-3 top-3 rounded-full px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.16em]"
+          className="absolute left-3 top-3 rounded-full px-2 py-0.5 font-label text-[0.75rem] uppercase tracking-[0.1em] font-semibold"
           style={{
             color: planned ? 'var(--color-muted)' : '#fff',
             backgroundColor: planned ? 'color-mix(in srgb, var(--color-fg) 8%, transparent)' : `color-mix(in srgb, ${accent} 80%, transparent)`,
@@ -52,12 +52,12 @@ export function HikeCard({ hike }: { hike: Hike }) {
       </div>
 
       <div className="flex flex-col p-5">
-        <p className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-muted">
+        <p className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">
           {hike.region} · {hike.country}
         </p>
         <h3 className="mt-1 font-display text-xl font-semibold leading-snug tracking-[-0.01em]">{hike.name}</h3>
-        <p className="mt-2 line-clamp-2 font-sans text-sm leading-6 text-fg/60">{hike.summary}</p>
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[0.7rem] text-muted">
+        <p className="mt-2 line-clamp-2 font-sans text-sm leading-6 text-muted">{hike.summary}</p>
+        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[0.75rem] text-muted">
           <span><span className="text-fg/80">{hike.distanceKm}</span> km</span>
           <span><span className="text-fg/80">{hike.days}</span> days</span>
           <span><span className="text-fg/80">{hike.maxAltitudeM.toLocaleString()}</span> m</span>
@@ -78,7 +78,7 @@ export function RangePlaceholder({ accent }: { accent: string }) {
         <polygon points="0,62 26,40 40,48 58,28 72,46 88,34 100,46 100,62" fill={`color-mix(in srgb, ${accent} 50%, transparent)`} />
         <circle cx="78" cy="14" r="5" fill={`color-mix(in srgb, ${accent} 60%, transparent)`} />
       </svg>
-      <span className="absolute bottom-2 right-3 font-mono text-[0.55rem] uppercase tracking-[0.18em] text-fg/35">photo coming soon</span>
+      <span className="absolute bottom-2 right-3 font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted font-semibold">photo coming soon</span>
     </div>
   )
 }

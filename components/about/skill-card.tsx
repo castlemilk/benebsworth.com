@@ -24,10 +24,10 @@ export function SkillCard({ skill, variant = 'default' }: { skill: Skill; varian
           {skill.name}
         </p>
         {skill.since && (
-          <span className={profile ? "shrink-0 font-sans text-xs tabular-nums text-muted" : "shrink-0 font-mono text-[0.65rem] tabular-nums text-muted"}>{skill.since}</span>
+          <span className={profile ? "shrink-0 font-sans text-xs tabular-nums text-muted" : "shrink-0 font-mono text-[0.75rem] tabular-nums text-muted"}>{skill.since}</span>
         )}
       </div>
-      <p className={profile ? "mt-1 font-sans text-xs text-muted" : "mt-0.5 font-mono text-[0.58rem] uppercase tracking-[0.18em] text-muted"}>
+      <p className={profile ? "mt-1 font-sans text-xs text-muted" : "mt-0.5 font-mono text-[0.75rem] uppercase tracking-[0.18em] text-muted"}>
         {skill.category}
       </p>
       <p className="mt-2 font-sans text-sm leading-6 text-fg/75">{skill.note}</p>
@@ -39,7 +39,7 @@ export function SkillCard({ skill, variant = 'default' }: { skill: Skill; varian
             {skill.sources.map((s) => (
               <li
                 key={s.label}
-                className={profile ? "flex flex-wrap items-center gap-1.5 rounded border px-2 py-1 font-sans text-xs leading-5" : "flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[0.62rem]"}
+                className={profile ? "flex flex-wrap items-center gap-1.5 rounded border px-2 py-1 font-sans text-xs leading-5" : "flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[0.75rem]"}
                 style={
                   {
                     color: profile ? 'var(--color-fg)' : `color-mix(in srgb, ${s.color} 82%, var(--color-fg))`,

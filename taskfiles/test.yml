@@ -50,11 +50,16 @@ tasks:
       that the dev server never produces. It also means a STALE out/ silently
       tests old code, so this task depends on `build` first.
 
-      `reuseExistingServer: true` — if something is already listening on
-      {{.E2E_PORT}}, Playwright USES IT rather than starting its own. Confirm the
-      listener is yours before trusting a pass:
+      The default port uses `reuseExistingServer: true` — if something is
+      already listening on {{.E2E_PORT}}, Playwright USES IT rather than starting
+      its own. Confirm the listener is yours before trusting a pass:
 
         lsof -nP -iTCP:{{.E2E_PORT}} -sTCP:LISTEN
+
+      Set the E2E_PORT environment variable for an isolated run, for example
+      `E2E_PORT=4337 task test:e2e`. An explicit environment override disables
+      server reuse and fails if that port is occupied. For `test:serve`, pass
+      the Task variable instead: `task test:serve E2E_PORT=4337`.
 
       Browsers must be installed once: `task test:e2e:install`.
     deps: [":build"]

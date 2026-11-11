@@ -108,33 +108,21 @@ takeaways:
 
 ## Generating Hero Images
 
-Every published post should have a `heroImage` (it drives the blog-listing card and the OG image — there is no banner on the post page itself). Generate one with OpenAI's `gpt-image-2`.
+A post's `heroImage` drives listing cards and the social image; it is not an inline article banner. For a new image, replacement or reusable family, read [Blog artwork: style + theme + topic](references/blog-image-composition.md). It contains the brief, prompt recipe, examples and pixel-level acceptance checks.
 
-**The bar: distinct and clever, NOT a generic template.** The weakest heroes are all the same "abstract geometric shapes in brand colours" — cohesive but interchangeable, and forgettable in a listing grid. A good hero is a *clever visual metaphor for that post's specific thesis*, and visually distinct from every other post's hero. Keep only the dark editorial mood + brand palette as the shared thread (teal `#00E0B8`, purple `#7C5CFF`, orange `#FF7A59` on near-black `#0a0a0a`, no text); let the **subject and composition be unique per post**.
+Compose three independent choices:
 
-Write the prompt as a concrete *scene* that captures the thesis, then end with the STRICT no-text clause (gpt-image loves to add garbled labels). Examples (thesis → image idea):
+- **Style:** the visual medium and composition language.
+- **Theme:** mood, palette, contrast and treatment.
+- **Topic:** the article-specific factual subject or concrete metaphor.
 
-- *"every wire is an RLC circuit"* → a clean digital square-wave edge betraying itself, overshooting into damped ringing; the wire beneath revealed as a coil + capacitor plates.
-- *"every qubit gate is a rotation"* → a single glass sphere with one bright arrow, caught mid-rotation in a faint gimbal ring.
-- *"B-trees vs LSM-trees"* → a serene balanced sorted tree facing a cascading waterfall of compacting sorted runs.
-- *"the modulation zoo"* → three dark vitrine panels holding a wobbling line, a circle, and a lattice grid of points.
+A recognisable family holds style, theme and framing together while changing topics. The same topic can also use a different style or theme. The approved paper/ink, precise engineering, geometric science and object-study examples are starting points, not rigid article-category presets. Site taxonomy and authorship remain separate metadata; an editorial image does not imply human-written text.
 
-**Step 1 — generate (to a staging path).** The key lives in this project's `.env` (`OPENAI_API_KEY`, confirmed present) and historically also in `~/projects/brandbrain/.env` — prefer the project `.env`; if it's ever absent, surface the cross-project read and get the user's OK. The sandbox blocks this cross-project `.env` read as "cross-purpose credential use" — surface it and get the user's OK, then run the gen (it also needs network egress, so it runs unsandboxed). `gpt-image-2` returns base64; use landscape `1536x1024`. Generate to a temp path first so a bad render never clobbers a good existing hero:
+Use the active imagegen capability and the requested imagegen skill for generation or edits. Read the current tool instructions rather than hard-coding a model or credential location. If generation is unavailable, return the completed brief, reference assets and exact required sizes; do not claim an image was generated.
 
-```bash
-# node fetch: POST gpt-image-2 {prompt: "<scene>\n\n<STRICT no-text>", n:1, size:"1536x1024"}
-# write data.data[0].b64_json (base64) → /tmp/heroes/<slug>.png
-```
+Generate to a new staging path and preserve existing artwork. Keep a source master, optimise the selected output to WebP, and mirror it byte-for-byte into BOTH `content/blog/<slug>/` and `public/blog/<slug>/`. Use `heroImage: /blog/<slug>/hero.webp` (or the selected filename). Write an inline MDX image separately when a header is requested.
 
-**Step 2 — optimise to webp (ALWAYS).** A raw gpt-image PNG is ~1.5–2 MB — far too heavy to ship as a hero. Convert to webp (quality 80 → ~50–140 KB, a 10–30× reduction) and write to BOTH `content/blog/<slug>/` and `public/blog/<slug>/` (only `public/` is served, but keep the source co-located):
-
-```bash
-node -e 'const sharp=require("sharp"),fs=require("fs");
-sharp("/tmp/heroes/<slug>.png").resize(1536,1024,{fit:"cover"}).webp({quality:80}).toBuffer()
-  .then(b=>{ for(const d of ["content","public"]) fs.writeFileSync(d+"/blog/<slug>/hero.webp", b) })'
-```
-
-**Step 3 — frontmatter.** `heroImage: /blog/<slug>/hero.webp`. Spot-check the result by eye — a hero that "rendered" can still be off-thesis, samey, or contain stray text (regenerate that one).
+Judge actual pixels at the site's small card sizes, in both themes and in the portrait social crop. Include meaningful alt text and truthful text/art provenance in the review handoff; the reference explains which metadata the current site supports. Keep every other editorial and publishing rule in this skill unchanged.
 
 ## Markdown / MDX features
 

@@ -141,7 +141,7 @@ function FacetedFilter({
         <SlidersHorizontal className="h-3 w-3" />
         {title}
         {selected.size > 0 && (
-          <span className="ml-0.5 rounded-full bg-[var(--color-accent)] px-1.5 py-0.5 text-[0.55rem] font-semibold text-white">
+          <span className="ml-0.5 rounded-full bg-[var(--color-accent)] px-1.5 py-0.5 text-[0.75rem] font-semibold text-white">
             {selected.size}
           </span>
         )}
@@ -198,12 +198,12 @@ function ExpandedRowContent({ row }: { row: RowData }) {
         <div className="grid gap-2 sm:grid-cols-3">
           {model.entries.map(e => (
             <div key={e.file} className="rounded-lg bg-[var(--color-surface)] p-2.5">
-              <div className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">{e.prompt_set} · {e.tokens} tok</div>
+              <div className="font-mono text-[0.75rem] uppercase tracking-wider text-muted">{e.prompt_set} · {e.tokens} tok</div>
               <div className="mt-1 flex items-baseline gap-1.5">
                 <span className="font-mono text-sm font-medium tabular-nums">{e.aggregate.gen_tps_mean.toFixed(1)}</span>
-                <span className="font-mono text-[0.6rem] text-muted">tok/s</span>
+                <span className="font-mono text-[0.75rem] text-muted">tok/s</span>
               </div>
-              <div className="font-mono text-[0.6rem] text-muted">
+              <div className="font-mono text-[0.75rem] text-muted">
                 TTFT {e.aggregate.ttft_ms_mean.toFixed(0)}ms · prompt {e.aggregate.prompt_tps_mean.toFixed(0)} tok/s
               </div>
             </div>
@@ -238,7 +238,7 @@ function ExpandedRowContent({ row }: { row: RowData }) {
         </div>
       )}
       <div className="sm:col-span-2">
-        <p className="max-w-prose text-sm leading-relaxed text-fg/65">{meta.blurb}</p>
+        <p className="max-w-prose text-sm leading-relaxed text-muted">{meta.blurb}</p>
       </div>
     </div>
   )
@@ -319,7 +319,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
             )}
             <div className="min-w-0">
               <div className="font-medium leading-tight">{row.model.displayName || row.id}</div>
-              <div className="font-mono text-[0.6rem] text-muted">{row.size} · {row.meta.quant}</div>
+              <div className="font-mono text-[0.75rem] text-muted">{row.size} · {row.meta.quant}</div>
             </div>
           </div>
         )
@@ -368,7 +368,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
             </div>
             <span className="font-mono text-sm font-medium tabular-nums">
               {val > 0 ? val.toFixed(1) : '—'}
-              <span className="ml-1 text-[0.6rem] text-muted">
+              <span className="ml-1 text-[0.75rem] text-muted">
                 {row.genMinTps > 0 && row.genMaxTps > 0 ? `${row.genMinTps.toFixed(0)}–${row.genMaxTps.toFixed(0)}` : ''}
               </span>
             </span>
@@ -512,7 +512,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
         {(globalFilter || selectedFamilies.size > 0) && (
           <div className="flex items-center gap-1.5">
             {selectedFamilies.size > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2 py-0.5 font-mono text-[0.6rem] text-[var(--color-accent)]">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2 py-0.5 font-mono text-[0.75rem] text-[var(--color-accent)]">
                 {selectedFamilies.size} {selectedFamilies.size === 1 ? 'family' : 'families'}
                 <button
                   onClick={() => setColumnFilters(prev => prev.filter(f => f.id !== 'family'))}
@@ -523,7 +523,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
               </span>
             )}
             {globalFilter && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2 py-0.5 font-mono text-[0.6rem] text-[var(--color-accent)]">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2 py-0.5 font-mono text-[0.75rem] text-[var(--color-accent)]">
                 &ldquo;{globalFilter}&rdquo;
                 <button
                   onClick={() => setGlobalFilter('')}
@@ -554,7 +554,7 @@ export function ModelTable({ models, scoredResults, maxGenTps }: ModelTableProps
                     <th
                       key={header.id}
                       className={cn(
-                        'p-0 text-left font-mono text-[0.65rem] uppercase tracking-wider text-muted',
+                        'p-0 text-left font-mono text-[0.75rem] uppercase tracking-wider text-muted',
                         canSort && 'cursor-pointer',
                       )}
                       style={{ width: header.column.getSize() }}

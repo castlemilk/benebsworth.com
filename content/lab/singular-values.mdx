@@ -1,0 +1,15 @@
+## Start with a prediction
+
+The blue unit sphere contains equal-length input vectors. The green ellipsoid is their image under a linear map. Amber markers identify one corresponding input and output as you scrub time.
+
+Choose **Volume preserved**. Predict whether changing **Output rotation** should alter the condition number, then move the control. Orthogonal output rotations change directions but preserve lengths, volume factor, and rank.
+
+## Three experiments
+
+1. Choose **Almost singular**. The minimum stretch is 0.1, so an output error in that direction is multiplied by 10 during inversion.
+2. Choose **Flatten to a plane**. Rank drops to 2, and the condition number becomes infinite. An entire input direction has disappeared.
+3. Return to **Volume preserved** and compare the three axis lengths. Their product is 1 even though the condition number is 4.
+
+The controls construct a matrix from known singular factors. They do not numerically decompose an arbitrary input matrix, and the stretch controls are axis-labelled rather than sorted. The original input rotation is fixed at 30°.
+
+Read [Singular values are stretches you can see](/blog/singular-values-are-stretches/) for the derivation, noise-amplification example, and low-rank approximation argument.

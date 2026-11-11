@@ -27,6 +27,7 @@ vars:
   NODE_MIN_MAJOR: 20
 
 includes:
+  remote: ./taskfiles/remote.yml
   build: ./taskfiles/build.yml
   lint: ./taskfiles/lint.yml
   test: ./taskfiles/test.yml

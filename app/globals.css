@@ -24,7 +24,13 @@
 
   --font-mono: var(--font-mono), ui-monospace, monospace;
   --font-sans: var(--font-sans), ui-sans-serif, system-ui;
-  --font-display: var(--font-display), var(--font-sans), ui-sans-serif, system-ui;
+  /* One reading voice (docs/type-system.md). Display and headings are the folio
+     serif; labels and meta are the condensed face; mono is for code and data;
+     Hanken (sans) is for form controls and dense lab panels. */
+  --font-display: 'Folio Serif', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-serif: 'Folio Serif', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-label: 'Folio Condensed', 'Barlow Condensed', 'Arial Narrow', ui-sans-serif, sans-serif;
+  --font-hand: 'Folio Hand', 'Caveat', cursive;
 
   /* ── Fluid type scale ───────────────────────────────────────────────
      One coherent hierarchy. clamp(min, fluid, max) in rem; paired weights,
@@ -36,7 +42,8 @@
   --text-h3: clamp(1.3rem, 1.1rem + 0.75vw, 1.65rem);
   --text-body: clamp(1.0625rem, 1rem + 0.22vw, 1.1875rem);
   --text-small: 0.875rem;
-  --text-label: 0.72rem;
+  --text-label: 0.8125rem;
+  --text-meta: 0.875rem;
 
   /* shadcn token mappings */
   --color-background: var(--background);
@@ -82,13 +89,14 @@
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
 
-  /* site brand tokens — light */
-  --bg: #f6f6f9;
-  --fg: #16161a;
-  --muted: #5d5d68;
-  --surface: #ffffff;
-  --surface-2: #eeeef2;
-  --dot: #c9c9d2;
+  /* site brand tokens — light. Warm paper is the site, not just the reading
+     routes (docs/type-system.md); canvases keep --stage/--diagram-paper. */
+  --bg: #f4f1e9;
+  --fg: #202c34;
+  --muted: #56616b;
+  --surface: #fbf9f3;
+  --surface-2: #ebe8df;
+  --dot: #cdc8bb;
   --stage: #eef0f4;          /* light "screen" base for canvases/plate in light mode */
   --diagram-paper: #f4f5f8;  /* light schematic panel, both themes */
   --blog: #08664f;    /* deepened from #0a7d6a → AA (4.5:1) for small accent text even over faint accent tints */
@@ -116,13 +124,13 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 
-  /* site brand tokens — dark */
-  --bg: #0a0a0c;
-  --fg: #ececf0;
-  --muted: #8a8a94;
-  --surface: #14141b;
-  --surface-2: #1a1a23;
-  --dot: #26262d;
+  /* site brand tokens — dark: a warm charcoal that matches the header ink */
+  --bg: #111312;
+  --fg: #ecebe6;
+  --muted: #9a9d98;
+  --surface: #181b1a;
+  --surface-2: #1e2221;
+  --dot: #2a2e2c;
   --stage: #0c0c10;
   --diagram-paper: #f4f5f8;
   --blog: #00e0b8;
@@ -140,21 +148,29 @@
       radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--fg) 4%, var(--bg)) 0%, var(--bg) 60%);
     color: var(--color-fg);
     min-height: 100vh;
+    /* Full-bleed strips (breadcrumb) use 100vw; clip the scrollbar's width
+       without making body a scroll container (sticky still works). */
+    overflow-x: clip;
     font-family: var(--font-sans);
     font-size: var(--text-body);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  /* Headings default to the display grotesque. Page headings carry no font
-     class and would otherwise inherit body sans — this catches them. Explicit
+  /* Headings default to the folio serif. Page headings carry no font class
+     and would otherwise inherit body sans — this catches them. Explicit
      font-sans / font-mono utilities still win where set (labels, code). */
   h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    font-weight: 600;
+    font-family: var(--font-serif);
+    font-weight: 460;
     letter-spacing: -0.02em;
-    line-height: 1.05;
+    line-height: 1.15;
+    text-wrap: balance;
   }
+  h1 { line-height: 1.06; letter-spacing: -0.035em; }
+  h4 { font-weight: 600; letter-spacing: 0; }
+  /* Form controls stay in the UI sans even inside serif reading surfaces. */
+  button, input, select, textarea { font-family: var(--font-sans); }
 }
 
 /* ── Type-scale utilities ────────────────────────────────────────────────
@@ -162,53 +178,67 @@
    composes from the same hierarchy instead of ad-hoc per-page values.        */
 @layer components {
   .type-display {
-    font-family: var(--font-display);
+    font-family: var(--font-serif);
     font-size: var(--text-display);
-    font-weight: 700;
-    line-height: 0.94;
-    letter-spacing: -0.035em;
+    font-weight: 450;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
   }
   .type-h1 {
-    font-family: var(--font-display);
+    font-family: var(--font-serif);
     font-size: var(--text-h1);
-    font-weight: 700;
-    line-height: 0.98;
-    letter-spacing: -0.03em;
+    font-weight: 450;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
   }
   .type-h2 {
-    font-family: var(--font-display);
+    font-family: var(--font-serif);
     font-size: var(--text-h2);
-    font-weight: 600;
-    line-height: 1.05;
+    font-weight: 460;
+    line-height: 1.15;
     letter-spacing: -0.025em;
   }
   .type-h3 {
-    font-family: var(--font-display);
+    font-family: var(--font-serif);
     font-size: var(--text-h3);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.25;
     letter-spacing: -0.015em;
   }
   .type-body {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-size: var(--text-body);
     font-weight: 400;
     line-height: 1.75;
     letter-spacing: 0;
   }
-  /* Mono is reserved for metadata labels + code. */
+  /* Eyebrows and section labels: condensed, uppercase, never below 13px. */
   .type-label {
-    font-family: var(--font-mono);
+    font-family: var(--font-label);
     font-size: var(--text-label);
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.22em;
-    line-height: 1;
+    letter-spacing: 0.1em;
+    line-height: 1.3;
+  }
+  /* Dates, reading times, bylines: condensed, sentence case. */
+  .type-meta {
+    font-family: var(--font-label);
+    font-size: var(--text-meta);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    color: var(--color-muted);
   }
 }
 
+/* Unlayered so it outranks Tailwind's utilities layer. The serif display
+   utility replaced Space Grotesk; its old bold weights are too heavy for a text
+   serif, so pair them down here rather than at 52 call sites. */
+.font-display:is(.font-semibold, .font-bold, .font-extrabold, .font-black) { font-weight: 480; }
+
 .dark body {
-  background: radial-gradient(120% 120% at 50% 0%, #131318 0%, var(--bg) 60%);
+  background: radial-gradient(120% 120% at 50% 0%, #171a19 0%, var(--bg) 60%);
 }
 
 /* ── Theme-safe accent ink ────────────────────────────────────────────────
@@ -360,9 +390,9 @@ a:focus-visible .word .snake-body {
   animation: cs-shine 4.5s linear infinite;
 }
 
-/* Theme toggle thumb glide. next-themes' `disableTransitionOnChange` injects a
-   global `*{transition:none!important}` during the theme swap to stop colours
-   flashing — which also kills the toggle thumb's slide. These class selectors
+/* Theme toggle thumb glide. The theme store (components/theme/theme-store.ts)
+   injects a global `*{transition:none!important}` during the theme swap to stop
+   colours flashing — which also kills the toggle thumb's slide. These class selectors
    have higher specificity than `*`, so their `!important` transition wins and
    the thumb keeps gliding while the rest of the page still switches instantly.
    Applied only once the toggle is "ready" (one frame after mount) so the thumb
@@ -465,7 +495,7 @@ a:focus-visible .word .snake-body {
   --editorial-search-scrim: #13191699;
 }
 .dark {
-  --editorial-search-paper: #202423;
+  --editorial-search-paper: #161918;
   --editorial-search-ink: #f1eee6;
   --editorial-search-muted: #b4b8b1;
   --editorial-search-rule: #454c47;

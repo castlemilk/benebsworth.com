@@ -42,29 +42,29 @@ export function ModelList() {
                   <div className="flex items-center gap-2">
                     <h3 className="type-h3 truncate leading-tight">{model.name}</h3>
                     {isLocal && (
-                      <span className="shrink-0 rounded-full border border-sky-500/30 bg-sky-500/10 px-1.5 py-0.5 font-mono text-[0.5rem] font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                      <span className="shrink-0 rounded-full border border-sky-500/30 bg-sky-500/10 px-1.5 py-0.5 font-mono text-[0.75rem] font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
                         Local
                       </span>
                     )}
                   </div>
-                  <p className="truncate font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+                  <p className="truncate font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                     {model.company ? `${model.company}` : model.provider}
                     <span className="mx-1 opacity-40">·</span>
                     <span style={{ color: logo.accent }}>{model.family ?? model.provider}</span>
                   </p>
                   {model.params && (
-                    <p className="mt-0.5 font-mono text-[0.6rem] text-muted">
+                    <p className="mt-0.5 font-mono text-[0.75rem] text-muted">
                       {model.params} · {model.license ?? '—'}
                     </p>
                   )}
                 </div>
                 {free && !isLocal && (
-                  <span className="shrink-0 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 font-mono text-[0.55rem] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                  <span className="shrink-0 rounded-full border border-emerald-600/25 bg-emerald-600/10 px-2 py-0.5 font-mono text-[0.75rem] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                     Free
                   </span>
                 )}
                 {free && isLocal && (
-                  <span className="shrink-0 rounded-full border border-zinc-300 bg-zinc-100 px-2 py-0.5 font-mono text-[0.55rem] font-semibold uppercase tracking-wider text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+                  <span className="shrink-0 rounded-full border border-zinc-300 bg-zinc-100 px-2 py-0.5 font-mono text-[0.75rem] font-semibold uppercase tracking-wider text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
                     $0
                   </span>
                 )}
@@ -76,13 +76,13 @@ export function ModelList() {
                   {model.tags.slice(0, 3).map((t) => (
                     <span
                       key={t}
-                      className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wide text-muted"
+                      className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 font-mono text-[0.75rem] uppercase tracking-wide text-muted"
                     >
                       {t}
                     </span>
                   ))}
                   {model.released && (
-                    <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 font-mono text-[0.55rem] text-muted">
+                    <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 font-mono text-[0.75rem] text-muted">
                       {model.released}
                     </span>
                   )}
@@ -97,38 +97,38 @@ export function ModelList() {
 
               <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-4">
                 <div className="flex flex-col gap-1">
-                  <span className="flex items-center gap-1 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+                  <span className="flex items-center gap-1 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                     <Coins className="h-3 w-3" /> In
                   </span>
-                  <span className="font-mono text-[0.7rem] font-medium tabular-nums text-fg/90">
+                  <span className="font-mono text-[0.75rem] font-medium tabular-nums text-fg/90">
                     {free ? 'Free' : `$${(model.costPer1kInputUsd * 1000).toFixed(2)}`}
                   </span>
-                  <span className="font-mono text-[0.6rem] text-muted">/1M in</span>
+                  <span className="font-mono text-[0.75rem] text-muted">/1M in</span>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="flex items-center gap-1 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+                  <span className="flex items-center gap-1 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                     <Layers className="h-3 w-3" /> Out
                   </span>
-                  <span className="font-mono text-[0.7rem] font-medium tabular-nums text-fg/90">
+                  <span className="font-mono text-[0.75rem] font-medium tabular-nums text-fg/90">
                     {free ? '—' : `$${(model.costPer1kOutputUsd * 1000).toFixed(2)}`}
                   </span>
-                  <span className="font-mono text-[0.6rem] text-muted">/1M out</span>
+                  <span className="font-mono text-[0.75rem] text-muted">/1M out</span>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="flex items-center gap-1 font-mono text-[0.6rem] uppercase tracking-wider text-muted">
+                  <span className="flex items-center gap-1 font-mono text-[0.75rem] uppercase tracking-wider text-muted">
                     <Maximize2 className="h-3 w-3" /> Ctx
                   </span>
-                  <span className="font-mono text-[0.7rem] font-medium tabular-nums text-fg/90">
+                  <span className="font-mono text-[0.75rem] font-medium tabular-nums text-fg/90">
                     {formatContextWindow(model.contextWindow)}
                   </span>
-                  <span className="flex items-center gap-1 font-mono text-[0.6rem] text-muted">
+                  <span className="flex items-center gap-1 font-mono text-[0.75rem] text-muted">
                     <Cpu className="h-2.5 w-2.5" /> {model.contextWindow >= 1000000 ? '1M' : model.contextWindow >= 256000 ? '256K' : '41K'}
                   </span>
                 </div>
               </div>
 
               <div className="mt-4 flex items-center justify-between gap-2 border-t border-[var(--color-border)]/50 pt-3">
-                <span className="flex items-center gap-1.5 font-mono text-[0.65rem] font-medium uppercase tracking-wider text-muted transition-colors group-hover:text-fg">
+                <span className="flex items-center gap-1.5 font-mono text-[0.75rem] font-medium uppercase tracking-wider text-muted transition-colors group-hover:text-fg">
                   Per-task results
                   <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
                 </span>
@@ -137,13 +137,13 @@ export function ModelList() {
                     href={model.modelCardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative z-10 inline-flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-2)] px-2.5 py-1 font-mono text-[0.6rem] font-medium uppercase tracking-wider text-muted transition-colors hover:border-fg/20 hover:text-fg"
+                    className="relative z-10 inline-flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-2)] px-2.5 py-1 font-mono text-[0.75rem] font-medium uppercase tracking-wider text-muted transition-colors hover:border-fg/20 hover:text-fg"
                   >
                     Card
                     <ExternalLink className="h-3 w-3" aria-hidden />
                   </a>
                 ) : (
-                  <span className="font-mono text-[0.6rem] text-muted/50">{model.provider}</span>
+                  <span className="font-mono text-[0.75rem] text-muted/50">{model.provider}</span>
                 )}
               </div>
             </div>

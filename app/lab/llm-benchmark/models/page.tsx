@@ -81,17 +81,15 @@ export default function ModelsIndexPage() {
     <>
       <JsonLd data={[breadcrumb, collection]} />
       <SiteNav />
-      <BenchmarkNav />
-      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-8">
-        <Breadcrumb
-          className="mb-10"
-          items={[
+      <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-24 sm:px-8">
+        <Breadcrumb items={[
             { label: 'Home', href: '/' },
             { label: 'Lab', href: '/lab/' },
             { label: 'LLM Benchmark', href: '/lab/llm-benchmark/' },
             { label: 'Models' },
           ]}
         />
+        <BenchmarkNav />
 
         <section className="pb-10">
           <Reveal>
@@ -115,7 +113,7 @@ export default function ModelsIndexPage() {
             <h2 className="type-h2 mb-2">Frontier</h2>
           </Reveal>
           <Reveal delay={60}>
-            <p className="mb-6 max-w-prose text-sm text-fg/60">
+            <p className="mb-6 max-w-prose text-sm text-muted">
               Paid, hosted frontier models run directly against their vendor APIs.
             </p>
           </Reveal>
@@ -134,7 +132,7 @@ export default function ModelsIndexPage() {
             </div>
           </Reveal>
           <Reveal delay={60}>
-            <p className="mb-6 max-w-prose text-sm text-fg/60">
+            <p className="mb-6 max-w-prose text-sm text-muted">
               Cost-0 open-weight models routed through OpenRouter. Served by community providers —
               availability and throughput vary, and results are subject to free-tier rate limits.
             </p>
@@ -227,7 +225,7 @@ function ModelCard({
                 </p>
               </div>
               {free && (
-                <span className="rounded-full border border-emerald-600/40 bg-emerald-600/10 px-2.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                <span className="rounded-full border border-emerald-600/40 bg-emerald-600/10 px-2.5 py-0.5 font-mono text-[0.75rem] uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                   Free
                 </span>
               )}
@@ -261,7 +259,7 @@ function ModelCard({
                 {model.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="font-mono text-[0.65rem] uppercase tracking-wider text-muted"
+                    className="font-mono text-[0.75rem] uppercase tracking-wider text-muted"
                   >
                     #{tag}
                   </span>
@@ -321,7 +319,7 @@ function MiniStat({
     <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
       <div className="flex items-center gap-2 text-muted">
         {icon}
-        <span className="font-mono text-[0.65rem] uppercase tracking-wider">{label}</span>
+        <span className="font-mono text-[0.75rem] uppercase tracking-wider">{label}</span>
       </div>
       <p className="mt-2 font-mono text-lg font-semibold">{value}</p>
     </div>

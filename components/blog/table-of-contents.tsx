@@ -18,7 +18,7 @@ export function TableOfContents({ className, label = 'On this page' }: { classNa
         className,
       )}
     >
-      <h2 className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted mb-3">
+      <h2 className="font-label text-[0.75rem] uppercase tracking-[0.1em] text-muted mb-3 font-semibold">
         {label}
       </h2>
       <ul className="m-0 list-none space-y-1 p-0">

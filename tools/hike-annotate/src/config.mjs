@@ -12,6 +12,13 @@ export const GCLOUD_ACCOUNT = process.env.HIKE_GCLOUD_ACCOUNT || 'ben.ebsworth@g
 export const AGY_BIN = process.env.AGY_BIN || 'agy'
 export const AGY_MODEL = process.env.AGY_MODEL || '' // '' = agy default (Gemini 3.x Pro)
 
-export const manifestObject = (slug) => `manifest/hike/${slug}.json`
+export function validateHikeSlug(slug) {
+  if (typeof slug !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    throw new Error('Invalid hike slug')
+  }
+  return slug
+}
+
+export const manifestObject = (slug) => `manifest/hike/${validateHikeSlug(slug)}.json`
 export const manifestPublicUrl = (slug) => `${PUBLIC_BASE}/${manifestObject(slug)}`
 export const gsUri = (object) => `gs://${BUCKET}/${object}`

@@ -45,7 +45,7 @@ export function StatStrip({
 
   return (
     <p
-      className={`flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.65rem] uppercase tracking-wider text-muted ${className}`}
+      className={`flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.75rem] uppercase tracking-wider text-muted ${className}`}
     >
       {segments.map((segment, i) => (
         <span key={segment} className="flex items-center gap-2">

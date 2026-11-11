@@ -5,7 +5,7 @@ const css = readFileSync(new URL('../../app/editorial.css', import.meta.url), 'u
 
 describe('reading-route paper palette', () => {
   it('limits the accepted cream palette to light-mode reading routes', () => {
-    const rule = css.match(/:root:not\(\.dark\):has\(\.folio-reading-page, \.folio-archive\)\{([^}]+)\}/)?.[1]
+    const rule = css.match(/:root:not\(\.dark\):has\(\.folio-reading-page, \.folio-archive(?:, \.[\w-]+)*\)\{([^}]+)\}/)?.[1]
     expect(rule).toBeDefined()
     expect(rule).toContain('--bg:#f4f1e9')
     expect(rule).toContain('--fg:#202c34')

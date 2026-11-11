@@ -20,6 +20,9 @@ const CATEGORY_ACCENT: Record<string, string> = {
   art: '#00e0b8',
   maths: '#7c5cff',
   physics: '#ff7a59',
+  chemistry: '#f472b6',
+  biology: '#a3e635',
+  earth: '#38bdf8',
   engineering: '#00b4d8',
 }
 
@@ -39,20 +42,20 @@ function LabCardLink({ e }: { e: LabEntry }) {
       <div className="mt-4 flex items-start justify-between gap-3">
         <h3 className="type-h3">{e.title}</h3>
         <span
-          className="accent-ink mt-0.5 inline-flex items-center gap-1.5 shrink-0 rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
+          className="accent-ink mt-0.5 inline-flex items-center gap-1.5 shrink-0 rounded-full border px-2 py-0.5 font-label text-[0.75rem] font-semibold uppercase tracking-[0.06em]"
           style={{ '--ink': accent, borderColor: accent } as React.CSSProperties}
         >
           <CategoryIcon category={cat.key} fallback={cat.glyph} /> {cat.label}
         </span>
       </div>
-      <p className="mt-1 type-body text-fg/65">{e.blurb}</p>
+      <p className="mt-1 type-body text-muted">{e.blurb}</p>
       <ul className="mt-3 flex flex-wrap gap-1.5">
         {e.tags.map((t) => {
           const c = tagColor(t)
           return (
             <li
               key={t}
-              className="accent-ink rounded-full border px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider"
+              className="accent-ink rounded-full border px-2 py-0.5 font-label text-[0.75rem] font-semibold uppercase tracking-[0.06em]"
               style={{
                 '--ink': c,
                 borderColor: `color-mix(in srgb, ${c} 40%, transparent)`,
@@ -136,7 +139,7 @@ export function LabContent({ navItems }: { navItems: CategoryNavItem[] }) {
                 <div className="mb-8">
                   <p className="type-label text-muted">Guides</p>
                   <h2 className="mt-2 type-h2">Concept guides</h2>
-                  <p className="mt-2 max-w-prose type-body text-fg/60">
+                  <p className="mt-2 max-w-prose type-body text-muted">
                     Friendly walkthroughs that build from a live simulation into the underlying idea.
                   </p>
                 </div>
@@ -173,7 +176,7 @@ export function LabContent({ navItems }: { navItems: CategoryNavItem[] }) {
                       <span className="opacity-40">·</span>
                       <span className="ml-2">{cat.label}</span>
                     </h2>
-                    <p className="mt-2 max-w-prose type-body text-fg/60">{cat.blurb}</p>
+                    <p className="mt-2 max-w-prose type-body text-muted">{cat.blurb}</p>
                   </div>
 
                   <div className="grid gap-6 sm:grid-cols-2">

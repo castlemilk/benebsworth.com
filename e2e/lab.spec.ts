@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 test('lab index lists effects and links to a detail page', async ({ page }) => {
   await page.goto('/lab/')
-  await expect(page.getByRole('heading', { name: 'Generative experiments' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: /^Ideas you can\s*put your hands on\.$/ })).toBeVisible()
   await page.getByRole('link', { name: /Orbits preview|Orbits/ }).first().click()
   await expect(page).toHaveURL(/\/lab\/[a-z-]+\/?/)
 })

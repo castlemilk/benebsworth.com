@@ -1,0 +1,176 @@
+---
+title: The nautilus is not a golden spiral
+date: '2026-11-10T04:00:00.000Z'
+description: >-
+  Measure a nautilus and each whorl grows about 3×, not the golden spiral's
+  6.85×. Raup's three-number model shows what shells really do.
+labels: 'biology,evolution,palaeontology,geometry,morphology'
+release: true
+heroImage: /blog/the-nautilus-is-not-a-golden-spiral/hero.webp
+takeaways:
+  - >-
+    A golden spiral expands by φ⁴ ≈ 6.85 per revolution, while a measured
+    Nautilus pompilius expands by about 3.1 per revolution, with individual
+    shells scattering from roughly 2.4 to 4.2.
+  - >-
+    Raup's 1966 model builds nautilus, ammonite and turret shell from the same
+    three constants: whorl expansion W, distance from the axis D and translation
+    T.
+  - >-
+    At T = 0 whorls overlap exactly when W·D < 1, and that boundary is one sharp
+    edge of the region real shells occupy.
+  - >-
+    Most of Raup's three-number cube is empty, and the emptiness has mechanical
+    reasons as well as historical ones.
+markdown_url: /blog/the-nautilus-is-not-a-golden-spiral/
+canonical_url: 'https://benebsworth.com/blog/the-nautilus-is-not-a-golden-spiral/'
+---
+## Key takeaways
+
+- A golden spiral expands by φ⁴ ≈ 6.85 per revolution, while a measured Nautilus pompilius expands by about 3.1 per revolution, with individual shells scattering from roughly 2.4 to 4.2.
+- Raup's 1966 model builds nautilus, ammonite and turret shell from the same three constants: whorl expansion W, distance from the axis D and translation T.
+- At T = 0 whorls overlap exactly when W·D < 1, and that boundary is one sharp edge of the region real shells occupy.
+- Most of Raup's three-number cube is empty, and the emptiness has mechanical reasons as well as historical ones.
+
+Every second poster about the golden ratio has a nautilus on it, sawn in half, with a golden spiral drawn over the chambers. The claim is that the shell grows by $\varphi \approx 1.618$ every quarter turn, so by $\varphi^4 \approx 6.85$ every full revolution. Pick up a real one and measure it. The outer edge of each whorl sits about three times further from the centre than the whorl before (3.14 from Moseley, 3.13 from Falbo's mean). Not 6.85. The nautilus is a logarithmic spiral, which is a lovely thing to be, but it is a different logarithmic spiral.
+
+The more interesting story is what the nautilus actually is, and in 1966 the palaeontologist David Raup wrote it down in three numbers. Take a circle, sweep it around an axis, and let it grow as it goes. One number says how fast the circle grows per revolution. One says how far it sits from the axis. One says how fast it slides along the axis. Nautilus, garden snail, ammonite and turret shell are all points in that three-dimensional space, and most of the space has nothing living in it.
+
+So let's build the thing. The lab below is Raup's model, drawn as a translucent tube. Start at the defaults, which are nautilus-like, then click **Golden spiral** and watch what a shell that really grew by $\varphi$ per quarter turn would look like. It is a squat, fast-opening cap. Then try **Turret shell** and rotate the camera to see the same rule stacked into a spire.
+
+> [SpatialLab component] Interactive spatial science workbench. The slug selects a mathematical or physical model with an orbitable 3D scene, parameter sliders, experiment presets, a scrubbable animation timeline, quantitative measurements, a colour legend and explicit model limitations. Play/pause, reset and camera views support careful comparisons. A projected SVG view preserves the same model and controls without WebGL. Each experiment is also available at /lab/<slug>/.
+
+The lime surface is the shell. The cyan line is the outer edge, the spiral a ruler would measure on a cut specimen. The violet line joins the centres of the generating circles, and the amber ring is the aperture, which advances as the timeline runs. The three readouts are the numbers this whole essay is about.
+
+## What a logarithmic spiral promises
+
+A logarithmic spiral is a curve whose radius multiplies by a fixed factor for every fixed amount of turning. Write the per-revolution factor as $W$ and the radius at angle $\theta$ is
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+r(\theta) = r_0\, W^{\theta / 2\pi}
+```
+
+$$
+r(\theta) = r_0\, W^{\theta / 2\pi}
+$$
+
+Zoom in on any member of the family and you see the same shape at a smaller scale, which is why the spiral turns up wherever something grows without changing its proportions. A shell is the obvious case.
+
+What separates one member of the family from another is a single number, and there are two equivalent ways to quote it. One is the expansion $W$. The other is the angle $\psi$ between the tangent and the radius, which is constant along the curve. Differentiate Equation 1 and the relation is
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\tan\psi = \frac{2\pi}{\ln W}
+```
+
+$$
+\tan\psi = \frac{2\pi}{\ln W}
+$$
+
+Henry Moseley measured this angle on real shells in 1838 and found $79^\circ 40'$ for a *Nautilus pompilius*. Push that through Equation 2 and $W = 3.14$. D'Arcy Thompson reproduced Moseley's table in *On Growth and Form* and the number has sat there for a century, available to anyone who looked past the poster. For the golden spiral, $W = \varphi^4 = 6.854$ and $\psi = 72.97^\circ$. The two curves are not close.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The lab's second readout is $\psi$ from Equation 2. At the default $W = 3.4$ it reads 78.98°. At the golden preset it reads 72.97°. A difference of six degrees in a constant angle compounds into a shell that opens more than twice as fast per revolution.
+
+## Measuring a real one
+
+Clement Falbo did the measurement properly in 2005, with a ruler and a set of shells rather than a drawing program. Across his specimens the growth per quarter turn ran from 1.24 to 1.43, with a mean near 1.33. Raise 1.33 to the fourth power and you get $W = 3.13$, in good agreement with Moseley's 3.14 from a different century and a different method. The spread is real too: $1.24^4 = 2.36$ and $1.43^4 = 4.18$, so a given shell can sit well either side of the mean. The lab's default $W = 3.4$ sits above that mean but well inside the spread, and I chose it because it keeps the whorls visibly separate on screen. A truer central value would be nearer 3.1.
+
+There is a standard rescue at this point. Perhaps the nautilus grows by $\varphi$ every half turn rather than every quarter turn? It does not. Half-turn growth is the square of quarter-turn growth, so $1.33^2 = 1.77$ for a measured shell, and $\sqrt{3.4} = 1.84$ for the lab default. Neither is 1.618. The claim fails at every angular scale because the spiral has one parameter and Moseley fixed it in 1838.
+
+> [StatGroup component] Editorial metric row — a wrapper for 2-4 `<Stat>` components, rendered as a horizontal band that breaks up long prose. The individual stats follow as their own placeholders.
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+
+
+> [Stat component] Editorial stat callout. Renders one key metric as large `value` text under a `label` header, with optional smaller `context` subtext beneath. Used inside a `<StatGroup>` to surface the numbers the post hinges on.
+
+I have not cut a nautilus myself. The numbers above come from two independent sources that agree to a percent, and the lab reproduces them from the equations. If you have a shell and a protractor, the second readout is the one to check.
+
+## Three numbers make a shell
+
+Raup's insight was that the planar spiral is only one slice of the problem. A shell is a tube, not a line, and the tube can sit at various distances from the coiling axis and slide along it as it coils. He fixed three constants for the cube, plus a fourth for the shape of the generating curve that this essay holds at a circle, and his 1966 definitions deserve stating exactly, because later authors drifted.
+
+$W$, the whorl expansion rate, is the ratio of distances from the axis for two points one revolution apart. $D$ is the distance of the inner edge of the generating curve from the axis divided by the distance of the outer edge. $T$, the translation rate, is how far the centre of the generating curve moves along the axis for every unit it moves away from the axis. With a circular generating curve of radius $\rho$ and centre distance $c$, the model is
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\rho(\theta) = \rho_0\, W^{\theta/2\pi}, \qquad c(\theta) = \rho(\theta)\,\frac{1+D}{1-D}, \qquad z(\theta) = T\, c(\theta)
+```
+
+$$
+\rho(\theta) = \rho_0\, W^{\theta/2\pi}, \qquad
+c(\theta) = \rho(\theta)\,\frac{1+D}{1-D}, \qquad
+z(\theta) = T\, c(\theta)
+$$
+
+The middle expression is just $D = (c - \rho)/(c + \rho)$ rearranged, so $D = 0$ means the tube touches the axis and $D$ near 1 means a thin tube far from it. The lab draws Equation 3 over four whorls, with the aperture at $\theta = 0$ and the finished outer edge pinned to a fixed size, which is why changing $W$ shrinks the early whorls rather than growing the last one.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+Nautilus, snail, ammonite and turret shell are not four designs. They are four points in one three-dimensional space, and the space is mostly empty.
+
+Walk the presets with Equation 3 in mind. **Golden spiral** is the default with $W$ pushed to 6.85: same $D$, same $T$, a cap instead of a coil. **Evolute ammonite** drops $W$ to 2 and pushes $D$ to 0.4, so the tube grows slowly and sits well out from the axis, leaving the wide central umbilicus that evolute ammonites show. **Turret shell** keeps the tube on the axis and sets $T = 3$, and the planar spiral becomes a cone. In that last case the outer edges of the whorls lie on a cone whose apical angle works out to $73.7^\circ$ for $T = 3$, $D = 0$. Real turritellids are far pointier, with $T$ well above anything the slider allows, but the mechanism is the one you are looking at.
+
+## The overlap boundary
+
+Now the part Raup cared about most. Consider two generating circles one revolution apart in the same half-plane through the axis. The outer one has centre distance $Wc$ and radius $W\rho$. They overlap when the gap between their centres is less than the sum of their radii. At $T = 0$ the centres are both on the same horizontal line, so the condition is $Wc - c < W\rho + \rho$, and with $c = \rho (1+D)/(1-D)$ this collapses to
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+W \cdot D < 1 \quad \Longleftrightarrow \quad \text{successive whorls overlap}
+```
+
+$$
+W \cdot D < 1 \quad \Longleftrightarrow \quad \text{successive whorls overlap}
+$$
+
+The surface $W = 1/D$ cuts through the morphospace and it is one of the sharpest edges of the occupied region. Almost every coiled cephalopod and gastropod sits on the overlapping side. *Spirula* and some heteromorph ammonites coil openly on the other side, and they are rare. Raup's reading was mechanical: a whorl that overlaps the one before can use it as its inner wall, which saves shell and stiffens the structure. A disjunct tube has to be a complete tube all the way round and is weaker for the same material.
+
+With translation the whorls are also displaced axially, and the centre-to-centre gap picks up a factor $\sqrt{1+T^2}$. The general condition for this model is $\sqrt{1+T^2}\,(W-1)(1+D) < (W+1)(1-D)$, which reduces to Equation 4 when $T = 0$. The lab's third readout prints $W \cdot D$ and then a verdict from the general test, so you can watch the two disagree. At the nautilus defaults $W \cdot D = 0.17$, but push $T$ past about 1.3 and the verdict flips to disjunct while the printed product does not move.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+Predict before you drag.
+
+1. Set **Evolute ammonite** and move $D$ to 0.5. Equation 4 says the whorls should exactly touch. Rotate to the front view to confirm the tube just kisses itself.
+2. From the defaults, what $T$ makes a nautilus-like shell come apart? Solve $\sqrt{1+T^2} = (W+1)(1-D) / ((W-1)(1+D))$ for $W = 3.4$, $D = 0.05$, then check the readout.
+3. Set $W = 10$ at the defaults. The first readout should go to 1.778× and the angle to 69.87°. Does the shell still look like a shell?
+4. Set $W = 1.2$, $D = 0$, $T = 0$. Four whorls barely grow at all. Which living thing does that remind you of?
+
+## The empty cube
+
+Raup and his colleague Arnold Michelson built the first version of this on an analogue computer in 1965, drew the shells on an oscilloscope screen and photographed them. The famous figure is a cube with $W$, $D$ and $T$ on the axes and the measured positions of real taxa plotted inside it. Most gastropods cluster at $W$ between about 1.5 and 3 with $T$ between 1 and 4. Ammonoids and nautiloids sit on the $T = 0$ face, nautiloids at small $D$, ammonoids with $W$ from about 1.5 to 4 and $D$ anywhere from near 0 in involute forms to about 0.5 in evolute ones, pressed up against the $W \cdot D = 1$ boundary. Bivalves live at absurd $W$, well above 10, because each valve is a fraction of one whorl that opens so fast it barely coils.
+
+And then there is the rest of the cube, which is empty. That emptiness is the real finding, and it is tempting to read it as pure historical accident: nothing happened to evolve there. Raup's own reading was more careful. Some regions are mechanically bad, like the disjunct side of Equation 4. Some are constructionally impossible for a bivalve, because two high-$T$ valves cannot close against each other. Some are empty because the developmental programme that builds a mollusc shell cannot easily reach them. The cube is a map of possibility, and the blank regions have several different explanations that are hard to separate from the outside.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The lab is a model of a model. The generating curve is a perfect circle and $W$, $D$ and $T$ never change over the animal's life, so there are no ribs, no septa, no flaring adult lips and no slowing of growth with age. Real nautilus shells depart from a pure logarithmic spiral by a few percent in both directions, which is a good part of why Falbo's measurements scatter. Overlapping whorls intersect each other in the mesh, as they do in Raup's equations. A real shell reabsorbs or shares that wall.
+
+Some food for thought while we are here. The golden ratio does show up in biology, in the phyllotaxis of sunflower heads and pine cones, where successive elements are placed at the golden angle of $137.5^\circ$. That is a genuine packing result with nothing to do with shells. The habit of seeing $\varphi$ in the nautilus seems to come from the same place as seeing it in the Parthenon: a golden rectangle, quartered and quartered again, with quarter circles drawn through the squares. That drawing is an approximation to a logarithmic spiral with $W = \varphi^4$. It is a pleasant construction. It is also the only place the nautilus spiral and the golden spiral have ever met.
+
+## Why the myth is sticky
+
+I think the confusion survives because both statements are half true. The nautilus is a logarithmic spiral, and the golden spiral is a logarithmic spiral, and from a poster's distance any two logarithmic spirals look alike. The thing that distinguishes them is a single parameter, and nobody measures it. Equation 2 turns that parameter into an angle you can read with a protractor, and Raup's cube turns it into one axis of a map that holds every shell at once.
+
+That map is also where this leaves off. Raup's cube holds his fourth parameter $S$, the shape of the generating curve, fixed at a circle, and keeps all four constant through life. Later workers let the aperture be an arbitrary outline, let $W$ and $T$ drift with age, and asked which trajectories through the cube an animal can actually follow. Those are the directions I would like to take [the standalone shell coiling lab](/lab/shell-coiling/) next: an aperture control, and a slow drift in $T$ to see a shell change its mind halfway through life. Watch this space.
+
+## Reading further
+
+- [Raup, D. M. (1966). Geometric analysis of shell coiling: general problems. Journal of Paleontology 40, 1178-1190](https://www.jstor.org/stable/1301992): the paper that fixes the definitions of W, D and T used here and maps the occupied region of the cube.
+- [Raup, D. M. and Michelson, A. (1965). Theoretical morphology of the coiled shell. Science 147, 1294-1295](https://doi.org/10.1126/science.147.3663.1294): the two-page original, with shells drawn on an analogue computer.
+- [Moseley, H. (1838). On the geometrical forms of turbinated and discoid shells. Philosophical Transactions 128, 351-370](https://doi.org/10.1098/rstl.1838.0018): the first measurement of shells as logarithmic spirals, including the 79°40′ for Nautilus.
+- [Thompson, D'Arcy W. (1917). On Growth and Form, chapter XI, The equiangular spiral](https://archive.org/details/ongrowthform00thom): the classic synthesis, reproducing Moseley's table and arguing the spiral from growth.
+- [Falbo, C. (2005). The golden ratio: a contrary viewpoint. College Mathematics Journal 36, 123-134](https://doi.org/10.2307/30044835): measured nautilus shells and the 1.24 to 1.43 per quarter turn spread.

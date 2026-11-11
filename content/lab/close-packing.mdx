@@ -1,0 +1,24 @@
+## Two stacks from one layer
+
+Every layer is the same hexagonal sheet of 37 touching spheres: pink at the A positions, cyan at B (the sheet shifted into one set of hollows), violet at C (the other set). Amber sticks join the white central sphere to every neighbour it touches; amber outlines trace the unit cell through sphere centres, a cube in the ABC stack or a hexagonal prism in ABAB. The two small amber balls between the bottom layers fill the octahedral and tetrahedral holes.
+
+### Experiments
+
+1. Select **Magnesium hcp**: three layers, ABA. The contacts readout shows 12 and the prism has the ideal $c/a$ of 1.633. Scrub the timeline and check that the third layer lands over the first.
+2. Select **Copper fcc**: four layers, ABCA. The cube stands on its corner, edge $\sqrt2\,d$ = 0.849 units, with all 8 corners and 6 face centres on sphere centres. For copper, $d$ = 2.556 Å gives $a$ = 3.615 Å.
+3. Drag **Layers stacked** from 1 to 5. Contacts go 6, 9, 12, 12, 12 and the slab fraction climbs 60.46%, 66.57%, 68.89%, 70.11%, 70.86% toward the 74.05% limit; flipping **Stacking** changes neither.
+4. Select **See-through lattice**: the violet triangles on the bottom layer mark where layer 3 lands. Flip **Stacking** to 0 and they turn grey; hcp never fills those hollows.
+
+The packing fraction of a slab of $n$ touching hexagonal layers is
+
+$$
+\phi_n=\frac{n\pi}{3\sqrt3\,\bigl(1+(n-1)\sqrt{2/3}\bigr)}\;\xrightarrow{\;n\to\infty\;}\;\frac{\pi}{3\sqrt2}=0.7405
+$$
+
+and it is the same for every stacking order: each layer adds the same volume and height.
+
+### What the model leaves out
+
+Spheres are drawn below contact size so you can see inside; the readout fraction belongs to full-size spheres in an infinite slab, not the 37-site patch. Pulled apart, the cube is a stretched rhombohedron and the hole markers no longer fit. Only ABAB and ABC are modelled; any repeat-free sequence of A, B and C packs equally well. Real hcp metals sit slightly off $c/a$ = 1.633, and atoms are not hard spheres.
+
+Read [Two different crystals hide in one stack of oranges](/blog/two-crystals-hide-in-one-stack-of-oranges/) for the derivation and the consequences for bending metal.

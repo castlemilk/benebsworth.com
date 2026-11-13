@@ -59,6 +59,11 @@ tasks:
       - postcss.config.mjs
       - tsconfig.json
       - package.json
+      - package-lock.json
+      - taskfiles/build.yml
+      - scripts/og-rewrite.mjs
+      - scripts/build-search.mts
+      - scripts/check-study-search.mts
     generates:
       - '{{.OUT_DIR}}/index.html'
       - '{{.OUT_DIR}}/pagefind/pagefind.js'
@@ -95,9 +100,12 @@ tasks:
            `out/**/opengraph-image` to `.png` and rewrites `opengraph-image?`
            to `opengraph-image.png?` in the emitted HTML. Without this every
            og:image / twitter:image URL 404s on static hosting.
-        2. pagefind --site out — builds out/pagefind/** from the rendered HTML.
-           Must run AFTER the HTML exists; running it against a partial out/
-           yields a silently incomplete search index.
+        2. scripts/build-search.mts — indexes rendered articles plus the curated
+           SVG study and PNG artwork records. The plain Pagefind CLI omits those
+           custom records and must not replace this shared npm/Task entry point.
+        3. scripts/check-study-search.mts — queries the emitted WASM index for
+           every asset title/alias and checks tags and excluded caveats. A missing
+           asset fails the build before release stamping or publication.
 
       Idempotent: re-running is safe (the rename and the HTML rewrite both
       no-op once applied).
@@ -106,7 +114,8 @@ tasks:
         msg: "out/ does not exist — run `task build` first"
     cmds:
       - node scripts/og-rewrite.mjs
-      - '{{.BIN}}/pagefind --site {{.OUT_DIR}}'
+      - 'node --import tsx scripts/build-search.mts {{.OUT_DIR}}'
+      - 'node --import tsx scripts/check-study-search.mts {{.OUT_DIR}}'
 
   gen:md:
     desc: Generate LLM-friendly .md siblings for every published blog post

@@ -118,6 +118,39 @@ for (const viewport of [{ width: 1180, height: 900 }, { width: 390, height: 844 
         await page.waitForFunction(() => !document.querySelector('div[hidden][id^="S:"]'))
         await expect(page.locator('article[data-pagefind-body="true"]')).toBeVisible()
       })
+
+      test('built Pagefind discovers SVG studies and PNG artwork at their real destinations', async ({ page }) => {
+        await gotoSettled(page, '/vectors/')
+        const trigger = page.getByRole('button', { name: 'Search the site' })
+        const dialog = page.getByRole('dialog', { name: 'Search', exact: true })
+        const input = dialog.getByRole('textbox', { name: 'Search posts and assets' })
+        await trigger.click()
+        await input.fill('BST')
+        const study = dialog.getByRole('link', { name: /Binary search tree/ })
+        await expect(study).toHaveAttribute('href', '/vectors/?study=binary-search-tree')
+        await study.click()
+        await expect(dialog).toHaveCount(0)
+        await expect(page).toHaveURL(/\/vectors\/\?study=binary-search-tree$/)
+        await expect(page.getByRole('region', { name: 'Selected study' }).getByRole('heading', { name: 'Binary search tree', exact: true })).toBeVisible()
+
+        // An in-page search destination must also reveal artwork hidden by the
+        // local collection filter, close the dialog and retain SVG tuning.
+        await gotoSettled(page, '/vectors/')
+        await page.getByRole('slider', { name: 'Amplitude', exact: true }).press('ArrowRight')
+        await expect(page.getByRole('slider', { name: 'Amplitude', exact: true })).toHaveValue('0.9')
+        await page.getByRole('searchbox', { name: 'Find artwork' }).fill('no-such-artwork')
+        await expect(page.getByRole('heading', { name: 'Optical lens', exact: true })).toBeHidden()
+        await trigger.click()
+        await input.fill('Optical lens')
+        const artwork = dialog.getByRole('link', { name: /Optical lens/ })
+        await expect(artwork).toHaveAttribute('href', '/vectors/#artwork-optical-lens')
+        await artwork.click()
+        await expect(dialog).toHaveCount(0)
+        await expect(page).toHaveURL(/\/vectors\/#artwork-optical-lens$/)
+        await expect(page.getByRole('heading', { name: 'Optical lens', exact: true })).toBeVisible()
+        await expect(page.getByRole('link', { name: 'Download Optical lens PNG' })).toHaveAttribute('href', '/artwork/editorial/optical-lens-v1.png')
+        await expect(page.getByRole('slider', { name: 'Amplitude', exact: true })).toHaveValue('0.9')
+      })
     })
   }
 }

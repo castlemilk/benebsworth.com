@@ -9,7 +9,7 @@
     "md:siblings:check": "node scripts/gen-md-siblings.mjs --check",
     "prebuild": "node scripts/gen-md-siblings.mjs && tsx scripts/gen-benchmark-outputs.mjs && node scripts/gen-harness-eval.mjs",
     "build": "next build",
-    "postbuild": "node scripts/og-rewrite.mjs && tsx scripts/build-search.mts",
+    "postbuild": "node scripts/og-rewrite.mjs && node --import tsx scripts/build-search.mts && node --import tsx scripts/check-study-search.mts",
     "start": "next start",
     "lint": "eslint .",
     "lint:prose": "node scripts/lint-prose.mjs",

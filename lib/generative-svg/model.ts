@@ -1,4 +1,5 @@
 import { ADDITIONAL_STUDIES } from './additional-studies'
+import { ORNAMENTAL_STUDIES } from './ornamental-studies'
 
 import { createStudyRegistry } from './registry'
 import { parametersFor, type Study, type Point, type InkRole, type Mark, type Geometry } from './definition'
@@ -145,6 +146,7 @@ const DEFINITIONS: readonly Study[] = [
     },
   },
   ...ADDITIONAL_STUDIES,
+  ...ORNAMENTAL_STUDIES,
 ]
 
 export const STUDY_REGISTRY = createStudyRegistry(DEFINITIONS)
@@ -153,6 +155,7 @@ export const STUDIES = STUDY_REGISTRY.studies
 export function geometryFor(study: Study, values: Readonly<Record<string, number>> = {}): Geometry {
   const geometry = study.model(parametersFor(study, values))
   for (const mark of geometry.marks) {
+    if (mark.stroke !== undefined && mark.stroke !== 'fine') throw new Error('Invalid stroke tier')
     const points = mark.kind === 'line' ? mark.points : [mark.kind === 'circle' ? mark.center : mark.at]
     for (const [x, y] of points) if (!Number.isFinite(x) || !Number.isFinite(y) || x < 8 || x > 312 || y < 8 || y > 232) throw new Error('Geometry exceeds the drawing bounds')
     if (mark.kind === 'circle' && (!Number.isFinite(mark.radius) || mark.radius <= 0 || mark.center[0] - mark.radius < 8 || mark.center[0] + mark.radius > 312 || mark.center[1] - mark.radius < 8 || mark.center[1] + mark.radius > 232)) throw new Error('Circle exceeds the drawing bounds')

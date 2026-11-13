@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server'
 import { GenerativeGallery } from './gallery'
 import { STUDIES } from '@/lib/generative-svg/model'
 import { renderStudySvg } from '@/lib/generative-svg/render'
+import * as svgRenderer from '@/lib/generative-svg/render'
 
 const writeText = vi.fn<(_text: string) => Promise<void>>()
 const selected = () => screen.getByRole('region', { name: 'Selected study' })
@@ -43,6 +44,13 @@ describe('generative SVG gallery', () => {
       expect(source()).toContain('stroke-linecap="butt"')
       expect(download().getAttribute('download')).toBe(`${study.id}.svg`)
     }
+  }, 30000) // The expanded Mathematics group exercises eight studies, including dense engravings, in JSDOM.
+  it('does not regenerate unchanged thumbnails when tuning the selected study', () => {
+    const renderSvg = vi.spyOn(svgRenderer, 'renderStudySvg')
+    render(<GenerativeGallery />)
+    renderSvg.mockClear()
+    fireEvent.change(screen.getByLabelText('Amplitude'), { target: { value: '0.4' } })
+    expect(renderSvg.mock.calls.map(([study]) => study.id)).toEqual(['sine-wave'])
   })
   it('changes all drawing appearances while preserving the selected model coordinates', () => {
     render(<GenerativeGallery />)

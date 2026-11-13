@@ -40,7 +40,7 @@ describe('searchable study registry', () => {
       expect(record.content).not.toContain(STUDIES[i].basis)
     }
   })
-  it('registers and discovers a 26th study without changing UI/search lists or original identities', () => {
+  it('registers and discovers another study without changing UI/search lists or original identities', () => {
     const expanded = createStudyRegistry([...STUDIES, LISSAJOUS_EXAMPLE])
     expect(expanded.studies).toHaveLength(STUDIES.length + 1)
     expect(searchStudies(expanded, 'lissajous')[0].id).toBe('lissajous-curve')

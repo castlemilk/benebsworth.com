@@ -24,16 +24,16 @@ test('curated metadata does not mine caveat text into search aliases', () => {
  assert(!JSON.stringify([item.subject,item.tags,item.aliases]).includes('Chladni'))
  assert.equal(item.sources[0].title,'Modes')
 })
-test('all 80 checked-in works have byte-accurate, transparent fixed assets', async () => {
+test('all 105 checked-in works have byte-accurate, transparent fixed assets', async () => {
  const catalogue = JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'),'utf8'))
  const report = await checkCatalogue(catalogue,{regenerate:false})
- assert.equal(report.artworks,80); assert.equal(report.files,720)
+ assert.equal(report.artworks,105); assert.equal(report.files,945)
  for (const theme of ['light', 'dark', 'mono']) {
   const worstPage = catalogue.map(a => a.variants[theme].thumbnailBytes).sort((a,b) => b-a).slice(0,24).reduce((a,b) => a+b,0)
   assert(worstPage < 1000000, 'Selected-palette visible-page thumbnail budget exceeded')
  }
  for (const art of catalogue) for (const variant of Object.values(art.variants)) assert(variant.thumbnailBytes < 50000, 'Per-thumbnail budget exceeded')
- assert.equal(catalogue.filter(a=>a.minimumDisplayWidth===320).length,38)
+ assert.equal(catalogue.filter(a=>a.minimumDisplayWidth===320).length,58)
 })
 test('catalogue verification fails on duplicate identity and hash mutations', async () => {
  const catalogue = JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'),'utf8'))
@@ -51,7 +51,7 @@ test('Set05 appends 25 works without changing the published pilot metadata or do
  assert.equal(createHash('sha256').update(JSON.stringify(catalogue.slice(0,30),null,2)+'\n').digest('hex'),PILOT_CATALOGUE_SHA256)
  assert.equal(catalogue.slice(30,55).length,25)
  assert(catalogue.slice(30,55).every(a => a.batchId === 'grounded-forms-twenty-five-studies-set05-r01'))
- assert.equal(new Set(catalogue.flatMap(a => Object.values(a.variants).map(v => v.sha256))).size,240)
+ assert.equal(new Set(catalogue.flatMap(a => Object.values(a.variants).map(v => v.sha256))).size,315)
 })
 test('reviewed geometric SVG primitives stay inert and external references remain rejected', () => {
  validateSvg(Buffer.from(safe.replace('</svg>','<metadata>Illustrative geometry</metadata><line x1="0" y1="0" x2="1" y2="1"/><circle cx="1" cy="1" r="1"/><ellipse cx="1" cy="1" rx="1" ry="2"/><polygon points="0,0 1,1 2,0"/></svg>')))
@@ -80,8 +80,9 @@ test('Set05 migration enforces the exact reviewed result before initial or repea
 
 test('Set06 preserves all 55 published catalogue and transport entries', async () => {
  const { verifySet06Baseline } = await import('../import-grounded-set06.mjs')
- const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
- const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,80)
+ const fullManifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const manifest={...fullManifest,catalogueSha256:'70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e',artworks:fullManifest.artworks.slice(0,80)}
  assert.equal(verifySet06Baseline(catalogue,manifest).length,55)
  assert.equal(verifySet06Baseline(catalogue.slice(0,55),{...manifest,catalogueSha256:'4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06',artworks:manifest.artworks.slice(0,55)}).length,55)
  const wrong=structuredClone(catalogue);wrong[40].limitations='changed'
@@ -91,7 +92,7 @@ test('Set06 preserves all 55 published catalogue and transport entries', async (
 })
 test('Set06 migration rejects changed new metadata before writing a result', async () => {
  const { verifySet06Catalogue } = await import('../import-grounded-set06.mjs')
- const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,80)
  verifySet06Catalogue(catalogue)
  const wrong=structuredClone(catalogue);wrong[55].limitations='changed'
  assert.throws(()=>verifySet06Catalogue(wrong),/Catalogue pin drift/)
@@ -101,7 +102,7 @@ test('Set06 migration rejects changed new metadata before writing a result', asy
  assert.equal(new Set(catalogue.slice(55).flatMap(a=>Object.values(a.variants).map(v=>v.sha256))).size,75)
 })
 test('Set06 preserves generic specimen provenance and unverified media rights', async () => {
- const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,80)
  const art=catalogue.find(a=>a.slug==='horseshoe-carapace')
  assert.match(art.provenance,/generic facts-grounded original/)
  assert.match(art.provenance,/current media license not fully verified/)
@@ -129,4 +130,57 @@ test('migration adapters reject foreign transport tails and mismatched catalogue
   assert.throws(()=>verify(prefix,{...transport,artworks:[...transport.artworks,transport.artworks[0]]}),/transport count mismatch/)
   assert.throws(()=>verify(prefix,{...transport,catalogueSha256:'wrong-catalogue'}),/transport catalogue mismatch/)
  }
+})
+
+test('Set07 static polylines and opacity remain finite and inert', () => {
+ for(const points of ['0,0 1,1','0 0 1 1','-1.5,+2.0 3e1,4','0 , 0 1 , 1']) validateSvg(Buffer.from(safe.replace('</svg>',`<polyline points="${points}" fill-opacity="0.25"/></svg>`)))
+ for(const points of ['', '0 0 1', '0 NaN 1 1', '0 Infinity 1 1', '0 1e999 1 1', '0 0 1 1junk', '0,,0 1,1', '0 0,,1 1', '0, ,0 1,1', ',0 0 1 1', '0 0 1 1,']) assert.throws(()=>validateSvg(Buffer.from(safe.replace('</svg>',`<polyline points="${points}"/></svg>`))),/Invalid SVG polyline points/)
+ for(const opacity of ['-0.1','1.1','NaN','Infinity','1e999','0.5;fill:red','url(#x)']) assert.throws(()=>validateSvg(Buffer.from(safe.replace('</svg>',`<polygon points="0,0 1,1" fill-opacity="${opacity}"/></svg>`))),/Invalid SVG fill opacity/)
+ for(const extra of ['onload="run()"','style="fill:red"','href="https://example.com"','fill="url(https://example.com)"']) assert.throws(()=>validateSvg(Buffer.from(safe.replace('</svg>',`<polyline points="0 0 1 1" ${extra}/></svg>`))))
+})
+test('Set07 preserves all 80 published catalogue and source-transport entries', async () => {
+ const {verifySet07Baseline}=await import('../import-grounded-set07.mjs')
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ assert.equal(verifySet07Baseline(catalogue,manifest).length,80)
+ const prefix=catalogue.slice(0,80),transport={...manifest,catalogueSha256:'70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e',artworks:manifest.artworks.slice(0,80)}
+ assert.equal(verifySet07Baseline(prefix,transport).length,80)
+ const wrong=structuredClone(catalogue);wrong[79].limitations='changed'
+ assert.throws(()=>verifySet07Baseline(wrong,manifest),/Published Set06 changed/)
+ const changed=structuredClone(manifest);changed.artworks[79].rawBytes++
+ assert.throws(()=>verifySet07Baseline(catalogue,changed),/Set06 transport changed/)
+ assert.throws(()=>verifySet07Baseline(prefix,{...transport,artworks:[...transport.artworks,transport.artworks[0]]}),/transport count mismatch/)
+ assert.throws(()=>verifySet07Baseline(prefix,{...transport,catalogueSha256:'wrong'}),/transport catalogue mismatch/)
+})
+test('Set07 pins exactly 25 additions and rejects metadata drift before result writes', async () => {
+ const {verifySet07Catalogue,verifySet07Baseline}=await import('../import-grounded-set07.mjs')
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ verifySet07Catalogue(catalogue)
+ const wrong=structuredClone(catalogue);wrong[80].limitations='changed'
+ assert.throws(()=>verifySet07Catalogue(wrong),/Catalogue pin drift/)
+ assert.throws(()=>verifySet07Baseline(wrong,manifest),/Expanded catalogue changed/)
+ assert.throws(()=>verifySet07Catalogue(catalogue.slice(0,80)),/Catalogue pin drift/)
+ const added=catalogue.slice(80)
+ assert.equal(added.length,25);assert(added.every(a=>a.batchId==='grounded-forms-twenty-five-studies-set07-r01'))
+ assert.equal(new Set(added.flatMap(a=>Object.values(a.variants).map(v=>v.sha256))).size,75)
+ assert.equal(added.filter(a=>a.minimumDisplayWidth===320).length,20)
+ assert.deepEqual([...new Set(added.map(a=>a.subject))].sort(),['biology','mathematics','physics'])
+})
+test('Set07 mapper preserves science and qualifies only reviewed source-access and fine-detail limits', async () => {
+ const {metadataForSet07}=await import('../import-grounded-set07.mjs')
+ const source={id:'motile-cilium',slug:'motile-cilium',number:'04',title:'Motile cilium',group:'cell-machinery',revision:1,width:900,height:900,viewBox:[0,0,900,900],minimum_display_width:320,caption:'Exact caption',basis:'Exact basis.',limitations:'Exact limits.',provenance:'Original geometry.',tags:['cell machinery'],aliases:['Axoneme','axoneme'],sources:[{title:'Original PMC',url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC3322410/'}]}
+ const a=metadataForSet07(source,'set07')
+ assert.equal(a.caption,source.caption);assert.equal(a.basis,source.basis);assert.equal(a.limitations,source.limitations)
+ assert.equal(a.subject,'biology');assert.deepEqual(a.tags,['cell-machinery']);assert.deepEqual(a.aliases,['axoneme'])
+ assert.deepEqual(a.sources[0],source.sources[0]);assert(a.sources.some(s=>s.url==='https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3003442'))
+ assert.match(a.provenance,/direct full-text access to the original PMC references was limited/)
+ assert.throws(()=>metadataForSet07({...source,slug:'other'},'set07'),/Canonical source identity changed/)
+ assert.throws(()=>metadataForSet07({...source,group:'unreviewed'},'set07'),/Unreviewed source group/)
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const eclipse=catalogue.find(a=>a.slug==='eclipse-cones')
+ assert.match(eclipse.provenance,/retrieval of the original OUP endpoint failed/)
+ assert(eclipse.sources.some(s=>s.url==='https://arxiv.org/html/1703.03414v1'))
+ const arch=catalogue.find(a=>a.slug==='archimedean-bounds')
+ assert.equal(arch.minimumDisplayWidth,320);assert.match(arch.provenance,/fine twelve-gon and circle separation is clearest at 640px/)
 })

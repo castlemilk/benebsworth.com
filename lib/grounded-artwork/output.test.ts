@@ -5,7 +5,7 @@ import { beforeAll, afterAll, expect, it } from 'vitest'
 import { checkGroundedOutput } from '../../scripts/check-grounded-output.mjs'
 import { GROUNDED_ARTWORK, groundedArtworkUrl, GROUNDED_PAGE_SIZE } from './registry'
 
-import { SET05_SCIENTIFIC_NOTES, SET06_SCIENTIFIC_NOTES, scientificNotesFor } from './references'
+import { SET05_SCIENTIFIC_NOTES, SET06_SCIENTIFIC_NOTES, SET07_SCIENTIFIC_NOTES, scientificNotesFor } from './references'
 
 let root: string
 const escape = (s: string) => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;')
@@ -31,8 +31,8 @@ async function corrupt(relative: string, mutation: (bytes: Buffer) => string | B
   try { await fs.writeFile(file, mutation(original)); await expect(checkGroundedOutput(root)).rejects.toThrow(error) }
   finally { await fs.writeFile(file, original) }
 }
-it('checks all eighty static routes and 720 original/fallback asset bytes without executing HTML', async () => {
-  expect(await checkGroundedOutput(root)).toMatchObject({ fixedArtworks: 80, assetsChecked: 720, originalSvgMasters: 240, initialCards: 24, browserAcceptance: 'NOT RUN', deployment: 'NOT RUN' })
+it('checks all 105 static routes and 945 original/fallback asset bytes without executing HTML', async () => {
+  expect(await checkGroundedOutput(root)).toMatchObject({ fixedArtworks: 105, assetsChecked: 945, originalSvgMasters: 315, initialCards: 24, browserAcceptance: 'NOT RUN', deployment: 'NOT RUN' })
 })
 it('rejects an altered original master', () => corrupt(GROUNDED_ARTWORK[0].variants.light.master, b => { const c = Buffer.from(b); c[100] ^= 1; return c }, /asset hash/))
 it('rejects altered thumbnail bytes', () => corrupt(GROUNDED_ARTWORK[0].variants.light.thumbnail, b => Buffer.concat([b, Buffer.from('x')]), /asset size/))
@@ -49,3 +49,7 @@ it('rejects missing Set05 full-note link', () => corrupt('vectors/grounded/float
 it('rejects changed Set06 scientific notes', () => corrupt(SET06_SCIENTIFIC_NOTES.url, b => Buffer.concat([b, Buffer.from('changed')]), /scientific notes hash/))
 it('rejects a Set06 detail linked to another batch notes', () => corrupt('vectors/grounded/horseshoe-carapace/index.html', b => b.toString().replace(SET06_SCIENTIFIC_NOTES.url, SET05_SCIENTIFIC_NOTES.url), /scientific notes link/))
 it('rejects omitted specimen provenance and rights qualification', () => corrupt('vectors/grounded/horseshoe-carapace/index.html', b => b.toString().replace('data-grounded-provenance', 'data-removed'), /Grounded provenance/))
+
+it('rejects changed Set07 scientific notes', () => corrupt(SET07_SCIENTIFIC_NOTES.url, b => Buffer.concat([b, Buffer.from('changed')]), /scientific notes hash/))
+it('rejects a Set07 detail linked to another batch notes', () => corrupt('vectors/grounded/motile-cilium/index.html', b => b.toString().replace(SET07_SCIENTIFIC_NOTES.url, SET06_SCIENTIFIC_NOTES.url), /scientific notes link/))
+it('rejects omission of the Set07 source-access qualification', () => corrupt('vectors/grounded/motile-cilium/index.html', b => b.toString().replace('direct full-text access to the original PMC references was limited', 'all sources were fully verified'), /Grounded provenance/))

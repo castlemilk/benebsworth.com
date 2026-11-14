@@ -9,9 +9,9 @@ import { JSDOM } from 'jsdom'
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const THEMES = ['light', 'dark', 'mono']
-export const CATALOGUE_SHA256 = '70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e'
+export const CATALOGUE_SHA256 = 'cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136'
 export const SET05_CATALOGUE_SHA256 = '4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06'
-export const REVIEWED_ARTWORK_COUNT = 80
+export const REVIEWED_ARTWORK_COUNT = 105
 export const PILOT_CATALOGUE_SHA256 = 'd1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de'
 export const INVENTORY_SHA256 = 'babd060dcdfd794f29a12cef57882ba050b4729cf76ad7e9fccf356a8badd37f'
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -98,6 +98,31 @@ const CURATION = [
  ["circle-inversion", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "circle-inversion"], ["circle inversion"]],
  ["spherical-triangle", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "spherical-triangle"], ["spherical triangle"]],
  ["sierpinski-cut", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "sierpinski-cut"], ["sierpinski cut"]],
+ ["chloroplast-grana", "biology", ["biology", "chloroplast-grana", "engraved", "grounded-forms"], ["chloroplast grana"]],
+ ["striated-sarcomere", "biology", ["biology", "striated-sarcomere", "engraved", "grounded-forms"], ["striated sarcomere"]],
+ ["chemical-synapse", "biology", ["biology", "chemical-synapse", "engraved", "grounded-forms"], ["chemical synapse"]],
+ ["motile-cilium", "biology", ["biology", "motile-cilium", "engraved", "grounded-forms"], ["motile cilium"]],
+ ["mitochondrial-cristae", "biology", ["biology", "mitochondrial-cristae", "engraved", "grounded-forms"], ["mitochondrial cristae"]],
+ ["graphite-sheets", "physics", ["materials", "graphite-sheets", "engraved", "grounded-forms"], ["graphite sheets"]],
+ ["edge-dislocation", "physics", ["materials", "edge-dislocation", "engraved", "grounded-forms"], ["edge dislocation"]],
+ ["grain-boundary", "physics", ["materials", "grain-boundary", "engraved", "grounded-forms"], ["grain boundary"]],
+ ["plateau-junction", "physics", ["materials", "plateau-junction", "engraved", "grounded-forms"], ["plateau junction"]],
+ ["sessile-droplet", "physics", ["materials", "sessile-droplet", "engraved", "grounded-forms"], ["sessile droplet"]],
+ ["kepler-equal-areas", "physics", ["astronomy", "ideal-geometry", "kepler-equal-areas"], ["kepler equal areas", "kepler-equal-areas"]],
+ ["orbital-inclination", "physics", ["astronomy", "ideal-geometry", "orbital-inclination"], ["orbital inclination", "orbital-inclination"]],
+ ["lunar-phase-geometry", "physics", ["astronomy", "ideal-geometry", "lunar-phase-geometry"], ["lunar phase geometry", "lunar-phase-geometry"]],
+ ["stellar-parallax", "physics", ["astronomy", "ideal-geometry", "stellar-parallax"], ["stellar parallax", "stellar-parallax"]],
+ ["eclipse-cones", "physics", ["astronomy", "ideal-geometry", "eclipse-cones"], ["eclipse cones", "eclipse-cones"]],
+ ["thin-lens-image", "physics", ["optics", "geometric-optics", "thin-lens-image"], ["thin lens image"]],
+ ["brewster-interface", "physics", ["optics", "geometric-optics", "brewster-interface"], ["brewster interface"]],
+ ["newton-rings", "physics", ["optics", "interference", "newton-rings"], ["newton rings"]],
+ ["pinhole-projection", "physics", ["optics", "geometric-optics", "pinhole-projection"], ["pinhole projection"]],
+ ["corner-retroreflector", "physics", ["optics", "geometric-optics", "corner-retroreflector"], ["corner retroreflector"]],
+ ["euler-bridge-graph", "mathematics", ["mathematics", "geometric-construction", "euler-bridge-graph"], ["euler bridge graph", "euler-bridge-graph"]],
+ ["lattice-basis", "mathematics", ["mathematics", "geometric-construction", "lattice-basis"], ["lattice basis", "lattice-basis"]],
+ ["desargues-configuration", "mathematics", ["mathematics", "geometric-construction", "desargues-configuration"], ["desargues configuration", "desargues-configuration"]],
+ ["archimedean-bounds", "mathematics", ["mathematics", "geometric-construction", "archimedean-bounds"], ["archimedean bounds", "archimedean-bounds"]],
+ ["pappus-torus", "mathematics", ["mathematics", "geometric-construction", "pappus-torus"], ["pappus torus", "pappus-torus"]],
 ].map(([slug, subject, tags, aliases]) => [slug, subject, tags.map(tag => tag.toLowerCase().replace(/\s+/g, '-')), [...new Map(aliases.map(alias => [alias.toLowerCase().trim(), alias])).values()]])
 export function slugFor(sourceId) {
  const slug = sourceId.replace(/^\d{2}-/, '')
@@ -113,15 +138,22 @@ export function validateSvg(bytes) {
   assert.equal(root.localName, 'svg'); assert.equal(root.namespaceURI, 'http://www.w3.org/2000/svg')
   assert.equal(root.getAttribute('width'), '900'); assert.equal(root.getAttribute('height'), '900')
   assert.equal(root.getAttribute('viewBox'), '0 0 900 900')
-  const tags = new Set(['svg','g','path','title','desc','defs','clipPath','line','polygon','ellipse','circle','metadata'])
-  const attrs = new Set(['xmlns','transform','fill','viewBox','id','height','stroke-linecap','fill-rule','clip-rule','aria-labelledby','stroke','d','stroke-width','clip-path','width','role','stroke-dasharray','stroke-linejoin','x1','y1','x2','y2','points','cx','cy','rx','ry','r','aria-describedby'])
+  const tags = new Set(['svg','g','path','title','desc','defs','clipPath','line','polyline','polygon','ellipse','circle','metadata'])
+  const attrs = new Set(['xmlns','transform','fill','viewBox','id','height','stroke-linecap','fill-rule','clip-rule','aria-labelledby','stroke','d','stroke-width','clip-path','width','role','stroke-dasharray','stroke-linejoin','x1','y1','x2','y2','points','cx','cy','rx','ry','r','aria-describedby','fill-opacity'])
   const ids = new Set()
   for (const el of [root, ...root.querySelectorAll('*')]) {
    assert(tags.has(el.localName) && el.namespaceURI === root.namespaceURI, `Unsafe SVG element: ${el.tagName}`)
    for (const a of el.attributes) {
     assert(attrs.has(a.name), `Unsafe SVG attribute: ${a.name}`)
     assert(!/javascript:|data:|https?:|\/\//i.test(a.value) || a.name === 'xmlns', 'External SVG reference')
+    if (a.name === 'fill-opacity') assert(/^(?:0(?:\.\d+)?|1(?:\.0+)?)$/.test(a.value), 'Invalid SVG fill opacity')
     if (/url\s*\(/i.test(a.value)) assert.match(a.value, /^url\(#[a-zA-Z][\w-]*\)$/, 'Unsafe SVG URL')
+   }
+   if (el.localName === 'polyline') {
+    const rawPoints = (el.getAttribute('points') ?? '').trim()
+    assert(!/^,|,$|,\s*,/.test(rawPoints), 'Invalid SVG polyline points')
+    const points = rawPoints.split(/[\s,]+/)
+    assert(points.length >= 4 && points.length % 2 === 0 && points.every(p => /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(p) && Number.isFinite(Number(p))), 'Invalid SVG polyline points')
    }
    if (el.id) { assert(!ids.has(el.id), 'Duplicate SVG ID'); ids.add(el.id) }
   }

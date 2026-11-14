@@ -5528,5 +5528,1691 @@
         "previewBytes": 14468
       }
     }
+  },
+  {
+    "slug": "chloroplast-grana",
+    "title": "Chloroplast grana",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "chloroplast-grana",
+    "sourceDirectoryId": "01-chloroplast-grana",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Stacked thylakoid sacs connect through unstacked stroma lamellae.",
+    "basis": "Stacked thylakoid sacs connect through unstacked stroma lamellae.",
+    "limitations": "Original isolated thylakoid excerpt, omitting the chloroplast envelope. Three stacks of five, seven and four sacs connect through two paired lamellar traces. Stack sizes and links are illustrative, not species-exact membrane topology.",
+    "provenance": "illustrative; original-authored SVG geometry, no tracing or raster source. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "biology",
+    "tags": [
+      "biology",
+      "chloroplast-grana",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "chloroplast grana"
+    ],
+    "sources": [
+      {
+        "title": "Eukaryotic Cells | OpenStax",
+        "url": "https://openstax.org/books/concepts-biology/pages/3-3-eukaryotic-cells"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/chloroplast-grana/light.2d7575ec8443db9dfd3135049270684537df0acb9785cc185d71649e47d73d37.svg",
+        "sha256": "2d7575ec8443db9dfd3135049270684537df0acb9785cc185d71649e47d73d37",
+        "bytes": 13986,
+        "thumbnail": "/artwork/grounded/chloroplast-grana/light-480.0552a53249d123be795d92fddc803bb13e1e29248222670405c6a8882304a514.webp",
+        "thumbnailSha256": "0552a53249d123be795d92fddc803bb13e1e29248222670405c6a8882304a514",
+        "thumbnailBytes": 16706,
+        "preview": "/artwork/grounded/chloroplast-grana/light-960.cc0a1d57a9a2ba2917837ba48cb7e8f19be5a5133ad2a4ad121e8a6b410b4e9c.webp",
+        "previewSha256": "cc0a1d57a9a2ba2917837ba48cb7e8f19be5a5133ad2a4ad121e8a6b410b4e9c",
+        "previewBytes": 32144
+      },
+      "dark": {
+        "master": "/artwork/grounded/chloroplast-grana/dark.db181ea03d77093cef3457c9cd42b9c0e4d0be06ef3849dd5308e426f38cee4c.svg",
+        "sha256": "db181ea03d77093cef3457c9cd42b9c0e4d0be06ef3849dd5308e426f38cee4c",
+        "bytes": 13986,
+        "thumbnail": "/artwork/grounded/chloroplast-grana/dark-480.ea21de7939c52136ed7e54715369a0c8ede4f711f632b1b547af0d6f0296cef9.webp",
+        "thumbnailSha256": "ea21de7939c52136ed7e54715369a0c8ede4f711f632b1b547af0d6f0296cef9",
+        "thumbnailBytes": 16954,
+        "preview": "/artwork/grounded/chloroplast-grana/dark-960.e1370f0884571e0c316118364482ebf9279316a1ee04381080d9c5462cf49463.webp",
+        "previewSha256": "e1370f0884571e0c316118364482ebf9279316a1ee04381080d9c5462cf49463",
+        "previewBytes": 32276
+      },
+      "mono": {
+        "master": "/artwork/grounded/chloroplast-grana/mono.04500708f6c938fefcd2de176d5ff35af13666f77c59d9b43dbbe7363577b0c3.svg",
+        "sha256": "04500708f6c938fefcd2de176d5ff35af13666f77c59d9b43dbbe7363577b0c3",
+        "bytes": 13986,
+        "thumbnail": "/artwork/grounded/chloroplast-grana/mono-480.b26458748cefcc5cf73689298cb9ce1dcd058ef2e85b5ffc880484782d220c8c.webp",
+        "thumbnailSha256": "b26458748cefcc5cf73689298cb9ce1dcd058ef2e85b5ffc880484782d220c8c",
+        "thumbnailBytes": 14180,
+        "preview": "/artwork/grounded/chloroplast-grana/mono-960.436fdb0426c65e698cfec9962b1ef5c548db7905124d5799a727071eeff3bcae.webp",
+        "previewSha256": "436fdb0426c65e698cfec9962b1ef5c548db7905124d5799a727071eeff3bcae",
+        "previewBytes": 27688
+      }
+    }
+  },
+  {
+    "slug": "striated-sarcomere",
+    "title": "Striated sarcomere",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "striated-sarcomere",
+    "sourceDirectoryId": "02-striated-sarcomere",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Z discs anchor thin filaments beside a central, thick-filament H zone.",
+    "basis": "Z discs anchor thin filaments beside a central, thick-filament H zone.",
+    "limitations": "One longitudinal sarcomere excerpt: Z discs at x=175 and 725, thin filaments end at 400 and 500, thick filaments span 285..615, and the M line is x=450 before rotation. Six thin levels and three thick levels are explanatory, not a cross-section or molecular count. Titin and regulatory proteins omitted.",
+    "provenance": "illustrative; original-authored SVG geometry, no tracing or raster source. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "biology",
+    "tags": [
+      "biology",
+      "striated-sarcomere",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "striated sarcomere"
+    ],
+    "sources": [
+      {
+        "title": "Muscle Contraction and Locomotion | OpenStax",
+        "url": "https://openstax.org/books/biology-2e/pages/38-4-muscle-contraction-and-locomotion"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/striated-sarcomere/light.5b00531f4a52b2c9c9b0de211b45ae3ae745e59cd305f7fec1e6010bb96aaf0b.svg",
+        "sha256": "5b00531f4a52b2c9c9b0de211b45ae3ae745e59cd305f7fec1e6010bb96aaf0b",
+        "bytes": 10114,
+        "thumbnail": "/artwork/grounded/striated-sarcomere/light-480.8e2c6f982947009f74a7bd9008be18a538c8c4b43e9d111bb1b64f554d1f3f3d.webp",
+        "thumbnailSha256": "8e2c6f982947009f74a7bd9008be18a538c8c4b43e9d111bb1b64f554d1f3f3d",
+        "thumbnailBytes": 10856,
+        "preview": "/artwork/grounded/striated-sarcomere/light-960.5255d74465c7450a6390e7280703f785b6867199304aed66316856b468a46ff7.webp",
+        "previewSha256": "5255d74465c7450a6390e7280703f785b6867199304aed66316856b468a46ff7",
+        "previewBytes": 20326
+      },
+      "dark": {
+        "master": "/artwork/grounded/striated-sarcomere/dark.977d88b35881d6447de117a574f44900640afd615162f89154a9358663b3ccae.svg",
+        "sha256": "977d88b35881d6447de117a574f44900640afd615162f89154a9358663b3ccae",
+        "bytes": 10114,
+        "thumbnail": "/artwork/grounded/striated-sarcomere/dark-480.562ae7f0f4c004f49f1ea2b13e21aad27fc942f43759df3978cf594c4c28dea7.webp",
+        "thumbnailSha256": "562ae7f0f4c004f49f1ea2b13e21aad27fc942f43759df3978cf594c4c28dea7",
+        "thumbnailBytes": 10772,
+        "preview": "/artwork/grounded/striated-sarcomere/dark-960.d9b7c043bcb342dcd7c5059f5f966b0e18661dd1ff1cd67915e42a2ccb3a7743.webp",
+        "previewSha256": "d9b7c043bcb342dcd7c5059f5f966b0e18661dd1ff1cd67915e42a2ccb3a7743",
+        "previewBytes": 20370
+      },
+      "mono": {
+        "master": "/artwork/grounded/striated-sarcomere/mono.5e607e4a600e45b5a2f3510a580097b3b116d9f1efd5104b103dacffe3119156.svg",
+        "sha256": "5e607e4a600e45b5a2f3510a580097b3b116d9f1efd5104b103dacffe3119156",
+        "bytes": 10114,
+        "thumbnail": "/artwork/grounded/striated-sarcomere/mono-480.7bb42089d9467ee1e20dbf544910c97893343c27fb71f18b200529a86e9b4bdc.webp",
+        "thumbnailSha256": "7bb42089d9467ee1e20dbf544910c97893343c27fb71f18b200529a86e9b4bdc",
+        "thumbnailBytes": 8570,
+        "preview": "/artwork/grounded/striated-sarcomere/mono-960.88282f00f6c61ff37c097221806d30779c2a7ca5b6d549f641e49e72cfbb1477.webp",
+        "previewSha256": "88282f00f6c61ff37c097221806d30779c2a7ca5b6d549f641e49e72cfbb1477",
+        "previewBytes": 16690
+      }
+    }
+  },
+  {
+    "slug": "chemical-synapse",
+    "title": "Chemical synapse",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "chemical-synapse",
+    "sourceDirectoryId": "03-chemical-synapse",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "A fused vesicle releases transmitter into a receptor-lined cleft.",
+    "basis": "A fused vesicle releases transmitter into a receptor-lined cleft.",
+    "limitations": "A presynaptic terminal opens an omega-shaped vesicle pore into the cleft. Separate transmitter marks lead toward two integral postsynaptic receptor symbols. Membrane spacing, vesicle counts and all molecular symbols are exaggerated; no ion selectivity, concentration, kinetic sequence or electrical model is asserted.",
+    "provenance": "illustrative; original-authored SVG geometry, no tracing or raster source. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "biology",
+    "tags": [
+      "biology",
+      "chemical-synapse",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "chemical synapse"
+    ],
+    "sources": [
+      {
+        "title": "How Neurons Communicate | OpenStax",
+        "url": "https://openstax.org/books/biology-2e/pages/35-2-how-neurons-communicate"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/chemical-synapse/light.6f3b9a0676a1e553b7d0232c85a111db755cf1f2d569f9540ddc8657f2f7cf46.svg",
+        "sha256": "6f3b9a0676a1e553b7d0232c85a111db755cf1f2d569f9540ddc8657f2f7cf46",
+        "bytes": 7453,
+        "thumbnail": "/artwork/grounded/chemical-synapse/light-480.5d8d145e9c0af203152f4ea0c2d03053ddd47d515899e1a82dd24aefa5258998.webp",
+        "thumbnailSha256": "5d8d145e9c0af203152f4ea0c2d03053ddd47d515899e1a82dd24aefa5258998",
+        "thumbnailBytes": 13272,
+        "preview": "/artwork/grounded/chemical-synapse/light-960.2fb1cac15aa9165edd2c43e8b1013a8f4a341db6fed7068998aa8e2a8c4e3b3c.webp",
+        "previewSha256": "2fb1cac15aa9165edd2c43e8b1013a8f4a341db6fed7068998aa8e2a8c4e3b3c",
+        "previewBytes": 27330
+      },
+      "dark": {
+        "master": "/artwork/grounded/chemical-synapse/dark.37047fc75eb55a6c003dc62e56939e69e7063e9034ec29b27aeb9afd04f66bc2.svg",
+        "sha256": "37047fc75eb55a6c003dc62e56939e69e7063e9034ec29b27aeb9afd04f66bc2",
+        "bytes": 7453,
+        "thumbnail": "/artwork/grounded/chemical-synapse/dark-480.0c3a66e7eedef7451cb512f54b62649edc149e08305ce7222be7d4d13f373358.webp",
+        "thumbnailSha256": "0c3a66e7eedef7451cb512f54b62649edc149e08305ce7222be7d4d13f373358",
+        "thumbnailBytes": 13438,
+        "preview": "/artwork/grounded/chemical-synapse/dark-960.bdeb09344c8d20bdf6ec497b6add4565159ead897f762057d552d690caffee8a.webp",
+        "previewSha256": "bdeb09344c8d20bdf6ec497b6add4565159ead897f762057d552d690caffee8a",
+        "previewBytes": 26266
+      },
+      "mono": {
+        "master": "/artwork/grounded/chemical-synapse/mono.d07d9201e053d59baf172bb30165ac1583bc54559f1183c1e4183a427854624d.svg",
+        "sha256": "d07d9201e053d59baf172bb30165ac1583bc54559f1183c1e4183a427854624d",
+        "bytes": 7453,
+        "thumbnail": "/artwork/grounded/chemical-synapse/mono-480.7b405871a9c4a4fc72753a9b34fb130dce06fb4dc9fac0f55624304c3ba555a2.webp",
+        "thumbnailSha256": "7b405871a9c4a4fc72753a9b34fb130dce06fb4dc9fac0f55624304c3ba555a2",
+        "thumbnailBytes": 10728,
+        "preview": "/artwork/grounded/chemical-synapse/mono-960.c466e53f553adf5cefb63ce651e7a3337f27a3fefbc08c29d6ca041e8533811c.webp",
+        "previewSha256": "c466e53f553adf5cefb63ce651e7a3337f27a3fefbc08c29d6ca041e8533811c",
+        "previewBytes": 22582
+      }
+    }
+  },
+  {
+    "slug": "motile-cilium",
+    "title": "Motile cilium",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "motile-cilium",
+    "sourceDirectoryId": "04-motile-cilium",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Nine outer microtubule doublets surround two central singlets.",
+    "basis": "Nine outer microtubule doublets surround two central singlets.",
+    "limitations": "A curved longitudinal excerpt is paired with an enlarged normal axoneme section: nine complete A tubules with adjoining partial B tubules, nine radial-spoke symbols and a central pair. The section shows the typical 9+2 arrangement, not all motile cilia. Basal body, molecular protofilaments and movement are omitted; scales differ.",
+    "provenance": "illustrative; original-authored SVG geometry, no tracing or raster source. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance. During source review, direct full-text access to the original PMC references was limited. Accessible PLOS primary research corroborated the depicted relationships; unrestricted access to the original endpoints is not claimed.",
+    "subject": "biology",
+    "tags": [
+      "biology",
+      "motile-cilium",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "motile cilium"
+    ],
+    "sources": [
+      {
+        "title": "Mitchell: The evolution of eukaryotic cilia and flagella",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3322410/"
+      },
+      {
+        "title": "Structure of the decorated ciliary doublet microtubule",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6936269/"
+      },
+      {
+        "title": "PLOS Biology: primary research on ciliary doublet architecture",
+        "url": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3003442"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/motile-cilium/light.a88afb1df00a9c5b5539d549e1f9a996c5d4b90490d3af87432cb904962e7027.svg",
+        "sha256": "a88afb1df00a9c5b5539d549e1f9a996c5d4b90490d3af87432cb904962e7027",
+        "bytes": 9012,
+        "thumbnail": "/artwork/grounded/motile-cilium/light-480.4470bee114470680f672e32573128932d2f7a55715ce541d999e772d7aff776d.webp",
+        "thumbnailSha256": "4470bee114470680f672e32573128932d2f7a55715ce541d999e772d7aff776d",
+        "thumbnailBytes": 22120,
+        "preview": "/artwork/grounded/motile-cilium/light-960.d48930541653ccfef64b17bd35f95c8533c1a69b9f2440aa82f78ef113443d7c.webp",
+        "previewSha256": "d48930541653ccfef64b17bd35f95c8533c1a69b9f2440aa82f78ef113443d7c",
+        "previewBytes": 44498
+      },
+      "dark": {
+        "master": "/artwork/grounded/motile-cilium/dark.b9c07ed0d0db3381d09e2109f79bf5959c4c79c8f93d6c70ec1da4dd18d37820.svg",
+        "sha256": "b9c07ed0d0db3381d09e2109f79bf5959c4c79c8f93d6c70ec1da4dd18d37820",
+        "bytes": 9012,
+        "thumbnail": "/artwork/grounded/motile-cilium/dark-480.e55b0867969abbde898c649dbc7dae71ea249cc5378f3d78332e711c3e918ef0.webp",
+        "thumbnailSha256": "e55b0867969abbde898c649dbc7dae71ea249cc5378f3d78332e711c3e918ef0",
+        "thumbnailBytes": 21554,
+        "preview": "/artwork/grounded/motile-cilium/dark-960.60a16353da7a9c107981b400526aebc3e57b11a029c1e3c246f653041eb01da2.webp",
+        "previewSha256": "60a16353da7a9c107981b400526aebc3e57b11a029c1e3c246f653041eb01da2",
+        "previewBytes": 45202
+      },
+      "mono": {
+        "master": "/artwork/grounded/motile-cilium/mono.c01cbacbcda19a1b8ae6f7dfd1249654410e8076ab749ecfae17789f7da215f9.svg",
+        "sha256": "c01cbacbcda19a1b8ae6f7dfd1249654410e8076ab749ecfae17789f7da215f9",
+        "bytes": 9012,
+        "thumbnail": "/artwork/grounded/motile-cilium/mono-480.e602eabf228e62ed1208a4fcad14a755bc1ece7e019b00e2c34eac32e188f82a.webp",
+        "thumbnailSha256": "e602eabf228e62ed1208a4fcad14a755bc1ece7e019b00e2c34eac32e188f82a",
+        "thumbnailBytes": 17476,
+        "preview": "/artwork/grounded/motile-cilium/mono-960.72e3983e6cb543fa128e3aba21aa8681ec90523a5119849210a8f34f739e12ce.webp",
+        "previewSha256": "72e3983e6cb543fa128e3aba21aa8681ec90523a5119849210a8f34f739e12ce",
+        "previewBytes": 37918
+      }
+    }
+  },
+  {
+    "slug": "mitochondrial-cristae",
+    "title": "Mitochondrial cristae",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "mitochondrial-cristae",
+    "sourceDirectoryId": "05-mitochondrial-cristae",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Cristae remain continuous with the inner mitochondrial membrane.",
+    "basis": "Cristae remain continuous with the inner mitochondrial membrane.",
+    "limitations": "A bent longitudinal section has one outer-membrane contour and one continuous inner-membrane contour that folds into the matrix. Six finger-like folds are an authored 2D simplification. This is not a species or tomography reconstruction, and omits junction ultrastructure, proteins, DNA and respiratory dynamics.",
+    "provenance": "illustrative; original-authored SVG geometry, no tracing or raster source. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "biology",
+    "tags": [
+      "biology",
+      "mitochondrial-cristae",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "mitochondrial cristae"
+    ],
+    "sources": [
+      {
+        "title": "Eukaryotic Cells | OpenStax",
+        "url": "https://openstax.org/books/concepts-biology/pages/3-3-eukaryotic-cells"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/mitochondrial-cristae/light.464f4a2b187bc508c79f9c42620775838dac055388bde53368dc4183ce45c84c.svg",
+        "sha256": "464f4a2b187bc508c79f9c42620775838dac055388bde53368dc4183ce45c84c",
+        "bytes": 3003,
+        "thumbnail": "/artwork/grounded/mitochondrial-cristae/light-480.8f259a2cef62d387cb5e8445148480185d71cc88712f931304f62fc0deb2178f.webp",
+        "thumbnailSha256": "8f259a2cef62d387cb5e8445148480185d71cc88712f931304f62fc0deb2178f",
+        "thumbnailBytes": 14292,
+        "preview": "/artwork/grounded/mitochondrial-cristae/light-960.036534567dead6e8a57a20cc2e2a2d7ed61eb2fbe9708fda765dc856df4056f9.webp",
+        "previewSha256": "036534567dead6e8a57a20cc2e2a2d7ed61eb2fbe9708fda765dc856df4056f9",
+        "previewBytes": 28698
+      },
+      "dark": {
+        "master": "/artwork/grounded/mitochondrial-cristae/dark.7bc6afcb25504594f560c1e582eb34fb087509e8c007ae59a1678be5b1808d28.svg",
+        "sha256": "7bc6afcb25504594f560c1e582eb34fb087509e8c007ae59a1678be5b1808d28",
+        "bytes": 3003,
+        "thumbnail": "/artwork/grounded/mitochondrial-cristae/dark-480.1988b9875db1e69408cab49164f98ac6ef85714584c8074a7a91a82a4b409329.webp",
+        "thumbnailSha256": "1988b9875db1e69408cab49164f98ac6ef85714584c8074a7a91a82a4b409329",
+        "thumbnailBytes": 14190,
+        "preview": "/artwork/grounded/mitochondrial-cristae/dark-960.636aa9297a35f6c315a84c7a9040eebd1814bdb79f6d8f1c733de19c610288d4.webp",
+        "previewSha256": "636aa9297a35f6c315a84c7a9040eebd1814bdb79f6d8f1c733de19c610288d4",
+        "previewBytes": 29488
+      },
+      "mono": {
+        "master": "/artwork/grounded/mitochondrial-cristae/mono.56af369a1aa3875bb27b37bacd0a9a2f75ba9a70529f0f12becb6770412dac04.svg",
+        "sha256": "56af369a1aa3875bb27b37bacd0a9a2f75ba9a70529f0f12becb6770412dac04",
+        "bytes": 3003,
+        "thumbnail": "/artwork/grounded/mitochondrial-cristae/mono-480.3938a41fe951238d1c75fa6dc226d1b613a68f18e4b972f2511ed6dc079eb0d6.webp",
+        "thumbnailSha256": "3938a41fe951238d1c75fa6dc226d1b613a68f18e4b972f2511ed6dc079eb0d6",
+        "thumbnailBytes": 11292,
+        "preview": "/artwork/grounded/mitochondrial-cristae/mono-960.deb96f29ba5d771bec153e93607f97c0da62f13ad1bfde8fc443508400267d8a.webp",
+        "previewSha256": "deb96f29ba5d771bec153e93607f97c0da62f13ad1bfde8fc443508400267d8a",
+        "previewBytes": 24012
+      }
+    }
+  },
+  {
+    "slug": "graphite-sheets",
+    "title": "Graphite sheets",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "graphite-sheets",
+    "sourceDirectoryId": "06-graphite-sheets",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Hexagonal carbon sheets repeat in an ABA stacking excerpt.",
+    "basis": "Hexagonal carbon sheets repeat in an ABA stacking excerpt.",
+    "limitations": "Three finite honeycomb sheets have latent registry A,B,A: the middle shifts by one bond vector and outer sheets coincide in-plane. Original display projection is x=X+0.42Y, y=0.40Y+Z. The vertical spacing is exploded; dotted lines indicate registry, not interlayer covalent bonds. Edge atom coordination is truncated by the finite excerpt.",
+    "provenance": "mathematical construction with illustrative presentation. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "materials",
+      "graphite-sheets",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "graphite sheets"
+    ],
+    "sources": [
+      {
+        "title": "Graphite Crystal Structure | IAEA",
+        "url": "https://nucleus.iaea.org/sites/graphiteknowledgebase/wiki/Wiki%20Pages/Structure.aspx"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/graphite-sheets/light.e1f2bd020162e43b99f4b2336c59163ca1323fb6afbb035cb498a4ef71a0068d.svg",
+        "sha256": "e1f2bd020162e43b99f4b2336c59163ca1323fb6afbb035cb498a4ef71a0068d",
+        "bytes": 61329,
+        "thumbnail": "/artwork/grounded/graphite-sheets/light-480.70b98ee90d42e4aaa7b2c0dce2d8ddc5bee36bec66b85cf87c4ab610f981f36b.webp",
+        "thumbnailSha256": "70b98ee90d42e4aaa7b2c0dce2d8ddc5bee36bec66b85cf87c4ab610f981f36b",
+        "thumbnailBytes": 13586,
+        "preview": "/artwork/grounded/graphite-sheets/light-960.7bc15a66b253ee81aa9f94e144d1ecb27edf059ecdaf8120f409a998f3f359f5.webp",
+        "previewSha256": "7bc15a66b253ee81aa9f94e144d1ecb27edf059ecdaf8120f409a998f3f359f5",
+        "previewBytes": 23846
+      },
+      "dark": {
+        "master": "/artwork/grounded/graphite-sheets/dark.22bfc01dca541b2da89ac9213f24cdab01b13f511a73f71c79a29336de31a948.svg",
+        "sha256": "22bfc01dca541b2da89ac9213f24cdab01b13f511a73f71c79a29336de31a948",
+        "bytes": 61329,
+        "thumbnail": "/artwork/grounded/graphite-sheets/dark-480.105b50fa0b18b039abfbecf334347acde6ff3778e7c307b5b4fc7f1d27bcf0c4.webp",
+        "thumbnailSha256": "105b50fa0b18b039abfbecf334347acde6ff3778e7c307b5b4fc7f1d27bcf0c4",
+        "thumbnailBytes": 13728,
+        "preview": "/artwork/grounded/graphite-sheets/dark-960.68bb6301bb84942fd57e9c546ef4fe5a503bc7cf4de3aa9ba81f561b1ecc14d1.webp",
+        "previewSha256": "68bb6301bb84942fd57e9c546ef4fe5a503bc7cf4de3aa9ba81f561b1ecc14d1",
+        "previewBytes": 24038
+      },
+      "mono": {
+        "master": "/artwork/grounded/graphite-sheets/mono.b0b33ac887a59e6b60b393475e9fb68fd3b4a0b56468656dafb23fc6ff2477b6.svg",
+        "sha256": "b0b33ac887a59e6b60b393475e9fb68fd3b4a0b56468656dafb23fc6ff2477b6",
+        "bytes": 61329,
+        "thumbnail": "/artwork/grounded/graphite-sheets/mono-480.fd85ef2478839ad7def63516a665275143fe20a05a3442c9882e24c47d625eb1.webp",
+        "thumbnailSha256": "fd85ef2478839ad7def63516a665275143fe20a05a3442c9882e24c47d625eb1",
+        "thumbnailBytes": 11490,
+        "preview": "/artwork/grounded/graphite-sheets/mono-960.a54c21a28b1d3570ae2e47f076e92bfbbb0a5bc8a924de4d92fb2bc0ae30a612.webp",
+        "previewSha256": "a54c21a28b1d3570ae2e47f076e92bfbbb0a5bc8a924de4d92fb2bc0ae30a612",
+        "previewBytes": 21128
+      }
+    }
+  },
+  {
+    "slug": "edge-dislocation",
+    "title": "Edge dislocation",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "edge-dislocation",
+    "sourceDirectoryId": "07-edge-dislocation",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "An extra half-plane terminates inside a distorted lattice section.",
+    "basis": "An extra half-plane terminates inside a distorted lattice section.",
+    "limitations": "The stylized 2D lattice has four upper rows of eleven sites and four lower rows of ten sites. The middle upper column ends at the core; surrounding columns continue into lower rows. Distortions are authored rather than an elastic displacement solution. No crystal species, energy, stress, Burgers circuit or mobility model is claimed.",
+    "provenance": "illustrative; original-authored SVG geometry, no tracing or raster source. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "materials",
+      "edge-dislocation",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "edge dislocation"
+    ],
+    "sources": [
+      {
+        "title": "Defects in Crystals | IIT Bombay MM219",
+        "url": "https://homepages.iitb.ac.in/~alsangle/MM219_Lectures_20-22.html"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/edge-dislocation/light.de5b34ddcefef5b11a0403fe5037be2514b2b5daf57afee0e8c3d30d946b58cd.svg",
+        "sha256": "de5b34ddcefef5b11a0403fe5037be2514b2b5daf57afee0e8c3d30d946b58cd",
+        "bytes": 30077,
+        "thumbnail": "/artwork/grounded/edge-dislocation/light-480.e5950962502981714d8347fa592797142702bf82bca1d87f97c30dde41ab85c4.webp",
+        "thumbnailSha256": "e5950962502981714d8347fa592797142702bf82bca1d87f97c30dde41ab85c4",
+        "thumbnailBytes": 17534,
+        "preview": "/artwork/grounded/edge-dislocation/light-960.c3c505c7a9759087fb29f2fa55b21fbb682a6e6fd95a2cffe7c1e4aa3cfe3168.webp",
+        "previewSha256": "c3c505c7a9759087fb29f2fa55b21fbb682a6e6fd95a2cffe7c1e4aa3cfe3168",
+        "previewBytes": 33184
+      },
+      "dark": {
+        "master": "/artwork/grounded/edge-dislocation/dark.0f602b54ec53fc4803831e3414a750826db574fddf7a1b18f9b7a6ee248432f6.svg",
+        "sha256": "0f602b54ec53fc4803831e3414a750826db574fddf7a1b18f9b7a6ee248432f6",
+        "bytes": 30077,
+        "thumbnail": "/artwork/grounded/edge-dislocation/dark-480.07a2dabdb4f826ae795f4de2f7ddc889e85dad15ad2faf06bab60cbad626b81c.webp",
+        "thumbnailSha256": "07a2dabdb4f826ae795f4de2f7ddc889e85dad15ad2faf06bab60cbad626b81c",
+        "thumbnailBytes": 17648,
+        "preview": "/artwork/grounded/edge-dislocation/dark-960.2ddc5e21d35794c4ce9d220af92fa30b18a1ba033dfa4e46deee627e7670be04.webp",
+        "previewSha256": "2ddc5e21d35794c4ce9d220af92fa30b18a1ba033dfa4e46deee627e7670be04",
+        "previewBytes": 33190
+      },
+      "mono": {
+        "master": "/artwork/grounded/edge-dislocation/mono.8821fe94bca6ef76e35c1af5601a0f180759cae4672d4d1ff6afde18a00a710f.svg",
+        "sha256": "8821fe94bca6ef76e35c1af5601a0f180759cae4672d4d1ff6afde18a00a710f",
+        "bytes": 30077,
+        "thumbnail": "/artwork/grounded/edge-dislocation/mono-480.a1ac9944a31579f8255e7a3211081feb3eaba5cd6b40e5a1b6331752c5f4cd1c.webp",
+        "thumbnailSha256": "a1ac9944a31579f8255e7a3211081feb3eaba5cd6b40e5a1b6331752c5f4cd1c",
+        "thumbnailBytes": 14400,
+        "preview": "/artwork/grounded/edge-dislocation/mono-960.6c1cff1449cfce3990bd3729c2f06710f97061eaf2d5453e98e2e4b428f7dafe.webp",
+        "previewSha256": "6c1cff1449cfce3990bd3729c2f06710f97061eaf2d5453e98e2e4b428f7dafe",
+        "previewBytes": 27890
+      }
+    }
+  },
+  {
+    "slug": "grain-boundary",
+    "title": "Grain boundary",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "grain-boundary",
+    "sourceDirectoryId": "08-grain-boundary",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Two differently oriented lattice domains meet across one boundary.",
+    "basis": "Two differently oriented lattice domains meet across one boundary.",
+    "limitations": "Two equal-spacing square arrays at -11 and +19 degrees form a 30-degree illustrative misorientation. A narrow authored strip of sites and bonds joins the domains. This is a schematic same-phase bicrystal excerpt, not an atomistically relaxed material, CSL construction, measured boundary width, fracture or computed boundary energy.",
+    "provenance": "mathematical construction with illustrative presentation. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "materials",
+      "grain-boundary",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "grain boundary"
+    ],
+    "sources": [
+      {
+        "title": "Grain Boundaries | Materials Project",
+        "url": "https://docs.materialsproject.org/methodology/materials-methodology/grain-boundaries"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/grain-boundary/light.e34d4586f0d50d34049c966b34c2d0882e76ec2c82cab531baa01cb3225d0274.svg",
+        "sha256": "e34d4586f0d50d34049c966b34c2d0882e76ec2c82cab531baa01cb3225d0274",
+        "bytes": 35724,
+        "thumbnail": "/artwork/grounded/grain-boundary/light-480.1849115724faf31b7187839c5b806e1fcb71cf576640f79f222dfc2d3564ced8.webp",
+        "thumbnailSha256": "1849115724faf31b7187839c5b806e1fcb71cf576640f79f222dfc2d3564ced8",
+        "thumbnailBytes": 20090,
+        "preview": "/artwork/grounded/grain-boundary/light-960.f190e42b5fd797d33c755015c5cc8020d7037a598cb35d4fc0e16abed63d9f9c.webp",
+        "previewSha256": "f190e42b5fd797d33c755015c5cc8020d7037a598cb35d4fc0e16abed63d9f9c",
+        "previewBytes": 39050
+      },
+      "dark": {
+        "master": "/artwork/grounded/grain-boundary/dark.cbf94c52349acec008bf20979794d00cded0a110359652b40570f2d1b58baa0e.svg",
+        "sha256": "cbf94c52349acec008bf20979794d00cded0a110359652b40570f2d1b58baa0e",
+        "bytes": 35724,
+        "thumbnail": "/artwork/grounded/grain-boundary/dark-480.722c7fae78518320a6227f1bc06768258dee200205853af324ce69f34128237d.webp",
+        "thumbnailSha256": "722c7fae78518320a6227f1bc06768258dee200205853af324ce69f34128237d",
+        "thumbnailBytes": 20204,
+        "preview": "/artwork/grounded/grain-boundary/dark-960.6edfeffa2a26f80735ab0f92d978f6f35b2479540fa7bc50364caaadc2b183a4.webp",
+        "previewSha256": "6edfeffa2a26f80735ab0f92d978f6f35b2479540fa7bc50364caaadc2b183a4",
+        "previewBytes": 39442
+      },
+      "mono": {
+        "master": "/artwork/grounded/grain-boundary/mono.e2317e5db594f300221eea53641b0efd03368d7da2af8a9cd6cb9798612eccb5.svg",
+        "sha256": "e2317e5db594f300221eea53641b0efd03368d7da2af8a9cd6cb9798612eccb5",
+        "bytes": 35724,
+        "thumbnail": "/artwork/grounded/grain-boundary/mono-480.1cb6992d50f29d2e08a2dc5a1d93dffced4dacbc2b404ec13bb7fa172b5c5a57.webp",
+        "thumbnailSha256": "1cb6992d50f29d2e08a2dc5a1d93dffced4dacbc2b404ec13bb7fa172b5c5a57",
+        "thumbnailBytes": 16202,
+        "preview": "/artwork/grounded/grain-boundary/mono-960.460d080e396bcc711a3d1795af95c7fc886da7a58aaf9a81d81220f53561b50e.webp",
+        "previewSha256": "460d080e396bcc711a3d1795af95c7fc886da7a58aaf9a81d81220f53561b50e",
+        "previewBytes": 32192
+      }
+    }
+  },
+  {
+    "slug": "plateau-junction",
+    "title": "Plateau junction",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "plateau-junction",
+    "sourceDirectoryId": "09-plateau-junction",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 240,
+    "caption": "Three equal-tension film traces meet at 120 degrees in normal section.",
+    "basis": "Three equal-tension film traces meet at 120 degrees in normal section.",
+    "limitations": "Three straight segments from one junction have directions -91, 29 and 149 degrees. This is a plane normal to a straight Plateau border, so its displayed angles are the actual local 120-degree film angles. Equal-length detached arrows illustrate equal tension. Endpoint supports are conceptual; no complete foam, film thickness, pressure field or stability computation is claimed.",
+    "provenance": "mathematical construction with illustrative presentation. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "materials",
+      "plateau-junction",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "plateau junction"
+    ],
+    "sources": [
+      {
+        "title": "Boundary Plateau Laws | UC San Diego Mathematics",
+        "url": "https://mathematics.ucsd.edu/seminar/boundary-plateau-laws"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/plateau-junction/light.65a7e62b7573355d9fc22a241f9222804989dfa8b26a4c4ed15b6a326d184aa2.svg",
+        "sha256": "65a7e62b7573355d9fc22a241f9222804989dfa8b26a4c4ed15b6a326d184aa2",
+        "bytes": 4616,
+        "thumbnail": "/artwork/grounded/plateau-junction/light-480.fbaa6327ce0e95c8092dd8c5c794e995b3ff574808237f659a18c89d42f759d9.webp",
+        "thumbnailSha256": "fbaa6327ce0e95c8092dd8c5c794e995b3ff574808237f659a18c89d42f759d9",
+        "thumbnailBytes": 5812,
+        "preview": "/artwork/grounded/plateau-junction/light-960.5e38ab149b4bfc371a61c52a3f169fe5725f3c70cdc8defd479c20a606e605eb.webp",
+        "previewSha256": "5e38ab149b4bfc371a61c52a3f169fe5725f3c70cdc8defd479c20a606e605eb",
+        "previewBytes": 11154
+      },
+      "dark": {
+        "master": "/artwork/grounded/plateau-junction/dark.91c9d81ffbc54a99d786ef14b5e694fb29fb45bb04ac02f4173e63f323c00893.svg",
+        "sha256": "91c9d81ffbc54a99d786ef14b5e694fb29fb45bb04ac02f4173e63f323c00893",
+        "bytes": 4616,
+        "thumbnail": "/artwork/grounded/plateau-junction/dark-480.cec062098ed4b676e99f8f25fe823255cfb86af0f5417d1ea881575400b5be62.webp",
+        "thumbnailSha256": "cec062098ed4b676e99f8f25fe823255cfb86af0f5417d1ea881575400b5be62",
+        "thumbnailBytes": 5816,
+        "preview": "/artwork/grounded/plateau-junction/dark-960.802571c1b34db92627e60dfc0bd049951f57ff567b0380888c46c981e2bc883d.webp",
+        "previewSha256": "802571c1b34db92627e60dfc0bd049951f57ff567b0380888c46c981e2bc883d",
+        "previewBytes": 10890
+      },
+      "mono": {
+        "master": "/artwork/grounded/plateau-junction/mono.2e6619b2e1a4496433b69e9abfe609e09867017d9d5389841468f3c2769f8bcb.svg",
+        "sha256": "2e6619b2e1a4496433b69e9abfe609e09867017d9d5389841468f3c2769f8bcb",
+        "bytes": 4616,
+        "thumbnail": "/artwork/grounded/plateau-junction/mono-480.9a382447435f9f6f296ebbb9657ceda0a69b54e3baa3941cd516b5284f51f08d.webp",
+        "thumbnailSha256": "9a382447435f9f6f296ebbb9657ceda0a69b54e3baa3941cd516b5284f51f08d",
+        "thumbnailBytes": 4484,
+        "preview": "/artwork/grounded/plateau-junction/mono-960.ebfd933f9d0b69ac4b3f3635f1c819a7d0914f9c7db5ba649729d19e9f910c62.webp",
+        "previewSha256": "ebfd933f9d0b69ac4b3f3635f1c819a7d0914f9c7db5ba649729d19e9f910c62",
+        "previewBytes": 8616
+      }
+    }
+  },
+  {
+    "slug": "sessile-droplet",
+    "title": "Sessile droplet",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "sessile-droplet",
+    "sourceDirectoryId": "10-sessile-droplet",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 240,
+    "caption": "A circular cap meets a level substrate at a 65-degree contact angle.",
+    "basis": "A circular cap meets a level substrate at a 65-degree contact angle.",
+    "limitations": "A circular arc of radius 300 drawing units meets y=600 at x=438 plus or minus 300 sin65 degrees. Its centre lies 300 cos65 below the substrate in SVG coordinates, so the contact angle measured through liquid is 65 degrees. This is the meridional section of a spherical-cap approximation for negligible gravity, not a measured liquid/surface pair. Texture and height guide are illustrative.",
+    "provenance": "mathematical construction with illustrative presentation. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "materials",
+      "sessile-droplet",
+      "engraved",
+      "grounded-forms"
+    ],
+    "aliases": [
+      "sessile droplet"
+    ],
+    "sources": [
+      {
+        "title": "Wettability and Contact Angle | MIT",
+        "url": "https://web.mit.edu/nnf/education/wettability/wetting.html"
+      },
+      {
+        "title": "Macroscopic Model for Sessile Droplet Evaporation on a Flat Surface",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6193248/"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/sessile-droplet/light.a0ff6aa4dede0f32c162eaf429bbe1fb67d4f9cbbea2fc7a0bb1fc16cbf8d50d.svg",
+        "sha256": "a0ff6aa4dede0f32c162eaf429bbe1fb67d4f9cbbea2fc7a0bb1fc16cbf8d50d",
+        "bytes": 5124,
+        "thumbnail": "/artwork/grounded/sessile-droplet/light-480.99e55ea09edb27a128133d9c0fdc5b44e938e15d2c0b25151433145deacb8d0f.webp",
+        "thumbnailSha256": "99e55ea09edb27a128133d9c0fdc5b44e938e15d2c0b25151433145deacb8d0f",
+        "thumbnailBytes": 5384,
+        "preview": "/artwork/grounded/sessile-droplet/light-960.d01813adcf2a2286978589d4b25f5c59ad3d6fd536bd72a3318d67f76746fb90.webp",
+        "previewSha256": "d01813adcf2a2286978589d4b25f5c59ad3d6fd536bd72a3318d67f76746fb90",
+        "previewBytes": 10168
+      },
+      "dark": {
+        "master": "/artwork/grounded/sessile-droplet/dark.920b9e99764d634ac1015771faac533eec8ff8e955004fc7f0057880d291ad12.svg",
+        "sha256": "920b9e99764d634ac1015771faac533eec8ff8e955004fc7f0057880d291ad12",
+        "bytes": 5124,
+        "thumbnail": "/artwork/grounded/sessile-droplet/dark-480.15eae9dda25fd698e919330d7e47e7a498e72fbace1b158a7e7a212bb270feaa.webp",
+        "thumbnailSha256": "15eae9dda25fd698e919330d7e47e7a498e72fbace1b158a7e7a212bb270feaa",
+        "thumbnailBytes": 5346,
+        "preview": "/artwork/grounded/sessile-droplet/dark-960.5e4935b43c9c35693b9046bfdb14e404a9a8e6e992d49705d86913e25997cc5c.webp",
+        "previewSha256": "5e4935b43c9c35693b9046bfdb14e404a9a8e6e992d49705d86913e25997cc5c",
+        "previewBytes": 10142
+      },
+      "mono": {
+        "master": "/artwork/grounded/sessile-droplet/mono.c9eb27f64456a0a3a87d680bd4b37d08a90517632be5f01ee9f245969e10807a.svg",
+        "sha256": "c9eb27f64456a0a3a87d680bd4b37d08a90517632be5f01ee9f245969e10807a",
+        "bytes": 5124,
+        "thumbnail": "/artwork/grounded/sessile-droplet/mono-480.4231928f84cbf66f0801ad82adbeb3c72be5ab7e23da256ef5efed97cbc95625.webp",
+        "thumbnailSha256": "4231928f84cbf66f0801ad82adbeb3c72be5ab7e23da256ef5efed97cbc95625",
+        "thumbnailBytes": 4130,
+        "preview": "/artwork/grounded/sessile-droplet/mono-960.8598efca84c2666d282add4ac87cf65a70b055f4c2d58443d2f42ba2b97ae8f3.webp",
+        "previewSha256": "8598efca84c2666d282add4ac87cf65a70b055f4c2d58443d2f42ba2b97ae8f3",
+        "previewBytes": 7810
+      }
+    }
+  },
+  {
+    "slug": "kepler-equal-areas",
+    "title": "Kepler equal areas",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "kepler-equal-areas",
+    "sourceDirectoryId": "11-kepler-equal-areas",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 240,
+    "caption": "Two focus-based sectors sweep equal areas in equal time.",
+    "basis": "Analytic SVG elliptical arcs. Equal mean-anomaly intervals of 0.70 radians give swept area abΔM/2. The source point is the positive focus. Radial hatching and key ticks are editorial.",
+    "limitations": "No planet identity, absolute duration or physical scale. Newtonian isolated two-body orbit; perturbations are omitted. The areas refer to sector boundaries, not ink coverage.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "astronomy",
+      "ideal-geometry",
+      "kepler-equal-areas"
+    ],
+    "aliases": [
+      "kepler equal areas",
+      "kepler-equal-areas"
+    ],
+    "sources": [
+      {
+        "title": "NASA Goddard: Kepler’s Second Law",
+        "url": "https://pwg.gsfc.nasa.gov/stargaze/Skepl2nd.htm"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/kepler-equal-areas/light.f674736a9a2ce86925fd1f2a90a564224c664e98b23d174cce9fc65c0a42949d.svg",
+        "sha256": "f674736a9a2ce86925fd1f2a90a564224c664e98b23d174cce9fc65c0a42949d",
+        "bytes": 6006,
+        "thumbnail": "/artwork/grounded/kepler-equal-areas/light-480.400dd4ef1a9bd83da7fe9782c89616597133d8dc28beb25f53a95a3f0a3d0e90.webp",
+        "thumbnailSha256": "400dd4ef1a9bd83da7fe9782c89616597133d8dc28beb25f53a95a3f0a3d0e90",
+        "thumbnailBytes": 14092,
+        "preview": "/artwork/grounded/kepler-equal-areas/light-960.0120cae0474a9cc9e328575b2ca03a3ad6c58be5810f65f0829140d1135675dc.webp",
+        "previewSha256": "0120cae0474a9cc9e328575b2ca03a3ad6c58be5810f65f0829140d1135675dc",
+        "previewBytes": 27092
+      },
+      "dark": {
+        "master": "/artwork/grounded/kepler-equal-areas/dark.230fe76e8b385f075fcae821f3e00452e051f44af8d34b2c786ea844698b1fac.svg",
+        "sha256": "230fe76e8b385f075fcae821f3e00452e051f44af8d34b2c786ea844698b1fac",
+        "bytes": 6006,
+        "thumbnail": "/artwork/grounded/kepler-equal-areas/dark-480.0c6c37238c141550e8f8d28579784662e055c5b9aed975569ea793225461c4b7.webp",
+        "thumbnailSha256": "0c6c37238c141550e8f8d28579784662e055c5b9aed975569ea793225461c4b7",
+        "thumbnailBytes": 14250,
+        "preview": "/artwork/grounded/kepler-equal-areas/dark-960.fbff1f38ff7ca5df103dd15a9244abb5003713a6559dfe225d874c78cab132ef.webp",
+        "previewSha256": "fbff1f38ff7ca5df103dd15a9244abb5003713a6559dfe225d874c78cab132ef",
+        "previewBytes": 27242
+      },
+      "mono": {
+        "master": "/artwork/grounded/kepler-equal-areas/mono.5727c5b376b076394f57787a9f3324a7bf02b82c2bf6ccedd5d5bfa8717ec42e.svg",
+        "sha256": "5727c5b376b076394f57787a9f3324a7bf02b82c2bf6ccedd5d5bfa8717ec42e",
+        "bytes": 6006,
+        "thumbnail": "/artwork/grounded/kepler-equal-areas/mono-480.9eb6f01b82c34c11e1f6d68dc432ae09cce6def9ddba7f0d157e7d1ea9ae42da.webp",
+        "thumbnailSha256": "9eb6f01b82c34c11e1f6d68dc432ae09cce6def9ddba7f0d157e7d1ea9ae42da",
+        "thumbnailBytes": 11390,
+        "preview": "/artwork/grounded/kepler-equal-areas/mono-960.afe38806a2b81469ff8d9d8f71b14d6604fc1bcb36487a2158f815ebf56d4845.webp",
+        "previewSha256": "afe38806a2b81469ff8d9d8f71b14d6604fc1bcb36487a2158f815ebf56d4845",
+        "previewBytes": 22330
+      }
+    }
+  },
+  {
+    "slug": "orbital-inclination",
+    "title": "Orbital inclination",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "orbital-inclination",
+    "sourceDirectoryId": "12-orbital-inclination",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "An inclined orbit crosses a reference plane at two opposite nodes.",
+    "basis": "A circular orbit is rotated 50 degrees about the common x-axis; an orthographic camera projects the orbit and both planes. A detached section draws the actual 50-degree angle.",
+    "limitations": "The displayed main-view angle is not the inclination. Orbit polylines use 360 samples, the reference 180. Central body, plane extents and orbit size are normalized illustration, not a measured satellite.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "astronomy",
+      "ideal-geometry",
+      "orbital-inclination"
+    ],
+    "aliases": [
+      "orbital inclination",
+      "orbital-inclination"
+    ],
+    "sources": [
+      {
+        "title": "NASA: Planetary Orbits",
+        "url": "https://science.nasa.gov/learn/basics-of-space-flight/chapter5-1/"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/orbital-inclination/light.8e1a901f022d59e6d9f03f60750d57914672501b67d5231ed2be946cf804a6f8.svg",
+        "sha256": "8e1a901f022d59e6d9f03f60750d57914672501b67d5231ed2be946cf804a6f8",
+        "bytes": 17498,
+        "thumbnail": "/artwork/grounded/orbital-inclination/light-480.450a01e3f94979ccb143418dc95d13876e0752b241b30b90e2abe309eed51e66.webp",
+        "thumbnailSha256": "450a01e3f94979ccb143418dc95d13876e0752b241b30b90e2abe309eed51e66",
+        "thumbnailBytes": 15978,
+        "preview": "/artwork/grounded/orbital-inclination/light-960.a1a999f4640de52df10ea99330326cdfdf94e15d9ceecbb4794dd799eb335ef8.webp",
+        "previewSha256": "a1a999f4640de52df10ea99330326cdfdf94e15d9ceecbb4794dd799eb335ef8",
+        "previewBytes": 28520
+      },
+      "dark": {
+        "master": "/artwork/grounded/orbital-inclination/dark.a99a71766ce0f9db77373ba157e6fbdee773371fc256c1ce3250aa989d392890.svg",
+        "sha256": "a99a71766ce0f9db77373ba157e6fbdee773371fc256c1ce3250aa989d392890",
+        "bytes": 17498,
+        "thumbnail": "/artwork/grounded/orbital-inclination/dark-480.de3cc82b4e972c4576a122392ccef8d110108f5cc54e5f43655acee9a70d3576.webp",
+        "thumbnailSha256": "de3cc82b4e972c4576a122392ccef8d110108f5cc54e5f43655acee9a70d3576",
+        "thumbnailBytes": 16040,
+        "preview": "/artwork/grounded/orbital-inclination/dark-960.c8bf7374e8b8a8be090cdd4529aaae8cfc2087162b2e16fc38f56141cb327e62.webp",
+        "previewSha256": "c8bf7374e8b8a8be090cdd4529aaae8cfc2087162b2e16fc38f56141cb327e62",
+        "previewBytes": 28512
+      },
+      "mono": {
+        "master": "/artwork/grounded/orbital-inclination/mono.dc543c0e855d5de502af7b050ad3c0ff9dc13eabd5f439835800e1834457f1a3.svg",
+        "sha256": "dc543c0e855d5de502af7b050ad3c0ff9dc13eabd5f439835800e1834457f1a3",
+        "bytes": 17498,
+        "thumbnail": "/artwork/grounded/orbital-inclination/mono-480.5f2f4f4170e86d2eaf585e8eddcf0ab556e3625d880baafb9c3ed3bf1ce671aa.webp",
+        "thumbnailSha256": "5f2f4f4170e86d2eaf585e8eddcf0ab556e3625d880baafb9c3ed3bf1ce671aa",
+        "thumbnailBytes": 11958,
+        "preview": "/artwork/grounded/orbital-inclination/mono-960.2badef9e35addcc392863accac9a71db416a74173232bfa9ef52b92a190ee06c.webp",
+        "previewSha256": "2badef9e35addcc392863accac9a71db416a74173232bfa9ef52b92a190ee06c",
+        "previewBytes": 22018
+      }
+    }
+  },
+  {
+    "slug": "lunar-phase-geometry",
+    "title": "Lunar phase geometry",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "lunar-phase-geometry",
+    "sourceDirectoryId": "13-lunar-phase-geometry",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Sunlight illuminates one hemisphere; viewing angle reveals a crescent.",
+    "basis": "The illuminated plan hemisphere faces the upward Sun direction. With observer E=(240,580), Moon M=(600,300), cos(alpha)=-280/sqrt(360²+280²). The disc fraction is (1+cos(alpha))/2.",
+    "limitations": "Ideal spherical Moon and parallel sunlight. No libration, topography, atmosphere, eclipse or ephemeris. Body sizes and distance are not astronomical scale. The lower disc is an independent observer-view inset.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "astronomy",
+      "ideal-geometry",
+      "lunar-phase-geometry"
+    ],
+    "aliases": [
+      "lunar phase geometry",
+      "lunar-phase-geometry"
+    ],
+    "sources": [
+      {
+        "title": "NASA SVS: Lunar Near and Far Side Phases",
+        "url": "https://svs.gsfc.nasa.gov/14992/"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/lunar-phase-geometry/light.b4fc6e1ca2b95db7ff9aae68eef134fef61217921348951fa83c76badd74c815.svg",
+        "sha256": "b4fc6e1ca2b95db7ff9aae68eef134fef61217921348951fa83c76badd74c815",
+        "bytes": 5266,
+        "thumbnail": "/artwork/grounded/lunar-phase-geometry/light-480.bd575c50184d5327a052a45bccddab4df74b5b979394232d49b427bc9a0bc8d1.webp",
+        "thumbnailSha256": "bd575c50184d5327a052a45bccddab4df74b5b979394232d49b427bc9a0bc8d1",
+        "thumbnailBytes": 9702,
+        "preview": "/artwork/grounded/lunar-phase-geometry/light-960.a89f11c3726dd80aecc8e22497bee9621439a496a914ac59936912924c5f5bc4.webp",
+        "previewSha256": "a89f11c3726dd80aecc8e22497bee9621439a496a914ac59936912924c5f5bc4",
+        "previewBytes": 18858
+      },
+      "dark": {
+        "master": "/artwork/grounded/lunar-phase-geometry/dark.1c6089d395347571861ed2be03a2c439c4db2a108adf69e5973c20233eed5fac.svg",
+        "sha256": "1c6089d395347571861ed2be03a2c439c4db2a108adf69e5973c20233eed5fac",
+        "bytes": 5266,
+        "thumbnail": "/artwork/grounded/lunar-phase-geometry/dark-480.84ed7d9b5ea64b3912fb12807b6c9ef49c448a23423c9b5b76ef552fe8f4f325.webp",
+        "thumbnailSha256": "84ed7d9b5ea64b3912fb12807b6c9ef49c448a23423c9b5b76ef552fe8f4f325",
+        "thumbnailBytes": 9758,
+        "preview": "/artwork/grounded/lunar-phase-geometry/dark-960.4b1c6ea6ccc098b62a0941b9a1104081fc9596470ee4c595fb60d8c986b56ff4.webp",
+        "previewSha256": "4b1c6ea6ccc098b62a0941b9a1104081fc9596470ee4c595fb60d8c986b56ff4",
+        "previewBytes": 19018
+      },
+      "mono": {
+        "master": "/artwork/grounded/lunar-phase-geometry/mono.2947caff5981fb511f15daf5e4195ea040e10a9f11d9a567f18bbb4856139334.svg",
+        "sha256": "2947caff5981fb511f15daf5e4195ea040e10a9f11d9a567f18bbb4856139334",
+        "bytes": 5266,
+        "thumbnail": "/artwork/grounded/lunar-phase-geometry/mono-480.b143200dab1ecfc092ab42f417e37ab936081ec5891fc33f620752a9f2a7f4fd.webp",
+        "thumbnailSha256": "b143200dab1ecfc092ab42f417e37ab936081ec5891fc33f620752a9f2a7f4fd",
+        "thumbnailBytes": 7026,
+        "preview": "/artwork/grounded/lunar-phase-geometry/mono-960.8da3bb55f5203f9a11725748905fd0ed9b463e3fa97409dbea5dbc4af1e21f3d.webp",
+        "previewSha256": "8da3bb55f5203f9a11725748905fd0ed9b463e3fa97409dbea5dbc4af1e21f3d",
+        "previewBytes": 14162
+      }
+    }
+  },
+  {
+    "slug": "stellar-parallax",
+    "title": "Stellar parallax",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "stellar-parallax",
+    "sourceDirectoryId": "14-stellar-parallax",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 240,
+    "caption": "A half-angle and half-baseline determine distance by tan(p)=b/d.",
+    "basis": "Observer positions are (210,700) and (690,700), with star (450,150). Half-baseline b=240, distance d=550 and p=atan(240/550); the full apex angle is 2p.",
+    "limitations": "An ideal symmetric triangle, not a measured star or orbit. No small-angle approximation is used. Baseline and angle are deliberately large for reading; proper motion, orbital eccentricity and instrument uncertainty are omitted.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "astronomy",
+      "ideal-geometry",
+      "stellar-parallax"
+    ],
+    "aliases": [
+      "stellar parallax",
+      "stellar-parallax"
+    ],
+    "sources": [
+      {
+        "title": "Penn State ASTRO 801: Lesson 4",
+        "url": "https://courses.ems.psu.edu/astro801/book/export/html/1763"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/stellar-parallax/light.8b20ec67dd29dd07b4a580cd80de2fb36de5f6ed842079f61554d1c5f63df675.svg",
+        "sha256": "8b20ec67dd29dd07b4a580cd80de2fb36de5f6ed842079f61554d1c5f63df675",
+        "bytes": 3960,
+        "thumbnail": "/artwork/grounded/stellar-parallax/light-480.b2536af878df0299fb362360a24a652e8b98c54ce2c939d39a64fe5af61f7055.webp",
+        "thumbnailSha256": "b2536af878df0299fb362360a24a652e8b98c54ce2c939d39a64fe5af61f7055",
+        "thumbnailBytes": 5126,
+        "preview": "/artwork/grounded/stellar-parallax/light-960.e710d7166dc3cd644a7731e5fdedee228b3d152d9be40c366f020c3ca8b24416.webp",
+        "previewSha256": "e710d7166dc3cd644a7731e5fdedee228b3d152d9be40c366f020c3ca8b24416",
+        "previewBytes": 9616
+      },
+      "dark": {
+        "master": "/artwork/grounded/stellar-parallax/dark.6a0e20011fceda5cf43901c243416f526f30cf7d2f5f9e11c83dd9625e107b7d.svg",
+        "sha256": "6a0e20011fceda5cf43901c243416f526f30cf7d2f5f9e11c83dd9625e107b7d",
+        "bytes": 3960,
+        "thumbnail": "/artwork/grounded/stellar-parallax/dark-480.e9388805d35b98d9e5d33c073aff7ce81d2411a658cb3fb5bb65d0ab2d5332cd.webp",
+        "thumbnailSha256": "e9388805d35b98d9e5d33c073aff7ce81d2411a658cb3fb5bb65d0ab2d5332cd",
+        "thumbnailBytes": 5118,
+        "preview": "/artwork/grounded/stellar-parallax/dark-960.b048cafa6c982f9c732efe64826c1ed688e2ba292cdb9ad261ae55f7d0e5ae0d.webp",
+        "previewSha256": "b048cafa6c982f9c732efe64826c1ed688e2ba292cdb9ad261ae55f7d0e5ae0d",
+        "previewBytes": 9582
+      },
+      "mono": {
+        "master": "/artwork/grounded/stellar-parallax/mono.f8f83691bd67a1b6f891b2d3a0fcae38cd336e1d2be71f28326556e321366044.svg",
+        "sha256": "f8f83691bd67a1b6f891b2d3a0fcae38cd336e1d2be71f28326556e321366044",
+        "bytes": 3960,
+        "thumbnail": "/artwork/grounded/stellar-parallax/mono-480.279cf8004972ba122ffc53a3dff54a0986db39203ee7498aeb6c0db2c5988720.webp",
+        "thumbnailSha256": "279cf8004972ba122ffc53a3dff54a0986db39203ee7498aeb6c0db2c5988720",
+        "thumbnailBytes": 4358,
+        "preview": "/artwork/grounded/stellar-parallax/mono-960.df99cc8664b06337c4af9fcf8a0502c4692b7ea66c05b612d87e3ed3a571a801.webp",
+        "previewSha256": "df99cc8664b06337c4af9fcf8a0502c4692b7ea66c05b612d87e3ed3a571a801",
+        "previewBytes": 8270
+      }
+    }
+  },
+  {
+    "slug": "eclipse-cones",
+    "title": "Eclipse cones",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "eclipse-cones",
+    "sourceDirectoryId": "15-eclipse-cones",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Common tangent rays delimit umbra, penumbra and antumbra.",
+    "basis": "Centers are separated by D=290, radii R=110 and r=48. External tangent normals have x=(R-r)/D; internal tangent normals have x=(R+r)/D. The umbra tip is at source x+D R/(R-r).",
+    "limitations": "Ideal geometric optics with spherical opaque blocker and extended spherical source. All dimensions are normalized; no Earth, Sun or Moon scale is claimed. No receiving body, atmospheric refraction, diffraction or brightness model.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance. During source review, retrieval of the original OUP endpoint failed. The same authors’ accessible arXiv version, with matching journal DOI, supplied the inspected cone derivation.",
+    "subject": "physics",
+    "tags": [
+      "astronomy",
+      "ideal-geometry",
+      "eclipse-cones"
+    ],
+    "aliases": [
+      "eclipse cones",
+      "eclipse-cones"
+    ],
+    "sources": [
+      {
+        "title": "Veras and Breedt (2017): Eclipse, transit and occultation geometry",
+        "url": "https://academic.oup.com/mnras/article/468/3/2672/3070428"
+      },
+      {
+        "title": "Veras and Breedt (2017): accessible author version",
+        "url": "https://arxiv.org/html/1703.03414v1"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/eclipse-cones/light.be56ec61146b47aaac206c4dcf9542c68e89320c03a3e58f1e1b7e2b7f9a52f5.svg",
+        "sha256": "be56ec61146b47aaac206c4dcf9542c68e89320c03a3e58f1e1b7e2b7f9a52f5",
+        "bytes": 8735,
+        "thumbnail": "/artwork/grounded/eclipse-cones/light-480.9abde138a78207d7133a42bbe81c49c7b90db4062e715865c8fdc2bfec5ece29.webp",
+        "thumbnailSha256": "9abde138a78207d7133a42bbe81c49c7b90db4062e715865c8fdc2bfec5ece29",
+        "thumbnailBytes": 8098,
+        "preview": "/artwork/grounded/eclipse-cones/light-960.dcd2bdd5a58ad4edbac22b820b5090d4d12b4f5a6dc37a4ffa1185bdc4fe001f.webp",
+        "previewSha256": "dcd2bdd5a58ad4edbac22b820b5090d4d12b4f5a6dc37a4ffa1185bdc4fe001f",
+        "previewBytes": 15584
+      },
+      "dark": {
+        "master": "/artwork/grounded/eclipse-cones/dark.0c22126d8e99990cac6690fcca82881266c7a6ba772b096bcb3460d481b80b36.svg",
+        "sha256": "0c22126d8e99990cac6690fcca82881266c7a6ba772b096bcb3460d481b80b36",
+        "bytes": 8735,
+        "thumbnail": "/artwork/grounded/eclipse-cones/dark-480.bc84a311b97cdad206e126bb14416de41f6defc9de11a744ca4c2705c93f0e2e.webp",
+        "thumbnailSha256": "bc84a311b97cdad206e126bb14416de41f6defc9de11a744ca4c2705c93f0e2e",
+        "thumbnailBytes": 8100,
+        "preview": "/artwork/grounded/eclipse-cones/dark-960.a48b85f2bb37bdc3d939174012cf321e256810c83f375331a0a9afb9e8f359f0.webp",
+        "previewSha256": "a48b85f2bb37bdc3d939174012cf321e256810c83f375331a0a9afb9e8f359f0",
+        "previewBytes": 15812
+      },
+      "mono": {
+        "master": "/artwork/grounded/eclipse-cones/mono.3e6c8c915c415436c2c31ff855ffa968055df873bbc66a3f961867da9fe614ab.svg",
+        "sha256": "3e6c8c915c415436c2c31ff855ffa968055df873bbc66a3f961867da9fe614ab",
+        "bytes": 8735,
+        "thumbnail": "/artwork/grounded/eclipse-cones/mono-480.7e855f6310c6229b762f2652ca10d6ebe4bf4bd7dee00c702dae5a7c03514683.webp",
+        "thumbnailSha256": "7e855f6310c6229b762f2652ca10d6ebe4bf4bd7dee00c702dae5a7c03514683",
+        "thumbnailBytes": 6358,
+        "preview": "/artwork/grounded/eclipse-cones/mono-960.34d745bdc6bb720b85ab772d23d452b468e288cd4b19b033450b9fb82762dd4e.webp",
+        "previewSha256": "34d745bdc6bb720b85ab772d23d452b468e288cd4b19b033450b9fb82762dd4e",
+        "previewBytes": 12576
+      }
+    }
+  },
+  {
+    "slug": "thin-lens-image",
+    "title": "Thin-lens image",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "thin-lens-image",
+    "sourceDirectoryId": "16-thin-lens-image",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "A converging thin lens forms an inverted real image.",
+    "basis": "The ideal thin-lens relation 1/do + 1/di = 1/f uses object distance 330, image distance 220 and focal length 132 in common drawing units. Magnification is -2/3, so the 100-unit upright object has a 66 2/3-unit inverted image. The ray parallel to the axis passes through the rear focus after the ideal lens plane, while the central ray continues undeviated; both reach the same image tip.",
+    "limitations": "Ideal paraxial thin-lens construction; ray slopes and imaging equation are represented, not exact Snell tracing through the illustrated finite lens outline. Lens curvature, aperture, mount and bench are authored; no index/material, aberrations, diffraction, intensity or manufacturing specification. Large drawing angles are explanatory, not a validated optical design.",
+    "provenance": "Original authored editable vector geometry; ideal mathematical optical relations with explicitly illustrative apparatus. No copied, traced or embedded reference imagery. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "optics",
+      "geometric-optics",
+      "thin-lens-image"
+    ],
+    "aliases": [
+      "thin lens image"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax University Physics 3: Thin Lenses",
+        "url": "https://openstax.org/books/university-physics-volume-3/pages/2-4-thin-lenses"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/thin-lens-image/light.6fd6a5792ba560cb0dc62dce18c0239fea5677d6cedc241437d960ee9b1db1e8.svg",
+        "sha256": "6fd6a5792ba560cb0dc62dce18c0239fea5677d6cedc241437d960ee9b1db1e8",
+        "bytes": 5910,
+        "thumbnail": "/artwork/grounded/thin-lens-image/light-480.9896f65d4f48e3d03832de32eceb8d4cc41270ca006e8ec3a71815316c6c9801.webp",
+        "thumbnailSha256": "9896f65d4f48e3d03832de32eceb8d4cc41270ca006e8ec3a71815316c6c9801",
+        "thumbnailBytes": 6310,
+        "preview": "/artwork/grounded/thin-lens-image/light-960.2aeb8ccaad7d2dd152e739740f539a72197585a97fdb969528b551e1dcf5160b.webp",
+        "previewSha256": "2aeb8ccaad7d2dd152e739740f539a72197585a97fdb969528b551e1dcf5160b",
+        "previewBytes": 12780
+      },
+      "dark": {
+        "master": "/artwork/grounded/thin-lens-image/dark.3cdf0e58efa4ea1527bfd74f3702981e4a137ae34dae4d7ec601101100b048c8.svg",
+        "sha256": "3cdf0e58efa4ea1527bfd74f3702981e4a137ae34dae4d7ec601101100b048c8",
+        "bytes": 5910,
+        "thumbnail": "/artwork/grounded/thin-lens-image/dark-480.5f4f2d4b3c3e28e5f664bf90596ebc9d1c9e04fbdb04c761d99d3973b2d83e21.webp",
+        "thumbnailSha256": "5f4f2d4b3c3e28e5f664bf90596ebc9d1c9e04fbdb04c761d99d3973b2d83e21",
+        "thumbnailBytes": 6310,
+        "preview": "/artwork/grounded/thin-lens-image/dark-960.133ce67183b93ad43af44757f2167ba02da829cbd36ef4595f985b9a8bcc9b4e.webp",
+        "previewSha256": "133ce67183b93ad43af44757f2167ba02da829cbd36ef4595f985b9a8bcc9b4e",
+        "previewBytes": 12776
+      },
+      "mono": {
+        "master": "/artwork/grounded/thin-lens-image/mono.280961b6321dd91feb04448033e7edd974b50680dafbbfb8ccb9c3c0032cd243.svg",
+        "sha256": "280961b6321dd91feb04448033e7edd974b50680dafbbfb8ccb9c3c0032cd243",
+        "bytes": 5910,
+        "thumbnail": "/artwork/grounded/thin-lens-image/mono-480.4d71fdd8e595bd8e9247f46d6a6000cfa8ff276e351f39ade67fb3a4668cbfb7.webp",
+        "thumbnailSha256": "4d71fdd8e595bd8e9247f46d6a6000cfa8ff276e351f39ade67fb3a4668cbfb7",
+        "thumbnailBytes": 5006,
+        "preview": "/artwork/grounded/thin-lens-image/mono-960.5d22737d03840f0542da047c5088a89542bf90ea75381458ae7c40f81fdc01bf.webp",
+        "previewSha256": "5d22737d03840f0542da047c5088a89542bf90ea75381458ae7c40f81fdc01bf",
+        "previewBytes": 10434
+      }
+    }
+  },
+  {
+    "slug": "brewster-interface",
+    "title": "Brewster interface",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "brewster-interface",
+    "sourceDirectoryId": "17-brewster-interface",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "At Brewster incidence, reflected and transmitted rays are perpendicular.",
+    "basis": "For hypothetical refractive indices n1=1 and n2=1.5, Brewster incidence is atan(1.5), about 56.31 degrees from the normal. Snell refraction is about 33.69 degrees, making the reflected and transmitted directions perpendicular. The ideal p-polarized reflection amplitude is zero; unpolarized incident light therefore yields an s-polarized reflected component.",
+    "limitations": "Planar geometric-optics interface between ideal lossless, nonmagnetic isotropic media with hypothetical indices 1 and 1.5. For unpolarized incident light, the reflected component is s-polarized; circle-dot glyphs beside the reflected ray denote electric-field direction perpendicular to the drawing plane, not discrete particles or measured amplitude. Transmitted light is not claimed to be purely p-polarized. Line weights do not encode power; absorption, dispersion and finite interfaces are omitted.",
+    "provenance": "Original authored editable vector geometry; ideal mathematical optical relations with explicitly illustrative apparatus. No copied, traced or embedded reference imagery. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "optics",
+      "geometric-optics",
+      "brewster-interface"
+    ],
+    "aliases": [
+      "brewster interface"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax University Physics 3: Polarization",
+        "url": "https://openstax.org/books/university-physics-volume-3/pages/1-7-polarization"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/brewster-interface/light.00205f5b1228fb6a8789d989909828c91798e753d6fd8d78b6c908ed21ddd936.svg",
+        "sha256": "00205f5b1228fb6a8789d989909828c91798e753d6fd8d78b6c908ed21ddd936",
+        "bytes": 6854,
+        "thumbnail": "/artwork/grounded/brewster-interface/light-480.a260b2e515ec985c61af03a8e364293d9db03f9acdf376542b13ee1b9544eeaa.webp",
+        "thumbnailSha256": "a260b2e515ec985c61af03a8e364293d9db03f9acdf376542b13ee1b9544eeaa",
+        "thumbnailBytes": 2910,
+        "preview": "/artwork/grounded/brewster-interface/light-960.24c0346a3e5693b6c63eee221a576adf91b84d236450026a7c16b18114f3fec6.webp",
+        "previewSha256": "24c0346a3e5693b6c63eee221a576adf91b84d236450026a7c16b18114f3fec6",
+        "previewBytes": 5252
+      },
+      "dark": {
+        "master": "/artwork/grounded/brewster-interface/dark.96ff4091be2adaeacc0b2a6bf4610f61784a8129a2b7e4aa13b8ccf3056da433.svg",
+        "sha256": "96ff4091be2adaeacc0b2a6bf4610f61784a8129a2b7e4aa13b8ccf3056da433",
+        "bytes": 6854,
+        "thumbnail": "/artwork/grounded/brewster-interface/dark-480.698510a11fe0275a0128e8ab7498ece0b73f35efd961c6be6f6bb419b74891e3.webp",
+        "thumbnailSha256": "698510a11fe0275a0128e8ab7498ece0b73f35efd961c6be6f6bb419b74891e3",
+        "thumbnailBytes": 2948,
+        "preview": "/artwork/grounded/brewster-interface/dark-960.c7fab5b0ed9e3600c703127648dba3904217dfdf8690b44d5778da95bf739936.webp",
+        "previewSha256": "c7fab5b0ed9e3600c703127648dba3904217dfdf8690b44d5778da95bf739936",
+        "previewBytes": 5282
+      },
+      "mono": {
+        "master": "/artwork/grounded/brewster-interface/mono.3f1681607ad30a41642d5b09e9221cc0952de1227f063ae3a9fcaea7c8d34c6c.svg",
+        "sha256": "3f1681607ad30a41642d5b09e9221cc0952de1227f063ae3a9fcaea7c8d34c6c",
+        "bytes": 6854,
+        "thumbnail": "/artwork/grounded/brewster-interface/mono-480.b61120077a5221796298a072b551195de05482c6884575e032cfe9a5aaba67be.webp",
+        "thumbnailSha256": "b61120077a5221796298a072b551195de05482c6884575e032cfe9a5aaba67be",
+        "thumbnailBytes": 2418,
+        "preview": "/artwork/grounded/brewster-interface/mono-960.e5a0ad35a7ae0355801b7c0bf556de8ce4b6f7bb591594f478ef2a573b1d6d28.webp",
+        "previewSha256": "e5a0ad35a7ae0355801b7c0bf556de8ce4b6f7bb591594f478ef2a573b1d6d28",
+        "previewBytes": 4640
+      }
+    }
+  },
+  {
+    "slug": "newton-rings",
+    "title": "Newton rings",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "newton-rings",
+    "sourceDirectoryId": "18-newton-rings",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Thin-film interference gives square-root-spaced dark-ring loci.",
+    "basis": "Near-normal reflection from a thin air film has dark loci at 2t=m lambda when the two reflected components differ by one pi reflection phase. With curvature radius 0.8 m and wavelength 589 nm, the leading-order relation is r_m squared = m lambda R. Seven authored circular loci use orders 1 through 7 and one common display scale; their squared radii have equal successive increments. The contact point marks order zero.",
+    "limitations": "Monochromatic near-normal reflection from an ideal thin air gap between spherical convex surface and plane, with one pi phase reversal. Ink circles mark dark-fringe loci, not a rendered intensity or wavelength-color field. The central dot marks the contact minimum. The lower lens/flat section exaggerates the gap and has an independent illustrative scale; it is not an exact profile of the radius used in the ring calculation. Contact deformation, coherence spectrum, lens/plate outer reflections and non-normal corrections are omitted. The detached rail has equally spaced order ticks, not a calibrated length scale.",
+    "provenance": "Original authored editable vector geometry; ideal mathematical optical relations with explicitly illustrative apparatus. No copied, traced or embedded reference imagery. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "optics",
+      "interference",
+      "newton-rings"
+    ],
+    "aliases": [
+      "newton rings"
+    ],
+    "sources": [
+      {
+        "title": "UNSW Physclips: Interference, Newton's rings",
+        "url": "https://www.animations.physics.unsw.edu.au/jw/light/Newton's-rings.html"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/newton-rings/light.fa6b41da03106b06af15c0019355e4dd92fed4bbc70039ded79fb113f4a9fd4d.svg",
+        "sha256": "fa6b41da03106b06af15c0019355e4dd92fed4bbc70039ded79fb113f4a9fd4d",
+        "bytes": 7778,
+        "thumbnail": "/artwork/grounded/newton-rings/light-480.89adbad1629437b2a41766c55b4e7a8d9c37d452f446388eddcfd0add83fca17.webp",
+        "thumbnailSha256": "89adbad1629437b2a41766c55b4e7a8d9c37d452f446388eddcfd0add83fca17",
+        "thumbnailBytes": 20306,
+        "preview": "/artwork/grounded/newton-rings/light-960.b32467ec09e5a6aa836d1bfd30f7bd85d36c7a0cc0c97ad4f2ecd534cc9427d4.webp",
+        "previewSha256": "b32467ec09e5a6aa836d1bfd30f7bd85d36c7a0cc0c97ad4f2ecd534cc9427d4",
+        "previewBytes": 42456
+      },
+      "dark": {
+        "master": "/artwork/grounded/newton-rings/dark.c5e449c982fcc1fdd80018a421fd387078e71f4a6e25411074311bacc3b46132.svg",
+        "sha256": "c5e449c982fcc1fdd80018a421fd387078e71f4a6e25411074311bacc3b46132",
+        "bytes": 7778,
+        "thumbnail": "/artwork/grounded/newton-rings/dark-480.6a7655c2d8298e285b2b67849e85f1e505ab0355cfd672885ce9d117b2699072.webp",
+        "thumbnailSha256": "6a7655c2d8298e285b2b67849e85f1e505ab0355cfd672885ce9d117b2699072",
+        "thumbnailBytes": 19888,
+        "preview": "/artwork/grounded/newton-rings/dark-960.a506cdc83107b5612ae781252de4fd945bb8e1d488f6882c607cce6e32127896.webp",
+        "previewSha256": "a506cdc83107b5612ae781252de4fd945bb8e1d488f6882c607cce6e32127896",
+        "previewBytes": 42858
+      },
+      "mono": {
+        "master": "/artwork/grounded/newton-rings/mono.6df97e5d1fd3ef9624359df741b3bb03a0c11b6ec57f8bd25e27aae777b4d10f.svg",
+        "sha256": "6df97e5d1fd3ef9624359df741b3bb03a0c11b6ec57f8bd25e27aae777b4d10f",
+        "bytes": 7778,
+        "thumbnail": "/artwork/grounded/newton-rings/mono-480.3c11ede50e05829a6414f3a0223f83b76bfab1feee4d93356cb369e665e5c76c.webp",
+        "thumbnailSha256": "3c11ede50e05829a6414f3a0223f83b76bfab1feee4d93356cb369e665e5c76c",
+        "thumbnailBytes": 16900,
+        "preview": "/artwork/grounded/newton-rings/mono-960.2fdd97bfb4115592cdf996e71be6ade30e693714a434519a5d05a4e6625d822d.webp",
+        "previewSha256": "2fdd97bfb4115592cdf996e71be6ade30e693714a434519a5d05a4e6625d822d",
+        "previewBytes": 38512
+      }
+    }
+  },
+  {
+    "slug": "pinhole-projection",
+    "title": "Pinhole projection",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "pinhole-projection",
+    "sourceDirectoryId": "19-pinhole-projection",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Straight rays through one opening invert a projected object.",
+    "basis": "Straight rays through the ideal aperture point (395,470) join an object plane at x=140 to a receiving plane at x=740. Object and image distances are 255 and 345 drawing units, giving signed magnification -345/255=-23/17. Rays from both endpoints of the asymmetric object glyph cross the same aperture point and reach the inverted endpoint positions.",
+    "limitations": "Ideal geometrical point-pinhole relation with straight rays and no focusing lens. The drawn opening is enlarged for readability; it does not calculate the finite-hole blur or diffraction of that displayed width. Object and projected glyph thicknesses are symbolic; brightness, exposure, screen scattering and housing fabrication are omitted. The diagram is a longitudinal section, not a complete camera design.",
+    "provenance": "Original authored editable vector geometry; ideal mathematical optical relations with explicitly illustrative apparatus. No copied, traced or embedded reference imagery. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "optics",
+      "geometric-optics",
+      "pinhole-projection"
+    ],
+    "aliases": [
+      "pinhole projection"
+    ],
+    "sources": [
+      {
+        "title": "University of Maryland: Optical board, pinhole camera",
+        "url": "https://lecdem.physics.umd.edu/l/l1/1421-l1-22.html"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/pinhole-projection/light.12520c9869cd7550f441e0976225cb82f38fe824603705ec14045b0fffa263e0.svg",
+        "sha256": "12520c9869cd7550f441e0976225cb82f38fe824603705ec14045b0fffa263e0",
+        "bytes": 7529,
+        "thumbnail": "/artwork/grounded/pinhole-projection/light-480.e717330855049c65db4f49e2e6c2f3e566a0ff5da36c5c4d8a0c413d145c0465.webp",
+        "thumbnailSha256": "e717330855049c65db4f49e2e6c2f3e566a0ff5da36c5c4d8a0c413d145c0465",
+        "thumbnailBytes": 3642,
+        "preview": "/artwork/grounded/pinhole-projection/light-960.067fa6ccc9d34734237af0a2ce013d6c1779022d68e88faddb03b5d0c52aa0c6.webp",
+        "previewSha256": "067fa6ccc9d34734237af0a2ce013d6c1779022d68e88faddb03b5d0c52aa0c6",
+        "previewBytes": 7198
+      },
+      "dark": {
+        "master": "/artwork/grounded/pinhole-projection/dark.909ae62582f1f13356dc8c5154e8ca3de6a6865e583bb108c7c9e76ce70e2a06.svg",
+        "sha256": "909ae62582f1f13356dc8c5154e8ca3de6a6865e583bb108c7c9e76ce70e2a06",
+        "bytes": 7529,
+        "thumbnail": "/artwork/grounded/pinhole-projection/dark-480.b642ff2cfad68cfb0ccb1c474a6f79864275ec5b69053880af5b11b0e1eb63ee.webp",
+        "thumbnailSha256": "b642ff2cfad68cfb0ccb1c474a6f79864275ec5b69053880af5b11b0e1eb63ee",
+        "thumbnailBytes": 3652,
+        "preview": "/artwork/grounded/pinhole-projection/dark-960.1e1ef5a7114d1d215c38e1cd03aa8a0be82156c690332a2fc49e32d18fd4ca41.webp",
+        "previewSha256": "1e1ef5a7114d1d215c38e1cd03aa8a0be82156c690332a2fc49e32d18fd4ca41",
+        "previewBytes": 7248
+      },
+      "mono": {
+        "master": "/artwork/grounded/pinhole-projection/mono.5d4d3289e8df3a7c2bb733fde9530d7086621025449d2b54399355acefba4e43.svg",
+        "sha256": "5d4d3289e8df3a7c2bb733fde9530d7086621025449d2b54399355acefba4e43",
+        "bytes": 7529,
+        "thumbnail": "/artwork/grounded/pinhole-projection/mono-480.f5bb25063027ed8160154ce966615b77eda97afa5ef4e2282819f06946a990bc.webp",
+        "thumbnailSha256": "f5bb25063027ed8160154ce966615b77eda97afa5ef4e2282819f06946a990bc",
+        "thumbnailBytes": 2240,
+        "preview": "/artwork/grounded/pinhole-projection/mono-960.974cc03aa4817f93545b90d41a430d76ede32bf9bfb3a7861b02dc1200d11f9e.webp",
+        "previewSha256": "974cc03aa4817f93545b90d41a430d76ede32bf9bfb3a7861b02dc1200d11f9e",
+        "previewBytes": 4334
+      }
+    }
+  },
+  {
+    "slug": "corner-retroreflector",
+    "title": "Corner retroreflector",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "corner-retroreflector",
+    "sourceDirectoryId": "20-corner-retroreflector",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Two perpendicular mirror reflections reverse a planar ray.",
+    "basis": "A planar ray first reflects from x=330 and then from y=650. Its normalized direction changes from (-0.8,0.6) to (0.8,0.6) and finally to (0.8,-0.6). The two perpendicular reflections reverse the input direction exactly while offsetting the output line. This is a two-mirror cross-section, not a three-dimensional cube corner.",
+    "limitations": "Ideal two-dimensional specular reflection. Rays strike each mirror once and emerge antiparallel, with a lateral offset. Two perpendicular mirrors do not reverse arbitrary three-dimensional ray directions; a trihedral cube corner requires a third mirror. Finite coating, diffraction, losses, alignment tolerance and mount design are not modeled. Line weight does not encode intensity.",
+    "provenance": "Original authored editable vector geometry; ideal mathematical optical relations with explicitly illustrative apparatus. No copied, traced or embedded reference imagery. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "physics",
+    "tags": [
+      "optics",
+      "geometric-optics",
+      "corner-retroreflector"
+    ],
+    "aliases": [
+      "corner retroreflector"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax University Physics 3: The Law of Reflection",
+        "url": "https://openstax.org/books/university-physics-volume-3/pages/1-2-the-law-of-reflection"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/corner-retroreflector/light.4f75a560a6ff8de03d7e2073d41be9e136b26df07c1d8551dbd724151c31c5d7.svg",
+        "sha256": "4f75a560a6ff8de03d7e2073d41be9e136b26df07c1d8551dbd724151c31c5d7",
+        "bytes": 7181,
+        "thumbnail": "/artwork/grounded/corner-retroreflector/light-480.c8926f3acfe7a93b3bbb216d859e1dfa01919799e38414613dc75c6a880ea361.webp",
+        "thumbnailSha256": "c8926f3acfe7a93b3bbb216d859e1dfa01919799e38414613dc75c6a880ea361",
+        "thumbnailBytes": 2902,
+        "preview": "/artwork/grounded/corner-retroreflector/light-960.9a43e6c8a51f64303887250a389f12ea973925193a69e19b88148caeb2efb775.webp",
+        "previewSha256": "9a43e6c8a51f64303887250a389f12ea973925193a69e19b88148caeb2efb775",
+        "previewBytes": 5706
+      },
+      "dark": {
+        "master": "/artwork/grounded/corner-retroreflector/dark.1bc875461d6c0cc4b1555485ed83dfb7450c16f2bf30c25bce82ade86b7e9ce7.svg",
+        "sha256": "1bc875461d6c0cc4b1555485ed83dfb7450c16f2bf30c25bce82ade86b7e9ce7",
+        "bytes": 7181,
+        "thumbnail": "/artwork/grounded/corner-retroreflector/dark-480.237f9e92daa5d1c57e04dde3acbc1b9e8f2d48842e01019340e2d4c093a31cbe.webp",
+        "thumbnailSha256": "237f9e92daa5d1c57e04dde3acbc1b9e8f2d48842e01019340e2d4c093a31cbe",
+        "thumbnailBytes": 2886,
+        "preview": "/artwork/grounded/corner-retroreflector/dark-960.f17aa3ff5065b504434824565a863bf330e94c91cbbbd4cd36232fa498ce08da.webp",
+        "previewSha256": "f17aa3ff5065b504434824565a863bf330e94c91cbbbd4cd36232fa498ce08da",
+        "previewBytes": 5614
+      },
+      "mono": {
+        "master": "/artwork/grounded/corner-retroreflector/mono.d0f6d5ce2de0698abcef7e1c4f6e55902e1917131b1ac511cec601c85debc8a4.svg",
+        "sha256": "d0f6d5ce2de0698abcef7e1c4f6e55902e1917131b1ac511cec601c85debc8a4",
+        "bytes": 7181,
+        "thumbnail": "/artwork/grounded/corner-retroreflector/mono-480.02f30d230235dca2c52d8874991d75feb4247d221b723c567191aba52c46dd79.webp",
+        "thumbnailSha256": "02f30d230235dca2c52d8874991d75feb4247d221b723c567191aba52c46dd79",
+        "thumbnailBytes": 1790,
+        "preview": "/artwork/grounded/corner-retroreflector/mono-960.cbcf7701670b53238a37e4269afa74074578eced810b6faa71006cafa598d06a.webp",
+        "previewSha256": "cbcf7701670b53238a37e4269afa74074578eced810b6faa71006cafa598d06a",
+        "previewBytes": 3382
+      }
+    }
+  },
+  {
+    "slug": "euler-bridge-graph",
+    "title": "Euler bridge graph",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "euler-bridge-graph",
+    "sourceDirectoryId": "21-euler-bridge-graph",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Seven bridges join four regions with degrees five, three, three, three.",
+    "basis": "The multigraph has edges AB twice, AC twice, AD, BD and CD. Its degrees are 5,3,3,3, giving four odd vertices and therefore no trail that uses every edge exactly once.",
+    "limitations": "Original schematic shore polygons and bridge widths are editorial. This is not a historical map, civil structure or traffic model. Bridge centerlines define connectivity; each paired rail and plank belongs to one edge.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "mathematics",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "euler-bridge-graph"
+    ],
+    "aliases": [
+      "euler bridge graph",
+      "euler-bridge-graph"
+    ],
+    "sources": [
+      {
+        "title": "Bogart, Drysdale and Stein: Discrete Math for Computer Science Students",
+        "url": "https://web.cecs.pdx.edu/~antoy/Courses/CS250/open_books/fullbook.pdf"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/euler-bridge-graph/light.a613507a534f4eef3e342a364ab63f3dfb443979095e283dd38fb547db1df354.svg",
+        "sha256": "a613507a534f4eef3e342a364ab63f3dfb443979095e283dd38fb547db1df354",
+        "bytes": 19409,
+        "thumbnail": "/artwork/grounded/euler-bridge-graph/light-480.45093f085edb11ccb6aaf9b6236dacd621c4473fdb15488e0cd465b1f0410ffe.webp",
+        "thumbnailSha256": "45093f085edb11ccb6aaf9b6236dacd621c4473fdb15488e0cd465b1f0410ffe",
+        "thumbnailBytes": 19654,
+        "preview": "/artwork/grounded/euler-bridge-graph/light-960.b1b85cd53395843078af83d42cae536ff66ffe615dba3cc56a1c3c35f97e4c0b.webp",
+        "previewSha256": "b1b85cd53395843078af83d42cae536ff66ffe615dba3cc56a1c3c35f97e4c0b",
+        "previewBytes": 33272
+      },
+      "dark": {
+        "master": "/artwork/grounded/euler-bridge-graph/dark.69b57bf561b92d19734f9c4473a714b4c23eee6a6a49595cc7b4c1998b6952d4.svg",
+        "sha256": "69b57bf561b92d19734f9c4473a714b4c23eee6a6a49595cc7b4c1998b6952d4",
+        "bytes": 19409,
+        "thumbnail": "/artwork/grounded/euler-bridge-graph/dark-480.f5a70bb9c61bb96215afa04a5a708de7ac315cf363d3dda3b81e94228efa34e7.webp",
+        "thumbnailSha256": "f5a70bb9c61bb96215afa04a5a708de7ac315cf363d3dda3b81e94228efa34e7",
+        "thumbnailBytes": 19706,
+        "preview": "/artwork/grounded/euler-bridge-graph/dark-960.bc657a5ff02ef1d11ab6ebd55543457330ac70ea0c8c5d6aa2ee904facabd514.webp",
+        "previewSha256": "bc657a5ff02ef1d11ab6ebd55543457330ac70ea0c8c5d6aa2ee904facabd514",
+        "previewBytes": 33348
+      },
+      "mono": {
+        "master": "/artwork/grounded/euler-bridge-graph/mono.cd82ef271525220d66ad58d4315e4ad236bd07fe55aceb7e87ef062864207738.svg",
+        "sha256": "cd82ef271525220d66ad58d4315e4ad236bd07fe55aceb7e87ef062864207738",
+        "bytes": 19409,
+        "thumbnail": "/artwork/grounded/euler-bridge-graph/mono-480.239243b3566f350a27b1e35be8dc38aea607e2da4c078248a319b7526c281fbf.webp",
+        "thumbnailSha256": "239243b3566f350a27b1e35be8dc38aea607e2da4c078248a319b7526c281fbf",
+        "thumbnailBytes": 14640,
+        "preview": "/artwork/grounded/euler-bridge-graph/mono-960.f6e6883be3217a2c89a3e158d853c759147b5043eec3dabb3a9a958e351ed134.webp",
+        "previewSha256": "f6e6883be3217a2c89a3e158d853c759147b5043eec3dabb3a9a958e351ed134",
+        "previewBytes": 25110
+      }
+    }
+  },
+  {
+    "slug": "lattice-basis",
+    "title": "Lattice basis",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "lattice-basis",
+    "sourceDirectoryId": "22-lattice-basis",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Two integer bases generate the same lattice and equal-area cells.",
+    "basis": "Basis u=(135,-30), v=(52,-145); replacing v by u+v is an integer determinant-one basis change. Both fundamental parallelograms have area |det(u,v)|=18015.",
+    "limitations": "Only a finite window of an infinite lattice is shown. The two cells begin at different lattice points. Hatch direction and arrow width are editorial; no lattice material, atoms, measured spacing or nearest-neighbor claim.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "mathematics",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "lattice-basis"
+    ],
+    "aliases": [
+      "lattice basis",
+      "lattice-basis"
+    ],
+    "sources": [
+      {
+        "title": "Gergely Ambrus: MATH 309, Lattices in the plane",
+        "url": "https://users.renyi.hu/~ambrus/UBC/notes_lattice.pdf"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/lattice-basis/light.0ed29b5a17d61fde066642706a5b512b719a4997d9177064512d9d0e8b7ddd22.svg",
+        "sha256": "0ed29b5a17d61fde066642706a5b512b719a4997d9177064512d9d0e8b7ddd22",
+        "bytes": 8433,
+        "thumbnail": "/artwork/grounded/lattice-basis/light-480.eaafe3b9b6cdc304692a6c49647d3f5cdb249db3456295097b77ea17a903874b.webp",
+        "thumbnailSha256": "eaafe3b9b6cdc304692a6c49647d3f5cdb249db3456295097b77ea17a903874b",
+        "thumbnailBytes": 7582,
+        "preview": "/artwork/grounded/lattice-basis/light-960.86fea8ec2e101492a89a37e8e7a99c75b934f5633ac34f0fceed1c72775b4d23.webp",
+        "previewSha256": "86fea8ec2e101492a89a37e8e7a99c75b934f5633ac34f0fceed1c72775b4d23",
+        "previewBytes": 13676
+      },
+      "dark": {
+        "master": "/artwork/grounded/lattice-basis/dark.80ad35eb9578c43f5847b5931ceeede2e1439ac3b48991d4a712db900369f31f.svg",
+        "sha256": "80ad35eb9578c43f5847b5931ceeede2e1439ac3b48991d4a712db900369f31f",
+        "bytes": 8433,
+        "thumbnail": "/artwork/grounded/lattice-basis/dark-480.b8dc7c891925f37e5b087f940475abd85f94aa68f0ceccd05b025635878dbf85.webp",
+        "thumbnailSha256": "b8dc7c891925f37e5b087f940475abd85f94aa68f0ceccd05b025635878dbf85",
+        "thumbnailBytes": 7632,
+        "preview": "/artwork/grounded/lattice-basis/dark-960.98f9c829f16d3c994cf35e537b161ac4e6cc4d0657ce048bb8346a3f0cdfad99.webp",
+        "previewSha256": "98f9c829f16d3c994cf35e537b161ac4e6cc4d0657ce048bb8346a3f0cdfad99",
+        "previewBytes": 13880
+      },
+      "mono": {
+        "master": "/artwork/grounded/lattice-basis/mono.f80086a38de6aeed9de7a93ec99bb4e4a831ba9a0f881651847f42de997af5ff.svg",
+        "sha256": "f80086a38de6aeed9de7a93ec99bb4e4a831ba9a0f881651847f42de997af5ff",
+        "bytes": 8433,
+        "thumbnail": "/artwork/grounded/lattice-basis/mono-480.4ee68963c30f672f21e4365641d1f95698af42a92fb835ce1ac4c58d300b42b6.webp",
+        "thumbnailSha256": "4ee68963c30f672f21e4365641d1f95698af42a92fb835ce1ac4c58d300b42b6",
+        "thumbnailBytes": 5938,
+        "preview": "/artwork/grounded/lattice-basis/mono-960.464b564a732efad3b2f7429c7a242a8889124de956b453931206f2dea3b61bbb.webp",
+        "previewSha256": "464b564a732efad3b2f7429c7a242a8889124de956b453931206f2dea3b61bbb",
+        "previewBytes": 10844
+      }
+    }
+  },
+  {
+    "slug": "desargues-configuration",
+    "title": "Desargues configuration",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "desargues-configuration",
+    "sourceDirectoryId": "23-desargues-configuration",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Perspective triangles place corresponding-side intersections on one line.",
+    "basis": "Original rational rays O=(0,0), A=(-3,0), B=(-1,4), C=(-3,4), with scale factors 1.4,0.6,0.8. Corresponding vertex lines are concurrent; the three side intersections are collinear.",
+    "limitations": "The original planar construction is exact in rational arithmetic before similarity placement and six-decimal serialization. Displayed segments stand for extended lines. Stroke intersections are not extra marked configuration points.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "mathematics",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "desargues-configuration"
+    ],
+    "aliases": [
+      "desargues configuration",
+      "desargues-configuration"
+    ],
+    "sources": [
+      {
+        "title": "University of Illinois: Desargues’ Theorem",
+        "url": "https://gkfweb.math.illinois.edu/oldnew/math403/public/affine/desargues.html"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/desargues-configuration/light.d1062a82243c0a40d349cb239eeaa38b22d0c1dde5cd71ae435b3903bf817692.svg",
+        "sha256": "d1062a82243c0a40d349cb239eeaa38b22d0c1dde5cd71ae435b3903bf817692",
+        "bytes": 4096,
+        "thumbnail": "/artwork/grounded/desargues-configuration/light-480.518b39af260868e9db254f97c4c2dc1a8a723f9a9862d6ad1511a70b95afd719.webp",
+        "thumbnailSha256": "518b39af260868e9db254f97c4c2dc1a8a723f9a9862d6ad1511a70b95afd719",
+        "thumbnailBytes": 9218,
+        "preview": "/artwork/grounded/desargues-configuration/light-960.a564fcefefc3f5ad58ef3332c4f160738d3a42094f3e95a0bf3c076b5ce869eb.webp",
+        "previewSha256": "a564fcefefc3f5ad58ef3332c4f160738d3a42094f3e95a0bf3c076b5ce869eb",
+        "previewBytes": 16680
+      },
+      "dark": {
+        "master": "/artwork/grounded/desargues-configuration/dark.d1ee94fd14d0665997dc84406b346833e2ec97db14432007ebd639275e8dfa52.svg",
+        "sha256": "d1ee94fd14d0665997dc84406b346833e2ec97db14432007ebd639275e8dfa52",
+        "bytes": 4096,
+        "thumbnail": "/artwork/grounded/desargues-configuration/dark-480.8087e46fc1863a52dbd5092a95c673b72787a73af29c2e254dfc2c32cec48456.webp",
+        "thumbnailSha256": "8087e46fc1863a52dbd5092a95c673b72787a73af29c2e254dfc2c32cec48456",
+        "thumbnailBytes": 9284,
+        "preview": "/artwork/grounded/desargues-configuration/dark-960.e5c8714b01455ef9b455277181917e3330e7e4aaadab0c1bb7334bc6ae2d680c.webp",
+        "previewSha256": "e5c8714b01455ef9b455277181917e3330e7e4aaadab0c1bb7334bc6ae2d680c",
+        "previewBytes": 16820
+      },
+      "mono": {
+        "master": "/artwork/grounded/desargues-configuration/mono.ad205130bbf81b11413cfd228c3a4a62934306773f0d212c74a64cbac547ef62.svg",
+        "sha256": "ad205130bbf81b11413cfd228c3a4a62934306773f0d212c74a64cbac547ef62",
+        "bytes": 4096,
+        "thumbnail": "/artwork/grounded/desargues-configuration/mono-480.35625baf84ddbb3b9a2f48fc74c8c1ea049785be1c79fb2649ed3cfa324f37a3.webp",
+        "thumbnailSha256": "35625baf84ddbb3b9a2f48fc74c8c1ea049785be1c79fb2649ed3cfa324f37a3",
+        "thumbnailBytes": 7810,
+        "preview": "/artwork/grounded/desargues-configuration/mono-960.c03d475c27ccc4d692812d490eea509d6cc586fe02039fe83a268b1085eff522.webp",
+        "previewSha256": "c03d475c27ccc4d692812d490eea509d6cc586fe02039fe83a268b1085eff522",
+        "previewBytes": 14574
+      }
+    }
+  },
+  {
+    "slug": "archimedean-bounds",
+    "title": "Archimedean bounds",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "archimedean-bounds",
+    "sourceDirectoryId": "24-archimedean-bounds",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 320,
+    "caption": "Inscribed and tangent polygons bound a circle’s circumference.",
+    "basis": "For n=6 and n=12, inner polygon vertices lie on radius r and outer polygon vertices on r/cos(pi/n). Perimeter halves give n sin(pi/n) < pi < n tan(pi/n).",
+    "limitations": "The two constructions use independent display radii, not a size change of one physical circle. Modern trigonometric construction; no claim to reproduce a historical drawing or the final 96-gon calculation. Stroke widths are editorial.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance. The broad construction is intended for 320px or wider; the fine twelve-gon and circle separation is clearest at 640px or wider.",
+    "subject": "mathematics",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "archimedean-bounds"
+    ],
+    "aliases": [
+      "archimedean bounds",
+      "archimedean-bounds"
+    ],
+    "sources": [
+      {
+        "title": "Joel Feldman, UBC: Archimedes’ Computation of pi",
+        "url": "https://personal.math.ubc.ca/~feldman/m120/archimedesPi.pdf"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/archimedean-bounds/light.ba758fcd9156e8ebc0d68c877ba49d11db9595842fcf5e8826bc3376bb83b4a5.svg",
+        "sha256": "ba758fcd9156e8ebc0d68c877ba49d11db9595842fcf5e8826bc3376bb83b4a5",
+        "bytes": 4936,
+        "thumbnail": "/artwork/grounded/archimedean-bounds/light-480.88d3f1b9c2c0066e0fafc4abea1bfef5d44e963f0ea41cc19f0686b139b9b107.webp",
+        "thumbnailSha256": "88d3f1b9c2c0066e0fafc4abea1bfef5d44e963f0ea41cc19f0686b139b9b107",
+        "thumbnailBytes": 16760,
+        "preview": "/artwork/grounded/archimedean-bounds/light-960.f157df0cd42a74c684d9ab19c6a1abaf8ed2e868a541cc50ac1e275f4d8aec38.webp",
+        "previewSha256": "f157df0cd42a74c684d9ab19c6a1abaf8ed2e868a541cc50ac1e275f4d8aec38",
+        "previewBytes": 31550
+      },
+      "dark": {
+        "master": "/artwork/grounded/archimedean-bounds/dark.2bd2dc5f5acf0b8f0694e08b065f285623b34e748af75d1e8e92584241db7d0e.svg",
+        "sha256": "2bd2dc5f5acf0b8f0694e08b065f285623b34e748af75d1e8e92584241db7d0e",
+        "bytes": 4936,
+        "thumbnail": "/artwork/grounded/archimedean-bounds/dark-480.c06cd9eb7aa1de92340fc43a22113ee1e575ff4e321615e7dc7256b3a582f50d.webp",
+        "thumbnailSha256": "c06cd9eb7aa1de92340fc43a22113ee1e575ff4e321615e7dc7256b3a582f50d",
+        "thumbnailBytes": 16890,
+        "preview": "/artwork/grounded/archimedean-bounds/dark-960.11a7554922e749e3867ba50df076fb69853379d74aab8f79928b9c607038b21a.webp",
+        "previewSha256": "11a7554922e749e3867ba50df076fb69853379d74aab8f79928b9c607038b21a",
+        "previewBytes": 31860
+      },
+      "mono": {
+        "master": "/artwork/grounded/archimedean-bounds/mono.bbca0e02c7894742724e06f0891e7f419c36c9182aefbae131ad4c84ed48da9d.svg",
+        "sha256": "bbca0e02c7894742724e06f0891e7f419c36c9182aefbae131ad4c84ed48da9d",
+        "bytes": 4936,
+        "thumbnail": "/artwork/grounded/archimedean-bounds/mono-480.cf162c5b3e620e09e7a5517a342352641f35b737ff0c37c1890131c0b20d48fe.webp",
+        "thumbnailSha256": "cf162c5b3e620e09e7a5517a342352641f35b737ff0c37c1890131c0b20d48fe",
+        "thumbnailBytes": 11866,
+        "preview": "/artwork/grounded/archimedean-bounds/mono-960.006fbe37c18b1db0b780e99b5f127204068c26f4dcfb801578aac517203f33f2.webp",
+        "previewSha256": "006fbe37c18b1db0b780e99b5f127204068c26f4dcfb801578aac517203f33f2",
+        "previewBytes": 23358
+      }
+    }
+  },
+  {
+    "slug": "pappus-torus",
+    "title": "Pappus torus",
+    "batchId": "grounded-forms-twenty-five-studies-set07-r01",
+    "sourceId": "pappus-torus",
+    "sourceDirectoryId": "25-pappus-torus",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": "0 0 900 900",
+    "minimumDisplayWidth": 240,
+    "caption": "A circular section swept around an external axis generates a torus.",
+    "basis": "Major radius R=210 exceeds section radius r=70. Pappus gives V=(pi r²)(2pi R)=2pi²Rr². The annular plan boundaries have radii R-r and R+r; the centroid sweep has radius R.",
+    "limitations": "A quarter of the annular plan is omitted to expose the construction. The volume is for the complete torus, not the cutaway ink. This is a plan view, not a perspective surface or mechanical part. Engraving carries no thickness claim.",
+    "provenance": "mathematical ideal-model; originally authored SVG construction. Scientific references inform facts and mathematics; no reference image is copied or traced. Citations are from the reviewed source packet; this import does not claim new source access or image-license clearance.",
+    "subject": "mathematics",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "pappus-torus"
+    ],
+    "aliases": [
+      "pappus torus",
+      "pappus-torus"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax, Rice University: Moments and Centers of Mass",
+        "url": "https://openstax.org/books/calculus-volume-1/pages/6-6-moments-and-centers-of-mass"
+      }
+    ],
+    "variants": {
+      "light": {
+        "master": "/artwork/grounded/pappus-torus/light.f7fd8334d406ef5a54d976d6398e7e0ead01202d92a8e510639b64e5064bd96b.svg",
+        "sha256": "f7fd8334d406ef5a54d976d6398e7e0ead01202d92a8e510639b64e5064bd96b",
+        "bytes": 4824,
+        "thumbnail": "/artwork/grounded/pappus-torus/light-480.1cd3e67a810cb63268e476e9c5ad96572c46117fcaacb43a91cb5520ab885f62.webp",
+        "thumbnailSha256": "1cd3e67a810cb63268e476e9c5ad96572c46117fcaacb43a91cb5520ab885f62",
+        "thumbnailBytes": 24116,
+        "preview": "/artwork/grounded/pappus-torus/light-960.6c6eb40836e8a65241638ead351fdd2c2f24abaa181dc62edc3cae4edb84d67b.webp",
+        "previewSha256": "6c6eb40836e8a65241638ead351fdd2c2f24abaa181dc62edc3cae4edb84d67b",
+        "previewBytes": 52770
+      },
+      "dark": {
+        "master": "/artwork/grounded/pappus-torus/dark.c72c2d979b1d9d5813f2bcd3d0f896c891d89ecdb85e47d94b6ba1c7ae0a82ba.svg",
+        "sha256": "c72c2d979b1d9d5813f2bcd3d0f896c891d89ecdb85e47d94b6ba1c7ae0a82ba",
+        "bytes": 4824,
+        "thumbnail": "/artwork/grounded/pappus-torus/dark-480.0de8da9c315b979136e81bda4a90e356953c071d43724109a686f20a91949c35.webp",
+        "thumbnailSha256": "0de8da9c315b979136e81bda4a90e356953c071d43724109a686f20a91949c35",
+        "thumbnailBytes": 24304,
+        "preview": "/artwork/grounded/pappus-torus/dark-960.1f8128f6d2f4150ef042237818442e1927976a6bd5978c768518c404d2a14700.webp",
+        "previewSha256": "1f8128f6d2f4150ef042237818442e1927976a6bd5978c768518c404d2a14700",
+        "previewBytes": 52054
+      },
+      "mono": {
+        "master": "/artwork/grounded/pappus-torus/mono.42fd9c4be32d336123c357c9261d473d68bf6a7d06c2f5b7f37a0aa2b8748a5e.svg",
+        "sha256": "42fd9c4be32d336123c357c9261d473d68bf6a7d06c2f5b7f37a0aa2b8748a5e",
+        "bytes": 4824,
+        "thumbnail": "/artwork/grounded/pappus-torus/mono-480.eb075a7ac313ab3ac59dbd9d4a3a4d02c2710b4ae5081372d4df5b8e3356f43e.webp",
+        "thumbnailSha256": "eb075a7ac313ab3ac59dbd9d4a3a4d02c2710b4ae5081372d4df5b8e3356f43e",
+        "thumbnailBytes": 19756,
+        "preview": "/artwork/grounded/pappus-torus/mono-960.d2680e6aa5e59c4ae0d1433fabc3d8a17deaa2cf70906ab7ccf51da5ec7e2f58.webp",
+        "previewSha256": "d2680e6aa5e59c4ae0d1433fabc3d8a17deaa2cf70906ab7ccf51da5ec7e2f58",
+        "previewBytes": 44384
+      }
+    }
   }
 ]

@@ -88,13 +88,28 @@ it('shows Set06 rights qualifications and the correct full scientific notes', ()
   expect(screen.getByText(/current media license not fully verified/)).toBeTruthy()
   expect(screen.getByRole('link', { name: /Smithsonian NMNH/ }).getAttribute('href')).toBe('https://qrius.si.edu/browse/object/10795203')
 })
-it('keeps the final eight artworks discoverable with a bounded fourth page', () => {
-  window.history.replaceState(null, '', '?page=4')
+it('keeps the final nine artworks discoverable with a bounded fifth page', () => {
+  window.history.replaceState(null, '', '?page=5')
   render(<GroundedCollection cards={cards} />)
-  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(8)
+  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(9)
   expect(screen.getByRole('button', { name: 'Next page' }).hasAttribute('disabled')).toBe(true)
-  expect(screen.getByRole('link', { name: `Open ${cards[72].title}` })).toBeTruthy()
+  expect(screen.getByRole('link', { name: `Open ${cards[96].title}` })).toBeTruthy()
   fireEvent.click(screen.getByRole('button', { name: 'Previous page' }))
   expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(24)
-  expect(window.location.search).toBe('?page=3')
+  expect(window.location.search).toBe('?page=4')
+})
+
+it('shows Set07 access qualifications, corroborating sources and its own notes', () => {
+  const artwork = GROUNDED_ARTWORK.find(a => a.slug === 'motile-cilium')!
+  render(<GroundedDetail artwork={artwork} />)
+  expect(screen.getByRole('link', { name: 'Read complete Set07 scientific notes and limitations' }).getAttribute('href')).toContain('/artwork/grounded-notes/set07.')
+  expect(screen.queryByRole('link', { name: 'Read complete Set06 scientific notes and limitations' })).toBeNull()
+  expect(screen.getByText(/direct full-text access to the original PMC references was limited/)).toBeTruthy()
+  expect(screen.getByRole('link', { name: /PLOS Biology: primary research/ }).getAttribute('href')).toBe('https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3003442')
+})
+it('keeps the broad 320px minimum and the finer 640px Archimedes guidance distinct', () => {
+  const artwork = GROUNDED_ARTWORK.find(a => a.slug === 'archimedean-bounds')!
+  expect(artwork.minimumDisplayWidth).toBe(320)
+  render(<GroundedDetail artwork={artwork} />)
+  expect(screen.getByText(/fine twelve-gon and circle separation is clearest at 640px/)).toBeTruthy()
 })

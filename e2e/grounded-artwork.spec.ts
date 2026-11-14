@@ -5,8 +5,13 @@ import { GROUNDED_ARTWORK } from '../lib/grounded-artwork/registry'
 import { gotoSettled } from './settled'
 
 async function screenshotEvidence(page: Page, testInfo: TestInfo, name: string) {
+  // Cross-document transitions keep the old page in a viewport-sized overlay.
+  // A full-page capture during that animation distorts both pages into the
+  // viewport, even though the new DOM and image are already ready.
+  await page.waitForFunction(() => !document.documentElement.matches(':active-view-transition'))
+  await page.evaluate(() => document.fonts.ready)
   const file = testInfo.outputPath(name)
-  await page.screenshot({ path: file, fullPage: true })
+  await page.screenshot({ path: file, fullPage: true, animations: 'disabled' })
   await testInfo.attach(name, { path: file, contentType: 'image/png' })
 }
 async function collectionEvidence(page: Page, testInfo: TestInfo, name: string) {

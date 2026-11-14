@@ -8,8 +8,8 @@ Each batch contains one member from six families. A batch must pass model tests,
 
 | Batch | Engraved curves | Line textiles | Tile ornaments | Recursive geometry | Contour fields | Discrete string art | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Hypotrochoid filigree | Rotated-grid interference | Square Truchet paths | Hilbert labyrinth | Standing-wave lace | Modular chord orbit | In implementation and review |
-| 2 | Epitrochoid crown | Triangular mesh brocade | Hexagonal arc mosaic | Dragon fold | Twin-source ripple interference | Coprime star polygons | Planned |
+| 1 | Hypotrochoid filigree | Rotated-grid interference | Square Truchet paths | Hilbert labyrinth | Standing-wave lace | Modular chord orbit | Source/specimen review passed; draft PR146, exact-head CI in progress |
+| 2 | Epitrochoid crown | Triangular mesh brocade | Hexagonal arc mosaic | Dragon fold | Twin-source ripple interference | Coprime star polygons | Source/specimen review passed; aggregate checks in progress |
 | 3 | Lissajous silk | Sinusoidal warp textile | Rhombille parquet | Lévy lace | Confocal ellipse loom | Parabolic string corners | Planned |
 | 4 | Cassini cartouche | Chevron herringbone | Eight-point star panels | Koch snowflake engraving | Bipolar coordinate lace | Permutation ribbons | Planned |
 | 5 | Involute fans | Circle-lens lattice | Six-point star honeycomb | Sierpiński cutwork | Harmonic saddle contours | Voronoi glasswork | Planned |
@@ -31,3 +31,11 @@ Each batch contains one member from six families. A batch must pass model tests,
 The octagonal textile clips complete source lines against eight half-planes. Standing-wave lace samples analytic per-cell level curves with cosine clustering at vertical tangencies, avoiding a general contour solver and ambiguous saddle cells. The Truchet construction shares exact tile endpoints; the Hilbert path is a finite recursive approximation. Closed rolling-circle patterns use the correct period for their integer ratio. Modular chord envelopes remain discrete constructions, not exact cardioids.
 
 The reviewed baseline fixture records default SVG SHA-256 hashes from the 28-study source at PR145 head f8bcedbb. New registration must not silently change those existing SVG bytes. Deliberate future changes require their own explicit review rather than regenerating the fixture to make tests green.
+
+## Second-batch details
+
+The second batch adds an external rolling-circle crown, paired-thread triangular textile, two-state hexagonal Truchet patch, finite dragon-fold path, twin-source scalar contours and nested coprime star cycles. The crown defaults to its richer 5:2 radius ratio with 140% pen reach. No existing model, original asset or canonical logo is replaced.
+
+Twin-source contours use canonical grid-edge identity and a bilinear asymptotic decider. Straight cell chords approximate the sampled bilinear contours, not exact analytic topology. Tests distinguish exact-level hits from saddle ties; neither occurs in the supported nine presets or the two finer reference cases. Model-only refinement is not a physical wave simulation.
+
+Independent source/specimen review covered every one of the 63 supported model configurations at maximum monochrome weight/emphasis, plus light/dark defaults and model extrema, minimum-stroke defaults and guides-on stress views. SVG drawings are not browser screenshots. Exact-source browser/build checks and release approval remain separate gates.

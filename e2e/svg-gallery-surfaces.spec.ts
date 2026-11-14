@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { STUDIES } from '../lib/generative-svg/model'
-import { ARTWORK } from '../lib/editorial-artwork/registry'
+import ARTWORK from '../lib/editorial-artwork/manifest.json' with { type: 'json' }
 import { gotoSettled } from './settled'
 
 for (const theme of ['light', 'dark'] as const) {

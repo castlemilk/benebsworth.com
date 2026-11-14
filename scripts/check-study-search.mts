@@ -3,6 +3,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { STUDY_REGISTRY } from '../lib/generative-svg/model'
 import { studyUrl } from '../lib/generative-svg/registry'
+import { GROUNDED_ARTWORK, groundedArtworkUrl } from '../lib/grounded-artwork/registry'
 import { ARTWORK, artworkUrl } from '../lib/editorial-artwork/registry'
 
 /** Exercise the real emitted Pagefind WASM index in Node, not a browser acceptance test. */
@@ -41,7 +42,15 @@ export async function checkStudySearch(site = 'out') {
         if (!(await urls(query.replaceAll('-', ' '))).includes(artworkUrl(asset))) throw new Error(`Artwork search failed: ${asset.id} via ${query}`)
       }
     }
-    return { artwork: ARTWORK.length, artworkDiscovery: 'passed', indexedPages: entry.languages.en.page_count, studies: STUDY_REGISTRY.studies.length, titleAndAliasSearch: 'passed', excludedCaveats: 'passed' }
+    for (const asset of GROUNDED_ARTWORK) {
+      for (const query of [asset.title, ...asset.aliases, ...asset.tags]) {
+        if (!(await urls(query.replaceAll('-', ' '))).includes(groundedArtworkUrl(asset))) throw new Error(`Grounded search failed: ${asset.slug} via ${query}`)
+      }
+    }
+    for (const [query, slug] of [['golden ratio', 'chambered-growth'], ['Chladni', 'degenerate-membrane'], ['Turing', 'autocatalytic-field']]) {
+      if ((await urls(query)).includes(`/vectors/grounded/${slug}/`)) throw new Error(`Grounded caveat leaked into search: ${slug}`)
+    }
+    return { groundedExcludedCaveats: 'passed', groundedArtwork: GROUNDED_ARTWORK.length, groundedDiscovery: 'passed', artwork: ARTWORK.length, artworkDiscovery: 'passed', indexedPages: entry.languages.en.page_count, studies: STUDY_REGISTRY.studies.length, titleAndAliasSearch: 'passed', excludedCaveats: 'passed' }
   } finally {
     try { await pagefind?.destroy() } finally { globalThis.fetch = originalFetch }
   }

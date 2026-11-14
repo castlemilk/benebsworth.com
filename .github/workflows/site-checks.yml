@@ -62,6 +62,7 @@ jobs:
           path: |
             test-results/**/gallery-print-*.pdf
             test-results/**/forced-colors-*.png
+            test-results/**/gallery-view-*.png
           retention-days: 7
           if-no-files-found: ignore
       # upload-artifact rejects paths containing ':' and other characters that

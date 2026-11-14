@@ -7,9 +7,9 @@
     "dev": "next dev",
     "md:siblings": "node scripts/gen-md-siblings.mjs",
     "md:siblings:check": "node scripts/gen-md-siblings.mjs --check",
-    "prebuild": "node scripts/gen-md-siblings.mjs && tsx scripts/gen-benchmark-outputs.mjs && node scripts/gen-harness-eval.mjs",
+    "prebuild": "node scripts/prepare-grounded-artwork.mjs && node scripts/gen-md-siblings.mjs && tsx scripts/gen-benchmark-outputs.mjs && node scripts/gen-harness-eval.mjs",
     "build": "next build",
-    "postbuild": "node scripts/og-rewrite.mjs && node --import tsx scripts/build-search.mts && node --import tsx scripts/check-study-search.mts",
+    "postbuild": "node scripts/og-rewrite.mjs && node --import tsx scripts/build-search.mts && node --import tsx scripts/check-study-search.mts && node --import tsx scripts/check-grounded-output.mts",
     "start": "next start",
     "lint": "eslint .",
     "lint:prose": "node scripts/lint-prose.mjs",
@@ -27,7 +27,12 @@
     "deploy:pages:prod": "bash scripts/deploy-pages.sh prod",
     "deploy:aws:next": "bash scripts/deploy.sh staging",
     "deploy:aws:prod": "bash scripts/deploy.sh prod",
-    "benchmark:run": "tsx scripts/run-benchmark.mjs"
+    "benchmark:run": "tsx scripts/run-benchmark.mjs",
+    "predev": "node scripts/prepare-grounded-artwork.mjs",
+    "pretest": "node scripts/prepare-grounded-artwork.mjs",
+    "pretest:watch": "node scripts/prepare-grounded-artwork.mjs",
+    "artwork:prepare": "node scripts/prepare-grounded-artwork.mjs",
+    "artwork:check": "node scripts/prepare-grounded-artwork.mjs --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

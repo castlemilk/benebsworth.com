@@ -134,3 +134,7 @@ graphify-out/.graphify_*
 graphify-out/*/
 !graphify-out/manifest.json
 .taste-skill/
+
+# Fixed artwork is restored losslessly from assets/grounded before build/test/dev.
+# Catalogue download URLs and original byte hashes remain unchanged.
+/public/artwork/grounded/

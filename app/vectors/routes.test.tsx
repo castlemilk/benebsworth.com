@@ -6,6 +6,7 @@ import LibraryPage, { metadata as libraryMetadata } from './page'
 import OriginalsPage, { metadata as archiveMetadata } from './originals/page'
 import { getAllVectors, getVectorBatches } from '@/lib/vectors/registry'
 import { STUDIES } from '@/lib/generative-svg/model'
+import { GROUNDED_ARTWORK, groundedArtworkUrl } from '@/lib/grounded-artwork/registry'
 import { ARTWORK } from '@/lib/editorial-artwork/registry'
 import { SITE_URL } from '@/components/seo/json-ld'
 
@@ -24,12 +25,14 @@ describe('SVG library and preserved original gallery routes', () => {
     expect(libraryMetadata.alternates?.canonical).toBe('/vectors/')
     expect(libraryMetadata.openGraph).toMatchObject({ url: '/vectors/' })
     expect(doc.querySelector('a[href="/vectors/originals/"]')?.textContent).toBe('Original vectors')
+    expect(doc.querySelector('a[href="/vectors/grounded/"],a[href="/vectors/grounded"]')).toBeTruthy()
     expect(doc.querySelector('input[type="range"]')).toBeTruthy()
     expect(doc.querySelector('a[download="sine-wave.svg"]')).toBeTruthy()
     for (const asset of ARTWORK) expect(doc.querySelector(`a[download="${asset.id}-v1.png"]`)).toBeTruthy()
     const collection = structured(doc).find(item => item['@type'] === 'CollectionPage')!
+    for (const art of GROUNDED_ARTWORK) expect(JSON.stringify(collection)).toContain(`${SITE_URL}${groundedArtworkUrl(art)}`)
     expect(collection.url).toBe(`${SITE_URL}/vectors/`)
-    expect((collection.mainEntity as { itemListElement: unknown[] }).itemListElement).toHaveLength(STUDIES.length + ARTWORK.length)
+    expect((collection.mainEntity as { itemListElement: unknown[] }).itemListElement).toHaveLength(STUDIES.length + ARTWORK.length + GROUNDED_ARTWORK.length)
   })
   it('preserves original gallery inputs, source asset URLs and historical pipeline facts', () => {
     const doc = render(OriginalsPage)

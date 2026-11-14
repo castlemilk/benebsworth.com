@@ -1,7 +1,8 @@
 /** Pure, deterministic geometry. Appearance never enters a model function. */
 export type Point = readonly [number, number]
 export type InkRole = 'ink' | 'accent' | 'guide'
-export type Mark = { emphasis?: boolean } & (
+// Fine engraving is an authored stroke tier, not a geometry perturbation or optional guide.
+export type Mark = { emphasis?: boolean; stroke?: 'fine' } & (
   | { kind: 'line'; points: readonly Point[]; role: InkRole; closed?: boolean }
   | { kind: 'circle'; center: Point; radius: number; role: InkRole }
   | { kind: 'text'; at: Point; text: string; role: InkRole })

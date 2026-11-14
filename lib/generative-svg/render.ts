@@ -54,7 +54,8 @@ const number = (n: number) => String(Math.round(n * 10000) / 10000)
 export function geometryMarkup(geometry: Geometry, options: Partial<Appearance> = {}): string {
   const appearance = appearanceFor(options), inks = inksFor(appearance)
   return geometry.marks.filter(mark => appearance.guides || mark.role !== 'guide').map(mark => {
-    const color = inks[mark.role], weight = appearance.weight * (mark.role === 'guide' ? 0.6 : mark.emphasis ? appearance.emphasis : 1)
+    if (mark.stroke !== undefined && mark.stroke !== 'fine') throw new Error('Invalid stroke tier')
+    const color = inks[mark.role], weight = appearance.weight * (mark.stroke === 'fine' ? 0.4 : 1) * (mark.role === 'guide' ? 0.6 : mark.emphasis ? appearance.emphasis : 1)
     const attributes = `fill="none" stroke="${color}" stroke-width="${number(weight)}" stroke-linecap="${appearance.linecap}" stroke-linejoin="round"${mark.role === 'guide' ? ` stroke-opacity="${number(appearance.guideOpacity)}"` : ''}`
     if (mark.kind === 'circle') return `<circle cx="${number(mark.center[0])}" cy="${number(mark.center[1])}" r="${number(mark.radius)}" ${attributes}/>`
     if (mark.kind === 'text') return `<text x="${number(mark.at[0])}" y="${number(mark.at[1] + 5)}" text-anchor="middle" font-family="ui-monospace,monospace" font-size="14" font-weight="${mark.emphasis ? 700 : 400}" fill="${color}">${escape(mark.text)}</text>`

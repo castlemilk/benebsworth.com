@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { STUDIES, STUDY_REGISTRY, parametersFor, type Study } from '@/lib/generative-svg/model'
 import { DEFAULT_APPEARANCE, renderStudySvg, type Appearance } from '@/lib/generative-svg/render'
 import { useVectorCopy } from '@/components/vectors/use-vector-copy'
@@ -9,9 +9,10 @@ import { StyleLab } from './style-lab'
 import { ArtworkCollection } from '@/components/editorial-artwork/collection'
 import { searchStudies, studyUrl, STUDY_CATEGORIES } from '@/lib/generative-svg/registry'
 
-function Drawing({ study, appearance, values = {} }: { study: Study; appearance: Appearance; values?: Record<string, number> }) {
-  return <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: renderStudySvg(study, values, appearance) }} />
-}
+// Thumbnails use defaults and need not resample when another study is tuned.
+const Drawing = memo(function Drawing({ study, appearance }: { study: Study; appearance: Appearance }) {
+  return <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: renderStudySvg(study, {}, appearance) }} />
+})
 
 function ExportActions({ svg, title, id }: { svg: string; title: string; id: string }) {
   const { feedback, copy } = useVectorCopy()
@@ -37,11 +38,11 @@ function kindLabel(study: Study) {
 }
 
 function StudyWorkbench({ study, appearance, values, setValues }: { study: Study; appearance: Appearance; values: Record<string, number>; setValues: (values: Record<string, number>) => void }) {
-  const svg = renderStudySvg(study, values, appearance)
+  const svg = useMemo(() => renderStudySvg(study, values, appearance), [study, values, appearance])
   return (
     <div className={styles.workbench}>
       <div className={styles.sheet} data-surface={appearance.theme}>
-        <Drawing study={study} appearance={appearance} values={values} />
+        <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: svg }} />
       </div>
       <div className={styles.studyDetails}>
         <p className={styles.kicker}>{kindLabel(study)}</p>
@@ -81,7 +82,7 @@ export function GenerativeGallery() {
   const searchRef = useRef<HTMLInputElement>(null)
   const workbenchRef = useRef<HTMLElement>(null)
   const selected = STUDIES.find(study => study.id === selectedId)!
-  const selectedValues = Object.hasOwn(studyValues, selected.id) ? studyValues[selected.id] : parametersFor(selected)
+  const selectedValues = useMemo(() => Object.hasOwn(studyValues, selected.id) ? studyValues[selected.id] : parametersFor(selected), [studyValues, selected])
   const filtered = searchStudies(STUDY_REGISTRY, query, { category: category === 'All studies' ? undefined : category, tag: tag || undefined })
   useEffect(() => {
     const restore = () => {

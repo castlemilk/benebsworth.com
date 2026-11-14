@@ -45,8 +45,8 @@ export function GroundedCollection({ cards }: { cards: readonly GroundedCard[] }
     <p>Cards are recognition thumbnails, not detail proofs. Open an artwork to inspect its preview, minimum display size, scientific basis and limitations.</p>
     <div className={styles.filters}>
       <label>Find grounded artwork<input ref={searchRef} type="search" value={query} onChange={e => change('q', e.target.value)} placeholder="Title, tag or alias" /></label>
-      <label>Subject<select value={subject} onChange={e => change('subject', e.target.value)}><option value="">All subjects</option>{[...new Set(cards.map(a => a.subject))].sort().map(value => <option key={value} value={value}>{value.replaceAll('-', ' ')}</option>)}</select></label>
-      <label>Tag<select value={tag} onChange={e => change('tag', e.target.value)}><option value="">All tags</option>{[...new Set(cards.flatMap(a => a.tags))].sort().map(value => <option key={value} value={value}>{value.replaceAll('-', ' ')}</option>)}</select></label>
+      <div className={styles.filter}><label htmlFor="grounded-subject">Subject</label><select id="grounded-subject" value={subject} onChange={e => change('subject', e.target.value)}><option value="">All subjects</option>{[...new Set(cards.map(a => a.subject))].sort().map(value => <option key={value} value={value}>{value.replaceAll('-', ' ')}</option>)}</select></div>
+      <div className={styles.filter}><label htmlFor="grounded-tag">Tag</label><select id="grounded-tag" value={tag} onChange={e => change('tag', e.target.value)}><option value="">All tags</option>{[...new Set(cards.flatMap(a => a.tags))].sort().map(value => <option key={value} value={value}>{value.replaceAll('-', ' ')}</option>)}</select></div>
       <button type="button" onClick={clear}>Clear filters</button>
     </div>
     <p role="status">{results.length} artworks · Page {page} of {pages}</p>

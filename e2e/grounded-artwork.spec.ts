@@ -1,18 +1,35 @@
 import { readFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page, type TestInfo } from '@playwright/test'
 import { GROUNDED_ARTWORK } from '../lib/grounded-artwork/registry'
 import { gotoSettled } from './settled'
 
+async function screenshotEvidence(page: Page, testInfo: TestInfo, name: string) {
+  const file = testInfo.outputPath(name)
+  await page.screenshot({ path: file, fullPage: true })
+  await testInfo.attach(name, { path: file, contentType: 'image/png' })
+}
+async function collectionEvidence(page: Page, testInfo: TestInfo, name: string) {
+  // Exercise the real lazy thumbnails, then capture a complete review sheet.
+  for (const image of await page.locator('[data-grounded-card] img').all()) {
+    await image.scrollIntoViewIfNeeded()
+    await expect(image).toHaveJSProperty('naturalWidth', 480)
+  }
+  await page.getByRole('heading', { level: 1 }).scrollIntoViewIfNeeded()
+  await screenshotEvidence(page, testInfo, name)
+}
+
 for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () => {
   test.use({ viewport: { width, height: 900 } })
-  test('filters, paginates, restores history and loads no SVG master on discovery', async ({ page }) => {
+  test('filters, paginates, restores history and loads no SVG master on discovery', async ({ page }, testInfo) => {
     const masters: string[] = []
     page.on('request', request => { if (request.url().includes('/artwork/grounded/') && request.url().endsWith('.svg')) masters.push(request.url()) })
     await gotoSettled(page, '/vectors/grounded/')
     await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
+    await collectionEvidence(page, testInfo, `gallery-view-grounded-${width}.png`)
     await page.getByRole('button', { name: 'Next page' }).click()
     await expect(page.locator('[data-grounded-card]')).toHaveCount(6)
+    await collectionEvidence(page, testInfo, `gallery-view-grounded-page2-${width}.png`)
     await page.goBack()
     await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
     await page.goForward()
@@ -25,6 +42,7 @@ for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () =
     await page.getByLabel('Subject', { exact: true }).selectOption('biology')
     await page.getByLabel('Tag', { exact: true }).selectOption('gills')
     await expect(page.locator('[data-grounded-card]')).toHaveCount(2)
+    await collectionEvidence(page, testInfo, `gallery-view-grounded-filtered-${width}.png`)
     await page.getByRole('button', { name: 'Clear filters', exact: true }).focus()
     await page.keyboard.press('Enter')
     await expect(page.getByRole('searchbox', { name: 'Find grounded artwork' })).toBeFocused()
@@ -47,6 +65,7 @@ for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () =
       await expect(page.locator('[data-grounded-preview]')).toHaveAttribute('src', artwork.variants[palette].preview)
       await expect(page.locator('[data-grounded-preview]')).toHaveJSProperty('naturalWidth', 960)
       await expect(page.locator('[data-grounded-download]')).toHaveAttribute('href', artwork.variants[palette].master)
+      await screenshotEvidence(page, testInfo, `gallery-view-grounded-${palette}-${width}.png`)
     }
     expect(masters).toEqual([])
     for (const [label, palette] of [['Light', 'light'], ['Dark', 'dark'], ['Monochrome', 'mono']] as const) {
@@ -64,10 +83,12 @@ for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () =
     await page.emulateMedia({ forcedColors: 'active' })
     await expect(page.locator('[data-grounded-preview]')).toBeVisible()
     await expect(page.locator('[data-palette=dark]')).toHaveCSS('background-color', 'rgb(23, 27, 32)')
-    await testInfo.attach(`forced-colors-grounded-${width}.png`, { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
+    await screenshotEvidence(page, testInfo, `forced-colors-grounded-${width}.png`)
     await page.emulateMedia({ forcedColors: 'none', media: 'print' })
     await expect(page.getByRole('radio', { name: 'Dark', exact: true })).toBeHidden()
     await expect(page.locator('figcaption')).toHaveText(artwork.caption)
-    await testInfo.attach(`gallery-print-grounded-${width}.pdf`, { body: await page.pdf({ printBackground: true }), contentType: 'application/pdf' })
+    const printed = testInfo.outputPath(`gallery-print-grounded-${width}.pdf`)
+    await page.pdf({ path: printed, printBackground: true })
+    await testInfo.attach(`gallery-print-grounded-${width}.pdf`, { path: printed, contentType: 'application/pdf' })
   })
 })

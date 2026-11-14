@@ -20,6 +20,16 @@ it('bounds initial HTML to 24 lightweight thumbnails with stable detail links', 
   expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(cards.length - 24)
   expect(window.location.search).toBe('?page=2')
 })
+it('gives selects explicit concise labels that exclude their option text', () => {
+  render(<GroundedCollection cards={cards} />)
+  for (const name of ['Subject', 'Tag']) {
+    const select = screen.getByRole('combobox', { name }) as HTMLSelectElement
+    expect(screen.getByLabelText(name, { exact: true })).toBe(select)
+    expect(select.labels).toHaveLength(1)
+    expect(select.labels![0].textContent).toBe(name)
+    expect(select.labels![0].htmlFor).toBe(select.id)
+  }
+})
 it('intersects filters, resets page, clears with focus and restores URL state', () => {
   render(<GroundedCollection cards={cards} />)
   fireEvent.click(screen.getByRole('button', { name: 'Next page' }))

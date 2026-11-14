@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test'
+import { STUDY_REGISTRY } from '../lib/generative-svg/model'
+import { searchStudies } from '../lib/generative-svg/registry'
 import { gotoSettled } from './settled'
 
 for (const width of [1180, 390]) for (const colorScheme of ['light', 'dark'] as const) {
@@ -10,7 +12,10 @@ for (const width of [1180, 390]) for (const colorScheme of ['light', 'dark'] as 
       const collection = page.getByRole('region', { name: 'The collection', exact: true })
       await expect(selected.getByRole('heading', { name: 'Guilloché rosette', exact: true })).toBeVisible()
       await page.getByRole('searchbox', { name: 'Find a study' }).fill('ornament')
-      await expect(collection.getByRole('button', { name: /^Open / })).toHaveCount(3)
+      const matches = searchStudies(STUDY_REGISTRY, 'ornament')
+      await expect(collection.getByRole('button', { name: /^Open / })).toHaveCount(matches.length)
+      for (const study of matches) await expect(collection.getByRole('button', { name: `Open ${study.title}`, exact: true })).toBeVisible()
+      await expect(collection.getByRole('button', { name: 'Open Sine wave', exact: true })).toHaveCount(0)
       await page.getByRole('combobox', { name: 'Preview surface', exact: true }).selectOption(colorScheme)
       await page.getByRole('combobox', { name: 'Ink', exact: true }).selectOption('monochrome')
       for (const [title, id, parameter] of [

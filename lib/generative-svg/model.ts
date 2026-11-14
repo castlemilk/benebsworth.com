@@ -1,5 +1,6 @@
 import { ADDITIONAL_STUDIES } from './additional-studies'
 import { ORNAMENTAL_STUDIES } from './ornamental-studies'
+import { PATTERN_ATLAS_STUDIES } from './pattern-atlas'
 
 import { createStudyRegistry } from './registry'
 import { parametersFor, type Study, type Point, type InkRole, type Mark, type Geometry } from './definition'
@@ -147,6 +148,7 @@ const DEFINITIONS: readonly Study[] = [
   },
   ...ADDITIONAL_STUDIES,
   ...ORNAMENTAL_STUDIES,
+  ...PATTERN_ATLAS_STUDIES,
 ]
 
 export const STUDY_REGISTRY = createStudyRegistry(DEFINITIONS)

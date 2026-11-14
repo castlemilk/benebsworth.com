@@ -180,8 +180,8 @@ describe('first-batch pattern constructions', () => {
     for (const [a, b] of [[64, 2], [48, 1], [96, 6], [72, 2.5], [NaN, 2]]) expect(() => modularChordEdges(a, b)).toThrow()
   })
 
-  it.each(PATTERN_CONSTRUCTIONS)('keeps $id deterministic, finite, fine-lined and inside a moderate geometry budget at every setting', study => {
-    for (const parameters of supportedParameters(study)) {
+  it.each(PATTERN_CONSTRUCTIONS.flatMap(study => supportedParameters(study).map(parameters => ({ study, parameters }))))(
+    'keeps $study.id deterministic, finite, fine-lined and bounded at $parameters', ({ study, parameters }) => {
       const geometry = geometryFor(study, parameters)
       expect(geometry).toEqual(geometryFor(study, parameters))
       let pointCount = 0
@@ -196,8 +196,7 @@ describe('first-batch pattern constructions', () => {
         }
       }
       expect(pointCount).toBeLessThan(10000)
-    }
-  })
+    })
 
   it.each(PATTERN_CONSTRUCTIONS)('discovers $id and preserves its transparent recipe and permanent geometry across appearances', study => {
     const registry = createStudyRegistry(PATTERN_CONSTRUCTIONS)

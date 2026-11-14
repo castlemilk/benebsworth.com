@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Mark, Point, Study } from './definition'
 import { parametersFor } from './definition'
-import { geometryFor } from './model'
+import { geometryFor, markPoints } from './model'
 import { HYPOTROCHOID_RATIOS, HYPOTROCHOID_SEGMENTS, PATTERN_CONSTRUCTIONS, hilbertGrid, hypotrochoidContours, modularChordEdges, squareTruchetArcs } from './pattern-constructions'
 import { createStudyRegistry, searchStudies, studySearchRecords } from './registry'
 import { renderStudySvg } from './render'
@@ -13,7 +13,7 @@ const radius = ([x, y]: Point) => Math.hypot(x - 160, y - 120)
 const canonical = (a: number, b: number) => [a, b].sort((x, y) => x - y).join(',')
 const supportedParameters = (study: Study) => study.parameters.reduce<Record<string, number>[]>((values, parameter) => values.flatMap(value =>
   Array.from({ length: 1 + Math.round((parameter.max - parameter.min) / parameter.step) }, (_, i) => ({ ...value, [parameter.key]: parameter.min + i * parameter.step }))), [{}])
-const svgCoordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle')].map(node => ['points', 'cx', 'cy', 'r'].map(key => node.getAttribute(key)))
+const svgCoordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,path')].map(node => ['points', 'cx', 'cy', 'r', 'd'].map(key => node.getAttribute(key)))
 
 describe('first-batch pattern constructions', () => {
   it('samples every hypotrochoid ratio over its correct closure period with one uniform radial fit', () => {
@@ -187,7 +187,7 @@ describe('first-batch pattern constructions', () => {
       let pointCount = 0
       for (const mark of geometry.marks) {
         expect(mark.stroke).toBe('fine')
-        const points = mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center] : [mark.at]
+        const points = markPoints(mark)
         pointCount += points.length
         for (const [x, y] of points) {
           expect(Number.isFinite(x) && Number.isFinite(y)).toBe(true)

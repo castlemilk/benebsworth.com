@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest'
 import { parametersFor, type Mark, type Point, type Study } from './definition'
-import { geometryFor } from './model'
+import { geometryFor, markPoints } from './model'
 import { PATTERN_PARQUET_LEVY, levyLacePath, levyLacePolygon, rhombilleParquet } from './pattern-parquet-levy'
 import { dragonFoldPath, hexagonalPatch } from './pattern-rolling-tiles'
 import { createStudyRegistry, searchStudies, studySearchRecords } from './registry'
@@ -18,7 +18,7 @@ const edgeKey = (a: string, b: string) => [a, b].sort().join(';')
 const supportedParameters = (study: Study) => study.parameters.reduce<Record<string, number>[]>((values, parameter) => values.flatMap(value =>
   Array.from({ length: 1 + Math.round((parameter.max - parameter.min) / parameter.step) }, (_, i) => ({ ...value, [parameter.key]: parameter.min + i * parameter.step }))), [{}])
 const settings = PATTERN_PARQUET_LEVY.flatMap(study => supportedParameters(study).map(parameters => ({ study, parameters, label: `${study.id} ${JSON.stringify(parameters)}` })))
-const svgCoordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle')].map(node => ['points', 'cx', 'cy', 'r'].map(key => node.getAttribute(key)))
+const svgCoordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,path')].map(node => ['points', 'cx', 'cy', 'r', 'd'].map(key => node.getAttribute(key)))
 
 describe('rhombille parquet and Lévy lace studies', () => {
   it.each(supportedParameters(parquet))('tiles exact rhombi with unique lattice edges for patch $patch, inset $inset', ({ patch, inset }) => {
@@ -167,7 +167,7 @@ describe('rhombille parquet and Lévy lace studies', () => {
     for (const mark of geometry.marks) {
       expect(mark.stroke).toBe('fine')
       expect(mark.role).not.toBe('guide')
-      const points = mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center] : [mark.at]
+      const points = markPoints(mark)
       const extent = mark.kind === 'circle' ? mark.radius : 0
       pointCount += points.length
       for (const [x, y] of points) {
@@ -193,7 +193,7 @@ describe('rhombille parquet and Lévy lace studies', () => {
       expect(renderStudySvg(study, recipe.parameters, recipe.appearance)).toBe(svg)
       expect(document.querySelector('rect,script,image,foreignObject,parsererror')).toBeNull()
       expect(document.querySelector('[stroke-opacity]')).toBeNull()
-      expect([...document.querySelectorAll('polyline,polygon,circle')].every(node => node.getAttribute('fill') === 'none')).toBe(true)
+      expect([...document.querySelectorAll('polyline,polygon,circle,path')].every(node => node.getAttribute('fill') === 'none')).toBe(true)
       expect(svg).not.toMatch(/NaN|Infinity|url\(|currentColor/)
       expect(Number(document.querySelector('[stroke-width]')!.getAttribute('stroke-width'))).toBeCloseTo(weight * .4, 10)
       const emphasis = [...document.querySelectorAll('[stroke-width]')].filter(node => Number(node.getAttribute('stroke-width')) > weight * .4 + 1e-8)

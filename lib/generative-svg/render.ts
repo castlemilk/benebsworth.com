@@ -1,4 +1,5 @@
 import { geometryFor, parametersFor, type Geometry, type Study } from './model'
+import { validatePathMark } from './path'
 
 export interface Appearance {
   palette: 'folio' | 'monochrome' | 'custom'
@@ -53,10 +54,23 @@ const number = (n: number) => String(Math.round(n * 10000) / 10000)
 
 export function geometryMarkup(geometry: Geometry, options: Partial<Appearance> = {}): string {
   const appearance = appearanceFor(options), inks = inksFor(appearance)
+  for (const mark of geometry.marks) if (mark.kind === 'path') validatePathMark(mark)
   return geometry.marks.filter(mark => appearance.guides || mark.role !== 'guide').map(mark => {
     if (mark.stroke !== undefined && mark.stroke !== 'fine') throw new Error('Invalid stroke tier')
     const color = inks[mark.role], weight = appearance.weight * (mark.stroke === 'fine' ? 0.4 : 1) * (mark.role === 'guide' ? 0.6 : mark.emphasis ? appearance.emphasis : 1)
     const attributes = `fill="none" stroke="${color}" stroke-width="${number(weight)}" stroke-linecap="${appearance.linecap}" stroke-linejoin="round"${mark.role === 'guide' ? ` stroke-opacity="${number(appearance.guideOpacity)}"` : ''}`
+    if (mark.kind === 'path') {
+      const point = ([x, y]: readonly [number, number]) => `${number(x)},${number(y)}`
+      const d = mark.commands.map(command => {
+        switch (command.op) {
+          case 'M': case 'L': return `${command.op}${point(command.to)}`
+          case 'C': return `C${point(command.control1)} ${point(command.control2)} ${point(command.to)}`
+          case 'Z': return 'Z'
+        }
+      }).join(' ')
+      const paint = mark.paint === 'stroke' ? attributes : `fill="${color}" fill-rule="evenodd" stroke="none"${mark.role === 'guide' ? ` fill-opacity="${number(appearance.guideOpacity)}"` : ''}`
+      return `<path d="${d}" ${paint}/>`
+    }
     if (mark.kind === 'circle') return `<circle cx="${number(mark.center[0])}" cy="${number(mark.center[1])}" r="${number(mark.radius)}" ${attributes}/>`
     if (mark.kind === 'text') return `<text x="${number(mark.at[0])}" y="${number(mark.at[1] + 5)}" text-anchor="middle" font-family="ui-monospace,monospace" font-size="14" font-weight="${mark.emphasis ? 700 : 400}" fill="${color}">${escape(mark.text)}</text>`
     const tag = mark.closed ? 'polygon' : 'polyline'

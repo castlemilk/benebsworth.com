@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import { PATTERN_ATLAS_BATCHES, PATTERN_ATLAS_STUDIES } from './pattern-atlas'
-import { STUDY_REGISTRY, geometryFor, parametersFor } from './model'
+import { STUDY_REGISTRY, geometryFor, markPoints, parametersFor } from './model'
 import { renderStudySvg } from './render'
 import { searchStudies } from './registry'
 import reviewedHashes from './reviewed-original-svg-hashes.json'
@@ -28,7 +28,7 @@ describe('pattern atlas batches', () => {
     for (const values of [parametersFor(study), ...corners]) {
       const geometry = geometryFor(study, values)
       expect(geometryFor(study, values)).toEqual(geometry)
-      const pointCount = geometry.marks.reduce((n, m) => n + (m.kind === 'line' ? m.points.length : 1), 0)
+      const pointCount = geometry.marks.reduce((n, m) => n + markPoints(m).length, 0)
       expect(pointCount).toBeLessThanOrEqual(25000)
       expect(geometry.marks.some(m => m.role !== 'guide')).toBe(true)
       const svg = renderStudySvg(study, values, { theme: 'dark', palette: 'monochrome', weight: 4, guides: false })
@@ -40,7 +40,7 @@ describe('pattern atlas batches', () => {
       expect(recipe.parameters).toEqual(values)
       expect(renderStudySvg(study, recipe.parameters, recipe.appearance)).toBe(svg)
       const defaultSvg = renderStudySvg(study, values, { guides: false })
-      const coordinates = (source: string) => source.match(/(?:points|cx|cy|r)="[^"]+"/g)
+      const coordinates = (source: string) => source.match(/(?:points|cx|cy|r|d)="[^"]+"/g)
       expect(coordinates(svg)).toEqual(coordinates(defaultSvg))
     }
   }, 15000)

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Mark, Point, Study } from './definition'
 import { parametersFor } from './definition'
-import { geometryFor } from './model'
+import { geometryFor, markPoints } from './model'
 import { EPITROCHOID_PEN_OFFSETS, EPITROCHOID_RATIOS, EPITROCHOID_SEGMENTS, HEXAGON_ARC_SEGMENTS, STUDIES, dragonFoldLattice, dragonFoldPath, epitrochoidCrown, hexagonalPatch, hexagonalTruchetArcs } from './pattern-rolling-tiles'
 import { createStudyRegistry, searchStudies, studySearchRecords } from './registry'
 import { renderStudySvg } from './render'
@@ -15,7 +15,7 @@ const dot = ([ax, ay]: Point, [bx, by]: Point) => ax * bx + ay * by
 const radius = ([x, y]: Point) => Math.hypot(x - 160, y - 120)
 const supportedParameters = (study: Study) => study.parameters.reduce<Record<string, number>[]>((values, parameter) => values.flatMap(value =>
   Array.from({ length: 1 + Math.round((parameter.max - parameter.min) / parameter.step) }, (_, i) => ({ ...value, [parameter.key]: parameter.min + i * parameter.step }))), [{}])
-const svgCoordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle')].map(node => ['points', 'cx', 'cy', 'r'].map(key => node.getAttribute(key)))
+const svgCoordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,path')].map(node => ['points', 'cx', 'cy', 'r', 'd'].map(key => node.getAttribute(key)))
 
 describe('rolling, tiling and folding pattern studies', () => {
   it('uses the exterior rolling formula and complete closure at every radius ratio and pen reach', () => {
@@ -237,7 +237,7 @@ describe('rolling, tiling and folding pattern studies', () => {
     let pointCount = 0
     for (const mark of geometry.marks) {
       expect(mark.stroke).toBe('fine')
-      const points = mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center] : [mark.at]
+      const points = markPoints(mark)
       const extent = mark.kind === 'circle' ? mark.radius : 0
       pointCount += points.length
       for (const [x, y] of points) {

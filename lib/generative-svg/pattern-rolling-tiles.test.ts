@@ -230,30 +230,31 @@ describe('rolling, tiling and folding pattern studies', () => {
     }
   })
 
-  it.each(STUDIES)('keeps $id deterministic, fine-lined, finite and safely bounded at every supported setting', study => {
-    const signatures = new Set<string>()
-    for (const parameters of supportedParameters(study)) {
-      const geometry = geometryFor(study, parameters)
-      signatures.add(JSON.stringify(geometry.marks.map(mark => mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center, mark.radius] : mark.at)))
-      expect(geometry).toEqual(geometryFor(study, parameters))
-      let pointCount = 0
-      for (const mark of geometry.marks) {
-        expect(mark.stroke).toBe('fine')
-        const points = mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center] : [mark.at]
-        const extent = mark.kind === 'circle' ? mark.radius : 0
-        pointCount += points.length
-        for (const [x, y] of points) {
-          expect(Number.isFinite(x) && Number.isFinite(y)).toBe(true)
-          expect(x - extent).toBeGreaterThanOrEqual(32)
-          expect(x + extent).toBeLessThanOrEqual(288)
-          expect(y - extent).toBeGreaterThanOrEqual(16)
-          expect(y + extent).toBeLessThanOrEqual(224)
-        }
+  // Keep the default timeout meaningful: each supported setting is one bounded case.
+  it.each(STUDIES.flatMap(study => supportedParameters(study).map(parameters => ({ study, parameters }))))('keeps $study.id $parameters deterministic, fine-lined, finite and safely bounded', ({ study, parameters }) => {
+    const geometry = geometryFor(study, parameters)
+    expect(geometry).toEqual(geometryFor(study, parameters))
+    let pointCount = 0
+    for (const mark of geometry.marks) {
+      expect(mark.stroke).toBe('fine')
+      const points = mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center] : [mark.at]
+      const extent = mark.kind === 'circle' ? mark.radius : 0
+      pointCount += points.length
+      for (const [x, y] of points) {
+        expect(Number.isFinite(x) && Number.isFinite(y)).toBe(true)
+        expect(x - extent).toBeGreaterThanOrEqual(32)
+        expect(x + extent).toBeLessThanOrEqual(288)
+        expect(y - extent).toBeGreaterThanOrEqual(16)
+        expect(y + extent).toBeLessThanOrEqual(224)
       }
-      expect(geometry.marks.length).toBeLessThan(150)
-      expect(pointCount).toBeLessThan(7000)
     }
-    expect(signatures.size).toBe(supportedParameters(study).length)
+    expect(geometry.marks.length).toBeLessThan(150)
+    expect(pointCount).toBeLessThan(7000)
+  })
+
+  it.each(STUDIES)('keeps every supported $id setting geometrically distinct', study => {
+    const signatures = supportedParameters(study).map(parameters => JSON.stringify(geometryFor(study, parameters)))
+    expect(new Set(signatures).size).toBe(supportedParameters(study).length)
   })
 
   it.each(STUDIES)('discovers $id and preserves its transparent, reproducible geometry across appearances', study => {

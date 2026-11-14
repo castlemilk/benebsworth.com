@@ -9,8 +9,9 @@ import { JSDOM } from 'jsdom'
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const THEMES = ['light', 'dark', 'mono']
-export const CATALOGUE_SHA256 = '4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06'
-export const REVIEWED_ARTWORK_COUNT = 55
+export const CATALOGUE_SHA256 = '70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e'
+export const SET05_CATALOGUE_SHA256 = '4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06'
+export const REVIEWED_ARTWORK_COUNT = 80
 export const PILOT_CATALOGUE_SHA256 = 'd1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de'
 export const INVENTORY_SHA256 = 'babd060dcdfd794f29a12cef57882ba050b4729cf76ad7e9fccf356a8badd37f'
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -72,6 +73,31 @@ const CURATION = [
  ["ruled-saddle", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "ruled saddle"], ["ruled saddle"]],
  ["constant-width-gauge", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "constant width gauge"], ["constant-width gauge"]],
  ["polyhedral-dual", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "polyhedral dual"], ["polyhedral dual"]],
+ ["budding-yeast", "biology", ["biology", "cells-and-assembly", "budding-yeast"], ["budding yeast"]],
+ ["bacterial-flagellum", "biology", ["biology", "cells-and-assembly", "bacterial-flagellum"], ["bacterial flagellum"]],
+ ["mitotic-spindle", "biology", ["biology", "cells-and-assembly", "mitotic-spindle"], ["mitotic spindle"]],
+ ["diatom-frustule", "biology", ["biology", "cells-and-assembly", "diatom-frustule"], ["diatom frustule"]],
+ ["phage-assembly", "biology", ["biology", "cells-and-assembly", "phage-assembly"], ["phage assembly"]],
+ ["sea-urchin-test", "biology", ["biology", "specimen-architecture", "sea-urchin-test"], ["sea urchin test"]],
+ ["shark-tooth", "biology", ["biology", "specimen-architecture", "shark-tooth"], ["shark tooth"]],
+ ["bird-furcula", "biology", ["biology", "specimen-architecture", "bird-furcula"], ["bird furcula"]],
+ ["horseshoe-carapace", "biology", ["biology", "specimen-architecture", "horseshoe-carapace"], ["horseshoe carapace"]],
+ ["trilobite-axis", "biology", ["biology", "specimen-architecture", "trilobite-axis"], ["trilobite axis"]],
+ ["columnar-jointing", "geology", ["earth-material-form", "transparent", "editable-svg", "columnar-jointing"], ["columnar jointing"]],
+ ["current-ripple", "geology", ["earth-material-form", "transparent", "editable-svg", "current-ripple"], ["current ripple"]],
+ ["normal-fault", "geology", ["earth-material-form", "transparent", "editable-svg", "normal-fault"], ["normal fault"]],
+ ["dendritic-snow-crystal", "geology", ["earth-material-form", "transparent", "editable-svg", "dendritic-snow-crystal"], ["dendritic snow crystal"]],
+ ["folded-strata", "geology", ["earth-material-form", "transparent", "editable-svg", "folded-strata"], ["folded strata"]],
+ ["inclined-equilibrium", "mechanics", ["inclined-plane", "statics", "normal-force", "static-friction"], ["inclined plane", "statics", "normal force", "static friction"]],
+ ["hydraulic-area-ratio", "mechanics", ["hydraulics", "pascal-principle", "piston-area", "force-ratio"], ["hydraulics", "Pascal principle", "piston area", "force ratio"]],
+ ["venturi-throat", "mechanics", ["venturi", "continuity", "bernoulli", "static-pressure"], ["Venturi", "continuity", "Bernoulli", "static pressure"]],
+ ["peristaltic-gate", "mechanics", ["peristalsis", "occlusion", "flexible-tube", "linear-pump"], ["peristalsis", "occlusion", "flexible tube", "linear pump"]],
+ ["bimetal-bend", "mechanics", ["bimetal", "thermal-expansion", "bonded-layers", "thermomechanics"], ["bimetal", "thermal expansion", "bonded layers", "thermomechanics"]],
+ ["pythagorean-dissection", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "pythagorean-dissection"], ["pythagorean dissection"]],
+ ["euclidean-tiling", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "euclidean-tiling"], ["euclidean tiling"]],
+ ["circle-inversion", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "circle-inversion"], ["circle inversion"]],
+ ["spherical-triangle", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "spherical-triangle"], ["spherical triangle"]],
+ ["sierpinski-cut", "mathematics", ["dissection-transformation", "transparent", "editable-svg", "sierpinski-cut"], ["sierpinski cut"]],
 ].map(([slug, subject, tags, aliases]) => [slug, subject, tags.map(tag => tag.toLowerCase().replace(/\s+/g, '-')), [...new Map(aliases.map(alias => [alias.toLowerCase().trim(), alias])).values()]])
 export function slugFor(sourceId) {
  const slug = sourceId.replace(/^\d{2}-/, '')
@@ -134,8 +160,9 @@ async function verifyImage(bytes, size) {
  for (let i = 3; i < data.length; i += info.channels) if (data[i] === 0) { transparent = true; break }
  assert(transparent, 'Transparency was lost')
 }
-export async function checkCatalogue(catalogue, { regenerate = true, root = ROOT } = {}) {
- assert.equal(catalogue.length, REVIEWED_ARTWORK_COUNT)
+export async function checkCatalogue(catalogue, { regenerate = true, root = ROOT, expectedCount = REVIEWED_ARTWORK_COUNT } = {}) {
+ assert([30, 55, 80, REVIEWED_ARTWORK_COUNT].includes(expectedCount), 'Unreviewed catalogue size')
+ assert.equal(catalogue.length, expectedCount)
  const slugs = new Set(), identities = new Set(), urls = new Set()
  for (const a of catalogue) {
   assert(!slugs.has(a.slug), 'Duplicate slug'); slugs.add(a.slug)
@@ -166,9 +193,9 @@ export async function checkCatalogue(catalogue, { regenerate = true, root = ROOT
    }
   }
  }
- assert.equal(urls.size, REVIEWED_ARTWORK_COUNT * 9)
+ assert.equal(urls.size, expectedCount * 9)
  const files = await readdir(resolve(root, 'public/artwork/grounded'), { recursive: true, withFileTypes: true })
- assert.equal(files.filter(entry => entry.isFile()).length, REVIEWED_ARTWORK_COUNT * 9, 'Unexpected or stale asset files')
+ assert.equal(files.filter(entry => entry.isFile()).length, expectedCount * 9, 'Unexpected or stale asset files')
  return { artworks: slugs.size, files: urls.size, thumbnails: Object.fromEntries(THEMES.map(theme => [theme, catalogue.reduce((sum,a) => sum + a.variants[theme].thumbnailBytes, 0)])) }
 }
 export async function importInventory(inventoryPath, { check = false } = {}) {

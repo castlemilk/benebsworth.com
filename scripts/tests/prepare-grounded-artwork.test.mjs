@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { brotliCompressSync } from 'node:zlib'
 import { ROOT, THEMES, sha256, checkCatalogue } from '../import-grounded-artwork.mjs'
-import { CHUNK_BYTES, MAX_PART_TEXT_BYTES, encodeArtwork, decodeArtwork, prepareGroundedAssets } from '../prepare-grounded-artwork.mjs'
+import { CHUNK_BYTES, MAX_PART_TEXT_BYTES, MAX_CATALOGUE_BYTES, encodeArtwork, decodeArtwork, prepareGroundedAssets } from '../prepare-grounded-artwork.mjs'
 
 const catalogue = JSON.parse(await readFile(resolve(ROOT, 'lib/grounded-artwork/catalogue.json')))
 const manifest = JSON.parse(await readFile(resolve(ROOT, 'assets/grounded/manifest.json')))
@@ -42,14 +42,14 @@ test('all original SVG bytes round-trip and packaging is deterministic with the 
   decoded.forEach((bytes, theme) => assert(bytes.equals(originals[theme])))
   originalBytes += entry.rawBytes; compressedBytes += entry.compressedBytes
  }
- assert.deepEqual({ originalBytes, compressedBytes, encodedBytes, parts }, { originalBytes: 9838054, compressedBytes: 847447, encodedBytes: 1130087, parts: 71 })
+ assert.deepEqual({ originalBytes, compressedBytes, encodedBytes, parts }, { originalBytes: 10984086, compressedBytes: 925799, encodedBytes: 1234616, parts: 96 })
 })
 
-test('a fresh checkout restores all 495 exact public bytes, dimensions and alpha sequentially', { timeout: 180000 }, async t => {
+test('a fresh checkout restores all 720 exact public bytes, dimensions and alpha sequentially', { timeout: 180000 }, async t => {
  const root = await fixture(t, false)
  const report = await prepareGroundedAssets({ root })
- assert.equal(report.written, 495); assert.equal(report.verified, 0)
- assert.equal((await checkCatalogue(catalogue, { root, regenerate: false })).files, 495)
+ assert.equal(report.written, 720); assert.equal(report.verified, 0)
+ assert.equal((await checkCatalogue(catalogue, { root, regenerate: false })).files, 720)
  for (const art of catalogue) for (const theme of THEMES) for (const kind of ['master', 'thumbnail', 'preview']) {
   const variant = art.variants[theme]
   assert((await readFile(assetPath(root, variant, kind))).equals(await readFile(assetPath(ROOT, variant, kind))))
@@ -60,7 +60,7 @@ test('warm outputs are skipped only after all source and public hashes pass, wit
  const root = await fixture(t), path = assetPath(root, catalogue.at(-1).variants.mono)
  const before = await lstat(path)
  const report = await prepareGroundedAssets({ root, renderer: () => { throw Error('Warm run must not render') } })
- assert.equal(report.written, 0); assert.equal(report.verified, 495)
+ assert.equal(report.written, 0); assert.equal(report.verified, 720)
  assert.equal((await lstat(path)).mtimeMs, before.mtimeMs)
  await prepareGroundedAssets({ root, check: true })
 })
@@ -69,7 +69,7 @@ test('partial preparation restores only missing files with the same fingerprints
  const root = await fixture(t), variant = catalogue[0].variants.light
  for (const kind of ['master', 'thumbnail', 'preview']) await rm(assetPath(root, variant, kind))
  const report = await prepareGroundedAssets({ root })
- assert.equal(report.written, 3); assert.equal(report.verified, 492)
+ assert.equal(report.written, 3); assert.equal(report.verified, 717)
  for (const kind of ['master', 'thumbnail', 'preview']) assert((await readFile(assetPath(root, variant, kind))).equals(await readFile(assetPath(ROOT, variant, kind))))
 })
 
@@ -185,4 +185,24 @@ test('npm, Task, remote verification and watch paths prepare before consumers wi
  assert(remote.indexOf('task: ":build:gen:grounded"') < remote.indexOf("task: ':verify'"))
  const tasks = await readFile(join(ROOT, 'Taskfile.yml'), 'utf8')
  assert.match(tasks, /task: build:gen:grounded\n {6}- '\{\{.BIN\}\}\/next dev'/)
+})
+
+test('historical Set05 output validation accepts exactly its 55-work catalogue and 495 assets', async t => {
+ const root = await fixture(t)
+ for (const art of catalogue.slice(55)) await rm(join(root, 'public/artwork/grounded', art.slug), { recursive: true })
+ const prefix = catalogue.slice(0,55)
+ const { verifySet05Catalogue } = await import('../import-grounded-set05.mjs')
+ verifySet05Catalogue(prefix)
+ assert.equal((await checkCatalogue(prefix, { root, regenerate: false, expectedCount: 55 })).files, 495)
+ await assert.rejects(checkCatalogue(prefix, { root, regenerate: false }), /55.*80|55 !== 80/s)
+ const source = await readFile(join(ROOT, 'scripts/import-grounded-set05.mjs'), 'utf8')
+ assert.match(source, /checkCatalogue\(catalogue,\{root,regenerate:false,expectedCount:55\}\)/)
+})
+
+test('catalogue growth remains bounded and oversized files fail before output creation', async t => {
+ const root = await fixture(t, false)
+ assert((await readFile(join(root, 'lib/grounded-artwork/catalogue.json'))).length < MAX_CATALOGUE_BYTES)
+ await writeFile(join(root, 'lib/grounded-artwork/catalogue.json'), Buffer.alloc(MAX_CATALOGUE_BYTES + 1, 32))
+ await assert.rejects(prepareGroundedAssets({ root }), /Unsafe or oversized file/)
+ await assert.rejects(lstat(join(root, 'public')), { code: 'ENOENT' })
 })

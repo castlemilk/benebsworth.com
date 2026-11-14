@@ -17,7 +17,7 @@ it('bounds initial HTML to 24 lightweight thumbnails with stable detail links', 
   expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(24)
   expect(document.querySelector('[data-grounded-card] img')?.getAttribute('loading')).toBe('lazy')
   fireEvent.click(screen.getByRole('button', { name: 'Next page' }))
-  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(cards.length - 24)
+  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(Math.min(24, cards.length - 24))
   expect(window.location.search).toBe('?page=2')
 })
 it('gives selects explicit concise labels that exclude their option text', () => {
@@ -42,7 +42,7 @@ it('intersects filters, resets page, clears with focus and restores URL state', 
   expect(document.activeElement).toBe(screen.getByLabelText('Find grounded artwork'))
   expect(window.location.search).toBe('')
   act(() => { window.history.replaceState(null, '', '?page=2'); window.dispatchEvent(new PopStateEvent('popstate')) })
-  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(cards.length - 24)
+  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(Math.min(24, cards.length - 24))
 })
 it('uses only the selected authored preview and byte-exact master URL on its intended matte', () => {
   const artwork = GROUNDED_ARTWORK[0]
@@ -72,4 +72,9 @@ it('loads shared alias and tag URLs, intersects tag filtering, and clamps malfor
   fireEvent.change(screen.getByLabelText('Tag'), { target: { value: unrelatedTag } })
   expect(screen.queryByRole('link', { name: `Open ${card.title}` })).toBeNull()
   expect(window.location.search).not.toContain('page=')
+})
+
+it('keeps the complete reviewed scientific notes available from Set05 detail pages', () => {
+  render(<GroundedDetail artwork={GROUNDED_ARTWORK.find(a => a.slug === 'floating-prism')!} />)
+  expect(screen.getByRole('link', { name: 'Read complete Set05 scientific notes and limitations' }).getAttribute('href')).toContain('/artwork/grounded-notes/set05.')
 })

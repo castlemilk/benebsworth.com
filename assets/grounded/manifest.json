@@ -1,6 +1,6 @@
 {
   "format": "brotli-concatenated-original-svg-v1",
-  "catalogueSha256": "d1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de",
+  "catalogueSha256": "4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06",
   "artworks": [
     {
       "slug": "chambered-growth",
@@ -453,6 +453,331 @@
         {
           "sha256": "e51142d78b5bb6f85635ac72d2b2374e975191a8001ede63ba29cec832fdf274",
           "bytes": 4584
+        }
+      ]
+    },
+    {
+      "slug": "stomatal-gate",
+      "rawBytes": 63747,
+      "rawSha256": "d306577876b14cf54edfcae8d0ae62de31cc2febadef563d7d52d07b9acd78ea",
+      "compressedBytes": 4550,
+      "compressedSha256": "bbd265b6eb8ae8ed9c8fce2c9e88a75644a4b5736a5b773177c69cee4c5cde76",
+      "parts": [
+        {
+          "sha256": "bbd265b6eb8ae8ed9c8fce2c9e88a75644a4b5736a5b773177c69cee4c5cde76",
+          "bytes": 4550
+        }
+      ]
+    },
+    {
+      "slug": "root-hair-zone",
+      "rawBytes": 49242,
+      "rawSha256": "7b7ca6aa97250593b19e361f247dc20e8743cd07a86df521e2c6f54c51439723",
+      "compressedBytes": 2435,
+      "compressedSha256": "8adcec6fe241e5dde41fd50dbfd50879063e968837a1b0ad4f9438f005dcebcb",
+      "parts": [
+        {
+          "sha256": "8adcec6fe241e5dde41fd50dbfd50879063e968837a1b0ad4f9438f005dcebcb",
+          "bytes": 2435
+        }
+      ]
+    },
+    {
+      "slug": "xylem-vessel",
+      "rawBytes": 67215,
+      "rawSha256": "6b209a43aa01f96f4a3e0a2c412639df2199508de61b2a13c2153be0850942e3",
+      "compressedBytes": 1925,
+      "compressedSha256": "28562458ff63f9ed912c1f72cdc80390cf25fb7b59fe4bbd20f3d7f3c9c8df61",
+      "parts": [
+        {
+          "sha256": "28562458ff63f9ed912c1f72cdc80390cf25fb7b59fe4bbd20f3d7f3c9c8df61",
+          "bytes": 1925
+        }
+      ]
+    },
+    {
+      "slug": "pollen-tube",
+      "rawBytes": 42714,
+      "rawSha256": "bc6ed26e231c5cb20476306f97cfc2823203c3dd90c3db4cd30ff0c24efca018",
+      "compressedBytes": 2426,
+      "compressedSha256": "585a6b5ffea3b020393c5ae0a2308002d0adbbcd65f7d8588fbe13df213741f7",
+      "parts": [
+        {
+          "sha256": "585a6b5ffea3b020393c5ae0a2308002d0adbbcd65f7d8588fbe13df213741f7",
+          "bytes": 2426
+        }
+      ]
+    },
+    {
+      "slug": "fern-sorus",
+      "rawBytes": 113826,
+      "rawSha256": "87ad6b58d678ee5ed6d72d7acc7e15b1c771930b37523a0bb11788377e8e0965",
+      "compressedBytes": 9299,
+      "compressedSha256": "442a323b59f450041056c37096ebcb1439b2e2532b50700aa1f5f2552476894a",
+      "parts": [
+        {
+          "sha256": "442a323b59f450041056c37096ebcb1439b2e2532b50700aa1f5f2552476894a",
+          "bytes": 9299
+        }
+      ]
+    },
+    {
+      "slug": "coral-polyp",
+      "rawBytes": 106762,
+      "rawSha256": "91f640970718d2365235383b847b7c6b214268bfb1af465f507856b37412e012",
+      "compressedBytes": 9557,
+      "compressedSha256": "61ce4d348d03f2fe1e41f7ea4a4b8c117b55709c25b879665df89853143ff2af",
+      "parts": [
+        {
+          "sha256": "61ce4d348d03f2fe1e41f7ea4a4b8c117b55709c25b879665df89853143ff2af",
+          "bytes": 9557
+        }
+      ]
+    },
+    {
+      "slug": "sponge-canal",
+      "rawBytes": 63196,
+      "rawSha256": "78d2a6f535efa8850a709e522bbad56fee60c4fddae3972686fc17cbe85a2ec4",
+      "compressedBytes": 2799,
+      "compressedSha256": "92a02f5e6cde8441d1888f0cc9beb09f1ef0ce858c11cccda58bdcc626a32f84",
+      "parts": [
+        {
+          "sha256": "92a02f5e6cde8441d1888f0cc9beb09f1ef0ce858c11cccda58bdcc626a32f84",
+          "bytes": 2799
+        }
+      ]
+    },
+    {
+      "slug": "bivalve-hinge",
+      "rawBytes": 35743,
+      "rawSha256": "0abc1f99e9eb618c1ba7421b93f372d11cfcae3b8b91ab5349eb3faa14abc7d6",
+      "compressedBytes": 2346,
+      "compressedSha256": "1677612598ed68c977e0058044f95d210157c67f4d19b78576e43ef4526a7d10",
+      "parts": [
+        {
+          "sha256": "1677612598ed68c977e0058044f95d210157c67f4d19b78576e43ef4526a7d10",
+          "bytes": 2346
+        }
+      ]
+    },
+    {
+      "slug": "tube-foot",
+      "rawBytes": 24121,
+      "rawSha256": "aa999e78cbb522cb3add15dd6ca2d9af40cdf357c9ddc39e744cad1bb6320ea2",
+      "compressedBytes": 1792,
+      "compressedSha256": "2ad254c5e5999c3a6e770d5f50baacb956555286528111ce10d46f4e08b817c3",
+      "parts": [
+        {
+          "sha256": "2ad254c5e5999c3a6e770d5f50baacb956555286528111ce10d46f4e08b817c3",
+          "bytes": 1792
+        }
+      ]
+    },
+    {
+      "slug": "cnidocyte-discharge",
+      "rawBytes": 32242,
+      "rawSha256": "9d49a3773910ceff4ad6c6be98df155a126d380e8106f042688a334be7ec5497",
+      "compressedBytes": 2002,
+      "compressedSha256": "8cb1766066b2100c45917cccfbb153b136fa71cf5bff48f06049bb43c5ebe128",
+      "parts": [
+        {
+          "sha256": "8cb1766066b2100c45917cccfbb153b136fa71cf5bff48f06049bb43c5ebe128",
+          "bytes": 2002
+        }
+      ]
+    },
+    {
+      "slug": "parabolic-reflector",
+      "rawBytes": 43045,
+      "rawSha256": "95dabedbaa4f980397e9fe9cf0a33a487d6491127f9fd349e8272e11b73498fe",
+      "compressedBytes": 2396,
+      "compressedSha256": "71dbfd9fa9ac0e65f186e351ab3c323c519c3d3d84af9dc6fc0e377bff4169a5",
+      "parts": [
+        {
+          "sha256": "71dbfd9fa9ac0e65f186e351ab3c323c519c3d3d84af9dc6fc0e377bff4169a5",
+          "bytes": 2396
+        }
+      ]
+    },
+    {
+      "slug": "double-slit-interference",
+      "rawBytes": 169849,
+      "rawSha256": "1a237d1b77e3c2a12f49488ef9f9ba28350c381e383c760c2612afff91ddf145",
+      "compressedBytes": 9619,
+      "compressedSha256": "83a488edc1eafc28fdea596170750bfae2a105ea3d5cbf98f6850acc9c5ee534",
+      "parts": [
+        {
+          "sha256": "83a488edc1eafc28fdea596170750bfae2a105ea3d5cbf98f6850acc9c5ee534",
+          "bytes": 9619
+        }
+      ]
+    },
+    {
+      "slug": "linear-polarization",
+      "rawBytes": 45820,
+      "rawSha256": "06cf1e9a9cd3326422ae92425b9fe2991c11cd47bfd4149d8bde36c85b405d9d",
+      "compressedBytes": 2945,
+      "compressedSha256": "6c20d0d7fc8d1033b8d6997f85d9b72dbad3a1c2400520b8e494972ebaba4cd8",
+      "parts": [
+        {
+          "sha256": "6c20d0d7fc8d1033b8d6997f85d9b72dbad3a1c2400520b8e494972ebaba4cd8",
+          "bytes": 2945
+        }
+      ]
+    },
+    {
+      "slug": "doppler-wavefronts",
+      "rawBytes": 15526,
+      "rawSha256": "5a8a852509d7367e4050457ba7d5b33f29507c982629db499b3b430a524898fb",
+      "compressedBytes": 1367,
+      "compressedSha256": "3aecb8b97759e2d5ab5425b662b8c77ed491884241b18d4d26a2fac8263fed18",
+      "parts": [
+        {
+          "sha256": "3aecb8b97759e2d5ab5425b662b8c77ed491884241b18d4d26a2fac8263fed18",
+          "bytes": 1367
+        }
+      ]
+    },
+    {
+      "slug": "pipe-resonance",
+      "rawBytes": 48862,
+      "rawSha256": "e1d6a0693b31bc9738eb17d478d37bbd1c8971e9902c74ab4fee4a0c79e10faf",
+      "compressedBytes": 2308,
+      "compressedSha256": "b68edfb856d56406166cee4855bc3ed6450a9e4f33d9b85d88c84900af3a8a09",
+      "parts": [
+        {
+          "sha256": "b68edfb856d56406166cee4855bc3ed6450a9e4f33d9b85d88c84900af3a8a09",
+          "bytes": 2308
+        }
+      ]
+    },
+    {
+      "slug": "primed-siphon",
+      "rawBytes": 19041,
+      "rawSha256": "06eb5a8d50e51c5ecb3df6269d1785ab828365ef2b65ac14d54c56ee42a868da",
+      "compressedBytes": 1227,
+      "compressedSha256": "9ddecb23cb069f6b5c9e08b1d599d8ad493fd50da522f26486e6423b787ddcbb",
+      "parts": [
+        {
+          "sha256": "9ddecb23cb069f6b5c9e08b1d599d8ad493fd50da522f26486e6423b787ddcbb",
+          "bytes": 1227
+        }
+      ]
+    },
+    {
+      "slug": "pressure-head",
+      "rawBytes": 32115,
+      "rawSha256": "b345a6d8474761d8766c1e74bab5067fb0ce42c88b8912185f2197a4eb702b71",
+      "compressedBytes": 1647,
+      "compressedSha256": "6f2956326b2a72fda8ecc8b12cb28a9af52dd9752985f0729f3da9ec2b8dd069",
+      "parts": [
+        {
+          "sha256": "6f2956326b2a72fda8ecc8b12cb28a9af52dd9752985f0729f3da9ec2b8dd069",
+          "bytes": 1647
+        }
+      ]
+    },
+    {
+      "slug": "floating-prism",
+      "rawBytes": 20190,
+      "rawSha256": "7e9a0e1a2198407b0990c0eebaf6e758830fecc6ca83d218ea935d8d99a39154",
+      "compressedBytes": 1240,
+      "compressedSha256": "08c19f1602feabbc9254f324617e3987dc5d20be2e81642f790b6c84c2023456",
+      "parts": [
+        {
+          "sha256": "08c19f1602feabbc9254f324617e3987dc5d20be2e81642f790b6c84c2023456",
+          "bytes": 1240
+        }
+      ]
+    },
+    {
+      "slug": "slider-crank",
+      "rawBytes": 22941,
+      "rawSha256": "abb9cbaf252cc368c0b202bad876e0437bcdff77d019a78ed17b1c9b92b6b0a7",
+      "compressedBytes": 1953,
+      "compressedSha256": "7fa5dd01ae6be275573ba5b5d94463f098c72555ce30f95dd1a206d7d8c58a4c",
+      "parts": [
+        {
+          "sha256": "7fa5dd01ae6be275573ba5b5d94463f098c72555ce30f95dd1a206d7d8c58a4c",
+          "bytes": 1953
+        }
+      ]
+    },
+    {
+      "slug": "centrifugal-governor",
+      "rawBytes": 22578,
+      "rawSha256": "03df727c8b70717c2cba2efebe0f1b53227f7cce0ed536f34ed82756a96b10ca",
+      "compressedBytes": 1575,
+      "compressedSha256": "14639a544a48e60ca628d6f7e1a64b6f479639986c67b09952e9c3a300e490aa",
+      "parts": [
+        {
+          "sha256": "14639a544a48e60ca628d6f7e1a64b6f479639986c67b09952e9c3a300e490aa",
+          "bytes": 1575
+        }
+      ]
+    },
+    {
+      "slug": "cycloid-trace",
+      "rawBytes": 56277,
+      "rawSha256": "43eb07054c255387c7d95037e3debd75ab9da170986e487d42075e01264ecf46",
+      "compressedBytes": 4506,
+      "compressedSha256": "e260c282c05f41093e0d87b78effabbf3ab0008e4fe2e076a026882c0b223fa6",
+      "parts": [
+        {
+          "sha256": "e260c282c05f41093e0d87b78effabbf3ab0008e4fe2e076a026882c0b223fa6",
+          "bytes": 4506
+        }
+      ]
+    },
+    {
+      "slug": "hilbert-channel",
+      "rawBytes": 50688,
+      "rawSha256": "8996e698936f9f010d828039ab82d2d3a30c5b91530c1963b874d6d325ffab16",
+      "compressedBytes": 2460,
+      "compressedSha256": "b128524d5292969fcd17b87f686c2cff9907dd9586996e791ba1d5526066fac0",
+      "parts": [
+        {
+          "sha256": "b128524d5292969fcd17b87f686c2cff9907dd9586996e791ba1d5526066fac0",
+          "bytes": 2460
+        }
+      ]
+    },
+    {
+      "slug": "ruled-saddle",
+      "rawBytes": 68544,
+      "rawSha256": "0e83641f95a7c5298cf4e77a0bc38cf88b4865bb23b534c999f205b62d422eb1",
+      "compressedBytes": 5455,
+      "compressedSha256": "d86b7e2f836fc9be7711c297b2769c136ccd6d67a72d2884e97827ca406edebc",
+      "parts": [
+        {
+          "sha256": "d86b7e2f836fc9be7711c297b2769c136ccd6d67a72d2884e97827ca406edebc",
+          "bytes": 5455
+        }
+      ]
+    },
+    {
+      "slug": "constant-width-gauge",
+      "rawBytes": 36867,
+      "rawSha256": "e814f3674c146e9ee3981e460c61f15020f240da6481e258cfb5e9f9605cbf92",
+      "compressedBytes": 1310,
+      "compressedSha256": "bb1ca95ecf531f03adbecdaea0592b2046b173bf99b0f557823cc65738170b24",
+      "parts": [
+        {
+          "sha256": "bb1ca95ecf531f03adbecdaea0592b2046b173bf99b0f557823cc65738170b24",
+          "bytes": 1310
+        }
+      ]
+    },
+    {
+      "slug": "polyhedral-dual",
+      "rawBytes": 16761,
+      "rawSha256": "283c0af7b3ec10848fd1ff3f9a92da3dd696ed21ddb01583cd27bbf607b6cae8",
+      "compressedBytes": 1049,
+      "compressedSha256": "848b0eefaee9afdb2b0a73c871bad00613801d380b04981c7098fe4400e9bf8c",
+      "parts": [
+        {
+          "sha256": "848b0eefaee9afdb2b0a73c871bad00613801d380b04981c7098fe4400e9bf8c",
+          "bytes": 1049
         }
       ]
     }

@@ -158,3 +158,71 @@ Pagefind receives explicit positive-content records, not negated scientific limi
 The approximately 1,000-piece plan includes these 30 grounded subjects. The earlier 36-pattern expansion is superseded as a planning queue, not deleted source. Existing live studies, the 18 additions in the held PR147–149 stack, and six separate object/place candidates are preserved independently. Palette and size variants never increase the distinct-artwork count. Further batches require new scientific/visual review and a reviewed inventory update, not loosening the current 30-item import receipt.
 
 Source preparation and tested derivatives do not establish browser acceptance or publication. Record exact-head CI and visual evidence separately; release remains dependent on resolving the PR147 merge hold through the existing workflow. No new credentials, security settings or share links are needed by this adapter.
+
+## Set05 additive integration (2026-11-14)
+
+The pilot sections above describe the historical 30-piece import. PR150 was merged
+and released at `c24cdf2161964cc8531aacb5d61410d21bd8b7e6`; the earlier release hold
+was resolved. Set05 appends 25 reviewed studies in five groups: plant exchange,
+invertebrate structures, light and waves, mechanics in balance, and constructed
+mathematics. The collection now has 55 distinct artworks, 165 SVG masters and 330
+lossless WebP derivatives. Palette or size variants do not count as new artworks.
+
+The first 30 catalogue entries serialize to the original pilot catalogue SHA-256
+`d1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de`. Their complete
+metadata, all 270 asset hashes and original compressed source entries are unchanged.
+The new full catalogue SHA-256 is
+`4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06`.
+
+Set05 authority receipts:
+
+- Source ZIP: `f4d8f9d68e24ddc157765e8d89dc27e140f626ff3e0b0ce146a7a5665331598c`.
+- Batch metadata: `84843c0ae52067285d783d7ad138daefbcabed593faf8cf529f4c404c58cb8a1`.
+- Source hash manifest: `05f0c22d64b83722398934b462846f7b9f8e7386973052e7a65af24b66571880`.
+- Batch identity: `grounded-forms-twenty-five-studies-set05-r01`.
+
+`node scripts/import-grounded-set05.mjs <final-packet> --check` verifies both
+source authority pins, every new master, derived output, mapped metadata and
+compressed transport against the reviewed packet. Without `--check`, it permits
+only the explicit 30-to-55 append or an exact recheck of the current 55. It refuses
+changed existing asset bytes. The original inventory importer now verifies its
+pilot prefix without truncating later additions. Ordinary preparation still
+requires the pinned full catalogue and never accepts new artwork automatically.
+
+The reviewed SVG allowlist adds only inert line, polygon, ellipse, circle and
+metadata elements and their geometric attributes. Scripts, embedded images,
+external resources, event handlers, style attributes and foreign namespaces remain
+rejected. Masters are never injected into page HTML. All authored theme geometry
+and bytes are retained; the site creates only lossless 480/960px WebP fallbacks.
+
+The 55 artwork transport contains 71 parts: 9,838,054 original SVG bytes,
+847,447 compressed bytes and 1,130,087 encoded part bytes. Per-artwork expansion
+bounds, sequential rendering and the existing 24-card page limit remain unchanged.
+The largest stream and part remain 144,756 and 43,693 bytes respectively. All
+thumbnails remain below 50,000 bytes. The worst 24-thumbnail palette page must stay
+below 1 MB, independent of total collection size. The discovery payload excludes
+scientific paragraphs and master metadata and is bounded at 70 KB.
+
+The source packet review verified all 253 manifest entries, all 254 ZIP members,
+75 exact master hashes, 25 theme-geometry triplets, 150 RGBA fallbacks and 75 clear
+alpha samples. Actual overview and all ten light/dark group sheets were inspected.
+Original procedural drawing sources support the provenance statement; no claim of
+global exclusivity or species validation is made. Recorded scientific checks cover
+36 geometric/semantic properties, including corrected double-slit wavelength
+spacing. Source reproduction receipts cover 150 byte-identical comparisons.
+
+Every artwork retains its full basis, sources and limitations on the detail route.
+Biology is illustrative, and physical/mathematical constructions preserve their
+stated idealizations. Intended minimum display widths remain 240/320px; gallery
+images are recognition thumbnails. Static checks cover all 55 routes and all 495
+assets. Browser regressions cover all three collection pages, history, filters,
+empty-state focus recovery, five new group representatives, new alias/global
+search, and exact three-palette Set05 downloads. Test and release results must be
+recorded separately; these source receipts alone do not establish live deployment.
+
+The immutable complete `SCIENTIFIC-BASIS.md` is also published under
+`/artwork/grounded-notes/` and linked from each Set05 detail page. Its SHA-256 is
+`5034a810f35404eb90896c95352b1395ce826e69bfa3b743a0aba8998386e98a`. This retains
+qualifications that are more detailed than the catalogue summaries, including
+illustrative force-arrow locations, pressure-arrow meaning and negligible governor
+sleeve load. Import, static output and browser checks verify this exact document.

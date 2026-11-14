@@ -5,11 +5,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { GROUNDED_THEMES, type GroundedArtwork, type GroundedTheme } from '@/lib/grounded-artwork/types'
 import styles from './grounded.module.css'
-import { SET05_SCIENTIFIC_NOTES } from '@/lib/grounded-artwork/references'
+import { scientificNotesFor } from '@/lib/grounded-artwork/references'
 
 export function GroundedDetail({ artwork }: { artwork: GroundedArtwork }) {
   const [palette, setPalette] = useState<GroundedTheme>('light')
   const variant = artwork.variants[palette]
+  const notes = scientificNotesFor(artwork.batchId)
   return <article className={styles.detail} data-pagefind-ignore>
     <div className={styles.navigation}><Link href="/vectors/grounded/" prefetch={false}>All grounded forms</Link><a href="/vectors/">Tunable Study lab</a></div>
     <p className={styles.eyebrow}>{artwork.subject} / fixed authored SVG</p>
@@ -24,8 +25,8 @@ export function GroundedDetail({ artwork }: { artwork: GroundedArtwork }) {
     <p>Minimum intended display width: {artwork.minimumDisplayWidth}px. Smaller thumbnails are for recognition only; inspect fine details at or above this width.</p>
     <div className={styles.download}><p><a href={variant.preview}>Open full-size preview</a> · 960 × 960 WebP</p><a data-grounded-download href={variant.master} download={variant.master.split('/').pop()}>Download {palette === 'mono' ? 'monochrome' : palette} SVG</a><p>Original SVG · {variant.bytes.toLocaleString('en-AU')} bytes · revision {artwork.revision}</p></div>
     <section><h2>Scientific basis</h2><p data-grounded-basis className={styles.prose}>{artwork.basis}</p><h2>Limitations</h2><p data-grounded-limitations className={styles.prose}>{artwork.limitations}</p></section>
-    {artwork.batchId === SET05_SCIENTIFIC_NOTES.batchId && <p><a data-grounded-scientific-notes href={SET05_SCIENTIFIC_NOTES.url}>Read complete Set05 scientific notes and limitations</a> · Original Markdown document with construction details and all qualifications.</p>}
+    {notes && <p><a data-grounded-scientific-notes href={notes.url}>Read complete {notes.label} scientific notes and limitations</a> · Original Markdown document with construction details and all qualifications.</p>}
     <section><h2>Sources</h2><ul>{artwork.sources.map(source => <li key={source.url}><a href={source.url}>{source.title}</a></li>)}</ul></section>
-    <section><h2>Provenance</h2><p className={styles.prose}>{artwork.provenance}</p><p>Source: {artwork.sourceId} · Revision: {artwork.revision} · Batch: {artwork.batchId}</p><p className={styles.hash}>SHA-256 ({palette} SVG): {variant.sha256}</p></section>
+    <section><h2>Provenance</h2><p data-grounded-provenance className={styles.prose}>{artwork.provenance}</p><p>Source: {artwork.sourceId} · Revision: {artwork.revision} · Batch: {artwork.batchId}</p><p className={styles.hash}>SHA-256 ({palette} SVG): {variant.sha256}</p></section>
   </article>
 }

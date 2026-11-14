@@ -8,6 +8,7 @@ import { brotliCompressSync, brotliDecompressSync, constants as zlib } from 'nod
 import { ROOT, THEMES, CATALOGUE_SHA256, REVIEWED_ARTWORK_COUNT, sha256, renderWebp } from './import-grounded-artwork.mjs'
 
 export const CHUNK_BYTES = 32768
+export const MAX_CATALOGUE_BYTES = 512 * 1024
 export const MAX_PART_TEXT_BYTES = 4 * Math.ceil(CHUNK_BYTES / 3) + 1
 export const MAX_SVG_BYTES = 1024 * 1024
 const MAX_COMPRESSED_BYTES = 1024 * 1024
@@ -80,7 +81,7 @@ function assetsFor(art) {
  })
 }
 async function readCatalogue(root) {
- const data = await readBounded(resolve(root, 'lib/grounded-artwork/catalogue.json'), 256 * 1024)
+ const data = await readBounded(resolve(root, 'lib/grounded-artwork/catalogue.json'), MAX_CATALOGUE_BYTES)
  assert.equal(sha256(data), CATALOGUE_SHA256, 'Catalogue metadata mutation; re-review required')
  const catalogue = JSON.parse(data)
  assert.equal(catalogue.length, REVIEWED_ARTWORK_COUNT)

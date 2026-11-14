@@ -1,6 +1,10 @@
 # Blog development checkpoint
 
-## Current continuation: Hiking opener identity
+## Current continuation: Grounded Forms Set06
+
+The current additive integration starts from verified master `4b0f4fa250a06ea9f5aff2661422f57f98d37e58` on `feat/grounded-forms-set06-20261114`. It preserves all 55 published works and adds 25 reviewed original studies. See [grounded-set06-review.md](grounded-set06-review.md) for exact packet/catalogue fingerprints, provenance qualifications, performance bounds, source review and remaining test/release gates. Publication uses the existing checked workflow only after exact-head acceptance. The older continuation records below are historical, not current ownership or release holds.
+
+## Historical continuation: Hiking opener identity
 
 The current blog continuation starts from PR95 head `d453c8c65bf2b0c01527d04e1b14553d354a4c63`, on local branch `fix/hiking-opener-identity-20261106`. The responsive photo return-focus correction is complete locally, with regression and actual-component browser evidence. See [photo-opener-review.md](photo-opener-review.md) for exact scope, five manual critique stages, screenshots, build limits and the unchanged release/data decision. PR95 remains held, unmerged and undeployed; this local continuation has not been pushed. The older sections below are historical checkpoints, not the current release status.
 

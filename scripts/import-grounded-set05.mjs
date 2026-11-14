@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { resolve, dirname, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ROOT, THEMES, PILOT_CATALOGUE_SHA256, CATALOGUE_SHA256, sha256, validateSvg, renderWebp, checkCatalogue } from './import-grounded-artwork.mjs'
+import { ROOT, THEMES, PILOT_CATALOGUE_SHA256, SET05_CATALOGUE_SHA256, sha256, validateSvg, renderWebp, checkCatalogue } from './import-grounded-artwork.mjs'
 import { encodeArtwork } from './prepare-grounded-artwork.mjs'
 export const SET05_BATCH_SHA256 = '84843c0ae52067285d783d7ad138daefbcabed593faf8cf529f4c404c58cb8a1'
 export const SET05_HASHES_SHA256 = '05f0c22d64b83722398934b462846f7b9f8e7386973052e7a65af24b66571880'
@@ -12,13 +12,15 @@ export function verifySet05Baseline(current, transport) {
  assert([30,55].includes(current.length), 'Unexpected catalogue baseline')
  const pilot = current.slice(0,30)
  assert.equal(sha256(Buffer.from(json(pilot))), PILOT_CATALOGUE_SHA256, 'Published pilot changed')
- if (current.length === 55) assert.equal(sha256(Buffer.from(json(current))), CATALOGUE_SHA256, 'Expanded catalogue changed')
+ if (current.length === 55) assert.equal(sha256(Buffer.from(json(current))), SET05_CATALOGUE_SHA256, 'Expanded catalogue changed')
+ assert.equal(transport.artworks?.length, current.length, 'Current transport count mismatch')
+ assert.equal(transport.catalogueSha256, sha256(Buffer.from(json(current))), 'Current transport catalogue mismatch')
  const prefix = {...transport, catalogueSha256: PILOT_CATALOGUE_SHA256, artworks: transport.artworks.slice(0,30)}
  assert.equal(sha256(Buffer.from(json(prefix))), '4d039aea768a78c45b587090416531220db1449e59b7582e76a880246e2bba69', 'Published pilot transport changed')
  return pilot
 }
 export function verifySet05Catalogue(catalogue) {
- assert.equal(sha256(Buffer.from(json(catalogue))), CATALOGUE_SHA256, 'Catalogue pin drift')
+ assert.equal(sha256(Buffer.from(json(catalogue))), SET05_CATALOGUE_SHA256, 'Catalogue pin drift')
 }
 export function metadataForSet05(a, batchId) {
  return { slug: a.id, title: a.title, batchId, sourceId: a.id, sourceDirectoryId: `${a.number}-${a.id}`, revision: a.revision,
@@ -85,7 +87,7 @@ export async function importSet05(packetRoot, { check = false, root = ROOT } = {
   // This explicit reviewed migration appends entries; the ordinary packer still refuses mutation.
   await writeFile(catalogueFile,data); await writeFile(transportFile,manifest)
  }
- return {catalogueSha256:sha256(data),...await checkCatalogue(catalogue,{root,regenerate:false})}
+ return {catalogueSha256:sha256(data),...await checkCatalogue(catalogue,{root,regenerate:false,expectedCount:55})}
 }
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
  const args=process.argv.slice(2)

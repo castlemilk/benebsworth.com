@@ -1,6 +1,14 @@
 # Grounded Forms fixed-artwork asset provenance
 
-## Scope and identity
+## Current reviewed expansion: Set06
+
+The reviewed candidate contains **80 distinct works**, **240 original SVG masters** and **480 transparent lossless WebP derivatives**, preserving the first 55 works and their exact download identities. It adds 25 Set06 studies in cells, specimen architecture, Earth forms, mechanics and mathematics. Full source qualifications, preserved hashes, performance budgets and release gates are recorded in [the Set06 review](development/grounded-set06-review.md). This current-source section supersedes historical collection counts below; source acceptance is distinct from deployment.
+
+The active catalogue digest is `70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e`. `scripts/import-grounded-set06.mjs <packet-root> --check` verifies the pinned packet, the entire 55-work published prefix and the exact 80-work result. Ordinary preparation restores all 720 files through unchanged bounded source transport. The Set05 migration remains a historical 30-to-55 adapter with its original fixed receipt.
+
+Set06 scientific notes remain byte-identical under SHA-256 `6d16ad6fe8cd49a4ec007bba55c7abee9560f598c6ee7e486f98d88065650df3`. All specimen studies are generic originals. No verified-CC0 specimen reproduction is claimed; the horseshoe work retains its unverified-current-media-rights qualification in visible provenance. Its broken Smithsonian object citation is explicitly corrected to the verified Q?rius record, without changing the original source packet or granting rights.
+
+## Historical pilot scope and identity
 
 30 reviewed artworks; 90 unchanged SVG masters; 90 transparent lossless 480 × 480 WebP thumbnails and 90 transparent lossless 960 × 960 previews. Masters remain 900 × 900 with viewBox `0 0 900 900`. Six works require 320px display width; the remaining 24 require 240px. Thumbnails are discovery aids, not an assertion that intricate details remain legible below those minimum widths.
 

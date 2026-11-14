@@ -78,3 +78,23 @@ it('keeps the complete reviewed scientific notes available from Set05 detail pag
   render(<GroundedDetail artwork={GROUNDED_ARTWORK.find(a => a.slug === 'floating-prism')!} />)
   expect(screen.getByRole('link', { name: 'Read complete Set05 scientific notes and limitations' }).getAttribute('href')).toContain('/artwork/grounded-notes/set05.')
 })
+
+it('shows Set06 rights qualifications and the correct full scientific notes', () => {
+  const artwork = GROUNDED_ARTWORK.find(a => a.slug === 'horseshoe-carapace')!
+  render(<GroundedDetail artwork={artwork} />)
+  expect(screen.getByRole('link', { name: 'Read complete Set06 scientific notes and limitations' }).getAttribute('href')).toContain('/artwork/grounded-notes/set06.')
+  expect(screen.queryByRole('link', { name: 'Read complete Set05 scientific notes and limitations' })).toBeNull()
+  expect(document.querySelector('[data-grounded-provenance]')?.textContent).toBe(artwork.provenance)
+  expect(screen.getByText(/current media license not fully verified/)).toBeTruthy()
+  expect(screen.getByRole('link', { name: /Smithsonian NMNH/ }).getAttribute('href')).toBe('https://qrius.si.edu/browse/object/10795203')
+})
+it('keeps the final eight artworks discoverable with a bounded fourth page', () => {
+  window.history.replaceState(null, '', '?page=4')
+  render(<GroundedCollection cards={cards} />)
+  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(8)
+  expect(screen.getByRole('button', { name: 'Next page' }).hasAttribute('disabled')).toBe(true)
+  expect(screen.getByRole('link', { name: `Open ${cards[72].title}` })).toBeTruthy()
+  fireEvent.click(screen.getByRole('button', { name: 'Previous page' }))
+  expect(screen.getAllByRole('link', { name: /^Open / })).toHaveLength(24)
+  expect(window.location.search).toBe('?page=3')
+})

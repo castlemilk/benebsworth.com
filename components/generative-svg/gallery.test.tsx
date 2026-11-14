@@ -57,6 +57,24 @@ describe('generative SVG gallery', () => {
     fireEvent.change(screen.getByLabelText('Amplitude'), { target: { value: '0.4' } })
     expect(renderSvg.mock.calls.map(([study]) => study.id)).toEqual(['sine-wave'])
   })
+  it('keeps vector thumbnails self-contained without a catalogue-sized inline path tree', () => {
+    render(<GenerativeGallery />)
+    const collection = screen.getByRole('region', { name: /^The collection$/ })
+    expect(collection.querySelectorAll('svg,polyline,polygon,circle')).toHaveLength(0)
+    const images = [...collection.querySelectorAll('img')]
+    expect(images).toHaveLength(STUDIES.length)
+    for (const [i, image] of images.entries()) {
+      expect(decodeURIComponent(image.getAttribute('src')!.split(',').slice(1).join(','))).toBe(renderStudySvg(STUDIES[i]))
+      expect(image.getAttribute('alt')).toBe('')
+      expect(image.getAttribute('loading')).toBe('eager')
+      expect(image.getAttribute('width')).toBe('320')
+      expect(image.getAttribute('height')).toBe('240')
+    }
+    fireEvent.change(screen.getByLabelText('Preview surface'), { target: { value: 'dark' } })
+    const first = collection.querySelector('img')!
+    expect(decodeURIComponent(first.getAttribute('src')!.split(',').slice(1).join(','))).toBe(renderStudySvg(STUDIES[0], {}, { theme: 'dark' }))
+    expect(selected().querySelector('svg')).not.toBeNull()
+  })
   it('changes all drawing appearances while preserving the selected model coordinates', () => {
     render(<GenerativeGallery />)
     const before = geometry(source())

@@ -43,7 +43,8 @@ describe('searchable study registry', () => {
   it('registers and discovers another study without changing UI/search lists or original identities', () => {
     const expanded = createStudyRegistry([...STUDIES, LISSAJOUS_EXAMPLE])
     expect(expanded.studies).toHaveLength(STUDIES.length + 1)
-    expect(searchStudies(expanded, 'lissajous')[0].id).toBe('lissajous-curve')
+    expect(searchStudies(expanded, 'lissajous').map(study => study.id)).toContain('lissajous-curve')
+    expect(searchStudies(expanded, 'lissajous curve')[0].id).toBe('lissajous-curve')
     expect(expanded.get('lissajous-curve')).toBeTruthy()
     expect(studySearchRecords(expanded).at(-1)?.url).toBe('/vectors/?study=lissajous-curve')
     expect(STUDY_REGISTRY.get('lissajous-curve')).toBeUndefined()

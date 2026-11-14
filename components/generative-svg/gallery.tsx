@@ -11,7 +11,11 @@ import { searchStudies, studyUrl, STUDY_CATEGORIES } from '@/lib/generative-svg/
 
 // Thumbnails use defaults and need not resample when another study is tuned.
 const Drawing = memo(function Drawing({ study, appearance }: { study: Study; appearance: Appearance }) {
-  return <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: renderStudySvg(study, {}, appearance) }} />
+  const svg = renderStudySvg(study, {}, appearance)
+  // Keep the growing collection's thousands of path nodes out of the page DOM.
+  // The thumbnail remains vector SVG; only the selected workbench is inline.
+  // Eager data-URI images are also available for printing unvisited rows.
+  return <div className={styles.drawing}><img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`} width={320} height={240} alt="" loading="eager" decoding="async" /></div>
 })
 
 function ExportActions({ svg, title, id }: { svg: string; title: string; id: string }) {

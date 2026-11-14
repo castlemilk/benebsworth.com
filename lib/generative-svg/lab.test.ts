@@ -4,7 +4,7 @@ import { STUDIES, geometryFor, type Mark } from './model'
 import { appearanceFor, activePreset, contrastRatio, DEFAULT_APPEARANCE, lowContrastInks, presetAppearance, renderStudySvg } from './render'
 const study = (id: string) => STUDIES.find(s => s.id === id)!
 const parse = (svg: string) => new DOMParser().parseFromString(svg, 'image/svg+xml')
-const coordinates = (svg: string) => [...parse(svg).querySelectorAll('polyline,polygon,circle,text')].map(n => ['points', 'cx', 'cy', 'r', 'x', 'y'].map(a => n.getAttribute(a)))
+const coordinates = (svg: string) => [...parse(svg).querySelectorAll('polyline,polygon,circle,text,path')].map(n => ['points', 'cx', 'cy', 'r', 'x', 'y', 'd'].map(a => n.getAttribute(a)))
 
 describe('three additional declared models', () => {
   it('keeps oscillator energy constant with equal axis scales and the correct phase orientation', () => {
@@ -75,7 +75,7 @@ describe('safe portable style tuning', () => {
     expect(recipe).toMatchObject({ version: 1, study: s.id, appearance: options })
     expect(renderStudySvg(s, recipe.parameters, recipe.appearance)).toBe(svg)
     expect(coordinates(svg)).toEqual(coordinates(renderStudySvg(s)))
-    expect(svg).toContain('stroke-linecap="butt"')
+    for (const node of doc.querySelectorAll('[stroke-width]')) expect(node.getAttribute('stroke-linecap')).toBe('butt')
     expect(svg).not.toMatch(/NaN|Infinity|url\(|currentColor/)
     expect(doc.querySelector('rect,script,foreignObject,image,parsererror')).toBeNull()
   })

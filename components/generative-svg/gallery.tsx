@@ -115,7 +115,7 @@ export function GenerativeGallery() {
     <div className={styles.gallery}>
       <header className={styles.opening}>
         <h1>Drawing with <em>rules.</em></h1>
-        <p>Curves from equations. Diagrams from relationships. A small collection of SVG studies, with a drawing language you can change. Transparent editorial artwork lives alongside them.</p>
+        <p>Curves from equations. Diagrams from relationships. Illustrations from authored contours. Explore the SVG collection, tune its drawing language, or find transparent editorial PNG artwork alongside it.</p>
       </header>
 
       <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a><a href="/vectors/originals/">Original vectors</a></nav>
@@ -157,7 +157,7 @@ export function GenerativeGallery() {
       <ArtworkCollection />
       <footer className={styles.notes}>
         <h2>Geometry first. Style second.</h2>
-        <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Each SVG download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
+        <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Solid silhouettes keep their shape while pen weight changes open strokes. Each SVG download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
         <p>The collection preserves all 25 original motifs and can grow through the shared study registry. Original SVG artwork remains preserved separately. The editorial PNG masters above are unchanged, with their prompts and provenance available as a separate metadata download. Your parameter tuning stays while you browse this page. Sampled curves are approximations; illustrative studies are labelled individually.</p>
       </footer>
     </div>

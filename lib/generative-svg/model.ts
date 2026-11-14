@@ -1,14 +1,17 @@
 import { ADDITIONAL_STUDIES } from './additional-studies'
 import { ORNAMENTAL_STUDIES } from './ornamental-studies'
 import { PATTERN_ATLAS_STUDIES } from './pattern-atlas'
+import { ARTISTIC_NATURE } from './artistic-nature'
+import { ARTISTIC_PAPER_INK } from './artistic-paper-ink'
 
 import { createStudyRegistry } from './registry'
-import { parametersFor, type Study, type Point, type InkRole, type Mark, type Geometry } from './definition'
-export { parametersFor } from './definition'
-export type { Study, Point, InkRole, Mark, Geometry, Parameter } from './definition'
+import { markPoints, parametersFor, type Study, type Point, type InkRole, type Mark, type Geometry } from './definition'
+import { validatePathMark } from './path'
+export { parametersFor, moveTo, lineTo, cubicTo, closePath, pathPoints, markPoints } from './definition'
+export type { Study, Point, InkRole, Mark, PathCommand, PathMark, Geometry, Parameter } from './definition'
 
-const line = (points: readonly Point[], role: InkRole = 'ink', closed = false): Mark => ({ kind: 'line', points, role, closed })
-const circle = (center: Point, radius: number, role: InkRole = 'ink'): Mark => ({ kind: 'circle', center, radius, role })
+const line = (points: readonly Point[], role: InkRole = 'ink', closed = false): Extract<Mark, { kind: 'line' }> => ({ kind: 'line', points, role, closed })
+const circle = (center: Point, radius: number, role: InkRole = 'ink'): Extract<Mark, { kind: 'circle' }> => ({ kind: 'circle', center, radius, role })
 const axes = (): Mark[] => [line([[28, 120], [292, 120]], 'guide'), line([[32, 28], [32, 212]], 'guide')]
 export function sampleCurve(fn: (x: number) => number, from: number, to: number, count = 256): Point[] {
   if (!Number.isFinite(from) || !Number.isFinite(to) || to <= from || !Number.isInteger(count) || count < 2 || count > 4096) throw new Error('Invalid sampling domain')
@@ -149,6 +152,8 @@ const DEFINITIONS: readonly Study[] = [
   ...ADDITIONAL_STUDIES,
   ...ORNAMENTAL_STUDIES,
   ...PATTERN_ATLAS_STUDIES,
+  ...ARTISTIC_NATURE,
+  ...ARTISTIC_PAPER_INK,
 ]
 
 export const STUDY_REGISTRY = createStudyRegistry(DEFINITIONS)
@@ -158,7 +163,8 @@ export function geometryFor(study: Study, values: Readonly<Record<string, number
   const geometry = study.model(parametersFor(study, values))
   for (const mark of geometry.marks) {
     if (mark.stroke !== undefined && mark.stroke !== 'fine') throw new Error('Invalid stroke tier')
-    const points = mark.kind === 'line' ? mark.points : [mark.kind === 'circle' ? mark.center : mark.at]
+    if (mark.kind === 'path') validatePathMark(mark)
+    const points = markPoints(mark)
     for (const [x, y] of points) if (!Number.isFinite(x) || !Number.isFinite(y) || x < 8 || x > 312 || y < 8 || y > 232) throw new Error('Geometry exceeds the drawing bounds')
     if (mark.kind === 'circle' && (!Number.isFinite(mark.radius) || mark.radius <= 0 || mark.center[0] - mark.radius < 8 || mark.center[0] + mark.radius > 312 || mark.center[1] - mark.radius < 8 || mark.center[1] + mark.radius > 232)) throw new Error('Circle exceeds the drawing bounds')
   }

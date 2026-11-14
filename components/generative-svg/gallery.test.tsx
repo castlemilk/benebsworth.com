@@ -12,7 +12,7 @@ const writeText = vi.fn<(_text: string) => Promise<void>>()
 const selected = () => screen.getByRole('region', { name: 'Selected study' })
 const download = () => within(selected()).getByRole('link', { name: 'Download SVG' }) as HTMLAnchorElement
 const source = () => decodeURIComponent(download().getAttribute('href')!.split(',').slice(1).join(','))
-const geometry = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,text')].map(n => ['points','cx','cy','r','x','y'].map(a => n.getAttribute(a)))
+const geometry = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,text,path')].map(n => ['points','cx','cy','r','x','y','d'].map(a => n.getAttribute(a)))
 // Keep each DOM journey bounded as the catalogue grows, without dropping studies.
 const studyGroups = [...new Set(STUDIES.map(s => s.category))].flatMap(category => {
   const studies = STUDIES.filter(s => s.category === category)

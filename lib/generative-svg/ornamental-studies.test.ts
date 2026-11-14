@@ -8,7 +8,7 @@ import { searchStudies, studySearchRecords } from './registry'
 const [rosette, bloom, medallion] = ORNAMENTAL_STUDIES
 const radius = ([x, y]: readonly number[]) => Math.hypot(x - 160, y - 116)
 const curve = (mark: Mark) => { if (mark.kind !== 'line') throw new Error('Expected contour'); return mark.points }
-const coordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle')].map(n => ['points', 'cx', 'cy', 'r'].map(a => n.getAttribute(a)))
+const coordinates = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,path')].map(n => ['points', 'cx', 'cy', 'r', 'd'].map(a => n.getAttribute(a)))
 
 describe('original engraved ornaments', () => {
   it('keeps thirteen closed rosette contours on their declared harmonic law at every supported setting', () => {

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Point, Study } from './definition'
 import { parametersFor } from './definition'
-import { geometryFor } from './model'
+import { geometryFor, markPoints } from './model'
 import { createStudyRegistry, searchStudies } from './registry'
 import { renderStudySvg } from './render'
 import { confocalLoom, ellipticPoint, LOOM_FOCAL_DISTANCE as C, PATTERN_ELLIPSE_STRINGS, parabolicCornerStrings, stringCornerPoint } from './pattern-ellipse-strings'
@@ -10,7 +10,7 @@ import { confocalLoom, ellipticPoint, LOOM_FOCAL_DISTANCE as C, PATTERN_ELLIPSE_
 const [loomStudy, fanStudy] = PATTERN_ELLIPSE_STRINGS
 const settings = (study: Study) => study.parameters.reduce<Record<string, number>[]>((all, p) => all.flatMap(previous => Array.from({ length: 1 + Math.round((p.max - p.min) / p.step) }, (_, i) => ({ ...previous, [p.key]: p.min + i * p.step }))), [{}])
 const key = ([x, y]: Point) => `${x.toFixed(8)},${y.toFixed(8)}`
-const svgGeometry = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle')].map(node => ['points', 'cx', 'cy', 'r'].map(attr => node.getAttribute(attr)))
+const svgGeometry = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,path')].map(node => ['points', 'cx', 'cy', 'r', 'd'].map(attr => node.getAttribute(attr)))
 
 describe('confocal ellipses and string corners', () => {
   it.each(settings(loomStudy))('preserves conic identities and shared foci at $outer / $density', ({ outer, density }) => {
@@ -82,7 +82,7 @@ describe('confocal ellipses and string corners', () => {
     let count = 0
     for (const mark of g.marks) {
       expect(mark.stroke).toBe('fine')
-      const points = mark.kind === 'line' ? mark.points : mark.kind === 'circle' ? [mark.center] : [mark.at]
+      const points = markPoints(mark)
       count += points.length
       expect(points.every(([x, y]) => Number.isFinite(x) && Number.isFinite(y) && x >= 40 && x <= 280 && y >= 24 && y <= 216)).toBe(true)
     }

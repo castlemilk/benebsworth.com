@@ -6,7 +6,15 @@ The library now includes authored illustrations alongside mathematical and topol
 - Cut paper: Offset portal and Folded horizon. Three separately arranged pictorial constructions each.
 - Expressive ink: Interrupted flourish and Rising ember. Three authored contour arrangements each.
 
-These six bring the requested 36-piece expansion to 24 implemented subjects: 18 mathematical patterns and six bespoke illustrations. Twelve remain. Together with the original 25 and three earlier engravings, the candidate library has 52 SVG studies. This count is a source checkpoint, not a deployment claim.
+The next bespoke batch adds six fixed compositions in three further families:
+
+- Intaglio objects: Index cabinet and Signal lantern, with open compartments and a hanging chamber.
+- Inlaid ornament: Mosaic carafe and Scalloped fan, with transparent handles and carved apertures.
+- Imagined places: Winding quarter and Harbour rigging, an invented roof cluster and a workboat vignette.
+
+These bring the requested 36-piece expansion to 30 implemented subjects: 18 mathematical patterns and 12 bespoke illustrations. Six remain. Together with the original 25 and three earlier engravings, the candidate library has 58 SVG studies. This count is a source checkpoint, not a deployment claim. Fixed illustrations expose appearance tuning without inventing a meaningless model control. Their descriptions state illustrative rather than architectural, cultural or engineering accuracy.
+
+The 52 default SVG outputs accepted before this batch are recorded by hash. Extending the registry must preserve those exact bytes; palette variants are not additional subjects.
 
 ## Author → register → export → review
 

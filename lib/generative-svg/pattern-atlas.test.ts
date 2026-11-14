@@ -19,7 +19,11 @@ describe('pattern atlas batches', () => {
   it('registers six distinct patterns per batch without substituting the existing collection', () => {
     for (const batch of PATTERN_ATLAS_BATCHES) expect(batch).toHaveLength(6)
     expect(new Set(PATTERN_ATLAS_STUDIES.map(s => s.id)).size).toBe(PATTERN_ATLAS_STUDIES.length)
-    expect(STUDY_REGISTRY.studies.length).toBeGreaterThanOrEqual(Object.keys(reviewedHashes).length + PATTERN_ATLAS_STUDIES.length)
+    // Reviewed checkpoints may already include pattern batches. Preserve the
+    // complete union rather than counting overlapping identities twice.
+    const requiredIds = new Set([...Object.keys(reviewedHashes), ...PATTERN_ATLAS_STUDIES.map(s => s.id)])
+    expect(STUDY_REGISTRY.studies.length).toBeGreaterThanOrEqual(requiredIds.size)
+    for (const id of requiredIds) expect(STUDY_REGISTRY.get(id)).toBeDefined()
   })
   it.each(PATTERN_ATLAS_STUDIES)('keeps $id bounded, discoverable and independently styled', study => {
     for (const query of [study.title, ...study.aliases]) expect(searchStudies(STUDY_REGISTRY, query).map(s => s.id)).toContain(study.id)

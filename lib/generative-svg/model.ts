@@ -3,6 +3,8 @@ import { ORNAMENTAL_STUDIES } from './ornamental-studies'
 import { PATTERN_ATLAS_STUDIES } from './pattern-atlas'
 import { ARTISTIC_NATURE } from './artistic-nature'
 import { ARTISTIC_PAPER_INK } from './artistic-paper-ink'
+import { ARTISTIC_OBJECTS } from './artistic-objects'
+import { ARTISTIC_PLACES } from './artistic-places'
 
 import { createStudyRegistry } from './registry'
 import { markPoints, parametersFor, type Study, type Point, type InkRole, type Mark, type Geometry } from './definition'
@@ -154,6 +156,8 @@ const DEFINITIONS: readonly Study[] = [
   ...PATTERN_ATLAS_STUDIES,
   ...ARTISTIC_NATURE,
   ...ARTISTIC_PAPER_INK,
+  ...ARTISTIC_OBJECTS,
+  ...ARTISTIC_PLACES,
 ]
 
 export const STUDY_REGISTRY = createStudyRegistry(DEFINITIONS)

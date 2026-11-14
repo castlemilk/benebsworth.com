@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { ARTISTIC_NATURE } from '../lib/generative-svg/artistic-nature'
 import { ARTISTIC_PAPER_INK } from '../lib/generative-svg/artistic-paper-ink'
+import { STUDIES } from '../lib/generative-svg/model'
 import { gotoSettled } from './settled'
 
 for (const width of [1180, 390]) for (const colorScheme of ['light', 'dark'] as const) {
@@ -12,7 +13,7 @@ for (const width of [1180, 390]) for (const colorScheme of ['light', 'dark'] as 
       const collection = page.getByRole('region', { name: 'The collection', exact: true })
       await collection.getByRole('combobox', { name: 'Subject', exact: true }).selectOption('Illustration')
       await collection.getByRole('combobox', { name: 'Tag', exact: true }).selectOption('bespoke-vector')
-      await expect(collection.getByRole('button', { name: /^Open / })).toHaveCount(6)
+      await expect(collection.getByRole('button', { name: /^Open / })).toHaveCount(STUDIES.filter(study => study.tags.includes('bespoke-vector')).length)
       await page.getByRole('combobox', { name: 'Preview surface', exact: true }).selectOption(colorScheme)
       await page.getByRole('combobox', { name: 'Ink', exact: true }).selectOption('monochrome')
       await page.getByRole('slider', { name: 'Line weight', exact: true }).press('End')

@@ -44,7 +44,7 @@ export function prepareArtPacket(input: unknown) {
       files[filename] = svg; variants[name] = filename
       hashes[filename] = createHash('sha256').update(svg).digest('hex')
     }
-    return { id: study.id, revision, title: study.title, style: study.tags.find(tag => ['engraved-natural', 'cut-paper', 'expressive-ink'].includes(tag)) ?? 'authored-vector', brief: study.description, provenance: study.provenance, sources: [], minimum_display_width: 160, files: variants, recipe: { study: study.id, parameters, appearance }, basis: study.basis, sha256: hashes }
+    return { id: study.id, revision, title: study.title, style: study.tags.find(tag => ['engraved-natural', 'cut-paper', 'expressive-ink', 'intaglio-object', 'inlaid-ornament', 'imagined-place'].includes(tag)) ?? 'authored-vector', brief: study.description, provenance: study.provenance, sources: [], minimum_display_width: 160, files: variants, recipe: { study: study.id, parameters, appearance }, basis: study.basis, sha256: hashes }
   })
   const manifest = { version: 1, batch_id: id, artworks }
   files['batch.json'] = JSON.stringify(manifest, null, 2) + '\n'

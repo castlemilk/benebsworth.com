@@ -7,6 +7,10 @@ description: Create or extend mathematical SVG studies for this blog's tunable g
 
 Use the existing geometry-first framework. A new study should become searchable and tunable through registration, without another renderer or a one-off gallery component.
 
+## Authored illustrations
+
+For bespoke pictorial artwork rather than equations or measured diagrams, use the [artistic vector factory](../../../docs/artistic-vector-factory.md) and its linked artistic-vector skill. Keep `Illustration` / `illustrative` provenance, typed paths, genuine cutouts, fixed compositions where a model control would be artificial, and subject-specific visual critique. The same registry, appearance lab and self-contained export remain the integration boundary. Preserve every previously reviewed default SVG hash when extending the collection.
+
 ## Keep raster artwork separate
 
 For generated PNG editorial illustrations, use the image generation workflow and `docs/editorial-artwork.md`. Register them in the separate artwork manifest, not as a `Study`. Keep real transparency, original master bytes and prompts; never wrap or trace them into a nominal SVG. The library and site search support both formats with distinct labels.

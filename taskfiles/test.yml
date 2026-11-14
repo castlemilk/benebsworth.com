@@ -31,11 +31,13 @@ tasks:
 
       The `@/...` alias is mirrored from tsconfig in vitest.config.ts.
     cmds:
+      - task: ':build:gen:grounded'
       - '{{.BIN}}/vitest run'
 
   watch:
     desc: Vitest in watch mode
     cmds:
+      - task: ':build:gen:grounded'
       - '{{.BIN}}/vitest'
 
   e2e:

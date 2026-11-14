@@ -4,6 +4,7 @@
 #
 #   PRE   gen:md   -> public/blog/<slug>/index.md   (LLM-friendly .md siblings)
 #         gen:outputs -> public/lab-data/**          (benchmark output artifacts)
+#         gen:grounded -> public/artwork/grounded/** (verified fixed artwork)
 #   MAIN  next build -> out/                         (output: 'export')
 #   POST  og-rewrite -> out/**/opengraph-image.png   (extensionless-404 fix)
 #         pagefind   -> out/pagefind/**              (client-side search index)
@@ -49,12 +50,14 @@ tasks:
     sources:
       - app/**/*
       - assets/og-fonts/**/*
+      - assets/grounded/**/*
       - components/**/*
       - lib/**/*
       - content/**/*
       - public/**/*
       - exclude: public/blog/*/index.md
       - exclude: public/lab-data/**/*
+      - exclude: public/artwork/grounded/**/*
       - next.config.mjs
       - postcss.config.mjs
       - tsconfig.json
@@ -64,11 +67,15 @@ tasks:
       - scripts/og-rewrite.mjs
       - scripts/build-search.mts
       - scripts/check-study-search.mts
+      - scripts/check-grounded-output.mts
+      - scripts/prepare-grounded-artwork.mjs
+      - scripts/import-grounded-artwork.mjs
     generates:
       - '{{.OUT_DIR}}/index.html'
       - '{{.OUT_DIR}}/pagefind/pagefind.js'
     method: checksum
     cmds:
+      - task: gen:grounded
       - task: gen:md
       - task: gen:outputs
       - '{{.BIN}}/next build'
@@ -82,10 +89,11 @@ tasks:
       zero ambiguity about what is in out/.
 
       Clears BOTH .next and out/ — clearing only .next/cache does not reliably
-      evict stale chunks. Runs both generation steps before rebuilding so a
-      fresh checkout includes Markdown siblings and benchmark output assets.
+      evict stale chunks. Runs generation before rebuilding so a fresh checkout
+      includes fixed artwork, Markdown siblings and benchmark output assets.
     cmds:
       - rm -rf .next {{.OUT_DIR}}
+      - task: gen:grounded
       - task: gen:md
       - task: gen:outputs
       - '{{.BIN}}/next build'
@@ -116,6 +124,19 @@ tasks:
       - node scripts/og-rewrite.mjs
       - 'node --import tsx scripts/build-search.mts {{.OUT_DIR}}'
       - 'node --import tsx scripts/check-study-search.mts {{.OUT_DIR}}'
+      - 'node --import tsx scripts/check-grounded-output.mts {{.OUT_DIR}}'
+
+  gen:grounded:
+    desc: Restore byte-identical fixed artwork and verified lossless WebPs
+    summary: |
+      Expands bounded Brotli parts from assets/grounded, checks the pinned
+      catalogue and original SVG hashes, then restores missing public assets
+      sequentially with the existing Sharp renderer. Existing files are checked
+      byte-for-byte by SHA-256; corruption or renderer drift fails, never overwrites.
+      Runs before build, dev and unit tests. No network or source packet needed.
+      No Task fingerprint: even an apparently warm output must pass all hashes.
+    cmds:
+      - node scripts/prepare-grounded-artwork.mjs
 
   gen:md:
     desc: Generate LLM-friendly .md siblings for every published blog post

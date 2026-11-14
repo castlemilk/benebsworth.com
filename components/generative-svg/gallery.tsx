@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { STUDIES, STUDY_REGISTRY, parametersFor, type Study } from '@/lib/generative-svg/model'
 import { DEFAULT_APPEARANCE, renderStudySvg, type Appearance } from '@/lib/generative-svg/render'
@@ -118,7 +119,7 @@ export function GenerativeGallery() {
         <p>Curves from equations. Diagrams from relationships. Illustrations from authored contours. Explore the SVG collection, tune its drawing language, or find transparent editorial PNG artwork alongside it.</p>
       </header>
 
-      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a><a href="/vectors/originals/">Original vectors</a></nav>
+      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a><Link href="/vectors/grounded/" prefetch={false}>Grounded forms · fixed SVG</Link><a href="/vectors/originals/">Original vectors</a></nav>
 
       {linkWarning && <p role="status">{linkWarning}</p>}
       <StyleLab appearance={appearance} setAppearance={setAppearance} />

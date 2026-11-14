@@ -8,6 +8,7 @@ import { createIndex, close } from 'pagefind'
 import { buildSearch } from '../../scripts/build-search.mjs'
 import { checkStudySearch } from '../../scripts/check-study-search.mjs'
 import { STUDIES } from './model'
+import { GROUNDED_ARTWORK } from '../grounded-artwork/registry'
 import { ARTWORK } from '../editorial-artwork/registry'
 
 const root = fileURLToPath(new URL('../../', import.meta.url))
@@ -22,9 +23,10 @@ it('Task and npm both build and validate the complete asset index before release
   expect(post).toContain(`${checker} {{.OUT_DIR}}`)
   expect(post.indexOf(builder)).toBeGreaterThan(post.lastIndexOf('node scripts/og-rewrite.mjs'))
   expect(post.indexOf(checker)).toBeGreaterThan(post.indexOf(builder))
+  expect(post).toContain('node --import tsx scripts/check-grounded-output.mts {{.OUT_DIR}}')
   expect(post).not.toContain('{{.BIN}}/pagefind --site')
   const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'))
-  expect(pkg.scripts.postbuild).toBe(`node scripts/og-rewrite.mjs && ${builder} && ${checker}`)
+  expect(pkg.scripts.postbuild).toBe(`node scripts/og-rewrite.mjs && ${builder} && ${checker} && node --import tsx scripts/check-grounded-output.mts`)
   const sources = build.split('    sources:\n')[1].split('    generates:\n')[0]
   for (const input of ['scripts/build-search.mts', 'scripts/check-study-search.mts', 'scripts/og-rewrite.mjs', 'taskfiles/build.yml', 'package-lock.json']) expect(sources).toContain(`- ${input}`)
 })
@@ -39,7 +41,7 @@ it('the shipped CLI preserves article search as well as every SVG and PNG record
     expect(JSON.parse(built.stdout)).toMatchObject({ svgStudies: STUDIES.length, pngArtwork: ARTWORK.length })
     const checked = cli('scripts/check-study-search.mts', directory)
     expect(checked.status, checked.stderr).toBe(0)
-    expect(JSON.parse(checked.stdout).indexedPages).toBe(STUDIES.length + ARTWORK.length + 1)
+    expect(JSON.parse(checked.stdout).indexedPages).toBe(STUDIES.length + ARTWORK.length + GROUNDED_ARTWORK.length + 1)
     // A separate process keeps the emitted module and its file-backed fetch
     // isolated from the all-asset checker and other tests.
     const article = spawnSync(process.execPath, ['--input-type=module', '-e', `
@@ -82,7 +84,7 @@ it('builds a real combined Pagefind index alongside articles and resolves every 
     const result = await buildSearch(directory)
     expect(result.svgStudies).toBe(STUDIES.length)
     const checked = await checkStudySearch(directory)
-    expect(checked.indexedPages).toBe(STUDIES.length + ARTWORK.length + 1)
+    expect(checked.indexedPages).toBe(STUDIES.length + ARTWORK.length + GROUNDED_ARTWORK.length + 1)
     expect(result.pngArtwork).toBe(ARTWORK.length)
     expect(checked.artworkDiscovery).toBe('passed')
     expect(checked.titleAndAliasSearch).toBe('passed')

@@ -54,6 +54,16 @@ jobs:
           path: test-results/
           retention-days: 7
           if-no-files-found: ignore
+      - name: Keep vector print and forced-color evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vector-presentation-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/**/gallery-print-*.pdf
+            test-results/**/forced-colors-*.png
+          retention-days: 7
+          if-no-files-found: ignore
       # upload-artifact rejects paths containing ':' and other characters that
       # are legal in exported routes (e.g. OpenRouter model ids ending ':free'),
       # so ship the export as one tarball instead of a file tree.

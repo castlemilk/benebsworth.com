@@ -16,13 +16,19 @@ for (const [batchIndex, batch] of PATTERN_ATLAS_BATCHES.entries()) for (const wi
       await page.getByRole('slider', { name: 'Line weight', exact: true }).press('End')
       await page.getByRole('checkbox', { name: 'Construction lines', exact: true }).uncheck()
       for (const study of batch) {
-        await collection.getByRole('button', { name: `Open ${study.title}`, exact: true }).click()
+        const card = collection.getByRole('button', { name: `Open ${study.title}`, exact: true })
+        await card.scrollIntoViewIfNeeded()
+        await expect(card.locator('img')).toHaveJSProperty('naturalWidth', 320)
+        await expect(card.locator('img')).toHaveJSProperty('naturalHeight', 240)
+        await card.click()
         await expect(selected).toBeFocused()
         const parameter = study.parameters[0]
         const slider = selected.getByRole('slider', { name: parameter.label, exact: true })
         await slider.press('Home')
         await slider.press('ArrowRight')
-        const value = parameter.min + parameter.step
+        // Native range values serialize the decimal step, not binary addition
+        // noise such as 1.1 + 0.1 === 1.2000000000000002.
+        const value = Number((parameter.min + parameter.step).toPrecision(12))
         await expect(slider).toHaveValue(String(value))
         await expect(page).toHaveURL(new RegExp(`study=${study.id}$`))
         const download = selected.getByRole('link', { name: 'Download SVG', exact: true })

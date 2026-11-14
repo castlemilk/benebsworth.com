@@ -42,14 +42,14 @@ test('all original SVG bytes round-trip and packaging is deterministic with the 
   decoded.forEach((bytes, theme) => assert(bytes.equals(originals[theme])))
   originalBytes += entry.rawBytes; compressedBytes += entry.compressedBytes
  }
- assert.deepEqual({ originalBytes, compressedBytes, encodedBytes, parts }, { originalBytes: 8570142, compressedBytes: 767259, encodedBytes: 1023114, parts: 46 })
+ assert.deepEqual({ originalBytes, compressedBytes, encodedBytes, parts }, { originalBytes: 9838054, compressedBytes: 847447, encodedBytes: 1130087, parts: 71 })
 })
 
-test('a fresh checkout restores all 270 exact public bytes, dimensions and alpha sequentially', { timeout: 180000 }, async t => {
+test('a fresh checkout restores all 495 exact public bytes, dimensions and alpha sequentially', { timeout: 180000 }, async t => {
  const root = await fixture(t, false)
  const report = await prepareGroundedAssets({ root })
- assert.equal(report.written, 270); assert.equal(report.verified, 0)
- assert.equal((await checkCatalogue(catalogue, { root, regenerate: false })).files, 270)
+ assert.equal(report.written, 495); assert.equal(report.verified, 0)
+ assert.equal((await checkCatalogue(catalogue, { root, regenerate: false })).files, 495)
  for (const art of catalogue) for (const theme of THEMES) for (const kind of ['master', 'thumbnail', 'preview']) {
   const variant = art.variants[theme]
   assert((await readFile(assetPath(root, variant, kind))).equals(await readFile(assetPath(ROOT, variant, kind))))
@@ -60,7 +60,7 @@ test('warm outputs are skipped only after all source and public hashes pass, wit
  const root = await fixture(t), path = assetPath(root, catalogue.at(-1).variants.mono)
  const before = await lstat(path)
  const report = await prepareGroundedAssets({ root, renderer: () => { throw Error('Warm run must not render') } })
- assert.equal(report.written, 0); assert.equal(report.verified, 270)
+ assert.equal(report.written, 0); assert.equal(report.verified, 495)
  assert.equal((await lstat(path)).mtimeMs, before.mtimeMs)
  await prepareGroundedAssets({ root, check: true })
 })
@@ -69,7 +69,7 @@ test('partial preparation restores only missing files with the same fingerprints
  const root = await fixture(t), variant = catalogue[0].variants.light
  for (const kind of ['master', 'thumbnail', 'preview']) await rm(assetPath(root, variant, kind))
  const report = await prepareGroundedAssets({ root })
- assert.equal(report.written, 3); assert.equal(report.verified, 267)
+ assert.equal(report.written, 3); assert.equal(report.verified, 492)
  for (const kind of ['master', 'thumbnail', 'preview']) assert((await readFile(assetPath(root, variant, kind))).equals(await readFile(assetPath(ROOT, variant, kind))))
 })
 

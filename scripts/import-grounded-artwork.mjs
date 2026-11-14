@@ -9,7 +9,9 @@ import { JSDOM } from 'jsdom'
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const THEMES = ['light', 'dark', 'mono']
-export const CATALOGUE_SHA256 = 'd1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de'
+export const CATALOGUE_SHA256 = '4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06'
+export const REVIEWED_ARTWORK_COUNT = 55
+export const PILOT_CATALOGUE_SHA256 = 'd1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de'
 export const INVENTORY_SHA256 = 'babd060dcdfd794f29a12cef57882ba050b4729cf76ad7e9fccf356a8badd37f'
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
 const json = value => JSON.stringify(value, null, 2) + '\n'
@@ -45,6 +47,31 @@ const CURATION = [
  ['mobius-band','mathematics',['topology','surface','half twist'],['Möbius','Mobius','nonorientable']],
  ['binomial-cascade','mathematics',['probability','binomial','path counts'],['Galton board','independent choices']],
  ['oblique-conic','mathematics',['cone','ellipse','section'],['conic section','plane intersection']],
+ ["stomatal-gate", "biology", ["biology", "plant-exchange", "stomata", "guard-cells", "epidermis"], ["stoma", "leaf pore", "gas exchange"]],
+ ["root-hair-zone", "biology", ["biology", "plant-exchange", "root", "root-hair", "absorption"], ["rhizodermis", "root maturation", "root tip"]],
+ ["xylem-vessel", "biology", ["biology", "plant-exchange", "xylem", "vessel", "water-transport"], ["vessel elements", "perforation plate", "pitted xylem"]],
+ ["pollen-tube", "biology", ["biology", "plant-exchange", "pollen", "tip-growth", "reproduction"], ["germinating pollen", "male gametophyte", "pollen germination"]],
+ ["fern-sorus", "biology", ["biology", "plant-exchange", "fern", "sorus", "sporangium", "annulus"], ["sori", "fern spores", "leptosporangia"]],
+ ["coral-polyp", "biology", ["biology", "invertebrate", "cnidarian", "radial", "cutaway"], ["stony coral", "polyp crown", "corallite"]],
+ ["sponge-canal", "biology", ["biology", "invertebrate", "porous", "section", "water-flow"], ["asconoid", "spongocoel", "osculum", "porifera"]],
+ ["bivalve-hinge", "biology", ["biology", "invertebrate", "mollusc", "articulation", "shell"], ["shell joint", "hinge teeth", "mollusc", "valves"]],
+ ["tube-foot", "biology", ["biology", "invertebrate", "echinoderm", "hydraulic", "longitudinal-section"], ["ampulla", "podium", "sea star", "water vascular system"]],
+ ["cnidocyte-discharge", "biology", ["biology", "invertebrate", "cnidarian", "cell", "discharge"], ["nematocyst", "stinging cell", "everted tubule"]],
+ ["parabolic-reflector", "physics", ["optics", "reflection", "parabola", "focus", "geometric-optics"], ["parabolic mirror", "focal reflector"]],
+ ["double-slit-interference", "physics", ["optics", "interference", "coherence", "hyperbola", "double-slit"], ["Young interference", "two-slit interference"]],
+ ["linear-polarization", "physics", ["optics", "electromagnetism", "polarization", "transverse-field"], ["plane polarized light", "transverse electric field"]],
+ ["doppler-wavefronts", "physics", ["acoustics", "waves", "doppler", "phase-front", "subsonic"], ["moving sound source", "acoustic Doppler effect"]],
+ ["pipe-resonance", "physics", ["acoustics", "standing-wave", "resonance", "air-column", "longitudinal"], ["open and stopped pipes", "quarter-wave resonator"]],
+ ["primed-siphon", "physics", ["siphon", "Bernoulli", "head", "flow"], ["siphon", "Bernoulli", "head", "flow"]],
+ ["pressure-head", "physics", ["manometer", "hydrostatics", "pressure", "U-tube"], ["manometer", "hydrostatics", "pressure", "U-tube"]],
+ ["floating-prism", "physics", ["buoyancy", "Archimedes", "density", "flotation"], ["buoyancy", "Archimedes", "density", "flotation"]],
+ ["slider-crank", "mechanics", ["kinematics", "slider", "crank", "piston"], ["kinematics", "slider", "crank", "piston"]],
+ ["centrifugal-governor", "mechanics", ["governor", "centrifugal", "Watt", "feedback"], ["governor", "centrifugal", "Watt", "feedback"]],
+ ["cycloid-trace", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "cycloid trace"], ["cycloid trace"]],
+ ["hilbert-channel", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "hilbert channel"], ["hilbert channel"]],
+ ["ruled-saddle", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "ruled saddle"], ["ruled saddle"]],
+ ["constant-width-gauge", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "constant width gauge"], ["constant-width gauge"]],
+ ["polyhedral-dual", "mathematics", ["constructed mathematics", "mathematical geometry", "transparent", "editable SVG", "polyhedral dual"], ["polyhedral dual"]],
 ].map(([slug, subject, tags, aliases]) => [slug, subject, tags.map(tag => tag.toLowerCase().replace(/\s+/g, '-')), [...new Map(aliases.map(alias => [alias.toLowerCase().trim(), alias])).values()]])
 export function slugFor(sourceId) {
  const slug = sourceId.replace(/^\d{2}-/, '')
@@ -60,8 +87,8 @@ export function validateSvg(bytes) {
   assert.equal(root.localName, 'svg'); assert.equal(root.namespaceURI, 'http://www.w3.org/2000/svg')
   assert.equal(root.getAttribute('width'), '900'); assert.equal(root.getAttribute('height'), '900')
   assert.equal(root.getAttribute('viewBox'), '0 0 900 900')
-  const tags = new Set(['svg','g','path','title','desc','defs','clipPath'])
-  const attrs = new Set(['xmlns','transform','fill','viewBox','id','height','stroke-linecap','fill-rule','clip-rule','aria-labelledby','stroke','d','stroke-width','clip-path','width','role','stroke-dasharray','stroke-linejoin'])
+  const tags = new Set(['svg','g','path','title','desc','defs','clipPath','line','polygon','ellipse','circle','metadata'])
+  const attrs = new Set(['xmlns','transform','fill','viewBox','id','height','stroke-linecap','fill-rule','clip-rule','aria-labelledby','stroke','d','stroke-width','clip-path','width','role','stroke-dasharray','stroke-linejoin','x1','y1','x2','y2','points','cx','cy','rx','ry','r','aria-describedby'])
   const ids = new Set()
   for (const el of [root, ...root.querySelectorAll('*')]) {
    assert(tags.has(el.localName) && el.namespaceURI === root.namespaceURI, `Unsafe SVG element: ${el.tagName}`)
@@ -108,7 +135,7 @@ async function verifyImage(bytes, size) {
  assert(transparent, 'Transparency was lost')
 }
 export async function checkCatalogue(catalogue, { regenerate = true, root = ROOT } = {}) {
- assert.equal(catalogue.length, 30)
+ assert.equal(catalogue.length, REVIEWED_ARTWORK_COUNT)
  const slugs = new Set(), identities = new Set(), urls = new Set()
  for (const a of catalogue) {
   assert(!slugs.has(a.slug), 'Duplicate slug'); slugs.add(a.slug)
@@ -139,9 +166,9 @@ export async function checkCatalogue(catalogue, { regenerate = true, root = ROOT
    }
   }
  }
- assert.equal(urls.size,270)
+ assert.equal(urls.size, REVIEWED_ARTWORK_COUNT * 9)
  const files = await readdir(resolve(root, 'public/artwork/grounded'), { recursive: true, withFileTypes: true })
- assert.equal(files.filter(entry => entry.isFile()).length, 270, 'Unexpected or stale asset files')
+ assert.equal(files.filter(entry => entry.isFile()).length, REVIEWED_ARTWORK_COUNT * 9, 'Unexpected or stale asset files')
  return { artworks: slugs.size, files: urls.size, thumbnails: Object.fromEntries(THEMES.map(theme => [theme, catalogue.reduce((sum,a) => sum + a.variants[theme].thumbnailBytes, 0)])) }
 }
 export async function importInventory(inventoryPath, { check = false } = {}) {
@@ -182,9 +209,10 @@ export async function importInventory(inventoryPath, { check = false } = {}) {
   catalogue.push(item)
  }
  const output = resolve(ROOT,'lib/grounded-artwork/catalogue.json')
- if (check) assert.equal(await readFile(output,'utf8'),json(catalogue),'Catalogue metadata mutation')
- else await writeFile(output,json(catalogue))
- return checkCatalogue(catalogue,{regenerate: true})
+ const current = JSON.parse(await readFile(output, 'utf8'))
+ assert.equal(sha256(Buffer.from(json(catalogue))), PILOT_CATALOGUE_SHA256, 'Pilot metadata mutation')
+ assert.deepEqual(current.slice(0, 30), catalogue, 'Pilot catalogue prefix mutation')
+ return checkCatalogue(current,{regenerate: true})
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
  const checkedIn = await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')).catch(() => null)

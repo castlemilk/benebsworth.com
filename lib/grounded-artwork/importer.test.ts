@@ -5,5 +5,5 @@ it('gates imported art integrity, safe SVG and bounded thumbnails through the ow
   const run = spawnSync(process.execPath, ['--test', 'scripts/tests/import-grounded-artwork.test.mjs'], { encoding: 'utf8', timeout: 25000 })
   expect(run.error).toBeUndefined()
   expect(run.status, run.stdout + run.stderr).toBe(0)
-  expect(run.stdout).toMatch(/(?:pass|passed) 5/)
+  expect(run.stdout).toMatch(/(?:pass|passed) 9/)
 }, 30000)

@@ -4,11 +4,11 @@ import { groundedArtworkUrl, GROUNDED_PAGE_SIZE, searchGroundedCards } from './d
 
 const clone = () => structuredClone(GROUNDED_ARTWORK)
 describe('fixed artwork registry', () => {
-  it('retains thirty subjects, ninety masters, intrinsic square geometry and original identities', () => {
-    expect(GROUNDED_ARTWORK).toHaveLength(30)
-    expect(new Set(GROUNDED_ARTWORK.map(a => `${a.batchId}:${a.sourceId}:${a.revision}`)).size).toBe(30)
+  it('retains fifty-five subjects, 165 masters, intrinsic square geometry and original identities', () => {
+    expect(GROUNDED_ARTWORK).toHaveLength(55)
+    expect(new Set(GROUNDED_ARTWORK.map(a => `${a.batchId}:${a.sourceId}:${a.revision}`)).size).toBe(55)
     expect(GROUNDED_ARTWORK.every(a => a.width === a.height && a.viewBox === '0 0 900 900')).toBe(true)
-    expect(GROUNDED_ARTWORK.filter(a => a.minimumDisplayWidth === 320)).toHaveLength(6)
+    expect(GROUNDED_ARTWORK.filter(a => a.minimumDisplayWidth === 320)).toHaveLength(20)
     expect(GROUNDED_ARTWORK.some(a => /^\d/.test(a.sourceId))).toBe(true)
     expect(GROUNDED_ARTWORK.some(a => !/^\d/.test(a.sourceId))).toBe(true)
     expect(getGroundedArtwork('constructor')).toBeUndefined()
@@ -28,13 +28,13 @@ describe('fixed artwork registry', () => {
   })
   it('ships a small discovery record without full master metadata or scientific paragraphs', () => {
     const cards = groundedCards()
-    expect(cards).toHaveLength(30)
+    expect(cards).toHaveLength(55)
     for (const card of cards) {
       expect(Object.keys(card).sort()).toEqual(['aliases', 'caption', 'minimumDisplayWidth', 'slug', 'subject', 'tags', 'thumbnails', 'title'])
       expect(JSON.stringify(card)).not.toContain('.svg')
     }
     expect(GROUNDED_PAGE_SIZE).toBe(24)
-    expect(Buffer.byteLength(JSON.stringify(cards))).toBeLessThan(50000)
+    expect(Buffer.byteLength(JSON.stringify(cards))).toBeLessThan(70000)
   })
   it.each(GROUNDED_ARTWORK.map(a => [a.slug, a] as const))('discovers %s by every curated title, alias and tag', (_slug, art) => {
     const cards = groundedCards()

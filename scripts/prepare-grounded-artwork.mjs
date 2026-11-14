@@ -5,7 +5,7 @@ import { lstat, mkdir, open, readdir } from 'node:fs/promises'
 import { dirname, join, parse, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { brotliCompressSync, brotliDecompressSync, constants as zlib } from 'node:zlib'
-import { ROOT, THEMES, CATALOGUE_SHA256, sha256, renderWebp } from './import-grounded-artwork.mjs'
+import { ROOT, THEMES, CATALOGUE_SHA256, REVIEWED_ARTWORK_COUNT, sha256, renderWebp } from './import-grounded-artwork.mjs'
 
 export const CHUNK_BYTES = 32768
 export const MAX_PART_TEXT_BYTES = 4 * Math.ceil(CHUNK_BYTES / 3) + 1
@@ -83,9 +83,9 @@ async function readCatalogue(root) {
  const data = await readBounded(resolve(root, 'lib/grounded-artwork/catalogue.json'), 256 * 1024)
  assert.equal(sha256(data), CATALOGUE_SHA256, 'Catalogue metadata mutation; re-review required')
  const catalogue = JSON.parse(data)
- assert.equal(catalogue.length, 30)
+ assert.equal(catalogue.length, REVIEWED_ARTWORK_COUNT)
  catalogue.forEach(assetsFor)
- assert.equal(new Set(catalogue.map(art => art.slug)).size, 30)
+ assert.equal(new Set(catalogue.map(art => art.slug)).size, REVIEWED_ARTWORK_COUNT)
  return catalogue
 }
 function validateEntry(entry, art) {
@@ -225,7 +225,7 @@ export async function prepareGroundedAssets({ root = ROOT, check = false, render
   for (const [path, data] of pending) { await writeMissing(resolve(root, path), data); written++ }
  }
  assert.equal((await existingOutputs(root, catalogue, false)).size, 0, 'Incomplete prepared assets')
- return { ...sourceStats(manifest), files: 270, written, verified: 270 - written }
+ return { ...sourceStats(manifest), files: catalogue.length * 9, written, verified: catalogue.length * 9 - written }
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
  const args = process.argv.slice(2)

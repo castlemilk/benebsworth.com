@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { GROUNDED_ARTWORK, groundedArtworkUrl, GROUNDED_PAGE_SIZE } from '../lib/grounded-artwork/registry'
+import { SET05_SCIENTIFIC_NOTES } from '../lib/grounded-artwork/references'
 import { GROUNDED_THEMES } from '../lib/grounded-artwork/types'
 
 const digest = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex')
@@ -25,6 +26,7 @@ export async function checkGroundedOutput(site = 'out') {
   try {
     const doc = collection.window.document
     page(doc, '/vectors/grounded/')
+    assert.equal(digest(await read(SET05_SCIENTIFIC_NOTES.url.slice(1))), SET05_SCIENTIFIC_NOTES.sha256, 'Grounded complete scientific notes hash')
     const cards = [...doc.querySelectorAll('[data-grounded-card]')]
     assert.equal(cards.length, Math.min(GROUNDED_PAGE_SIZE, GROUNDED_ARTWORK.length), 'Bounded initial grounded cards')
     assert(doc.querySelector('a[href="/vectors/"]'), 'Grounded return to tunable library')
@@ -49,6 +51,7 @@ export async function checkGroundedOutput(site = 'out') {
         assert.equal(document.querySelector('[data-grounded-download]')?.getAttribute('href'), art.variants.light.master, `Grounded original download: ${art.slug}`)
         assert.equal(document.querySelector('[data-grounded-basis]')?.textContent, art.basis, `Grounded basis: ${art.slug}`)
         assert.equal(document.querySelector('[data-grounded-limitations]')?.textContent, art.limitations, `Grounded limitations: ${art.slug}`)
+        if (art.batchId === SET05_SCIENTIFIC_NOTES.batchId) assert.equal(document.querySelector('[data-grounded-scientific-notes]')?.getAttribute('href'), SET05_SCIENTIFIC_NOTES.url, 'Grounded complete scientific notes link')
         assert(document.querySelector('[data-grounded-basis]')?.closest('[data-pagefind-ignore]'), 'Scientific caveats excluded from automated fulltext index')
       } finally { detail.window.close() }
       for (const theme of GROUNDED_THEMES) {

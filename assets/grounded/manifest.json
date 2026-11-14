@@ -1,6 +1,6 @@
 {
   "format": "brotli-concatenated-original-svg-v1",
-  "catalogueSha256": "70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e",
+  "catalogueSha256": "cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136",
   "artworks": [
     {
       "slug": "chambered-growth",
@@ -1103,6 +1103,331 @@
         {
           "sha256": "7d3078144758ebac3c712bfb690fe319ee13504a4194c18a20d9f73c678b4061",
           "bytes": 981
+        }
+      ]
+    },
+    {
+      "slug": "chloroplast-grana",
+      "rawBytes": 41958,
+      "rawSha256": "b34ebd979f17a7390be33b6e35e1a27a8038dfa486e6f7dee94e2348512bd939",
+      "compressedBytes": 1770,
+      "compressedSha256": "ea1bdc3501739fa39c533dd80c86a6b56ca617af856dba946c33f01b65becd23",
+      "parts": [
+        {
+          "sha256": "ea1bdc3501739fa39c533dd80c86a6b56ca617af856dba946c33f01b65becd23",
+          "bytes": 1770
+        }
+      ]
+    },
+    {
+      "slug": "striated-sarcomere",
+      "rawBytes": 30342,
+      "rawSha256": "a6b00adc60581a0473d122f5b9ea76bd4839fcc7bafa7d689e443cffff9931a0",
+      "compressedBytes": 1264,
+      "compressedSha256": "3d70a0b1613ef641d28382dd86dfbc684c5d971db98cb90520be03af9e8d61dc",
+      "parts": [
+        {
+          "sha256": "3d70a0b1613ef641d28382dd86dfbc684c5d971db98cb90520be03af9e8d61dc",
+          "bytes": 1264
+        }
+      ]
+    },
+    {
+      "slug": "chemical-synapse",
+      "rawBytes": 22359,
+      "rawSha256": "863d3157b98e01394a5467b52c2ed1bad8793c7911fd0cfe05ced48c613c5860",
+      "compressedBytes": 1372,
+      "compressedSha256": "8782847f35476884a8939d303d06ccd5be1240fb07a7a9daa9a75dd1caa24434",
+      "parts": [
+        {
+          "sha256": "8782847f35476884a8939d303d06ccd5be1240fb07a7a9daa9a75dd1caa24434",
+          "bytes": 1372
+        }
+      ]
+    },
+    {
+      "slug": "motile-cilium",
+      "rawBytes": 27036,
+      "rawSha256": "edfaad34cc3f84be2c99a08aa60a675226820f1044e43c260b3a9a28bf72e7b5",
+      "compressedBytes": 1578,
+      "compressedSha256": "9f008523da863c26eb850146db3091782df14fa4b98822502db9bcd1f57d885d",
+      "parts": [
+        {
+          "sha256": "9f008523da863c26eb850146db3091782df14fa4b98822502db9bcd1f57d885d",
+          "bytes": 1578
+        }
+      ]
+    },
+    {
+      "slug": "mitochondrial-cristae",
+      "rawBytes": 9009,
+      "rawSha256": "bd3fad47c1d49fca7f1ebd0b03110aa7343ae47d4716500ebdf0f0af16d1ed12",
+      "compressedBytes": 934,
+      "compressedSha256": "95ca688dd1f2762b8aa5f7c3f4c8cc3077de4861775e20e56c9bf76bc0de31a5",
+      "parts": [
+        {
+          "sha256": "95ca688dd1f2762b8aa5f7c3f4c8cc3077de4861775e20e56c9bf76bc0de31a5",
+          "bytes": 934
+        }
+      ]
+    },
+    {
+      "slug": "graphite-sheets",
+      "rawBytes": 183987,
+      "rawSha256": "fd68f4a8e33f4a0a16d75ec0ae64c538ff99ff9ab918532016d5adadb6a2eac8",
+      "compressedBytes": 4185,
+      "compressedSha256": "5a3bde2770fad79e960f7dae32941d8048073fbb476ff7577d1c62903b555462",
+      "parts": [
+        {
+          "sha256": "5a3bde2770fad79e960f7dae32941d8048073fbb476ff7577d1c62903b555462",
+          "bytes": 4185
+        }
+      ]
+    },
+    {
+      "slug": "edge-dislocation",
+      "rawBytes": 90231,
+      "rawSha256": "77ee52e8d34ff0e1a626b89455703a7405935e137ec01eace5ae7685b2d3dd4d",
+      "compressedBytes": 2752,
+      "compressedSha256": "eb8787668083181bd2564aa3cba175bb14aa1bfff6265b656ca4088c8096b2d7",
+      "parts": [
+        {
+          "sha256": "eb8787668083181bd2564aa3cba175bb14aa1bfff6265b656ca4088c8096b2d7",
+          "bytes": 2752
+        }
+      ]
+    },
+    {
+      "slug": "grain-boundary",
+      "rawBytes": 107172,
+      "rawSha256": "5d0347559bd25d2149c8579225daebbe42771aedcba345dc209c59f8725834b8",
+      "compressedBytes": 3990,
+      "compressedSha256": "1b9c8fe0f87c2490568cd23e6dc88865d7fc45469ec28d5e1b733cb413be19f0",
+      "parts": [
+        {
+          "sha256": "1b9c8fe0f87c2490568cd23e6dc88865d7fc45469ec28d5e1b733cb413be19f0",
+          "bytes": 3990
+        }
+      ]
+    },
+    {
+      "slug": "plateau-junction",
+      "rawBytes": 13848,
+      "rawSha256": "0207106cde42262b63695812e011cc6278c8d8c09732ccaabbd7543d7e2a7301",
+      "compressedBytes": 1175,
+      "compressedSha256": "77163359cb229edd111f6e3d8236bbc890cd639b66df1611b8c5a2b87d31cfa0",
+      "parts": [
+        {
+          "sha256": "77163359cb229edd111f6e3d8236bbc890cd639b66df1611b8c5a2b87d31cfa0",
+          "bytes": 1175
+        }
+      ]
+    },
+    {
+      "slug": "sessile-droplet",
+      "rawBytes": 15372,
+      "rawSha256": "f115761fcac17413252361aacb7e0bad55f98e183d56999055de5d60432a9463",
+      "compressedBytes": 979,
+      "compressedSha256": "be3f24a3c39670e6e7b4f98cd46239906a9b201d89e93ab81f93fc83fa6a3b07",
+      "parts": [
+        {
+          "sha256": "be3f24a3c39670e6e7b4f98cd46239906a9b201d89e93ab81f93fc83fa6a3b07",
+          "bytes": 979
+        }
+      ]
+    },
+    {
+      "slug": "kepler-equal-areas",
+      "rawBytes": 18018,
+      "rawSha256": "11a257cca90dc27d5b1662ff8f5573bacdcc93eb27a72aa6756eabec11805b24",
+      "compressedBytes": 1286,
+      "compressedSha256": "2f0376561edcb9377024b6cc40abca6a5dd054b52dfc01c881ed07d626533e6b",
+      "parts": [
+        {
+          "sha256": "2f0376561edcb9377024b6cc40abca6a5dd054b52dfc01c881ed07d626533e6b",
+          "bytes": 1286
+        }
+      ]
+    },
+    {
+      "slug": "orbital-inclination",
+      "rawBytes": 52494,
+      "rawSha256": "7d797f7b5cb571bea59db261f40c087d04c2a06680dad3f691a914e3a816f3d9",
+      "compressedBytes": 5550,
+      "compressedSha256": "effce11182c8762deb7eabdb172a0226b284e0059682f228d7349e9b15479a9a",
+      "parts": [
+        {
+          "sha256": "effce11182c8762deb7eabdb172a0226b284e0059682f228d7349e9b15479a9a",
+          "bytes": 5550
+        }
+      ]
+    },
+    {
+      "slug": "lunar-phase-geometry",
+      "rawBytes": 15798,
+      "rawSha256": "1ad2f7cdd06969d9e484f433d1679f131d7900658f10032473676ed47898c9d2",
+      "compressedBytes": 1185,
+      "compressedSha256": "25312821aa508a1e1787d957bea45de14e9d85306fdeb7b38847a2293fc7744f",
+      "parts": [
+        {
+          "sha256": "25312821aa508a1e1787d957bea45de14e9d85306fdeb7b38847a2293fc7744f",
+          "bytes": 1185
+        }
+      ]
+    },
+    {
+      "slug": "stellar-parallax",
+      "rawBytes": 11880,
+      "rawSha256": "64c8134e396d9dfb5140f09c55fbd9b81cb5f4101167972e4465250db74923a1",
+      "compressedBytes": 942,
+      "compressedSha256": "2b55d732112ba069d8571cc02f9f2877f9db72108eabcc851e0f097779b7b31d",
+      "parts": [
+        {
+          "sha256": "2b55d732112ba069d8571cc02f9f2877f9db72108eabcc851e0f097779b7b31d",
+          "bytes": 942
+        }
+      ]
+    },
+    {
+      "slug": "eclipse-cones",
+      "rawBytes": 26205,
+      "rawSha256": "a5373a0d8eae606c9f3056bb1d8f8c89d20210a1716e8cec797d847d8e8174f6",
+      "compressedBytes": 1521,
+      "compressedSha256": "5faad809a2280a248d93d4d0222aa9b4aee0d178a682fe43860922b424f0ec33",
+      "parts": [
+        {
+          "sha256": "5faad809a2280a248d93d4d0222aa9b4aee0d178a682fe43860922b424f0ec33",
+          "bytes": 1521
+        }
+      ]
+    },
+    {
+      "slug": "thin-lens-image",
+      "rawBytes": 17730,
+      "rawSha256": "6a1cb3dac22c15e8f7b4d1b869029bc506b4051f9ebefcf558f31f6f1cd96b03",
+      "compressedBytes": 1296,
+      "compressedSha256": "b59a38450aca60f8c33521f8b58f7b986ec2dedf483fa97c7a39b27846209998",
+      "parts": [
+        {
+          "sha256": "b59a38450aca60f8c33521f8b58f7b986ec2dedf483fa97c7a39b27846209998",
+          "bytes": 1296
+        }
+      ]
+    },
+    {
+      "slug": "brewster-interface",
+      "rawBytes": 20562,
+      "rawSha256": "21b5ffed0091e9a5aadf09a83e75405da18e65a2dc41770d6be5472337ce6b59",
+      "compressedBytes": 1267,
+      "compressedSha256": "92ccb2aceb3684c196dbe79c55c9fbc720860546a3576606113fab5bac8888af",
+      "parts": [
+        {
+          "sha256": "92ccb2aceb3684c196dbe79c55c9fbc720860546a3576606113fab5bac8888af",
+          "bytes": 1267
+        }
+      ]
+    },
+    {
+      "slug": "newton-rings",
+      "rawBytes": 23334,
+      "rawSha256": "c022fc1d49e44c5d50b2ef2e4b453a531bd4a3c061d03490dc5428fee8d12c1e",
+      "compressedBytes": 1313,
+      "compressedSha256": "c4a796f24f5a24abfe5270ec1177d3c9bad896646fd2f4acaf32bc8fd3f64566",
+      "parts": [
+        {
+          "sha256": "c4a796f24f5a24abfe5270ec1177d3c9bad896646fd2f4acaf32bc8fd3f64566",
+          "bytes": 1313
+        }
+      ]
+    },
+    {
+      "slug": "pinhole-projection",
+      "rawBytes": 22587,
+      "rawSha256": "5b4aa23590148847a97c3f7b306b9277cf3de5f46b7a474e3ca878277da259b7",
+      "compressedBytes": 1438,
+      "compressedSha256": "e05861c68c4f8d5a731c846323331de2c9fcc6442a55e3a2083ba85eac1b60f2",
+      "parts": [
+        {
+          "sha256": "e05861c68c4f8d5a731c846323331de2c9fcc6442a55e3a2083ba85eac1b60f2",
+          "bytes": 1438
+        }
+      ]
+    },
+    {
+      "slug": "corner-retroreflector",
+      "rawBytes": 21543,
+      "rawSha256": "8d82d58dafceef86e66d924def1eabf5c5ac9db1b38fc3648f140e3c9894f3c1",
+      "compressedBytes": 1178,
+      "compressedSha256": "fc547fd20bfe3331f8afbd1daad96bbf36bfb51c688b0d75e13569684e1f8efb",
+      "parts": [
+        {
+          "sha256": "fc547fd20bfe3331f8afbd1daad96bbf36bfb51c688b0d75e13569684e1f8efb",
+          "bytes": 1178
+        }
+      ]
+    },
+    {
+      "slug": "euler-bridge-graph",
+      "rawBytes": 58227,
+      "rawSha256": "36d90a3f759eafc48aa75d4beada9ccd1413e4e82167d93e5fe8b911005af71a",
+      "compressedBytes": 2509,
+      "compressedSha256": "9d0292d27a20b3f4f66dfa64520fe9782cceda2bd32ce6739eb018dc44cbc529",
+      "parts": [
+        {
+          "sha256": "9d0292d27a20b3f4f66dfa64520fe9782cceda2bd32ce6739eb018dc44cbc529",
+          "bytes": 2509
+        }
+      ]
+    },
+    {
+      "slug": "lattice-basis",
+      "rawBytes": 25299,
+      "rawSha256": "62a4a6efe01534b37a0a089ae760dde52cc5db67328d9a980c0f84ee6d8835e0",
+      "compressedBytes": 1484,
+      "compressedSha256": "eb6e2977685a072eb186340701ba1bbd268f4cbd481c56c9ac21302a6e042550",
+      "parts": [
+        {
+          "sha256": "eb6e2977685a072eb186340701ba1bbd268f4cbd481c56c9ac21302a6e042550",
+          "bytes": 1484
+        }
+      ]
+    },
+    {
+      "slug": "desargues-configuration",
+      "rawBytes": 12288,
+      "rawSha256": "a31fab9cd43cad7022df0afd3175da857d02327a9ada3ee3c3549292da1132fb",
+      "compressedBytes": 873,
+      "compressedSha256": "8c2153605a2408f026ea1c078516c625f7189b3318bb8f09a7c46f051fa3ec39",
+      "parts": [
+        {
+          "sha256": "8c2153605a2408f026ea1c078516c625f7189b3318bb8f09a7c46f051fa3ec39",
+          "bytes": 873
+        }
+      ]
+    },
+    {
+      "slug": "archimedean-bounds",
+      "rawBytes": 14808,
+      "rawSha256": "984d13bf1da1f0d63fd6d95cc45c27cf44acc1d965eb332654e8251914577aed",
+      "compressedBytes": 1201,
+      "compressedSha256": "d5258d19d210cb36a16ab0663b5cfd46b7b12dd527cec97fc975fb0e60143e2b",
+      "parts": [
+        {
+          "sha256": "d5258d19d210cb36a16ab0663b5cfd46b7b12dd527cec97fc975fb0e60143e2b",
+          "bytes": 1201
+        }
+      ]
+    },
+    {
+      "slug": "pappus-torus",
+      "rawBytes": 14472,
+      "rawSha256": "7de8a97fae052fc8b77b69cf075eba02a33b9eb4705ff42f33356e45c44aac79",
+      "compressedBytes": 1247,
+      "compressedSha256": "f1b11032ba5ad7a3f19dc5d8957f2c9cc3ccad8478ba48c89819bef325f05550",
+      "parts": [
+        {
+          "sha256": "f1b11032ba5ad7a3f19dc5d8957f2c9cc3ccad8478ba48c89819bef325f05550",
+          "bytes": 1247
         }
       ]
     }

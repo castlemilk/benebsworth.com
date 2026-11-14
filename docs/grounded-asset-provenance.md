@@ -1,10 +1,18 @@
 # Grounded Forms fixed-artwork asset provenance
 
-## Current reviewed expansion: Set06
+## Current reviewed expansion: Set07
 
-The reviewed candidate contains **80 distinct works**, **240 original SVG masters** and **480 transparent lossless WebP derivatives**, preserving the first 55 works and their exact download identities. It adds 25 Set06 studies in cells, specimen architecture, Earth forms, mechanics and mathematics. Full source qualifications, preserved hashes, performance budgets and release gates are recorded in [the Set06 review](development/grounded-set06-review.md). This current-source section supersedes historical collection counts below; source acceptance is distinct from deployment.
+The reviewed candidate contains **105 distinct works**, **315 original SVG masters** and **630 transparent lossless WebP derivatives**, preserving all 80 previously published works and their exact download identities. It adds 25 studies in cellular machinery, material interfaces, celestial geometry, optics and mathematical reasoning. Exact sources, access caveats, performance budgets and gates are recorded in [the Set07 review](development/grounded-set07-review.md). This current-source section supersedes historical collection counts below; source acceptance is distinct from deployment.
 
-The active catalogue digest is `70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e`. `scripts/import-grounded-set06.mjs <packet-root> --check` verifies the pinned packet, the entire 55-work published prefix and the exact 80-work result. Ordinary preparation restores all 720 files through unchanged bounded source transport. The Set05 migration remains a historical 30-to-55 adapter with its original fixed receipt.
+The active catalogue digest is `cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136`. `scripts/import-grounded-set07.mjs <packet-root> --check` verifies the pinned packet, the entire 80-work prefix and exact 105-work result. Ordinary bounded preparation restores all 945 files. Historical Set05 and Set06 migrations retain their original fixed receipts.
+
+Set07 scientific notes remain unchanged under SHA-256 `d7416b7d71060fa9921008e41250dc92e0d078e5c2e31b591ff5eadb6acc98a9`. Source images are not copied or traced. The motile-cilium and eclipse-cones details retain explicit original-source access limitations and separately identify inspected corroboration. Fine Archimedean polygon/circle separation is clearest at 640px; the broad construction retains its reviewed 320px minimum.
+
+## Historical reviewed expansion: Set06
+
+The reviewed candidate contains **80 distinct works**, **240 original SVG masters** and **480 transparent lossless WebP derivatives**, preserving the first 55 works and their exact download identities. It adds 25 Set06 studies in cells, specimen architecture, Earth forms, mechanics and mathematics. Full source qualifications, preserved hashes, performance budgets and release gates are recorded in [the Set06 review](development/grounded-set06-review.md). This is the historical Set06 source checkpoint.
+
+The historical Set06 catalogue digest is `70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e`. `scripts/import-grounded-set06.mjs <packet-root> --check` verifies the pinned packet, the entire 55-work published prefix and the exact 80-work result. Ordinary preparation restores all 720 files through unchanged bounded source transport. The Set05 migration remains a historical 30-to-55 adapter with its original fixed receipt.
 
 Set06 scientific notes remain byte-identical under SHA-256 `6d16ad6fe8cd49a4ec007bba55c7abee9560f598c6ee7e486f98d88065650df3`. All specimen studies are generic originals. No verified-CC0 specimen reproduction is claimed; the horseshoe work retains its unverified-current-media-rights qualification in visible provenance. Its broken Smithsonian object citation is explicitly corrected to the verified Q?rius record, without changing the original source packet or granting rights.
 

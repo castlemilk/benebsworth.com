@@ -9,7 +9,7 @@ export function groundedSearchText(artwork: Pick<GroundedCard, 'slug' | 'title' 
   return [artwork.title, artwork.slug, artwork.subject, ...artwork.tags, ...artwork.aliases].join(' ')
 }
 /** All terms match word prefixes; subject and tag filters intersect, never index disclaimers. */
-export function searchGroundedCards<T extends GroundedCard>(cards: readonly T[], query = '', filters: { subject?: string; tag?: string } = {}): readonly T[] {
+export function searchGroundedCards<T extends Pick<GroundedCard, 'slug' | 'title' | 'subject' | 'tags' | 'aliases'>>(cards: readonly T[], query = '', filters: { subject?: string; tag?: string } = {}): readonly T[] {
   const normalized = normalizeStudySearch(query), terms = normalized.split(' ').filter(Boolean)
   return cards.filter(card => {
     if (filters.subject && card.subject !== filters.subject || filters.tag && !card.tags.includes(filters.tag)) return false

@@ -170,7 +170,7 @@ test('unexpected files and oversized source parts cannot be silently ignored', a
 
 test('npm, Task, remote verification and watch paths prepare before consumers without worker races', async () => {
  const pkg = JSON.parse(await readFile(join(ROOT, 'package.json')))
- for (const hook of ['predev', 'pretest', 'pretest:watch']) assert.equal(pkg.scripts[hook], 'node scripts/prepare-grounded-artwork.mjs')
+ for (const hook of ['predev', 'pretest', 'pretest:watch']) assert.equal(pkg.scripts[hook], 'node scripts/prepare-grounded-artwork.mjs && node --import tsx scripts/prepare-grounded-discovery.mts')
  assert(pkg.scripts.prebuild.startsWith('node scripts/prepare-grounded-artwork.mjs && '))
  const build = await readFile(join(ROOT, 'taskfiles/build.yml'), 'utf8')
  for (const name of ['default', 'clean']) {
@@ -178,6 +178,8 @@ test('npm, Task, remote verification and watch paths prepare before consumers wi
   assert(block.indexOf('- task: gen:grounded') < block.indexOf("'{{.BIN}}/next build'"))
  }
  assert(build.includes('- assets/grounded/**/*'))
+ assert(build.includes('- scripts/prepare-grounded-discovery.mts'))
+ assert.match(build, /- node scripts\/prepare-grounded-artwork.mjs\n {6}- node --import tsx scripts\/prepare-grounded-discovery.mts/)
  const unit = await readFile(join(ROOT, 'taskfiles/test.yml'), 'utf8')
  assert.match(unit, /task: ':build:gen:grounded'\n {6}- '\{\{.BIN\}\}\/vitest run'/)
  assert.match(unit, /task: ':build:gen:grounded'\n {6}- '\{\{.BIN\}\}\/vitest'/)

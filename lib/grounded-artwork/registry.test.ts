@@ -1,3 +1,4 @@
+import { partitionGroundedDiscovery } from './partitions'
 import { describe, expect, it } from 'vitest'
 import { GROUNDED_ARTWORK, getGroundedArtwork, groundedCards, groundedSearchRecords, validateGroundedCatalogue } from './registry'
 import { groundedArtworkUrl, GROUNDED_PAGE_SIZE, searchGroundedCards } from './discovery'
@@ -34,7 +35,7 @@ describe('fixed artwork registry', () => {
       expect(JSON.stringify(card)).not.toContain('.svg')
     }
     expect(GROUNDED_PAGE_SIZE).toBe(24)
-    expect(Buffer.byteLength(JSON.stringify(cards))).toBeLessThan(70000)
+    expect(Buffer.byteLength(JSON.stringify(partitionGroundedDiscovery(cards).bootstrap))).toBeLessThan(70000)
   })
   it.each(GROUNDED_ARTWORK.map(a => [a.slug, a] as const))('discovers %s by every curated title, alias and tag', (_slug, art) => {
     const cards = groundedCards()

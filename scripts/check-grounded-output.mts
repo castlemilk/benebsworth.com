@@ -4,6 +4,9 @@ import path from 'node:path'
 import { createHash } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
 import { JSDOM } from 'jsdom'
+import { inspectGroundedDiscoveryDocument } from '../lib/grounded-artwork/discovery-output'
+import { partitionGroundedDiscovery } from '../lib/grounded-artwork/partitions'
+import { groundedCards } from '../lib/grounded-artwork/registry'
 import { GROUNDED_ARTWORK, groundedArtworkUrl, GROUNDED_PAGE_SIZE } from '../lib/grounded-artwork/registry'
 import { GROUNDED_SCIENTIFIC_NOTES, scientificNotesFor } from '../lib/grounded-artwork/references'
 import { GROUNDED_THEMES } from '../lib/grounded-artwork/types'
@@ -26,6 +29,9 @@ export async function checkGroundedOutput(site = 'out') {
   try {
     const doc = collection.window.document
     page(doc, '/vectors/grounded/')
+    const discovery = inspectGroundedDiscoveryDocument(doc)
+    const { files } = partitionGroundedDiscovery(groundedCards())
+    for (const [url, expected] of files) assert.equal((await read(url.slice(1))).toString(), expected, 'Grounded discovery partition bytes')
     for (const notes of GROUNDED_SCIENTIFIC_NOTES) assert.equal(digest(await read(notes.url.slice(1))), notes.sha256, 'Grounded complete scientific notes hash')
     const cards = [...doc.querySelectorAll('[data-grounded-card]')]
     assert.equal(cards.length, Math.min(GROUNDED_PAGE_SIZE, GROUNDED_ARTWORK.length), 'Bounded initial grounded cards')
@@ -66,7 +72,7 @@ export async function checkGroundedOutput(site = 'out') {
         }
       }
     }
-    return { fixedArtworks: GROUNDED_ARTWORK.length, assetsChecked, bytesChecked, originalSvgMasters: GROUNDED_ARTWORK.length * 3, initialCards: cards.length, staticOutput: 'passed', browserAcceptance: 'NOT RUN', deployment: 'NOT RUN' }
+    return { fixedArtworks: GROUNDED_ARTWORK.length, assetsChecked, bytesChecked, originalSvgMasters: GROUNDED_ARTWORK.length * 3, initialCards: cards.length, discovery: { ...discovery, htmlBytes: (await read('vectors/grounded/index.html')).length, onDemandFiles: files.size, onDemandBytes: [...files.values()].reduce((sum, body) => sum + Buffer.byteLength(body), 0) }, staticOutput: 'passed', browserAcceptance: 'NOT RUN', deployment: 'NOT RUN' }
   } finally { collection.window.close(); sitemap.window.close() }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

@@ -269,3 +269,84 @@ for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () =
     await testInfo.attach(`gallery-print-grounded-${width}.pdf`, { path: printed, contentType: 'application/pdf' })
   })
 })
+
+test('loads discovery only on demand, reports transfer bytes, and retries failed metadata', async ({ page }, testInfo) => {
+  const requests: string[] = []
+  await page.addInitScript(() => performance.setResourceTimingBufferSize(2000))
+  page.on('request', request => {
+    const url = new URL(request.url())
+    requests.push(url.pathname + url.search)
+  })
+  await gotoSettled(page, '/vectors/grounded/')
+  await collectionEvidence(page, testInfo, 'gallery-view-grounded-discovery-initial.png')
+  expect(requests.filter(url => url.includes('/grounded-discovery/'))).toEqual([])
+  const thumbnails = requests.filter(url => url.startsWith('/artwork/grounded/'))
+  expect(new Set(thumbnails)).toEqual(new Set(GROUNDED_ARTWORK.slice(0, 24).map(a => a.variants.light.thumbnail)))
+  async function transferReceipt(phase: 'initial' | 'on-demand') {
+    const entries = await page.evaluate(() => [...performance.getEntriesByType('navigation'), ...performance.getEntriesByType('resource')].map(entry => {
+      const resource = entry as PerformanceResourceTiming
+      const url = new URL(resource.name)
+      return { url: url.pathname + url.search, category: entry.entryType === 'navigation' ? 'document' : url.pathname.includes('/grounded-discovery/') ? 'discovery-json' : url.pathname.startsWith('/artwork/grounded/') ? 'artwork' : url.pathname.endsWith('.txt') || url.searchParams.has('_rsc') ? 'rsc' : 'other', initiatorType: resource.initiatorType, startTime: resource.startTime, transferSize: resource.transferSize, encodedBodySize: resource.encodedBodySize, decodedBodySize: resource.decodedBodySize }
+    }))
+    const totals = (items: typeof entries) => ({
+      count: items.length,
+      transferSize: items.reduce((sum, entry) => sum + entry.transferSize, 0),
+      encodedBodySize: items.reduce((sum, entry) => sum + entry.encodedBodySize, 0),
+      decodedBodySize: items.reduce((sum, entry) => sum + entry.decodedBodySize, 0),
+    })
+    const receipt = {
+      schema: 1,
+      phase,
+      scope: phase === 'initial' ? 'arrival-after-scrolling-all-24-selected-thumbnails' : 'cumulative-since-arrival-including-injected-503-and-successful-retry',
+      project: testInfo.project.name,
+      retry: testInfo.retry,
+      viewport: page.viewportSize(),
+      selectedCards: await page.locator('[data-grounded-card]').evaluateAll(cards => cards.map(card => ({
+        slug: card.getAttribute('data-grounded-card'),
+        thumbnail: new URL(card.querySelector<HTMLImageElement>('img')!.currentSrc).pathname,
+      }))),
+      requests: [...requests],
+      entries,
+      totals: totals(entries),
+      categories: Object.fromEntries(['document', 'rsc', 'discovery-json', 'artwork', 'other'].map(category => [category, totals(entries.filter(entry => entry.category === category))])),
+      byteSemantics: 'Performance navigation/resource entries only; transferSize includes response overhead, encoded/decoded sizes are bodies. Zero can indicate cache or unavailable timing. No unrequested export HTML or Flight files are added. Cumulative receipt must not be added to initial receipt. Injected 503 is a test response, not production traffic.',
+    }
+    // Successful Site checks retain CI stdout, but only selected image/PDF attachments.
+    console.log(`GROUNDED_TRANSFER_${phase === 'initial' ? 'INITIAL' : 'ON_DEMAND_CUMULATIVE'} ${JSON.stringify(receipt)}`)
+    await testInfo.attach(`grounded-${phase}-transfer.json`, { body: JSON.stringify(receipt, null, 2), contentType: 'application/json' })
+  }
+  await transferReceipt('initial')
+  await page.route('**/artwork/grounded-discovery/*.json', route => route.fulfill({ status: 503, body: 'Unavailable' }))
+  await page.getByRole('button', { name: 'Next page' }).click()
+  await expect(page.getByRole('button', { name: 'Retry loading artwork' })).toBeVisible()
+  await expect(page.locator('[data-grounded-card]')).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'No matching artwork' })).toHaveCount(0)
+  await page.unroute('**/artwork/grounded-discovery/*.json')
+  await page.getByRole('button', { name: 'Retry loading artwork' }).click()
+  await expect(page.locator('[data-grounded-card]').first()).toHaveAttribute('data-grounded-card', GROUNDED_ARTWORK[24].slug)
+  await collectionEvidence(page, testInfo, 'gallery-view-grounded-discovery-on-demand.png')
+  await transferReceipt('on-demand')
+  await page.goBack()
+  await expect(page.locator('[data-grounded-card]').first()).toHaveAttribute('data-grounded-card', GROUNDED_ARTWORK[0].slug)
+  await page.goForward()
+  await expect(page.locator('[data-grounded-card]').first()).toHaveAttribute('data-grounded-card', GROUNDED_ARTWORK[24].slug)
+})
+
+test('ignores delayed discovery after clear and clamps a deep page URL', async ({ page }) => {
+  let release!: () => void
+  const hold = new Promise<void>(resolve => { release = resolve })
+  await page.route('**/artwork/grounded-discovery/*.json', async route => { await hold; await route.continue() })
+  await page.goto('/vectors/grounded/?page=9999', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('status')).toHaveText('Loading artwork…')
+  await expect(page.locator('[data-grounded-card]')).toHaveCount(0)
+  await page.getByRole('searchbox', { name: 'Find grounded artwork' }).fill('nothing matches')
+  await page.getByRole('button', { name: 'Clear filters' }).click()
+  await expect(page.getByRole('searchbox', { name: 'Find grounded artwork' })).toBeFocused()
+  release()
+  await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
+  await expect(page.getByRole('status')).toHaveText('105 artworks · Page 1 of 5')
+  await page.unroute('**/artwork/grounded-discovery/*.json')
+  await gotoSettled(page, '/vectors/grounded/?page=9999')
+  await expect(page.locator('[data-grounded-card]')).toHaveCount(9)
+  await expect(page.getByRole('status')).toHaveText('105 artworks · Page 5 of 5')
+})

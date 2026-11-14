@@ -58,6 +58,7 @@ tasks:
       - exclude: public/blog/*/index.md
       - exclude: public/lab-data/**/*
       - exclude: public/artwork/grounded/**/*
+      - exclude: public/artwork/grounded-discovery/**/*
       - next.config.mjs
       - postcss.config.mjs
       - tsconfig.json
@@ -68,6 +69,7 @@ tasks:
       - scripts/build-search.mts
       - scripts/check-study-search.mts
       - scripts/check-grounded-output.mts
+      - scripts/prepare-grounded-discovery.mts
       - scripts/prepare-grounded-artwork.mjs
       - scripts/import-grounded-artwork.mjs
     generates:
@@ -137,6 +139,7 @@ tasks:
       No Task fingerprint: even an apparently warm output must pass all hashes.
     cmds:
       - node scripts/prepare-grounded-artwork.mjs
+      - node --import tsx scripts/prepare-grounded-discovery.mts
 
   gen:md:
     desc: Generate LLM-friendly .md siblings for every published blog post

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { STUDIES } from '../lib/generative-svg/model'
+import { ARTWORK } from '../lib/editorial-artwork/registry'
 import { gotoSettled } from './settled'
 
 for (const theme of ['light', 'dark'] as const) {
@@ -40,6 +41,13 @@ for (const theme of ['light', 'dark'] as const) {
       return image.complete && image.naturalWidth === 320 && image.naturalHeight === 240 && image.loading === 'eager'
     }))).toBe(true)
     await images.evaluateAll(elements => Promise.all(elements.map(el => (el as HTMLImageElement).decode())))
+    const artworkImages = page.getByRole('region', { name: 'Editorial artwork', exact: true }).locator('img')
+    await expect(artworkImages).toHaveCount(ARTWORK.length)
+    await expect.poll(() => artworkImages.evaluateAll(elements => elements.map(el => {
+      const image = el as HTMLImageElement
+      return { complete: image.complete, width: image.naturalWidth, height: image.naturalHeight, loading: image.loading, priority: image.fetchPriority, src: image.getAttribute('src') }
+    }))).toEqual(ARTWORK.map(asset => ({ complete: true, width: asset.width, height: asset.height, loading: 'eager', priority: 'low', src: asset.src })))
+    await artworkImages.evaluateAll(elements => Promise.all(elements.map(el => (el as HTMLImageElement).decode())))
     expect(await collection.evaluate(el => window.scrollY < el.getBoundingClientRect().top + window.scrollY)).toBe(true)
     await page.emulateMedia({ media: 'print' })
     const surfaces = collection.locator('[data-surface]')

@@ -7,7 +7,8 @@ import { ARTWORK, ARTWORK_TAGS, searchArtwork } from '@/lib/editorial-artwork/re
 import { SEARCH_ANCHOR_EVENT } from '@/components/search/search-navigation'
 import styles from '../generative-svg/gallery.module.css'
 
-/** Native anchors and downloads remain useful without JavaScript. PNGs are not SVG models. */
+/** Native anchors and downloads remain useful without JavaScript. PNGs are not SVG models.
+ * Eager low-priority originals prevent blank unvisited rows in native print output. */
 export function ArtworkCollection() {
   const [query, setQuery] = useState('')
   const [tag, setTag] = useState('')
@@ -44,7 +45,7 @@ export function ArtworkCollection() {
     </div>
     <div className={styles.artworkGrid}>
       {ARTWORK.map(asset => <article key={asset.id} id={`artwork-${asset.id}`} tabIndex={-1} hidden={!filtered.includes(asset)} className={styles.artworkCard}>
-        <div className={styles.artworkImage} data-surface={surface}><Image src={asset.src} width={asset.width} height={asset.height} alt={asset.alt} unoptimized loading="lazy" /></div>
+        <div className={styles.artworkImage} data-surface={surface}><Image src={asset.src} width={asset.width} height={asset.height} alt={asset.alt} unoptimized loading="eager" fetchPriority="low" decoding="async" /></div>
         <h3>{asset.title}</h3>
         <p className={styles.tags}>{asset.tags.map(value => <span key={value}>{value.replaceAll('-', ' ')}</span>)}</p>
         <p className={styles.artworkMeta}>Generated PNG · {asset.width} × {asset.height} · {(asset.bytes / 1024 / 1024).toFixed(2)} MB · Transparent</p>

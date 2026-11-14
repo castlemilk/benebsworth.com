@@ -14,7 +14,9 @@ it('server-renders real images, anchor targets and original PNG download names',
   for (const asset of ARTWORK) {
     const img = screen.getByAltText(asset.alt)
     expect(img.getAttribute('src')).toBe(asset.src)
-    expect(img.getAttribute('loading')).toBe('lazy')
+    expect(img.getAttribute('loading')).toBe('eager')
+    expect(img.getAttribute('fetchpriority')).toBe('low')
+    expect(img.getAttribute('decoding')).toBe('async')
     const link = screen.getByRole('link', { name: `Download ${asset.title} PNG` })
     expect(link.getAttribute('href')).toBe(asset.src)
     expect(link.getAttribute('download')).toBe(asset.src.split('/').pop())

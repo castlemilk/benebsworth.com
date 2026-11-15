@@ -42,14 +42,14 @@ test('all original SVG bytes round-trip and packaging is deterministic with the 
   decoded.forEach((bytes, theme) => assert(bytes.equals(originals[theme])))
   originalBytes += entry.rawBytes; compressedBytes += entry.compressedBytes
  }
- assert.deepEqual({ originalBytes, compressedBytes, encodedBytes, parts }, { originalBytes: 13013139, compressedBytes: 1030886, encodedBytes: 1374846, parts: 146 })
+ assert.deepEqual({ originalBytes, compressedBytes, encodedBytes, parts }, { originalBytes: 14181219, compressedBytes: 1114462, encodedBytes: 1486339, parts: 171 })
 })
 
-test('a fresh checkout restores all 1170 exact public bytes, dimensions and alpha sequentially', { timeout: 180000 }, async t => {
+test('a fresh checkout restores all 1395 exact public bytes, dimensions and alpha sequentially', { timeout: 180000 }, async t => {
  const root = await fixture(t, false)
  const report = await prepareGroundedAssets({ root })
- assert.equal(report.written, 1170); assert.equal(report.verified, 0)
- assert.equal((await checkCatalogue(catalogue, { root, regenerate: false })).files, 1170)
+ assert.equal(report.written, 1395); assert.equal(report.verified, 0)
+ assert.equal((await checkCatalogue(catalogue, { root, regenerate: false })).files, 1395)
  for (const art of catalogue) for (const theme of THEMES) for (const kind of ['master', 'thumbnail', 'preview']) {
   const variant = art.variants[theme]
   assert((await readFile(assetPath(root, variant, kind))).equals(await readFile(assetPath(ROOT, variant, kind))))
@@ -60,7 +60,7 @@ test('warm outputs are skipped only after all source and public hashes pass, wit
  const root = await fixture(t), path = assetPath(root, catalogue.at(-1).variants.mono)
  const before = await lstat(path)
  const report = await prepareGroundedAssets({ root, renderer: () => { throw Error('Warm run must not render') } })
- assert.equal(report.written, 0); assert.equal(report.verified, 1170)
+ assert.equal(report.written, 0); assert.equal(report.verified, 1395)
  assert.equal((await lstat(path)).mtimeMs, before.mtimeMs)
  await prepareGroundedAssets({ root, check: true })
 })
@@ -69,7 +69,7 @@ test('partial preparation restores only missing files with the same fingerprints
  const root = await fixture(t), variant = catalogue[0].variants.light
  for (const kind of ['master', 'thumbnail', 'preview']) await rm(assetPath(root, variant, kind))
  const report = await prepareGroundedAssets({ root })
- assert.equal(report.written, 3); assert.equal(report.verified, 1167)
+ assert.equal(report.written, 3); assert.equal(report.verified, 1392)
  for (const kind of ['master', 'thumbnail', 'preview']) assert((await readFile(assetPath(root, variant, kind))).equals(await readFile(assetPath(ROOT, variant, kind))))
 })
 
@@ -196,7 +196,7 @@ test('historical Set05 output validation accepts exactly its 55-work catalogue a
  const { verifySet05Catalogue } = await import('../import-grounded-set05.mjs')
  verifySet05Catalogue(prefix)
  assert.equal((await checkCatalogue(prefix, { root, regenerate: false, expectedCount: 55 })).files, 495)
- await assert.rejects(checkCatalogue(prefix, { root, regenerate: false }), /55.*130|55 !== 130/s)
+ await assert.rejects(checkCatalogue(prefix, { root, regenerate: false }), /55.*155|55 !== 155/s)
  const source = await readFile(join(ROOT, 'scripts/import-grounded-set05.mjs'), 'utf8')
  assert.match(source, /checkCatalogue\(catalogue,\{root,regenerate:false,expectedCount:55\}\)/)
 })
@@ -216,7 +216,7 @@ test('historical Set06 output validation retains exactly 80 works and 720 assets
  const {verifySet06Catalogue}=await import('../import-grounded-set06.mjs')
  verifySet06Catalogue(prefix)
  assert.equal((await checkCatalogue(prefix,{root,regenerate:false,expectedCount:80})).files,720)
- await assert.rejects(checkCatalogue(prefix,{root,regenerate:false}),/80.*130|80 !== 130/s)
+ await assert.rejects(checkCatalogue(prefix,{root,regenerate:false}),/80.*155|80 !== 155/s)
  const source=await readFile(join(ROOT,'scripts/import-grounded-set06.mjs'),'utf8')
  assert.match(source,/checkCatalogue\(catalogue,\{root,regenerate:false,expectedCount:80\}\)/)
 })

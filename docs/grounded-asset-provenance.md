@@ -270,3 +270,17 @@ client bootstrap cap. The 130-work bootstrap is 9,368 bytes and all search recor
 and display partitions remain available on demand. Per-SVG, compressed transport,
 expansion and visible-page transfer bounds are unchanged. Current verification
 and publication gates are recorded in `development/grounded-set08-review.md`.
+
+## Set09 additive source packet
+
+Set09 adds 25 distinct authored works and 75 exact light/dark/mono masters, retaining
+all 130 prior works. Batch metadata SHA-256 is
+`0c6d13ea2815816747f3345123bb0d498504ea4c50a445a9a76cdfaa3433c1ac`;
+file manifest SHA-256 is
+`94c039f355f6b673e4a287703c0789206a2ba12ed8082cda4041bc132978b7f0`.
+The complete source scientific notes are retained byte-for-byte through the
+Set09 notes link. Original source subjects remain biology, physics, chemistry
+and mathematics; chemistry is a real authored discovery subject, not a physics
+alias. Minimum display width is 320px, with 640px recommended for fine detail.
+No new scientific-source access or image-license clearance is claimed by import.
+See `docs/development/grounded-set09-review.md` for verification and release holds.

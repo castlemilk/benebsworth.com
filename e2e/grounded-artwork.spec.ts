@@ -32,7 +32,7 @@ async function collectionEvidence(page: Page, testInfo: TestInfo, name: string) 
 
 for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () => {
   test.use({ viewport: { width, height: 900 } })
-  test('paginates all six bounded pages without loading SVG masters', async ({ page }, testInfo) => {
+  test('paginates all seven bounded pages without loading SVG masters', async ({ page }, testInfo) => {
     const masters: string[] = []
     page.on('request', request => { if (request.url().includes('/artwork/grounded/') && request.url().endsWith('.svg')) masters.push(request.url()) })
     await gotoSettled(page, '/vectors/grounded/')
@@ -51,9 +51,12 @@ for (const width of [390, 1180]) test.describe(`Grounded forms ${width}px`, () =
     await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
     await collectionEvidence(page, testInfo, `gallery-view-grounded-page5-${width}.png`)
     await page.getByRole('button', { name: 'Next page' }).click()
-    await expect(page.locator('[data-grounded-card]')).toHaveCount(10)
-    await expect(page.getByRole('button', { name: 'Next page' })).toBeDisabled()
+    await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
     await collectionEvidence(page, testInfo, `gallery-view-grounded-page6-${width}.png`)
+    await page.getByRole('button', { name: 'Next page' }).click()
+    await expect(page.locator('[data-grounded-card]')).toHaveCount(11)
+    await expect(page.getByRole('button', { name: 'Next page' })).toBeDisabled()
+    await collectionEvidence(page, testInfo, `gallery-view-grounded-page7-${width}.png`)
     await page.getByRole('button', { name: 'Previous page' }).click()
     await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
     expect(masters).toEqual([])
@@ -347,11 +350,11 @@ test('ignores delayed discovery after clear and clamps a deep page URL', async (
   await expect(page.getByRole('searchbox', { name: 'Find grounded artwork' })).toBeFocused()
   release()
   await expect(page.locator('[data-grounded-card]')).toHaveCount(24)
-  await expect(page.getByRole('status')).toHaveText('130 artworks · Page 1 of 6')
+  await expect(page.getByRole('status')).toHaveText('155 artworks · Page 1 of 7')
   await page.unroute('**/artwork/grounded-discovery/*.json')
   await gotoSettled(page, '/vectors/grounded/?page=9999')
-  await expect(page.locator('[data-grounded-card]')).toHaveCount(10)
-  await expect(page.getByRole('status')).toHaveText('130 artworks · Page 6 of 6')
+  await expect(page.locator('[data-grounded-card]')).toHaveCount(11)
+  await expect(page.getByRole('status')).toHaveText('155 artworks · Page 7 of 7')
 })
 
 test('Set08 discovers all five new families and preserves notes and palette downloads', async ({ page }, testInfo) => {
@@ -376,5 +379,37 @@ test('Set08 discovers all five new families and preserves notes and palette down
     }
     await page.goBack()
     await expect(page.getByRole('searchbox', { name: 'Find grounded artwork' })).toHaveValue(artwork.aliases[0])
+  }
+})
+
+test('Set09 discovers all five new families and preserves notes and palette downloads', async ({ page }, testInfo) => {
+  for (const slug of ['anther-section', 'compact-bone-osteon', 'poiseuille-profile', 'methane-tetrahedron', 'bezier-subdivision']) {
+    const artwork = GROUNDED_ARTWORK.find(a => a.slug === slug)!
+    await gotoSettled(page, '/vectors/grounded/')
+    await page.getByRole('searchbox', { name: 'Find grounded artwork' }).fill(artwork.aliases[0])
+    await page.getByLabel('Subject', { exact: true }).selectOption(artwork.subject)
+    await page.getByLabel('Tag', { exact: true }).selectOption(artwork.tags[0])
+    await page.locator(`[data-grounded-card="${slug}"]`).getByRole('link').click()
+    await expect(page.getByRole('heading', { level: 1, name: artwork.title })).toBeVisible()
+    await expect(page.locator('[data-grounded-limitations]')).toHaveText(artwork.limitations)
+    const notes = await page.request.get(await page.locator('[data-grounded-scientific-notes]').getAttribute('href') || '')
+    expect(notes.ok()).toBe(true)
+    expect(createHash('sha256').update(await notes.body()).digest('hex')).toBe('08b5bcac4b02caeca921d17a4bb9d2d4752430db931d3f7c0a1483e5f476a0d5')
+    for (const [label, palette] of [['Light', 'light'], ['Dark', 'dark'], ['Monochrome', 'mono']] as const) {
+      await page.getByRole('radio', { name: label, exact: true }).check()
+      await expect(page.locator('[data-grounded-preview]')).toHaveAttribute('src', artwork.variants[palette].preview)
+      await waitForPreview(page, artwork.variants[palette].preview)
+      await screenshotEvidence(page, testInfo, `gallery-view-grounded-set09-${slug}-${palette}.png`)
+      const downloadEvent = page.waitForEvent('download')
+      await page.locator('[data-grounded-download]').click()
+      const download = await downloadEvent
+      expect(createHash('sha256').update(await readFile((await download.path())!)).digest('hex')).toBe(artwork.variants[palette].sha256)
+    }
+    await page.goBack()
+    await expect(page.getByRole('searchbox', { name: 'Find grounded artwork' })).toHaveValue(artwork.aliases[0])
+    await expect(page.getByLabel('Subject', { exact: true })).toHaveValue(artwork.subject)
+    await expect(page.getByLabel('Tag', { exact: true })).toHaveValue(artwork.tags[0])
+    await page.goForward()
+    await expect(page.getByRole('heading', { level: 1, name: artwork.title })).toBeVisible()
   }
 })

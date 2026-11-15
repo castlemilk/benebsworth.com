@@ -27,5 +27,12 @@ export const SET08_SCIENTIFIC_NOTES = {
   sha256: 'bdf9a796b0ff2c6a186857fc1e0f4055f33e0d162c059f99d425db8fe99593cd',
 } as const
 
-export const GROUNDED_SCIENTIFIC_NOTES = [SET05_SCIENTIFIC_NOTES, SET06_SCIENTIFIC_NOTES, SET07_SCIENTIFIC_NOTES, SET08_SCIENTIFIC_NOTES] as const
+export const SET09_SCIENTIFIC_NOTES = {
+  label: 'Set09',
+  batchId: 'grounded-forms-twenty-five-studies-set09-r01',
+  url: '/artwork/grounded-notes/set09.08b5bcac4b02caeca921d17a4bb9d2d4752430db931d3f7c0a1483e5f476a0d5.md',
+  sha256: '08b5bcac4b02caeca921d17a4bb9d2d4752430db931d3f7c0a1483e5f476a0d5',
+} as const
+
+export const GROUNDED_SCIENTIFIC_NOTES = [SET05_SCIENTIFIC_NOTES, SET06_SCIENTIFIC_NOTES, SET07_SCIENTIFIC_NOTES, SET08_SCIENTIFIC_NOTES, SET09_SCIENTIFIC_NOTES] as const
 export const scientificNotesFor = (batchId: string) => GROUNDED_SCIENTIFIC_NOTES.find(notes => notes.batchId === batchId)

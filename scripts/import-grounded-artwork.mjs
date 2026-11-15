@@ -9,10 +9,10 @@ import { JSDOM } from 'jsdom'
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const THEMES = ['light', 'dark', 'mono']
-export const CATALOGUE_SHA256 = '2e0b46e5b6fef0339df3980f3f6bc6c122b553f6111bc9fe3d36464851330705'
-export const CATALOGUE_BYTES = 536135
+export const CATALOGUE_SHA256 = 'dbc984547066c7075e63ce15a389aad572cd67eda2b2c5eb9ce4b47ad8627cad'
+export const CATALOGUE_BYTES = 642168
 export const SET05_CATALOGUE_SHA256 = '4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06'
-export const REVIEWED_ARTWORK_COUNT = 130
+export const REVIEWED_ARTWORK_COUNT = 155
 export const PILOT_CATALOGUE_SHA256 = 'd1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de'
 export const INVENTORY_SHA256 = 'babd060dcdfd794f29a12cef57882ba050b4729cf76ad7e9fccf356a8badd37f'
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -149,6 +149,31 @@ const CURATION = [
  ["napoleon-triangle", "mathematics", ["mathematics", "geometric-construction", "napoleon-triangle"], ["napoleon triangle"]],
  ["tractrix-tow", "mathematics", ["mathematics", "geometric-construction", "tractrix-tow"], ["tractrix tow"]],
  ["cavalieri-shear", "mathematics", ["mathematics", "geometric-construction", "cavalieri-shear"], ["cavalieri shear"]],
+ ["anther-section", "biology", ["biology", "botany", "anther-section"], ["anther section"]],
+ ["legume-pod", "biology", ["biology", "botany", "legume-pod"], ["legume pod"]],
+ ["pine-cone-scale", "biology", ["biology", "botany", "pine-cone-scale"], ["pine cone scale"]],
+ ["dandelion-pappus", "biology", ["biology", "botany", "dandelion-pappus"], ["dandelion pappus"]],
+ ["moss-capsule", "biology", ["biology", "botany", "moss-capsule"], ["moss capsule"]],
+ ["compact-bone-osteon", "biology", ["biology", "anatomy", "compact-bone-osteon"], ["compact bone osteon"]],
+ ["tendon-fascicle", "biology", ["biology", "anatomy", "tendon-fascicle"], ["tendon fascicle"]],
+ ["epidermal-barrier", "biology", ["biology", "anatomy", "epidermal-barrier"], ["epidermal barrier"]],
+ ["intervertebral-disc", "biology", ["biology", "anatomy", "intervertebral-disc"], ["intervertebral disc"]],
+ ["arterial-wall", "biology", ["biology", "anatomy", "arterial-wall"], ["arterial wall"]],
+ ["poiseuille-profile", "physics", ["fluid-mechanics", "flow-and-resistance", "poiseuille-profile"], ["poiseuille profile"]],
+ ["couette-shear", "physics", ["fluid-mechanics", "flow-and-resistance", "couette-shear"], ["couette shear"]],
+ ["stokes-settling", "physics", ["fluid-mechanics", "flow-and-resistance", "stokes-settling"], ["stokes settling"]],
+ ["hydraulic-jump", "physics", ["fluid-mechanics", "flow-and-resistance", "hydraulic-jump"], ["hydraulic jump"]],
+ ["rankine-vortex", "physics", ["fluid-mechanics", "flow-and-resistance", "rankine-vortex"], ["rankine vortex"]],
+ ["methane-tetrahedron", "chemistry", ["molecular-geometry", "methane-tetrahedron"], ["methane tetrahedron"]],
+ ["boron-trifluoride-plane", "chemistry", ["molecular-geometry", "boron-trifluoride-plane"], ["boron trifluoride plane"]],
+ ["sulfur-hexafluoride-octahedron", "chemistry", ["molecular-geometry", "sulfur-hexafluoride-octahedron"], ["sulfur hexafluoride octahedron"]],
+ ["cyclohexane-chair", "chemistry", ["molecular-geometry", "cyclohexane-chair"], ["cyclohexane chair"]],
+ ["water-hydrogen-chain", "chemistry", ["molecular-geometry", "water-hydrogen-chain"], ["water hydrogen chain"]],
+ ["bezier-subdivision", "mathematics", ["mathematics", "geometric-construction", "bezier-subdivision"], ["bezier subdivision"]],
+ ["delaunay-edge-flip", "mathematics", ["mathematics", "geometric-construction", "delaunay-edge-flip"], ["delaunay edge flip"]],
+ ["clothoid-transition", "mathematics", ["mathematics", "geometric-construction", "clothoid-transition"], ["clothoid transition"]],
+ ["ellipse-reflection", "mathematics", ["mathematics", "geometric-construction", "ellipse-reflection"], ["ellipse reflection"]],
+ ["tesseract-projection", "mathematics", ["mathematics", "geometric-construction", "tesseract-projection"], ["tesseract projection"]],
 ].map(([slug, subject, tags, aliases]) => [slug, subject, tags.map(tag => tag.toLowerCase().replace(/\s+/g, '-')), [...new Map(aliases.map(alias => [alias.toLowerCase().trim(), alias])).values()]])
 export function slugFor(sourceId) {
  const slug = sourceId.replace(/^\d{2}-/, '')
@@ -226,7 +251,7 @@ async function verifyImage(bytes, size) {
  assert(transparent, 'Transparency was lost')
 }
 export async function checkCatalogue(catalogue, { regenerate = true, root = ROOT, expectedCount = REVIEWED_ARTWORK_COUNT } = {}) {
- assert([30, 55, 80, REVIEWED_ARTWORK_COUNT].includes(expectedCount), 'Unreviewed catalogue size')
+ assert([30, 55, 80, 105, 130, REVIEWED_ARTWORK_COUNT].includes(expectedCount), 'Unreviewed catalogue size')
  assert.equal(catalogue.length, expectedCount)
  const slugs = new Set(), identities = new Set(), urls = new Set()
  for (const a of catalogue) {

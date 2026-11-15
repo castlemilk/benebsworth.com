@@ -35,8 +35,8 @@ async function corrupt(relative: string, mutation: (bytes: Buffer) => string | B
   try { await fs.writeFile(file, mutation(original)); await expect(checkGroundedOutput(root)).rejects.toThrow(error) }
   finally { await fs.writeFile(file, original) }
 }
-it('checks all 105 static routes and 945 original/fallback asset bytes without executing HTML', async () => {
-  expect(await checkGroundedOutput(root)).toMatchObject({ fixedArtworks: 105, assetsChecked: 945, originalSvgMasters: 315, initialCards: 24, browserAcceptance: 'NOT RUN', deployment: 'NOT RUN' })
+it('checks all 130 static routes and 1170 original/fallback asset bytes without executing HTML', async () => {
+  expect(await checkGroundedOutput(root)).toMatchObject({ fixedArtworks: 130, assetsChecked: 1170, originalSvgMasters: 390, initialCards: 24, browserAcceptance: 'NOT RUN', deployment: 'NOT RUN' })
 })
 it('rejects an altered original master', () => corrupt(GROUNDED_ARTWORK[0].variants.light.master, b => { const c = Buffer.from(b); c[100] ^= 1; return c }, /asset hash/))
 it('rejects altered thumbnail bytes', () => corrupt(GROUNDED_ARTWORK[0].variants.light.thumbnail, b => Buffer.concat([b, Buffer.from('x')]), /asset size/))

@@ -9,9 +9,10 @@ import { JSDOM } from 'jsdom'
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const THEMES = ['light', 'dark', 'mono']
-export const CATALOGUE_SHA256 = 'cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136'
+export const CATALOGUE_SHA256 = '2e0b46e5b6fef0339df3980f3f6bc6c122b553f6111bc9fe3d36464851330705'
+export const CATALOGUE_BYTES = 536135
 export const SET05_CATALOGUE_SHA256 = '4e47b279dc90ae7037ed9398e3152f58db53d7c5a9aec6f7ff8a6e8fb84ead06'
-export const REVIEWED_ARTWORK_COUNT = 105
+export const REVIEWED_ARTWORK_COUNT = 130
 export const PILOT_CATALOGUE_SHA256 = 'd1d980bcb3d4f72522cf64eadcf86bfdddc2c0e75121445573973e5dd17bd1de'
 export const INVENTORY_SHA256 = 'babd060dcdfd794f29a12cef57882ba050b4729cf76ad7e9fccf356a8badd37f'
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -123,6 +124,31 @@ const CURATION = [
  ["desargues-configuration", "mathematics", ["mathematics", "geometric-construction", "desargues-configuration"], ["desargues configuration", "desargues-configuration"]],
  ["archimedean-bounds", "mathematics", ["mathematics", "geometric-construction", "archimedean-bounds"], ["archimedean bounds", "archimedean-bounds"]],
  ["pappus-torus", "mathematics", ["mathematics", "geometric-construction", "pappus-torus"], ["pappus torus", "pappus-torus"]],
+ ["alveolar-sac", "biology", ["biology", "anatomy", "alveolar-sac"], ["alveolar sac"]],
+ ["intestinal-villus", "biology", ["biology", "anatomy", "intestinal-villus"], ["intestinal villus"]],
+ ["myelinated-axon", "biology", ["biology", "anatomy", "myelinated-axon"], ["myelinated axon"]],
+ ["insect-trachea", "biology", ["biology", "anatomy", "insect-trachea"], ["insect trachea"]],
+ ["renal-nephron", "biology", ["biology", "anatomy", "renal-nephron"], ["renal nephron"]],
+ ["karst-cavern", "geology", ["geology", "landform", "karst-cavern"], ["karst cavern"]],
+ ["oxbow-cutoff", "geology", ["geology", "landform", "oxbow-cutoff"], ["oxbow cutoff"]],
+ ["alluvial-fan", "geology", ["geology", "landform", "alluvial-fan"], ["alluvial fan"]],
+ ["glacial-cirque", "geology", ["geology", "landform", "glacial-cirque"], ["glacial cirque"]],
+ ["graded-bed", "geology", ["geology", "landform", "graded-bed"], ["graded bed"]],
+ ["ratchet-pawl", "mechanics", ["mechanics", "motion-converter", "ratchet-pawl"], ["ratchet pawl"]],
+ ["cam-follower", "mechanics", ["mechanics", "motion-converter", "cam-follower"], ["cam follower"]],
+ ["scotch-yoke", "mechanics", ["mechanics", "motion-converter", "scotch-yoke"], ["scotch yoke"]],
+ ["scissor-lift", "mechanics", ["mechanics", "motion-converter", "scissor-lift"], ["scissor lift"]],
+ ["universal-joint", "mechanics", ["mechanics", "motion-converter", "universal-joint"], ["universal joint"]],
+ ["parallel-plate-capacitor", "physics", ["electromagnetism", "charge-and-induction", "parallel-plate-capacitor"], ["parallel plate capacitor"]],
+ ["solenoid-section", "physics", ["electromagnetism", "charge-and-induction", "solenoid-section"], ["solenoid section"]],
+ ["transformer-core", "physics", ["electromagnetism", "charge-and-induction", "transformer-core"], ["transformer core"]],
+ ["hall-effect", "physics", ["electromagnetism", "charge-and-induction", "hall-effect"], ["hall effect"]],
+ ["motional-emf", "physics", ["electromagnetism", "charge-and-induction", "motional-emf"], ["motional emf"]],
+ ["stereographic-projection", "mathematics", ["mathematics", "geometric-construction", "stereographic-projection"], ["stereographic projection"]],
+ ["pick-lattice-area", "mathematics", ["mathematics", "geometric-construction", "pick-lattice-area"], ["pick lattice area"]],
+ ["napoleon-triangle", "mathematics", ["mathematics", "geometric-construction", "napoleon-triangle"], ["napoleon triangle"]],
+ ["tractrix-tow", "mathematics", ["mathematics", "geometric-construction", "tractrix-tow"], ["tractrix tow"]],
+ ["cavalieri-shear", "mathematics", ["mathematics", "geometric-construction", "cavalieri-shear"], ["cavalieri shear"]],
 ].map(([slug, subject, tags, aliases]) => [slug, subject, tags.map(tag => tag.toLowerCase().replace(/\s+/g, '-')), [...new Map(aliases.map(alias => [alias.toLowerCase().trim(), alias])).values()]])
 export function slugFor(sourceId) {
  const slug = sourceId.replace(/^\d{2}-/, '')
@@ -138,8 +164,8 @@ export function validateSvg(bytes) {
   assert.equal(root.localName, 'svg'); assert.equal(root.namespaceURI, 'http://www.w3.org/2000/svg')
   assert.equal(root.getAttribute('width'), '900'); assert.equal(root.getAttribute('height'), '900')
   assert.equal(root.getAttribute('viewBox'), '0 0 900 900')
-  const tags = new Set(['svg','g','path','title','desc','defs','clipPath','line','polyline','polygon','ellipse','circle','metadata'])
-  const attrs = new Set(['xmlns','transform','fill','viewBox','id','height','stroke-linecap','fill-rule','clip-rule','aria-labelledby','stroke','d','stroke-width','clip-path','width','role','stroke-dasharray','stroke-linejoin','x1','y1','x2','y2','points','cx','cy','rx','ry','r','aria-describedby','fill-opacity'])
+  const tags = new Set(['svg','g','path','title','desc','defs','clipPath','line','polyline','polygon','ellipse','circle','rect','metadata'])
+  const attrs = new Set(['xmlns','transform','fill','viewBox','id','height','stroke-linecap','fill-rule','clip-rule','aria-labelledby','stroke','d','stroke-width','clip-path','width','role','stroke-dasharray','stroke-linejoin','x1','y1','x2','y2','points','cx','cy','rx','ry','r','aria-describedby','fill-opacity','x','y'])
   const ids = new Set()
   for (const el of [root, ...root.querySelectorAll('*')]) {
    assert(tags.has(el.localName) && el.namespaceURI === root.namespaceURI, `Unsafe SVG element: ${el.tagName}`)
@@ -148,6 +174,13 @@ export function validateSvg(bytes) {
     assert(!/javascript:|data:|https?:|\/\//i.test(a.value) || a.name === 'xmlns', 'External SVG reference')
     if (a.name === 'fill-opacity') assert(/^(?:0(?:\.\d+)?|1(?:\.0+)?)$/.test(a.value), 'Invalid SVG fill opacity')
     if (/url\s*\(/i.test(a.value)) assert.match(a.value, /^url\(#[a-zA-Z][\w-]*\)$/, 'Unsafe SVG URL')
+   }
+   if (el.localName === 'rect') {
+    for (const name of ['x','y','width','height','rx','ry']) {
+     const value = el.getAttribute(name)
+     if (value === null) continue
+     assert(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(value) && Number.isFinite(Number(value)) && (!['width','height','rx','ry'].includes(name) || Number(value) >= 0), 'Invalid SVG rectangle geometry')
+    }
    }
    if (el.localName === 'polyline') {
     const rawPoints = (el.getAttribute('points') ?? '').trim()

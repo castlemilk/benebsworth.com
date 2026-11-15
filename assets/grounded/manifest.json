@@ -1,6 +1,6 @@
 {
   "format": "brotli-concatenated-original-svg-v1",
-  "catalogueSha256": "cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136",
+  "catalogueSha256": "2e0b46e5b6fef0339df3980f3f6bc6c122b553f6111bc9fe3d36464851330705",
   "artworks": [
     {
       "slug": "chambered-growth",
@@ -1428,6 +1428,331 @@
         {
           "sha256": "f1b11032ba5ad7a3f19dc5d8957f2c9cc3ccad8478ba48c89819bef325f05550",
           "bytes": 1247
+        }
+      ]
+    },
+    {
+      "slug": "alveolar-sac",
+      "rawBytes": 37335,
+      "rawSha256": "0b32c16821793721a9145267920dd21a425e04c82743f4b98c939f11f0bbf8ec",
+      "compressedBytes": 1382,
+      "compressedSha256": "1232455986b3ac3893b1aa938ac1039b074c6b26a13184912a77a80dd0e4fa12",
+      "parts": [
+        {
+          "sha256": "1232455986b3ac3893b1aa938ac1039b074c6b26a13184912a77a80dd0e4fa12",
+          "bytes": 1382
+        }
+      ]
+    },
+    {
+      "slug": "intestinal-villus",
+      "rawBytes": 40164,
+      "rawSha256": "4cf791992a2b300ba54d827af87d9add5ab74ba4959431f24c16cd8547c74c5c",
+      "compressedBytes": 1823,
+      "compressedSha256": "f62484790512a2fc4b89a14515392e37be07b0217314b9a12be238791d55f37e",
+      "parts": [
+        {
+          "sha256": "f62484790512a2fc4b89a14515392e37be07b0217314b9a12be238791d55f37e",
+          "bytes": 1823
+        }
+      ]
+    },
+    {
+      "slug": "myelinated-axon",
+      "rawBytes": 22140,
+      "rawSha256": "2f1954e66104f37cf98d31a7f479664b22127303d963537adcadc76bc1756ce2",
+      "compressedBytes": 1239,
+      "compressedSha256": "a3faa23cb03aad3d75926185c746b843773729c44345af86e75ca119c2d9bb96",
+      "parts": [
+        {
+          "sha256": "a3faa23cb03aad3d75926185c746b843773729c44345af86e75ca119c2d9bb96",
+          "bytes": 1239
+        }
+      ]
+    },
+    {
+      "slug": "insect-trachea",
+      "rawBytes": 25659,
+      "rawSha256": "e0fb1bcb710d13ecb09349668d55b58a4e872816806ff97d41f2daa3b2d03633",
+      "compressedBytes": 1360,
+      "compressedSha256": "3c9c46df2b68ec29582fcc0974bb27b72122deb1f60775a195d596d227b66fa5",
+      "parts": [
+        {
+          "sha256": "3c9c46df2b68ec29582fcc0974bb27b72122deb1f60775a195d596d227b66fa5",
+          "bytes": 1360
+        }
+      ]
+    },
+    {
+      "slug": "renal-nephron",
+      "rawBytes": 14676,
+      "rawSha256": "41ca8667eef9d2f6f458802a37539ed63fa6685ecb182463fdc6ec18ed38d5ca",
+      "compressedBytes": 1132,
+      "compressedSha256": "b00ee2f01d3b5734cd9c13aa26f397f15d716b73f8572f37454736962cc1348e",
+      "parts": [
+        {
+          "sha256": "b00ee2f01d3b5734cd9c13aa26f397f15d716b73f8572f37454736962cc1348e",
+          "bytes": 1132
+        }
+      ]
+    },
+    {
+      "slug": "karst-cavern",
+      "rawBytes": 13494,
+      "rawSha256": "3d5193b38c50dd3f187d292b18f3970760eb8185a76fb0091260d570be0329d2",
+      "compressedBytes": 1182,
+      "compressedSha256": "370ba821e5beb6231bf7d931369390c7a46844c2d0d1918cb18d11a5e29a8897",
+      "parts": [
+        {
+          "sha256": "370ba821e5beb6231bf7d931369390c7a46844c2d0d1918cb18d11a5e29a8897",
+          "bytes": 1182
+        }
+      ]
+    },
+    {
+      "slug": "oxbow-cutoff",
+      "rawBytes": 14670,
+      "rawSha256": "ab3b5a360e7642bf3d7753139e223ea102ed73f5c06681ef106c6898d0812b5b",
+      "compressedBytes": 1108,
+      "compressedSha256": "0277f6f932ffa212686a9a0b1fd9daec61cebf97b112032c271add75659527d0",
+      "parts": [
+        {
+          "sha256": "0277f6f932ffa212686a9a0b1fd9daec61cebf97b112032c271add75659527d0",
+          "bytes": 1108
+        }
+      ]
+    },
+    {
+      "slug": "alluvial-fan",
+      "rawBytes": 20271,
+      "rawSha256": "1b25d011ee3f0fc893d35189c89cfd4c7be431457892c3d32d021f04f865770e",
+      "compressedBytes": 1246,
+      "compressedSha256": "3c3a9c6ae2645f0d5b440b8737be11a4685aea45783eeafb8882c762e3617799",
+      "parts": [
+        {
+          "sha256": "3c3a9c6ae2645f0d5b440b8737be11a4685aea45783eeafb8882c762e3617799",
+          "bytes": 1246
+        }
+      ]
+    },
+    {
+      "slug": "glacial-cirque",
+      "rawBytes": 13032,
+      "rawSha256": "8d7dc591ccc1493e7bb5dd6da8de4e2ae9ed1734ac996ee53f7c1bbbdfc27bec",
+      "compressedBytes": 1050,
+      "compressedSha256": "453a9680b9d0de2f767bc4996c7f29f688d9fadf7564118c50c28ada5d4d30e3",
+      "parts": [
+        {
+          "sha256": "453a9680b9d0de2f767bc4996c7f29f688d9fadf7564118c50c28ada5d4d30e3",
+          "bytes": 1050
+        }
+      ]
+    },
+    {
+      "slug": "graded-bed",
+      "rawBytes": 96702,
+      "rawSha256": "2c2ee3f65d8068a9fd335a0b29b93661e8cadacd0a3574ec917c3b571375f657",
+      "compressedBytes": 5248,
+      "compressedSha256": "8907ca96954af7aa47583b01f9d4b5ec56f86be0ac5a412925033f95d39916a2",
+      "parts": [
+        {
+          "sha256": "8907ca96954af7aa47583b01f9d4b5ec56f86be0ac5a412925033f95d39916a2",
+          "bytes": 5248
+        }
+      ]
+    },
+    {
+      "slug": "ratchet-pawl",
+      "rawBytes": 23775,
+      "rawSha256": "e3dfa14d5c5332e6a28501f2e45cfd1a26c9c2d3e4b8eda8e446c6513bc9c0c4",
+      "compressedBytes": 1992,
+      "compressedSha256": "f5cdc26f54d3460fac765d67a4a390b6243233df31e79e3595ccb0192a0c27ca",
+      "parts": [
+        {
+          "sha256": "f5cdc26f54d3460fac765d67a4a390b6243233df31e79e3595ccb0192a0c27ca",
+          "bytes": 1992
+        }
+      ]
+    },
+    {
+      "slug": "cam-follower",
+      "rawBytes": 29466,
+      "rawSha256": "276a4f8902a3fe6e59ad5dc1c20546a9c782e1ae49fe7693a16e3a5056819ebd",
+      "compressedBytes": 1831,
+      "compressedSha256": "72309b5529d55774a5ad3cb5cf62d5c2167db87321a45a1433d85edce40a8535",
+      "parts": [
+        {
+          "sha256": "72309b5529d55774a5ad3cb5cf62d5c2167db87321a45a1433d85edce40a8535",
+          "bytes": 1831
+        }
+      ]
+    },
+    {
+      "slug": "scotch-yoke",
+      "rawBytes": 20619,
+      "rawSha256": "11c2f62398c365bb06bba5e772f128a38adb460a2d5c296187b9bb7cfb4eae7a",
+      "compressedBytes": 1360,
+      "compressedSha256": "69f1ae192872c1578b75f3db1564c85f342c2ddbcc362d4d3eb10138f2fd9505",
+      "parts": [
+        {
+          "sha256": "69f1ae192872c1578b75f3db1564c85f342c2ddbcc362d4d3eb10138f2fd9505",
+          "bytes": 1360
+        }
+      ]
+    },
+    {
+      "slug": "scissor-lift",
+      "rawBytes": 34212,
+      "rawSha256": "2fcec6ae61de9998705572ada0c375292996f8731536d776b3c2d8c1d8a00a38",
+      "compressedBytes": 1521,
+      "compressedSha256": "1aa190a02a249909b773856057fa599d9f351a816c5f2862c32427bfb3b843c1",
+      "parts": [
+        {
+          "sha256": "1aa190a02a249909b773856057fa599d9f351a816c5f2862c32427bfb3b843c1",
+          "bytes": 1521
+        }
+      ]
+    },
+    {
+      "slug": "universal-joint",
+      "rawBytes": 16623,
+      "rawSha256": "728d4e70b9b3ae9f698689598f13525fd3553da492edf75dc642e33780300fb7",
+      "compressedBytes": 1611,
+      "compressedSha256": "5316da958c9d91cf5dd2c1805beb4f8155dc60592d0e6df4a09d4c486da28b6d",
+      "parts": [
+        {
+          "sha256": "5316da958c9d91cf5dd2c1805beb4f8155dc60592d0e6df4a09d4c486da28b6d",
+          "bytes": 1611
+        }
+      ]
+    },
+    {
+      "slug": "parallel-plate-capacitor",
+      "rawBytes": 34116,
+      "rawSha256": "958a7298697ab507b86eeeb0e585793c6583c6f4626cd5394812ad9937b006e4",
+      "compressedBytes": 1489,
+      "compressedSha256": "1d925faf33e2effd2871ab1cd88a39dcd8648ed09f09960a3903123627f5a340",
+      "parts": [
+        {
+          "sha256": "1d925faf33e2effd2871ab1cd88a39dcd8648ed09f09960a3903123627f5a340",
+          "bytes": 1489
+        }
+      ]
+    },
+    {
+      "slug": "solenoid-section",
+      "rawBytes": 41151,
+      "rawSha256": "3846309f54febdb41413986947198c9681f234ebb78f3b866f759d4a572c1cb2",
+      "compressedBytes": 2370,
+      "compressedSha256": "c4583135056b7d4931def2dbde60a71a7440de25e583eb489194028136161a15",
+      "parts": [
+        {
+          "sha256": "c4583135056b7d4931def2dbde60a71a7440de25e583eb489194028136161a15",
+          "bytes": 2370
+        }
+      ]
+    },
+    {
+      "slug": "transformer-core",
+      "rawBytes": 99417,
+      "rawSha256": "438ae8b4b2a1ec4bb7b67237bba79e698e32e9cf748cc38f5e069c039e38382b",
+      "compressedBytes": 3651,
+      "compressedSha256": "e1473eeccdc3422d55c1d7dd74e46457cd42592fe64d0d796beebab5b86cd11e",
+      "parts": [
+        {
+          "sha256": "e1473eeccdc3422d55c1d7dd74e46457cd42592fe64d0d796beebab5b86cd11e",
+          "bytes": 3651
+        }
+      ]
+    },
+    {
+      "slug": "hall-effect",
+      "rawBytes": 29025,
+      "rawSha256": "ba271a4a652eb12b8f1f70768f22947fb4e87a1af8ef72e0efd342108766304b",
+      "compressedBytes": 1464,
+      "compressedSha256": "3101a80aec7bb4c2cfa7029533192755ff7acc7cf29e4b1e9a0bc58481581975",
+      "parts": [
+        {
+          "sha256": "3101a80aec7bb4c2cfa7029533192755ff7acc7cf29e4b1e9a0bc58481581975",
+          "bytes": 1464
+        }
+      ]
+    },
+    {
+      "slug": "motional-emf",
+      "rawBytes": 32079,
+      "rawSha256": "07e25a5cdae4776c7b6de4ec122e119555370052c6baf872f165531be8e544db",
+      "compressedBytes": 1682,
+      "compressedSha256": "023871829dfc321a9d25596edd065b7587dc1e6ab4e19d15ab42aa081a9bfeb6",
+      "parts": [
+        {
+          "sha256": "023871829dfc321a9d25596edd065b7587dc1e6ab4e19d15ab42aa081a9bfeb6",
+          "bytes": 1682
+        }
+      ]
+    },
+    {
+      "slug": "stereographic-projection",
+      "rawBytes": 124599,
+      "rawSha256": "abd26c7a34d3be6371352f66d012634a99493ed56c97a34eb7ec7d106450ce7e",
+      "compressedBytes": 11072,
+      "compressedSha256": "387a6a43939f8ee2f244da356fcf8ec8dd08f2338fffd9007830514c4e37cf03",
+      "parts": [
+        {
+          "sha256": "387a6a43939f8ee2f244da356fcf8ec8dd08f2338fffd9007830514c4e37cf03",
+          "bytes": 11072
+        }
+      ]
+    },
+    {
+      "slug": "pick-lattice-area",
+      "rawBytes": 42615,
+      "rawSha256": "6e604a7e92b522b5cec8c2f1d339121849c83b011150fc2855610e47da2868fd",
+      "compressedBytes": 2387,
+      "compressedSha256": "2a5c5e2882c91adb617acef3334373646dbc7defeb8f0f55fc00fbab3e269f2a",
+      "parts": [
+        {
+          "sha256": "2a5c5e2882c91adb617acef3334373646dbc7defeb8f0f55fc00fbab3e269f2a",
+          "bytes": 2387
+        }
+      ]
+    },
+    {
+      "slug": "napoleon-triangle",
+      "rawBytes": 14436,
+      "rawSha256": "778d2a2f9b297c9e82f7c4bd5455fa7301056c7b719e9efe318cfa7947eb97e1",
+      "compressedBytes": 1198,
+      "compressedSha256": "13714eb437e380c7352cfb54b667046e84a05ccc6e09147ef7047214fe010aeb",
+      "parts": [
+        {
+          "sha256": "13714eb437e380c7352cfb54b667046e84a05ccc6e09147ef7047214fe010aeb",
+          "bytes": 1198
+        }
+      ]
+    },
+    {
+      "slug": "tractrix-tow",
+      "rawBytes": 43659,
+      "rawSha256": "34cd8acf0fe7bcc74f47ac1453002cfa21d9cc294de4bbeb8ffc9655ef758e79",
+      "compressedBytes": 3950,
+      "compressedSha256": "be01e2f7c0c15be7d92b0dbfc9d5c462052a3184c20b1e42a33c690f6e81b9da",
+      "parts": [
+        {
+          "sha256": "be01e2f7c0c15be7d92b0dbfc9d5c462052a3184c20b1e42a33c690f6e81b9da",
+          "bytes": 3950
+        }
+      ]
+    },
+    {
+      "slug": "cavalieri-shear",
+      "rawBytes": 248559,
+      "rawSha256": "b464911bd58730425350e0bb3709ee1b3e073c2c76a7bacd3d09847c3feb45bb",
+      "compressedBytes": 6450,
+      "compressedSha256": "c5c50e25da4b513c0b4448ab8a6f83185d3ec69343100ee3dcaaf6ca3a2adbe1",
+      "parts": [
+        {
+          "sha256": "c5c50e25da4b513c0b4448ab8a6f83185d3ec69343100ee3dcaaf6ca3a2adbe1",
+          "bytes": 6450
         }
       ]
     }

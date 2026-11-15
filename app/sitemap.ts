@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { GROUNDED_ARTWORK, groundedArtworkUrl } from '@/lib/grounded-artwork/registry'
 import { SITE_URL } from '@/components/seo/json-ld'
 import { getPublishedPosts, getAllProjects } from '@/lib/content'
 import { hikes } from '@/content/hiking'
@@ -65,6 +66,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page('/projects/', { changeFrequency: 'monthly', priority: 0.7 }),
     page('/uses/', { changeFrequency: 'yearly', priority: 0.4 }),
     page('/vectors/', { changeFrequency: 'monthly', priority: 0.6 }),
+    page('/vectors/grounded/', { changeFrequency: 'monthly', priority: 0.6 }),
+    ...GROUNDED_ARTWORK.map(art => page(groundedArtworkUrl(art), { changeFrequency: 'yearly', priority: 0.4 })),
     page('/vectors/originals/', { changeFrequency: 'yearly', priority: 0.3 }),
     page('/lab/', { changeFrequency: 'weekly', priority: 0.9 }),
     page('/lab/black-hole-sim/', { changeFrequency: 'monthly', priority: 0.7 }),

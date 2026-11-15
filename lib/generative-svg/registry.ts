@@ -1,6 +1,6 @@
 import type { Study } from './definition'
 
-export const STUDY_CATEGORIES = ['Mathematics', 'Algorithms', 'Physics', 'Electronics', 'Distributed systems'] as const
+export const STUDY_CATEGORIES = ['Mathematics', 'Algorithms', 'Physics', 'Electronics', 'Distributed systems', 'Illustration'] as const
 const PROVENANCE = ['math-derived', 'topology', 'illustrative', 'simulated']
 const slug = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/
 const nonempty = (value: unknown): value is string => typeof value === 'string' && value.trim() === value && value.length > 0

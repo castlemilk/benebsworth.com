@@ -5,11 +5,11 @@ import { groundedArtworkUrl, GROUNDED_PAGE_SIZE, searchGroundedCards } from './d
 
 const clone = () => structuredClone(GROUNDED_ARTWORK)
 describe('fixed artwork registry', () => {
-  it('retains 105 subjects, 315 masters, intrinsic square geometry and original identities', () => {
-    expect(GROUNDED_ARTWORK).toHaveLength(105)
-    expect(new Set(GROUNDED_ARTWORK.map(a => `${a.batchId}:${a.sourceId}:${a.revision}`)).size).toBe(105)
+  it('retains 130 subjects, 390 masters, intrinsic square geometry and original identities', () => {
+    expect(GROUNDED_ARTWORK).toHaveLength(130)
+    expect(new Set(GROUNDED_ARTWORK.map(a => `${a.batchId}:${a.sourceId}:${a.revision}`)).size).toBe(130)
     expect(GROUNDED_ARTWORK.every(a => a.width === a.height && a.viewBox === '0 0 900 900')).toBe(true)
-    expect(GROUNDED_ARTWORK.filter(a => a.minimumDisplayWidth === 320)).toHaveLength(58)
+    expect(GROUNDED_ARTWORK.filter(a => a.minimumDisplayWidth === 320)).toHaveLength(83)
     expect(GROUNDED_ARTWORK.some(a => /^\d/.test(a.sourceId))).toBe(true)
     expect(GROUNDED_ARTWORK.some(a => !/^\d/.test(a.sourceId))).toBe(true)
     expect(getGroundedArtwork('constructor')).toBeUndefined()
@@ -29,7 +29,7 @@ describe('fixed artwork registry', () => {
   })
   it('ships a small discovery record without full master metadata or scientific paragraphs', () => {
     const cards = groundedCards()
-    expect(cards).toHaveLength(105)
+    expect(cards).toHaveLength(130)
     for (const card of cards) {
       expect(Object.keys(card).sort()).toEqual(['aliases', 'caption', 'minimumDisplayWidth', 'slug', 'subject', 'tags', 'thumbnails', 'title'])
       expect(JSON.stringify(card)).not.toContain('.svg')

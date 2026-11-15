@@ -242,3 +242,31 @@ The immutable complete `SCIENTIFIC-BASIS.md` is also published under
 qualifications that are more detailed than the catalogue summaries, including
 illustrative force-arrow locations, pressure-arrow meaning and negligible governor
 sleeve load. Import, static output and browser checks verify this exact document.
+
+## Set08 additive source packet
+
+Set08 adds 25 original generic studies (body interfaces, landscape records, motion
+converters, charge and induction, and mathematical constructions) to the preserved
+105-work collection. Each new work has exact light/dark/mono 900-square masters,
+lossless 480px thumbnails and 960px previews. The source brief, full basis,
+limitations and citations are retained. Complete original notes are linked from
+all Set08 details, and visible provenance preserves the source README's advice to
+prefer 640px for fine detail above the declared 320px minimum. Recognition exports
+at 64/160px are not scientific-reading validation.
+
+The immutable packet ZIP SHA-256 is
+`22a4cc30cb66292af72e20cdb5c0c18759b982f38ca371b49b6c2fed422a9d17`.
+Original scientific notes SHA-256 is
+`bdf9a796b0ff2c6a186857fc1e0f4055f33e0d162c059f99d425db8fe99593cd`.
+These are factual-reference-informed original drawings, with no copied/traced
+reference image, Smithsonian licence claim or specimen-specific reproduction.
+Independent replacement tooling was used where bundled skill scripts were
+unavailable; integration does not claim those unavailable scripts ran.
+
+Preparation now reads only the exact reviewed 536,135-byte server catalogue,
+checked by both length and digest, rather than reserving arbitrary catalogue-growth
+headroom. This server source bound is distinct from the unchanged 70,000-byte
+client bootstrap cap. The 130-work bootstrap is 9,368 bytes and all search records
+and display partitions remain available on demand. Per-SVG, compressed transport,
+expansion and visible-page transfer bounds are unchanged. Current verification
+and publication gates are recorded in `development/grounded-set08-review.md`.

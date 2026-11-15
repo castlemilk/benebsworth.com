@@ -24,16 +24,16 @@ test('curated metadata does not mine caveat text into search aliases', () => {
  assert(!JSON.stringify([item.subject,item.tags,item.aliases]).includes('Chladni'))
  assert.equal(item.sources[0].title,'Modes')
 })
-test('all 105 checked-in works have byte-accurate, transparent fixed assets', async () => {
+test('all 130 checked-in works have byte-accurate, transparent fixed assets', async () => {
  const catalogue = JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'),'utf8'))
  const report = await checkCatalogue(catalogue,{regenerate:false})
- assert.equal(report.artworks,105); assert.equal(report.files,945)
+ assert.equal(report.artworks,130); assert.equal(report.files,1170)
  for (const theme of ['light', 'dark', 'mono']) {
   const worstPage = catalogue.map(a => a.variants[theme].thumbnailBytes).sort((a,b) => b-a).slice(0,24).reduce((a,b) => a+b,0)
   assert(worstPage < 1000000, 'Selected-palette visible-page thumbnail budget exceeded')
  }
  for (const art of catalogue) for (const variant of Object.values(art.variants)) assert(variant.thumbnailBytes < 50000, 'Per-thumbnail budget exceeded')
- assert.equal(catalogue.filter(a=>a.minimumDisplayWidth===320).length,58)
+ assert.equal(catalogue.filter(a=>a.minimumDisplayWidth===320).length,83)
 })
 test('catalogue verification fails on duplicate identity and hash mutations', async () => {
  const catalogue = JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'),'utf8'))
@@ -51,7 +51,7 @@ test('Set05 appends 25 works without changing the published pilot metadata or do
  assert.equal(createHash('sha256').update(JSON.stringify(catalogue.slice(0,30),null,2)+'\n').digest('hex'),PILOT_CATALOGUE_SHA256)
  assert.equal(catalogue.slice(30,55).length,25)
  assert(catalogue.slice(30,55).every(a => a.batchId === 'grounded-forms-twenty-five-studies-set05-r01'))
- assert.equal(new Set(catalogue.flatMap(a => Object.values(a.variants).map(v => v.sha256))).size,315)
+ assert.equal(new Set(catalogue.flatMap(a => Object.values(a.variants).map(v => v.sha256))).size,390)
 })
 test('reviewed geometric SVG primitives stay inert and external references remain rejected', () => {
  validateSvg(Buffer.from(safe.replace('</svg>','<metadata>Illustrative geometry</metadata><line x1="0" y1="0" x2="1" y2="1"/><circle cx="1" cy="1" r="1"/><ellipse cx="1" cy="1" rx="1" ry="2"/><polygon points="0,0 1,1 2,0"/></svg>')))
@@ -140,8 +140,9 @@ test('Set07 static polylines and opacity remain finite and inert', () => {
 })
 test('Set07 preserves all 80 published catalogue and source-transport entries', async () => {
  const {verifySet07Baseline}=await import('../import-grounded-set07.mjs')
- const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
- const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,105)
+ const fullManifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const manifest={...fullManifest,catalogueSha256:'cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136',artworks:fullManifest.artworks.slice(0,105)}
  assert.equal(verifySet07Baseline(catalogue,manifest).length,80)
  const prefix=catalogue.slice(0,80),transport={...manifest,catalogueSha256:'70a46ac2eac813ba4fef83c79ba96babcd0a0b19c6107ce5299805b623aaf96e',artworks:manifest.artworks.slice(0,80)}
  assert.equal(verifySet07Baseline(prefix,transport).length,80)
@@ -154,8 +155,9 @@ test('Set07 preserves all 80 published catalogue and source-transport entries', 
 })
 test('Set07 pins exactly 25 additions and rejects metadata drift before result writes', async () => {
  const {verifySet07Catalogue,verifySet07Baseline}=await import('../import-grounded-set07.mjs')
- const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
- const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,105)
+ const fullManifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const manifest={...fullManifest,catalogueSha256:'cccf9820b9d86d914be0e533c6c78ac1f0e1477f342ee450024b8a43e669f136',artworks:fullManifest.artworks.slice(0,105)}
  verifySet07Catalogue(catalogue)
  const wrong=structuredClone(catalogue);wrong[80].limitations='changed'
  assert.throws(()=>verifySet07Catalogue(wrong),/Catalogue pin drift/)
@@ -183,4 +185,36 @@ test('Set07 mapper preserves science and qualifies only reviewed source-access a
  assert(eclipse.sources.some(s=>s.url==='https://arxiv.org/html/1703.03414v1'))
  const arch=catalogue.find(a=>a.slug==='archimedean-bounds')
  assert.equal(arch.minimumDisplayWidth,320);assert.match(arch.provenance,/fine twelve-gon and circle separation is clearest at 640px/)
+})
+
+test('Set08 preserves all 105 published works and rejects old or new catalogue and transport drift', async () => {
+ const {verifySet08Baseline,verifySet08Catalogue}=await import('../import-grounded-set08.mjs')
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ assert.equal(verifySet08Baseline(catalogue,manifest).length,105)
+ verifySet08Catalogue(catalogue)
+ const old=structuredClone(catalogue);old[104].basis='changed'
+ assert.throws(()=>verifySet08Baseline(old,manifest),/Published Set07 changed/)
+ const changed=structuredClone(catalogue);changed[105].limitations='changed'
+ assert.throws(()=>verifySet08Catalogue(changed),/Catalogue pin drift/)
+ const transport=structuredClone(manifest);transport.artworks[104].rawBytes++
+ assert.throws(()=>verifySet08Baseline(catalogue,transport),/Set07 transport changed/)
+ const added=catalogue.slice(105)
+ assert.deepEqual(added.map(a=>[a.slug,a.subject]), [["alveolar-sac", "biology"], ["intestinal-villus", "biology"], ["myelinated-axon", "biology"], ["insect-trachea", "biology"], ["renal-nephron", "biology"], ["karst-cavern", "geology"], ["oxbow-cutoff", "geology"], ["alluvial-fan", "geology"], ["glacial-cirque", "geology"], ["graded-bed", "geology"], ["ratchet-pawl", "mechanics"], ["cam-follower", "mechanics"], ["scotch-yoke", "mechanics"], ["scissor-lift", "mechanics"], ["universal-joint", "mechanics"], ["parallel-plate-capacitor", "physics"], ["solenoid-section", "physics"], ["transformer-core", "physics"], ["hall-effect", "physics"], ["motional-emf", "physics"], ["stereographic-projection", "mathematics"], ["pick-lattice-area", "mathematics"], ["napoleon-triangle", "mathematics"], ["tractrix-tow", "mathematics"], ["cavalieri-shear", "mathematics"]])
+ assert.equal(added.length,25)
+ assert(added.every(a=>a.minimumDisplayWidth===320 && a.batchId==='grounded-forms-twenty-five-studies-set08-r01'))
+ assert.equal(new Set(added.flatMap(a=>Object.values(a.variants).map(v=>v.sha256))).size,75)
+})
+test('Set08 rectangle geometry is finite and inert', () => {
+ validateSvg(Buffer.from(safe.replace('</svg>','<rect x="-1" y="2" width="3" height="4"/></svg>')))
+ for(const attr of ['x="NaN"','y="1e999"','width="-1"','height="10%"','rx="-2"','x="0;run()"','onclick="run()"','fill="url(https://example.com)"']) assert.throws(()=>validateSvg(Buffer.from(safe.replace('</svg>',`<rect ${attr}/></svg>`))))
+})
+test('Set08 mapper preserves the source brief, scientific limitations and references', async () => {
+ const {metadataForSet08}=await import('../import-grounded-set08.mjs')
+ const source={id:'example',slug:'example',number:'01',title:'Example',group:'body-interfaces',subject:'biology',revision:1,width:900,height:900,viewBox:[0,0,900,900],minimum_display_width:320,brief:'Exact brief',basis:'Exact basis',limitations:'Exact caveats',provenance:'Original geometry.',tags:['body interfaces'],aliases:['Example'],sources:[{title:'Fact source',url:'https://example.com'}]}
+ const a=metadataForSet08(source,'set08')
+ assert.throws(()=>metadataForSet08({...source,subject:'engineering'},'set08'),/Authored source subject changed/)
+ assert.equal(a.caption,source.brief);assert.equal(a.basis,source.basis);assert.equal(a.limitations,source.limitations);assert.deepEqual(a.sources,source.sources)
+ assert(a.provenance.startsWith(source.provenance));assert.equal(a.subject,'biology')
+ assert.throws(()=>metadataForSet08({...source,group:'unknown'},'set08'),/Unreviewed source group/)
 })

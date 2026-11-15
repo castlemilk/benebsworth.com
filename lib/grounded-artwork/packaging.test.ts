@@ -7,5 +7,5 @@ it('gates bounded lossless source expansion, all output bytes and build hooks', 
   const run = spawnSync(process.execPath, ['--test', 'scripts/tests/prepare-grounded-artwork.test.mjs'], { encoding: 'utf8', timeout: 240000 })
   expect(run.error).toBeUndefined()
   expect(run.status, run.stdout + run.stderr).toBe(0)
-  expect(run.stdout).toMatch(/(?:pass|passed) 17/)
+  expect(run.stdout).toMatch(/(?:pass|passed) 18/)
 }, 250000)

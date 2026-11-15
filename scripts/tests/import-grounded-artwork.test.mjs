@@ -24,16 +24,16 @@ test('curated metadata does not mine caveat text into search aliases', () => {
  assert(!JSON.stringify([item.subject,item.tags,item.aliases]).includes('Chladni'))
  assert.equal(item.sources[0].title,'Modes')
 })
-test('all 130 checked-in works have byte-accurate, transparent fixed assets', async () => {
+test('all 155 checked-in works have byte-accurate, transparent fixed assets', async () => {
  const catalogue = JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'),'utf8'))
  const report = await checkCatalogue(catalogue,{regenerate:false})
- assert.equal(report.artworks,130); assert.equal(report.files,1170)
+ assert.equal(report.artworks,155); assert.equal(report.files,1395)
  for (const theme of ['light', 'dark', 'mono']) {
   const worstPage = catalogue.map(a => a.variants[theme].thumbnailBytes).sort((a,b) => b-a).slice(0,24).reduce((a,b) => a+b,0)
   assert(worstPage < 1000000, 'Selected-palette visible-page thumbnail budget exceeded')
  }
  for (const art of catalogue) for (const variant of Object.values(art.variants)) assert(variant.thumbnailBytes < 50000, 'Per-thumbnail budget exceeded')
- assert.equal(catalogue.filter(a=>a.minimumDisplayWidth===320).length,83)
+ assert.equal(catalogue.filter(a=>a.minimumDisplayWidth===320).length,108)
 })
 test('catalogue verification fails on duplicate identity and hash mutations', async () => {
  const catalogue = JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'),'utf8'))
@@ -51,7 +51,7 @@ test('Set05 appends 25 works without changing the published pilot metadata or do
  assert.equal(createHash('sha256').update(JSON.stringify(catalogue.slice(0,30),null,2)+'\n').digest('hex'),PILOT_CATALOGUE_SHA256)
  assert.equal(catalogue.slice(30,55).length,25)
  assert(catalogue.slice(30,55).every(a => a.batchId === 'grounded-forms-twenty-five-studies-set05-r01'))
- assert.equal(new Set(catalogue.flatMap(a => Object.values(a.variants).map(v => v.sha256))).size,390)
+ assert.equal(new Set(catalogue.flatMap(a => Object.values(a.variants).map(v => v.sha256))).size,465)
 })
 test('reviewed geometric SVG primitives stay inert and external references remain rejected', () => {
  validateSvg(Buffer.from(safe.replace('</svg>','<metadata>Illustrative geometry</metadata><line x1="0" y1="0" x2="1" y2="1"/><circle cx="1" cy="1" r="1"/><ellipse cx="1" cy="1" rx="1" ry="2"/><polygon points="0,0 1,1 2,0"/></svg>')))
@@ -189,8 +189,9 @@ test('Set07 mapper preserves science and qualifies only reviewed source-access a
 
 test('Set08 preserves all 105 published works and rejects old or new catalogue and transport drift', async () => {
  const {verifySet08Baseline,verifySet08Catalogue}=await import('../import-grounded-set08.mjs')
- const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
- const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,130)
+ const fullManifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ const manifest={...fullManifest,catalogueSha256:'2e0b46e5b6fef0339df3980f3f6bc6c122b553f6111bc9fe3d36464851330705',artworks:fullManifest.artworks.slice(0,130)}
  assert.equal(verifySet08Baseline(catalogue,manifest).length,105)
  verifySet08Catalogue(catalogue)
  const old=structuredClone(catalogue);old[104].basis='changed'
@@ -217,4 +218,50 @@ test('Set08 mapper preserves the source brief, scientific limitations and refere
  assert.equal(a.caption,source.brief);assert.equal(a.basis,source.basis);assert.equal(a.limitations,source.limitations);assert.deepEqual(a.sources,source.sources)
  assert(a.provenance.startsWith(source.provenance));assert.equal(a.subject,'biology')
  assert.throws(()=>metadataForSet08({...source,group:'unknown'},'set08'),/Unreviewed source group/)
+})
+
+test('Set09 preserves all 130 published works and rejects old or new catalogue and transport drift', async () => {
+ const {verifySet09Baseline,verifySet09Catalogue}=await import('../import-grounded-set09.mjs')
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(0,155)
+ const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ assert.equal(verifySet09Baseline(catalogue,manifest).length,130)
+ verifySet09Catalogue(catalogue)
+ const old=structuredClone(catalogue);old[129].basis='changed'
+ assert.throws(()=>verifySet09Baseline(old,manifest),/Published Set08 changed/)
+ const changed=structuredClone(catalogue);changed[130].limitations='changed'
+ assert.throws(()=>verifySet09Catalogue(changed),/Catalogue pin drift/)
+ const transport=structuredClone(manifest);transport.artworks[129].rawBytes++
+ assert.throws(()=>verifySet09Baseline(catalogue,transport),/Set08 transport changed/)
+ const added=catalogue.slice(130)
+ assert.deepEqual(added.map(a=>[a.slug,a.subject]), [["anther-section", "biology"], ["legume-pod", "biology"], ["pine-cone-scale", "biology"], ["dandelion-pappus", "biology"], ["moss-capsule", "biology"], ["compact-bone-osteon", "biology"], ["tendon-fascicle", "biology"], ["epidermal-barrier", "biology"], ["intervertebral-disc", "biology"], ["arterial-wall", "biology"], ["poiseuille-profile", "physics"], ["couette-shear", "physics"], ["stokes-settling", "physics"], ["hydraulic-jump", "physics"], ["rankine-vortex", "physics"], ["methane-tetrahedron", "chemistry"], ["boron-trifluoride-plane", "chemistry"], ["sulfur-hexafluoride-octahedron", "chemistry"], ["cyclohexane-chair", "chemistry"], ["water-hydrogen-chain", "chemistry"], ["bezier-subdivision", "mathematics"], ["delaunay-edge-flip", "mathematics"], ["clothoid-transition", "mathematics"], ["ellipse-reflection", "mathematics"], ["tesseract-projection", "mathematics"]])
+ assert.equal(added.length,25)
+ assert(added.every(a=>a.minimumDisplayWidth===320 && a.batchId==='grounded-forms-twenty-five-studies-set09-r01'))
+ assert.equal(new Set(added.flatMap(a=>Object.values(a.variants).map(v=>v.sha256))).size,75)
+})
+
+test('Set09 every authored semantic field and discovery identity survives the mapper', async () => {
+ const {metadataForSet09}=await import('../import-grounded-set09.mjs')
+ const sources=JSON.parse(await readFile(new URL('./fixtures/set09-source-metadata.json',import.meta.url)))
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json'))).slice(130)
+ assert.equal(sources.length,25)
+ for(const [i,source] of sources.entries()) {
+  const mapped=metadataForSet09(source,'grounded-forms-twenty-five-studies-set09-r01')
+  const actual={...catalogue[i]};delete actual.variants
+  assert.deepEqual(actual,mapped)
+  for(const field of ['subject','title','basis','limitations']) assert.equal(actual[field],source[field])
+  assert.equal(actual.caption,source.brief);assert.deepEqual(actual.sources,source.sources.map(({title,url})=>({title,url})))
+  assert.deepEqual(actual.aliases,source.aliases);assert.deepEqual(actual.tags,source.tags)
+  assert(actual.provenance.startsWith(source.provenance.replace(/[.\s]+$/, '')+'.'))
+  assert.throws(()=>metadataForSet09({...source,subject:'invented'},'set09'),/Authored source subject changed/)
+ }
+})
+test('Set09 rejects foreign identity, groups and transport tails', async () => {
+ const {metadataForSet09,verifySet09Baseline}=await import('../import-grounded-set09.mjs')
+ const [source]=JSON.parse(await readFile(new URL('./fixtures/set09-source-metadata.json',import.meta.url)))
+ assert.throws(()=>metadataForSet09({...source,slug:'wrong'},'set09'),/Canonical source identity/)
+ assert.throws(()=>metadataForSet09({...source,group:'unknown'},'set09'),/Unreviewed source group/)
+ const catalogue=JSON.parse(await readFile(resolve(ROOT,'lib/grounded-artwork/catalogue.json')))
+ const manifest=JSON.parse(await readFile(resolve(ROOT,'assets/grounded/manifest.json')))
+ assert.throws(()=>verifySet09Baseline(catalogue,{...manifest,artworks:[...manifest.artworks,manifest.artworks[0]]}),/transport count mismatch/)
+ assert.throws(()=>verifySet09Baseline(catalogue,{...manifest,catalogueSha256:'wrong'}),/transport catalogue mismatch/)
 })

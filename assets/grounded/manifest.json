@@ -1,6 +1,6 @@
 {
   "format": "brotli-concatenated-original-svg-v1",
-  "catalogueSha256": "2e0b46e5b6fef0339df3980f3f6bc6c122b553f6111bc9fe3d36464851330705",
+  "catalogueSha256": "dbc984547066c7075e63ce15a389aad572cd67eda2b2c5eb9ce4b47ad8627cad",
   "artworks": [
     {
       "slug": "chambered-growth",
@@ -1753,6 +1753,331 @@
         {
           "sha256": "c5c50e25da4b513c0b4448ab8a6f83185d3ec69343100ee3dcaaf6ca3a2adbe1",
           "bytes": 6450
+        }
+      ]
+    },
+    {
+      "slug": "anther-section",
+      "rawBytes": 51312,
+      "rawSha256": "3144586901148433266bbd601ff4c50b071ccd225a3fad2dd43aeb97f0d18c8f",
+      "compressedBytes": 2434,
+      "compressedSha256": "460550f591ce7f43cff02a7f5772e61ef9a11b898522e39b1326ce7c8a56d3b0",
+      "parts": [
+        {
+          "sha256": "460550f591ce7f43cff02a7f5772e61ef9a11b898522e39b1326ce7c8a56d3b0",
+          "bytes": 2434
+        }
+      ]
+    },
+    {
+      "slug": "legume-pod",
+      "rawBytes": 15393,
+      "rawSha256": "c7c86dba2c2b2d4576f43466fdf67092c76bbd4e7a40f1c7b6e2d045b30226e5",
+      "compressedBytes": 943,
+      "compressedSha256": "65f2cb779cb3c6292201006d6d81f72eff35aed289ed9c8220779230105a6486",
+      "parts": [
+        {
+          "sha256": "65f2cb779cb3c6292201006d6d81f72eff35aed289ed9c8220779230105a6486",
+          "bytes": 943
+        }
+      ]
+    },
+    {
+      "slug": "pine-cone-scale",
+      "rawBytes": 118878,
+      "rawSha256": "e1817413396074890dd562e31bce537d78851a81011db5537a41d17445754f3a",
+      "compressedBytes": 13012,
+      "compressedSha256": "9526f2b34bb19ca6993e480361fd10a34a303ce2c61022680d4e0d48762facf4",
+      "parts": [
+        {
+          "sha256": "9526f2b34bb19ca6993e480361fd10a34a303ce2c61022680d4e0d48762facf4",
+          "bytes": 13012
+        }
+      ]
+    },
+    {
+      "slug": "dandelion-pappus",
+      "rawBytes": 31170,
+      "rawSha256": "01ba59dea5950202efded5104c9c043df3ddf535d2379e9e12ad38547167fa46",
+      "compressedBytes": 1577,
+      "compressedSha256": "1f082ab6fea5b6e5e43a04418f8665209cd0f2afc59ae2650782e57589e9f346",
+      "parts": [
+        {
+          "sha256": "1f082ab6fea5b6e5e43a04418f8665209cd0f2afc59ae2650782e57589e9f346",
+          "bytes": 1577
+        }
+      ]
+    },
+    {
+      "slug": "moss-capsule",
+      "rawBytes": 15321,
+      "rawSha256": "df65c23ccb6a747c6ffa112fe393378219defcbd9928bf7a88aeb0bac10037d3",
+      "compressedBytes": 1108,
+      "compressedSha256": "a437da3a9b24e799221774c2de7355d035c24145f816ab918ee89f71ad3e3134",
+      "parts": [
+        {
+          "sha256": "a437da3a9b24e799221774c2de7355d035c24145f816ab918ee89f71ad3e3134",
+          "bytes": 1108
+        }
+      ]
+    },
+    {
+      "slug": "compact-bone-osteon",
+      "rawBytes": 191607,
+      "rawSha256": "1b7c201a274f6bdf9a234ab8a9684719cd658fedb3e842f6ed0ecbf9cd30816f",
+      "compressedBytes": 13727,
+      "compressedSha256": "02cbc46f2d493c3c8a21dd4110cc15eeba632caea0bb04c4ced7813d782b57f1",
+      "parts": [
+        {
+          "sha256": "02cbc46f2d493c3c8a21dd4110cc15eeba632caea0bb04c4ced7813d782b57f1",
+          "bytes": 13727
+        }
+      ]
+    },
+    {
+      "slug": "tendon-fascicle",
+      "rawBytes": 129828,
+      "rawSha256": "bbf4fc93af5cdfabfc42656d12a658ad119023bc1ce85d043a5be27c7ea0a538",
+      "compressedBytes": 4051,
+      "compressedSha256": "38212264f6b7a5f9bffc5359bcfa32944e6b7333712a86b04c0b5160ac2376de",
+      "parts": [
+        {
+          "sha256": "38212264f6b7a5f9bffc5359bcfa32944e6b7333712a86b04c0b5160ac2376de",
+          "bytes": 4051
+        }
+      ]
+    },
+    {
+      "slug": "epidermal-barrier",
+      "rawBytes": 58551,
+      "rawSha256": "5804d68627e23a5b38c93e4440a8f668855faf74856002986bb6eabca189ac5c",
+      "compressedBytes": 2552,
+      "compressedSha256": "e4a2c83386d93ae28ada5c09055244cca54105a4a8ad91b4505d3e019bd0d472",
+      "parts": [
+        {
+          "sha256": "e4a2c83386d93ae28ada5c09055244cca54105a4a8ad91b4505d3e019bd0d472",
+          "bytes": 2552
+        }
+      ]
+    },
+    {
+      "slug": "intervertebral-disc",
+      "rawBytes": 89580,
+      "rawSha256": "3f446229a957117a87c0e6475286c12221d8b8ccb36ca79f446bd8e879d53c65",
+      "compressedBytes": 8913,
+      "compressedSha256": "031bb7ad9d9af2cc285ffea142fd9b1367344e52aa4081b24cf94566f73db3f3",
+      "parts": [
+        {
+          "sha256": "031bb7ad9d9af2cc285ffea142fd9b1367344e52aa4081b24cf94566f73db3f3",
+          "bytes": 8913
+        }
+      ]
+    },
+    {
+      "slug": "arterial-wall",
+      "rawBytes": 34938,
+      "rawSha256": "debde1eb1576383b93ad3495034eb135159ed067e1605dbd54302c295746312b",
+      "compressedBytes": 1512,
+      "compressedSha256": "48b97541ef60c0892a4b2c4a92a2710acf38b0272fcc708d9c982a28a79c6299",
+      "parts": [
+        {
+          "sha256": "48b97541ef60c0892a4b2c4a92a2710acf38b0272fcc708d9c982a28a79c6299",
+          "bytes": 1512
+        }
+      ]
+    },
+    {
+      "slug": "poiseuille-profile",
+      "rawBytes": 46050,
+      "rawSha256": "a1dbc3dacd738d89b7d136f249b35d09cd48149d54b1859b6dc64337b0f02558",
+      "compressedBytes": 2307,
+      "compressedSha256": "4e1fc31f697e6d4e4f2e18a818c9ce614dde263519e0d1f5427a14465016a3c8",
+      "parts": [
+        {
+          "sha256": "4e1fc31f697e6d4e4f2e18a818c9ce614dde263519e0d1f5427a14465016a3c8",
+          "bytes": 2307
+        }
+      ]
+    },
+    {
+      "slug": "couette-shear",
+      "rawBytes": 24492,
+      "rawSha256": "48978245c30137e978f65069b1e3c87980efe51a322d36a2e21c77e6edbe28e3",
+      "compressedBytes": 1283,
+      "compressedSha256": "cfb3077a38efd7ac1eed2df65c817586ece207503b65b3ef57e5c2d41b20639d",
+      "parts": [
+        {
+          "sha256": "cfb3077a38efd7ac1eed2df65c817586ece207503b65b3ef57e5c2d41b20639d",
+          "bytes": 1283
+        }
+      ]
+    },
+    {
+      "slug": "stokes-settling",
+      "rawBytes": 42246,
+      "rawSha256": "53d5020e2c2d8292dc616474fe68e042c7e308560fa7b3598d8454fd30e713f8",
+      "compressedBytes": 3070,
+      "compressedSha256": "7765eae5ff79d074fefaf04c8938a7bdf617e8106b9d7bcc3fe4d8a6f255b54a",
+      "parts": [
+        {
+          "sha256": "7765eae5ff79d074fefaf04c8938a7bdf617e8106b9d7bcc3fe4d8a6f255b54a",
+          "bytes": 3070
+        }
+      ]
+    },
+    {
+      "slug": "hydraulic-jump",
+      "rawBytes": 31371,
+      "rawSha256": "f161a51829e1ccf4e3bb5d1ab434a99f3fec03e2bd42c4bb69f61d4a03f1559f",
+      "compressedBytes": 2319,
+      "compressedSha256": "f3c51756539b5019c047499b594433554aa29c0f317542132f3f666b08489c03",
+      "parts": [
+        {
+          "sha256": "f3c51756539b5019c047499b594433554aa29c0f317542132f3f666b08489c03",
+          "bytes": 2319
+        }
+      ]
+    },
+    {
+      "slug": "rankine-vortex",
+      "rawBytes": 69624,
+      "rawSha256": "21f0ae4a41ed84ce34d7a347ab15820a6a9b23b3aa7de1276bd81f5e9896b493",
+      "compressedBytes": 7794,
+      "compressedSha256": "43c142bb3c44a9a9bcbff3284e77f6a83505a298e045a1b53c03d56cea76f035",
+      "parts": [
+        {
+          "sha256": "43c142bb3c44a9a9bcbff3284e77f6a83505a298e045a1b53c03d56cea76f035",
+          "bytes": 7794
+        }
+      ]
+    },
+    {
+      "slug": "methane-tetrahedron",
+      "rawBytes": 10452,
+      "rawSha256": "1581f9b7b7af33cc9e29148542c9cc005c45b160759c34a7e4f594a42f2b7067",
+      "compressedBytes": 906,
+      "compressedSha256": "c76b6ef05d08f2327c242fe074e1c88edddad71796a9504f58e729d8434589d4",
+      "parts": [
+        {
+          "sha256": "c76b6ef05d08f2327c242fe074e1c88edddad71796a9504f58e729d8434589d4",
+          "bytes": 906
+        }
+      ]
+    },
+    {
+      "slug": "boron-trifluoride-plane",
+      "rawBytes": 17841,
+      "rawSha256": "89d98d9a9e29ca2fb82c8d2c1a1c5f7386d91be63e14b565339c55d009e5774d",
+      "compressedBytes": 1265,
+      "compressedSha256": "315e39470d14ba6e52effddd3f1594c6dff36a84b35507ad3c9c9feee0a43ec9",
+      "parts": [
+        {
+          "sha256": "315e39470d14ba6e52effddd3f1594c6dff36a84b35507ad3c9c9feee0a43ec9",
+          "bytes": 1265
+        }
+      ]
+    },
+    {
+      "slug": "sulfur-hexafluoride-octahedron",
+      "rawBytes": 31239,
+      "rawSha256": "f6744707439ecf0b75e293675e999d501696527114638ed5b11df2901319ea4d",
+      "compressedBytes": 1809,
+      "compressedSha256": "166db846cfac47d04f118495e7a46e2bb623fed5d8ccfd72793221bfb8a3175d",
+      "parts": [
+        {
+          "sha256": "166db846cfac47d04f118495e7a46e2bb623fed5d8ccfd72793221bfb8a3175d",
+          "bytes": 1809
+        }
+      ]
+    },
+    {
+      "slug": "cyclohexane-chair",
+      "rawBytes": 16662,
+      "rawSha256": "44ff8e8265434e63619aca0933bef64c6a5edb4037ad36e0615b416e511e0ac8",
+      "compressedBytes": 1303,
+      "compressedSha256": "91dbc057fd83b79a59761f08fbf1b6515256da3c1e2c39eae3bd3e7543510293",
+      "parts": [
+        {
+          "sha256": "91dbc057fd83b79a59761f08fbf1b6515256da3c1e2c39eae3bd3e7543510293",
+          "bytes": 1303
+        }
+      ]
+    },
+    {
+      "slug": "water-hydrogen-chain",
+      "rawBytes": 22074,
+      "rawSha256": "79e5c36e769381b6fa474bb21d5cb58da6e536ed409971a202a2ea28d72b829c",
+      "compressedBytes": 1191,
+      "compressedSha256": "3eaa0b4f56426e85d754dddd7888bfaa2dc88cafa25330e494f61897f944e50a",
+      "parts": [
+        {
+          "sha256": "3eaa0b4f56426e85d754dddd7888bfaa2dc88cafa25330e494f61897f944e50a",
+          "bytes": 1191
+        }
+      ]
+    },
+    {
+      "slug": "bezier-subdivision",
+      "rawBytes": 10899,
+      "rawSha256": "539cc9a27a09fe354aad3ca45153d9e05f300493afcf99e9ae1c24c0abbf54ba",
+      "compressedBytes": 821,
+      "compressedSha256": "2aa36a50b254274acec9d360b908a89d26a29e2f43609012d46dd2f1c4d64938",
+      "parts": [
+        {
+          "sha256": "2aa36a50b254274acec9d360b908a89d26a29e2f43609012d46dd2f1c4d64938",
+          "bytes": 821
+        }
+      ]
+    },
+    {
+      "slug": "delaunay-edge-flip",
+      "rawBytes": 8115,
+      "rawSha256": "53634cd597e379e0a7abc6bba255cd942b8e970e574933d39a1b22f5d447dc62",
+      "compressedBytes": 704,
+      "compressedSha256": "e8e6c86031ab260fcb40ed1b5933dac87433ec4f3826b17177a59434ef408387",
+      "parts": [
+        {
+          "sha256": "e8e6c86031ab260fcb40ed1b5933dac87433ec4f3826b17177a59434ef408387",
+          "bytes": 704
+        }
+      ]
+    },
+    {
+      "slug": "clothoid-transition",
+      "rawBytes": 67782,
+      "rawSha256": "cc96c517b944398f4ae15367800787ef10c450cc8ec7fa6f10be208b8a6bb5cf",
+      "compressedBytes": 6626,
+      "compressedSha256": "71555809b976146335ec2013243a777a82b808f7387d56725f6555a6b0629d97",
+      "parts": [
+        {
+          "sha256": "71555809b976146335ec2013243a777a82b808f7387d56725f6555a6b0629d97",
+          "bytes": 6626
+        }
+      ]
+    },
+    {
+      "slug": "ellipse-reflection",
+      "rawBytes": 14736,
+      "rawSha256": "996f0fc850ee53915f4d52217e3eafa2d002fed8670d863a9469ffbd6db71200",
+      "compressedBytes": 1256,
+      "compressedSha256": "181bda4540970bfd5c6836c48733c047f18ce2f855a1b987f087a4202bc507b4",
+      "parts": [
+        {
+          "sha256": "181bda4540970bfd5c6836c48733c047f18ce2f855a1b987f087a4202bc507b4",
+          "bytes": 1256
+        }
+      ]
+    },
+    {
+      "slug": "tesseract-projection",
+      "rawBytes": 17919,
+      "rawSha256": "b8ed97fc6e55eb59f9c241d2d9040132d15fbe9271c8b463f0fe4c5592529d6c",
+      "compressedBytes": 1093,
+      "compressedSha256": "8c3c7d40b3b96303f023120b50cb7889bebf81e0532c5661dc83e9c1faed6c02",
+      "parts": [
+        {
+          "sha256": "8c3c7d40b3b96303f023120b50cb7889bebf81e0532c5661dc83e9c1faed6c02",
+          "bytes": 1093
         }
       ]
     }

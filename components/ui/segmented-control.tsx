@@ -59,11 +59,13 @@ function useSegmentDrag(select: (value: string) => void) {
 function Segmented({
   label,
   options,
+  optionIcons,
   defaultValue,
   onValueChange,
 }: {
   label: string
   options: string[]
+  optionIcons?: Partial<Record<string, React.ReactNode>>
   defaultValue: string
   onValueChange?: (value: string) => void
 }) {
@@ -87,6 +89,7 @@ function Segmented({
         <SegmentedControlIndicator data-kit="segmented-indicator" />
         {options.map((option) => (
           <SegmentedControlItem key={option} value={option} data-kit="segment" data-value={option}>
+            {optionIcons?.[option] && <span data-kit="segment-icon" aria-hidden="true">{optionIcons[option]}</span>}
             <span data-kit="led" aria-hidden />
             {option}
           </SegmentedControlItem>

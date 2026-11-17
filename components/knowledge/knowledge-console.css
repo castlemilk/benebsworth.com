@@ -364,3 +364,32 @@
     max-height: 240px;
   }
 }
+
+/* SDK captions inherit an editorial theme color unless the fixed light
+   chassis supplies its own ink. Keep this override inside this console. */
+[data-skin="hardware"] .kg-console [data-kit="label"],
+[data-skin="hardware"] .kg-console [data-kit="slider"] [data-kit="value"] {
+  color: var(--ink, #1b1b19);
+}
+
+/* Each layout has a distinct engraved symbol on its slot; text and the
+   selection LED remain below for readable, non-color-only identification. */
+.kg-console [data-kit="segment-icon"] {
+  position: absolute;
+  z-index: 3;
+  top: calc(4px + var(--slot-height) / 2);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--ink, #1b1b19);
+  pointer-events: none;
+}
+
+.kg-console [data-kit="segment-icon"] svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.6;
+}

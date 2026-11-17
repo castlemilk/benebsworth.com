@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { Network, Columns3, Orbit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import './knowledge-console.css'
 import {
@@ -752,6 +753,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
             <Segmented
               label="layout"
               options={['drift', 'lanes', 'orbit']}
+              optionIcons={{ drift: <Network />, lanes: <Columns3 />, orbit: <Orbit /> }}
               defaultValue="drift"
               onValueChange={(v) => setMode(v as LayoutMode)}
             />

@@ -17,7 +17,7 @@ export type KGNode = {
   art?: string
 }
 
-export type KGEdge = { source: string; target: string; kind: EdgeKind }
+export type KGEdge = { source: string; target: string; kind: EdgeKind; evidence?: 'authored-glossary' | 'shared-tag' | 'normalized-tag-match' | 'registry-category' }
 export type KnowledgeGraph = { nodes: KGNode[]; edges: KGEdge[] }
 
 /** Shared normalizer so a glossary term and a content tag collapse onto one hub. */
@@ -52,7 +52,7 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
       kind: 'concept',
       label: e.term,
       href: '/study/concepts/',
-      blurb: e.def,
+      blurb: 'Normalized glossary term index. Open source chapters for each definition; matching tags are lexical matches, not verified conceptual equivalence.',
       art: TOPIC_ART[norm(e.term)],
     })
   }
@@ -61,8 +61,8 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
   for (const vol of course.volumes) {
     for (const ch of vol.chapters) {
       if (!ch.hasPacket) continue
-      nodes.set(`study:${ch.slug}`, {
-        id: `study:${ch.slug}`,
+      nodes.set(`study:${vol.id}/${ch.slug}`, {
+        id: `study:${vol.id}/${ch.slug}`,
         kind: 'study',
         label: ch.title,
         href: `/study/${vol.id}/${ch.slug}/`,
@@ -72,7 +72,7 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
   }
   for (const e of getGlossaryIndex()) {
     const c = conceptHubs.get(norm(e.term))
-    if (c) edges.push({ source: `study:${e.slug}`, target: c.id, kind: 'concept' })
+    if (c) edges.push({ source: `study:${e.volume}/${e.slug}`, target: c.id, kind: 'concept', evidence: 'authored-glossary' })
   }
 
   for (const p of getPublishedPosts()) {
@@ -89,7 +89,7 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
       if (!key) continue
       const concept = conceptHubs.get(key)
       const t = concept ?? hub(tagHubs, key, { kind: 'tag', label: raw, art: TOPIC_ART[key] })
-      edges.push({ source: `blog:${p.slug}`, target: t.id, kind: concept ? 'concept' : 'tag' })
+      edges.push({ source: `blog:${p.slug}`, target: t.id, kind: concept ? 'concept' : 'tag', evidence: concept ? 'normalized-tag-match' : 'shared-tag' })
     }
   }
 
@@ -111,13 +111,13 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
       blurb: fx.blurb,
       meta: fx.category,
     })
-    edges.push({ source: `lab:${fx.slug}`, target: `category:cat-${fx.category}`, kind: 'category' })
+    edges.push({ source: `lab:${fx.slug}`, target: `category:cat-${fx.category}`, kind: 'category', evidence: 'registry-category' })
     for (const raw of fx.tags ?? []) {
       const key = norm(raw)
       if (!key) continue
       const concept = conceptHubs.get(key)
       const t = concept ?? hub(tagHubs, key, { kind: 'tag', label: raw, art: TOPIC_ART[key] })
-      edges.push({ source: `lab:${fx.slug}`, target: t.id, kind: concept ? 'concept' : 'tag' })
+      edges.push({ source: `lab:${fx.slug}`, target: t.id, kind: concept ? 'concept' : 'tag', evidence: concept ? 'normalized-tag-match' : 'shared-tag' })
     }
   }
 

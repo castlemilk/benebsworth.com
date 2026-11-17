@@ -1,0 +1,986 @@
+[
+  {
+    "id": "anther-section",
+    "slug": "anther-section",
+    "number": "01",
+    "title": "Anther section",
+    "group": "plant-release",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Four pollen sacs bracket a narrow connective core in an oblique transverse study.",
+    "basis": "A typical young angiosperm anther has four microsporangia arranged in two lobes around connective tissue. Pollen develops within these sacs.",
+    "limitations": "Intact transverse section, not a dehiscing mature anther. Chamber profiles, pollen counts and vascular detail are invented. No species, developmental timing or cell-layer reconstruction is claimed.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "botany",
+      "anther-section"
+    ],
+    "aliases": [
+      "anther section"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Reproductive Development and Structure",
+        "url": "https://openstax.org/books/biology-2e/pages/32-1-reproductive-development-and-structure",
+        "reference": "https://openstax.org/books/biology-2e/pages/32-1-reproductive-development-and-structure",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "legume-pod",
+    "slug": "legume-pod",
+    "number": "02",
+    "title": "Legume pod",
+    "group": "plant-release",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Two unequal curling valves expose a descending row of attached seeds.",
+    "basis": "A typical dehiscent legume develops from one carpel and opens along two longitudinal sutures. Seeds attach along the placental margin.",
+    "limitations": "Generic invented open pod, not all Fabaceae fruit types. Four visible seeds and valve curvature are illustrative. The connection of valves near the apex is a partial-opening convention, not a modeled fracture or dispersal event.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "botany",
+      "legume-pod"
+    ],
+    "aliases": [
+      "legume pod"
+    ],
+    "sources": [
+      {
+        "title": "USDA IDtools: Fabaceae fruit and seed family",
+        "url": "https://www.idtools.org/tools/1060/index.cfm?entityID=57851&packageID=2246",
+        "reference": "https://www.idtools.org/tools/1060/index.cfm?entityID=57851&packageID=2246",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "pine-cone-scale",
+    "slug": "pine-cone-scale",
+    "number": "03",
+    "title": "Pine cone scale",
+    "group": "plant-release",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A broad scalloped scale shelters two basal ovules on its upper face.",
+    "basis": "A pine ovuliferous scale bears a pair of ovules on its upper surface. This isolated adaxial study emphasizes that paired relationship.",
+    "limitations": "Generic pine-type immature ovulate scale, not a mature whole cone or winged seed. No species is assigned. Ovule size, scale outline, texture and relative distances are invented; bract, cone axis and internal tissues omitted.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "botany",
+      "pine-cone-scale"
+    ],
+    "aliases": [
+      "pine cone scale"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Gymnosperms",
+        "url": "https://openstax.org/books/biology-2e/pages/26-2-gymnosperms",
+        "reference": "https://openstax.org/books/biology-2e/pages/26-2-gymnosperms",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "dandelion-pappus",
+    "slug": "dandelion-pappus",
+    "number": "04",
+    "title": "Dandelion pappus",
+    "group": "plant-release",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "An airy hair canopy balances one long beak and a small ribbed fruit.",
+    "basis": "A dandelion dispersal unit includes a one-seeded fruit attached through a long beak to a pappus of hairs. The gaps among hairs are open, rather than a continuous parachute membrane.",
+    "limitations": "Generic dandelion-type morphology, not species identification. Hair number, spread, surface ribs and fruit proportions are illustrative. No vortex, settling speed, humidity response or flight simulation is claimed.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "botany",
+      "dandelion-pappus"
+    ],
+    "aliases": [
+      "dandelion pappus"
+    ],
+    "sources": [
+      {
+        "title": "University of California IPM: Dandelion",
+        "url": "https://ipm.ucanr.edu/weeds-identification-gallery/dandelion/",
+        "reference": "https://ipm.ucanr.edu/weeds-identification-gallery/dandelion/",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "moss-capsule",
+    "slug": "moss-capsule",
+    "number": "05",
+    "title": "Moss capsule",
+    "group": "plant-release",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A leaning urn and long seta oppose an offset detached lid.",
+    "basis": "Many moss capsules release spores through a mouth after the operculum is lost. Peristome teeth can regulate release; capsule and seta are parts of the sporophyte.",
+    "limitations": "Generic peristomate moss, not all mosses. Only an illustrative near-side tooth subset is shown, not a complete or diagnostic tooth count. Operculum is displaced for explanation; calyptra and internal tissues omitted. No species or humidity-driven movement is claimed.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "botany",
+      "moss-capsule"
+    ],
+    "aliases": [
+      "moss capsule"
+    ],
+    "sources": [
+      {
+        "title": "Australian National Botanic Gardens: Bryophyte dispersal",
+        "url": "https://www.anbg.gov.au/bryophyte/dispersal.html",
+        "reference": "https://www.anbg.gov.au/bryophyte/dispersal.html",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "compact-bone-osteon",
+    "slug": "compact-bone-osteon",
+    "number": "06",
+    "title": "Compact bone osteon",
+    "group": "living-composites",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A clipped tissue fragment exposes lamellae and lacunae around a clear central canal.",
+    "basis": "An osteon has mineralized concentric lamellae surrounding a central canal; osteocytes occupy lacunae connected by canaliculi. Interstitial bone lies between osteons.",
+    "limitations": "One invented transverse compact-bone fragment with an explanatory removed wedge. Unpainted canal omits its vessels, nerves and other contents; unpainted matrix is engraving, not porosity. Counts and canaliculi are symbolic. Not a scan, diagnosis, stress field or trabecular structure.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "anatomy",
+      "compact-bone-osteon"
+    ],
+    "aliases": [
+      "compact bone osteon"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Bone Structure",
+        "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/6-3-bone-structure",
+        "reference": "https://openstax.org/books/anatomy-and-physiology-2e/pages/6-3-bone-structure",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "tendon-fascicle",
+    "slug": "tendon-fascicle",
+    "number": "07",
+    "title": "Tendon fascicle",
+    "group": "living-composites",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A long crimped bundle releases one fascicle into a sweeping upper gap.",
+    "basis": "Tendon collagen is organized into fibers and fascicles with crimped longitudinal structure. Sparse elongated cell symbols lie between collagen bundles.",
+    "limitations": "Teased-apart illustrative preparation, not an intact tendon or a loading simulation. The separated fascicle, cut ends, crimp amplitude, wavelength and cell positions are authored. No molecular periodicity, measured strain, strength or specific tendon is claimed.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "anatomy",
+      "tendon-fascicle"
+    ],
+    "aliases": [
+      "tendon fascicle"
+    ],
+    "sources": [
+      {
+        "title": "Franchi et al.: Tendon crimps and peritendinous tissues responding to tensional forces",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/17703588/",
+        "reference": "https://pubmed.ncbi.nlm.nih.gov/17703588/",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "epidermal-barrier",
+    "slug": "epidermal-barrier",
+    "number": "08",
+    "title": "Epidermal barrier",
+    "group": "living-composites",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Flattened surface plates rest above nucleated cell layers and a wavy basal row.",
+    "basis": "Epidermal keratinocytes mature outward from the basal layer toward flattened anucleate corneocytes at the surface. A basement boundary separates the epidermis from underlying dermis.",
+    "limitations": "Schematic thin-skin excerpt: no separate stratum lucidum is asserted. Cell count, scale and spacing are invented. Clear gaps are drawing separations, not an open leaky barrier; lipids, junctions, immune cells, pigment and appendages omitted. Not a histological diagnosis or permeability model.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "anatomy",
+      "epidermal-barrier"
+    ],
+    "aliases": [
+      "epidermal barrier"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Layers of the Skin",
+        "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/5-1-layers-of-the-skin",
+        "reference": "https://openstax.org/books/anatomy-and-physiology-2e/pages/5-1-layers-of-the-skin",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "intervertebral-disc",
+    "slug": "intervertebral-disc",
+    "number": "09",
+    "title": "Intervertebral disc",
+    "group": "living-composites",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "An oblique lamellar rim wraps a quieter core above a deeply engraved front cut.",
+    "basis": "The intervertebral disc has an outer annulus fibrosus surrounding the nucleus pulposus. The annulus has layered collagen-rich organization.",
+    "limitations": "Invented oblique partial section, not a measured lumbar disc. An explanatory side wedge is omitted. Open engraving inside the nucleus depicts omitted gel, not an air cavity or spinal canal. Endplates, vertebrae and nerves omitted; no herniation, degeneration or load model.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "anatomy",
+      "intervertebral-disc"
+    ],
+    "aliases": [
+      "intervertebral disc"
+    ],
+    "sources": [
+      {
+        "title": "NCBI MeSH: Annulus Fibrosus",
+        "url": "https://meshb.nlm.nih.gov/record/ui?ui=D000070616",
+        "reference": "https://meshb.nlm.nih.gov/record/ui?ui=D000070616",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "arterial-wall",
+    "slug": "arterial-wall",
+    "number": "10",
+    "title": "Arterial wall",
+    "group": "living-composites",
+    "subject": "biology",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "One exposed tubular end opens into a long, layered arterial wall excerpt.",
+    "basis": "An arterial wall comprises an inner tunica intima, a middle tunica media rich in smooth muscle, and an outer connective-tissue tunica externa. The lumen is bounded by endothelium.",
+    "limitations": "Generic muscular-artery-style partial cutaway, not a named vessel. Curved surfaces are simplified projected contours; layer thicknesses and cell symbols are illustrative. Blood, small vessels, nerves and complete elastic microstructure omitted. No pressure, flow, disease or physiological simulation.",
+    "provenance": "Original-authored editable SVG vectors using factual references only. No source image copied or traced. No raster concept used.",
+    "tags": [
+      "biology",
+      "anatomy",
+      "arterial-wall"
+    ],
+    "aliases": [
+      "arterial wall"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Structure and Function of Blood Vessels",
+        "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-1-structure-and-function-of-blood-vessels",
+        "reference": "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-1-structure-and-function-of-blood-vessels",
+        "permission": "Factual-reference-only use; no source figure reproduced or traced, no image-license claim.",
+        "use": "Biological relationships only; original composition, silhouette and vector geometry."
+      }
+    ]
+  },
+  {
+    "id": "poiseuille-profile",
+    "slug": "poiseuille-profile",
+    "number": "11",
+    "title": "Poiseuille profile",
+    "group": "flow-and-resistance",
+    "subject": "physics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A broad pair of engraved pipe walls frames a bow-shaped speed envelope. Nine arrows grow toward the axis; a detached circular section establishes the tube rather than a flat channel.",
+    "basis": "For steady, fully developed laminar flow of an incompressible Newtonian fluid in a straight circular tube, u(r)=G(R\u00b2-r\u00b2)/(4mu), where G=-dp/dx. The drawn profile and arrow lengths follow this parabola. A hypothetical R=0.005 m, mu=0.001 Pa s, density 1000 kg/m\u00b3 and G=32 Pa/m give maximum speed 0.2 m/s, mean speed 0.1 m/s and diameter-based Reynolds number 1000.",
+    "limitations": "A meridional section and separate circular-section key, with editorial wall thickness and independent display scales. Assumes no slip, a uniform circular tube and fully developed laminar flow. Entrance effects, turbulence, non-Newtonian behavior, compressibility and wall deformation are omitted. This is not a physiological or pipe-design prediction.",
+    "provenance": "Original authored vector geometry. Factual source principles inform the limited model; no source figure or photograph is traced or reproduced.",
+    "tags": [
+      "fluid-mechanics",
+      "flow-and-resistance",
+      "poiseuille-profile"
+    ],
+    "aliases": [
+      "poiseuille profile"
+    ],
+    "sources": [
+      {
+        "title": "UC Berkeley: Flow Rate, Poiseuille\u2019s Law",
+        "url": "https://ucb-bioe.github.io/textbook/chapters/05_diagnostics/07_poiseuille.html",
+        "reference": "https://ucb-bioe.github.io/textbook/chapters/05_diagnostics/07_poiseuille.html",
+        "permission": "Factual principles only. No source image, figure or extended text reproduced; no source-image licence claimed.",
+        "use": "Pressure-driven laminar tube flow has a parabolic speed profile."
+      }
+    ]
+  },
+  {
+    "id": "couette-shear",
+    "slug": "couette-shear",
+    "number": "12",
+    "title": "Couette shear",
+    "group": "flow-and-resistance",
+    "subject": "physics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A tilted pair of heavy plates holds a ladder of unequal horizontal arrows. The lean of one line links a motionless lower wall to the moving upper wall, with a quiet open half beside it.",
+    "basis": "With zero pressure gradient, steady plane Couette flow between a fixed wall at y=0 and a wall moving at speed U at y=H has u=Uy/H. The serialized arrow lengths increase linearly with height and meet the wall speeds. Hypothetical U=0.035 m/s, H=0.0035 m and mu=0.2 Pa s give shear rate 10 per second and shear stress 2 Pa.",
+    "limitations": "Ideal parallel walls and a laminar Newtonian fluid, with no slip and no pressure gradient. The entire illustration is rigidly rotated for presentation. Finite-end effects, start-up, heating and transition are omitted. The diagonal line is a velocity envelope, not a solid brace or actual fluid trajectory.",
+    "provenance": "Original authored vector geometry. Factual source principles inform the limited model; no source figure or photograph is traced or reproduced.",
+    "tags": [
+      "fluid-mechanics",
+      "flow-and-resistance",
+      "couette-shear"
+    ],
+    "aliases": [
+      "couette shear"
+    ],
+    "sources": [
+      {
+        "title": "U.S. DOE NETL MFiX: Steady 2D Couette Flow",
+        "url": "https://mfix.netl.doe.gov/doc/vvuq-manual/main/html/fluid/fld-05.html",
+        "reference": "https://mfix.netl.doe.gov/doc/vvuq-manual/main/html/fluid/fld-05.html",
+        "permission": "Factual principles only. No source image, figure or extended text reproduced; no source-image licence claimed.",
+        "use": "A moving wall produces a linear velocity gradient across a fluid."
+      }
+    ]
+  },
+  {
+    "id": "stokes-settling",
+    "slug": "stokes-settling",
+    "number": "13",
+    "title": "Stokes settling",
+    "group": "flow-and-resistance",
+    "subject": "physics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A single engraved sphere hangs between two upward forces and one longer downward force. Three detached bars above expose the force sum; a separate descent arrow reserves the right-hand negative space.",
+    "basis": "A rigid sphere at terminal speed in creeping flow has Stokes drag 6 pi mu R U. Weight minus buoyancy balances drag, so U=2(rho_p-rho_f)gR\u00b2/(9mu). The hypothetical 50-micrometre radius sphere has density 2500 kg/m\u00b3 in fluid of density 1000 kg/m\u00b3 and viscosity 0.1 Pa s. The weight, buoyancy and drag arrows have lengths in ratio 5:2:3, with the latter two opposed to weight.",
+    "limitations": "Isolated spherical particle in an effectively unbounded, quiescent Newtonian fluid at terminal speed. Particle and force display scales are enlarged and independent of the velocity arrow. Surface etching is not fluid streamlines. Brownian motion, walls, other particles, non-sphericity, transient history and finite-Reynolds-number corrections are omitted.",
+    "provenance": "Original authored vector geometry. Factual source principles inform the limited model; no source figure or photograph is traced or reproduced.",
+    "tags": [
+      "fluid-mechanics",
+      "flow-and-resistance",
+      "stokes-settling"
+    ],
+    "aliases": [
+      "stokes settling"
+    ],
+    "sources": [
+      {
+        "title": "Federal Interagency Sedimentation Project: Methods of Analyzing Sediment Samples, section 11",
+        "url": "https://water.usgs.gov/fisp/docs/Report_4.pdf",
+        "reference": "https://water.usgs.gov/fisp/docs/Report_4.pdf",
+        "permission": "Factual principles only. No source image, figure or extended text reproduced; no source-image licence claimed.",
+        "use": "Viscous drag and buoyancy balance weight at terminal settling speed."
+      }
+    ]
+  },
+  {
+    "id": "hydraulic-jump",
+    "slug": "hydraulic-jump",
+    "number": "14",
+    "title": "Hydraulic jump",
+    "group": "flow-and-resistance",
+    "subject": "physics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A low upstream ribbon rises into a deep downstream pool over one long level bed. A loose recirculation arc sits above the through-flow, while slender depth gauges frame the unequal free surfaces.",
+    "basis": "The classical momentum balance for a horizontal rectangular hydraulic jump gives y2/y1=(sqrt(1+8 Fr1\u00b2)-1)/2. For Fr1=3 and y1=0.08 m, the depth ratio is about 3.772. The two remote water depths use this ratio, and the downstream mean-speed arrows are shortened by its reciprocal to conserve discharge per unit width. The modeled downstream Froude number is below one.",
+    "limitations": "Only the far-state conjugate depths and mean-flow relations are calculated. The curved jump surface, recirculation arc and sparse air marks are qualitative, not computed turbulence, bubble trajectories or a measured jump length. Assumes hydrostatic remote sections and negligible bed force across the ideal control volume. No dam, channel-safety or engineering-design claim.",
+    "provenance": "Original authored vector geometry. Factual source principles inform the limited model; no source figure or photograph is traced or reproduced.",
+    "tags": [
+      "fluid-mechanics",
+      "flow-and-resistance",
+      "hydraulic-jump"
+    ],
+    "aliases": [
+      "hydraulic jump"
+    ],
+    "sources": [
+      {
+        "title": "San Diego State University: Initial and Sequent Hydraulic-Jump Depths",
+        "url": "https://ponce.sdsu.edu/onlinechannel16.php",
+        "reference": "https://ponce.sdsu.edu/onlinechannel16.php",
+        "permission": "Factual principles only. No source image, figure or extended text reproduced; no source-image licence claimed.",
+        "use": "A hydraulic jump connects shallow supercritical flow to deeper subcritical flow."
+      }
+    ]
+  },
+  {
+    "id": "rankine-vortex",
+    "slug": "rankine-vortex",
+    "number": "15",
+    "title": "Rankine vortex",
+    "group": "flow-and-resistance",
+    "subject": "physics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Broken circular streamlines wrap an off-center core, leaving a clean lower-right sector. Five tangential arrows rise and then shorten; a detached kinked profile contrasts solid-body rotation with inverse-radius decay.",
+    "basis": "The ideal Rankine vortex has tangential speed v=Omega r within core radius a and v=Omega a\u00b2/r outside it. The field is purely azimuthal, with uniform vorticity 2 Omega in the core and zero outside. The sampled speed profile is continuous at a. The illustrative model uses a=0.1 m and Omega=2 rad/s, so maximum speed is 0.2 m/s.",
+    "limitations": "An ideal inviscid two-dimensional vortex, not a viscously evolving flow, tornado forecast or draining bathtub. Streamline arcs are selected portions of circles and do not show inward spiraling. The core boundary is a vorticity interface, not a solid wall. Free-surface depression, axial flow, external strain and viscous diffusion are not modeled.",
+    "provenance": "Original authored vector geometry. Factual source principles inform the limited model; no source figure or photograph is traced or reproduced.",
+    "tags": [
+      "fluid-mechanics",
+      "flow-and-resistance",
+      "rankine-vortex"
+    ],
+    "aliases": [
+      "rankine vortex"
+    ],
+    "sources": [
+      {
+        "title": "University of Washington: Atmospheric Sciences 536, Rankine Vortex",
+        "url": "https://www.atmos.uw.edu/academics/classes/2017Q1/536/homework/Hwk3_2017.pdf",
+        "reference": "https://www.atmos.uw.edu/academics/classes/2017Q1/536/homework/Hwk3_2017.pdf",
+        "permission": "Factual principles only. No source image, figure or extended text reproduced; no source-image licence claimed.",
+        "use": "A rotating core joins an inverse-radius exterior velocity field."
+      }
+    ]
+  },
+  {
+    "id": "methane-tetrahedron",
+    "slug": "methane-tetrahedron",
+    "number": "16",
+    "title": "Methane tetrahedron",
+    "group": "molecular-geometry",
+    "subject": "chemistry",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Four terminal rings suspend a carbon center inside a broken-line tetrahedral envelope.",
+    "basis": "CH4 has tetrahedral molecular geometry. The four authored direction vectors (\u00b11,\u00b11,\u00b11) have pairwise cosine -1/3.",
+    "limitations": "Orthographic view; projected angles are not bond angles. Ring sizes and lengths are symbolic. Dashed H-H guides are not chemical bonds.",
+    "provenance": "Original-authored editable vectors, generated from explicit coordinates. Scientific sources inform facts only; no imagery copied or traced. Not a measured molecule.",
+    "tags": [
+      "molecular-geometry",
+      "methane-tetrahedron"
+    ],
+    "aliases": [
+      "methane tetrahedron"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Molecular Structure and Polarity",
+        "url": "https://openstax.org/books/chemistry-2e/pages/7-6-molecular-structure-and-polarity",
+        "reference": "Textual scientific principles reviewed 2026-11-15. No figures used.",
+        "permission": "Factual reference only; no copied or traced artwork.",
+        "use": "Molecular connectivity and geometry principles."
+      }
+    ]
+  },
+  {
+    "id": "boron-trifluoride-plane",
+    "slug": "boron-trifluoride-plane",
+    "number": "17",
+    "title": "Boron trifluoride plane",
+    "group": "molecular-geometry",
+    "subject": "chemistry",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Three broad spokes spread across one open molecular plane.",
+    "basis": "BF3 is trigonal planar. Three equal-length authored bonds have 120-degree separations in this face-on view.",
+    "limitations": "Symbol sizes are not atomic radii. Dashed triangle is a coplanarity guide, not F-F bonds. Detached rail is a conceptual edge-on plane inset, not another molecule.",
+    "provenance": "Original-authored editable vectors, generated from explicit coordinates. Scientific sources inform facts only; no imagery copied or traced. Not a measured molecule.",
+    "tags": [
+      "molecular-geometry",
+      "boron-trifluoride-plane"
+    ],
+    "aliases": [
+      "boron trifluoride plane"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Molecular Structure and Polarity",
+        "url": "https://openstax.org/books/chemistry-2e/pages/7-6-molecular-structure-and-polarity",
+        "reference": "Textual scientific principles reviewed 2026-11-15. No figures used.",
+        "permission": "Factual reference only; no copied or traced artwork.",
+        "use": "Molecular connectivity and geometry principles."
+      },
+      {
+        "title": "NIST CCCBDB: Boron trifluoride experimental geometry",
+        "url": "https://cccbdb.nist.gov/exp2x.asp?casno=7637072&charge=0",
+        "reference": "D3h geometry and 120-degree F-B-F angle; accessed 2026-11-15.",
+        "permission": "Factual reference only; no copied figures.",
+        "use": "Planar BF3 identification."
+      }
+    ]
+  },
+  {
+    "id": "sulfur-hexafluoride-octahedron",
+    "slug": "sulfur-hexafluoride-octahedron",
+    "number": "18",
+    "title": "Sulfur hexafluoride octahedron",
+    "group": "molecular-geometry",
+    "subject": "chemistry",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Six terminals frame a tall octahedral molecular scaffold.",
+    "basis": "SF6 has six S-F bonds in octahedral geometry. Authored ligand vectors are the six signed Cartesian unit axes.",
+    "limitations": "Orthographic view; the screen does not preserve spatial angles. Dotted envelope edges are not F-F bonds. No electron density or measured atomic radii.",
+    "provenance": "Original-authored editable vectors, generated from explicit coordinates. Scientific sources inform facts only; no imagery copied or traced. Not a measured molecule.",
+    "tags": [
+      "molecular-geometry",
+      "sulfur-hexafluoride-octahedron"
+    ],
+    "aliases": [
+      "sulfur hexafluoride octahedron"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Molecular Structure and Polarity",
+        "url": "https://openstax.org/books/chemistry-2e/pages/7-6-molecular-structure-and-polarity",
+        "reference": "Textual scientific principles reviewed 2026-11-15. No figures used.",
+        "permission": "Factual reference only; no copied or traced artwork.",
+        "use": "Molecular connectivity and geometry principles."
+      },
+      {
+        "title": "NIST CCCBDB: Sulfur hexafluoride",
+        "url": "https://cccbdb.nist.gov/exp2x.asp?casno=2551624&charge=0",
+        "reference": "Octahedral point group Oh; reviewed 2026-11-15.",
+        "permission": "Factual reference only; no copied figures.",
+        "use": "SF6 molecular symmetry."
+      }
+    ]
+  },
+  {
+    "id": "cyclohexane-chair",
+    "slug": "cyclohexane-chair",
+    "number": "19",
+    "title": "Cyclohexane chair",
+    "group": "molecular-geometry",
+    "subject": "chemistry",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A puckered carbon loop spreads twelve short hydrogen branches.",
+    "basis": "Six carbons form a closed chair scaffold, each joined to two carbons and two hydrogens. Alternating axial and outward equatorial directions are shown.",
+    "limitations": "Idealized authored chair, not measured coordinates or a conformational energy calculation. C-H length and atom rings are editorial. Projection foreshortens bond lengths and angles; no ring-flip sequence.",
+    "provenance": "Original-authored editable vectors, generated from explicit coordinates. Scientific sources inform facts only; no imagery copied or traced. Not a measured molecule.",
+    "tags": [
+      "molecular-geometry",
+      "cyclohexane-chair"
+    ],
+    "aliases": [
+      "cyclohexane chair"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Conformations of Cyclohexane",
+        "url": "https://openstax.org/books/organic-chemistry/pages/4-5-conformations-of-cyclohexane",
+        "reference": "Textual scientific principles reviewed 2026-11-15. No figures used.",
+        "permission": "Factual reference only; no copied or traced artwork.",
+        "use": "Molecular connectivity and geometry principles."
+      }
+    ]
+  },
+  {
+    "id": "water-hydrogen-chain",
+    "slug": "water-hydrogen-chain",
+    "number": "20",
+    "title": "Water hydrogen chain",
+    "group": "molecular-geometry",
+    "subject": "chemistry",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Four bent molecules climb diagonally, linked by three dashed hydrogen bonds.",
+    "basis": "Each H2O unit has two covalent O-H bonds. Dashed links join one donor hydrogen to the oxygen of the next molecule.",
+    "limitations": "Authored educational chain, not measured liquid structure or an ice lattice. The 104.5-degree planar motif is illustrative. No bond energies, electron orbitals or complete intermolecular network.",
+    "provenance": "Original-authored editable vectors, generated from explicit coordinates. Scientific sources inform facts only; no imagery copied or traced. Not a measured molecule.",
+    "tags": [
+      "molecular-geometry",
+      "water-hydrogen-chain"
+    ],
+    "aliases": [
+      "water hydrogen chain"
+    ],
+    "sources": [
+      {
+        "title": "OpenStax: Intermolecular Forces",
+        "url": "https://openstax.org/books/chemistry-2e/pages/10-1-intermolecular-forces",
+        "reference": "Textual scientific principles reviewed 2026-11-15. No figures used.",
+        "permission": "Factual reference only; no copied or traced artwork.",
+        "use": "Molecular connectivity and geometry principles."
+      }
+    ]
+  },
+  {
+    "id": "bezier-subdivision",
+    "slug": "bezier-subdivision",
+    "number": "21",
+    "title": "Bezier subdivision",
+    "group": "constructed-curves-and-spaces",
+    "subject": "mathematics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A broad rising cubic is caught inside a three-level interpolation ladder. The heavy curve is split at one offset focal ring.",
+    "basis": "A cubic with control points (130,620),(220,150),(690,100),(770,585) is subdivided at t=0.42 by de Casteljau interpolation. The two serialized cubic segments reproduce the original locus; the lower key places the parameter on a uniform zero-to-one interval.",
+    "limitations": "Control polygons and point radii are explanatory. The parameter is not arclength. No mechanical deformation or optimization is modeled. Six-decimal serialization introduces sub-micro-unit rounding.",
+    "provenance": "Original-authored mathematical SVG geometry. Sources supply factual principles only; no images copied or traced.",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "bezier-subdivision"
+    ],
+    "aliases": [
+      "bezier subdivision"
+    ],
+    "sources": [
+      {
+        "title": "Shene, Michigan Technological University: Subdividing a Bezier Curve",
+        "url": "https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/surface/bezier-sub.html",
+        "reference": "De Casteljau subdivision control points.",
+        "permission": "Consulted for mathematical facts only; no source imagery copied, traced or embedded.",
+        "use": "Independent authored construction and numerical verification of the stated relationship."
+      }
+    ]
+  },
+  {
+    "id": "delaunay-edge-flip",
+    "slug": "delaunay-edge-flip",
+    "number": "22",
+    "title": "Delaunay edge flip",
+    "group": "constructed-curves-and-spaces",
+    "subject": "mathematics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Two equal-scale quadrilaterals descend across the square. An intruding witness point inside a dashed circumcircle gives way to two empty circumcircles.",
+    "basis": "The convex quadrilateral (0,0),(230,0),(210,230),(0,150) has an illegal 0-2 diagonal: vertex 3 is inside the circumcircle of triangle 0,1,2. Flipping to diagonal 1-3 makes both triangle circumcircles empty of the opposite vertex. The two panels differ only by translation.",
+    "limitations": "A four-site planar example, not a triangulation algorithm run over a measured dataset. Circumcircle strokes and crossing points are guides, not extra sites. Small central marks are circumcenters, not sites. The two legal circles can overlap without violating the empty-circle property.",
+    "provenance": "Original-authored mathematical SVG geometry. Sources supply factual principles only; no images copied or traced.",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "delaunay-edge-flip"
+    ],
+    "aliases": [
+      "delaunay edge flip"
+    ],
+    "sources": [
+      {
+        "title": "CGAL: 2D Triangulations",
+        "url": "https://doc.cgal.org/Manual/3.9/doc_html/cgal_manual/Triangulation_2/Chapter_main.html",
+        "reference": "Section 36.5: empty-circle property.",
+        "permission": "Consulted for mathematical facts only; no source imagery copied, traced or embedded.",
+        "use": "Independent authored construction and numerical verification of the stated relationship."
+      }
+    ]
+  },
+  {
+    "id": "clothoid-transition",
+    "slug": "clothoid-transition",
+    "number": "23",
+    "title": "Clothoid transition",
+    "group": "constructed-curves-and-spaces",
+    "subject": "mathematics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A low straight approach rises into a tight turn. A lengthening normal comb traces the growing curvature while a small straight ramp explains its arclength law.",
+    "basis": "The unit-speed curve integrates x prime=cos(theta), y prime=-sin(theta), with theta(s)=0.000006 s squared/2 for 0<=s<=720. Curvature magnitude is 0.000006 s. A straight entry joins with zero initial curvature. Comb lengths and the detached ramp are proportional to curvature.",
+    "limitations": "The SVG centerline is a 720-segment polyline, not an exact transcendental SVG path. Composite Simpson quadrature uses two half-panels per segment. The analytic integration bound is below 0.000000002 drawing units and the polyline chord-deviation bound is below 0.000541 drawing units. Comb and graph are scaled explanatory marks, not a road-width or vehicle-dynamics model.",
+    "provenance": "Original-authored mathematical SVG geometry. Sources supply factual principles only; no images copied or traced.",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "clothoid-transition"
+    ],
+    "aliases": [
+      "clothoid transition"
+    ],
+    "sources": [
+      {
+        "title": "Bertolazzi and Frego: Fast and accurate clothoid fitting",
+        "url": "https://arxiv.org/abs/1209.0910",
+        "reference": "Definition 2.1 and equation (1), arclength integral and linear curvature.",
+        "permission": "Consulted for mathematical facts only; no source imagery copied, traced or embedded.",
+        "use": "Independent authored construction and numerical verification of the stated relationship."
+      }
+    ]
+  },
+  {
+    "id": "ellipse-reflection",
+    "slug": "ellipse-reflection",
+    "number": "24",
+    "title": "Ellipse reflection",
+    "group": "constructed-curves-and-spaces",
+    "subject": "mathematics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "A quiet wide oval contains a fan of five broken rays. One heavier route touches a short tangent and dotted normal, balancing the two inset focus rings.",
+    "basis": "An ellipse centered at (450,465), with semiaxes 320 and 220, has foci offset by sqrt(320 squared minus 220 squared). Five rays begin at the left focus, meet the ellipse, and reflect to the right focus. At the accented contact the normal is proportional to ((x-450)/320 squared,(y-465)/220 squared).",
+    "limitations": "Ideal two-dimensional specular reflection. Line thickness and fan spacing do not encode intensity. No wave, absorption, finite-source or manufactured mirror model. The outer short engraving marks are editorial, not a second optical boundary.",
+    "provenance": "Original-authored mathematical SVG geometry. Sources supply factual principles only; no images copied or traced.",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "ellipse-reflection"
+    ],
+    "aliases": [
+      "ellipse reflection"
+    ],
+    "sources": [
+      {
+        "title": "APEX Calculus: Conic Sections",
+        "url": "https://opentext.uleth.ca/apex-calculus/sec_conic_sections.html",
+        "reference": "Reflective property of an ellipse.",
+        "permission": "Consulted for mathematical facts only; no source imagery copied, traced or embedded.",
+        "use": "Independent authored construction and numerical verification of the stated relationship."
+      }
+    ]
+  },
+  {
+    "id": "tesseract-projection",
+    "slug": "tesseract-projection",
+    "number": "25",
+    "title": "Tesseract projection",
+    "group": "constructed-curves-and-spaces",
+    "subject": "mathematics",
+    "revision": 1,
+    "width": 900,
+    "height": 900,
+    "viewBox": [
+      0,
+      0,
+      900,
+      900
+    ],
+    "minimum_display_width": 320,
+    "brief": "Sixteen nodes span a faceted open cage. Eight warmer, heavier parallel edges reveal one coordinate direction; four detached arrows disclose the projection basis.",
+    "basis": "The vertices are all 16 sign choices in {-1,1} to the fourth power. Two vertices are joined exactly when they differ in one coordinate, giving 32 edges and degree four at each vertex. A declared linear map sends the four coordinate basis vectors to (158,18),(48,-130),(-112,-72),(27,108), then translates by (450,450).",
+    "limitations": "Direct 4D-to-2D linear projection, not a three-dimensional object, physical perspective camera, or length/angle-preserving view. All edges are shown without occlusion. Unmarked edge crossings are not vertices. The key arrows are scaled basis images, not extra hypercube edges.",
+    "provenance": "Original-authored mathematical SVG geometry. Sources supply factual principles only; no images copied or traced.",
+    "tags": [
+      "mathematics",
+      "geometric-construction",
+      "tesseract-projection"
+    ],
+    "aliases": [
+      "tesseract projection"
+    ],
+    "sources": [
+      {
+        "title": "Oliver Knill, Harvard: The Tesseract",
+        "url": "https://people.math.harvard.edu/~knill/teaching/math21b2003/4dcube/index.html",
+        "reference": "Four-dimensional sign-coordinate vertex construction.",
+        "permission": "Consulted for mathematical facts only; no source imagery copied, traced or embedded.",
+        "use": "Independent authored construction and numerical verification of the stated relationship."
+      }
+    ]
+  }
+]

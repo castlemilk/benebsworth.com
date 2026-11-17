@@ -73,3 +73,14 @@ describe('::eq markers', () => {
     expect(html).toContain('orphan')
   })
 })
+
+it('links reference book figures without exporting SVG or raster bytes', async () => {
+  const html = await renderMarkdown('::fig[reference]', {
+    inlineFigures: new Map([['reference', { title: 'Source illustration', svg: '<svg id="upstream-bytes"></svg>', imageUri: 'data:image/png;base64,PRIVATE' }]]),
+    bookFigureIds: new Set(['reference']),
+  })
+  expect(html).toContain('https://mlsysbook.ai/')
+  expect(html).toContain('Reference image not republished')
+  expect(html).not.toContain('upstream-bytes')
+  expect(html).not.toContain('data:image')
+})

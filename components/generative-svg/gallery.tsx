@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { STUDIES, STUDY_REGISTRY, parametersFor, type Study } from '@/lib/generative-svg/model'
 import { DEFAULT_APPEARANCE, renderStudySvg, type Appearance } from '@/lib/generative-svg/render'
 import { useVectorCopy } from '@/components/vectors/use-vector-copy'
@@ -9,9 +10,14 @@ import { StyleLab } from './style-lab'
 import { ArtworkCollection } from '@/components/editorial-artwork/collection'
 import { searchStudies, studyUrl, STUDY_CATEGORIES } from '@/lib/generative-svg/registry'
 
-function Drawing({ study, appearance, values = {} }: { study: Study; appearance: Appearance; values?: Record<string, number> }) {
-  return <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: renderStudySvg(study, values, appearance) }} />
-}
+// Thumbnails use defaults and need not resample when another study is tuned.
+const Drawing = memo(function Drawing({ study, appearance }: { study: Study; appearance: Appearance }) {
+  const svg = renderStudySvg(study, {}, appearance)
+  // Keep the growing collection's thousands of path nodes out of the page DOM.
+  // The thumbnail remains vector SVG; only the selected workbench is inline.
+  // Eager data-URI images are also available for printing unvisited rows.
+  return <div className={styles.drawing}><img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`} width={320} height={240} alt="" loading="eager" decoding="async" /></div>
+})
 
 function ExportActions({ svg, title, id }: { svg: string; title: string; id: string }) {
   const { feedback, copy } = useVectorCopy()
@@ -37,11 +43,11 @@ function kindLabel(study: Study) {
 }
 
 function StudyWorkbench({ study, appearance, values, setValues }: { study: Study; appearance: Appearance; values: Record<string, number>; setValues: (values: Record<string, number>) => void }) {
-  const svg = renderStudySvg(study, values, appearance)
+  const svg = useMemo(() => renderStudySvg(study, values, appearance), [study, values, appearance])
   return (
     <div className={styles.workbench}>
       <div className={styles.sheet} data-surface={appearance.theme}>
-        <Drawing study={study} appearance={appearance} values={values} />
+        <div className={styles.drawing} dangerouslySetInnerHTML={{ __html: svg }} />
       </div>
       <div className={styles.studyDetails}>
         <p className={styles.kicker}>{kindLabel(study)}</p>
@@ -81,7 +87,7 @@ export function GenerativeGallery() {
   const searchRef = useRef<HTMLInputElement>(null)
   const workbenchRef = useRef<HTMLElement>(null)
   const selected = STUDIES.find(study => study.id === selectedId)!
-  const selectedValues = Object.hasOwn(studyValues, selected.id) ? studyValues[selected.id] : parametersFor(selected)
+  const selectedValues = useMemo(() => Object.hasOwn(studyValues, selected.id) ? studyValues[selected.id] : parametersFor(selected), [studyValues, selected])
   const filtered = searchStudies(STUDY_REGISTRY, query, { category: category === 'All studies' ? undefined : category, tag: tag || undefined })
   useEffect(() => {
     const restore = () => {
@@ -110,10 +116,10 @@ export function GenerativeGallery() {
     <div className={styles.gallery}>
       <header className={styles.opening}>
         <h1>Drawing with <em>rules.</em></h1>
-        <p>Curves from equations. Diagrams from relationships. A small collection of SVG studies, with a drawing language you can change. Transparent editorial artwork lives alongside them.</p>
+        <p>Curves from equations. Diagrams from relationships. Illustrations from authored contours. Explore the SVG collection, tune its drawing language, or find transparent editorial PNG artwork alongside it.</p>
       </header>
 
-      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a><a href="/vectors/originals/">Original vectors</a></nav>
+      <nav aria-label="Library collections" className={styles.collectionNav}><a href="#svg-studies">SVG studies</a><a href="#artwork">PNG artwork</a><Link href="/vectors/grounded/" prefetch={false}>Grounded forms · fixed SVG</Link><a href="/vectors/originals/">Original vectors</a></nav>
 
       {linkWarning && <p role="status">{linkWarning}</p>}
       <StyleLab appearance={appearance} setAppearance={setAppearance} />
@@ -152,7 +158,7 @@ export function GenerativeGallery() {
       <ArtworkCollection />
       <footer className={styles.notes}>
         <h2>Geometry first. Style second.</h2>
-        <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Each SVG download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
+        <p>Appearance changes ink, stroke weight, line ends, selection emphasis and construction lines. It never moves the underlying points. Solid silhouettes keep their shape while pen weight changes open strokes. Each SVG download contains its model notes, current parameters and styling recipe, with no background, external fonts or scripts.</p>
         <p>The collection preserves all 25 original motifs and can grow through the shared study registry. Original SVG artwork remains preserved separately. The editorial PNG masters above are unchanged, with their prompts and provenance available as a separate metadata download. Your parameter tuning stays while you browse this page. Sampled curves are approximations; illustrative studies are labelled individually.</p>
       </footer>
     </div>

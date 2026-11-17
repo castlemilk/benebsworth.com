@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "status": "recovered concept originals; not production-approved",
+  "source_conversation": "https://chatgpt.com/c/6afbdd63-cf60-83ec-8e26-2948e1e1d0c1",
+  "source_page": "https://chatgpt.com/space/page_551b58188e48819187a946c825b1e711",
+  "recovered_on": "2026-11-17",
+  "source_baseline": "1121edc4ae6ac8de415b5395d8fadc11450fc55f",
+  "transformations": "None: exact bytes from source Page file references.",
+  "generation_prompts": "Not recovered; do not reconstruct as original prompts.",
+  "rights": "Generated in the owner-requested ChatGPT artwork session. No stock source, third-party license, or trademark claim is evidenced in the recovered packet. This records provenance, not a legal clearance or exclusivity guarantee.",
+  "missing": [
+    "exact generation prompts and settings",
+    "companion SVGs",
+    "original manifest and scripts",
+    "source review packet and header compositions"
+  ],
+  "assets": [
+    {
+      "file": "originals/circuit.png",
+      "sha256": "f77461ea9dbf043af7e9cf5baea2fd77a58b76debffa5cc201e2b88a3ee8ad07",
+      "bytes": 1902134,
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "transparent_pixels": 1182919,
+      "opaque_pixels": 0,
+      "partial_alpha_pixels": 389945
+    },
+    {
+      "file": "originals/black-hole.png",
+      "sha256": "1115b555a08412afecfa23ab8e81be65c0fba06c1f560ee71d01539eabc6d2fb",
+      "bytes": 746580,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "transparent_pixels": 1263494,
+      "opaque_pixels": 70,
+      "partial_alpha_pixels": 308952
+    },
+    {
+      "file": "originals/atom.png",
+      "sha256": "7553d48963f18bc25b7f87a9b4be4a3108d96d33201739a40b2c4698b189fa22",
+      "bytes": 1586880,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "transparent_pixels": 1065936,
+      "opaque_pixels": 804,
+      "partial_alpha_pixels": 505776
+    },
+    {
+      "file": "originals/floppy-disk.png",
+      "sha256": "245430aaecbab25ffa0313bd1ceb2282c3c3b29ad9003456ffdcefaa4e277369",
+      "bytes": 2397044,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "transparent_pixels": 612212,
+      "opaque_pixels": 362,
+      "partial_alpha_pixels": 959942
+    },
+    {
+      "file": "originals/branching-graph.png",
+      "sha256": "fc636b08537ed93ccdd909e06212cdb69159e4a85c2619a8fb2f49daf5cb0beb",
+      "bytes": 835974,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "transparent_pixels": 1288639,
+      "opaque_pixels": 439,
+      "partial_alpha_pixels": 283438
+    },
+    {
+      "file": "originals/brain.png",
+      "sha256": "b47d7beede791a7c81c568fc4444442f306fd1437872fc7fa2fc1cd3f9129214",
+      "bytes": 2143878,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "transparent_pixels": 802640,
+      "opaque_pixels": 200,
+      "partial_alpha_pixels": 769676
+    }
+  ]
+}

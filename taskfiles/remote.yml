@@ -13,6 +13,7 @@ tasks:
       vars: [EXPECTED_SHA]
     cmds:
       - node scripts/site-release.mjs assert-clean "$EXPECTED_SHA"
+      - task: ":build:gen:grounded"
       - node scripts/check-blog-assets.mjs --base "${PROSE_BASE:-$EXPECTED_SHA}"
       - node --test scripts/check-blog-assets.test.mjs scripts/site-release.test.mjs
       - task: ':verify'

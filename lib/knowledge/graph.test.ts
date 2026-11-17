@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { buildKnowledgeGraph, type NodeKind } from './graph'
+import { existsSync } from 'node:fs'
+import { CATEGORIES } from '@/lib/lab/registry'
 import { CATEGORY_ART, TOPIC_ART } from './topic-art'
 
 const graph = buildKnowledgeGraph()
@@ -10,6 +12,16 @@ describe('buildKnowledgeGraph', () => {
     const kinds = new Set(graph.nodes.map((n) => n.kind))
     for (const k of ['blog', 'lab', 'study', 'tag', 'concept', 'category'] satisfies NodeKind[]) {
       expect(kinds, `missing kind ${k}`).toContain(k)
+    }
+  })
+
+  it('retains explicit relationship evidence and volume-scoped study identity', () => {
+    for (const e of graph.edges) expect(e.evidence).toBeTruthy()
+    for (const n of graph.nodes.filter((n) => n.kind === 'study')) {
+      expect(n.id).toBe(`study:${n.href!.replace(/^\/study\//, '').replace(/\/$/, '')}`)
+    }
+    for (const e of graph.edges.filter((e) => e.kind === 'concept' && !e.source.startsWith('study:'))) {
+      expect(e.evidence).toBe('normalized-tag-match')
     }
   })
 
@@ -54,6 +66,8 @@ describe('buildKnowledgeGraph', () => {
   })
 
   it('CATEGORY_ART covers exactly the registry categories and resolves to TOPIC_ART', () => {
+    expect(Object.keys(CATEGORY_ART).sort()).toEqual(CATEGORIES.map((c) => c.key).sort())
+    for (const file of Object.values(TOPIC_ART)) expect(existsSync(`public${file}`)).toBe(true)
     expect(Object.values(CATEGORY_ART).every((v) => Object.values(TOPIC_ART).includes(v))).toBe(true)
     for (const v of Object.values(CATEGORY_ART)) expect(v).toBeTruthy()
   })

@@ -88,7 +88,7 @@ describe('portable transparent SVG', () => {
   })
   it.each(STUDIES)('keeps $id coordinates invariant across themes, palettes and weights', s => {
     const geometry = JSON.stringify(geometryFor(s))
-    const paths = (svg: string) => [...parseSvg(svg).querySelectorAll('polyline,polygon,circle,text')].map(n => ['points','cx','cy','r','x','y'].map(a => n.getAttribute(a)))
+    const paths = (svg: string) => [...parseSvg(svg).querySelectorAll('polyline,polygon,circle,text,path')].map(n => ['points','cx','cy','r','x','y','d'].map(a => n.getAttribute(a)))
     const baseline = paths(renderStudySvg(s))
     for (const theme of ['light', 'dark'] as const) for (const palette of ['folio', 'monochrome'] as const) for (const weight of [1.5, 4]) {
       expect(paths(renderStudySvg(s, {}, { theme, palette, weight }))).toEqual(baseline)

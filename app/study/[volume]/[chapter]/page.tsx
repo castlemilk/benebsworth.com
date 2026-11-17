@@ -171,6 +171,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
           )}
           {audioUrl && (
             <AudioOverview
+              key={ch.id}
               src={audioUrl}
               segments={transcript.segments}
               hosts={transcript.hosts}
@@ -240,12 +241,11 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
               <section id="book-figures" className="mt-12 scroll-mt-20">
                 <h2 className="mb-2 text-2xl font-semibold tracking-tight">From the book</h2>
                 <p className="mb-4 text-sm text-muted-foreground">
-                  The figures the packet points at, mirrored from mlsysbook.ai
-                  (Vijay Janapa Reddi, Harvard CS249r, CC-BY-NC-SA 4.0). Read them
-                  next to our sketches; the captions say what ours do differently.
+                  Reference figures from Machine Learning Systems by Vijay Janapa Reddi.
+                  These images are not republished here; consult the source book alongside our sketches.
                 </p>
                 {galleryBookFigures.map((f) => (
-                  <SvgFigure key={f.id} figure={f} book />
+                  <p key={f.id} id={`fig-${f.id}`}><a href={f.sourceHref} className="underline">Read the source book figure: {f.title}</a></p>
                 ))}
               </section>
             )}
@@ -260,7 +260,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
                   </a>
                   .
                 </p>
-                <QuizRunner quiz={preparedQuiz} chapterId={ch.id} />
+                <QuizRunner key={ch.id} quiz={preparedQuiz} chapterId={ch.id} />
               </section>
             )}
           </>
@@ -306,7 +306,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
           <a href="https://mlsysbook.ai" className="underline underline-offset-2" target="_blank" rel="noreferrer">
             mlsysbook.ai
           </a>{' '}
-          (Vijay Janapa Reddi, Harvard CS249r, CC-BY-NC-SA 4.0). Figures are original sketches, not book assets.
+          (Vijay Janapa Reddi, Harvard CS249r). Original sketches are labelled separately; reference book figures link to the source and are not republished here.
         </p>
       </main>
       <SiteFooter />

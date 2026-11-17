@@ -43,7 +43,11 @@ function Html({ html, className }: { html: string; className?: string }) {
   return <div className={cn('prose-sm max-w-none [&_code]:font-normal [&_p]:my-0', className)} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
-export function QuizRunner({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: string }) {
+export function QuizRunner(props: { quiz: PreparedQuiz; chapterId: string }) {
+  return <QuizSession key={JSON.stringify([props.chapterId, props.quiz])} {...props} />
+}
+
+function QuizSession({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: string }) {
   const [answers, setAnswers] = useState<Record<string, AnswerState>>({})
   const [recorded, setRecorded] = useState(false)
 

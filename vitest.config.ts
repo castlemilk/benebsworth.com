@@ -15,6 +15,8 @@ export default defineConfig({
   // per-file with `// @vitest-environment jsdom`.
   test: {
     environment: 'node',
+    // Bound file-level contention: integrity suites each scan thousands of assets.
+    maxWorkers: 4,
     globals: true,
     // Only run app unit tests. Exclude legacy Gatsby tests and Playwright e2e
     // specs (the latter import @playwright/test and are run via `npm run e2e`).

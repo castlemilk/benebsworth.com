@@ -137,3 +137,10 @@ graphify-out/*/
 
 # MLSys book study — vendored book source (sparse clone, restored per machine)
 /study/cs249r_book/
+
+# Fixed artwork is restored losslessly from assets/grounded before build/test/dev.
+# Catalogue download URLs and original byte hashes remain unchanged.
+/public/artwork/grounded/
+
+# Deterministic, content-addressed discovery metadata generated before build/test/dev.
+/public/artwork/grounded-discovery/

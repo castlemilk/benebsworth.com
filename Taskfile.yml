@@ -168,4 +168,5 @@ tasks:
       Pagefind search index. Anything that depends on those must be checked
       against a real `task build` + `task test:e2e`.
     cmds:
+      - task: build:gen:grounded
       - '{{.BIN}}/next dev'

@@ -25,6 +25,7 @@ Sampled curves are approximations. An illustrative prism does not acquire a refr
 - Reuse `Point`, `Mark`, `Geometry`, `parametersFor`, `geometryFor` and `renderStudySvg`. Appearance must never enter the model. Keep the common 320×240 space, finite coordinates and safe margins. Split discontinuous domains instead of drawing bridges across poles or missing values.
 - Reuse an existing tag where its meaning fits. Tags use lowercase kebab-case. Add real names and acronyms as aliases, such as BST or Schwarzschild. Search indexes only curated title/ID/subject/tags/aliases: do not add unsupported capabilities, negative caveats or the whole basis as keywords. Gallery terms intersect; subject and tag filters also intersect.
 - Keep scientific/data marks distinct from optional guides. Selected states need a non-color cue that survives monochrome and minimum emphasis. Do not use accepting-state rings to mean mere selection in an automaton.
+- For dense decorative engraving, the optional `stroke: 'fine'` tier scales the chosen line weight by 0.4 without moving geometry. Do not hide decorative detail in construction guides or silently change existing figures. Inspect the maximum-weight specimen: radial contour spacing is not perpendicular stroke clearance. See `ornamental-studies.ts` for original polar ornaments and an equal-area seed construction.
 
 Read [Model and review checks](references/model-checks.md) for numerical or graph-specific test choices.
 

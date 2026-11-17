@@ -6,12 +6,18 @@ import { renderToString } from 'react-dom/server'
 import { GenerativeGallery } from './gallery'
 import { STUDIES } from '@/lib/generative-svg/model'
 import { renderStudySvg } from '@/lib/generative-svg/render'
+import * as svgRenderer from '@/lib/generative-svg/render'
 
 const writeText = vi.fn<(_text: string) => Promise<void>>()
 const selected = () => screen.getByRole('region', { name: 'Selected study' })
 const download = () => within(selected()).getByRole('link', { name: 'Download SVG' }) as HTMLAnchorElement
 const source = () => decodeURIComponent(download().getAttribute('href')!.split(',').slice(1).join(','))
-const geometry = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,text')].map(n => ['points','cx','cy','r','x','y'].map(a => n.getAttribute(a)))
+const geometry = (svg: string) => [...new DOMParser().parseFromString(svg, 'image/svg+xml').querySelectorAll('polyline,polygon,circle,text,path')].map(n => ['points','cx','cy','r','x','y','d'].map(a => n.getAttribute(a)))
+// Keep each DOM journey bounded as the catalogue grows, without dropping studies.
+const studyGroups = [...new Set(STUDIES.map(s => s.category))].flatMap(category => {
+  const studies = STUDIES.filter(s => s.category === category)
+  return Array.from({ length: Math.ceil(studies.length / 4) }, (_, index) => ({ category, name: `${category} ${index + 1}`, studies: studies.slice(index * 4, index * 4 + 4) }))
+})
 beforeEach(() => {
   window.history.replaceState(null, '', '/vectors/')
   writeText.mockReset().mockResolvedValue(undefined)
@@ -29,12 +35,12 @@ describe('generative SVG gallery', () => {
     expect(screen.getAllByRole('button', { name: /^Open / })).toHaveLength(STUDIES.length)
     expect(source()).toBe(renderStudySvg(STUDIES[0]))
   })
-  it.each(['Mathematics', 'Physics', 'Algorithms', 'Distributed systems', 'Electronics'])('opens and exports every %s study with retained custom appearance', category => {
+  it.each(studyGroups)('opens and exports every study in $name with retained custom appearance', ({ category, studies }) => {
     render(<GenerativeGallery />)
     fireEvent.change(screen.getByLabelText('Style preset'), { target: { value: 'technical' } })
     fireEvent.change(screen.getByLabelText('Subject'), { target: { value: category } })
     expect(screen.getAllByRole('button', { name: /^Open / })).toHaveLength(STUDIES.filter(s => s.category === category).length)
-    for (const study of STUDIES.filter(s => s.category === category)) {
+    for (const study of studies) {
       fireEvent.click(screen.getByRole('button', { name: `Open ${study.title}` }))
       for (const parameter of study.parameters) fireEvent.change(screen.getByLabelText(parameter.label), { target: { value: String(parameter.max) } })
       const recipe = JSON.parse(new DOMParser().parseFromString(source(), 'image/svg+xml').querySelector('metadata')!.textContent!)
@@ -43,6 +49,31 @@ describe('generative SVG gallery', () => {
       expect(source()).toContain('stroke-linecap="butt"')
       expect(download().getAttribute('download')).toBe(`${study.id}.svg`)
     }
+  }, 30000)
+  it('does not regenerate unchanged thumbnails when tuning the selected study', () => {
+    const renderSvg = vi.spyOn(svgRenderer, 'renderStudySvg')
+    render(<GenerativeGallery />)
+    renderSvg.mockClear()
+    fireEvent.change(screen.getByLabelText('Amplitude'), { target: { value: '0.4' } })
+    expect(renderSvg.mock.calls.map(([study]) => study.id)).toEqual(['sine-wave'])
+  })
+  it('keeps vector thumbnails self-contained without a catalogue-sized inline path tree', () => {
+    render(<GenerativeGallery />)
+    const collection = screen.getByRole('region', { name: /^The collection$/ })
+    expect(collection.querySelectorAll('svg,polyline,polygon,circle')).toHaveLength(0)
+    const images = [...collection.querySelectorAll('img')]
+    expect(images).toHaveLength(STUDIES.length)
+    for (const [i, image] of images.entries()) {
+      expect(decodeURIComponent(image.getAttribute('src')!.split(',').slice(1).join(','))).toBe(renderStudySvg(STUDIES[i]))
+      expect(image.getAttribute('alt')).toBe('')
+      expect(image.getAttribute('loading')).toBe('eager')
+      expect(image.getAttribute('width')).toBe('320')
+      expect(image.getAttribute('height')).toBe('240')
+    }
+    fireEvent.change(screen.getByLabelText('Preview surface'), { target: { value: 'dark' } })
+    const first = collection.querySelector('img')!
+    expect(decodeURIComponent(first.getAttribute('src')!.split(',').slice(1).join(','))).toBe(renderStudySvg(STUDIES[0], {}, { theme: 'dark' }))
+    expect(selected().querySelector('svg')).not.toBeNull()
   })
   it('changes all drawing appearances while preserving the selected model coordinates', () => {
     render(<GenerativeGallery />)

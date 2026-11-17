@@ -71,6 +71,18 @@ Transparent graph labels have deliberate line clearance instead of opaque backgr
 
 Three.js is not installed: none of this slice requires rotatable 3D geometry. A future genuine 3D study could add a lazy inspector and deterministic projected SVG poster with honest limitations. D3/Mafs or other chart frameworks are similarly deferred until a concrete need justifies them.
 
+## Engraved mathematical ornaments
+
+Three original studies extend the preserved 25-model catalogue to 28. This is decorative mathematical engraving, not a replacement for scientific figures, technology logos or the eight editorial PNG masters. The quiet graphite/red palette, transparent 320×240 space and existing workbench remain the authority; no new dashboard or global restyle is introduced.
+
+- Guilloché rosette: thirteen nested polar harmonics, one red contour, a central seal and finely divided rim. Lobe count and relief are tunable. The stated 5.4-unit separation is radial, not a minimum perpendicular stroke clearance.
+- Phyllotaxis bloom: 55, 72 or 89 golden-angle seeds, two trimmed index-step-13 chains and a broken rim. Seed count and rotation are tunable. This is an equal-area construction, not simulated botanical growth.
+- Harmonic medallion: three phase-shifted harmonic ribbons, each with three radially offset contours. Lobe count and depth are tunable. Crossings are explicit planar overlaps, not fabricated over/under knot topology. An early five-contour version was reduced after maximum-weight specimen review showed its narrow flanks merging.
+
+`ornamental-studies.ts` keeps these original definitions separate. The shared optional `stroke: 'fine'` mark tier renders at 0.4× the selected global weight, independently of construction guides. It does not alter coordinates or suppress detail in monochrome. Existing unmarked strokes and all 25 original default SVG exports remain byte-identical. At maximum weight the dense rosette folds intentionally become crowded; no universal line-clearance guarantee is made.
+
+Unchanged thumbnails are memoized when tuning an individual study, and the workbench uses a single serialized SVG for preview and download. Geometry, metadata, aliases, parameters and all current appearance settings remain part of the same deterministic export path.
+
 ## Acceptance
 
 Model, DOM, static export and actual browser acceptance are separate. The gallery retains existing visual/access/release holds. Native clipboard/download, narrow/theme layout, zoom, keyboard, print and forced-color acceptance still need the existing permitted browser path. Complete motif coverage does not imply full scientific simulation, actual-browser acceptance, visual certification or deployment.

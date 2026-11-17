@@ -3,7 +3,6 @@ import localFont from 'next/font/local'
 import { preload } from 'react-dom'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme/theme-provider'
-import { Hardware } from '@/components/ui/hardware'
 import { Analytics } from '@/components/analytics/analytics'
 import { SITE_URL } from '@/components/seo/json-ld'
 
@@ -79,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <ThemeProvider>
-          <Hardware keyColor={{ l: 0.64, c: 0.31, h: 48 }}>{children}</Hardware>
+          {children}
         </ThemeProvider>
         <Analytics />
       </body>

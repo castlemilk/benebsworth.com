@@ -213,6 +213,7 @@ export type InlineFigureData = {
   caption?: string
   svg?: string
   imageUri?: string
+  sourceHref?: string
 }
 
 /** Ids the inline-figure transform actually embedded — the page filters
@@ -269,6 +270,17 @@ function rehypeInlineFigures(
       }
     }
     const f = figures.get(id)
+    if (f && bookFigureIds.has(id)) {
+      return {
+        type: 'element', tagName: 'figure', properties: { ...shared, id: `fig-${id}` },
+        children: [{
+          type: 'element', tagName: 'a', properties: { href: f.sourceHref ?? 'https://mlsysbook.ai/' },
+          children: [{ type: 'text', value: `Read the source book figure: ${f.title ?? id}` }],
+        }, { type: 'element', tagName: 'figcaption', properties: {}, children: [
+          { type: 'text', value: 'Machine Learning Systems, Vijay Janapa Reddi. Reference image not republished; consult the source chapter.' },
+        ] }],
+      }
+    }
     if (!f || (!f.svg && !f.imageUri)) {
       return missingStub('figure', id)
     }

@@ -105,6 +105,8 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
   const hoveredRef = React.useRef<string | null>(null)
   const modeRef = React.useRef<LayoutMode>(mode)
   const reduceMotion = React.useRef(false)
+  const [paused, setPaused] = React.useState(false)
+  const pausedRef = React.useRef(false)
   React.useEffect(() => {
     selectedRef.current = selected
   }, [selected])
@@ -118,20 +120,21 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     return c
   }, [graph])
 
-  const neighborsOf = React.useCallback((id: string | null): KGNode[] => {
-    if (!id || !simRef.current) return []
-    const seen = simRef.current.neighbors.get(id)
-    if (!seen) return []
-    return simRef.current.nodes.filter((n) => seen.has(n.id))
-  }, [])
-
-  const selectedNode = selected ? (simRef.current?.nodes.find((n) => n.id === selected) ?? null) : null
+  const visibleGraph = React.useMemo(() => {
+    const nodes = graph.nodes.filter((n) => enabled.has(n.kind))
+    const ids = new Set(nodes.map((n) => n.id))
+    const edges = graph.edges.filter((e) => ids.has(e.source) && ids.has(e.target))
+    return { nodes, edges }
+  }, [graph, enabled])
+  const selectedNode = visibleGraph.nodes.find((n) => n.id === selected)
+  const neighborIds = new Set(visibleGraph.edges.flatMap((e) =>
+    e.source === selected ? [e.target] : e.target === selected ? [e.source] : []))
 
   const hits = React.useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return []
-    return graph.nodes.filter((n) => n.label.toLowerCase().includes(q)).slice(0, 7)
-  }, [graph, query])
+    return visibleGraph.nodes.filter((n) => n.label.toLowerCase().includes(q)).slice(0, 7)
+  }, [visibleGraph, query])
 
   // The most-connected hubs, for the idle panel; the fastest way in.
   const topHubs = React.useMemo(() => {
@@ -203,7 +206,10 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
       sim.force('charge', forceManyBody<SimNode>().strength((n) => (isHub(n.kind) ? -60 - n.degree * 6 : -26)))
       sim.force('radial', null)
     }
-    sim.alpha(0.55).restart()
+    sim.alpha(0.55)
+    if (reduceMotion.current || pausedRef.current) {
+      sim.stop().tick(220)
+    } else sim.restart()
   }, [])
 
   React.useEffect(() => {
@@ -216,7 +222,14 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     const screen = screenRef.current
     if (!canvas || !screen) return
     paletteRef.current = resolvePalette(screen)
-    reduceMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    reduceMotion.current = media.matches
+    const onMotionChange = () => {
+      reduceMotion.current = media.matches
+      if (media.matches) simRef.current?.sim.stop()
+      applyForces()
+    }
+    media.addEventListener('change', onMotionChange)
 
     const degree = new Map<string, number>()
     for (const e of graph.edges) {
@@ -258,7 +271,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     applyForces()
     sim.stop()
     for (let i = 0; i < 220; i += 1) sim.tick()
-    sim.alpha(0.18).restart()
+    if (!reduceMotion.current && !pausedRef.current) sim.alpha(0.18).restart()
 
     const ctx = canvas.getContext('2d')!
     let raf = 0
@@ -460,6 +473,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     raf = requestAnimationFrame(frame)
 
     // ── pointer interaction ──────────────────────────────────────────
+    let activePointer: number | null = null
     let dragNode: SimNode | null = null
     let panFrom: { px: number; py: number; vx: number; vy: number } | null = null
     let moved = 0
@@ -485,6 +499,8 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     }
 
     const down = (e: PointerEvent) => {
+      if (activePointer !== null) return
+      activePointer = e.pointerId
       canvas.setPointerCapture(e.pointerId)
       fly.current = null
       moved = 0
@@ -493,12 +509,13 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
         dragNode = n
         n.fx = n.x
         n.fy = n.y
-        sim.alphaTarget(0.2).restart()
+        if (!reduceMotion.current && !pausedRef.current) sim.alphaTarget(0.2).restart()
       } else {
         panFrom = { px: e.clientX, py: e.clientY, vx: view.current.x, vy: view.current.y }
       }
     }
     const move = (e: PointerEvent) => {
+      if (activePointer !== null && activePointer !== e.pointerId) return
       const n = nodeAt(e)
       if (hoveredRef.current !== (n?.id ?? null)) {
         hoveredRef.current = n?.id ?? null
@@ -508,6 +525,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
         const { wx, wy } = toWorld(e)
         dragNode.fx = wx
         dragNode.fy = wy
+        if (reduceMotion.current || pausedRef.current) { dragNode.x = wx; dragNode.y = wy }
         moved += 1
       } else if (panFrom) {
         view.current.x = panFrom.vx + (e.clientX - panFrom.px)
@@ -516,6 +534,8 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
       }
     }
     const up = (e: PointerEvent) => {
+      if (activePointer !== e.pointerId) return
+      activePointer = null
       if (dragNode) {
         dragNode.fx = null
         dragNode.fy = null
@@ -526,6 +546,15 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
         if (!nodeAt(e)) setSelected(null)
       }
       panFrom = null
+    }
+    const cancelDrag = (e: PointerEvent) => {
+      if (activePointer !== e.pointerId) return
+      activePointer = null
+      if (dragNode) { dragNode.fx = null; dragNode.fy = null }
+      dragNode = null
+      panFrom = null
+      sim.alphaTarget(0)
+      if (reduceMotion.current || pausedRef.current) sim.stop()
     }
     const wheelZoom = (e: WheelEvent) => {
       e.preventDefault()
@@ -544,6 +573,8 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     canvas.addEventListener('pointerdown', down)
     canvas.addEventListener('pointermove', move)
     canvas.addEventListener('pointerup', up)
+    canvas.addEventListener('pointercancel', cancelDrag)
+    canvas.addEventListener('lostpointercapture', cancelDrag)
     canvas.addEventListener('wheel', wheelZoom, { passive: false })
     return () => {
       cancelAnimationFrame(raf)
@@ -552,11 +583,15 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
       canvas.removeEventListener('pointerdown', down)
       canvas.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', up)
+      canvas.removeEventListener('pointercancel', cancelDrag)
+      canvas.removeEventListener('lostpointercapture', cancelDrag)
+      media.removeEventListener('change', onMotionChange)
       canvas.removeEventListener('wheel', wheelZoom)
     }
   }, [enabled, graph, applyForces])
 
   const toggleKind = (kind: NodeKind, on: boolean) => {
+    if (!on && selectedNode?.kind === kind) setSelected(null)
     setEnabled((s) => {
       const next = new Set(s)
       if (on) next.add(kind)
@@ -572,6 +607,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
   }
 
   const setViewZoom = (z: number) => {
+    fly.current = null
     view.current.zoom = z
     setZoom(z)
   }
@@ -621,9 +657,9 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
     e.preventDefault()
   }
 
-  const neighbors = neighborsOf(selected)
+  const neighbors = visibleGraph.nodes.filter((n) => neighborIds.has(n.id))
   const visibleCount = KINDS.reduce((s, k) => s + (enabled.has(k.kind) ? counts[k.kind] : 0), 0)
-  const visibleEdges = simRef.current?.links.length ?? graph.edges.length
+  const visibleEdges = visibleGraph.edges.length
 
   return (
     <div className="kg-console" aria-label="knowledge console">
@@ -631,6 +667,12 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
         <span className="kg-power" aria-hidden />
         <strong>kg-01</strong>
         <span>knowledge console</span>
+        <Button aria-pressed={paused} onClick={() => {
+          pausedRef.current = !paused
+          setPaused(!paused)
+          if (pausedRef.current) simRef.current?.sim.stop()
+          else applyForces()
+        }}>{paused ? 'Resume layout' : 'Pause layout'}</Button>
       </header>
       <div className="kg-top">
           <Lcd tag="sys" size="sm" className="kg-status">
@@ -661,10 +703,10 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
               />
             </Field>
             {hits.length > 0 && (
-              <ul className="kg-hits" role="listbox" aria-label="Search results">
+              <ul className="kg-hits" aria-label="Search results">
                 {hits.map((n) => (
                   <li key={n.id}>
-                    <button type="button" role="option" aria-selected={n.id === selected} onClick={() => focusNode(n)}>
+                    <button type="button" onClick={() => focusNode(n)}>
                       <span data-kind={n.kind}>{n.kind}</span> {n.label}
                     </button>
                   </li>
@@ -727,7 +769,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
                       {selectedNode.kind}
                     </Badge>
                     {selectedNode.meta && <span className="kg-meta">{selectedNode.meta}</span>}
-                    <span className="kg-meta">{selectedNode.degree} links</span>
+                    <span className="kg-meta">{neighborIds.size} links</span>
                   </div>
                   <div className="kg-sel-title">{selectedNode.label}</div>
                   {selectedNode.blurb && <p className="kg-sel-blurb">{selectedNode.blurb}</p>}
@@ -751,7 +793,7 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
                   onValueChange={(id) => setSelected(id)}
                   columns={[
                     { key: 'kind', label: 'kind', width: '4.5rem', render: (n: KGNode) => <span data-kind={n.kind}>{n.kind}</span> },
-                    { key: 'label', label: 'name', render: (n: KGNode) => n.label },
+                    { key: 'label', label: 'name', render: (n: KGNode) => <span>{n.label}<small className="block">{[...new Set(visibleGraph.edges.filter((e) => (e.source === selected && e.target === n.id) || (e.target === selected && e.source === n.id)).map((e) => e.evidence === 'normalized-tag-match' ? 'Automatic tag-name match' : e.evidence === 'authored-glossary' ? 'Chapter glossary' : e.kind === 'category' ? 'Registry category' : 'Shared tag'))].join(', ')}</small></span> },
                   ]}
                 />
               ) : (

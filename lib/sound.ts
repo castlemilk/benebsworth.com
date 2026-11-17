@@ -18,7 +18,14 @@ type Voice =
   | "error"
 
 const storageKey = "spec01:sound"
-let enabled = typeof localStorage === "undefined" || localStorage.getItem(storageKey) !== "off"
+function readSoundPreference() {
+  try {
+    return typeof localStorage !== "undefined" && localStorage.getItem(storageKey) === "on"
+  } catch {
+    return false
+  }
+}
+let enabled = readSoundPreference()
 const listeners = new Set<(on: boolean) => void>()
 
 function soundEnabled() {

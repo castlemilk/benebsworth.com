@@ -151,7 +151,6 @@ function readBookFigureManifest(packetDir: string): StudyDiagram[] {
 /** Shared manifest/dir reader for `diagrams/` (originals) and `book-figures/` (mirrored book assets). */
 function readFigureDir(packetDir: string, subdir: string, manifestName: string): StudyDiagram[] {
   const dir = path.join(packetDir, subdir)
-  if (!fs.existsSync(dir)) return []
   const manifestPath = path.join(packetDir, manifestName)
   if (fs.existsSync(manifestPath)) {
     const raw = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as Array<Partial<StudyDiagram>>
@@ -162,6 +161,7 @@ function readFigureDir(packetDir: string, subdir: string, manifestName: string):
       caption: d.caption ?? '',
     }))
   }
+  if (!fs.existsSync(dir)) return []
   return fs
     .readdirSync(dir)
     .filter((f) => /\.(svg|png|webp|jpe?g)$/i.test(f))
@@ -224,7 +224,7 @@ export function getProgressRows(): Map<string, ProgressRow> {
   return rows
 }
 
-export type LoadedFigure = StudyDiagram & { svg?: string; imageUri?: string }
+export type LoadedFigure = StudyDiagram & { svg?: string; imageUri?: string; sourceHref?: string }
 
 export type LoadedChapter = {
   chapter: StudyChapter
@@ -261,13 +261,10 @@ export const getChapter = cache(function getChapter(volumeParam: string, chapter
     const svgPath = path.join(dir, 'diagrams', d.file)
     return { ...d, svg: fs.existsSync(svgPath) ? fs.readFileSync(svgPath, 'utf8') : '' }
   })
-  const bookFigures: LoadedFigure[] = readBookFigureManifest(dir).map((d) => {
-    const figPath = path.join(dir, 'book-figures', d.file)
-    if (!fs.existsSync(figPath)) return { ...d }
-    if (d.file.endsWith('.svg')) return { ...d, svg: fs.readFileSync(figPath, 'utf8') }
-    const mime = d.file.endsWith('.webp') ? 'image/webp' : d.file.endsWith('.png') ? 'image/png' : 'image/jpeg'
-    return { ...d, imageUri: `data:${mime};base64,${fs.readFileSync(figPath).toString('base64')}` }
-  })
+  // Book images remain reference-only; published pages link to their source.
+  const bookFigures: LoadedFigure[] = readBookFigureManifest(dir).map((d) => ({
+    ...d, sourceHref: `https://mlsysbook.ai/${chapter.id}/${chapter.id.split('/')[1]}.html`,
+  }))
 
   const audioFile = path.join(process.cwd(), 'public', 'study-audio', volume.id, `${chapter.slug}.m4a`)
   const audioUrl = fs.existsSync(audioFile) ? `/study-audio/${volume.id}/${chapter.slug}.m4a` : null

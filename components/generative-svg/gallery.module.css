@@ -32,7 +32,11 @@
 .sheet[data-surface=dark],.thumbnail[data-surface=dark]{background:#11171b;color:#f4f1e8}
 .sheet{border:1px solid var(--rule);min-height:360px;padding:clamp(8px,2vw,32px)}
 .drawing{width:100%;min-width:0;line-height:0}
-.drawing svg{display:block;width:100%;height:auto;max-height:540px}
+.drawing svg,.drawing img{display:block;width:100%;height:auto;max-height:540px}
+/* Artwork keeps its paired ink/surface in print and forced colors; labels and
+   controls outside the surface retain system colors and focus indicators. */
+.sheet,.thumbnail{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+@media(forced-colors:active){.sheet,.thumbnail{forced-color-adjust:none}}
 .studyDetails>p{font-size:1rem;color:var(--muted);margin:0 0 18px;max-width:55ch}
 .studyDetails .basis{font-size:.85rem;line-height:1.6}
 .basis strong{display:block;color:var(--ink);margin-bottom:6px}

@@ -67,7 +67,12 @@ function SegmentEquation({ eq, href }: { eq: TranscriptEquation; href?: string }
  * list auto-scrolls. Clicking a segment seeks. Speakers get named hues; turns
  * that discuss an equation carry a KaTeX chip under the utterance.
  */
-export function AudioOverview({ src, segments: initial, hosts: hostsProp, transcriptSrc, title, eqAnchorPrefix }: AudioOverviewProps) {
+export function AudioOverview(props: AudioOverviewProps) {
+  const identity = JSON.stringify([props.src, props.transcriptSrc, props.segments, props.hosts])
+  return <AudioOverviewSession key={identity} {...props} />
+}
+
+function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transcriptSrc, title, eqAnchorPrefix }: AudioOverviewProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
   const [segments, setSegments] = useState<TranscriptSegment[]>(initial ?? [])

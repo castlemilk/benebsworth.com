@@ -258,8 +258,8 @@ the delimiters).
      the REVIEW discussion.
    - **Figures to look at** — point at the book's own images worth opening
      (path + why), since ours are complementary sketches, not replacements.
-     Every figure cited here should also be mirrored into `book-figures/` (see
-     step 4b) so the list isn't a dead pointer.
+     Every figure cited here should have reference metadata (see step 4b)
+     and an attributed source link, not republished image bytes.
 4. Write `diagrams/` — 1–3 ORIGINAL SVG sketches distilling the chapter's
    central structures. Site-compatible: light/dark legible (prefer
    `currentColor` / neutral greys + one accent), flat, labelled, readable at
@@ -267,18 +267,13 @@ the delimiters).
    is fine. Never copy the book's figures; distil the idea differently.
    Then place each where it's discussed with `::fig[id]` (see the packet
    syntax bullet — standalone paragraph, blanks both sides).
-4b. Mirror every figure the packet cites into `book-figures/` + a
-   `book-figures.json` manifest (same shape as diagrams.json; captions say
-   what our sketch does differently). Sources: `images/**/*.svg|png` in the
-   book repo copy straight across; TikZ/Jupyter-only figures
-   (`{#fig-…}` anchors in the .qmd) have no file — pull the rendered asset
-   from the published page at
-   `https://mlsysbook.ai/<vol>/<NN_ch>/<NN_ch>.html` → figure div →
-   `*_files/mediabag/*.svg` or `figure-html/*.png`. Downscale raster to
-   ~1600px. Book assets never go in `diagrams/`. Cite each inline via
-   `::fig[id]` where the packet discusses it (badge travels with it);
-   anything without a natural home still renders in "From the book" with
-   the CC-BY-NC-SA attribution line.
+4b. Record cited book figures in `book-figures.json` as reference metadata.
+   Do not republish upstream SVG/PNG bytes. The public reader renders an
+   attributed link to the source book for these references; original sketches
+   alone go in `diagrams/`. Preserve existing reference files without exporting
+   them. Exact upstream revision and per-asset provenance must be established
+   before reconsidering publication; a general book attribution is not evidence
+   of permission for every embedded asset.
 5. Write `quiz.md` — the written self-test (see TEST below for sources).
 5b. Write `podcast.md` then generate the audio — format contract, TTS
    command, and gotchas live in **Generated artifacts** above.

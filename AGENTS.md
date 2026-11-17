@@ -13,6 +13,5 @@ search `node_modules/@ui-sdk/react/docs/core.md` by heading, and read
   doesn't reset the skin.
 - Components come from the SPEC-01 shadcn registry, registered as
   `@spec-01` in `components.json`: `npx shadcn@latest add @spec-01/<name>`.
-- The app shell is wrapped in `<Hardware>` (`components/ui/hardware.tsx`) —
-  everything inside inherits the skin; scope it to a subtree instead if a
-  surface should stay flat.
+- Only the knowledge console is wrapped in `<Hardware>` (`components/ui/hardware.tsx`).
+  Keep the editorial shell outside it; everything inside inherits its skin.

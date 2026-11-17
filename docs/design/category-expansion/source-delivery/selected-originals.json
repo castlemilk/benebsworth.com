@@ -1,0 +1,452 @@
+[
+  {
+    "batch": 1,
+    "label": "01 Mathematics \u2014 carved folded mathematical surface",
+    "sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+    "byte_size": 1331177,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/01-maths-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "02 Chemistry \u2014 crystalline molecular assembly",
+    "sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+    "byte_size": 1172847,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/02-chemistry-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "03 Life Sciences \u2014 fern and seed structure",
+    "sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+    "byte_size": 1161435,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/03-biology-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "04 Earth & Space \u2014 cutaway terrestrial globe",
+    "sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+    "byte_size": 1599947,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/04-earth-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "05 Geology \u2014 layered rock specimen",
+    "sha256": "33997c37a42a3c72770c6908c8a919b1fdb95fe2f613d90d410ebdf74a82b1ee",
+    "byte_size": 1771322,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/05-geology-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "06 Oceanography \u2014 breaking wave cross-section",
+    "sha256": "5e9445bc1da43a88795d3923c6b486906c9ccac306255cf1e1bee24f5c11213d",
+    "byte_size": 1637259,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/06-oceanography-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "07 Meteorology \u2014 cloud and barometric instrument",
+    "sha256": "5c7adf366d77c5cd495ab0b9754fbd21bf04585f93b02486c3e4ff4d05233aa5",
+    "byte_size": 1537599,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/07-meteorology-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "08 Ecology \u2014 interdependent leaf/root ecosystem",
+    "sha256": "18f154a46f485599c4425eca6871ab6c78c883ebb0b248dd8ec0f938c29cfd73",
+    "byte_size": 1366002,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/08-ecology-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "09 Genetics \u2014 twisted DNA ladder motif",
+    "sha256": "60f050ebe8c7e0cd6afede3853bbe5fc1d53d686f9d65c5348cec2cf12b0bd80",
+    "byte_size": 821040,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/09-genetics-r1.png"
+    ]
+  },
+  {
+    "batch": 1,
+    "label": "10 Neuroscience revision 2 \u2014 branching neuron with generous margins",
+    "sha256": "e7798940831713b34c7d442642460d1d15fbe555bb64c831ebaf80ae9f814818",
+    "byte_size": 416285,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-01/originals/10-neuroscience-r2.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "01 Kubernetes \u2014 Orchestration of containers",
+    "sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd",
+    "byte_size": 1545388,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "02 Service Mesh \u2014 Interwoven routed mesh",
+    "sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9",
+    "byte_size": 1183577,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "03 CI/CD \u00b7 Tekton \u2014 Staged conveyor assembly, v2",
+    "sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+    "byte_size": 849613,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/refinements/03-tekton-staged-assembly-conveyor-v2.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "04 Config \u00b7 Kustomize \u2014 Nested configurable plates, v2",
+    "sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+    "byte_size": 863550,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/refinements/04-kustomize-nested-configurable-plates-v2.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "05 Local Dev \u2014 Compact workstation and container",
+    "sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8",
+    "byte_size": 606578,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "06 Google Cloud \u2014 Abstract cloud infrastructure",
+    "sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf",
+    "byte_size": 650726,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "07 React \u2014 Reusable interlocking interface modules",
+    "sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c",
+    "byte_size": 643573,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "08 Engineering \u2014 Precision mechanism",
+    "sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400",
+    "byte_size": 984728,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "09 Field Notes \u2014 Open annotated field notebook without text",
+    "sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e",
+    "byte_size": 718964,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png"
+    ]
+  },
+  {
+    "batch": 2,
+    "label": "10 Hiking \u2014 Cairn and trail compass, natural palette v2",
+    "sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+    "byte_size": 934766,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-02/refinements/10-hiking-cairn-and-trail-compass-v2.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "01 Databases proposed study",
+    "sha256": "987cc2662f60a237318704d3e54f254f77ea133f12d8d4299949c8ba041b5580",
+    "byte_size": 1897329,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/01-databases.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "02 Distributed systems proposed study",
+    "sha256": "5656800efc365ed88795ed4f4505a37c059967bcb7a2b7edfa4dd8f5325ec7bd",
+    "byte_size": 1189757,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/02-distributed-systems.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "03 Networking proposed study",
+    "sha256": "eb261b5f954e8dd58080328fc52326919d95a973d77bf60c10cdb7263d556e3a",
+    "byte_size": 1029304,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/03-networking.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "04 Cybersecurity proposed study",
+    "sha256": "c40f38825254a5d084b7766a37875a448a4bf5b048eedde2a3c172f0fde89339",
+    "byte_size": 1468903,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/04-cybersecurity.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "05 Operating systems proposed study",
+    "sha256": "485029f272abdda4819b7859af875bb7cc17249fbb946aa2c1eae10ed23410f7",
+    "byte_size": 1606339,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/05-operating-systems.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "06 Compilers framing revision 2 proposed study",
+    "sha256": "d84c0af30cfe45fae229849f61d69d7b52c440ec60371ca934e873ab3901677f",
+    "byte_size": 325051,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/06-compilers-v2.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "07 Programming languages proposed study",
+    "sha256": "37dfff1d3da46544ba952a4aae99bae9c3cbf39fc6132c67c9631116e0703a8c",
+    "byte_size": 1203486,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/07-programming-languages.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "08 Testing proposed study",
+    "sha256": "c42d2327599e89c38405acbadc060d8f2fc9ee8044ce5ed06bd3f53d29c82e86",
+    "byte_size": 889241,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/08-testing.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "09 Observability proposed study",
+    "sha256": "8790398672eefe70fcec33ce66516d8f088c64b5011aab917e99e5f852957938",
+    "byte_size": 768130,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/09-observability.png"
+    ]
+  },
+  {
+    "batch": 3,
+    "label": "10 Data engineering proposed study",
+    "sha256": "eeec358248b4526df6d000e3993f1131b6361efb933c88378306ee5f4fee1a67",
+    "byte_size": 901248,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-03/originals/10-data-engineering.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Probability framed original Batch 04",
+    "sha256": "08353e4f5b2a395e22fa1760603e0c82a7e93707e856ef20a1790d29f247fd8c",
+    "byte_size": 685615,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/01-probability-framed-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Statistics framed original Batch 04",
+    "sha256": "bbeff4bbee294551d4957cdd8a5718d242db356d955eb5a5622a1b8bd8e2c556",
+    "byte_size": 442123,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/02-statistics-framed-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Optimization framed original Batch 04",
+    "sha256": "0ee2f0fa6ff4853e682a968f399e99ccea086b1a0f4fa77ed52e0d096c541eb1",
+    "byte_size": 423396,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/03-optimization-framed-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Information Theory framed transparent original Batch 04",
+    "sha256": "9fb6ed5d51c6403e9fca53d0b9b81db5d0d30a87051478f267492287598ef14a",
+    "byte_size": 359610,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/04-information-theory-framed-transparent-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Control Theory framed original Batch 04",
+    "sha256": "834f45b19411223a46f52986d6ad54e2eb95662a258ab399480261be1b100e2b",
+    "byte_size": 474151,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/05-control-theory-framed-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Signal Processing framed original Batch 04",
+    "sha256": "4cd98b9d6aa9cf94c1513ae5a645038586a6b0055ef32af7c5d28adefe7663e5",
+    "byte_size": 341877,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/06-signal-processing-framed-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Numerical Methods original Batch 04",
+    "sha256": "d08623dcc744fa49819a8fb1c0faa415db14155789d779415bc86c5d95d2dcf4",
+    "byte_size": 1509434,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/07-numerical-methods-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Geometry original Batch 04",
+    "sha256": "f912b4ff07e7d681f28518d7a31c47a6f87350a9e7ba137249a74b09812e12d0",
+    "byte_size": 1073107,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/08-geometry-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Topology original Batch 04",
+    "sha256": "310d69b1dd5c6eafdb9a98dc8d91202ad07e1235a8800c0d9c6815d7efde6618",
+    "byte_size": 1644985,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/09-topology-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 4,
+    "label": "Cryptography framed original Batch 04",
+    "sha256": "ac1b4a00e133a7b759bc7de6b16476125ee433c5ce1d77eb721a0edd9c409886",
+    "byte_size": 593652,
+    "paths": [
+      "docs/design/category-expansion/batch-04/recovered/selected/10-cryptography-framed-original-batch-04.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Thermodynamics selected original after background cleanup",
+    "sha256": "84eb49d72f574f91aa52a4929e3eb166b68677f300463e7e4a2151c0c817772f",
+    "byte_size": 598335,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/thermodynamics-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Fluid dynamics revised original with wider margins",
+    "sha256": "95d44cc8dee23b21d98fca78e42b988ea4fdd01f675ecc746fc2fe4efb59e3d4",
+    "byte_size": 498232,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/fluid-dynamics-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Materials science original artwork study",
+    "sha256": "1781b68dc503f2c1903fb00f3d3cb7a25056b61586fb03dd84a2e6b0f892af42",
+    "byte_size": 896699,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/materials-science-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Optics original artwork study",
+    "sha256": "f82b4cdfc80dbd7847c19f9056d9c4cc2fe12a6ce154b7396a038257fddf7302",
+    "byte_size": 337688,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/optics-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Robotics original artwork study",
+    "sha256": "dd5c3771d3d98de898f17a524d583bdb5466f5ce737d026505e05b8fbfe7b7b3",
+    "byte_size": 545655,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/robotics-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Acoustics original artwork study",
+    "sha256": "676785899a44511c05fb4cdefed4dac1ee6cf89d9c31464b411cef2d50446665",
+    "byte_size": 327762,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/acoustics-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Astronomy original artwork study",
+    "sha256": "f885ba1ded204ac3c4196845f8fd74df10ac963797b7499db22f49dcab90ca6c",
+    "byte_size": 291771,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/astronomy-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Geophysics original artwork study",
+    "sha256": "43a4137b90dca208904b56bc653ed8af4db8421b50b6b942fb884fbb3c1bdae3",
+    "byte_size": 689517,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/geophysics-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Renewable energy original artwork study",
+    "sha256": "53d20dba8af3618878af90d1ccd05a8f64007634d186d02715b929c3dd004dca",
+    "byte_size": 411198,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/renewable-energy-original.png"
+    ]
+  },
+  {
+    "batch": 5,
+    "label": "Biotechnology original artwork study",
+    "sha256": "4d5f9806a8cbe6edac2e0306986aadaf4a1479e82952de2b1550a655997c0e2f",
+    "byte_size": 712944,
+    "paths": [
+      "public/artwork/category-expansion-v1/batch-05/biotechnology-original.png"
+    ]
+  }
+]

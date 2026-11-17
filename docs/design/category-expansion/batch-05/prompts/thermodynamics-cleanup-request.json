@@ -1,0 +1,7 @@
+{
+  "prompt": "Use case: background-extraction. Edit target: the supplied thermodynamics heat-engine piston artwork. Make only the surrounding background and empty spaces genuinely transparent: remove the faint neutral haze and all gray shadow around the silhouette, especially left of the cylinder and around the base, and clear all stray nonzero-alpha speckles in the generous outer margins. Preserve the existing compact central placement and scale, the complete piston/flywheel geometry, fine graphite hatching, warm ivory subject tones and small red heated band. Maintain at least twenty percent fully empty transparent margin on every side. The inside of the flywheel openings is transparent. Keep crisp antialiased material edges; do not add a contrasting outline. No halo, glow, shadow, matte, fog, vignette, checkerboard, paper background or backdrop. No new objects, words, labels, numbers, marks or watermark. This is one clean editorial cutout; preserve the existing illustration rather than redesigning it. Return one transparent PNG.",
+  "referenced_image_paths": [
+    "/workspace/scratch/309ecf484822/benebsworth-batch05/docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-original.png"
+  ],
+  "transparent_background": true
+}

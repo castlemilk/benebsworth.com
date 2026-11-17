@@ -1,0 +1,132 @@
+{
+  "generated_count": 2,
+  "skipped": [],
+  "themes": {
+    "light": "#f4f0e8",
+    "dark": "#191a1c"
+  },
+  "sizes_px": [
+    256,
+    96,
+    48,
+    24
+  ],
+  "originals_unchanged": true,
+  "source_sha256": {
+    "03-networking.png": "eb261b5f954e8dd58080328fc52326919d95a973d77bf60c10cdb7263d556e3a",
+    "04-cybersecurity.png": "c40f38825254a5d084b7766a37875a448a4bf5b048eedde2a3c172f0fde89339"
+  },
+  "edge_samples": {
+    "03-networking-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          278,
+          134,
+          374,
+          230
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          1092,
+          382,
+          1188,
+          478
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          861,
+          1048,
+          957,
+          1144
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          70,
+          952,
+          166,
+          1048
+        ],
+        "scale": 3
+      }
+    ],
+    "04-cybersecurity-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          574,
+          120,
+          670,
+          216
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          903,
+          841,
+          999,
+          937
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          708,
+          1040,
+          804,
+          1136
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          244,
+          912,
+          340,
+          1008
+        ],
+        "scale": 3
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "filename": "pair-02-contact-light.png",
+      "sha256": "cf6924fa5cf115949e979b2c613cabd6955dc55d8665b4ba6dceb89f91b48153"
+    },
+    {
+      "filename": "pair-02-contact-dark.png",
+      "sha256": "3630860cb0d9091ecc7d95940bc9f133c82773614c9cc27a090335a65f9ad0e7"
+    },
+    {
+      "filename": "pair-02-sizes-light.png",
+      "sha256": "87b7a4a5867e5d642ee40b7f5a0f121c74f7055d0d498435398d0eb0bc0a84f4"
+    },
+    {
+      "filename": "pair-02-sizes-dark.png",
+      "sha256": "16ce2959810081a1726727537ddfeaf23adaa7bcb8b3934c8290586dc10b35a9"
+    },
+    {
+      "filename": "03-networking-edges.png",
+      "sha256": "9e91b1a774c85f63f7706719f46012a2a9586a6e733b2f507d686c27937ce9e1"
+    },
+    {
+      "filename": "04-cybersecurity-edges.png",
+      "sha256": "18fbaefd1a493814366cb2f9269e38eb83210fbab35604fac4c5355cdb935a8a"
+    }
+  ],
+  "evidence_boundary": "Review composites, never browser screenshots or additional original artworks. Visual inspection is still required."
+}

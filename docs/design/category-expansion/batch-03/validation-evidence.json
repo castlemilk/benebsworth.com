@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "scope": "Batch03 asset/docs source verification only",
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "checks": [
+    {
+      "check": "Separate image generation",
+      "result": "passed",
+      "subjects": 10,
+      "first_pass_calls": 10,
+      "framing_edit_calls": 1,
+      "retained_outputs": 11,
+      "evidence": [
+        "prompts.json",
+        "generation-log.json",
+        "compiler-framing-request.json",
+        "iterations/06-compilers-framing-v2-log.json"
+      ]
+    },
+    {
+      "check": "Exact first-pass prompts against actual invocation records",
+      "result": "passed",
+      "compared": 10
+    },
+    {
+      "check": "All returned original bytes compared to preserved files",
+      "result": "passed",
+      "compared": 11,
+      "method": "Full byte equality against returned generated-image paths"
+    },
+    {
+      "check": "Selected image upload hashes equal local original hashes",
+      "result": "passed",
+      "compared": 10,
+      "evidence": "page-assets.json"
+    },
+    {
+      "check": "Final PNG inventory, SHA256, byte sizes, PNG CRCs/termination, decoded RGBA and alpha distributions",
+      "result": "passed",
+      "command": "python3 docs/design/category-expansion/batch-03/verify.py --manifest docs/design/category-expansion/batch-03/manifest.json --output docs/design/category-expansion/batch-03/verification.json",
+      "evidence": "verification.json"
+    },
+    {
+      "check": "Review composition preserved original hashes",
+      "result": "passed",
+      "command": "python3 docs/design/category-expansion/batch-03/build_review.py --output-dir docs/design/category-expansion/batch-03/review/final",
+      "evidence": "review/final/review-receipt.json"
+    },
+    {
+      "check": "Independent static visual inspection",
+      "result": "completed_with_limitations",
+      "evidence": "REVIEW.md",
+      "surfaces": [
+        "#f4f0e8",
+        "#191a1c"
+      ],
+      "canvas_sizes_px": [
+        256,
+        96,
+        48,
+        24
+      ],
+      "edge_samples": "four source crops per subject shown at3x"
+    },
+    {
+      "check": "Actual browser/consumer rendering",
+      "result": "unavailable",
+      "reason": "No browser access or permission request was used."
+    },
+    {
+      "check": "Full application tests/build/remote CI",
+      "result": "not_run",
+      "reason": "This source handoff adds isolated art/docs only, with no runtime consumer changes and no remote publication."
+    },
+    {
+      "check": "Remote publication",
+      "result": "blocked",
+      "evidence": "remote-preflight.json"
+    }
+  ]
+}

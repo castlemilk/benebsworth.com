@@ -1,0 +1,78 @@
+{
+  "filename": "03-biology-r1.png",
+  "key": "biology",
+  "revision": 1,
+  "sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+  "bytes": 1161435,
+  "format": "PNG",
+  "mode": "RGBA",
+  "width": 1254,
+  "height": 1254,
+  "alpha_channel_present": true,
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "alpha_counts": {
+    "zero": 1185278,
+    "partial_1_to_254": 387084,
+    "opaque_255": 154,
+    "total": 1572516
+  },
+  "transparent_fraction": 0.753746,
+  "partial_alpha_fraction": 0.246156,
+  "border_nonzero_alpha_pixels": 31,
+  "border_alpha_above_16_pixels": 0,
+  "border_alpha_maximum": 1,
+  "bbox_alpha_gt_0": {
+    "threshold_exclusive": 0,
+    "bbox": [
+      0,
+      55,
+      1228,
+      1254
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 0,
+      "top": 55,
+      "right": 26,
+      "bottom": 0
+    },
+    "margin_fractions": {
+      "left": 0.0,
+      "top": 0.04386,
+      "right": 0.020734,
+      "bottom": 0.0
+    },
+    "minimum_margin_fraction": 0.0,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "bbox_alpha_gt_16": {
+    "threshold_exclusive": 16,
+    "bbox": [
+      309,
+      121,
+      1052,
+      1134
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 309,
+      "top": 121,
+      "right": 202,
+      "bottom": 120
+    },
+    "margin_fractions": {
+      "left": 0.246411,
+      "top": 0.096491,
+      "right": 0.161085,
+      "bottom": 0.095694
+    },
+    "minimum_margin_fraction": 0.095694,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "transparency_verified": true,
+  "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+  "selected_for_review": true
+}

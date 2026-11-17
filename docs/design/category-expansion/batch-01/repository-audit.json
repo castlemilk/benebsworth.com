@@ -1,0 +1,100 @@
+{
+  "source_repository": "castlemilk/benebsworth.com",
+  "default_branch": "master",
+  "source_sha": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "source_tree": "c5ace5810de4b2a7140549bda795fad9d31095dd",
+  "target_branch": "art/blog-category-expansion-batch-01",
+  "target_branch_exists_at_initial_check": false,
+  "taxonomy_count": 20,
+  "existing_topics": {
+    "maths": "Mathematics",
+    "chemistry": "Chemistry",
+    "biology": "Life Sciences",
+    "earth": "Earth & Space"
+  },
+  "proposed_only": [
+    "geology",
+    "oceanography",
+    "meteorology",
+    "ecology",
+    "genetics",
+    "neuroscience"
+  ],
+  "batch_paths_in_master": [],
+  "current_instruction_paths": [
+    "DESIGN.md",
+    "CLAUDE.md",
+    ".agents/skills/blog-development/SKILL.md",
+    "docs/design/VISUAL-REVIEW.md"
+  ],
+  "root_AGENTS_md": "not present at pinned source (GitHub 404)",
+  "active_owner_prs": [
+    {
+      "pr": 158,
+      "title": "feat(knowledge): add source-backed graph adapter and navigation contract",
+      "branch": "feat/blog-kg01-source-contract-20261117",
+      "revision": "85eda8e00d4f2408aef841144bbae5a3a01f6713",
+      "draft": true,
+      "state": "open",
+      "url": "https://github.com/castlemilk/benebsworth.com/pull/158"
+    },
+    {
+      "pr": 159,
+      "title": "BLOG DESIGN 03: Add isolated editorial component workbench",
+      "branch": "codex/blog-design-03-folio-workbench-20261117",
+      "revision": "28915abdfde858dd84d0a49066708eb8c3baad38",
+      "draft": true,
+      "state": "open",
+      "url": "https://github.com/castlemilk/benebsworth.com/pull/159"
+    },
+    {
+      "pr": 160,
+      "title": "feat(motion): add scoped folio interaction and accessibility workbench",
+      "branch": "workbench/blog-motion05-20261117",
+      "revision": "903f7503236fc16855ce2dbfb8049592e902a617",
+      "draft": true,
+      "state": "open",
+      "url": "https://github.com/castlemilk/benebsworth.com/pull/160"
+    },
+    {
+      "pr": 161,
+      "title": "BLOG KG 02: Add isolated knowledge folio views and reader journeys",
+      "branch": "codex/blog-kg02-folio-views-20261117",
+      "revision": "f7dd7e57861891ccb81a7c9fb08467a555999190",
+      "draft": true,
+      "state": "open",
+      "url": "https://github.com/castlemilk/benebsworth.com/pull/161"
+    }
+  ],
+  "deployment_gate": {
+    "vercel_git_source_deployment_enabled": false,
+    "legacy_preview_trigger": "push to any non-master branch",
+    "legacy_preview_job_condition": "vars.VERCEL_PREVIEW_CI_ENABLED == 'true'",
+    "current_variable_value_verified": false,
+    "exact_variable_read_result": "GitHub fetch HTTP 400 INVALID_ARGUMENT: URL is not an allowed public GitHub repository or search endpoint",
+    "prior_evidence": "PR158 body reports false at its publication; not independently verified current",
+    "production_trigger": "manual workflow_dispatch with exact SHA and explicit confirmation",
+    "reviewed_publisher_branch": "codex/gamma-blog-editorial-20261027",
+    "recommendation": "If current legacy preview gate cannot be verified with an already authorized tool, retain source/patch pack without branch push under no-deploy hold.",
+    "gh_variable_read": "gh api exited 4: unauthenticated; no login attempted"
+  },
+  "source_local_clone": "/workspace/scratch/88bf657805e9/blog-motion05",
+  "source_local_clone_shallow": true,
+  "source_local_tree_present": true,
+  "original_local_directory": "/workspace/scratch/c4db5f6ec949/blog-art04/public/artwork/knowledge-folio-v1/originals",
+  "original_exact_hash_matches": [
+    "ee-circuit-r1.png",
+    "algorithms-graph-r1.png",
+    "ai-brain-r1.png",
+    "cosmology-black-hole-r2.png",
+    "physics-atom-r1.png",
+    "software-floppy-r1.png"
+  ],
+  "instructions_summary": [
+    "Owner-approved research folio supersedes initial dark dossier for Blog/Lab: Source Serif4, Barlow Condensed, Caveat/selectable red notes; graphite, paper and meaningful negative space.",
+    "Preserve scientific geometry/content, native marks and existing approved symbols; concept imagery is not scientific data or implemented UI.",
+    "Generated plates contain no text/numbering/callouts by default; annotations remain separate responsive components.",
+    "Report visual alignment separately from functional/source checks; missing real-browser themes/sizes are unverified.",
+    "User ownership restriction controls writes: only the two declared batch01 directories, no registries/tokens/runtime edits."
+  ]
+}

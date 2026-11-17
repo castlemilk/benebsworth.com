@@ -1,0 +1,54 @@
+{
+  "checked_at_utc": "2026-11-17T06:17:57Z",
+  "checked_at_melbourne": "2026-11-17 17:17:57 AEDT",
+  "repository": "castlemilk/benebsworth.com",
+  "base_branch": "master",
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "requested_branch": "art/blog-category-expansion-batch-03",
+  "requested_remote_branch": "absent",
+  "owners": [
+    {
+      "pr": 158,
+      "lane": "Graph model",
+      "head": "85eda8e00d4f2408aef841144bbae5a3a01f6713",
+      "overlap": false
+    },
+    {
+      "pr": 159,
+      "lane": "Editorial workbench",
+      "head": "ee911f9502497cb61667530467023beb565e5a4f",
+      "overlap": false
+    },
+    {
+      "pr": 160,
+      "lane": "Motion",
+      "head": "903f7503236fc16855ce2dbfb8049592e902a617",
+      "overlap": false
+    },
+    {
+      "pr": 161,
+      "lane": "Graph views",
+      "head": "f7dd7e57861891ccb81a7c9fb08467a555999190",
+      "overlap": false
+    },
+    {
+      "pr": 144,
+      "lane": "Dependency",
+      "head": "29ea5e34305c1399d4140e495efe104979cf96e7",
+      "overlap": false
+    },
+    {
+      "pr": 141,
+      "lane": "Legacy dependency",
+      "head": "530c5065cbc9702691c2afab988e6414509658e0",
+      "overlap": false
+    }
+  ],
+  "publication": {
+    "pushed": false,
+    "pr_created": false,
+    "merged": false,
+    "deployed": false,
+    "blocker": "The existing legacy Vercel preview workflow triggers on non-master pushes. Its current VERCEL_PREVIEW_CI_ENABLED opt-in variable cannot be directly verified with the available tools. The gh CLI variable read exited4 unauthenticated; connected GitHub fetch returned HTTP400 INVALID_ARGUMENT because that endpoint is not an allowed public repository/search endpoint. No exposed variable-read tool was found. Previous skipped runs are historical evidence only. No settings, credentials, permissions or workflow changes were made."
+  }
+}

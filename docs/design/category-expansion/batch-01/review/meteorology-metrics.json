@@ -1,0 +1,78 @@
+{
+  "filename": "07-meteorology-r1.png",
+  "key": "meteorology",
+  "revision": 1,
+  "sha256": "5c7adf366d77c5cd495ab0b9754fbd21bf04585f93b02486c3e4ff4d05233aa5",
+  "bytes": 1537599,
+  "format": "PNG",
+  "mode": "RGBA",
+  "width": 1254,
+  "height": 1254,
+  "alpha_channel_present": true,
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "alpha_counts": {
+    "zero": 1051155,
+    "partial_1_to_254": 521206,
+    "opaque_255": 155,
+    "total": 1572516
+  },
+  "transparent_fraction": 0.668454,
+  "partial_alpha_fraction": 0.331447,
+  "border_nonzero_alpha_pixels": 51,
+  "border_alpha_above_16_pixels": 0,
+  "border_alpha_maximum": 1,
+  "bbox_alpha_gt_0": {
+    "threshold_exclusive": 0,
+    "bbox": [
+      0,
+      19,
+      1251,
+      1232
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 0,
+      "top": 19,
+      "right": 3,
+      "bottom": 22
+    },
+    "margin_fractions": {
+      "left": 0.0,
+      "top": 0.015152,
+      "right": 0.002392,
+      "bottom": 0.017544
+    },
+    "minimum_margin_fraction": 0.0,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "bbox_alpha_gt_16": {
+    "threshold_exclusive": 16,
+    "bbox": [
+      149,
+      163,
+      1104,
+      1139
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 149,
+      "top": 163,
+      "right": 150,
+      "bottom": 115
+    },
+    "margin_fractions": {
+      "left": 0.11882,
+      "top": 0.129984,
+      "right": 0.119617,
+      "bottom": 0.091707
+    },
+    "minimum_margin_fraction": 0.091707,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "transparency_verified": true,
+  "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+  "selected_for_review": true
+}

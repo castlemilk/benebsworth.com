@@ -1,0 +1,284 @@
+{
+  "sources": [
+    {
+      "key": "maths",
+      "filename": "01-maths-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-23551ae0-1803-4a43-ae32-aed7fef1cab8.png"
+    },
+    {
+      "key": "chemistry",
+      "filename": "02-chemistry-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-3571e752-0da6-474c-9f47-461f2c3b5aca.png"
+    },
+    {
+      "key": "biology",
+      "filename": "03-biology-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-91289559-e390-4b94-b94d-41c874ee79bd.png"
+    },
+    {
+      "key": "earth",
+      "filename": "04-earth-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-a7688120-5b9a-4d89-8813-026ca0fa1969.png"
+    },
+    {
+      "key": "geology",
+      "filename": "05-geology-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-fdf35495-ad3c-4e33-b30c-5a20f7e92cc0.png"
+    },
+    {
+      "key": "oceanography",
+      "filename": "06-oceanography-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-d4a29675-ab6e-48e4-b4a1-a6aaba1a7ff9.png"
+    },
+    {
+      "key": "meteorology",
+      "filename": "07-meteorology-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-f8117965-9b37-48b7-83cf-e3058d435ecf.png"
+    },
+    {
+      "key": "ecology",
+      "filename": "08-ecology-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-91a517c5-10fc-40f5-badb-cc664dba9aec.png"
+    },
+    {
+      "key": "genetics",
+      "filename": "09-genetics-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-5fbdf04f-d802-4c63-93b2-b14f555fbd22.png"
+    },
+    {
+      "key": "neuroscience",
+      "filename": "10-neuroscience-r1.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-74b793e9-c3e7-483b-a5b8-12f48909217e.png"
+    },
+    {
+      "key": "neuroscience",
+      "revision": 2,
+      "filename": "10-neuroscience-r2.png",
+      "source": "/workspace/scratch/9327e1640d21/generated_images/exec-057a7a36-bd1f-4b8a-ace6-909ade67be80.png"
+    }
+  ],
+  "uploads": [
+    {
+      "key": "maths",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV8zNC1yeHI0MkNxbU5FNk1KN01rRUdn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "01-maths-r1-3f2b2e99a016477d8f01f9bbc08c65a8.png",
+      "mime_type": "image/png",
+      "byte_size": 1331177,
+      "sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![01 Mathematics — carved folded mathematical surface](library-file:fde1_bGliZmlsZV8zNC1yeHI0MkNxbU5FNk1KN01rRUdn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "chemistry",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9fMElTSnlWQVV5ZlJ1QTNOTjNKZmd3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "02-chemistry-r1-f8af008689bf4eb3b1ce9a5323e0cd6f.png",
+      "mime_type": "image/png",
+      "byte_size": 1172847,
+      "sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![02 Chemistry — crystalline molecular assembly](library-file:fde1_bGliZmlsZV9fMElTSnlWQVV5ZlJ1QTNOTjNKZmd3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "biology",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9WMndwTHYzU0FQUzVka2F6RllibXZn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "03-biology-r1-659c39b52fc8478d8375ed849e103ea0.png",
+      "mime_type": "image/png",
+      "byte_size": 1161435,
+      "sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![03 Life Sciences — fern and seed structure](library-file:fde1_bGliZmlsZV9WMndwTHYzU0FQUzVka2F6RllibXZn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "earth",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9xajVES2gxVUxxOXlCQVg3UENWRFpB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "04-earth-r1-65038cebb40a49b39352a9c4b8512491.png",
+      "mime_type": "image/png",
+      "byte_size": 1599947,
+      "sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![04 Earth & Space — cutaway terrestrial globe](library-file:fde1_bGliZmlsZV9xajVES2gxVUxxOXlCQVg3UENWRFpB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "geology",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV91c0tkZklwUHlCRC11RXh2YmN5Y29B_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "05-geology-r1-48caf066e31643a98be726c7842d1b81.png",
+      "mime_type": "image/png",
+      "byte_size": 1771322,
+      "sha256": "33997c37a42a3c72770c6908c8a919b1fdb95fe2f613d90d410ebdf74a82b1ee",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![05 Geology — layered rock specimen](library-file:fde1_bGliZmlsZV91c0tkZklwUHlCRC11RXh2YmN5Y29B_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "oceanography",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV94YmU1MkRfQmszN3VsaGF0dG5UdWt3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "06-oceanography-r1-510c4b88914f45e292c47ec2ba346cca.png",
+      "mime_type": "image/png",
+      "byte_size": 1637259,
+      "sha256": "5e9445bc1da43a88795d3923c6b486906c9ccac306255cf1e1bee24f5c11213d",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![06 Oceanography — breaking wave cross-section](library-file:fde1_bGliZmlsZV94YmU1MkRfQmszN3VsaGF0dG5UdWt3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "meteorology",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV8xbER5eTNOREc3MHE0ekw0aERtOXRB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "07-meteorology-r1-3184d82283024d34bc9f6709fb4cb8cd.png",
+      "mime_type": "image/png",
+      "byte_size": 1537599,
+      "sha256": "5c7adf366d77c5cd495ab0b9754fbd21bf04585f93b02486c3e4ff4d05233aa5",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![07 Meteorology — cloud and barometric instrument](library-file:fde1_bGliZmlsZV8xbER5eTNOREc3MHE0ekw0aERtOXRB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "ecology",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9OcU9yak9WVGYxVW1JeTBsWEp6TENB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "08-ecology-r1-7dbb4759d633482b8c5ca98bf1c32e74.png",
+      "mime_type": "image/png",
+      "byte_size": 1366002,
+      "sha256": "18f154a46f485599c4425eca6871ab6c78c883ebb0b248dd8ec0f938c29cfd73",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![08 Ecology — interdependent leaf/root ecosystem](library-file:fde1_bGliZmlsZV9OcU9yak9WVGYxVW1JeTBsWEp6TENB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "genetics",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9PdkpzLUVwdDJBWWhvS0syN0ZDWmFR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "09-genetics-r1-184e81280fba4fb4b394d46aa2a233cd.png",
+      "mime_type": "image/png",
+      "byte_size": 821040,
+      "sha256": "60f050ebe8c7e0cd6afede3853bbe5fc1d53d686f9d65c5348cec2cf12b0bd80",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![09 Genetics — twisted DNA ladder motif](library-file:fde1_bGliZmlsZV9PdkpzLUVwdDJBWWhvS0syN0ZDWmFR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "neuroscience",
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9xOHNRLTI3ZjJXbGpETlFSNnlqYWFn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "10-neuroscience-r1-88ee68a01911448b9feb30f07632f5b3.png",
+      "mime_type": "image/png",
+      "byte_size": 1084323,
+      "sha256": "4f4b8b2ab0e224faefff733d0a456b8643065da7644efdb6b12ea711d1d5e8ff",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![10 Neuroscience — branching neuron](library-file:fde1_bGliZmlsZV9xOHNRLTI3ZjJXbGpETlFSNnlqYWFn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "key": "neuroscience",
+      "revision": 2,
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV84S1puenlNVll1Ny0teFFWdXljUXdB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "10-neuroscience-r2-d8e9e071fcce41e4af898fa1c4b4bbdb.png",
+      "mime_type": "image/png",
+      "byte_size": 416285,
+      "sha256": "e7798940831713b34c7d442642460d1d15fbe555bb64c831ebaf80ae9f814818",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![10 Neuroscience revision 2 — branching neuron with generous margins](library-file:fde1_bGliZmlsZV84S1puenlNVll1Ny0teFFWdXljUXdB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  ],
+  "checkpoints": [
+    {
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9QVjR3eDVydnJEeVRtcTVtUXZtak5n_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "batch-01-checkpoint-02-dcc528741dd649ad8206241f41503792.zip",
+      "mime_type": "application/zip",
+      "byte_size": 2414486,
+      "sha256": "92dc39f9f970547c23d4dcb2502b91d1ab95a7ce7be66ea8c3230339bc180e65",
+      "file_access_confirmed": true,
+      "is_image": false,
+      "markdown": "[Batch 01 checkpoint 02 originals prompts and measurements](library-file:fde1_bGliZmlsZV9QVjR3eDVydnJEeVRtcTVtUXZtak5n_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9hTHlnTWVCbDRnbjcwSzRQYllkckpn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "batch-01-checkpoint-04-9df2ec4e5ee6426aa58ee09f68a7da14.zip",
+      "mime_type": "application/zip",
+      "byte_size": 5058007,
+      "sha256": "cf058f7333aedbc72cf00ac8553e2a6a9b3546dffea0c09f74a60d8ceea6ca36",
+      "file_access_confirmed": true,
+      "is_image": false,
+      "markdown": "[Batch 01 checkpoint 04 originals prompts and measurements](library-file:fde1_bGliZmlsZV9hTHlnTWVCbDRnbjcwSzRQYllkckpn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9xZlJhekMtcE9yaXZaV2lDOFZXSTVR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "batch-01-checkpoint-06-b8993f0ac14c43dfa52c3d96d10bf965.zip",
+      "mime_type": "application/zip",
+      "byte_size": 8330324,
+      "sha256": "9778e2110401ef0c801e27cb462158bf5af102394baf2eb58b8a0b150c660b96",
+      "file_access_confirmed": true,
+      "is_image": false,
+      "markdown": "[Batch 01 checkpoint 06 originals prompts and measurements](library-file:fde1_bGliZmlsZV9xZlJhekMtcE9yaXZaV2lDOFZXSTVR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9VMk1IRHl1OE56cmhISDJsYzZZeVpn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "batch-01-checkpoint-08-ad8b13bdf8004fe2bebd79d0a6f5a26e.zip",
+      "mime_type": "application/zip",
+      "byte_size": 2780632,
+      "sha256": "b82d16f0f51143aef39ad34a7af9ae7575c3f59b6858cb836ab49793cf26cb59",
+      "file_access_confirmed": true,
+      "is_image": false,
+      "markdown": "[Batch 01 checkpoint 08 new originals 07–08 and cumulative measurements](library-file:fde1_bGliZmlsZV9VMk1IRHl1OE56cmhISDJsYzZZeVpn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "page_id": "page_45e85238d2f0819191d039fbf3a6f309",
+      "reference": "library-file:fde1_bGliZmlsZV9Xb0JRempTcll6RDJMdTRrR2VwRWtR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "batch-01-checkpoint-10-de3ac1dabf53429880fb83848a037dfa.zip",
+      "mime_type": "application/zip",
+      "byte_size": 1707915,
+      "sha256": "2ccc22c58d1896d4fcede7032a2d6b440c08f9986c3191d00164edccac7a737f",
+      "file_access_confirmed": true,
+      "is_image": false,
+      "markdown": "[Batch 01 checkpoint 10 new originals 09–10 and cumulative measurements](library-file:fde1_bGliZmlsZV9Xb0JRempTcll6RDJMdTRrR2VwRWtR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  ]
+}

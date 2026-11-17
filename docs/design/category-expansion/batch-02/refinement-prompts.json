@@ -1,0 +1,41 @@
+[
+  {
+    "key": "tekton",
+    "filename": "03-tekton-staged-assembly-conveyor-v2.png",
+    "input": "03-tekton-staged-assembly-conveyor.png",
+    "reason": "Wider framing with clear transparent margin; remove atmospheric edge haze.",
+    "prompt": "Use case: background-extraction. Edit the supplied Tekton assembly-conveyor illustration. Keep its three-stage physical assembly subject, graphite engraved drawing, matte ivory materials, restrained red roller hub, visual order, detail and silhouette. Change only framing and exterior: reduce the complete subject to fit within the central 55 percent of a square canvas, leaving at least 22.5 percent genuinely blank transparent margin on all sides. Never crop the subject. Clear all atmospheric haze, glows, shadows and pale exterior wash; all holes and exterior are transparent, with a crisp naturally antialiased edge and opaque subject. This is an editorial metaphor, not a scientific or operating workflow. No text, labels, numbers, letters, watermark, signature, logos, new decoration or background. Do not enlarge the subject to fill the frame.",
+    "settings": {
+      "transparent_background": true
+    },
+    "input_file": "public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png",
+    "generation_tool": "image_gen.imagegen",
+    "method": "image generation edit; output retained unmodified"
+  },
+  {
+    "key": "kustomize",
+    "filename": "04-kustomize-nested-configurable-plates-v2.png",
+    "input": "04-kustomize-nested-configurable-plates.png",
+    "reason": "Wider framing with clear transparent margin; retain all four plates.",
+    "prompt": "Use case: background-extraction. Edit the supplied nested configurable-plates illustration. Keep its four stepped plates, large rectangular apertures, sliding tabs, graphite engraved texture, matte ivory surfaces and single muted-red adjustment tab. Change only framing and exterior: reduce the entire complete subject to fit within the central 55 percent of a square canvas, leaving at least 22.5 percent genuinely blank transparent margin on every side. Preserve its oblique orientation and distinctive stacked silhouette; no crop. Clear exterior haze and stray paint. All open windows and the outside of the object must be truly transparent with crisp naturally antialiased edges; subject material is opaque. No glow, halo, drop shadow, background, text, numbers, labels, watermark, signature, letter K or vendor mark.",
+    "settings": {
+      "transparent_background": true
+    },
+    "input_file": "public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png",
+    "generation_tool": "image_gen.imagegen",
+    "method": "image generation edit; output retained unmodified"
+  },
+  {
+    "key": "hiking",
+    "filename": "10-hiking-cairn-and-trail-compass-v2.png",
+    "input": "10-hiking-cairn-and-trail-compass.png",
+    "reason": "Remove red compass needle; retain natural stone and forest identity.",
+    "prompt": "Use case: precise-object-edit. Edit the supplied Hiking cairn-and-compass illustration. Change the reddish compass-needle half to muted dark forest green so the whole scene uses only natural slate, limestone, moss/forest green and weathered brown. Keep the other needle half graphite grey. Absolutely no red, orange-red, folio-red or copper-red accent. Preserve the three-stone cairn, moss, leaf, compass, cord, unlettered face, natural hand-drawn engraving, composition and generous transparent margins. Preserve all existing transparency while clearing any stray edge haze; no glow, halo, shadow or background. Keep the subject complete and uncropped. Do not add any text, numbers, cardinal letters, map, label, signature, watermark or logo.",
+    "settings": {
+      "transparent_background": true
+    },
+    "input_file": "public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png",
+    "generation_tool": "image_gen.imagegen",
+    "method": "image generation edit; output retained unmodified"
+  }
+]

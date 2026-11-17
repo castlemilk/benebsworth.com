@@ -1,0 +1,16 @@
+{
+  "tool": "image_gen.imagegen",
+  "purpose": "Bounded framing-only generated edit; original remains unchanged",
+  "source_sha256": "237e6b684c1bc0371627f871ba1d67c208ee9cd6d04f2fae3c74f9970574a0c2",
+  "submitted_parameters": {
+    "prompt": "Edit this one compiler press illustration for framing only. Zoom out strongly so the COMPLETE existing artwork, including every incoming and outgoing tile and the handle, occupies no more than the central HALF of the final square canvas width. Uniformly reduce the apparent size of the whole subject to about 55% of its current displayed size, centre it, and add genuinely transparent empty space on every side. Keep the same press, tile shapes and counts, perspective, graphite cross-hatching, warm ivory materials and small oxblood collar. Preserve all structure. Do not add objects, shadows, paper, text, numbers, haze, fringe, glow, halo or a card. No cropping. Transparent background and holes; solid material should remain visually opaque. The empty transparent margin is the purpose of this edit and must be clearly much larger than in the reference.",
+    "referenced_image_paths": [
+      "/workspace/scratch/f9aadd8a4299/blog-category-batch03/public/artwork/category-expansion-v1/batch-03/originals/06-compilers.png"
+    ],
+    "transparent_background": true
+  },
+  "status": "completed",
+  "output_file": "public/artwork/category-expansion-v1/batch-03/originals/06-compilers-v2.png",
+  "output_sha256": "d84c0af30cfe45fae229849f61d69d7b52c440ec60371ca934e873ab3901677f",
+  "selected_for_handoff": true
+}

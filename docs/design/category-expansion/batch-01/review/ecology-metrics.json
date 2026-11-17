@@ -1,0 +1,78 @@
+{
+  "filename": "08-ecology-r1.png",
+  "key": "ecology",
+  "revision": 1,
+  "sha256": "18f154a46f485599c4425eca6871ab6c78c883ebb0b248dd8ec0f938c29cfd73",
+  "bytes": 1366002,
+  "format": "PNG",
+  "mode": "RGBA",
+  "width": 1254,
+  "height": 1254,
+  "alpha_channel_present": true,
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "alpha_counts": {
+    "zero": 1120556,
+    "partial_1_to_254": 451616,
+    "opaque_255": 344,
+    "total": 1572516
+  },
+  "transparent_fraction": 0.712588,
+  "partial_alpha_fraction": 0.287193,
+  "border_nonzero_alpha_pixels": 30,
+  "border_alpha_above_16_pixels": 0,
+  "border_alpha_maximum": 1,
+  "bbox_alpha_gt_0": {
+    "threshold_exclusive": 0,
+    "bbox": [
+      0,
+      29,
+      1236,
+      1254
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 0,
+      "top": 29,
+      "right": 18,
+      "bottom": 0
+    },
+    "margin_fractions": {
+      "left": 0.0,
+      "top": 0.023126,
+      "right": 0.014354,
+      "bottom": 0.0
+    },
+    "minimum_margin_fraction": 0.0,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "bbox_alpha_gt_16": {
+    "threshold_exclusive": 16,
+    "bbox": [
+      167,
+      132,
+      1086,
+      1128
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 167,
+      "top": 132,
+      "right": 168,
+      "bottom": 126
+    },
+    "margin_fractions": {
+      "left": 0.133174,
+      "top": 0.105263,
+      "right": 0.133971,
+      "bottom": 0.100478
+    },
+    "minimum_margin_fraction": 0.100478,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "transparency_verified": true,
+  "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+  "selected_for_review": true
+}

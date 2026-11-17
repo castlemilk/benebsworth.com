@@ -1,0 +1,985 @@
+{
+  "schema_version": 1,
+  "batch": "01",
+  "target_original_count": 10,
+  "target_concept_count": 10,
+  "actual_original_count": 11,
+  "original_file_count": 11,
+  "distinct_concept_count": 10,
+  "selected_review_count": 10,
+  "selection_rule": "Highest numeric rN revision per category key; earlier generated files remain preserved.",
+  "selected_original_filenames": [
+    "01-maths-r1.png",
+    "02-chemistry-r1.png",
+    "03-biology-r1.png",
+    "04-earth-r1.png",
+    "05-geology-r1.png",
+    "06-oceanography-r1.png",
+    "07-meteorology-r1.png",
+    "08-ecology-r1.png",
+    "09-genetics-r1.png",
+    "10-neuroscience-r2.png"
+  ],
+  "originals_modified": false,
+  "source_path": "public/artwork/category-expansion-v1/batch-01/originals",
+  "backgrounds": {
+    "light": "#f4efe6",
+    "dark": "#181a19"
+  },
+  "preview_sizes_px": [
+    256,
+    128,
+    64
+  ],
+  "edge_crop_display_scale": "1 image pixel per output pixel",
+  "preview_resampling": "Pillow LANCZOS; originals untouched",
+  "browser_checks": "unavailable; these are deterministic image composites, not browser captures",
+  "visual_acceptance": "not inferred from integrity or alpha metrics",
+  "files": [
+    {
+      "filename": "01-maths-r1.png",
+      "key": "maths",
+      "revision": 1,
+      "sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+      "bytes": 1331177,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1262,
+      "height": 1246,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1129041,
+        "partial_1_to_254": 443072,
+        "opaque_255": 339,
+        "total": 1572452
+      },
+      "transparent_fraction": 0.718013,
+      "partial_alpha_fraction": 0.281771,
+      "border_nonzero_alpha_pixels": 0,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 0,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          76,
+          33,
+          1248,
+          1230
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 76,
+          "top": 33,
+          "right": 14,
+          "bottom": 16
+        },
+        "margin_fractions": {
+          "left": 0.060222,
+          "top": 0.026485,
+          "right": 0.011094,
+          "bottom": 0.012841
+        },
+        "minimum_margin_fraction": 0.011094,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          97,
+          278,
+          1164,
+          1009
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 97,
+          "top": 278,
+          "right": 98,
+          "bottom": 237
+        },
+        "margin_fractions": {
+          "left": 0.076862,
+          "top": 0.223114,
+          "right": 0.077655,
+          "bottom": 0.190209
+        },
+        "minimum_margin_fraction": 0.076862,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "02-chemistry-r1.png",
+      "key": "chemistry",
+      "revision": 1,
+      "sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+      "bytes": 1172847,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1187783,
+        "partial_1_to_254": 384135,
+        "opaque_255": 598,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.755339,
+      "partial_alpha_fraction": 0.244281,
+      "border_nonzero_alpha_pixels": 71,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          9,
+          1240,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 9,
+          "right": 14,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.007177,
+          "right": 0.011164,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          188,
+          146,
+          1006,
+          1140
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 188,
+          "top": 146,
+          "right": 248,
+          "bottom": 114
+        },
+        "margin_fractions": {
+          "left": 0.14992,
+          "top": 0.116427,
+          "right": 0.197767,
+          "bottom": 0.090909
+        },
+        "minimum_margin_fraction": 0.090909,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "03-biology-r1.png",
+      "key": "biology",
+      "revision": 1,
+      "sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+      "bytes": 1161435,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1185278,
+        "partial_1_to_254": 387084,
+        "opaque_255": 154,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.753746,
+      "partial_alpha_fraction": 0.246156,
+      "border_nonzero_alpha_pixels": 31,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          55,
+          1228,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 55,
+          "right": 26,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.04386,
+          "right": 0.020734,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          309,
+          121,
+          1052,
+          1134
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 309,
+          "top": 121,
+          "right": 202,
+          "bottom": 120
+        },
+        "margin_fractions": {
+          "left": 0.246411,
+          "top": 0.096491,
+          "right": 0.161085,
+          "bottom": 0.095694
+        },
+        "minimum_margin_fraction": 0.095694,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "04-earth-r1.png",
+      "key": "earth",
+      "revision": 1,
+      "sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+      "bytes": 1599947,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1069922,
+        "partial_1_to_254": 502510,
+        "opaque_255": 84,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.680389,
+      "partial_alpha_fraction": 0.319558,
+      "border_nonzero_alpha_pixels": 21,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          19,
+          1216,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 19,
+          "right": 38,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.015152,
+          "right": 0.030303,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          230,
+          227,
+          1021,
+          1050
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 230,
+          "top": 227,
+          "right": 233,
+          "bottom": 204
+        },
+        "margin_fractions": {
+          "left": 0.183413,
+          "top": 0.181021,
+          "right": 0.185805,
+          "bottom": 0.162679
+        },
+        "minimum_margin_fraction": 0.162679,
+        "meets_prompt_16_percent_all_sides": true
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "05-geology-r1.png",
+      "key": "geology",
+      "revision": 1,
+      "sha256": "33997c37a42a3c72770c6908c8a919b1fdb95fe2f613d90d410ebdf74a82b1ee",
+      "bytes": 1771322,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1045627,
+        "partial_1_to_254": 526802,
+        "opaque_255": 87,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.664939,
+      "partial_alpha_fraction": 0.335006,
+      "border_nonzero_alpha_pixels": 102,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          17,
+          1214,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 17,
+          "right": 40,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.013557,
+          "right": 0.031898,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          154,
+          224,
+          1067,
+          1058
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 154,
+          "top": 224,
+          "right": 187,
+          "bottom": 196
+        },
+        "margin_fractions": {
+          "left": 0.122807,
+          "top": 0.178628,
+          "right": 0.149123,
+          "bottom": 0.1563
+        },
+        "minimum_margin_fraction": 0.122807,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "06-oceanography-r1.png",
+      "key": "oceanography",
+      "revision": 1,
+      "sha256": "5e9445bc1da43a88795d3923c6b486906c9ccac306255cf1e1bee24f5c11213d",
+      "bytes": 1637259,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1031990,
+        "partial_1_to_254": 540359,
+        "opaque_255": 167,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.656267,
+      "partial_alpha_fraction": 0.343627,
+      "border_nonzero_alpha_pixels": 167,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          19,
+          1254,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 19,
+          "right": 0,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.015152,
+          "right": 0.0,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          171,
+          243,
+          1094,
+          1031
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 171,
+          "top": 243,
+          "right": 160,
+          "bottom": 223
+        },
+        "margin_fractions": {
+          "left": 0.136364,
+          "top": 0.19378,
+          "right": 0.127592,
+          "bottom": 0.177831
+        },
+        "minimum_margin_fraction": 0.127592,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "07-meteorology-r1.png",
+      "key": "meteorology",
+      "revision": 1,
+      "sha256": "5c7adf366d77c5cd495ab0b9754fbd21bf04585f93b02486c3e4ff4d05233aa5",
+      "bytes": 1537599,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1051155,
+        "partial_1_to_254": 521206,
+        "opaque_255": 155,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.668454,
+      "partial_alpha_fraction": 0.331447,
+      "border_nonzero_alpha_pixels": 51,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          19,
+          1251,
+          1232
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 19,
+          "right": 3,
+          "bottom": 22
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.015152,
+          "right": 0.002392,
+          "bottom": 0.017544
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          149,
+          163,
+          1104,
+          1139
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 149,
+          "top": 163,
+          "right": 150,
+          "bottom": 115
+        },
+        "margin_fractions": {
+          "left": 0.11882,
+          "top": 0.129984,
+          "right": 0.119617,
+          "bottom": 0.091707
+        },
+        "minimum_margin_fraction": 0.091707,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "08-ecology-r1.png",
+      "key": "ecology",
+      "revision": 1,
+      "sha256": "18f154a46f485599c4425eca6871ab6c78c883ebb0b248dd8ec0f938c29cfd73",
+      "bytes": 1366002,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1120556,
+        "partial_1_to_254": 451616,
+        "opaque_255": 344,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.712588,
+      "partial_alpha_fraction": 0.287193,
+      "border_nonzero_alpha_pixels": 30,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          29,
+          1236,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 29,
+          "right": 18,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.023126,
+          "right": 0.014354,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          167,
+          132,
+          1086,
+          1128
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 167,
+          "top": 132,
+          "right": 168,
+          "bottom": 126
+        },
+        "margin_fractions": {
+          "left": 0.133174,
+          "top": 0.105263,
+          "right": 0.133971,
+          "bottom": 0.100478
+        },
+        "minimum_margin_fraction": 0.100478,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "09-genetics-r1.png",
+      "key": "genetics",
+      "revision": 1,
+      "sha256": "60f050ebe8c7e0cd6afede3853bbe5fc1d53d686f9d65c5348cec2cf12b0bd80",
+      "bytes": 821040,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1326963,
+        "partial_1_to_254": 244694,
+        "opaque_255": 859,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.843847,
+      "partial_alpha_fraction": 0.155607,
+      "border_nonzero_alpha_pixels": 4,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          0,
+          1234,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 0,
+          "right": 20,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.0,
+          "right": 0.015949,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          374,
+          125,
+          851,
+          1160
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 374,
+          "top": 125,
+          "right": 403,
+          "bottom": 94
+        },
+        "margin_fractions": {
+          "left": 0.298246,
+          "top": 0.099681,
+          "right": 0.321372,
+          "bottom": 0.07496
+        },
+        "minimum_margin_fraction": 0.07496,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    },
+    {
+      "filename": "10-neuroscience-r1.png",
+      "key": "neuroscience",
+      "revision": 1,
+      "sha256": "4f4b8b2ab0e224faefff733d0a456b8643065da7644efdb6b12ea711d1d5e8ff",
+      "bytes": 1084323,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1063741,
+        "partial_1_to_254": 508507,
+        "opaque_255": 268,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.676458,
+      "partial_alpha_fraction": 0.323372,
+      "border_nonzero_alpha_pixels": 25,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 1,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          0,
+          15,
+          1236,
+          1254
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 0,
+          "top": 15,
+          "right": 18,
+          "bottom": 0
+        },
+        "margin_fractions": {
+          "left": 0.0,
+          "top": 0.011962,
+          "right": 0.014354,
+          "bottom": 0.0
+        },
+        "minimum_margin_fraction": 0.0,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          103,
+          50,
+          1137,
+          1171
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 103,
+          "top": 50,
+          "right": 117,
+          "bottom": 83
+        },
+        "margin_fractions": {
+          "left": 0.082137,
+          "top": 0.039872,
+          "right": 0.093301,
+          "bottom": 0.066188
+        },
+        "minimum_margin_fraction": 0.039872,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": false
+    },
+    {
+      "filename": "10-neuroscience-r2.png",
+      "key": "neuroscience",
+      "revision": 2,
+      "sha256": "e7798940831713b34c7d442642460d1d15fbe555bb64c831ebaf80ae9f814818",
+      "bytes": 416285,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha_channel_present": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_counts": {
+        "zero": 1441520,
+        "partial_1_to_254": 130918,
+        "opaque_255": 78,
+        "total": 1572516
+      },
+      "transparent_fraction": 0.916697,
+      "partial_alpha_fraction": 0.083254,
+      "border_nonzero_alpha_pixels": 0,
+      "border_alpha_above_16_pixels": 0,
+      "border_alpha_maximum": 0,
+      "bbox_alpha_gt_0": {
+        "threshold_exclusive": 0,
+        "bbox": [
+          47,
+          15,
+          1226,
+          1223
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 47,
+          "top": 15,
+          "right": 28,
+          "bottom": 31
+        },
+        "margin_fractions": {
+          "left": 0.03748,
+          "top": 0.011962,
+          "right": 0.022329,
+          "bottom": 0.024721
+        },
+        "minimum_margin_fraction": 0.011962,
+        "meets_prompt_16_percent_all_sides": false
+      },
+      "bbox_alpha_gt_16": {
+        "threshold_exclusive": 16,
+        "bbox": [
+          362,
+          326,
+          891,
+          910
+        ],
+        "bbox_convention": "left and top inclusive; right and bottom exclusive",
+        "margins_px": {
+          "left": 362,
+          "top": 326,
+          "right": 363,
+          "bottom": 344
+        },
+        "margin_fractions": {
+          "left": 0.288676,
+          "top": 0.259968,
+          "right": 0.289474,
+          "bottom": 0.274322
+        },
+        "minimum_margin_fraction": 0.259968,
+        "meets_prompt_16_percent_all_sides": true
+      },
+      "transparency_verified": true,
+      "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+      "selected_for_review": true
+    }
+  ],
+  "secondary_review_outputs": [
+    {
+      "filename": "contact-light.png",
+      "sha256": "296c72a7400802e45d2e46a95140144841b8321fe7c22f284f841d3c4799239f",
+      "bytes": 441471
+    },
+    {
+      "filename": "size-review-light-01.png",
+      "sha256": "78f1c8934d5281d3d8a5ff9d1941af8174502fb81234f95c1c68e695ab34e2bf",
+      "bytes": 350324
+    },
+    {
+      "filename": "size-review-light-02.png",
+      "sha256": "f09f310c4f590aa03efab6d4a6ba0e6945c088a6267e33ece9d6e24cece0d513",
+      "bytes": 304504
+    },
+    {
+      "filename": "contact-dark.png",
+      "sha256": "94b8694b6191d6066dca192ac04ab3def092c0f4769f05579a503caf9a6a189d",
+      "bytes": 448524
+    },
+    {
+      "filename": "size-review-dark-01.png",
+      "sha256": "9703a13a74e826d25d6d04c83eda47d7864d2f63228c61bfc0b2c057c3a50c63",
+      "bytes": 357380
+    },
+    {
+      "filename": "size-review-dark-02.png",
+      "sha256": "dfbd6e32e4f525f6b3728d42048facff8528b968e4b873dc372a54e0138be315",
+      "bytes": 309610
+    },
+    {
+      "filename": "edge-review-maths.png",
+      "sha256": "807d6d26b53a81e12656f3fdd3d42e133bdfcd9719ac8d56671d9015ef88af75",
+      "bytes": 143457
+    },
+    {
+      "filename": "edge-review-chemistry.png",
+      "sha256": "ffc01edfdc31810e713986af58b02efae316632e95bbf6e8b87b798e652fe613",
+      "bytes": 98183
+    },
+    {
+      "filename": "edge-review-biology.png",
+      "sha256": "1ec0e72b9e8d91b823a1c81f26f8f284c02df71351e66e70dec7d663539d4da2",
+      "bytes": 147841
+    },
+    {
+      "filename": "edge-review-earth.png",
+      "sha256": "b4203f67466212209a2e4fcdb5ea0b376b340ce401ecab20f110a159e06f479b",
+      "bytes": 155777
+    },
+    {
+      "filename": "edge-review-geology.png",
+      "sha256": "8ec9bad9b94ccffa43a81fc401405db133bba90bb9dacfe9fe4ffea3b8d98fde",
+      "bytes": 156261
+    },
+    {
+      "filename": "edge-review-oceanography.png",
+      "sha256": "fd7e590e15b97773c02690e779e3c5bd6c83eb1573edb978c6ec4eb50f9b7bf1",
+      "bytes": 138014
+    },
+    {
+      "filename": "edge-review-meteorology.png",
+      "sha256": "5e788c94283edb7d5c2ae0e68a8289c67803780b82638f9e0f8b52c4839234ac",
+      "bytes": 118936
+    },
+    {
+      "filename": "edge-review-ecology.png",
+      "sha256": "34ac06cb6728803047e07c68b273a58e4b31c700cc103f017bddef3f98f8fb4c",
+      "bytes": 149827
+    },
+    {
+      "filename": "edge-review-genetics.png",
+      "sha256": "269c316d2885991ee163d5e43b76832afcf8ba0d5916ddcebb4eff6bb0f27920",
+      "bytes": 120365
+    },
+    {
+      "filename": "edge-review-neuroscience.png",
+      "sha256": "bb3b1076ea9f655ae816a7c96c9be6b19b8de0515affdde87c216d4a365e44a6",
+      "bytes": 86714
+    },
+    {
+      "filename": "revision-review-neuroscience.png",
+      "sha256": "2738355242d75983d6644c31f984577db150b67056367297fbb422cf13421b23",
+      "bytes": 116056
+    }
+  ]
+}

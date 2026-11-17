@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "local_revision": "831b30a2bb287d30c73a3df394a02da33c22640c",
+  "local_tree": "f0cb4d8c2d68cfd16a66089723e8bb909a41953a",
+  "branch": "art/blog-category-expansion-batch-05",
+  "remote_branch_created": false,
+  "remote_pr_created": false,
+  "local_worktree_clean": true,
+  "changed_files": 73,
+  "all_changes": "additions within the two owned Batch05 paths",
+  "selected_image_count": 10,
+  "target_image_count": 10,
+  "retained_attempt_count": 3,
+  "total_generator_outputs": 13,
+  "patch_file": "blog-category-art-batch05.patch",
+  "patch_sha256": "0daee9a8a8a63d12b493f8cd5e43efe72147ea45f414a2026bf7cc3286a2031b",
+  "patch_bytes": 15006641,
+  "patch_applies_to_base_index": true,
+  "patch_reconstructed_tree": "f0cb4d8c2d68cfd16a66089723e8bb909a41953a",
+  "patch_tree_matches_local_commit": true,
+  "space_page": "https://chatgpt.com/space/page_4a95f7010100819192097f3954e10d28",
+  "checksummed_repository_files": 72,
+  "selected_image_uploads_verified": 10,
+  "publication_blocker": "Non-master push can run Vercel preview; current VERCEL_PREVIEW_CI_ENABLED cannot be read using available tools. No push, PR, merge, or deployment performed.",
+  "remaining_gates": [
+    "Strict zero-alpha exterior: low-alpha residue persists",
+    "Real-browser and consuming-route acceptance",
+    "Coordinated source publication after preview opt-in state is verified"
+  ],
+  "images_missing": []
+}

@@ -1,0 +1,16 @@
+Verified kubernetes: 1254 x 1254 RGBA, 1545388 bytes
+Verified istio: 1254 x 1254 RGBA, 1183577 bytes
+Verified tekton: 1254 x 1254 RGBA, 1425763 bytes
+Verified kustomize: 1254 x 1254 RGBA, 1596992 bytes
+Verified minikube: 1254 x 1254 RGBA, 606578 bytes
+Verified gcp: 1254 x 1254 RGBA, 650726 bytes
+Verified react: 1254 x 1254 RGBA, 643573 bytes
+Verified technology: 1254 x 1254 RGBA, 984728 bytes
+Verified general: 1254 x 1254 RGBA, 718964 bytes
+Verified hiking: 1254 x 1254 RGBA, 1000036 bytes
+Verified tekton refinement 1: 1254 x 1254 RGBA, 849613 bytes
+Verified kustomize refinement 2: 1254 x 1254 RGBA, 863550 bytes
+Verified hiking refinement 3: 1254 x 1254 RGBA, 934766 bytes
+PASS: packet integrity, 10/10 original images (complete inventory).
+PASS: 3 additional refinements; original concept count remains 10/10.
+Visual acceptance, decoded alpha observations and browser checks are separate gates.

@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "batch": "03",
+  "title": "Computing systems",
+  "target_count": 10,
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "branch": "art/blog-category-expansion-batch-03",
+  "space_url": "https://chatgpt.com/space/page_eee3325ef21481919120904082c7c55e",
+  "assets": [
+    {
+      "number": 1,
+      "slug": "databases",
+      "label": "Databases",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "01-databases.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: An indexed storage cabinet as a database metaphor: a compact graphite metal archive with three stacked shallow drawers, one drawer drawn partway forward, and a neat fan of thick warm-ivory page leaves with plain stepped index tabs. Indexed structure should be immediately legible from the drawer and page silhouette. One tiny oxblood tab is the only accent. No alphabet, index letters or filing labels.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject within the central 62 percent of the canvas, leaving at least 18 percent genuinely empty transparent margin on every side. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 2,
+      "slug": "distributed-systems",
+      "label": "Distributed systems",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "02-distributed-systems.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: Three separated small computing-machine housings collaborating across open space: tactile ivory and graphite mechanical boxes of slightly different proportions, arranged in a loose triangular composition, joined by three purposeful thin physical cables. Each machine has a distinct vented or slotted face, never a screen. One short oxblood cable sleeve provides the accent. Make the gaps between independent machines obvious. This is an invented collaboration metaphor, not an actual network topology.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject within the central 62 percent of the canvas, leaving at least 18 percent genuinely empty transparent margin on every side. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 3,
+      "slug": "networking",
+      "label": "Networking",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "03-networking.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: A routed cable junction: one compact machined graphite junction body in three-quarter view, with four thick cloth-wrapped cables bending outward into clear separated routes and a small exposed routing channel through the centre. Warm ivory cable insulation, finely drawn graphite connector rings, one restrained oxblood collar. The asymmetrical cable silhouette is the focal subject; no computers, globes, arrows, numeric ports or logos.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject within the central 62 percent of the canvas, leaving at least 18 percent genuinely empty transparent margin on every side. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 4,
+      "slug": "cybersecurity",
+      "label": "Cybersecurity",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "04-cybersecurity.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: A layered secure lock mechanism: an upright closed arch shackle over a small sectioned stack of thick interlocking ivory and graphite lock plates, showing nested protective wards and one simple central keyway. Three-quarter view makes physical depth and multiple barriers clear. A single thin oxblood separator is inset between two plates. No shield emblem, checkmark, key, status indicator or claims of guaranteed security.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject within the central 62 percent of the canvas, leaving at least 18 percent genuinely empty transparent margin on every side. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 5,
+      "slug": "operating-systems",
+      "label": "Operating systems",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "05-operating-systems.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: Coordinated kernel and mechanical layers: a compact exploded vertical mechanism of three broad nested circular plates around one central graphite spindle, with a few precisely located bearings and a cutaway in one layer that reveals the shared hub. Warm ivory upper surfaces and graphite engraved edges, one tiny oxblood alignment wedge. Gaps between plates reveal how layers coordinate. No rockets, penguins, windows, screens, labelled architecture or branded operating-system motifs.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject within the central 62 percent of the canvas, leaving at least 18 percent genuinely empty transparent margin on every side. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 6,
+      "slug": "compilers",
+      "label": "Compilers",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "06-compilers-v2.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: A transformation press as a compiler metaphor: a compact hand-operated precision press with a graphite arched frame and warm-ivory base. A short incoming row of varied structured relief tiles enters the left of the press; a short outgoing row of uniform compact machine tiles exits at the right. The tiles have simple geometric recesses only, with no letters, binary digits or writing. A small oxblood press collar is the sole colour accent. Clearly show input, physical transformation and output using the silhouette, without arrows.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject small within the central 54 percent of the canvas, leaving at least 23 percent genuinely empty transparent margin on every side. Surrounding negative space is essential: do not enlarge the object to fill the frame. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 2,
+      "generation_kind": "generated_edit_from_own_original",
+      "first_pass_filename": "06-compilers.png",
+      "first_pass_preserved_path": "docs/design/category-expansion/batch-03/superseded/06-compilers-v1.png",
+      "framing_edit_request": "docs/design/category-expansion/batch-03/compiler-framing-request.json",
+      "framing_edit_log": "docs/design/category-expansion/batch-03/iterations/06-compilers-framing-v2-log.json"
+    },
+    {
+      "number": 7,
+      "slug": "programming-languages",
+      "label": "Programming languages",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "07-programming-languages.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: A tactile arrangement of structured syntax blocks with absolutely no text: carefully nested ivory rectangular blocks with physical mortise-and-tenon joints, grouped into three visibly indented levels, enclosed on one side by a broad open graphite bracket-shaped support. One small oxblood inset block marks a structural joint. Emphasise hierarchy, grouping and composability rather than a heap of cubes. All marks are actual material edges, not code characters, pseudo writing or invented alphabets.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject small within the central 54 percent of the canvas, leaving at least 23 percent genuinely empty transparent margin on every side. Surrounding negative space is essential: do not enlarge the object to fill the frame. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 8,
+      "slug": "testing",
+      "label": "Testing",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "08-testing.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: A calibrated mechanical test jig: a low graphite measurement base with two precise upright fixtures holding one small warm-ivory specimen between opposing probes, plus a single compact round mechanical indicator on a side arm. The indicator face is completely unlettered and unnumbered, with a plain pointer and a few short geometric ticks only; no pass/fail symbol or reported result. One oxblood adjustment collar. Make it feel like a carefully drawn workshop instrument, not a dashboard or medical device.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject small within the central 54 percent of the canvas, leaving at least 23 percent genuinely empty transparent margin on every side. Surrounding negative space is essential: do not enlarge the object to fill the frame. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 9,
+      "slug": "observability",
+      "label": "Observability",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "09-observability.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: An instrument and telemetry lens metaphor: one large circular graphite inspection lens in a compact ivory gimbal frame, revealing three separated slender material trace ribbons passing through it. The trace ribbons are abstract physical strips, not plotted measurements, and remain continuous and easy to distinguish; one has a tiny oxblood segment. The focal silhouette is the lens, its inner opening and the clean routes beneath. No eye symbol, cloud, numeric readings, charts, screens or operational status.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject small within the central 54 percent of the canvas, leaving at least 23 percent genuinely empty transparent margin on every side. Surrounding negative space is essential: do not enlarge the object to fill the frame. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    },
+    {
+      "number": 10,
+      "slug": "data-engineering",
+      "label": "Data engineering",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "10-data-engineering.png",
+      "prompt": "Use case: stylized-concept\nAsset type: one original raster category artwork study for Ben Ebsworth's Blog and Lab research folio.\nPrimary request: A branching data-pipeline sluice: a small elevated warm-ivory channel enters a central graphite sorting gate and divides into two open troughs at different levels, carrying a few plain rectangular material blocks. Clearly show the continuous channel walls and branching flow geometry; all blocks are blank. One restrained oxblood gate lever provides the accent. A tactile carved industrial watercourse metaphor, without water splash, arrows, cloud, numeric data, labels or actual pipeline claims.\nStyle and medium: sophisticated graphite pencil and fine copperplate engraving, tactile hand-drawn object study, controlled cross-hatching and small material imperfections, matte warm-ivory solid surfaces with charcoal graphite outlines. Restrained red material detail only. Quiet editorial craft; distinctive subject silhouette and useful interior negative space.\nComposition and framing: a single complete isolated subject, square canvas, mild three-quarter view, optically centred. Keep the entire subject small within the central 54 percent of the canvas, leaving at least 23 percent genuinely empty transparent margin on every side. Surrounding negative space is essential: do not enlarge the object to fill the frame. No clipping. Detail must support recognition at 96 to 256 pixels, with the larger structure readable first.\nBackground and alpha: actual transparent background. Fully opaque material inside the subject; transparent exterior and open holes. Crisp natural antialiasing only. No floor, cast shadow, surrounding paper, haze, pale fringe, light rim, glow, halo or faded vignette. Paper texture may exist on ivory material, never in the empty surroundings.\nPalette: warm ivory, graphite and charcoal, plus a very small deep red or oxblood accent. No neon, blue glow, metallic chrome or glossy rendering.\nText: none. No letters, words, numbers, logos, signatures, watermark, pseudo-text, fake labels, fake code or annotation arrows.\nEvidence boundary: an original illustrative metaphor and proposed category study, not a scientific diagram, actual system architecture, operational evidence, vendor mark or approved category. Render only this one artwork, not a sheet, grid, montage, card, app screen or comparison panel.",
+      "tool": "image_gen.imagegen",
+      "submitted_parameters": {
+        "transparent_background": true
+      },
+      "not_exposed": [
+        "model",
+        "seed",
+        "quality",
+        "output_dimensions"
+      ],
+      "reference_images_submitted": false,
+      "status": "generated_study",
+      "handoff_revision": 1
+    }
+  ],
+  "prompt_revision_note": "Before generating assets 06\u201310, the framing request was strengthened from central62%/18% margins to central54%/23% margins in response to measured first-pair output. Earlier submitted prompts remain exact.",
+  "completed_subject_count": 10,
+  "generated_output_count": 11,
+  "unmodified_first_pass_originals_preserved": true
+}

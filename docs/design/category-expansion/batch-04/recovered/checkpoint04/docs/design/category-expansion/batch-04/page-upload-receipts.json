@@ -1,0 +1,70 @@
+[
+  {
+    "index": 1,
+    "slug": "probability",
+    "page_upload": {
+      "page_id": "page_66291fc975948191b69395f17f41dc45",
+      "reference": "library-file:fde1_bGliZmlsZV8yOXJDZndTV2hRMVBrTDRMTE53SlRB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "01-probability-original-510042af5e4a49428b10f9eb46befac8.png",
+      "mime_type": "image/png",
+      "byte_size": 1804730,
+      "sha256": "ab32731a84dff4fb1d3f4500d154f6fa37145715849f9ea32587d264e4138b1d",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![Probability original Batch 04](library-file:fde1_bGliZmlsZV8yOXJDZndTV2hRMVBrTDRMTE53SlRB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  },
+  {
+    "index": 2,
+    "slug": "statistics",
+    "page_upload": {
+      "page_id": "page_66291fc975948191b69395f17f41dc45",
+      "reference": "library-file:fde1_bGliZmlsZV9oMldid2l3RWVLQVJIalNfOEdWY1R3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "02-statistics-original-38e40d6107e444a8acf710a1d19944aa.png",
+      "mime_type": "image/png",
+      "byte_size": 1367477,
+      "sha256": "e07a7be5faa8744411739e50963c51a8a2a7c46feeb2b78e271b795b50124da0",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![Statistics original Batch 04](library-file:fde1_bGliZmlsZV9oMldid2l3RWVLQVJIalNfOEdWY1R3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  },
+  {
+    "index": 3,
+    "slug": "optimization",
+    "page_upload": {
+      "page_id": "page_66291fc975948191b69395f17f41dc45",
+      "reference": "library-file:fde1_bGliZmlsZV9UVlRWbEoyQVFlV2dsTF9nNWpLR2JR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "03-optimization-original-efe706dc26b545fe9c71db84137a4a35.png",
+      "mime_type": "image/png",
+      "byte_size": 1318380,
+      "sha256": "dece81f5c286ef4385b8af8728e990263b4e65f3c550c6d933ebab31ce9c2b86",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![Optimization original Batch 04](library-file:fde1_bGliZmlsZV9UVlRWbEoyQVFlV2dsTF9nNWpLR2JR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  },
+  {
+    "index": 4,
+    "slug": "information-theory",
+    "page_upload": {
+      "page_id": "page_66291fc975948191b69395f17f41dc45",
+      "reference": "library-file:fde1_bGliZmlsZV9uY2Z1X0NIT2liTTRoWUVHekdNWUdn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "04-information-theory-original-4079589052e7457982283e89778b43f5.png",
+      "mime_type": "image/png",
+      "byte_size": 1206577,
+      "sha256": "a6142c9b71fed2163216be6d143e3e8d9b1ed07dfd4599a672f19994bee84a29",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![Information Theory original Batch 04](library-file:fde1_bGliZmlsZV9uY2Z1X0NIT2liTTRoWUVHekdNWUdn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  }
+]

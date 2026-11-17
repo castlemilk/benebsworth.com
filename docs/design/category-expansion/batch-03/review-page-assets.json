@@ -1,0 +1,34 @@
+{
+  "page_id": "page_eee3325ef21481919120904082c7c55e",
+  "review_derivatives": [
+    {
+      "theme": "light",
+      "page_id": "page_eee3325ef21481919120904082c7c55e",
+      "reference": "library-file:fde1_bGliZmlsZV9nYnBWUGRyVVJmb3JrVTVQNGNjaEhB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "contact-light-b7596912a44e49369d5cb33c6fe9c5f9.png",
+      "mime_type": "image/png",
+      "byte_size": 391503,
+      "sha256": "d3c864fcbe0fd6288d4baac4e11dcdab4759db8be03a43b352e747f172bf71d9",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![Batch 03 ten studies on ivory](library-file:fde1_bGliZmlsZV9nYnBWUGRyVVJmb3JrVTVQNGNjaEhB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    },
+    {
+      "theme": "dark",
+      "page_id": "page_eee3325ef21481919120904082c7c55e",
+      "reference": "library-file:fde1_bGliZmlsZV9uQlloS0NxYW45YnlZQ2xTbXNPWGFR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "file_name": "contact-dark-a07ad551c25e45ae93c83180be5f8df7.png",
+      "mime_type": "image/png",
+      "byte_size": 384486,
+      "sha256": "58378825d4adbce628b5405da718dbcb5a313535e1d459fb379a5b59e50d671f",
+      "file_access_confirmed": true,
+      "is_image": true,
+      "markdown": "![Batch 03 ten studies on graphite](library-file:fde1_bGliZmlsZV9uQlloS0NxYW45YnlZQ2xTbXNPWGFR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+      "inserted": false,
+      "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+    }
+  ],
+  "rendering": "Saved Page image references; browser preview not inspected."
+}

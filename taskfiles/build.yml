@@ -52,6 +52,7 @@ tasks:
       - components/**/*
       - lib/**/*
       - content/**/*
+      - study/mlsys/**/*
       - public/**/*
       - exclude: public/blog/*/index.md
       - exclude: public/lab-data/**/*

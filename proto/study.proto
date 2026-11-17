@@ -1,0 +1,177 @@
+syntax = "proto3";
+package study;
+
+// Data model for the /study microfrontend: a step-through course built from
+// study/mlsys/ (packets, quizzes, diagrams) + curriculum.md/progress.md.
+// Source book: Machine Learning Systems, mlsysbook.ai (CC-BY-NC-SA 4.0).
+
+// Per-chapter state machine: unread → packet → reviewed → quizzed → posted.
+// Mirrors the status legend in study/mlsys/curriculum.md.
+enum ChapterStatus {
+  CHAPTER_STATUS_UNSPECIFIED = 0; // unread
+  PACKET = 1;
+  REVIEWED = 2;
+  QUIZZED = 3;
+  POSTED = 4;
+}
+
+enum VolumeState {
+  VOLUME_STATE_UNSPECIFIED = 0;
+  ACTIVE = 1;          // chapter sources complete in the book repo
+  PREVIEW = 2;         // partial / preview release
+  IN_PREPARATION = 3;  // skeleton only
+}
+
+enum QuestionKind {
+  QUESTION_KIND_UNSPECIFIED = 0;
+  MCQ = 1;      // scored multiple choice
+  FEYNMAN = 2;  // explain-back prompt, self-marked
+  NUMERIC = 3;  // worked numeric exercise, reveal + self-mark
+}
+
+enum QuestionSource {
+  QUESTION_SOURCE_UNSPECIFIED = 0;
+  BOOK = 1;     // adapted from the book's *_quizzes.json bank
+  ORIGINAL = 2; // written for the packet
+}
+
+message QuizOption {
+  string id = 1;
+  string label = 2;
+}
+
+message QuizQuestion {
+  string id = 1;
+  QuestionKind kind = 2;
+  QuestionSource source = 3;
+  string prompt = 4;                    // markdown
+  repeated QuizOption options = 5;      // MCQ only
+  string correct_option_id = 6;         // MCQ
+  string model_answer = 7;              // feynman/numeric (markdown)
+  string explanation = 8;               // shown after answering
+}
+
+message StudyQuiz {
+  string chapter_id = 1; // "vol1/01_introduction"
+  string title = 2;
+  repeated QuizQuestion questions = 3;
+}
+
+message StudyDiagram {
+  string id = 1;      // filename stem
+  string title = 2;
+  string file = 3;    // filename inside diagrams/
+  string caption = 4; // markdown
+}
+
+// One symbol in an equation's drilldown: what it is called and what it means.
+message EquationSymbol {
+  string symbol = 1;   // TeX for the glyph, e.g. "R_{\\mathrm{peak}}"
+  string name = 2;     // short name, e.g. "peak compute rate"
+  string meaning = 3;  // one-line gloss: what it measures / units
+}
+
+// A named/numbered LaTeX equation shown in a "Key equations" block and
+// copyable via the gamma Equation component. `latex` is raw TeX (no $$
+// delimiters); it is also the copy source.
+message StudyEquation {
+  string id = 1;
+  int32 number = 2;
+  string title = 3;     // short label, e.g. "Iron law of ML systems"
+  string latex = 4;     // TeX body, rendered as display math
+  string caption = 5;   // markdown, explains the terms
+  repeated EquationSymbol symbols = 6; // per-symbol drilldown
+}
+
+enum ChartKind {
+  CHART_KIND_UNSPECIFIED = 0;
+  LINE = 1;        // time series (date x axis)
+  BAR_STACKED = 2; // horizontal stacked budget bars
+  // Interactive iron-law explorer: series are the budget terms
+  // (movement/compute/overhead) with a single baseline value each; the UI adds
+  // a compute-rate slider and derives sequential/overlapped scenarios.
+  IRON_LAW_EXPLORER = 3;
+}
+
+message ChartSeries {
+  string key = 1;     // data key in chart rows
+  string label = 2;
+  string color = 3;   // CSS color / var, e.g. "var(--chart-1)"
+  repeated double values = 4; // parallel to StudyChart.x_points
+}
+
+message StudyChart {
+  string id = 1;
+  ChartKind kind = 2;
+  string title = 3;
+  string caption = 4;  // markdown
+  string x_label = 5;
+  string y_label = 6;
+  repeated string x_points = 7;  // ISO dates (LINE) or category names (BAR_STACKED);
+                                 // single baseline label for IRON_LAW_EXPLORER
+  repeated ChartSeries series = 8;
+}
+
+message StudySection {
+  string title = 1;
+}
+
+message StudyChapter {
+  string id = 1;            // "vol1/01_introduction" (curriculum key)
+  string volume_id = 2;     // "vol1"
+  string slug = 3;          // URL slug: "01-introduction"
+  string source_dir = 4;    // chapter dir inside the book clone
+  string title = 5;
+  ChapterStatus status = 6;
+  repeated StudySection sections = 7;
+  bool has_packet = 8;
+  bool has_quiz = 9;
+  repeated StudyDiagram diagrams = 10;
+  repeated StudyEquation equations = 11;
+  repeated StudyChart charts = 12;
+}
+
+// Equation attached to a transcript segment by a `::eq[id]` marker line in
+// podcast.md — resolved from the chapter's equations.json at generation so
+// the public transcript copy is self-contained.
+message TranscriptEquation {
+  string id = 1;
+  string title = 2;
+  string latex = 3;  // raw TeX, no $$ delimiters
+}
+
+// One utterance in the audio-overview transcript. start/end are seconds in
+// the joined .m4a; the generator measures them from each segment's WAV.
+message TranscriptSegment {
+  string speaker = 1; // host id, "A" | "B"
+  string text = 2;    // spoken prose
+  double start = 3;   // seconds
+  double end = 4;     // seconds
+  TranscriptEquation eq = 5; // set when the utterance names an equation
+}
+
+// transcript.json beside podcast.md — drives the karaoke read-along in the
+// AudioOverview component.
+message StudyTranscript {
+  map<string, string> hosts = 1;        // {"A":"Marcus","B":"Iris"} from `# hosts:`
+  repeated TranscriptSegment segments = 2;
+}
+
+message StudyVolume {
+  string id = 1;            // "vol1"
+  int32 number = 2;         // 1..4
+  string title = 3;
+  VolumeState state = 4;
+  int32 chapter_count = 5;
+  repeated StudyChapter chapters = 6;
+}
+
+message StudyCourse {
+  string id = 1;
+  string title = 2;
+  string source_title = 3;
+  string source_author = 4;
+  string source_url = 5;
+  string license = 6;
+  repeated StudyVolume volumes = 7;
+}

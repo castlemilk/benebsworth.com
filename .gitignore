@@ -134,3 +134,6 @@ graphify-out/.graphify_*
 graphify-out/*/
 !graphify-out/manifest.json
 .taste-skill/
+
+# MLSys book study — vendored book source (sparse clone, restored per machine)
+/study/cs249r_book/

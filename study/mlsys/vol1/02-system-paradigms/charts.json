@@ -1,0 +1,54 @@
+[
+  {
+    "id": "memory-wall",
+    "kind": "LINE",
+    "title": "The memory wall compounds",
+    "caption": "Illustrative annual growth factors sustained over a decade: compute ~1.6x per year, memory bandwidth ~1.2x per year. The widening vertical gap is why data movement keeps claiming a larger share of execution time.",
+    "xLabel": "Year",
+    "yLabel": "Growth index (year 0 = 1)",
+    "xPoints": ["2015-01-01", "2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01", "2024-01-01", "2025-01-01"],
+    "series": [
+      {
+        "key": "compute",
+        "label": "Compute (~1.6x/yr)",
+        "color": "var(--chart-1)",
+        "values": [1, 1.6, 2.56, 4.1, 6.55, 10.49, 16.78, 26.84, 42.95, 68.72, 109.95]
+      },
+      {
+        "key": "bandwidth",
+        "label": "Memory bandwidth (~1.2x/yr)",
+        "color": "var(--chart-3)",
+        "values": [1, 1.2, 1.44, 1.73, 2.07, 2.49, 2.99, 3.58, 4.3, 5.16, 6.19]
+      }
+    ]
+  },
+  {
+    "id": "locality-bound",
+    "kind": "BAR_STACKED",
+    "title": "Remote-path lower bound vs the deadline",
+    "caption": "A 4K drone frame (199 Mbit) over a 100 Mbps uplink: transmission alone is ~2,000 ms against a 16.7 ms frame budget. The bar barely shows the local path because the remote bound is ~125x larger.",
+    "xLabel": "Path",
+    "yLabel": "Time (ms, log-like scale not applied: values are raw)",
+    "xPoints": ["Remote path (cloud offload)", "Local path (edge inference)"],
+    "series": [
+      {
+        "key": "transmit",
+        "label": "Transmission (D_vol / BW_net)",
+        "color": "var(--chart-1)",
+        "values": [1992, 0]
+      },
+      {
+        "key": "network",
+        "label": "Network RTT + protocol (L_net)",
+        "color": "var(--chart-2)",
+        "values": [60, 0]
+      },
+      {
+        "key": "compute",
+        "label": "Compute (O / R·eta)",
+        "color": "var(--chart-3)",
+        "values": [50, 16]
+      }
+    ]
+  }
+]

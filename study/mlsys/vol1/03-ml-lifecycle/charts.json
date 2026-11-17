@@ -1,0 +1,66 @@
+[
+  {
+    "id": "time-allocation",
+    "kind": "BAR_STACKED",
+    "title": "Where the hours go: survey shares",
+    "caption": "CrowdFlower 2016, share of practitioners naming each bucket as their most time-consuming activity. Data work (~80%) dwarfs model-focused work (~16%) — the survey anchors stage-2 planning weight, though each team must find its own bottleneck.",
+    "xLabel": "Survey bucket",
+    "yLabel": "Share of 'most time' responses (%)",
+    "xPoints": ["Data work (clean + collect)", "Model-focused (mine + sets + refine)", "Other"],
+    "series": [
+      {
+        "key": "cleaning",
+        "label": "Cleaning & organizing (60%)",
+        "color": "var(--chart-1)",
+        "values": [60, 0, 0]
+      },
+      {
+        "key": "collecting",
+        "label": "Collecting datasets (19%)",
+        "color": "var(--chart-2)",
+        "values": [19, 0, 0]
+      },
+      {
+        "key": "mining",
+        "label": "Mining patterns (9%)",
+        "color": "var(--chart-3)",
+        "values": [0, 9, 0]
+      },
+      {
+        "key": "sets",
+        "label": "Training sets (3%)",
+        "color": "var(--chart-4)",
+        "values": [0, 3, 0]
+      },
+      {
+        "key": "refine",
+        "label": "Algorithm refinement (4%)",
+        "color": "var(--chart-5)",
+        "values": [0, 4, 0]
+      },
+      {
+        "key": "other",
+        "label": "Other (5%)",
+        "color": "var(--chart-6)",
+        "values": [0, 0, 5]
+      }
+    ]
+  },
+  {
+    "id": "iteration-tax",
+    "kind": "BAR_STACKED",
+    "title": "Iteration tax: candidates per window",
+    "caption": "The book's six-month scenario: a weekly training loop clears ~26 candidates; an hourly loop clears ~100 (capped on useful experiments). Cycle time, not model quality, sets how much a team can learn — the ~3.8x gap is pure search breadth.",
+    "xLabel": "Cycle time",
+    "yLabel": "Candidates tested in 6 months",
+    "xPoints": ["Weekly cycle (large ensemble)", "Hourly cycle (edge model)"],
+    "series": [
+      {
+        "key": "tested",
+        "label": "Candidates tested",
+        "color": "var(--chart-2)",
+        "values": [26, 100]
+      }
+    ]
+  }
+]

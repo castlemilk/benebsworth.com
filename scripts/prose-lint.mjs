@@ -456,7 +456,7 @@ function extractTs(filePath, source) {
 
 export function extractProse(filePath, source) {
   const normalized = filePath.replaceAll('\\', '/')
-  const result = /\.mdx$/.test(normalized)
+  const result = /\.mdx?$/.test(normalized)
     ? extractMdx(normalized, source)
     : extractTs(normalized, source)
   return { ...result, file: normalized, source }

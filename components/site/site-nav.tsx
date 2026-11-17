@@ -13,6 +13,8 @@ const navLinks = [
   { href: '/projects/', prefix: '/projects', label: 'Projects' },
   { href: '/blog/', prefix: '/blog', label: 'Blog' },
   { href: '/lab/', prefix: '/lab', label: 'Lab' },
+  { href: '/study/', prefix: '/study', label: 'Study' },
+  { href: '/knowledge/', prefix: '/knowledge', label: 'Knowledge' },
   { href: '/vectors/', prefix: '/vectors', label: 'Vectors' },
   { href: '/hiking/', prefix: '/hiking', label: 'Hiking' },
   { href: '/about/', prefix: '/about', label: 'About' },

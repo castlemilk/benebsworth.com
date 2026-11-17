@@ -1,0 +1,92 @@
+[
+{
+"id": "sensitivity",
+"number": 1,
+"title": "Sensitivity (recall): the missed-case floor",
+"latex": "\\mathrm{Sens} = \\frac{\\mathrm{TP}}{\\mathrm{TP} + \\mathrm{FN}}",
+"caption": "Share of real disease cases the model flags. The DR contract sets this above 90% because a missed diagnosis is the expensive failure — every FN is a patient sent home untreated.",
+"symbols": [
+{"symbol": "\\mathrm{Sens}", "name": "sensitivity", "meaning": "true-positive rate; share of actual positive cases correctly flagged"},
+{"symbol": "\\mathrm{TP}", "name": "true positives", "meaning": "diseased patients correctly flagged for referral"},
+{"symbol": "\\mathrm{FN}", "name": "false negatives", "meaning": "diseased patients cleared as healthy — the catastrophic miss"}
+]
+},
+{
+"id": "specificity",
+"number": 2,
+"title": "Specificity: the false-referral budget",
+"latex": "\\mathrm{Spec} = \\frac{\\mathrm{TN}}{\\mathrm{TN} + \\mathrm{FP}}",
+"caption": "Share of healthy patients correctly cleared. Above 80% keeps the specialist referral load within clinic capacity — a 90%-healthy population means every specificity point is paid in real referrals.",
+"symbols": [
+{"symbol": "\\mathrm{Spec}", "name": "specificity", "meaning": "true-negative rate; share of actual healthy patients correctly cleared"},
+{"symbol": "\\mathrm{TN}", "name": "true negatives", "meaning": "healthy patients correctly cleared, no referral"},
+{"symbol": "\\mathrm{FP}", "name": "false positives", "meaning": "healthy patients flagged for referral — consumes scarce specialist capacity"}
+]
+},
+{
+"id": "ungradable-share",
+"number": 3,
+"title": "Ungradable share: the lab-to-field gap measured",
+"latex": "f_{\\mathrm{reject}} = \\frac{N_{\\mathrm{ungradable}}}{N_{\\mathrm{submitted}}} = \\frac{393}{1838} \\approx 0.21",
+"caption": "Beede et al. 2020: of 1,838 retinal images captured in Thai clinics, 393 were ungradable — about one in five patients effectively unscreened despite a specialist-level lab model.",
+"symbols": [
+{"symbol": "f_{\\mathrm{reject}}", "name": "rejected share", "meaning": "fraction of field images too degraded to grade"},
+{"symbol": "N_{\\mathrm{ungradable}}", "name": "ungradable count", "meaning": "images rejected by quality requirements — 393 in the Thailand deployment"},
+{"symbol": "N_{\\mathrm{submitted}}", "name": "submitted count", "meaning": "all images captured at the clinic — 1,838 in the study"}
+]
+},
+{
+"id": "constraint-rework",
+"number": 4,
+"title": "Constraint-propagation rework",
+"latex": "R = \\sum_{a \\in A_{\\mathrm{dep}}} \\bigl( c_{\\mathrm{revise}}(a) + c_{\\mathrm{repeat}}(a) + c_{\\mathrm{validate}}(a) \\bigr)",
+"caption": "The bill when a constraint surfaces late: every dependent artifact revised, its dependent work repeated, and the result re-validated. Day-153 priced at five months plus a six-day sequential repair.",
+"symbols": [
+{"symbol": "R", "name": "total rework", "meaning": "cost of the late constraint, summed over all affected artifacts"},
+{"symbol": "A_{\\mathrm{dep}}", "name": "dependent artifacts", "meaning": "artifacts built on decisions the constraint invalidates — dataset, weights, validation results"},
+{"symbol": "c_{\\mathrm{revise}}(a)", "name": "revision cost", "meaning": "work to correct artifact a against the newly surfaced constraint"},
+{"symbol": "c_{\\mathrm{repeat}}(a)", "name": "repetition cost", "meaning": "re-running the dependent pipeline stages for artifact a"},
+{"symbol": "c_{\\mathrm{validate}}(a)", "name": "re-validation cost", "meaning": "re-establishing the release evidence for artifact a — the term that usually dominates"}
+]
+},
+{
+"id": "iteration-tax",
+"number": 5,
+"title": "Iteration tax: search breadth per window",
+"latex": "N_{\\mathrm{ideas}} \\approx \\frac{T_{\\mathrm{window}}}{t_{\\mathrm{cycle}}}",
+"caption": "Ideas tested is window divided by cycle time — a weekly loop clears ~26 candidates in six months, an hourly loop ~100. The tax buys search breadth, not accuracy per se.",
+"symbols": [
+{"symbol": "N_{\\mathrm{ideas}}", "name": "experiments possible", "meaning": "how many candidates or fixes a team can try inside the window"},
+{"symbol": "T_{\\mathrm{window}}", "name": "development window", "meaning": "calendar time available, e.g. six months"},
+{"symbol": "t_{\\mathrm{cycle}}", "name": "cycle time", "meaning": "wall-clock for one full loop — train, validate, or both"}
+]
+},
+{
+"id": "iron-law-task",
+"number": 6,
+"title": "Iron law, additive form: stage ownership map",
+"latex": "T_{\\mathrm{task}} = \\frac{D_{\\mathrm{vol}}}{BW} + \\frac{\\mathrm{Ops}}{R_{\\mathrm{peak}} \\cdot \\eta} + L",
+"caption": "Chapter 1's time equation read as an org chart: data stage sets D_vol via capture resolution, model stage sets Ops via backbone choice, deployment stage sets R_peak, η, and L via device and runtime.",
+"symbols": [
+{"symbol": "T_{\\mathrm{task}}", "name": "task time", "meaning": "one training run or one screening inference"},
+{"symbol": "D_{\\mathrm{vol}}", "name": "data volume", "meaning": "bytes moved per task — set by capture resolution at the data stage"},
+{"symbol": "BW", "name": "memory bandwidth", "meaning": "bytes/s the machine delivers — a device property"},
+{"symbol": "\\mathrm{Ops}", "name": "operation count", "meaning": "FLOPs per task — set by architecture choice (~600 MFLOPs for MobileNetV2)"},
+{"symbol": "R_{\\mathrm{peak}}", "name": "peak rate", "meaning": "theoretical FLOP/s of the target machine"},
+{"symbol": "\\eta", "name": "utilization", "meaning": "fraction of peak actually realized — set by runtime and data feeding"},
+{"symbol": "L", "name": "fixed overhead", "meaning": "dispatch, launch, and sync costs per task"}
+]
+},
+{
+"id": "operating-point",
+"number": 7,
+"title": "Feasible operating point: the ROC pass corner",
+"latex": "\\exists\\, \\tau:\\ \\mathrm{Sens}(\\tau) \\ge 0.90 \\ \\land\\ \\mathrm{Spec}(\\tau) \\ge 0.80",
+"caption": "The first validation check: does any single classification threshold satisfy both floors under intended conditions? Sweeping τ traces the ROC curve; if no point reaches the corner, the candidate fails before deployment questions start.",
+"symbols": [
+{"symbol": "\\tau", "name": "decision threshold", "meaning": "probability cutoff that turns the model's score into a binary referral"},
+{"symbol": "\\mathrm{Sens}(\\tau)", "name": "sensitivity at τ", "meaning": "lowering τ catches more disease (raises this) at the cost of more false referrals"},
+{"symbol": "\\mathrm{Spec}(\\tau)", "name": "specificity at τ", "meaning": "raising τ clears more healthy patients (raises this) at the cost of missed cases"}
+]
+}
+]

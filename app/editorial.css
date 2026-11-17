@@ -239,10 +239,136 @@ a:focus-visible>.folio-entry{outline:2px solid var(--blog);outline-offset:4px}
 :is(.research-article,.folio-study) .equation{border-block:1px solid var(--border);padding:1rem 0 1.25rem;text-align:left}
 :is(.research-article,.folio-study) .equation-caption{font:1rem/1.6 'Folio Serif',Georgia,serif;color:var(--muted);overflow-wrap:anywhere}
 :is(.research-article,.folio-study) .equation-number{font-family:'Folio Condensed',sans-serif;font-size:1rem;font-weight:600;color:var(--fg)}
-@media print{.equation-controls{display:none}.equation-math{overflow:visible}}
+/* Symbol drilldown: hover-revealed explainer over the math, expands a
+   per-term key under the caption. */
+.equation-math-wrap{position:relative}
+.equation-explainer{position:absolute;right:.45rem;top:.45rem;z-index:2;display:inline-flex;align-items:center;justify-content:center;width:1.9rem;height:1.9rem;border-radius:50%;border:1px solid var(--border);background:var(--popover,var(--background));color:var(--muted);cursor:pointer;opacity:0;transition:opacity .18s ease,color .18s ease,border-color .18s ease}
+.equation:hover .equation-explainer,.equation:focus-within .equation-explainer,.equation-explainer[data-open]{opacity:1}
+@media (hover:none){.equation-explainer{opacity:.85}}
+@media (prefers-reduced-motion:reduce){.equation-explainer{transition:none}}
+.equation-explainer:hover{color:var(--fg);border-color:var(--fg)}
+.equation-explainer[data-open]{color:var(--blog,var(--primary));border-color:var(--blog,var(--primary))}
+.equation-explainer:focus-visible{outline:2px solid var(--blog);outline-offset:2px;opacity:1}
+.equation-symbols{margin-top:.6rem;text-align:left}
+.equation-symbols-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .22s ease}
+.equation-symbols-panel[data-open]{grid-template-rows:1fr}
+@media (prefers-reduced-motion:reduce){.equation-symbols-panel{transition:none}}
+.equation-symbols-inner{overflow:hidden;min-height:0}
+.equation-symbols-inner dl{margin:.35rem 0 .2rem;display:grid;gap:.15rem}
+.equation-symbol-row{display:grid;grid-template-columns:minmax(7rem,auto) 1fr;gap:.4rem 1.1rem;align-items:baseline;padding:.45rem .6rem;border-radius:.45rem}
+.equation-symbol-row:nth-child(odd){background:color-mix(in srgb,var(--fg) 4%,transparent)}
+.equation-symbol-row dt{font-size:.95rem;min-width:0}
+.equation-symbol-row dd{margin:0;display:flex;flex-wrap:wrap;gap:.15rem .7rem;align-items:baseline;min-width:0}
+.equation-symbol-name{font:600 .8rem/1.5 'Folio Condensed',sans-serif;letter-spacing:.05em;color:var(--fg)}
+.equation-symbol-meaning{font:.82rem/1.5 var(--font-sans),sans-serif;color:var(--muted)}
+.equation-symbol-raw{font:.8rem/1.4 var(--font-mono),monospace;color:var(--fg)}
+@media (max-width:40rem){.equation-symbol-row{grid-template-columns:1fr}}
+@media print{.equation-controls,.equation-symbols{display:none}.equation-math{overflow:visible}}
+/* Packet `<!-- eq:id -->$$…$$` blocks reuse the explainer chrome inside prose. */
+.equation-packet{margin:1.9rem 0;text-align:center}
+.equation-packet .equation-math-wrap{overflow-x:auto}
+.equation-packet .katex-display{margin:.4em 0}
+.equation-packet .equation-symbols{max-width:44rem;margin-inline:auto}
 /* Local size adapters only; maintained ActionMenu source and CSS stay intact. */
 .equation-controls .action-menu-trigger,.equation-controls .action-menu-item{min-height:44px}
 .equation-controls .action-menu-panel{min-width:min(230px,calc(100vw - 3rem));max-width:min(310px,calc(100vw - 3rem))}
+
+/* Inline `::fig[id]` / `::chart[id]` embeds — figures at the point of
+   discussion, styled like the gallery frames. */
+.study-fig{margin:1.9rem 0;padding:1rem 1.1rem;border:1px solid var(--border);border-radius:.85rem;background:color-mix(in srgb,var(--fg) 2%,var(--bg))}
+.study-fig,.study-chart-embed{scroll-margin-top:5rem}
+.study-fig>svg,.study-fig .study-fig-img{display:block;width:100%;height:auto}
+.study-fig figcaption,.study-chart-embed figcaption{margin-top:.6rem;display:flex;flex-wrap:wrap;gap:.15rem .6rem;align-items:baseline}
+.study-fig .study-fig-title,.study-chart-embed .study-fig-title{font:600 .82rem/1.5 var(--font-sans),sans-serif;color:var(--fg)}
+.study-fig .study-fig-title::after,.study-chart-embed .study-fig-title::after{content:":"}
+.study-fig .study-fig-caption,.study-chart-embed .study-fig-caption{font:.82rem/1.5 var(--font-sans),sans-serif;color:var(--muted)}
+.study-fig .study-fig-badge{font:600 .62rem/1.4 var(--font-mono),monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--folio-accent,#a34c29);border:1px solid var(--border);border-radius:999px;padding:.1rem .55rem}
+.dark .study-fig .study-fig-badge,.dark .study-fig-missing{color:var(--folio-accent,#dda17a)}
+.study-fig-missing{font:.8rem/1.5 var(--font-mono),monospace;color:var(--folio-accent,#a34c29);border:1px dashed var(--border);border-radius:.5rem;padding:.5rem .8rem}
+.study-chart-embed{margin:1.9rem 0}
+.study-chart-embed .study-chart-slot:empty{display:none}
+.study-chart-embed figcaption p{margin:.15rem 0}
+/* Chart embeds get no outer card — the portaled chart carries its own border;
+   the figcaption styles above are shared with .study-fig. */
+@media print{.study-fig,.study-chart-embed{break-inside:avoid}}
+
+/* AudioOverview: two-host player with karaoke read-along transcript.
+   Speaker hues are scoped on the component — --ao-a picks up --blog, --ao-b
+   picks up --folio-accent where present, with literal fallbacks so the two
+   speakers stay distinct on surfaces that don't define those vars. */
+.audio-overview{--ao-a:var(--blog);--ao-b:var(--folio-accent,#a34c29);margin:1.5rem 0;padding:1rem 1.1rem;border:1px solid var(--border);border-radius:.85rem;background:color-mix(in srgb,var(--fg) 3%,var(--bg))}
+.ao-caption{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.4rem 1rem;margin-bottom:.7rem}
+.ao-label{font:600 .68rem/1.4 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ao-legend{display:inline-flex;align-items:center;gap:.55rem;font:.72rem/1.4 var(--font-mono),monospace;color:var(--muted)}
+.ao-dot{display:inline-block;width:.5rem;height:.5rem;border-radius:50%}
+.ao-dot--a{background:var(--ao-a);margin-right:.3rem}
+.dark .audio-overview{--ao-b:var(--folio-accent,#dda17a)}
+.ao-dot--b{background:var(--ao-b);margin:0 .3rem 0 .55rem}
+.ao-controls{display:flex;align-items:center;gap:.7rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.ao-play{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:2.6rem;height:2.6rem;border:none;border-radius:50%;background:var(--ao-a);color:var(--bg);cursor:pointer;transition:transform .15s ease,filter .15s ease}
+.ao-play:hover{filter:brightness(1.12)}
+.ao-play:active{transform:scale(.94)}
+.ao-play:focus-visible{outline:2px solid var(--ao-a);outline-offset:2px}
+.ao-play svg{fill:currentColor}
+.ao-time{flex-shrink:0;font:.75rem/1 var(--font-mono),monospace;color:var(--muted);font-variant-numeric:tabular-nums}
+.ao-scrub{flex:1;appearance:none;-webkit-appearance:none;height:.35rem;border-radius:999px;cursor:pointer;background:linear-gradient(to right,var(--ao-a) var(--ao-fill,0%),color-mix(in srgb,var(--fg) 16%,var(--bg)) var(--ao-fill,0%))}
+.ao-scrub::-webkit-slider-thumb{-webkit-appearance:none;width:.9rem;height:.9rem;border-radius:50%;background:var(--ao-a);border:2px solid var(--bg)}
+.ao-scrub::-moz-range-thumb{width:.9rem;height:.9rem;border-radius:50%;background:var(--ao-a);border:2px solid var(--bg)}
+.ao-scrub:focus-visible{outline:2px solid var(--ao-a);outline-offset:3px}
+.ao-speed{flex-shrink:0;padding:.2rem .3rem;border:1px solid var(--border);border-radius:.4rem;background:transparent;color:var(--fg);font:.72rem/1.4 var(--font-mono),monospace;cursor:pointer}
+.ao-transcript{list-style:none;display:flex;flex-direction:column;gap:.45rem;max-height:19rem;margin:.7rem 0 0;padding:0;overflow-y:auto;scrollbar-width:thin}
+.ao-seg{display:flex}
+.ao-seg--b{justify-content:flex-end}
+.ao-seg-btn{display:flex;align-items:flex-start;gap:.55rem;max-width:min(92%,40rem);padding:.5rem .65rem;border:none;border-radius:.7rem;background:transparent;color:var(--fg);font:.92rem/1.55 var(--font-sans),sans-serif;text-align:left;cursor:pointer;transition:background .15s ease}
+.ao-seg-btn:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+.ao-seg-btn:focus-visible{outline:2px solid var(--ao-a);outline-offset:1px}
+.ao-seg--b .ao-seg-btn{flex-direction:row-reverse}
+.ao-chip{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:1.35rem;height:1.35rem;margin-top:.1rem;border-radius:50%;color:var(--bg);font:700 .68rem/1 var(--font-mono),monospace}
+.ao-seg--a .ao-chip{background:var(--ao-a)}
+.ao-seg--b .ao-chip{background:var(--ao-b)}
+.ao-seg.is-active .ao-chip{outline:2px solid var(--ao-a);outline-offset:1px}
+.ao-seg--b.is-active .ao-chip{outline-color:var(--ao-b)}
+.ao-seg-body{display:block;flex:1;min-width:0}
+.ao-seg-text{display:block;padding:.1rem .2rem;border-radius:.4rem;overflow-wrap:anywhere}
+/* Karaoke fill = two layered backgrounds on the text box, driven by JS-measured
+   line metrics: a solid band over completed lines + a partial-width band on
+   the current line. A single overlay div would slice all lines at once. */
+.ao-seg.is-active .ao-seg-text{
+  background:
+    linear-gradient(var(--ao-tint),var(--ao-tint)) 0 0/100% var(--ao-done,0px) no-repeat,
+    linear-gradient(90deg,var(--ao-tint) var(--ao-frac,0%),transparent var(--ao-frac,0%)) 0 var(--ao-done,0px)/100% var(--ao-lh,1.55em) no-repeat;
+}
+.ao-seg--a{--ao-tint:color-mix(in srgb,var(--ao-a) 14%,transparent)}
+.ao-seg--b{--ao-tint:color-mix(in srgb,var(--ao-b) 16%,transparent)}
+.ao-seg.is-active .ao-seg-text{box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--ao-a) 55%,transparent)}
+.ao-seg--b.is-active .ao-seg-text{box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--ao-b) 60%,transparent)}
+.ao-seg-time{flex-shrink:0;align-self:center;font:.68rem/1 var(--font-mono),monospace;color:var(--muted);font-variant-numeric:tabular-nums;opacity:0;transition:opacity .15s ease}
+.ao-seg-btn:hover .ao-seg-time,.ao-seg.is-active .ao-seg-time{opacity:1}
+/* Transcript disclosure + expand. */
+.ao-toggle{display:inline-flex;align-items:center;gap:.35rem;flex-shrink:0;padding:.25rem .6rem;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--muted);font:.72rem/1.4 var(--font-mono),monospace;cursor:pointer;transition:color .15s ease,border-color .15s ease}
+.ao-toggle:hover{color:var(--fg);border-color:var(--fg)}
+.ao-toggle:focus-visible{outline:2px solid var(--ao-a);outline-offset:2px}
+.ao-toggle-count{color:var(--muted)}
+.ao-chevron{transition:transform .18s ease}
+.ao-chevron[data-open]{transform:rotate(180deg)}
+.ao-transcript-wrap{position:relative}
+.ao-transcript[hidden]{display:none}
+.ao-expand{position:absolute;right:.2rem;top:.45rem;z-index:2;padding:.15rem .5rem;border:1px solid var(--border);border-radius:999px;background:var(--bg);color:var(--muted);font:.66rem/1.4 var(--font-mono),monospace;cursor:pointer}
+.ao-expand:hover{color:var(--fg);border-color:var(--fg)}
+.ao-expand:focus-visible{outline:2px solid var(--ao-a);outline-offset:2px}
+.ao-transcript--full{max-height:none;overflow:visible}
+/* Equation chip inside a transcript bubble. */
+.ao-eq{display:block;position:relative;margin:.45rem .2rem .15rem;padding:.5rem .8rem .55rem;border-left:3px solid var(--ao-a);border-radius:0 .5rem .5rem 0;background:color-mix(in srgb,var(--ao-a) 7%,var(--bg));color:inherit;text-decoration:none}
+.ao-seg--b .ao-eq{border-left-color:var(--ao-b);background:color-mix(in srgb,var(--ao-b) 8%,var(--bg))}
+a.ao-eq:hover{border-left-color:var(--fg)}
+a.ao-eq:focus-visible{outline:2px solid var(--ao-a);outline-offset:2px}
+.ao-eq-title{display:block;font:600 .64rem/1.4 var(--font-mono),monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ao-eq-math{display:block;max-width:100%;overflow-x:auto;font-size:.9em}
+.ao-eq-math .katex-display{margin:.45em 0}
+.ao-eq-raw{display:block;font:.78rem/1.5 var(--font-mono),monospace;color:var(--fg);overflow-wrap:anywhere}
+.ao-eq-jump{position:absolute;right:.5rem;top:.45rem;font-size:.7rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.ao-seg-btn,.ao-play,.ao-seg-time,.ao-chevron{transition:none}}
+@media print{.ao-controls,.ao-seg-time,.ao-toggle,.ao-expand{display:none}.ao-transcript[hidden]{display:flex}.ao-transcript{max-height:none;overflow:visible}}
 
 /* A reading line is not a figure canvas. Only explicit authored study roots
    break the 44rem measure; their own container decides when to split. */

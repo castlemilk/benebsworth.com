@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 340" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <!-- Lifecycle loop: six stages, artifact on each edge, operational phase shaded -->
+  <defs>
+    <marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <marker id="arrFb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- operational-phase shading: deploy (5) + monitor (6), bottom-left -->
+  <rect x="28" y="196" width="408" height="116" rx="10" fill="#f59e0b" fill-opacity="0.08" stroke="#f59e0b" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="232" y="212" text-anchor="middle" font-size="11" fill="#b45309">OPERATIONAL PHASE — deployment starts a phase, it doesn't end one</text>
+
+  <!-- top row: 1,2,3 left→right -->
+  <g>
+    <rect x="32" y="56" width="180" height="56" rx="6" fill="#3b82f6" fill-opacity="0.14" stroke="#2563eb" stroke-width="1.4"/>
+    <text x="122" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">1 · PROBLEM DEF</text>
+    <text x="122" y="96" text-anchor="middle" font-size="10" fill="#6b7280">requirements → all axes</text>
+  </g>
+  <g>
+    <rect x="252" y="56" width="180" height="56" rx="6" fill="#3b82f6" fill-opacity="0.14" stroke="#2563eb" stroke-width="1.4"/>
+    <text x="342" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">2 · DATA</text>
+    <text x="342" y="96" text-anchor="middle" font-size="10" fill="#6b7280">owns the D axis</text>
+  </g>
+  <g>
+    <rect x="472" y="56" width="180" height="56" rx="6" fill="#3b82f6" fill-opacity="0.14" stroke="#2563eb" stroke-width="1.4"/>
+    <text x="562" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">3 · MODEL DEV</text>
+    <text x="562" y="96" text-anchor="middle" font-size="10" fill="#6b7280">owns the A axis</text>
+  </g>
+
+  <!-- bottom row: 4 right, 5 middle, 6 left (flow right→left) -->
+  <g>
+    <rect x="472" y="236" width="180" height="56" rx="6" fill="#3b82f6" fill-opacity="0.14" stroke="#2563eb" stroke-width="1.4"/>
+    <text x="562" y="258" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">4 · EVAL + VALIDATE</text>
+    <text x="562" y="276" text-anchor="middle" font-size="10" fill="#6b7280">verifies before release</text>
+  </g>
+  <g>
+    <rect x="252" y="236" width="180" height="56" rx="6" fill="#3b82f6" fill-opacity="0.14" stroke="#2563eb" stroke-width="1.4"/>
+    <text x="342" y="258" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">5 · DEPLOY</text>
+    <text x="342" y="276" text-anchor="middle" font-size="10" fill="#6b7280">commits D·A to an M</text>
+  </g>
+  <g>
+    <rect x="32" y="236" width="180" height="56" rx="6" fill="#3b82f6" fill-opacity="0.14" stroke="#2563eb" stroke-width="1.4"/>
+    <text x="122" y="258" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">6 · MONITOR</text>
+    <text x="122" y="276" text-anchor="middle" font-size="10" fill="#6b7280">verifies continuously</text>
+  </g>
+
+  <!-- forward edges with artifact labels -->
+  <line x1="212" y1="84" x2="248" y2="84" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrL)"/>
+  <text x="232" y="74" text-anchor="middle" font-size="9" fill="#6b7280">targets</text>
+  <line x1="432" y1="84" x2="468" y2="84" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrL)"/>
+  <text x="452" y="74" text-anchor="middle" font-size="9" fill="#6b7280">dataset</text>
+  <!-- down the right side: 3 → 4 -->
+  <line x1="562" y1="112" x2="562" y2="232" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrL)"/>
+  <text x="574" y="168" font-size="9" fill="#6b7280">reproducible</text>
+  <text x="574" y="180" font-size="9" fill="#6b7280">artifact</text>
+  <!-- bottom row right→left: 4 → 5 → 6 -->
+  <line x1="472" y1="264" x2="436" y2="264" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrL)"/>
+  <text x="452" y="254" text-anchor="middle" font-size="9" fill="#6b7280">manifest</text>
+  <line x1="252" y1="264" x2="216" y2="264" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrL)"/>
+  <text x="232" y="254" text-anchor="middle" font-size="9" fill="#6b7280">endpoint</text>
+  <!-- up the left side: 6 → 1 (the loop closure) -->
+  <line x1="122" y1="236" x2="122" y2="116" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrFb)"/>
+  <text x="134" y="172" font-size="10" fill="#dc2626">drift evidence →</text>
+  <text x="134" y="186" font-size="10" fill="#dc2626">re-collect, retrain,</text>
+  <text x="134" y="200" font-size="10" fill="#dc2626">re-validate</text>
+
+  <text x="350" y="160" text-anchor="middle" font-size="10" fill="#9ca3af">each edge is a contract hand-off;</text>
+  <text x="350" y="176" text-anchor="middle" font-size="10" fill="#9ca3af">the dashed return is why it's a loop, not a waterfall</text>
+</svg>

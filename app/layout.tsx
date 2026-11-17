@@ -1,16 +1,34 @@
 import type { Metadata, Viewport } from 'next'
-import { JetBrains_Mono, Hanken_Grotesk } from 'next/font/google'
+import localFont from 'next/font/local'
 import { preload } from 'react-dom'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme/theme-provider'
+import { Hardware } from '@/components/ui/hardware'
 import { Analytics } from '@/components/analytics/analytics'
 import { SITE_URL } from '@/components/seo/json-ld'
 
-const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
-const sans = Hanken_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+// Vendored in app/fonts/ — next/font/google hits an upstream flake where
+// Google intermittently returns extensionless /l/font?kit= URLs and Turbopack
+// fails the build (vercel/next.js#99114). Local files keep the build offline-safe.
+const mono = localFont({
+  src: './fonts/jetbrains-mono-latin.woff2',
+  weight: '100 800',
+  variable: '--font-mono',
+})
+const sans = localFont({
+  src: './fonts/hanken-grotesk-latin.woff2',
+  weight: '100 900',
   variable: '--font-sans',
+})
+// SPEC-01 hardware skin typeface — vendored so the skin stays CDN-free.
+const plexMono = localFont({
+  src: [
+    { path: './fonts/ibm-plex-mono-200.woff2', weight: '200' },
+    { path: './fonts/ibm-plex-mono-300.woff2', weight: '300' },
+    { path: './fonts/ibm-plex-mono-400.woff2', weight: '400' },
+    { path: './fonts/ibm-plex-mono-500.woff2', weight: '500' },
+  ],
+  variable: '--font-plex-mono',
 })
 
 export const metadata: Metadata = {
@@ -44,7 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${mono.variable} ${sans.variable}`}
+      className={`${mono.variable} ${sans.variable} ${plexMono.variable}`}
     >
       <body className="font-sans antialiased">
         {/* Photos (hike galleries, trail-guide figures) are served from the GCS
@@ -60,7 +78,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Hardware keyColor={{ l: 0.64, c: 0.31, h: 48 }}>{children}</Hardware>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

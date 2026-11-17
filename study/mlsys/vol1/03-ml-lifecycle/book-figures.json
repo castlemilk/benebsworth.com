@@ -1,0 +1,50 @@
+[
+  {
+    "id": "lifecycle-overview",
+    "file": "lifecycle-overview.svg",
+    "title": "fig-lifecycle-overview: the six-stage loop",
+    "caption": "The figure the chapter defends — six stages with artifacts on the edges and monitoring's return path closing the loop. Ours (lifecycle-loop.svg) distils the same cycle with the operational phase shaded."
+  },
+  {
+    "id": "lifecycle-detail",
+    "file": "lifecycle-detail.svg",
+    "title": "fig-ml-lifecycle: the dual-pipeline detail",
+    "caption": "Upper data pipeline and lower model pipeline executing concurrently with named feedback arrows — data fixes, data needs, online performance — the routes teams traverse repeatedly."
+  },
+  {
+    "id": "ds-time",
+    "file": "ds-time.svg",
+    "title": "fig-ds-time: where the hours go",
+    "caption": "CrowdFlower 2016: 60% cleaning, 19% collecting — ~80% of practitioners name data work as the biggest time sink vs ~16% model-focused. Compare with our time-allocation chart, same numbers."
+  },
+  {
+    "id": "eye-dr",
+    "file": "eye-dr.png",
+    "title": "fig-eye-dr: the fundus photographs",
+    "caption": "Actual retinal images of the kind the DR screener grades — what 'gradable vs ungradable' looks like, and why blur and lighting are screening outcomes, not just image quality."
+  },
+  {
+    "id": "roc-corner",
+    "file": "roc-corner.svg",
+    "title": "margin: the ROC pass corner",
+    "caption": "Threshold sweep as feasibility test: the curve must reach the corner where Sens ≥ 0.90 and Spec ≥ 0.80 both hold. If no threshold lands there, the candidate fails before deployment questions start."
+  },
+  {
+    "id": "feedback-timescales",
+    "file": "feedback-timescales.svg",
+    "title": "Monitoring loops span five orders of magnitude",
+    "caption": "Log-scale ladder: minute-level camera checks up to quarterly architecture reviews. Cadence matches signal trustworthiness and remedy cost — thrashing vs silent decay is the failure pair."
+  },
+  {
+    "id": "feedback-paths",
+    "file": "feedback-paths.svg",
+    "title": "fig-ml-lifecycle-feedback: the upstream return paths",
+    "caption": "Named feedback routes across stages 2-6: data gaps trigger targeted collection, validation issues motivate augmentation, performance insights and deployment constraints route back to data prep and collection."
+  },
+  {
+    "id": "iteration-tax-bars",
+    "file": "iteration-tax-bars.svg",
+    "title": "margin: the iteration tax",
+    "caption": "100 experiments at an hourly cycle vs 26 at a weekly one over six months — ~3.8× search breadth from cycle time alone."
+  }
+]

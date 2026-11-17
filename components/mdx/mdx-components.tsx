@@ -6,6 +6,7 @@ import { FieldNote, Assumptions, FigureFocus } from './research-folio'
 import type { MDXComponents } from 'mdx/types'
 import { Callout } from '@/components/ui/callout'
 import { Equation } from './equation'
+import { AudioOverview } from './audio-overview'
 import { AttentionCostCurve } from './attention-cost-curve'
 import { DeltaMemory } from './delta-memory'
 import { AttnResDepth } from './attn-res-depth'
@@ -176,6 +177,7 @@ export const mdxComponents: MDXComponents = {
   DriverLayerStack,
   BringupTimeline,
   Equation,
+  AudioOverview,
   pre: TechnicalPre,
   table: TechnicalTable,
   h2: (p) => <h2 className="font-serif mt-12 scroll-mt-32 text-[clamp(1.75rem,1.3rem+1.6vw,2.6rem)] font-[460] leading-[1.15] tracking-[-0.025em] text-fg" {...p} />,

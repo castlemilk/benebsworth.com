@@ -1,0 +1,118 @@
+{
+"chapterId": "vol1/03_ml_lifecycle",
+"title": "Self-test: Vol I, Ch 3: ML Lifecycle",
+"questions": [
+{
+"id": "a1",
+"kind": "MCQ",
+"source": "BOOK",
+"prompt": "Team A ships a DR screening model and freezes all development once the model clears validation in the lab, treating subsequent tasks as standard server operations. Team B treats launch as the beginning of an ongoing feedback loop, monitoring telemetry and data distributions to guide evidence-based updates. Which team's posture aligns with the chapter's lifecycle, and why?",
+"options": [
+{"id": "a", "label": "Team B — the lifecycle is a closed loop where operational feedback and distribution drift continuously reshape upstream data and model decisions"},
+{"id": "b", "label": "Team A — once a model meets offline validation thresholds its statistical properties are fixed and need only infrastructure maintenance"},
+{"id": "c", "label": "Team A — updating a validated model in production introduces regulatory risk that outweighs drift adaptation"},
+{"id": "d", "label": "Team B — the lifecycle mandates automatic daily retraining regardless of whether distributions have drifted"}
+],
+"correctOptionId": "a",
+"explanation": "Deployment starts the feedback loop rather than ending the project: production inputs, demographics, and equipment shift even when code is untouched. Regulatory frameworks mandate lifecycle management and change control — not frozen models — and the lifecycle prescribes evidence-driven intervention, not unconditional retraining."
+},
+{
+"id": "a2",
+"kind": "MCQ",
+"source": "BOOK",
+"prompt": "An engineering team completes problem definition with clinical sensitivity targets but records the target deployment environment as 'TBD.' Which failure mode does this set up?",
+"options": [
+{"id": "a", "label": "None — deployment can be chosen freely once accuracy is optimized"},
+{"id": "b", "label": "A late-discovery failure: the physical-layer constraint exists but was never bound, so downstream data and architecture decisions can harden around an infeasible target"},
+{"id": "c", "label": "Only a documentation gap, since monitoring will flag any memory overflow post-launch"},
+{"id": "d", "label": "A data-collection problem, because the paradigm choice determines which images are legally shareable"}
+],
+"correctOptionId": "b",
+"explanation": "Deployment paradigm is a stage-1 output that constrains every downstream stage — memory, latency, and data-residency requirements differ across cloud/edge/mobile/TinyML. The day-153 failure is exactly this: the 500 MB reservation existed from day one but was never written into a contract."
+},
+{
+"id": "a3",
+"kind": "MCQ",
+"source": "BOOK",
+"prompt": "Deployment discovers the trained model needs 4 GB while the clinic device reserves ~500 MB. Walking the stage-interface contracts back, which stage owns the defect?",
+"options": [
+{"id": "a", "label": "Deployment — it found the defect, so it owns the fix"},
+{"id": "b", "label": "Model development — it chose an oversized architecture"},
+{"id": "c", "label": "Problem definition — the earliest boundary whose contract never stated the memory condition"},
+{"id": "d", "label": "Evaluation — it should have measured model size alongside sensitivity"}
+],
+"correctOptionId": "c",
+"explanation": "Ownership is assigned by which boundary should have recorded the condition, not by where it surfaced. Evaluation measured what its contract required (sensitivity); model development received no memory budget; problem definition handed off without the constraint — so the fix starts there."
+},
+{
+"id": "a4",
+"kind": "MCQ",
+"source": "BOOK",
+"prompt": "What is the primary conceptual distinction between model evaluation and model validation as the chapter defines them?",
+"options": [
+{"id": "a", "label": "Evaluation uses the test set; validation uses the training set"},
+{"id": "b", "label": "Evaluation measures model behavior on chosen datasets and metrics; validation assembles the broader evidence — latency, subgroup floors, robustness, operational readiness, cost — needed for a specified deployment decision"},
+{"id": "c", "label": "Evaluation happens after deployment; validation happens before"},
+{"id": "d", "label": "They are synonyms for the same offline accuracy check"}
+],
+"correctOptionId": "b",
+"explanation": "Evaluation supplies measurements; validation is the release decision that consumes them plus system-level evidence. A model can pass every accuracy check and still fail validation on latency, subgroup reliability, or cost — validation cannot be reduced to 'one more test.'"
+},
+{
+"id": "a5",
+"kind": "MCQ",
+"source": "BOOK",
+"prompt": "A DR model achieves 94% aggregate sensitivity on held-out validation data. How should the validation stage treat this number before release?",
+"options": [
+{"id": "a", "label": "As sufficient evidence — 94% clears the 90% floor"},
+{"id": "b", "label": "As insufficient: aggregate numbers hide subgroup drops, so stratified evaluation across age brackets, conditions, and camera models must confirm no critical subgroup falls below its floor"},
+{"id": "c", "label": "As grounds to lower the classification threshold until aggregate sensitivity reaches 99%"},
+{"id": "d", "label": "As proof the deployment target is feasible"}
+],
+"correctOptionId": "b",
+"explanation": "The chapter's own example: 94% aggregate can conceal <80% sensitivity on cataract patients or low-light clinics — local failures invisible in the average that surface as missed diagnoses after launch. Release requires per-subgroup evidence in the manifest."
+},
+{
+"id": "a6",
+"kind": "MCQ",
+"source": "BOOK",
+"prompt": "In routine care, only flagged or borderline patients get specialist grading; patients the model cleared are never re-examined. What does this imply for measuring field sensitivity?",
+"options": [
+{"id": "a", "label": "Nothing — referral outcomes provide all the labels needed"},
+{"id": "b", "label": "Field sensitivity is unmeasurable from routine outcomes: misses among cleared patients stay unseen unless the monitoring data path labels a sample of unreferred images"},
+{"id": "c", "label": "Sensitivity can be estimated from referral-rate changes alone"},
+{"id": "d", "label": "The model's training-set sensitivity applies indefinitely"}
+],
+"correctOptionId": "b",
+"explanation": "The routing policy creates a selection hole: false negatives produce no referral and therefore no label. The chapter's remedy is a dedicated monitoring data path — sampled images uploaded off-hours and graded centrally — which is also the retraining data source."
+},
+{
+"id": "b1",
+"kind": "FEYNMAN",
+"source": "ORIGINAL",
+"prompt": "Explain to a software-engineering colleague why 'the artifact is untouched but the model degraded' — no exception, no crash, silent accuracy loss — and why monitoring exists as a lifecycle stage because of it.",
+"modelAnswer": "A traditional binary's behavior is a function of its code: unchanged code means unchanged behavior. An ML model's behavior is a function of code plus the distribution it learned — and the distribution is outside the artifact. When production inputs drift (new camera color profiles, demographic shifts), the learned features meet pixel distributions never sampled in training; accuracy falls while every unit test passes and the latency SLA holds. Monitoring exists because no conventional alarm can see this: statistical telemetry (drift tests, proxy signals, delayed labeled outcomes) is the only sensor pointed at the thing that actually changed. The degradation equation formalizes it — accuracy tracks divergence between production and training data, not code version."
+},
+{
+"id": "b2",
+"kind": "FEYNMAN",
+"source": "ORIGINAL",
+"prompt": "A team treats its held-out test set as the model-selection signal, retraining until a candidate finally clears it. Explain what this does to the evidence the release decision relies on.",
+"modelAnswer": "The test set's evidentiary value comes from its independence: it measures a model it didn't shape. Using it to select is fitting by proxy — each rejection-and-retry leaks information about the test distribution into the search, so the 'held-out' score becomes optimistically biased, a mild form of overfitting to the test set itself. Validation then inherits corrupted evidence: the one number meant to bound generalization can no longer bound anything. The fix is role separation — a validation set for selection, the test set touched once for the release manifest, and fresh or rotating evaluation data if selection must continue."
+},
+{
+"id": "c1",
+"kind": "NUMERIC",
+"source": "ORIGINAL",
+"prompt": "A validation pipeline clears one release candidate per week; a rebuilt pipeline clears one per day. Over a 26-week window, how many candidates does each clear, and what is the search-breadth ratio?",
+"modelAnswer": "N = T_window / t_cycle. Weekly: 26 weeks / 1 week = 26 candidates. Daily: 26 × 7 = 182 candidates. Ratio ≈ 182/26 = 7× — the same iteration-tax arithmetic as the book's ~3.8× (hourly vs weekly training), scaled to the validation boundary. The tax applies at every slow stage, not just training: whichever boundary cycles slowest caps the whole loop's learning rate."
+},
+{
+"id": "c2",
+"kind": "NUMERIC",
+"source": "ORIGINAL",
+"prompt": "A screening program submits 1,838 clinic images; 393 come back ungradable. What share is rejected, and at 100 patients/day how many unscreened patients does that rate produce weekly?",
+"modelAnswer": "f_reject = 393/1838 ≈ 0.214, about 21% — the Beede 2020 field result. At 100 patients/day the program rejects ~21 patients/day unscreened, or ~150 per week (~147 exactly at 21.4%). This is why image-quality checks move to capture time: a rejected image discovered at inference is a patient sent home."
+}
+]
+}

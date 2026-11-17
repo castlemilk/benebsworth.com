@@ -1,17 +1,24 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
     "hallmark": {
       "source": "nutlope/hallmark",
       "sourceType": "github",
       "skillPath": "skills/hallmark/SKILL.md",
-      "computedHash": "611aa02a0444197b38896cb3073866ae9563f10005f7d14e7bf4baf8ab58f437"
+      "computedHash": ""
     },
     "stageshow": {
       "source": "benjitaylor/skills",
       "sourceType": "github",
       "skillPath": "stageshow/SKILL.md",
-      "computedHash": "bf9f07985a62882deae7935b5b1162fb5bf66b248930bb14a75dcaf9d67291b7"
+      "computedHash": ""
+    },
+    "ui-sdk": {
+      "source": "vercel-labs/ui",
+      "commit": "e07158ce1bc6f843f501fa78c34cbdf5d74b7e88",
+      "sourceType": "github",
+      "skillPath": "packages/core/skills/ui-sdk/SKILL.md",
+      "computedHash": "7353586d36e12a3895bcec7d6d589ad26a18e7acff95b014ea63ccb12cfafc38"
     }
   }
 }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-labelledby="mo08-excerpt-notch-r1-24-dark-title" aria-describedby="mo08-excerpt-notch-r1-24-dark-desc">
+  <title id="mo08-excerpt-notch-r1-24-dark-title">Excerpt notch; 24px optical master</title>
+  <desc id="mo08-excerpt-notch-r1-24-dark-desc">A folded short edge points toward two uneven excerpt rules. Only accompany an actual excerpt with attribution and locator; the rules are not text. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo08-excerpt-notch","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":24,"palette":"dark","provenance_class":"original-authored-vector","revision":1,"semantic_role":"label-companion"}</metadata>
+  <g id="mo08-excerpt-notch-r1-24-dark-ink" fill="none" stroke="#ecebe6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo08-excerpt-notch-r1-24-dark-notch" d="M5.3 5 L5.3 8.8 L9 12 L5.3 15.2 L5.3 19"/>
+    <path id="mo08-excerpt-notch-r1-24-dark-upper-excerpt" d="M13 8 L19 8"/>
+    <path id="mo08-excerpt-notch-r1-24-dark-lower-excerpt" d="M13 16 L17 16"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="20" viewBox="0 0 80 20" role="img" aria-labelledby="mo02-end-stop-r1-20-light-title" aria-describedby="mo02-end-stop-r1-20-light-desc">
+  <title id="mo02-end-stop-r1-20-light-title">End stop; 20px optical master</title>
+  <desc id="mo02-end-stop-r1-20-light-desc">A long quiet rule ends before a compact cut-nib lozenge. Signals a visual rest without replacing headings or semantic separators. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo02-end-stop","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":20,"palette":"light","provenance_class":"original-authored-vector","revision":1,"semantic_role":"decorative"}</metadata>
+  <g id="mo02-end-stop-r1-20-light-ink" fill="none" stroke="#202c34" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo02-end-stop-r1-20-light-rule" d="M7 10 C24 10.9 43 9.4 59 10"/>
+    <path id="mo02-end-stop-r1-20-light-nib" d="M67 7.4 L70.2 10 L67 12.6 L63.8 10 Z" fill="#202c34" stroke="none"/>
+  </g>
+</svg>

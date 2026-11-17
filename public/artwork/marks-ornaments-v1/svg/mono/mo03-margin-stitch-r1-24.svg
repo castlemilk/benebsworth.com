@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-labelledby="mo03-margin-stitch-r1-24-mono-title" aria-describedby="mo03-margin-stitch-r1-24-mono-desc">
+  <title id="mo03-margin-stitch-r1-24-mono-title">Margin stitch; 24px optical master</title>
+  <desc id="mo03-margin-stitch-r1-24-mono-desc">Two short unequal oblique pen cuts mark a passage in the margin. They do not mean pause, quotation or a mathematical operator. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo03-margin-stitch","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":24,"palette":"mono","provenance_class":"original-authored-vector","revision":1,"semantic_role":"decorative"}</metadata>
+  <g id="mo03-margin-stitch-r1-24-mono-ink" fill="none" stroke="#000000" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo03-margin-stitch-r1-24-mono-first-cut" d="M5.5 14.4 C8 12.6 9.1 9.1 10 5.5"/>
+    <path id="mo03-margin-stitch-r1-24-mono-second-cut" d="M13 18.6 C15.6 16.5 17 13.4 18.2 9.4"/>
+  </g>
+</svg>

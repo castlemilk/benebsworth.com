@@ -1,0 +1,2707 @@
+{
+  "audit_tool": "artistic-transparent-vectors/scripts/audit_svg.py",
+  "audit_tool_sha256": "09753694b9e98d93385d1fbf876e378edbd8c65ee5be08963e48e9ff81c97a16",
+  "scope": "authored static SVG profile; not a general sanitizer",
+  "files": [
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo01-section-pause-r1-16.svg",
+      "sha256": "e19da7f48038a6a530b3d370abd62d1dd509edffcb85cf277ea7328860fa0e88",
+      "bytes": 1141,
+      "viewBox": [
+        0.0,
+        0.0,
+        64.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo01-section-pause-r1-20.svg",
+      "sha256": "b5c8dc7053117fca8a860a109328f951416d21af083b3fc9410a4611d29e0203",
+      "bytes": 1149,
+      "viewBox": [
+        0.0,
+        0.0,
+        80.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo01-section-pause-r1-24.svg",
+      "sha256": "40a2db7f3bcbe4bda8a2a0366d1e9bdf9003a8abd6817ed27dad29ba00e648b8",
+      "bytes": 1156,
+      "viewBox": [
+        0.0,
+        0.0,
+        96.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo02-end-stop-r1-16.svg",
+      "sha256": "0aaac8b0e69c9f2f0ed2b710c85d684aadd45f24d3dd44fbb004e1cc765e8ed0",
+      "bytes": 1123,
+      "viewBox": [
+        0.0,
+        0.0,
+        64.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo02-end-stop-r1-20.svg",
+      "sha256": "b9629608ecca145f14658b1726d32ba70b54c40bda677f47ae41a8899db85def",
+      "bytes": 1129,
+      "viewBox": [
+        0.0,
+        0.0,
+        80.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo02-end-stop-r1-24.svg",
+      "sha256": "43e8aaa83e93bc88e1a5999c7edcd53946bafe279576d99733c25cee58e1da55",
+      "bytes": 1122,
+      "viewBox": [
+        0.0,
+        0.0,
+        96.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo03-margin-stitch-r1-16.svg",
+      "sha256": "5bcba27b6f4f7566d7814efb63dda30e615d7fddbb56433e7ce22006087f0e58",
+      "bytes": 1155,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo03-margin-stitch-r1-20.svg",
+      "sha256": "85310bd8b923e143b2cb64a3dafaee2aaa169bfa0838ce070ce49ceb4f1f51b6",
+      "bytes": 1160,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo03-margin-stitch-r1-24.svg",
+      "sha256": "199be7c36d0e0fe2b35b26956ab8ee605611ba7fa03889a5d0108119c5211254",
+      "bytes": 1159,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo04-margin-fold-r1-16.svg",
+      "sha256": "be164b8f7ec2058b6b8a2314a7c257930c04854271deee53d0b42b7163e136ed",
+      "bytes": 1154,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo04-margin-fold-r1-20.svg",
+      "sha256": "e68055fee07a52bda40caa95a28f8ca5bb31621afdcda4084bbc49de694c66a1",
+      "bytes": 1166,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo04-margin-fold-r1-24.svg",
+      "sha256": "dd3fa17ed952eccd9bdaecdd96e64ef861934599149b477cc5727d300c94dbc8",
+      "bytes": 1157,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo05-note-seat-r1-16.svg",
+      "sha256": "5c6902caf1fe185159b4488636a51043ec04a2f0d07274903180fa714961267d",
+      "bytes": 1070,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo05-note-seat-r1-20.svg",
+      "sha256": "9813040f0822c1192084b3ce666097f2c29b42cefe334c3420cc807f67fe7524",
+      "bytes": 1082,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo05-note-seat-r1-24.svg",
+      "sha256": "c4e09a0ed040bae04cc40a81a121ba2501c1706fa7aef3ffd3540889c706c0e9",
+      "bytes": 1076,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo06-paired-cuts-r1-16.svg",
+      "sha256": "97d741bb5617596231700fa266c37aa8795c87d26907ef7de4c33a4d43739f85",
+      "bytes": 1148,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo06-paired-cuts-r1-20.svg",
+      "sha256": "45e5073975c0ec2934c63a1aa98ecf1879bd932acea4fecc3082fd02c35496e2",
+      "bytes": 1155,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo06-paired-cuts-r1-24.svg",
+      "sha256": "2b94627be2c75218667b5e28cb684137695b2471a5ae9cd69e87d80d63897626",
+      "bytes": 1145,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo07-locator-tab-r1-16.svg",
+      "sha256": "3733629119cd58695480faf2650253506625d3783b565c314d6d561def050535",
+      "bytes": 1148,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo07-locator-tab-r1-20.svg",
+      "sha256": "92b4d2c8986fa4d2e48b5af2dfb83f31900866213bae2be2f33474bcec0c99d9",
+      "bytes": 1156,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo07-locator-tab-r1-24.svg",
+      "sha256": "1f1a4497c9e0cc64c0253945365d5a56d298100f68fe92bf388be972411a500c",
+      "bytes": 1128,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo08-excerpt-notch-r1-16.svg",
+      "sha256": "a96f029b02100efb47db37bcf5ff0d57edc503df2812aac35a58f062119a70e9",
+      "bytes": 1251,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo08-excerpt-notch-r1-20.svg",
+      "sha256": "a8ce207c5418ab1186deb7d58d0a31f4e340bb085e4469315b587793960cb601",
+      "bytes": 1266,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo08-excerpt-notch-r1-24.svg",
+      "sha256": "274d05b00da5e6575015fe024d7c7adc2c2724a1a5a0baeb91d2d48dcafb36a8",
+      "bytes": 1244,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo09-interpretation-seam-r1-16.svg",
+      "sha256": "a86291ab2f1397a8f8b8bbdf6eecb2fbab54d54f2d3d9d4f628666746b0f3c0e",
+      "bytes": 1341,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo09-interpretation-seam-r1-20.svg",
+      "sha256": "d5d96d3110264bf1cc90cb5c23f52a71d38f31d2ecdf8d600d70a40bef4ca84f",
+      "bytes": 1339,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo09-interpretation-seam-r1-24.svg",
+      "sha256": "5eb9c02ae5a2db157187013f8d4890a42a2dbc8a1bbc84f2e5c13f816da862c6",
+      "bytes": 1341,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo10-record-gap-r1-16.svg",
+      "sha256": "a29db1160e67ed844bdb7ffb1852225d310cc2675267869bc8d83ca785b4ed95",
+      "bytes": 1175,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo10-record-gap-r1-20.svg",
+      "sha256": "0cd6973cc792a9a0cb295aa8c54bf9131ddfe6b226473b42937752d44bc659ce",
+      "bytes": 1177,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo10-record-gap-r1-24.svg",
+      "sha256": "e71419ce3255b5f5d213f1b0381939b3082b00db2091e99d3dbf8796e100e095",
+      "bytes": 1163,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo11-leader-landing-r1-16.svg",
+      "sha256": "f376f6a28d859bc7a17cd5894cf0b141e695e3a1289315a13be7fdf1cb39db66",
+      "bytes": 1215,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo11-leader-landing-r1-20.svg",
+      "sha256": "af4c3c17cadae158eb0be7dd337c9571c0690c11dc35f314d34c8f143c2bf84c",
+      "bytes": 1212,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo11-leader-landing-r1-24.svg",
+      "sha256": "f0188ec3798669a809db7d04dfc1659befa694e1a3a06ff4011f63c0d75b15bc",
+      "bytes": 1215,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo12-extent-ends-r1-16.svg",
+      "sha256": "483ad5c324874b3431559c24c261c2cf93ad68371af2bf40225a9b0ea1b55001",
+      "bytes": 1203,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo12-extent-ends-r1-20.svg",
+      "sha256": "c5b82a025dd7d90a91033dff66273e3207ec13599bcfa635f780145348764ead",
+      "bytes": 1212,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/dark/mo12-extent-ends-r1-24.svg",
+      "sha256": "a258725ad11c4a83b026b08b7079ee27623739bed01736046cf0d745521ff0f7",
+      "bytes": 1196,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo01-section-pause-r1-16.svg",
+      "sha256": "2e352cd69374695eae07c5d9d4e23f263aa7f092723a02837d1d3754ef93efe4",
+      "bytes": 1149,
+      "viewBox": [
+        0.0,
+        0.0,
+        64.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo01-section-pause-r1-20.svg",
+      "sha256": "641de843e82609beba42c9754b05d0f4891cdf0f766d423b9f5355aecd9ad033",
+      "bytes": 1157,
+      "viewBox": [
+        0.0,
+        0.0,
+        80.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo01-section-pause-r1-24.svg",
+      "sha256": "f6abc8d762c09932fc1ff99826c491c72287fe03d9a214a7f8c2f497c73df90c",
+      "bytes": 1164,
+      "viewBox": [
+        0.0,
+        0.0,
+        96.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo02-end-stop-r1-16.svg",
+      "sha256": "49f353d2a7d3f41798fc484fe3229a1854bb7eeab9080201c4f48dbdc60a1566",
+      "bytes": 1131,
+      "viewBox": [
+        0.0,
+        0.0,
+        64.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo02-end-stop-r1-20.svg",
+      "sha256": "435158fca6b6d6b5607f28f116804dc9e3a9398ee78d0e0e24deece930c7d778",
+      "bytes": 1137,
+      "viewBox": [
+        0.0,
+        0.0,
+        80.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo02-end-stop-r1-24.svg",
+      "sha256": "b83d3e52ffa9c6748d46a558a7ba893fb2b178ae06e16d9873a593756c19502b",
+      "bytes": 1130,
+      "viewBox": [
+        0.0,
+        0.0,
+        96.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo03-margin-stitch-r1-16.svg",
+      "sha256": "bf05e0d64aec92384ae078b0078bca250e5b1b1e31357eb5fe48ffed85891fa7",
+      "bytes": 1163,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo03-margin-stitch-r1-20.svg",
+      "sha256": "c75063bac5da8cddfeaa9e7a493dd9f026992975d5828fb6d841b39c22ac9414",
+      "bytes": 1168,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo03-margin-stitch-r1-24.svg",
+      "sha256": "5baacef0d0caf19b8669c3f1f84e0e16c11544906edd006e318bdc5bb7e8d755",
+      "bytes": 1167,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo04-margin-fold-r1-16.svg",
+      "sha256": "160cb84afc5a7684048cf6331ab6dd04a44ae93d9d314496111904f65519fc96",
+      "bytes": 1162,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo04-margin-fold-r1-20.svg",
+      "sha256": "9cb4bf2f94c8c89ec9620bcbb479985b990f3017161c211ffccf351c3de39839",
+      "bytes": 1174,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo04-margin-fold-r1-24.svg",
+      "sha256": "e39442d5685eb5fb330cb8ab82437713626841585721570141153c94d6f26ebb",
+      "bytes": 1165,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo05-note-seat-r1-16.svg",
+      "sha256": "d9385efd143076f4bb546ef8f3dec6743a560ea39a3eb9dba5e8fc2b7f19541d",
+      "bytes": 1077,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo05-note-seat-r1-20.svg",
+      "sha256": "bd85927cc49cca7236b976c47116f9c3858884c2de65b5a3e13cd791161d1593",
+      "bytes": 1089,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo05-note-seat-r1-24.svg",
+      "sha256": "a9d65b8183df7b7e3a1dc151e7fc3ef449ccc5c77e80414d41baf02e8ba6f9e2",
+      "bytes": 1083,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo06-paired-cuts-r1-16.svg",
+      "sha256": "b366555f9b881ee62c5c2ecf88d343d9cba6cc9fa6ada9a135306ff4ec1e7523",
+      "bytes": 1156,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo06-paired-cuts-r1-20.svg",
+      "sha256": "1483ba3fac2dbd91c6a354e603063ab1abdd9444d6a2ef63fa4e97e6b356ad78",
+      "bytes": 1163,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo06-paired-cuts-r1-24.svg",
+      "sha256": "7ceeef324d806c60b9e78f7ec23749db70f70815ef1a4c8695050f1b1c9c67aa",
+      "bytes": 1153,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo07-locator-tab-r1-16.svg",
+      "sha256": "1023e499d5f9975a8ea7354700e4370d91624da05c74270be0e63aa48b69453d",
+      "bytes": 1156,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo07-locator-tab-r1-20.svg",
+      "sha256": "d4943e16de1eb9d1b5b5996b80ed3952cae1308a36da74036a6c5c8b02faa880",
+      "bytes": 1164,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo07-locator-tab-r1-24.svg",
+      "sha256": "924e90d196401142c19f2689dd8b8a4ec8edfdc1c138e157c0a9e568680b2258",
+      "bytes": 1136,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo08-excerpt-notch-r1-16.svg",
+      "sha256": "f112ec89779d51dc09344a086e9635fb70116a361b66a3f173cd3977bd28d219",
+      "bytes": 1260,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo08-excerpt-notch-r1-20.svg",
+      "sha256": "8777ee39c1b4e7e8b420a36a6a74084e96a2a01d8a586f1ba17299d204c7b4e6",
+      "bytes": 1275,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo08-excerpt-notch-r1-24.svg",
+      "sha256": "08eb6a1dd39f2fcc1c6c2ab23542ad2423cfc96712e9908a3fbcab4ac11abe05",
+      "bytes": 1253,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo09-interpretation-seam-r1-16.svg",
+      "sha256": "41fec60d70c5b5ac7e03a6a5a849a3d27f6d515e651e1b75ad5509da7994888e",
+      "bytes": 1350,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo09-interpretation-seam-r1-20.svg",
+      "sha256": "f3df551947424d49f0f984fa050c44aa7d2ae9bc4eba35469bd9b5e2cdebdda5",
+      "bytes": 1348,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo09-interpretation-seam-r1-24.svg",
+      "sha256": "e6e31b51cba2b65e23583f52e762170248a2635db8ca4a9d552e0a7fb9dc9918",
+      "bytes": 1350,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo10-record-gap-r1-16.svg",
+      "sha256": "7a50262b28a94fc09e5089bde230212fc1e988e4595679e14239e880891cf6d6",
+      "bytes": 1183,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo10-record-gap-r1-20.svg",
+      "sha256": "0b6f1934631790a8f74268158f4593550b137b5581876d867569938d2b8c1e83",
+      "bytes": 1185,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo10-record-gap-r1-24.svg",
+      "sha256": "b4de15d92e49f4a68b58e6a2ee01563e2f2cf98605c2afba9053f1fd7f34f2a6",
+      "bytes": 1171,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo11-leader-landing-r1-16.svg",
+      "sha256": "7686d02a1ebd5f7c5607c57659257c389c8232770e9b52f5273ecba62200cad3",
+      "bytes": 1223,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo11-leader-landing-r1-20.svg",
+      "sha256": "63aa93cc877164b8d5412fe7b92d5c5ff23994d990bb421ffce7b782c604aa89",
+      "bytes": 1220,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo11-leader-landing-r1-24.svg",
+      "sha256": "265e5db7d74d8b906b507031dae515f8a55ef9d162dbf483eb72691488ac7487",
+      "bytes": 1223,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo12-extent-ends-r1-16.svg",
+      "sha256": "8ee5ec48fe67490f18822fe6d8f11ffe8ade8b1b4bc966956f7d5c47da682620",
+      "bytes": 1211,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo12-extent-ends-r1-20.svg",
+      "sha256": "2606cea56ac8773bea59d2358b94faf585c41335be88bb4ea1771426f29b7ff1",
+      "bytes": 1220,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/light/mo12-extent-ends-r1-24.svg",
+      "sha256": "557be6335966cbc27e217e74344752a82150ffc3617f26bc1a235a31557ca390",
+      "bytes": 1204,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo01-section-pause-r1-16.svg",
+      "sha256": "f44a2c8aae15d9b23c9accb98534c146abe5822edba42a5dd7215e8ecf6e004e",
+      "bytes": 1141,
+      "viewBox": [
+        0.0,
+        0.0,
+        64.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo01-section-pause-r1-20.svg",
+      "sha256": "9ce331ac33753cefaa670164a7d210840fb3de96ad2df9c9af2702e4753a3472",
+      "bytes": 1149,
+      "viewBox": [
+        0.0,
+        0.0,
+        80.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo01-section-pause-r1-24.svg",
+      "sha256": "3bd1ccabc5d42aa67a0c51689f90cf670ada0e3f876312ad84a71049cf14e9d7",
+      "bytes": 1156,
+      "viewBox": [
+        0.0,
+        0.0,
+        96.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo02-end-stop-r1-16.svg",
+      "sha256": "3098394f4ed812724375e5a76a66fff45f395befd58d4b63859189e838504e0e",
+      "bytes": 1123,
+      "viewBox": [
+        0.0,
+        0.0,
+        64.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo02-end-stop-r1-20.svg",
+      "sha256": "47da749db4e1344dac0b38f3a31c12d0d4609fb7a95cf1e5fc2a2b733bacfa28",
+      "bytes": 1129,
+      "viewBox": [
+        0.0,
+        0.0,
+        80.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo02-end-stop-r1-24.svg",
+      "sha256": "613c154480c1f8d8de0d0cd5c98e7e8c538d4f79c06c15fb2e09c6ccfc067984",
+      "bytes": 1122,
+      "viewBox": [
+        0.0,
+        0.0,
+        96.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo03-margin-stitch-r1-16.svg",
+      "sha256": "1c5796d7fc2d07e001650695f2a1b5bee328fb379c53c7c97b4f5fe7c39e0fee",
+      "bytes": 1155,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo03-margin-stitch-r1-20.svg",
+      "sha256": "2ac96192b4ba90a171ea0b666e9175cff439d5a07a751252ae307a34502fc594",
+      "bytes": 1160,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo03-margin-stitch-r1-24.svg",
+      "sha256": "751b92f2e635b90da6a3ed2cd0ac5e1746f99ddce077f8eb191e052655d0a644",
+      "bytes": 1159,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo04-margin-fold-r1-16.svg",
+      "sha256": "f5aa3defd6346c36719dbeaf694190f3a62cdedbbcb900d90373e30670dc389e",
+      "bytes": 1154,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo04-margin-fold-r1-20.svg",
+      "sha256": "a19ff34b0c3afeb6cdc936cad4b6b093f1478168e18c54c41ce09478073c6ab3",
+      "bytes": 1166,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo04-margin-fold-r1-24.svg",
+      "sha256": "777ff50cd7f93e1738deaaee890051a9fbd5e70aad44dffc8c2cf03c8e459fb0",
+      "bytes": 1157,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo05-note-seat-r1-16.svg",
+      "sha256": "98521d0e8a55e38c10c42a3b03dab78d70e9b888a09d9e28a57f89667d6c1741",
+      "bytes": 1070,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo05-note-seat-r1-20.svg",
+      "sha256": "fcce3229d8f80e8e66dc5afdcc56a7d71d50ac4e12a60ff57a1581eacbaf5e79",
+      "bytes": 1082,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo05-note-seat-r1-24.svg",
+      "sha256": "b56b7d18fabf8e308ea99deea2af1264e5db5e83b7cc2161e8975c4ed697b7f9",
+      "bytes": 1076,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 6,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo06-paired-cuts-r1-16.svg",
+      "sha256": "40694d1dd45aae41a871a25405d00873e7acc9340d117df1a92e8f42b3e41cb2",
+      "bytes": 1148,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo06-paired-cuts-r1-20.svg",
+      "sha256": "db034976fff6e6324dc0165feae3bfdaf34be82a41e1cac9ef39ba8845c7af7b",
+      "bytes": 1155,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo06-paired-cuts-r1-24.svg",
+      "sha256": "fb589d6bfdd553af9d831914e91778efd5678e3315c7656564284fe289a2fdc5",
+      "bytes": 1145,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo07-locator-tab-r1-16.svg",
+      "sha256": "01659ea0fd9d23936c92f9a27337a06ad5cb4e9f584c405f64544ce2d191247c",
+      "bytes": 1148,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo07-locator-tab-r1-20.svg",
+      "sha256": "b08cf87d6153e9b9fe0f1d58a4520bf95ecce3f5afe5b5a1ac72fa40b29451f5",
+      "bytes": 1156,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo07-locator-tab-r1-24.svg",
+      "sha256": "11fc7f03fed5c75379fffee28f313e09cc8c7f4e731b6bc9422e53fb1e1ab87e",
+      "bytes": 1128,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo08-excerpt-notch-r1-16.svg",
+      "sha256": "4e06e9fca5c3f4a5d65369a60b0453b5ec40cf0e4f0b106cc473ecb4ab795401",
+      "bytes": 1251,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo08-excerpt-notch-r1-20.svg",
+      "sha256": "3bf540ee62944c24e996221582ffd0be2db708c5ab0d24bc8fd9fa180dd2d848",
+      "bytes": 1266,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo08-excerpt-notch-r1-24.svg",
+      "sha256": "eb6df6082636688c6200a912e410c46a16c6c83c5e8366e6d834304cc74c6320",
+      "bytes": 1244,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo09-interpretation-seam-r1-16.svg",
+      "sha256": "9e5d7fc016e4323991620cba0f80693d72f00ceed0de0127e395ec10306b3494",
+      "bytes": 1341,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo09-interpretation-seam-r1-20.svg",
+      "sha256": "8916b854be215d17f4d1719e95fec9eda87a96f86c5b80b39d7035568b2af444",
+      "bytes": 1339,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo09-interpretation-seam-r1-24.svg",
+      "sha256": "0077eb4233b0bd760a56bc5d25b34c90bf1e0e2b2ef52e094b9ca463c78304e8",
+      "bytes": 1341,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 8,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 3,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo10-record-gap-r1-16.svg",
+      "sha256": "c4bc3cbf4df9a27d992d8ceaeb67c21dd094f4fe4ac17ee99ea35a7ab361a04e",
+      "bytes": 1175,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo10-record-gap-r1-20.svg",
+      "sha256": "df6820617e67c349b14b1e6321758413743356f95d2b898f29e6a1c80b6d8735",
+      "bytes": 1177,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo10-record-gap-r1-24.svg",
+      "sha256": "03d6d6f3eda32253ac023503fc38999b420f869e85c4fab0a69b5cc2ae47f7cf",
+      "bytes": 1163,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo11-leader-landing-r1-16.svg",
+      "sha256": "edb15902f457e4d53484cda531f82f9b10355ba9c52e49012d3e771e1aeb4638",
+      "bytes": 1215,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo11-leader-landing-r1-20.svg",
+      "sha256": "83e7e392ab1fd7c8501192f35585973d0b8068e89bb2d0e46bcad6707c6e6772",
+      "bytes": 1212,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo11-leader-landing-r1-24.svg",
+      "sha256": "f50077a18e6166e4c90916a4735e13bccc598066b4120882a154ff67662cab6e",
+      "bytes": 1215,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo12-extent-ends-r1-16.svg",
+      "sha256": "a2c5484ccfdfe66f05050f1e26e5e8759c5b1160b62db34fa003bbd2bb95b200",
+      "bytes": 1203,
+      "viewBox": [
+        0.0,
+        0.0,
+        16.0,
+        16.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo12-extent-ends-r1-20.svg",
+      "sha256": "15ab039f0833dbb08646e70ec62d7bb85e00cf6e30df70fb4c5cd40b431c12d5",
+      "bytes": 1212,
+      "viewBox": [
+        0.0,
+        0.0,
+        20.0,
+        20.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    },
+    {
+      "file": "public/artwork/marks-ornaments-v1/svg/mono/mo12-extent-ends-r1-24.svg",
+      "sha256": "dc122b0ba125851dc3ea80c62a03f2e2a4530135649fa8bc54805c8a12bc9042",
+      "bytes": 1196,
+      "viewBox": [
+        0.0,
+        0.0,
+        24.0,
+        24.0
+      ],
+      "elements": 7,
+      "counts": {
+        "svg": 1,
+        "g": 1,
+        "path": 2,
+        "metadata": 1,
+        "desc": 1,
+        "title": 1
+      },
+      "static_profile": "pass",
+      "alpha": "not-tested",
+      "warnings": [
+        "Path grammar and painted bounds require a successful renderer and visual inspection."
+      ]
+    }
+  ]
+}

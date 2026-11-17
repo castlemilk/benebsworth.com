@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-labelledby="mo09-interpretation-seam-r1-24-dark-title" aria-describedby="mo09-interpretation-seam-r1-24-dark-desc">
+  <title id="mo09-interpretation-seam-r1-24-dark-title">Interpretation seam; 24px optical master</title>
+  <desc id="mo09-interpretation-seam-r1-24-dark-desc">Separated material strokes are bridged by one raised curve. Always pair with the existing Interpretation label; the bridge illustrates reasoning, not a proven implication. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo09-interpretation-seam","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":24,"palette":"dark","provenance_class":"original-authored-vector","revision":1,"semantic_role":"label-companion"}</metadata>
+  <g id="mo09-interpretation-seam-r1-24-dark-ink" fill="none" stroke="#ecebe6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo09-interpretation-seam-r1-24-dark-left-fragment" d="M5 17.5 L8.5 17.5"/>
+    <path id="mo09-interpretation-seam-r1-24-dark-right-fragment" d="M15.5 17.5 L19 17.5"/>
+    <path id="mo09-interpretation-seam-r1-24-dark-bridge" d="M5.8 11.2 C8.9 5.1 15.1 5.1 18.2 11.2"/>
+  </g>
+</svg>

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "review_kind": "Independent assistant static drawing review plus source/alpha inspection",
+  "user_selection": null,
+  "retained_concepts": 12,
+  "optical_sizes": [
+    16,
+    20,
+    24
+  ],
+  "inspected_boards": [
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/01-vocabulary-dark.png",
+      "sha256": "72d455a304b57089d9743337d6dfd2a4894094ed979075b8480cf9db37ca1b4c"
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/01-vocabulary-light.png",
+      "sha256": "d10e5eed8ecb52e52095aecf37d1d6ecdb7c6786d96d837f59a01553f73748ba"
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/02-optical-native.png",
+      "sha256": "d44b570b6f8b5d245b16e34ee33abb348464fb3715cf5e52621a164f762f496b"
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/03-optical-density.png",
+      "sha256": "a89e91ada1cc08c4e9d8536f9b00ea458f07527eeeb3a4bdd4bb4f584e5ee59c"
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/04-monochrome.png",
+      "sha256": "ecfeda82c44a26642778a13e10cf25f0aefa868b4a4ce16081b6f6f297cf45f7"
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/05-adjacency-studies.png",
+      "sha256": "2b34b42f48b70a703ef1ab77ffe93be9d75a0f4f6a67d7da91445cf4c2c1e453"
+    }
+  ],
+  "corrections": [
+    "MO04 redrawn as curled return, removing external-link-arrow resemblance",
+    "Native optical sheet size labels realigned with independent theme row"
+  ],
+  "palette_geometry_invariant": true,
+  "palette_alpha_invariant": true,
+  "minimum_transparent_edge_pixels": 2,
+  "final_visible_clipping_or_overlap_found": false,
+  "semantic_caveats": [
+    "MO06 resembles crop/focus corners and must retain note label",
+    "MO08 resembles brace/equals; source metadata only, outside equations/code",
+    "MO10 does not distinguish source states without exact visible text",
+    "MO11/MO12 must not represent data/dimensions/forces/error bars/graph edges"
+  ],
+  "pending": [
+    "Ben selection",
+    "Consuming browser",
+    "Keyboard and focus",
+    "Assistive technology",
+    "Forced colors",
+    "Zoom/reflow",
+    "Print",
+    "Runtime adoption",
+    "Release"
+  ]
+}

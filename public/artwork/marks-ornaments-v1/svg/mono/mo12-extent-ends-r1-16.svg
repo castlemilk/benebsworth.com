@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-labelledby="mo12-extent-ends-r1-16-mono-title" aria-describedby="mo12-extent-ends-r1-16-mono-desc">
+  <title id="mo12-extent-ends-r1-16-mono-title">Extent ends; 16px optical master</title>
+  <desc id="mo12-extent-ends-r1-16-mono-desc">Two short outward-swept terminals reserve an empty span for a labelled passage or region. They are annotation accents, never a dimension line, error bar or numerical interval. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo12-extent-ends","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":16,"palette":"mono","provenance_class":"original-authored-vector","revision":1,"semantic_role":"context-dependent"}</metadata>
+  <g id="mo12-extent-ends-r1-16-mono-ink" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo12-extent-ends-r1-16-mono-left-end" d="M3.5 5 L3.5 10 C3.5 11.5 4.6 12 6 12"/>
+    <path id="mo12-extent-ends-r1-16-mono-right-end" d="M12.5 5 L12.5 10 C12.5 11.5 11.4 12 10 12"/>
+  </g>
+</svg>

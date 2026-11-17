@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "Read-only release-path audit before review publication",
+  "source_baseline": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+  "latest_master_observed": "06438f05c829a0df0d05e625e7adebec09eb895c",
+  "workflow_hook_and_publishing_contract_delta": "No changes in the selected relevant files between baseline and latest observed master",
+  "preview_hold_evidence": {
+    "source": "https://chatgpt.com/space/page_ba64e3a87b908191b185bdfc76e46171",
+    "block_id": "d09c2514-367e-42e8-9a98-0885fdc842c0",
+    "coordinator_receipt": "Preview enablement was freshly verified false without changing settings; PR164 preview job skipped",
+    "independent_live_variable_read_by_this_lane": false,
+    "read_limitation": "GitHub CLI has no active authentication; connected GitHub fetch does not support the repository-variable endpoint",
+    "settings_changed": false
+  },
+  "source_behavior": {
+    "legacy_preview": "Non-master push job requires vars.VERCEL_PREVIEW_CI_ENABLED == 'true'; draft status alone does not suppress it",
+    "vercel_git_deploymentEnabled": false,
+    "special_editorial_publisher": "Restricted to codex/gamma-blog-editorial-20261027; ordinary art branch does not match",
+    "production": "Existing manual workflow_dispatch on master with exact revision and confirmation inputs",
+    "draft_pr_site_checks": "Normal intended source-validation path; contains no deployment command"
+  },
+  "transport": "Use the existing authenticated connector after completing normal documented constituent gates. Connector object operations do not execute local hooks; no hook execution claim is made.",
+  "forbidden_changes_per_brief": ["merge", "deployment", "preview enablement", "credential setup", "permission changes", "security changes", "hook bypass", "shared-file integration"],
+  "post_publication_checks": ["Exact remote branch head", "Draft PR and changed file boundary", "Exact-head Site checks", "Legacy push-triggered preview result if visible"],
+  "actual_publication": "Recorded separately after confirmed writes; this preflight is not evidence that a branch or PR exists"
+}

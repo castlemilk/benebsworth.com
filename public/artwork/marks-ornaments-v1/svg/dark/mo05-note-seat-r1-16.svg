@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-labelledby="mo05-note-seat-r1-16-dark-title" aria-describedby="mo05-note-seat-r1-16-dark-desc">
+  <title id="mo05-note-seat-r1-16-dark-title">Note seat; 16px optical master</title>
+  <desc id="mo05-note-seat-r1-16-dark-desc">An asymmetric open saddle supports an adjacent note label. The text or native link carries identity and action; the mark is not a number container. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo05-note-seat","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":16,"palette":"dark","provenance_class":"original-authored-vector","revision":1,"semantic_role":"label-companion"}</metadata>
+  <g id="mo05-note-seat-r1-16-dark-ink" fill="none" stroke="#ffaaa5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo05-note-seat-r1-16-dark-seat" d="M3.5 4.5 L3.5 9 C3.5 11.5 5.6 12 8 12 L12.5 12 L12.5 8"/>
+  </g>
+</svg>

@@ -1,0 +1,256 @@
+{
+  "document_version": "1.0",
+  "purpose": "Companion semantics and usage constraints for a bounded marks and ornaments art packet",
+  "status": "Candidate contract; inventory and review receipt are supplied by the packet owner",
+  "runtime_integration": "Not included",
+  "asset_bindings": [
+    {
+      "asset_id": "mo01-section-pause",
+      "role": "decorative",
+      "required_context": "Two unequal pen rules pause around a deliberate empty interval. Use between substantial passages, never as a broken data axis.",
+      "paint_role": "ink"
+    },
+    {
+      "asset_id": "mo02-end-stop",
+      "role": "decorative",
+      "required_context": "A long quiet rule ends before a compact cut-nib lozenge. Signals a visual rest without replacing headings or semantic separators.",
+      "paint_role": "ink"
+    },
+    {
+      "asset_id": "mo03-margin-stitch",
+      "role": "decorative",
+      "required_context": "Two short unequal oblique pen cuts mark a passage in the margin. They do not mean pause, quotation or a mathematical operator.",
+      "paint_role": "accent"
+    },
+    {
+      "asset_id": "mo04-margin-fold",
+      "role": "decorative",
+      "required_context": "An open page-corner turn, with a curled return and no enclosing page. A small companion to a note, never a bookmark control.",
+      "paint_role": "accent"
+    },
+    {
+      "asset_id": "mo05-note-seat",
+      "role": "label-companion",
+      "required_context": "An asymmetric open saddle supports an adjacent note label. The text or native link carries identity and action; the mark is not a number container.",
+      "paint_role": "accent"
+    },
+    {
+      "asset_id": "mo06-paired-cuts",
+      "role": "label-companion",
+      "required_context": "Two displaced corner cuts reserve an interval between related labels. Matching visible note numbers establish the relationship, not the corners alone.",
+      "paint_role": "accent"
+    },
+    {
+      "asset_id": "mo07-locator-tab",
+      "role": "label-companion",
+      "required_context": "A small notched tab attaches a page, section or timestamp locator. Pair with Source recorded and the actual locator; no truth or verification claim.",
+      "paint_role": "ink"
+    },
+    {
+      "asset_id": "mo08-excerpt-notch",
+      "role": "label-companion",
+      "required_context": "A folded short edge points toward two uneven excerpt rules. Only accompany an actual excerpt with attribution and locator; the rules are not text.",
+      "paint_role": "ink"
+    },
+    {
+      "asset_id": "mo09-interpretation-seam",
+      "role": "label-companion",
+      "required_context": "Separated material strokes are bridged by one raised curve. Always pair with the existing Interpretation label; the bridge illustrates reasoning, not a proven implication.",
+      "paint_role": "ink"
+    },
+    {
+      "asset_id": "mo10-record-gap",
+      "role": "label-companion",
+      "required_context": "An intentionally open record corner and a detached short entry stroke accompany an explicit missing or unchecked context. The open shape does not establish the reason for the gap.",
+      "paint_role": "ink"
+    },
+    {
+      "asset_id": "mo11-leader-landing",
+      "role": "context-dependent",
+      "required_context": "A short leader stops before a shallow concave landing. It identifies a note's endpoint without an arrowhead. An existing layout owner must supply the measured connector and text relationship.",
+      "paint_role": "accent"
+    },
+    {
+      "asset_id": "mo12-extent-ends",
+      "role": "context-dependent",
+      "required_context": "Two short outward-swept terminals reserve an empty span for a labelled passage or region. They are annotation accents, never a dimension line, error bar or numerical interval.",
+      "paint_role": "accent"
+    }
+  ],
+  "asset_bindings_note": "Each candidate master is bound here; visual observations are in REVIEW.md. Labels are required where specified.",
+  "preservation": {
+    "existing_decorative_marks": [
+      "arrow",
+      "underline",
+      "bracket",
+      "circle"
+    ],
+    "protected_construction": "hooked insight rail with its dot",
+    "shared_tokens": "Read existing values; do not modify without coordination with their owner",
+    "excluded_surfaces": [
+      "About reskin",
+      "Hiking reskin",
+      "Hardware reskin",
+      "category hero art",
+      "logo redesign"
+    ],
+    "preview_and_release_holds": "Preserve"
+  },
+  "usage": {
+    "max_accent_gestures_per_viewport": 2,
+    "accent_limit_basis": "Packet applies a conservative ceiling of two accent gestures, extending the existing typography rule for handwritten notes; this is not a global-token change",
+    "one_color_per_mark": true,
+    "same_geometry_across_palettes": true,
+    "retain_master_transparent_margins": true,
+    "do_not_attach_to_every_heading": true,
+    "do_not_replace_document_structure": true
+  },
+  "optical_sizes": {
+    "unit": "SVG user units at nominal CSS display size",
+    "status": "Authored 16/20/24px optical masters; actual inspection receipt in REVIEW.md",
+    "variants": [
+      {
+        "square": [
+          16,
+          16
+        ],
+        "divider": [
+          64,
+          16
+        ],
+        "stroke": 1.5
+      },
+      {
+        "square": [
+          20,
+          20
+        ],
+        "divider": [
+          80,
+          20
+        ],
+        "stroke": 1.65
+      },
+      {
+        "square": [
+          24,
+          24
+        ],
+        "divider": [
+          96,
+          24
+        ],
+        "stroke": 1.75
+      }
+    ],
+    "arbitrary_scaling_is_not_optical_validation": true,
+    "below_smallest_reviewed_size": "Unsupported unless separately reviewed"
+  },
+  "palette": {
+    "light": {
+      "background": "#f4f1e9",
+      "foreground": "#202c34",
+      "muted": "#56616b",
+      "accent": "#b32624"
+    },
+    "dark": {
+      "background": "#111312",
+      "foreground": "#ecebe6",
+      "muted": "#9a9d98",
+      "accent": "#ffaaa5"
+    },
+    "accent_existing_token": "--folio-handwriting",
+    "standalone_svg_color": "Explicit",
+    "future_runtime_color": "currentColor through existing consuming owner",
+    "contrast_validation_status": "See validation/contrast.json; host compositing remains a consumer check"
+  },
+  "existing_semantics": {
+    "evidence_note": {
+      "basis_to_exact_label": {
+        "measured": "Measured result",
+        "simulated": "Simulation",
+        "illustrative": "Illustration",
+        "interpretation": "Interpretation"
+      },
+      "rule": "Keep basis values and visible labels unchanged; companion artwork must not substitute for the label"
+    },
+    "pr159_source_contexts": [
+      "Source recorded",
+      "Not yet checked",
+      "Source unavailable",
+      "Locator missing"
+    ],
+    "source_context_rule": "Preserve existing state definitions and exact visible labels; no combined quality score",
+    "basis_and_source_context_are_independent": true,
+    "verification_badges": "None",
+    "unsupported_inferences": [
+      "independent verification",
+      "truth",
+      "certification",
+      "endorsement",
+      "publication approval"
+    ]
+  },
+  "contextual_accessibility": {
+    "classification_basis": "Actual use in context, not asset filename or shape",
+    "decorative_external_image": {
+      "alt": ""
+    },
+    "decorative_inline_svg": {
+      "aria-hidden": "true",
+      "focusable": "false"
+    },
+    "companion_to_equivalent_visible_label": "Hide the redundant SVG and retain the label",
+    "independent_informative_svg": "Provide equivalent accessible naming or description; a role=img pattern may reference a unique title ID through aria-labelledby",
+    "functional_use": "Use a real named link or button; name the action and keep the SVG itself unfocusable",
+    "diagram_annotation": "Express relationship, direction, scale and uncertainty in text or a legend; decoration establishes no scientific claim"
+  },
+  "wcag_requirements": [
+    {
+      "criterion": "1.4.11",
+      "topic": "Non-text contrast",
+      "requirement": "Meaning-bearing graphic parts and relevant control/state information generally require at least 3:1 contrast against adjacent colors",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    },
+    {
+      "criterion": "1.4.3",
+      "topic": "Text contrast",
+      "requirement": "Ordinary small text and images of text require at least 4.5:1 contrast, subject to the criterion's defined exceptions",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html"
+    },
+    {
+      "criterion": "1.4.1",
+      "topic": "Color independence",
+      "requirement": "Do not use color as the sole visual means of conveying information, action or state",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html"
+    },
+    {
+      "criterion": "2.5.8",
+      "topic": "Pointer target size",
+      "requirement": "Targets generally require 24 by 24 CSS pixels; apply the criterion's explicit spacing, equivalent, inline, user-agent or essential exceptions only when applicable",
+      "source": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    }
+  ],
+  "implementation_guidance_sources": [
+    "https://design-system.w3.org/styles/svg-icons.html",
+    "https://www.w3.org/WAI/tutorials/images/",
+    "https://www.w3.org/WAI/tutorials/images/decorative/",
+    "https://www.w3.org/WAI/tutorials/images/functional/"
+  ],
+  "design_recommendations": [
+    "Inspect each optical variant at native size at 1x and 2x density",
+    "Retain visible labels for unfamiliar semantics",
+    "Give thin strokes contrast margin and inspect their rasterization",
+    "Keep semantic distinctions understandable in monochrome",
+    "Prefer comfortable target areas over reliance on minimum-size exceptions",
+    "Do not round a failing contrast ratio upward"
+  ],
+  "pending_consuming_checks": [
+    "browser rendering",
+    "keyboard interaction",
+    "assistive technology",
+    "forced colors",
+    "print"
+  ],
+  "validation_claims": "None are implied by this document; consult the packet's separate observed review receipt"
+}

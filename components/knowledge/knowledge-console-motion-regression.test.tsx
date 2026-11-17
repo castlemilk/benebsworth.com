@@ -18,7 +18,7 @@ vi.mock('@/components/ui/item-list', () => ({ ItemList: ({label,rows,onValueChan
 vi.mock('@/components/ui/dpad', () => ({ DPad: () => null }))
 vi.mock('@/components/ui/slider', () => ({ Slider: ({onValueChange}: {onValueChange:(v:number)=>void}) => <button onClick={()=>onValueChange(2)}>manual zoom</button> }))
 vi.mock('@/components/ui/bar-graph', () => ({ BarGraph: () => null }))
-vi.mock('@/components/ui/mode-dial', () => ({ ModeDial: ({onValueChange}: {onValueChange:(v:string)=>void}) => <button onClick={()=>onValueChange('lanes')}>lanes mode</button> }))
+vi.mock('@/components/ui/segmented-control', () => ({ Segmented: ({onValueChange}: {onValueChange:(v:string)=>void}) => <button onClick={()=>onValueChange('lanes')}>lanes mode</button> }))
 import { KnowledgeConsole } from './knowledge-console'
 
 const graph: KnowledgeGraph = {
@@ -83,7 +83,7 @@ describe('knowledge motion and pointer lifecycle regressions',()=>{
   it('keeps a user pause through selection, layout, layer rebuild and preference changes',()=>{
     render(<KnowledgeConsole graph={graph}/>);fireEvent.click(screen.getByText('Pause layout'))
     vi.mocked(sim().restart).mockClear();selectHub();fireEvent.click(screen.getByText('lanes mode'));expect(sim().restart).not.toHaveBeenCalled()
-    fireEvent.click(screen.getByRole('checkbox',{name:'lab'}));expect(sim().restart).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('checkbox',{name:'lab 1'}));expect(sim().restart).not.toHaveBeenCalled()
     changeMotion(true);changeMotion(false);expect(sim().restart).not.toHaveBeenCalled()
     fireEvent.click(screen.getByText('Resume layout'));expect(sim().restart).toHaveBeenCalled()
   })

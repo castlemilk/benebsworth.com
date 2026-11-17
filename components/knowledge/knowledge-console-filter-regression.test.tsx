@@ -17,7 +17,7 @@ vi.mock('@/components/ui/item-list', () => ({ ItemList: ({label,rows,onValueChan
 vi.mock('@/components/ui/dpad', () => ({ DPad: () => null }))
 vi.mock('@/components/ui/slider', () => ({ Slider: () => null }))
 vi.mock('@/components/ui/bar-graph', () => ({ BarGraph: () => null }))
-vi.mock('@/components/ui/mode-dial', () => ({ ModeDial: () => null }))
+vi.mock('@/components/ui/segmented-control', () => ({ Segmented: () => null }))
 import { KnowledgeConsole } from './knowledge-console'
 
 const graph: KnowledgeGraph = {
@@ -43,16 +43,16 @@ describe('knowledge layer-derived selection and discovery', () => {
   it('removes hidden layers from search and restores them on re-enable', () => {
     render(<KnowledgeConsole graph={graph}/>); search()
     expect(within(screen.getByRole('list',{name:'Search results'})).getByText('Shared lab')).toBeTruthy()
-    fireEvent.click(screen.getByRole('checkbox',{name:'lab'}))
+    fireEvent.click(screen.getByRole('checkbox',{name:'lab 1'}))
     expect(within(screen.getByRole('list',{name:'Search results'})).queryByText('Shared lab')).toBeNull()
-    fireEvent.click(screen.getByRole('checkbox',{name:'lab'}))
+    fireEvent.click(screen.getByRole('checkbox',{name:'lab 1'}))
     expect(within(screen.getByRole('list',{name:'Search results'})).getByText('Shared lab')).toBeTruthy()
   })
   it('counts and lists only visible neighbors of the selected hub', () => {
     render(<KnowledgeConsole graph={graph}/>)
     fireEvent.click(within(screen.getByRole('group',{name:'biggest hubs'})).getByText('Shared hub'))
     expect(screen.getByText('2 links')).toBeTruthy()
-    fireEvent.click(screen.getByRole('checkbox',{name:'lab'}))
+    fireEvent.click(screen.getByRole('checkbox',{name:'lab 1'}))
     expect(screen.getByText('1 links')).toBeTruthy()
     const linked=screen.getByRole('group',{name:'linked'})
     expect(within(linked).getByText('Shared post')).toBeTruthy()
@@ -61,7 +61,7 @@ describe('knowledge layer-derived selection and discovery', () => {
   it('clears hidden selection and prevents Enter opening its former destination', () => {
     render(<KnowledgeConsole graph={graph}/>); search()
     fireEvent.click(within(screen.getByRole('list',{name:'Search results'})).getByText('Shared post'))
-    fireEvent.click(screen.getByRole('checkbox',{name:'blog'}))
+    fireEvent.click(screen.getByRole('checkbox',{name:'blog 1'}))
     expect(screen.queryByRole('button',{name:'open →'})).toBeNull()
     expect(screen.getByText(/nothing selected/)).toBeTruthy()
     fireEvent.keyDown(screen.getByRole('img'), {key:'Enter'})

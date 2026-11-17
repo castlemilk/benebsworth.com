@@ -24,7 +24,7 @@ import { DPad } from '@/components/ui/dpad'
 import { Slider } from '@/components/ui/slider'
 import { BarGraph } from '@/components/ui/bar-graph'
 import { ItemList } from '@/components/ui/item-list'
-import { ModeDial } from '@/components/ui/mode-dial'
+import { Segmented } from '@/components/ui/segmented-control'
 import { Button } from '@/components/ui/hardware/button'
 import { Badge } from '@/components/ui/hardware/badge'
 
@@ -720,10 +720,11 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
           <div className="kg-rail" role="group" aria-label="Layer switches">
             {KINDS.map((k) => (
               <div key={k.kind} className="kg-rail-row">
-                <Switch label={k.label} defaultChecked onCheckedChange={(on) => toggleKind(k.kind, on)} />
-                <span className="kg-rail-count" data-kind={k.kind} aria-hidden>
-                  {counts[k.kind]}
-                </span>
+                <Switch
+                  label={`${k.label} ${counts[k.kind]}`}
+                  defaultChecked
+                  onCheckedChange={(on) => toggleKind(k.kind, on)}
+                />
               </div>
             ))}
             <BarGraph
@@ -748,14 +749,10 @@ export function KnowledgeConsole({ graph }: { graph: KnowledgeGraph }) {
           </div>
 
           <aside className="kg-panel">
-            <ModeDial
+            <Segmented
               label="layout"
-              options={[
-                { value: 'drift', label: 'drift' },
-                { value: 'lanes', label: 'lanes' },
-                { value: 'orbit', label: 'orbit' },
-              ]}
-              value={mode}
+              options={['drift', 'lanes', 'orbit']}
+              defaultValue="drift"
               onValueChange={(v) => setMode(v as LayoutMode)}
             />
             <Lcd tag={selectedNode ? selectedNode.kind : 'idle'} size="md" className="kg-readout">

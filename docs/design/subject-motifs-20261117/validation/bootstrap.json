@@ -1,0 +1,12 @@
+{
+  "task_version": "3.42.1",
+  "task_archive_sha256": "05b41f97e655f56cc8a7617106622dbfb5f647d13ec6013ff7719bc80b52746c",
+  "task_binary_sha256": "b119c85b41e4447af804b1ad8697763fb3405da0fa8c44459ff8eac4d4034b9b",
+  "node": "24.22.1",
+  "npm": "11.9.0",
+  "dependency_install": "npm ci --no-audit --no-fund",
+  "dependency_install_result": "1040 packages; exit 0",
+  "original_package_lock_and_gate_bytes_preserved": true,
+  "configuration_changes": null,
+  "credentials_added": false
+}

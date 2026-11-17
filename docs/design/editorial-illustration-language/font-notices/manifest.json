@@ -1,0 +1,16 @@
+[
+  {
+    "file": "OFL-source-serif-4.txt",
+    "upstream_path": "public/fonts/editorial/OFL-source-serif-4.txt",
+    "upstream_sha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+    "copy_sha256": "0fd8b796c1c6220a559a5682cfd00d1c8488b428369f7cb70deb671888cef85f",
+    "change": "trailing line whitespace normalized; complete licence text preserved"
+  },
+  {
+    "file": "OFL-barlow-condensed.txt",
+    "upstream_path": "public/fonts/editorial/OFL-barlow-condensed.txt",
+    "upstream_sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+    "copy_sha256": "10b0e6bb43166a50fbe7cde2895bd7f703738a5da843acb5c97c95dc9ea26817",
+    "change": "trailing line whitespace normalized; complete licence text preserved"
+  }
+]

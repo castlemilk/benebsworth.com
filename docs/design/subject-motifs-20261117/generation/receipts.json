@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "batch": "BSM-20261117",
+  "request_count": 4,
+  "receipts": [
+    {
+      "id": "BSM-20261117-01",
+      "revision": "r1",
+      "tool": "image_gen.imagegen (built-in)",
+      "actual_request": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept.\nAsset type: one original standalone knowledge-subject motif for Ben Ebsworth's technical Blog/Lab research folio. A subject-specific illustrative object, not a scientific diagram or an interface.\nMedium: refined graphite engraving of a tactile warm-ivory specimen, confident substantial contours, sparse contour-following crosshatching contained inside material surfaces. Quiet authored technical curiosity. Matte ivory, charcoal graphite and one small muted vermilion detail only. No metallic gloss, glow or futuristic embellishment.\nComposition: one compact subject on a square canvas, occupying approximately the central 64 percent in both dimensions, with at least 16 percent completely empty margin on every side including every protrusion. All parts inside the frame. Subject-readable silhouette and broad negative spaces. No panel, framing tile, surrounding scene, pedestal unless explicitly part of the specified support, or floor.\nTransparency: genuine transparent RGBA background outside the subject and through all open spaces. Warm ivory fills belong only to the physical object. No paper background, white rectangle, checkerboard, ground shadow, vignette, halo, feathered haze or floating specks. Opaque object surfaces with clean antialiased edges.\nConstraints: exactly one artwork, no contact sheet or miniatures. No words, letters, numbers, equations, scale marks, diagram labels, fake inscriptions, logos, watermark, ornament borders, decorative arrows or annotation marks. Bold enough to remain identifiable in a 128-pixel full-canvas thumbnail. This is an illustrative metaphor; do not invent data or calibrated scientific geometry.\nSubject: an airy three-dimensional spherical state scaffold with exactly ONE broad upright meridian hoop and ONE thinner equatorial hoop at right angles, joined as the minimal open frame of an abstract coordinate sphere. Most of the sphere is clear empty space. A single substantial ivory radial pointer begins at the geometric centre and points upward-right to the outer sphere; only its small triangular tip is muted vermilion. No other pointer, bead or dot. The centre is a simple tiny joint, not a nucleus or clustered object. The frame has restrained hand-engraved volume and coherent three-quarter perspective, with the rear parts quieter than the front. No solid globe, continents, cutaway interior layers, diagonal electron orbits, multiple tilted loops, globe stand, circular lens bezel, base or outside rays. The focal relationship is one orientation within open state space. This is a Bloch-sphere-inspired metaphor, not an atom, physical quantum device, calibrated coordinate diagram or a claim that all quantum processes are rotations."
+      },
+      "request_sha256_utf8_canonical_json": "55013014adbec7070341f732012fe6b01aaeb486f29a087df0bebfaf4d207b43",
+      "generation_date_local": "2026-11-17",
+      "timezone": "Australia/Melbourne",
+      "model_version": null,
+      "seed": null,
+      "model_and_seed_status": "not returned by tool; exact regeneration is not asserted",
+      "returned_local_basename": "exec-6ec1d294-3133-4f52-85cc-208d5454f4d2.png",
+      "reference_images": [],
+      "transparent_background_requested": true,
+      "original_file": {
+        "path": "public/artwork/subject-motifs-v1/originals/01-qubit-state-r1.png",
+        "sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+        "byte_size": 720413,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "original_retained_byte_for_byte": true,
+      "creative_post_processing": null,
+      "corrective_generations": [],
+      "prompt_departures": [
+        "The request asked for at least 16 percent completely empty margin. Measured alpha>=16 minimum margin is 15.55 percent; unthresholded outer edges retain alpha up to 1/255. No exact-margin compliance is claimed."
+      ]
+    },
+    {
+      "id": "BSM-20261117-02",
+      "revision": "r1",
+      "tool": "image_gen.imagegen (built-in)",
+      "actual_request": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept.\nAsset type: one original standalone knowledge-subject motif for Ben Ebsworth's technical Blog/Lab research folio. A subject-specific illustrative object, not a scientific diagram or an interface.\nMedium: refined graphite engraving of a tactile warm-ivory specimen, confident substantial contours, sparse contour-following crosshatching contained inside material surfaces. Quiet authored technical curiosity. Matte ivory, charcoal graphite and one small muted vermilion detail only. No metallic gloss, glow or futuristic embellishment.\nComposition: one compact subject on a square canvas, occupying approximately the central 64 percent in both dimensions, with at least 16 percent completely empty margin on every side including every protrusion. All parts inside the frame. Subject-readable silhouette and broad negative spaces. No panel, framing tile, surrounding scene, pedestal unless explicitly part of the specified support, or floor.\nTransparency: genuine transparent RGBA background outside the subject and through all open spaces. Warm ivory fills belong only to the physical object. No paper background, white rectangle, checkerboard, ground shadow, vignette, halo, feathered haze or floating specks. Opaque object surfaces with clean antialiased edges.\nConstraints: exactly one artwork, no contact sheet or miniatures. No words, letters, numbers, equations, scale marks, diagram labels, fake inscriptions, logos, watermark, ornament borders, decorative arrows or annotation marks. Bold enough to remain identifiable in a 128-pixel full-canvas thumbnail. This is an illustrative metaphor; do not invent data or calibrated scientific geometry.\nSubject: a single off-centre flywheel on a slim oblique axle, cantilevered from ONE plainly visible pivot at the top of a short substantial ivory support on a compact foot at lower left. The axle rises gently towards upper right, and a large broad solid rotor disc sits near its far end; the disc is perpendicular to the axle and seen obliquely as an oval. Make the unsupported reach and offset mass immediately legible, with clear transparent air between the support and rotor. The graphite-edged disc has a modest thick rim and a quiet warm-ivory face, no spokes, gears, perforations or extra flyballs. One small muted vermilion bearing collar at the pivot. All supports and the single axle visibly connect coherently. No symmetric gimbal cage, enclosing circular frame, counterweight, paired weights, spring, needle gauge, top toy, motion trails, arrows or force vectors. The silhouette is an asymmetric tilted mechanical arm with one large wheel and a low foot, not a generic gear mechanism or centrifugal governor. This is a static illustrative gyroscope; no measured motion or anti-gravity behavior is claimed."
+      },
+      "request_sha256_utf8_canonical_json": "7ff1b536eaac8f9fb4a2c26ebc48dd812639e19981336609639a005a4074b578",
+      "generation_date_local": "2026-11-17",
+      "timezone": "Australia/Melbourne",
+      "model_version": null,
+      "seed": null,
+      "model_and_seed_status": "not returned by tool; exact regeneration is not asserted",
+      "returned_local_basename": "exec-b126193f-9e19-4fda-944e-8bc9627947e8.png",
+      "reference_images": [],
+      "transparent_background_requested": true,
+      "original_file": {
+        "path": "public/artwork/subject-motifs-v1/originals/02-cantilever-gyroscope-r1.png",
+        "sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+        "byte_size": 816978,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "original_retained_byte_for_byte": true,
+      "creative_post_processing": null,
+      "corrective_generations": [],
+      "prompt_departures": [
+        "The request asked for at least 16 percent completely empty margin. Measured alpha>=16 minimum margin is 13.64 percent; unthresholded outer edges retain alpha up to 1/255. No exact-margin compliance is claimed."
+      ]
+    },
+    {
+      "id": "BSM-20261117-03",
+      "revision": "r1",
+      "tool": "image_gen.imagegen (built-in)",
+      "actual_request": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept.\nAsset type: one original standalone knowledge-subject motif for Ben Ebsworth's technical Blog/Lab research folio. A subject-specific illustrative object, not a scientific diagram or an interface.\nMedium: refined graphite engraving of a tactile warm-ivory specimen, confident substantial contours, sparse contour-following crosshatching contained inside material surfaces. Quiet authored technical curiosity. Matte ivory, charcoal graphite and one small muted vermilion detail only. No metallic gloss, glow or futuristic embellishment.\nComposition: one compact subject on a square canvas, occupying approximately the central 64 percent in both dimensions, with at least 16 percent completely empty margin on every side including every protrusion. All parts inside the frame. Subject-readable silhouette and broad negative spaces. No panel, framing tile, surrounding scene, pedestal unless explicitly part of the specified support, or floor.\nTransparency: genuine transparent RGBA background outside the subject and through all open spaces. Warm ivory fills belong only to the physical object. No paper background, white rectangle, checkerboard, ground shadow, vignette, halo, feathered haze or floating specks. Opaque object surfaces with clean antialiased edges.\nConstraints: exactly one artwork, no contact sheet or miniatures. No words, letters, numbers, equations, scale marks, diagram labels, fake inscriptions, logos, watermark, ornament borders, decorative arrows or annotation marks. Bold enough to remain identifiable in a 128-pixel full-canvas thumbnail. This is an illustrative metaphor; do not invent data or calibrated scientific geometry.\nSubject: one broad continuous ivory computation tape, with a compact open curl at upper left and an unwound strip bending forward and across to lower right, in an elegant asymmetric S-like silhouette. A few large shallow blank rectangular impressions sit on the strip as retained marks, with no writing, holes or symbols. A short graphite inspection stylus with one muted vermilion tip reaches in from the near side and touches an earlier impression beside the curl. Keep the contact plainly visible and the strip continuous, thick enough to feel tactile, with the open curl revealing real transparent space. The stylus is an unbranded simple tool, not a decorative annotation. No second spool, cassette, floppy disk, conveyor, separate event cards, machine housing, multiple stacked sheets, node graph, directional arrows, landscape or downhill ball. The visible idea is revisiting a retained record, not erasing or unwinding a computation. Conceptual art for reverse sensitivity accumulation, no actual operations, derivatives, timings or neural architecture encoded."
+      },
+      "request_sha256_utf8_canonical_json": "b8627fc64b84ed6f675c15ae1ba883225970776d86776a6f078e839a6a03f14f",
+      "generation_date_local": "2026-11-17",
+      "timezone": "Australia/Melbourne",
+      "model_version": null,
+      "seed": null,
+      "model_and_seed_status": "not returned by tool; exact regeneration is not asserted",
+      "returned_local_basename": "exec-23748d1f-f49b-4444-a603-fa02b363a4a6.png",
+      "reference_images": [],
+      "transparent_background_requested": true,
+      "original_file": {
+        "path": "public/artwork/subject-motifs-v1/originals/03-reverse-mode-tape-r1.png",
+        "sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+        "byte_size": 1229528,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "original_retained_byte_for_byte": true,
+      "creative_post_processing": null,
+      "corrective_generations": [],
+      "prompt_departures": [
+        "The request asked for at least 16 percent completely empty margin. Measured alpha>=16 minimum margin is 10.61 percent; unthresholded outer edges retain alpha up to 1/255. No exact-margin compliance is claimed."
+      ]
+    },
+    {
+      "id": "BSM-20261117-04",
+      "revision": "r1",
+      "tool": "image_gen.imagegen (built-in)",
+      "actual_request": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept.\nAsset type: one original standalone knowledge-subject motif for Ben Ebsworth's technical Blog/Lab research folio. A subject-specific illustrative object, not a scientific diagram or an interface.\nMedium: refined graphite engraving of a tactile warm-ivory specimen, confident substantial contours, sparse contour-following crosshatching contained inside material surfaces. Quiet authored technical curiosity. Matte ivory, charcoal graphite and one small muted vermilion detail only. No metallic gloss, glow or futuristic embellishment.\nComposition: one compact subject on a square canvas, occupying approximately the central 64 percent in both dimensions, with at least 16 percent completely empty margin on every side including every protrusion. All parts inside the frame. Subject-readable silhouette and broad negative spaces. No panel, framing tile, surrounding scene, pedestal unless explicitly part of the specified support, or floor.\nTransparency: genuine transparent RGBA background outside the subject and through all open spaces. Warm ivory fills belong only to the physical object. No paper background, white rectangle, checkerboard, ground shadow, vignette, halo, feathered haze or floating specks. Opaque object surfaces with clean antialiased edges.\nConstraints: exactly one artwork, no contact sheet or miniatures. No words, letters, numbers, equations, scale marks, diagram labels, fake inscriptions, logos, watermark, ornament borders, decorative arrows or annotation marks. Bold enough to remain identifiable in a 128-pixel full-canvas thumbnail. This is an illustrative metaphor; do not invent data or calibrated scientific geometry.\nSubject: a single broad hand-held comb stylus, angled from upper left to lower right. A substantial shared ivory handle branches smoothly into four short parallel graphite-edged flat nibs, like a quiet original technical drawing tool. Each nib touches its own short separate ivory sample strip beneath, with clear transparent gaps separating the strips. The four contact points align coherently, making the shared tool and multiple separate contacts the entire focal relationship. One nib tip is muted vermilion; the others are graphite. Compact fork-like silhouette with an open end, no surrounding chassis. Keep it a tactile engraved object with substantial simple shapes and very little fine detail. No circuitry, processor package, memory stack, grid of cells, parallel server boxes, conveyor, printing press, gears, graph nodes, arrows, text, equations or numbers. It is a metaphor for one coordinated operation applied to several vector elements. The compositional nib count must not suggest a measured SIMD width, instruction set, hardware implementation or speedup."
+      },
+      "request_sha256_utf8_canonical_json": "7b51a7650641cf4c27c22510bdc0508a3e62db512e9aafe2c96de76f814ca1be",
+      "generation_date_local": "2026-11-17",
+      "timezone": "Australia/Melbourne",
+      "model_version": null,
+      "seed": null,
+      "model_and_seed_status": "not returned by tool; exact regeneration is not asserted",
+      "returned_local_basename": "exec-d33e66ac-5400-4439-a424-aadeb0d6b93b.png",
+      "reference_images": [],
+      "transparent_background_requested": true,
+      "original_file": {
+        "path": "public/artwork/subject-motifs-v1/originals/04-vectorised-arithmetic-r1.png",
+        "sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+        "byte_size": 919950,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "original_retained_byte_for_byte": true,
+      "creative_post_processing": null,
+      "corrective_generations": [],
+      "prompt_departures": [
+        "The request asked for at least 16 percent completely empty margin. Measured alpha>=16 minimum margin is 11.4 percent; unthresholded outer edges retain alpha up to 1/255. No exact-margin compliance is claimed."
+      ]
+    }
+  ],
+  "derivative_commands": {
+    "thumbnail": "magick ORIGINAL -filter Lanczos -resize WIDTHxWIDTH THUMBNAIL.png",
+    "matte": "magick THUMBNAIL-512.png -background SURFACE -alpha remove -alpha off REVIEW.png",
+    "contact_sheet": "magick montage -label TITLE IMAGE ... -font DejaVu-Sans -pointsize 20 -fill INK -background SURFACE -tile 2x2 -geometry 512x512+20+18 CONTACT.png",
+    "size_sheet": "magick montage -label TITLE THUMBNAIL ... -font DejaVu-Sans -pointsize 13 -fill INK -background SURFACE -tile 2x2 -geometry 260xWIDTH+18+18 SIZE.png"
+  },
+  "environment": {
+    "imagemagick": "Version: ImageMagick 7.1.1-43 Q16 x86_64 22550 https://imagemagick.org",
+    "pillow": "13.0.0"
+  }
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="el03-sequence-title el03-sequence-description">
+<title id="el03-sequence-title">From trace to structure</title>
+<desc id="el03-sequence-description">A continuous illustrated ribbon changes form along its length. Shared vertices make the authored surfaces connected; this does not establish a physically foldable strip, a temporal sequence or a mathematical surface.</desc>
+<g id="el03-sequence-geometry" stroke-linecap="round" stroke-linejoin="round">
+<path id="tail-side" d="M180 508 L342 492 L389 553 L209 568 L209 582 L389 568 L350 508 L180 523 Z" fill="#263239" stroke="#f4f1e8" stroke-width="4.2"/>
+<path id="flat-tail" d="M180 508 L342 492 L389 553 L209 568 Z" fill="#394850" stroke="#f4f1e8" stroke-width="4.6"/>
+<path id="first-fold-rise" d="M342 492 L455 276 L493 362 L389 553 Z" fill="#263239" stroke="#f4f1e8" stroke-width="4.6"/>
+<path id="broad-bridge" d="M455 276 L604 321 L648 410 L493 362 Z" fill="#394850" stroke="#f4f1e8" stroke-width="4.6"/>
+<path id="second-fold-descent" d="M604 321 L690 493 L755 547 L648 410 Z" fill="#263239" stroke="#f4f1e8" stroke-width="4.6"/>
+<path id="open-arch" d="M690 493 C746 362 850 287 946 296 C986 299 1018 314 1030 336 L1012 365 C911 327 814 383 755 547 Z" fill="#394850" stroke="#f4f1e8" stroke-width="4.6"/>
+<path id="red-tail-edge" d="M207 550 L382 535 L389 553 L209 568 Z" fill="#ffaaa5" stroke="#f4f1e8" stroke-width="3.4"/>
+<path id="red-fold-edge" d="M382 535 L480 348 L493 362 L389 553 Z" fill="#ffaaa5" stroke="#f4f1e8" stroke-width="3.4"/>
+<path id="first-turn-hatching" d="M393 401 L413 410 M401 385 L421 395 M409 369 L429 379 M417 353 L437 363 M425 337 L445 347" fill="none" stroke="#f4f1e8" stroke-width="2.4"/>
+</g>
+</svg>

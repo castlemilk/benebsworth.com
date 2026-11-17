@@ -1,0 +1,33 @@
+{
+  "encoding": "lossless gzip, original bytes retained including whitespace",
+  "logs": [
+    {
+      "original_log_basename": "pre-commit.stderr.log",
+      "original_sha256": "b58cdd048b570e333988597d8587ead5ab3bf89272eaadf75a4d56fcc1eea7dc",
+      "original_bytes": 170,
+      "lossless_artifact": "docs/design/subject-motifs-20261117/validation/pre-commit.stderr.log.gz",
+      "gzip_sha256": "e39be88ebde731b0ee53ab83e38f51f7b0e3de7074ac494c16a6f997437d9440"
+    },
+    {
+      "original_log_basename": "pre-commit.stdout.log",
+      "original_sha256": "d95ed89f87a8fcdc8c7eb266210722b27c5d85b950f60e1bd3277d7933705554",
+      "original_bytes": 63,
+      "lossless_artifact": "docs/design/subject-motifs-20261117/validation/pre-commit.stdout.log.gz",
+      "gzip_sha256": "e1463b6c056f1bed3be896317ad08b2bafd6da6bb67e8cffc383a657acb8dcdd"
+    },
+    {
+      "original_log_basename": "pre-push.stderr.log",
+      "original_sha256": "44b9fc72b907cd2da0cfc623f96e5cde271aba87e8fa21e9a3fb32d08d0f340b",
+      "original_bytes": 998,
+      "lossless_artifact": "docs/design/subject-motifs-20261117/validation/pre-push.stderr.log.gz",
+      "gzip_sha256": "ace68de2ba5c0f83a470db9298c243e12c9db0953607881d3b97d3cfdc0a43a1"
+    },
+    {
+      "original_log_basename": "pre-push.stdout.log",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original_bytes": 0,
+      "lossless_artifact": "docs/design/subject-motifs-20261117/validation/pre-push.stdout.log.gz",
+      "gzip_sha256": "8fdce69e9b19f8832ae1a15eaacc71d7b38fff1c5f2749f8d7b33ef58e315102"
+    }
+  ]
+}

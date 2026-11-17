@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "packet_id": "blog-editorial-illustration-language-v1",
+  "prepared_date": "2026-11-17",
+  "timezone": "Australia/Melbourne",
+  "baseline_commit": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+  "baseline_role": "initial artwork audit",
+  "validation_base_commit": "06438f05c829a0df0d05e625e7adebec09eb895c",
+  "branch": "art/blog-editorial-illustration-language-20261117",
+  "scope": "Isolated design review; no runtime adoption or release",
+  "distinct_raster_concepts": 3,
+  "generation_calls": 6,
+  "initial_calls": 3,
+  "corrective_calls": 3,
+  "rights": "No new public licence assigned; no third-party input images or vendor graphics. Generated provenance does not establish exclusive rights.",
+  "raster_theme_strategy": "Same unchanged original on two labelled review mattes; no recoloured original.",
+  "review_renderer": {
+    "library": "Pillow",
+    "version": "13.0.0",
+    "resampling": "LANCZOS",
+    "python": "3.12.14"
+  },
+  "vector_manifest": "vector-source/vector-manifest.json",
+  "assets": [
+    {
+      "id": "el01-interface",
+      "display_id": "EL01",
+      "title": "Expose the interface",
+      "revision": "r2",
+      "user_rating": "unrated",
+      "assistant_decision": "retain as a review candidate",
+      "provenance_class": "illustrative-generated-raster",
+      "alt": "Two pale stepped pieces sit apart, exposing a small red shim on the left piece.",
+      "caption": "An invented assembly makes the interface visible. It illustrates a relationship between parts; it is not a dimensioned or functional joint.",
+      "minimum_intended_width_px": 320,
+      "thumbnail_only_width_px": 160,
+      "generation": {
+        "tool": "OpenAI built-in imagegen",
+        "model_version": null,
+        "seed": null,
+        "quality": null,
+        "requested_size_parameter": null,
+        "transparent_background": true,
+        "initial_prompt": "Use case: stylized-concept.\nAsset type: an original standalone LONG-FORM EDITORIAL ILLUSTRATION for Ben Ebsworth's research-folio blog, an authored visual essay rather than a category icon. This is a new drawing, no prior artwork is an image input.\nMedium: exacting contemporary engraved pen-and-ink on solid warm ivory object surfaces; deep graphite contours, intentional variation in line weight, short contour-following hatch groups only where they describe a turned plane. Generous quiet unhatched areas. Craft is thoughtful and tactile, neither glossy photorealistic 3D nor generic flat clipart. One dominant physical relationship, clear asymmetrical hierarchy and deliberate negative space. Restrained severe engineering character with broad clean forms, without copying any brand mark.\nPalette: graphite around #28343b, ivory around #f4f1e8 within physical objects, one small muted vermilion detail around #b32624. The red detail identifies the focal relationship and is also differentiated by shape. No other color.\nCanvas: LANDSCAPE 3:2, about 1536 by 1024 if supported. All drawing stays within the central 76% width and 68% height; at least 12% genuinely transparent margin left/right and 16% top/bottom. The outer silhouette and major relationship should remain clear at 320 pixels wide. A few fine strokes can support the 640px reading size.\nBackground: true transparent RGBA, zero-alpha empty space outside and through openings. Solid ivory belongs only to the objects. No paper backdrop, checkerboard, border, plate, horizon, cast shadow, glow, vignette, texture cloud, decorative specks or signature.\nNo writing, labels, text, numbers, equations, measurement ticks, graphs, logos, badges, corner marks, arrows, planets, circuits, thumbnail UI or application layout.\nFidelity: this is an invented editorial construction. Do not imply real measured scientific data, named anatomical structures, exact mechanical fitness or physically validated folding.\nSubject and composition: A single broad, low carved enclosure split into TWO complementary unequal portions, seen in a coherent slightly elevated three-quarter viewpoint. The heavier left portion occupies about two-thirds of the object; the shorter right portion has been pulled a short distance right, exposing a clean stepped tongue and matching receiving recess. The clearly visible transparent interval between them is the focal event, wide enough to read at thumbnail size. One short red rectangular shim is seated on the step inside that interval, a real physical part, not a line or arrow. Keep the outer body wide, shallow and simple, with a softly chamfered top, one broad quiet ivory face and sparse hatching on the revealed cut faces. Weight sits left, the clear gap just right of center. No screws, gears, cables, computer-chip tabs or decorative mechanics. The image tells a story about what happens at an interface, not a manufactured product. Do not draw a second comparison copy or a base plate.",
+        "initial_image_inputs": [],
+        "correction_prompt": "Refine this NEW editorial study. Preserve the depicted subject, component count, orientation, visual relationships, engraved pen-and-ink drawing, graphite/ivory/red palette and all major shapes. Change only framing and transparent edge cleanliness: uniformly reduce the entire illustration to about 72% of its current scale, keeping a centered LANDSCAPE 3:2 transparent canvas at the same dimensions. Every substantial painted part must lie within the central 68% of canvas width and 66% of canvas height; ensure at least 16% empty transparent margin on every edge. All background and all empty gaps must have zero alpha: no matte, white fog, glow, drop shadow, haze, checkerboard or floating residue. Retain solid warm ivory only on physical surfaces. Do not add, remove, or reposition individual components, arrows, annotation, text, icons, logos or decorations. Maintain clear strong outer contours and quiet planes. This is an illustrative sculptural metaphor, not a measured diagram.",
+        "correction_image_input_sha256": "f55d187e828d203423be1fbbdc4da8ff7fe7d893f36f0c060222c5337dff1366",
+        "correction_image_input_revision": "r1"
+      },
+      "original_unmodified": true,
+      "r2": {
+        "path": "public/artwork/editorial-illustration-v1/originals/el01-interface-r2.png",
+        "bytes": 1158125,
+        "sha256": "a78451f3ffe5c6d3e3eeeaa0bfc4a9af37e8889fde3680f1b0202221483ca938",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1280122,
+        "partially_transparent_pixels": 292742,
+        "low_alpha_1_to_16_pixels": 9343,
+        "painted_bounds_alpha_gt_0": [
+          81,
+          28,
+          1482,
+          952
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          200,
+          351,
+          1305,
+          702
+        ],
+        "substantial_margins_ltrb_percent": [
+          13.021,
+          34.277,
+          15.039,
+          31.445
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 13.021,
+        "outer_border_max_alpha": 0,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": true
+      },
+      "r1": {
+        "path": "docs/design/editorial-illustration-language/process/r1/el01-interface-r1.png",
+        "bytes": 1375199,
+        "sha256": "f55d187e828d203423be1fbbdc4da8ff7fe7d893f36f0c060222c5337dff1366",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1138960,
+        "partially_transparent_pixels": 433904,
+        "low_alpha_1_to_16_pixels": 14524,
+        "painted_bounds_alpha_gt_0": [
+          0,
+          65,
+          1482,
+          1024
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          94,
+          329,
+          1441,
+          754
+        ],
+        "substantial_margins_ltrb_percent": [
+          6.12,
+          32.129,
+          6.185,
+          26.367
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 6.12,
+        "outer_border_max_alpha": 1,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": false
+      },
+      "empty_space_probe": {
+        "pixel": [
+          946,
+          645
+        ],
+        "alpha": 0
+      },
+      "scientific_claim": "No measured, simulated, anatomical, mathematical or physical mechanism claim."
+    },
+    {
+      "id": "el02-cutaway",
+      "display_id": "EL02",
+      "title": "Look inside the boundary",
+      "revision": "r2",
+      "user_rating": "unrated",
+      "assistant_decision": "retain as a review candidate",
+      "provenance_class": "illustrative-generated-raster",
+      "alt": "An open pale shell exposes two curved ribs, with a detached side section to the right and a red edge on the lower rib.",
+      "caption": "An invented cutaway distinguishes an exterior from its interior. It does not represent a named organism, material sample or tested mechanism.",
+      "minimum_intended_width_px": 320,
+      "thumbnail_only_width_px": 160,
+      "generation": {
+        "tool": "OpenAI built-in imagegen",
+        "model_version": null,
+        "seed": null,
+        "quality": null,
+        "requested_size_parameter": null,
+        "transparent_background": true,
+        "initial_prompt": "Use case: stylized-concept.\nAsset type: an original standalone LONG-FORM EDITORIAL ILLUSTRATION for Ben Ebsworth's research-folio blog, an authored visual essay rather than a category icon. This is a new drawing, no prior artwork is an image input.\nMedium: exacting contemporary engraved pen-and-ink on solid warm ivory object surfaces; deep graphite contours, intentional variation in line weight, short contour-following hatch groups only where they describe a turned plane. Generous quiet unhatched areas. Craft is thoughtful and tactile, neither glossy photorealistic 3D nor generic flat clipart. One dominant physical relationship, clear asymmetrical hierarchy and deliberate negative space. Restrained severe engineering character with broad clean forms, without copying any brand mark.\nPalette: graphite around #28343b, ivory around #f4f1e8 within physical objects, one small muted vermilion detail around #b32624. The red detail identifies the focal relationship and is also differentiated by shape. No other color.\nCanvas: LANDSCAPE 3:2, about 1536 by 1024 if supported. All drawing stays within the central 76% width and 68% height; at least 12% genuinely transparent margin left/right and 16% top/bottom. The outer silhouette and major relationship should remain clear at 320 pixels wide. A few fine strokes can support the 640px reading size.\nBackground: true transparent RGBA, zero-alpha empty space outside and through openings. Solid ivory belongs only to the objects. No paper backdrop, checkerboard, border, plate, horizon, cast shadow, glow, vignette, texture cloud, decorative specks or signature.\nNo writing, labels, text, numbers, equations, measurement ticks, graphs, logos, badges, corner marks, arrows, planets, circuits, thumbnail UI or application layout.\nFidelity: this is an invented editorial construction. Do not imply real measured scientific data, named anatomical structures, exact mechanical fitness or physically validated folding.\nSubject and composition: ONE asymmetrical sculpted ovoid shell, open at the top, in a coherent three-quarter viewpoint. Remove a broad front-right quarter of the shell to reveal its thick wall, generous interior cavity and TWO broad internal curved ribs. Place the removed curved section just to its right, close enough that its relationship is clear but with a clean transparent gap. The main shell is tall and slightly off-center left, its unbroken back face sweeping upward, and its cut lip reads as solid ivory. Only the nearer of the two internal ribs has a short vermilion edge accent. Make the cavity a readable shape rather than a black filled hole; background is truly visible through the open region where no object surface exists. Hatch only wall thickness and the turned edge. No concentric target rings, hardware fittings, lens, turbine blades, fossils, cellular nuclei or recognizable anatomy. This invented cutaway illustrates looking beneath an exterior, not a scientific section of a real specimen.",
+        "initial_image_inputs": [],
+        "correction_prompt": "Refine this NEW editorial study. Preserve the depicted subject, component count, orientation, visual relationships, engraved pen-and-ink drawing, graphite/ivory/red palette and all major shapes. Change only framing and transparent edge cleanliness: uniformly reduce the entire illustration to about 72% of its current scale, keeping a centered LANDSCAPE 3:2 transparent canvas at the same dimensions. Every substantial painted part must lie within the central 68% of canvas width and 66% of canvas height; ensure at least 16% empty transparent margin on every edge. All background and all empty gaps must have zero alpha: no matte, white fog, glow, drop shadow, haze, checkerboard or floating residue. Retain solid warm ivory only on physical surfaces. Do not add, remove, or reposition individual components, arrows, annotation, text, icons, logos or decorations. Maintain clear strong outer contours and quiet planes. This is an illustrative sculptural metaphor, not a measured diagram.",
+        "correction_image_input_sha256": "ff6d34aecd86f0bd5e8f1fda21533143c9b3c9170b7e6e12fc4f41c6c4322df3",
+        "correction_image_input_revision": "r1"
+      },
+      "original_unmodified": true,
+      "r2": {
+        "path": "public/artwork/editorial-illustration-v1/originals/el02-cutaway-r2.png",
+        "bytes": 1553663,
+        "sha256": "00e7828545a9d849d3407ab8fb359b9232300cc1788420e4a5384c3e3c4f48c1",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1253382,
+        "partially_transparent_pixels": 319482,
+        "low_alpha_1_to_16_pixels": 12328,
+        "painted_bounds_alpha_gt_0": [
+          25,
+          29,
+          1508,
+          1024
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          361,
+          195,
+          1174,
+          830
+        ],
+        "substantial_margins_ltrb_percent": [
+          23.503,
+          19.043,
+          23.568,
+          18.945
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 18.945,
+        "outer_border_max_alpha": 1,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": true
+      },
+      "r1": {
+        "path": "docs/design/editorial-illustration-language/process/r1/el02-cutaway-r1.png",
+        "bytes": 1998215,
+        "sha256": "ff6d34aecd86f0bd5e8f1fda21533143c9b3c9170b7e6e12fc4f41c6c4322df3",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1001469,
+        "partially_transparent_pixels": 571395,
+        "low_alpha_1_to_16_pixels": 19580,
+        "painted_bounds_alpha_gt_0": [
+          223,
+          35,
+          1408,
+          958
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          229,
+          85,
+          1316,
+          933
+        ],
+        "substantial_margins_ltrb_percent": [
+          14.909,
+          8.301,
+          14.323,
+          8.887
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 8.301,
+        "outer_border_max_alpha": 0,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": false
+      },
+      "empty_space_probe": {
+        "pixel": [
+          900,
+          450
+        ],
+        "alpha": 0
+      },
+      "scientific_claim": "No measured, simulated, anatomical, mathematical or physical mechanism claim."
+    },
+    {
+      "id": "el03-sequence",
+      "display_id": "EL03",
+      "title": "From trace to structure",
+      "revision": "r2",
+      "user_rating": "unrated",
+      "assistant_decision": "retain as a review candidate",
+      "provenance_class": "illustrative-generated-raster",
+      "alt": "A continuous pale ribbon rises from a flat red-edged tail through broad bends into an open arch.",
+      "caption": "A sculptural ribbon suggests progressive construction. Its spatial sequence is illustrative, not evidence of temporal causation, topology or physical foldability.",
+      "minimum_intended_width_px": 320,
+      "thumbnail_only_width_px": 160,
+      "generation": {
+        "tool": "OpenAI built-in imagegen",
+        "model_version": null,
+        "seed": null,
+        "quality": null,
+        "requested_size_parameter": null,
+        "transparent_background": true,
+        "initial_prompt": "Use case: stylized-concept.\nAsset type: an original standalone LONG-FORM EDITORIAL ILLUSTRATION for Ben Ebsworth's research-folio blog, an authored visual essay rather than a category icon. This is a new drawing, no prior artwork is an image input.\nMedium: exacting contemporary engraved pen-and-ink on solid warm ivory object surfaces; deep graphite contours, intentional variation in line weight, short contour-following hatch groups only where they describe a turned plane. Generous quiet unhatched areas. Craft is thoughtful and tactile, neither glossy photorealistic 3D nor generic flat clipart. One dominant physical relationship, clear asymmetrical hierarchy and deliberate negative space. Restrained severe engineering character with broad clean forms, without copying any brand mark.\nPalette: graphite around #28343b, ivory around #f4f1e8 within physical objects, one small muted vermilion detail around #b32624. The red detail identifies the focal relationship and is also differentiated by shape. No other color.\nCanvas: LANDSCAPE 3:2, about 1536 by 1024 if supported. All drawing stays within the central 76% width and 68% height; at least 12% genuinely transparent margin left/right and 16% top/bottom. The outer silhouette and major relationship should remain clear at 320 pixels wide. A few fine strokes can support the 640px reading size.\nBackground: true transparent RGBA, zero-alpha empty space outside and through openings. Solid ivory belongs only to the objects. No paper backdrop, checkerboard, border, plate, horizon, cast shadow, glow, vignette, texture cloud, decorative specks or signature.\nNo writing, labels, text, numbers, equations, measurement ticks, graphs, logos, badges, corner marks, arrows, planets, circuits, thumbnail UI or application layout.\nFidelity: this is an invented editorial construction. Do not imply real measured scientific data, named anatomical structures, exact mechanical fitness or physically validated folding.\nSubject and composition: A single continuous wide ivory ribbon crosses the composition from lower left toward upper right. Begin with one broad FLAT tail at left, then exactly TWO large clear angular folds through the middle, and finish in a short upright open arch at right. These are successive spatial regions of ONE connected sculptural ribbon, not repeated objects or a storyboard and not an exact origami instruction. The connections must be visibly continuous across broad fold joints, no floating fragments, impossible disconnected seams or decorative extra turns. The left tail has a short vermilion strip along its near edge that visually continues across the first fold and then stops. Use a low oblique viewpoint with distinctly readable top/side faces and real transparent air under the arch. The large clear undercut beneath the last rise balances the quiet flat left tail. Concentrate modest hatching on two underside faces only. Avoid scroll-paper curls, infinity knots, M\u00f6bius-band claims, arrows, spirals or wheels. The narrative is a loose trace taking structured form, not a mathematical proof or certified foldable mechanism.",
+        "initial_image_inputs": [],
+        "correction_prompt": "Refine this NEW editorial study. Preserve the depicted subject, component count, orientation, visual relationships, engraved pen-and-ink drawing, graphite/ivory/red palette and all major shapes. Change only framing and transparent edge cleanliness: uniformly reduce the entire illustration to about 72% of its current scale, keeping a centered LANDSCAPE 3:2 transparent canvas at the same dimensions. Every substantial painted part must lie within the central 68% of canvas width and 66% of canvas height; ensure at least 16% empty transparent margin on every edge. All background and all empty gaps must have zero alpha: no matte, white fog, glow, drop shadow, haze, checkerboard or floating residue. Retain solid warm ivory only on physical surfaces. Do not add, remove, or reposition individual components, arrows, annotation, text, icons, logos or decorations. Maintain clear strong outer contours and quiet planes. This is an illustrative sculptural metaphor, not a measured diagram.",
+        "correction_image_input_sha256": "64de8088b86ee0cfde8f0b60c80961644b0465a1e0565df4e3af320cd3ab7d4c",
+        "correction_image_input_revision": "r1"
+      },
+      "original_unmodified": true,
+      "r2": {
+        "path": "public/artwork/editorial-illustration-v1/originals/el03-sequence-r2.png",
+        "bytes": 1012856,
+        "sha256": "3a04e2f1b20307987ff374042b2f89d58f5ed832592ed6928c477c0deee898d4",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1415516,
+        "partially_transparent_pixels": 157348,
+        "low_alpha_1_to_16_pixels": 8008,
+        "painted_bounds_alpha_gt_0": [
+          19,
+          53,
+          1466,
+          976
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          202,
+          294,
+          1268,
+          774
+        ],
+        "substantial_margins_ltrb_percent": [
+          13.151,
+          28.711,
+          17.448,
+          24.414
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 13.151,
+        "outer_border_max_alpha": 0,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": true
+      },
+      "r1": {
+        "path": "docs/design/editorial-illustration-language/process/r1/el03-sequence-r1.png",
+        "bytes": 1169304,
+        "sha256": "64de8088b86ee0cfde8f0b60c80961644b0465a1e0565df4e3af320cd3ab7d4c",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1342003,
+        "partially_transparent_pixels": 230861,
+        "low_alpha_1_to_16_pixels": 10165,
+        "painted_bounds_alpha_gt_0": [
+          65,
+          157,
+          1466,
+          1024
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          87,
+          249,
+          1396,
+          835
+        ],
+        "substantial_margins_ltrb_percent": [
+          5.664,
+          24.316,
+          9.115,
+          18.457
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 5.664,
+        "outer_border_max_alpha": 1,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": false
+      },
+      "empty_space_probe": {
+        "pixel": [
+          1135,
+          505
+        ],
+        "alpha": 0
+      },
+      "scientific_claim": "No measured, simulated, anatomical, mathematical or physical mechanism claim."
+    }
+  ]
+}

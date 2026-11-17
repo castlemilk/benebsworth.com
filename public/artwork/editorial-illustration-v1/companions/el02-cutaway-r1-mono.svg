@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="el02-cutaway-title el02-cutaway-description">
+<title id="el02-cutaway-title">Look inside the boundary</title>
+<desc id="el02-cutaway-description">An invented cutaway shell. The open cavity and displaced section indicate inside and outside; this is not anatomy, a real material section or a tested mechanical assembly.</desc>
+<g id="el02-cutaway-geometry" stroke-linecap="round" stroke-linejoin="round">
+<path id="shell-back-wall" d="M716 258 C663 166 548 135 451 172 C310 226 247 361 277 480 C307 597 422 657 542 630 L566 593 C458 610 365 550 340 461 C316 369 370 275 469 235 C550 202 625 225 670 286 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="shell-left-thickness" d="M451 172 C310 226 247 361 277 480 C307 597 422 657 542 630 L566 593 C458 610 365 550 340 461 C316 369 370 275 469 235 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.6"/>
+<path id="back-rim" d="M451 172 C548 135 663 166 716 258 L670 286 C625 225 550 202 469 235 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="upper-rib" d="M345 347 C434 317 541 345 620 389 L629 422 C533 371 432 346 343 374 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="lower-rib" d="M335 429 C410 415 506 452 577 499 L584 533 C502 482 410 449 341 457 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="near-rib-red-edge" d="M526 469 C547 480 564 489 577 499 L584 533 C566 521 549 511 530 501 Z" fill="#28343b" stroke="#28343b" stroke-width="3.8"/>
+<path id="displaced-section" d="M837 279 C932 332 985 447 950 534 C937 570 911 595 875 610 L836 576 C907 543 925 461 888 389 C871 356 845 334 804 312 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="section-cut-face" d="M837 279 L804 312 C845 334 871 356 888 389 C925 461 907 543 836 576 L875 610 C968 565 988 462 934 365 C910 324 879 298 837 279 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.6"/>
+<path id="section-rim" d="M837 279 C932 332 985 447 950 534" fill="none" stroke="#28343b" stroke-width="4.6"/>
+<path id="left-wall-hatching" d="M286 390 L320 404 M282 412 L319 427 M286 435 L323 450 M292 457 L331 474 M300 479 L341 496 M311 500 L353 517 M325 520 L366 537 M342 539 L384 554 M362 556 L404 571" fill="none" stroke="#28343b" stroke-width="2.4"/>
+<path id="section-hatching" d="M905 376 L928 365 M916 398 L944 385 M924 420 L954 407 M930 442 L962 430 M931 464 L963 453 M928 486 L958 478" fill="none" stroke="#28343b" stroke-width="2.4"/>
+</g>
+</svg>

@@ -1,0 +1,11 @@
+{
+  "command": "PATH=/workspace/scratch/b9f080651e91/motif-gate-tools/bin:$PATH .githooks/pre-commit",
+  "cwd": "/workspace/scratch/b9f080651e91/blog-motifs-audit",
+  "start_utc": "2026-11-17T11:39:26.635138+00:00",
+  "end_utc": "2026-11-17T11:39:46.244268+00:00",
+  "start_melbourne": "2026-11-17T22:39:26.635138+11:00",
+  "elapsed_seconds": 19.615,
+  "exit_code": 0,
+  "stdout_log": "/workspace/scratch/b9f080651e91/motif-gate-tools/pre-commit.stdout.log",
+  "stderr_log": "/workspace/scratch/b9f080651e91/motif-gate-tools/pre-commit.stderr.log"
+}

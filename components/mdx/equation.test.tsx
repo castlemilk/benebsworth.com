@@ -189,7 +189,8 @@ describe('Equation canonical Gamma action menu', () => {
     expect(status.parentElement).toBe(reserve.parentElement)
     expect(status.closest('.equation-controls')).toBe(controls)
     expect(status.closest('.action-menu')).toBeNull()
-    expect(controls.nextElementSibling?.className).toBe('equation-math')
+    // The math region (or its positioning wrapper) follows the controls row.
+    expect(controls.nextElementSibling?.className).toContain('equation-math')
     expect(controls.hasAttribute('data-pagefind-ignore')).toBe(true)
     expect(reserve.closest('[data-pagefind-ignore]')).toBe(controls)
     expect(container.querySelector('.equation-math')?.closest('[data-pagefind-ignore]')).toBeNull()

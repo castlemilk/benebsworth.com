@@ -23,6 +23,7 @@ import {
   harnessTaskPath,
 } from '@/lib/lab/harness-eval/nav'
 import { HARNESS_SUITES, HARNESS_TASKS } from '@/lib/lab/harness-eval/registry'
+import { getCourse } from '@/lib/study/load'
 
 export const dynamic = 'force-static'
 
@@ -70,6 +71,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...GROUNDED_ARTWORK.map(art => page(groundedArtworkUrl(art), { changeFrequency: 'yearly', priority: 0.4 })),
     page('/vectors/originals/', { changeFrequency: 'yearly', priority: 0.3 }),
     page('/lab/', { changeFrequency: 'weekly', priority: 0.9 }),
+    page('/study/', { changeFrequency: 'weekly', priority: 0.7 }),
+    page('/knowledge/', { changeFrequency: 'weekly', priority: 0.6 }),
     page('/lab/black-hole-sim/', { changeFrequency: 'monthly', priority: 0.7 }),
     page('/lab/carbon/', { changeFrequency: 'monthly', priority: 0.7 }),
     page('/lab/circuit-sim/', { changeFrequency: 'monthly', priority: 0.7 }),
@@ -126,6 +129,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ),
   ]
 
+  // Only chapters with a built packet get real pages; the rest are stubs.
+  const studyPages = getCourse().volumes.flatMap((vol) =>
+    vol.chapters
+      .filter((c) => c.hasPacket)
+      .map((c) => page(`/study/${vol.id}/${c.slug}/`, { changeFrequency: 'monthly', priority: 0.6 })),
+  )
+
   const harnessPages = [
     ...HARNESS_SUITES.map((suite) =>
       page(harnessSuitePath(suite.slug), { changeFrequency: 'monthly', priority: 0.6 }),
@@ -141,7 +151,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Registry overlap is easy to introduce when a page graduates to a
   // dedicated route. Keep the output valid even if that happens again.
   const seen = new Set<string>()
-  return [...staticPages, ...posts, ...projects, ...labs, ...hikePages, ...benchmarkPages, ...harnessPages].filter(
+  return [...staticPages, ...posts, ...projects, ...labs, ...hikePages, ...benchmarkPages, ...studyPages, ...harnessPages].filter(
     (entry) => {
       if (seen.has(entry.url)) return false
       seen.add(entry.url)

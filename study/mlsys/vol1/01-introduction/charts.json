@@ -1,0 +1,104 @@
+[
+  {
+    "id": "degradation-curve",
+    "kind": "LINE",
+    "title": "Silent degradation: green alerts, falling quality",
+    "caption": "Illustrative deployment: infrastructure health stays flat and green while predictive quality decays after the data drifts (~day 28). Nothing pages. The gap between the two lines is what monitoring misses.",
+    "xLabel": "days since deploy",
+    "yLabel": "percent",
+    "xPoints": [
+      "2026-01-05",
+      "2026-01-12",
+      "2026-01-19",
+      "2026-01-26",
+      "2026-02-02",
+      "2026-02-09",
+      "2026-02-16",
+      "2026-02-23",
+      "2026-03-02",
+      "2026-03-09",
+      "2026-03-16",
+      "2026-03-23",
+      "2026-03-30"
+    ],
+    "series": [
+      {
+        "key": "accuracy",
+        "label": "Predictive quality",
+        "color": "var(--chart-1)",
+        "values": [
+          92.0,
+          91.8,
+          91.9,
+          91.5,
+          90.2,
+          88.1,
+          85.4,
+          82.0,
+          78.9,
+          76.5,
+          75.1,
+          74.2,
+          73.8
+        ]
+      },
+      {
+        "key": "health",
+        "label": "Infra health (alert metric)",
+        "color": "var(--chart-positive)",
+        "values": [
+          99.9,
+          99.9,
+          99.8,
+          99.9,
+          99.9,
+          99.8,
+          99.9,
+          99.9,
+          99.8,
+          99.9,
+          99.9,
+          99.8,
+          99.9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "iron-law",
+    "kind": "IRON_LAW_EXPLORER",
+    "title": "Iron-law budget explorer",
+    "caption": "Baseline budget $T_{\\mathrm{mem}}=25$, $T_{\\mathrm{comp}}=100$, $T_{\\mathrm{ovh}}=5$ ms. Drag the compute-rate multiplier: at 2\u00d7 the sequential time drops 130 to 80 ms, but the overlapped bound only drops 105 to 55 ms. Upgrading *compute* is also what makes overlap start to expose *memory* as the new bottleneck.",
+    "xLabel": "scenario",
+    "yLabel": "ms",
+    "xPoints": [
+      "baseline"
+    ],
+    "series": [
+      {
+        "key": "movement",
+        "label": "Data movement",
+        "color": "var(--chart-1)",
+        "values": [
+          25
+        ]
+      },
+      {
+        "key": "compute",
+        "label": "Compute",
+        "color": "var(--chart-2)",
+        "values": [
+          100
+        ]
+      },
+      {
+        "key": "overhead",
+        "label": "Overhead",
+        "color": "var(--chart-4)",
+        "values": [
+          5
+        ]
+      }
+    ]
+  }
+]

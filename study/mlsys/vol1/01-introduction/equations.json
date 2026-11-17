@@ -1,0 +1,79 @@
+[
+  {
+    "id": "iron-law-product",
+    "number": 1,
+    "title": "Iron law of ML systems: product form",
+    "latex": "T = \\frac{\\mathrm{samples}}{\\mathrm{task}} \\times \\frac{\\mathrm{FLOPs}}{\\mathrm{sample}} \\times \\frac{s}{\\mathrm{FLOP}}",
+    "caption": "Dimensional cancellation over the D-A-M axes: the first two factors multiply to total operations $O$.",
+    "symbols": [
+      { "symbol": "T", "name": "total time", "meaning": "wall-clock time for the task, in seconds" },
+      { "symbol": "\\frac{\\mathrm{samples}}{\\mathrm{task}}", "name": "samples per task", "meaning": "how many inputs must pass through: the Data factor" },
+      { "symbol": "\\frac{\\mathrm{FLOPs}}{\\mathrm{sample}}", "name": "work per sample", "meaning": "operations the model spends on each input: the Algorithm factor" },
+      { "symbol": "\\frac{s}{\\mathrm{FLOP}}", "name": "seconds per FLOP", "meaning": "what each operation costs on this machine: the Machine factor" }
+    ]
+  },
+  {
+    "id": "iron-law-sequential",
+    "number": 2,
+    "title": "Iron law of ML systems: sequential bound",
+    "latex": "T_{\\mathrm{seq}} = T_{\\mathrm{mem}} + T_{\\mathrm{comp}} + T_{\\mathrm{ovh}}",
+    "caption": "Total latency is the *sum* of data movement, compute, and overheads when the stages run in series.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{seq}}", "name": "sequential time", "meaning": "wall-clock time when no stage overlaps another" },
+      { "symbol": "T_{\\mathrm{mem}}", "name": "memory time", "meaning": "moving all required bytes at effective bandwidth: D_vol / BW" },
+      { "symbol": "T_{\\mathrm{comp}}", "name": "compute time", "meaning": "executing all operations at achieved rate: O / (R_peak * eta_hw)" },
+      { "symbol": "T_{\\mathrm{ovh}}", "name": "fixed overhead", "meaning": "latency that survives at zero work: kernel launches, network RTTs, setup" }
+    ]
+  },
+  {
+    "id": "iron-law-overlapped",
+    "number": 3,
+    "title": "Iron law: overlapped lower bound",
+    "latex": "T_{\\mathrm{ovl}} = \\max\\!\\left(T_{\\mathrm{mem}},\\, T_{\\mathrm{comp}}\\right) + T_{\\mathrm{ovh}}",
+    "caption": "Perfect prefetch/compute overlap can hide the smaller of the two dominant terms, but never both, and never the overhead.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{ovl}}", "name": "overlapped time", "meaning": "fastest achievable time when movement and compute fully overlap" },
+      { "symbol": "\\max(T_{\\mathrm{mem}}, T_{\\mathrm{comp}})", "name": "binding term", "meaning": "whichever stage is slower sets the floor; the other hides inside it" },
+      { "symbol": "T_{\\mathrm{ovh}}", "name": "fixed overhead", "meaning": "latency that survives at zero work: kernel launches, network RTTs, setup" }
+    ]
+  },
+  {
+    "id": "silent-degradation",
+    "number": 4,
+    "title": "Silent degradation under drift",
+    "latex": "\\mathrm{Acc}(t) \\approx \\mathrm{Acc}_0 - \\lambda\\, D\\!\\left(P_t \\,\\|\\, P_0\\right)",
+    "caption": "Accuracy decays roughly in proportion to divergence $D$ between the serving-time distribution $P_t$ and the training-time distribution $P_0$, while every infra metric stays green.",
+    "symbols": [
+      { "symbol": "\\mathrm{Acc}(t)", "name": "accuracy at time t", "meaning": "quality on live traffic now, the thing nobody is measuring" },
+      { "symbol": "\\mathrm{Acc}_0", "name": "baseline accuracy", "meaning": "quality at deployment, measured on the eval set" },
+      { "symbol": "\\lambda", "name": "drift sensitivity", "meaning": "how fast accuracy falls per unit of divergence; fitted per model" },
+      { "symbol": "D(P_t \\,\\|\\, P_0)", "name": "distribution divergence", "meaning": "distance between what the model sees now and what it was trained/evaluated on" }
+    ]
+  },
+  {
+    "id": "energy-budget",
+    "number": 5,
+    "title": "Energy counterpart of the iron law",
+    "latex": "E \\approx D_{\\mathrm{vol}} \\cdot E_{\\mathrm{move}} + O \\cdot E_{\\mathrm{compute}}",
+    "caption": "The same two work terms priced in joules instead of seconds. A DRAM byte costs ~145x an FP16 FLOP, so movement dominates.",
+    "symbols": [
+      { "symbol": "E", "name": "total energy", "meaning": "joules spent running the task" },
+      { "symbol": "D_{\\mathrm{vol}}", "name": "data volume", "meaning": "bytes moved: weights, activations, inputs" },
+      { "symbol": "E_{\\mathrm{move}}", "name": "energy per byte", "meaning": "cost of moving one byte; ~145x an FP16 FLOP for DRAM" },
+      { "symbol": "O", "name": "operations", "meaning": "total FLOPs executed" },
+      { "symbol": "E_{\\mathrm{compute}}", "name": "energy per operation", "meaning": "cost of one FLOP; shrinks with precision (INT8 much cheaper)" }
+    ]
+  },
+  {
+    "id": "return-on-compute",
+    "number": 6,
+    "title": "Return on compute",
+    "latex": "\\mathrm{RoC} = \\frac{\\Delta \\mathrm{Accuracy}}{\\Delta \\mathrm{Compute}}",
+    "caption": "Accuracy gained per unit of additional compute. The chapter's efficiency lens: spending compute on the wrong term buys nothing.",
+    "symbols": [
+      { "symbol": "\\mathrm{RoC}", "name": "return on compute", "meaning": "quality bought per unit of compute spent; the efficiency question" },
+      { "symbol": "\\Delta \\mathrm{Accuracy}", "name": "quality gained", "meaning": "improvement on the metric you actually care about" },
+      { "symbol": "\\Delta \\mathrm{Compute}", "name": "compute spent", "meaning": "extra FLOPs, memory, or wall-clock budget you paid" }
+    ]
+  }
+]

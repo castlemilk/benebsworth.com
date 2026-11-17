@@ -1,0 +1,29 @@
+# MLSys study progress
+
+State machine per chapter: `unread → packet → reviewed → quizzed → posted`.
+The `mlsys-study` skill updates this file after every phase transition.
+Book rev pinned: `dev` @ sparse clone in `study/cs249r_book/` (clone date 2026-11-11).
+
+| Unit | Packet | Reviewed | Quizzed (score) | Post slug | Notes |
+|---|---|---|---|---|---|
+| vol1/01 Introduction | ✅ 2026-11-11 | pending | pending | pending | first packet |
+| vol1/02 System Paradigms | ✅ 2026-11-16 | pending | pending | pending | tiers/walls/archetypes/screening |
+| vol1/03 ML Lifecycle | ✅ 2026-11-16 | pending | pending | pending | loop/contracts/constraint propagation |
+
+## Session log
+
+- **2026-11-11**: scaffolding created (`study/`, curriculum, progress, mlsys-study skill); Ch.1 packet produced.
+- **2026-11-14**: `/study` microfrontend built (proto `study.proto` → `lib/gen/study.ts`, loader `lib/study/`, routes `app/study/`); chapter contract extended with `quiz.json` + `diagrams.json`; course also ported to `~/projects/brainbuilder` (`buildMlSystemsCourse`, `packages/courseware/src/content/mlsys.ts`).
+- **2026-11-14 (2)**: study UI upgraded: bklit charts vendored (`components/charts/` via shadcn registry, chart CSS vars in globals.css), `StudyEquation` + `StudyChart` added to `proto/study.proto`, packet contract extended with `equations.json` + `charts.json`. Ch1: LaTeX throughout packet/quiz, 4 key equations, degradation line chart + interactive iron-law explorer (gamma `RangeSlider`). Gamma in views: `ChapterActions` menu, `GammaButton` quiz controls.
+- **2026-11-15**: deslop + perf pass. Prose cleaned across packet/quiz/manifests/copy (em dashes, unicode arrows, ai-tell words, en-dash ranges to hyphens). Perf: unified processor hoisted in `lib/study/markdown.ts`, parallel render prep on the chapter page, `next/dynamic` split for the bklit bundle, memo/rerender fixes, `content-visibility` on index sections. `study/mlsys/**` added to the prose-lint manifest (`:` is now the curriculum delimiter; `lib/study/load.ts` regexes + skill updated) and to `build:default` sources so packet edits trigger rebuilds.
+- **2026-11-16**: TOC rail + glosses + equation drilldown. `TocNav` (scrollspy rail in the left gutter ≥xl, `<details>` contents block below) fed by server-extracted h2/h3 slugs + section ids. `==mark=={gloss}` hover cards (glosses span links/inline markup; reader note-marks reuse the card for note preview). `EquationSymbol` added to proto; `Equation` gained a `symbols` drilldown (server-rendered KaTeX on /study, lazy `import('katex')` for MDX use); all 4 ch1 equations have symbol keys.
+- **2026-11-15 (2)**: notes + highlights layer. Author side: `==mark==` and `> [!kind]` (note/observation/caution/method/connection/question) transforms added to `lib/study/markdown.ts`, styled `.study-mark`/`.study-note` in folio palette. Reader side: `PacketAnnotator` (select → Highlight/Note popover, gamma buttons, folio-hand margin rail on xl, popover note on small screens) persisted per-chapter at `mlsys:study:notes:v1`, re-anchored by text+context. Ch1 packet seeded with 5 marks + 4 callouts.
+- **2026-11-16 (2)**: Ch.2 (System Paradigms) packet produced: packet.md (silicon contract, three walls, four archetypes, locality invariant, screen-then-cost, hybrid patterns, fallacies; marks + glosses + callouts), quiz (6 book MCQs adapted + 3 Feynman + 1 locality numeric), 5 equations with symbol keys (light barrier, f^3 power, memory-wall ratio, bottleneck bound, locality invariant), 2 charts (memory-wall line, locality stacked bars), 3 original diagrams (tier ladder, archetype map, screen funnel).
+- **2026-11-16 (3)**: equation annotations on all packet math. Fixed real bug: `katex.min.css` only loaded via `mdx-content.tsx`, so /study KaTeX rendered unstyled (MathML+HTML both visible). New packet syntax `::eq[id]` + `$$…$$` → `rehypeEquationExplainers` wraps display math in `.equation`/`.equation-math-wrap` + hover-Σ button + `eqs-<id>` symbol panel pre-rendered via `katex.renderToString`; PacketAnnotator's delegated click toggles `data-open`/`aria-expanded` (same mechanism as the MDX component). Symbol manifests extended: ch1 4→6 (added product form + energy), ch2 5→7 (added serial iron law + ridge point). Both packets restructured so every named law is a display block; inline `$…$` stays for terms/scalars.
+- **2026-11-16 (4)**: Ch.3 (ML Lifecycle) packet produced: packet.md (loop as thesis, day-153 failure + constraint-propagation principle, CrowdFlower time split + iteration tax, stage interface contracts + walk-back audit, six stages, monitoring as a stage with four metric categories and multi-scale feedback, fallacies; marks + glosses + callouts), quiz (6 book MCQs adapted + 2 Feynman + 2 numeric), 7 equations with symbol keys (sens/spec defs, ungradable share, rework, iteration tax, iron-law map, ROC corner), 2 charts (survey bars, iteration tax), 3 original diagrams (lifecycle loop, day-153 cascade, contract walk-back), 7 book figures mirrored (lifecycle overview/detail, ds-time pie, eye-dr photos, ROC corner, timescale ladder, iteration bars, feedback paths), podcast ~6 min with 5 ::eq markers.
+
+## Conventions
+
+- Packets live at `study/mlsys/<vol>/<NN-slug>/{packet.md,quiz.md,quiz.json,equations.json,charts.json,diagrams.json,diagrams/}`: `quiz.json`/`charts.json` conform to `proto/study.proto` and feed `/study`; `equations.json` renders via gamma `Equation`. LaTeX: `$…$`/`$$…$$` everywhere; escape literal `\$`.
+- Posts derive one essay per chapter, counter-intuitive-claim angle, never a chapter summary. `labels: machine-learning,mlsys`, `draft: true` until reviewed; add slug to `TOPIC.software` in `lib/topics.ts` `BY_SLUG`.
+- Attribution: every post links the chapter + book site; original diagrams only (CC-BY-NC-SA 4.0).

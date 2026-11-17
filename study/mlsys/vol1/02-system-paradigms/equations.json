@@ -1,0 +1,91 @@
+[
+  {
+    "id": "light-barrier",
+    "number": 1,
+    "title": "Light barrier: minimum round-trip latency",
+    "latex": "T_{\\mathrm{RTT}} \\ge \\frac{2\\,D}{c_{\\mathrm{fiber}}} \\approx \\frac{2\\,D}{200{,}000\\ \\mathrm{km/s}}",
+    "caption": "The propagation floor under any remote path, before routing, queuing, or compute. At ~5 ms per 1,000 km round trip, a 10 ms budget dies on distance alone.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{RTT}}", "name": "round-trip floor", "meaning": "minimum time for a signal to go and return; no remote compute can shrink it" },
+      { "symbol": "D", "name": "one-way distance", "meaning": "path length from client to data center, km" },
+      { "symbol": "c_{\\mathrm{fiber}}", "name": "propagation speed in fiber", "meaning": "~200,000 km/s, about two-thirds of c in vacuum because light slows in glass" }
+    ]
+  },
+  {
+    "id": "power-scaling",
+    "number": 2,
+    "title": "Power wall: dynamic power is cubic in frequency",
+    "latex": "P \\propto C\\,V^{2}\\,f \\quad\\xrightarrow{\\ V\\propto f\\ }\\quad P \\propto f^{3}",
+    "caption": "Raising the clock also raises the voltage needed to switch reliably. Both effects multiply, so doubling f can cost ~8x the power: why clocks froze ~2005 and phones throttle.",
+    "symbols": [
+      { "symbol": "P", "name": "dynamic power", "meaning": "energy per second spent switching transistors, becomes heat" },
+      { "symbol": "C", "name": "switched capacitance", "meaning": "charge moved per clock edge; set by circuit size, not speed" },
+      { "symbol": "V", "name": "supply voltage", "meaning": "must rise with f to keep switching reliable" },
+      { "symbol": "f", "name": "clock frequency", "meaning": "switching rate; the lever that now costs cubed power" }
+    ]
+  },
+  {
+    "id": "memory-wall",
+    "number": 3,
+    "title": "Memory wall: compute outgrows bandwidth",
+    "latex": "\\rho_{\\mathrm{wall}} = \\frac{g_{\\mathrm{compute}}}{g_{\\mathrm{mem}}} \\approx \\frac{1.6}{1.2} \\approx 1.33\\ \\text{per year}",
+    "caption": "Annual growth factors, not speeds. A ratio above 1 compounds: over a decade the compute-to-bandwidth gap opens ~16x, so movement takes a rising share of time and energy.",
+    "symbols": [
+      { "symbol": "\\rho_{\\mathrm{wall}}", "name": "divergence ratio", "meaning": "how much faster compute grows than bandwidth each year" },
+      { "symbol": "g_{\\mathrm{compute}}", "name": "compute growth factor", "meaning": "~1.6x/yr, the ~18-month doubling" },
+      { "symbol": "g_{\\mathrm{mem}}", "name": "bandwidth growth factor", "meaning": "~1.2x/yr, memory signaling improves slowly" }
+    ]
+  },
+  {
+    "id": "iron-law-serial",
+    "number": 4,
+    "title": "Iron law, additive form: one request end to end",
+    "latex": "T = \\frac{D_{\\mathrm{vol}}}{BW} + \\frac{O}{R_{\\mathrm{peak}}\\,\\eta_{\\mathrm{hw}}} + L_{\\mathrm{lat}}",
+    "caption": "Use this when memory, compute, and overhead all sit on one dependent path: they add. This is what a single request's latency pays.",
+    "symbols": [
+      { "symbol": "T", "name": "request latency", "meaning": "end-to-end time for one unit of work" },
+      { "symbol": "\\frac{D_{\\mathrm{vol}}}{BW}", "name": "memory term", "meaning": "bytes moved divided by bandwidth" },
+      { "symbol": "\\frac{O}{R_{\\mathrm{peak}}\\eta_{\\mathrm{hw}}}", "name": "compute term", "meaning": "operations divided by achieved rate (peak x hardware efficiency)" },
+      { "symbol": "L_{\\mathrm{lat}}", "name": "fixed overhead", "meaning": "latency that survives at zero work: launches, RTTs, setup" }
+    ]
+  },
+  {
+    "id": "bottleneck-bound",
+    "number": 5,
+    "title": "Bottleneck principle: overlapped stream bound",
+    "latex": "T_{\\mathrm{stream}} \\ge \\max\\!\\left(T_{\\mathrm{mem}},\\ T_{\\mathrm{comp}},\\ T_{\\mathrm{IO}}\\right) + L_{\\mathrm{lat}}",
+    "caption": "For an ideally overlapped stream, the interval between completions is set by the single slowest stage. Speeding any other stage buys nothing for throughput.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{stream}}", "name": "per-task interval", "meaning": "steady-state time between completed tasks once the pipeline fills" },
+      { "symbol": "T_{\\mathrm{mem}}", "name": "memory stage", "meaning": "D_vol / BW: bytes moved at bandwidth" },
+      { "symbol": "T_{\\mathrm{comp}}", "name": "compute stage", "meaning": "O / (R_peak x eta_hw): operations at achieved rate" },
+      { "symbol": "T_{\\mathrm{IO}}", "name": "transfer stage", "meaning": "storage or network link time; deployment adds it to the race" },
+      { "symbol": "L_{\\mathrm{lat}}", "name": "fixed overhead", "meaning": "non-overlapped cost paid per task, sits outside the max" }
+    ]
+  },
+  {
+    "id": "system-balance",
+    "number": 6,
+    "title": "System balance: the ridge point",
+    "latex": "I^{*} = \\frac{R_{\\mathrm{peak}}}{BW}",
+    "caption": "The platform's balance point in FLOPs per byte. A workload whose arithmetic intensity sits above I* is compute-bound; below it, bandwidth-bound. Same model, different batch, different side.",
+    "symbols": [
+      { "symbol": "I^{*}", "name": "ridge point", "meaning": "the arithmetic intensity where memory and compute cost the same time" },
+      { "symbol": "R_{\\mathrm{peak}}", "name": "peak compute rate", "meaning": "maximum FLOPs/s the silicon contract offers" },
+      { "symbol": "BW", "name": "memory bandwidth", "meaning": "bytes/s the machine can stream" }
+    ]
+  },
+  {
+    "id": "locality-invariant",
+    "number": 7,
+    "title": "Data locality invariant: remote-path lower bound",
+    "latex": "T_{\\mathrm{remote}} \\ge \\frac{D_{\\mathrm{vol}}}{BW_{\\mathrm{net}}} + L_{\\mathrm{net}} + \\frac{O}{R_{\\mathrm{rem}}\\,\\eta_{\\mathrm{rem}}}",
+    "caption": "An idealized bound that omits remote queueing, serialization, and memory movement. If even this misses the deadline, the remote path is rejected; surviving it only earns a complete-path measurement.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{remote}}", "name": "remote-path bound", "meaning": "optimistic total time for offload; the screen compares it to the deadline" },
+      { "symbol": "\\frac{D_{\\mathrm{vol}}}{BW_{\\mathrm{net}}}", "name": "transmission term", "meaning": "time to push the input over the uplink; cannot be bought down by remote compute" },
+      { "symbol": "L_{\\mathrm{net}}", "name": "network latency", "meaning": "propagation + routing + protocol handshakes, round trip" },
+      { "symbol": "\\frac{O}{R_{\\mathrm{rem}}\\eta_{\\mathrm{rem}}}", "name": "remote compute term", "meaning": "the only term remote hardware improves; often the smallest one" }
+    ]
+  }
+]

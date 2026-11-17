@@ -2,7 +2,7 @@ import test from 'node:test'
 import { spawnSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 import assert from 'node:assert/strict'
-import { cp, lstat, mkdtemp, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises'
+import { cp, lstat, mkdtemp, mkdir, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { brotliCompressSync } from 'node:zlib'
@@ -14,7 +14,7 @@ const manifest = JSON.parse(await readFile(resolve(ROOT, 'assets/grounded/manife
 const assetPath = (root, variant, kind = 'master') => resolve(root, `public${variant[kind]}`)
 const partPath = (root, part) => resolve(root, `assets/grounded/parts/${part.sha256}.br.b64`)
 async function fixture(t, outputs = true) {
- const root = await mkdtemp(join(tmpdir(), 'grounded-source-test-'))
+ const root = await mkdtemp(join(await realpath(tmpdir()), 'grounded-source-test-'))
  t.after(() => rm(root, { recursive: true, force: true }))
  await mkdir(join(root, 'lib/grounded-artwork'), { recursive: true })
  await cp(join(ROOT, 'lib/grounded-artwork/catalogue.json'), join(root, 'lib/grounded-artwork/catalogue.json'))

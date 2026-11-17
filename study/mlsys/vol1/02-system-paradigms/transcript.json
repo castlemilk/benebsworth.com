@@ -1,0 +1,160 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "Chapter two today \u2014 I'm Marcus, with Iris. System paradigms. And this one surprised me because it's secretly a physics chapter wearing a deployment diagram's clothes.",
+      "start": 0.0,
+      "end": 12.1
+    },
+    {
+      "speaker": "B",
+      "text": "That's the right read. The chapter's organizing claim is what they call the silicon contract: the deployment tier is determined by three terms \u2014 power, memory, interconnect \u2014 plus two preconditions, privacy and latency. Software wishes don't move any of them.",
+      "start": 12.1,
+      "end": 28.95
+    },
+    {
+      "speaker": "A",
+      "text": "And the preconditions come first, which is the part people skip. Privacy screens out paths the data isn't allowed to take at all. Latency rules out paths whose lower bound already misses the deadline. Neither is negotiable \u2014 a slower answer later is not a negotiation.",
+      "start": 28.95,
+      "end": 48.5
+    },
+    {
+      "speaker": "B",
+      "text": "The braking example is the cleanest one. Your car needs a decision inside ten milliseconds. The cloud is fifteen hundred kilometres away. Light in fibre does roughly two hundred thousand kilometres a second, so the round trip alone is fifteen milliseconds \u2014 more than the whole budget. No engineering fixes that. Physics says the decision happens on the car.",
+      "start": 48.5,
+      "end": 70.85,
+      "eq": {
+        "id": "light-barrier",
+        "title": "Light barrier: minimum round-trip latency",
+        "latex": "T_{\\mathrm{RTT}} \\ge \\frac{2\\,D}{c_{\\mathrm{fiber}}} \\approx \\frac{2\\,D}{200{,}000\\ \\mathrm{km/s}}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Feasibility before speed \u2014 that's the order. You screen first, then optimize.",
+      "start": 70.85,
+      "end": 76.72
+    },
+    {
+      "speaker": "B",
+      "text": "Then the three walls. Light is the first, we just did it. Power is the second \u2014 and the math here is brutal. Dynamic power scales with frequency cubed, because voltage scales with frequency. So doubling the clock costs eight times the power. That's why every chip in your house froze around three to five gigahertz in about two thousand and five.",
+      "start": 76.72,
+      "end": 97.67,
+      "eq": {
+        "id": "power-scaling",
+        "title": "Power wall: dynamic power is cubic in frequency",
+        "latex": "P \\propto C\\,V^{2}\\,f \\quad\\xrightarrow{\\ V\\propto f\\ }\\quad P \\propto f^{3}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "The end of Dennard scaling \u2014 transistors kept shrinking but you couldn't run them faster without melting, so the free lunch became more cores instead of more clock.",
+      "start": 97.67,
+      "end": 108.85
+    },
+    {
+      "speaker": "B",
+      "text": "And the third wall is memory, which is the sneaky one. Compute grows about one-point-six times a year; memory bandwidth about one-point-two. Ratio of one-point-three-three \u2014 sounds small, but it compounds to about sixteen times per decade. Every year the gap between how fast you can compute and how fast you can feed the compute gets wider.",
+      "start": 108.85,
+      "end": 129.97,
+      "eq": {
+        "id": "memory-wall",
+        "title": "Memory wall: compute outgrows bandwidth",
+        "latex": "\\rho_{\\mathrm{wall}} = \\frac{g_{\\mathrm{compute}}}{g_{\\mathrm{mem}}} \\approx \\frac{1.6}{1.2} \\approx 1.33\\ \\text{per year}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Which is why the book keeps hammering \"the bottleneck is data movement\" \u2014 and why your laptop running a local model is, at heart, a bandwidth-bound machine.",
+      "start": 129.97,
+      "end": 140.7
+    },
+    {
+      "speaker": "B",
+      "text": "Then the workload archetypes, and this is where it stops being trivia and becomes a design tool. Four regimes \u2014 throughput, latency, capacity, power \u2014 each named after a lighthouse task that defines it.",
+      "start": 140.7,
+      "end": 154.02
+    },
+    {
+      "speaker": "A",
+      "text": "Right \u2014 batch inference is throughput-bound, interactive serving is latency-bound, training is capacity-bound because the weights have to fit, and TinyML sensing is power-bound. And the key move: the archetype isn't a property of the model, it's a property of the deployment context. The same model is different archetypes on different tiers.",
+      "start": 154.02,
+      "end": 177.12
+    },
+    {
+      "speaker": "B",
+      "text": "Prove it with the drone example, because that's the worked number that sticks. A four-K frame is about twenty-five megabytes \u2014 call it two hundred megabits. On a hundred megabit uplink that's two seconds of pure transmission. Meanwhile the sixty-fps frame budget is sixteen-point-seven milliseconds.",
+      "start": 177.12,
+      "end": 195.35
+    },
+    {
+      "speaker": "A",
+      "text": "So the remote path can't even start. The workload is power-archetype territory \u2014 the answer has to be on the drone.",
+      "start": 195.35,
+      "end": 203.9
+    },
+    {
+      "speaker": "B",
+      "text": "And then they make the ordering explicit: the locality invariant. Remote execution is a lower bound you compute first \u2014 data volume over network bandwidth, plus network latency, plus compute on the remote side. If that bound already misses the budget, you never get to round two.",
+      "start": 203.9,
+      "end": 222.17,
+      "eq": {
+        "id": "locality-invariant",
+        "title": "Data locality invariant: remote-path lower bound",
+        "latex": "T_{\\mathrm{remote}} \\ge \\frac{D_{\\mathrm{vol}}}{BW_{\\mathrm{net}}} + L_{\\mathrm{net}} + \\frac{O}{R_{\\mathrm{rem}}\\,\\eta_{\\mathrm{rem}}}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Which is the screen-then-cost method \u2014 privacy screen, latency screen, resource screen, and only then lifecycle cost. Each check excludes candidates before the next one runs, and they're ordered by how cheap the check is \u2014 physics first, money last.",
+      "start": 222.17,
+      "end": 239.7
+    },
+    {
+      "speaker": "B",
+      "text": "Last bit \u2014 hybrid architectures, because the real world isn't a single tier. The voice-assistant cascade is the pricing exercise: waking word detection on-device, because streaming audio from a billion devices to the cloud is thirty-two terabytes a second and hundreds of millions of dollars a year for a free feature. Local detection cuts the uploads by a factor of about eight hundred and sixty.",
+      "start": 239.7,
+      "end": 264.68
+    },
+    {
+      "speaker": "A",
+      "text": "But the wake word is only the first filter \u2014 everything after it still wants the cloud. Hybrid isn't a compromise; at that scale it's the only shape that works.",
+      "start": 264.68,
+      "end": 276.12
+    },
+    {
+      "speaker": "B",
+      "text": "And the complexity tax is real \u2014 synchronized state, feature definitions, model versions all have to match across the boundary or you reintroduce training-serving skew where the tiers meet.",
+      "start": 276.12,
+      "end": 288.3
+    },
+    {
+      "speaker": "A",
+      "text": "Takeaway for the review shelf: before any deployment discussion, write down the three contract terms and the two preconditions. If a path fails a precondition, it's not a candidate \u2014 no amount of budget or cleverness reopens it.",
+      "start": 288.3,
+      "end": 304.28
+    },
+    {
+      "speaker": "B",
+      "text": "And keep the numbers handy: fifteen milliseconds of light-speed round trip per fifteen hundred kilometres, eight times power for twice the clock, one point three three times the memory gap per year, sixteen point seven milliseconds per frame at sixty fps.",
+      "start": 304.28,
+      "end": 320.73
+    },
+    {
+      "speaker": "A",
+      "text": "Chapter three next \u2014 the ML lifecycle, where the data half of that dual mandate becomes a pipeline.",
+      "start": 320.73,
+      "end": 328.35
+    },
+    {
+      "speaker": "B",
+      "text": "See you there.",
+      "start": 328.35,
+      "end": 329.93
+    }
+  ]
+}

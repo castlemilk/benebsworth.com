@@ -207,7 +207,7 @@ export interface LabEffect {
   title: string;
   blurb: string;
   tags: string[];
-  category: LabCategory;
   homeEmbedSafe: boolean;
-}
+  category: LabCategory;
 // ── END MANUAL ADDITION ───────────────────────────────────────────────────
+}

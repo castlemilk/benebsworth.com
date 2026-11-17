@@ -1,0 +1,20 @@
+[
+  {
+    "id": "dam-loop",
+    "file": "dam-loop.svg",
+    "title": "D·A·M: the diagnosis is a loop",
+    "caption": "Three constraint axes: Data, Algorithm, Machine. Relax one and the limit reappears on a neighbour: symptom → attribute → intervene → re-measure, forever."
+  },
+  {
+    "id": "silent-degradation",
+    "file": "silent-degradation.svg",
+    "title": "Silent degradation",
+    "caption": "Infra health stays green while predictive quality decays after drift; the gap nobody alerts on. Drift metrics warn; labelled outcomes convict."
+  },
+  {
+    "id": "iron-law-budget",
+    "file": "iron-law-budget.svg",
+    "title": "The iron-law timing budget",
+    "caption": "Sequential vs overlapped bounds, then a 2× arithmetic upgrade. You only ever gain through the term that dominates: upgrade the 100, not the 25."
+  }
+]

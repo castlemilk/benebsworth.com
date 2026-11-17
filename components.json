@@ -21,5 +21,8 @@
   },
   "menuColor": "default",
   "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@bklit": "https://ui.bklit.com/r/{name}.json",
+    "@spec-01": "https://spec-01.vercel.app/r/{name}.json"
+  }
 }

@@ -3,18 +3,53 @@
 import { useState, useRef, useEffect, useId, type ReactNode } from 'react'
 import { ActionMenu } from '@/components/gamma/ActionMenu'
 
+export interface EquationSymbolRow {
+  /** TeX source for the glyph, rendered through KaTeX. */
+  symbol: string
+  /** Optional pre-rendered KaTeX HTML (server-rendered on study pages). */
+  symbolHtml?: string
+  name?: string
+  meaning: string
+}
+
+/**
+ * Renders one symbol glyph. Prefers server-rendered `html`; otherwise
+ * lazy-loads katex so MDX-authored symbols don't cost the bundle upfront.
+ */
+function SymbolMath({ tex, html }: { tex: string; html?: string }) {
+  const [rendered, setRendered] = useState<string | null>(html ?? null)
+  useEffect(() => {
+    if (html) return
+    let alive = true
+    import('katex')
+      .then((k) => {
+        if (alive) setRendered(k.default.renderToString(tex, { throwOnError: false, output: 'html' }))
+      })
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [tex, html])
+  if (rendered) return <span dangerouslySetInnerHTML={{ __html: rendered }} />
+  return <code className="equation-symbol-raw">{tex}</code>
+}
+
 /** Display children are rendered by the production KaTeX pipeline.
  * `latex` is only the copy source; omitting it hides the existing copy actions.
+ * `symbols` adds a drilldown naming each term in the equation.
  */
-export function Equation({ id, number, caption, latex, children }: {
+export function Equation({ id, number, caption, latex, symbols, children }: {
   id?: string
   /** Explicit number without surrounding parentheses. No number is inferred. */
   number?: string
   caption?: ReactNode
   latex?: string
+  /** Per-symbol drilldown: name + meaning for each term in `latex`. */
+  symbols?: EquationSymbolRow[]
   children: ReactNode
 }) {
   const [open, setOpen] = useState(false)
+  const [drill, setDrill] = useState(false)
   const [feedback, setFeedback] = useState<'latex' | 'text' | 'error' | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const request = useRef(0)
@@ -97,15 +132,59 @@ export function Equation({ id, number, caption, latex, children }: {
             { id: 'text', label: 'Copy math', description: 'expression only', icon: <CopyIcon />, onSelect: () => { void handleCopy('text') } },
           ] }]} />
       </div>}
-      <div className="equation-math" tabIndex={0} role="region" aria-label={number ? `Equation (${number})` : 'Equation'}
-        aria-describedby={number || caption ? captionId : undefined}>
-        {children}
+      <div className="equation-math-wrap">
+        <div className="equation-math" tabIndex={0} role="region" aria-label={number ? `Equation (${number})` : 'Equation'}
+          aria-describedby={number || caption ? captionId : undefined}>
+          {children}
+        </div>
+        {symbols && symbols.length > 0 && (
+          <button
+            type="button"
+            className="equation-explainer"
+            aria-label={`Explain the ${symbols.length === 1 ? 'symbol' : `${symbols.length} symbols`} in this equation`}
+            aria-expanded={drill}
+            aria-controls={`${captionId}-symbols`}
+            data-open={drill || undefined}
+            onClick={() => setDrill((v) => !v)}
+          >
+            <SigmaIcon />
+          </button>
+        )}
       </div>
       {(number || caption) && <figcaption id={captionId} className="equation-caption mt-3 font-mono text-xs text-fg/60">
         {number && <span className="equation-number mr-2 font-semibold text-fg/75">({number})</span>}
         {caption}
       </figcaption>}
+      {symbols && symbols.length > 0 && (
+        <div className="equation-symbols" data-pagefind-ignore>
+          <div id={`${captionId}-symbols`} className="equation-symbols-panel" data-open={drill || undefined} aria-hidden={!drill}>
+            <div className="equation-symbols-inner">
+              <dl>
+                {symbols.map((s, i) => (
+                  <div className="equation-symbol-row" key={`${s.symbol}-${i}`}>
+                    <dt>
+                      <SymbolMath tex={s.symbol} html={s.symbolHtml} />
+                    </dt>
+                    <dd>
+                      {s.name && <span className="equation-symbol-name">{s.name}</span>}
+                      <span className="equation-symbol-meaning">{s.meaning}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </div>
+      )}
     </figure>
+  )
+}
+
+function SigmaIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M18 7V5H6l6 7-6 7h12v-2" />
+    </svg>
   )
 }
 

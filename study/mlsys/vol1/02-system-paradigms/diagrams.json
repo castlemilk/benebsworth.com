@@ -1,0 +1,20 @@
+[
+  {
+    "id": "tier-ladder",
+    "file": "tier-ladder.svg",
+    "title": "Four regimes, nine orders of magnitude",
+    "caption": "Power on the horizontal log axis, on-site memory rising vertically. Each tier is the operating regime left over after one wall binds hardest: capacity and energy for TinyML, the power wall for mobile, the light barrier for edge's purpose, the memory wall for cloud."
+  },
+  {
+    "id": "archetype-map",
+    "file": "archetype-map.svg",
+    "title": "Archetypes: two time terms, two preconditions",
+    "caption": "Compute- and bandwidth-bound are iron-law terms that set how fast a workload runs. Capacity- and power-bound are feasibility preconditions that decide whether it runs at all. The archetype is a regime, not a model property."
+  },
+  {
+    "id": "screen-funnel",
+    "file": "screen-funnel.svg",
+    "title": "Screen, then cost",
+    "caption": "Four filters ordered by cost of rejection: privacy (a law answers it), latency (one inequality), resource (device specs), then cost (TCO compares only survivors). An empty set means redesign or partition across tiers."
+  }
+]

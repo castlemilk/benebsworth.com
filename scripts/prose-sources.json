@@ -11,6 +11,7 @@
     "app/**/*.ts",
     "components/**/*.tsx",
     "app/llms.txt/route.ts",
+    "study/mlsys/**/*.md",
     "lib/topics.ts",
     "lib/skill-provenance.ts",
     "lib/content.ts"

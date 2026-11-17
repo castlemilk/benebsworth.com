@@ -1,0 +1,366 @@
+/* Knowledge console layout inside the hardware skin's Device chassis.
+   Desktop is a cockpit — top strip, layer rail, screen, readout panel,
+   control deck — that fills the viewport. Below ~860px it collapses into
+   the handheld stack where the device chrome reads best. */
+
+.kg-console {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 12px 14px 14px;
+  height: calc(100dvh - 6rem);
+  min-height: 560px;
+  background: var(--paper, #efefeb);
+  border: 1px solid rgb(27 27 25 / 0.22);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    inset 0 -2px 6px rgb(27 27 25 / 0.06),
+    0 12px 32px rgb(27 27 25 / 0.12);
+}
+
+/* Maker's plate: power LED + model + name, as the device chrome prints it. */
+.kg-plate {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink, #1b1b19);
+  opacity: 0.75;
+}
+
+.kg-plate strong {
+  font-weight: 600;
+}
+
+.kg-power {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--key-color, #d4501f);
+  box-shadow: 0 0 6px var(--key-color, #d4501f);
+}
+
+/* ── Top strip: status LCD | search | layout dial ── */
+.kg-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 300px);
+  gap: 12px;
+  align-items: start;
+}
+
+.kg-status {
+  min-width: 0;
+}
+
+.kg-status [data-kit='lcd-body'] {
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.kg-status-line {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+}
+
+.kg-status-line b {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.kg-hint {
+  opacity: 0.6;
+}
+
+.kg-find {
+  position: relative;
+  min-width: 0;
+}
+
+.kg-hits {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--paper, #efefeb);
+  border: 1px solid var(--ink, #1b1b19);
+  border-radius: 6px;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 0.35);
+  max-height: 260px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.kg-hits button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  color: var(--ink, #1b1b19);
+  font: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kg-hits button:hover,
+.kg-hits button:focus-visible {
+  background: var(--ink, #1b1b19);
+  color: var(--paper, #efefeb);
+  outline: none;
+}
+
+.kg-hits [data-kind] {
+  display: inline-block;
+  min-width: 4.2em;
+  opacity: 0.6;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+/* ── Body: layer rail | screen | selection panel ── */
+.kg-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(230px, 280px);
+  gap: 12px;
+  min-height: 0;
+}
+
+.kg-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.kg-rail-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* The narrow rail has no room for the skin's on/off side labels — the
+   row label carries the state instead. */
+.kg-rail [data-kit="switch"]::before,
+.kg-rail [data-kit="switch"]::after {
+  display: none;
+}
+
+.kg-rail [data-kit="switch-row"] {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.kg-display {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+}
+
+.kg-display [data-kit='display'] {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.kg-display [data-kit='display-bezel'] {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+}
+
+.kg-display [data-kit='display-screen'] {
+  min-height: 0;
+}
+
+/* The canvas screen is dark glass — node/edge paints resolve these vars. */
+.kg-screen {
+  position: absolute;
+  inset: 0;
+  --kg-ink: #f2f2ee;
+  --kg-dim: #8f8f87;
+  --kg-blog: #6ea8ff;
+  --kg-lab: #4cd97a;
+  --kg-study: #ff9d6b;
+  --kg-tag: #9a9a92;
+  --kg-concept: #e6c34a;
+  --kg-category: #7d8a9a;
+}
+
+.kg-screen canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.kg-screen canvas:focus-visible {
+  outline: 2px solid var(--kg-concept);
+  outline-offset: -2px;
+}
+
+.kg-screen canvas:active {
+  cursor: grabbing;
+}
+
+/* ── Selection panel ── */
+.kg-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.kg-readout [data-kit='lcd-body'] {
+  min-height: 5.5rem;
+}
+
+.kg-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.kg-sel-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.kg-sel-art {
+  border-radius: 50%;
+  background: #ece5d3;
+  flex-shrink: 0;
+}
+
+.kg-sel-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.kg-sel-blurb {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  opacity: 0.75;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kg-meta {
+  font-size: 10px;
+  opacity: 0.65;
+}
+
+.kg-idle {
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.75;
+  padding: 6px 0;
+}
+
+.kg-neighbors {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.kg-neighbors [data-kit='item-list'] {
+  max-height: none;
+  flex: 1;
+  overflow: auto;
+}
+
+.kg-neighbors [data-kind] {
+  text-transform: lowercase;
+  opacity: 0.8;
+}
+
+/* ── Bottom deck: pan | zoom | fit | reset ── */
+.kg-deck {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.kg-deck [data-kit='slider'] {
+  min-width: 160px;
+  flex: 1;
+  max-width: 340px;
+}
+
+/* ── Handheld: the gameboy layout the chassis was drawn for ── */
+@media (max-width: 860px) {
+  .kg-console {
+    height: auto;
+    min-height: 0;
+  }
+
+  .kg-top {
+    grid-template-columns: 1fr;
+  }
+
+  .kg-body {
+    grid-template-columns: 1fr;
+  }
+
+  .kg-display {
+    height: 56svh;
+    min-height: 320px;
+  }
+
+  .kg-rail {
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .kg-panel {
+    overflow: visible;
+  }
+
+  .kg-hint {
+    display: none;
+  }
+
+  .kg-neighbors [data-kit='item-list'] {
+    max-height: 240px;
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "Welcome back \u2014 I'm Marcus. Today we're doing chapter one of Machine Learning Systems, Vijay Janapa Reddi's Harvard text \u2014 and honestly, it's the chapter that reframes what \"AI engineering\" even means.",
+      "start": 0.0,
+      "end": 14.82
+    },
+    {
+      "speaker": "B",
+      "text": "And I'm Iris. The chapter's big move is to say: the model isn't the product. The system is. And they have a name for that \u2014 the dual mandate.",
+      "start": 14.82,
+      "end": 24.12
+    },
+    {
+      "speaker": "A",
+      "text": "The dual mandate, yeah. Two obligations at once: the model has to keep producing statistically trustworthy behaviour, and the system has to execute inside physical budgets \u2014 time, memory, energy, cost. Fail either side and you've failed, even if the other side looks perfect.",
+      "start": 24.12,
+      "end": 44.23
+    },
+    {
+      "speaker": "B",
+      "text": "And the examples they pick are great, because each one fails on a different side. So there's Google Flu Trends \u2014",
+      "start": 44.23,
+      "end": 51.08
+    },
+    {
+      "speaker": "A",
+      "text": "Which I love because everyone assumes it was a data problem. They had hundreds of billions of search queries. Real-time data at a scale nobody had ever touched.",
+      "start": 51.08,
+      "end": 62.78
+    },
+    {
+      "speaker": "B",
+      "text": "And it still failed, right? It overestimated flu prevalence in a hundred out of a hundred and eight weeks, ending up at about twice the CDC rate. The code ran fine. The problem was the proxy: search volume measured public attention, not influenza. Autocomplete suggestions, news coverage, all of it leaking into the signal.",
+      "start": 62.78,
+      "end": 84.1
+    },
+    {
+      "speaker": "A",
+      "text": "So data volume is not ground truth. That's the lesson. A behavioural proxy needs a feedback loop to something you actually trust \u2014 labelled outcomes.",
+      "start": 84.1,
+      "end": 94.95
+    },
+    {
+      "speaker": "B",
+      "text": "Then contrast that with Knight Capital. Completely different failure.",
+      "start": 94.95,
+      "end": 99.25
+    },
+    {
+      "speaker": "A",
+      "text": "Yeah \u2014 forty-five minutes, four hundred and forty million dollars gone. Deployment error, dormant code path reactivated. The system was \"correct\" in the sense that it executed exactly what it was told. The failure was that the thing it was told was wrong, and nothing in the runtime noticed.",
+      "start": 99.25,
+      "end": 119.75
+    },
+    {
+      "speaker": "B",
+      "text": "And Boeing's MCAS is the darkest one \u2014 a correct system in an untrue world. Single angle-of-attack sensor feeding a flight-control system that kept pushing the nose down. The software did exactly what it was designed to do; the model of the world it was built on was wrong.",
+      "start": 119.75,
+      "end": 137.8
+    },
+    {
+      "speaker": "A",
+      "text": "Three failures, one pattern: the code was fine. So the chapter's claim is that code correctness is the wrong verification target for ML systems \u2014 you're verifying the wrong layer.",
+      "start": 137.8,
+      "end": 151.2
+    },
+    {
+      "speaker": "B",
+      "text": "Which sets up the thing I found most counter-intuitive \u2014 silent degradation. In normal software, broken things scream. Exceptions, crash loops, five-hundreds.",
+      "start": 151.2,
+      "end": 162.05
+    },
+    {
+      "speaker": "A",
+      "text": "In ML systems the dashboard stays green and the predictions quietly get worse. The chapter draws it as two curves: health flat over time, recall sliding from ninety-five to eighty-five percent. Nothing to page on. You have to detect degradation statistically, which means labelled outcomes arriving late \u2014 so there's always a lag between \"the world moved\" and \"you found out\".",
+      "start": 162.05,
+      "end": 188.05
+    },
+    {
+      "speaker": "B",
+      "text": "And they formalise that as an equation \u2014 accuracy at time t equals baseline accuracy minus lambda times the divergence between the current data distribution and the training distribution. Drift is the warning signal, not the proof \u2014 labelled outcomes are the proof.",
+      "start": 188.05,
+      "end": 205.55,
+      "eq": {
+        "id": "silent-degradation",
+        "title": "Silent degradation under drift",
+        "latex": "\\mathrm{Acc}(t) \\approx \\mathrm{Acc}_0 - \\lambda\\, D\\!\\left(P_t \\,\\|\\, P_0\\right)"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "There's a nice phrase in the packet for this: a green dashboard is not evidence the model works.",
+      "start": 205.55,
+      "end": 212.1
+    },
+    {
+      "speaker": "B",
+      "text": "Good line. Okay \u2014 second pillar of the chapter: the iron law of execution. If software engineering has Amdahl, ML systems has this.",
+      "start": 212.1,
+      "end": 221.85
+    },
+    {
+      "speaker": "A",
+      "text": "Execution time decomposes into data over bandwidth, plus operations over the rate you actually achieve, plus latency. Three terms \u2014 the memory term, the compute term, the latency term. And the important bit: the real bottleneck is whichever term is biggest, so you take the max, not the sum \u2014 because memory movement and compute overlap.",
+      "start": 221.85,
+      "end": 245.68,
+      "eq": {
+        "id": "iron-law-overlapped",
+        "title": "Iron law: overlapped lower bound",
+        "latex": "T_{\\mathrm{ovl}} = \\max\\!\\left(T_{\\mathrm{mem}},\\, T_{\\mathrm{comp}}\\right) + T_{\\mathrm{ovh}}"
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "Which is where it gets spicy, because data movement is usually the wall. Moving a byte costs orders of magnitude more energy than computing on it. So the fastest fix is rarely a faster chip \u2014 it's moving less data.",
+      "start": 245.68,
+      "end": 259.7
+    },
+    {
+      "speaker": "A",
+      "text": "And that loops back to the D-A-M structure: data, algorithm, machine. Three axes, and every edge of the triangle points both ways \u2014 relax a bottleneck on one axis and it migrates to a neighbour.",
+      "start": 259.7,
+      "end": 274.32
+    },
+    {
+      "speaker": "B",
+      "text": "The book makes the point with a triangle; we drew it as a loop \u2014 find the binding constraint, relieve it, re-measure, because the constraint always moves.",
+      "start": 274.32,
+      "end": 283.5
+    },
+    {
+      "speaker": "A",
+      "text": "Last piece \u2014 the economics. Return on compute: the value of the increment versus the cost of the increment. The chapter's example is spending twenty thousand dollars on better data versus a hundred and twenty thousand on a bigger model \u2014",
+      "start": 283.5,
+      "end": 300.65,
+      "eq": {
+        "id": "return-on-compute",
+        "title": "Return on compute",
+        "latex": "\\mathrm{RoC} = \\frac{\\Delta \\mathrm{Accuracy}}{\\Delta \\mathrm{Compute}}"
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "And the answer is usually the data, which feels wrong because model upgrades are what make conference talks. But RoC is about marginal return, not peak capability.",
+      "start": 300.65,
+      "end": 311.75
+    },
+    {
+      "speaker": "A",
+      "text": "Plus the fallacies list \u2014 my favourite is \"the model is the system\", and its cousin \"the bottleneck is compute\". Nine out of ten times the book's answer is: it's data movement, or it's the data itself.",
+      "start": 311.75,
+      "end": 325.45
+    },
+    {
+      "speaker": "B",
+      "text": "So the through-line for the whole book: ML engineering is a systems discipline. The physics \u2014 bandwidth, energy, latency \u2014 is not negotiable, and the verification target is the system's behaviour, not the code's.",
+      "start": 325.45,
+      "end": 339.4
+    },
+    {
+      "speaker": "A",
+      "text": "And the practical takeaway for review: when you look at your own stack, ask which of the three iron-law terms is binding \u2014 and check whether your dashboards measure health or outcomes.",
+      "start": 339.4,
+      "end": 351.67
+    },
+    {
+      "speaker": "B",
+      "text": "Next up, chapter two \u2014 the deployment paradigms, and why your laptop is basically a bandwidth-bound device.",
+      "start": 351.67,
+      "end": 358.9
+    },
+    {
+      "speaker": "A",
+      "text": "See you there.",
+      "start": 358.9,
+      "end": 360.52
+    }
+  ]
+}

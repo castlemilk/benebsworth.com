@@ -1,0 +1,32 @@
+[
+  {
+    "id": "deployment-spectrum",
+    "title": "The distributed intelligence spectrum",
+    "file": "fig-cloud-edge-tinyml-spectrum.svg",
+    "caption": "Five-position continuum spanning nine orders of magnitude of power, with the TinyML, edge, and cloud spans marked. Our tier-ladder.svg redraws the same tiers as a constraint ladder (power x memory)."
+  },
+  {
+    "id": "microprocessor-trends",
+    "title": "Fifty years of microprocessor trends",
+    "file": "fig-microprocessor-trends.png",
+    "caption": "Transistors keep rising past ~2005 while frequency and typical power plateau and cores take over: the end of Dennard scaling in one scatter (data: rupp2022microprocessor)."
+  },
+  {
+    "id": "memory-wall-divergence",
+    "title": "Memory-wall divergence",
+    "file": "memory-wall-divergence.svg",
+    "caption": "Compute growth pulling away from memory-bandwidth growth; the same ~1.33x ratio our memory-wall chart compounds over a decade."
+  },
+  {
+    "id": "playbook-flowchart",
+    "title": "The screen-then-cost chain",
+    "file": "fig-mlsys-playbook-flowchart.svg",
+    "caption": "Privacy, latency, resource, cost in that order, each check excluding candidates before the next runs. Our screen-funnel.svg draws the same filters as a funnel with the cost of checking on the right."
+  },
+  {
+    "id": "doorbell-scorecard",
+    "title": "Smart doorbell feasibility scorecard",
+    "file": "fig-doorbell-scorecard.png",
+    "caption": "Demand/supply per constraint for the responsive chime: latency demand is 202% of supply (fails), flash only 11.9% (passes). The two-level screen as a bar plot."
+  }
+]

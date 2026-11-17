@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ai-timeline",
+    "title": "AI development timeline",
+    "file": "fig-ai-timeline.svg",
+    "caption": "Publication-attention curve with the two AI winters shaded and milestone callouts. The curve tracks attention, not capability; the winters are attention crashes, not capability crashes."
+  },
+  {
+    "id": "dam-axis-triad",
+    "title": "The D·A·M axis triad",
+    "file": "fig-dam-axis-triad-intro.svg",
+    "caption": "Each vertex is a diagnostic axis and every edge points both ways: relax one bottleneck and it migrates to a neighbor. Our dam-loop.svg distils the loop instead of the triangle."
+  },
+  {
+    "id": "health-vs-recall",
+    "title": "Health vs recall divergence",
+    "file": "margin-003-health-vs-recall.svg",
+    "caption": "Runtime health flat while recall slides 95% to 85%: the silent-degradation gap in one margin sketch. Our silent-degradation.svg adds the equation annotation and the monitoring window."
+  },
+  {
+    "id": "amdahl-bars",
+    "title": "Amdahl latency bars",
+    "file": "margin-004-amdahl-bars.svg",
+    "caption": "Model time shrinks 3x, pre- and post-processing unchanged: the Amdahl tax on the 30 ms win. Our iron-law-budget.svg generalises the same accounting to the three-term budget."
+  }
+]

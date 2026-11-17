@@ -1,0 +1,20 @@
+[
+  {
+    "id": "lifecycle-loop",
+    "file": "lifecycle-loop.svg",
+    "title": "The lifecycle is a loop, not a waterfall",
+    "caption": "Six stages, one artifact per edge: targets → dataset → reproducible artifact → manifest → endpoint → drift evidence → back upstream. The shaded bottom half is the operational phase — deployment starts a phase rather than ending one."
+  },
+  {
+    "id": "day-153-cascade",
+    "file": "day-153-cascade.svg",
+    "title": "The day-153 cascade",
+    "caption": "Five months of dependent decisions harden before the 500 MB constraint arrives at deployment. The rework arrows propagate back to every stage whose artifacts assumed a feasible target — revise, repeat, re-validate."
+  },
+  {
+    "id": "contract-audit",
+    "file": "contract-audit.svg",
+    "title": "The contract walk-back",
+    "caption": "Ownership is assigned by boundary, not by discovery site: deployment found the 4 GB defect, evaluation's contract was met, model development received no budget — so the fix starts at problem definition, the earliest boundary whose contract never stated the condition."
+  }
+]

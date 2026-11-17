@@ -1,0 +1,132 @@
+{
+  "generated_count": 2,
+  "skipped": [],
+  "themes": {
+    "light": "#f4f0e8",
+    "dark": "#191a1c"
+  },
+  "sizes_px": [
+    256,
+    96,
+    48,
+    24
+  ],
+  "originals_unchanged": true,
+  "source_sha256": {
+    "05-operating-systems.png": "485029f272abdda4819b7859af875bb7cc17249fbb946aa2c1eae10ed23410f7",
+    "06-compilers.png": "237e6b684c1bc0371627f871ba1d67c208ee9cd6d04f2fae3c74f9970574a0c2"
+  },
+  "edge_samples": {
+    "05-operating-systems-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          579,
+          157,
+          675,
+          253
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          976,
+          642,
+          1072,
+          738
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          581,
+          1087,
+          677,
+          1183
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          166,
+          659,
+          262,
+          755
+        ],
+        "scale": 3
+      }
+    ],
+    "06-compilers-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          846,
+          214,
+          942,
+          310
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          1132,
+          718,
+          1228,
+          814
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          434,
+          962,
+          530,
+          1058
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          25,
+          737,
+          121,
+          833
+        ],
+        "scale": 3
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "filename": "pair-03-contact-light.png",
+      "sha256": "d5b84b0c888dfa6c7e51b289b597984803c7f96ede67cbf7a72c604ff1e0743e"
+    },
+    {
+      "filename": "pair-03-contact-dark.png",
+      "sha256": "da009ddc66edf87fce94e7725f45eb0c79a4ba6a3d96e918c1db494252d07f52"
+    },
+    {
+      "filename": "pair-03-sizes-light.png",
+      "sha256": "45189140562095c19a2422a041ea54978774ca055bdddc72869736d31e5314c7"
+    },
+    {
+      "filename": "pair-03-sizes-dark.png",
+      "sha256": "42db427527f6b1c98f34fcee5b2d5302abbad92f30d1e2d1d2b9b8e6cdadae74"
+    },
+    {
+      "filename": "05-operating-systems-edges.png",
+      "sha256": "f3b4ad975a1f6281410d268b32bd2641d8f461d3e973e5a1131c1688f69d7cab"
+    },
+    {
+      "filename": "06-compilers-edges.png",
+      "sha256": "64204bf70d6870d256d1b42b8c96769b62d3c7de92bc24de29b67625393edb3b"
+    }
+  ],
+  "evidence_boundary": "Review composites, never browser screenshots or additional original artworks. Visual inspection is still required."
+}

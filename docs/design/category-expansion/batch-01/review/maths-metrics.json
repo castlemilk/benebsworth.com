@@ -1,0 +1,78 @@
+{
+  "filename": "01-maths-r1.png",
+  "key": "maths",
+  "revision": 1,
+  "sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+  "bytes": 1331177,
+  "format": "PNG",
+  "mode": "RGBA",
+  "width": 1262,
+  "height": 1246,
+  "alpha_channel_present": true,
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "alpha_counts": {
+    "zero": 1129041,
+    "partial_1_to_254": 443072,
+    "opaque_255": 339,
+    "total": 1572452
+  },
+  "transparent_fraction": 0.718013,
+  "partial_alpha_fraction": 0.281771,
+  "border_nonzero_alpha_pixels": 0,
+  "border_alpha_above_16_pixels": 0,
+  "border_alpha_maximum": 0,
+  "bbox_alpha_gt_0": {
+    "threshold_exclusive": 0,
+    "bbox": [
+      76,
+      33,
+      1248,
+      1230
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 76,
+      "top": 33,
+      "right": 14,
+      "bottom": 16
+    },
+    "margin_fractions": {
+      "left": 0.060222,
+      "top": 0.026485,
+      "right": 0.011094,
+      "bottom": 0.012841
+    },
+    "minimum_margin_fraction": 0.011094,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "bbox_alpha_gt_16": {
+    "threshold_exclusive": 16,
+    "bbox": [
+      97,
+      278,
+      1164,
+      1009
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 97,
+      "top": 278,
+      "right": 98,
+      "bottom": 237
+    },
+    "margin_fractions": {
+      "left": 0.076862,
+      "top": 0.223114,
+      "right": 0.077655,
+      "bottom": 0.190209
+    },
+    "minimum_margin_fraction": 0.076862,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "transparency_verified": true,
+  "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+  "selected_for_review": true
+}

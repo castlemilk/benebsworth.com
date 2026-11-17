@@ -1,0 +1,86 @@
+{
+  "batch": "03",
+  "completed": 2,
+  "target": 10,
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "assets": [
+    {
+      "filename": "01-databases.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/01-databases.png",
+      "sha256": "987cc2662f60a237318704d3e54f254f77ea133f12d8d4299949c8ba041b5580",
+      "byte_size": 1897329,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_zero": 955251,
+      "alpha_partial": 616867,
+      "alpha_opaque": 398,
+      "alpha_ge_240": 601266,
+      "bbox_by_threshold": {
+        "0": [
+          0,
+          29,
+          1232,
+          1254
+        ],
+        "16": [
+          199,
+          225,
+          1054,
+          1056
+        ],
+        "128": [
+          200,
+          226,
+          1053,
+          1056
+        ],
+        "240": [
+          201,
+          226,
+          1052,
+          1055
+        ]
+      }
+    },
+    {
+      "filename": "02-distributed-systems.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/02-distributed-systems.png",
+      "sha256": "5656800efc365ed88795ed4f4505a37c059967bcb7a2b7edfa4dd8f5325ec7bd",
+      "byte_size": 1189757,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "alpha_zero": 1195039,
+      "alpha_partial": 376999,
+      "alpha_opaque": 478,
+      "alpha_ge_240": 348329,
+      "bbox_by_threshold": {
+        "0": [
+          0,
+          36,
+          1234,
+          1238
+        ],
+        "16": [
+          116,
+          247,
+          1124,
+          1039
+        ],
+        "128": [
+          117,
+          248,
+          1123,
+          1039
+        ],
+        "240": [
+          118,
+          249,
+          1123,
+          1038
+        ]
+      }
+    }
+  ]
+}

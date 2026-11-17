@@ -1,0 +1,126 @@
+[
+  {
+    "index": 1,
+    "slug": "probability",
+    "source_path": "/workspace/scratch/eede42a15fea/generated_images/exec-42cc681d-4fa6-4936-82e7-eec3983a1356.png",
+    "destination": "/workspace/scratch/eede42a15fea/batch04-repo/public/artwork/category-expansion-v1/batch-04/originals/01-probability-original.png",
+    "exact_request": {
+      "prompt": "Use case: stylized-concept\nAsset type: one original category artwork for Ben Ebsworth's Blog/Lab research folio; a proposed artwork study, not an approved topic.\nStyle and medium: a sophisticated hand-drawn graphite engraving of a tactile miniature object, warm ivory material, fine charcoal contours, selective crosshatching and etched grain. Quiet authored editorial character, not a generic icon or glossy 3D product tile.\nComposition and framing: square canvas, the entire single subject centred within the middle 64 percent of the canvas. Keep at least 18 percent genuinely empty margin on every edge. A clear, distinctive silhouette with meaningful internal negative space; coherent three-quarter view. All parts fully inside the frame.\nColour and material: graphite black, charcoal grey and warm ivory only, with one small restrained vermilion red material detail occupying less than five percent of the subject. The red detail is part of the object, not a label, glow or operational status.\nBackground and lighting: genuinely transparent alpha outside the object and through its open spaces. Solid opaque subject surfaces with natural antialiased silhouette edges. No backdrop, no paper rectangle, no floor, no cast shadow, no vignette, no outer glow, no halo, no luminous edge or coloured fringe. Shading is contained within the object.\nConstraints: create only this one original subject. No text, no letters, no numbers, no tick labels, no equations, no fake inscriptions, no arrows or annotation lines, no readable code, no watermark, no logo, no badge border. This is an illustrative metaphor, not a scientifically accurate diagram, measurement, real dataset, model output or functioning apparatus.\nSubject: A compact branching chance mechanism: a single upper feed chute divides into two substantial Y-shaped grooved channels, then into four open terminal cups, forming a sculptural branching silhouette. Small ivory balls are held at different forks; one small red ball rests at the first decision fork. Mechanical dividers and channel lips are clearly drawn. The physical forks, empty gaps and four outcomes are the visual idea; avoid a generic node-link graph and avoid dice, playing cards or percentages.",
+      "transparent_background": true
+    },
+    "output_hint": "Generated images are saved to /workspace/scratch/eede42a15fea/generated_images as /workspace/scratch/eede42a15fea/generated_images/exec-42cc681d-4fa6-4936-82e7-eec3983a1356.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "sha256": "ab32731a84dff4fb1d3f4500d154f6fa37145715849f9ea32587d264e4138b1d",
+    "bytes": 1804730,
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_minmax": [
+      0,
+      255
+    ],
+    "alpha_zero": 980965,
+    "alpha_partial": 591035,
+    "alpha_opaque": 516,
+    "bbox": [
+      0,
+      0,
+      1248,
+      1254
+    ]
+  },
+  {
+    "index": 2,
+    "slug": "statistics",
+    "source_path": "/workspace/scratch/eede42a15fea/generated_images/exec-730e1844-60ce-4c85-8f4b-88b9367c3c14.png",
+    "destination": "/workspace/scratch/eede42a15fea/batch04-repo/public/artwork/category-expansion-v1/batch-04/originals/02-statistics-original.png",
+    "exact_request": {
+      "prompt": "Use case: stylized-concept\nAsset type: one original category artwork for Ben Ebsworth's Blog/Lab research folio; a proposed artwork study, not an approved topic.\nStyle and medium: a sophisticated hand-drawn graphite engraving of a tactile miniature object, warm ivory material, fine charcoal contours, selective crosshatching and etched grain. Quiet authored editorial character, not a generic icon or glossy 3D product tile.\nComposition and framing: square canvas, the entire single subject centred within the middle 64 percent of the canvas. Keep at least 18 percent genuinely empty margin on every edge. A clear, distinctive silhouette with meaningful internal negative space; coherent three-quarter view. All parts fully inside the frame.\nColour and material: graphite black, charcoal grey and warm ivory only, with one small restrained vermilion red material detail occupying less than five percent of the subject. The red detail is part of the object, not a label, glow or operational status.\nBackground and lighting: genuinely transparent alpha outside the object and through its open spaces. Solid opaque subject surfaces with natural antialiased silhouette edges. No backdrop, no paper rectangle, no floor, no cast shadow, no vignette, no outer glow, no halo, no luminous edge or coloured fringe. Shading is contained within the object.\nConstraints: create only this one original subject. No text, no letters, no numbers, no tick labels, no equations, no fake inscriptions, no arrows or annotation lines, no readable code, no watermark, no logo, no badge border. This is an illustrative metaphor, not a scientifically accurate diagram, measurement, real dataset, model output or functioning apparatus.\nSubject: A sampled distribution apparatus: an open shallow collector tray holds a row of seven close-set upright chambers filled with ivory beads to visibly different heights, forming an asymmetric rounded mound silhouette. A slender sampling scoop lifts one red bead just above the row at one side. The seven chambers and scoop form one compact object, viewed three-quarter-on. No branches, no pegboard, no chart axes or statistical labels. It suggests samples accumulating into a distribution without claiming actual data.",
+      "transparent_background": true
+    },
+    "output_hint": "Generated images are saved to /workspace/scratch/eede42a15fea/generated_images as /workspace/scratch/eede42a15fea/generated_images/exec-730e1844-60ce-4c85-8f4b-88b9367c3c14.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "sha256": "e07a7be5faa8744411739e50963c51a8a2a7c46feeb2b78e271b795b50124da0",
+    "bytes": 1367477,
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_minmax": [
+      0,
+      255
+    ],
+    "alpha_zero": 922693,
+    "alpha_partial": 649505,
+    "alpha_opaque": 318,
+    "bbox": [
+      0,
+      9,
+      1254,
+      1254
+    ]
+  },
+  {
+    "index": 3,
+    "slug": "optimization",
+    "source_path": "/workspace/scratch/eede42a15fea/generated_images/exec-0e7ea24f-b4da-450e-abeb-049ad752e894.png",
+    "destination": "/workspace/scratch/eede42a15fea/batch04-repo/public/artwork/category-expansion-v1/batch-04/originals/03-optimization-original.png",
+    "exact_request": {
+      "prompt": "Use case: stylized-concept\nAsset type: one original category artwork for Ben Ebsworth's Blog/Lab research folio; a proposed artwork study, not an approved topic.\nStyle and medium: a sophisticated hand-drawn graphite engraving of a tactile miniature object, warm ivory material, fine charcoal contours, selective crosshatching and etched grain. Quiet authored editorial character, not a generic icon or glossy 3D product tile.\nComposition and framing: square canvas, the entire single subject centred within the middle 64 percent of the canvas. Keep at least 18 percent genuinely empty margin on every edge. A clear, distinctive silhouette with meaningful internal negative space; coherent three-quarter view. All parts fully inside the frame.\nColour and material: graphite black, charcoal grey and warm ivory only, with one small restrained vermilion red material detail occupying less than five percent of the subject. The red detail is part of the object, not a label, glow or operational status.\nBackground and lighting: genuinely transparent alpha outside the object and through its open spaces. Solid opaque subject surfaces with natural antialiased silhouette edges. No backdrop, no paper rectangle, no floor, no cast shadow, no vignette, no outer glow, no halo, no luminous edge or coloured fringe. Shading is contained within the object.\nConstraints: create only this one original subject. No text, no letters, no numbers, no tick labels, no equations, no fake inscriptions, no arrows or annotation lines, no readable code, no watermark, no logo, no badge border. This is an illustrative metaphor, not a scientifically accurate diagram, measurement, real dataset, model output or functioning apparatus.\nSubject: A hand-carved terrain specimen with one low hollow and two unequal rounded rises, as a compact irregular sculpted slab. Fine engraved contour-like grooves follow its surface. A narrow inset vermilion thread winds down from the higher ridge in a few deliberate bends and ends in the shallow hollow. The thread has no arrowhead. Let the changing elevation and descending path create the silhouette and focal point. No chart axes, no formula, no floating location pin, no claim of a computed optimum.",
+      "transparent_background": true
+    },
+    "output_hint": "Generated images are saved to /workspace/scratch/eede42a15fea/generated_images as /workspace/scratch/eede42a15fea/generated_images/exec-0e7ea24f-b4da-450e-abeb-049ad752e894.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "sha256": "dece81f5c286ef4385b8af8728e990263b4e65f3c550c6d933ebab31ce9c2b86",
+    "bytes": 1318380,
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_minmax": [
+      0,
+      255
+    ],
+    "alpha_zero": 1134380,
+    "alpha_partial": 437826,
+    "alpha_opaque": 310,
+    "bbox": [
+      0,
+      21,
+      1240,
+      1230
+    ]
+  },
+  {
+    "index": 4,
+    "slug": "information-theory",
+    "source_path": "/workspace/scratch/eede42a15fea/generated_images/exec-a724c645-64ad-494d-a7b5-6635c902a22c.png",
+    "destination": "/workspace/scratch/eede42a15fea/batch04-repo/public/artwork/category-expansion-v1/batch-04/originals/04-information-theory-original.png",
+    "exact_request": {
+      "prompt": "Use case: stylized-concept\nAsset type: one original category artwork for Ben Ebsworth's Blog/Lab research folio; a proposed artwork study, not an approved topic.\nStyle and medium: a sophisticated hand-drawn graphite engraving of a tactile miniature object, warm ivory material, fine charcoal contours, selective crosshatching and etched grain. Quiet authored editorial character, not a generic icon or glossy 3D product tile.\nComposition and framing: square canvas, the entire single subject centred within the middle 64 percent of the canvas. Keep at least 18 percent genuinely empty margin on every edge. A clear, distinctive silhouette with meaningful internal negative space; coherent three-quarter view. All parts fully inside the frame.\nColour and material: graphite black, charcoal grey and warm ivory only, with one small restrained vermilion red material detail occupying less than five percent of the subject. The red detail is part of the object, not a label, glow or operational status.\nBackground and lighting: genuinely transparent alpha outside the object and through its open spaces. Solid opaque subject surfaces with natural antialiased silhouette edges. No backdrop, no paper rectangle, no floor, no cast shadow, no vignette, no outer glow, no halo, no luminous edge or coloured fringe. Shading is contained within the object.\nConstraints: create only this one original subject. No text, no letters, no numbers, no tick labels, no equations, no fake inscriptions, no arrows or annotation lines, no readable code, no watermark, no logo, no badge border. This is an illustrative metaphor, not a scientifically accurate diagram, measurement, real dataset, model output or functioning apparatus.\nSubject: One physical coded-channel motif: two small open comb-shaped encoder and receiver frames joined by a narrow taut ivory ribbon that passes through a constricted central channel. Alternating raised and recessed rectangular studs along the ribbon suggest an abstract code, with just one red stud. Small irregular graphite flecks are enclosed inside the channel, suggesting interference without becoming an exterior cloud. Keep this a crisp sparse bridge-like silhouette, with no letters, binary digits, actual cipher text, wave graph, or measured information claim.",
+      "transparent_background": true
+    },
+    "output_hint": "Generated images are saved to /workspace/scratch/eede42a15fea/generated_images as /workspace/scratch/eede42a15fea/generated_images/exec-a724c645-64ad-494d-a7b5-6635c902a22c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "sha256": "a6142c9b71fed2163216be6d143e3e8d9b1ed07dfd4599a672f19994bee84a29",
+    "bytes": 1206577,
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha_minmax": [
+      0,
+      255
+    ],
+    "alpha_zero": 1167365,
+    "alpha_partial": 404165,
+    "alpha_opaque": 986,
+    "bbox": [
+      0,
+      31,
+      1248,
+      1254
+    ]
+  }
+]

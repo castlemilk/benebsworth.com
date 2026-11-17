@@ -1,0 +1,199 @@
+[
+  {
+    "index": 1,
+    "slug": "thermodynamics",
+    "label": "Thermodynamics",
+    "status": "proposed-artwork-study",
+    "concept": "heat-engine piston",
+    "filename": "thermodynamics-original.png",
+    "request": {
+      "prompt": "Use case: background-extraction. Edit target: the supplied thermodynamics heat-engine piston artwork. Make only the surrounding background and empty spaces genuinely transparent: remove the faint neutral haze and all gray shadow around the silhouette, especially left of the cylinder and around the base, and clear all stray nonzero-alpha speckles in the generous outer margins. Preserve the existing compact central placement and scale, the complete piston/flywheel geometry, fine graphite hatching, warm ivory subject tones and small red heated band. Maintain at least twenty percent fully empty transparent margin on every side. The inside of the flywheel openings is transparent. Keep crisp antialiased material edges; do not add a contrasting outline. No halo, glow, shadow, matte, fog, vignette, checkerboard, paper background or backdrop. No new objects, words, labels, numbers, marks or watermark. This is one clean editorial cutout; preserve the existing illustration rather than redesigning it. Return one transparent PNG.",
+      "referenced_image_paths": [
+        "/workspace/scratch/309ecf484822/benebsworth-batch05/docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-original.png"
+      ],
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "One local edit target: retained thermodynamics attempt 2; exact path in request"
+    },
+    "selected_attempt": 3,
+    "previous_attempt": "Attempts 1 and 2 retained under docs/design/category-expansion/batch-05/attempts; margin correction then imagegen background cleanup."
+  },
+  {
+    "index": 2,
+    "slug": "fluid-dynamics",
+    "label": "Fluid dynamics",
+    "status": "proposed-artwork-study",
+    "concept": "vortex around streamlined body",
+    "filename": "fluid-dynamics-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Fluid dynamics — vortex around streamlined body.\nComposition: A streamlined teardrop-shaped graphite-and-ivory body suspended diagonally, with a small family of clearly separated engraved fluid ribbons wrapping around it and curling into one visible open vortex downstream. The body is distinct and substantial; the sweeping fluid ribbons form an elegant asymmetric silhouette with clear transparent spaces between them. One short ribbon segment is muted red. No foamy ocean, blue liquid fill, smoke, glow or arrows; this is a stylised flow metaphor, not computed streamlines.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    },
+    "selected_attempt": 2,
+    "previous_attempt": "Retained under docs/design/category-expansion/batch-05/attempts; regenerated for generous margins."
+  },
+  {
+    "index": 3,
+    "slug": "materials-science",
+    "label": "Materials science",
+    "status": "proposed-artwork-study",
+    "concept": "layered lattice specimen",
+    "filename": "materials-science-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Materials science — layered lattice specimen.\nComposition: A tactile compact material specimen in three-quarter view: three thick offset cut layers exposing a coherent open lattice within a block. A dense graphite mineral-like bottom layer, an ivory porous cellular middle layer and a pale engraved top lattice demonstrate distinct material structures. Open geometric windows reveal true transparency. One thin muted red interlayer. The specimen should feel like a carefully drawn physical sample, with a strong stepped silhouette, not scattered molecules, a chemistry ball-and-stick model or a data chart.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 4,
+    "slug": "optics",
+    "label": "Optics",
+    "status": "proposed-artwork-study",
+    "concept": "lens and prismatic beam",
+    "filename": "optics-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Optics — lens and prismatic beam.\nComposition: One coherent optical bench sculpture reduced to a suspended thick biconvex lens in a minimal graphite mounting ring at lower left and a small triangular ivory prism at upper right. A few solid engraved narrow light ribbons pass through the lens toward the prism and fan into three restrained graphic lines; one muted red line, others graphite and ivory. Clear transparent gaps, restrained refraction metaphor, no rainbow glow, laser bloom, flares, numbers or decorative orbit. Keep ring, prism and beam compact and fully inside generous margins.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 5,
+    "slug": "robotics",
+    "label": "Robotics",
+    "status": "proposed-artwork-study",
+    "concept": "articulated gripper",
+    "filename": "robotics-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Robotics — articulated gripper.\nComposition: A single compact articulated robotic end-effector with two opposed jointed fingers open around a clear empty space, mounted on a short angled wrist. Draw deliberate mechanical hinge discs and connecting linkages in graphite and warm ivory with tactile etched surfaces. One small red insert on a hinge, no object held and no anthropomorphic face. Strong pincer silhouette, two clearly separated fingers, visually plausible motion without diagram arrows. No complete robot, cables spilling beyond the silhouette, branding, lettering or glowing electronics.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 6,
+    "slug": "acoustics",
+    "label": "Acoustics",
+    "status": "proposed-artwork-study",
+    "concept": "resonant tuning-fork form",
+    "filename": "acoustics-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Acoustics — resonant tuning-fork form.\nComposition: A sculptural upright tuning fork tilted very slightly, two long matte ivory prongs, a curved lower bridge and short graphite handle. A few thin, deliberately engraved echo contours closely follow each prong and open outward to suggest resonance; these contours remain distinct lines with transparent gaps, never glow. A very small muted red collar at the base. Minimal, bold U-shaped silhouette, rich dry-graphite hatching on inner faces. No notes, musical symbols, waveform chart, numerals, floor shadow or tuning instructions.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 7,
+    "slug": "astronomy",
+    "label": "Astronomy",
+    "status": "proposed-artwork-study",
+    "concept": "telescope and stellar cluster",
+    "filename": "astronomy-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Astronomy — telescope and stellar cluster.\nComposition: A compact classic refracting telescope with warm ivory tube, graphite focusing rings and a quiet three-leg articulated support, angled toward a small loose cluster of five or six engraved stars above its open front. The stars are small solid ink/ivory marks or points with modest geometric rays, no glowing nebula. One thin muted red band around the telescope tube. An immediately readable telescope silhouette, generous spacing between legs and cluster. Not a black hole, planet, astrology wheel, named constellation or actual sky map.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 8,
+    "slug": "geophysics",
+    "label": "Geophysics",
+    "status": "proposed-artwork-study",
+    "concept": "seismic wave and layered Earth instrument",
+    "filename": "geophysics-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Geophysics — seismic wave and layered Earth instrument.\nComposition: A compact geological instrument composition: a low sculpted wedge of layered Earth strata supporting a small graphite pendulum seismic sensor with a clearly visible suspended weight. One restrained ribbon-like seismic undulation passes through the exposed strata, a short section in muted red. The wedge has warm ivory and dark graphite crosshatched layers; the instrument and rock form one coherent readable silhouette with clear gaps. No terrestrial globe, map, plotted chart, scale, reading, numbers or actual recorded seismic data.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 9,
+    "slug": "renewable-energy",
+    "label": "Renewable energy",
+    "status": "proposed-artwork-study",
+    "concept": "wind/solar energy mechanism",
+    "filename": "renewable-energy-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Renewable energy — wind/solar energy mechanism.\nComposition: One compact integrated wind-and-solar mechanism: a clean three-blade wind rotor on a short graphite mast rising beside a single angled solar collector panel with a restrained engraved cell grid, joined on a minimal shared mechanical base. Warm ivory turbine blades and matte graphite panel; one tiny muted red coupling. Keep rotor and panel clearly separable within a balanced sculptural silhouette, generous transparent gaps and margins. No landscape, sun icon, green leaf logo, glowing energy, efficiency claims, readable markings or dense machinery.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  },
+  {
+    "index": 10,
+    "slug": "biotechnology",
+    "label": "Biotechnology",
+    "status": "proposed-artwork-study",
+    "concept": "bioreactor/leaf synthesis motif",
+    "filename": "biotechnology-original.png",
+    "request": {
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE original standalone category artwork for Ben Ebsworth's open-margin research folio, not a logo tile, not a contact sheet.\nStyle and medium: sophisticated tactile scientific-editorial engraving; precise graphite contours, dense but controlled dry-pencil hatching and fine stipple, warm ivory opaque subject surfaces, subtle material depth drawn by hand. Restrained muted vermilion red occupies a very small structural detail only. Quiet, authored and intellectual; strong distinctive silhouette.\nCanvas and framing: square canvas, ideally 1024 by 1024 pixels. The drawing must be SMALL on the canvas: its complete silhouette, including every line, occupies at most the central 50 percent of BOTH the canvas width and height. Leave the outer 25 percent on ALL four sides completely transparent and empty. Do NOT zoom the object to fill the canvas; pull the camera well back. A single coherent isolated object/composition, generous negative space, slightly three-quarter view, no rectangular card or page surrounding it.\nBackground and edges: genuinely transparent alpha outside the artwork and through purposeful gaps. Solid subject surfaces must be opaque. Crisp natural antialiased edge; absolutely no white fringe, aura, outer glow, bloom, fog, cast shadow or vignette. Do not draw a checkerboard, paper rectangle, backdrop or horizon.\nNo words, letters, numbers, labels, pseudo-text, scales, arrows, annotations, watermarks, logos or signatures. No glossy sci-fi, plastic gradients or generic stock icon styling. The artwork is an invented visual metaphor, not a scientifically exact diagram, technical instruction, measurement or evidence.\nSubject for this image: Biotechnology — bioreactor/leaf synthesis motif.\nComposition: A compact rounded laboratory bioreactor vessel with an ivory rim, a simple graphite stirrer spindle and a delicate leaf form integrated into its interior as a visual synthesis motif. Draw the vessel as a partial cutaway with crisp engraved contour and sparse dry hatching, not glossy glass; the leaf has clear veins and sculptural ivory lobes. One muted red port collar. A coherent botanical-apparatus silhouette with transparent clear exterior and open gaps. No DNA helix, microbes, medical claims, growth data, hazard labels, scales or invented scientific labels.",
+      "transparent_background": true
+    },
+    "available_settings": {
+      "tool": "image_gen.imagegen",
+      "model": "not exposed",
+      "seed": "not exposed",
+      "size": "requested in prompt; no size argument exposed",
+      "reference_images": "none"
+    }
+  }
+]

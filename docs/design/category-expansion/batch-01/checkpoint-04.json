@@ -1,0 +1,118 @@
+{
+  "completed": 4,
+  "target": 10,
+  "originals": [
+    {
+      "key": "maths",
+      "file": "public/artwork/category-expansion-v1/batch-01/originals/01-maths-r1.png",
+      "sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+      "byte_size": 1331177,
+      "dimensions": [
+        1262,
+        1246
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1129041,
+      "alpha_bbox": [
+        76,
+        33,
+        1248,
+        1230
+      ],
+      "substantial_alpha_bbox": [
+        97,
+        278,
+        1164,
+        1009
+      ]
+    },
+    {
+      "key": "chemistry",
+      "file": "public/artwork/category-expansion-v1/batch-01/originals/02-chemistry-r1.png",
+      "sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+      "byte_size": 1172847,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1187783,
+      "alpha_bbox": [
+        0,
+        9,
+        1240,
+        1254
+      ],
+      "substantial_alpha_bbox": [
+        188,
+        146,
+        1006,
+        1140
+      ]
+    },
+    {
+      "key": "biology",
+      "file": "public/artwork/category-expansion-v1/batch-01/originals/03-biology-r1.png",
+      "sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+      "byte_size": 1161435,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1185278,
+      "alpha_bbox": [
+        0,
+        55,
+        1228,
+        1254
+      ],
+      "substantial_alpha_bbox": [
+        309,
+        121,
+        1052,
+        1134
+      ]
+    },
+    {
+      "key": "earth",
+      "file": "public/artwork/category-expansion-v1/batch-01/originals/04-earth-r1.png",
+      "sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+      "byte_size": 1599947,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels": 1069922,
+      "alpha_bbox": [
+        0,
+        19,
+        1216,
+        1254
+      ],
+      "substantial_alpha_bbox": [
+        230,
+        227,
+        1021,
+        1050
+      ]
+    }
+  ]
+}

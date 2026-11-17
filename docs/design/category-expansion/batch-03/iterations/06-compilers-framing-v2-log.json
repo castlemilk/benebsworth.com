@@ -1,0 +1,20 @@
+{
+  "number": 6,
+  "slug": "compilers",
+  "revision": 2,
+  "kind": "generated_edit",
+  "original_tool_path": "/workspace/scratch/f9aadd8a4299/generated_images/exec-02e35add-48ef-4854-a9a1-8ab039cf5ed2.png",
+  "preserved_generated_path": "/workspace/scratch/f9aadd8a4299/blog-category-batch03/docs/design/category-expansion/batch-03/iterations/06-compilers-framing-v2.png",
+  "output_hint": "Generated images are saved to /workspace/scratch/f9aadd8a4299/generated_images as /workspace/scratch/f9aadd8a4299/generated_images/exec-02e35add-48ef-4854-a9a1-8ab039cf5ed2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "tool": "image_gen.imagegen",
+  "submitted_parameters": {
+    "prompt": "Edit this one compiler press illustration for framing only. Zoom out strongly so the COMPLETE existing artwork, including every incoming and outgoing tile and the handle, occupies no more than the central HALF of the final square canvas width. Uniformly reduce the apparent size of the whole subject to about 55% of its current displayed size, centre it, and add genuinely transparent empty space on every side. Keep the same press, tile shapes and counts, perspective, graphite cross-hatching, warm ivory materials and small oxblood collar. Preserve all structure. Do not add objects, shadows, paper, text, numbers, haze, fringe, glow, halo or a card. No cropping. Transparent background and holes; solid material should remain visually opaque. The empty transparent margin is the purpose of this edit and must be clearly much larger than in the reference.",
+    "referenced_image_paths": [
+      "/workspace/scratch/f9aadd8a4299/blog-category-batch03/public/artwork/category-expansion-v1/batch-03/originals/06-compilers.png"
+    ],
+    "transparent_background": true
+  },
+  "timestamp_utc": "2026-11-17T06:15:16.039Z",
+  "final_preserved_path": "public/artwork/category-expansion-v1/batch-03/originals/06-compilers-v2.png",
+  "path_note": "preserved_generated_path records the initial copy made at tool return; it was then moved without modifying bytes to final_preserved_path."
+}

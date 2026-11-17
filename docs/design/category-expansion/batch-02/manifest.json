@@ -1,0 +1,636 @@
+{
+  "schema_version": 1,
+  "batch": 2,
+  "title": "Platform craft and fieldwork",
+  "target_image_count": 10,
+  "completed_original_image_count": 10,
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "branch": "art/blog-category-expansion-batch-02",
+  "space_url": "https://chatgpt.com/space/page_237967649bdc8191b85ef00a2ef72926",
+  "originals_are_unmodified": true,
+  "media_kind": "generated raster artwork; not editable vector",
+  "evidence_boundary": "Editorial metaphors, not measurements, scientific evidence, real graph data or official vendor marks.",
+  "browser_checks": "unavailable; not performed",
+  "images": [
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+      "bytes": 1545388,
+      "sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1045323,
+        "partial_pixels": 526644,
+        "opaque_pixels": 549,
+        "transparent_fraction": 0.664746,
+        "nonzero_bbox": [
+          0,
+          19,
+          1242,
+          1254
+        ],
+        "alpha128_bbox": [
+          158,
+          220,
+          1104,
+          1112
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          19,
+          12,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 1,
+      "topic_key": "kubernetes",
+      "existing_label": "Kubernetes",
+      "taxonomy_status": "existing",
+      "concept": "Orchestration of containers",
+      "prompt_sha256": "aabb9e4398d38ac1f888ed03f6a84635f66396f5f156d7a79da51def37b449e9",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "kubernetes",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-eddc39a5-1262-47df-876a-72ad68b95f53.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-eddc39a5-1262-47df-876a-72ad68b95f53.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+      "bytes": 1183577,
+      "sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1185163,
+        "partial_pixels": 387117,
+        "opaque_pixels": 236,
+        "transparent_fraction": 0.753673,
+        "nonzero_bbox": [
+          0,
+          17,
+          1240,
+          1254
+        ],
+        "alpha128_bbox": [
+          153,
+          169,
+          1101,
+          1124
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          17,
+          14,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 2,
+      "topic_key": "istio",
+      "existing_label": "Service Mesh",
+      "taxonomy_status": "existing",
+      "concept": "Interwoven routed mesh",
+      "prompt_sha256": "4bc4d6a4c410b8072aaf83cb028d91c18d4ab0fe0a95c6bf25bdb0367ea0497f",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "istio",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-14b33c94-2300-4b7f-a61b-641eca2a0800.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-14b33c94-2300-4b7f-a61b-641eca2a0800.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png",
+      "bytes": 1425763,
+      "sha256": "7772990a6e2b64532a543c0cae11b0c79c26b2b52c9dbd76c607224d204bc53f",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1012769,
+        "partial_pixels": 559482,
+        "opaque_pixels": 265,
+        "transparent_fraction": 0.644044,
+        "nonzero_bbox": [
+          0,
+          16,
+          1251,
+          1254
+        ],
+        "alpha128_bbox": [
+          72,
+          340,
+          1179,
+          1003
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          16,
+          3,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 3,
+      "topic_key": "tekton",
+      "existing_label": "CI/CD \u00b7 Tekton",
+      "taxonomy_status": "existing",
+      "concept": "Staged conveyor assembly",
+      "prompt_sha256": "e09f199b3a4b6080ff3f11ee0ea8663bac026a19b5bcf5f13b507e2e6718059a",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "tekton",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-980eda2a-4a33-43e7-9132-cb86f7273268.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-980eda2a-4a33-43e7-9132-cb86f7273268.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "7772990a6e2b64532a543c0cae11b0c79c26b2b52c9dbd76c607224d204bc53f"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png",
+      "bytes": 1596992,
+      "sha256": "6df6672666ce60ea1a357990242a147595145a9e38a8149bdb89c24698c42d1b",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 995910,
+        "partial_pixels": 576231,
+        "opaque_pixels": 375,
+        "transparent_fraction": 0.633323,
+        "nonzero_bbox": [
+          0,
+          0,
+          1238,
+          1254
+        ],
+        "alpha128_bbox": [
+          89,
+          213,
+          1122,
+          1141
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 4,
+      "topic_key": "kustomize",
+      "existing_label": "Config \u00b7 Kustomize",
+      "taxonomy_status": "existing",
+      "concept": "Nested configurable plates",
+      "prompt_sha256": "503ab5528b5eade3601fc2da44aafd47e31c58e96700d27f9cf782c0d6cf86d9",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "kustomize",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-ff9c8f53-afd2-4c18-b258-72dfb3c11a27.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-ff9c8f53-afd2-4c18-b258-72dfb3c11a27.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "6df6672666ce60ea1a357990242a147595145a9e38a8149bdb89c24698c42d1b"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+      "bytes": 606578,
+      "sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1358495,
+        "partial_pixels": 213548,
+        "opaque_pixels": 473,
+        "transparent_fraction": 0.863899,
+        "nonzero_bbox": [
+          0,
+          30,
+          1240,
+          1254
+        ],
+        "alpha128_bbox": [
+          291,
+          421,
+          925,
+          908
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          30,
+          14,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 5,
+      "topic_key": "minikube",
+      "existing_label": "Local Dev",
+      "taxonomy_status": "existing",
+      "concept": "Compact workstation and container",
+      "prompt_sha256": "a8cbdcfef620d4d1b9af06df9e0d3cd97dd635b519f93734f9deb4a91fe4a43c",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "minikube",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-cedf52a9-fe6d-49da-83b6-ca3403e95f25.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-cedf52a9-fe6d-49da-83b6-ca3403e95f25.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+      "bytes": 650726,
+      "sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1360233,
+        "partial_pixels": 211661,
+        "opaque_pixels": 622,
+        "transparent_fraction": 0.865004,
+        "nonzero_bbox": [
+          47,
+          67,
+          1222,
+          1226
+        ],
+        "alpha128_bbox": [
+          328,
+          386,
+          907,
+          967
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          47,
+          67,
+          32,
+          28
+        ],
+        "minimum_clear_margin_fraction": 0.022329,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 6,
+      "topic_key": "gcp",
+      "existing_label": "Google Cloud",
+      "taxonomy_status": "existing",
+      "concept": "Abstract cloud infrastructure",
+      "prompt_sha256": "74b0cd3e7fa9ef65efd764cc3e95f11130b2b23e1bb8f88becc493210ca1dffc",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "gcp",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-c1e53b16-41c5-46fc-bd63-76e4c585e08b.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-c1e53b16-41c5-46fc-bd63-76e4c585e08b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+      "bytes": 643573,
+      "sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1345604,
+        "partial_pixels": 226635,
+        "opaque_pixels": 277,
+        "transparent_fraction": 0.855701,
+        "nonzero_bbox": [
+          0,
+          23,
+          1251,
+          1254
+        ],
+        "alpha128_bbox": [
+          294,
+          310,
+          928,
+          947
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          23,
+          3,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 7,
+      "topic_key": "react",
+      "existing_label": "React",
+      "taxonomy_status": "existing",
+      "concept": "Reusable interlocking interface modules",
+      "prompt_sha256": "ac25977d378d5c41b3cd557f5f526cdc4a70ea53e8659a50c85c655191aae77c",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "react",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-42589fae-dee1-4af4-a1cf-7e2a1560f79b.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-42589fae-dee1-4af4-a1cf-7e2a1560f79b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+      "bytes": 984728,
+      "sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1251845,
+        "partial_pixels": 320042,
+        "opaque_pixels": 629,
+        "transparent_fraction": 0.796078,
+        "nonzero_bbox": [
+          0,
+          21,
+          1234,
+          1238
+        ],
+        "alpha128_bbox": [
+          262,
+          352,
+          989,
+          951
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          21,
+          20,
+          16
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 8,
+      "topic_key": "technology",
+      "existing_label": "Engineering",
+      "taxonomy_status": "existing",
+      "concept": "Precision mechanism",
+      "prompt_sha256": "941873d8eec22eb3ff36b664e2b31f9b9f285d68a4b7cd904faf1f56cd415b24",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "technology",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-fedea67d-57c0-435e-abee-06efea7bb9d6.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-fedea67d-57c0-435e-abee-06efea7bb9d6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+      "bytes": 718964,
+      "sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1285379,
+        "partial_pixels": 286864,
+        "opaque_pixels": 273,
+        "transparent_fraction": 0.817403,
+        "nonzero_bbox": [
+          0,
+          19,
+          1240,
+          1254
+        ],
+        "alpha128_bbox": [
+          254,
+          399,
+          1002,
+          885
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          19,
+          14,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 9,
+      "topic_key": "general",
+      "existing_label": "Field Notes",
+      "taxonomy_status": "existing",
+      "concept": "Open annotated field notebook without text",
+      "prompt_sha256": "78f851fffe1d11e837b334adc14f290846b2c076393c4ed89e0edd2c2b22a7b8",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "general",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-c95ec136-2811-4b88-8566-20a09bed3906.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-c95ec136-2811-4b88-8566-20a09bed3906.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e"
+      }
+    },
+    {
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png",
+      "bytes": 1000036,
+      "sha256": "203da886339fdacad42c9d4a7eac4b7d4f829d289f1bf11e5c3f3736f6f310c0",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1265924,
+        "partial_pixels": 306132,
+        "opaque_pixels": 460,
+        "transparent_fraction": 0.805031,
+        "nonzero_bbox": [
+          0,
+          21,
+          1208,
+          1254
+        ],
+        "alpha128_bbox": [
+          235,
+          321,
+          996,
+          990
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          0,
+          21,
+          46,
+          0
+        ],
+        "minimum_clear_margin_fraction": 0.0,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review.",
+      "order": 10,
+      "topic_key": "hiking",
+      "existing_label": "Hiking",
+      "taxonomy_status": "existing",
+      "concept": "Cairn and trail compass",
+      "prompt_sha256": "2ad32efaca3d4ed4e90bc65627fb56dfde6c40187b0c57b7f5425ae576aae7d1",
+      "generation_tool": "image_gen.imagegen",
+      "settings": {
+        "transparent_background": true
+      },
+      "source_identity": {
+        "key": "hiking",
+        "original_path": "public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png",
+        "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-e5c9d8b2-7710-4653-a324-d264dd40d966.png",
+        "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-e5c9d8b2-7710-4653-a324-d264dd40d966.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "method": "unmodified byte copy",
+        "date": "2026-11-17",
+        "source_sha256": "203da886339fdacad42c9d4a7eac4b7d4f829d289f1bf11e5c3f3736f6f310c0"
+      }
+    }
+  ]
+}

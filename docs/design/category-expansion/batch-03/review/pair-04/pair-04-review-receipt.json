@@ -1,0 +1,132 @@
+{
+  "generated_count": 2,
+  "skipped": [],
+  "themes": {
+    "light": "#f4f0e8",
+    "dark": "#191a1c"
+  },
+  "sizes_px": [
+    256,
+    96,
+    48,
+    24
+  ],
+  "originals_unchanged": true,
+  "source_sha256": {
+    "07-programming-languages.png": "37dfff1d3da46544ba952a4aae99bae9c3cbf39fc6132c67c9631116e0703a8c",
+    "08-testing.png": "c42d2327599e89c38405acbadc060d8f2fc9ee8044ce5ed06bd3f53d29c82e86"
+  },
+  "edge_samples": {
+    "07-programming-languages-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          780,
+          249,
+          876,
+          345
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          864,
+          434,
+          960,
+          530
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          318,
+          946,
+          414,
+          1042
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          269,
+          625,
+          365,
+          721
+        ],
+        "scale": 3
+      }
+    ],
+    "08-testing-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          803,
+          216,
+          899,
+          312
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          951,
+          474,
+          1047,
+          570
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          806,
+          958,
+          902,
+          1054
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          163,
+          874,
+          259,
+          970
+        ],
+        "scale": 3
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "filename": "pair-04-contact-light.png",
+      "sha256": "3ccc413eca3d7853d392530346a490521e622da6d92a85342482036142fb55c7"
+    },
+    {
+      "filename": "pair-04-contact-dark.png",
+      "sha256": "437d8bc2c57e3920dba6b662a7507ff6c6b2c30852accc1f31fec1a4659fefc0"
+    },
+    {
+      "filename": "pair-04-sizes-light.png",
+      "sha256": "0c99593c732fce982270d14623edc5a05fa2c38da31a8ece7f65c06fd63297e5"
+    },
+    {
+      "filename": "pair-04-sizes-dark.png",
+      "sha256": "eb39612385b30e5db12e30d3930e953b1ec693612489ed81d8ba32f1c0a6b5d3"
+    },
+    {
+      "filename": "07-programming-languages-edges.png",
+      "sha256": "d686b9c6d78faba0b1e09ea04c9a1f639d7b1dc149625b0460663025ccd03b61"
+    },
+    {
+      "filename": "08-testing-edges.png",
+      "sha256": "a7c76912417656a391129ebf337062cc78ad0cdcb5ce2e3b9fc6b1093d3f3695"
+    }
+  ],
+  "evidence_boundary": "Review composites, never browser screenshots or additional original artworks. Visual inspection is still required."
+}

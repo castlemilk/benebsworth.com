@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "completed_refinement_count": 3,
+  "images": [
+    {
+      "key": "tekton",
+      "filename": "03-tekton-staged-assembly-conveyor-v2.png",
+      "input": "03-tekton-staged-assembly-conveyor.png",
+      "reason": "Wider framing with clear transparent margin; remove atmospheric edge haze.",
+      "prompt": "Use case: background-extraction. Edit the supplied Tekton assembly-conveyor illustration. Keep its three-stage physical assembly subject, graphite engraved drawing, matte ivory materials, restrained red roller hub, visual order, detail and silhouette. Change only framing and exterior: reduce the complete subject to fit within the central 55 percent of a square canvas, leaving at least 22.5 percent genuinely blank transparent margin on all sides. Never crop the subject. Clear all atmospheric haze, glows, shadows and pale exterior wash; all holes and exterior are transparent, with a crisp naturally antialiased edge and opaque subject. This is an editorial metaphor, not a scientific or operating workflow. No text, labels, numbers, letters, watermark, signature, logos, new decoration or background. Do not enlarge the subject to fill the frame.",
+      "settings": {
+        "transparent_background": true
+      },
+      "input_file": "public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png",
+      "generation_tool": "image_gen.imagegen",
+      "method": "image generation edit; output retained unmodified",
+      "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-f3faf7e0-bbb9-4fa7-97fd-5ca9b2c993dc.png",
+      "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-f3faf7e0-bbb9-4fa7-97fd-5ca9b2c993dc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "path": "public/artwork/category-expansion-v1/batch-02/refinements/03-tekton-staged-assembly-conveyor-v2.png",
+      "exact_request": {
+        "prompt": "Use case: background-extraction. Edit the supplied Tekton assembly-conveyor illustration. Keep its three-stage physical assembly subject, graphite engraved drawing, matte ivory materials, restrained red roller hub, visual order, detail and silhouette. Change only framing and exterior: reduce the complete subject to fit within the central 55 percent of a square canvas, leaving at least 22.5 percent genuinely blank transparent margin on all sides. Never crop the subject. Clear all atmospheric haze, glows, shadows and pale exterior wash; all holes and exterior are transparent, with a crisp naturally antialiased edge and opaque subject. This is an editorial metaphor, not a scientific or operating workflow. No text, labels, numbers, letters, watermark, signature, logos, new decoration or background. Do not enlarge the subject to fill the frame.",
+        "transparent_background": true,
+        "referenced_image_paths": [
+          "/workspace/scratch/4ab08f6d41d3/blog-category-batch-02/public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png"
+        ]
+      },
+      "input_sha256": "7772990a6e2b64532a543c0cae11b0c79c26b2b52c9dbd76c607224d204bc53f",
+      "source_sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+      "prompt_sha256": "beb0cec47672c13e4a7c700c39c63f137da8cbe2db788517857f5bf29ad19cb0",
+      "bytes": 849613,
+      "sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1304932,
+        "partial_pixels": 266459,
+        "opaque_pixels": 1125,
+        "transparent_fraction": 0.829837,
+        "nonzero_bbox": [
+          25,
+          59,
+          1176,
+          1222
+        ],
+        "alpha128_bbox": [
+          179,
+          383,
+          1082,
+          916
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          25,
+          59,
+          78,
+          32
+        ],
+        "minimum_clear_margin_fraction": 0.019936,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review."
+    },
+    {
+      "key": "kustomize",
+      "filename": "04-kustomize-nested-configurable-plates-v2.png",
+      "input": "04-kustomize-nested-configurable-plates.png",
+      "reason": "Wider framing with clear transparent margin; retain all four plates.",
+      "prompt": "Use case: background-extraction. Edit the supplied nested configurable-plates illustration. Keep its four stepped plates, large rectangular apertures, sliding tabs, graphite engraved texture, matte ivory surfaces and single muted-red adjustment tab. Change only framing and exterior: reduce the entire complete subject to fit within the central 55 percent of a square canvas, leaving at least 22.5 percent genuinely blank transparent margin on every side. Preserve its oblique orientation and distinctive stacked silhouette; no crop. Clear exterior haze and stray paint. All open windows and the outside of the object must be truly transparent with crisp naturally antialiased edges; subject material is opaque. No glow, halo, drop shadow, background, text, numbers, labels, watermark, signature, letter K or vendor mark.",
+      "settings": {
+        "transparent_background": true
+      },
+      "input_file": "public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png",
+      "generation_tool": "image_gen.imagegen",
+      "method": "image generation edit; output retained unmodified",
+      "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-7b8587ca-14bd-4f10-9ec8-ed189c94ee4d.png",
+      "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-7b8587ca-14bd-4f10-9ec8-ed189c94ee4d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "path": "public/artwork/category-expansion-v1/batch-02/refinements/04-kustomize-nested-configurable-plates-v2.png",
+      "exact_request": {
+        "prompt": "Use case: background-extraction. Edit the supplied nested configurable-plates illustration. Keep its four stepped plates, large rectangular apertures, sliding tabs, graphite engraved texture, matte ivory surfaces and single muted-red adjustment tab. Change only framing and exterior: reduce the entire complete subject to fit within the central 55 percent of a square canvas, leaving at least 22.5 percent genuinely blank transparent margin on every side. Preserve its oblique orientation and distinctive stacked silhouette; no crop. Clear exterior haze and stray paint. All open windows and the outside of the object must be truly transparent with crisp naturally antialiased edges; subject material is opaque. No glow, halo, drop shadow, background, text, numbers, labels, watermark, signature, letter K or vendor mark.",
+        "transparent_background": true,
+        "referenced_image_paths": [
+          "/workspace/scratch/4ab08f6d41d3/blog-category-batch-02/public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png"
+        ]
+      },
+      "input_sha256": "6df6672666ce60ea1a357990242a147595145a9e38a8149bdb89c24698c42d1b",
+      "source_sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+      "prompt_sha256": "a4200cd8c425dbfca982298665633b149d040bb29f5092c2cbd63482ed728fbe",
+      "bytes": 863550,
+      "sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1261996,
+        "partial_pixels": 309996,
+        "opaque_pixels": 524,
+        "transparent_fraction": 0.802533,
+        "nonzero_bbox": [
+          71,
+          103,
+          1224,
+          1214
+        ],
+        "alpha128_bbox": [
+          219,
+          289,
+          1010,
+          1005
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          71,
+          103,
+          30,
+          40
+        ],
+        "minimum_clear_margin_fraction": 0.023923,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review."
+    },
+    {
+      "key": "hiking",
+      "filename": "10-hiking-cairn-and-trail-compass-v2.png",
+      "input": "10-hiking-cairn-and-trail-compass.png",
+      "reason": "Remove red compass needle; retain natural stone and forest identity.",
+      "prompt": "Use case: precise-object-edit. Edit the supplied Hiking cairn-and-compass illustration. Change the reddish compass-needle half to muted dark forest green so the whole scene uses only natural slate, limestone, moss/forest green and weathered brown. Keep the other needle half graphite grey. Absolutely no red, orange-red, folio-red or copper-red accent. Preserve the three-stone cairn, moss, leaf, compass, cord, unlettered face, natural hand-drawn engraving, composition and generous transparent margins. Preserve all existing transparency while clearing any stray edge haze; no glow, halo, shadow or background. Keep the subject complete and uncropped. Do not add any text, numbers, cardinal letters, map, label, signature, watermark or logo.",
+      "settings": {
+        "transparent_background": true
+      },
+      "input_file": "public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png",
+      "generation_tool": "image_gen.imagegen",
+      "method": "image generation edit; output retained unmodified",
+      "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-56670eba-69da-4481-92a8-567e34601896.png",
+      "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-56670eba-69da-4481-92a8-567e34601896.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "path": "public/artwork/category-expansion-v1/batch-02/refinements/10-hiking-cairn-and-trail-compass-v2.png",
+      "exact_request": {
+        "prompt": "Use case: precise-object-edit. Edit the supplied Hiking cairn-and-compass illustration. Change the reddish compass-needle half to muted dark forest green so the whole scene uses only natural slate, limestone, moss/forest green and weathered brown. Keep the other needle half graphite grey. Absolutely no red, orange-red, folio-red or copper-red accent. Preserve the three-stone cairn, moss, leaf, compass, cord, unlettered face, natural hand-drawn engraving, composition and generous transparent margins. Preserve all existing transparency while clearing any stray edge haze; no glow, halo, shadow or background. Keep the subject complete and uncropped. Do not add any text, numbers, cardinal letters, map, label, signature, watermark or logo.",
+        "transparent_background": true,
+        "referenced_image_paths": [
+          "/workspace/scratch/4ab08f6d41d3/blog-category-batch-02/public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png"
+        ]
+      },
+      "input_sha256": "203da886339fdacad42c9d4a7eac4b7d4f829d289f1bf11e5c3f3736f6f310c0",
+      "source_sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+      "prompt_sha256": "e2fe75fa28eab8ae70bece45c262c90e48d1d3cebc5f1f5c207c363d8bd67bf2",
+      "bytes": 934766,
+      "sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1254,
+      "height": 1254,
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "transparent_pixels": 1266118,
+        "partial_pixels": 306181,
+        "opaque_pixels": 217,
+        "transparent_fraction": 0.805154,
+        "nonzero_bbox": [
+          35,
+          37,
+          1144,
+          1222
+        ],
+        "alpha128_bbox": [
+          234,
+          321,
+          998,
+          992
+        ],
+        "clear_margins_px_left_top_right_bottom": [
+          35,
+          37,
+          110,
+          32
+        ],
+        "minimum_clear_margin_fraction": 0.025518,
+        "outer_edge_max_alpha_top_bottom_left_right": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "alpha_claim": "Transparent and partial-alpha pixels verified from decoded PNG; edge appearance requires visual review."
+    }
+  ]
+}

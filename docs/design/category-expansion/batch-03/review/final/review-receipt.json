@@ -1,0 +1,508 @@
+{
+  "generated_count": 10,
+  "skipped": [],
+  "themes": {
+    "light": "#f4f0e8",
+    "dark": "#191a1c"
+  },
+  "sizes_px": [
+    256,
+    96,
+    48,
+    24
+  ],
+  "originals_unchanged": true,
+  "source_sha256": {
+    "01-databases.png": "987cc2662f60a237318704d3e54f254f77ea133f12d8d4299949c8ba041b5580",
+    "02-distributed-systems.png": "5656800efc365ed88795ed4f4505a37c059967bcb7a2b7edfa4dd8f5325ec7bd",
+    "03-networking.png": "eb261b5f954e8dd58080328fc52326919d95a973d77bf60c10cdb7263d556e3a",
+    "04-cybersecurity.png": "c40f38825254a5d084b7766a37875a448a4bf5b048eedde2a3c172f0fde89339",
+    "05-operating-systems.png": "485029f272abdda4819b7859af875bb7cc17249fbb946aa2c1eae10ed23410f7",
+    "06-compilers-v2.png": "d84c0af30cfe45fae229849f61d69d7b52c440ec60371ca934e873ab3901677f",
+    "07-programming-languages.png": "37dfff1d3da46544ba952a4aae99bae9c3cbf39fc6132c67c9631116e0703a8c",
+    "08-testing.png": "c42d2327599e89c38405acbadc060d8f2fc9ee8044ce5ed06bd3f53d29c82e86",
+    "09-observability.png": "8790398672eefe70fcec33ce66516d8f088c64b5011aab917e99e5f852957938",
+    "10-data-engineering.png": "eeec358248b4526df6d000e3993f1131b6361efb933c88378306ee5f4fee1a67"
+  },
+  "edge_samples": {
+    "01-databases-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          466,
+          177,
+          562,
+          273
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          1005,
+          216,
+          1101,
+          312
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          707,
+          1007,
+          803,
+          1103
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          151,
+          821,
+          247,
+          917
+        ],
+        "scale": 3
+      }
+    ],
+    "02-distributed-systems-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          544,
+          199,
+          640,
+          295
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          1075,
+          757,
+          1171,
+          853
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          950,
+          990,
+          1046,
+          1086
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          68,
+          808,
+          164,
+          904
+        ],
+        "scale": 3
+      }
+    ],
+    "03-networking-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          278,
+          134,
+          374,
+          230
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          1092,
+          382,
+          1188,
+          478
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          861,
+          1048,
+          957,
+          1144
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          70,
+          952,
+          166,
+          1048
+        ],
+        "scale": 3
+      }
+    ],
+    "04-cybersecurity-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          574,
+          120,
+          670,
+          216
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          903,
+          841,
+          999,
+          937
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          708,
+          1040,
+          804,
+          1136
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          244,
+          912,
+          340,
+          1008
+        ],
+        "scale": 3
+      }
+    ],
+    "05-operating-systems-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          579,
+          157,
+          675,
+          253
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          976,
+          642,
+          1072,
+          738
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          581,
+          1087,
+          677,
+          1183
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          166,
+          659,
+          262,
+          755
+        ],
+        "scale": 3
+      }
+    ],
+    "06-compilers-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          718,
+          391,
+          814,
+          487
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          867,
+          657,
+          963,
+          753
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          504,
+          784,
+          600,
+          880
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          281,
+          664,
+          377,
+          760
+        ],
+        "scale": 3
+      }
+    ],
+    "07-programming-languages-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          780,
+          249,
+          876,
+          345
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          864,
+          434,
+          960,
+          530
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          318,
+          946,
+          414,
+          1042
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          269,
+          625,
+          365,
+          721
+        ],
+        "scale": 3
+      }
+    ],
+    "08-testing-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          803,
+          216,
+          899,
+          312
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          951,
+          474,
+          1047,
+          570
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          806,
+          958,
+          902,
+          1054
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          163,
+          874,
+          259,
+          970
+        ],
+        "scale": 3
+      }
+    ],
+    "09-observability-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          579,
+          274,
+          675,
+          370
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          889,
+          535,
+          985,
+          631
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          565,
+          972,
+          661,
+          1068
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          247,
+          565,
+          343,
+          661
+        ],
+        "scale": 3
+      }
+    ],
+    "10-data-engineering-edges.png": [
+      {
+        "edge": "top",
+        "source_crop_xyxy_exclusive": [
+          642,
+          302,
+          738,
+          398
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "right",
+        "source_crop_xyxy_exclusive": [
+          1013,
+          559,
+          1109,
+          655
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "bottom",
+        "source_crop_xyxy_exclusive": [
+          662,
+          942,
+          758,
+          1038
+        ],
+        "scale": 3
+      },
+      {
+        "edge": "left",
+        "source_crop_xyxy_exclusive": [
+          132,
+          418,
+          228,
+          514
+        ],
+        "scale": 3
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "filename": "contact-light.png",
+      "sha256": "d3c864fcbe0fd6288d4baac4e11dcdab4759db8be03a43b352e747f172bf71d9"
+    },
+    {
+      "filename": "contact-dark.png",
+      "sha256": "58378825d4adbce628b5405da718dbcb5a313535e1d459fb379a5b59e50d671f"
+    },
+    {
+      "filename": "sizes-light.png",
+      "sha256": "61d6c03de8f0dced80cd8847f640dddcc704271b2c396bd2592558a4486834f6"
+    },
+    {
+      "filename": "sizes-dark.png",
+      "sha256": "3055754cabc357de2af627518aea8e5e58fc3755e5fa5b957f6a0bcd2eda7060"
+    },
+    {
+      "filename": "01-databases-edges.png",
+      "sha256": "790b87bcf47b54b6df31373fc31674166fc3a50cc75ffb207dea9f09a4ff0ca4"
+    },
+    {
+      "filename": "02-distributed-systems-edges.png",
+      "sha256": "b101de0cbe0386a12d4813c94307804424ff1096fbaae1c19595669562bbbed8"
+    },
+    {
+      "filename": "03-networking-edges.png",
+      "sha256": "9e91b1a774c85f63f7706719f46012a2a9586a6e733b2f507d686c27937ce9e1"
+    },
+    {
+      "filename": "04-cybersecurity-edges.png",
+      "sha256": "18fbaefd1a493814366cb2f9269e38eb83210fbab35604fac4c5355cdb935a8a"
+    },
+    {
+      "filename": "05-operating-systems-edges.png",
+      "sha256": "f3b4ad975a1f6281410d268b32bd2641d8f461d3e973e5a1131c1688f69d7cab"
+    },
+    {
+      "filename": "06-compilers-edges.png",
+      "sha256": "bb159002d842a23c6e364347d934097bdd8107ac4c4190c6757de4a342d2bf7b"
+    },
+    {
+      "filename": "07-programming-languages-edges.png",
+      "sha256": "d686b9c6d78faba0b1e09ea04c9a1f639d7b1dc149625b0460663025ccd03b61"
+    },
+    {
+      "filename": "08-testing-edges.png",
+      "sha256": "a7c76912417656a391129ebf337062cc78ad0cdcb5ce2e3b9fc6b1093d3f3695"
+    },
+    {
+      "filename": "09-observability-edges.png",
+      "sha256": "57adc0c3d0d38063ffe667e99d4ff211aa2a81049950c3eb15f978ce097bfa7d"
+    },
+    {
+      "filename": "10-data-engineering-edges.png",
+      "sha256": "cdd6f51bfcafaca92cd24002b270ff6ee1c33ce609f915c2de815bfbea7ebd74"
+    }
+  ],
+  "evidence_boundary": "Review composites, never browser screenshots or additional original artworks. Visual inspection is still required."
+}

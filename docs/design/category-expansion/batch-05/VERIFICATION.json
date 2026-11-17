@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-17",
+  "baseline": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "branch": "art/blog-category-expansion-batch-05",
+  "asset_verification": {
+    "result": "passed",
+    "checksummed_files": 71,
+    "selected_original_count": 10,
+    "retained_attempt_count": 3,
+    "total_generated_output_count": 13,
+    "source_copy_equality_checked_in_current_environment": 13,
+    "selected_page_upload_digests_match": 10,
+    "valid_local_gallery_references": 45,
+    "gallery_image_instances": 20,
+    "png_structure_and_crc_valid": 10,
+    "browser_checks": "unavailable; not performed",
+    "application_build_and_ci": "not run; isolated asset/docs handoff"
+  },
+  "script_syntax": "Both Python scripts parsed successfully",
+  "generated_originals_byte_identity": "13 of 13 source copies equal generator output",
+  "review_originals": "10 selected, 3 earlier attempts preserved",
+  "review_methods": [
+    "Pillow alpha/channel/bbox/CRC analysis",
+    "Direct file-image inspection of light/dark contact sheets",
+    "Direct file-image inspection of actual-size strips and selected768px composites",
+    "Independent visual review recorded in review/OBSERVATIONS.md"
+  ],
+  "not_performed": [
+    "Real browser review",
+    "Narrow consuming-route review",
+    "Screen-reader or forced-colour acceptance",
+    "Full application build",
+    "Remote CI",
+    "Git push or PR creation",
+    "Merge or deployment"
+  ],
+  "strict_alpha_gate": "Not passed: low-alpha exterior residue remains",
+  "perceptual_halo_review": "No perceptible halo observed in final inspected composites",
+  "checksum_note": "SHA256SUMS generated after this receipt is written includes this receipt; its count exceeds the pre-receipt check by one."
+}

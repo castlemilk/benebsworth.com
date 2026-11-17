@@ -1,0 +1,78 @@
+{
+  "filename": "10-neuroscience-r2.png",
+  "key": "neuroscience",
+  "revision": 2,
+  "sha256": "e7798940831713b34c7d442642460d1d15fbe555bb64c831ebaf80ae9f814818",
+  "bytes": 416285,
+  "format": "PNG",
+  "mode": "RGBA",
+  "width": 1254,
+  "height": 1254,
+  "alpha_channel_present": true,
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "alpha_counts": {
+    "zero": 1441520,
+    "partial_1_to_254": 130918,
+    "opaque_255": 78,
+    "total": 1572516
+  },
+  "transparent_fraction": 0.916697,
+  "partial_alpha_fraction": 0.083254,
+  "border_nonzero_alpha_pixels": 0,
+  "border_alpha_above_16_pixels": 0,
+  "border_alpha_maximum": 0,
+  "bbox_alpha_gt_0": {
+    "threshold_exclusive": 0,
+    "bbox": [
+      47,
+      15,
+      1226,
+      1223
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 47,
+      "top": 15,
+      "right": 28,
+      "bottom": 31
+    },
+    "margin_fractions": {
+      "left": 0.03748,
+      "top": 0.011962,
+      "right": 0.022329,
+      "bottom": 0.024721
+    },
+    "minimum_margin_fraction": 0.011962,
+    "meets_prompt_16_percent_all_sides": false
+  },
+  "bbox_alpha_gt_16": {
+    "threshold_exclusive": 16,
+    "bbox": [
+      362,
+      326,
+      891,
+      910
+    ],
+    "bbox_convention": "left and top inclusive; right and bottom exclusive",
+    "margins_px": {
+      "left": 362,
+      "top": 326,
+      "right": 363,
+      "bottom": 344
+    },
+    "margin_fractions": {
+      "left": 0.288676,
+      "top": 0.259968,
+      "right": 0.289474,
+      "bottom": 0.274322
+    },
+    "minimum_margin_fraction": 0.259968,
+    "meets_prompt_16_percent_all_sides": true
+  },
+  "transparency_verified": true,
+  "visual_halo_status": "requires visual inspection; not inferred from alpha statistics",
+  "selected_for_review": true
+}

@@ -1,0 +1,188 @@
+{
+  "batch": 2,
+  "target": 10,
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "space_url": "https://chatgpt.com/space/page_237967649bdc8191b85ef00a2ef72926",
+  "prompts": [
+    {
+      "order": 1,
+      "key": "kubernetes",
+      "existing_label": "Kubernetes",
+      "taxonomy_status": "existing",
+      "concept": "Orchestration of containers",
+      "filename": "01-kubernetes-container-orchestration.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 68 percent of canvas width and height, leaving at least 16 percent genuinely empty transparent margin on every side. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: an original orchestrated cluster of three substantial cargo-like container modules seated at different heights in an open skeletal docking cradle. A single slim mechanical yoke aligns a fourth small module just above its matching slot; short understated routing joins the cradle. Composition feels balanced, purposeful and compact, with generous visible gaps between modules. Distinguish the modules by subtle physical edge joints, not marks. One tiny muted-red locking clip. No ship wheel, helm, heptagon emblem or Kubernetes logo; no brand blue.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 2,
+      "key": "istio",
+      "existing_label": "Service Mesh",
+      "taxonomy_status": "existing",
+      "concept": "Interwoven routed mesh",
+      "filename": "02-istio-interwoven-routed-mesh.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 68 percent of canvas width and height, leaving at least 16 percent genuinely empty transparent margin on every side. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a sculptural routed mesh of three broad ivory-and-graphite bands weaving over and under one another between a few small square terminal blocks. Routes bend with clear elbows and crossings visibly remain separate, creating an airy irregular diamond silhouette and open windows. Give the weave tactile engraved depth and one small muted-red splice on a single band. This is a service-mesh metaphor, not actual routing data. No sail, sailing ship, triangle mast or Istio logo; no sphere or generic node cloud.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 3,
+      "key": "tekton",
+      "existing_label": "CI/CD · Tekton",
+      "taxonomy_status": "existing",
+      "concept": "Staged conveyor assembly",
+      "filename": "03-tekton-staged-assembly-conveyor.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 68 percent of canvas width and height, leaving at least 16 percent genuinely empty transparent margin on every side. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a compact stepped assembly conveyor shown in three-quarter view, with three visually distinct open stations on one mechanical rail. At the first station a simple blank plate, at the middle a matching folded housing being fitted, at the final a complete small cartridge; show assembly stages through form alone. Ivory rollers, graphite guides, a single muted-red roller hub. Strong low horizontal silhouette with a deliberate stepped top, all inside the square clear-margin envelope. No mascots, brand marks, arrows with labels or readable stage names; not an actual production workflow.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 4,
+      "key": "kustomize",
+      "existing_label": "Config · Kustomize",
+      "taxonomy_status": "existing",
+      "concept": "Nested configurable plates",
+      "filename": "04-kustomize-nested-configurable-plates.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 68 percent of canvas width and height, leaving at least 16 percent genuinely empty transparent margin on every side. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a sculptural set of four nested precision plates, each with a large offset rectangular aperture, arranged in a stepped oblique stack. Carefully designed sliding tabs and recessed sockets suggest configuration and recombination; one plate is slightly translated to expose how the layers align. Ivory cut edges, graphite hatching on the broad faces, one small muted-red adjustment tab. A memorable ascending open silhouette, not a solid pile of cubes. No letters, K shape, official Kustomize mark or blueprint annotations.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 5,
+      "key": "minikube",
+      "existing_label": "Local Dev",
+      "taxonomy_status": "existing",
+      "concept": "Compact workstation and container",
+      "filename": "05-minikube-compact-container-workstation.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 50 percent of canvas width and height, leaving at least 25 percent genuinely empty transparent margin on every side. The object should appear small within a deliberately spacious canvas, never enlarged to fill the frame. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a compact personal development workstation as one tactile miniature object: a small upright blank inset monitor on a short stand, a low plain input slab and one squat open container chamber integrated beside its base. The chamber holds a single simple module, all grounded by one thin shared platform. The screen has no text, UI, glowing pixels or symbols. Matte ivory casing and graphite vents with one small muted-red cable collar. Distinct upright-plus-low-block silhouette. No animal mascot, minikube logo or software vendor mark.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 6,
+      "key": "gcp",
+      "existing_label": "Google Cloud",
+      "taxonomy_status": "existing",
+      "concept": "Abstract cloud infrastructure",
+      "filename": "06-gcp-abstract-cloud-infrastructure.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 50 percent of canvas width and height, leaving at least 25 percent genuinely empty transparent margin on every side. The object should appear small within a deliberately spacious canvas, never enlarged to fill the frame. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: cloud infrastructure imagined as a small carved architectural object: a soft lobed cloud canopy made from warm ivory stone, supported above three slender rectangular compute pillars and an open graphite routing shelf. Broad cloud mass contrasts with fine straight architecture; show clear transparent gaps, not a solid filled cloud icon. One tiny muted-red connector in the lower structure. Original monochrome editorial metaphor, no Google lettering, G motif, rainbow segments, red-blue-yellow-green brand palette or official cloud outline.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 7,
+      "key": "react",
+      "existing_label": "React",
+      "taxonomy_status": "existing",
+      "concept": "Reusable interlocking interface modules",
+      "filename": "07-react-interlocking-interface-modules.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 50 percent of canvas width and height, leaving at least 25 percent genuinely empty transparent margin on every side. The object should appear small within a deliberately spacious canvas, never enlarged to fill the frame. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a small assembly of reusable interface modules treated as physical crafted pieces: four thin ivory panels with distinct tab-and-socket edges interlock into an asymmetric open cross-like composition. One smaller module is offset just above its matching recess to show reusability. A few large blank recessed rectangles and one circular cutout suggest interface anatomy without depicting text or live UI. Graphite chamfers, fine engraved surface grain, one tiny muted-red joining pin. No electron orbits, atom emblem, blue React logo, enclosing ring or brand mark.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 8,
+      "key": "technology",
+      "existing_label": "Engineering",
+      "taxonomy_status": "existing",
+      "concept": "Precision mechanism",
+      "filename": "08-technology-precision-mechanism.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 50 percent of canvas width and height, leaving at least 25 percent genuinely empty transparent margin on every side. The object should appear small within a deliberately spacious canvas, never enlarged to fill the frame. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a compact exposed precision mechanism, an eccentric cam and two intermeshing toothed wheels held in a sculpted open bearing frame with a short leadscrew. Give it a distinctive offset circular-and-linear silhouette with visible negative space and plausible material joins; illustrative metaphor, not a functional engineering drawing. Warm ivory cut faces, graphite engravings and one tiny muted-red bearing insert. Avoid generic isolated cogwheel icon, clock numerals, scales, labels, glossy metal or decorative complexity.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 9,
+      "key": "general",
+      "existing_label": "Field Notes",
+      "taxonomy_status": "existing",
+      "concept": "Open annotated field notebook without text",
+      "filename": "09-general-open-annotated-field-notebook.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 50 percent of canvas width and height, leaving at least 25 percent genuinely empty transparent margin on every side. The object should appear small within a deliberately spacious canvas, never enlarged to fill the frame. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: one open field notebook viewed at a gentle oblique angle, with a tactile folded spine, softly irregular ivory page edges and a narrow graphite cover. Pages carry only a few deliberate nonlinguistic pencil sketches: a small contour shape, a simple branching twig and short margin strokes. Include one restrained muted-red bracket pointing to a drawn shape and one short red cloth bookmark. No written characters, pseudo-script, letters, numbers, captions, ruled fake text, measurements or invented facts. Clear broad two-page silhouette with empty page space.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    },
+    {
+      "order": 10,
+      "key": "hiking",
+      "existing_label": "Hiking",
+      "taxonomy_status": "existing",
+      "concept": "Cairn and trail compass",
+      "filename": "10-hiking-cairn-and-trail-compass.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one original editorial category illustration for Ben Ebsworth's Blog/Lab research folio, a separate raster artwork, not a logo or UI screenshot.\nStyle/medium: sophisticated graphite drawing and fine engraved crosshatching on tactile warm-ivory material. Strong, distinctive object silhouette and deliberate open negative space. Quiet, precise, handmade depth; matte surfaces, carefully chosen broad planes, only enough intricate texture to feel drawn. Restrained warm red appears only as one small physical detail.\nComposition/framing: a square canvas with one centered coherent subject, complete and uncropped. The artwork including all wisps and details fits strictly inside the central 50 percent of canvas width and height, leaving at least 25 percent genuinely empty transparent margin on every side. The object should appear small within a deliberately spacious canvas, never enlarged to fill the frame. Modest three-quarter view, clear readable silhouette at small display sizes.\nBackground: true transparent alpha outside the object and in open holes. Solid opaque subject material, crisp naturally antialiased edge. No paper rectangle, background wash, ambient cloud, vignette, drop shadow, blur, glow, halo or luminous fringe.\nText: none. No letters, words, numbers, fake labels, pseudo-writing, diagrams with data, watermark or signature.\nConstraints: editorial metaphor only; no real system measurements, scientific evidence or knowledge-graph data. No glossy 3D tile, glass, chrome, neon, gradient backdrop, stock icon, frame, badge, enclosing circle or contact sheet. Do not imitate a technology brand mark or imply vendor endorsement.\nSubject: a small cairn of three irregular weathered stones and a compact trail compass resting at its base, joined into one natural still-life. The compass has a simple unlettered directional needle and plain bezel, without numbers, cardinal letters or legible scale. Subtle moss on stone and one small woodland leaf give the trail identity. Palette override: natural slate, warm limestone, muted forest green and weathered brown only; absolutely no red folio accent. Fine graphite engraving and tactile natural surfaces, quiet naturalist character, no mountain brand mark, no landscape backdrop or real map.",
+      "settings": {
+        "transparent_background": true
+      },
+      "generation_method": "built-in image_gen.imagegen",
+      "requested_image_count": 1,
+      "input_images": [],
+      "model": "not exposed by tool",
+      "seed": "not exposed by tool",
+      "output_size": "not settable through current tool; inspect output"
+    }
+  ]
+}

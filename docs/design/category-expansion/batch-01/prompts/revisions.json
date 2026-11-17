@@ -1,0 +1,21 @@
+{
+  "revisions": [
+    {
+      "key": "neuroscience",
+      "from": "10-neuroscience-r1.png",
+      "to": "10-neuroscience-r2.png",
+      "reason": "Independent image review found upper dendrites within 3.99% of canvas top; requested generous margins.",
+      "request": {
+        "prompt": "Edit the referenced Neuroscience illustration to correct composition only. Preserve its identity as ONE branching neuron, the warm ivory and graphite engraved tactile material, the recessed nucleus, the single longer curved axon and the small deep vermilion axon segment. Preserve the asymmetrical dendritic crown, but keep major branches clearly readable. Recompose the COMPLETE neuron at a substantially SMALLER scale in the center of a square canvas: the entire silhouette, including every fine dendrite tip and terminal, must fit inside the central 54% of canvas width and central 58% of canvas height. Leave at least 21% fully transparent empty margin above and below and 23% at left and right. The neuron must not approach any edge. All empty space and gaps must be genuine clean alpha transparency, with no residual paper haze, white fringe, glow, halo, coloured outline, loose specks, drop shadow, rectangular matte or ground. This is one isolated original raster illustration for a research folio, not a tile or scientific diagram. Do not add or retain any text, letters, numbers, labels, arrows, watermark, frame or other object. No brain silhouette. The requested change is a smaller, more spacious composition with clean exterior alpha, retaining the existing artistic subject.",
+        "referenced_image_paths": [
+          "/workspace/scratch/9327e1640d21/blog-category-batch01/public/artwork/category-expansion-v1/batch-01/originals/10-neuroscience-r1.png"
+        ],
+        "transparent_background": true
+      },
+      "model": "not exposed",
+      "seed": "not exposed",
+      "quality": "not exposed",
+      "size": "not exposed"
+    }
+  ]
+}

@@ -1,0 +1,675 @@
+{
+  "schema_version": 1,
+  "batch": "04",
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "target_originals": 10,
+  "saved_originals": 4,
+  "partial_mode": true,
+  "missing_originals": [
+    "05-control-theory-original.png",
+    "06-signal-processing-original.png",
+    "07-numerical-methods-original.png",
+    "08-geometry-original.png",
+    "09-topology-original.png",
+    "10-cryptography-original.png"
+  ],
+  "unexpected_files": [],
+  "pixel_inspection_available": true,
+  "scope": "Read-only original byte, PNG structure, decoded dimension and alpha inspection. This is not browser, scientific, artistic or accessibility acceptance.",
+  "bbox_convention": "[left, top, right, bottom], right and bottom exclusive. Threshold 1 includes every nonzero-alpha pixel, including very faint fringe.",
+  "files": [
+    {
+      "index": 1,
+      "slug": "probability",
+      "label": "Probability",
+      "filename": "01-probability-original.png",
+      "path": "public/artwork/category-expansion-v1/batch-04/originals/01-probability-original.png",
+      "bytes": 1804730,
+      "sha256": "ab32731a84dff4fb1d3f4500d154f6fa37145715849f9ea32587d264e4138b1d",
+      "png": {
+        "signature_valid": true,
+        "all_chunk_crcs_valid": true,
+        "clean_iend": true,
+        "ihdr": {
+          "width": 1254,
+          "height": 1254,
+          "bit_depth": 8,
+          "colour_type": 6,
+          "compression": 0,
+          "filter_method": 0,
+          "interlace": 0
+        },
+        "chunks": [
+          {
+            "type": "IHDR",
+            "bytes": 13
+          },
+          {
+            "type": "caBX",
+            "bytes": 23654
+          },
+          {
+            "type": "IDAT",
+            "bytes": 1781007
+          },
+          {
+            "type": "IEND",
+            "bytes": 0
+          }
+        ]
+      },
+      "pixel_inspection": {
+        "decoder": "Pillow 13.0.0",
+        "mode": "RGBA",
+        "frame_count": 1,
+        "encoded_transparency": true,
+        "actual_transparency_confirmed": true,
+        "pixels": 1572516,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "alpha_counts": {
+          "zero": 980965,
+          "partial_1_to_254": 591035,
+          "opaque_255": 516
+        },
+        "alpha_percent": {
+          "zero": 62.381877,
+          "partial_1_to_254": 37.585309,
+          "opaque_255": 0.032814
+        },
+        "alpha_distinct_values": 256,
+        "alpha_weighted_coverage_percent": 32.263339,
+        "bounds": {
+          "1": {
+            "threshold_inclusive": 1,
+            "bbox_xyxy_exclusive": [
+              0,
+              0,
+              1248,
+              1254
+            ],
+            "margins_pixels": {
+              "left": 0,
+              "top": 0,
+              "right": 6,
+              "bottom": 0
+            },
+            "margins_percent": {
+              "left": 0.0,
+              "top": 0.0,
+              "right": 0.478469,
+              "bottom": 0.0
+            },
+            "minimum_margin_percent": 0.0
+          },
+          "16": {
+            "threshold_inclusive": 16,
+            "bbox_xyxy_exclusive": [
+              106,
+              102,
+              1134,
+              1109
+            ],
+            "margins_pixels": {
+              "left": 106,
+              "top": 102,
+              "right": 120,
+              "bottom": 145
+            },
+            "margins_percent": {
+              "left": 8.452951,
+              "top": 8.133971,
+              "right": 9.569378,
+              "bottom": 11.562998
+            },
+            "minimum_margin_percent": 8.133971
+          },
+          "128": {
+            "threshold_inclusive": 128,
+            "bbox_xyxy_exclusive": [
+              107,
+              103,
+              1133,
+              1108
+            ],
+            "margins_pixels": {
+              "left": 107,
+              "top": 103,
+              "right": 121,
+              "bottom": 146
+            },
+            "margins_percent": {
+              "left": 8.532695,
+              "top": 8.213716,
+              "right": 9.649123,
+              "bottom": 11.642743
+            },
+            "minimum_margin_percent": 8.213716
+          },
+          "254": {
+            "threshold_inclusive": 254,
+            "bbox_xyxy_exclusive": [
+              108,
+              105,
+              1131,
+              1107
+            ],
+            "margins_pixels": {
+              "left": 108,
+              "top": 105,
+              "right": 123,
+              "bottom": 147
+            },
+            "margins_percent": {
+              "left": 8.61244,
+              "top": 8.373206,
+              "right": 9.808612,
+              "bottom": 11.722488
+            },
+            "minimum_margin_percent": 8.373206
+          }
+        },
+        "border": {
+          "unique_pixels": 5012,
+          "nonzero_alpha_pixels": 79,
+          "maximum_alpha": 1
+        },
+        "warnings": [
+          "Nonzero alpha touches the image border; crop/margin review required"
+        ],
+        "edge_interpretation": "Alpha statistics cannot establish absence of a halo or colour fringe. Inspect light/dark composites and the consuming surface."
+      },
+      "integrity": "checked"
+    },
+    {
+      "index": 2,
+      "slug": "statistics",
+      "label": "Statistics",
+      "filename": "02-statistics-original.png",
+      "path": "public/artwork/category-expansion-v1/batch-04/originals/02-statistics-original.png",
+      "bytes": 1367477,
+      "sha256": "e07a7be5faa8744411739e50963c51a8a2a7c46feeb2b78e271b795b50124da0",
+      "png": {
+        "signature_valid": true,
+        "all_chunk_crcs_valid": true,
+        "clean_iend": true,
+        "ihdr": {
+          "width": 1254,
+          "height": 1254,
+          "bit_depth": 8,
+          "colour_type": 6,
+          "compression": 0,
+          "filter_method": 0,
+          "interlace": 0
+        },
+        "chunks": [
+          {
+            "type": "IHDR",
+            "bytes": 13
+          },
+          {
+            "type": "caBX",
+            "bytes": 23654
+          },
+          {
+            "type": "IDAT",
+            "bytes": 1343754
+          },
+          {
+            "type": "IEND",
+            "bytes": 0
+          }
+        ]
+      },
+      "pixel_inspection": {
+        "decoder": "Pillow 13.0.0",
+        "mode": "RGBA",
+        "frame_count": 1,
+        "encoded_transparency": true,
+        "actual_transparency_confirmed": true,
+        "pixels": 1572516,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "alpha_counts": {
+          "zero": 922693,
+          "partial_1_to_254": 649505,
+          "opaque_255": 318
+        },
+        "alpha_percent": {
+          "zero": 58.676223,
+          "partial_1_to_254": 41.303554,
+          "opaque_255": 0.020222
+        },
+        "alpha_distinct_values": 256,
+        "alpha_weighted_coverage_percent": 24.495926,
+        "bounds": {
+          "1": {
+            "threshold_inclusive": 1,
+            "bbox_xyxy_exclusive": [
+              0,
+              9,
+              1254,
+              1254
+            ],
+            "margins_pixels": {
+              "left": 0,
+              "top": 9,
+              "right": 0,
+              "bottom": 0
+            },
+            "margins_percent": {
+              "left": 0.0,
+              "top": 0.717703,
+              "right": 0.0,
+              "bottom": 0.0
+            },
+            "minimum_margin_percent": 0.0
+          },
+          "16": {
+            "threshold_inclusive": 16,
+            "bbox_xyxy_exclusive": [
+              111,
+              321,
+              1141,
+              1028
+            ],
+            "margins_pixels": {
+              "left": 111,
+              "top": 321,
+              "right": 113,
+              "bottom": 226
+            },
+            "margins_percent": {
+              "left": 8.851675,
+              "top": 25.598086,
+              "right": 9.011164,
+              "bottom": 18.022329
+            },
+            "minimum_margin_percent": 8.851675
+          },
+          "128": {
+            "threshold_inclusive": 128,
+            "bbox_xyxy_exclusive": [
+              112,
+              322,
+              1140,
+              1027
+            ],
+            "margins_pixels": {
+              "left": 112,
+              "top": 322,
+              "right": 114,
+              "bottom": 227
+            },
+            "margins_percent": {
+              "left": 8.931419,
+              "top": 25.677831,
+              "right": 9.090909,
+              "bottom": 18.102073
+            },
+            "minimum_margin_percent": 8.931419
+          },
+          "254": {
+            "threshold_inclusive": 254,
+            "bbox_xyxy_exclusive": [
+              113,
+              323,
+              1139,
+              1026
+            ],
+            "margins_pixels": {
+              "left": 113,
+              "top": 323,
+              "right": 115,
+              "bottom": 228
+            },
+            "margins_percent": {
+              "left": 9.011164,
+              "top": 25.757576,
+              "right": 9.170654,
+              "bottom": 18.181818
+            },
+            "minimum_margin_percent": 9.011164
+          }
+        },
+        "border": {
+          "unique_pixels": 5012,
+          "nonzero_alpha_pixels": 416,
+          "maximum_alpha": 1
+        },
+        "warnings": [
+          "Nonzero alpha touches the image border; crop/margin review required"
+        ],
+        "edge_interpretation": "Alpha statistics cannot establish absence of a halo or colour fringe. Inspect light/dark composites and the consuming surface."
+      },
+      "integrity": "checked"
+    },
+    {
+      "index": 3,
+      "slug": "optimization",
+      "label": "Optimization",
+      "filename": "03-optimization-original.png",
+      "path": "public/artwork/category-expansion-v1/batch-04/originals/03-optimization-original.png",
+      "bytes": 1318380,
+      "sha256": "dece81f5c286ef4385b8af8728e990263b4e65f3c550c6d933ebab31ce9c2b86",
+      "png": {
+        "signature_valid": true,
+        "all_chunk_crcs_valid": true,
+        "clean_iend": true,
+        "ihdr": {
+          "width": 1254,
+          "height": 1254,
+          "bit_depth": 8,
+          "colour_type": 6,
+          "compression": 0,
+          "filter_method": 0,
+          "interlace": 0
+        },
+        "chunks": [
+          {
+            "type": "IHDR",
+            "bytes": 13
+          },
+          {
+            "type": "caBX",
+            "bytes": 21881
+          },
+          {
+            "type": "IDAT",
+            "bytes": 1296430
+          },
+          {
+            "type": "IEND",
+            "bytes": 0
+          }
+        ]
+      },
+      "pixel_inspection": {
+        "decoder": "Pillow 13.0.0",
+        "mode": "RGBA",
+        "frame_count": 1,
+        "encoded_transparency": true,
+        "actual_transparency_confirmed": true,
+        "pixels": 1572516,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "alpha_counts": {
+          "zero": 1134380,
+          "partial_1_to_254": 437826,
+          "opaque_255": 310
+        },
+        "alpha_percent": {
+          "zero": 72.137899,
+          "partial_1_to_254": 27.842388,
+          "opaque_255": 0.019714
+        },
+        "alpha_distinct_values": 256,
+        "alpha_weighted_coverage_percent": 26.941628,
+        "bounds": {
+          "1": {
+            "threshold_inclusive": 1,
+            "bbox_xyxy_exclusive": [
+              0,
+              21,
+              1240,
+              1230
+            ],
+            "margins_pixels": {
+              "left": 0,
+              "top": 21,
+              "right": 14,
+              "bottom": 24
+            },
+            "margins_percent": {
+              "left": 0.0,
+              "top": 1.674641,
+              "right": 1.116427,
+              "bottom": 1.913876
+            },
+            "minimum_margin_percent": 0.0
+          },
+          "16": {
+            "threshold_inclusive": 16,
+            "bbox_xyxy_exclusive": [
+              127,
+              278,
+              1127,
+              979
+            ],
+            "margins_pixels": {
+              "left": 127,
+              "top": 278,
+              "right": 127,
+              "bottom": 275
+            },
+            "margins_percent": {
+              "left": 10.127592,
+              "top": 22.169059,
+              "right": 10.127592,
+              "bottom": 21.929825
+            },
+            "minimum_margin_percent": 10.127592
+          },
+          "128": {
+            "threshold_inclusive": 128,
+            "bbox_xyxy_exclusive": [
+              128,
+              279,
+              1126,
+              978
+            ],
+            "margins_pixels": {
+              "left": 128,
+              "top": 279,
+              "right": 128,
+              "bottom": 276
+            },
+            "margins_percent": {
+              "left": 10.207337,
+              "top": 22.248804,
+              "right": 10.207337,
+              "bottom": 22.009569
+            },
+            "minimum_margin_percent": 10.207337
+          },
+          "254": {
+            "threshold_inclusive": 254,
+            "bbox_xyxy_exclusive": [
+              129,
+              281,
+              1125,
+              977
+            ],
+            "margins_pixels": {
+              "left": 129,
+              "top": 281,
+              "right": 129,
+              "bottom": 277
+            },
+            "margins_percent": {
+              "left": 10.287081,
+              "top": 22.408293,
+              "right": 10.287081,
+              "bottom": 22.089314
+            },
+            "minimum_margin_percent": 10.287081
+          }
+        },
+        "border": {
+          "unique_pixels": 5012,
+          "nonzero_alpha_pixels": 13,
+          "maximum_alpha": 1
+        },
+        "warnings": [
+          "Nonzero alpha touches the image border; crop/margin review required"
+        ],
+        "edge_interpretation": "Alpha statistics cannot establish absence of a halo or colour fringe. Inspect light/dark composites and the consuming surface."
+      },
+      "integrity": "checked"
+    },
+    {
+      "index": 4,
+      "slug": "information-theory",
+      "label": "Information Theory",
+      "filename": "04-information-theory-original.png",
+      "path": "public/artwork/category-expansion-v1/batch-04/originals/04-information-theory-original.png",
+      "bytes": 1206577,
+      "sha256": "a6142c9b71fed2163216be6d143e3e8d9b1ed07dfd4599a672f19994bee84a29",
+      "png": {
+        "signature_valid": true,
+        "all_chunk_crcs_valid": true,
+        "clean_iend": true,
+        "ihdr": {
+          "width": 1254,
+          "height": 1254,
+          "bit_depth": 8,
+          "colour_type": 6,
+          "compression": 0,
+          "filter_method": 0,
+          "interlace": 0
+        },
+        "chunks": [
+          {
+            "type": "IHDR",
+            "bytes": 13
+          },
+          {
+            "type": "caBX",
+            "bytes": 23654
+          },
+          {
+            "type": "IDAT",
+            "bytes": 1182854
+          },
+          {
+            "type": "IEND",
+            "bytes": 0
+          }
+        ]
+      },
+      "pixel_inspection": {
+        "decoder": "Pillow 13.0.0",
+        "mode": "RGBA",
+        "frame_count": 1,
+        "encoded_transparency": true,
+        "actual_transparency_confirmed": true,
+        "pixels": 1572516,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "alpha_counts": {
+          "zero": 1167365,
+          "partial_1_to_254": 404165,
+          "opaque_255": 986
+        },
+        "alpha_percent": {
+          "zero": 74.235493,
+          "partial_1_to_254": 25.701805,
+          "opaque_255": 0.062702
+        },
+        "alpha_distinct_values": 256,
+        "alpha_weighted_coverage_percent": 22.369268,
+        "bounds": {
+          "1": {
+            "threshold_inclusive": 1,
+            "bbox_xyxy_exclusive": [
+              0,
+              31,
+              1248,
+              1254
+            ],
+            "margins_pixels": {
+              "left": 0,
+              "top": 31,
+              "right": 6,
+              "bottom": 0
+            },
+            "margins_percent": {
+              "left": 0.0,
+              "top": 2.472089,
+              "right": 0.478469,
+              "bottom": 0.0
+            },
+            "minimum_margin_percent": 0.0
+          },
+          "16": {
+            "threshold_inclusive": 16,
+            "bbox_xyxy_exclusive": [
+              82,
+              365,
+              1174,
+              962
+            ],
+            "margins_pixels": {
+              "left": 82,
+              "top": 365,
+              "right": 80,
+              "bottom": 292
+            },
+            "margins_percent": {
+              "left": 6.539075,
+              "top": 29.106858,
+              "right": 6.379585,
+              "bottom": 23.285486
+            },
+            "minimum_margin_percent": 6.379585
+          },
+          "128": {
+            "threshold_inclusive": 128,
+            "bbox_xyxy_exclusive": [
+              83,
+              366,
+              1174,
+              961
+            ],
+            "margins_pixels": {
+              "left": 83,
+              "top": 366,
+              "right": 80,
+              "bottom": 293
+            },
+            "margins_percent": {
+              "left": 6.61882,
+              "top": 29.186603,
+              "right": 6.379585,
+              "bottom": 23.365231
+            },
+            "minimum_margin_percent": 6.379585
+          },
+          "254": {
+            "threshold_inclusive": 254,
+            "bbox_xyxy_exclusive": [
+              84,
+              369,
+              1172,
+              960
+            ],
+            "margins_pixels": {
+              "left": 84,
+              "top": 369,
+              "right": 82,
+              "bottom": 294
+            },
+            "margins_percent": {
+              "left": 6.698565,
+              "top": 29.425837,
+              "right": 6.539075,
+              "bottom": 23.444976
+            },
+            "minimum_margin_percent": 6.539075
+          }
+        },
+        "border": {
+          "unique_pixels": 5012,
+          "nonzero_alpha_pixels": 16,
+          "maximum_alpha": 1
+        },
+        "warnings": [
+          "Nonzero alpha touches the image border; crop/margin review required"
+        ],
+        "edge_interpretation": "Alpha statistics cannot establish absence of a halo or colour fringe. Inspect light/dark composites and the consuming surface."
+      },
+      "integrity": "checked"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "slug": "thermodynamics",
+    "page_id": "page_4a95f7010100819192097f3954e10d28",
+    "reference": "library-file:fde1_bGliZmlsZV9wcTNaUzRYX1ZVc0tPN09kQ2YtSXdn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+    "file_name": "thermodynamics-original-0ce35d6be60f46bc86005fac014dc16a.png",
+    "mime_type": "image/png",
+    "byte_size": 1371604,
+    "sha256": "eba0cb79672c0b46da2a48cee77d9edb2a72a47425b9d2757e97c801fa4c36c7",
+    "file_access_confirmed": true,
+    "is_image": true,
+    "markdown": "![thermodynamics original artwork study](library-file:fde1_bGliZmlsZV9wcTNaUzRYX1ZVc0tPN09kQ2YtSXdn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+    "inserted": false,
+    "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown.",
+    "status": "superseded-first-attempt"
+  },
+  {
+    "slug": "fluid-dynamics",
+    "page_id": "page_4a95f7010100819192097f3954e10d28",
+    "reference": "library-file:fde1_bGliZmlsZV9fc2pESi1UY3RrTUl0anFETnh3Tk1R_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+    "file_name": "fluid-dynamics-original-2ab708a277bc4c749cfe2d39ddb54a82.png",
+    "mime_type": "image/png",
+    "byte_size": 805665,
+    "sha256": "a7f87db96f8416ec32b1b185d215ba6e12b69f053505d2f2a6957ea7976bea27",
+    "file_access_confirmed": true,
+    "is_image": true,
+    "markdown": "![fluid-dynamics original artwork study](library-file:fde1_bGliZmlsZV9fc2pESi1UY3RrTUl0anFETnh3Tk1R_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+    "inserted": false,
+    "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown.",
+    "status": "superseded-first-attempt"
+  },
+  {
+    "slug": "thermodynamics",
+    "attempt": 2,
+    "page_id": "page_4a95f7010100819192097f3954e10d28",
+    "reference": "library-file:fde1_bGliZmlsZV91Nm5CQ3ZJSEJnZ0xCR1dDOUJuUXVB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+    "file_name": "thermodynamics-original-a55a151a658e4a479160bca5b9e5815f.png",
+    "mime_type": "image/png",
+    "byte_size": 807159,
+    "sha256": "f41abe6170468974815e6b7ef783dd20298b7e03e6941aeb5dc23e02e474b673",
+    "file_access_confirmed": true,
+    "is_image": true,
+    "markdown": "![Thermodynamics revised original with wider margins](library-file:fde1_bGliZmlsZV91Nm5CQ3ZJSEJnZ0xCR1dDOUJuUXVB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+    "inserted": false,
+    "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown.",
+    "status": "superseded-second-attempt"
+  }
+]

@@ -1,0 +1,1186 @@
+{
+  "schema_version": 1,
+  "batch": "03",
+  "target_count": 10,
+  "completed_count": 8,
+  "complete": false,
+  "status": "checkpoint",
+  "manifest_comparison": "not_requested",
+  "missing": [
+    "09-observability.png",
+    "10-data-engineering.png"
+  ],
+  "unexpected": [],
+  "errors": [],
+  "assets": [
+    {
+      "number": 1,
+      "slug": "databases",
+      "label": "Databases",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "01-databases.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/01-databases.png",
+      "sha256": "987cc2662f60a237318704d3e54f254f77ea133f12d8d4299949c8ba041b5580",
+      "byte_size": 1897329,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 955251,
+        "opaque_pixels": 398,
+        "partial_alpha_pixels": 616867,
+        "near_opaque_alpha_ge_250_pixels": 598413,
+        "very_low_alpha_1_to_16_pixels": 10998,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 955251
+          },
+          {
+            "alpha": 253,
+            "pixels": 561026
+          },
+          {
+            "alpha": 252,
+            "pixels": 17481
+          },
+          {
+            "alpha": 254,
+            "pixels": 13987
+          },
+          {
+            "alpha": 1,
+            "pixels": 6314
+          },
+          {
+            "alpha": 251,
+            "pixels": 3909
+          },
+          {
+            "alpha": 250,
+            "pixels": 1612
+          },
+          {
+            "alpha": 2,
+            "pixels": 1527
+          }
+        ],
+        "transparent_fraction": 0.607467,
+        "opaque_fraction": 0.000253,
+        "partial_fraction": 0.39228,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 77,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              29,
+              1232,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 29,
+              "right": 22,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.023126,
+              "right": 0.017544,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              199,
+              225,
+              1054,
+              1056
+            ],
+            "clear_margins_px": {
+              "left": 199,
+              "top": 225,
+              "right": 200,
+              "bottom": 198
+            },
+            "clear_margins_fraction": {
+              "left": 0.158692,
+              "top": 0.179426,
+              "right": 0.15949,
+              "bottom": 0.157895
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              200,
+              226,
+              1053,
+              1056
+            ],
+            "clear_margins_px": {
+              "left": 200,
+              "top": 226,
+              "right": 201,
+              "bottom": 198
+            },
+            "clear_margins_fraction": {
+              "left": 0.15949,
+              "top": 0.180223,
+              "right": 0.160287,
+              "bottom": 0.157895
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 2,
+      "slug": "distributed-systems",
+      "label": "Distributed systems",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "02-distributed-systems.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/02-distributed-systems.png",
+      "sha256": "5656800efc365ed88795ed4f4505a37c059967bcb7a2b7edfa4dd8f5325ec7bd",
+      "byte_size": 1189757,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1195039,
+        "opaque_pixels": 478,
+        "partial_alpha_pixels": 376999,
+        "near_opaque_alpha_ge_250_pixels": 339822,
+        "very_low_alpha_1_to_16_pixels": 20085,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1195039
+          },
+          {
+            "alpha": 253,
+            "pixels": 286719
+          },
+          {
+            "alpha": 252,
+            "pixels": 24671
+          },
+          {
+            "alpha": 254,
+            "pixels": 16303
+          },
+          {
+            "alpha": 1,
+            "pixels": 11138
+          },
+          {
+            "alpha": 251,
+            "pixels": 7563
+          },
+          {
+            "alpha": 250,
+            "pixels": 4088
+          },
+          {
+            "alpha": 2,
+            "pixels": 2904
+          }
+        ],
+        "transparent_fraction": 0.759953,
+        "opaque_fraction": 0.000304,
+        "partial_fraction": 0.239743,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 11,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              36,
+              1234,
+              1238
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 36,
+              "right": 20,
+              "bottom": 16
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.028708,
+              "right": 0.015949,
+              "bottom": 0.012759
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              116,
+              247,
+              1124,
+              1039
+            ],
+            "clear_margins_px": {
+              "left": 116,
+              "top": 247,
+              "right": 130,
+              "bottom": 215
+            },
+            "clear_margins_fraction": {
+              "left": 0.092504,
+              "top": 0.19697,
+              "right": 0.103668,
+              "bottom": 0.171451
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              117,
+              248,
+              1123,
+              1039
+            ],
+            "clear_margins_px": {
+              "left": 117,
+              "top": 248,
+              "right": 131,
+              "bottom": 215
+            },
+            "clear_margins_fraction": {
+              "left": 0.093301,
+              "top": 0.197767,
+              "right": 0.104466,
+              "bottom": 0.171451
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 3,
+      "slug": "networking",
+      "label": "Networking",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "03-networking.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/03-networking.png",
+      "sha256": "eb261b5f954e8dd58080328fc52326919d95a973d77bf60c10cdb7263d556e3a",
+      "byte_size": 1029304,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1250669,
+        "opaque_pixels": 319,
+        "partial_alpha_pixels": 321528,
+        "near_opaque_alpha_ge_250_pixels": 278274,
+        "very_low_alpha_1_to_16_pixels": 29809,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1250669
+          },
+          {
+            "alpha": 253,
+            "pixels": 230911
+          },
+          {
+            "alpha": 252,
+            "pixels": 32574
+          },
+          {
+            "alpha": 1,
+            "pixels": 22746
+          },
+          {
+            "alpha": 251,
+            "pixels": 7864
+          },
+          {
+            "alpha": 254,
+            "pixels": 3449
+          },
+          {
+            "alpha": 250,
+            "pixels": 3157
+          },
+          {
+            "alpha": 2,
+            "pixels": 2560
+          }
+        ],
+        "transparent_fraction": 0.79533,
+        "opaque_fraction": 0.000203,
+        "partial_fraction": 0.204467,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 23,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              17,
+              1236,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 17,
+              "right": 18,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.013557,
+              "right": 0.014354,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              118,
+              182,
+              1141,
+              1097
+            ],
+            "clear_margins_px": {
+              "left": 118,
+              "top": 182,
+              "right": 113,
+              "bottom": 157
+            },
+            "clear_margins_fraction": {
+              "left": 0.094099,
+              "top": 0.145136,
+              "right": 0.090112,
+              "bottom": 0.125199
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              119,
+              183,
+              1140,
+              1096
+            ],
+            "clear_margins_px": {
+              "left": 119,
+              "top": 183,
+              "right": 114,
+              "bottom": 158
+            },
+            "clear_margins_fraction": {
+              "left": 0.094896,
+              "top": 0.145933,
+              "right": 0.090909,
+              "bottom": 0.125997
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 4,
+      "slug": "cybersecurity",
+      "label": "Cybersecurity",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "04-cybersecurity.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/04-cybersecurity.png",
+      "sha256": "c40f38825254a5d084b7766a37875a448a4bf5b048eedde2a3c172f0fde89339",
+      "byte_size": 1468903,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1100719,
+        "opaque_pixels": 387,
+        "partial_alpha_pixels": 471410,
+        "near_opaque_alpha_ge_250_pixels": 433154,
+        "very_low_alpha_1_to_16_pixels": 26317,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1100719
+          },
+          {
+            "alpha": 253,
+            "pixels": 365730
+          },
+          {
+            "alpha": 252,
+            "pixels": 54516
+          },
+          {
+            "alpha": 1,
+            "pixels": 19200
+          },
+          {
+            "alpha": 251,
+            "pixels": 7966
+          },
+          {
+            "alpha": 250,
+            "pixels": 2856
+          },
+          {
+            "alpha": 2,
+            "pixels": 2602
+          },
+          {
+            "alpha": 254,
+            "pixels": 1699
+          }
+        ],
+        "transparent_fraction": 0.699973,
+        "opaque_fraction": 0.000246,
+        "partial_fraction": 0.299781,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 405,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              0,
+              1226,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 0,
+              "right": 28,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.0,
+              "right": 0.022329,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              292,
+              168,
+              952,
+              1089
+            ],
+            "clear_margins_px": {
+              "left": 292,
+              "top": 168,
+              "right": 302,
+              "bottom": 165
+            },
+            "clear_margins_fraction": {
+              "left": 0.232855,
+              "top": 0.133971,
+              "right": 0.240829,
+              "bottom": 0.131579
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              293,
+              169,
+              951,
+              1088
+            ],
+            "clear_margins_px": {
+              "left": 293,
+              "top": 169,
+              "right": 303,
+              "bottom": 166
+            },
+            "clear_margins_fraction": {
+              "left": 0.233652,
+              "top": 0.134769,
+              "right": 0.241627,
+              "bottom": 0.132376
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 5,
+      "slug": "operating-systems",
+      "label": "Operating systems",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "05-operating-systems.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/05-operating-systems.png",
+      "sha256": "485029f272abdda4819b7859af875bb7cc17249fbb946aa2c1eae10ed23410f7",
+      "byte_size": 1606339,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1023163,
+        "opaque_pixels": 420,
+        "partial_alpha_pixels": 548933,
+        "near_opaque_alpha_ge_250_pixels": 521353,
+        "very_low_alpha_1_to_16_pixels": 15168,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1023163
+          },
+          {
+            "alpha": 253,
+            "pixels": 473537
+          },
+          {
+            "alpha": 252,
+            "pixels": 29704
+          },
+          {
+            "alpha": 254,
+            "pixels": 9691
+          },
+          {
+            "alpha": 1,
+            "pixels": 9022
+          },
+          {
+            "alpha": 251,
+            "pixels": 5643
+          },
+          {
+            "alpha": 250,
+            "pixels": 2358
+          },
+          {
+            "alpha": 2,
+            "pixels": 2076
+          }
+        ],
+        "transparent_fraction": 0.650653,
+        "opaque_fraction": 0.000267,
+        "partial_fraction": 0.349079,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 134,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              0,
+              1245,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 0,
+              "right": 9,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.0,
+              "right": 0.007177,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              214,
+              205,
+              1025,
+              1136
+            ],
+            "clear_margins_px": {
+              "left": 214,
+              "top": 205,
+              "right": 229,
+              "bottom": 118
+            },
+            "clear_margins_fraction": {
+              "left": 0.170654,
+              "top": 0.163477,
+              "right": 0.182616,
+              "bottom": 0.094099
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              215,
+              205,
+              1024,
+              1135
+            ],
+            "clear_margins_px": {
+              "left": 215,
+              "top": 205,
+              "right": 230,
+              "bottom": 119
+            },
+            "clear_margins_fraction": {
+              "left": 0.171451,
+              "top": 0.163477,
+              "right": 0.183413,
+              "bottom": 0.094896
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 6,
+      "slug": "compilers",
+      "label": "Compilers",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "06-compilers.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/06-compilers.png",
+      "sha256": "237e6b684c1bc0371627f871ba1d67c208ee9cd6d04f2fae3c74f9970574a0c2",
+      "byte_size": 1196099,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1120119,
+        "opaque_pixels": 520,
+        "partial_alpha_pixels": 451877,
+        "near_opaque_alpha_ge_250_pixels": 285652,
+        "very_low_alpha_1_to_16_pixels": 151033,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1120119
+          },
+          {
+            "alpha": 253,
+            "pixels": 235311
+          },
+          {
+            "alpha": 1,
+            "pixels": 135837
+          },
+          {
+            "alpha": 252,
+            "pixels": 34498
+          },
+          {
+            "alpha": 251,
+            "pixels": 8454
+          },
+          {
+            "alpha": 2,
+            "pixels": 7066
+          },
+          {
+            "alpha": 250,
+            "pixels": 3639
+          },
+          {
+            "alpha": 254,
+            "pixels": 3230
+          }
+        ],
+        "transparent_fraction": 0.71231,
+        "opaque_fraction": 0.000331,
+        "partial_fraction": 0.287359,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 316,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.0,
+              "right": 0.0,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              73,
+              262,
+              1181,
+              1011
+            ],
+            "clear_margins_px": {
+              "left": 73,
+              "top": 262,
+              "right": 73,
+              "bottom": 243
+            },
+            "clear_margins_fraction": {
+              "left": 0.058214,
+              "top": 0.208931,
+              "right": 0.058214,
+              "bottom": 0.19378
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              73,
+              263,
+              1181,
+              1010
+            ],
+            "clear_margins_px": {
+              "left": 73,
+              "top": 263,
+              "right": 73,
+              "bottom": 244
+            },
+            "clear_margins_fraction": {
+              "left": 0.058214,
+              "top": 0.209729,
+              "right": 0.058214,
+              "bottom": 0.194577
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 7,
+      "slug": "programming-languages",
+      "label": "Programming languages",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "07-programming-languages.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/07-programming-languages.png",
+      "sha256": "37dfff1d3da46544ba952a4aae99bae9c3cbf39fc6132c67c9631116e0703a8c",
+      "byte_size": 1203486,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1186337,
+        "opaque_pixels": 361,
+        "partial_alpha_pixels": 385818,
+        "near_opaque_alpha_ge_250_pixels": 354940,
+        "very_low_alpha_1_to_16_pixels": 18746,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1186337
+          },
+          {
+            "alpha": 253,
+            "pixels": 290013
+          },
+          {
+            "alpha": 252,
+            "pixels": 53691
+          },
+          {
+            "alpha": 1,
+            "pixels": 11291
+          },
+          {
+            "alpha": 251,
+            "pixels": 6062
+          },
+          {
+            "alpha": 2,
+            "pixels": 2670
+          },
+          {
+            "alpha": 250,
+            "pixels": 2468
+          },
+          {
+            "alpha": 254,
+            "pixels": 2345
+          }
+        ],
+        "transparent_fraction": 0.75442,
+        "opaque_fraction": 0.00023,
+        "partial_fraction": 0.245351,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 28,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              0,
+              20,
+              1224,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 0,
+              "top": 20,
+              "right": 30,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.0,
+              "top": 0.015949,
+              "right": 0.023923,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              317,
+              297,
+              913,
+              995
+            ],
+            "clear_margins_px": {
+              "left": 317,
+              "top": 297,
+              "right": 341,
+              "bottom": 259
+            },
+            "clear_margins_fraction": {
+              "left": 0.252791,
+              "top": 0.236842,
+              "right": 0.27193,
+              "bottom": 0.206539
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              318,
+              298,
+              912,
+              994
+            ],
+            "clear_margins_px": {
+              "left": 318,
+              "top": 298,
+              "right": 342,
+              "bottom": 260
+            },
+            "clear_margins_fraction": {
+              "left": 0.253589,
+              "top": 0.23764,
+              "right": 0.272727,
+              "bottom": 0.207337
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    },
+    {
+      "number": 8,
+      "slug": "testing",
+      "label": "Testing",
+      "taxonomy_status": "proposed_study_label",
+      "filename": "08-testing.png",
+      "path": "public/artwork/category-expansion-v1/batch-03/originals/08-testing.png",
+      "sha256": "c42d2327599e89c38405acbadc060d8f2fc9ee8044ce5ed06bd3f53d29c82e86",
+      "byte_size": 889241,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "format": "PNG",
+      "png_integrity": {
+        "crc_check": "passed",
+        "clean_termination": true,
+        "chunks": [
+          "IHDR",
+          "caBX",
+          "IDAT",
+          "IEND"
+        ],
+        "width": 1254,
+        "height": 1254,
+        "bit_depth": 8,
+        "color_type": 6,
+        "compression": 0,
+        "filter_method": 0,
+        "interlace": 0
+      },
+      "alpha": {
+        "minimum": 0,
+        "maximum": 255,
+        "transparent_pixels": 1298783,
+        "opaque_pixels": 482,
+        "partial_alpha_pixels": 273251,
+        "near_opaque_alpha_ge_250_pixels": 238655,
+        "very_low_alpha_1_to_16_pixels": 18568,
+        "dominant_values": [
+          {
+            "alpha": 0,
+            "pixels": 1298783
+          },
+          {
+            "alpha": 253,
+            "pixels": 190304
+          },
+          {
+            "alpha": 252,
+            "pixels": 31521
+          },
+          {
+            "alpha": 1,
+            "pixels": 10881
+          },
+          {
+            "alpha": 251,
+            "pixels": 9368
+          },
+          {
+            "alpha": 250,
+            "pixels": 4113
+          },
+          {
+            "alpha": 254,
+            "pixels": 2867
+          },
+          {
+            "alpha": 2,
+            "pixels": 2822
+          }
+        ],
+        "transparent_fraction": 0.825927,
+        "opaque_fraction": 0.000307,
+        "partial_fraction": 0.173767,
+        "has_transparency": true,
+        "unique_values": 256,
+        "border_total_pixels": 5012,
+        "border_nonzero_alpha_pixels": 4,
+        "border_above_16_pixels": 0,
+        "border_above_128_pixels": 0,
+        "threshold_bounds": {
+          "gt_0": {
+            "bbox_xyxy_exclusive": [
+              25,
+              19,
+              1240,
+              1254
+            ],
+            "clear_margins_px": {
+              "left": 25,
+              "top": 19,
+              "right": 14,
+              "bottom": 0
+            },
+            "clear_margins_fraction": {
+              "left": 0.019936,
+              "top": 0.015152,
+              "right": 0.011164,
+              "bottom": 0.0
+            }
+          },
+          "gt_16": {
+            "bbox_xyxy_exclusive": [
+              211,
+              264,
+              1000,
+              1007
+            ],
+            "clear_margins_px": {
+              "left": 211,
+              "top": 264,
+              "right": 254,
+              "bottom": 247
+            },
+            "clear_margins_fraction": {
+              "left": 0.168262,
+              "top": 0.210526,
+              "right": 0.202552,
+              "bottom": 0.19697
+            }
+          },
+          "gt_128": {
+            "bbox_xyxy_exclusive": [
+              212,
+              265,
+              1000,
+              1006
+            ],
+            "clear_margins_px": {
+              "left": 212,
+              "top": 265,
+              "right": 254,
+              "bottom": 248
+            },
+            "clear_margins_fraction": {
+              "left": 0.169059,
+              "top": 0.211324,
+              "right": 0.202552,
+              "bottom": 0.197767
+            }
+          }
+        }
+      },
+      "visual_review": "Required separately; numeric alpha checks cannot certify no halo or legibility."
+    }
+  ],
+  "evidence_boundary": "PNG integrity and pixel measurements only. Browser, semantic, edge-fringe and visual acceptance are separate."
+}

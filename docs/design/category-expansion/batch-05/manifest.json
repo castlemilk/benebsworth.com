@@ -1,0 +1,1229 @@
+{
+  "schema_version": 1,
+  "batch": "05",
+  "title": "Physical worlds and invention",
+  "target_count": 10,
+  "selected_original_count": 10,
+  "retained_attempt_count": 3,
+  "total_generated_output_count": 13,
+  "source_copy_equality_checked_in_current_environment": 13,
+  "selected_page_upload_digests_match": 10,
+  "valid_local_gallery_references": 45,
+  "gallery_image_instances": 20,
+  "png_structure_and_crc_valid": 10,
+  "browser_checks": "unavailable; not performed",
+  "application_build_and_ci": "not run; isolated asset/docs handoff",
+  "repository": "https://github.com/castlemilk/benebsworth.com",
+  "base_revision": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "branch": "art/blog-category-expansion-batch-05",
+  "owned_paths": [
+    "docs/design/category-expansion/batch-05/",
+    "public/artwork/category-expansion-v1/batch-05/"
+  ],
+  "space_page": "https://chatgpt.com/space/page_4a95f7010100819192097f3954e10d28",
+  "generation_tool": "image_gen.imagegen",
+  "generation_date": "2026-11-17",
+  "unexposed_settings": [
+    "model identifier/version",
+    "seed",
+    "quality",
+    "explicit size control",
+    "exact generation timestamps"
+  ],
+  "review": {
+    "evidence": "File-derived composites; not browser screenshots",
+    "themes": {
+      "light": "#f5f1e8",
+      "dark": "#171717"
+    },
+    "reviewed_canvas_sizes_px": [
+      16,
+      24,
+      48,
+      96,
+      192,
+      280,
+      768
+    ],
+    "no_perceptible_halo_in_reviewed_composites": true,
+    "strict_fully_clear_alpha_exterior_accepted": false,
+    "minimum_substantial_foreground_margin_percent": 19.7767,
+    "recommended_use": "Labelled spot/header artwork; contain complete canvas; prefer 192\u2013280px or larger",
+    "production_symbol_replacement_accepted": false,
+    "findings": "docs/design/category-expansion/batch-05/review/OBSERVATIONS.md"
+  },
+  "publication": {
+    "pushed": false,
+    "draft_pr_created": false,
+    "merged": false,
+    "deployed": false,
+    "blocker": "Non-master push can trigger Vercel preview; current VERCEL_PREVIEW_CI_ENABLED is unreadable with available tools."
+  },
+  "images": [
+    {
+      "slug": "thermodynamics",
+      "label": "Thermodynamics",
+      "status": "proposed-artwork-study",
+      "concept": "heat-engine piston",
+      "file": "public/artwork/category-expansion-v1/batch-05/thermodynamics-original.png",
+      "sha256": "84eb49d72f574f91aa52a4929e3eb166b68677f300463e7e4a2151c0c817772f",
+      "bytes": 598335,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 3,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/thermodynamics.json",
+      "exact_request_sha256": "245a67440d5eceab9fd4622768c640d2946218f7592e9a332aa55ab1c6efa732",
+      "page_reference": "library-file:fde1_bGliZmlsZV9ZRVpsQk5hcXJWVXAwdGNFRDRQcGNn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "84eb49d72f574f91aa52a4929e3eb166b68677f300463e7e4a2151c0c817772f",
+      "alpha_fully_transparent_fraction": 0.86965729,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            0,
+            21,
+            1230,
+            1230
+          ],
+          "pixels_at_or_above": 204966,
+          "clear_border_margins_px": {
+            "left": 0,
+            "top": 21,
+            "right": 24,
+            "bottom": 24
+          },
+          "clear_border_margins_percent": {
+            "left": 0.0,
+            "top": 1.6746,
+            "right": 1.9139,
+            "bottom": 1.9139
+          },
+          "minimum_clear_margin_percent": 0.0
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            394,
+            309,
+            852,
+            981
+          ],
+          "pixels_at_or_above": 191742,
+          "clear_border_margins_px": {
+            "left": 394,
+            "top": 309,
+            "right": 402,
+            "bottom": 273
+          },
+          "clear_border_margins_percent": {
+            "left": 31.4195,
+            "top": 24.6411,
+            "right": 32.0574,
+            "bottom": 21.7703
+          },
+          "minimum_clear_margin_percent": 21.7703
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            395,
+            309,
+            851,
+            980
+          ],
+          "pixels_at_or_above": 189460,
+          "clear_border_margins_px": {
+            "left": 395,
+            "top": 309,
+            "right": 403,
+            "bottom": 274
+          },
+          "clear_border_margins_percent": {
+            "left": 31.4992,
+            "top": 24.6411,
+            "right": 32.1372,
+            "bottom": 21.8501
+          },
+          "minimum_clear_margin_percent": 21.8501
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 27,
+        "maximum_alpha": 1
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "fluid-dynamics",
+      "label": "Fluid dynamics",
+      "status": "proposed-artwork-study",
+      "concept": "vortex around streamlined body",
+      "file": "public/artwork/category-expansion-v1/batch-05/fluid-dynamics-original.png",
+      "sha256": "95d44cc8dee23b21d98fca78e42b988ea4fdd01f675ecc746fc2fe4efb59e3d4",
+      "bytes": 498232,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 2,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/fluid-dynamics.json",
+      "exact_request_sha256": "488408021ce7c56deeecf48eb8ac3b0026ac0a3974cc9dfb209da1e090356d26",
+      "page_reference": "library-file:fde1_bGliZmlsZV9lc01rRVdFWkdCN1ItOF92cElObldR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "95d44cc8dee23b21d98fca78e42b988ea4fdd01f675ecc746fc2fe4efb59e3d4",
+      "alpha_fully_transparent_fraction": 0.88582946,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            0,
+            21,
+            1238,
+            1254
+          ],
+          "pixels_at_or_above": 179535,
+          "clear_border_margins_px": {
+            "left": 0,
+            "top": 21,
+            "right": 16,
+            "bottom": 0
+          },
+          "clear_border_margins_percent": {
+            "left": 0.0,
+            "top": 1.6746,
+            "right": 1.2759,
+            "bottom": 0.0
+          },
+          "minimum_clear_margin_percent": 0.0
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            252,
+            476,
+            1006,
+            832
+          ],
+          "pixels_at_or_above": 96021,
+          "clear_border_margins_px": {
+            "left": 252,
+            "top": 476,
+            "right": 248,
+            "bottom": 422
+          },
+          "clear_border_margins_percent": {
+            "left": 20.0957,
+            "top": 37.9585,
+            "right": 19.7767,
+            "bottom": 33.6523
+          },
+          "minimum_clear_margin_percent": 19.7767
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            266,
+            479,
+            1006,
+            831
+          ],
+          "pixels_at_or_above": 88666,
+          "clear_border_margins_px": {
+            "left": 266,
+            "top": 479,
+            "right": 248,
+            "bottom": 423
+          },
+          "clear_border_margins_percent": {
+            "left": 21.2121,
+            "top": 38.1978,
+            "right": 19.7767,
+            "bottom": 33.7321
+          },
+          "minimum_clear_margin_percent": 19.7767
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 38,
+        "maximum_alpha": 1
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "materials-science",
+      "label": "Materials science",
+      "status": "proposed-artwork-study",
+      "concept": "layered lattice specimen",
+      "file": "public/artwork/category-expansion-v1/batch-05/materials-science-original.png",
+      "sha256": "1781b68dc503f2c1903fb00f3d3cb7a25056b61586fb03dd84a2e6b0f892af42",
+      "bytes": 896699,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/materials-science.json",
+      "exact_request_sha256": "070404eaa728ec765511c33330a88cfc1a2812ce88f8de74bfef4024d7179a95",
+      "page_reference": "library-file:fde1_bGliZmlsZV9pS01BSzFSdlVvN1FGcnliUERRc3lR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "1781b68dc503f2c1903fb00f3d3cb7a25056b61586fb03dd84a2e6b0f892af42",
+      "alpha_fully_transparent_fraction": 0.82520432,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            25,
+            21,
+            1222,
+            1212
+          ],
+          "pixels_at_or_above": 274869,
+          "clear_border_margins_px": {
+            "left": 25,
+            "top": 21,
+            "right": 32,
+            "bottom": 42
+          },
+          "clear_border_margins_percent": {
+            "left": 1.9936,
+            "top": 1.6746,
+            "right": 2.5518,
+            "bottom": 3.3493
+          },
+          "minimum_clear_margin_percent": 1.6746
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            327,
+            357,
+            923,
+            938
+          ],
+          "pixels_at_or_above": 259700,
+          "clear_border_margins_px": {
+            "left": 327,
+            "top": 357,
+            "right": 331,
+            "bottom": 316
+          },
+          "clear_border_margins_percent": {
+            "left": 26.0766,
+            "top": 28.4689,
+            "right": 26.3955,
+            "bottom": 25.1994
+          },
+          "minimum_clear_margin_percent": 25.1994
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            328,
+            358,
+            922,
+            937
+          ],
+          "pixels_at_or_above": 253409,
+          "clear_border_margins_px": {
+            "left": 328,
+            "top": 358,
+            "right": 332,
+            "bottom": 317
+          },
+          "clear_border_margins_percent": {
+            "left": 26.1563,
+            "top": 28.5486,
+            "right": 26.4753,
+            "bottom": 25.2791
+          },
+          "minimum_clear_margin_percent": 25.2791
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 0,
+        "maximum_alpha": 0
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "optics",
+      "label": "Optics",
+      "status": "proposed-artwork-study",
+      "concept": "lens and prismatic beam",
+      "file": "public/artwork/category-expansion-v1/batch-05/optics-original.png",
+      "sha256": "f82b4cdfc80dbd7847c19f9056d9c4cc2fe12a6ce154b7396a038257fddf7302",
+      "bytes": 337688,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/optics.json",
+      "exact_request_sha256": "1b8619c96f3c382971681b2868ad013145c1a2dbff18f3cf2d5ad2dc54f97319",
+      "page_reference": "library-file:fde1_bGliZmlsZV9tbzZaVGpjeHpIdjd3dF9UTFo4M21n_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "f82b4cdfc80dbd7847c19f9056d9c4cc2fe12a6ce154b7396a038257fddf7302",
+      "alpha_fully_transparent_fraction": 0.94105942,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            25,
+            39,
+            1236,
+            1235
+          ],
+          "pixels_at_or_above": 92685,
+          "clear_border_margins_px": {
+            "left": 25,
+            "top": 39,
+            "right": 18,
+            "bottom": 19
+          },
+          "clear_border_margins_percent": {
+            "left": 1.9936,
+            "top": 3.11,
+            "right": 1.4354,
+            "bottom": 1.5152
+          },
+          "minimum_clear_margin_percent": 1.4354
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            274,
+            435,
+            946,
+            918
+          ],
+          "pixels_at_or_above": 70973,
+          "clear_border_margins_px": {
+            "left": 274,
+            "top": 435,
+            "right": 308,
+            "bottom": 336
+          },
+          "clear_border_margins_percent": {
+            "left": 21.8501,
+            "top": 34.689,
+            "right": 24.5614,
+            "bottom": 26.7943
+          },
+          "minimum_clear_margin_percent": 21.8501
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            275,
+            440,
+            945,
+            917
+          ],
+          "pixels_at_or_above": 66413,
+          "clear_border_margins_px": {
+            "left": 275,
+            "top": 440,
+            "right": 309,
+            "bottom": 337
+          },
+          "clear_border_margins_percent": {
+            "left": 21.9298,
+            "top": 35.0877,
+            "right": 24.6411,
+            "bottom": 26.874
+          },
+          "minimum_clear_margin_percent": 21.9298
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 0,
+        "maximum_alpha": 0
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "robotics",
+      "label": "Robotics",
+      "status": "proposed-artwork-study",
+      "concept": "articulated gripper",
+      "file": "public/artwork/category-expansion-v1/batch-05/robotics-original.png",
+      "sha256": "dd5c3771d3d98de898f17a524d583bdb5466f5ce737d026505e05b8fbfe7b7b3",
+      "bytes": 545655,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/robotics.json",
+      "exact_request_sha256": "1866c541c3a79dafe1ddebdf80a446e38c136eb0f679e6be7f7e2554f2bba071",
+      "page_reference": "library-file:fde1_bGliZmlsZV9kQkQ4Q0VsTWZ3MWxBd0FKNUdnNU1B_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "dd5c3771d3d98de898f17a524d583bdb5466f5ce737d026505e05b8fbfe7b7b3",
+      "alpha_fully_transparent_fraction": 0.90587377,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            47,
+            21,
+            1232,
+            1236
+          ],
+          "pixels_at_or_above": 148015,
+          "clear_border_margins_px": {
+            "left": 47,
+            "top": 21,
+            "right": 22,
+            "bottom": 18
+          },
+          "clear_border_margins_percent": {
+            "left": 3.748,
+            "top": 1.6746,
+            "right": 1.7544,
+            "bottom": 1.4354
+          },
+          "minimum_clear_margin_percent": 1.4354
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            316,
+            366,
+            933,
+            886
+          ],
+          "pixels_at_or_above": 138562,
+          "clear_border_margins_px": {
+            "left": 316,
+            "top": 366,
+            "right": 321,
+            "bottom": 368
+          },
+          "clear_border_margins_percent": {
+            "left": 25.1994,
+            "top": 29.1866,
+            "right": 25.5981,
+            "bottom": 29.3461
+          },
+          "minimum_clear_margin_percent": 25.1994
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            317,
+            367,
+            932,
+            885
+          ],
+          "pixels_at_or_above": 136430,
+          "clear_border_margins_px": {
+            "left": 317,
+            "top": 367,
+            "right": 322,
+            "bottom": 369
+          },
+          "clear_border_margins_percent": {
+            "left": 25.2791,
+            "top": 29.2663,
+            "right": 25.6778,
+            "bottom": 29.4258
+          },
+          "minimum_clear_margin_percent": 25.2791
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 0,
+        "maximum_alpha": 0
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "acoustics",
+      "label": "Acoustics",
+      "status": "proposed-artwork-study",
+      "concept": "resonant tuning-fork form",
+      "file": "public/artwork/category-expansion-v1/batch-05/acoustics-original.png",
+      "sha256": "676785899a44511c05fb4cdefed4dac1ee6cf89d9c31464b411cef2d50446665",
+      "bytes": 327762,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/acoustics.json",
+      "exact_request_sha256": "e83b340f8aff40154033285c1380cfc92049b86aafcbcdefedc320eddadfd40d",
+      "page_reference": "library-file:fde1_bGliZmlsZV9paHRkbGJUZDRuX3VUQzRvNUg2MlRn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "676785899a44511c05fb4cdefed4dac1ee6cf89d9c31464b411cef2d50446665",
+      "alpha_fully_transparent_fraction": 0.93385632,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            33,
+            38,
+            1218,
+            1188
+          ],
+          "pixels_at_or_above": 104012,
+          "clear_border_margins_px": {
+            "left": 33,
+            "top": 38,
+            "right": 36,
+            "bottom": 66
+          },
+          "clear_border_margins_percent": {
+            "left": 2.6316,
+            "top": 3.0303,
+            "right": 2.8708,
+            "bottom": 5.2632
+          },
+          "minimum_clear_margin_percent": 2.6316
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            414,
+            335,
+            833,
+            938
+          ],
+          "pixels_at_or_above": 70833,
+          "clear_border_margins_px": {
+            "left": 414,
+            "top": 335,
+            "right": 421,
+            "bottom": 316
+          },
+          "clear_border_margins_percent": {
+            "left": 33.0144,
+            "top": 26.7145,
+            "right": 33.5726,
+            "bottom": 25.1994
+          },
+          "minimum_clear_margin_percent": 25.1994
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            415,
+            336,
+            832,
+            937
+          ],
+          "pixels_at_or_above": 64960,
+          "clear_border_margins_px": {
+            "left": 415,
+            "top": 336,
+            "right": 422,
+            "bottom": 317
+          },
+          "clear_border_margins_percent": {
+            "left": 33.0941,
+            "top": 26.7943,
+            "right": 33.6523,
+            "bottom": 25.2791
+          },
+          "minimum_clear_margin_percent": 25.2791
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 0,
+        "maximum_alpha": 0
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "astronomy",
+      "label": "Astronomy",
+      "status": "proposed-artwork-study",
+      "concept": "telescope and stellar cluster",
+      "file": "public/artwork/category-expansion-v1/batch-05/astronomy-original.png",
+      "sha256": "f885ba1ded204ac3c4196845f8fd74df10ac963797b7499db22f49dcab90ca6c",
+      "bytes": 291771,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/astronomy.json",
+      "exact_request_sha256": "f8355244ad435a9ce4ad5a5110123baeafc240e062ddc09d67d6c6a01b29edcf",
+      "page_reference": "library-file:fde1_bGliZmlsZV9hNjZ0b3YxNDlBLXd5bXV6SWR3SEl3_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "f885ba1ded204ac3c4196845f8fd74df10ac963797b7499db22f49dcab90ca6c",
+      "alpha_fully_transparent_fraction": 0.9543515,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            25,
+            33,
+            1202,
+            1184
+          ],
+          "pixels_at_or_above": 71783,
+          "clear_border_margins_px": {
+            "left": 25,
+            "top": 33,
+            "right": 52,
+            "bottom": 70
+          },
+          "clear_border_margins_percent": {
+            "left": 1.9936,
+            "top": 2.6316,
+            "right": 4.1467,
+            "bottom": 5.5821
+          },
+          "minimum_clear_margin_percent": 1.9936
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            369,
+            311,
+            926,
+            947
+          ],
+          "pixels_at_or_above": 55700,
+          "clear_border_margins_px": {
+            "left": 369,
+            "top": 311,
+            "right": 328,
+            "bottom": 307
+          },
+          "clear_border_margins_percent": {
+            "left": 29.4258,
+            "top": 24.8006,
+            "right": 26.1563,
+            "bottom": 24.4817
+          },
+          "minimum_clear_margin_percent": 24.4817
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            370,
+            314,
+            924,
+            946
+          ],
+          "pixels_at_or_above": 52684,
+          "clear_border_margins_px": {
+            "left": 370,
+            "top": 314,
+            "right": 330,
+            "bottom": 308
+          },
+          "clear_border_margins_percent": {
+            "left": 29.5056,
+            "top": 25.0399,
+            "right": 26.3158,
+            "bottom": 24.5614
+          },
+          "minimum_clear_margin_percent": 24.5614
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 0,
+        "maximum_alpha": 0
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "geophysics",
+      "label": "Geophysics",
+      "status": "proposed-artwork-study",
+      "concept": "seismic wave and layered Earth instrument",
+      "file": "public/artwork/category-expansion-v1/batch-05/geophysics-original.png",
+      "sha256": "43a4137b90dca208904b56bc653ed8af4db8421b50b6b942fb884fbb3c1bdae3",
+      "bytes": 689517,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/geophysics.json",
+      "exact_request_sha256": "e665286b17e3da2438cff3899d5256ea42d35f6a8e919ca8a9acecdd27b90b35",
+      "page_reference": "library-file:fde1_bGliZmlsZV9BU1NHT24yaW9Qbm5ZbWVsRG1oQUdB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "43a4137b90dca208904b56bc653ed8af4db8421b50b6b942fb884fbb3c1bdae3",
+      "alpha_fully_transparent_fraction": 0.87136093,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            0,
+            33,
+            1226,
+            1230
+          ],
+          "pixels_at_or_above": 202287,
+          "clear_border_margins_px": {
+            "left": 0,
+            "top": 33,
+            "right": 28,
+            "bottom": 24
+          },
+          "clear_border_margins_percent": {
+            "left": 0.0,
+            "top": 2.6316,
+            "right": 2.2329,
+            "bottom": 1.9139
+          },
+          "minimum_clear_margin_percent": 0.0
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            288,
+            373,
+            902,
+            955
+          ],
+          "pixels_at_or_above": 187279,
+          "clear_border_margins_px": {
+            "left": 288,
+            "top": 373,
+            "right": 352,
+            "bottom": 299
+          },
+          "clear_border_margins_percent": {
+            "left": 22.9665,
+            "top": 29.7448,
+            "right": 28.0702,
+            "bottom": 23.8437
+          },
+          "minimum_clear_margin_percent": 22.9665
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            289,
+            374,
+            901,
+            954
+          ],
+          "pixels_at_or_above": 184425,
+          "clear_border_margins_px": {
+            "left": 289,
+            "top": 374,
+            "right": 353,
+            "bottom": 300
+          },
+          "clear_border_margins_percent": {
+            "left": 23.0463,
+            "top": 29.8246,
+            "right": 28.1499,
+            "bottom": 23.9234
+          },
+          "minimum_clear_margin_percent": 23.0463
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 2,
+        "maximum_alpha": 1
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "renewable-energy",
+      "label": "Renewable energy",
+      "status": "proposed-artwork-study",
+      "concept": "wind/solar energy mechanism",
+      "file": "public/artwork/category-expansion-v1/batch-05/renewable-energy-original.png",
+      "sha256": "53d20dba8af3618878af90d1ccd05a8f64007634d186d02715b929c3dd004dca",
+      "bytes": 411198,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/renewable-energy.json",
+      "exact_request_sha256": "29f78b631fbe2ae4919fe1d36ef0d8ac8dd3e3adad4dccd92c3c9746bbdabef6",
+      "page_reference": "library-file:fde1_bGliZmlsZV8tZ09TUjJ4WHJoanl4YkdRLXh4YTRB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "53d20dba8af3618878af90d1ccd05a8f64007634d186d02715b929c3dd004dca",
+      "alpha_fully_transparent_fraction": 0.92706529,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            0,
+            0,
+            1224,
+            1230
+          ],
+          "pixels_at_or_above": 114691,
+          "clear_border_margins_px": {
+            "left": 0,
+            "top": 0,
+            "right": 30,
+            "bottom": 24
+          },
+          "clear_border_margins_percent": {
+            "left": 0.0,
+            "top": 0.0,
+            "right": 2.3923,
+            "bottom": 1.9139
+          },
+          "minimum_clear_margin_percent": 0.0
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            363,
+            290,
+            862,
+            970
+          ],
+          "pixels_at_or_above": 101192,
+          "clear_border_margins_px": {
+            "left": 363,
+            "top": 290,
+            "right": 392,
+            "bottom": 284
+          },
+          "clear_border_margins_percent": {
+            "left": 28.9474,
+            "top": 23.126,
+            "right": 31.26,
+            "bottom": 22.6475
+          },
+          "minimum_clear_margin_percent": 22.6475
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            364,
+            290,
+            861,
+            969
+          ],
+          "pixels_at_or_above": 98337,
+          "clear_border_margins_px": {
+            "left": 364,
+            "top": 290,
+            "right": 393,
+            "bottom": 285
+          },
+          "clear_border_margins_percent": {
+            "left": 29.0271,
+            "top": 23.126,
+            "right": 31.3397,
+            "bottom": 22.7273
+          },
+          "minimum_clear_margin_percent": 22.7273
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 1,
+        "maximum_alpha": 1
+      },
+      "original_output_bytes_preserved": true
+    },
+    {
+      "slug": "biotechnology",
+      "label": "Biotechnology",
+      "status": "proposed-artwork-study",
+      "concept": "bioreactor/leaf synthesis motif",
+      "file": "public/artwork/category-expansion-v1/batch-05/biotechnology-original.png",
+      "sha256": "4d5f9806a8cbe6edac2e0306986aadaf4a1479e82952de2b1550a655997c0e2f",
+      "bytes": 712944,
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "selected_attempt": 1,
+      "exact_request_file": "docs/design/category-expansion/batch-05/prompts/biotechnology.json",
+      "exact_request_sha256": "c3c4574e49fb782e2e41510173002c1b2fdcf45854d2cc0754cf41b5e45d02e8",
+      "page_reference": "library-file:fde1_bGliZmlsZV9fM21zX3JOMTJVV0IzLUFfRTB6Nkhn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+      "upload_sha256": "4d5f9806a8cbe6edac2e0306986aadaf4a1479e82952de2b1550a655997c0e2f",
+      "alpha_fully_transparent_fraction": 0.85882497,
+      "alpha_margins": [
+        {
+          "threshold_gte": 1,
+          "bbox_xyxy_exclusive": [
+            0,
+            53,
+            1218,
+            1213
+          ],
+          "pixels_at_or_above": 222000,
+          "clear_border_margins_px": {
+            "left": 0,
+            "top": 53,
+            "right": 36,
+            "bottom": 41
+          },
+          "clear_border_margins_percent": {
+            "left": 0.0,
+            "top": 4.2265,
+            "right": 2.8708,
+            "bottom": 3.2695
+          },
+          "minimum_clear_margin_percent": 0.0
+        },
+        {
+          "threshold_gte": 16,
+          "bbox_xyxy_exclusive": [
+            403,
+            313,
+            836,
+            939
+          ],
+          "pixels_at_or_above": 206932,
+          "clear_border_margins_px": {
+            "left": 403,
+            "top": 313,
+            "right": 418,
+            "bottom": 315
+          },
+          "clear_border_margins_percent": {
+            "left": 32.1372,
+            "top": 24.9601,
+            "right": 33.3333,
+            "bottom": 25.1196
+          },
+          "minimum_clear_margin_percent": 24.9601
+        },
+        {
+          "threshold_gte": 128,
+          "bbox_xyxy_exclusive": [
+            403,
+            314,
+            836,
+            938
+          ],
+          "pixels_at_or_above": 203968,
+          "clear_border_margins_px": {
+            "left": 403,
+            "top": 314,
+            "right": 418,
+            "bottom": 316
+          },
+          "clear_border_margins_percent": {
+            "left": 32.1372,
+            "top": 25.0399,
+            "right": 33.3333,
+            "bottom": 25.1994
+          },
+          "minimum_clear_margin_percent": 25.0399
+        }
+      ],
+      "outermost_border": {
+        "unique_pixel_count": 5012,
+        "pixels_with_alpha_gt_zero": 2,
+        "maximum_alpha": 1
+      },
+      "original_output_bytes_preserved": true
+    }
+  ],
+  "all_preserved_outputs": [
+    {
+      "slug": "thermodynamics",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-a39bdf2e-5c51-4266-8092-b6ae276228a7.png",
+      "destination": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v1-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v1-request.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-a39bdf2e-5c51-4266-8092-b6ae276228a7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "superseded",
+      "attempt": 1,
+      "superseded_reason": "Insufficient generous subject margin",
+      "sha256": "eba0cb79672c0b46da2a48cee77d9edb2a72a47425b9d2757e97c801fa4c36c7",
+      "bytes": 1371604
+    },
+    {
+      "slug": "fluid-dynamics",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-bbe277f9-041b-4ffb-8c2d-7f7641a73596.png",
+      "destination": "docs/design/category-expansion/batch-05/attempts/fluid-dynamics-v1-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/attempts/fluid-dynamics-v1-request.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-bbe277f9-041b-4ffb-8c2d-7f7641a73596.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "superseded",
+      "attempt": 1,
+      "superseded_reason": "Insufficient generous subject margin",
+      "sha256": "a7f87db96f8416ec32b1b185d215ba6e12b69f053505d2f2a6957ea7976bea27",
+      "bytes": 805665
+    },
+    {
+      "slug": "materials-science",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-318556d3-3f3b-4804-81e7-4f48a7d73faf.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/materials-science-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/materials-science.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-318556d3-3f3b-4804-81e7-4f48a7d73faf.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "1781b68dc503f2c1903fb00f3d3cb7a25056b61586fb03dd84a2e6b0f892af42",
+      "bytes": 896699
+    },
+    {
+      "slug": "optics",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-b035a913-12e9-4efe-98e0-f1227edbb74f.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/optics-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/optics.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-b035a913-12e9-4efe-98e0-f1227edbb74f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "f82b4cdfc80dbd7847c19f9056d9c4cc2fe12a6ce154b7396a038257fddf7302",
+      "bytes": 337688
+    },
+    {
+      "slug": "robotics",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-eb8c761a-8b77-4ba4-a62a-1d47504c6945.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/robotics-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/robotics.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-eb8c761a-8b77-4ba4-a62a-1d47504c6945.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "dd5c3771d3d98de898f17a524d583bdb5466f5ce737d026505e05b8fbfe7b7b3",
+      "bytes": 545655
+    },
+    {
+      "slug": "acoustics",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-28bcf2dd-3831-4ae6-ae78-37f97e05ca63.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/acoustics-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/acoustics.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-28bcf2dd-3831-4ae6-ae78-37f97e05ca63.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "676785899a44511c05fb4cdefed4dac1ee6cf89d9c31464b411cef2d50446665",
+      "bytes": 327762
+    },
+    {
+      "slug": "astronomy",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-7f4f976c-89fd-43b2-910e-cd4c88b1c7f3.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/astronomy-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/astronomy.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-7f4f976c-89fd-43b2-910e-cd4c88b1c7f3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "f885ba1ded204ac3c4196845f8fd74df10ac963797b7499db22f49dcab90ca6c",
+      "bytes": 291771
+    },
+    {
+      "slug": "geophysics",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-39d0228f-c5c7-48f6-99d3-16306c7ed2b9.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/geophysics-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/geophysics.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-39d0228f-c5c7-48f6-99d3-16306c7ed2b9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "43a4137b90dca208904b56bc653ed8af4db8421b50b6b942fb884fbb3c1bdae3",
+      "bytes": 689517
+    },
+    {
+      "slug": "renewable-energy",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-121ed2a5-6340-491f-93da-d118b152501e.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/renewable-energy-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/renewable-energy.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-121ed2a5-6340-491f-93da-d118b152501e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "53d20dba8af3618878af90d1ccd05a8f64007634d186d02715b929c3dd004dca",
+      "bytes": 411198
+    },
+    {
+      "slug": "biotechnology",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-f5d60304-3aaf-413d-9ec5-a63e4cb9b81f.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/biotechnology-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/biotechnology.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-f5d60304-3aaf-413d-9ec5-a63e4cb9b81f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "status": "selected",
+      "attempt": 1,
+      "sha256": "4d5f9806a8cbe6edac2e0306986aadaf4a1479e82952de2b1550a655997c0e2f",
+      "bytes": 712944
+    },
+    {
+      "slug": "thermodynamics",
+      "attempt": 2,
+      "status": "superseded",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-6681ba4d-f21f-4b41-a153-5593417a36f6.png",
+      "destination": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-request.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-6681ba4d-f21f-4b41-a153-5593417a36f6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "superseded_reason": "Faint neutral halo visible on dark review",
+      "sha256": "f41abe6170468974815e6b7ef783dd20298b7e03e6941aeb5dc23e02e474b673",
+      "bytes": 807159
+    },
+    {
+      "slug": "fluid-dynamics",
+      "attempt": 2,
+      "status": "selected",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-0cdfeddf-66ae-47c8-80bb-af1c734912f5.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/fluid-dynamics-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/fluid-dynamics.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-0cdfeddf-66ae-47c8-80bb-af1c734912f5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "sha256": "95d44cc8dee23b21d98fca78e42b988ea4fdd01f675ecc746fc2fe4efb59e3d4",
+      "bytes": 498232
+    },
+    {
+      "slug": "thermodynamics",
+      "attempt": 3,
+      "status": "selected",
+      "intent": "background-extraction edit",
+      "input_source_path": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-original.png",
+      "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-ef5ee5cc-f2d3-4e51-b4ff-5d097f8db31e.png",
+      "destination": "public/artwork/category-expansion-v1/batch-05/thermodynamics-original.png",
+      "generation_request_path": "docs/design/category-expansion/batch-05/prompts/thermodynamics.json",
+      "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-ef5ee5cc-f2d3-4e51-b4ff-5d097f8db31e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "generated_on": "2026-11-17",
+      "available_result_fields": [
+        "image_url",
+        "output_hint"
+      ],
+      "sha256": "84eb49d72f574f91aa52a4929e3eb166b68677f300463e7e4a2151c0c817772f",
+      "bytes": 598335
+    }
+  ]
+}

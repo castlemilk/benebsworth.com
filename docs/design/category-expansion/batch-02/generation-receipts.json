@@ -1,0 +1,92 @@
+[
+  {
+    "key": "kubernetes",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-eddc39a5-1262-47df-876a-72ad68b95f53.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-eddc39a5-1262-47df-876a-72ad68b95f53.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd"
+  },
+  {
+    "key": "istio",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-14b33c94-2300-4b7f-a61b-641eca2a0800.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-14b33c94-2300-4b7f-a61b-641eca2a0800.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9"
+  },
+  {
+    "key": "tekton",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-980eda2a-4a33-43e7-9132-cb86f7273268.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-980eda2a-4a33-43e7-9132-cb86f7273268.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "7772990a6e2b64532a543c0cae11b0c79c26b2b52c9dbd76c607224d204bc53f"
+  },
+  {
+    "key": "kustomize",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-ff9c8f53-afd2-4c18-b258-72dfb3c11a27.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-ff9c8f53-afd2-4c18-b258-72dfb3c11a27.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "6df6672666ce60ea1a357990242a147595145a9e38a8149bdb89c24698c42d1b"
+  },
+  {
+    "key": "minikube",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-cedf52a9-fe6d-49da-83b6-ca3403e95f25.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-cedf52a9-fe6d-49da-83b6-ca3403e95f25.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8"
+  },
+  {
+    "key": "gcp",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-c1e53b16-41c5-46fc-bd63-76e4c585e08b.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-c1e53b16-41c5-46fc-bd63-76e4c585e08b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf"
+  },
+  {
+    "key": "react",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-42589fae-dee1-4af4-a1cf-7e2a1560f79b.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-42589fae-dee1-4af4-a1cf-7e2a1560f79b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c"
+  },
+  {
+    "key": "technology",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-fedea67d-57c0-435e-abee-06efea7bb9d6.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-fedea67d-57c0-435e-abee-06efea7bb9d6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400"
+  },
+  {
+    "key": "general",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-c95ec136-2811-4b88-8566-20a09bed3906.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-c95ec136-2811-4b88-8566-20a09bed3906.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e"
+  },
+  {
+    "key": "hiking",
+    "original_path": "public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png",
+    "source_file": "/workspace/scratch/4ab08f6d41d3/generated_images/exec-e5c9d8b2-7710-4653-a324-d264dd40d966.png",
+    "output_hint": "Generated images are saved to /workspace/scratch/4ab08f6d41d3/generated_images as /workspace/scratch/4ab08f6d41d3/generated_images/exec-e5c9d8b2-7710-4653-a324-d264dd40d966.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "method": "unmodified byte copy",
+    "date": "2026-11-17",
+    "source_sha256": "203da886339fdacad42c9d4a7eac4b7d4f829d289f1bf11e5c3f3736f6f310c0"
+  }
+]

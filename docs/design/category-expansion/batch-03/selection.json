@@ -1,0 +1,12 @@
+{
+  "subject_count": 10,
+  "generated_output_count": 11,
+  "compiler": {
+    "handoff": "public/artwork/category-expansion-v1/batch-03/originals/06-compilers-v2.png",
+    "sha256": "d84c0af30cfe45fae229849f61d69d7b52c440ec60371ca934e873ab3901677f",
+    "superseded_original": "docs/design/category-expansion/batch-03/superseded/06-compilers-v1.png",
+    "superseded_sha256": "237e6b684c1bc0371627f871ba1d67c208ee9cd6d04f2fae3c74f9970574a0c2",
+    "reason": "Visible-side margins increased from about 5.8% to 26.2%; material/press/tile metaphor retained. This is an assistant handoff choice, not user taxonomy or production approval."
+  },
+  "historical_review": "review/pair-03 records the first compiler at its then-current path; its bytes are now preserved under superseded. Final review is regenerated from selected handoff originals."
+}

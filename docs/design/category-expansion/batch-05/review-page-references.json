@@ -1,0 +1,44 @@
+[
+  {
+    "file": "review/contact-sheet-light.png",
+    "page_id": "page_4a95f7010100819192097f3954e10d28",
+    "reference": "library-file:fde1_bGliZmlsZV9xaU1aZGN3VTJvNndpS3hEU1RHV2VB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+    "file_name": "contact-sheet-light-683f1b26d7ab42329370e06804c88d56.png",
+    "mime_type": "image/png",
+    "byte_size": 237070,
+    "sha256": "96af62b8b2e55d5b97879694c7c0e03ca6c69eaf9f2df46ccf20492fec4a833e",
+    "file_access_confirmed": true,
+    "is_image": true,
+    "markdown": "![Batch 05 light review contact sheet](library-file:fde1_bGliZmlsZV9xaU1aZGN3VTJvNndpS3hEU1RHV2VB_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+    "inserted": false,
+    "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+  },
+  {
+    "file": "review/contact-sheet-dark.png",
+    "page_id": "page_4a95f7010100819192097f3954e10d28",
+    "reference": "library-file:fde1_bGliZmlsZV93VUt1QWpDTEpRUXUwQkhBSndGemdR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+    "file_name": "contact-sheet-dark-1d16b1bd00ce4260acb3e15d766b33f8.png",
+    "mime_type": "image/png",
+    "byte_size": 233748,
+    "sha256": "28e46ca76f12f5264da0e067e5ae203d7ce9602ad8130d57e80d238bb26a671b",
+    "file_access_confirmed": true,
+    "is_image": true,
+    "markdown": "![Batch 05 dark review contact sheet](library-file:fde1_bGliZmlsZV93VUt1QWpDTEpRUXUwQkhBSndGemdR_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+    "inserted": false,
+    "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+  },
+  {
+    "file": "manifest.json",
+    "page_id": "page_4a95f7010100819192097f3954e10d28",
+    "reference": "library-file:fde1_bGliZmlsZV9FeExhYlc2VFJEdlJaa0FMaThtWnpn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6",
+    "file_name": "manifest-7b06ca77092142958a1309cb96ba9655.json",
+    "mime_type": "application/json",
+    "byte_size": 46241,
+    "sha256": "2b201be568880ec53e0b3e6379d15bd5a2b4e7882b64bb3ecf9782c672a3fedb",
+    "file_access_confirmed": true,
+    "is_image": false,
+    "markdown": "[Batch 05 original assets and provenance manifest](library-file:fde1_bGliZmlsZV9FeExhYlc2VFJEdlJaa0FMaThtWnpn_FileDrive_e9f75495a0508191a6ee13c8a501d5d6)",
+    "inserted": false,
+    "next_step": "Read the Page and use edit_page with its fresh guards to insert markdown."
+  }
+]

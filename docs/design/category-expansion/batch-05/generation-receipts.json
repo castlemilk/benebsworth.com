@@ -1,0 +1,189 @@
+[
+  {
+    "slug": "thermodynamics",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-a39bdf2e-5c51-4266-8092-b6ae276228a7.png",
+    "destination": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v1-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v1-request.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-a39bdf2e-5c51-4266-8092-b6ae276228a7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "superseded",
+    "attempt": 1,
+    "superseded_reason": "Insufficient generous subject margin"
+  },
+  {
+    "slug": "fluid-dynamics",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-bbe277f9-041b-4ffb-8c2d-7f7641a73596.png",
+    "destination": "docs/design/category-expansion/batch-05/attempts/fluid-dynamics-v1-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/attempts/fluid-dynamics-v1-request.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-bbe277f9-041b-4ffb-8c2d-7f7641a73596.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "superseded",
+    "attempt": 1,
+    "superseded_reason": "Insufficient generous subject margin"
+  },
+  {
+    "slug": "materials-science",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-318556d3-3f3b-4804-81e7-4f48a7d73faf.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/materials-science-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/materials-science.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-318556d3-3f3b-4804-81e7-4f48a7d73faf.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "optics",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-b035a913-12e9-4efe-98e0-f1227edbb74f.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/optics-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/optics.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-b035a913-12e9-4efe-98e0-f1227edbb74f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "robotics",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-eb8c761a-8b77-4ba4-a62a-1d47504c6945.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/robotics-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/robotics.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-eb8c761a-8b77-4ba4-a62a-1d47504c6945.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "acoustics",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-28bcf2dd-3831-4ae6-ae78-37f97e05ca63.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/acoustics-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/acoustics.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-28bcf2dd-3831-4ae6-ae78-37f97e05ca63.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "astronomy",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-7f4f976c-89fd-43b2-910e-cd4c88b1c7f3.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/astronomy-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/astronomy.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-7f4f976c-89fd-43b2-910e-cd4c88b1c7f3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "geophysics",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-39d0228f-c5c7-48f6-99d3-16306c7ed2b9.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/geophysics-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/geophysics.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-39d0228f-c5c7-48f6-99d3-16306c7ed2b9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "renewable-energy",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-121ed2a5-6340-491f-93da-d118b152501e.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/renewable-energy-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/renewable-energy.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-121ed2a5-6340-491f-93da-d118b152501e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "biotechnology",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-f5d60304-3aaf-413d-9ec5-a63e4cb9b81f.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/biotechnology-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/biotechnology.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-f5d60304-3aaf-413d-9ec5-a63e4cb9b81f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "status": "selected",
+    "attempt": 1
+  },
+  {
+    "slug": "thermodynamics",
+    "attempt": 2,
+    "status": "superseded",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-6681ba4d-f21f-4b41-a153-5593417a36f6.png",
+    "destination": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-request.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-6681ba4d-f21f-4b41-a153-5593417a36f6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ],
+    "superseded_reason": "Faint neutral halo visible on dark review"
+  },
+  {
+    "slug": "fluid-dynamics",
+    "attempt": 2,
+    "status": "selected",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-0cdfeddf-66ae-47c8-80bb-af1c734912f5.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/fluid-dynamics-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/fluid-dynamics.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-0cdfeddf-66ae-47c8-80bb-af1c734912f5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ]
+  },
+  {
+    "slug": "thermodynamics",
+    "attempt": 3,
+    "status": "selected",
+    "intent": "background-extraction edit",
+    "input_source_path": "docs/design/category-expansion/batch-05/attempts/thermodynamics-v2-original.png",
+    "original_source_path": "/workspace/scratch/309ecf484822/generated_images/exec-ef5ee5cc-f2d3-4e51-b4ff-5d097f8db31e.png",
+    "destination": "public/artwork/category-expansion-v1/batch-05/thermodynamics-original.png",
+    "generation_request_path": "docs/design/category-expansion/batch-05/prompts/thermodynamics.json",
+    "output_hint": "Generated images are saved to /workspace/scratch/309ecf484822/generated_images as /workspace/scratch/309ecf484822/generated_images/exec-ef5ee5cc-f2d3-4e51-b4ff-5d097f8db31e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generated_on": "2026-11-17",
+    "available_result_fields": [
+      "image_url",
+      "output_hint"
+    ]
+  }
+]

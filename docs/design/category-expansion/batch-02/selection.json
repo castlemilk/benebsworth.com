@@ -1,0 +1,97 @@
+{
+  "concept_count": 10,
+  "generated_file_count": 13,
+  "selection_is": "recommended review set; not approved production adoption",
+  "images": [
+    {
+      "order": 1,
+      "key": "kubernetes",
+      "label": "Kubernetes",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+      "sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png"
+    },
+    {
+      "order": 2,
+      "key": "istio",
+      "label": "Service Mesh",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+      "sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png"
+    },
+    {
+      "order": 3,
+      "key": "tekton",
+      "label": "CI/CD \u00b7 Tekton",
+      "path": "public/artwork/category-expansion-v1/batch-02/refinements/03-tekton-staged-assembly-conveyor-v2.png",
+      "sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+      "variant": "v2",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/03-tekton-staged-assembly-conveyor.png"
+    },
+    {
+      "order": 4,
+      "key": "kustomize",
+      "label": "Config \u00b7 Kustomize",
+      "path": "public/artwork/category-expansion-v1/batch-02/refinements/04-kustomize-nested-configurable-plates-v2.png",
+      "sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+      "variant": "v2",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/04-kustomize-nested-configurable-plates.png"
+    },
+    {
+      "order": 5,
+      "key": "minikube",
+      "label": "Local Dev",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+      "sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png"
+    },
+    {
+      "order": 6,
+      "key": "gcp",
+      "label": "Google Cloud",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+      "sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png"
+    },
+    {
+      "order": 7,
+      "key": "react",
+      "label": "React",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+      "sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png"
+    },
+    {
+      "order": 8,
+      "key": "technology",
+      "label": "Engineering",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+      "sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png"
+    },
+    {
+      "order": 9,
+      "key": "general",
+      "label": "Field Notes",
+      "path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+      "sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e",
+      "variant": "v1",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png"
+    },
+    {
+      "order": 10,
+      "key": "hiking",
+      "label": "Hiking",
+      "path": "public/artwork/category-expansion-v1/batch-02/refinements/10-hiking-cairn-and-trail-compass-v2.png",
+      "sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+      "variant": "v2",
+      "original_path": "public/artwork/category-expansion-v1/batch-02/originals/10-hiking-cairn-and-trail-compass.png"
+    }
+  ]
+}

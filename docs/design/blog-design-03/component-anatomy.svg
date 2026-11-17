@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1680" height="1160" viewBox="0 0 1680 1160" role="img" aria-labelledby="drawing-title drawing-description">
+  <title id="drawing-title">Editorial component anatomy and spacing contract</title>
+  <desc id="drawing-description">An original editable contract drawing, not a browser capture. The light panel identifies the entity and source citation slots. The dark panel identifies a compact persistent inspector header and a separately scrolling body containing the full title. Dimensions are taken from the local editorial workbench CSS: entity padding-block 24 pixels; button minimum height 44 pixels; citation state-row margin-bottom 8 pixels; desktop inspector header and body padding 24 pixels. Content labels name slots and assert no article, source, measurement or scientific fact. The drawing does not prove rendered behavior or deployment.</desc>
+  <metadata>
+    {
+      "kind": "original editable documentation drawing",
+      "created": "2026-11-17",
+      "status": "source-informed contract; not browser evidence or deployed state",
+      "sourceFiles": [
+        "components/editorial-workbench/workbench.module.css",
+        "components/editorial-workbench/primitives.tsx",
+        "components/editorial-workbench/controls.tsx"
+      ],
+      "dimensions": {
+        ".entity padding-block": "24px",
+        ".button min-height": "44px",
+        ".citationTop margin-bottom": "8px",
+        ".dialogHeader padding": "24px desktop; 20px at max-width 760px",
+        ".dialogScroll padding": "24px desktop; 20px at max-width 760px"
+      },
+      "fonts": "Existing public/fonts/editorial files; no new font assets or dependencies",
+      "content": "Schematic slot labels only; no scientific or source claims"
+    }
+  </metadata>
+  <defs>
+    <style><![CDATA[
+      @font-face { font-family: 'Source Serif 4'; src: url('../../../public/fonts/editorial/source-serif-4.woff') format('woff'); font-weight: 200 900; }
+      @font-face { font-family: 'Barlow Condensed'; src: url('../../../public/fonts/editorial/barlow-condensed-semibold.ttf') format('truetype'); font-weight: 600; }
+      @font-face { font-family: 'Caveat'; src: url('../../../public/fonts/editorial/caveat.ttf') format('truetype'); font-weight: 400 700; }
+      text { fill: #202c34; font-family: 'Source Serif 4', Georgia, serif; }
+      .label { font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; letter-spacing: 1px; }
+      .utility { font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; }
+      .mono { font-family: monospace; }
+      .note { font-family: Caveat, cursive; font-weight: 400; fill: #b32624; }
+      .muted { fill: #56616b; }
+      .red { fill: #b32624; }
+      .dark-ink { fill: #ecebe6; }
+      .dark-muted { fill: #afb3ac; }
+      .dark-red { fill: #ffaaa5; }
+      .rule { fill: none; stroke: #bcc0ba; stroke-width: 1; }
+      .dark-rule { fill: none; stroke: #626862; stroke-width: 1; }
+      .callout { fill: none; stroke: #b32624; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+      .dark-callout { fill: none; stroke: #ffaaa5; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+      .guide { fill: none; stroke: #b32624; stroke-width: 1; stroke-dasharray: 3 5; opacity: .5; }
+      .dark-guide { fill: none; stroke: #afb3ac; stroke-width: 1; stroke-dasharray: 4 5; opacity: .55; }
+    ]]></style>
+    <clipPath id="inspector-body-clip"><rect x="913" y="481" width="578" height="447"/></clipPath>
+    <pattern id="scroll-cut" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 8 8-2 M6 10 10 6" fill="none" stroke="#626862" stroke-width="1"/></pattern>
+  </defs>
+
+  <g id="sheet" inkscape:label="Document frame">
+    <rect width="1680" height="1160" fill="#fbf9f3"/>
+    <text x="48" y="51" class="label muted" font-size="14">BEN EBSWORTH / EDITORIAL WORKBENCH</text>
+    <text x="48" y="113" font-size="46" font-weight="450" letter-spacing="-1.3">An entry, with its evidence.</text>
+    <text x="50" y="151" class="utility muted" font-size="19">Two reusable component contracts: reading context on the left, a source inspector on the right.</text>
+    <rect x="48" y="184" width="1584" height="44" fill="none" stroke="#b32624" stroke-width="1.5"/>
+    <text x="68" y="213" class="label red" font-size="20">CONTRACT DRAWING / NOT A BROWSER CAPTURE</text>
+    <text x="1609" y="211" text-anchor="end" class="utility muted" font-size="16">Editable text and geometry · slot labels only · no factual claims</text>
+  </g>
+
+  <g id="entity-and-source-panel" inkscape:label="Light entity and source anatomy">
+    <rect x="48" y="260" width="760" height="802" fill="#f4f1e9"/>
+    <text x="80" y="297" class="label muted" font-size="14">ENTITY + SOURCE / LIGHT</text>
+    <text x="80" y="338" font-size="32" font-weight="450" letter-spacing="-.7">Name the work. Keep its trail.</text>
+
+    <g id="entity-anatomy" inkscape:label="Entity card slots">
+      <path d="M120 388H570" class="rule"/>
+      <path d="M121.5 388V634" stroke="#202c34" stroke-width="3" fill="none"/>
+      <text x="139" y="427" class="label muted" font-size="14">ENTRY TYPE</text>
+      <rect x="240" y="411" width="61" height="22" rx="3" fill="none" stroke="#56616b" stroke-width="1"/>
+      <text x="248" y="426" class="utility" font-size="12">Selected</text>
+      <text x="139" y="467" font-size="25.6" font-weight="450">Entry title</text>
+      <text x="139" y="502" font-size="17">Consumer-supplied summary.</text>
+      <text x="139" y="543" class="utility muted" font-size="13">Original tags</text>
+      <path d="M139 549H210" class="rule"/>
+      <rect x="139" y="566" width="150" height="44" class="guide"/>
+      <text x="139" y="593" class="utility" font-size="15">Read destination</text>
+      <path d="M139 598H237" stroke="#202c34" stroke-width="1"/>
+      <rect x="305" y="566" width="100" height="44" rx="4" fill="none" stroke="#56616b" stroke-width="1"/>
+      <text x="355" y="593" text-anchor="middle" class="utility" font-size="15">Inspect</text>
+      <path d="M120 634H570" class="rule"/>
+
+      <path d="M104 388V412 M99 388H109 M99 412H109" class="callout"/>
+      <path d="M104 388H583L603 397" class="callout"/>
+      <text x="615" y="402" class="utility red" font-size="16">24 px padding</text>
+      <text x="615" y="423" class="utility muted" font-size="14">Top and bottom</text>
+      <path d="M262 461H603" class="callout"/>
+      <circle cx="262" cy="461" r="2.5" fill="#b32624"/>
+      <text x="615" y="465" class="utility red" font-size="16">Title / href</text>
+      <text x="615" y="486" class="utility muted" font-size="14">Native content link</text>
+      <path d="M418 566V610 M413 566H423 M413 610H423 M423 588H603" class="callout"/>
+      <text x="615" y="585" class="utility red" font-size="16">44 px minimum</text>
+      <text x="615" y="606" class="utility muted" font-size="14">Separate action target</text>
+    </g>
+
+    <g id="citation-anatomy" inkscape:label="Source citation slots">
+      <text x="120" y="674" class="label muted" font-size="13">SOURCE CITATION</text>
+      <path d="M120 692V840" stroke="#56616b" stroke-width="1" fill="none"/>
+      <text x="137" y="724" class="label muted" font-size="14">SOURCE STATE</text>
+      <text x="457" y="724" class="mono muted" font-size="12">revision?</text>
+      <path d="M137 729H570 M137 737H570" class="guide"/>
+      <text x="137" y="756" font-size="18">Source title</text>
+      <path d="M137 760H230" stroke="#202c34" stroke-width="1"/>
+      <text x="137" y="793" class="mono muted" font-size="12">Exact source locator</text>
+      <text x="137" y="821" class="utility muted" font-size="15">Provenance and supplied limits</text>
+
+      <path d="M583 729V737 M578 729H588 M578 737H588 M588 733H603" class="callout"/>
+      <text x="615" y="737" class="utility red" font-size="16">8 px spacing</text>
+      <text x="615" y="758" class="utility muted" font-size="14">After the state row</text>
+      <path d="M313 789H603" class="callout"/>
+      <circle cx="313" cy="789" r="2.5" fill="#b32624"/>
+      <text x="615" y="795" class="utility red" font-size="16">Locator wraps</text>
+      <text x="615" y="816" class="utility muted" font-size="14">Selectable text</text>
+    </g>
+
+    <path d="M120 879H736" class="rule"/>
+    <text x="120" y="916" class="note" font-size="28">Separate link + button.</text>
+    <text x="120" y="949" class="utility muted" font-size="17">A content link navigates. Inspect opens the source trail.</text>
+    <text x="120" y="979" class="utility muted" font-size="17">The title, original tags and source meaning belong to the consumer.</text>
+    <text x="120" y="1024" class="label muted" font-size="12">SLOTS SHOW ANATOMY, NOT ARTICLE CONTENT OR REVIEW STATUS</text>
+  </g>
+
+  <g id="inspector-panel" inkscape:label="Dark inspector anatomy">
+    <rect x="872" y="260" width="760" height="802" fill="#111312"/>
+    <text x="904" y="297" class="label dark-muted" font-size="14">INSPECTOR / DARK</text>
+    <text x="904" y="338" class="dark-ink" font-size="32" font-weight="450" letter-spacing="-.7">Keep the exit in place.</text>
+
+    <g id="inspector-boundary" inkscape:label="Native dialog boundary">
+      <rect x="912" y="388" width="580" height="540" rx="6" fill="#111312" stroke="#afb3ac" stroke-width="1"/>
+      <path d="M912 481H1492" class="dark-rule"/>
+      <text x="936" y="439" class="label dark-muted" font-size="14">INSPECTING · ENTRY TYPE</text>
+      <rect x="1318" y="412" width="150" height="44" rx="4" fill="#181b1a" stroke="#afb3ac" stroke-width="1"/>
+      <text x="1393" y="439" text-anchor="middle" class="utility dark-ink" font-size="15">Close inspector</text>
+
+      <path d="M912 375H936 M912 370V380 M936 370V380" class="dark-callout"/>
+      <text x="949" y="380" class="utility dark-red" font-size="16">24 px padding</text>
+      <text x="1097" y="380" class="utility dark-muted" font-size="14">Desktop header and body</text>
+      <path d="M1480 412V456 M1475 412H1485 M1475 456H1485 M1485 434H1505" class="dark-callout"/>
+      <text x="1517" y="432" class="utility dark-red" font-size="16">44 px</text>
+      <text x="1517" y="453" class="utility dark-muted" font-size="14">Min. target</text>
+    </g>
+
+    <g id="scrolling-body" clip-path="url(#inspector-body-clip)" inkscape:label="Scrollable body with full title">
+      <rect x="924" y="493" width="556" height="422" class="dark-guide"/>
+      <text x="936" y="533" class="dark-ink" font-size="27.2" font-weight="450">Full entry title</text>
+      <text x="936" y="577" class="dark-ink" font-size="27.2" font-weight="450">continues on a new line.</text>
+      <text x="936" y="631" class="label dark-muted" font-size="14">ENTRY TYPE · SOURCE TRAIL</text>
+
+      <path d="M936 649V795" stroke="#afb3ac" stroke-width="1" fill="none"/>
+      <text x="953" y="681" class="label dark-muted" font-size="14">SOURCE STATE</text>
+      <text x="953" y="713" class="dark-ink" font-size="18">Source title</text>
+      <path d="M953 717H1046" stroke="#ecebe6" stroke-width="1"/>
+      <text x="953" y="750" class="mono dark-muted" font-size="12">Exact source locator</text>
+      <text x="953" y="779" class="utility dark-muted" font-size="15">Provenance and supplied limits</text>
+      <text x="936" y="834" class="dark-ink" font-size="18">Consumer-supplied context.</text>
+      <rect x="936" y="858" width="156" height="44" rx="4" fill="none" stroke="#ecebe6" stroke-width="1"/>
+      <text x="1014" y="885" text-anchor="middle" class="utility dark-ink" font-size="15">Read destination</text>
+      <path d="M936 922H1468" class="dark-rule"/>
+      <text x="936" y="953" class="utility dark-ink" font-size="16">Identity and original tags</text>
+    </g>
+
+    <g id="inspector-callouts" inkscape:label="Inspector documentation annotations">
+      <path d="M1494 480H1505" class="dark-callout"/>
+      <text x="1517" y="502" class="utility dark-red" font-size="16">Header</text>
+      <text x="1517" y="523" class="utility dark-muted" font-size="14">Outside</text>
+      <text x="1517" y="542" class="utility dark-muted" font-size="14">the scroller</text>
+      <path d="M1480 645H1505" class="dark-callout"/>
+      <text x="1517" y="642" class="utility dark-red" font-size="16">Body</text>
+      <text x="1517" y="663" class="utility dark-muted" font-size="14">Full title</text>
+      <text x="1517" y="682" class="utility dark-muted" font-size="14">and sources</text>
+      <path d="M1480 710V878 M1476 714L1480 710 1484 714 M1476 874L1480 878 1484 874" class="dark-callout"/>
+      <text x="1517" y="754" class="utility dark-red" font-size="16">Scroll here</text>
+      <text x="1517" y="775" class="utility dark-muted" font-size="14">Content stays</text>
+      <text x="1517" y="794" class="utility dark-muted" font-size="14">inside dialog</text>
+      <rect x="913" y="916" width="578" height="11" fill="url(#scroll-cut)"/>
+      <text x="912" y="970" class="note dark-red" font-size="28">Long titles scroll. Close stays available.</text>
+      <text x="912" y="1002" class="utility dark-muted" font-size="16">Heading receives focus; Shift+Tab reaches Close; Escape returns to opener.</text>
+      <text x="912" y="1030" class="label dark-muted" font-size="12">DASHED REGION AND HATCHED CUT ARE DRAWING GUIDES, NOT UI</text>
+    </g>
+  </g>
+
+  <g id="source-and-scale-notes" inkscape:label="Source and scale notes">
+    <text x="48" y="1102" class="utility muted" font-size="17">Dimensions follow workbench.module.css. Desktop inspector spacing shown; at ≤760px, header/body padding is 20px.</text>
+    <text x="48" y="1129" class="utility muted" font-size="16">Fonts use existing Source Serif 4, Barlow Condensed and Caveat assets. Layout and wrapping are schematic; interaction needs browser acceptance.</text>
+    <text x="1632" y="1129" text-anchor="end" class="label muted" font-size="12">DESIGN 03 · 17 NOV 2026</text>
+  </g>
+</svg>

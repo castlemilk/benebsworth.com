@@ -22,9 +22,20 @@ function useSegmentDrag(select: (value: string) => void) {
     if (under.dataset.value) select(under.dataset.value)
   }
 
+  const finish = (event: React.PointerEvent<HTMLElement>) => {
+    const current = drag.current
+    if (!current || current.id !== event.pointerId) return
+    const root = event.currentTarget
+    // Clear first: releasing capture can itself dispatch lostpointercapture.
+    drag.current = null
+    delete root.dataset.dragging
+    root.style.removeProperty("--drag-left")
+    if (root.hasPointerCapture(current.id)) root.releasePointerCapture(current.id)
+  }
+
   return {
     onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
-      if (event.button !== 0) return
+      if (event.button !== 0 || drag.current) return
       drag.current = { x: event.clientX, id: event.pointerId, moved: false }
     },
     onPointerMove: (event: React.PointerEvent<HTMLElement>) => {
@@ -39,17 +50,9 @@ function useSegmentDrag(select: (value: string) => void) {
       }
       follow(root, event.clientX)
     },
-    onPointerUp: (event: React.PointerEvent<HTMLElement>) => {
-      const root = event.currentTarget
-      if (drag.current?.moved) root.releasePointerCapture(event.pointerId)
-      drag.current = null
-      delete root.dataset.dragging
-      root.style.removeProperty("--drag-left")
-    },
-    onPointerCancel: (event: React.PointerEvent<HTMLElement>) => {
-      drag.current = null
-      delete event.currentTarget.dataset.dragging
-    },
+    onPointerUp: finish,
+    onPointerCancel: finish,
+    onLostPointerCapture: finish,
   }
 }
 

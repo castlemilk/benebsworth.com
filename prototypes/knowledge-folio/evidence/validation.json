@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-17T05:48:08.229445+00:00",
+  "repository": "castlemilk/benebsworth.com",
+  "branch": "codex/blog-kg02-folio-views-20261117",
+  "testedBase": "1121edc4ae6ac8de415b5395d8fadc11450fc55f",
+  "latestMasterObserved": "92cd2eeae1a289f727b6d7bcb2beb9ddbe44ab76",
+  "ownedPath": "prototypes/knowledge-folio/",
+  "runtime": {
+    "node": "24.22.1",
+    "npm": "11.9.0",
+    "jsdom": "27.0.1",
+    "playwright": "1.60.0"
+  },
+  "checks": {
+    "focused": {
+      "command": "node --test prototypes/knowledge-folio/fixtures.test.mjs prototypes/knowledge-folio/view-state.test.mjs prototypes/knowledge-folio/app.test.mjs",
+      "status": "passed",
+      "tests": 63,
+      "passed": 63,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 3185.586822,
+      "groups": {
+        "sourceFixtures": 16,
+        "viewState": 29,
+        "actualModuleDOM": 18
+      },
+      "limit": "JSDOM emulates history and has no layout. This is not native keyboard, browser or source-page round-trip proof."
+    },
+    "eslint": {
+      "command": "node_modules/.bin/eslint prototypes/knowledge-folio/*.mjs",
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0
+    },
+    "typescript": {
+      "command": "node_modules/.bin/tsc --noEmit --incremental false",
+      "status": "passed"
+    },
+    "existingSiteUnitSuite": {
+      "command": "npm test -- --maxWorkers=2",
+      "status": "passed",
+      "filesPassed": 230,
+      "filesSkipped": 2,
+      "testsPassed": 3290,
+      "testsSkipped": 5,
+      "durationSeconds": 248.16,
+      "limit": "Runs against the tested base plus isolated prototype; prototype Node tests execute separately."
+    },
+    "changedProse": {
+      "command": "node scripts/lint-prose.mjs --changed --ci",
+      "status": "passed",
+      "output": "FILE  WORDS  HARD  WARNINGS",
+      "limit": "No owned prototype path is in the existing prose manifest; this is not an audit of prototype copy."
+    },
+    "offlineBenchmarkIntegrity": {
+      "command": "node --import tsx scripts/verify-results.mjs --quiet",
+      "status": "passed",
+      "output": "[verify-results] 15 checks, 269 records, 0 failures, 0 warnings, 1396 skipped, 178 pre-bundle",
+      "limit": "Offline existing-data validation. No model calls or new benchmark run."
+    },
+    "browserAttempt": {
+      "command": "KG02_CHROMIUM_EXECUTABLE=/usr/bin/chromium node_modules/.bin/playwright test --config prototypes/knowledge-folio/playwright.config.mjs",
+      "status": "blocked_before_page_load",
+      "cases": 32,
+      "launchFailures": 32,
+      "pageObservations": 0,
+      "screenshots": 0,
+      "reportStats": {
+        "startTime": "2026-11-17T05:36:29.129Z",
+        "duration": 19010.552,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 32,
+        "flaky": 0
+      },
+      "error": "browserType.launch: Target page, context or browser has been closed; FATAL process_singleton_posix.cc:297: socket() failed: Operation not permitted (1)",
+      "attemptedBrowser": "Chromium 156.0.8078.79 Debian GNU/Linux 13",
+      "limit": "The final suite also has source-only lint/metadata/ControlOrMeta corrections. It has not been successfully run in a browser."
+    },
+    "connectedMacBrowser": {
+      "status": "unavailable",
+      "error": "Browser extension connection timed out before inspection",
+      "limit": "Existing Mac /knowledge/ and dirty graph types were not directly inspected or changed."
+    },
+    "cloudBrowser": {
+      "status": "unavailable",
+      "error": "ERR_CONNECTION_REFUSED for the isolated localhost server",
+      "limit": "No prototype page was rendered."
+    },
+    "productionBuild": {
+      "command": "npm run build",
+      "status": "incomplete",
+      "prebuildError": "listen EPERM: operation not permitted /tmp/tsx-1000/64.pipe",
+      "documentedInvocationContinuation": [
+        "node --import tsx scripts/gen-benchmark-outputs.mjs",
+        "node scripts/gen-harness-eval.mjs",
+        "node node_modules/next/dist/bin/next build"
+      ],
+      "compilePassed": true,
+      "nextTypecheckPassed": true,
+      "compileSeconds": 23.3,
+      "staticGenerationLastReported": "386/774",
+      "terminalResult": "worker exited with code null and signal SIGKILL",
+      "postbuild": "not reached",
+      "limit": "Cause of SIGKILL unestablished. No complete production build pass."
+    }
+  },
+  "finalSourceSha256": {
+    "prototypes/knowledge-folio/app.mjs": "317956bcbba22f232c14ebc8527b8d209ee41274679baf81170c8c3fd45e5541",
+    "prototypes/knowledge-folio/app.test.mjs": "cce43267443aeb5b47c27b8490f513936a299f14308bbc78e4f29247bff8eaf3",
+    "prototypes/knowledge-folio/fixtures.mjs": "7033ded7f23904ba459c2ff085f91be95e1c9eab555449780dcbedc4c183cda5",
+    "prototypes/knowledge-folio/fixtures.test.mjs": "48716d9d4fe41d73fc32f2d8baaf44bb5d6a81b4790211d08631125ea6fdc44e",
+    "prototypes/knowledge-folio/folio.css": "602ce4e9f57091da83992a8c32c2335a6fe432121b5d891d38542f49ddd3b864",
+    "prototypes/knowledge-folio/index.html": "387107e0ec2300cd0741bb43f96bc5587323c8a85841f7ec075287e053fa3a13",
+    "prototypes/knowledge-folio/knowledge.browser.spec.mjs": "2b5058406239b8d4dbd081f27f4ccaafaec4265aa9400f7112189b4eb11a24ca",
+    "prototypes/knowledge-folio/playwright.config.mjs": "a915e106fac1c390204f49275ef8e28c9e10eecdc4f9d097613dc68fb5f065ca",
+    "prototypes/knowledge-folio/view-contract.d.ts": "6fe3c046b858f5d5464b276809e0330373e3c60ae397f501936da35f286c47bf",
+    "prototypes/knowledge-folio/view-state.mjs": "fd0b38725f6a570d38aaf81b6e97aed8a2f8210f01d3b321f1b025e2f3907247",
+    "prototypes/knowledge-folio/view-state.test.mjs": "8afae53cf0f73c8047ca636f7426b8b989ff816e9e822fccde2fad7181fb81af"
+  },
+  "visualAcceptance": "unverified",
+  "deployment": "not requested or performed"
+}

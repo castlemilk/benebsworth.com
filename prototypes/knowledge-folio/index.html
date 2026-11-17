@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="color-scheme" content="light dark">
+    <title>Knowledge folio · Ben Ebsworth · Review prototype</title>
+    <link rel="stylesheet" href="./folio.css">
+    <script type="module" src="./app.mjs"></script>
+  </head>
+  <body class="kg02-preview" data-theme="light">
+    <a class="kg-skip" href="#kg-main">Skip to exploration</a>
+    <header class="kg-masthead">
+      <a href="https://benebsworth.com/" class="kg-wordmark">Ben Ebsworth<span>Notes on how things work.</span></a>
+      <div class="kg-masthead-end"><span class="kg-label">Knowledge / review study</span><button id="kg-theme" type="button" aria-pressed="false">Dark paper</button></div>
+    </header>
+    <main id="kg-main" class="kg-folio" tabindex="-1">
+      <section class="kg-opening" aria-labelledby="kg-title">
+        <div><h1 id="kg-title">Follow an idea.</h1><p class="kg-deck">Find its sources. Read an explanation.<br>Put it to work in the Lab.</p></div>
+        <aside class="kg-margin-note"><p>A connection is a reading trail.<br>Its source tells you what it means.</p><span class="kg-label">Association is not equivalence.</span></aside>
+      </section>
+      <p class="kg-disclosure" id="kg-disclosure">Loading the source-backed review sample. This isolated study does not replace the existing knowledge route.</p>
+      <div class="kg-controls">
+        <nav class="kg-views" aria-label="Knowledge views">
+          <a id="kg-view-neighbourhood" data-view="neighbourhood" data-kg-nav href="?kgView=neighbourhood">Neighbourhood</a>
+          <a id="kg-view-list" data-view="list" data-kg-nav href="?kgView=list">Searchable list</a>
+          <a id="kg-view-categories" data-view="categories" data-kg-nav href="?kgView=categories">Categories</a>
+        </nav>
+        <form id="kg-search" role="search" aria-label="Search knowledge items">
+          <label for="kg-query">Find a concept, article or experiment</label>
+          <div class="kg-search-line"><input id="kg-query" name="kgQ" type="search" placeholder="Try “logistic” or “chaos”" maxlength="300" autocomplete="off"><button type="submit">Search</button></div>
+        </form>
+      </div>
+      <div class="kg-filter-line" id="kg-filter-line">
+        <label>Item type<select id="kg-kind"><option value="">Every type</option><option value="concept">Concepts</option><option value="blog">Articles</option><option value="lab">Labs</option><option value="study">Studies</option><option value="tag">Tags</option><option value="category">Categories</option></select></label>
+        <label>Source category<select id="kg-category"><option value="">Every category</option></select></label>
+        <a id="kg-clear" data-kg-nav href="?kgView=list">Clear filters</a>
+        <span class="kg-label">Search and filters apply to the list.</span>
+      </div>
+      <div class="kg-context" id="kg-context"></div>
+      <div id="kg-status" class="kg-status" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div id="kg-availability"></div>
+      <div class="kg-layout">
+        <section id="kg-view" class="kg-view" aria-labelledby="kg-view-title"></section>
+        <aside id="kg-inspector" class="kg-inspector" aria-labelledby="kg-inspector-title" tabindex="-1"></aside>
+      </div>
+      <section class="kg-reading-path" aria-labelledby="kg-path-title">
+        <div><span class="kg-label">A route through the sample</span><h2 id="kg-path-title">From a name to an experiment.</h2></div>
+        <ol><li><a id="kg-start-concept" data-kg-nav href="?kgSelected=concept%3Alogistic-map%3Aproposal">Inspect Logistic map</a><span>Check the proposed mapping and its source.</span></li><li><a id="kg-start-article" data-kg-nav href="?kgSelected=blog%3Achaos-in-one-equation">Read the article</a><span>The inspector links to the original writing.</span></li><li><a id="kg-start-lab" data-kg-nav href="?kgSelected=lab%3Alogistic-bifurcation">Try Logistic Bifurcation</a><span>The article explicitly embeds this Lab.</span></li><li><strong>Return with browser Back</strong><span>Your root, selection and list state are in the URL.</span></li></ol>
+      </section>
+      <details class="kg-review-controls" id="kg-review-controls">
+        <summary>Review fixtures and source boundary</summary>
+        <p>This is a view prototype using a pinned, bounded sample. Counts describe this sample, never the entire blog. Failure and scale scenarios are mock data. The production model and existing routes are not modified.</p>
+        <label for="kg-fixture">Review scenario</label><select id="kg-fixture"><option value="source">Source-backed sample</option><option value="empty">Mock · empty response</option><option value="error">Mock · failed response</option><option value="partial">Mock · partial coverage</option><option value="missing">Mock · missing source</option><option value="long-label">Mock · long labels</option><option value="large">Mock · 1,000 items</option></select>
+        <p id="kg-revision"></p><p><a href="./README.md">Review and run instructions</a> · <a href="./CONTRACT.md">Contract for the model owner</a></p>
+      </details>
+    </main>
+    <footer class="kg-footer"><span>Ben Ebsworth / Knowledge folio</span><span>Isolated prototype · not deployed</span></footer>
+    <noscript><section class="kg-no-script"><h2>The interactive sample needs JavaScript.</h2><p>These original sources remain available:</p><ul><li><a href="https://benebsworth.com/blog/chaos-in-one-equation/">Chaos hides in one line of algebra</a></li><li><a href="https://benebsworth.com/lab/logistic-bifurcation/">Logistic Bifurcation</a></li><li><a href="https://benebsworth.com/lab/editorial-system/">Editorial design study</a></li></ul></section></noscript>
+  </body>
+</html>

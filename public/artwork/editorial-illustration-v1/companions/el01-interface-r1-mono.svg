@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="el01-interface-title el01-interface-description">
+<title id="el01-interface-title">Expose the interface</title>
+<desc id="el01-interface-description">An original illustrative interface study. The two stepped footprints and exposed shim show a relationship; no manufactured fit, dimensions or engineering tolerance is asserted.</desc>
+<g id="el01-interface-geometry" stroke-linecap="round" stroke-linejoin="round">
+<path id="receiver-side-1" d="M720 318.6 L664.2 356.4 L664.2 450.4 L720 412.6 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="receiver-side-2" d="M664.2 356.4 L594.2 336.8 L594.2 430.8 L664.2 450.4 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="receiver-side-3" d="M594.2 336.8 L538.4 374.6 L538.4 468.6 L594.2 430.8 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="receiver-side-4" d="M538.4 374.6 L608.4 394.2 L608.4 488.2 L538.4 468.6 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="receiver-side-5" d="M608.4 394.2 L558.8 427.8 L558.8 521.8 L608.4 488.2 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="receiver-side-6" d="M558.8 427.8 L188.8 324.2 L188.8 418.2 L558.8 521.8 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="receiver-top" d="M350 215 L720 318.6 L664.2 356.4 L594.2 336.8 L538.4 374.6 L608.4 394.2 L558.8 427.8 L188.8 324.2 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="insert-side-1" d="M1020 402.6 L858.8 511.8 L858.8 605.8 L1020 496.6 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="insert-side-2" d="M858.8 511.8 L663.8 457.2 L663.8 551.2 L858.8 605.8 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="insert-side-3" d="M663.8 457.2 L713.4 423.6 L713.4 517.6 L663.8 551.2 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="insert-side-4" d="M713.4 423.6 L643.4 404 L643.4 498 L713.4 517.6 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="insert-side-5" d="M643.4 404 L699.2 366.2 L699.2 460.2 L643.4 498 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="insert-side-6" d="M699.2 366.2 L769.2 385.8 L769.2 479.8 L699.2 460.2 Z" fill="#dedbd2" stroke="#28343b" stroke-width="4.2"/>
+<path id="insert-top" d="M825 348 L1020 402.6 L858.8 511.8 L663.8 457.2 L713.4 423.6 L643.4 404 L699.2 366.2 L769.2 385.8 Z" fill="#f4f1e8" stroke="#28343b" stroke-width="4.6"/>
+<path id="shim-side" d="M588.7 350.1 L622.7 359.62 L601 374.32 L567 364.8 Z" fill="#28343b" stroke="#28343b" stroke-width="3.8"/>
+<path id="shim-crown" d="M588.7 335.1 L622.7 344.62 L601 359.32 L567 349.8 Z" fill="#28343b" stroke="#28343b" stroke-width="3.8"/>
+<path id="shim-near-edge" d="M567 349.8 L601 359.32 L601 374.32 L567 364.8 Z" fill="#28343b" stroke="#28343b" stroke-width="3.4"/>
+<path id="receiver-front-hatching" d="M218.8 346.6 L236.8 404.64 M236.8 351.64 L254.8 409.68 M254.8 356.68 L272.8 414.72 M272.8 361.72 L290.8 419.76 M290.8 366.76 L308.8 424.8 M308.8 371.8 L326.8 429.84 M326.8 376.84 L344.8 434.88 M344.8 381.88 L362.8 439.92 M362.8 386.92 L380.8 444.96" fill="none" stroke="#28343b" stroke-width="2.4"/>
+<path id="insert-side-hatching" d="M1007.6 426 L999.54 476.46 M996.44 433.56 L988.38 484.02 M985.28 441.12 L977.22 491.58 M974.12 448.68 L966.06 499.14 M962.96 456.24 L954.9 506.7 M951.8 463.8 L943.74 514.26" fill="none" stroke="#28343b" stroke-width="2.4"/>
+</g>
+</svg>

@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "packet": "blog-editorial-illustration-language-v1",
+  "scope": "Three independently authored vector counterparts. Not tracings, replacements or exact reconstructions of the generated raster originals. Palette variants are not additional artworks.",
+  "source": "make_companions.py",
+  "source_revision": "1",
+  "randomness": "none",
+  "palettes": {
+    "light": {
+      "ink": "#28343b",
+      "paper": "#f4f1e8",
+      "side": "#d8d4c9",
+      "accent": "#b32624"
+    },
+    "dark": {
+      "ink": "#f4f1e8",
+      "paper": "#394850",
+      "side": "#263239",
+      "accent": "#ffaaa5"
+    },
+    "mono": {
+      "ink": "#28343b",
+      "paper": "#f4f1e8",
+      "side": "#dedbd2",
+      "accent": "#28343b"
+    }
+  },
+  "license": "No new public licence assigned; no external stock or vendor graphics used. Project owner retains licensing decision.",
+  "assets": [
+    {
+      "id": "el01-interface",
+      "title": "Expose the interface",
+      "alt": "Two unequal stepped solids sit apart, exposing a small raised shim in their shared interval.",
+      "description": "An original illustrative interface study. The two stepped footprints and exposed shim show a relationship; no manufactured fit, dimensions or engineering tolerance is asserted.",
+      "revision": "r1",
+      "provenance": "original-authored-illustrative-vector",
+      "trace_source": null,
+      "image_inputs": [],
+      "viewBox": [
+        0,
+        0,
+        1200,
+        800
+      ],
+      "geometry_sha256": "3810a4542b962b0a918838a3cb09528cf253eb586312649139220b7814e1e0f3",
+      "layer_ids": [
+        "receiver-side-1",
+        "receiver-side-2",
+        "receiver-side-3",
+        "receiver-side-4",
+        "receiver-side-5",
+        "receiver-side-6",
+        "receiver-top",
+        "insert-side-1",
+        "insert-side-2",
+        "insert-side-3",
+        "insert-side-4",
+        "insert-side-5",
+        "insert-side-6",
+        "insert-top",
+        "shim-side",
+        "shim-crown",
+        "shim-near-edge",
+        "receiver-front-hatching",
+        "insert-side-hatching"
+      ],
+      "minimum_intended_width_px": 320,
+      "files": [
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el01-interface-r1-light.svg",
+          "palette": "light",
+          "bytes": 3521,
+          "sha256": "13158f26726a13b77405d0987d3e9d87b63936b2c89b8b201b965211a1eb063a"
+        },
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el01-interface-r1-dark.svg",
+          "palette": "dark",
+          "bytes": 3521,
+          "sha256": "38ef8f5e24b5ff5c7242ae19d45835210e3ae3495b9e7ff0913adcef9130cd62"
+        },
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el01-interface-r1-mono.svg",
+          "palette": "mono",
+          "bytes": 3521,
+          "sha256": "16b062ab0f28e4b21d98bed9f4754b60b94630d1fc3d5254c516dc77e2c89450"
+        }
+      ]
+    },
+    {
+      "id": "el02-cutaway",
+      "title": "Look inside the boundary",
+      "alt": "An open curved shell exposes two broad ribs while a detached curved wall section sits to its right.",
+      "description": "An invented cutaway shell. The open cavity and displaced section indicate inside and outside; this is not anatomy, a real material section or a tested mechanical assembly.",
+      "revision": "r1",
+      "provenance": "original-authored-illustrative-vector",
+      "trace_source": null,
+      "image_inputs": [],
+      "viewBox": [
+        0,
+        0,
+        1200,
+        800
+      ],
+      "geometry_sha256": "6b4cc1b586899b0e7c9fa776846e423212339f120488098111a8f7fc2b2d86c1",
+      "layer_ids": [
+        "shell-back-wall",
+        "shell-left-thickness",
+        "back-rim",
+        "upper-rib",
+        "lower-rib",
+        "near-rib-red-edge",
+        "displaced-section",
+        "section-cut-face",
+        "section-rim",
+        "left-wall-hatching",
+        "section-hatching"
+      ],
+      "minimum_intended_width_px": 320,
+      "files": [
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el02-cutaway-r1-light.svg",
+          "palette": "light",
+          "bytes": 2561,
+          "sha256": "735b3b3802517a3c37d93eea1685f80b601fb73fd9d5357b05196ae2da9d0eea"
+        },
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el02-cutaway-r1-dark.svg",
+          "palette": "dark",
+          "bytes": 2561,
+          "sha256": "802c3801a612fc13483bfbc0f0a7020f94ec0818b1c00dace0d982e8d21db74a"
+        },
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el02-cutaway-r1-mono.svg",
+          "palette": "mono",
+          "bytes": 2561,
+          "sha256": "1628fe1c78b1143635451506d7635ff890958278fcfbdde0c0153fdf4d589703"
+        }
+      ]
+    },
+    {
+      "id": "el03-sequence",
+      "title": "From trace to structure",
+      "alt": "One broad ribbon rises from a flat tail through two angular folds into an open arch.",
+      "description": "A continuous illustrated ribbon changes form along its length. Shared vertices make the authored surfaces connected; this does not establish a physically foldable strip, a temporal sequence or a mathematical surface.",
+      "revision": "r1",
+      "provenance": "original-authored-illustrative-vector",
+      "trace_source": null,
+      "image_inputs": [],
+      "viewBox": [
+        0,
+        0,
+        1200,
+        800
+      ],
+      "geometry_sha256": "0f43f77e31a949a44a21ed6868cb9d1cf91e77b62147e770c83dd9537a0eb43d",
+      "layer_ids": [
+        "tail-side",
+        "flat-tail",
+        "first-fold-rise",
+        "broad-bridge",
+        "second-fold-descent",
+        "open-arch",
+        "red-tail-edge",
+        "red-fold-edge",
+        "first-turn-hatching"
+      ],
+      "minimum_intended_width_px": 320,
+      "files": [
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el03-sequence-r1-light.svg",
+          "palette": "light",
+          "bytes": 1807,
+          "sha256": "f004596772b745eb630075a88b781dfa47983881c7b68b500f3d398069fceba6"
+        },
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el03-sequence-r1-dark.svg",
+          "palette": "dark",
+          "bytes": 1807,
+          "sha256": "7f68df0baeab61ec2368f0673fa058b90ab7791347984ad3f40e226cf922f1d6"
+        },
+        {
+          "path": "public/artwork/editorial-illustration-v1/companions/el03-sequence-r1-mono.svg",
+          "palette": "mono",
+          "bytes": 1807,
+          "sha256": "c144fda198800de0b3a5a66dbe020d5e776362e56611251863416dc0830847e8"
+        }
+      ]
+    }
+  ]
+}

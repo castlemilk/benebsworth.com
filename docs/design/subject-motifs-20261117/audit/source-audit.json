@@ -1,0 +1,1835 @@
+{
+  "schema_version": 1,
+  "batch": "BSM-20261117",
+  "audit_date_local": "2026-11-17",
+  "timezone": "Australia/Melbourne",
+  "repository": "castlemilk/benebsworth.com",
+  "default_branch": "master",
+  "source_revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+  "audit_scope": "Read-only source inventory and byte verification; root and independent visual reviewer report actual fifty-original pixel review before final subject selection. No broad category gap is asserted.",
+  "canonical_design_page": "https://chatgpt.com/space/page_6adc74403d50819193fb9b2d0681ea64",
+  "workstream_index": "https://chatgpt.com/space/page_ba64e3a87b908191b185bdfc76e46171",
+  "counts": {
+    "current_topic_keys": 20,
+    "current_lab_categories": 9,
+    "lab_entries_including_spatial": 85,
+    "blog_source_folders": 103,
+    "release_true_articles": 97,
+    "release_false_articles": 6,
+    "curriculum_chapters": 71,
+    "actual_study_packets": 3,
+    "existing_topic_art_mappings": 50,
+    "selected_originals": 50,
+    "matched_selected_originals": 50,
+    "decoded_selected_pngs": 50,
+    "existing_editorial_raster_subjects": 8,
+    "existing_grounded_catalogue_records": 155,
+    "existing_vector_concept_briefs": 25,
+    "existing_generative_svg_study_definitions": 52,
+    "new_subject_motifs": 4
+  },
+  "count_method": "Source parsing and preserved catalogue records at pinned revision; these are source counts, not live rendered acceptance or independent scientific validation.",
+  "actual_study_packet_paths": [
+    "study/mlsys/vol1/01-introduction/packet.md",
+    "study/mlsys/vol1/02-system-paradigms/packet.md",
+    "study/mlsys/vol1/03-ml-lifecycle/packet.md"
+  ],
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "role": "Instruction boundary: Hardware console; editorial shell remains separate",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "c4278ed92107532a6a2825c77e7e1b1378381c73",
+      "sha256": "087245a5bb1537f082a9e8e38bb6287d822e52d9deaffb5cb9663e377cbbf65b",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/AGENTS.md"
+    },
+    {
+      "path": "lib/topics.ts",
+      "role": "Twenty current topic keys and article/tag resolution",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "b469d48fef4af675c58ad6c3cbcc458ee6068d34",
+      "sha256": "81fe3a6c764eb77f0e862f4f1c5aa2790cfd906a56ce5195e76f102aa861b5e8",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/topics.ts"
+    },
+    {
+      "path": "lib/knowledge/topic-art.ts",
+      "role": "Fifty existing artwork paths and nine category mappings",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "c855aa185cabd906a775d08fd3bdefe178510bf5",
+      "sha256": "5426e46f23455274997ae6942b73038442657d713f69f797c545c5c4481512b9",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/knowledge/topic-art.ts"
+    },
+    {
+      "path": "lib/lab/registry.ts",
+      "role": "Current category and Lab inventory",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "6c72d46e0e40adec915028b285682e04f1174088",
+      "sha256": "293c3a1b36e9194cc0bc32ebfbbd3e0744341d4ea9a138b4b1b524811f9e4aa8",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/lab/registry.ts"
+    },
+    {
+      "path": "lib/lab/spatial/catalog.ts",
+      "role": "Twenty spatial Lab entries",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "05981453cae25bcfb9da69a83f19419fffcde0cf",
+      "sha256": "8caaca7a3e8784761e283bc929b59a0d9930f1729a1d0ae12f973a7ba78ca2d9",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/lab/spatial/catalog.ts"
+    },
+    {
+      "path": "lib/knowledge/graph.ts",
+      "role": "Current graph identity and evidence boundaries",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "3b6e68760707ac6e8c7f107b56bb31ba21836863",
+      "sha256": "06038f815948ab0bcc66285938afe6e263409ef112f57cccaccea0028a63f10a",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/knowledge/graph.ts"
+    },
+    {
+      "path": "study/mlsys/curriculum.md",
+      "role": "Seventy-one planned chapters; not proof of seventy-one packets",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "5d11abf2385b008c8ffd5d0de47b417f19e6dea0",
+      "sha256": "89aff1ce2ec7d59010c949226e7ba6a6948f26543f17bab2678fbac9e25dc7d5",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/study/mlsys/curriculum.md"
+    },
+    {
+      "path": "lib/editorial-artwork/manifest.json",
+      "role": "Eight existing raster subjects; metadata collision screen",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "3b878dfb96b29f473db7192b05da1de542f478f3",
+      "sha256": "86faedddeed522b3a347258b1534440dafa46e4ff60e82e30ca7e2d4fd1695c1",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/editorial-artwork/manifest.json"
+    },
+    {
+      "path": "lib/grounded-artwork/catalogue.json",
+      "role": "155 existing grounded subjects; metadata collision screen",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "eb7801282191ee5524c03f5f6cf721d8bf98a1ad",
+      "sha256": "dbc984547066c7075e63ce15a389aad572cd67eda2b2c5eb9ce4b47ad8627cad",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/grounded-artwork/catalogue.json"
+    },
+    {
+      "path": "lib/vectors/registry.ts",
+      "role": "Twenty-five preserved vector concept briefs",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "1d1ca7c74a94688c06700a6135fd73119bb18205",
+      "sha256": "ce05bb8b9bbb06f3cc73387b519d7ff64ff39a5973d76d099d8bd60ba8f5518e",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/vectors/registry.ts"
+    },
+    {
+      "path": "lib/generative-svg/model.ts",
+      "role": "Base generative study definitions",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "5c1be243b307d052797fe261e46278ff0bdbfd5b",
+      "sha256": "a4e469d1c378e96a41fd68cac95a3ad4372cd201150bf4bdbf18313d6560009b",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/generative-svg/model.ts"
+    },
+    {
+      "path": "lib/generative-svg/additional-studies.ts",
+      "role": "Existing mathematical/diagrammatic subject definitions",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "3a1b234a8bf32da5b7c1f2697ac009319ee94a0f",
+      "sha256": "ca68de6459ea146e64ae28b2d929217e776c8246f3a78db94cd458befa53c0c2",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/generative-svg/additional-studies.ts"
+    },
+    {
+      "path": "docs/design/category-expansion/source-delivery/selected-originals.json",
+      "role": "Authoritative selection records for all fifty originals",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "c6aba009fc3aa21da6603c68a3b6b7d14cf783bf",
+      "sha256": "a8328970ce4b5451a070be892395f17ab7102a64d3a87865909ed60884092556",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/docs/design/category-expansion/source-delivery/selected-originals.json"
+    },
+    {
+      "path": "content/blog/every-qubit-gate-is-a-rotation/index.mdx",
+      "role": "Published source for single-qubit state association",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "ae6874a76cd8facce17b1972fa8555dfcb110a5b",
+      "sha256": "22c45160319f367e9afc870605257662432ddbcb8fceffa564fbcf1fdca087bc",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/every-qubit-gate-is-a-rotation/index.mdx"
+    },
+    {
+      "path": "content/blog/remembering-a-qubit-that-forgets/index.mdx",
+      "role": "Related published quantum-information source; no error-correction claim encoded by art",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "7b670544ab1b924d5531059d7d1b1f225ee14aa5",
+      "sha256": "39b5d1a67c4f4ac803b899327e72e07e194d66721a5fd0697a73d074bb0aaf51",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/remembering-a-qubit-that-forgets/index.mdx"
+    },
+    {
+      "path": "content/blog/a-gyroscope-falls-sideways/index.mdx",
+      "role": "Published source for cantilever gyroscope association",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "b0a60d50b81977c614b891645e8230b24403d4e7",
+      "sha256": "a184a183f6e11fb4937a1c163a3a133f78faa1a7124957bd763a66f20fcbe865",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/a-gyroscope-falls-sideways/index.mdx"
+    },
+    {
+      "path": "content/lab/gyroscope.mdx",
+      "role": "Gyroscope model limitations",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "23fd6d1a423b1300c89a961b174d98b5d5ac9b81",
+      "sha256": "41eb43582802a88f276430aab4053bbfede07afe2b99b27d23a1d21f48d60031",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/lab/gyroscope.mdx"
+    },
+    {
+      "path": "content/blog/backprop-is-just-the-chain-rule/index.mdx",
+      "role": "Published source for retained intermediates and reverse derivative accumulation",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "d64de78fe378010de680819974934749ac140697",
+      "sha256": "9c2049bef81ad24b62433828592db62305b506f9e899450462b2f47200963841",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/backprop-is-just-the-chain-rule/index.mdx"
+    },
+    {
+      "path": "content/blog/software-defined-radio-in-100-lines/index.mdx",
+      "role": "Published elementwise vector multiply and vectorised convolution",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "8c7194a0e5e3dac9ba3045f7e4a694fc6186581f",
+      "sha256": "eba401f4fa34816496187fec906afbaa0183130a015348c5e01b7414deb7c545",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/software-defined-radio-in-100-lines/index.mdx"
+    },
+    {
+      "path": "content/blog/beating-splash-on-an-m5-max/index.mdx",
+      "role": "Secondary published source: vectorised GEMM epilogue; benchmark figures not reused",
+      "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+      "git_blob_sha": "06191ff14806a543fbb4f0f9d892aae83ccf9e68",
+      "sha256": "325ef0620cde33fcff70bc6c6f1a1923362fb4697c8c0560ad2318f95ff5ca5e",
+      "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/beating-splash-on-an-m5-max/index.mdx"
+    }
+  ],
+  "selected_original_verification": {
+    "selection_manifest_path": "docs/design/category-expansion/source-delivery/selected-originals.json",
+    "selection_manifest_sha256": "a8328970ce4b5451a070be892395f17ab7102a64d3a87865909ed60884092556",
+    "verification": "Every listed file reread, SHA-256 and byte size compared to preserved selection record; all fifty decoded as PNG.",
+    "visual_review_attribution": "Root reports all fifty selected originals visually inspected; independent motif_visual_review reports all fifty plus original atom/black-hole inspected. This source auditor did not itself perform the fifty-image review.",
+    "records": [
+      {
+        "selection_index": 1,
+        "batch": 1,
+        "label": "01 Mathematics — carved folded mathematical surface",
+        "expected_sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+        "expected_byte_size": 1331177,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/01-maths-r1.png",
+            "observed_sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+            "observed_byte_size": 1331177,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1262,
+              1246
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 2,
+        "batch": 1,
+        "label": "02 Chemistry — crystalline molecular assembly",
+        "expected_sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+        "expected_byte_size": 1172847,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/02-chemistry-r1.png",
+            "observed_sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+            "observed_byte_size": 1172847,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 3,
+        "batch": 1,
+        "label": "03 Life Sciences — fern and seed structure",
+        "expected_sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+        "expected_byte_size": 1161435,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/03-biology-r1.png",
+            "observed_sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+            "observed_byte_size": 1161435,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 4,
+        "batch": 1,
+        "label": "04 Earth & Space — cutaway terrestrial globe",
+        "expected_sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+        "expected_byte_size": 1599947,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/04-earth-r1.png",
+            "observed_sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+            "observed_byte_size": 1599947,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 5,
+        "batch": 1,
+        "label": "05 Geology — layered rock specimen",
+        "expected_sha256": "33997c37a42a3c72770c6908c8a919b1fdb95fe2f613d90d410ebdf74a82b1ee",
+        "expected_byte_size": 1771322,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/05-geology-r1.png",
+            "observed_sha256": "33997c37a42a3c72770c6908c8a919b1fdb95fe2f613d90d410ebdf74a82b1ee",
+            "observed_byte_size": 1771322,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 6,
+        "batch": 1,
+        "label": "06 Oceanography — breaking wave cross-section",
+        "expected_sha256": "5e9445bc1da43a88795d3923c6b486906c9ccac306255cf1e1bee24f5c11213d",
+        "expected_byte_size": 1637259,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/06-oceanography-r1.png",
+            "observed_sha256": "5e9445bc1da43a88795d3923c6b486906c9ccac306255cf1e1bee24f5c11213d",
+            "observed_byte_size": 1637259,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 7,
+        "batch": 1,
+        "label": "07 Meteorology — cloud and barometric instrument",
+        "expected_sha256": "5c7adf366d77c5cd495ab0b9754fbd21bf04585f93b02486c3e4ff4d05233aa5",
+        "expected_byte_size": 1537599,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/07-meteorology-r1.png",
+            "observed_sha256": "5c7adf366d77c5cd495ab0b9754fbd21bf04585f93b02486c3e4ff4d05233aa5",
+            "observed_byte_size": 1537599,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 8,
+        "batch": 1,
+        "label": "08 Ecology — interdependent leaf/root ecosystem",
+        "expected_sha256": "18f154a46f485599c4425eca6871ab6c78c883ebb0b248dd8ec0f938c29cfd73",
+        "expected_byte_size": 1366002,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/08-ecology-r1.png",
+            "observed_sha256": "18f154a46f485599c4425eca6871ab6c78c883ebb0b248dd8ec0f938c29cfd73",
+            "observed_byte_size": 1366002,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 9,
+        "batch": 1,
+        "label": "09 Genetics — twisted DNA ladder motif",
+        "expected_sha256": "60f050ebe8c7e0cd6afede3853bbe5fc1d53d686f9d65c5348cec2cf12b0bd80",
+        "expected_byte_size": 821040,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/09-genetics-r1.png",
+            "observed_sha256": "60f050ebe8c7e0cd6afede3853bbe5fc1d53d686f9d65c5348cec2cf12b0bd80",
+            "observed_byte_size": 821040,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 10,
+        "batch": 1,
+        "label": "10 Neuroscience revision 2 — branching neuron with generous margins",
+        "expected_sha256": "e7798940831713b34c7d442642460d1d15fbe555bb64c831ebaf80ae9f814818",
+        "expected_byte_size": 416285,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-01/originals/10-neuroscience-r2.png",
+            "observed_sha256": "e7798940831713b34c7d442642460d1d15fbe555bb64c831ebaf80ae9f814818",
+            "observed_byte_size": 416285,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 11,
+        "batch": 2,
+        "label": "01 Kubernetes — Orchestration of containers",
+        "expected_sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd",
+        "expected_byte_size": 1545388,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+            "observed_sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd",
+            "observed_byte_size": 1545388,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 12,
+        "batch": 2,
+        "label": "02 Service Mesh — Interwoven routed mesh",
+        "expected_sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9",
+        "expected_byte_size": 1183577,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+            "observed_sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9",
+            "observed_byte_size": 1183577,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 13,
+        "batch": 2,
+        "label": "03 CI/CD · Tekton — Staged conveyor assembly, v2",
+        "expected_sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+        "expected_byte_size": 849613,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/refinements/03-tekton-staged-assembly-conveyor-v2.png",
+            "observed_sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+            "observed_byte_size": 849613,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 14,
+        "batch": 2,
+        "label": "04 Config · Kustomize — Nested configurable plates, v2",
+        "expected_sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+        "expected_byte_size": 863550,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/refinements/04-kustomize-nested-configurable-plates-v2.png",
+            "observed_sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+            "observed_byte_size": 863550,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 15,
+        "batch": 2,
+        "label": "05 Local Dev — Compact workstation and container",
+        "expected_sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8",
+        "expected_byte_size": 606578,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+            "observed_sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8",
+            "observed_byte_size": 606578,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 16,
+        "batch": 2,
+        "label": "06 Google Cloud — Abstract cloud infrastructure",
+        "expected_sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf",
+        "expected_byte_size": 650726,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+            "observed_sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf",
+            "observed_byte_size": 650726,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 17,
+        "batch": 2,
+        "label": "07 React — Reusable interlocking interface modules",
+        "expected_sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c",
+        "expected_byte_size": 643573,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+            "observed_sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c",
+            "observed_byte_size": 643573,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 18,
+        "batch": 2,
+        "label": "08 Engineering — Precision mechanism",
+        "expected_sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400",
+        "expected_byte_size": 984728,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+            "observed_sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400",
+            "observed_byte_size": 984728,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 19,
+        "batch": 2,
+        "label": "09 Field Notes — Open annotated field notebook without text",
+        "expected_sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e",
+        "expected_byte_size": 718964,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+            "observed_sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e",
+            "observed_byte_size": 718964,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 20,
+        "batch": 2,
+        "label": "10 Hiking — Cairn and trail compass, natural palette v2",
+        "expected_sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+        "expected_byte_size": 934766,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-02/refinements/10-hiking-cairn-and-trail-compass-v2.png",
+            "observed_sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+            "observed_byte_size": 934766,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 21,
+        "batch": 3,
+        "label": "01 Databases proposed study",
+        "expected_sha256": "987cc2662f60a237318704d3e54f254f77ea133f12d8d4299949c8ba041b5580",
+        "expected_byte_size": 1897329,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/01-databases.png",
+            "observed_sha256": "987cc2662f60a237318704d3e54f254f77ea133f12d8d4299949c8ba041b5580",
+            "observed_byte_size": 1897329,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 22,
+        "batch": 3,
+        "label": "02 Distributed systems proposed study",
+        "expected_sha256": "5656800efc365ed88795ed4f4505a37c059967bcb7a2b7edfa4dd8f5325ec7bd",
+        "expected_byte_size": 1189757,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/02-distributed-systems.png",
+            "observed_sha256": "5656800efc365ed88795ed4f4505a37c059967bcb7a2b7edfa4dd8f5325ec7bd",
+            "observed_byte_size": 1189757,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 23,
+        "batch": 3,
+        "label": "03 Networking proposed study",
+        "expected_sha256": "eb261b5f954e8dd58080328fc52326919d95a973d77bf60c10cdb7263d556e3a",
+        "expected_byte_size": 1029304,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/03-networking.png",
+            "observed_sha256": "eb261b5f954e8dd58080328fc52326919d95a973d77bf60c10cdb7263d556e3a",
+            "observed_byte_size": 1029304,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 24,
+        "batch": 3,
+        "label": "04 Cybersecurity proposed study",
+        "expected_sha256": "c40f38825254a5d084b7766a37875a448a4bf5b048eedde2a3c172f0fde89339",
+        "expected_byte_size": 1468903,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/04-cybersecurity.png",
+            "observed_sha256": "c40f38825254a5d084b7766a37875a448a4bf5b048eedde2a3c172f0fde89339",
+            "observed_byte_size": 1468903,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 25,
+        "batch": 3,
+        "label": "05 Operating systems proposed study",
+        "expected_sha256": "485029f272abdda4819b7859af875bb7cc17249fbb946aa2c1eae10ed23410f7",
+        "expected_byte_size": 1606339,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/05-operating-systems.png",
+            "observed_sha256": "485029f272abdda4819b7859af875bb7cc17249fbb946aa2c1eae10ed23410f7",
+            "observed_byte_size": 1606339,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 26,
+        "batch": 3,
+        "label": "06 Compilers framing revision 2 proposed study",
+        "expected_sha256": "d84c0af30cfe45fae229849f61d69d7b52c440ec60371ca934e873ab3901677f",
+        "expected_byte_size": 325051,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/06-compilers-v2.png",
+            "observed_sha256": "d84c0af30cfe45fae229849f61d69d7b52c440ec60371ca934e873ab3901677f",
+            "observed_byte_size": 325051,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 27,
+        "batch": 3,
+        "label": "07 Programming languages proposed study",
+        "expected_sha256": "37dfff1d3da46544ba952a4aae99bae9c3cbf39fc6132c67c9631116e0703a8c",
+        "expected_byte_size": 1203486,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/07-programming-languages.png",
+            "observed_sha256": "37dfff1d3da46544ba952a4aae99bae9c3cbf39fc6132c67c9631116e0703a8c",
+            "observed_byte_size": 1203486,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 28,
+        "batch": 3,
+        "label": "08 Testing proposed study",
+        "expected_sha256": "c42d2327599e89c38405acbadc060d8f2fc9ee8044ce5ed06bd3f53d29c82e86",
+        "expected_byte_size": 889241,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/08-testing.png",
+            "observed_sha256": "c42d2327599e89c38405acbadc060d8f2fc9ee8044ce5ed06bd3f53d29c82e86",
+            "observed_byte_size": 889241,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 29,
+        "batch": 3,
+        "label": "09 Observability proposed study",
+        "expected_sha256": "8790398672eefe70fcec33ce66516d8f088c64b5011aab917e99e5f852957938",
+        "expected_byte_size": 768130,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/09-observability.png",
+            "observed_sha256": "8790398672eefe70fcec33ce66516d8f088c64b5011aab917e99e5f852957938",
+            "observed_byte_size": 768130,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 30,
+        "batch": 3,
+        "label": "10 Data engineering proposed study",
+        "expected_sha256": "eeec358248b4526df6d000e3993f1131b6361efb933c88378306ee5f4fee1a67",
+        "expected_byte_size": 901248,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-03/originals/10-data-engineering.png",
+            "observed_sha256": "eeec358248b4526df6d000e3993f1131b6361efb933c88378306ee5f4fee1a67",
+            "observed_byte_size": 901248,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 31,
+        "batch": 4,
+        "label": "Probability framed original Batch 04",
+        "expected_sha256": "08353e4f5b2a395e22fa1760603e0c82a7e93707e856ef20a1790d29f247fd8c",
+        "expected_byte_size": 685615,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/01-probability-framed-original-batch-04.png",
+            "observed_sha256": "08353e4f5b2a395e22fa1760603e0c82a7e93707e856ef20a1790d29f247fd8c",
+            "observed_byte_size": 685615,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 32,
+        "batch": 4,
+        "label": "Statistics framed original Batch 04",
+        "expected_sha256": "bbeff4bbee294551d4957cdd8a5718d242db356d955eb5a5622a1b8bd8e2c556",
+        "expected_byte_size": 442123,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/02-statistics-framed-original-batch-04.png",
+            "observed_sha256": "bbeff4bbee294551d4957cdd8a5718d242db356d955eb5a5622a1b8bd8e2c556",
+            "observed_byte_size": 442123,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 33,
+        "batch": 4,
+        "label": "Optimization framed original Batch 04",
+        "expected_sha256": "0ee2f0fa6ff4853e682a968f399e99ccea086b1a0f4fa77ed52e0d096c541eb1",
+        "expected_byte_size": 423396,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/03-optimization-framed-original-batch-04.png",
+            "observed_sha256": "0ee2f0fa6ff4853e682a968f399e99ccea086b1a0f4fa77ed52e0d096c541eb1",
+            "observed_byte_size": 423396,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 34,
+        "batch": 4,
+        "label": "Information Theory framed transparent original Batch 04",
+        "expected_sha256": "9fb6ed5d51c6403e9fca53d0b9b81db5d0d30a87051478f267492287598ef14a",
+        "expected_byte_size": 359610,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/04-information-theory-framed-transparent-original-batch-04.png",
+            "observed_sha256": "9fb6ed5d51c6403e9fca53d0b9b81db5d0d30a87051478f267492287598ef14a",
+            "observed_byte_size": 359610,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 35,
+        "batch": 4,
+        "label": "Control Theory framed original Batch 04",
+        "expected_sha256": "834f45b19411223a46f52986d6ad54e2eb95662a258ab399480261be1b100e2b",
+        "expected_byte_size": 474151,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/05-control-theory-framed-original-batch-04.png",
+            "observed_sha256": "834f45b19411223a46f52986d6ad54e2eb95662a258ab399480261be1b100e2b",
+            "observed_byte_size": 474151,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 36,
+        "batch": 4,
+        "label": "Signal Processing framed original Batch 04",
+        "expected_sha256": "4cd98b9d6aa9cf94c1513ae5a645038586a6b0055ef32af7c5d28adefe7663e5",
+        "expected_byte_size": 341877,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/06-signal-processing-framed-original-batch-04.png",
+            "observed_sha256": "4cd98b9d6aa9cf94c1513ae5a645038586a6b0055ef32af7c5d28adefe7663e5",
+            "observed_byte_size": 341877,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 37,
+        "batch": 4,
+        "label": "Numerical Methods original Batch 04",
+        "expected_sha256": "d08623dcc744fa49819a8fb1c0faa415db14155789d779415bc86c5d95d2dcf4",
+        "expected_byte_size": 1509434,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/07-numerical-methods-original-batch-04.png",
+            "observed_sha256": "d08623dcc744fa49819a8fb1c0faa415db14155789d779415bc86c5d95d2dcf4",
+            "observed_byte_size": 1509434,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 38,
+        "batch": 4,
+        "label": "Geometry original Batch 04",
+        "expected_sha256": "f912b4ff07e7d681f28518d7a31c47a6f87350a9e7ba137249a74b09812e12d0",
+        "expected_byte_size": 1073107,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/08-geometry-original-batch-04.png",
+            "observed_sha256": "f912b4ff07e7d681f28518d7a31c47a6f87350a9e7ba137249a74b09812e12d0",
+            "observed_byte_size": 1073107,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 39,
+        "batch": 4,
+        "label": "Topology original Batch 04",
+        "expected_sha256": "310d69b1dd5c6eafdb9a98dc8d91202ad07e1235a8800c0d9c6815d7efde6618",
+        "expected_byte_size": 1644985,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/09-topology-original-batch-04.png",
+            "observed_sha256": "310d69b1dd5c6eafdb9a98dc8d91202ad07e1235a8800c0d9c6815d7efde6618",
+            "observed_byte_size": 1644985,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 40,
+        "batch": 4,
+        "label": "Cryptography framed original Batch 04",
+        "expected_sha256": "ac1b4a00e133a7b759bc7de6b16476125ee433c5ce1d77eb721a0edd9c409886",
+        "expected_byte_size": 593652,
+        "observed_files": [
+          {
+            "path": "docs/design/category-expansion/batch-04/recovered/selected/10-cryptography-framed-original-batch-04.png",
+            "observed_sha256": "ac1b4a00e133a7b759bc7de6b16476125ee433c5ce1d77eb721a0edd9c409886",
+            "observed_byte_size": 593652,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 41,
+        "batch": 5,
+        "label": "Thermodynamics selected original after background cleanup",
+        "expected_sha256": "84eb49d72f574f91aa52a4929e3eb166b68677f300463e7e4a2151c0c817772f",
+        "expected_byte_size": 598335,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/thermodynamics-original.png",
+            "observed_sha256": "84eb49d72f574f91aa52a4929e3eb166b68677f300463e7e4a2151c0c817772f",
+            "observed_byte_size": 598335,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 42,
+        "batch": 5,
+        "label": "Fluid dynamics revised original with wider margins",
+        "expected_sha256": "95d44cc8dee23b21d98fca78e42b988ea4fdd01f675ecc746fc2fe4efb59e3d4",
+        "expected_byte_size": 498232,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/fluid-dynamics-original.png",
+            "observed_sha256": "95d44cc8dee23b21d98fca78e42b988ea4fdd01f675ecc746fc2fe4efb59e3d4",
+            "observed_byte_size": 498232,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 43,
+        "batch": 5,
+        "label": "Materials science original artwork study",
+        "expected_sha256": "1781b68dc503f2c1903fb00f3d3cb7a25056b61586fb03dd84a2e6b0f892af42",
+        "expected_byte_size": 896699,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/materials-science-original.png",
+            "observed_sha256": "1781b68dc503f2c1903fb00f3d3cb7a25056b61586fb03dd84a2e6b0f892af42",
+            "observed_byte_size": 896699,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 44,
+        "batch": 5,
+        "label": "Optics original artwork study",
+        "expected_sha256": "f82b4cdfc80dbd7847c19f9056d9c4cc2fe12a6ce154b7396a038257fddf7302",
+        "expected_byte_size": 337688,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/optics-original.png",
+            "observed_sha256": "f82b4cdfc80dbd7847c19f9056d9c4cc2fe12a6ce154b7396a038257fddf7302",
+            "observed_byte_size": 337688,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 45,
+        "batch": 5,
+        "label": "Robotics original artwork study",
+        "expected_sha256": "dd5c3771d3d98de898f17a524d583bdb5466f5ce737d026505e05b8fbfe7b7b3",
+        "expected_byte_size": 545655,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/robotics-original.png",
+            "observed_sha256": "dd5c3771d3d98de898f17a524d583bdb5466f5ce737d026505e05b8fbfe7b7b3",
+            "observed_byte_size": 545655,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 46,
+        "batch": 5,
+        "label": "Acoustics original artwork study",
+        "expected_sha256": "676785899a44511c05fb4cdefed4dac1ee6cf89d9c31464b411cef2d50446665",
+        "expected_byte_size": 327762,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/acoustics-original.png",
+            "observed_sha256": "676785899a44511c05fb4cdefed4dac1ee6cf89d9c31464b411cef2d50446665",
+            "observed_byte_size": 327762,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 47,
+        "batch": 5,
+        "label": "Astronomy original artwork study",
+        "expected_sha256": "f885ba1ded204ac3c4196845f8fd74df10ac963797b7499db22f49dcab90ca6c",
+        "expected_byte_size": 291771,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/astronomy-original.png",
+            "observed_sha256": "f885ba1ded204ac3c4196845f8fd74df10ac963797b7499db22f49dcab90ca6c",
+            "observed_byte_size": 291771,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 48,
+        "batch": 5,
+        "label": "Geophysics original artwork study",
+        "expected_sha256": "43a4137b90dca208904b56bc653ed8af4db8421b50b6b942fb884fbb3c1bdae3",
+        "expected_byte_size": 689517,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/geophysics-original.png",
+            "observed_sha256": "43a4137b90dca208904b56bc653ed8af4db8421b50b6b942fb884fbb3c1bdae3",
+            "observed_byte_size": 689517,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 49,
+        "batch": 5,
+        "label": "Renewable energy original artwork study",
+        "expected_sha256": "53d20dba8af3618878af90d1ccd05a8f64007634d186d02715b929c3dd004dca",
+        "expected_byte_size": 411198,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/renewable-energy-original.png",
+            "observed_sha256": "53d20dba8af3618878af90d1ccd05a8f64007634d186d02715b929c3dd004dca",
+            "observed_byte_size": 411198,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      },
+      {
+        "selection_index": 50,
+        "batch": 5,
+        "label": "Biotechnology original artwork study",
+        "expected_sha256": "4d5f9806a8cbe6edac2e0306986aadaf4a1479e82952de2b1550a655997c0e2f",
+        "expected_byte_size": 712944,
+        "observed_files": [
+          {
+            "path": "public/artwork/category-expansion-v1/batch-05/biotechnology-original.png",
+            "observed_sha256": "4d5f9806a8cbe6edac2e0306986aadaf4a1479e82952de2b1550a655997c0e2f",
+            "observed_byte_size": 712944,
+            "sha256_matches": true,
+            "byte_size_matches": true,
+            "png_decoded": true,
+            "dimensions": [
+              1254,
+              1254
+            ],
+            "mode": "RGBA"
+          }
+        ],
+        "all_bytes_match": true
+      }
+    ]
+  },
+  "existing_topic_coverage": {
+    "meaning": "Archive subject coverage by fourteen subjects from the fifty plus six preserved ART04 originals; this is not a claim of current runtime use of every original.",
+    "all_twenty_covered": true,
+    "records": [
+      {
+        "topic_key": "maths",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 1,
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/01-maths-r1.png",
+        "sha256": "e9d44beb9a1d3076199237aa7a0d4a1563f4287f18e164238947b3cc527f981e",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "chemistry",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 2,
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/02-chemistry-r1.png",
+        "sha256": "94f9d338aceddd1c8ee702b5493e2e453a53260ba124ac74efb58a67f571f32a",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "biology",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 3,
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/03-biology-r1.png",
+        "sha256": "7be92b747e05dcaa55f4665f15bbf153a6dc69be4c4c97bd4ec36d9fd69c673e",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "earth",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 4,
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/04-earth-r1.png",
+        "sha256": "a6c0f470256b892c374709d1c1016c00976282444695df8bf8e8a9affa0a4344",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "kubernetes",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 11,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+        "sha256": "389e912292752af8cde25cfbbd9df146099e5cda77cf43cee17e1e8d846df2fd",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "istio",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 12,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+        "sha256": "01b0a1c66a6ad55b875ddb4b8c6d44dd4228063e3893428469712692a07fa2a9",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "tekton",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 13,
+        "path": "public/artwork/category-expansion-v1/batch-02/refinements/03-tekton-staged-assembly-conveyor-v2.png",
+        "sha256": "36d6bec4f8f9864b7e0031051b104121e6dcc046562222b68b7fd8e7d7c3a299",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "kustomize",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 14,
+        "path": "public/artwork/category-expansion-v1/batch-02/refinements/04-kustomize-nested-configurable-plates-v2.png",
+        "sha256": "c3db570346934f80eaf33484f8d7c53ccd09e5f79eeac9190e94972c2b842193",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "minikube",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 15,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+        "sha256": "9077fffae262b902fde40a884c0e2ee155339e3d8b887d06c68099913cfde0c8",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "gcp",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 16,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+        "sha256": "ca23e96a8205ddd34ab5f41990a21e045a5351328871a68de711888ebc8cedaf",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "react",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 17,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+        "sha256": "e09e27b54ac33bfd31b48e0c0ffeec0c90a6fb7f288255d77808b00e87e56f8c",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "technology",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 18,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+        "sha256": "ea57377b05c6e5b06336eaec382785989427b3e23e3fee566da069b2d66e5400",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "general",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 19,
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+        "sha256": "17f440bef75388ece2a70067d380cb2159acad0c6b5fc4fa09e484b04129b82e",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "hiking",
+        "coverage_kind": "preserved-selected-category-original",
+        "selected_original_index": 20,
+        "path": "public/artwork/category-expansion-v1/batch-02/refinements/10-hiking-cairn-and-trail-compass-v2.png",
+        "sha256": "03f154e8253250ae6da1b30c65885f17edcbd0179002bfbfda620d39ba8490c4",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "ee",
+        "coverage_kind": "preserved-art04-original",
+        "path": "docs/design/art04-recovered-originals/originals/circuit.png",
+        "sha256": "f77461ea9dbf043af7e9cf5baea2fd77a58b76debffa5cc201e2b88a3ee8ad07",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "physics",
+        "coverage_kind": "preserved-art04-original",
+        "path": "docs/design/art04-recovered-originals/originals/atom.png",
+        "sha256": "7553d48963f18bc25b7f87a9b4be4a3108d96d33201739a40b2c4698b189fa22",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "cosmology",
+        "coverage_kind": "preserved-art04-original",
+        "path": "docs/design/art04-recovered-originals/originals/black-hole.png",
+        "sha256": "1115b555a08412afecfa23ab8e81be65c0fba06c1f560ee71d01539eabc6d2fb",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "software",
+        "coverage_kind": "preserved-art04-original",
+        "path": "docs/design/art04-recovered-originals/originals/floppy-disk.png",
+        "sha256": "245430aaecbab25ffa0313bd1ceb2282c3c3b29ad9003456ffdcefaa4e277369",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "algorithms",
+        "coverage_kind": "preserved-art04-original",
+        "path": "docs/design/art04-recovered-originals/originals/branching-graph.png",
+        "sha256": "fc636b08537ed93ccdd909e06212cdb69159e4a85c2619a8fb2f49daf5cb0beb",
+        "runtime_adoption_claimed": false
+      },
+      {
+        "topic_key": "ai",
+        "coverage_kind": "preserved-art04-original",
+        "path": "docs/design/art04-recovered-originals/originals/brain.png",
+        "sha256": "b47d7beede791a7c81c568fc4444442f306fd1437872fc7fa2fc1cd3f9129214",
+        "runtime_adoption_claimed": false
+      }
+    ]
+  },
+  "existing_lab_category_mappings": {
+    "source_path": "lib/knowledge/topic-art.ts",
+    "all_nine_mapped": true,
+    "meaning": "Observed source mapping retained as evidence, not a scientific equivalence endorsement or new proposed mapping.",
+    "records": [
+      {
+        "category_key": "art",
+        "existing_art_slug": "topology",
+        "existing_runtime_path": "public/topics/artwork/topology.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "maths",
+        "existing_art_slug": "mathematics",
+        "existing_runtime_path": "public/topics/artwork/mathematics.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "physics",
+        "existing_art_slug": "optics",
+        "existing_runtime_path": "public/topics/artwork/optics.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "chemistry",
+        "existing_art_slug": "chemistry",
+        "existing_runtime_path": "public/topics/artwork/chemistry.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "biology",
+        "existing_art_slug": "life-sciences",
+        "existing_runtime_path": "public/topics/artwork/life-sciences.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "earth",
+        "existing_art_slug": "earth-space",
+        "existing_runtime_path": "public/topics/artwork/earth-space.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "engineering",
+        "existing_art_slug": "engineering",
+        "existing_runtime_path": "public/topics/artwork/engineering.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "ai",
+        "existing_art_slug": "neuroscience",
+        "existing_runtime_path": "public/topics/artwork/neuroscience.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      },
+      {
+        "category_key": "cosmology",
+        "existing_art_slug": "astronomy",
+        "existing_runtime_path": "public/topics/artwork/astronomy.png",
+        "path_exists": true,
+        "new_mapping_proposed": false,
+        "semantic_equivalence_claimed": false
+      }
+    ]
+  },
+  "selected_subject_gaps": [
+    {
+      "id": "BSM-20261117-01",
+      "slug": "qubit-state",
+      "title": "Single-qubit state",
+      "gap_kind": "specific-published-subject-without-dedicated-motif-in-audited-category-set",
+      "source_paths": [
+        "content/blog/every-qubit-gate-is-a-rotation/index.mdx",
+        "lib/lab/registry.ts"
+      ],
+      "observed_source_anchors": [
+        "The arrow on the ball",
+        "Decoherence: the arrow sinks off the surface",
+        "bloch-sphere"
+      ],
+      "visible_construction": "One meridian, one equator and one radial pointer in a compact sphere-like specimen; no nucleus or orbital ellipses.",
+      "differentiation": "State representation rather than atom, black hole, terrestrial globe or probability wavepacket.",
+      "semantic_caveats": [
+        "Bloch-sphere-inspired illustration; geometry and pointer are not a computed state or gate.",
+        "A surface pointer evokes a pure single-qubit state; mixed states must not be described as constrained to the surface.",
+        "Not a physical electron orbit, quantum processor, entanglement diagram or depiction of arbitrary quantum operations."
+      ],
+      "forbidden_replacements": [
+        "docs/design/art04-recovered-originals/originals/atom.png",
+        "docs/design/art04-recovered-originals/originals/black-hole.png"
+      ],
+      "selection_status": "assistant-selected for bounded review; user-unrated"
+    },
+    {
+      "id": "BSM-20261117-02",
+      "slug": "cantilever-gyroscope",
+      "title": "Cantilever gyroscope",
+      "gap_kind": "specific-published-subject-without-dedicated-motif-in-audited-category-set",
+      "source_paths": [
+        "content/blog/a-gyroscope-falls-sideways/index.mdx",
+        "content/lab/gyroscope.mdx",
+        "lib/lab/spatial/catalog.ts"
+      ],
+      "observed_source_anchors": [
+        "Torque is a rate of change of a vector",
+        "Why a real top wobbles",
+        "gyroscope"
+      ],
+      "visible_construction": "One off-centre rotor disc, one oblique axle and a clearly connected end support.",
+      "differentiation": "Supported angular-momentum object rather than the generic Engineering mechanism or control-theory flyball governor.",
+      "semantic_caveats": [
+        "Static object metaphor; does not demonstrate motion, conservation or a measured precession rate.",
+        "No claimed dimensions, balance, manufacturability, bearing friction, nutation or dynamics validation.",
+        "Do not infer the slow-precession approximation from a picture alone."
+      ],
+      "selection_status": "assistant-selected for bounded review; user-unrated"
+    },
+    {
+      "id": "BSM-20261117-03",
+      "slug": "reverse-mode-tape",
+      "title": "Reverse-mode retained computation",
+      "gap_kind": "specific-published-computing-concept-without-dedicated-motif-in-audited-category-set",
+      "source_paths": [
+        "content/blog/backprop-is-just-the-chain-rule/index.mdx"
+      ],
+      "observed_source_anchors": [
+        "One forward pass, one backward pass",
+        "Why backwards, specifically",
+        "From gradient to learning"
+      ],
+      "visible_construction": "Curled retained computation tape and one stylus revisiting an earlier impression; no node network, conveyor or memory stack.",
+      "differentiation": "Reuse of saved intermediate work rather than forward data transport, buffering, storage hierarchy or an optimizer landscape.",
+      "semantic_caveats": [
+        "Tape and stylus are an authored bookkeeping analogy; not a historical or physical autodiff device.",
+        "Reverse sensitivity accumulation does not invert, rewind, erase or undo the forward function.",
+        "The image does not encode derivatives, local Jacobians, path sums, executable operations or a model architecture.",
+        "Backprop computes gradients; parameter updates belong to a separate optimizer step."
+      ],
+      "selection_status": "assistant-selected for bounded review; user-unrated"
+    },
+    {
+      "id": "BSM-20261117-04",
+      "slug": "vectorised-arithmetic",
+      "title": "Vectorised arithmetic",
+      "gap_kind": "specific-published-computing-concept-without-dedicated-motif-in-audited-category-set",
+      "source_paths": [
+        "content/blog/software-defined-radio-in-100-lines/index.mdx",
+        "content/blog/beating-splash-on-an-m5-max/index.mdx"
+      ],
+      "observed_source_anchors": [
+        "baseband = iq * lo",
+        "np.convolve(baseband, taps, mode='same')",
+        "vectorised-epilogue prefill GEMM tile"
+      ],
+      "visible_construction": "One shared four-nib stylus acting across separate strips; the common tool and distinct contact points carry the meaning.",
+      "differentiation": "One coordinated operation over several elements rather than transformation through a compiler press, item transport, network fanout or a cell grid.",
+      "semantic_caveats": [
+        "Nib count is compositional; it does not assert SIMD width, thread count, instruction set or hardware lanes.",
+        "Array syntax and vectorised APIs do not alone prove a particular SIMD execution mechanism.",
+        "No hardware, performance, energy-efficiency, numerical-equivalence or benchmark claim is encoded.",
+        "Four nibs are a requested visual construction, not a measured data count."
+      ],
+      "selection_status": "assistant-selected for bounded review; user-unrated"
+    }
+  ],
+  "rejected_duplicate_candidates": [
+    {
+      "candidate": "Serial double pendulum / chaos",
+      "reason": "Specific source exists, but nearby coupled-pendulums and the category geophysics pendulum increase visual repetition.",
+      "existing_ids": [
+        "coupled-pendulums",
+        "geophysics"
+      ]
+    },
+    {
+      "candidate": "Ising domain mosaic",
+      "reason": "Domain-grid construction is too close to existing material/lattice and other tile silhouettes for this bounded set.",
+      "existing_ids": [
+        "materials-science",
+        "grain-boundary",
+        "close-packing"
+      ]
+    },
+    {
+      "candidate": "Cellular automaton glider",
+      "reason": "Another grid/block silhouette; a literal glider also requires exact cell-state validation.",
+      "existing_ids": [
+        "programming-languages",
+        "operating-systems",
+        "logic-lattice"
+      ]
+    },
+    {
+      "candidate": "Memory hierarchy stack",
+      "reason": "Existing editorial motif already covers this construction.",
+      "existing_ids": [
+        "memory-layer-stack"
+      ]
+    },
+    {
+      "candidate": "Coil / generic electromagnetism",
+      "reason": "Existing coil, solenoid, transformer and dipole subjects.",
+      "existing_ids": [
+        "wound-inductor",
+        "solenoid-section",
+        "transformer-core",
+        "magnetic-dipole"
+      ]
+    },
+    {
+      "candidate": "Generic quantum wavepacket",
+      "reason": "Existing vector and generative study already cover the same subject.",
+      "existing_ids": [
+        "wavepacket-quantum"
+      ]
+    },
+    {
+      "candidate": "Generic graph, tree or network",
+      "reason": "Already covered by original Algorithms and multiple vector subjects; risks encroaching on graph lane.",
+      "existing_ids": [
+        "branching-graph",
+        "binary-search-tree",
+        "directed-acyclic-graph",
+        "mesh-gossip"
+      ]
+    },
+    {
+      "candidate": "Complex-root folded sheet / helical construction",
+      "reason": "Published source exists but folded Mathematics, Topology, helical-screw and surface studies make silhouette differentiation weaker.",
+      "existing_ids": [
+        "mathematics",
+        "topology",
+        "helical-screw",
+        "mobius-band"
+      ]
+    },
+    {
+      "candidate": "Optical prism / lens",
+      "reason": "Existing category and editorial optics motifs plus grounded studies.",
+      "existing_ids": [
+        "optics",
+        "optical-lens",
+        "prism-refraction",
+        "prism-dispersion"
+      ]
+    }
+  ],
+  "provenance_rules": [
+    "All four new motifs are illustrative; none is data-derived, mathematically validated, simulation output, a measured instrument, a scientific claim or an official third-party logo.",
+    "Text-only fresh image requests use no existing category image as a reference or edit target.",
+    "Source links justify subject relevance and caveats, not the truth or scientific accuracy of generated geometry.",
+    "Subjects are additive proposals for review; do not create categories, tag aliases, identity merges, graph edges or runtime artwork mappings.",
+    "Preserve original fifty bytes, previous revisions and provenance; palette or framing variants do not count as extra subjects."
+  ],
+  "ownership": {
+    "owned_roots": [
+      "docs/design/subject-motifs-20261117/",
+      "public/artwork/subject-motifs-v1/"
+    ],
+    "outside_scope": [
+      "editorial visual grammar",
+      "marks and ornaments",
+      "application layouts",
+      "graph identity/provider/routes",
+      "Hardware/UI SDK",
+      "existing asset manifests and taxonomy"
+    ],
+    "observed_open_prs": [
+      {
+        "number": 165,
+        "head": "76913a33b353c3825aa5f1323564456354b1f4ff",
+        "owner_scope": "current-master additive knowledge source bridge; supersedes older #158 proposal"
+      },
+      {
+        "number": 159,
+        "head": "ee911f9502497cb61667530467023beb565e5a4f",
+        "owner_scope": "editorial component workbench"
+      },
+      {
+        "number": 160,
+        "head": "903f7503236fc16855ce2dbfb8049592e902a617",
+        "owner_scope": "motion/accessibility workbench"
+      },
+      {
+        "number": 161,
+        "head": "f7dd7e57861891ccb81a7c9fb08467a555999190",
+        "owner_scope": "knowledge views prototype"
+      },
+      {
+        "number": 158,
+        "head": "85eda8e00d4f2408aef841144bbae5a3a01f6713",
+        "owner_scope": "older source proposal"
+      }
+    ]
+  },
+  "limitations": [
+    "Batch 04 remains a partial historical recovery: ten selected originals are exact, but later actual prompts/settings, rejected opaque framing output and final cumulative packet remain missing.",
+    "No globally exhaustive originality claim; additional editorial, grounded and vector subjects were screened through source metadata, not a full visual review of every old asset.",
+    "The four motifs remain illustrative proposals, not user-selected or scientifically validated figures.",
+    "Alpha, margins, small-size recognition and light/dark inspection of newly generated files belong to the separate asset review receipts; this source audit does not claim those checks.",
+    "No browser, deployed gallery, consuming route, accessibility or live graph acceptance is established here.",
+    "Counts and ownership are pinned observations; later repository/PR changes require a new read.",
+    "No spending, permission, credential, security, release-setting or deployment changes are part of this audit."
+  ]
+}

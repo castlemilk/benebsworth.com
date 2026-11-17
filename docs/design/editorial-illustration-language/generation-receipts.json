@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-17",
+  "timezone": "Australia/Melbourne",
+  "tool": "OpenAI built-in imagegen",
+  "distinct_concepts": 3,
+  "initial_calls": 3,
+  "corrective_calls": 3,
+  "transparent_background_requested": true,
+  "reported_model_version": null,
+  "reported_seed": null,
+  "reported_quality": null,
+  "caller_size_parameter": null,
+  "notes": "Each r1 was text-only. Each r2 referenced only its own r1. The saved tool-output file was compared byte-for-byte to the repository copy. Basenames identify the executor output, not a model-version or backend request ID. No image output is represented as an exact affine framing operation.",
+  "outputs": [
+    {
+      "id": "el01-interface",
+      "revision": "r1",
+      "tool_output_basename": "exec-b619ae9c-877f-4a1a-9bf6-c4805491b3f2.png",
+      "repository_path": "docs/design/editorial-illustration-language/process/r1/el01-interface-r1.png",
+      "sha256": "f55d187e828d203423be1fbbdc4da8ff7fe7d893f36f0c060222c5337dff1366",
+      "bytes": 1375199,
+      "tool_return_copy_byte_identical": true,
+      "prompt_record": "generation-prompts.json",
+      "image_input_revision": null
+    },
+    {
+      "id": "el02-cutaway",
+      "revision": "r1",
+      "tool_output_basename": "exec-89d797c6-de62-4046-83b7-f9533fcd3323.png",
+      "repository_path": "docs/design/editorial-illustration-language/process/r1/el02-cutaway-r1.png",
+      "sha256": "ff6d34aecd86f0bd5e8f1fda21533143c9b3c9170b7e6e12fc4f41c6c4322df3",
+      "bytes": 1998215,
+      "tool_return_copy_byte_identical": true,
+      "prompt_record": "generation-prompts.json",
+      "image_input_revision": null
+    },
+    {
+      "id": "el03-sequence",
+      "revision": "r1",
+      "tool_output_basename": "exec-f2bd8436-261d-4a15-b4d3-7d842bf6804c.png",
+      "repository_path": "docs/design/editorial-illustration-language/process/r1/el03-sequence-r1.png",
+      "sha256": "64de8088b86ee0cfde8f0b60c80961644b0465a1e0565df4e3af320cd3ab7d4c",
+      "bytes": 1169304,
+      "tool_return_copy_byte_identical": true,
+      "prompt_record": "generation-prompts.json",
+      "image_input_revision": null
+    },
+    {
+      "id": "el01-interface",
+      "revision": "r2",
+      "tool_output_basename": "exec-24e2df99-511f-40e3-b34b-b45e7a4e13b7.png",
+      "repository_path": "public/artwork/editorial-illustration-v1/originals/el01-interface-r2.png",
+      "sha256": "a78451f3ffe5c6d3e3eeeaa0bfc4a9af37e8889fde3680f1b0202221483ca938",
+      "bytes": 1158125,
+      "tool_return_copy_byte_identical": true,
+      "prompt_record": "correction-prompts.json",
+      "image_input_revision": "r1"
+    },
+    {
+      "id": "el02-cutaway",
+      "revision": "r2",
+      "tool_output_basename": "exec-29283315-fae1-4fb1-a9a3-a5db8e53f96a.png",
+      "repository_path": "public/artwork/editorial-illustration-v1/originals/el02-cutaway-r2.png",
+      "sha256": "00e7828545a9d849d3407ab8fb359b9232300cc1788420e4a5384c3e3c4f48c1",
+      "bytes": 1553663,
+      "tool_return_copy_byte_identical": true,
+      "prompt_record": "correction-prompts.json",
+      "image_input_revision": "r1"
+    },
+    {
+      "id": "el03-sequence",
+      "revision": "r2",
+      "tool_output_basename": "exec-af673424-0d78-430c-8188-b35f2438176d.png",
+      "repository_path": "public/artwork/editorial-illustration-v1/originals/el03-sequence-r2.png",
+      "sha256": "3a04e2f1b20307987ff374042b2f89d58f5ed832592ed6928c477c0deee898d4",
+      "bytes": 1012856,
+      "tool_return_copy_byte_identical": true,
+      "prompt_record": "correction-prompts.json",
+      "image_input_revision": "r1"
+    }
+  ]
+}

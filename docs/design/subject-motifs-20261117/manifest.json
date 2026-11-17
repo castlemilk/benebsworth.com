@@ -1,0 +1,926 @@
+{
+  "schema_version": 1,
+  "batch": "BSM-20261117",
+  "count": 4,
+  "created_date_local": "2026-11-17",
+  "timezone": "Australia/Melbourne",
+  "repository": "castlemilk/benebsworth.com",
+  "branch": "art/blog-subject-motifs-20261117",
+  "source_baseline": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+  "owned_paths": [
+    "docs/design/subject-motifs-20261117/",
+    "public/artwork/subject-motifs-v1/"
+  ],
+  "audit_before_selection": true,
+  "preserved_category_originals": 50,
+  "candidate_status": "assistant-selected; independently visually reviewed; user-unrated; not integrated",
+  "canonical_receipt": "https://chatgpt.com/space/page_f4d21b4bea7c8191859dfbdc4e638812",
+  "source_audit": "audit/source-audit.json",
+  "gap_map": "gap-map.md",
+  "usage_rules": "USAGE.md",
+  "review": "REVIEW.md",
+  "formats": {
+    "originals": "RGBA PNG raster; not editable SVG",
+    "thumbnails": "RGBA PNG, full canvas, Lanczos resize",
+    "review_examples": "opaque matte composites for inspection only"
+  },
+  "theme_specimens": {
+    "light": {
+      "background": "#f4f1e9",
+      "text": "#202c34"
+    },
+    "dark": {
+      "background": "#111312",
+      "text": "#ecebe6"
+    },
+    "source": "app/globals.css at e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+    "policy": "Existing tokens read, never changed. Review board labels use DejaVu Sans for utility only; no new typography or layout system is proposed."
+  },
+  "generation_count": 4,
+  "input_reference_image_count": 0,
+  "derivative_method": "ImageMagick deterministic resizing, compositing and contact sheets; no crop, recolour, trace, threshold or generative modification. Pillow reads metadata and alpha only.",
+  "rights_and_originality": "New AI-generated illustrations requested for this packet; no third-party logo or source image was requested or supplied. Bounded visual/source collision audit only. No exclusive-rights or global-originality certification.",
+  "assets": [
+    {
+      "id": "BSM-20261117-01",
+      "revision": "r1",
+      "slug": "qubit-state",
+      "title": "Single-qubit state",
+      "status": "candidate-for-review",
+      "user_rating": null,
+      "runtime_adoption": false,
+      "taxonomy_assignment": null,
+      "role": "illustrative-knowledge-subject-motif",
+      "alt_text": "An ivory open sphere formed by a meridian and equatorial hoop, with one red-tipped radial pointer.",
+      "suggested_caption": "Single-qubit state — a Bloch-sphere-inspired illustration of orientation, with no encoded state or gate angle.",
+      "metaphor": "One meridian, one equator and one radial pointer in a compact sphere-like specimen; no nucleus or orbital ellipses.",
+      "differentiation": "State representation rather than atom, black hole, terrestrial globe or probability wavepacket.",
+      "semantic_caveats": [
+        "Bloch-sphere-inspired illustration; geometry and pointer are not a computed state or gate.",
+        "A surface pointer evokes a pure single-qubit state; mixed states must not be described as constrained to the surface.",
+        "Not a physical electron orbit, quantum processor, entanglement diagram or depiction of arbitrary quantum operations.",
+        "The pointer is an illustrative orientation. It is not a physical qubit or an electron orbit.",
+        "A single static surface pointer must not be used to assert that every quantum operation is a rotation."
+      ],
+      "source_associations": [
+        {
+          "path": "content/blog/every-qubit-gate-is-a-rotation/index.mdx",
+          "role": "Published source for single-qubit state association",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "ae6874a76cd8facce17b1972fa8555dfcb110a5b",
+          "sha256": "22c45160319f367e9afc870605257662432ddbcb8fceffa564fbcf1fdca087bc",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/every-qubit-gate-is-a-rotation/index.mdx",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        },
+        {
+          "path": "lib/lab/registry.ts",
+          "role": "Current category and Lab inventory",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "6c72d46e0e40adec915028b285682e04f1174088",
+          "sha256": "293c3a1b36e9194cc0bc32ebfbbd3e0744341d4ea9a138b4b1b524811f9e4aa8",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/lab/registry.ts",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        }
+      ],
+      "primary_concept_reference": {
+        "url": "https://learn.microsoft.com/en-us/azure/quantum/concepts-the-qubit",
+        "accessed_date_local": "2026-11-17",
+        "role": "semantic boundary only; no image copying or tracing"
+      },
+      "original": {
+        "path": "public/artwork/subject-motifs-v1/originals/01-qubit-state-r1.png",
+        "sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+        "byte_size": 720413,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "observed_alpha": {
+        "file": "public/artwork/subject-motifs-v1/originals/01-qubit-state-r1.png",
+        "sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+        "byte_size": 720413,
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "nonzero_alpha_bounds": [
+          33,
+          0,
+          1136,
+          1254
+        ],
+        "alpha_at_least_16_bounds": [
+          202,
+          219,
+          1052,
+          1059
+        ],
+        "minimum_margin_at_alpha_16_percent": 15.55,
+        "edge_alpha_max": 1,
+        "zero_alpha_percent": 84.7997,
+        "alpha_1_to_15_percent": 3.4243
+      },
+      "thumbnails": [
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/01-qubit-state-r1-64.png",
+          "sha256": "9f05f5380fa6a2d860b5dbe6d83daf209bff27e0d16c20c69433e154bc609fc3",
+          "byte_size": 6462,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 64,
+          "height": 64,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "decorative beside subject text only"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/01-qubit-state-r1-128.png",
+          "sha256": "94612dbc1947944038821f744865451d31cce21f925ae4c2ea504d5acfc07d37",
+          "byte_size": 17497,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 128,
+          "height": 128,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/01-qubit-state-r1-256.png",
+          "sha256": "deb3b6dea2fc218fe1920b795f52d5b91f6545f9f40cfb8d32ce6bff4159bae4",
+          "byte_size": 49045,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 256,
+          "height": 256,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/01-qubit-state-r1-512.png",
+          "sha256": "90db401bee629a5f9e0a9b22837bfbc4376fd81544bc84f202741e28af4f6c87",
+          "byte_size": 152851,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 512,
+          "height": 512,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        }
+      ],
+      "minimum_labelled_canvas_px": 128,
+      "relationship_review_canvas_px": 256,
+      "theme_policy": "Preserve original RGB and alpha; use receiving surface; no inversion, tint, crop or silhouette normalization.",
+      "generation_receipt": "generation/receipts.json#BSM-20261117-01",
+      "exact_request": "generation/requests.json#BSM-20261117-01",
+      "input_images": []
+    },
+    {
+      "id": "BSM-20261117-02",
+      "revision": "r1",
+      "slug": "cantilever-gyroscope",
+      "title": "Cantilever gyroscope",
+      "status": "candidate-for-review",
+      "user_rating": null,
+      "runtime_adoption": false,
+      "taxonomy_assignment": null,
+      "role": "illustrative-knowledge-subject-motif",
+      "alt_text": "An ivory rotor disc at the end of a long axle supported on one side by a footed bearing.",
+      "suggested_caption": "Cantilever gyroscope — an illustrative rotor, axle and support; a static image does not demonstrate precession.",
+      "metaphor": "One off-centre rotor disc, one oblique axle and a clearly connected end support.",
+      "differentiation": "Supported angular-momentum object rather than the generic Engineering mechanism or control-theory flyball governor.",
+      "semantic_caveats": [
+        "Static object metaphor; does not demonstrate motion, conservation or a measured precession rate.",
+        "No claimed dimensions, balance, manufacturability, bearing friction, nutation or dynamics validation.",
+        "Do not infer the slow-precession approximation from a picture alone.",
+        "No spin direction, measured precession rate or engineering specification is encoded."
+      ],
+      "source_associations": [
+        {
+          "path": "content/blog/a-gyroscope-falls-sideways/index.mdx",
+          "role": "Published source for cantilever gyroscope association",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "b0a60d50b81977c614b891645e8230b24403d4e7",
+          "sha256": "a184a183f6e11fb4937a1c163a3a133f78faa1a7124957bd763a66f20fcbe865",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/a-gyroscope-falls-sideways/index.mdx",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        },
+        {
+          "path": "content/lab/gyroscope.mdx",
+          "role": "Gyroscope model limitations",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "23fd6d1a423b1300c89a961b174d98b5d5ac9b81",
+          "sha256": "41eb43582802a88f276430aab4053bbfede07afe2b99b27d23a1d21f48d60031",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/lab/gyroscope.mdx",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        },
+        {
+          "path": "lib/lab/spatial/catalog.ts",
+          "role": "Twenty spatial Lab entries",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "05981453cae25bcfb9da69a83f19419fffcde0cf",
+          "sha256": "8caaca7a3e8784761e283bc929b59a0d9930f1729a1d0ae12f973a7ba78ca2d9",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/lib/lab/spatial/catalog.ts",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        }
+      ],
+      "primary_concept_reference": {
+        "url": "https://openstax.org/books/university-physics-volume-1/pages/11-4-precession-of-a-gyroscope",
+        "accessed_date_local": "2026-11-17",
+        "role": "semantic boundary only; no image copying or tracing"
+      },
+      "original": {
+        "path": "public/artwork/subject-motifs-v1/originals/02-cantilever-gyroscope-r1.png",
+        "sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+        "byte_size": 816978,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "observed_alpha": {
+        "file": "public/artwork/subject-motifs-v1/originals/02-cantilever-gyroscope-r1.png",
+        "sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+        "byte_size": 816978,
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "nonzero_alpha_bounds": [
+          0,
+          0,
+          1254,
+          1229
+        ],
+        "alpha_at_least_16_bounds": [
+          171,
+          189,
+          1081,
+          1065
+        ],
+        "minimum_margin_at_alpha_16_percent": 13.64,
+        "edge_alpha_max": 1,
+        "zero_alpha_percent": 81.4826,
+        "alpha_1_to_15_percent": 1.0254
+      },
+      "thumbnails": [
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/02-cantilever-gyroscope-r1-64.png",
+          "sha256": "0d506080f498e98a6b24fc3e1811c86e738daee268928aa9d99b4952c071d34c",
+          "byte_size": 5440,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 64,
+          "height": 64,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "decorative beside subject text only"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/02-cantilever-gyroscope-r1-128.png",
+          "sha256": "29944954c30253b9200705034d456a702e90855af1d8b44ba7a358623609fbc8",
+          "byte_size": 14393,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 128,
+          "height": 128,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/02-cantilever-gyroscope-r1-256.png",
+          "sha256": "2038fcbb2153d82a377ba44be205f67f5c41ba4e40648e9ea6c2cdff2305181c",
+          "byte_size": 43628,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 256,
+          "height": 256,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/02-cantilever-gyroscope-r1-512.png",
+          "sha256": "b0cc7f1a12b72b74da41d80423dbda44e2a9232f92d0677c6da77d448725a8a7",
+          "byte_size": 153106,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 512,
+          "height": 512,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        }
+      ],
+      "minimum_labelled_canvas_px": 128,
+      "relationship_review_canvas_px": 256,
+      "theme_policy": "Preserve original RGB and alpha; use receiving surface; no inversion, tint, crop or silhouette normalization.",
+      "generation_receipt": "generation/receipts.json#BSM-20261117-02",
+      "exact_request": "generation/requests.json#BSM-20261117-02",
+      "input_images": []
+    },
+    {
+      "id": "BSM-20261117-03",
+      "revision": "r1",
+      "slug": "reverse-mode-tape",
+      "title": "Reverse-mode differentiation",
+      "status": "candidate-for-review",
+      "user_rating": null,
+      "runtime_adoption": false,
+      "taxonomy_assignment": null,
+      "role": "illustrative-knowledge-subject-motif",
+      "alt_text": "A curled ivory tape with blank recessed panels and a red-tipped stylus touching an earlier panel.",
+      "suggested_caption": "Reverse-mode differentiation — a metaphor for retained computation revisited during sensitivity accumulation.",
+      "metaphor": "Curled retained computation tape and one stylus revisiting an earlier impression; no node network, conveyor or memory stack.",
+      "differentiation": "Reuse of saved intermediate work rather than forward data transport, buffering, storage hierarchy or an optimizer landscape.",
+      "semantic_caveats": [
+        "Tape and stylus are an authored bookkeeping analogy; not a historical or physical autodiff device.",
+        "Reverse sensitivity accumulation does not invert, rewind, erase or undo the forward function.",
+        "The image does not encode derivatives, local Jacobians, path sums, executable operations or a model architecture.",
+        "Backprop computes gradients; parameter updates belong to a separate optimizer step.",
+        "The stylus does not erase, undo or invert a computation. Blank panels contain no actual derivatives or execution trace."
+      ],
+      "source_associations": [
+        {
+          "path": "content/blog/backprop-is-just-the-chain-rule/index.mdx",
+          "role": "Published source for retained intermediates and reverse derivative accumulation",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "d64de78fe378010de680819974934749ac140697",
+          "sha256": "9c2049bef81ad24b62433828592db62305b506f9e899450462b2f47200963841",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/backprop-is-just-the-chain-rule/index.mdx",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        }
+      ],
+      "primary_concept_reference": {
+        "url": "https://docs.jax.dev/en/latest/jacobian-vector-products.html",
+        "accessed_date_local": "2026-11-17",
+        "role": "semantic boundary only; no image copying or tracing"
+      },
+      "original": {
+        "path": "public/artwork/subject-motifs-v1/originals/03-reverse-mode-tape-r1.png",
+        "sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+        "byte_size": 1229528,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "observed_alpha": {
+        "file": "public/artwork/subject-motifs-v1/originals/03-reverse-mode-tape-r1.png",
+        "sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+        "byte_size": 1229528,
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "nonzero_alpha_bounds": [
+          0,
+          19,
+          1240,
+          1254
+        ],
+        "alpha_at_least_16_bounds": [
+          133,
+          211,
+          1117,
+          1104
+        ],
+        "minimum_margin_at_alpha_16_percent": 10.61,
+        "edge_alpha_max": 1,
+        "zero_alpha_percent": 62.1672,
+        "alpha_1_to_15_percent": 13.5699
+      },
+      "thumbnails": [
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/03-reverse-mode-tape-r1-64.png",
+          "sha256": "01e8836e549af56e6dd626008edd6cabc8a0ca2468b5dbe1b1ba49544ac68a2f",
+          "byte_size": 6664,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 64,
+          "height": 64,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "decorative beside subject text only"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/03-reverse-mode-tape-r1-128.png",
+          "sha256": "f8080a0524cc58542d27c8b9486230accbf868c42863a34997b6119fa08a11b1",
+          "byte_size": 19161,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 128,
+          "height": 128,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/03-reverse-mode-tape-r1-256.png",
+          "sha256": "a6cfadd15e3f5808f9bd8c592cf40bc0e890747d87105d404597d3f14b9e8159",
+          "byte_size": 61580,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 256,
+          "height": 256,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/03-reverse-mode-tape-r1-512.png",
+          "sha256": "8a2fc12c2173241ff5d4ee0f2b997acde08bf846e5c7dc68e47cd8ba0252e135",
+          "byte_size": 221296,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 512,
+          "height": 512,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        }
+      ],
+      "minimum_labelled_canvas_px": 128,
+      "relationship_review_canvas_px": 256,
+      "theme_policy": "Preserve original RGB and alpha; use receiving surface; no inversion, tint, crop or silhouette normalization.",
+      "generation_receipt": "generation/receipts.json#BSM-20261117-03",
+      "exact_request": "generation/requests.json#BSM-20261117-03",
+      "input_images": []
+    },
+    {
+      "id": "BSM-20261117-04",
+      "revision": "r1",
+      "slug": "vectorised-arithmetic",
+      "title": "Vectorised arithmetic",
+      "status": "candidate-for-review",
+      "user_rating": null,
+      "runtime_adoption": false,
+      "taxonomy_assignment": null,
+      "role": "illustrative-knowledge-subject-motif",
+      "alt_text": "One ivory handle with four broad nibs, each touching a separate strip; one nib is muted red.",
+      "suggested_caption": "Vectorised arithmetic — a metaphor for a shared operation across several elements; the four contacts are compositional.",
+      "metaphor": "One shared four-nib stylus acting across separate strips; the common tool and distinct contact points carry the meaning.",
+      "differentiation": "One coordinated operation over several elements rather than transformation through a compiler press, item transport, network fanout or a cell grid.",
+      "semantic_caveats": [
+        "Nib count is compositional; it does not assert SIMD width, thread count, instruction set or hardware lanes.",
+        "Array syntax and vectorised APIs do not alone prove a particular SIMD execution mechanism.",
+        "No hardware, performance, energy-efficiency, numerical-equivalence or benchmark claim is encoded.",
+        "Four nibs are a requested visual construction, not a measured data count.",
+        "The red nib is only an accent: it does not encode a mask, selected lane, numerical state or result."
+      ],
+      "source_associations": [
+        {
+          "path": "content/blog/software-defined-radio-in-100-lines/index.mdx",
+          "role": "Published elementwise vector multiply and vectorised convolution",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "8c7194a0e5e3dac9ba3045f7e4a694fc6186581f",
+          "sha256": "eba401f4fa34816496187fec906afbaa0183130a015348c5e01b7414deb7c545",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/software-defined-radio-in-100-lines/index.mdx",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        },
+        {
+          "path": "content/blog/beating-splash-on-an-m5-max/index.mdx",
+          "role": "Secondary published source: vectorised GEMM epilogue; benchmark figures not reused",
+          "revision": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+          "git_blob_sha": "06191ff14806a543fbb4f0f9d892aae83ccf9e68",
+          "sha256": "325ef0620cde33fcff70bc6c6f1a1923362fb4697c8c0560ad2318f95ff5ca5e",
+          "url": "https://github.com/castlemilk/benebsworth.com/blob/e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e/content/blog/beating-splash-on-an-m5-max/index.mdx",
+          "association_status": "suggested-only; not runtime assignment",
+          "use": "topic relevance; no image input"
+        }
+      ],
+      "primary_concept_reference": {
+        "url": "https://numpy.org/doc/stable/reference/generated/numpy.multiply.html",
+        "accessed_date_local": "2026-11-17",
+        "role": "semantic boundary only; no image copying or tracing"
+      },
+      "original": {
+        "path": "public/artwork/subject-motifs-v1/originals/04-vectorised-arithmetic-r1.png",
+        "sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+        "byte_size": 919950,
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_extrema": [
+          0,
+          255
+        ]
+      },
+      "observed_alpha": {
+        "file": "public/artwork/subject-motifs-v1/originals/04-vectorised-arithmetic-r1.png",
+        "sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+        "byte_size": 919950,
+        "mode": "RGBA",
+        "width": 1254,
+        "height": 1254,
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "nonzero_alpha_bounds": [
+          33,
+          21,
+          1240,
+          1254
+        ],
+        "alpha_at_least_16_bounds": [
+          143,
+          191,
+          1110,
+          1094
+        ],
+        "minimum_margin_at_alpha_16_percent": 11.4,
+        "edge_alpha_max": 1,
+        "zero_alpha_percent": 79.754,
+        "alpha_1_to_15_percent": 1.1414
+      },
+      "thumbnails": [
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/04-vectorised-arithmetic-r1-64.png",
+          "sha256": "02c03ed536d61c4a2ccd886e1b275e16be69d53432425a1224bd7b02efdd3f2c",
+          "byte_size": 6401,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 64,
+          "height": 64,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "decorative beside subject text only"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/04-vectorised-arithmetic-r1-128.png",
+          "sha256": "5608852e3ff7ba6b57bef81365aeea7c97d1b854416afac9677b1af5e98bb27a",
+          "byte_size": 17795,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 128,
+          "height": 128,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/04-vectorised-arithmetic-r1-256.png",
+          "sha256": "0641eaf8bfc8811d03de0d7318e54587e13f54da7301a4021f2f248aa8f1e2d9",
+          "byte_size": 53826,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 256,
+          "height": 256,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        },
+        {
+          "path": "public/artwork/subject-motifs-v1/thumbnails/04-vectorised-arithmetic-r1-512.png",
+          "sha256": "4e31cbefefcebfbe502438a9e384e3909c4dc71d04e1c199f52228efa51a9ab3",
+          "byte_size": 179817,
+          "format": "PNG",
+          "mode": "RGBA",
+          "width": 512,
+          "height": 512,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "kind": "transparent_full_canvas_resize",
+          "source_sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+          "filter": "Lanczos",
+          "crop": false,
+          "recolour": false,
+          "alpha_threshold_applied": false,
+          "display_rule": "labelled subject illustration"
+        }
+      ],
+      "minimum_labelled_canvas_px": 128,
+      "relationship_review_canvas_px": 256,
+      "theme_policy": "Preserve original RGB and alpha; use receiving surface; no inversion, tint, crop or silhouette normalization.",
+      "generation_receipt": "generation/receipts.json#BSM-20261117-04",
+      "exact_request": "generation/requests.json#BSM-20261117-04",
+      "input_images": []
+    }
+  ],
+  "review_files": [
+    {
+      "path": "docs/design/subject-motifs-20261117/review/01-qubit-state-r1-dark-512.png",
+      "sha256": "c789d8d4edbacc6dce05fc1c1b20b0074d40d1a69dd371752d91e90b17ce303e",
+      "byte_size": 89349,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/01-qubit-state-r1-light-512.png",
+      "sha256": "070e526607480ee062e0434001b9028e5fda93ebdcb3497ca51289e3ff66411c",
+      "byte_size": 93778,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/02-cantilever-gyroscope-r1-dark-512.png",
+      "sha256": "70ca3dbf25587f9f194f00168125f22b97c76504af05901794ff331f14e0e308",
+      "byte_size": 107997,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/02-cantilever-gyroscope-r1-light-512.png",
+      "sha256": "961ca928f7483af357e074f4318c68d4d77e9411a9a2a3cba388290c5e6089f0",
+      "byte_size": 111886,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/03-reverse-mode-tape-r1-dark-512.png",
+      "sha256": "01e7be657e91c35e27940eb6df4b58f52d0e477ade58758f52d623b30a9af3d9",
+      "byte_size": 156153,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/03-reverse-mode-tape-r1-light-512.png",
+      "sha256": "6d657c73aead4f57a3165a7df9a329716c5b182d9ca92de26532ab578e67fdb9",
+      "byte_size": 160486,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/04-vectorised-arithmetic-r1-dark-512.png",
+      "sha256": "e6840ecdbed251880e8733ff1751588867708ebe8d793cbedaf596e78f5d142e",
+      "byte_size": 118025,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/04-vectorised-arithmetic-r1-light-512.png",
+      "sha256": "1fb39296fadb5290478872080a701de6d44f9a562788d717c46b236f2504a9cf",
+      "byte_size": 123599,
+      "format": "PNG",
+      "mode": "RGB",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/contact-sheet-dark.png",
+      "sha256": "556fe105cf69fe53dad07382109c92537c6d7500f5c8c243701aa00241b5e77f",
+      "byte_size": 750744,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1104,
+      "height": 1152,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/contact-sheet-light.png",
+      "sha256": "2483d74be2e84e3ebbd05e34ae08decb2475c5ba560cbb594c8123c19bec80f9",
+      "byte_size": 794311,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 1104,
+      "height": 1152,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/size-check-dark-128.png",
+      "sha256": "d59a89c27bb726d736a89f4a56737ce8d59a001c7e912f01198d1709ffb484cc",
+      "byte_size": 118637,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 592,
+      "height": 370,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/size-check-dark-256.png",
+      "sha256": "96b0c3032707c2ab7d8b8669510a20bf181679107210b944e598bc99ca24591e",
+      "byte_size": 353448,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 592,
+      "height": 626,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/size-check-dark-64.png",
+      "sha256": "7b2d2c52deec999d1ec8571a38b1c7d8fd3de11838d997b249f124da13d88de9",
+      "byte_size": 48649,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 592,
+      "height": 242,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/size-check-light-128.png",
+      "sha256": "cb6124f75a128308f9a435ed0a56cc62011596d143b577498fd7db22fb4d6214",
+      "byte_size": 115962,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 592,
+      "height": 370,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/size-check-light-256.png",
+      "sha256": "6972370cf04f62f0d8b54165e26997ca348155d292d5b6c136b286bda8c7468e",
+      "byte_size": 344158,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 592,
+      "height": 626,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    },
+    {
+      "path": "docs/design/subject-motifs-20261117/review/size-check-light-64.png",
+      "sha256": "092db05c5f3d0d76c2f724f6b41793b3bd83bf9d7f762eda2fa5da2dd8d14642",
+      "byte_size": 47182,
+      "format": "PNG",
+      "mode": "RGBA",
+      "width": 592,
+      "height": 242,
+      "alpha_extrema": [
+        255,
+        255
+      ]
+    }
+  ]
+}

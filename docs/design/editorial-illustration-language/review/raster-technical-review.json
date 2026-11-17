@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "png_decodes": 6,
+  "all_original_hashes_match": true,
+  "r2_substantial_margin_floor_12_percent_pass": true,
+  "r2_empty_space_probes_pass": 3,
+  "strict_zero_alpha_background": false,
+  "caveat": "Low-alpha residue persists. Substantial painted bounds use alpha > 16; do not equate this with a wholly clean cutout.",
+  "actual_size_sheets": [
+    160,
+    320,
+    640
+  ],
+  "detail_width_px": 1536,
+  "review_mattes": [
+    "#f4f1e8",
+    "#181c20"
+  ],
+  "checks": [
+    {
+      "id": "el01-interface",
+      "r1": {
+        "path": "docs/design/editorial-illustration-language/process/r1/el01-interface-r1.png",
+        "bytes": 1375199,
+        "sha256": "f55d187e828d203423be1fbbdc4da8ff7fe7d893f36f0c060222c5337dff1366",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1138960,
+        "partially_transparent_pixels": 433904,
+        "low_alpha_1_to_16_pixels": 14524,
+        "painted_bounds_alpha_gt_0": [
+          0,
+          65,
+          1482,
+          1024
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          94,
+          329,
+          1441,
+          754
+        ],
+        "substantial_margins_ltrb_percent": [
+          6.12,
+          32.129,
+          6.185,
+          26.367
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 6.12,
+        "outer_border_max_alpha": 1,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": false
+      },
+      "r2": {
+        "path": "public/artwork/editorial-illustration-v1/originals/el01-interface-r2.png",
+        "bytes": 1158125,
+        "sha256": "a78451f3ffe5c6d3e3eeeaa0bfc4a9af37e8889fde3680f1b0202221483ca938",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1280122,
+        "partially_transparent_pixels": 292742,
+        "low_alpha_1_to_16_pixels": 9343,
+        "painted_bounds_alpha_gt_0": [
+          81,
+          28,
+          1482,
+          952
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          200,
+          351,
+          1305,
+          702
+        ],
+        "substantial_margins_ltrb_percent": [
+          13.021,
+          34.277,
+          15.039,
+          31.445
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 13.021,
+        "outer_border_max_alpha": 0,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": true
+      },
+      "probe": {
+        "pixel": [
+          946,
+          645
+        ],
+        "alpha": 0
+      }
+    },
+    {
+      "id": "el02-cutaway",
+      "r1": {
+        "path": "docs/design/editorial-illustration-language/process/r1/el02-cutaway-r1.png",
+        "bytes": 1998215,
+        "sha256": "ff6d34aecd86f0bd5e8f1fda21533143c9b3c9170b7e6e12fc4f41c6c4322df3",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1001469,
+        "partially_transparent_pixels": 571395,
+        "low_alpha_1_to_16_pixels": 19580,
+        "painted_bounds_alpha_gt_0": [
+          223,
+          35,
+          1408,
+          958
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          229,
+          85,
+          1316,
+          933
+        ],
+        "substantial_margins_ltrb_percent": [
+          14.909,
+          8.301,
+          14.323,
+          8.887
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 8.301,
+        "outer_border_max_alpha": 0,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": false
+      },
+      "r2": {
+        "path": "public/artwork/editorial-illustration-v1/originals/el02-cutaway-r2.png",
+        "bytes": 1553663,
+        "sha256": "00e7828545a9d849d3407ab8fb359b9232300cc1788420e4a5384c3e3c4f48c1",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1253382,
+        "partially_transparent_pixels": 319482,
+        "low_alpha_1_to_16_pixels": 12328,
+        "painted_bounds_alpha_gt_0": [
+          25,
+          29,
+          1508,
+          1024
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          361,
+          195,
+          1174,
+          830
+        ],
+        "substantial_margins_ltrb_percent": [
+          23.503,
+          19.043,
+          23.568,
+          18.945
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 18.945,
+        "outer_border_max_alpha": 1,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": true
+      },
+      "probe": {
+        "pixel": [
+          900,
+          450
+        ],
+        "alpha": 0
+      }
+    },
+    {
+      "id": "el03-sequence",
+      "r1": {
+        "path": "docs/design/editorial-illustration-language/process/r1/el03-sequence-r1.png",
+        "bytes": 1169304,
+        "sha256": "64de8088b86ee0cfde8f0b60c80961644b0465a1e0565df4e3af320cd3ab7d4c",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1342003,
+        "partially_transparent_pixels": 230861,
+        "low_alpha_1_to_16_pixels": 10165,
+        "painted_bounds_alpha_gt_0": [
+          65,
+          157,
+          1466,
+          1024
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          87,
+          249,
+          1396,
+          835
+        ],
+        "substantial_margins_ltrb_percent": [
+          5.664,
+          24.316,
+          9.115,
+          18.457
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 5.664,
+        "outer_border_max_alpha": 1,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": false
+      },
+      "r2": {
+        "path": "public/artwork/editorial-illustration-v1/originals/el03-sequence-r2.png",
+        "bytes": 1012856,
+        "sha256": "3a04e2f1b20307987ff374042b2f89d58f5ed832592ed6928c477c0deee898d4",
+        "format": "PNG",
+        "mode": "RGBA",
+        "width": 1536,
+        "height": 1024,
+        "alpha_min": 0,
+        "alpha_max": 254,
+        "transparent_pixels": 1415516,
+        "partially_transparent_pixels": 157348,
+        "low_alpha_1_to_16_pixels": 8008,
+        "painted_bounds_alpha_gt_0": [
+          19,
+          53,
+          1466,
+          976
+        ],
+        "substantial_bounds_alpha_gt_16": [
+          202,
+          294,
+          1268,
+          774
+        ],
+        "substantial_margins_ltrb_percent": [
+          13.151,
+          28.711,
+          17.448,
+          24.414
+        ],
+        "margin_order": [
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "minimum_substantial_margin_percent": 13.151,
+        "outer_border_max_alpha": 0,
+        "has_real_transparency": true,
+        "strict_zero_alpha_background_claim": false,
+        "candidate_margin_floor_12_percent_pass": true
+      },
+      "probe": {
+        "pixel": [
+          1135,
+          505
+        ],
+        "alpha": 0
+      }
+    }
+  ]
+}

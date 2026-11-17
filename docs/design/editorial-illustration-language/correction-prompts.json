@@ -1,0 +1,24 @@
+{
+  "revision": "r2",
+  "reason": "Improve intrinsic transparent margins. R1 substantial painted bounds were narrower than brief; preserve r1 unchanged as process evidence.",
+  "assets": [
+    {
+      "id": "el01-interface",
+      "reference": "el01-interface-r1.png",
+      "prompt": "Refine this NEW editorial study. Preserve the depicted subject, component count, orientation, visual relationships, engraved pen-and-ink drawing, graphite/ivory/red palette and all major shapes. Change only framing and transparent edge cleanliness: uniformly reduce the entire illustration to about 72% of its current scale, keeping a centered LANDSCAPE 3:2 transparent canvas at the same dimensions. Every substantial painted part must lie within the central 68% of canvas width and 66% of canvas height; ensure at least 16% empty transparent margin on every edge. All background and all empty gaps must have zero alpha: no matte, white fog, glow, drop shadow, haze, checkerboard or floating residue. Retain solid warm ivory only on physical surfaces. Do not add, remove, or reposition individual components, arrows, annotation, text, icons, logos or decorations. Maintain clear strong outer contours and quiet planes. This is an illustrative sculptural metaphor, not a measured diagram.",
+      "transparent_background": true
+    },
+    {
+      "id": "el02-cutaway",
+      "reference": "el02-cutaway-r1.png",
+      "prompt": "Refine this NEW editorial study. Preserve the depicted subject, component count, orientation, visual relationships, engraved pen-and-ink drawing, graphite/ivory/red palette and all major shapes. Change only framing and transparent edge cleanliness: uniformly reduce the entire illustration to about 72% of its current scale, keeping a centered LANDSCAPE 3:2 transparent canvas at the same dimensions. Every substantial painted part must lie within the central 68% of canvas width and 66% of canvas height; ensure at least 16% empty transparent margin on every edge. All background and all empty gaps must have zero alpha: no matte, white fog, glow, drop shadow, haze, checkerboard or floating residue. Retain solid warm ivory only on physical surfaces. Do not add, remove, or reposition individual components, arrows, annotation, text, icons, logos or decorations. Maintain clear strong outer contours and quiet planes. This is an illustrative sculptural metaphor, not a measured diagram.",
+      "transparent_background": true
+    },
+    {
+      "id": "el03-sequence",
+      "reference": "el03-sequence-r1.png",
+      "prompt": "Refine this NEW editorial study. Preserve the depicted subject, component count, orientation, visual relationships, engraved pen-and-ink drawing, graphite/ivory/red palette and all major shapes. Change only framing and transparent edge cleanliness: uniformly reduce the entire illustration to about 72% of its current scale, keeping a centered LANDSCAPE 3:2 transparent canvas at the same dimensions. Every substantial painted part must lie within the central 68% of canvas width and 66% of canvas height; ensure at least 16% empty transparent margin on every edge. All background and all empty gaps must have zero alpha: no matte, white fog, glow, drop shadow, haze, checkerboard or floating residue. Retain solid warm ivory only on physical surfaces. Do not add, remove, or reposition individual components, arrows, annotation, text, icons, logos or decorations. Maintain clear strong outer contours and quiet planes. This is an illustrative sculptural metaphor, not a measured diagram.",
+      "transparent_background": true
+    }
+  ]
+}

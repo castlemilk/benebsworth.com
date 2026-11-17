@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "checked_date_local": "2026-11-17T22:42:55.179735+11:00",
+  "source_baseline": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+  "asset_checks": {
+    "passed": true,
+    "pngs_decoded_and_hash_checked": 36,
+    "originals_rgba_1254_square": 4,
+    "full_canvas_transparent_thumbnails": 16,
+    "review_composites_and_sheets": 16,
+    "json_parse": "pass",
+    "source_associations_hash_checked": 8,
+    "all_fifty_prior_selections_sha256_and_size_match": true,
+    "prior_selected_files_checked": 50,
+    "prior_selected_files": [
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/01-maths-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/02-chemistry-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/03-biology-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/04-earth-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/05-geology-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/06-oceanography-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/07-meteorology-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/08-ecology-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/09-genetics-r1.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-01/originals/10-neuroscience-r2.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/01-kubernetes-container-orchestration.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/02-istio-interwoven-routed-mesh.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/refinements/03-tekton-staged-assembly-conveyor-v2.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/refinements/04-kustomize-nested-configurable-plates-v2.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/05-minikube-compact-container-workstation.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/06-gcp-abstract-cloud-infrastructure.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/07-react-interlocking-interface-modules.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/08-technology-precision-mechanism.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/originals/09-general-open-annotated-field-notebook.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-02/refinements/10-hiking-cairn-and-trail-compass-v2.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/01-databases.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/02-distributed-systems.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/03-networking.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/04-cybersecurity.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/05-operating-systems.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/06-compilers-v2.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/07-programming-languages.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/08-testing.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/09-observability.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-03/originals/10-data-engineering.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/01-probability-framed-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/02-statistics-framed-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/03-optimization-framed-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/04-information-theory-framed-transparent-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/05-control-theory-framed-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/06-signal-processing-framed-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/07-numerical-methods-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/08-geometry-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/09-topology-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "docs/design/category-expansion/batch-04/recovered/selected/10-cryptography-framed-original-batch-04.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/thermodynamics-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/fluid-dynamics-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/materials-science-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/optics-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/robotics-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/acoustics-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/astronomy-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/geophysics-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/renewable-energy-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      },
+      {
+        "path": "public/artwork/category-expansion-v1/batch-05/biotechnology-original.png",
+        "sha256_matches": true,
+        "byte_size_matches": true
+      }
+    ],
+    "baseline_tracked_files_modified": 0,
+    "stage_paths_only_owned": true,
+    "git_diff_cached_check": "passed"
+  },
+  "normal_gates": {
+    "pre_commit": {
+      "command": "PATH=/workspace/scratch/b9f080651e91/motif-gate-tools/bin:$PATH .githooks/pre-commit",
+      "cwd": "/workspace/scratch/b9f080651e91/blog-motifs-audit",
+      "start_utc": "2026-11-17T11:39:26.635138+00:00",
+      "end_utc": "2026-11-17T11:39:46.244268+00:00",
+      "start_melbourne": "2026-11-17T22:39:26.635138+11:00",
+      "elapsed_seconds": 19.615,
+      "exit_code": 0,
+      "stdout_log": "/workspace/scratch/b9f080651e91/motif-gate-tools/pre-commit.stdout.log",
+      "stderr_log": "/workspace/scratch/b9f080651e91/motif-gate-tools/pre-commit.stderr.log"
+    },
+    "pre_push": {
+      "command": "PATH=/workspace/scratch/b9f080651e91/motif-gate-tools/bin:$PATH .githooks/pre-push",
+      "cwd": "/workspace/scratch/b9f080651e91/blog-motifs-audit",
+      "start_utc": "2026-11-17T11:39:55.386417+00:00",
+      "end_utc": "2026-11-17T11:39:55.507839+00:00",
+      "start_melbourne": "2026-11-17T22:39:55.386417+11:00",
+      "elapsed_seconds": 0.122,
+      "exit_code": 201,
+      "stdout_log": "/workspace/scratch/b9f080651e91/motif-gate-tools/pre-push.stdout.log",
+      "stderr_log": "/workspace/scratch/b9f080651e91/motif-gate-tools/pre-push.stderr.log"
+    }
+  },
+  "not_executed": [
+    "benchmark verification script (launcher failed before execution)",
+    "full Vitest suite",
+    "static build and prebuild/postbuild",
+    "native browser / assistive technology / consuming-layout checks",
+    "remote exact-commit CI"
+  ],
+  "publication": "blocked before push; do not use alternative transport to bypass the required gate"
+}

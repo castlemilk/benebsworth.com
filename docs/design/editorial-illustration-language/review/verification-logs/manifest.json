@@ -1,0 +1,40 @@
+{
+  "encoding": "gzip; unchanged console output after decompression",
+  "logs": [
+    {
+      "file": "build.log.gz",
+      "bytes": 5067,
+      "sha256": "ed68cc44ec292aee19b5219e705ae9d2874f86162284f9198f8c3581526c201b",
+      "uncompressed_bytes": 16244,
+      "uncompressed_sha256": "0be8677fe0cf80cb07b6e9245af8fca6dd8cc866f7f9fcda9fba4f27041c4bcb"
+    },
+    {
+      "file": "hooks-test.log.gz",
+      "bytes": 602,
+      "sha256": "0edec4667fcf9143f2c562e9d2e3470c2208fc91a57d45bf226943a83d587b23",
+      "uncompressed_bytes": 1343,
+      "uncompressed_sha256": "9e1df3ded160f5b035bf56631e2777fa8bd10622988437d3f55f5dfd1c5f76e5"
+    },
+    {
+      "file": "offline-verifier.log.gz",
+      "bytes": 220,
+      "sha256": "4e81ef4aa5b01a71a6105af707a1a4e948c78d6b70113486a12a824cbf2ccf5c",
+      "uncompressed_bytes": 334,
+      "uncompressed_sha256": "8b004aecb0dee9d0d9bdea35e2bdb94954702cf6aa451dcc2ce2642d1d134b73"
+    },
+    {
+      "file": "unit-attempt.log.gz",
+      "bytes": 372,
+      "sha256": "e5beec56de547c33458b6bbb7307894c635d0fa2a162f5c4ce5fe5fa764ad9ca",
+      "uncompressed_bytes": 680,
+      "uncompressed_sha256": "12889ad88cc43ea8dc66cfb3044955188067b7bf6c2611ae2cbf307813f465e7"
+    },
+    {
+      "file": "workspace-temp-diagnostic.log.gz",
+      "bytes": 495,
+      "sha256": "33940773e8ddd32924d41dd150cec045932693c4900f5ff05ce252cc1a451009",
+      "uncompressed_bytes": 1096,
+      "uncompressed_sha256": "6b92a79ce0b364f171315853bb055f609b3d44b628662037ed6511c3727d48b0"
+    }
+  ]
+}

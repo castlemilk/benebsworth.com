@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "audited_source_base": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+  "latest_observed_master": "06438f05c829a0df0d05e625e7adebec09eb895c",
+  "master_advance": "PR165 merged; 28 additive bridge source/document/test files",
+  "latest_changed_paths": [
+    "docs/knowledge/01-source-contract.md",
+    "docs/knowledge/02-console-integration-proposal.md",
+    "docs/knowledge/03-current-master-integration.md",
+    "lib/knowledge-source/build.test.ts",
+    "lib/knowledge-source/build.ts",
+    "lib/knowledge-source/curation.test.ts",
+    "lib/knowledge-source/curation.ts",
+    "lib/knowledge-source/execution-contract.test.ts",
+    "lib/knowledge-source/extract-mdx.test.ts",
+    "lib/knowledge-source/extract-mdx.ts",
+    "lib/knowledge-source/identity.ts",
+    "lib/knowledge-source/integration/bridge.test.ts",
+    "lib/knowledge-source/integration/bridge.ts",
+    "lib/knowledge-source/integration/execution.test.ts",
+    "lib/knowledge-source/integration/host-seam.test.ts",
+    "lib/knowledge-source/integration/host-seam.ts",
+    "lib/knowledge-source/integration/repository.ts",
+    "lib/knowledge-source/integration/study-source.test.ts",
+    "lib/knowledge-source/integration/study-source.ts",
+    "lib/knowledge-source/navigation.test.ts",
+    "lib/knowledge-source/navigation.ts",
+    "lib/knowledge-source/repository.test.ts",
+    "lib/knowledge-source/repository.ts",
+    "lib/knowledge-source/revision.test.ts",
+    "lib/knowledge-source/revision.ts",
+    "lib/knowledge-source/schema.ts",
+    "scripts/export-knowledge-integration.mts",
+    "scripts/export-knowledge-source.mts"
+  ],
+  "owned_path_overlap": false,
+  "audited_source_input_changes": [],
+  "pr165": {
+    "number": 165,
+    "state": "merged",
+    "head": "76913a33b353c3825aa5f1323564456354b1f4ff",
+    "merge_commit": "06438f05c829a0df0d05e625e7adebec09eb895c"
+  },
+  "open_prs_at_recheck": [
+    {
+      "number": 166,
+      "head": "e90f22845f9256148ac86678b3af9d061909000a"
+    },
+    {
+      "number": 161,
+      "head": "f7dd7e57861891ccb81a7c9fb08467a555999190"
+    },
+    {
+      "number": 160,
+      "head": "903f7503236fc16855ce2dbfb8049592e902a617"
+    },
+    {
+      "number": 159,
+      "head": "ee911f9502497cb61667530467023beb565e5a4f"
+    },
+    {
+      "number": 158,
+      "head": "85eda8e00d4f2408aef841144bbae5a3a01f6713"
+    }
+  ],
+  "new_art_siblings": [
+    "docs/design/editorial-illustration-language/",
+    "public/artwork/editorial-illustration-v1/",
+    "docs/design/marks-ornaments-v1/",
+    "public/artwork/marks-ornaments-v1/",
+    "docs/design/blog-applications-v1/"
+  ],
+  "scope": "read-only snapshot, not permission or release approval"
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "file": "public/artwork/subject-motifs-v1/originals/01-qubit-state-r1.png",
+    "sha256": "1387656dddf8277acf1acc8abdab4297830a20f50b209344300a7400cd22299f",
+    "byte_size": 720413,
+    "mode": "RGBA",
+    "width": 1254,
+    "height": 1254,
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "nonzero_alpha_bounds": [
+      33,
+      0,
+      1136,
+      1254
+    ],
+    "alpha_at_least_16_bounds": [
+      202,
+      219,
+      1052,
+      1059
+    ],
+    "minimum_margin_at_alpha_16_percent": 15.55,
+    "edge_alpha_max": 1,
+    "zero_alpha_percent": 84.7997,
+    "alpha_1_to_15_percent": 3.4243
+  },
+  {
+    "file": "public/artwork/subject-motifs-v1/originals/02-cantilever-gyroscope-r1.png",
+    "sha256": "4309d944dd4f5b459fc068770f0d8ccb87ae985759e4855d089b025f8e494c93",
+    "byte_size": 816978,
+    "mode": "RGBA",
+    "width": 1254,
+    "height": 1254,
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "nonzero_alpha_bounds": [
+      0,
+      0,
+      1254,
+      1229
+    ],
+    "alpha_at_least_16_bounds": [
+      171,
+      189,
+      1081,
+      1065
+    ],
+    "minimum_margin_at_alpha_16_percent": 13.64,
+    "edge_alpha_max": 1,
+    "zero_alpha_percent": 81.4826,
+    "alpha_1_to_15_percent": 1.0254
+  },
+  {
+    "file": "public/artwork/subject-motifs-v1/originals/03-reverse-mode-tape-r1.png",
+    "sha256": "a583d9edef218d22ef017adee1acd62bd6464f67f5372095483fdbf8b75bc04b",
+    "byte_size": 1229528,
+    "mode": "RGBA",
+    "width": 1254,
+    "height": 1254,
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "nonzero_alpha_bounds": [
+      0,
+      19,
+      1240,
+      1254
+    ],
+    "alpha_at_least_16_bounds": [
+      133,
+      211,
+      1117,
+      1104
+    ],
+    "minimum_margin_at_alpha_16_percent": 10.61,
+    "edge_alpha_max": 1,
+    "zero_alpha_percent": 62.1672,
+    "alpha_1_to_15_percent": 13.5699
+  },
+  {
+    "file": "public/artwork/subject-motifs-v1/originals/04-vectorised-arithmetic-r1.png",
+    "sha256": "60d859ea91f73a90e514288a2cee7707020629b6531dcd57a157d22f794b73e1",
+    "byte_size": 919950,
+    "mode": "RGBA",
+    "width": 1254,
+    "height": 1254,
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "nonzero_alpha_bounds": [
+      33,
+      21,
+      1240,
+      1254
+    ],
+    "alpha_at_least_16_bounds": [
+      143,
+      191,
+      1110,
+      1094
+    ],
+    "minimum_margin_at_alpha_16_percent": 11.4,
+    "edge_alpha_max": 1,
+    "zero_alpha_percent": 79.754,
+    "alpha_1_to_15_percent": 1.1414
+  }
+]

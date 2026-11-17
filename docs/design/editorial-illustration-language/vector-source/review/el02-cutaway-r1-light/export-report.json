@@ -1,0 +1,153 @@
+{
+  "source": {
+    "file": "el02-cutaway-r1-light.svg",
+    "sha256": "735b3b3802517a3c37d93eea1685f80b601fb73fd9d5357b05196ae2da9d0eea",
+    "bytes": 2561,
+    "viewBox": [
+      0,
+      0,
+      1200,
+      800
+    ],
+    "elements": 15,
+    "counts": {
+      "svg": 1,
+      "g": 1,
+      "path": 11,
+      "desc": 1,
+      "title": 1
+    },
+    "static_profile": "pass",
+    "alpha": "not-tested",
+    "warnings": [
+      "Path grammar and painted bounds require a successful renderer and visual inspection."
+    ]
+  },
+  "renderer": {
+    "name": "sharp",
+    "versions": {
+      "aom": "3.13.1",
+      "archive": "3.8.2",
+      "cairo": "1.18.4",
+      "cgif": "0.5.0",
+      "exif": "0.6.25",
+      "expat": "2.7.3",
+      "ffi": "3.5.2",
+      "fontconfig": "2.17.1",
+      "freetype": "2.14.1",
+      "fribidi": "1.0.16",
+      "glib": "2.86.1",
+      "harfbuzz": "12.1.0",
+      "heif": "1.20.2",
+      "highway": "1.3.0",
+      "imagequant": "2.4.1",
+      "lcms": "2.17",
+      "mozjpeg": "0826579",
+      "pango": "1.57.0",
+      "pixman": "0.46.4",
+      "png": "1.6.50",
+      "proxy-libintl": "0.5",
+      "rsvg": "2.61.2",
+      "spng": "0.7.4",
+      "tiff": "4.7.1",
+      "vips": "8.17.3",
+      "webp": "1.6.0",
+      "xml2": "2.15.1",
+      "zlib-ng": "2.2.5",
+      "sharp": "0.34.5"
+    }
+  },
+  "exports": [
+    {
+      "file": "transparent-64.png",
+      "width": 64,
+      "height": 43,
+      "sha256": "7e2b818b07d61adaecc52e66a8d8763e0ae584bc42891e5363ea4c7f51ea345b",
+      "alpha": {
+        "clear_fraction": 0.8484738372093024,
+        "partial_pixels": 256,
+        "painted_pixels": 417,
+        "painted_bounds": [
+          13,
+          8,
+          51,
+          34
+        ],
+        "edge_pixels": 0
+      }
+    },
+    {
+      "file": "transparent-160.png",
+      "width": 160,
+      "height": 107,
+      "sha256": "fc8912af3f5110111187fc2a4af3260e61e21702b9705de187fd8ee8612aeb14",
+      "alpha": {
+        "clear_fraction": 0.8776869158878504,
+        "partial_pixels": 730,
+        "painted_pixels": 2094,
+        "painted_bounds": [
+          35,
+          20,
+          128,
+          85
+        ],
+        "edge_pixels": 0
+      }
+    },
+    {
+      "file": "transparent-320.png",
+      "width": 320,
+      "height": 213,
+      "sha256": "e761c05d3e8c0c10565c2ba8ca2031a6f4ccb4007aa56fd04d79d6f6043af189",
+      "alpha": {
+        "clear_fraction": 0.8873239436619719,
+        "partial_pixels": 1308,
+        "painted_pixels": 7680,
+        "painted_bounds": [
+          71,
+          41,
+          257,
+          169
+        ],
+        "edge_pixels": 0
+      }
+    },
+    {
+      "file": "transparent-640.png",
+      "width": 640,
+      "height": 427,
+      "sha256": "f89f74dbc2c206c3e5b705a6639d944c612d7837c9818c517f31b345b591c9aa",
+      "alpha": {
+        "clear_fraction": 0.8919606264637002,
+        "partial_pixels": 2327,
+        "painted_pixels": 29525,
+        "painted_bounds": [
+          142,
+          82,
+          515,
+          340
+        ],
+        "edge_pixels": 0
+      }
+    },
+    {
+      "file": "transparent-1600.png",
+      "width": 1600,
+      "height": 1067,
+      "sha256": "0ad16465e96db5e704e570e0fb277aedb9fd37e330d408d9f8ca2e75bf26cf3e",
+      "alpha": {
+        "clear_fraction": 0.8946198453608247,
+        "partial_pixels": 5799,
+        "painted_pixels": 179905,
+        "painted_bounds": [
+          356,
+          206,
+          1287,
+          851
+        ],
+        "edge_pixels": 0
+      }
+    }
+  ],
+  "visual_review": "pending"
+}

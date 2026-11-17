@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "source_hashes": {
+    "el01-interface-r1-dark.svg": "38ef8f5e24b5ff5c7242ae19d45835210e3ae3495b9e7ff0913adcef9130cd62",
+    "el01-interface-r1-light.svg": "13158f26726a13b77405d0987d3e9d87b63936b2c89b8b201b965211a1eb063a",
+    "el01-interface-r1-mono.svg": "16b062ab0f28e4b21d98bed9f4754b60b94630d1fc3d5254c516dc77e2c89450",
+    "el02-cutaway-r1-dark.svg": "802c3801a612fc13483bfbc0f0a7020f94ec0818b1c00dace0d982e8d21db74a",
+    "el02-cutaway-r1-light.svg": "735b3b3802517a3c37d93eea1685f80b601fb73fd9d5357b05196ae2da9d0eea",
+    "el02-cutaway-r1-mono.svg": "1628fe1c78b1143635451506d7635ff890958278fcfbdde0c0153fdf4d589703",
+    "el03-sequence-r1-dark.svg": "7f68df0baeab61ec2368f0673fa058b90ab7791347984ad3f40e226cf922f1d6",
+    "el03-sequence-r1-light.svg": "f004596772b745eb630075a88b781dfa47983881c7b68b500f3d398069fceba6",
+    "el03-sequence-r1-mono.svg": "c144fda198800de0b3a5a66dbe020d5e776362e56611251863416dc0830847e8"
+  },
+  "determinism": {
+    "regenerations": 2,
+    "unchanged_svg_files": 9
+  },
+  "static_profile": {
+    "passed": 9,
+    "renderer": "Sharp",
+    "versions": {
+      "aom": "3.13.1",
+      "archive": "3.8.2",
+      "cairo": "1.18.4",
+      "cgif": "0.5.0",
+      "exif": "0.6.25",
+      "expat": "2.7.3",
+      "ffi": "3.5.2",
+      "fontconfig": "2.17.1",
+      "freetype": "2.14.1",
+      "fribidi": "1.0.16",
+      "glib": "2.86.1",
+      "harfbuzz": "12.1.0",
+      "heif": "1.20.2",
+      "highway": "1.3.0",
+      "imagequant": "2.4.1",
+      "lcms": "2.17",
+      "mozjpeg": "0826579",
+      "pango": "1.57.0",
+      "pixman": "0.46.4",
+      "png": "1.6.50",
+      "proxy-libintl": "0.5",
+      "rsvg": "2.61.2",
+      "spng": "0.7.4",
+      "tiff": "4.7.1",
+      "vips": "8.17.3",
+      "webp": "1.6.0",
+      "xml2": "2.15.1",
+      "zlib-ng": "2.2.5",
+      "sharp": "0.34.5"
+    }
+  },
+  "raster_exports": {
+    "count": 45,
+    "widths": [
+      64,
+      160,
+      320,
+      640,
+      1600
+    ],
+    "all_nonempty": true,
+    "all_have_transparent_pixels": true,
+    "all_have_zero_edge_pixels": true
+  },
+  "specimens": [
+    {
+      "id": "el01-interface",
+      "geometry_equal_across_palettes": true,
+      "alpha_equal_across_palettes": true,
+      "transparent_space_probes": [
+        {
+          "viewBox_point": [
+            760,
+            345
+          ],
+          "alpha": 0
+        },
+        {
+          "viewBox_point": [
+            620,
+            470
+          ],
+          "alpha": 0
+        },
+        {
+          "viewBox_point": [
+            640,
+            510
+          ],
+          "alpha": 0
+        }
+      ],
+      "painted_margin_fractions": {
+        "left": 0.155,
+        "right": 0.1475,
+        "top": 0.26522961574507964,
+        "bottom": 0.23992502343017807
+      },
+      "large_export_alpha": {
+        "clear_fraction": 0.8152050140581069,
+        "partial_pixels": 3331,
+        "painted_pixels": 315482,
+        "painted_bounds": [
+          248,
+          283,
+          1363,
+          810
+        ],
+        "edge_pixels": 0
+      }
+    },
+    {
+      "id": "el02-cutaway",
+      "geometry_equal_across_palettes": true,
+      "alpha_equal_across_palettes": true,
+      "transparent_space_probes": [
+        {
+          "viewBox_point": [
+            600,
+            350
+          ],
+          "alpha": 0
+        },
+        {
+          "viewBox_point": [
+            500,
+            410
+          ],
+          "alpha": 0
+        },
+        {
+          "viewBox_point": [
+            750,
+            410
+          ],
+          "alpha": 0
+        }
+      ],
+      "painted_margin_fractions": {
+        "left": 0.2225,
+        "right": 0.195,
+        "top": 0.19306466729147143,
+        "bottom": 0.2014995313964386
+      },
+      "large_export_alpha": {
+        "clear_fraction": 0.8946198453608247,
+        "partial_pixels": 5799,
+        "painted_pixels": 179905,
+        "painted_bounds": [
+          356,
+          206,
+          1287,
+          851
+        ],
+        "edge_pixels": 0
+      }
+    },
+    {
+      "id": "el03-sequence",
+      "geometry_equal_across_palettes": true,
+      "alpha_equal_across_palettes": true,
+      "transparent_space_probes": [
+        {
+          "viewBox_point": [
+            500,
+            500
+          ],
+          "alpha": 0
+        },
+        {
+          "viewBox_point": [
+            880,
+            460
+          ],
+          "alpha": 0
+        }
+      ],
+      "painted_margin_fractions": {
+        "left": 0.1475,
+        "right": 0.139375,
+        "top": 0.34208059981255856,
+        "bottom": 0.26991565135895035
+      },
+      "large_export_alpha": {
+        "clear_fraction": 0.9214585285848172,
+        "partial_pixels": 3857,
+        "painted_pixels": 134086,
+        "painted_bounds": [
+          236,
+          365,
+          1376,
+          778
+        ],
+        "edge_pixels": 0
+      }
+    }
+  ],
+  "visual_review": "See REVIEW.md; this script does not certify visual acceptance.",
+  "limits": [
+    "Illustrative geometry only; no physical, scientific or temporal model validated.",
+    "No live browser, host layout, accessibility-tree, download or release checks.",
+    "Monochrome means neutral artwork colors, not a certified one-ink print separation."
+  ]
+}

@@ -48,4 +48,14 @@ Six authored cases cover light/dark at 1280×900 and 390×844, search/reset cont
 
 When executed, each capture records route, viewport, theme, media, fixture revision and `EXPECTED_SHA`. Captures are named `gallery-view-folio-workbench-*` for the existing CI evidence upload. Until an actual artifact is read, the files are a test plan, not screenshots.
 
-The extension browser timed out and the permitted cloud fallback received `ERR_CONNECTION_REFUSED` for the isolated local preview. No browser acceptance, screen-reader check, 200% zoom check, deployed route or manual local capture is claimed. Follow the [verification receipt](../../development/blog-design-03.md) and [Space page](https://chatgpt.com/space/page_74f855da15cc81919425d848da51513d) for subsequent evidence.
+The extension browser timed out and the permitted cloud fallback received `ERR_CONNECTION_REFUSED` for the isolated local preview. No local-browser acceptance or manual local capture was obtained. Screen-reader, 200% zoom and deployed-state checks are not claimed. Subsequent CI observations appear below. Follow the [verification receipt](../../development/blog-design-03.md) and [Space page](https://chatgpt.com/space/page_74f855da15cc81919425d848da51513d) for subsequent evidence.
+
+## First actual-browser review — revision 28915abd
+
+[Site checks run 44025753400](https://github.com/castlemilk/benebsworth.com/actions/runs/44025753400) completed the 775-page static export and generated nine workbench Chromium captures. The full browser result was 162 passed, 1 failed. Desktop light/dark captures show the selected serif/condensed/handwriting hierarchy, open reading margins and restrained source annotation. At 390×480, the native inspector retained Close while its source body scrolled, and the keyboard lifecycle assertions passed.
+
+The failing 320px synthetic-title case measured a three-pixel scrollHeight/clientHeight difference. Inspection of its actual failure image revealed a separate real horizontal clip from the native dialog max-width and implicit grid minimum. The source correction sets explicit viewport max-width, a minmax(0, 1fr) column and min-width:0 on both header and scroller. The revised assertion measures visible containment and reachability of the last text rather than treating glyph ink outside the line box as clipped content. The synthetic title remains visibly labelled as test content.
+
+The first-run images are preserved in the dedicated Space page with their exact revision. They are actual browser observations, not the generated concept. Acceptance of the corrected 320px dialog depends on the next exact-head run; screen-reader, physical touch and 200% zoom review remain separate.
+
+The independent review of both 390px full-page themes found no additional blocking layout defect. It noted a minor decorative-arrow orphan on long source links; the correction uses a nonbreaking space before that hidden arrow. The first-run forced-colour recovery remains readable, and the desktop empty-result capture retains the selected Lab source/context beside the recovery action.

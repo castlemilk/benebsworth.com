@@ -284,16 +284,89 @@ test('320px layout wraps real long titles and locators while reading controls st
     await heading.evaluate((element, text) => { element.textContent = text }, syntheticTitle)
     await expect(dialog).toHaveAccessibleName(syntheticTitle)
     await expect(heading).toHaveText(syntheticTitle)
-    const titleOverflow = await heading.evaluate(element => ({
-      horizontal: element.scrollWidth - element.clientWidth,
-      vertical: element.scrollHeight - element.clientHeight,
-    }))
-    expect(titleOverflow.horizontal).toBeLessThanOrEqual(1)
-    expect(titleOverflow.vertical).toBeLessThanOrEqual(1)
+    const scroller = dialog.locator(':scope > div')
+    await scroller.evaluate(element => element.scrollTo({ top: 0, behavior: 'instant' }))
+    const geometry = await dialog.evaluate(element => {
+      const header = element.querySelector<HTMLElement>(':scope > header')!
+      const body = element.querySelector<HTMLElement>(':scope > div')!
+      const title = body.querySelector('h2')!
+      const bounds = (node: Element) => {
+        const { left, right, top, bottom } = node.getBoundingClientRect()
+        return { left, right, top, bottom }
+      }
+      const bodyBounds = bounds(body)
+      const style = getComputedStyle(body)
+      return {
+        dialog: bounds(element), header: bounds(header), scroller: bodyBounds, title: bounds(title),
+        contentLeft: bodyBounds.left + body.clientLeft + parseFloat(style.paddingLeft),
+        contentRight: bodyBounds.left + body.clientLeft + body.clientWidth - parseFloat(style.paddingRight),
+        horizontalOverflow: body.scrollWidth - body.clientWidth,
+      }
+    })
+    // The scrollable title may be taller than the viewport. Its horizontal
+    // bounds and both grid rows must still fit inside the actual native dialog,
+    // including the browser's max-width rule and grid min-content sizing.
+    const viewport = page.viewportSize()!
+    expect(geometry.dialog.left).toBeGreaterThanOrEqual(0)
+    expect(geometry.dialog.right).toBeLessThanOrEqual(viewport.width)
+    expect(geometry.dialog.top).toBeGreaterThanOrEqual(0)
+    expect(geometry.dialog.bottom).toBeLessThanOrEqual(viewport.height)
+    for (const [name, box] of [['header', geometry.header], ['scroller', geometry.scroller]] as const) {
+      expect(box.left, `${name} left edge`).toBeGreaterThanOrEqual(geometry.dialog.left - 1)
+      expect(box.right, `${name} right edge`).toBeLessThanOrEqual(geometry.dialog.right + 1)
+      expect(box.top, `${name} top edge`).toBeGreaterThanOrEqual(geometry.dialog.top - 1)
+      expect(box.bottom, `${name} bottom edge`).toBeLessThanOrEqual(geometry.dialog.bottom + 1)
+    }
+    expect(geometry.header.bottom).toBeLessThanOrEqual(geometry.scroller.top + 1)
+    expect(geometry.title.left).toBeGreaterThanOrEqual(geometry.contentLeft - 1)
+    expect(geometry.title.right).toBeLessThanOrEqual(geometry.contentRight + 1)
+    expect(geometry.horizontalOverflow).toBeLessThanOrEqual(1)
     await expect(close).toBeInViewport({ ratio: 1 })
     const position = await close.boundingBox()
+    expect(position).not.toBeNull()
+    expect(position!.x).toBeGreaterThanOrEqual(geometry.header.left)
+    expect(position!.x + position!.width).toBeLessThanOrEqual(geometry.header.right)
+
+    // A font's glyph box can extend beyond the h2 line box without clipping.
+    // Measure the final non-whitespace character itself and bring it inside
+    // the body's padded viewport, rather than comparing h2 scroll/clientHeight.
+    const titleEnd = await heading.evaluate(element => {
+      const body = element.parentElement!
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+      let lastText: Text | null = null
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (node.textContent?.trim()) lastText = node as Text
+      }
+      const lastCharacter = lastText?.data.match(/\S(?=\s*$)/u)
+      if (!lastText || !lastCharacter || lastCharacter.index === undefined) throw new Error('Synthetic heading has no final text character')
+      const range = document.createRange()
+      range.setStart(lastText, lastCharacter.index)
+      range.setEnd(lastText, lastCharacter.index + lastCharacter[0].length)
+      const bodyBounds = body.getBoundingClientRect()
+      const style = getComputedStyle(body)
+      const paddedViewport = {
+        left: bodyBounds.left + body.clientLeft + parseFloat(style.paddingLeft),
+        right: bodyBounds.left + body.clientLeft + body.clientWidth - parseFloat(style.paddingRight),
+        top: bodyBounds.top + body.clientTop + parseFloat(style.paddingTop),
+        bottom: bodyBounds.top + body.clientTop + body.clientHeight - parseFloat(style.paddingBottom),
+      }
+      body.scrollTo({ top: body.scrollTop + range.getBoundingClientRect().bottom - paddedViewport.bottom, behavior: 'instant' })
+      const { left, right, top, bottom, width, height } = range.getBoundingClientRect()
+      return { text: { left, right, top, bottom, width, height }, viewport: paddedViewport }
+    })
+    expect(titleEnd.text.width).toBeGreaterThan(0)
+    expect(titleEnd.text.height).toBeGreaterThan(0)
+    expect(titleEnd.text.left).toBeGreaterThanOrEqual(titleEnd.viewport.left - 1)
+    expect(titleEnd.text.right).toBeLessThanOrEqual(titleEnd.viewport.right + 1)
+    expect(titleEnd.text.top).toBeGreaterThanOrEqual(titleEnd.viewport.top - 1)
+    expect(titleEnd.text.bottom).toBeLessThanOrEqual(titleEnd.viewport.bottom + 1)
+    await expect(close).toBeInViewport({ ratio: 1 })
+    const titleEndPosition = await close.boundingBox()
+    expect(titleEndPosition).not.toBeNull()
+    expect(Math.abs(titleEndPosition!.x - position!.x)).toBeLessThanOrEqual(1)
+    expect(Math.abs(titleEndPosition!.y - position!.y)).toBeLessThanOrEqual(1)
     await capture(page, testInfo, 'gallery-view-folio-workbench-light-320x480-synthetic-title-stress.png',
-      'Synthetic layout stress only: the artificially extended h2 is not an article title or scientific evidence')
+      'Synthetic layout stress only: final title text scrolled inside the padded body viewport while Close stays fixed; the extended h2 is not an article title or scientific evidence')
     const disclosure = dialog.getByText('Identity and original tags', { exact: true })
     await disclosure.focus()
     await page.keyboard.press('Enter')
@@ -301,8 +374,8 @@ test('320px layout wraps real long titles and locators while reading controls st
     await expect.poll(() => dialog.locator(':scope > div').evaluate(element => element.scrollTop)).toBeGreaterThan(0)
     await expect(close).toBeInViewport({ ratio: 1 })
     const scrolled = await close.boundingBox()
-    expect(position).not.toBeNull()
     expect(scrolled).not.toBeNull()
+    expect(Math.abs(scrolled!.x - position!.x)).toBeLessThanOrEqual(1)
     expect(Math.abs(scrolled!.y - position!.y)).toBeLessThanOrEqual(1)
     await noPageOverflow(page)
     await heading.evaluate((element, text) => { element.textContent = text }, articleTitle)

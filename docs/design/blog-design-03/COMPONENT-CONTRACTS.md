@@ -135,7 +135,7 @@ The implementation synchronizes its native open state from the controlled open p
 
 When closing, it returns focus to the captured opener if that element is still connected; otherwise it uses the latest connected fallback ref. Teardown calls the same restoration helper, including when the original opener has disappeared. A queued close event is ignored while a newer dialog cycle is open. This prevents the previous cycle’s event from clearing the new opener.
 
-The compact header preserves the Close action while the long title and content scroll. The title is a labelled h2 with tabIndex=-1 and an explicit focus outline. The body has min-height:0, overflow-y:auto and overscroll-behavior:contain. This is source support for long-content and short-viewport operation; native focus containment, repeated entry/exit and actual scroll behavior still require browser acceptance.
+The compact header preserves the Close action while the long title and content scroll. The title is a labelled h2 with tabIndex=-1 and an explicit focus outline. The body has min-width:0, min-height:0, overflow-y:auto and overscroll-behavior:contain. The dialog sets an explicit viewport-derived max-width to override the native user-agent default, and its grid column is minmax(0, 1fr). The header also has min-width:0. These constraints let the flex label shrink while preserving the Close target and wrapping the complete title. This is source support for long-content and short-viewport operation; native focus containment, repeated entry/exit and actual scroll behavior still require browser acceptance.
 
 ## 4. Typography, color and geometry
 
@@ -201,7 +201,7 @@ DEFAULT_READING is **{ size: 19, measure: 'comfortable', notes: true }**. The sa
 | Reading controls / sample | 16px row / 32px column gaps; 24px bottom padding; sample 32px top margin and 24px vertical padding |
 | State block | 24px vertical padding; title/message gaps 12px; action gap 20px |
 | Loading bars | Three static 8px bars; 12px gap; widths 100%, 88%, 60%; maximum width 520px |
-| Dialog | Maximum width 580px; 16px outer margin; width at most viewport minus 32px; max-height viewport minus 32px; 6px radius |
+| Dialog | Width min(580px, viewport minus 32px), with explicit max-width viewport minus 32px; 16px outer margin; zero-minimum grid column; max-height viewport minus 32px; 6px radius |
 | Dialog interior | Header 24px padding and 16px gap; scroller 24px padding; title bottom margin 24px |
 | Control focus | 2px ink outline, 4px offset, no shadow; the programmatically focused dialog title has its own equivalent rule |
 
@@ -367,3 +367,9 @@ The available **Impeccable v4.3.1** skill and its technical-audit reference were
 For browser acceptance, use the exact candidate revision and record route, viewport, theme, fixture, input method and artifact path. Cover light/dark/inherit; keyboard inspection, Escape and explicit Close; repeated close/reopen; removed opener and surviving fallback; long titles and locators; approximately 320px narrow and short viewports; 200% zoom; filter-empty recovery; reduced motion; forced colors; and print. Confirm the full source remains readable and the Close control reachable. Distinguish resized-pointer checks from physical touch/hybrid evidence.
 
 This documentation pass ran no tests or browser sessions. Refer to the parent implementation receipt for commands actually executed and their exact outcomes. The source review, a test result, an illustrative concept, a local preview, a remote PR and a deployed revision are different evidence.
+
+## 9. First native-browser evidence and correction
+
+[CI run 44025753400](https://github.com/castlemilk/benebsworth.com/actions/runs/44025753400) at `28915abdfde858dd84d0a49066708eb8c3baad38` built 775 static pages and passed 3,322 unit tests (5 skipped). Five workbench browser cases passed; the sixth failed its synthetic-title metric. The full browser suite was 162 passed, 1 failed. Nine workbench captures were produced and the native 390×480 inspector was observed with Close reachable before/after scrolling and keyboard focus returned on dismissal. This evidence is scoped to that revision.
+
+The 320px failure capture also revealed real horizontal clipping: the native dialog max-width and implicit grid minimum made the content wider than the visible dialog. The corrected contract explicitly bounds max-width and gives the dialog column/header/scroller a zero minimum. The test checks actual title/scroller bounds and last-text reachability; a small glyph-ink overflow beyond a line box is not itself proof of clipping. The corrected candidate still requires its own CI/browser acceptance.

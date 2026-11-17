@@ -42,7 +42,7 @@ export function FolioSourceCitation({ source, compact = false }: { source: Folio
     <div className={s.citationTop}><span className={s.eyebrow}>{sourceLabels[state]}</span>
       {source.revision && <span className={s.revision} title={source.revision}>{source.revision.slice(0, 8)}</span>}
     </div>
-    {href ? <a className={s.sourceLink} href={href}>{source.title}<span aria-hidden="true"> ↗</span></a>
+    {href ? <a className={s.sourceLink} href={href}>{source.title}<span aria-hidden="true">&nbsp;↗</span></a>
       : <span className={s.sourceLink}>{source.title}</span>}
     {source.locator && <p className={s.locator}>{source.locator}</p>}
     {!href && <p className={s.small}>No usable source link supplied.</p>}

@@ -16,7 +16,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     // Bound file-level contention: integrity suites each scan thousands of assets.
-    maxWorkers: 4,
+    maxWorkers: 1,
     globals: true,
     // Only run app unit tests. Exclude legacy Gatsby tests and Playwright e2e
     // specs (the latter import @playwright/test and are run via `npm run e2e`).

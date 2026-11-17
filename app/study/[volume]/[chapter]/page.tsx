@@ -160,7 +160,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
             {packetHtml && <span>~{minutes} min packet</span>}
             {quiz && <span>{quiz.questions.length} self-test questions</span>}
             {figures.length > 0 && <span>{figures.length} original figures</span>}
-            {bookFigures.length > 0 && <span>{bookFigures.length} book figures</span>}
+            {bookFigures.length > 0 && <span>{bookFigures.length} book references</span>}
             {ch.equations.length > 0 && <span>{ch.equations.length} key equations</span>}
             {ch.charts.length > 0 && <span>{ch.charts.length} charts</span>}
           </div>

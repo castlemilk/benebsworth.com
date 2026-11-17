@@ -303,8 +303,8 @@ $$
 
 ## Figures to look at (in the book)
 
-Rendered below under [From the book](#book-figures); open the book for the full
-captions and surrounding prose.
+Reference links appear alongside the discussion above; open the source book for
+the full figures, captions and surrounding prose.
 
 - [`images/fig-ai-timeline`](#fig-ai-timeline) (TikZ, publication-attention
   curve w/ AI winters): the era structure at a glance.

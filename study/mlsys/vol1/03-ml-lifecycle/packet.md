@@ -364,8 +364,8 @@ $$
 
 ## Figures to look at in the book
 
-Rendered below under [From the book](#book-figures); open the book for the full
-captions and surrounding prose.
+Reference links appear alongside the discussion above; open the source book for
+the full figures, captions and surrounding prose.
 
 - [`fig-lifecycle-overview`](#fig-lifecycle-overview): the six-stage loop with
   artifacts on the edges: the figure the whole chapter defends. Ours

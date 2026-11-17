@@ -314,8 +314,8 @@ $$
 
 ## Figures to look at in the book
 
-Rendered below under [From the book](#book-figures); open the book for the full
-captions and surrounding prose.
+Reference links appear alongside the discussion above; open the source book for
+the full figures, captions and surrounding prose.
 
 - [`fig-cloud-edge-TinyML-comparison`](#fig-deployment-spectrum): the
   five-position spectrum (sensors, device, gateway, on-prem, cloud) with

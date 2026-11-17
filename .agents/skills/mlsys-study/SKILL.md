@@ -44,8 +44,7 @@ study/
       NN_chapter.qmd      # chapter source — read this first
       *_concepts.yml      # book's own concept map (primary/secondary/claims)
       *_quizzes.json      # book's own quiz bank (MCQ/short answers per section)
-      images/             # book figures — study references; mirror the ones the
-                          #   packet cites into book-figures/ (never into diagrams/)
+      images/             # reference-only book figures; do not copy into public source
   mlsys/
     curriculum.md         # all volumes/chapters/sections — the map
     progress.md           # state table + session log — the tracker
@@ -61,10 +60,8 @@ study/
       diagrams/*.svg      # ORIGINAL sketches distilled from the chapter
       book-figures.json   # [{id,file,title,caption}] — same shape; captions say
                           #   what our sketch does differently
-      book-figures/*      # figures referenced by "Figures to look at", mirrored
-                          #   for local study (CC-BY-NC-SA 4.0, attributed on the
-                          #   page). SVG inlines; PNG/JPG/WebP emits a data URI —
-                          #   downscale raster before committing (~1600px wide).
+                          #   Reference metadata renders an attributed source-chapter
+                          #   link; upstream image bytes are not committed or exported.
       podcast.md          # two-host audio-overview script: `A:`/`B:` lines,
                           #   `# hosts: Name | Name` directive, optional
                           #   `::eq[id]` markers tagging turns to equations.json
@@ -246,8 +243,8 @@ the delimiters).
      - Placement: end of the section/bullet that introduces the concept —
        the visual accompanies its explanation, never decorates cold.
      - Embedded ids are auto-filtered from the Sketches / From-the-book /
-       charts galleries — no duplicate rendering. Book figures keep
-       their CC-BY-NC-SA attribution badge inline.
+       charts galleries — no duplicate rendering. Book references keep
+       their source attribution and chapter link inline.
    - **Glossary** — new terms, defined in one line each.
    - **→ Ben's world** — 2–4 concrete connections to his stack: the LLM
      benchmark harness (`lib/lab/llm-benchmark/`), lab effects
@@ -411,9 +408,8 @@ instance:**
   cross-tab. One module listener: invalidate cache, then notify. And
   `useSyncExternalStore`'s server snapshot must be a stable constant
   (`const EMPTY = {}`), not `() => ({})`.
-- Parity across surfaces: when inline embeds gained the attribution badge,
-  gallery book figures stayed bare — same asset, two treatments. Any
-  visual affordance added to one figure path gets mirrored in the other.
+- Keep reference attribution and source-chapter links consistent in inline
+  references and end galleries; neither surface republishes upstream images.
 - Shared hooks before copies: `useReducedMotion` was inline in one file
   while a sibling component hardcoded `animationDuration` without it —
   extract `components/study/use-reduced-motion.ts` rather than letting

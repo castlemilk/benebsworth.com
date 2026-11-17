@@ -1836,6 +1836,10 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
+  /* web.css slides the checked thumb with margin-inline-start:auto; the skin
+     slides it with translate. Without this reset both apply and the thumb
+     overshoots the track. */
+  margin-inline-start: 0;
   background: linear-gradient(180deg, #ffffff, #f2f2f1);
   box-shadow:
     0 1px 1px rgb(0 0 0 / calc(0.15 * var(--shadow-k))),

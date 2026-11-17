@@ -15,3 +15,7 @@ All art is illustrative metaphor, not scientific evidence. Proposed topic names 
 Canonical review index: https://chatgpt.com/space/page_ba64e3a87b908191b185bdfc76e46171
 
 Private design library: https://blog-design-asset-library.castlemilk.chatgpt.site
+
+## Publication boundary
+
+The GitHub review branch publishes these source artifacts to the repository audience. Files beneath `public/` would also become site-downloadable on eventual merge and production release, even without runtime imports. This task pushes a draft branch only; merge and deployment are held for separate review and privacy confirmation.

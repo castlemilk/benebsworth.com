@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="20" viewBox="0 0 80 20" role="img" aria-labelledby="mo01-section-pause-r1-20-light-title" aria-describedby="mo01-section-pause-r1-20-light-desc">
+  <title id="mo01-section-pause-r1-20-light-title">Section pause; 20px optical master</title>
+  <desc id="mo01-section-pause-r1-20-light-desc">Two unequal pen rules pause around a deliberate empty interval. Use between substantial passages, never as a broken data axis. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo01-section-pause","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":20,"palette":"light","provenance_class":"original-authored-vector","revision":1,"semantic_role":"decorative"}</metadata>
+  <g id="mo01-section-pause-r1-20-light-ink" fill="none" stroke="#202c34" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo01-section-pause-r1-20-light-long-rule" d="M7 10.5 C20 9.4 31 10.7 43 10"/>
+    <path id="mo01-section-pause-r1-20-light-short-rule" d="M52 10 C59 9.6 67 10.7 73 9.5"/>
+  </g>
+</svg>

@@ -1,0 +1,3371 @@
+{
+  "schema_version": 1,
+  "verification": "deterministic reproduction of existing authored SVG and Sharp raster exports",
+  "verified_at_utc": "2026-11-17T11:36:56.103478+00:00",
+  "repository": "castlemilk/benebsworth.com",
+  "status": "passed",
+  "method": "Captured complete file bytes and SHA-256 before rerunning the two existing generators; compared complete bytes and SHA-256 after both completed.",
+  "runtime": {
+    "python": "3.12.14",
+    "node": "v24.22.1",
+    "runtime_bundle_version": "26.1112.11217",
+    "sharp_versions": {
+      "aom": "3.15.1",
+      "archive": "3.8.9",
+      "cairo": "1.18.6",
+      "cgif": "0.5.4",
+      "exif": "0.6.26",
+      "expat": "2.8.5",
+      "ffi": "3.8.0",
+      "fontconfig": "2.18.3",
+      "freetype": "2.14.3",
+      "fribidi": "1.0.17",
+      "glib": "2.90.0",
+      "harfbuzz": "14.5.0",
+      "heif": "1.23.5",
+      "highway": "1.4.0",
+      "imagequant": "2.4.1",
+      "lcms": "2.19.1",
+      "mozjpeg": "0826579",
+      "pango": "1.58.2",
+      "pixman": "0.46.4",
+      "png": "1.6.58",
+      "proxy-libintl": "0.5",
+      "rsvg": "2.63.2",
+      "tiff": "4.7.2",
+      "uhdr": "2.0.2",
+      "vips": "8.18.7",
+      "webp": "1.6.0",
+      "xml2": "2.15.4",
+      "zlib-ng": "2.3.3",
+      "sharp": "0.35.5"
+    }
+  },
+  "counts": {
+    "svg": 108,
+    "native_density_png": 216,
+    "manifest": 1,
+    "render_report": 1,
+    "detail_png": 36,
+    "compared_files": 362,
+    "exact_byte_matches": 362
+  },
+  "commands": [
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "docs/design/marks-ornaments-v1/make_assets.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"artworks\": 12, \"svg_files\": 108}",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "docs/design/marks-ornaments-v1/render_assets.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"svg_count\":108,\"native_density_pngs\":216,\"minimum_clear_edge_px\":2,\"renderer\":\"0.35.5\"}",
+      "stderr": ""
+    }
+  ],
+  "source_or_runtime_changes_required": false,
+  "source_files_unchanged": true,
+  "path_inventory_unchanged": true,
+  "added_paths": [],
+  "removed_paths": [],
+  "changed_outputs": [],
+  "changed_sources": [],
+  "source_files": [
+    {
+      "path": "docs/design/marks-ornaments-v1/geometry.json",
+      "before_sha256": "1b3756894dddca647bb38ff43335f095f6c61d90f6729576cdeb77c6d15627d0",
+      "after_sha256": "1b3756894dddca647bb38ff43335f095f6c61d90f6729576cdeb77c6d15627d0",
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/make_assets.py",
+      "before_sha256": "deb66de3ae55241bfd080f7232347e51fdc9fd93c4864bf5f326262450020d34",
+      "after_sha256": "deb66de3ae55241bfd080f7232347e51fdc9fd93c4864bf5f326262450020d34",
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/render_assets.mjs",
+      "before_sha256": "bfd5c9e55b606c5016d2dbf7237442417a9370c6f57e84a054fd5772e9afbe19",
+      "after_sha256": "bfd5c9e55b606c5016d2dbf7237442417a9370c6f57e84a054fd5772e9afbe19",
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/make_specimens.py",
+      "before_sha256": "8541dc866f2fb62fe00e0f89dabfb6d00d64d81ce13a7de536492ec5d89431c3",
+      "after_sha256": "8541dc866f2fb62fe00e0f89dabfb6d00d64d81ce13a7de536492ec5d89431c3",
+      "exact_bytes_equal": true
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/design/marks-ornaments-v1/manifest.json",
+      "kind": "manifest",
+      "before_sha256": "fc666202523fb9ca30680a7de3885ef36d54ad689176345634161d4570fbeb81",
+      "after_sha256": "fc666202523fb9ca30680a7de3885ef36d54ad689176345634161d4570fbeb81",
+      "before_byte_size": 41914,
+      "after_byte_size": 41914,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo01-section-pause-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "4c104640bbe0a32eae51fe09f628264bfd17fa1514c16970e6f11bf51ed4d2d4",
+      "after_sha256": "4c104640bbe0a32eae51fe09f628264bfd17fa1514c16970e6f11bf51ed4d2d4",
+      "before_byte_size": 3174,
+      "after_byte_size": 3174,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo01-section-pause-light.png",
+      "kind": "detail_png",
+      "before_sha256": "16a51b625f7744b4bb64bc404463f6afe8189eb9f9d9011e74662e517a2eeb79",
+      "after_sha256": "16a51b625f7744b4bb64bc404463f6afe8189eb9f9d9011e74662e517a2eeb79",
+      "before_byte_size": 3231,
+      "after_byte_size": 3231,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo01-section-pause-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "af88bb72abdad12927b5581efdb998537f907746ac966a0ba20fa14cb4d6b9a5",
+      "after_sha256": "af88bb72abdad12927b5581efdb998537f907746ac966a0ba20fa14cb4d6b9a5",
+      "before_byte_size": 2585,
+      "after_byte_size": 2585,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo02-end-stop-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "695c98a27e07f0f23344e44aa87ff5370ffb3f569ef9b5b0820c167967a5b810",
+      "after_sha256": "695c98a27e07f0f23344e44aa87ff5370ffb3f569ef9b5b0820c167967a5b810",
+      "before_byte_size": 2713,
+      "after_byte_size": 2713,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo02-end-stop-light.png",
+      "kind": "detail_png",
+      "before_sha256": "c6629c24442459dbba41eaba330fb406806a43806e91efee2212830613436756",
+      "after_sha256": "c6629c24442459dbba41eaba330fb406806a43806e91efee2212830613436756",
+      "before_byte_size": 2774,
+      "after_byte_size": 2774,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo02-end-stop-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "3f54167df2e61033ddee5ccbd72be127e37e098959e21358068a885f08e7aefa",
+      "after_sha256": "3f54167df2e61033ddee5ccbd72be127e37e098959e21358068a885f08e7aefa",
+      "before_byte_size": 2299,
+      "after_byte_size": 2299,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo03-margin-stitch-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "f61ca49cd4572f012c7fbb921844f2c77edc7e38d6ead77e05b0292f7f2f6a2d",
+      "after_sha256": "f61ca49cd4572f012c7fbb921844f2c77edc7e38d6ead77e05b0292f7f2f6a2d",
+      "before_byte_size": 2495,
+      "after_byte_size": 2495,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo03-margin-stitch-light.png",
+      "kind": "detail_png",
+      "before_sha256": "91bffde2ce0b6ed9ccd3d3644a4b7ddc9dfe4b82cd4b8d4f53d0352d0d1a6515",
+      "after_sha256": "91bffde2ce0b6ed9ccd3d3644a4b7ddc9dfe4b82cd4b8d4f53d0352d0d1a6515",
+      "before_byte_size": 2612,
+      "after_byte_size": 2612,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo03-margin-stitch-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "488921d39e9d2aa52ae70e6d09d18d5bb16b1df4548973067dbb117f725b2295",
+      "after_sha256": "488921d39e9d2aa52ae70e6d09d18d5bb16b1df4548973067dbb117f725b2295",
+      "before_byte_size": 2034,
+      "after_byte_size": 2034,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo04-margin-fold-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "410bc4a4d6199efe61f680d990420217f9bbc5c2b9b824d99156ce8b7cf22297",
+      "after_sha256": "410bc4a4d6199efe61f680d990420217f9bbc5c2b9b824d99156ce8b7cf22297",
+      "before_byte_size": 2180,
+      "after_byte_size": 2180,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo04-margin-fold-light.png",
+      "kind": "detail_png",
+      "before_sha256": "b35d08c66ef8ed71af169cd9c5c51dc19ab0fafb5da21ea8abe102340a8fc0dd",
+      "after_sha256": "b35d08c66ef8ed71af169cd9c5c51dc19ab0fafb5da21ea8abe102340a8fc0dd",
+      "before_byte_size": 2285,
+      "after_byte_size": 2285,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo04-margin-fold-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "97103b60244f710d54f0a83ee7811bd64922f82b5caf7e00e6ac686ced1b5216",
+      "after_sha256": "97103b60244f710d54f0a83ee7811bd64922f82b5caf7e00e6ac686ced1b5216",
+      "before_byte_size": 1829,
+      "after_byte_size": 1829,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo05-note-seat-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "f945e0053a7bfb3e7c1c21bfce8473572187100b3e0168fcdaf37794bd94dc24",
+      "after_sha256": "f945e0053a7bfb3e7c1c21bfce8473572187100b3e0168fcdaf37794bd94dc24",
+      "before_byte_size": 1688,
+      "after_byte_size": 1688,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo05-note-seat-light.png",
+      "kind": "detail_png",
+      "before_sha256": "17c565469650db92a5e51a2a62155a995e448e2daa8deec03d421423aab76e23",
+      "after_sha256": "17c565469650db92a5e51a2a62155a995e448e2daa8deec03d421423aab76e23",
+      "before_byte_size": 1744,
+      "after_byte_size": 1744,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo05-note-seat-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "4ff81f337760cc8c0e08e300bdcafba95ddbf14df79444c658f4c802a8bd7fd4",
+      "after_sha256": "4ff81f337760cc8c0e08e300bdcafba95ddbf14df79444c658f4c802a8bd7fd4",
+      "before_byte_size": 1398,
+      "after_byte_size": 1398,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo06-paired-cuts-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "68751a76870185e3618af97b3dc85a443db8d8f51a5faae95004ae1a5dc3e4df",
+      "after_sha256": "68751a76870185e3618af97b3dc85a443db8d8f51a5faae95004ae1a5dc3e4df",
+      "before_byte_size": 1045,
+      "after_byte_size": 1045,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo06-paired-cuts-light.png",
+      "kind": "detail_png",
+      "before_sha256": "6c5c566eae1b0c9b8d981a6e9fd75ac473fc0838e6a82af43229ce848e16a46e",
+      "after_sha256": "6c5c566eae1b0c9b8d981a6e9fd75ac473fc0838e6a82af43229ce848e16a46e",
+      "before_byte_size": 1088,
+      "after_byte_size": 1088,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo06-paired-cuts-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "ea7684100e84c4f6585c277d4cf694a8d476030a1dc31cebefcb145f05248b75",
+      "after_sha256": "ea7684100e84c4f6585c277d4cf694a8d476030a1dc31cebefcb145f05248b75",
+      "before_byte_size": 879,
+      "after_byte_size": 879,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo07-locator-tab-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "2f577cd0c338d4d5e341c3462f992430d6886ab4a33eec88329b5f852d89a4a8",
+      "after_sha256": "2f577cd0c338d4d5e341c3462f992430d6886ab4a33eec88329b5f852d89a4a8",
+      "before_byte_size": 1202,
+      "after_byte_size": 1202,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo07-locator-tab-light.png",
+      "kind": "detail_png",
+      "before_sha256": "609d0ad4a852dff51e73dbcd3304b2effac1e63e4504209e55795cb9ae0a98f4",
+      "after_sha256": "609d0ad4a852dff51e73dbcd3304b2effac1e63e4504209e55795cb9ae0a98f4",
+      "before_byte_size": 1173,
+      "after_byte_size": 1173,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo07-locator-tab-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "2728580ab43f703d9d56ec02c41c91015c1d139e44668b886e88afa8513c8b42",
+      "after_sha256": "2728580ab43f703d9d56ec02c41c91015c1d139e44668b886e88afa8513c8b42",
+      "before_byte_size": 990,
+      "after_byte_size": 990,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo08-excerpt-notch-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "a9d8dcb79223d9588f70ae86a9a138b26243387eba6ef2c9724dc2e63af82e3e",
+      "after_sha256": "a9d8dcb79223d9588f70ae86a9a138b26243387eba6ef2c9724dc2e63af82e3e",
+      "before_byte_size": 1670,
+      "after_byte_size": 1670,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo08-excerpt-notch-light.png",
+      "kind": "detail_png",
+      "before_sha256": "818b221f97d548952f836f7b97a22f2daac0afb87fefb30aaed92ac9bc499aed",
+      "after_sha256": "818b221f97d548952f836f7b97a22f2daac0afb87fefb30aaed92ac9bc499aed",
+      "before_byte_size": 1687,
+      "after_byte_size": 1687,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo08-excerpt-notch-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "810f18ec5a0be43ad5fb6c74cd30b946ce394d03539a8d418629a931216c0464",
+      "after_sha256": "810f18ec5a0be43ad5fb6c74cd30b946ce394d03539a8d418629a931216c0464",
+      "before_byte_size": 1353,
+      "after_byte_size": 1353,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo09-interpretation-seam-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "4ab53367c723099fb205d48786e83d8d71fb91bf8b403a5de0dc26caf443e3d6",
+      "after_sha256": "4ab53367c723099fb205d48786e83d8d71fb91bf8b403a5de0dc26caf443e3d6",
+      "before_byte_size": 1950,
+      "after_byte_size": 1950,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo09-interpretation-seam-light.png",
+      "kind": "detail_png",
+      "before_sha256": "4fb818e96fb75618fb10247bac0f44f98411ba9fab9e6f9c634bc736d1ea23cb",
+      "after_sha256": "4fb818e96fb75618fb10247bac0f44f98411ba9fab9e6f9c634bc736d1ea23cb",
+      "before_byte_size": 1984,
+      "after_byte_size": 1984,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo09-interpretation-seam-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "88e2349fe0998af5a94f1d73dbbfe4b9d489995c1c7bfcef697ae7d75a35df3c",
+      "after_sha256": "88e2349fe0998af5a94f1d73dbbfe4b9d489995c1c7bfcef697ae7d75a35df3c",
+      "before_byte_size": 1546,
+      "after_byte_size": 1546,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo10-record-gap-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "ddea8d2621c2f536a5d44d8304122bc0be7f1ee5e46d41d56feb66940922565b",
+      "after_sha256": "ddea8d2621c2f536a5d44d8304122bc0be7f1ee5e46d41d56feb66940922565b",
+      "before_byte_size": 1118,
+      "after_byte_size": 1118,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo10-record-gap-light.png",
+      "kind": "detail_png",
+      "before_sha256": "c4ea616f345a9f51dbe635759d6d306a7becc103ceae6451b92c65c8f1558f38",
+      "after_sha256": "c4ea616f345a9f51dbe635759d6d306a7becc103ceae6451b92c65c8f1558f38",
+      "before_byte_size": 1127,
+      "after_byte_size": 1127,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo10-record-gap-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "f959322ba014ba47dace89560b8fd55ccefe8b16431fbe9227796eb5afec2da5",
+      "after_sha256": "f959322ba014ba47dace89560b8fd55ccefe8b16431fbe9227796eb5afec2da5",
+      "before_byte_size": 973,
+      "after_byte_size": 973,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo11-leader-landing-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "d2ed7f639b3ca9ddc5acfb957897c750d502edf242b864c1fd5eed6a07e80a94",
+      "after_sha256": "d2ed7f639b3ca9ddc5acfb957897c750d502edf242b864c1fd5eed6a07e80a94",
+      "before_byte_size": 1961,
+      "after_byte_size": 1961,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo11-leader-landing-light.png",
+      "kind": "detail_png",
+      "before_sha256": "65a90fbffee7beced62136850169351aadf8ba8a52af532070bd9da84fdedfb3",
+      "after_sha256": "65a90fbffee7beced62136850169351aadf8ba8a52af532070bd9da84fdedfb3",
+      "before_byte_size": 2061,
+      "after_byte_size": 2061,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo11-leader-landing-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "9a4e66b2894a9aeb243f8146ee2f3b34bc9cf163b6cb251c7b31a5ed8704a20b",
+      "after_sha256": "9a4e66b2894a9aeb243f8146ee2f3b34bc9cf163b6cb251c7b31a5ed8704a20b",
+      "before_byte_size": 1604,
+      "after_byte_size": 1604,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo12-extent-ends-dark.png",
+      "kind": "detail_png",
+      "before_sha256": "b36b57fd79414756aca3188ef63e107eb85833594f71eb8aefbed08acee6a133",
+      "after_sha256": "b36b57fd79414756aca3188ef63e107eb85833594f71eb8aefbed08acee6a133",
+      "before_byte_size": 1741,
+      "after_byte_size": 1741,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo12-extent-ends-light.png",
+      "kind": "detail_png",
+      "before_sha256": "a0a65b3dd94b1fffd1a1cf09252c15187df625c00b7fb16560c518b0ca294b63",
+      "after_sha256": "a0a65b3dd94b1fffd1a1cf09252c15187df625c00b7fb16560c518b0ca294b63",
+      "before_byte_size": 1807,
+      "after_byte_size": 1807,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/specimens/details/mo12-extent-ends-mono.png",
+      "kind": "detail_png",
+      "before_sha256": "0ad775b33b9297d14dfaf7fb93798cf48bf43b5808d7a50c820a6b3e5d6c17c8",
+      "after_sha256": "0ad775b33b9297d14dfaf7fb93798cf48bf43b5808d7a50c820a6b3e5d6c17c8",
+      "before_byte_size": 1435,
+      "after_byte_size": 1435,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "docs/design/marks-ornaments-v1/validation/render-report.json",
+      "kind": "render_report",
+      "before_sha256": "5616c0fe4b2e417d43a836bfde5046a4fa537152f7a5a4d20bc5addac5ff637e",
+      "after_sha256": "5616c0fe4b2e417d43a836bfde5046a4fa537152f7a5a4d20bc5addac5ff637e",
+      "before_byte_size": 124378,
+      "after_byte_size": 124378,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo01-section-pause-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "edeafd7c7aba489aa5ab182390372eb9bea6bbfa6ac8893be510eff7dd2b3049",
+      "after_sha256": "edeafd7c7aba489aa5ab182390372eb9bea6bbfa6ac8893be510eff7dd2b3049",
+      "before_byte_size": 318,
+      "after_byte_size": 318,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo01-section-pause-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "df45657a6261eb513b082f2487f6761263dff09ec7cfbcbb880474276177ff24",
+      "after_sha256": "df45657a6261eb513b082f2487f6761263dff09ec7cfbcbb880474276177ff24",
+      "before_byte_size": 495,
+      "after_byte_size": 495,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo01-section-pause-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "725c21778d0e0ad28a5a5f5aa561e0f5d37f18ab42f817642c534b4d42de67df",
+      "after_sha256": "725c21778d0e0ad28a5a5f5aa561e0f5d37f18ab42f817642c534b4d42de67df",
+      "before_byte_size": 350,
+      "after_byte_size": 350,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo01-section-pause-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "03095ebde4478d96d7eaa0445706f483b6110f0038538effc44112a222d67955",
+      "after_sha256": "03095ebde4478d96d7eaa0445706f483b6110f0038538effc44112a222d67955",
+      "before_byte_size": 617,
+      "after_byte_size": 617,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo01-section-pause-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d2f638b8d11f2dd75b7ac5bae2022ac86d07a4f9ca331aa4a827f9898b1c5fa3",
+      "after_sha256": "d2f638b8d11f2dd75b7ac5bae2022ac86d07a4f9ca331aa4a827f9898b1c5fa3",
+      "before_byte_size": 427,
+      "after_byte_size": 427,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo01-section-pause-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "59cb2a312cacafbe649bfa5a43df09ac24f35f252b2aebc9ab698997c365d554",
+      "after_sha256": "59cb2a312cacafbe649bfa5a43df09ac24f35f252b2aebc9ab698997c365d554",
+      "before_byte_size": 780,
+      "after_byte_size": 780,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo02-end-stop-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b330a251032990e7918d627548eb19d78f7b91d61818c437b3c2b751952df29f",
+      "after_sha256": "b330a251032990e7918d627548eb19d78f7b91d61818c437b3c2b751952df29f",
+      "before_byte_size": 276,
+      "after_byte_size": 276,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo02-end-stop-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c341d43be207c613b76d49da5682c318e949fa5ce20bebc5abe2062db287f80e",
+      "after_sha256": "c341d43be207c613b76d49da5682c318e949fa5ce20bebc5abe2062db287f80e",
+      "before_byte_size": 468,
+      "after_byte_size": 468,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo02-end-stop-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a797de8ff17da440b241628b04eb93cf7ed364d91e369486c8aae7425f483861",
+      "after_sha256": "a797de8ff17da440b241628b04eb93cf7ed364d91e369486c8aae7425f483861",
+      "before_byte_size": 341,
+      "after_byte_size": 341,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo02-end-stop-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "da436348982cffa948ffe852ad9d32905298823f2cdf132fc00aee600a25a17e",
+      "after_sha256": "da436348982cffa948ffe852ad9d32905298823f2cdf132fc00aee600a25a17e",
+      "before_byte_size": 634,
+      "after_byte_size": 634,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo02-end-stop-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a093e839cdc8bf18505595be4ad3cfaa882fe0ead29af504fd239935de96a60d",
+      "after_sha256": "a093e839cdc8bf18505595be4ad3cfaa882fe0ead29af504fd239935de96a60d",
+      "before_byte_size": 396,
+      "after_byte_size": 396,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo02-end-stop-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "28e316b4fc0e6ed1683c65bf5aed8260b62a5ec04fd404aa134890138652c05e",
+      "after_sha256": "28e316b4fc0e6ed1683c65bf5aed8260b62a5ec04fd404aa134890138652c05e",
+      "before_byte_size": 678,
+      "after_byte_size": 678,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo03-margin-stitch-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "384af31a9ba035b62abaef47a61a46d7c713d7207c3ceae8b8b5ada77119056d",
+      "after_sha256": "384af31a9ba035b62abaef47a61a46d7c713d7207c3ceae8b8b5ada77119056d",
+      "before_byte_size": 267,
+      "after_byte_size": 267,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo03-margin-stitch-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "1dd1161e8e5559fdd9a8528c82578ab1582580564ed1d5b130340d2c8977e8d2",
+      "after_sha256": "1dd1161e8e5559fdd9a8528c82578ab1582580564ed1d5b130340d2c8977e8d2",
+      "before_byte_size": 444,
+      "after_byte_size": 444,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo03-margin-stitch-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "78d3177072c4fa37963d7742dc5dd2f7e71dabe385b94496acfcc92f793097e8",
+      "after_sha256": "78d3177072c4fa37963d7742dc5dd2f7e71dabe385b94496acfcc92f793097e8",
+      "before_byte_size": 325,
+      "after_byte_size": 325,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo03-margin-stitch-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "bbfcbba163adee54175fa37a4994a336f7921cc9302bccf0def1981b320736ce",
+      "after_sha256": "bbfcbba163adee54175fa37a4994a336f7921cc9302bccf0def1981b320736ce",
+      "before_byte_size": 558,
+      "after_byte_size": 558,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo03-margin-stitch-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a44b1aadcd7612474e231ce5fc65fcd543c526d154be99e9b1bbc72f275fb9df",
+      "after_sha256": "a44b1aadcd7612474e231ce5fc65fcd543c526d154be99e9b1bbc72f275fb9df",
+      "before_byte_size": 375,
+      "after_byte_size": 375,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo03-margin-stitch-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "6bb5ad1a0fdc678882a9a17fcb4bae3410f6f11f587f4b8617c26bfa88dca009",
+      "after_sha256": "6bb5ad1a0fdc678882a9a17fcb4bae3410f6f11f587f4b8617c26bfa88dca009",
+      "before_byte_size": 673,
+      "after_byte_size": 673,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo04-margin-fold-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d14527ed6c1be5b670a7448372135fc765e06efb358cbcfd90b2885f00186815",
+      "after_sha256": "d14527ed6c1be5b670a7448372135fc765e06efb358cbcfd90b2885f00186815",
+      "before_byte_size": 280,
+      "after_byte_size": 280,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo04-margin-fold-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "161df7f022e169642954654b2ae417d6de9ee1ae8b16dbadebea39819a4259b7",
+      "after_sha256": "161df7f022e169642954654b2ae417d6de9ee1ae8b16dbadebea39819a4259b7",
+      "before_byte_size": 407,
+      "after_byte_size": 407,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo04-margin-fold-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "403aedddb05adb806bc0f2fa478c5f20da2a5369eda977312b35f9d8423d6f4b",
+      "after_sha256": "403aedddb05adb806bc0f2fa478c5f20da2a5369eda977312b35f9d8423d6f4b",
+      "before_byte_size": 314,
+      "after_byte_size": 314,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo04-margin-fold-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2fcb7935226e1853ad975608b3e424209a9525e83bd5a6dd91afea80e6e39ca9",
+      "after_sha256": "2fcb7935226e1853ad975608b3e424209a9525e83bd5a6dd91afea80e6e39ca9",
+      "before_byte_size": 491,
+      "after_byte_size": 491,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo04-margin-fold-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "9f62ef19b0a8097072da45d67ad070b3ea10c2366d8752c92e0b9de1ea3264c6",
+      "after_sha256": "9f62ef19b0a8097072da45d67ad070b3ea10c2366d8752c92e0b9de1ea3264c6",
+      "before_byte_size": 338,
+      "after_byte_size": 338,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo04-margin-fold-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "df3ab232e3d3bb82a8e3cca85048d4630a0da5fbfb8f6f155390d68fed2abc0c",
+      "after_sha256": "df3ab232e3d3bb82a8e3cca85048d4630a0da5fbfb8f6f155390d68fed2abc0c",
+      "before_byte_size": 569,
+      "after_byte_size": 569,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo05-note-seat-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "dfd28b38614ae3c3970003ba184d3b3ab849b9687c492dfca5945a6d3460fa30",
+      "after_sha256": "dfd28b38614ae3c3970003ba184d3b3ab849b9687c492dfca5945a6d3460fa30",
+      "before_byte_size": 221,
+      "after_byte_size": 221,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo05-note-seat-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "782193d019f6983ea9cc1df9085f9e2f74d5d7d50a8cc581436bd5d64c01cc3f",
+      "after_sha256": "782193d019f6983ea9cc1df9085f9e2f74d5d7d50a8cc581436bd5d64c01cc3f",
+      "before_byte_size": 318,
+      "after_byte_size": 318,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo05-note-seat-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a6c738c4bc9aac7b6d5e5382c3ca4398bf64e8af0d6bfb69e5d109adbb1263b2",
+      "after_sha256": "a6c738c4bc9aac7b6d5e5382c3ca4398bf64e8af0d6bfb69e5d109adbb1263b2",
+      "before_byte_size": 230,
+      "after_byte_size": 230,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo05-note-seat-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "63cbfb7c707abfcc65354e65d1e8ef72aade60bfad70c43a8fdef41cfe61a4fe",
+      "after_sha256": "63cbfb7c707abfcc65354e65d1e8ef72aade60bfad70c43a8fdef41cfe61a4fe",
+      "before_byte_size": 392,
+      "after_byte_size": 392,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo05-note-seat-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d814a9f95b3d4614464eefd9fa3292ccfbb05d5589c0fbb64237a4fd072ed54a",
+      "after_sha256": "d814a9f95b3d4614464eefd9fa3292ccfbb05d5589c0fbb64237a4fd072ed54a",
+      "before_byte_size": 277,
+      "after_byte_size": 277,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo05-note-seat-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d30c3c4c1a55e4407550b49f77a0ba5025bfba75e756ef1d2d4bb3037345d16a",
+      "after_sha256": "d30c3c4c1a55e4407550b49f77a0ba5025bfba75e756ef1d2d4bb3037345d16a",
+      "before_byte_size": 451,
+      "after_byte_size": 451,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo06-paired-cuts-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "75005d4cdf7b74f7a606be2cae8bad4500407e8287718ade87251f34bf929896",
+      "after_sha256": "75005d4cdf7b74f7a606be2cae8bad4500407e8287718ade87251f34bf929896",
+      "before_byte_size": 191,
+      "after_byte_size": 191,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo06-paired-cuts-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "42a691fd23be353446d142de54bef85153ccb22ed347b6ddb79b7aa0728ed382",
+      "after_sha256": "42a691fd23be353446d142de54bef85153ccb22ed347b6ddb79b7aa0728ed382",
+      "before_byte_size": 222,
+      "after_byte_size": 222,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo06-paired-cuts-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "541e5b1d58b838eed6e6030fe53db07710cf00f9094af720d4d411ee63a20c2d",
+      "after_sha256": "541e5b1d58b838eed6e6030fe53db07710cf00f9094af720d4d411ee63a20c2d",
+      "before_byte_size": 197,
+      "after_byte_size": 197,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo06-paired-cuts-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d08d600c845f178b04834a60ed7548565561e150c572999ea511b00a2a114430",
+      "after_sha256": "d08d600c845f178b04834a60ed7548565561e150c572999ea511b00a2a114430",
+      "before_byte_size": 326,
+      "after_byte_size": 326,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo06-paired-cuts-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3b42357f8ae78cd060a5c0416cff3fc78e1c2a8118706ebdd54ad1db67e8272f",
+      "after_sha256": "3b42357f8ae78cd060a5c0416cff3fc78e1c2a8118706ebdd54ad1db67e8272f",
+      "before_byte_size": 187,
+      "after_byte_size": 187,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo06-paired-cuts-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3ffc8e4d514c96fbca7720fc46cb0c5f5dae96b5688fac9da47946d71d7abd2e",
+      "after_sha256": "3ffc8e4d514c96fbca7720fc46cb0c5f5dae96b5688fac9da47946d71d7abd2e",
+      "before_byte_size": 285,
+      "after_byte_size": 285,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo07-locator-tab-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4297d94b019fe6fcce336715a826f88da3944efb1756af7d72e2cd00de788b31",
+      "after_sha256": "4297d94b019fe6fcce336715a826f88da3944efb1756af7d72e2cd00de788b31",
+      "before_byte_size": 254,
+      "after_byte_size": 254,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo07-locator-tab-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2e7ffe11bfece8f256da2099102fa1bdd3b2370327fc02146be3668d8f2cc79d",
+      "after_sha256": "2e7ffe11bfece8f256da2099102fa1bdd3b2370327fc02146be3668d8f2cc79d",
+      "before_byte_size": 345,
+      "after_byte_size": 345,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo07-locator-tab-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d8aee35628def69d613c2a0a5a54916871eed229aeb39746674a44a1fd5f16ac",
+      "after_sha256": "d8aee35628def69d613c2a0a5a54916871eed229aeb39746674a44a1fd5f16ac",
+      "before_byte_size": 273,
+      "after_byte_size": 273,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo07-locator-tab-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f8dcfffdcbf75860e3c6347cb21a47b0d91e1af34f570b28d92dd8e5b3e77630",
+      "after_sha256": "f8dcfffdcbf75860e3c6347cb21a47b0d91e1af34f570b28d92dd8e5b3e77630",
+      "before_byte_size": 413,
+      "after_byte_size": 413,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo07-locator-tab-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b8f6cf424f2d965ffa9ff18deaac691b846d5702e732b4ca227cd04933a1d809",
+      "after_sha256": "b8f6cf424f2d965ffa9ff18deaac691b846d5702e732b4ca227cd04933a1d809",
+      "before_byte_size": 224,
+      "after_byte_size": 224,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo07-locator-tab-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "21034ab6d7ef60ce8df09d20f5912e9e265fe24e0a636ce091378e2bb07b2fc0",
+      "after_sha256": "21034ab6d7ef60ce8df09d20f5912e9e265fe24e0a636ce091378e2bb07b2fc0",
+      "before_byte_size": 324,
+      "after_byte_size": 324,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo08-excerpt-notch-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "322f35ca93fbe429901c750e8d7bcb3a2097ebe11ba4aff869b27a2d32715eff",
+      "after_sha256": "322f35ca93fbe429901c750e8d7bcb3a2097ebe11ba4aff869b27a2d32715eff",
+      "before_byte_size": 215,
+      "after_byte_size": 215,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo08-excerpt-notch-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e4d801d8b2f54156d796c2f3d470d21bf04de44d8a74129a91505f91818a425b",
+      "after_sha256": "e4d801d8b2f54156d796c2f3d470d21bf04de44d8a74129a91505f91818a425b",
+      "before_byte_size": 300,
+      "after_byte_size": 300,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo08-excerpt-notch-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4f5c73cfe3c285e9780a0a72360144f558dc0846e0ec36812566171e0aa8baaf",
+      "after_sha256": "4f5c73cfe3c285e9780a0a72360144f558dc0846e0ec36812566171e0aa8baaf",
+      "before_byte_size": 259,
+      "after_byte_size": 259,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo08-excerpt-notch-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "424a9be724153696b1fa60e66912e470b502abf663b6b70bb9805cd0c61b923e",
+      "after_sha256": "424a9be724153696b1fa60e66912e470b502abf663b6b70bb9805cd0c61b923e",
+      "before_byte_size": 415,
+      "after_byte_size": 415,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo08-excerpt-notch-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "648c4a64bf3c40fd574e139507820b2cf2e383f386c8e4dfa91149f1cdd2c602",
+      "after_sha256": "648c4a64bf3c40fd574e139507820b2cf2e383f386c8e4dfa91149f1cdd2c602",
+      "before_byte_size": 238,
+      "after_byte_size": 238,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo08-excerpt-notch-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0130f57185bad5894e2d141d64248c2f5a49a7fd1dc57aad00ec625a9f2b4283",
+      "after_sha256": "0130f57185bad5894e2d141d64248c2f5a49a7fd1dc57aad00ec625a9f2b4283",
+      "before_byte_size": 388,
+      "after_byte_size": 388,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo09-interpretation-seam-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "17dbad258fc487211763514601ee8826e731be9a67ca7c0bfe992c3d935efbe5",
+      "after_sha256": "17dbad258fc487211763514601ee8826e731be9a67ca7c0bfe992c3d935efbe5",
+      "before_byte_size": 265,
+      "after_byte_size": 265,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo09-interpretation-seam-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b0c9f4e501b1ba04dc3dcc1e19e987b05e7ee87df27395e74c49b7e16be13b91",
+      "after_sha256": "b0c9f4e501b1ba04dc3dcc1e19e987b05e7ee87df27395e74c49b7e16be13b91",
+      "before_byte_size": 430,
+      "after_byte_size": 430,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo09-interpretation-seam-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "aab895240f2ab8466003fa3ee62115b2d1b2ac95e4a18593cd4f92466029b502",
+      "after_sha256": "aab895240f2ab8466003fa3ee62115b2d1b2ac95e4a18593cd4f92466029b502",
+      "before_byte_size": 288,
+      "after_byte_size": 288,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo09-interpretation-seam-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d2d9dafbb7653b5852a3bdb2a6e531a7c22474cd4058f0b2d822a071fd2f8fde",
+      "after_sha256": "d2d9dafbb7653b5852a3bdb2a6e531a7c22474cd4058f0b2d822a071fd2f8fde",
+      "before_byte_size": 446,
+      "after_byte_size": 446,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo09-interpretation-seam-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "9294edf6b534e37c3f63537afb25893f707ea1187a28f8e940d3776cfb90d052",
+      "after_sha256": "9294edf6b534e37c3f63537afb25893f707ea1187a28f8e940d3776cfb90d052",
+      "before_byte_size": 336,
+      "after_byte_size": 336,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo09-interpretation-seam-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f3bdcc36a8fa8c301b9c1dcecb1d2a5f24d990d1321d28ed05d21b034986ab97",
+      "after_sha256": "f3bdcc36a8fa8c301b9c1dcecb1d2a5f24d990d1321d28ed05d21b034986ab97",
+      "before_byte_size": 519,
+      "after_byte_size": 519,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo10-record-gap-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4bf2a4d80407f5268fccea62296065e643d2f2f711e783a1a0d79ab338a2de2a",
+      "after_sha256": "4bf2a4d80407f5268fccea62296065e643d2f2f711e783a1a0d79ab338a2de2a",
+      "before_byte_size": 217,
+      "after_byte_size": 217,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo10-record-gap-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "254aad7ef7a35557d15e5edb7ad133598b9e28062dd3ad703b1cb3a44df4bba3",
+      "after_sha256": "254aad7ef7a35557d15e5edb7ad133598b9e28062dd3ad703b1cb3a44df4bba3",
+      "before_byte_size": 248,
+      "after_byte_size": 248,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo10-record-gap-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2bc28aa298696dc297b9c621078d986f91ed6933bfb094ea7285bd296774077c",
+      "after_sha256": "2bc28aa298696dc297b9c621078d986f91ed6933bfb094ea7285bd296774077c",
+      "before_byte_size": 196,
+      "after_byte_size": 196,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo10-record-gap-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "cf04b79ad632968db2ea26b295a1830e87019eeef36b3b75c242a8b7421719fa",
+      "after_sha256": "cf04b79ad632968db2ea26b295a1830e87019eeef36b3b75c242a8b7421719fa",
+      "before_byte_size": 350,
+      "after_byte_size": 350,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo10-record-gap-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "dea1bba8269a2e9a94b8fecdf801b4db30e254ab786351039e4103ea72e14931",
+      "after_sha256": "dea1bba8269a2e9a94b8fecdf801b4db30e254ab786351039e4103ea72e14931",
+      "before_byte_size": 186,
+      "after_byte_size": 186,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo10-record-gap-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "7c898b2627222022c6c651a68a933edd019f844bb44db26f7a0dde6d8d82c268",
+      "after_sha256": "7c898b2627222022c6c651a68a933edd019f844bb44db26f7a0dde6d8d82c268",
+      "before_byte_size": 269,
+      "after_byte_size": 269,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo11-leader-landing-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b7362644283fd566a6a2928919e404a6501cf9151dde5404e0210ed8f31c1610",
+      "after_sha256": "b7362644283fd566a6a2928919e404a6501cf9151dde5404e0210ed8f31c1610",
+      "before_byte_size": 215,
+      "after_byte_size": 215,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo11-leader-landing-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "adab366a9a645ef59926a57ea27dbed6c40ea34004dfcfe300bf1e01e8b3dfb9",
+      "after_sha256": "adab366a9a645ef59926a57ea27dbed6c40ea34004dfcfe300bf1e01e8b3dfb9",
+      "before_byte_size": 346,
+      "after_byte_size": 346,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo11-leader-landing-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c7928537b387c8aea334f7183bc8c7a67dee7e4adc5b75363843fede5ecb7ae7",
+      "after_sha256": "c7928537b387c8aea334f7183bc8c7a67dee7e4adc5b75363843fede5ecb7ae7",
+      "before_byte_size": 252,
+      "after_byte_size": 252,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo11-leader-landing-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2d77eed79e308e3e49ebd7baaca1fcd9cfbca74539742017203550d3393779dc",
+      "after_sha256": "2d77eed79e308e3e49ebd7baaca1fcd9cfbca74539742017203550d3393779dc",
+      "before_byte_size": 436,
+      "after_byte_size": 436,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo11-leader-landing-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "8ae75e26ee9a92eb23623f1e4ca7252ae7361c398c22d0659d6d74dd3c7912d5",
+      "after_sha256": "8ae75e26ee9a92eb23623f1e4ca7252ae7361c398c22d0659d6d74dd3c7912d5",
+      "before_byte_size": 301,
+      "after_byte_size": 301,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo11-leader-landing-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0f020bc7111627a8583717087544e7ad5c5c5da58aafef535891017ce831a97e",
+      "after_sha256": "0f020bc7111627a8583717087544e7ad5c5c5da58aafef535891017ce831a97e",
+      "before_byte_size": 469,
+      "after_byte_size": 469,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo12-extent-ends-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "680a559ac08d6bda806c36f08889547f1119960d34727b518124e70a20251478",
+      "after_sha256": "680a559ac08d6bda806c36f08889547f1119960d34727b518124e70a20251478",
+      "before_byte_size": 203,
+      "after_byte_size": 203,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo12-extent-ends-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "441e048d8bcabcadce7ab00b58208827bc2b58fba87722089d62ccf40f9700a1",
+      "after_sha256": "441e048d8bcabcadce7ab00b58208827bc2b58fba87722089d62ccf40f9700a1",
+      "before_byte_size": 310,
+      "after_byte_size": 310,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo12-extent-ends-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "8479d21c8702ae2a1272a82a010aae0d6156e914deffd454704f315a843d85b4",
+      "after_sha256": "8479d21c8702ae2a1272a82a010aae0d6156e914deffd454704f315a843d85b4",
+      "before_byte_size": 232,
+      "after_byte_size": 232,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo12-extent-ends-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "389f806e1e4a66509100de8bf03a5e2dab8fe013064b7409c60f3ee123cd38fe",
+      "after_sha256": "389f806e1e4a66509100de8bf03a5e2dab8fe013064b7409c60f3ee123cd38fe",
+      "before_byte_size": 416,
+      "after_byte_size": 416,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo12-extent-ends-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "70593cb23f6bdbc182e07ee491b39288288b907d795af24b4877068e7d6e7c65",
+      "after_sha256": "70593cb23f6bdbc182e07ee491b39288288b907d795af24b4877068e7d6e7c65",
+      "before_byte_size": 250,
+      "after_byte_size": 250,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/dark/mo12-extent-ends-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "ff8ceefbee5fbaedcb9028257e70748aa3b4132e615a98c2afc748d3928a72dc",
+      "after_sha256": "ff8ceefbee5fbaedcb9028257e70748aa3b4132e615a98c2afc748d3928a72dc",
+      "before_byte_size": 440,
+      "after_byte_size": 440,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo01-section-pause-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d0a7c2c0aa8bc2257aafc303f87c7768b753b4357d7f1aab58ae8fd94f3be37a",
+      "after_sha256": "d0a7c2c0aa8bc2257aafc303f87c7768b753b4357d7f1aab58ae8fd94f3be37a",
+      "before_byte_size": 325,
+      "after_byte_size": 325,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo01-section-pause-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0f2862694299f307dc6bf8c0502b9da0b2a21b154132662376dc2381ce891868",
+      "after_sha256": "0f2862694299f307dc6bf8c0502b9da0b2a21b154132662376dc2381ce891868",
+      "before_byte_size": 511,
+      "after_byte_size": 511,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo01-section-pause-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2269b5726cf4137684c92b9416631a2e8c16f673819aa0c489c03332689567d8",
+      "after_sha256": "2269b5726cf4137684c92b9416631a2e8c16f673819aa0c489c03332689567d8",
+      "before_byte_size": 357,
+      "after_byte_size": 357,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo01-section-pause-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "12331dcfa9b90bc714167da128c8f17e807369c0cc1f7027d9e70fbb077bfa22",
+      "after_sha256": "12331dcfa9b90bc714167da128c8f17e807369c0cc1f7027d9e70fbb077bfa22",
+      "before_byte_size": 642,
+      "after_byte_size": 642,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo01-section-pause-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "13847bce72fd52da698ad0a9e6709a58fb9c5393be7976f7640c93729fc91933",
+      "after_sha256": "13847bce72fd52da698ad0a9e6709a58fb9c5393be7976f7640c93729fc91933",
+      "before_byte_size": 440,
+      "after_byte_size": 440,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo01-section-pause-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "048ef920347ae6163439f6fc90e17c1f9865dfae88b1df9896fab994fb8a60d9",
+      "after_sha256": "048ef920347ae6163439f6fc90e17c1f9865dfae88b1df9896fab994fb8a60d9",
+      "before_byte_size": 795,
+      "after_byte_size": 795,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo02-end-stop-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "01f3012aca13c56a84cd5e93129c0f35bc4f683a0e45c945b2c05018fb17ed13",
+      "after_sha256": "01f3012aca13c56a84cd5e93129c0f35bc4f683a0e45c945b2c05018fb17ed13",
+      "before_byte_size": 281,
+      "after_byte_size": 281,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo02-end-stop-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a5a7697322bd9b846712c7d8ebefa200c29631c30a6ce37c6ff74258ca7e7dda",
+      "after_sha256": "a5a7697322bd9b846712c7d8ebefa200c29631c30a6ce37c6ff74258ca7e7dda",
+      "before_byte_size": 478,
+      "after_byte_size": 478,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo02-end-stop-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "fafb5ff215efa4843a481f31598cb83ed1ffae2bf1c86c22b4e27b3cac68b458",
+      "after_sha256": "fafb5ff215efa4843a481f31598cb83ed1ffae2bf1c86c22b4e27b3cac68b458",
+      "before_byte_size": 353,
+      "after_byte_size": 353,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo02-end-stop-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "deda8a50fe6299ff9ec93cd0937daa353036b5b2faa2698e48c078869f4af866",
+      "after_sha256": "deda8a50fe6299ff9ec93cd0937daa353036b5b2faa2698e48c078869f4af866",
+      "before_byte_size": 656,
+      "after_byte_size": 656,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo02-end-stop-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "265de28180d649c4f71ffc4d77e596844593286c9568570e4206112be05ea889",
+      "after_sha256": "265de28180d649c4f71ffc4d77e596844593286c9568570e4206112be05ea889",
+      "before_byte_size": 408,
+      "after_byte_size": 408,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo02-end-stop-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "fc3c87502beb7d83700d9a8fe21bfa583fecb20dc4659f1a23fd508c3be5dd2f",
+      "after_sha256": "fc3c87502beb7d83700d9a8fe21bfa583fecb20dc4659f1a23fd508c3be5dd2f",
+      "before_byte_size": 710,
+      "after_byte_size": 710,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo03-margin-stitch-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a243592c7cdeb1f5074aab0db4251b3aa6ef90ab049b79f7cf5b1c9e2770a4ef",
+      "after_sha256": "a243592c7cdeb1f5074aab0db4251b3aa6ef90ab049b79f7cf5b1c9e2770a4ef",
+      "before_byte_size": 294,
+      "after_byte_size": 294,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo03-margin-stitch-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2d70a9ed4a657219b17a2ca30c497cae735c461f6e47ceaf34a6fee3850c893e",
+      "after_sha256": "2d70a9ed4a657219b17a2ca30c497cae735c461f6e47ceaf34a6fee3850c893e",
+      "before_byte_size": 464,
+      "after_byte_size": 464,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo03-margin-stitch-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "bc400fe71c379cb3672cfd74983595af9c8e008f2acfe85bdfa8ff54b4ef1969",
+      "after_sha256": "bc400fe71c379cb3672cfd74983595af9c8e008f2acfe85bdfa8ff54b4ef1969",
+      "before_byte_size": 344,
+      "after_byte_size": 344,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo03-margin-stitch-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3c64ec219bea6b21c15d3be6a958bd577d214fde8eaa4c5d36d5feb8b9eb0898",
+      "after_sha256": "3c64ec219bea6b21c15d3be6a958bd577d214fde8eaa4c5d36d5feb8b9eb0898",
+      "before_byte_size": 592,
+      "after_byte_size": 592,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo03-margin-stitch-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "10267c5b7e121bc298db3458fba50f1a6799a715618adf5b8a63a0962f39417a",
+      "after_sha256": "10267c5b7e121bc298db3458fba50f1a6799a715618adf5b8a63a0962f39417a",
+      "before_byte_size": 394,
+      "after_byte_size": 394,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo03-margin-stitch-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e26928d7af33b95bfcd84d90e08e9e2862c749f575d140a83c6f1046922f8233",
+      "after_sha256": "e26928d7af33b95bfcd84d90e08e9e2862c749f575d140a83c6f1046922f8233",
+      "before_byte_size": 692,
+      "after_byte_size": 692,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo04-margin-fold-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c034fe8f9bdcfb5c1ea7a7b0e90729a2474847af0ef3b1e0331304034e132318",
+      "after_sha256": "c034fe8f9bdcfb5c1ea7a7b0e90729a2474847af0ef3b1e0331304034e132318",
+      "before_byte_size": 285,
+      "after_byte_size": 285,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo04-margin-fold-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e1778b52bc1d742efd97b31bb28c08de976439b652f304c016f50f62b5352a5c",
+      "after_sha256": "e1778b52bc1d742efd97b31bb28c08de976439b652f304c016f50f62b5352a5c",
+      "before_byte_size": 417,
+      "after_byte_size": 417,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo04-margin-fold-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4d7d1e29f5e8b68b4d9d409b99eaaf1126d58df732114247e679f18c9063e9c8",
+      "after_sha256": "4d7d1e29f5e8b68b4d9d409b99eaaf1126d58df732114247e679f18c9063e9c8",
+      "before_byte_size": 333,
+      "after_byte_size": 333,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo04-margin-fold-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3fe4177fb07440a459a3f3ccc2485918670ebcd4943e26ab1149a688881f2ff4",
+      "after_sha256": "3fe4177fb07440a459a3f3ccc2485918670ebcd4943e26ab1149a688881f2ff4",
+      "before_byte_size": 523,
+      "after_byte_size": 523,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo04-margin-fold-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "1c1b605b56da43f5746668c7aa575c1e75854f8402d672e0c93eb5c45c9aa4ec",
+      "after_sha256": "1c1b605b56da43f5746668c7aa575c1e75854f8402d672e0c93eb5c45c9aa4ec",
+      "before_byte_size": 359,
+      "after_byte_size": 359,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo04-margin-fold-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4c52b728ef73ecfaa3f0aa2b7f6397e54a22bddfb9e07deb8f9995aaf8f28b7c",
+      "after_sha256": "4c52b728ef73ecfaa3f0aa2b7f6397e54a22bddfb9e07deb8f9995aaf8f28b7c",
+      "before_byte_size": 592,
+      "after_byte_size": 592,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo05-note-seat-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c6dad40698357b1c81d224f450b966aeaccd493d6706e19c13513ce0899d207c",
+      "after_sha256": "c6dad40698357b1c81d224f450b966aeaccd493d6706e19c13513ce0899d207c",
+      "before_byte_size": 221,
+      "after_byte_size": 221,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo05-note-seat-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "9e6f5d35b8d2d4d896a5a1bea09932376804131a2a37ed4e326966bfc7689b67",
+      "after_sha256": "9e6f5d35b8d2d4d896a5a1bea09932376804131a2a37ed4e326966bfc7689b67",
+      "before_byte_size": 331,
+      "after_byte_size": 331,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo05-note-seat-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "09958de2f1391eff9f5d14db611b7ffdac753cd1055a2268bb95124796c13f42",
+      "after_sha256": "09958de2f1391eff9f5d14db611b7ffdac753cd1055a2268bb95124796c13f42",
+      "before_byte_size": 245,
+      "after_byte_size": 245,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo05-note-seat-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "7a8d8d288c834fe1115c32ab480aacfd6f871a684612edc9fc991186ce8de994",
+      "after_sha256": "7a8d8d288c834fe1115c32ab480aacfd6f871a684612edc9fc991186ce8de994",
+      "before_byte_size": 405,
+      "after_byte_size": 405,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo05-note-seat-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a46052e95cc374cbad8cb4d18571bbc6bcd35b0dd3a2eb7277ef14c8d21df441",
+      "after_sha256": "a46052e95cc374cbad8cb4d18571bbc6bcd35b0dd3a2eb7277ef14c8d21df441",
+      "before_byte_size": 282,
+      "after_byte_size": 282,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo05-note-seat-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "af2bf2418b5af43b0bae0d90f3ef3c77682b87ae9efa33beebb7e607c584d346",
+      "after_sha256": "af2bf2418b5af43b0bae0d90f3ef3c77682b87ae9efa33beebb7e607c584d346",
+      "before_byte_size": 459,
+      "after_byte_size": 459,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo06-paired-cuts-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "42a8bc29d5a0cc03117a8b22921220e219c68eee1798418e50bb1fa725fd4d92",
+      "after_sha256": "42a8bc29d5a0cc03117a8b22921220e219c68eee1798418e50bb1fa725fd4d92",
+      "before_byte_size": 200,
+      "after_byte_size": 200,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo06-paired-cuts-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b32bedddde830bdd2e1db0da4515c81f0f4b13db58a6ed586cd3457a92a61c76",
+      "after_sha256": "b32bedddde830bdd2e1db0da4515c81f0f4b13db58a6ed586cd3457a92a61c76",
+      "before_byte_size": 230,
+      "after_byte_size": 230,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo06-paired-cuts-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "16855518a33ff8cad73a49bebb9a663660a088463a2ad10d0bc900f080a26846",
+      "after_sha256": "16855518a33ff8cad73a49bebb9a663660a088463a2ad10d0bc900f080a26846",
+      "before_byte_size": 208,
+      "after_byte_size": 208,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo06-paired-cuts-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "8d51f74c7fdd0bdd55c5c87a4f395c3735ad6a7ef8ef32f161fe4f908a9f6d91",
+      "after_sha256": "8d51f74c7fdd0bdd55c5c87a4f395c3735ad6a7ef8ef32f161fe4f908a9f6d91",
+      "before_byte_size": 340,
+      "after_byte_size": 340,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo06-paired-cuts-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "5bcdcba77482fb6cc6e513cfd1753f074339e4c869073c7085762faa60fb35da",
+      "after_sha256": "5bcdcba77482fb6cc6e513cfd1753f074339e4c869073c7085762faa60fb35da",
+      "before_byte_size": 191,
+      "after_byte_size": 191,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo06-paired-cuts-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b46f822088c29ef41ec3667ee79a7c6668e2f6ba7daa9ea8f9efb1ea0599a199",
+      "after_sha256": "b46f822088c29ef41ec3667ee79a7c6668e2f6ba7daa9ea8f9efb1ea0599a199",
+      "before_byte_size": 298,
+      "after_byte_size": 298,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo07-locator-tab-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "47402fcef1f78ee0f21691bdac5dc7b53347cf0f148ffb36b2316083ad52bdce",
+      "after_sha256": "47402fcef1f78ee0f21691bdac5dc7b53347cf0f148ffb36b2316083ad52bdce",
+      "before_byte_size": 259,
+      "after_byte_size": 259,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo07-locator-tab-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0893de58e2e8409b6397a5b0710965ea5cfebaf2cdaf56979dd963fccbbc47f9",
+      "after_sha256": "0893de58e2e8409b6397a5b0710965ea5cfebaf2cdaf56979dd963fccbbc47f9",
+      "before_byte_size": 357,
+      "after_byte_size": 357,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo07-locator-tab-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b0734058f6fb13db86824b4b508f6b8071e672fd1966b70c01cf3bdcd584f9ed",
+      "after_sha256": "b0734058f6fb13db86824b4b508f6b8071e672fd1966b70c01cf3bdcd584f9ed",
+      "before_byte_size": 285,
+      "after_byte_size": 285,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo07-locator-tab-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "1117a63fe3b12aa45ba8edc255bb39ed90b9ec19240d874f54181289836e12b6",
+      "after_sha256": "1117a63fe3b12aa45ba8edc255bb39ed90b9ec19240d874f54181289836e12b6",
+      "before_byte_size": 430,
+      "after_byte_size": 430,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo07-locator-tab-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "ebf06f31ac3c6397099320430b565c1107904379d15aa61f6318c70c9aade7af",
+      "after_sha256": "ebf06f31ac3c6397099320430b565c1107904379d15aa61f6318c70c9aade7af",
+      "before_byte_size": 222,
+      "after_byte_size": 222,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo07-locator-tab-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a4f39323aa03427731aef361a338c4da0e4229678f5708e1e1a1f556550c685e",
+      "after_sha256": "a4f39323aa03427731aef361a338c4da0e4229678f5708e1e1a1f556550c685e",
+      "before_byte_size": 334,
+      "after_byte_size": 334,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo08-excerpt-notch-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c59de2cfc0720ae91dc9279f70094869bf4415e2eb46b572de97a42d9ea3da3c",
+      "after_sha256": "c59de2cfc0720ae91dc9279f70094869bf4415e2eb46b572de97a42d9ea3da3c",
+      "before_byte_size": 208,
+      "after_byte_size": 208,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo08-excerpt-notch-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "fea6d49dabfb4f6b3d402bae36577bd8a6bc64e99bde4b40bd8817726e13ec3b",
+      "after_sha256": "fea6d49dabfb4f6b3d402bae36577bd8a6bc64e99bde4b40bd8817726e13ec3b",
+      "before_byte_size": 307,
+      "after_byte_size": 307,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo08-excerpt-notch-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "76a34e2438ccdee057c2a1a5712664dfb58ad81e4730329da38cdf8bc35dd372",
+      "after_sha256": "76a34e2438ccdee057c2a1a5712664dfb58ad81e4730329da38cdf8bc35dd372",
+      "before_byte_size": 256,
+      "after_byte_size": 256,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo08-excerpt-notch-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c06dda66f7cf89f8d128d4fd681e2255b9bdef2ac65a629550dd129c7baa0dc5",
+      "after_sha256": "c06dda66f7cf89f8d128d4fd681e2255b9bdef2ac65a629550dd129c7baa0dc5",
+      "before_byte_size": 421,
+      "after_byte_size": 421,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo08-excerpt-notch-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "11b612d80d03f615933f6fdcef59ca0946cb8fde35e9ef9d39dbc46fd3ec2756",
+      "after_sha256": "11b612d80d03f615933f6fdcef59ca0946cb8fde35e9ef9d39dbc46fd3ec2756",
+      "before_byte_size": 241,
+      "after_byte_size": 241,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo08-excerpt-notch-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "059740b28c5098f5f66232c1acb8a60b4af1347035a905c874b4cf39b3763c30",
+      "after_sha256": "059740b28c5098f5f66232c1acb8a60b4af1347035a905c874b4cf39b3763c30",
+      "before_byte_size": 397,
+      "after_byte_size": 397,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo09-interpretation-seam-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "427ef15dd02eb5eab9faf5905e454ff6495b27eb90fd95db069c9eef0f75ec9e",
+      "after_sha256": "427ef15dd02eb5eab9faf5905e454ff6495b27eb90fd95db069c9eef0f75ec9e",
+      "before_byte_size": 270,
+      "after_byte_size": 270,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo09-interpretation-seam-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "8208792707bfe29393557c842169934f2754148ab80950f90e4072ad229b4d40",
+      "after_sha256": "8208792707bfe29393557c842169934f2754148ab80950f90e4072ad229b4d40",
+      "before_byte_size": 426,
+      "after_byte_size": 426,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo09-interpretation-seam-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "7714763a9dc266ffea9781b1db61a4f7d5cc04e80167be028c1e1abbfc47cbb0",
+      "after_sha256": "7714763a9dc266ffea9781b1db61a4f7d5cc04e80167be028c1e1abbfc47cbb0",
+      "before_byte_size": 294,
+      "after_byte_size": 294,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo09-interpretation-seam-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "14a860742599d473a9baab2c890dd7480aade5a54622e504f3668ac37e02433a",
+      "after_sha256": "14a860742599d473a9baab2c890dd7480aade5a54622e504f3668ac37e02433a",
+      "before_byte_size": 453,
+      "after_byte_size": 453,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo09-interpretation-seam-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a47011065d3b21bdfb26c906328ac3e7ab995c8ad43ea5676ac96cd55ee7ce2a",
+      "after_sha256": "a47011065d3b21bdfb26c906328ac3e7ab995c8ad43ea5676ac96cd55ee7ce2a",
+      "before_byte_size": 341,
+      "after_byte_size": 341,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo09-interpretation-seam-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3d6cb8bb78d264457259045d34ad78ba44502952f904339d67699ef94f1de2d0",
+      "after_sha256": "3d6cb8bb78d264457259045d34ad78ba44502952f904339d67699ef94f1de2d0",
+      "before_byte_size": 515,
+      "after_byte_size": 515,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo10-record-gap-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "413928519156f359fc7f88a2c7fccb4d1c64b0f0e18fc6931aef910367ed61a6",
+      "after_sha256": "413928519156f359fc7f88a2c7fccb4d1c64b0f0e18fc6931aef910367ed61a6",
+      "before_byte_size": 216,
+      "after_byte_size": 216,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo10-record-gap-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "963574eb048c2f22e1b92735ba22ae5c30c22594e1a65358bc23e1c552bdb8d4",
+      "after_sha256": "963574eb048c2f22e1b92735ba22ae5c30c22594e1a65358bc23e1c552bdb8d4",
+      "before_byte_size": 250,
+      "after_byte_size": 250,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo10-record-gap-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "bb4f2ba2abafb7f19c9eb14763b815522812b0e13b6580e616a7224944f558b0",
+      "after_sha256": "bb4f2ba2abafb7f19c9eb14763b815522812b0e13b6580e616a7224944f558b0",
+      "before_byte_size": 194,
+      "after_byte_size": 194,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo10-record-gap-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "a13349beb22d1cdad87f5727121b703138de87a23e30e7e5b769c62aa724f864",
+      "after_sha256": "a13349beb22d1cdad87f5727121b703138de87a23e30e7e5b769c62aa724f864",
+      "before_byte_size": 350,
+      "after_byte_size": 350,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo10-record-gap-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4352f7de6b6f72b9ff8fab5499ea276f41fc6d000825f66f99e98f903f2fe816",
+      "after_sha256": "4352f7de6b6f72b9ff8fab5499ea276f41fc6d000825f66f99e98f903f2fe816",
+      "before_byte_size": 184,
+      "after_byte_size": 184,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo10-record-gap-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "7328b7f79ac05b176c8c7828d9b5516dd9e3c27185a32837ffac5daa83839017",
+      "after_sha256": "7328b7f79ac05b176c8c7828d9b5516dd9e3c27185a32837ffac5daa83839017",
+      "before_byte_size": 274,
+      "after_byte_size": 274,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo11-leader-landing-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "ae0d48ddfc92384bc21116db729277dc98a69597a0472fad9be68eb259e9afdc",
+      "after_sha256": "ae0d48ddfc92384bc21116db729277dc98a69597a0472fad9be68eb259e9afdc",
+      "before_byte_size": 224,
+      "after_byte_size": 224,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo11-leader-landing-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "11cec77151c8e9a1c410f9bba13ae5084417b142f4fbd78ae65d00d93610ddcf",
+      "after_sha256": "11cec77151c8e9a1c410f9bba13ae5084417b142f4fbd78ae65d00d93610ddcf",
+      "before_byte_size": 359,
+      "after_byte_size": 359,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo11-leader-landing-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b4ed750ea2fdbe6cb9db45eb13e06058c1a99a89043b92bc405d8d5a2743c9c2",
+      "after_sha256": "b4ed750ea2fdbe6cb9db45eb13e06058c1a99a89043b92bc405d8d5a2743c9c2",
+      "before_byte_size": 258,
+      "after_byte_size": 258,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo11-leader-landing-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f436e1b20fc2ea5e80f2e14f15952113ce0ae3b530ccfd86b24828cc94151002",
+      "after_sha256": "f436e1b20fc2ea5e80f2e14f15952113ce0ae3b530ccfd86b24828cc94151002",
+      "before_byte_size": 456,
+      "after_byte_size": 456,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo11-leader-landing-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "85407fa682a25d9f75293fa28ded3083e5aad81f965beeff7ac41a4ee0f9432d",
+      "after_sha256": "85407fa682a25d9f75293fa28ded3083e5aad81f965beeff7ac41a4ee0f9432d",
+      "before_byte_size": 318,
+      "after_byte_size": 318,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo11-leader-landing-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e1de3fde7cf326b1d7feaedfa2ff6101e21473cfaab6905cf38bdfa2da5638bf",
+      "after_sha256": "e1de3fde7cf326b1d7feaedfa2ff6101e21473cfaab6905cf38bdfa2da5638bf",
+      "before_byte_size": 494,
+      "after_byte_size": 494,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo12-extent-ends-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "efff4117addabc7396ababee5b21774d3d668bd642046b4bc719a9149e17e015",
+      "after_sha256": "efff4117addabc7396ababee5b21774d3d668bd642046b4bc719a9149e17e015",
+      "before_byte_size": 210,
+      "after_byte_size": 210,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo12-extent-ends-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0c75e011011361718cd6fa2019de55105c40922e3aed8e469ba9f7256b7db720",
+      "after_sha256": "0c75e011011361718cd6fa2019de55105c40922e3aed8e469ba9f7256b7db720",
+      "before_byte_size": 329,
+      "after_byte_size": 329,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo12-extent-ends-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "5fdc20edc87a523f944b48b1b48a565fa1035bd64d07dedbeb2f54653db5ef28",
+      "after_sha256": "5fdc20edc87a523f944b48b1b48a565fa1035bd64d07dedbeb2f54653db5ef28",
+      "before_byte_size": 251,
+      "after_byte_size": 251,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo12-extent-ends-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f25f49278298283f7d88174bbc514a283edfd076a2a24cbc3a6b18f3873bd852",
+      "after_sha256": "f25f49278298283f7d88174bbc514a283edfd076a2a24cbc3a6b18f3873bd852",
+      "before_byte_size": 436,
+      "after_byte_size": 436,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo12-extent-ends-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c9a1e374de8c187162bd6a20f343c559b0e86405b624c05aa08a43520948099d",
+      "after_sha256": "c9a1e374de8c187162bd6a20f343c559b0e86405b624c05aa08a43520948099d",
+      "before_byte_size": 264,
+      "after_byte_size": 264,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/light/mo12-extent-ends-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "c0590de1b495d7c8612e6e73a9fa09eb0dc27be951755ff366b5a1a004c44fa6",
+      "after_sha256": "c0590de1b495d7c8612e6e73a9fa09eb0dc27be951755ff366b5a1a004c44fa6",
+      "before_byte_size": 452,
+      "after_byte_size": 452,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo01-section-pause-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "7d0d8875105cf9a279456c9a02475b2ce6f8c7574d1eaaf524d56376a8ca6513",
+      "after_sha256": "7d0d8875105cf9a279456c9a02475b2ce6f8c7574d1eaaf524d56376a8ca6513",
+      "before_byte_size": 258,
+      "after_byte_size": 258,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo01-section-pause-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "9fb872ce243fcf71ac5ff0c74fc2acbf01ae8b2c40cfb0bfd140f6487ff4434d",
+      "after_sha256": "9fb872ce243fcf71ac5ff0c74fc2acbf01ae8b2c40cfb0bfd140f6487ff4434d",
+      "before_byte_size": 401,
+      "after_byte_size": 401,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo01-section-pause-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "86df47215a462ede285da82fb9d8e760c6b3dbc32c6b16984bd0812a4ec696f6",
+      "after_sha256": "86df47215a462ede285da82fb9d8e760c6b3dbc32c6b16984bd0812a4ec696f6",
+      "before_byte_size": 291,
+      "after_byte_size": 291,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo01-section-pause-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "84134ef352d18ef59b8f1ba90d13640d75bfe0d528c7335c0a2569f53c0f99a9",
+      "after_sha256": "84134ef352d18ef59b8f1ba90d13640d75bfe0d528c7335c0a2569f53c0f99a9",
+      "before_byte_size": 510,
+      "after_byte_size": 510,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo01-section-pause-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "09d2cb8ca68f3eb623eb1302a2e18f2c64e29df2fc3609ed50dc956952bef056",
+      "after_sha256": "09d2cb8ca68f3eb623eb1302a2e18f2c64e29df2fc3609ed50dc956952bef056",
+      "before_byte_size": 345,
+      "after_byte_size": 345,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo01-section-pause-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "fa45e5ca8a6b367c72cb038429c8ff482a2d632bbdbd826f6fa4255ee9bf83af",
+      "after_sha256": "fa45e5ca8a6b367c72cb038429c8ff482a2d632bbdbd826f6fa4255ee9bf83af",
+      "before_byte_size": 613,
+      "after_byte_size": 613,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo02-end-stop-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "55a7991462e5ebd2f73c9f75ce7b6eadd6d5516d605a0fe1fab2170914db8620",
+      "after_sha256": "55a7991462e5ebd2f73c9f75ce7b6eadd6d5516d605a0fe1fab2170914db8620",
+      "before_byte_size": 235,
+      "after_byte_size": 235,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo02-end-stop-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0d397ef05e1d4f91ac31fa96c9a7cdc6a4e07ab3f6f42750f2067eb54d3e0bda",
+      "after_sha256": "0d397ef05e1d4f91ac31fa96c9a7cdc6a4e07ab3f6f42750f2067eb54d3e0bda",
+      "before_byte_size": 379,
+      "after_byte_size": 379,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo02-end-stop-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "24b15e7fd46bde2e45599f6374d27d28e1b89fbbcb7bf685fb7339a3615a0ca3",
+      "after_sha256": "24b15e7fd46bde2e45599f6374d27d28e1b89fbbcb7bf685fb7339a3615a0ca3",
+      "before_byte_size": 278,
+      "after_byte_size": 278,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo02-end-stop-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f6103322b2bafc5204af3934bf16919be860f5daa6394d3ed87d85c24527beb5",
+      "after_sha256": "f6103322b2bafc5204af3934bf16919be860f5daa6394d3ed87d85c24527beb5",
+      "before_byte_size": 514,
+      "after_byte_size": 514,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo02-end-stop-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "1f9dc55468a10ff0b844c0e0a5f118f9f88633fb8fa82aa19976d4a41520c113",
+      "after_sha256": "1f9dc55468a10ff0b844c0e0a5f118f9f88633fb8fa82aa19976d4a41520c113",
+      "before_byte_size": 325,
+      "after_byte_size": 325,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo02-end-stop-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "49fff507ddaf1a06b3a91ba986e4a5a592cd1989b4e34fc7a69e4d0f6dcd1946",
+      "after_sha256": "49fff507ddaf1a06b3a91ba986e4a5a592cd1989b4e34fc7a69e4d0f6dcd1946",
+      "before_byte_size": 557,
+      "after_byte_size": 557,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo03-margin-stitch-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "03abe4f9d5bcf33c3cd8c4f06f7e55010f9df7b75d287ef11c9a5c6fbbb51e3e",
+      "after_sha256": "03abe4f9d5bcf33c3cd8c4f06f7e55010f9df7b75d287ef11c9a5c6fbbb51e3e",
+      "before_byte_size": 218,
+      "after_byte_size": 218,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo03-margin-stitch-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "8088534aa31b8977121c329891a1ecda94def41985301c3ef0e55688bc2aea2a",
+      "after_sha256": "8088534aa31b8977121c329891a1ecda94def41985301c3ef0e55688bc2aea2a",
+      "before_byte_size": 362,
+      "after_byte_size": 362,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo03-margin-stitch-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3939afcc6689f2b9de062bb73e0d15b5be20b61c713e18ae4c5fd31d295e9d00",
+      "after_sha256": "3939afcc6689f2b9de062bb73e0d15b5be20b61c713e18ae4c5fd31d295e9d00",
+      "before_byte_size": 262,
+      "after_byte_size": 262,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo03-margin-stitch-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "76c28f10d80908c381b2fc72782090b7f634fe1c0a2030b925a0b6b40e6c9c33",
+      "after_sha256": "76c28f10d80908c381b2fc72782090b7f634fe1c0a2030b925a0b6b40e6c9c33",
+      "before_byte_size": 441,
+      "after_byte_size": 441,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo03-margin-stitch-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2e08a5f5eebb0d85ee6afab31b675946cd34daa3a77c262df00272a665cd6b2d",
+      "after_sha256": "2e08a5f5eebb0d85ee6afab31b675946cd34daa3a77c262df00272a665cd6b2d",
+      "before_byte_size": 296,
+      "after_byte_size": 296,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo03-margin-stitch-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b8e9ea002af95239165bc5728b9fe007facb60e2f43d95374d5b60df5c36833a",
+      "after_sha256": "b8e9ea002af95239165bc5728b9fe007facb60e2f43d95374d5b60df5c36833a",
+      "before_byte_size": 505,
+      "after_byte_size": 505,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo04-margin-fold-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f35c08630890af65ddfa95e5ee24641b6716268e91fac00ca2050cd11b8e4275",
+      "after_sha256": "f35c08630890af65ddfa95e5ee24641b6716268e91fac00ca2050cd11b8e4275",
+      "before_byte_size": 226,
+      "after_byte_size": 226,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo04-margin-fold-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e4ee43c49b767948a6f1d6bbe8bdc47a94c673156d291054823ebf81fa7b6c2a",
+      "after_sha256": "e4ee43c49b767948a6f1d6bbe8bdc47a94c673156d291054823ebf81fa7b6c2a",
+      "before_byte_size": 340,
+      "after_byte_size": 340,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo04-margin-fold-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "cb14080a67ac96fd720c41568bfce978b6a6fdd8a950a5ef2adbc53946f71941",
+      "after_sha256": "cb14080a67ac96fd720c41568bfce978b6a6fdd8a950a5ef2adbc53946f71941",
+      "before_byte_size": 261,
+      "after_byte_size": 261,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo04-margin-fold-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4935d531c0774c8ddc67e71f0a7cd57705e1d10974e309b650fbb0813fb6c420",
+      "after_sha256": "4935d531c0774c8ddc67e71f0a7cd57705e1d10974e309b650fbb0813fb6c420",
+      "before_byte_size": 408,
+      "after_byte_size": 408,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo04-margin-fold-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "62f05195af8c690690562213a9709dc8989824aab45889ff38aba46c3bf2bcf9",
+      "after_sha256": "62f05195af8c690690562213a9709dc8989824aab45889ff38aba46c3bf2bcf9",
+      "before_byte_size": 275,
+      "after_byte_size": 275,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo04-margin-fold-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "7a50755519efa13b9934cc1461c4fa618395beb393dc86eeaaf5732f358d3e1f",
+      "after_sha256": "7a50755519efa13b9934cc1461c4fa618395beb393dc86eeaaf5732f358d3e1f",
+      "before_byte_size": 457,
+      "after_byte_size": 457,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo05-note-seat-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "bc31f6923caf9006051869bbb1d83e965ddca2ecd2546777e06cfb70674dc81d",
+      "after_sha256": "bc31f6923caf9006051869bbb1d83e965ddca2ecd2546777e06cfb70674dc81d",
+      "before_byte_size": 190,
+      "after_byte_size": 190,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo05-note-seat-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4a1fb738719d74549eb63682bb7f5a135d8ba38b1c87ac18d926da9012e0f550",
+      "after_sha256": "4a1fb738719d74549eb63682bb7f5a135d8ba38b1c87ac18d926da9012e0f550",
+      "before_byte_size": 277,
+      "after_byte_size": 277,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo05-note-seat-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "29c72a0786bdff77a681eccaa09c1bb3f6f333a08547bddd1e94840772a59b44",
+      "after_sha256": "29c72a0786bdff77a681eccaa09c1bb3f6f333a08547bddd1e94840772a59b44",
+      "before_byte_size": 201,
+      "after_byte_size": 201,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo05-note-seat-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "51063766348db690d5b5a327f79781d8b36cec4a778710d376f6bdb47570f6fa",
+      "after_sha256": "51063766348db690d5b5a327f79781d8b36cec4a778710d376f6bdb47570f6fa",
+      "before_byte_size": 312,
+      "after_byte_size": 312,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo05-note-seat-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "3075ad6de00eafab3779525f0ab4b151e89d52b8e9dbfcedcae430ccb4bfe368",
+      "after_sha256": "3075ad6de00eafab3779525f0ab4b151e89d52b8e9dbfcedcae430ccb4bfe368",
+      "before_byte_size": 224,
+      "after_byte_size": 224,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo05-note-seat-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "fb2a9580fbd9e5ea4947cac5683f1e7378c6a6c82599e02a6d4eeac5f1d52c6e",
+      "after_sha256": "fb2a9580fbd9e5ea4947cac5683f1e7378c6a6c82599e02a6d4eeac5f1d52c6e",
+      "before_byte_size": 372,
+      "after_byte_size": 372,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo06-paired-cuts-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e321ec8217b2304a4a283549242c1278919b7fd9c51599121db0de24a1f0b3ce",
+      "after_sha256": "e321ec8217b2304a4a283549242c1278919b7fd9c51599121db0de24a1f0b3ce",
+      "before_byte_size": 170,
+      "after_byte_size": 170,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo06-paired-cuts-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "f2d25a8ecc57821363f07c474b055335b0e418d51b4d029c15160d3f759d4b38",
+      "after_sha256": "f2d25a8ecc57821363f07c474b055335b0e418d51b4d029c15160d3f759d4b38",
+      "before_byte_size": 203,
+      "after_byte_size": 203,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo06-paired-cuts-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "47bdb1ef0a099e63d0da09ebf00d46808b0f50688b5ca84374446feb18a008d8",
+      "after_sha256": "47bdb1ef0a099e63d0da09ebf00d46808b0f50688b5ca84374446feb18a008d8",
+      "before_byte_size": 180,
+      "after_byte_size": 180,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo06-paired-cuts-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "367d82693d8a3a3d3aaae2b7163c5fdebb68cd521920b0cedf1b9e8e84e532f3",
+      "after_sha256": "367d82693d8a3a3d3aaae2b7163c5fdebb68cd521920b0cedf1b9e8e84e532f3",
+      "before_byte_size": 281,
+      "after_byte_size": 281,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo06-paired-cuts-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "4795b6b999c3963862451a081c1a88ecb6c20d11e764293feb47cc171953fa15",
+      "after_sha256": "4795b6b999c3963862451a081c1a88ecb6c20d11e764293feb47cc171953fa15",
+      "before_byte_size": 161,
+      "after_byte_size": 161,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo06-paired-cuts-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "5cd578f9a005c747a19b508627904d1a5e153e7b4faa5ba28c1df69b3b7b89f1",
+      "after_sha256": "5cd578f9a005c747a19b508627904d1a5e153e7b4faa5ba28c1df69b3b7b89f1",
+      "before_byte_size": 253,
+      "after_byte_size": 253,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo07-locator-tab-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "01f9bdb8f6c57d220f617270406142ca865e34626707fd1f4eb06d07607b2012",
+      "after_sha256": "01f9bdb8f6c57d220f617270406142ca865e34626707fd1f4eb06d07607b2012",
+      "before_byte_size": 212,
+      "after_byte_size": 212,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo07-locator-tab-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "ab35b2d5e2ee5109d001623f9f8af8cda3372dd18e97158f959e692adb6dc5ad",
+      "after_sha256": "ab35b2d5e2ee5109d001623f9f8af8cda3372dd18e97158f959e692adb6dc5ad",
+      "before_byte_size": 288,
+      "after_byte_size": 288,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo07-locator-tab-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "04d989066b453689bfc8871aef125330a98b01c2abb7aaa91f91fa23f48e7d70",
+      "after_sha256": "04d989066b453689bfc8871aef125330a98b01c2abb7aaa91f91fa23f48e7d70",
+      "before_byte_size": 224,
+      "after_byte_size": 224,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo07-locator-tab-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "6987591200a96947c3654529e9be38e8b40d2b32ec27d37978c383bb43cd2187",
+      "after_sha256": "6987591200a96947c3654529e9be38e8b40d2b32ec27d37978c383bb43cd2187",
+      "before_byte_size": 336,
+      "after_byte_size": 336,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo07-locator-tab-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "d24d97af35d1064b39b42508d798b7b64088d0462e7ba9d993eb5deee8e9a9a3",
+      "after_sha256": "d24d97af35d1064b39b42508d798b7b64088d0462e7ba9d993eb5deee8e9a9a3",
+      "before_byte_size": 192,
+      "after_byte_size": 192,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo07-locator-tab-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e2f8f3a8cd6ad412a848b2225b0575d3badd4448be85c47e64ef9a3485737dd3",
+      "after_sha256": "e2f8f3a8cd6ad412a848b2225b0575d3badd4448be85c47e64ef9a3485737dd3",
+      "before_byte_size": 290,
+      "after_byte_size": 290,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo08-excerpt-notch-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b72da6999a02ae693dd77c6848fbb43bb53c873add30ca5df9bad34459a98277",
+      "after_sha256": "b72da6999a02ae693dd77c6848fbb43bb53c873add30ca5df9bad34459a98277",
+      "before_byte_size": 177,
+      "after_byte_size": 177,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo08-excerpt-notch-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "dd99d36ea3cbec7e1f4ecb73ffa13bc25084678c1072ed17b743b958b0a4edc3",
+      "after_sha256": "dd99d36ea3cbec7e1f4ecb73ffa13bc25084678c1072ed17b743b958b0a4edc3",
+      "before_byte_size": 263,
+      "after_byte_size": 263,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo08-excerpt-notch-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "9f42b2beb4895bd2a8693ac54f3b5111bbbe2de72722813fbddac19e7898fe4b",
+      "after_sha256": "9f42b2beb4895bd2a8693ac54f3b5111bbbe2de72722813fbddac19e7898fe4b",
+      "before_byte_size": 214,
+      "after_byte_size": 214,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo08-excerpt-notch-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "cf2e3598667b531e851199b793725d32c8edc4701c78531f5506897d9ac543a0",
+      "after_sha256": "cf2e3598667b531e851199b793725d32c8edc4701c78531f5506897d9ac543a0",
+      "before_byte_size": 343,
+      "after_byte_size": 343,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo08-excerpt-notch-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "26df1d489118161b6a603eb27d91f44055229cb3485442cb1c32921417f15642",
+      "after_sha256": "26df1d489118161b6a603eb27d91f44055229cb3485442cb1c32921417f15642",
+      "before_byte_size": 209,
+      "after_byte_size": 209,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo08-excerpt-notch-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2a9034aab771c6eb9247602cdd903abe92b4781bc4c1cb2e0f0c4f3ef176e162",
+      "after_sha256": "2a9034aab771c6eb9247602cdd903abe92b4781bc4c1cb2e0f0c4f3ef176e162",
+      "before_byte_size": 323,
+      "after_byte_size": 323,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo09-interpretation-seam-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "e2cbddef7257812c73d0fa0cf183d4bfc2f8248a3c0c65c41b5d9019e0119fa6",
+      "after_sha256": "e2cbddef7257812c73d0fa0cf183d4bfc2f8248a3c0c65c41b5d9019e0119fa6",
+      "before_byte_size": 211,
+      "after_byte_size": 211,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo09-interpretation-seam-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "56847ee931a3ce5bf2b2458c957ab101a8eb379768d547e7438c70bc8bf44964",
+      "after_sha256": "56847ee931a3ce5bf2b2458c957ab101a8eb379768d547e7438c70bc8bf44964",
+      "before_byte_size": 343,
+      "after_byte_size": 343,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo09-interpretation-seam-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "323a5ac4efb6fdfaa5536cfe372582da9a28b00317f4b882f25c0da2b416cd0d",
+      "after_sha256": "323a5ac4efb6fdfaa5536cfe372582da9a28b00317f4b882f25c0da2b416cd0d",
+      "before_byte_size": 236,
+      "after_byte_size": 236,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo09-interpretation-seam-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "6cf413c21b52bd59c369ff26a446f70113151270ea36fb3c5d9c8121ca3a5e51",
+      "after_sha256": "6cf413c21b52bd59c369ff26a446f70113151270ea36fb3c5d9c8121ca3a5e51",
+      "before_byte_size": 357,
+      "after_byte_size": 357,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo09-interpretation-seam-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "905cdab29eceaa7a468d3123de435da52de5653e7b5040ac4a398c6c88d68194",
+      "after_sha256": "905cdab29eceaa7a468d3123de435da52de5653e7b5040ac4a398c6c88d68194",
+      "before_byte_size": 269,
+      "after_byte_size": 269,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo09-interpretation-seam-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "6c6ffc550f0722d597b6bb1f761aba6c20a4365e8e4009069752079cdeb469b6",
+      "after_sha256": "6c6ffc550f0722d597b6bb1f761aba6c20a4365e8e4009069752079cdeb469b6",
+      "before_byte_size": 407,
+      "after_byte_size": 407,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo10-record-gap-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "be3447d0e985d8ce241dcb33a917ef1ef7c18fbe553aab735b106d8045432d08",
+      "after_sha256": "be3447d0e985d8ce241dcb33a917ef1ef7c18fbe553aab735b106d8045432d08",
+      "before_byte_size": 189,
+      "after_byte_size": 189,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo10-record-gap-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "6f15773406bb0622ee5bb43a370dae3e44b55dc3ff0b56afeec11abf518c4489",
+      "after_sha256": "6f15773406bb0622ee5bb43a370dae3e44b55dc3ff0b56afeec11abf518c4489",
+      "before_byte_size": 225,
+      "after_byte_size": 225,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo10-record-gap-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "91ef00274d78b564e727f36da6fbb0a18be534ffac722041140fc02418438660",
+      "after_sha256": "91ef00274d78b564e727f36da6fbb0a18be534ffac722041140fc02418438660",
+      "before_byte_size": 164,
+      "after_byte_size": 164,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo10-record-gap-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b19304375d8880e53882c08c0cb859220e2f643d08c331a73e355be9823a0b4f",
+      "after_sha256": "b19304375d8880e53882c08c0cb859220e2f643d08c331a73e355be9823a0b4f",
+      "before_byte_size": 293,
+      "after_byte_size": 293,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo10-record-gap-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b86e2fe44b132a18617798557e8065cd9157c5d3af1ebce75c0c1553443b485c",
+      "after_sha256": "b86e2fe44b132a18617798557e8065cd9157c5d3af1ebce75c0c1553443b485c",
+      "before_byte_size": 167,
+      "after_byte_size": 167,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo10-record-gap-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "63e59d2bd9f0e70c48a77641189ebd97c7c8b2656cfdbf2945797d2651389f51",
+      "after_sha256": "63e59d2bd9f0e70c48a77641189ebd97c7c8b2656cfdbf2945797d2651389f51",
+      "before_byte_size": 250,
+      "after_byte_size": 250,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo11-leader-landing-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "cf87339743f2c329ada449e3b5019ca4dc4d5b6a44b929e786ca9885c3345852",
+      "after_sha256": "cf87339743f2c329ada449e3b5019ca4dc4d5b6a44b929e786ca9885c3345852",
+      "before_byte_size": 190,
+      "after_byte_size": 190,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo11-leader-landing-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "60e504ef5db926e31fbc1a3d636209fedba18cec887b83d9fb75e00caee79e6d",
+      "after_sha256": "60e504ef5db926e31fbc1a3d636209fedba18cec887b83d9fb75e00caee79e6d",
+      "before_byte_size": 283,
+      "after_byte_size": 283,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo11-leader-landing-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "0a4b229bb2cfaf8959d0cbc66f8e81b9faef8f881847509e3df09b61444bd9f6",
+      "after_sha256": "0a4b229bb2cfaf8959d0cbc66f8e81b9faef8f881847509e3df09b61444bd9f6",
+      "before_byte_size": 213,
+      "after_byte_size": 213,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo11-leader-landing-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b8c6c3e3b5fc92212c6935c21982fd9f7a6a65265b6339b693fcfa3c1ee088c6",
+      "after_sha256": "b8c6c3e3b5fc92212c6935c21982fd9f7a6a65265b6339b693fcfa3c1ee088c6",
+      "before_byte_size": 342,
+      "after_byte_size": 342,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo11-leader-landing-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "08bfca7708e1644f0fdf69d8f4e9b72120439054be5ddaab66436eb4d5dfd4ac",
+      "after_sha256": "08bfca7708e1644f0fdf69d8f4e9b72120439054be5ddaab66436eb4d5dfd4ac",
+      "before_byte_size": 239,
+      "after_byte_size": 239,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo11-leader-landing-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "ca85978d71d87ef77dd11acce410697bc238cf7fe996188f6b950d4f9b583c48",
+      "after_sha256": "ca85978d71d87ef77dd11acce410697bc238cf7fe996188f6b950d4f9b583c48",
+      "before_byte_size": 380,
+      "after_byte_size": 380,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo12-extent-ends-r1-16@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "1731c7d98671a18b91d9047d2596f26e5f196f45828de09d8bbf62068254b1eb",
+      "after_sha256": "1731c7d98671a18b91d9047d2596f26e5f196f45828de09d8bbf62068254b1eb",
+      "before_byte_size": 175,
+      "after_byte_size": 175,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo12-extent-ends-r1-16@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "b5eb721e5ffba09ef228a8e1c867236b9fc6fe341157a530c71bdc8e7cc3f9b3",
+      "after_sha256": "b5eb721e5ffba09ef228a8e1c867236b9fc6fe341157a530c71bdc8e7cc3f9b3",
+      "before_byte_size": 264,
+      "after_byte_size": 264,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo12-extent-ends-r1-20@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "70410680c383b45ba9516d022471297a2e9cd88190f888a721edb34884354fa4",
+      "after_sha256": "70410680c383b45ba9516d022471297a2e9cd88190f888a721edb34884354fa4",
+      "before_byte_size": 203,
+      "after_byte_size": 203,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo12-extent-ends-r1-20@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "2b0a64db8fa4c3895a2452be301b88f12d39275f06238f487f20b9c3da06b929",
+      "after_sha256": "2b0a64db8fa4c3895a2452be301b88f12d39275f06238f487f20b9c3da06b929",
+      "before_byte_size": 336,
+      "after_byte_size": 336,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo12-extent-ends-r1-24@1x.png",
+      "kind": "native_density_png",
+      "before_sha256": "fced1b535974d41c6cd46fa0406c1e4f4e6ba44c8c3d2485f8087f02e577ce8a",
+      "after_sha256": "fced1b535974d41c6cd46fa0406c1e4f4e6ba44c8c3d2485f8087f02e577ce8a",
+      "before_byte_size": 216,
+      "after_byte_size": 216,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/png/mono/mo12-extent-ends-r1-24@2x.png",
+      "kind": "native_density_png",
+      "before_sha256": "52d07ae39cac3bd3ec97a5624e0cb7f773fce6707dcb7683a0409bccad398a75",
+      "after_sha256": "52d07ae39cac3bd3ec97a5624e0cb7f773fce6707dcb7683a0409bccad398a75",
+      "before_byte_size": 356,
+      "after_byte_size": 356,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo01-section-pause-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "e19da7f48038a6a530b3d370abd62d1dd509edffcb85cf277ea7328860fa0e88",
+      "after_sha256": "e19da7f48038a6a530b3d370abd62d1dd509edffcb85cf277ea7328860fa0e88",
+      "before_byte_size": 1141,
+      "after_byte_size": 1141,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo01-section-pause-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "b5c8dc7053117fca8a860a109328f951416d21af083b3fc9410a4611d29e0203",
+      "after_sha256": "b5c8dc7053117fca8a860a109328f951416d21af083b3fc9410a4611d29e0203",
+      "before_byte_size": 1149,
+      "after_byte_size": 1149,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo01-section-pause-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "40a2db7f3bcbe4bda8a2a0366d1e9bdf9003a8abd6817ed27dad29ba00e648b8",
+      "after_sha256": "40a2db7f3bcbe4bda8a2a0366d1e9bdf9003a8abd6817ed27dad29ba00e648b8",
+      "before_byte_size": 1156,
+      "after_byte_size": 1156,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo02-end-stop-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "0aaac8b0e69c9f2f0ed2b710c85d684aadd45f24d3dd44fbb004e1cc765e8ed0",
+      "after_sha256": "0aaac8b0e69c9f2f0ed2b710c85d684aadd45f24d3dd44fbb004e1cc765e8ed0",
+      "before_byte_size": 1123,
+      "after_byte_size": 1123,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo02-end-stop-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "b9629608ecca145f14658b1726d32ba70b54c40bda677f47ae41a8899db85def",
+      "after_sha256": "b9629608ecca145f14658b1726d32ba70b54c40bda677f47ae41a8899db85def",
+      "before_byte_size": 1129,
+      "after_byte_size": 1129,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo02-end-stop-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "43e8aaa83e93bc88e1a5999c7edcd53946bafe279576d99733c25cee58e1da55",
+      "after_sha256": "43e8aaa83e93bc88e1a5999c7edcd53946bafe279576d99733c25cee58e1da55",
+      "before_byte_size": 1122,
+      "after_byte_size": 1122,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo03-margin-stitch-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "5bcba27b6f4f7566d7814efb63dda30e615d7fddbb56433e7ce22006087f0e58",
+      "after_sha256": "5bcba27b6f4f7566d7814efb63dda30e615d7fddbb56433e7ce22006087f0e58",
+      "before_byte_size": 1155,
+      "after_byte_size": 1155,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo03-margin-stitch-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "85310bd8b923e143b2cb64a3dafaee2aaa169bfa0838ce070ce49ceb4f1f51b6",
+      "after_sha256": "85310bd8b923e143b2cb64a3dafaee2aaa169bfa0838ce070ce49ceb4f1f51b6",
+      "before_byte_size": 1160,
+      "after_byte_size": 1160,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo03-margin-stitch-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "199be7c36d0e0fe2b35b26956ab8ee605611ba7fa03889a5d0108119c5211254",
+      "after_sha256": "199be7c36d0e0fe2b35b26956ab8ee605611ba7fa03889a5d0108119c5211254",
+      "before_byte_size": 1159,
+      "after_byte_size": 1159,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo04-margin-fold-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "be164b8f7ec2058b6b8a2314a7c257930c04854271deee53d0b42b7163e136ed",
+      "after_sha256": "be164b8f7ec2058b6b8a2314a7c257930c04854271deee53d0b42b7163e136ed",
+      "before_byte_size": 1154,
+      "after_byte_size": 1154,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo04-margin-fold-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "e68055fee07a52bda40caa95a28f8ca5bb31621afdcda4084bbc49de694c66a1",
+      "after_sha256": "e68055fee07a52bda40caa95a28f8ca5bb31621afdcda4084bbc49de694c66a1",
+      "before_byte_size": 1166,
+      "after_byte_size": 1166,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo04-margin-fold-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "dd3fa17ed952eccd9bdaecdd96e64ef861934599149b477cc5727d300c94dbc8",
+      "after_sha256": "dd3fa17ed952eccd9bdaecdd96e64ef861934599149b477cc5727d300c94dbc8",
+      "before_byte_size": 1157,
+      "after_byte_size": 1157,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo05-note-seat-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "5c6902caf1fe185159b4488636a51043ec04a2f0d07274903180fa714961267d",
+      "after_sha256": "5c6902caf1fe185159b4488636a51043ec04a2f0d07274903180fa714961267d",
+      "before_byte_size": 1070,
+      "after_byte_size": 1070,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo05-note-seat-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "9813040f0822c1192084b3ce666097f2c29b42cefe334c3420cc807f67fe7524",
+      "after_sha256": "9813040f0822c1192084b3ce666097f2c29b42cefe334c3420cc807f67fe7524",
+      "before_byte_size": 1082,
+      "after_byte_size": 1082,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo05-note-seat-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "c4e09a0ed040bae04cc40a81a121ba2501c1706fa7aef3ffd3540889c706c0e9",
+      "after_sha256": "c4e09a0ed040bae04cc40a81a121ba2501c1706fa7aef3ffd3540889c706c0e9",
+      "before_byte_size": 1076,
+      "after_byte_size": 1076,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo06-paired-cuts-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "97d741bb5617596231700fa266c37aa8795c87d26907ef7de4c33a4d43739f85",
+      "after_sha256": "97d741bb5617596231700fa266c37aa8795c87d26907ef7de4c33a4d43739f85",
+      "before_byte_size": 1148,
+      "after_byte_size": 1148,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo06-paired-cuts-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "45e5073975c0ec2934c63a1aa98ecf1879bd932acea4fecc3082fd02c35496e2",
+      "after_sha256": "45e5073975c0ec2934c63a1aa98ecf1879bd932acea4fecc3082fd02c35496e2",
+      "before_byte_size": 1155,
+      "after_byte_size": 1155,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo06-paired-cuts-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "2b94627be2c75218667b5e28cb684137695b2471a5ae9cd69e87d80d63897626",
+      "after_sha256": "2b94627be2c75218667b5e28cb684137695b2471a5ae9cd69e87d80d63897626",
+      "before_byte_size": 1145,
+      "after_byte_size": 1145,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo07-locator-tab-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "3733629119cd58695480faf2650253506625d3783b565c314d6d561def050535",
+      "after_sha256": "3733629119cd58695480faf2650253506625d3783b565c314d6d561def050535",
+      "before_byte_size": 1148,
+      "after_byte_size": 1148,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo07-locator-tab-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "92b4d2c8986fa4d2e48b5af2dfb83f31900866213bae2be2f33474bcec0c99d9",
+      "after_sha256": "92b4d2c8986fa4d2e48b5af2dfb83f31900866213bae2be2f33474bcec0c99d9",
+      "before_byte_size": 1156,
+      "after_byte_size": 1156,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo07-locator-tab-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "1f1a4497c9e0cc64c0253945365d5a56d298100f68fe92bf388be972411a500c",
+      "after_sha256": "1f1a4497c9e0cc64c0253945365d5a56d298100f68fe92bf388be972411a500c",
+      "before_byte_size": 1128,
+      "after_byte_size": 1128,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo08-excerpt-notch-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "a96f029b02100efb47db37bcf5ff0d57edc503df2812aac35a58f062119a70e9",
+      "after_sha256": "a96f029b02100efb47db37bcf5ff0d57edc503df2812aac35a58f062119a70e9",
+      "before_byte_size": 1251,
+      "after_byte_size": 1251,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo08-excerpt-notch-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "a8ce207c5418ab1186deb7d58d0a31f4e340bb085e4469315b587793960cb601",
+      "after_sha256": "a8ce207c5418ab1186deb7d58d0a31f4e340bb085e4469315b587793960cb601",
+      "before_byte_size": 1266,
+      "after_byte_size": 1266,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo08-excerpt-notch-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "274d05b00da5e6575015fe024d7c7adc2c2724a1a5a0baeb91d2d48dcafb36a8",
+      "after_sha256": "274d05b00da5e6575015fe024d7c7adc2c2724a1a5a0baeb91d2d48dcafb36a8",
+      "before_byte_size": 1244,
+      "after_byte_size": 1244,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo09-interpretation-seam-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "a86291ab2f1397a8f8b8bbdf6eecb2fbab54d54f2d3d9d4f628666746b0f3c0e",
+      "after_sha256": "a86291ab2f1397a8f8b8bbdf6eecb2fbab54d54f2d3d9d4f628666746b0f3c0e",
+      "before_byte_size": 1341,
+      "after_byte_size": 1341,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo09-interpretation-seam-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "d5d96d3110264bf1cc90cb5c23f52a71d38f31d2ecdf8d600d70a40bef4ca84f",
+      "after_sha256": "d5d96d3110264bf1cc90cb5c23f52a71d38f31d2ecdf8d600d70a40bef4ca84f",
+      "before_byte_size": 1339,
+      "after_byte_size": 1339,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo09-interpretation-seam-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "5eb9c02ae5a2db157187013f8d4890a42a2dbc8a1bbc84f2e5c13f816da862c6",
+      "after_sha256": "5eb9c02ae5a2db157187013f8d4890a42a2dbc8a1bbc84f2e5c13f816da862c6",
+      "before_byte_size": 1341,
+      "after_byte_size": 1341,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo10-record-gap-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "a29db1160e67ed844bdb7ffb1852225d310cc2675267869bc8d83ca785b4ed95",
+      "after_sha256": "a29db1160e67ed844bdb7ffb1852225d310cc2675267869bc8d83ca785b4ed95",
+      "before_byte_size": 1175,
+      "after_byte_size": 1175,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo10-record-gap-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "0cd6973cc792a9a0cb295aa8c54bf9131ddfe6b226473b42937752d44bc659ce",
+      "after_sha256": "0cd6973cc792a9a0cb295aa8c54bf9131ddfe6b226473b42937752d44bc659ce",
+      "before_byte_size": 1177,
+      "after_byte_size": 1177,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo10-record-gap-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "e71419ce3255b5f5d213f1b0381939b3082b00db2091e99d3dbf8796e100e095",
+      "after_sha256": "e71419ce3255b5f5d213f1b0381939b3082b00db2091e99d3dbf8796e100e095",
+      "before_byte_size": 1163,
+      "after_byte_size": 1163,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo11-leader-landing-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "f376f6a28d859bc7a17cd5894cf0b141e695e3a1289315a13be7fdf1cb39db66",
+      "after_sha256": "f376f6a28d859bc7a17cd5894cf0b141e695e3a1289315a13be7fdf1cb39db66",
+      "before_byte_size": 1215,
+      "after_byte_size": 1215,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo11-leader-landing-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "af4c3c17cadae158eb0be7dd337c9571c0690c11dc35f314d34c8f143c2bf84c",
+      "after_sha256": "af4c3c17cadae158eb0be7dd337c9571c0690c11dc35f314d34c8f143c2bf84c",
+      "before_byte_size": 1212,
+      "after_byte_size": 1212,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo11-leader-landing-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "f0188ec3798669a809db7d04dfc1659befa694e1a3a06ff4011f63c0d75b15bc",
+      "after_sha256": "f0188ec3798669a809db7d04dfc1659befa694e1a3a06ff4011f63c0d75b15bc",
+      "before_byte_size": 1215,
+      "after_byte_size": 1215,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo12-extent-ends-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "483ad5c324874b3431559c24c261c2cf93ad68371af2bf40225a9b0ea1b55001",
+      "after_sha256": "483ad5c324874b3431559c24c261c2cf93ad68371af2bf40225a9b0ea1b55001",
+      "before_byte_size": 1203,
+      "after_byte_size": 1203,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo12-extent-ends-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "c5b82a025dd7d90a91033dff66273e3207ec13599bcfa635f780145348764ead",
+      "after_sha256": "c5b82a025dd7d90a91033dff66273e3207ec13599bcfa635f780145348764ead",
+      "before_byte_size": 1212,
+      "after_byte_size": 1212,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/dark/mo12-extent-ends-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "a258725ad11c4a83b026b08b7079ee27623739bed01736046cf0d745521ff0f7",
+      "after_sha256": "a258725ad11c4a83b026b08b7079ee27623739bed01736046cf0d745521ff0f7",
+      "before_byte_size": 1196,
+      "after_byte_size": 1196,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo01-section-pause-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "2e352cd69374695eae07c5d9d4e23f263aa7f092723a02837d1d3754ef93efe4",
+      "after_sha256": "2e352cd69374695eae07c5d9d4e23f263aa7f092723a02837d1d3754ef93efe4",
+      "before_byte_size": 1149,
+      "after_byte_size": 1149,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo01-section-pause-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "641de843e82609beba42c9754b05d0f4891cdf0f766d423b9f5355aecd9ad033",
+      "after_sha256": "641de843e82609beba42c9754b05d0f4891cdf0f766d423b9f5355aecd9ad033",
+      "before_byte_size": 1157,
+      "after_byte_size": 1157,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo01-section-pause-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "f6abc8d762c09932fc1ff99826c491c72287fe03d9a214a7f8c2f497c73df90c",
+      "after_sha256": "f6abc8d762c09932fc1ff99826c491c72287fe03d9a214a7f8c2f497c73df90c",
+      "before_byte_size": 1164,
+      "after_byte_size": 1164,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo02-end-stop-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "49f353d2a7d3f41798fc484fe3229a1854bb7eeab9080201c4f48dbdc60a1566",
+      "after_sha256": "49f353d2a7d3f41798fc484fe3229a1854bb7eeab9080201c4f48dbdc60a1566",
+      "before_byte_size": 1131,
+      "after_byte_size": 1131,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo02-end-stop-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "435158fca6b6d6b5607f28f116804dc9e3a9398ee78d0e0e24deece930c7d778",
+      "after_sha256": "435158fca6b6d6b5607f28f116804dc9e3a9398ee78d0e0e24deece930c7d778",
+      "before_byte_size": 1137,
+      "after_byte_size": 1137,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo02-end-stop-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "b83d3e52ffa9c6748d46a558a7ba893fb2b178ae06e16d9873a593756c19502b",
+      "after_sha256": "b83d3e52ffa9c6748d46a558a7ba893fb2b178ae06e16d9873a593756c19502b",
+      "before_byte_size": 1130,
+      "after_byte_size": 1130,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo03-margin-stitch-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "bf05e0d64aec92384ae078b0078bca250e5b1b1e31357eb5fe48ffed85891fa7",
+      "after_sha256": "bf05e0d64aec92384ae078b0078bca250e5b1b1e31357eb5fe48ffed85891fa7",
+      "before_byte_size": 1163,
+      "after_byte_size": 1163,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo03-margin-stitch-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "c75063bac5da8cddfeaa9e7a493dd9f026992975d5828fb6d841b39c22ac9414",
+      "after_sha256": "c75063bac5da8cddfeaa9e7a493dd9f026992975d5828fb6d841b39c22ac9414",
+      "before_byte_size": 1168,
+      "after_byte_size": 1168,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo03-margin-stitch-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "5baacef0d0caf19b8669c3f1f84e0e16c11544906edd006e318bdc5bb7e8d755",
+      "after_sha256": "5baacef0d0caf19b8669c3f1f84e0e16c11544906edd006e318bdc5bb7e8d755",
+      "before_byte_size": 1167,
+      "after_byte_size": 1167,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo04-margin-fold-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "160cb84afc5a7684048cf6331ab6dd04a44ae93d9d314496111904f65519fc96",
+      "after_sha256": "160cb84afc5a7684048cf6331ab6dd04a44ae93d9d314496111904f65519fc96",
+      "before_byte_size": 1162,
+      "after_byte_size": 1162,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo04-margin-fold-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "9cb4bf2f94c8c89ec9620bcbb479985b990f3017161c211ffccf351c3de39839",
+      "after_sha256": "9cb4bf2f94c8c89ec9620bcbb479985b990f3017161c211ffccf351c3de39839",
+      "before_byte_size": 1174,
+      "after_byte_size": 1174,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo04-margin-fold-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "e39442d5685eb5fb330cb8ab82437713626841585721570141153c94d6f26ebb",
+      "after_sha256": "e39442d5685eb5fb330cb8ab82437713626841585721570141153c94d6f26ebb",
+      "before_byte_size": 1165,
+      "after_byte_size": 1165,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo05-note-seat-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "d9385efd143076f4bb546ef8f3dec6743a560ea39a3eb9dba5e8fc2b7f19541d",
+      "after_sha256": "d9385efd143076f4bb546ef8f3dec6743a560ea39a3eb9dba5e8fc2b7f19541d",
+      "before_byte_size": 1077,
+      "after_byte_size": 1077,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo05-note-seat-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "bd85927cc49cca7236b976c47116f9c3858884c2de65b5a3e13cd791161d1593",
+      "after_sha256": "bd85927cc49cca7236b976c47116f9c3858884c2de65b5a3e13cd791161d1593",
+      "before_byte_size": 1089,
+      "after_byte_size": 1089,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo05-note-seat-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "a9d65b8183df7b7e3a1dc151e7fc3ef449ccc5c77e80414d41baf02e8ba6f9e2",
+      "after_sha256": "a9d65b8183df7b7e3a1dc151e7fc3ef449ccc5c77e80414d41baf02e8ba6f9e2",
+      "before_byte_size": 1083,
+      "after_byte_size": 1083,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo06-paired-cuts-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "b366555f9b881ee62c5c2ecf88d343d9cba6cc9fa6ada9a135306ff4ec1e7523",
+      "after_sha256": "b366555f9b881ee62c5c2ecf88d343d9cba6cc9fa6ada9a135306ff4ec1e7523",
+      "before_byte_size": 1156,
+      "after_byte_size": 1156,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo06-paired-cuts-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "1483ba3fac2dbd91c6a354e603063ab1abdd9444d6a2ef63fa4e97e6b356ad78",
+      "after_sha256": "1483ba3fac2dbd91c6a354e603063ab1abdd9444d6a2ef63fa4e97e6b356ad78",
+      "before_byte_size": 1163,
+      "after_byte_size": 1163,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo06-paired-cuts-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "7ceeef324d806c60b9e78f7ec23749db70f70815ef1a4c8695050f1b1c9c67aa",
+      "after_sha256": "7ceeef324d806c60b9e78f7ec23749db70f70815ef1a4c8695050f1b1c9c67aa",
+      "before_byte_size": 1153,
+      "after_byte_size": 1153,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo07-locator-tab-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "1023e499d5f9975a8ea7354700e4370d91624da05c74270be0e63aa48b69453d",
+      "after_sha256": "1023e499d5f9975a8ea7354700e4370d91624da05c74270be0e63aa48b69453d",
+      "before_byte_size": 1156,
+      "after_byte_size": 1156,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo07-locator-tab-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "d4943e16de1eb9d1b5b5996b80ed3952cae1308a36da74036a6c5c8b02faa880",
+      "after_sha256": "d4943e16de1eb9d1b5b5996b80ed3952cae1308a36da74036a6c5c8b02faa880",
+      "before_byte_size": 1164,
+      "after_byte_size": 1164,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo07-locator-tab-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "924e90d196401142c19f2689dd8b8a4ec8edfdc1c138e157c0a9e568680b2258",
+      "after_sha256": "924e90d196401142c19f2689dd8b8a4ec8edfdc1c138e157c0a9e568680b2258",
+      "before_byte_size": 1136,
+      "after_byte_size": 1136,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo08-excerpt-notch-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "f112ec89779d51dc09344a086e9635fb70116a361b66a3f173cd3977bd28d219",
+      "after_sha256": "f112ec89779d51dc09344a086e9635fb70116a361b66a3f173cd3977bd28d219",
+      "before_byte_size": 1260,
+      "after_byte_size": 1260,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo08-excerpt-notch-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "8777ee39c1b4e7e8b420a36a6a74084e96a2a01d8a586f1ba17299d204c7b4e6",
+      "after_sha256": "8777ee39c1b4e7e8b420a36a6a74084e96a2a01d8a586f1ba17299d204c7b4e6",
+      "before_byte_size": 1275,
+      "after_byte_size": 1275,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo08-excerpt-notch-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "08eb6a1dd39f2fcc1c6c2ab23542ad2423cfc96712e9908a3fbcab4ac11abe05",
+      "after_sha256": "08eb6a1dd39f2fcc1c6c2ab23542ad2423cfc96712e9908a3fbcab4ac11abe05",
+      "before_byte_size": 1253,
+      "after_byte_size": 1253,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo09-interpretation-seam-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "41fec60d70c5b5ac7e03a6a5a849a3d27f6d515e651e1b75ad5509da7994888e",
+      "after_sha256": "41fec60d70c5b5ac7e03a6a5a849a3d27f6d515e651e1b75ad5509da7994888e",
+      "before_byte_size": 1350,
+      "after_byte_size": 1350,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo09-interpretation-seam-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "f3df551947424d49f0f984fa050c44aa7d2ae9bc4eba35469bd9b5e2cdebdda5",
+      "after_sha256": "f3df551947424d49f0f984fa050c44aa7d2ae9bc4eba35469bd9b5e2cdebdda5",
+      "before_byte_size": 1348,
+      "after_byte_size": 1348,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo09-interpretation-seam-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "e6e31b51cba2b65e23583f52e762170248a2635db8ca4a9d552e0a7fb9dc9918",
+      "after_sha256": "e6e31b51cba2b65e23583f52e762170248a2635db8ca4a9d552e0a7fb9dc9918",
+      "before_byte_size": 1350,
+      "after_byte_size": 1350,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo10-record-gap-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "7a50262b28a94fc09e5089bde230212fc1e988e4595679e14239e880891cf6d6",
+      "after_sha256": "7a50262b28a94fc09e5089bde230212fc1e988e4595679e14239e880891cf6d6",
+      "before_byte_size": 1183,
+      "after_byte_size": 1183,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo10-record-gap-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "0b6f1934631790a8f74268158f4593550b137b5581876d867569938d2b8c1e83",
+      "after_sha256": "0b6f1934631790a8f74268158f4593550b137b5581876d867569938d2b8c1e83",
+      "before_byte_size": 1185,
+      "after_byte_size": 1185,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo10-record-gap-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "b4de15d92e49f4a68b58e6a2ee01563e2f2cf98605c2afba9053f1fd7f34f2a6",
+      "after_sha256": "b4de15d92e49f4a68b58e6a2ee01563e2f2cf98605c2afba9053f1fd7f34f2a6",
+      "before_byte_size": 1171,
+      "after_byte_size": 1171,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo11-leader-landing-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "7686d02a1ebd5f7c5607c57659257c389c8232770e9b52f5273ecba62200cad3",
+      "after_sha256": "7686d02a1ebd5f7c5607c57659257c389c8232770e9b52f5273ecba62200cad3",
+      "before_byte_size": 1223,
+      "after_byte_size": 1223,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo11-leader-landing-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "63aa93cc877164b8d5412fe7b92d5c5ff23994d990bb421ffce7b782c604aa89",
+      "after_sha256": "63aa93cc877164b8d5412fe7b92d5c5ff23994d990bb421ffce7b782c604aa89",
+      "before_byte_size": 1220,
+      "after_byte_size": 1220,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo11-leader-landing-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "265e5db7d74d8b906b507031dae515f8a55ef9d162dbf483eb72691488ac7487",
+      "after_sha256": "265e5db7d74d8b906b507031dae515f8a55ef9d162dbf483eb72691488ac7487",
+      "before_byte_size": 1223,
+      "after_byte_size": 1223,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo12-extent-ends-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "8ee5ec48fe67490f18822fe6d8f11ffe8ade8b1b4bc966956f7d5c47da682620",
+      "after_sha256": "8ee5ec48fe67490f18822fe6d8f11ffe8ade8b1b4bc966956f7d5c47da682620",
+      "before_byte_size": 1211,
+      "after_byte_size": 1211,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo12-extent-ends-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "2606cea56ac8773bea59d2358b94faf585c41335be88bb4ea1771426f29b7ff1",
+      "after_sha256": "2606cea56ac8773bea59d2358b94faf585c41335be88bb4ea1771426f29b7ff1",
+      "before_byte_size": 1220,
+      "after_byte_size": 1220,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/light/mo12-extent-ends-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "557be6335966cbc27e217e74344752a82150ffc3617f26bc1a235a31557ca390",
+      "after_sha256": "557be6335966cbc27e217e74344752a82150ffc3617f26bc1a235a31557ca390",
+      "before_byte_size": 1204,
+      "after_byte_size": 1204,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo01-section-pause-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "f44a2c8aae15d9b23c9accb98534c146abe5822edba42a5dd7215e8ecf6e004e",
+      "after_sha256": "f44a2c8aae15d9b23c9accb98534c146abe5822edba42a5dd7215e8ecf6e004e",
+      "before_byte_size": 1141,
+      "after_byte_size": 1141,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo01-section-pause-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "9ce331ac33753cefaa670164a7d210840fb3de96ad2df9c9af2702e4753a3472",
+      "after_sha256": "9ce331ac33753cefaa670164a7d210840fb3de96ad2df9c9af2702e4753a3472",
+      "before_byte_size": 1149,
+      "after_byte_size": 1149,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo01-section-pause-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "3bd1ccabc5d42aa67a0c51689f90cf670ada0e3f876312ad84a71049cf14e9d7",
+      "after_sha256": "3bd1ccabc5d42aa67a0c51689f90cf670ada0e3f876312ad84a71049cf14e9d7",
+      "before_byte_size": 1156,
+      "after_byte_size": 1156,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo02-end-stop-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "3098394f4ed812724375e5a76a66fff45f395befd58d4b63859189e838504e0e",
+      "after_sha256": "3098394f4ed812724375e5a76a66fff45f395befd58d4b63859189e838504e0e",
+      "before_byte_size": 1123,
+      "after_byte_size": 1123,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo02-end-stop-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "47da749db4e1344dac0b38f3a31c12d0d4609fb7a95cf1e5fc2a2b733bacfa28",
+      "after_sha256": "47da749db4e1344dac0b38f3a31c12d0d4609fb7a95cf1e5fc2a2b733bacfa28",
+      "before_byte_size": 1129,
+      "after_byte_size": 1129,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo02-end-stop-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "613c154480c1f8d8de0d0cd5c98e7e8c538d4f79c06c15fb2e09c6ccfc067984",
+      "after_sha256": "613c154480c1f8d8de0d0cd5c98e7e8c538d4f79c06c15fb2e09c6ccfc067984",
+      "before_byte_size": 1122,
+      "after_byte_size": 1122,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo03-margin-stitch-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "1c5796d7fc2d07e001650695f2a1b5bee328fb379c53c7c97b4f5fe7c39e0fee",
+      "after_sha256": "1c5796d7fc2d07e001650695f2a1b5bee328fb379c53c7c97b4f5fe7c39e0fee",
+      "before_byte_size": 1155,
+      "after_byte_size": 1155,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo03-margin-stitch-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "2ac96192b4ba90a171ea0b666e9175cff439d5a07a751252ae307a34502fc594",
+      "after_sha256": "2ac96192b4ba90a171ea0b666e9175cff439d5a07a751252ae307a34502fc594",
+      "before_byte_size": 1160,
+      "after_byte_size": 1160,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo03-margin-stitch-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "751b92f2e635b90da6a3ed2cd0ac5e1746f99ddce077f8eb191e052655d0a644",
+      "after_sha256": "751b92f2e635b90da6a3ed2cd0ac5e1746f99ddce077f8eb191e052655d0a644",
+      "before_byte_size": 1159,
+      "after_byte_size": 1159,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo04-margin-fold-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "f5aa3defd6346c36719dbeaf694190f3a62cdedbbcb900d90373e30670dc389e",
+      "after_sha256": "f5aa3defd6346c36719dbeaf694190f3a62cdedbbcb900d90373e30670dc389e",
+      "before_byte_size": 1154,
+      "after_byte_size": 1154,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo04-margin-fold-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "a19ff34b0c3afeb6cdc936cad4b6b093f1478168e18c54c41ce09478073c6ab3",
+      "after_sha256": "a19ff34b0c3afeb6cdc936cad4b6b093f1478168e18c54c41ce09478073c6ab3",
+      "before_byte_size": 1166,
+      "after_byte_size": 1166,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo04-margin-fold-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "777ff50cd7f93e1738deaaee890051a9fbd5e70aad44dffc8c2cf03c8e459fb0",
+      "after_sha256": "777ff50cd7f93e1738deaaee890051a9fbd5e70aad44dffc8c2cf03c8e459fb0",
+      "before_byte_size": 1157,
+      "after_byte_size": 1157,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo05-note-seat-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "98521d0e8a55e38c10c42a3b03dab78d70e9b888a09d9e28a57f89667d6c1741",
+      "after_sha256": "98521d0e8a55e38c10c42a3b03dab78d70e9b888a09d9e28a57f89667d6c1741",
+      "before_byte_size": 1070,
+      "after_byte_size": 1070,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo05-note-seat-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "fcce3229d8f80e8e66dc5afdcc56a7d71d50ac4e12a60ff57a1581eacbaf5e79",
+      "after_sha256": "fcce3229d8f80e8e66dc5afdcc56a7d71d50ac4e12a60ff57a1581eacbaf5e79",
+      "before_byte_size": 1082,
+      "after_byte_size": 1082,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo05-note-seat-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "b56b7d18fabf8e308ea99deea2af1264e5db5e83b7cc2161e8975c4ed697b7f9",
+      "after_sha256": "b56b7d18fabf8e308ea99deea2af1264e5db5e83b7cc2161e8975c4ed697b7f9",
+      "before_byte_size": 1076,
+      "after_byte_size": 1076,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo06-paired-cuts-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "40694d1dd45aae41a871a25405d00873e7acc9340d117df1a92e8f42b3e41cb2",
+      "after_sha256": "40694d1dd45aae41a871a25405d00873e7acc9340d117df1a92e8f42b3e41cb2",
+      "before_byte_size": 1148,
+      "after_byte_size": 1148,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo06-paired-cuts-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "db034976fff6e6324dc0165feae3bfdaf34be82a41e1cac9ef39ba8845c7af7b",
+      "after_sha256": "db034976fff6e6324dc0165feae3bfdaf34be82a41e1cac9ef39ba8845c7af7b",
+      "before_byte_size": 1155,
+      "after_byte_size": 1155,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo06-paired-cuts-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "fb589d6bfdd553af9d831914e91778efd5678e3315c7656564284fe289a2fdc5",
+      "after_sha256": "fb589d6bfdd553af9d831914e91778efd5678e3315c7656564284fe289a2fdc5",
+      "before_byte_size": 1145,
+      "after_byte_size": 1145,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo07-locator-tab-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "01659ea0fd9d23936c92f9a27337a06ad5cb4e9f584c405f64544ce2d191247c",
+      "after_sha256": "01659ea0fd9d23936c92f9a27337a06ad5cb4e9f584c405f64544ce2d191247c",
+      "before_byte_size": 1148,
+      "after_byte_size": 1148,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo07-locator-tab-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "b08cf87d6153e9b9fe0f1d58a4520bf95ecce3f5afe5b5a1ac72fa40b29451f5",
+      "after_sha256": "b08cf87d6153e9b9fe0f1d58a4520bf95ecce3f5afe5b5a1ac72fa40b29451f5",
+      "before_byte_size": 1156,
+      "after_byte_size": 1156,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo07-locator-tab-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "11fc7f03fed5c75379fffee28f313e09cc8c7f4e731b6bc9422e53fb1e1ab87e",
+      "after_sha256": "11fc7f03fed5c75379fffee28f313e09cc8c7f4e731b6bc9422e53fb1e1ab87e",
+      "before_byte_size": 1128,
+      "after_byte_size": 1128,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo08-excerpt-notch-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "4e06e9fca5c3f4a5d65369a60b0453b5ec40cf0e4f0b106cc473ecb4ab795401",
+      "after_sha256": "4e06e9fca5c3f4a5d65369a60b0453b5ec40cf0e4f0b106cc473ecb4ab795401",
+      "before_byte_size": 1251,
+      "after_byte_size": 1251,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo08-excerpt-notch-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "3bf540ee62944c24e996221582ffd0be2db708c5ab0d24bc8fd9fa180dd2d848",
+      "after_sha256": "3bf540ee62944c24e996221582ffd0be2db708c5ab0d24bc8fd9fa180dd2d848",
+      "before_byte_size": 1266,
+      "after_byte_size": 1266,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo08-excerpt-notch-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "eb6df6082636688c6200a912e410c46a16c6c83c5e8366e6d834304cc74c6320",
+      "after_sha256": "eb6df6082636688c6200a912e410c46a16c6c83c5e8366e6d834304cc74c6320",
+      "before_byte_size": 1244,
+      "after_byte_size": 1244,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo09-interpretation-seam-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "9e5d7fc016e4323991620cba0f80693d72f00ceed0de0127e395ec10306b3494",
+      "after_sha256": "9e5d7fc016e4323991620cba0f80693d72f00ceed0de0127e395ec10306b3494",
+      "before_byte_size": 1341,
+      "after_byte_size": 1341,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo09-interpretation-seam-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "8916b854be215d17f4d1719e95fec9eda87a96f86c5b80b39d7035568b2af444",
+      "after_sha256": "8916b854be215d17f4d1719e95fec9eda87a96f86c5b80b39d7035568b2af444",
+      "before_byte_size": 1339,
+      "after_byte_size": 1339,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo09-interpretation-seam-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "0077eb4233b0bd760a56bc5d25b34c90bf1e0e2b2ef52e094b9ca463c78304e8",
+      "after_sha256": "0077eb4233b0bd760a56bc5d25b34c90bf1e0e2b2ef52e094b9ca463c78304e8",
+      "before_byte_size": 1341,
+      "after_byte_size": 1341,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo10-record-gap-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "c4bc3cbf4df9a27d992d8ceaeb67c21dd094f4fe4ac17ee99ea35a7ab361a04e",
+      "after_sha256": "c4bc3cbf4df9a27d992d8ceaeb67c21dd094f4fe4ac17ee99ea35a7ab361a04e",
+      "before_byte_size": 1175,
+      "after_byte_size": 1175,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo10-record-gap-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "df6820617e67c349b14b1e6321758413743356f95d2b898f29e6a1c80b6d8735",
+      "after_sha256": "df6820617e67c349b14b1e6321758413743356f95d2b898f29e6a1c80b6d8735",
+      "before_byte_size": 1177,
+      "after_byte_size": 1177,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo10-record-gap-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "03d6d6f3eda32253ac023503fc38999b420f869e85c4fab0a69b5cc2ae47f7cf",
+      "after_sha256": "03d6d6f3eda32253ac023503fc38999b420f869e85c4fab0a69b5cc2ae47f7cf",
+      "before_byte_size": 1163,
+      "after_byte_size": 1163,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo11-leader-landing-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "edb15902f457e4d53484cda531f82f9b10355ba9c52e49012d3e771e1aeb4638",
+      "after_sha256": "edb15902f457e4d53484cda531f82f9b10355ba9c52e49012d3e771e1aeb4638",
+      "before_byte_size": 1215,
+      "after_byte_size": 1215,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo11-leader-landing-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "83e7e392ab1fd7c8501192f35585973d0b8068e89bb2d0e46bcad6707c6e6772",
+      "after_sha256": "83e7e392ab1fd7c8501192f35585973d0b8068e89bb2d0e46bcad6707c6e6772",
+      "before_byte_size": 1212,
+      "after_byte_size": 1212,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo11-leader-landing-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "f50077a18e6166e4c90916a4735e13bccc598066b4120882a154ff67662cab6e",
+      "after_sha256": "f50077a18e6166e4c90916a4735e13bccc598066b4120882a154ff67662cab6e",
+      "before_byte_size": 1215,
+      "after_byte_size": 1215,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo12-extent-ends-r1-16.svg",
+      "kind": "svg",
+      "before_sha256": "a2c5484ccfdfe66f05050f1e26e5e8759c5b1160b62db34fa003bbd2bb95b200",
+      "after_sha256": "a2c5484ccfdfe66f05050f1e26e5e8759c5b1160b62db34fa003bbd2bb95b200",
+      "before_byte_size": 1203,
+      "after_byte_size": 1203,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo12-extent-ends-r1-20.svg",
+      "kind": "svg",
+      "before_sha256": "15ab039f0833dbb08646e70ec62d7bb85e00cf6e30df70fb4c5cd40b431c12d5",
+      "after_sha256": "15ab039f0833dbb08646e70ec62d7bb85e00cf6e30df70fb4c5cd40b431c12d5",
+      "before_byte_size": 1212,
+      "after_byte_size": 1212,
+      "exact_bytes_equal": true
+    },
+    {
+      "path": "public/artwork/marks-ornaments-v1/svg/mono/mo12-extent-ends-r1-24.svg",
+      "kind": "svg",
+      "before_sha256": "dc122b0ba125851dc3ea80c62a03f2e2a4530135649fa8bc54805c8a12bc9042",
+      "after_sha256": "dc122b0ba125851dc3ea80c62a03f2e2a4530135649fa8bc54805c8a12bc9042",
+      "before_byte_size": 1196,
+      "after_byte_size": 1196,
+      "exact_bytes_equal": true
+    }
+  ],
+  "limitations": [
+    "Reproduction is established for the recorded installed runtime and versions; different renderer versions are not tested.",
+    "The six specimen boards were not regenerated by this check. Only their 36 enlarged detail inputs were regenerated and compared.",
+    "No application, browser, assistive-technology, print or release acceptance is implied."
+  ]
+}

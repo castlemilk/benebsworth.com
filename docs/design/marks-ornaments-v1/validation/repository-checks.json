@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "completedAt": "2026-11-17T11:42:54.712635+00:00",
+  "status": "local-gate-constituents-passed-with-documented-loader-substitution",
+  "baseline": {
+    "branch": "art/blog-marks-ornaments-v1",
+    "commit": "e1c0f0a4c9ac4d7d189542e7c71abf274cc0977e",
+    "tree": "786dcd639c0688d68035ad73698f0d85ba551a0c",
+    "scope": [
+      "docs/design/marks-ornaments-v1/",
+      "public/artwork/marks-ornaments-v1/"
+    ],
+    "newStagedPathsBeforeThisReceipt": 384,
+    "sourceChangesOutsideScope": []
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "next": "16.2.6",
+    "vitest": "4.1.7",
+    "packageLockSha256": "7994f12f44eac3bb20943dd09394c0fa8c10daee929c09954aad7e51041bf8bb",
+    "dependencies": "Private copy of installed dependencies from an existing same-lock checkout. Source and destination inodes differ; all 67 dependency symlinks resolve within the respective dependency tree. No source/artwork was copied from that checkout.",
+    "taskBinary": "unavailable",
+    "coreHooksPath": null,
+    "hookEntrypointsInvoked": false,
+    "environmentOverrides": {
+      "CI": "true",
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  },
+  "gateMode": "Executed the constituent commands documented in taskfiles/git.yml, lint.yml, test.yml, benchmark.yml and build.yml. The task executable and hook entrypoints were not run.",
+  "transportFailure": {
+    "command": "node_modules/.bin/tsx scripts/verify-results.mjs",
+    "exitCode": 1,
+    "error": "listen EPERM while the tsx CLI attempted to open its local IPC pipe, before the verifier ran.",
+    "replacement": "node --import tsx scripts/verify-results.mjs",
+    "replacementExitCode": 0,
+    "justification": "Runs the unchanged verifier using the existing tsx loader form already used in the repository build tasks. No invariant, assertion, timeout or source was removed or modified."
+  },
+  "results": {
+    "typeGeneration": "passed",
+    "wholeProjectTypecheck": "passed",
+    "stagedLint": "exit 0; no staged TS/TSX files",
+    "changedProse": "exit 0; no changed manifest prose files selected; not a prose-style review of this documentation",
+    "benchmark": {
+      "checks": 15,
+      "records": 269,
+      "failures": 0,
+      "warnings": 0,
+      "reportedSkips": 1396,
+      "preBundle": 178,
+      "runLogFiles": 0,
+      "note": "Fresh checkout has no sweeps directory; normal retained-log and legacy-field skips are reported by the verifier."
+    },
+    "unit": {
+      "filesPassed": 237,
+      "filesSkipped": 2,
+      "testsPassed": 3334,
+      "testsSkipped": 5,
+      "failures": 0,
+      "seconds": 310.73,
+      "command": "node_modules/.bin/vitest run",
+      "workerCount": 1,
+      "workerSource": "existing vitest.config.ts; no override"
+    },
+    "build": {
+      "staticPagesGenerated": 851,
+      "nextBuildExitCode": 0,
+      "preAndPostPhases": "completed",
+      "ogImagesRenamed": 202,
+      "htmlFilesRewritten": 98,
+      "htmlFilesScannedForSearch": 823,
+      "indexedPages": 313,
+      "registeredSvgStudies": 52,
+      "registeredPngArtwork": 8,
+      "registeredGroundedArtwork": 155,
+      "groundedAssetsChecked": 1395,
+      "groundedBytesChecked": 34885813,
+      "groundedSvgMastersChecked": 465
+    },
+    "cachedDiffCheck": "passed"
+  },
+  "preservation": {
+    "snapshot_compared_files": 98,
+    "snapshot_changed": [],
+    "exported_assets": 324,
+    "extension_counts": {
+      ".png": 216,
+      ".svg": 108
+    },
+    "export_missing": [],
+    "export_altered": [],
+    "public_identity_manifest_sha256": "6bcf34a7f9bbeab57831ace52db0d696f3e89528ee3f0944e2846cf284727a1c",
+    "non_owned_changes": [],
+    "unstaged_existing_changes": [],
+    "staged_paths_at_check": 384,
+    "hooks_path": null
+  },
+  "checks": [
+    {
+      "id": "01-typegen",
+      "command": "node_modules/.bin/next typegen",
+      "exitCode": 0,
+      "seconds": 0.411,
+      "startedAt": "2026-11-17T11:32:30.291145+00:00",
+      "endedAt": "2026-11-17T11:32:30.702067+00:00",
+      "stdoutSha256": "adba4af9194e10e47dda75ff0fd0f8c2b756474896d0eba5612799c527ff372a"
+    },
+    {
+      "id": "02-staged-lint",
+      "command": "#!/usr/bin/env bash\nset -euo pipefail\nfiles=\"$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\\.(ts|tsx)$' || true)\"\nif [ -z \"$files\" ]; then\n  echo \"lint:staged \u2014 no staged TS files\"\n  exit 0\nfi\necho \"$files\" | tr '\\n' ' ' | xargs node_modules/.bin/eslint\n",
+      "exitCode": 0,
+      "seconds": 0.006,
+      "startedAt": "2026-11-17T11:32:44.463852+00:00",
+      "endedAt": "2026-11-17T11:32:44.469965+00:00",
+      "stdoutSha256": "c7a90767105ada4653338759580ef427fcab0cc7758bc23e9fb49a926afb2156"
+    },
+    {
+      "id": "03-typecheck",
+      "command": "node_modules/.bin/tsc --noEmit",
+      "exitCode": 0,
+      "seconds": 17.765,
+      "startedAt": "2026-11-17T11:32:44.493093+00:00",
+      "endedAt": "2026-11-17T11:33:02.258161+00:00",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "04-changed-prose",
+      "command": "node scripts/lint-prose.mjs --changed --ci",
+      "exitCode": 0,
+      "seconds": 0.096,
+      "startedAt": "2026-11-17T11:33:02.288505+00:00",
+      "endedAt": "2026-11-17T11:33:02.384169+00:00",
+      "stdoutSha256": "54144769148164d7f021334994a8468d3bb9b164d2a22136776ff32ff8afd730"
+    },
+    {
+      "id": "05-benchmark-invariants",
+      "command": "node_modules/.bin/tsx scripts/verify-results.mjs",
+      "exitCode": 1,
+      "seconds": 0.076,
+      "startedAt": "2026-11-17T11:33:02.407849+00:00",
+      "endedAt": "2026-11-17T11:33:02.484133+00:00",
+      "stdoutSha256": "8705efdfc8ae9107c6ab4f73420873704578d5b4092a5345773acc5d2fb2f4e9"
+    },
+    {
+      "id": "05b-benchmark-invariants-loader",
+      "command": "node --import tsx scripts/verify-results.mjs",
+      "exitCode": 0,
+      "seconds": 0.483,
+      "startedAt": "2026-11-17T11:33:30.831899+00:00",
+      "endedAt": "2026-11-17T11:33:31.315179+00:00",
+      "stdoutSha256": "8b004aecb0dee9d0d9bdea35e2bdb94954702cf6aa451dcc2ce2642d1d134b73"
+    },
+    {
+      "id": "06-prepare-grounded",
+      "command": "node scripts/prepare-grounded-artwork.mjs",
+      "exitCode": 0,
+      "seconds": 32.878,
+      "startedAt": "2026-11-17T11:33:31.343572+00:00",
+      "endedAt": "2026-11-17T11:34:04.221822+00:00",
+      "stdoutSha256": "68806771440fcd55ea6beaf78ca01669216280a70aadd83e853794dae399a05e"
+    },
+    {
+      "id": "07-prepare-discovery",
+      "command": "node --import tsx scripts/prepare-grounded-discovery.mts",
+      "exitCode": 0,
+      "seconds": 0.251,
+      "startedAt": "2026-11-17T11:34:04.250387+00:00",
+      "endedAt": "2026-11-17T11:34:04.500873+00:00",
+      "stdoutSha256": "ed775798540ee9c321e5031903fb693dc7d6f5adf45befca7893b129b0e0e4ff"
+    },
+    {
+      "id": "08-unit",
+      "command": "node_modules/.bin/vitest run",
+      "exitCode": 0,
+      "seconds": 311.1,
+      "startedAt": "2026-11-17T11:34:04.527698+00:00",
+      "endedAt": "2026-11-17T11:39:15.627190+00:00",
+      "stdoutSha256": "0095e9af10660aeba7c5ed70a17ad1a0daa83744acbcb6bb92a41ca0838461e7"
+    },
+    {
+      "id": "09-md-precheck",
+      "command": "node scripts/gen-md-siblings.mjs --check",
+      "exitCode": 0,
+      "seconds": 0.284,
+      "startedAt": "2026-11-17T11:39:32.211617+00:00",
+      "endedAt": "2026-11-17T11:39:32.495215+00:00",
+      "stdoutSha256": "afdf26fa75cb6acfe47e039f0d5de54530259c45a00d929d0cb751c510b9bd15"
+    },
+    {
+      "id": "10-build-prepare-grounded",
+      "command": "node scripts/prepare-grounded-artwork.mjs",
+      "exitCode": 0,
+      "seconds": 1.839,
+      "startedAt": "2026-11-17T11:39:32.522176+00:00",
+      "endedAt": "2026-11-17T11:39:34.360982+00:00",
+      "stdoutSha256": "ffffbadd19addb74639d395d68fa2565dd22c15956b0a304de4655da0dc73d46"
+    },
+    {
+      "id": "11-build-prepare-discovery",
+      "command": "node --import tsx scripts/prepare-grounded-discovery.mts",
+      "exitCode": 0,
+      "seconds": 0.121,
+      "startedAt": "2026-11-17T11:39:34.402400+00:00",
+      "endedAt": "2026-11-17T11:39:34.523674+00:00",
+      "stdoutSha256": "ed775798540ee9c321e5031903fb693dc7d6f5adf45befca7893b129b0e0e4ff"
+    },
+    {
+      "id": "12-build-generate-md",
+      "command": "node scripts/gen-md-siblings.mjs",
+      "exitCode": 0,
+      "seconds": 0.182,
+      "startedAt": "2026-11-17T11:39:34.551747+00:00",
+      "endedAt": "2026-11-17T11:39:34.733437+00:00",
+      "stdoutSha256": "b80be921bdc4a3fadc4996a1cbe7301b9cfb88c886087ba229e10882f1c4e50d"
+    },
+    {
+      "id": "13-build-generate-outputs",
+      "command": "node --import tsx scripts/gen-benchmark-outputs.mjs",
+      "exitCode": 0,
+      "seconds": 0.383,
+      "startedAt": "2026-11-17T11:39:34.763392+00:00",
+      "endedAt": "2026-11-17T11:39:35.146027+00:00",
+      "stdoutSha256": "adcc1c828a8a914414dddee1e4f6d3f7965db66cd9131b0275a9a3a352f14613"
+    },
+    {
+      "id": "14-build-next",
+      "command": "node_modules/.bin/next build",
+      "exitCode": 0,
+      "seconds": 90.335,
+      "startedAt": "2026-11-17T11:39:35.209534+00:00",
+      "endedAt": "2026-11-17T11:41:05.544588+00:00",
+      "stdoutSha256": "df93d6a16961e41c463acbc4286bb526db7da065b8cdeb3e60eb83ecbca70aca"
+    },
+    {
+      "id": "15-post-og",
+      "command": "node scripts/og-rewrite.mjs",
+      "exitCode": 0,
+      "seconds": 0.835,
+      "startedAt": "2026-11-17T11:41:13.045081+00:00",
+      "endedAt": "2026-11-17T11:41:13.879618+00:00",
+      "stdoutSha256": "595169c1187d20ab340239012d93e59d5a785e1f4f6a32b567b8ccf2cb9e1e65"
+    },
+    {
+      "id": "16-post-search",
+      "command": "node --import tsx scripts/build-search.mts out",
+      "exitCode": 0,
+      "seconds": 0.989,
+      "startedAt": "2026-11-17T11:41:13.916240+00:00",
+      "endedAt": "2026-11-17T11:41:14.905566+00:00",
+      "stdoutSha256": "5447dc90621f025bf9478df6632e10a59ae1eeca517a8cea1e63e995d6c5b990"
+    },
+    {
+      "id": "17-post-study-search",
+      "command": "node --import tsx scripts/check-study-search.mts out",
+      "exitCode": 0,
+      "seconds": 6.459,
+      "startedAt": "2026-11-17T11:41:14.939039+00:00",
+      "endedAt": "2026-11-17T11:41:21.397534+00:00",
+      "stdoutSha256": "72580a58f2f5d923aca4b6d215477a868681478ebbcc631806622c0d45b88243"
+    },
+    {
+      "id": "18-post-grounded",
+      "command": "node --import tsx scripts/check-grounded-output.mts out",
+      "exitCode": 0,
+      "seconds": 5.008,
+      "startedAt": "2026-11-17T11:41:21.424589+00:00",
+      "endedAt": "2026-11-17T11:41:26.432556+00:00",
+      "stdoutSha256": "3e903e25337e049e683a2956461976e567298bd0c37ed4d6c11f08a4aeda523f"
+    },
+    {
+      "id": "20-final-staged-lint",
+      "command": "#!/usr/bin/env bash\nset -euo pipefail\nfiles=\"$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\\.(ts|tsx)$' || true)\"\nif [ -z \"$files\" ]; then\n  echo \"lint:staged \u2014 no staged TS files\"\n  exit 0\nfi\necho \"$files\" | tr '\\n' ' ' | xargs node_modules/.bin/eslint\n",
+      "exitCode": 0,
+      "seconds": 0.007,
+      "startedAt": "2026-11-17T11:40:01.172161+00:00",
+      "endedAt": "2026-11-17T11:40:01.179289+00:00",
+      "stdoutSha256": "c7a90767105ada4653338759580ef427fcab0cc7758bc23e9fb49a926afb2156"
+    },
+    {
+      "id": "21-final-changed-prose",
+      "command": "node scripts/lint-prose.mjs --changed --ci",
+      "exitCode": 0,
+      "seconds": 0.133,
+      "startedAt": "2026-11-17T11:40:01.205697+00:00",
+      "endedAt": "2026-11-17T11:40:01.338754+00:00",
+      "stdoutSha256": "54144769148164d7f021334994a8468d3bb9b164d2a22136776ff32ff8afd730"
+    },
+    {
+      "id": "22-final-diff-check",
+      "command": "git diff --cached --check",
+      "exitCode": 0,
+      "seconds": 0.008,
+      "startedAt": "2026-11-17T11:40:01.371675+00:00",
+      "endedAt": "2026-11-17T11:40:01.379779+00:00",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "limitations": [
+    "No browser, screen-reader, physical-device, forced-colors or print acceptance was run by this repository gate task.",
+    "These application gates do not establish artistic or optical acceptance; use the separate asset review.",
+    "Local execution used Node 24.22.1; the existing Site checks workflow uses Node 22. Exact published-head CI remains a separate result.",
+    "Master advanced during validation to coordinator-reported 06438f05c829a0df0d05e625e7adebec09eb895c. This run stayed pinned to e1c0f0a; no fetch or rebase occurred.",
+    "Next emitted the repository-documented non-fatal Turbopack NFT whole-project tracing warning.",
+    "No commit, push, PR operation, deployment, preview enablement, credential or permission change was performed by this gate task."
+  ],
+  "rawLogRetention": "Detailed local logs and their per-command JSON receipts are outside the repository under the coordinator workspace repo-gates directory. This compact receipt preserves exact commands, outcomes and stdout hashes."
+}

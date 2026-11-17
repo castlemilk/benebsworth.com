@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-labelledby="mo07-locator-tab-r1-24-dark-title" aria-describedby="mo07-locator-tab-r1-24-dark-desc">
+  <title id="mo07-locator-tab-r1-24-dark-title">Locator tab; 24px optical master</title>
+  <desc id="mo07-locator-tab-r1-24-dark-desc">A small notched tab attaches a page, section or timestamp locator. Pair with Source recorded and the actual locator; no truth or verification claim. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo07-locator-tab","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":24,"palette":"dark","provenance_class":"original-authored-vector","revision":1,"semantic_role":"label-companion"}</metadata>
+  <g id="mo07-locator-tab-r1-24-dark-ink" fill="none" stroke="#ecebe6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo07-locator-tab-r1-24-dark-staff" d="M5 19 L5 5"/>
+    <path id="mo07-locator-tab-r1-24-dark-tab" d="M5 5 L19 5 L15 9 L19 13 L5 13"/>
+  </g>
+</svg>

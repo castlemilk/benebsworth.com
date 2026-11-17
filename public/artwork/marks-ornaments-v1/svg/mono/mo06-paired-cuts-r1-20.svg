@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" role="img" aria-labelledby="mo06-paired-cuts-r1-20-mono-title" aria-describedby="mo06-paired-cuts-r1-20-mono-desc">
+  <title id="mo06-paired-cuts-r1-20-mono-title">Paired cuts; 20px optical master</title>
+  <desc id="mo06-paired-cuts-r1-20-mono-desc">Two displaced corner cuts reserve an interval between related labels. Matching visible note numbers establish the relationship, not the corners alone. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo06-paired-cuts","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":20,"palette":"mono","provenance_class":"original-authored-vector","revision":1,"semantic_role":"label-companion"}</metadata>
+  <g id="mo06-paired-cuts-r1-20-mono-ink" fill="none" stroke="#000000" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo06-paired-cuts-r1-20-mono-upper-cut" d="M4.2 9 L4.2 4.2 L9 4.2"/>
+    <path id="mo06-paired-cuts-r1-20-mono-lower-cut" d="M11.5 15.8 L15.8 15.8 L15.8 11.5"/>
+  </g>
+</svg>

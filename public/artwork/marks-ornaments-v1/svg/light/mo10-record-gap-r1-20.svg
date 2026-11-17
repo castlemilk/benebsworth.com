@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" role="img" aria-labelledby="mo10-record-gap-r1-20-light-title" aria-describedby="mo10-record-gap-r1-20-light-desc">
+  <title id="mo10-record-gap-r1-20-light-title">Record gap; 20px optical master</title>
+  <desc id="mo10-record-gap-r1-20-light-desc">An intentionally open record corner and a detached short entry stroke accompany an explicit missing or unchecked context. The open shape does not establish the reason for the gap. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo10-record-gap","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":20,"palette":"light","provenance_class":"original-authored-vector","revision":1,"semantic_role":"label-companion"}</metadata>
+  <g id="mo10-record-gap-r1-20-light-ink" fill="none" stroke="#202c34" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo10-record-gap-r1-20-light-open-record" d="M10 4.2 L4.2 4.2 L4.2 15.8 L15.8 15.8 L15.8 10"/>
+    <path id="mo10-record-gap-r1-20-light-entry" d="M8 10 L11 10"/>
+  </g>
+</svg>

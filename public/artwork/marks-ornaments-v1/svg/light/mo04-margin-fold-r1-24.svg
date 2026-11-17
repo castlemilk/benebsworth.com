@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-labelledby="mo04-margin-fold-r1-24-light-title" aria-describedby="mo04-margin-fold-r1-24-light-desc">
+  <title id="mo04-margin-fold-r1-24-light-title">Margin fold; 24px optical master</title>
+  <desc id="mo04-margin-fold-r1-24-light-desc">An open page-corner turn, with a curled return and no enclosing page. A small companion to a note, never a bookmark control. The surrounding canvas is transparent. Adapt accessibility to the host context.</desc>
+  <metadata>{"asset_id":"mo04-margin-fold","geometry_source":"geometry.json","not_a_logo_or_scientific_figure":true,"optical_size":24,"palette":"light","provenance_class":"original-authored-vector","revision":1,"semantic_role":"decorative"}</metadata>
+  <g id="mo04-margin-fold-r1-24-light-ink" fill="none" stroke="#b32624" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path id="mo04-margin-fold-r1-24-light-outer-corner" d="M5 5.2 L15.8 5.2 C18.5 5.2 19 7 19 9.5 L19 19"/>
+    <path id="mo04-margin-fold-r1-24-light-fold" d="M9.7 5.2 L9.7 13 C12.7 13 14.4 11.2 14.6 8.5"/>
+  </g>
+</svg>

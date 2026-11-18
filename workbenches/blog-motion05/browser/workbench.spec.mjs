@@ -1,0 +1,97 @@
+/** UNEXECUTED review pack. A successful list/syntax check is not browser evidence. */
+import { test, expect } from '@playwright/test'
+
+const rlcName = 'Inspect RLC Resonance'
+const seasonName = 'Inspect Seasons from a tilted axis'
+
+test('page, full sequence and long labels reflow; finite feedback leaves no active effects', async ({ page }, info) => {
+  const errors = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.goto('/')
+  await expect(page).toHaveTitle(/Selection without losing your place/)
+  await expect(page.locator('[data-enhancement-status]')).toContainText('Enhanced locally')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  await page.screenshot({ path: info.outputPath('first-viewport.png') })
+  const source = page.getByRole('link', { name: rlcName, exact: true })
+  await source.focus()
+  await page.keyboard.press('Enter')
+  await expect(source).toBeFocused()
+  await expect(page.locator('[data-inspector-title]')).toHaveText('RLC Resonance')
+  await expect(page).toHaveURL(/inspect=rlc-lab/)
+  await page.getByRole('link', { name: seasonName, exact: true }).click()
+  await expect(page.locator('[data-inspector-title]')).toHaveText('Seasons from a tilted axis')
+  await page.getByLabel('Find a source', { exact: true }).fill('seasons')
+  await page.getByRole('button', { name: 'Apply', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('1 matching source')
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await expect.poll(() => page.evaluate(() => document.getAnimations().filter(animation => animation.playState === 'running').length)).toBe(0)
+  await page.screenshot({ path: info.outputPath('filtered-full-page.png'), fullPage: true })
+  expect(errors).toEqual([])
+})
+
+test('native Back and Forward restore inspection and prior reading position', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: rlcName, exact: true }).click()
+  const reading = page.getByRole('link', { name: 'Open the reading fixture', exact: false })
+  await reading.scrollIntoViewIfNeeded()
+  const before = await page.evaluate(() => ({ y: scrollY, search: location.search, restoration: history.scrollRestoration }))
+  await reading.click()
+  await expect(page).toHaveURL(/reading.html#reading-checkpoint/)
+  await page.goBack()
+  await expect(page.locator('[data-inspector-title]')).toHaveText('RLC Resonance')
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeCloseTo(before.y, 0)
+  expect(await page.evaluate(() => location.search)).toBe(before.search)
+  expect(await page.evaluate(() => history.scrollRestoration)).toBe(before.restoration)
+  await page.goForward()
+  await expect(page).toHaveURL(/reading.html#reading-checkpoint/)
+})
+
+test('reduced motion and forced colours preserve final content and explicit selection', async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: 'reduce', forcedColors: 'active' })
+  await page.goto('/')
+  const source = page.getByRole('link', { name: rlcName, exact: true })
+  await source.focus()
+  await page.keyboard.press('Enter')
+  await expect(source).toBeFocused()
+  await expect(source).toHaveAttribute('aria-current', 'true')
+  await expect(source).toContainText('Inspected')
+  await expect(page.locator('[data-inspector-title]')).toHaveText('RLC Resonance')
+  expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)
+  expect(await source.evaluate(element => getComputedStyle(element).outlineStyle)).not.toBe('none')
+  await page.screenshot({ path: info.outputPath('forced-colours-reduced-motion.png'), fullPage: true })
+})
+
+test('no JavaScript still resolves filters, inspection and source links', async ({ browser, baseURL }, info) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: info.project.use.viewport })
+  const page = await context.newPage()
+  await page.goto(`${baseURL}/?enhance=off`)
+  await page.getByLabel('Kind', { exact: true }).selectOption('lab')
+  await page.getByRole('button', { name: 'Apply', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('2 matching sources')
+  await page.getByRole('link', { name: rlcName, exact: true }).click()
+  await expect(page.locator('[data-source-link]')).toHaveAttribute('href', 'https://benebsworth.com/lab/rlc-resonance/')
+  await expect(page).toHaveURL(/enhance=off/)
+  await page.screenshot({ path: info.outputPath('no-javascript.png'), fullPage: true })
+  await context.close()
+})
+
+test('failed module keeps the same selected source and query through native navigation', async ({ page }) => {
+  await page.goto('/?inspect=seasons-lab&q=seasons')
+  await page.getByText('Review controls and evidence boundaries', { exact: true }).click()
+  await page.getByRole('link', { name: 'Failed enhancement module', exact: true }).click()
+  await expect(page).toHaveURL(/enhance=broken/)
+  await expect(page.getByLabel('Find a source', { exact: true })).toHaveValue('seasons')
+  await expect(page.locator('[data-inspector-title]')).toHaveText('Seasons from a tilted axis')
+  await expect(page.locator('[data-enhancement-status]')).toContainText('Server-rendered specimen')
+  await page.getByRole('link', { name: 'Clear', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('4 matching sources')
+})
+
+test('unknown inspection ID stays explicit and 320 CSS pixels do not hide source controls', async ({ page }, info) => {
+  await page.setViewportSize({ width: 320, height: 740 })
+  await page.goto('/?inspect=missing-fixture')
+  await expect(page.locator('[data-inspector-title]')).toHaveText('This inspection link has no fixture')
+  await expect(page.getByRole('link', { name: rlcName, exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.screenshot({ path: info.outputPath('320px-missing-fixture.png'), fullPage: true })
+})

@@ -1,0 +1,978 @@
+{
+  "schemaVersion": 1,
+  "collection": {
+    "id": "monumental-worlds-range-study",
+    "title": "Monumental Worlds — Range Study",
+    "studyDate": "2026-11-19",
+    "description": "Eight selected generated artworks explore four sequences for combining worldbuilding with deliberate creative departures. Nine render outputs are recorded because one underwater scene received a focused edit. The method comparison is a qualitative studio study, not a controlled benchmark. These draft records preserve exact prompts and measured asset identities; image files have not been imported into this repository.",
+    "methodReferences": [
+      {
+        "role": "artwork-workflow",
+        "url": "https://github.com/castlemilk/omega-skills/tree/bf645edc5bbc6335b1cf1730448a17f9c2cbf0e8/skills/generate-futuristic-art"
+      },
+      {
+        "role": "creative-method",
+        "url": "https://github.com/mankidev/antialgorithm/tree/766e30411195a9198afad38f3d76e08701ed4516"
+      }
+    ]
+  },
+  "artworks": [
+    {
+      "id": "the-right-to-a-horizon",
+      "slug": "the-right-to-a-horizon",
+      "title": "The Right to a Horizon",
+      "status": "draft",
+      "summary": "A curved inhabited district rises over an older city, opening an immense gap beneath its translucent underside.",
+      "premise": {
+        "kind": "fiction",
+        "text": "Civic continuity produces a city that moves its ground. The imagined society retains old neighborhoods while allowing districts to meet the sky."
+      },
+      "taxonomy": {
+        "subjects": [
+          "civic terrain",
+          "inhabited megastructure"
+        ],
+        "scales": [
+          "urban",
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "selective fine detail"
+        ],
+        "aesthetics": [
+          "lucid future",
+          "organic technology",
+          "classical architecture"
+        ],
+        "moods": [
+          "expansive",
+          "hopeful"
+        ],
+        "materials": [
+          "pale mineral construction",
+          "translucent membrane",
+          "masonry"
+        ],
+        "palette": [
+          "chalk white",
+          "cobalt blue",
+          "cultivated green",
+          "warm ochre"
+        ]
+      },
+      "creativeProcess": {
+        "route": "story-first",
+        "departure": "A civic value becomes moving inhabited terrain with an exposed living underside.",
+        "selectionReason": "The curved mass, deep older city, clouds and tiny craft make immense inhabited scale legible while preserving a bright emotional register."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Create a standalone portrait 2:3 monumental science-fiction painting in brilliant clear daylight, rich tactile painted material and atmospheric depth. An immense inhabited district is turning upward from a horizontal city surface, exposing an older neighborhood to the sky. This civilization preserves historic communities while moving entire districts through controlled local gravity.\n\nLook upward and outward from the deep shadow of a public terrace. A colossal pale district plate crosses the image diagonally, beginning as horizontal inhabited terrain in the middle distance and bending into an almost vertical landscape beyond the upper-right edge. Its thickness contains densely inhabited recesses, long civic halls and tiny transport galleries. Entire planted streets, groves and narrow blue canals continue up the nearly vertical FACE: they lie along the rotated terrain and retain their own local down. Make their spatial rotation readable. They are occupied ground, not windows on a conventional skyscraper and not falling waterfalls. The large plate spans many separate neighborhoods; its far side dissolves behind atmospheric haze.\n\nAt the bend, hard mineral construction grades continuously into a broad, thick flexible living hinge. Shallow pressure chambers appear beneath its translucent skin, with old growth scars and precise mineral selector patches around the moving boundary. This hinge is one continuous working material, without tree-root supports.\n\nFar below, the revealed ancient city consists of darker masonry embedded in younger pale construction. Sunlight reaches one immense avenue while adjacent regions stay cool. Minute passenger vessels cross the huge gap, and a distant cloud bank enters beneath the lifted terrain.\n\nWarm chalk-white construction, intense cobalt sky, quiet green cultivation, restrained rust-red awnings. Substantial thickness and deep cast shadows. Large calm planes; selective fine detail at inhabited edges, material transitions and recesses. No text, labels, UI, portals, rings, toy-plaza scale or generic neon.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "9c1e7cd186a1318d5be8bedd15dcbd70b4a16deaed80689f6c3bd69397ae2c1a",
+            "bytes": 3019510,
+            "width": 1024,
+            "height": 1536,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "A colossal curved inhabited plate, translucent structural underside, deep city below, cloud layers, tiny craft, cobalt daylight and warm white architecture.",
+            "limitations": "The precise local-gravity behavior and ongoing rotation are not established. Classical-looking architecture and foreground people were introduced by the renderer.",
+            "alt": "A vast pale curved city plate rises above an older city beneath a cobalt sky, with translucent undersides, planted terraces, clouds and tiny aircraft."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "city-beneath",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "scale",
+          "label": "A city beneath a district",
+          "text": "Whole neighborhoods lie below the curved plate while tiny aircraft cross the space between them.",
+          "region": null
+        },
+        {
+          "id": "translucent-underside",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Translucent underside",
+          "text": "The pale outer construction gives way to a translucent lower surface above deep occupied recesses.",
+          "region": null
+        },
+        {
+          "id": "diagonal-curve",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "composition",
+          "label": "Inhabited curve",
+          "text": "The broad diagonal plate carries the eye upward while the city below supplies successive layers of depth.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "the-joining-of-two-seas",
+      "slug": "the-joining-of-two-seas",
+      "title": "The Joining of Two Seas",
+      "status": "draft",
+      "summary": "Pearl membranes surround blue underwater space, with a precise recessed interface beside an amber mixing cloud.",
+      "premise": {
+        "kind": "fiction",
+        "text": "Two distributed ocean intelligences temporarily join by changing the contact between their waters. Their pressure partitions and exchange tissues are their technology."
+      },
+      "taxonomy": {
+        "subjects": [
+          "marine ecology",
+          "exchange infrastructure"
+        ],
+        "scales": [
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "soft atmospheric depth"
+        ],
+        "aesthetics": [
+          "organic technology",
+          "nonhuman environment",
+          "submerged"
+        ],
+        "moods": [
+          "quiet",
+          "unfamiliar"
+        ],
+        "materials": [
+          "pearl membrane",
+          "mineral tissue",
+          "blue ceramic"
+        ],
+        "palette": [
+          "pearl",
+          "pale honey",
+          "subdued olive",
+          "cold blue"
+        ]
+      },
+      "creativeProcess": {
+        "route": "story-first",
+        "departure": "The ocean environment grows its own exchange architecture from continuous pressure membranes.",
+        "selectionReason": "The selected edit clarifies deliberate construction at one local interface while retaining the set’s softest and most materially distinct environment."
+      },
+      "selectedVersionId": "v2",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Create a standalone wide 16:9 monumental science-fiction painting viewed from inside a vast submerged planetary chamber. Two intelligent ocean ecologies are beginning a temporary union. Their technology grows from their own pressure-regulating membranes; living material and precise architecture are one system. The image must convey an immense engineered nonhuman environment with mountain-scale depth, not a medical close-up or an ordinary coral reef.\n\nLook laterally across the interior. A thick pearl-colored partition edge fills the lower-left foreground. Beyond it, a small number of enormous smooth pressure cushions rise from a drowned landscape, merge into the ceiling far above and disappear through cold blue distance. Give these masses coherent attachment, substantial edge thickness and deeply recessed intervals. Avoid ribs, columns, roots and human buildings.\n\nAt the focal region a long section of partition has relaxed and folded down. Amber suspended material enters cold blue water along a broad gently clouded boundary, forming massive, slow-edged, NONLUMINOUS billows. Tiny unfamiliar flattened organisms gather on each side, and distant shoals are almost lost against the enormous volumes.\n\nNear the contact region, the opaque chalky tissue becomes translucent and then resolves into highly ordered fields of tiny mineral selector pores, with precise organized surface regions grown continuously from the membrane. Keep this technological regularity concentrated at the working interface. Pale hardened scars record old joining lines on otherwise smooth, maintained surfaces.\n\nA submerged basalt mountain ridge crosses the middle distance beneath the partitions. Far away, filtered daylight enters through a translucent ceiling region and reveals particles; the greater chamber falls into a quiet deep blue void. Pearl, pale honey, subdued olive and cold blue. Tactile painterly materials, selective sharp foreground edges, strong aerial or underwater perspective and convincing geological scale. No humanoids, bolted-on machines, glowing tendrils, portals, lettering or UI.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "835529a4a4ed4d75a18904b4245003ad3b997589b2bac2008078324641c30745",
+            "bytes": 2191612,
+            "width": 1672,
+            "height": 941,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "Pearl membranes with ordered pores, blue depth, amber mixing cloud, marine organisms and a submerged rocky ridge.",
+            "limitations": "The image can read as a biological underwater environment; deliberate technology and planetary scale are weakly evidenced.",
+            "alt": "Pale porous membranes surround a deep blue underwater landscape with an amber suspended cloud, small marine organisms and a rocky ridge."
+          }
+        },
+        {
+          "id": "v2",
+          "operation": "edit",
+          "parentVersionId": "v1",
+          "prompt": "Edit the supplied underwater science-fiction artwork with ONE focused intervention: clarify the deliberate technological function at the nearest membrane's exchange boundary. Preserve the overall wide composition, immense pearl pressure cushions and soft ceiling, blue underwater depth, rocky middle-distance ridge, amber mixing front, fish-like organisms, filtered light, smooth organic materials and atmospheric scale. Keep this scene materially distinct from a conventional industrial interior.\n\nGrow a single clearly engineered exchange-and-maintenance interface into the nearest perforated membrane beside the amber mixing boundary, in the lower-left to central foreground. The interface should be substantial enough to read, but occupy only a localized portion of this broad surface. Existing rounded pores gradually become precisely aligned, differentiated apertures around a deep recessed oval intake. Thick pale mineral tissue forms several exact terraced edges and narrow radial flow channels around the opening. Give the cut edges real depth. Fine translucent pressure windows and a few dark blue ceramic control surfaces are flush WITH the grown material. This is one continuous specialized region of the living membrane, not a metal machine bolted onto an organism.\n\nWithin the sheltered recess, show a compact, unmistakably constructed nonhuman maintenance platform with precise anchoring and a tiny autonomous submersible nearby. The platform is minute compared with the pressure wall yet has coherent local structure; no human figures, classical buildings or familiar house windows. Its precise interfaces establish technology and scale while the main landscape remains overwhelmingly biological. Keep the nearby mineral pore field and amber-blue water exchange readable, with no added diagram arrows or glow.\n\nRetain soft pearl, pale honey, olive and cold blue, tactile painterly surfaces and a quiet deep background. Concentrate sharp technical detail in this one region. No exposed conventional pipes, hanging cables, large industrial gantries, cathedral ribs, plants added as decoration, captions, typography or interface overlays.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "109c7ad54a3a34403c09cb9120a4a2114ee53820784daf308a2e167fd1706852",
+            "bytes": 2206375,
+            "width": 1672,
+            "height": 941,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "The pearl membrane now contains a continuous, precise recessed exchange interface, differentiated apertures, flush blue surfaces and a small maintenance platform/submersible, while the amber mixing cloud, blue depths, marine organisms and basalt ridge remain.",
+            "limitations": "The technological reading is clearer. The intelligence of the two ecologies, controlled union and planetary extent remain accompanying fiction; motion and chemical selectivity are not established by a still.",
+            "alt": "Pale porous membranes span a blue underwater landscape; a recessed oval interface and small submersible sit beside an amber cloud of suspended material."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "grown-interface",
+          "versionId": "v2",
+          "basis": "observed",
+          "category": "material",
+          "label": "Grown exchange interface",
+          "text": "Precise terraces, differentiated apertures and flush blue surfaces continue into the surrounding pale membrane.",
+          "region": null
+        },
+        {
+          "id": "mixing-boundary",
+          "versionId": "v2",
+          "basis": "observed",
+          "category": "atmosphere",
+          "label": "Amber and blue water",
+          "text": "The broad amber suspended cloud softens into the blue depth beside the recessed interface.",
+          "region": null
+        },
+        {
+          "id": "local-scale",
+          "versionId": "v2",
+          "basis": "observed",
+          "category": "scale",
+          "label": "Local scale cue",
+          "text": "A small constructed platform and nearby submersible give the immense membrane a local size reference.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "the-walking-interval",
+      "slug": "the-walking-interval",
+      "title": "The Walking Interval",
+      "status": "draft",
+      "summary": "Offset pale chambers and immense red folded joints form a cropped architectural body against distant space.",
+      "premise": {
+        "kind": "fiction",
+        "text": "An invented transit drive changes the separation of sealed habitation chambers. Broad living joints accommodate the rearrangement."
+      },
+      "taxonomy": {
+        "subjects": [
+          "articulated vessel",
+          "habitation chambers"
+        ],
+        "scales": [
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "selective hard edges"
+        ],
+        "aesthetics": [
+          "biomechanical",
+          "architectural",
+          "organic technology"
+        ],
+        "moods": [
+          "powerful",
+          "unfamiliar"
+        ],
+        "materials": [
+          "ivory ceramic",
+          "red fibrous tissue",
+          "recessed structural panels"
+        ],
+        "palette": [
+          "ivory",
+          "rust red",
+          "maroon",
+          "cool blue"
+        ]
+      },
+      "creativeProcess": {
+        "route": "departure-first",
+        "departure": "A vessel becomes an upright arrangement of offset chambers joined by substantial contractile tissue.",
+        "selectionReason": "The material continuity between red folded tissue and pale enclosures creates the clearest organic-technological fusion in the set."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Create a portrait 2:3 cinematic monumental science-fiction artwork of an immense interstellar vessel caught halfway through a bodily step. Its silhouette rises steeply: THREE UNEQUAL thick angular habitation chambers connect at offset corners through short extraordinarily broad living joints. They form a broken ascending arrangement of enclosed architectural volumes with deep recessed bays. Make the arrangement asymmetric and unmistakably nonhumanoid: no head, arms, legs or recognizable creature anatomy. The upper chamber has shifted sideways relative to the lower ones, leaving a vast dark interval through which stars are visible.\n\nView from below and beside the nearest joint. Its thick underside occupies a foreground corner. The next chamber recedes far upward, with one outer edge continuing beyond the frame. A pale planetary crescent is remote beyond the lowest volume. Minute transfer vessels cross the dark gaps at several distances; the galleries lining the recesses become tiny precise marks inside the enormous mass.\n\nAt the active joint, thick aligned rust-red contractile tissue continues into matte ivory structural ceramic. One side compresses into dense broad folds while the opposite side stretches as long load-bearing sheets with real thickness. Keep every material attached and aligned to the architectural volumes. Narrow ochre repair seams cross older surfaces. Recessed attachment ledges contain small ordered mechanisms. The motion is suggested by the differing chamber positions and deformation, not by motion graphics.\n\nBroad quiet ivory planes, maroon interiors, warm direct sunlight, restrained blue reflected light, deep unlit masses. Painterly scuffs and growth variation with sharp local edge highlights. This is a colossal vessel and an invented reconfiguration-based transit system, not a sculpture on a pedestal. No conventional stern nozzle, uniform glow, floating labels, UI, central portal or decorative bead chain.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "d78c184a5deb905de7df945c97e24ec6e6e68967faac7c36d4663487acbe5ec1",
+            "bytes": 2647236,
+            "width": 1024,
+            "height": 1536,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "Offset white architectural volumes joined by thick red folded tissue, deep inhabited bays, tiny craft and a remote crescent.",
+            "limitations": "The close crop leaves the full vessel ambiguous. A still cannot establish stepping or propulsion; the material relationship is visible.",
+            "alt": "Colossal offset ivory chambers rise out of frame, joined by thick red folded tissue above dark recessed bays, tiny spacecraft and a distant planetary crescent."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "contractile-joint",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Folded living joint",
+          "text": "Thick red fibrous sheets occupy and connect the pale architectural enclosures.",
+          "region": null
+        },
+        {
+          "id": "close-crop",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "composition",
+          "label": "Mass beyond the frame",
+          "text": "The low close viewpoint crops the outer chambers and emphasizes their undersides and deep intervals.",
+          "region": null
+        },
+        {
+          "id": "recessed-bays",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "scale",
+          "label": "Nested bays and craft",
+          "text": "Tiny craft and fine structures inside the recessed bays establish scale beneath the larger chamber masses.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "the-way-around",
+      "slug": "the-way-around",
+      "title": "The Way Around",
+      "status": "draft",
+      "summary": "Separated celadon bodies hang above a pale basin while a dust and vapor trail forms an angular detour.",
+      "premise": {
+        "kind": "fiction",
+        "text": "A landscape-scale defense system connects a dangerous approach to an uninhabited route. Its action displaces the approach through space."
+      },
+      "taxonomy": {
+        "subjects": [
+          "distributed defense",
+          "desert infrastructure"
+        ],
+        "scales": [
+          "geological",
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "selective fine detail"
+        ],
+        "aesthetics": [
+          "mineral industrial",
+          "organic technology",
+          "atmospheric landscape"
+        ],
+        "moods": [
+          "tense",
+          "immense"
+        ],
+        "materials": [
+          "weathered celadon ceramic",
+          "brass-colored recesses",
+          "cellular surfaces"
+        ],
+        "palette": [
+          "celadon",
+          "chalk white",
+          "warm brass",
+          "rose",
+          "cobalt shadow"
+        ]
+      },
+      "creativeProcess": {
+        "route": "departure-first",
+        "departure": "The defense apparatus is distributed across the landscape, and its action appears as a volumetric spatial detour.",
+        "selectionReason": "Separated bodies, a canyon-spanning shadow and inhabited terraces provide exceptional scale, while the physical plume carries the action."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Create a wide 16:9 cinematic science-fiction painting overlooking a vast pale salt basin with distant inhabited terraces. This is a fictional distributed defense instrument whose action changes the route of an approaching vessel. Several enormous solid defense bodies hang at widely separated depths above the land, NOT in a ring. Each has heavy irregular faceted shoulders, offset masses and deep rectangular cavities. Their proportions are geological: clouds hide the lower part of a far body; the nearest body's shadow crosses an entire canyon system.\n\nPlace the camera high beside the nearest body. Its cropped underside fills the upper-right corner, showing immense recesses and thick lit cut edges. Far below, long populated terraces and tiny transit routes establish the basin's scale. Leave a broad open region of pale sky toward the left and center.\n\nA small distant intruding vessel has left an enormous physical wake of white vapor and red dust. Show ONE coherent redirected trajectory: the wake enters horizontally from the left, makes a conspicuously abrupt square turn beside a middle-distance defense body, and continues away toward uninhabited badlands on the distant horizon. The vessel is at the receding end. Render the wake as thick turbulent weather, with ragged edges, billowing volumes and separated clumps; it is not an arrow, graphic line or glowing beam. The geometric turn is a fictional spatial event.\n\nWeathered celadon-green ceramic faces and warm brass-colored deep interiors. Within selected cavities, aligned pale sensing tissue becomes a precise cellular matrix. Keep most exterior surfaces quiet. No surface solidification or armor transformation.\n\nHard afternoon sunlight, chalk-white land, far rose ridges and deep cobalt shadows. Immense aerial distance, tactile painted surfaces, fine localized machinery and clearly separated scales. No portal, ring, central cannon, energy bubble, luminous ribbon, caption, diagram or interface.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "7ba102a58cc1f8643625ccdafeab092057da31220232c99aa019ad3c67370ae0",
+            "bytes": 2872806,
+            "width": 1672,
+            "height": 941,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "Distributed celadon blocks over a salt basin, huge cast shadows, biological-looking pore matrices, and a rectilinear dust/vapor detour.",
+            "limitations": "The trail makes a squared offset with more than one bend rather than the requested single corner. The defense's causal mechanism is fictional.",
+            "alt": "Heavy celadon blocks hover over pale desert terraces and cast enormous shadows; a white and red atmospheric trail bends through an angular offset."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "offset-trail",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "composition",
+          "label": "Angular atmospheric trail",
+          "text": "The dust and vapor trail forms a squared offset with multiple bends through the open basin.",
+          "region": null
+        },
+        {
+          "id": "landscape-shadow",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "scale",
+          "label": "Landscape-sized shadow",
+          "text": "A broad cast shadow crosses the basin below the nearest suspended body.",
+          "region": null
+        },
+        {
+          "id": "service-recesses",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Quiet shells and deep recesses",
+          "text": "Broad celadon surfaces contrast with warm exposed galleries and concentrated cellular detail.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "the-descending-summer",
+      "slug": "the-descending-summer",
+      "title": "The Descending Summer",
+      "status": "draft",
+      "summary": "Pink geology, immense pale walls and inhabited cellular margins descend toward a curved green interior landscape.",
+      "premise": {
+        "kind": "fiction",
+        "text": "Related species flourish in different gravity environments. A civilization opens one continuous inhabitable descent from the planetary surface toward an engineered core."
+      },
+      "taxonomy": {
+        "subjects": [
+          "planetary interior",
+          "habitable excavation"
+        ],
+        "scales": [
+          "planetary",
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "selective fine detail"
+        ],
+        "aesthetics": [
+          "geological organic technology",
+          "lucid future",
+          "inhabited megastructure"
+        ],
+        "moods": [
+          "serene",
+          "expansive"
+        ],
+        "materials": [
+          "pink rock",
+          "pale ceramic",
+          "cellular construction"
+        ],
+        "palette": [
+          "calamine pink",
+          "pale limestone",
+          "moss green",
+          "blue-gray"
+        ]
+      },
+      "creativeProcess": {
+        "route": "story-departure-coherence",
+        "departure": "Planetary engineering becomes an inhabited interior descent through geology and immense retaining surfaces.",
+        "selectionReason": "Nested curved surfaces, tiny transit marks, layered atmosphere and calm structural mass make a complete planetary environment."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Create a portrait 2:3 monumental science-fiction painting from the lip of an artificial canyon extending from a planet's surface toward its exposed core. This civilization has made one continuous habitable descent through different gravity environments. Show the physical interior of a transformed WORLD: the curved exterior rim sweeps across the far upper background, with its thin atmosphere and black space visible beyond. This is a colossal inhabited planetary excavation, not a small gorge or an explanatory cutaway diagram.\n\nA vast smooth pressure-retaining surface descends diagonally from the near-left foreground into the gulf. Give it enormous thickness, exposed where it enters broken geological strata. Rounded self-renewing cellular margins grow directly into precise flat ceramic faces; the living and manufactured qualities belong to the same wall. Preserve a calm primary plane. Concentrate tiny chambers, recessed transit channels and renewed growth margins around its attachments, becoming minute with distance.\n\nAcross the gulf, immense rock faces alternate with distant engineered surfaces. Separate the successive depths with several different pale weather layers. Far below, part of the cold engineered core forms a CONVEX sage-colored landscape, with a clear curved limb and shadow boundary. It is a distant huge solid surface, not a glowing fireball. Minute transit vessels become lost within the immense descent and establish scale beneath the world's rim.\n\nUse luminous calamine-pink geology, pale limestone ceramic, muted moss green and blue-gray distance. Daylight reaches upper walls; soft reflected light reveals the vast interior. Serene, expansive, maintained for an unimaginable time. Tactile painted surfaces, selective crisp edges, restrained technical linework and meaningful local detail. No labels, grid overlays, conventional diagram, branching supports, suspended ocean, lifted continent or neon outlines.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "587c5d8a02c843177697ae9a745992c2a906fabddba1114ac7517d64f2658e3c",
+            "bytes": 2842739,
+            "width": 1024,
+            "height": 1536,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "Pink geological terraces, immense pale smooth engineered wall, cellular edge regions, a distant convex green inner surface, a planetary rim and black space beyond it.",
+            "limitations": "Different gravity regimes and continuous maintenance remain fictional. Nested planetary surfaces and immense inhabited depth are visibly established.",
+            "alt": "Pink terraces and a vast pale wall descend through mist toward a curved green landscape, with cellular inhabited edges, tiny vessels and black space beyond the upper planetary rim."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "nested-world",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "scale",
+          "label": "Nested planetary surfaces",
+          "text": "A distant curved green surface sits below the immense descent while an upper rim meets black space.",
+          "region": null
+        },
+        {
+          "id": "living-margin",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Cellular wall margin",
+          "text": "Rounded cellular regions join the broad smooth retaining face beside exposed pink geology.",
+          "region": null
+        },
+        {
+          "id": "weather-depth",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "atmosphere",
+          "label": "Weather between layers",
+          "text": "Pale atmospheric bands separate the near terrace, the opposite walls and the distant interior landscape.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "the-passing-mass",
+      "slug": "the-passing-mass",
+      "title": "The Passing Mass",
+      "status": "draft",
+      "summary": "A huge celadon body overhangs a rain-soaked landscape, with granular surfaces, porous edges and drifting mist.",
+      "premise": {
+        "kind": "fiction",
+        "text": "An artifact of unknown origin appears to advance by gathering matter from rain at one end and releasing mist at the other. Observers understand its recurring appearances more clearly than its purpose."
+      },
+      "taxonomy": {
+        "subjects": [
+          "mysterious artifact",
+          "weather encounter"
+        ],
+        "scales": [
+          "landscape",
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "weather-softened edges"
+        ],
+        "aesthetics": [
+          "elemental",
+          "mineral",
+          "ambiguous technology"
+        ],
+        "moods": [
+          "uncanny",
+          "austere"
+        ],
+        "materials": [
+          "celadon mineral surface",
+          "porous material",
+          "water-like face"
+        ],
+        "palette": [
+          "celadon",
+          "pewter",
+          "iron black",
+          "muted rose",
+          "cobalt"
+        ]
+      },
+      "creativeProcess": {
+        "route": "departure-story-coherence",
+        "departure": "A moving artifact is imagined through opposing transitions between weather and solid matter.",
+        "selectionReason": "The weighted overhang, wet landscape and uncertain material identity create a compelling environmental encounter without resolving its purpose."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Paint a wide 3:2 monumental science-fiction landscape dominated by an immense horizontal artifact crossing a rain-soaked upland. Its makers and purpose remain mysterious. Its body advances by becoming solid at one end and dissolving into mist at the other. Show a finite, extremely thick irregular blunt body running obliquely across the image above distant mountains. It has an almost uninterrupted celadon mineral surface, without familiar engines, windows, symbols or spacecraft fittings. The artifact must have material weight and coherent geometry.\n\nAt its nearer advancing end to the right, dense rain converges into a narrow zone of pale mineral granules. Those granules merge continuously into a newly formed smooth corner of the enormous mass. At the distant trailing underside to the left, the mass grows porous and quietly releases low banks of mist. Make both end processes spatially separate and visibly connected to the same continuous body. They are quiet transitions, not an explosion or shattered ruins.\n\nView from a wet iron-black escarpment. A very broad dry passage cuts through the saturated ground beneath the object. Shallow mineral bands along the lower flank preserve previous weather passages. One minute survey craft near the solidifying edge provides local scale. Half-hidden mountain ranges, receding rain curtains and the artifact's enormous underside shadow provide larger scales.\n\nPewter storm light reveals the weight. Include a muted rose break in the far sky, cobalt rain shadows and pale reflected light below the body. Waxy mineral skin, tactile painterly scumbling, edges lost in weather and concentrated sharp detail at the accretion boundary. Preserve quiet primary surfaces and uncanny atmosphere. No glowing runes, tendrils, weapons, ring, portal, luminous ribbons, lettering or UI.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "80776f9084946ee42c32b2c1681f70ff26241c551e2c407f6419d4f1aadba4b6",
+            "bytes": 2859096,
+            "width": 1536,
+            "height": 1024,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "A colossal celadon body over a wet landscape, rain and granular-looking transition at the nearer face, porous trailing areas, mist, distant ridges and a small survey craft.",
+            "limitations": "Accretion, dissolution and movement direction remain ambiguous in the still; the near face can read as a giant water or ice front. The form carries mystery and scale more strongly than mechanism.",
+            "alt": "An immense celadon overhang stretches above wet black rock and distant mountains, with rain at its near face, porous edges, mist and a tiny survey craft."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "wet-foreground",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "atmosphere",
+          "label": "Rain-soaked distance",
+          "text": "Wet foreground rock, receding rain curtains and mist connect the object to its surrounding weather.",
+          "region": null
+        },
+        {
+          "id": "porous-edge",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Uneven material transitions",
+          "text": "A broad near face contrasts with porous regions and mist around the farther underside.",
+          "region": null
+        },
+        {
+          "id": "survey-craft",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "scale",
+          "label": "Small craft beneath mass",
+          "text": "A tiny craft near the enormous surface provides a local comparison within the mountain landscape.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "a-graft-for-two-suns",
+      "slug": "a-graft-for-two-suns",
+      "title": "A Graft for Two Suns",
+      "status": "draft",
+      "summary": "A thick dark porous construction occupies the contact between differently illuminated stellar-like surfaces.",
+      "premise": {
+        "kind": "fiction",
+        "text": "A civilization cultivates a shared stellar environment while preserving two suns as distinct bodies. A self-renewing regulator occupies their contact region."
+      },
+      "taxonomy": {
+        "subjects": [
+          "stellar infrastructure",
+          "alien contact region"
+        ],
+        "scales": [
+          "astronomical",
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "selective hard edges"
+        ],
+        "aesthetics": [
+          "cosmic",
+          "porous alien material",
+          "organic technology"
+        ],
+        "moods": [
+          "awe",
+          "mystery"
+        ],
+        "materials": [
+          "graphite-like glass",
+          "dark cellular ceramic",
+          "granular luminous surfaces"
+        ],
+        "palette": [
+          "graphite",
+          "smoky olive",
+          "butter white",
+          "copper peach",
+          "pale blue"
+        ]
+      },
+      "creativeProcess": {
+        "route": "departure-story-coherence",
+        "departure": "Substantial alien infrastructure occupies a stellar contact region rather than a conventional orbit.",
+        "selectionReason": "Porous-to-dense transitions, dark cavities and differentiated illumination provide the richest alien material language in the set."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Create a portrait 4:5 monumental science-fiction painting near the contact region of two immense suns. One granular photosphere, butter-white with pale blue shadows, fills the upper-left background. Another copper-peach stellar surface curves into the lower-right distance. Both continue far beyond the frame, giving the image enormous astronomical scale rather than two decorative spheres.\n\nBetween their distinct surfaces is a colossal self-renewing regulator of dense graphite glass and dark ceramic cellular material. Give it one compact asymmetric continuous body with immense solid shoulders, broad concave contact faces and deep offset service recesses. It is a physically substantial alien construction, not a narrow bridge, a plasma streamer or a luminous connection. Large quiet opaque volumes dominate; exposed cellular margins become finer and denser where they join precise structural faces.\n\nEach stellar surface deforms toward a different contact face. Confine incandescent exchange to those LOCAL interfaces and a few recessed channels inside the body. Keep the photospheres' colors and physical boundaries distinct. At exposed working margins, coarse porous growing material matures continuously into smooth opaque structure, suggesting biological renewal integrated with control of the contact geometry.\n\nA small eclipsed planet beyond the farther shoulder supplies another astronomical distance. Use granular photospheric texture, partial occlusion, thin plasma haze and radical differences in apparent scale. The two suns illuminate opposite sides of the body in warm and cool light, revealing its real thickness and sheltered cavities.\n\nTactile painterly brushwork, highly selective fine structural detail, smoky olive recesses, graphite glass, pale cream and copper stellar fields. Quiet cosmic grandeur and original invented stellar engineering. No orbital ring, lattice sphere, purple crystal blade, glowing ribbon, floating symbols, diagram or familiar spacecraft silhouette.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "4322caf4f8c0fd2e52bba99d725e7a928e91f910a52b13ffffd1f6ae850e72d4",
+            "bytes": 2870076,
+            "width": 1122,
+            "height": 1402,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "A substantial dark porous body between two differently illuminated granular stellar-like surfaces, precise broad planes, deep cavities and a small eclipsed sphere.",
+            "limitations": "Its stellar regulation and biological renewal are intended fiction. The tight crop emphasizes contact and material rather than an overall astronomical layout.",
+            "alt": "A massive dark cellular body with deep cavities stands between pale and copper-colored granular luminous surfaces, with a small eclipsed sphere beyond it."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "porous-to-dense",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Porous and dense construction",
+          "text": "Coarse cellular margins meet broad opaque planes around deep offset cavities.",
+          "region": null
+        },
+        {
+          "id": "two-sided-light",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "light",
+          "label": "Differentiated illumination",
+          "text": "Pale cool light and copper warmth illuminate different sides of the dark body.",
+          "region": null
+        },
+        {
+          "id": "cosmic-fragment",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "composition",
+          "label": "Close cosmic fragment",
+          "text": "The surrounding luminous surfaces extend out of frame while a small dark sphere establishes another distance.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    },
+    {
+      "id": "the-assembly-weather",
+      "slug": "the-assembly-weather",
+      "title": "The Assembly Weather",
+      "status": "draft",
+      "summary": "A pale vessel shares an immense industrial hall with suspended particles, taut working membranes and tiny observers.",
+      "premise": {
+        "kind": "fiction",
+        "text": "Spacefarers preserve material continuity between generations of vessels. Mineral seed-grains from old bodies participate in the formation of new ones, making construction a public act of succession."
+      },
+      "taxonomy": {
+        "subjects": [
+          "vessel fabrication",
+          "industrial shipyard"
+        ],
+        "scales": [
+          "monumental"
+        ],
+        "styles": [
+          "painterly",
+          "cinematic",
+          "selective fine detail"
+        ],
+        "aesthetics": [
+          "communal industry",
+          "material transformation",
+          "organic technology"
+        ],
+        "moods": [
+          "industrious",
+          "anticipatory"
+        ],
+        "materials": [
+          "chalk ceramic",
+          "woven membranes",
+          "granular material",
+          "worn anchors"
+        ],
+        "palette": [
+          "warm chalk",
+          "dusty vermilion",
+          "muted chartreuse",
+          "navy"
+        ]
+      },
+      "creativeProcess": {
+        "route": "story-departure-coherence",
+        "departure": "Vessel construction becomes granular ordering coordinated by broad taut working membranes.",
+        "selectionReason": "People, working craft, material transitions and waiting vessels make the most complete industrial narrative in the set."
+      },
+      "selectedVersionId": "v1",
+      "versions": [
+        {
+          "id": "v1",
+          "operation": "generate",
+          "parentVersionId": null,
+          "prompt": "Paint a wide 16:9 monumental science-fiction industrial interior showing a new vessel forming directly from suspended mineral grains. This spacefaring society preserves the material continuity between generations of vessels; construction is a public act of succession. Show one decisive material event in an immense rectilinear chamber, with tangible thickness and extreme clearance.\n\nLook laterally from a high service ledge. A broad asymmetric hull occupies the middle distance, its blunt sculptural body continuing through a monumental rectangular opening into daylight. Most of it is solid warm chalk ceramic, with deep navy recesses and a thick off-center keel. On ONE unfinished flank, a dense, sharply bounded weather front of mineral particles condenses into continuous material. Make the transition legible: separated grains farther away, coherent porous growth nearer the hull, then smooth finished structure. It must read as fabrication, not a damaged ship exploding.\n\nSeveral huge matte woven working membranes span from heavy wall anchors toward the active region. They are broad taut physical surfaces with substantial edge thickness, integrated exact sensor regions and visible strain patterns, organizing the growing material. Avoid thin ribbons, decorative webs and biological womb imagery. Distant anchors, deep industrial slots and subsidiary chambers fade into dusty atmospheric distance. Small maintenance craft gather near the active boundary, tiny against the vessel.\n\nWarm daylight from the exit falls across dusty vermilion machinery and muted chartreuse working surfaces. A distant group of completed vessels waits outside, suggesting a communal launch. Preserve the new hull's clean finish and handling wear on old anchors and contact surfaces.\n\nEmphasize tangible mass, huge internal volume, coherent joints, selective intricate detail, broad quiet surfaces and tactile painterly atmosphere. No stacked assembly plates, cathedral ribs, root networks, lettering, UI or uniform noisy texture.",
+          "promptStatus": "exact-used",
+          "asset": {
+            "availability": "not-imported",
+            "src": null,
+            "sha256": "c0d035aba53853a266fef189ded9bb13ba2f6cf765c16238c615290acf2b9a73",
+            "bytes": 2836543,
+            "width": 1672,
+            "height": 941,
+            "mimeType": "image/png"
+          },
+          "generation": {
+            "service": "ChatGPT image generation",
+            "model": null,
+            "seed": null,
+            "generatedAt": null,
+            "deterministicReplay": false
+          },
+          "review": {
+            "observed": "An immense shipyard, a coherent partially granular hull, broad taut woven surfaces with precise attachments, small working craft, people and distant vessels.",
+            "limitations": "The still suggests fabrication but cannot prove the direction of material flow. The social succession ceremony remains accompanying fiction.",
+            "alt": "A broad pale vessel stands amid particles and suspended woven surfaces inside a vast sunlit shipyard, with deep bays, small craft, observers and distant vessels."
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "id": "granular-hull",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "material",
+          "label": "Granular hull boundary",
+          "text": "A coherent smooth hull meets a localized region of porous and separate particulate material.",
+          "region": null
+        },
+        {
+          "id": "working-membranes",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "composition",
+          "label": "Broad suspended surfaces",
+          "text": "Taut woven surfaces connect the chamber’s anchors to the working region around the vessel.",
+          "region": null
+        },
+        {
+          "id": "industrial-scale",
+          "versionId": "v1",
+          "basis": "observed",
+          "category": "scale",
+          "label": "People, craft and chambers",
+          "text": "Small observers and craft sit within receding industrial levels beneath the large vessel and hall.",
+          "region": null
+        }
+      ],
+      "rights": {
+        "kind": "generated-artwork",
+        "reuseLicense": null,
+        "credit": null
+      }
+    }
+  ]
+}

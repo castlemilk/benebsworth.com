@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benebsworth.com/schemas/artwork-v1.json",
+  "title": "Art catalogue workflow v1",
+  "description": "Source contract for reviewed creative artwork and immutable generation history. This schema URL is an identifier, not a claim that a deployed endpoint exists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "collection", "artworks"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "studyDate", "description", "methodReferences"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "title": { "$ref": "#/$defs/text" },
+        "studyDate": { "type": "string", "format": "date" },
+        "description": { "$ref": "#/$defs/text" },
+        "methodReferences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["role", "url"],
+            "properties": {
+              "role": { "$ref": "#/$defs/text" },
+              "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+            }
+          }
+        }
+      }
+    },
+    "artworks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/artwork" }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "nullableText": { "type": ["string", "null"], "minLength": 1, "pattern": "\\S" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "versionId": { "type": "string", "pattern": "^v[1-9][0-9]*$" },
+    "tags": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/text" }
+    },
+    "artwork": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "slug", "title", "status", "summary", "premise", "taxonomy", "creativeProcess", "selectedVersionId", "versions", "annotations", "rights"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "slug": { "$ref": "#/$defs/slug" },
+        "title": { "$ref": "#/$defs/text" },
+        "status": { "enum": ["draft", "published"] },
+        "summary": { "$ref": "#/$defs/text" },
+        "premise": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "text"],
+          "properties": {
+            "kind": { "const": "fiction" },
+            "text": { "$ref": "#/$defs/text" }
+          }
+        },
+        "taxonomy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["subjects", "scales", "styles", "aesthetics", "moods", "materials", "palette"],
+          "properties": {
+            "subjects": { "$ref": "#/$defs/tags" },
+            "scales": { "$ref": "#/$defs/tags" },
+            "styles": { "$ref": "#/$defs/tags" },
+            "aesthetics": { "$ref": "#/$defs/tags" },
+            "moods": { "$ref": "#/$defs/tags" },
+            "materials": { "$ref": "#/$defs/tags" },
+            "palette": { "$ref": "#/$defs/tags" }
+          }
+        },
+        "creativeProcess": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["route", "departure", "selectionReason"],
+          "properties": {
+            "route": { "enum": ["story-first", "departure-first", "story-departure-coherence", "departure-story-coherence"] },
+            "departure": { "$ref": "#/$defs/text" },
+            "selectionReason": { "$ref": "#/$defs/text" }
+          }
+        },
+        "selectedVersionId": { "$ref": "#/$defs/versionId" },
+        "versions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/version" } },
+        "annotations": { "type": "array", "items": { "$ref": "#/$defs/annotation" } },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "reuseLicense", "credit"],
+          "properties": {
+            "kind": { "const": "generated-artwork" },
+            "reuseLicense": { "$ref": "#/$defs/nullableText" },
+            "credit": { "$ref": "#/$defs/nullableText" }
+          }
+        }
+      }
+    },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "parentVersionId", "prompt", "promptStatus", "asset", "generation", "review"],
+      "properties": {
+        "id": { "$ref": "#/$defs/versionId" },
+        "operation": { "enum": ["generate", "edit"] },
+        "parentVersionId": { "type": ["string", "null"], "pattern": "^v[1-9][0-9]*$" },
+        "prompt": { "$ref": "#/$defs/text" },
+        "promptStatus": { "const": "exact-used" },
+        "asset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["availability", "src", "sha256", "bytes", "width", "height", "mimeType"],
+          "properties": {
+            "availability": { "enum": ["not-imported", "imported"] },
+            "src": {
+              "type": ["string", "null"],
+              "pattern": "^/artwork/worlds/[a-z0-9]+(?:[-_][a-z0-9]+)*(?:/[a-z0-9]+(?:[-_][a-z0-9]+)*)*\\.png$"
+            },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "bytes": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+            "width": { "type": "integer", "minimum": 1 },
+            "height": { "type": "integer", "minimum": 1 },
+            "mimeType": { "const": "image/png" }
+          }
+        },
+        "generation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["service", "model", "seed", "generatedAt", "deterministicReplay"],
+          "properties": {
+            "service": { "$ref": "#/$defs/text" },
+            "model": { "$ref": "#/$defs/nullableText" },
+            "seed": { "$ref": "#/$defs/nullableText" },
+            "generatedAt": { "type": ["string", "null"], "format": "date-time" },
+            "deterministicReplay": { "const": false }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observed", "limitations", "alt"],
+          "properties": {
+            "observed": { "$ref": "#/$defs/text" },
+            "limitations": { "$ref": "#/$defs/text" },
+            "alt": { "$ref": "#/$defs/text" }
+          }
+        }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "versionId", "basis", "category", "label", "text", "region"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "versionId": { "$ref": "#/$defs/versionId" },
+        "basis": { "enum": ["observed", "interpretation"] },
+        "category": { "enum": ["scale", "material", "composition", "light", "atmosphere", "story"] },
+        "label": { "$ref": "#/$defs/text" },
+        "text": { "$ref": "#/$defs/text" },
+        "region": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["x", "y", "width", "height"],
+          "properties": {
+            "x": { "type": "number", "minimum": 0, "maximum": 1 },
+            "y": { "type": "number", "minimum": 0, "maximum": 1 },
+            "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    }
+  }
+}

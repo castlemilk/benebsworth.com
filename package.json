@@ -62,7 +62,7 @@
     "katex": "^0.17.0",
     "lucide-react": "^1.17.0",
     "motion": "^14.14.0",
-    "next": "^16.2.6",
+    "next": "^16.4.6",
     "next-mdx-remote": "^6.0.0",
     "ogl": "^1.0.11",
     "react": "^19.2.6",
@@ -109,14 +109,14 @@
     "pagefind": "^1.5.2",
     "postcss": "^8.5.15",
     "serve": "^14.2.6",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.0",
     "ts-proto": "^2.11.8",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1",
     "vitest": "^4.1.7",
-    "wrangler": "^4.103.0"
+    "wrangler": "^4.168.0"
   },
   "browserslist": [
     "defaults and fully supports es6-module-dynamic-import"

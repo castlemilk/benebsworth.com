@@ -7,7 +7,7 @@ import { buildIntegrationBridge, HOST_PROVIDER, projectVisibleHostGraph, resolve
 import { loadIntegrationSources, verifySupplementalInventories } from './repository'
 import type { AuthoredGlossaryOccurrence } from './study-source'
 
-const REVISION = '69991f75991ed9898808a43e32489bdf6891cedd'
+const REVISION = '624cb4e7b17c14130a9e04ebe60945799b54b346'
 let real: Awaited<ReturnType<typeof loadIntegrationSources>>
 beforeAll(async () => { real = await loadIntegrationSources(REVISION, REVISION) }, 30_000)
 const realInput = () => ({ snapshot: real.snapshot, host: real.host, hostRevision: REVISION, glossary: real.study.glossary,
@@ -42,10 +42,10 @@ function synthetic(tags: string[], term?: string) {
   return { snapshot, host, hostRevision: REVISION, glossary, artworkFiles: [], artworkMappingFile: file }
 }
 
-describe('actual master 69991f7 source/console comparison', () => {
-  it('rebuilds fresh inputs including real packets instead of reusing the old 959-node snapshot', () => {
-    expect([real.snapshot.nodes.length, real.snapshot.edges.length]).toEqual([998, 1637])
-    expect([real.host.nodes.length, real.host.edges.length]).toEqual([508, 746])
+describe('published site source/console comparison', () => {
+  it('captures the published corpus and study packets at the recorded revision', () => {
+    expect([real.snapshot.nodes.length, real.snapshot.edges.length]).toEqual([1018, 1660])
+    expect([real.host.nodes.length, real.host.edges.length]).toEqual([511, 751])
     expect(real.study.coverage).toEqual({ curriculumChapters: 71, packetChapters: 3, glossaryOccurrences: 36, studyReferences: 'not-extracted' })
     expect(real.bridge.canonicalSnapshotIdentity).toBe(real.snapshot.digest)
   })
@@ -88,11 +88,11 @@ describe('actual master 69991f7 source/console comparison', () => {
     const blogCategories = real.snapshot.nodes.filter(n => n.kind === 'category' && n.namespace === 'blog-topic')
     expect(blogCategories).toHaveLength(20)
     expect(blogCategories.every(n => real.bridge.canonicalOnlyIds.includes(n.id))).toBe(true)
-    expect(real.bridge.canonicalOnlyIds).toHaveLength(480)
+    expect(real.bridge.canonicalOnlyIds).toHaveLength(497)
   })
   it('accounts for all host occurrences with explicit canonical edge candidates', () => {
     const ids = new Set(real.snapshot.edges.map(e => e.id))
-    expect(real.bridge.edges).toHaveLength(746)
+    expect(real.bridge.edges).toHaveLength(real.host.edges.length)
     expect(real.bridge.edges.every(e => e.outcome === 'source-matched' && e.candidateCanonicalEdgeIds.length === 1 && ids.has(e.candidateCanonicalEdgeIds[0]))).toBe(true)
     expect(real.bridge.correspondences.every(c => c.outcome === 'source-matched' || c.outcome === 'ambiguous')).toBe(true)
   })
@@ -102,11 +102,14 @@ describe('actual master 69991f7 source/console comparison', () => {
     expect(real.bridge.artwork.find(a => a.hostId === 'category:cat-ai')).toMatchObject({ path: '/topics/artwork/neuroscience.png', illustrative: true, scope: 'host-presentation-only' })
     expect(real.bridge.artwork.every(a => real.host.nodes.find(n => n.id === a.hostId)?.art === a.path)).toBe(true)
   })
-  it('checks 185 content destinations and 35 glossary-index destinations as source evidence only', () => {
-    expect(real.bridge.destinations.filter(d => d.status === 'matched-content-route')).toHaveLength(185)
+  it('checks article, Lab, study and glossary destinations as source evidence only', () => {
+    expect(real.bridge.destinations.filter(d => d.status === 'matched-content-route')).toHaveLength(186)
     expect(real.bridge.destinations.filter(d => d.status === 'discovery-index-only')).toHaveLength(35)
-    expect(real.routeSupport).toHaveLength(220)
+    expect(real.routeSupport).toHaveLength(221)
     expect(real.routeSupport.every(r => r.status === 'registry-and-route-source' && !r.built && !r.live)).toBe(true)
+    expect(real.routeSupport.find(r => r.hostId === 'blog:micropod-ci-on-apple-silicon')).toMatchObject({
+      href: '/blog/micropod-ci-on-apple-silicon/', routeFile: 'app/blog/[slug]/page.tsx',
+    })
     expect(real.routeSupport.find(r => r.hostId === 'lab:circuit-sim')?.routeFile).toBe('app/lab/circuit-sim/page.tsx')
   })
   it('has no dangling filtered host edges for every combination of the six existing kinds', () => {

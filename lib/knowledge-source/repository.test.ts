@@ -11,7 +11,7 @@ import * as mdx from './extract-mdx'
 import { loadRepositoryInput } from './repository'
 import type { ContentSource, SourceInput } from './schema'
 
-const revision = '1121edc4ae6ac8de415b5395d8fadc11450fc55f'
+const revision = '624cb4e7b17c14130a9e04ebe60945799b54b346'
 // These cases parse/hash the complete article and Lab corpus. Two full passes
 // took 7.75s under whole-suite contention; keep a bounded corpus-specific budget.
 const CORPUS_TIMEOUT_MS = 30_000
@@ -55,7 +55,10 @@ describe('verified repository knowledge source mapping', () => {
   it('covers the current publication manifest and all registered labs with explicit limits', () => {
     expect(input.complete).toBe(true)
     expect(input.documents.filter(item => item.kind === 'blog')).toHaveLength(getAllPosts().length)
-    expect(input.documents.filter(item => item.kind === 'blog' && item.publication === 'published')).toHaveLength(97)
+    const publishedKeys = input.documents
+      .filter(item => item.kind === 'blog' && item.publication === 'published')
+      .map(item => item.key)
+    expect(publishedKeys.sort()).toEqual(getAllPosts().filter(isPublished).map(post => post.slug).sort())
     expect(input.documents.filter(item => item.kind === 'lab')).toHaveLength(85)
     expect(input.documents.filter(item => item.kind === 'lab')).toHaveLength(LAB_EFFECTS.length)
     expect(input.coverage).toEqual({ blog: 'complete', lab: 'registry-only', study: 'unavailable', concepts: 'curated-source-scoped', citations: 'supported-mdx-syntax' })

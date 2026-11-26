@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { indexChapter, packSection } from './source.mjs'
 
 const fixture = `---
@@ -60,7 +60,7 @@ test('rejects invalid or ambiguous requests', () => {
   for (const args of [[fixture, ''], [fixture, 'Missing'], [fixture, 'First', { maxBytes: 0 }], [fixture, 'First', { terms: 'bad' }], ['## Same\na\n## Same\nb', 'Same']]) assert.throws(() => packSection(...args))
 })
 
-test('reduces pinned chapters while preserving source ranges', () => {
+test('reduces pinned chapters while preserving source ranges', { skip: !existsSync('study/cs249r_book/books') }, () => {
   for (const path of ['10_model_compression/10_model_compression.qmd', '11_hw_acceleration/11_hw_acceleration.qmd']) {
     const qmd = readFileSync(`study/cs249r_book/books/vol1/${path}`, 'utf8')
     const section = indexChapter(qmd)[0]
